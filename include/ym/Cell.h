@@ -10,8 +10,8 @@
 
 
 #include "ym/ym_cell.h"
+#include "ym/ym_logic.h"
 #include "ym/CellArea.h"
-#include "YmLogic/expr_nsdef.h"
 
 
 BEGIN_NAMESPACE_YM_CELL

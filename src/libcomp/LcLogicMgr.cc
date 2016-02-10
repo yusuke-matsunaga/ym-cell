@@ -11,7 +11,8 @@
 #include "LcGroup.h"
 #include "ym/Expr.h"
 #include "ym/TvFunc.h"
-#include "ym/NpnMgr.h"
+#include "ym/NpnMap.h"
+#include "ym/NpnMapM.h"
 #include "ym/Cell.h"
 
 
@@ -122,8 +123,7 @@ LcLogicMgr::find_repfunc(const TvFuncM& f,
 
   if ( no == 1 ) {
     TvFunc f1 = f.output(VarId(0));
-    NpnMap xmap1;
-    mNpnMgr.cannonical(f1, xmap1);
+    NpnMap xmap1 = f1.npn_cannonical_map();
     xmap = NpnMapM(xmap1);
     repfunc = f.xform(xmap);
     { // 一応検証
@@ -156,10 +156,11 @@ LcLogicMgr::find_idmap_list(const TvFuncM& func,
   ymuint ni = func.input_num();
   ymuint no = func.output_num();
   if ( no == 1 ) {
-    NpnMap xmap1;
+    vector<NpnMap> tmp_list;
     TvFunc f1 = func.output(VarId(0));
-    mNpnMgr.cannonical(f1, xmap1);
+    f1.npn_cannonical_all_map(tmp_list);
     { // 検証
+      NpnMap xmap1 = tmp_list.front();
       TvFunc f2 = f1.xform(xmap1);
       if ( f1 != f2 ) {
 	cerr << "f1   = " << f1 << endl
@@ -169,8 +170,6 @@ LcLogicMgr::find_idmap_list(const TvFuncM& func,
       }
       ASSERT_COND( f1 == f2 );
     }
-    vector<NpnMap> tmp_list;
-    mNpnMgr.all_map(tmp_list);
     idmap_list.reserve(tmp_list.size());
     for (vector<NpnMap>::iterator p = tmp_list.begin();
 	 p != tmp_list.end(); ++ p) {

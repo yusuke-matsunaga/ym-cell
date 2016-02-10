@@ -10,7 +10,7 @@
 
 
 #include "ym/ym_cell.h"
-#include "ym/expr_nsdef.h"
+#include "ym/ym_logic.h"
 #include "ym/IDO.h"
 #include "ym/ODO.h"
 

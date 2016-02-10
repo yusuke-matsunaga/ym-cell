@@ -10,9 +10,9 @@
 
 
 #include "ym/ym_cell.h"
+#include "ym/ym_logic.h"
 #include "ym/CellTime.h"
 #include "ym/CellResistance.h"
-#include "ym/expr_nsdef.h"
 
 
 BEGIN_NAMESPACE_YM_CELL

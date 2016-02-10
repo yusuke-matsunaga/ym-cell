@@ -10,7 +10,7 @@
 
 
 #include "ym/ym_cell.h"
-#include "ym/ym_npn.h"
+#include "ym/ym_logic.h"
 
 
 BEGIN_NAMESPACE_YM_CELL

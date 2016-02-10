@@ -10,8 +10,8 @@
 
 
 #include "ym/ym_cell.h"
-#include "YmUtils/IDO.h"
-#include "YmUtils/ODO.h"
+#include "ym/IDO.h"
+#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM_CELL
