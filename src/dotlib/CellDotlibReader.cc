@@ -547,20 +547,13 @@ gen_timing(CellLibrary* library,
 }
 
 // @brief DotlibNode から CellLibrary を生成する．
-// @param[in] dt_library ライブラリを表すパース木のルート
-// @return 生成したライブラリを返す．
-// @note 生成が失敗したら nullptr を返す．
-const CellLibrary*
-gen_library(const DotlibNode* dt_library)
+// @param[in] library_info ライブラリの情報を持つオブジェクト
+// @param[in] library設定対象のライブラリ
+void
+set_library(const DotlibLibrary& library_info,
+	    CellLibrary* library)
 {
-  DotlibLibrary library_info;
-
-  if ( !library_info.set_data(dt_library) ) {
-    return nullptr;
-  }
-
-  // ライブラリの生成
-  CellLibrary* library = CellLibrary::new_obj();
+  // 'name' の設定
   library->set_name(library_info.name());
 
   // 'technology' の設定
@@ -639,7 +632,7 @@ gen_library(const DotlibNode* dt_library)
        p != dt_lut_template_list.end(); ++ p, ++ templ_id) {
     DotlibTemplate templ_info;
     if ( !templ_info.set_data(*p) ) {
-      return nullptr;
+      return;
     }
     ymuint d = templ_info.dimension();
     switch ( d ) {
@@ -986,8 +979,6 @@ gen_library(const DotlibNode* dt_library)
   }
 
   library->compile();
-
-  return library;
 }
 
 END_NONAMESPACE
@@ -1011,38 +1002,41 @@ CellDotlibReader::~CellDotlibReader()
 {
 }
 
-// @brief dotlib ファイルを読み込む
+// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
 // @param[in] filename ファイル名
-// @return 読み込んで作成したセルライブラリを返す．
-// @note エラーが起きたら nullptr を返す．
-const CellLibrary*
-CellDotlibReader::operator()(const string& filename)
+// @param[in] library 設定対象のライブラリ
+// @return 読み込みが成功したら true を返す．
+bool
+CellDotlibReader::read(const string& filename,
+		       CellLibrary* library)
 {
   using namespace nsDotlib;
 
   DotlibMgr mgr;
   DotlibParser parser;
   if ( !parser.read_file(filename, mgr, false) ) {
-    return nullptr;
+    return false;
   }
-  return gen_library(mgr.root_node());
+
+  DotlibLibrary library_info;
+  if ( !library_info.set_data(mgr.root_node()) ) {
+    return false;
+  }
+
+  set_library(library_info, library);
+
+  return true;
 }
 
-// @brief dotlib ファイルを読み込む
+// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
 // @param[in] filename ファイル名
-// @return 読み込んで作成したセルライブラリを返す．
-// @note エラーが起きたら nullptr を返す．
-const CellLibrary*
-CellDotlibReader::operator()(const char* filename)
+// @param[in] library 設定対象のライブラリ
+// @return 読み込みが成功したら true を返す．
+bool
+CellDotlibReader::read(const char* filename,
+		       CellLibrary* library)
 {
-  using namespace nsDotlib;
-
-  DotlibMgr mgr;
-  DotlibParser parser;
-  if ( !parser.read_file(filename, mgr, false) ) {
-    return nullptr;
-  }
-  return gen_library(mgr.root_node());
+  return read(string(filename), library);
 }
 
 END_NAMESPACE_YM_CELL

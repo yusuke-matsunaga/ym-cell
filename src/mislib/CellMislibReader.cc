@@ -72,17 +72,16 @@ dfs(const MislibNode* node,
   }
 }
 
-// @brief MislibNode から CellLibrary を生成する．
+// @brief MislibNode から CellLibrary に設定する．
 // @param[in] lib_name ライブラリ名
 // @param[in] gate_list パース木のルート
-// @return 生成したライブラリを返す．
-// @note 生成が失敗したら nullptr を返す．
-const CellLibrary*
-gen_library(const string& lib_name,
-	    const MislibNode* gate_list)
+// @param[in] library 設定対象のライブラリ
+void
+set_library(const string& lib_name,
+	    const MislibNode* gate_list,
+	    CellLibrary* library)
 {
-  // ライブラリの生成
-  CellLibrary* library = CellLibrary::new_obj();
+  // 名前の設定
   library->set_name(lib_name);
 
   // セル数の設定
@@ -277,8 +276,6 @@ gen_library(const string& lib_name,
   }
 
   library->compile();
-
-  return library;
 }
 
 END_NONAMESPACE
@@ -302,38 +299,36 @@ CellMislibReader::~CellMislibReader()
 {
 }
 
-// @brief mislib ファイルを読み込む
+// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
 // @param[in] filename ファイル名
-// @return 読み込んで作成したセルライブラリを返す．
-// @note エラーが起きたら nullptr を返す．
-const CellLibrary*
-CellMislibReader::operator()(const string& filename)
+// @param[in] library 設定対象のライブラリ
+// @return 読み込みが成功したら true を返す．
+bool
+CellMislibReader::read(const string& filename,
+		       CellLibrary* library)
 {
   using namespace nsMislib;
 
   MislibMgr mgr;
   MislibParser parser;
   if ( !parser.read_file(filename, mgr) ) {
-    return nullptr;
+    return false;
   }
-  return gen_library(filename, mgr.gate_list());
+
+  set_library(filename, mgr.gate_list(), library);
+
+  return true;
 }
 
-// @brief mislib ファイルを読み込む
+// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
 // @param[in] filename ファイル名
-// @return 読み込んで作成したセルライブラリを返す．
-// @note エラーが起きたら nullptr を返す．
-const CellLibrary*
-CellMislibReader::operator()(const char* filename)
+// @param[in] library 設定対象のライブラリ
+// @return 読み込みが成功したら true を返す．
+bool
+CellMislibReader::read(const char* filename,
+		       CellLibrary* library)
 {
-  using namespace nsMislib;
-
-  MislibMgr mgr;
-  MislibParser parser;
-  if ( !parser.read_file(filename, mgr) ) {
-    return nullptr;
-  }
-  return gen_library(filename, mgr.gate_list());
+  return read(string(filename), library);
 }
 
 END_NAMESPACE_YM_CELL

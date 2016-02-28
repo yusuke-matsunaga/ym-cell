@@ -32,19 +32,21 @@ public:
 
 public:
 
-  /// @brief mislib 形式のファイルを読み込んでライブラリを生成する．
+  /// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
   /// @param[in] filename ファイル名
-  /// @return 読み込んで作成したセルライブラリを返す．
-  /// @note エラーが起きたら nullptr を返す．
-  const CellLibrary*
-  operator()(const string& filename);
+  /// @param[in] library 設定対象のライブラリ
+  /// @return 読み込みが成功したら true を返す．
+  bool
+  read(const string& filename,
+       CellLibrary* library);
 
-  /// @brief mislib 形式のファイルを読み込んでライブラリを生成する．
+  /// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
   /// @param[in] filename ファイル名
-  /// @return 読み込んで作成したセルライブラリを返す．
-  /// @note エラーが起きたら nullptr を返す．
-  const CellLibrary*
-  operator()(const char* filename);
+  /// @param[in] library 設定対象のライブラリ
+  /// @return 読み込みが成功したら true を返す．
+  bool
+  read(const char* filename,
+       CellLibrary* library);
 
 };
 
