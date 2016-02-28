@@ -115,22 +115,8 @@ set ( ym_cell_SOURCES
 #  ターゲットの設定
 # ===================================================================
 
-#ym_add_library(ym_cell
-#  SHARED
-#  DESTINATION lib
-#  )
-
-add_library ( ym_cell
-  OBJECT
+ym_add_object_library ( ym_cell
   ${ym_cell_SOURCES}
-  )
-
-target_compile_options ( ym_cell
-  PRIVATE "-O3" "-fPIC"
-  )
-
-target_compile_definitions ( ym_cell
-  PRIVATE "-DNDEBUG"
   )
 
 
