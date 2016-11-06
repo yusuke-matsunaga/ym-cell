@@ -40,7 +40,7 @@ set (ci_SOURCES
   )
 
 set (dotlib_SOURCES
-  src/dotlib/CellDotlibReader.cc
+  src/dotlib/read_liberty.cc
   src/dotlib/ComplexHandler.cc
   src/dotlib/DefineHandler.cc
   src/dotlib/DotlibAttr.cc
@@ -83,7 +83,7 @@ set (libcomp_SOURCES
   )
 
 set (mislib_SOURCES
-  src/mislib/CellMislibReader.cc
+  src/mislib/read_mislib.cc
   src/mislib/MislibBop.cc
   src/mislib/MislibConst.cc
   src/mislib/MislibGate.cc

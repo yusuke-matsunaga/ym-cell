@@ -1,13 +1,13 @@
 ﻿
-/// @file CellDotlibReader.cc
-/// @brief CellDotlibReader の実装ファイル
+/// @file read_liberty.cc
+/// @brief read_liberty の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ym/CellDotlibReader.h"
+#include "dotlib_nsdef.h"
 
 #include "ym/CellLibrary.h"
 #include "ym/Cell.h"
@@ -988,27 +988,13 @@ END_NAMESPACE_YM_DOTLIB
 
 BEGIN_NAMESPACE_YM_CELL
 
-//////////////////////////////////////////////////////////////////////
-// Dotlibファイルを読んで CellLibrary を作るクラス
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-CellDotlibReader::CellDotlibReader()
-{
-}
-
-// @brief デストラクタ
-CellDotlibReader::~CellDotlibReader()
-{
-}
-
-// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
+// @brief liberty 形式のファイルを読み込んでライブラリに設定する．
 // @param[in] filename ファイル名
 // @param[in] library 設定対象のライブラリ
 // @return 読み込みが成功したら true を返す．
 bool
-CellDotlibReader::read(const string& filename,
-		       CellLibrary* library)
+read_liberty(const string& filename,
+	     CellLibrary* library)
 {
   using namespace nsDotlib;
 
@@ -1028,15 +1014,15 @@ CellDotlibReader::read(const string& filename,
   return true;
 }
 
-// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
+// @brief liberty 形式のファイルを読み込んでライブラリに設定する．
 // @param[in] filename ファイル名
 // @param[in] library 設定対象のライブラリ
 // @return 読み込みが成功したら true を返す．
 bool
-CellDotlibReader::read(const char* filename,
-		       CellLibrary* library)
+read_liberty(const char* filename,
+	     CellLibrary* library)
 {
-  return read(string(filename), library);
+  return read_liberty(string(filename), library);
 }
 
 END_NAMESPACE_YM_CELL

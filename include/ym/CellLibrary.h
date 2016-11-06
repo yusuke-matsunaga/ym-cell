@@ -857,6 +857,42 @@ public:
 };
 
 /// @relates CellLibrary
+/// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
+/// @param[in] filename ファイル名
+/// @param[in] library 設定対象のライブラリ
+/// @return 読み込みが成功したら true を返す．
+bool
+read_mislib(const string& filename,
+	    CellLibrary* library);
+
+/// @relates CellLibrary
+/// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
+/// @param[in] filename ファイル名
+/// @param[in] library 設定対象のライブラリ
+/// @return 読み込みが成功したら true を返す．
+bool
+read_mislib(const char* filename,
+	    CellLibrary* library);
+
+/// @relates CellLibrary
+/// @brief liberty 形式のファイルを読み込んでライブラリに設定する．
+/// @param[in] filename ファイル名
+/// @param[in] library 設定対象のライブラリ
+/// @return 読み込みが成功したら true を返す．
+bool
+read_liberty(const string& filename,
+	     CellLibrary* library);
+
+/// @relates CellLibrary
+/// @brief liberty 形式のファイルを読み込んでライブラリに設定する．
+/// @param[in] filename ファイル名
+/// @param[in] library 設定対象のライブラリ
+/// @return 読み込みが成功したら true を返す．
+bool
+read_liberty(const char* filename,
+	     CellLibrary* library);
+
+/// @relates CellLibrary
 /// @brief 内容を出力する．
 void
 display_library(ostream& s,

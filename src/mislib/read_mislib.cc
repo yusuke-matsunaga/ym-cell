@@ -1,13 +1,13 @@
 ﻿
-/// @file CellMislibReader.cc
-/// @brief CellMislibReader の実装ファイル
+/// @file read_mislib.cc
+/// @brief read_mislib の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ym/CellMislibReader.h"
+#include "mislib_nsdef.h"
 
 #include "ym/CellLibrary.h"
 #include "ym/CellArea.h"
@@ -285,27 +285,13 @@ END_NAMESPACE_YM_MISLIB
 
 BEGIN_NAMESPACE_YM_CELL
 
-//////////////////////////////////////////////////////////////////////
-// Mislibファイルを読んで CellLibrary を作るクラス
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-CellMislibReader::CellMislibReader()
-{
-}
-
-// @brief デストラクタ
-CellMislibReader::~CellMislibReader()
-{
-}
-
 // @brief mislib 形式のファイルを読み込んでライブラリに設定する．
 // @param[in] filename ファイル名
 // @param[in] library 設定対象のライブラリ
 // @return 読み込みが成功したら true を返す．
 bool
-CellMislibReader::read(const string& filename,
-		       CellLibrary* library)
+read_mislib(const string& filename,
+	    CellLibrary* library)
 {
   using namespace nsMislib;
 
@@ -325,10 +311,10 @@ CellMislibReader::read(const string& filename,
 // @param[in] library 設定対象のライブラリ
 // @return 読み込みが成功したら true を返す．
 bool
-CellMislibReader::read(const char* filename,
-		       CellLibrary* library)
+read_mislib(const char* filename,
+	    CellLibrary* library)
 {
-  return read(string(filename), library);
+  return read_mislib(string(filename), library);
 }
 
 END_NAMESPACE_YM_CELL
