@@ -80,6 +80,11 @@ public:
   CellLatchInfo
   latch_info() const;
 
+  /// @brief 反転出力を持つ時 true を返す．
+  virtual
+  bool
+  has_xq() const;
+
   /// @brief データ入力を持つとき true を返す．
   virtual
   bool
@@ -211,7 +216,7 @@ public:
   ///  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
   ///  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
   ///  - pos_array[4] : 肯定出力のピン番号       (3bit)
-  ///  - pos_array[5] : 否定出力のピン番号       (3bit)
+  ///  - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか (1bit)
   void
   set_ff_info(ymuint pos_array[]);
 

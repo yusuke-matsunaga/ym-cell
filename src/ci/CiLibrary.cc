@@ -1398,8 +1398,9 @@ CiLibrary::compile()
 	ymuint pol = imap.inv() ? 16U : 8U;
 	pos_array[pos] = i | pol;
       }
+      #warning "TODO: 反転出力ありと決めつけていいの？"
       pos_array[4] = 0;
-      pos_array[5] = 1;
+      pos_array[5] = 1 | (1 << 3);
       cgroup->set_ff_info(pos_array);
     }
   }

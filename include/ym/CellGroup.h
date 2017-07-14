@@ -76,6 +76,11 @@ public:
   CellLatchInfo
   latch_info() const = 0;
 
+  /// @brief 反転出力を持つ時 true を返す．
+  virtual
+  bool
+  has_xq() const = 0;
+
   /// @brief データ入力を持つとき true を返す．
   virtual
   bool

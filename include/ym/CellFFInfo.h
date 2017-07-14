@@ -36,7 +36,7 @@ public:
   ///  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
   ///  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
   ///  - pos_array[4] : 肯定出力のピン番号       (3bit)
-  ///  - pos_array[5] : 否定出力のピン番号       (3bit)
+  ///  - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか(1bit)
   CellFFInfo(ymuint pos_array[]);
 
   /// @brief デストラクタ
@@ -67,6 +67,10 @@ public:
   /// @retval 2 Low sensitive
   ymuint
   preset_sense() const;
+
+  /// @brief 反転出力を持つタイプの時に true を返す．
+  bool
+  has_xq() const;
 
   /// @brief クリア入力を持つタイプの時に true を返す．
   bool

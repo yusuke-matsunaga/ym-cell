@@ -276,6 +276,11 @@ public:
   Expr
   tristate_expr(ymuint pin_id) const = 0;
 
+  /// @brief FFセルの場合にFFのピン情報を得る．
+  virtual
+  CellFFInfo
+  ff_info() const = 0;
+
   /// @brief FFセルの場合に次状態関数を表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
   virtual
@@ -293,6 +298,11 @@ public:
   virtual
   Expr
   clock2_expr() const = 0;
+
+  /// @brief ラッチセルの場合にFFのピン情報を得る．
+  virtual
+  CellLatchInfo
+  latch_info() const = 0;
 
   /// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定

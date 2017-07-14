@@ -108,7 +108,7 @@ CiGroup::ff_info() const
   pos_array[2] = clear_pos() | (clear_sense() << 3);
   pos_array[3] = preset_pos() | (preset_sense() << 3);
   pos_array[4] = q_pos();
-  pos_array[5] = xq_pos();
+  pos_array[5] = xq_pos() | (static_cast<ymuint>(has_xq()) << 3);
   return CellFFInfo(pos_array);
 }
 
@@ -131,6 +131,13 @@ CiGroup::latch_info() const
   pos_array[3] = preset_pos() | (preset_sense() << 3);
   pos_array[4] = q_pos();
   return CellLatchInfo(pos_array);
+}
+
+// @brief 反転出力を持つ時 true を返す．
+bool
+CiGroup::has_xq() const
+{
+  return get_sense(mPinInfo, OUTPUT2) != 0;
 }
 
 // @brief データ入力を持つとき true を返す．
@@ -299,7 +306,7 @@ CiGroup::init(const CellClass* cell_class,
 //  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
 //  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
 //  - pos_array[4] : 肯定出力のピン番号       (3bit)
-//  - pos_array[5] : 否定出力のピン番号       (3bit)
+//  - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか (1bit)
 void
 CiGroup::set_ff_info(ymuint pos_array[])
 {

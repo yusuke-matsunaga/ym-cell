@@ -14,6 +14,8 @@ BEGIN_NAMESPACE_YM_CELL
 
 BEGIN_NONAMESPACE
 
+// mBits には各要素に 5bit を割り当てる．
+// 全部で 5 * 6 = 30bit
 const int OUTPUT1 = 0;
 const int OUTPUT2 = 1;
 const int INPUT   = 2;
@@ -66,7 +68,7 @@ CellFFInfo::CellFFInfo() :
 //  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
 //  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
 //  - pos_array[4] : 肯定出力のピン番号       (3bit)
-//  - pos_array[5] : 否定出力のピン番号       (3bit)
+//  - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか(1bit)
 CellFFInfo::CellFFInfo(ymuint pos_array[]) :
   mBits(0U)
 {
@@ -110,6 +112,13 @@ ymuint
 CellFFInfo::preset_sense() const
 {
   return get_sense(mBits, PRESET);
+}
+
+// @brief 反転出力を持つタイプの時に true を返す．
+bool
+CellFFInfo::has_xq() const
+{
+  return get_sense(mBits, OUTPUT2) != 0;
 }
 
 // @brief クリア入力を持つタイプの時に true を返す．

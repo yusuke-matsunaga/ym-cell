@@ -14,6 +14,8 @@
 #include "CiBus.h"
 #include "CiBundle.h"
 #include "ym/CellGroup.h"
+#include "ym/CellFFInfo.h"
+#include "ym/CellLatchInfo.h"
 
 
 BEGIN_NAMESPACE_YM_CELL
@@ -453,6 +455,18 @@ CiCell::tristate_expr(ymuint pin_id) const
   return mTristateArray[pin_id];
 }
 
+// @brief FFセルの場合にFFのピン情報を得る．
+CellFFInfo
+CiCell::ff_info() const
+{
+  if ( is_ff() ) {
+    return cell_group()->ff_info();
+  }
+  else {
+    return CellFFInfo();
+  }
+}
+
 // @brief FFセルの場合に次状態関数を表す論理式を返す．
 // @note それ以外の型の場合の返り値は不定
 Expr
@@ -475,6 +489,18 @@ Expr
 CiCell::clock2_expr() const
 {
   return Expr::make_zero();
+}
+
+// @brief ラッチセルの場合にFFのピン情報を得る．
+CellLatchInfo
+CiCell::latch_info() const
+{
+  if ( is_latch() ) {
+    return cell_group()->latch_info();
+  }
+  else {
+    return CellLatchInfo();
+  }
 }
 
 // @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
