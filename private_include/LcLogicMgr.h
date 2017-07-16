@@ -10,7 +10,6 @@
 
 
 #include "LcGroupMgr.h"
-//#include "ym/NpnMgr.h"
 
 
 BEGIN_NAMESPACE_YM_CELL_LIBCOMP
@@ -60,30 +59,22 @@ private:
   // 内部で用いられる仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セルのシグネチャ関数を作る．
-  /// @param[in] cell セル
-  /// @param[out] f シグネチャ関数
-  virtual
-  void
-  gen_signature(const Cell* cell,
-		TvFuncM& f);
-
-  /// @brief 代表関数を求める．
-  /// @param[in] f 関数
-  /// @param[out] repfunc 代表関数
+  /// @brief 代表シグネチャを求める．
+  /// @param[in] sig シグネチャ
+  /// @param[out] rep_sig 代表シグネチャ
   /// @param[out] xmap 変換
   virtual
   void
-  find_repfunc(const TvFuncM& f,
-	       TvFuncM& repfunc,
-	       NpnMapM& xmap);
+  find_rep(const LcSignature& sig,
+	   LcSignature& rep_sig,
+	   NpnMapM& xmap);
 
   /// @brief 同位体変換リストを求める．
-  /// @param[in] func 対象の関数
+  /// @param[in] sig シグネチャ
   /// @param[out] idmap_list 同位体変換のリスト
   virtual
   void
-  find_idmap_list(const TvFuncM& func,
+  find_idmap_list(const LcSignature& sig,
 		  vector<NpnMapM>& idmap_list);
 
 
@@ -92,11 +83,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // NPN同意類を求めるためのオブジェクト
-  //NpnMgr mNpnMgr;
-
   // 定義済みの論理グループ
-  ymuint32 mLogicGroup[4];
+  ymuint mLogicGroup[4];
 
 };
 

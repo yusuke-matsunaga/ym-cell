@@ -9,11 +9,8 @@
 
 #include "LcLogicMgr.h"
 #include "LcGroup.h"
+#include "LcSignature.h"
 #include "ym/Expr.h"
-#include "ym/TvFunc.h"
-#include "ym/NpnMap.h"
-#include "ym/NpnMapM.h"
-#include "ym/Cell.h"
 
 
 BEGIN_NAMESPACE_YM_CELL_LIBCOMP
@@ -44,23 +41,23 @@ LcLogicMgr::init()
   clear();
 
   { // 定数0グループの登録
-    TvFuncM const0(TvFunc::const_zero(0));
-    LcGroup* func0 = find_group(const0, false);
+    LcSignature sig(Expr::make_zero());
+    LcGroup* func0 = find_group(sig, false);
     mLogicGroup[0] = func0->id();
   }
   { // 定数1グループの登録
-    TvFuncM const1(TvFunc::const_one(0));
-    LcGroup* func1 = find_group(const1, false);
+    LcSignature sig(Expr::make_one());
+    LcGroup* func1 = find_group(sig, false);
     mLogicGroup[1] = func1->id();
   }
   { // バッファグループの登録
-    TvFuncM plit(TvFunc::posi_literal(1, VarId(0)));
-    LcGroup* func2 = find_group(plit, false);
+    LcSignature sig(Expr::make_posiliteral(VarId(0)));
+    LcGroup* func2 = find_group(sig, false);
     mLogicGroup[2] = func2->id();
   }
   { // インバーターグループの登録
-    TvFuncM nlit(TvFunc::nega_literal(1, VarId(0)));
-    LcGroup* func3 = find_group(nlit, false);
+    LcSignature sig(Expr::make_negaliteral(VarId(0)));
+    LcGroup* func3 = find_group(sig, false);
     mLogicGroup[3] = func3->id();
   }
 }
@@ -78,38 +75,27 @@ LcLogicMgr::logic_group(ymuint id) const
   return mLogicGroup[id];
 }
 
-// @brief セルのシグネチャ関数を作る．
-// @param[in] cell セル
-// @param[out] f シグネチャ関数
+// @brief 代表シグネチャを求める．
+// @param[in] sig シグネチャ
+// @param[out] rep_sig 代表シグネチャ
+// @param[out] xmap 変換
 void
-LcLogicMgr::gen_signature(const Cell* cell,
-			  TvFuncM& f)
+LcLogicMgr::find_rep(const LcSignature& sig,
+		     LcSignature& rep_sig,
+		     NpnMapM& xmap)
 {
-  ymuint ni2 = cell->input_num2();
-  ymuint no2 = cell->output_num2();
-  bool has_tristate = false;
-  for (ymuint i = 0; i < no2; ++ i) {
-    if ( cell->has_tristate(i) ) {
-      has_tristate = true;
-      break;
-    }
-  }
-  if ( no2 == 1 && !has_tristate ) {
-    Expr expr = cell->logic_expr(0);
-    f = TvFuncM(expr.make_tv(ni2));
-  }
-  else {
-    vector<TvFunc> f_list(no2 * 2);
-    for (ymuint i = 0; i < no2; ++ i) {
-      Expr lexpr = cell->logic_expr(i);
-      f_list[i * 2 + 0] = lexpr.make_tv(ni2);
-      Expr texpr = cell->tristate_expr(i);
-      f_list[i * 2 + 1] = texpr.make_tv(ni2);
-    }
-    f = TvFuncM(f_list);
-  }
 }
 
+// @brief 同位体変換リストを求める．
+// @param[in] sig シグネチャ
+// @param[out] idmap_list 同位体変換のリスト
+void
+LcLogicMgr::find_idmap_list(const LcSignature& sig,
+			    vector<NpnMapM>& idmap_list)
+{
+}
+
+#if 0
 // @brief 代表関数を求める．
 // @param[in] f 関数
 // @param[out] repfunc 代表関数
@@ -193,5 +179,6 @@ LcLogicMgr::find_idmap_list(const TvFuncM& func,
     // 今のところなし．
   }
 }
+#endif
 
 END_NAMESPACE_YM_CELL_LIBCOMP

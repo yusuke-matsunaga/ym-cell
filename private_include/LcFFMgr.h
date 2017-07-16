@@ -41,13 +41,17 @@ public:
   init();
 
   /// @brief 定義済みのFFクラス番号を返す．
-  /// @param[in] id 番号
-  /// - 0: クリアなし，プリセットなし
-  /// - 1: クリアあり，プリセットなし
-  /// - 2: クリアなし，プリセットあり
-  /// - 3: クリアあり，プリセットあり
+  /// @param[in] has_q Q端子の有無
+  /// @param[in] has_xq 反転Q端子の有無
+  /// @param[in] has_clear クリア端子の有無
+  /// @param[in] has_preset プリセット端子の有無
+  ///
+  /// has_q == false && has_xq == false は不適
   ymuint
-  ff_class(ymuint id) const;
+  ff_class(bool has_q,
+	   bool has_xq,
+	   bool has_clear,
+	   bool has_preset);
 
 
 private:
@@ -55,30 +59,22 @@ private:
   // 内部で用いられる仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セルのシグネチャ関数を作る．
-  /// @param[in] cell セル
-  /// @param[out] f シグネチャ関数
-  virtual
-  void
-  gen_signature(const Cell* cell,
-		TvFuncM& f);
-
   /// @brief 代表関数を求める．
-  /// @param[in] f 関数
-  /// @param[out] repfunc 代表関数
+  /// @param[in] sig シグネチャ
+  /// @param[out] rep_sig 代表シグネチャ
   /// @param[out] xmap 変換
   virtual
   void
-  find_repfunc(const TvFuncM& f,
-	       TvFuncM& repfunc,
-	       NpnMapM& xmap);
+  find_rep(const LcSignature& sig,
+	   LcSignature& rep_sig,
+	   NpnMapM& xmap);
 
   /// @brief 同位体変換リストを求める．
-  /// @param[in] func 対象の関数
+  /// @param[in] sig シグネチャ
   /// @param[out] idmap_list 同位体変換のリスト
   virtual
   void
-  find_idmap_list(const TvFuncM& func,
+  find_idmap_list(const LcSignature& sig,
 		  vector<NpnMapM>& idmap_list);
 
 
@@ -88,7 +84,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 定義済みのクラス番号
-  ymuint32 mFFClass[4];
+  ymuint mFFClass[12];
 
 };
 

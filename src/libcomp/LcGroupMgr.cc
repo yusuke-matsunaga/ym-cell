@@ -10,6 +10,7 @@
 #include "LcGroupMgr.h"
 #include "LcClass.h"
 #include "LcGroup.h"
+#include "LcSignature.h"
 #include "LibComp.h"
 #include "ym/Cell.h"
 #include "ym/MFSet.h"
@@ -54,19 +55,17 @@ LcGroupMgr::add_cell(Cell* cell)
 
     ymuint ni = cell->input_num2();
     ymuint no = cell->output_num2();
-    TvFuncM repfunc(ni, no);
-    LcClass* fclass = mLibComp.new_class(repfunc, false);
+    LcClass* fclass = mLibComp.new_class(LcSignature(), false);
     NpnMapM xmap;
     xmap.set_identity(ni, no);
     fclass->add_group(fgroup, xmap);
   }
   else {
     // セルのシグネチャ関数を作る．
-    TvFuncM f;
-    gen_signature(cell, f);
+    LcSignature sig(cell);
 
-    // f に対するセルグループを求める．
-    LcGroup* fgroup = find_group(f, false);
+    // sig に対するセルグループを求める．
+    LcGroup* fgroup = find_group(sig, false);
 
     // セル(番号)を追加する．
     fgroup->add_cell(cell);
@@ -74,39 +73,41 @@ LcGroupMgr::add_cell(Cell* cell)
 }
 
 // @brief f に対応する LcGroup を求める．
-// @param[in] f 関数
+// @param[in] sig シグネチャ
 // @param[in] builtin 組み込みクラスの時 true にするフラグ
 // @note なければ新規に作る．
 LcGroup*
-LcGroupMgr::find_group(const TvFuncM& f,
+LcGroupMgr::find_group(const LcSignature& sig,
 		       bool builtin)
 {
+  string sig_str = sig.str();
   ymuint fgid;
-  if ( mGroupMap.find(f, fgid) ) {
+  if ( mGroupMap.find(sig_str, fgid) ) {
     // 既に登録されていた．
     return mLibComp.group(fgid);
   }
 
   // なかったので新たに作る．
   LcGroup* fgroup = mLibComp.new_group();
-  mGroupMap.add(f, fgroup->id());
+  mGroupMap.add(sig_str, fgroup->id());
 
   // 代表関数を求める．
-  TvFuncM repfunc;
+  LcSignature rep_sig;
   NpnMapM xmap;
-  find_repfunc(f, repfunc, xmap);
+  find_rep(sig, rep_sig, xmap);
 
+  string rep_sig_str = rep_sig.str();
   LcClass* fclass = nullptr;
   ymuint fcid;
-  if ( mClassMap.find(repfunc, fcid) ) {
+  if ( mClassMap.find(rep_sig_str, fcid) ) {
     // 登録されていた．
     fclass = mLibComp.npn_class(fcid);
   }
   else {
     // まだ登録されていない．
-    LcClass* fclass = mLibComp.new_class(repfunc, builtin);
-    mClassMap.add(repfunc, fclass->id());
-    find_idmap_list(repfunc, fclass->mIdmapList);
+    LcClass* fclass = mLibComp.new_class(rep_sig, builtin);
+    mClassMap.add(rep_sig_str, fclass->id());
+    find_idmap_list(rep_sig, fclass->mIdmapList);
   }
 
   // グループを追加する．
@@ -115,7 +116,7 @@ LcGroupMgr::find_group(const TvFuncM& f,
   return fgroup;
 }
 
-
+#if 0
 BEGIN_NONAMESPACE
 
 // サポートを表すビットベクタを作る．
@@ -135,7 +136,7 @@ gen_support(const TvFunc& f)
 
 // f を最大化する変換を求める．
 ymuint
-gen_maxmap(const TvFuncM& f,
+gen_maxmap(const LcSignature& sig,
 	   ymuint offset,
 	   NpnMapM& xmap)
 {
@@ -246,6 +247,7 @@ LcGroupMgr::default_repfunc(const TvFuncM& f,
 
   repfunc = f.xform(xmap);
 }
+#endif
 
 #if 0
 // @brief 内容をバイナリダンプする．

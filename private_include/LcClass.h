@@ -10,8 +10,7 @@
 
 
 #include "libcomp_nsdef.h"
-#include "ym/TvFunc.h"
-#include "ym/TvFuncM.h"
+#include "LcSignature.h"
 
 
 BEGIN_NAMESPACE_YM_CELL_LIBCOMP
@@ -22,25 +21,15 @@ BEGIN_NAMESPACE_YM_CELL_LIBCOMP
 //////////////////////////////////////////////////////////////////////
 class LcClass
 {
-  friend class LcGroupMgr;
+  friend class LibComp;
 
 public:
 
   /// @brief コンストラクタ
   /// @param[in] id ID番号
-  /// @param[in] builtin 組み込みクラスの時 true にするフラグ
-  /// @param[in] repfunc 代表関数
+  /// @param[in] rep_sig 代表シグネチャ
   LcClass(ymuint id,
-	  bool builtin,
-	  const TvFunc& repfunc);
-
-  /// @brief コンストラクタ
-  /// @param[in] id ID番号
-  /// @param[in] builtin 組み込みクラスの時 true にするフラグ
-  /// @param[in] repfunc 代表関数
-  LcClass(ymuint id,
-	  bool builtin,
-	  const TvFuncM& repfunc);
+	  const LcSignature& rep_sig);
 
   /// @brief デストラクタ
   ~LcClass();
@@ -55,21 +44,13 @@ public:
   ymuint
   id() const;
 
-  /// @brief 組み込みクラスの時 true を返す．
-  bool
-  builtin() const;
-
-  /// @brief 代表関数を返す．
-  TvFuncM
-  repfunc() const;
+  /// @brief 代表シグネチャを返す．
+  const LcSignature&
+  rep_sig() const;
 
   /// @brief 同位体変換のリストを返す．
   const vector<NpnMapM>&
   idmap_list() const;
-
-  /// @brief 実体を返す．
-  const CellClass*
-  cell_class() const;
 
   /// @brief このクラスに属しているグループのリストを返す．
   const vector<LcGroup*>&
@@ -87,21 +68,55 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID番号
-  ymuint32 mId;
+  ymuint mId;
 
-  // 代表関数
-  TvFuncM mRepFunc;
+  // 代表シグネチャ
+  LcSignature mRepSig;
 
   // 同位体変換のリスト
   vector<NpnMapM> mIdmapList;
-
-  // 実体のオブジェクト
-  CellClass* mCellClass;
 
   // グループのリスト
   vector<LcGroup*> mGroupList;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief ID番号を返す．
+inline
+ymuint
+LcClass::id() const
+{
+  return mId;
+}
+
+// @brief 代表シグネチャを返す．
+inline
+const LcSignature&
+LcClass::rep_sig() const
+{
+  return mRepSig;
+}
+
+// @brief 同位体変換のリストを返す．
+inline
+const vector<NpnMapM>&
+LcClass::idmap_list() const
+{
+  return mIdmapList;
+}
+
+// @brief このクラスに属しているグループのリストを返す．
+inline
+const vector<LcGroup*>&
+LcClass::group_list() const
+{
+  return mGroupList;
+}
 
 END_NAMESPACE_YM_CELL_LIBCOMP
 

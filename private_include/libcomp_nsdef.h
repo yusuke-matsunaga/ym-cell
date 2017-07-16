@@ -27,6 +27,7 @@ BEGIN_NAMESPACE_YM_CELL_LIBCOMP
 class LibComp;
 class LcClass;
 class LcGroup;
+class LcSignature;
 
 class LcPatMgr;
 class LcPatNode;

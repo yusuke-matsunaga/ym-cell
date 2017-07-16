@@ -14,9 +14,9 @@
 #include "LcPatHandle.h"
 #include "ym/CellLibrary.h"
 #include "ym/Cell.h"
-#include "ym/CellPin.h"
 #include "ym/Expr.h"
 #include "ym/NpnMap.h"
+#include "ym/HashSet.h"
 
 
 BEGIN_NAMESPACE_YM_CELL_LIBCOMP
@@ -46,6 +46,65 @@ xform_expr(const Expr& expr,
   return cexpr;
 }
 
+// has_q, has_xq, has_clear, has_preset をエンコードする．
+inline
+ymuint
+encode(bool has_q,
+       bool has_xq,
+       bool has_clear,
+       bool has_preset)
+{
+  ymuint ans = 0;
+  if ( has_q ) {
+    if ( has_xq ) {
+      ans = 2;
+    }
+    else {
+      ans = 0;
+    }
+  }
+  else {
+    ASSERT_COND( has_xq );
+    ans = 1;
+  }
+  ans <<= 2;
+  if ( has_clear ) {
+    ans |= 1U;
+  }
+  if ( has_preset ) {
+    ans |= 2U;
+  }
+  return ans;
+}
+
+// 整数から　has_q, has_xq, has_clear, has_preset をデコードする．
+inline
+void
+decode(ymuint val,
+       bool& has_q,
+       bool& has_xq,
+       bool& has_clear,
+       bool& has_preset)
+{
+  ymuint val1 = val >> 2;
+  switch ( val1 ) {
+  case 0:
+    has_q = true;
+    has_xq = false;
+    break;
+  case 1:
+    has_q = false;
+    has_xq = true;
+    break;
+  case 2:
+    has_q = true;
+    has_xq = true;
+    break;
+  }
+  has_clear = static_cast<bool>((val >> 0) & 1U);
+  has_preset = static_cast<bool>((val >> 1) & 1U);
+}
+
 END_NONAMESPACE
 
 
@@ -54,10 +113,7 @@ END_NONAMESPACE
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-LibComp::LibComp() :
-  mLogicMgr(*this),
-  mFFMgr(*this),
-  mLatchMgr(*this)
+LibComp::LibComp()
 {
 }
 
@@ -74,27 +130,6 @@ LibComp::~LibComp()
   }
 }
 
-// @brief 論理セルグループの情報を取り出す．
-const LcGroupMgr&
-LibComp::logic_group_mgr() const
-{
-  return mLogicMgr;
-}
-
-// @brief FFセルグループの情報を取り出す．
-const LcGroupMgr&
-LibComp::ff_group_mgr() const
-{
-  return mFFMgr;
-}
-
-// @brief ラッチセルグループの情報を取り出す．
-const LcGroupMgr&
-LibComp::latch_group_mgr() const
-{
-  return mLatchMgr;
-}
-
 // @brief パタングラフの情報を取り出す．
 const LcPatMgr&
 LibComp::pat_mgr() const
@@ -107,116 +142,28 @@ void
 LibComp::compile(CellLibrary& library)
 {
   mGroupList.clear();
-  mClassList.clear();
+  mGroupMap.clear();
 
-  mLogicMgr.init();
-  mFFMgr.init();
-  mLatchMgr.init();
+  mClassList.clear();
+  mClassMap.clear();
+
+  // パタンマネージャを初期化
   mPatMgr.init();
 
-  // AND2 〜 AND8 のパタンを登録しておく．
-  for (ymuint ni = 2; ni <= 8; ++ ni) {
-    Expr and_expr = Expr::make_posiliteral(VarId(0));
-    for (ymuint i = 1; i < ni; ++ i) {
-      and_expr &= Expr::make_posiliteral(VarId(i));
-    }
-    reg_expr(and_expr, true);
-  }
+  // 論理型の基本タイプを登録
+  _logic_init();
 
-  // XOR2 〜 XOR4 のパタンを登録しておく．
-  for (ymuint ni = 2; ni <= 4; ++ ni) {
-    Expr xor_expr = Expr::make_posiliteral(VarId(0));
-    for (ymuint i = 1; i < ni; ++ i) {
-      xor_expr ^= Expr::make_posiliteral(VarId(i));
-    }
-    reg_expr(xor_expr, true);
-  }
+  // FFの基本タイプを登録
+  _ff_init();
 
-  // MUX2 のパタンを登録しておく．
-  {
-    Expr lit0 = Expr::make_posiliteral(VarId(0));
-    Expr lit1 = Expr::make_posiliteral(VarId(1));
-    Expr lit2 = Expr::make_posiliteral(VarId(2));
-    Expr mux2_ex = lit0 & ~lit2 | lit1 & lit2;
-    reg_expr(mux2_ex, true);
-  }
+  // ラッチの基本タイプを登録
+  _latch_init();
 
-  // MUX4 のパタンを登録しておく．
-  {
-    Expr lit0 = Expr::make_posiliteral(VarId(0));
-    Expr lit1 = Expr::make_posiliteral(VarId(1));
-    Expr lit2 = Expr::make_posiliteral(VarId(2));
-    Expr lit3 = Expr::make_posiliteral(VarId(3));
-    Expr lit4 = Expr::make_posiliteral(VarId(4));
-    Expr lit5 = Expr::make_posiliteral(VarId(5));
-    Expr mux4_ex =
-      lit0 & ~lit4 & ~lit5 |
-      lit1 &  lit4 & ~lit5 |
-      lit2 & ~lit4 &  lit5 |
-      lit3 &  lit4 &  lit5;
-    reg_expr(mux4_ex, true);
-  }
-
-  // MUX8 のパタンを登録しておく．
-  if ( 0 ) {
-    Expr lit0 = Expr::make_posiliteral(VarId(0));
-    Expr lit1 = Expr::make_posiliteral(VarId(1));
-    Expr lit2 = Expr::make_posiliteral(VarId(2));
-    Expr lit3 = Expr::make_posiliteral(VarId(3));
-    Expr lit4 = Expr::make_posiliteral(VarId(4));
-    Expr lit5 = Expr::make_posiliteral(VarId(5));
-    Expr lit6 = Expr::make_posiliteral(VarId(6));
-    Expr lit7 = Expr::make_posiliteral(VarId(7));
-    Expr lit8 = Expr::make_posiliteral(VarId(8));
-    Expr lit9 = Expr::make_posiliteral(VarId(9));
-    Expr lit10 = Expr::make_posiliteral(VarId(10));
-    Expr mux8_ex =
-      lit0 & ~lit8 & ~lit9 & ~lit10 |
-      lit1 &  lit8 & ~lit9 & ~lit10 |
-      lit2 & ~lit8 &  lit9 & ~lit10 |
-      lit3 &  lit8 &  lit9 & ~lit10 |
-      lit4 & ~lit8 & ~lit9 &  lit10 |
-      lit5 &  lit8 & ~lit9 &  lit10 |
-      lit6 & ~lit8 &  lit9 &  lit10 |
-      lit7 &  lit8 &  lit9 &  lit10;
-    reg_expr(mux8_ex, true);
-  }
-
+  // library に含まれるセルを登録する．
   ymuint nc = library.cell_num();
   for (ymuint i = 0; i < nc; ++ i) {
     Cell* cell = library.cell(i);
-
-    if ( cell->is_logic() ) {
-      mLogicMgr.add_cell(cell);
-
-      // パタンを作る．
-      ymuint no2 = cell->output_num2();
-      if ( no2 != 1 ) {
-	// 出力ピンが複数あるセルは対象外
-	continue;
-      }
-      if ( !cell->has_logic(0) ) {
-	// 論理式を持たないセルも対象外
-	continue;
-      }
-      if ( cell->has_tristate(0) ) {
-	// three_state 属性を持つセルも対象外
-	continue;
-      }
-
-      Expr expr = cell->logic_expr(0);
-      reg_expr(expr, false);
-    }
-    else if ( cell->is_ff() ) {
-      mFFMgr.add_cell(cell);
-    }
-    else if ( cell->is_latch() ) {
-      mLatchMgr.add_cell(cell);
-    }
-  }
-
-  if ( 0 ) {
-    display(cout);
+     _add_cell(cell);
   }
 }
 
@@ -261,54 +208,326 @@ LibComp::npn_class(ymuint id) const
 ymuint
 LibComp::logic_group(ymuint id) const
 {
-  return mLogicMgr.logic_group(id);
+  ASSERT_COND( id < 4 );
+  return mLogicGroup[id];
 }
 
 // @brief 定義済みのFFクラス番号を返す．
-// @param[in] id 番号
-// - 0: クリアなし，プリセットなし
-// - 1: クリアあり，プリセットなし
-// - 2: クリアなし，プリセットあり
-// - 3: クリアあり，プリセットあり
+// @param[in] has_q Q端子の有無
+// @param[in] has_xq 反転Q端子の有無
+// @param[in] has_clear クリア端子の有無
+// @param[in] has_preset プリセット端子の有無
+//
+// has_q == false && has_xq == false は不適
 ymuint
-LibComp::ff_class(ymuint id) const
+LibComp::ff_class(bool has_q,
+		  bool has_xq,
+		  bool has_clear,
+		  bool has_preset) const
 {
-  return mFFMgr.ff_class(id);
+  ymuint i = encode(has_q, has_xq, has_clear, has_preset);
+  return mFFClass[i];
 }
 
 // @brief 定義済みのラッチクラス番号を返す．
-// @param[in] id 番号
-// - 0: クリアなし，プリセットなし
-// - 1: クリアあり，プリセットなし
-// - 2: クリアなし，プリセットあり
-// - 3: クリアあり，プリセットあり
+// @param[in] has_q Q端子の有無
+// @param[in] has_xq 反転Q端子の有無
+// @param[in] has_clear クリア端子の有無
+// @param[in] has_preset プリセット端子の有無
+//
+// has_q == false && has_xq == false は不適
 ymuint
-LibComp::latch_class(ymuint id) const
+LibComp::latch_class(bool has_q,
+		     bool has_xq,
+		     bool has_clear,
+		     bool has_preset)
 {
-  return mLatchMgr.latch_class(id);
+  ymuint i = encode(has_q, has_xq, has_clear, has_preset);
+  return mLatchClass[i];
+}
+
+// @brief 論理セルの基本タイプを登録する．
+void
+LibComp::_logic_init()
+{
+  { // 定数0グループの登録
+    LcGroup* func0 = _find_group(Expr::make_zero());
+    mLogicGroup[0] = func0->id();
+  }
+  { // 定数1グループの登録
+    LcGroup* func1 = _find_group(Expr::make_one());
+    mLogicGroup[1] = func1->id();
+  }
+  { // バッファグループの登録
+    Expr expr = Expr::make_posiliteral(VarId(0));
+    LcGroup* func2 = _find_group(expr);
+    mLogicGroup[2] = func2->id();
+  }
+  { // インバーターグループの登録
+    Expr expr = Expr::make_negaliteral(VarId(0));
+    LcGroup* func3 = _find_group(expr);
+    mLogicGroup[3] = func3->id();
+  }
+
+  // AND2 〜 AND8 のシグネチャを登録しておく．
+  for (ymuint ni = 2; ni <= 8; ++ ni) {
+    Expr and_expr = Expr::make_posiliteral(VarId(0));
+    for (ymuint i = 1; i < ni; ++ i) {
+      and_expr &= Expr::make_posiliteral(VarId(i));
+    }
+    _find_group(and_expr);
+  }
+
+  // XOR2 〜 XOR4 のシグネチャを登録しておく．
+  for (ymuint ni = 2; ni <= 4; ++ ni) {
+    Expr xor_expr = Expr::make_posiliteral(VarId(0));
+    for (ymuint i = 1; i < ni; ++ i) {
+      xor_expr ^= Expr::make_posiliteral(VarId(i));
+    }
+    _find_group(xor_expr);
+  }
+
+  // MUX2 のシグネチャを登録しておく．
+  {
+    Expr lit0 = Expr::make_posiliteral(VarId(0));
+    Expr lit1 = Expr::make_posiliteral(VarId(1));
+    Expr lit2 = Expr::make_posiliteral(VarId(2));
+    Expr mux2_expr = lit0 & ~lit2 | lit1 & lit2;
+    _find_group(mux2_expr);
+  }
+
+  // MUX4 のシグネチャを登録しておく．
+  {
+    Expr lit0 = Expr::make_posiliteral(VarId(0));
+    Expr lit1 = Expr::make_posiliteral(VarId(1));
+    Expr lit2 = Expr::make_posiliteral(VarId(2));
+    Expr lit3 = Expr::make_posiliteral(VarId(3));
+    Expr lit4 = Expr::make_posiliteral(VarId(4));
+    Expr lit5 = Expr::make_posiliteral(VarId(5));
+    Expr mux4_expr =
+      lit0 & ~lit4 & ~lit5 |
+      lit1 &  lit4 & ~lit5 |
+      lit2 & ~lit4 &  lit5 |
+      lit3 &  lit4 &  lit5;
+    _find_group(mux4_expr);
+  }
+
+  // MUX8 のシグネチャを登録しておく．
+  if ( 0 ) {
+    Expr lit0 = Expr::make_posiliteral(VarId(0));
+    Expr lit1 = Expr::make_posiliteral(VarId(1));
+    Expr lit2 = Expr::make_posiliteral(VarId(2));
+    Expr lit3 = Expr::make_posiliteral(VarId(3));
+    Expr lit4 = Expr::make_posiliteral(VarId(4));
+    Expr lit5 = Expr::make_posiliteral(VarId(5));
+    Expr lit6 = Expr::make_posiliteral(VarId(6));
+    Expr lit7 = Expr::make_posiliteral(VarId(7));
+    Expr lit8 = Expr::make_posiliteral(VarId(8));
+    Expr lit9 = Expr::make_posiliteral(VarId(9));
+    Expr lit10 = Expr::make_posiliteral(VarId(10));
+    Expr mux8_expr =
+      lit0 & ~lit8 & ~lit9 & ~lit10 |
+      lit1 &  lit8 & ~lit9 & ~lit10 |
+      lit2 & ~lit8 &  lit9 & ~lit10 |
+      lit3 &  lit8 &  lit9 & ~lit10 |
+      lit4 & ~lit8 & ~lit9 &  lit10 |
+      lit5 &  lit8 & ~lit9 &  lit10 |
+      lit6 & ~lit8 &  lit9 &  lit10 |
+      lit7 &  lit8 &  lit9 &  lit10;
+    _find_group(mux8_expr);
+  }
+}
+
+// @brief FFセルの基本タイプを登録する．
+void
+LibComp::_ff_init()
+{
+  for (ymuint i = 0; i < 12; ++ i) {
+    bool has_q;
+    bool has_xq;
+    bool has_clear;
+    bool has_preset;
+    decode(i, has_q, has_xq, has_clear, has_preset);
+
+    LcSignature sig(LcSignature::kFFType, has_q, has_xq, has_clear, has_preset);
+    LcGroup* group = _find_group(sig);
+    LcClass* cclass = group->parent();
+    mFFClass[i] = cclass->id();
+  }
+}
+
+// @brief ラッチセルの基本タイプを登録する．
+void
+LibComp::_latch_init()
+{
+  for (ymuint i = 0; i < 12; ++ i) {
+    bool has_q;
+    bool has_xq;
+    bool has_clear;
+    bool has_preset;
+    decode(i, has_q, has_xq, has_clear, has_preset);
+
+    LcSignature sig(LcSignature::kLatchType, has_q, has_xq, has_clear, has_preset);
+    LcGroup* group = _find_group(sig);
+    LcClass* cclass = group->parent();
+    mLatchClass[i] = cclass->id();
+  }
+}
+
+// @brief セルを追加する．
+// @param[in] cell セル
+void
+LibComp::_add_cell(Cell* cell)
+{
+  LcGroup* fgroup = nullptr;
+  if ( !cell->has_logic() || cell->output_num2() == 0 ) {
+    // ひとつでも論理式を持たない出力があるセルは独立したグループとなる．
+    fgroup = _new_group();
+
+    ymuint ni = cell->input_num2();
+    ymuint no = cell->output_num2();
+    LcClass* fclass = _new_class(LcSignature());
+    NpnMapM xmap;
+    xmap.set_identity(ni, no);
+    fclass->add_group(fgroup, xmap);
+  }
+  else if ( cell->is_logic() &&
+	    cell->output_num2() == 1 &&
+	    !cell->has_tristate(0) ) {
+    // 1出力の単純なセルの場合，論理式からグループを求める．
+    fgroup = _find_group(cell->logic_expr(0));
+  }
+  else {
+    // セルのシグネチャ関数を作る．
+    LcSignature sig(cell);
+
+    // sig に対するセルグループを求める．
+    fgroup = _find_group(sig);
+  }
+
+  // セル(番号)を追加する．
+  fgroup->add_cell(cell);
+}
+
+// @brief シグネチャに対応する LcGroup を求める．
+// @param[in] sig シグネチャ
+//
+// なければ新規に作る．
+LcGroup*
+LibComp::_find_group(const LcSignature& sig)
+{
+  string sig_str = sig.str();
+  ymuint fgid;
+  if ( mGroupMap.find(sig_str, fgid) ) {
+    // 既に登録されていた．
+    return mGroupList[fgid];
+  }
+
+  // なかったので新たに作る．
+  LcGroup* fgroup = _new_group();
+  mGroupMap.add(sig_str, fgroup->id());
+
+  // 代表関数を求める．
+  NpnMapM xmap = _cannonical_map(sig);
+  LcSignature rep_sig(sig, xmap);
+  string rep_sig_str = rep_sig.str();
+  LcClass* fclass = nullptr;
+  ymuint fcid;
+  if ( mClassMap.find(rep_sig_str, fcid) ) {
+    // 登録されていた．
+    fclass = mClassList[fcid];
+  }
+  else {
+    // まだ登録されていない．
+    LcClass* fclass = _new_class(rep_sig);
+    mClassMap.add(rep_sig_str, fclass->id());
+  }
+
+  // グループを追加する．
+  fclass->add_group(fgroup, xmap);
+
+  return fgroup;
+}
+
+// @brief 論理式に対応する LcGroup を求める．
+// @param[in] expr 論理式
+//
+// こちらは1出力の論理セル用
+LcGroup*
+LibComp::_find_group(const Expr& expr)
+{
+  LcSignature sig(expr);
+  LcGroup* fgroup = _find_group(sig);
+
+  // expr からパタングラフを作り登録する．
+  _reg_expr(expr, fgroup);
+
+  return fgroup;
+}
+
+// @brief 新しいグループを作る．
+LcGroup*
+LibComp::_new_group()
+{
+  ymuint new_id = mGroupList.size();
+  LcGroup* fgroup = new LcGroup(new_id);
+  mGroupList.push_back(fgroup);
+
+  return fgroup;
+}
+
+// @brief 新しいクラスを作る．
+// @param[in] rep_sig 代表シグネチャ
+LcClass*
+LibComp::_new_class(const LcSignature& rep_sig)
+{
+  ymuint new_id = mClassList.size();
+  LcClass* fclass = new LcClass(new_id, rep_sig);
+  mClassList.push_back(fclass);
+  _find_idmap_list(rep_sig, fclass->mIdmapList);
+
+  return fclass;
+}
+
+// @brief 正規変換を求める．
+// @param[in] sig シグネチャ
+// @return 正規シグネチャへの変換マップを返す．
+NpnMapM
+LibComp::_cannonical_map(const LcSignature& sig)
+{
+  if ( sig.output_num() == 1 ) {
+    TvFunc f1 = sig.output_func(0);
+    NpnMap xmap1 = f1.npn_cannonical_map();
+    return NpnMapM(xmap1);
+  }
+  else {
+#warning "TODO: 未完"
+  }
+}
+
+// @brief 同位体変換リストを求める．
+// @param[in] sig シグネチャ
+// @param[out] idmap_list 同位体変換のリスト
+void
+LibComp::_find_idmap_list(const LcSignature& sig,
+			 vector<NpnMapM>& idmap_list)
+{
+#warning "TODO: 未完"
 }
 
 // @brief expr から生成されるパタンを登録する．
 // @param[in] expr 論理式
-// @param[in] builtin 組み込みクラスの時 true にするフラグ
+// @param[in] fgroup expr の属している機能グループ
 void
-LibComp::reg_expr(const Expr& expr,
-		  bool builtin)
+LibComp::_reg_expr(const Expr& expr,
+		   LcGroup* fgroup)
 {
-  // expr に対応する LcGroup を求める．
-  TvFunc f = expr.make_tv();
-  LcGroup* fgroup = mLogicMgr.find_group(TvFuncM(f), builtin);
   const LcClass* fclass = fgroup->parent();
-
-  // 組み込みクラスなら新たなパタンの登録は行わない．
-  if ( !builtin && fclass->builtin() ) {
-    return;
-  }
 
   // fclass->rep_func() を用いる理由は論理式に現れる変数が
   // 真のサポートとは限らないから
 
-  ymuint ni = fclass->repfunc().input_num();
+  ymuint ni = fclass->rep_sig().input_num();
 
   if ( ni <= 1 ) {
     // 定数関数およびバッファ，インバータは別に処理する．
@@ -325,31 +544,6 @@ LibComp::reg_expr(const Expr& expr,
   else {
     // 登録できなかったことを通知する？
   }
-}
-
-// @brief 新しいグループを作る．
-LcGroup*
-LibComp::new_group()
-{
-  ymuint new_id = mGroupList.size();
-  LcGroup* fgroup = new LcGroup(new_id);
-  mGroupList.push_back(fgroup);
-
-  return fgroup;
-}
-
-// @brief 新しいクラスを作る．
-// @param[in] repfunc 代表関数
-// @param[in] builtin 組み込みクラスの時 true にするフラグ
-LcClass*
-LibComp::new_class(const TvFuncM& repfunc,
-		   bool builtin)
-{
-  ymuint new_id = mClassList.size();
-  LcClass* fclass = new LcClass(new_id, builtin, repfunc);
-  mClassList.push_back(fclass);
-
-  return fclass;
 }
 
 // @brief グラフ構造全体をダンプする．
@@ -384,7 +578,8 @@ LibComp::display(ostream& s) const
     const LcClass* cclass = npn_class(i);
     ASSERT_COND( cclass->id() == i );
     s << "CLASS#" << i << ": ";
-    cclass->repfunc().print(s, 2);
+#warning "TODO: 未完"
+    //cclass->rep_sig().print(s, 2);
     s << endl;
     s << "  equivalence = ";
     const vector<LcGroup*>& group_list = cclass->group_list();

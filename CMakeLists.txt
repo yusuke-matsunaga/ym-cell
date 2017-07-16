@@ -8,6 +8,13 @@ include_directories(
 
 
 # ===================================================================
+# サブディレクトリの設定
+# ===================================================================
+
+add_subdirectory ( gtest )
+
+
+# ===================================================================
 #  ソースファイルの設定
 # ===================================================================
 set (main_SOURCES
@@ -73,12 +80,9 @@ set (dotlib_SOURCES
 
 set (libcomp_SOURCES
   src/libcomp/LcClass.cc
-  src/libcomp/LcFFMgr.cc
   src/libcomp/LcGroup.cc
-  src/libcomp/LcGroupMgr.cc
-  src/libcomp/LcLatchMgr.cc
-  src/libcomp/LcLogicMgr.cc
   src/libcomp/LcPatMgr.cc
+  src/libcomp/LcSignature.cc
   src/libcomp/LibComp.cc
   )
 

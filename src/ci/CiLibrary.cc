@@ -21,10 +21,8 @@
 #include "CiLut.h"
 
 #include "LibComp.h"
-#include "LcGroupMgr.h"
 #include "LcClass.h"
 #include "LcGroup.h"
-#include "LcPatMgr.h"
 
 
 BEGIN_NAMESPACE_YM_CELL
@@ -1380,50 +1378,68 @@ CiLibrary::compile()
     mLogicGroup[i] = &mGroupArray[libcomp.logic_group(i)];
   }
 
-  for (ymuint i = 0; i < 4; ++ i) {
-    CiClass* cclass = &mClassArray[libcomp.ff_class(i)];
-    mFFClass[i] = cclass;
-    ymuint n = cclass->group_num();
-    for (ymuint g = 0; g < n; ++ g) {
-      // ちょっと面倒な手順を踏む．
-      ymuint gid = cclass->cell_group(g)->id();
-      CiGroup* cgroup = &mGroupArray[gid];
-      NpnMapM map = cgroup->map();
-      ymuint pos_array[6] = { 0, 0, 0, 0, 0, 0 };
-      ymuint ni = map.input_num() - 2;
-      ASSERT_COND( ni <= 4 );
-      for (ymuint i = 0; i < ni; ++ i) {
-	NpnVmap imap = map.imap(VarId(i));
-	ymuint pos = imap.var().val();
-	ymuint pol = imap.inv() ? 16U : 8U;
-	pos_array[pos] = i | pol;
+  for (ymuint i = 0; i < 3; ++ i) {
+    bool has_q = (i == 0 || i == 2);
+    bool has_xq = (i == 1 || i == 2);
+    for (ymuint j = 0; j < 2; ++ j) {
+      bool has_clear = (j == 1);
+      for (ymuint k = 0; k < 2; ++ k) {
+	bool has_preset = (k == 1);
+	CiClass* cclass = &mClassArray[libcomp.ff_class(has_q, has_xq, has_clear, has_preset)];
+	mFFClass[i * 4 + j * 2 + k] = cclass;
+	ymuint n = cclass->group_num();
+	for (ymuint g = 0; g < n; ++ g) {
+	  // ちょっと面倒な手順を踏む．
+	  ymuint gid = cclass->cell_group(g)->id();
+	  CiGroup* cgroup = &mGroupArray[gid];
+	  NpnMapM map = cgroup->map();
+	  ymuint pos_array[6] = { 0, 0, 0, 0, 0, 0 };
+	  ymuint ni = map.input_num() - 2;
+	  ASSERT_COND( ni <= 4 );
+	  for (ymuint i = 0; i < ni; ++ i) {
+	    NpnVmap imap = map.imap(VarId(i));
+	    ymuint pos = imap.var().val();
+	    ymuint pol = imap.inv() ? 16U : 8U;
+	    pos_array[pos] = i | pol;
+	  }
+#warning "TODO: 反転出力ありと決めつけていいの？"
+	  pos_array[4] = 0;
+	  pos_array[5] = 1 | (1 << 3);
+	  cgroup->set_ff_info(pos_array);
+	}
       }
-      #warning "TODO: 反転出力ありと決めつけていいの？"
-      pos_array[4] = 0;
-      pos_array[5] = 1 | (1 << 3);
-      cgroup->set_ff_info(pos_array);
     }
   }
-  for (ymuint i = 0; i < 4; ++ i) {
-    CiClass* cclass = &mClassArray[libcomp.latch_class(i)];
-    mLatchClass[i] = cclass;
-    ymuint n = cclass->group_num();
-    for (ymuint g = 0; g < n; ++ g) {
-      // ちょっと面倒な手順を踏む．
-      ymuint gid = cclass->cell_group(g)->id();
-      CiGroup* cgroup = &mGroupArray[gid];
-      NpnMapM map = cgroup->map();
-      ymuint pos_array[5] = { 0, 0, 0, 0, 0 };
-      ymuint ni = map.input_num() - 2;
-      ASSERT_COND( ni <= 4 );
-      for (ymuint i = 0; i < ni; ++ i) {
-	NpnVmap imap = map.imap(VarId(i));
-	ymuint pos = imap.var().val();
-	ymuint pol = imap.inv() ? 16U : 8U;
-	pos_array[pos] = i | pol;
+
+  for (ymuint i = 0; i < 3; ++ i) {
+    bool has_q = (i == 0 || i == 2);
+    bool has_xq = (i == 1 || i == 2);
+    for (ymuint j = 0; j < 2; ++ j) {
+      bool has_clear = (j == 1);
+      for (ymuint k = 0; k < 2; ++ k) {
+	bool has_preset = (k == 1);
+	ymuint id = libcomp.latch_class(has_q, has_xq, has_clear, has_preset);
+	CiClass* cclass = &mClassArray[id];
+	mLatchClass[i * 4 + j * 2 + k] = cclass;
+	ymuint n = cclass->group_num();
+	for (ymuint g = 0; g < n; ++ g) {
+	  // ちょっと面倒な手順を踏む．
+	  ymuint gid = cclass->cell_group(g)->id();
+	  CiGroup* cgroup = &mGroupArray[gid];
+	  NpnMapM map = cgroup->map();
+	  ymuint pos_array[5] = { 0, 0, 0, 0, 0 };
+	  ymuint ni = map.input_num() - 2;
+	  ASSERT_COND( ni <= 4 );
+	  for (ymuint i = 0; i < ni; ++ i) {
+	    NpnVmap imap = map.imap(VarId(i));
+	    ymuint pos = imap.var().val();
+	    ymuint pol = imap.inv() ? 16U : 8U;
+	    pos_array[pos] = i | pol;
+	  }
+	  pos_array[4] = 0;
+	  cgroup->set_latch_info(pos_array);
+	}
       }
-      pos_array[4] = 0;
-      cgroup->set_latch_info(pos_array);
     }
   }
 

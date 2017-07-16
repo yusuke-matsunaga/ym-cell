@@ -10,7 +10,7 @@
 
 
 #include "libcomp_nsdef.h"
-#include "ym/TvFuncM.h"
+#include "ym/NpnMapM.h"
 #include "ym/HashMap.h"
 
 
@@ -46,12 +46,13 @@ public:
   void
   add_cell(Cell* cell);
 
-  /// @brief f に対応する LcGroup を求める．
-  /// @param[in] f 関数
+  /// @brief シグネチャに対応する LcGroup を求める．
+  /// @param[in] sig シグネチャ
   /// @param[in] builtin 組み込みクラスの時 true にするフラグ
-  /// @note なければ新規に作る．
+  ///
+  /// なければ新規に作る．
   LcGroup*
-  find_group(const TvFuncM& f,
+  find_group(const LcSignature& sig,
 	     bool builtin);
 
 
@@ -60,30 +61,22 @@ private:
   // 内部で用いられる仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セルのシグネチャ関数を作る．
-  /// @param[in] cell セル
-  /// @param[out] f シグネチャ関数
-  virtual
-  void
-  gen_signature(const Cell* cell,
-		TvFuncM& f) = 0;
-
-  /// @brief 代表関数を求める．
-  /// @param[in] f 関数
-  /// @param[out] repfunc 代表関数
+  /// @brief 代表シグネチャを求める．
+  /// @param[in] sig シグネチャ
+  /// @param[out] rep_sig 代表シグネチャ
   /// @param[out] xmap 変換
   virtual
   void
-  find_repfunc(const TvFuncM& f,
-	       TvFuncM& repfunc,
-	       NpnMapM& xmap) = 0;
+  find_rep(const LcSignature& sig,
+	   LcSignature& rep_sig,
+	   NpnMapM& xmap) = 0;
 
   /// @brief 同位体変換リストを求める．
-  /// @param[in] func 対象の関数
+  /// @param[in] sig シグネチャ
   /// @param[out] idmap_list 同位体変換のリスト
   virtual
   void
-  find_idmap_list(const TvFuncM& func,
+  find_idmap_list(const LcSignature& sig,
 		  vector<NpnMapM>& idmap_list) = 0;
 
 
@@ -92,12 +85,12 @@ protected:
   // 内部で用いられるクラスメソッド
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 代表関数を求める．
+  /// @brief 代表シグネチャを求める．
   static
   void
-  default_repfunc(const TvFuncM& f,
-		  TvFuncM& repfunc,
-		  NpnMapM& xmap);
+  default_rep(const LcSignature& sig,
+	      LcSignature& rep_sig,
+	      NpnMapM& xmap);
 
 
 private:
@@ -108,11 +101,11 @@ private:
   // 親の LibComp
   LibComp& mLibComp;
 
-  // 多出力論理関数をキーとしてグループ番号を保持するハッシュ表
-  HashMap<TvFuncM, ymuint> mGroupMap;
+  // シグネチャ文字列をキーとしてグループ番号を保持するハッシュ表
+  HashMap<string, ymuint> mGroupMap;
 
-  // 代表関数をキーとしてクラス番号を保持するハッシュ表
-  HashMap<TvFuncM, ymuint> mClassMap;
+  // 代表シグネチャの文字列をキーとしてクラス番号を保持するハッシュ表
+  HashMap<string, ymuint> mClassMap;
 
 };
 

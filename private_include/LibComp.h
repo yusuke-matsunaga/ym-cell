@@ -5,14 +5,11 @@
 /// @brief LibComp のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "libcomp_nsdef.h"
-#include "LcLogicMgr.h"
-#include "LcFFMgr.h"
-#include "LcLatchMgr.h"
 #include "LcPatMgr.h"
 
 
@@ -20,12 +17,10 @@ BEGIN_NAMESPACE_YM_CELL_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 /// @class LibComp LibComp.h "LibComp.h"
-/// @brief パタングラフの情報をダンプするためのクラス
+/// @brief セルライブラリの情報を解析して等価グループに分類するクラス
 //////////////////////////////////////////////////////////////////////
 class LibComp
 {
-  friend class LcGroupMgr;
-
 public:
 
   /// @brief コンストラクタ
@@ -43,18 +38,6 @@ public:
   /// @brief セルのグループ化，クラス化を行う．
   void
   compile(CellLibrary& library);
-
-  /// @brief 論理セルグループの情報を取り出す．
-  const LcGroupMgr&
-  logic_group_mgr() const;
-
-  /// @brief FFセルグループの情報を取り出す．
-  const LcGroupMgr&
-  ff_group_mgr() const;
-
-  /// @brief ラッチセルグループの情報を取り出す．
-  const LcGroupMgr&
-  latch_group_mgr() const;
 
   /// @brief パタングラフの情報を取り出す．
   const LcPatMgr&
@@ -99,22 +82,30 @@ public:
   logic_group(ymuint id) const;
 
   /// @brief 定義済みのFFクラス番号を返す．
-  /// @param[in] id 番号
-  /// - 0: クリアなし，プリセットなし
-  /// - 1: クリアあり，プリセットなし
-  /// - 2: クリアなし，プリセットあり
-  /// - 3: クリアあり，プリセットあり
+  /// @param[in] has_q Q端子の有無
+  /// @param[in] has_xq 反転Q端子の有無
+  /// @param[in] has_clear クリア端子の有無
+  /// @param[in] has_preset プリセット端子の有無
+  ///
+  /// has_q == false && has_xq == false は不適
   ymuint
-  ff_class(ymuint id) const;
+  ff_class(bool has_q,
+	   bool has_xq,
+	   bool has_clear,
+	   bool has_preset) const;
 
   /// @brief 定義済みのラッチクラス番号を返す．
-  /// @param[in] id 番号
-  /// - 0: クリアなし，プリセットなし
-  /// - 1: クリアあり，プリセットなし
-  /// - 2: クリアなし，プリセットあり
-  /// - 3: クリアあり，プリセットあり
+  /// @param[in] has_q Q端子の有無
+  /// @param[in] has_xq 反転Q端子の有無
+  /// @param[in] has_clear クリア端子の有無
+  /// @param[in] has_preset プリセット端子の有無
+  ///
+  /// has_q == false && has_xq == false は不適
   ymuint
-  latch_class(ymuint id) const;
+  latch_class(bool has_q,
+	      bool has_xq,
+	      bool has_clear,
+	      bool has_preset);
 
 
 private:
@@ -122,23 +113,66 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief expr から生成されるパタンを登録する．
-  /// @param[in] expr 論理式
-  /// @param[in] builtin 組み込みクラスの時 true にするフラグ
+  /// @brief 論理セルの基本タイプを登録する．
   void
-  reg_expr(const Expr& expr,
-	   bool builtin);
+  _logic_init();
+
+  /// @brief FFセルの基本タイプを登録する．
+  void
+  _ff_init();
+
+  /// @brief ラッチセルの基本タイプを登録する．
+  void
+  _latch_init();
+
+  /// @brief セルを追加する．
+  /// @param[in] cell セル
+  void
+  _add_cell(Cell* cell);
+
+  /// @brief シグネチャに対応する LcGroup を求める．
+  /// @param[in] sig シグネチャ
+  ///
+  /// なければ新規に作る．
+  LcGroup*
+  _find_group(const LcSignature& sig);
+
+  /// @brief 論理式に対応する LcGroup を求める．
+  /// @param[in] expr 論理式
+  ///
+  /// こちらは1出力の論理セル用
+  /// 内部で _reg_pat() を呼ぶ．
+  LcGroup*
+  _find_group(const Expr& expr);
 
   /// @brief 新しいグループを作る．
   LcGroup*
-  new_group();
+  _new_group();
 
   /// @brief 新しいクラスを作る．
-  /// @param[in] repfunc 代表関数
-  /// @param[in] builtin 組み込みクラスの時 true にするフラグ
+  /// @param[in] rep_sig 代表シグネチャ
   LcClass*
-  new_class(const TvFuncM& repfunc,
-	    bool builtin);
+  _new_class(const LcSignature& rep_sig);
+
+  /// @brief 正規変換を求める．
+  /// @param[in] sig シグネチャ
+  /// @return 正規シグネチャへの変換マップを返す．
+  NpnMapM
+  _cannonical_map(const LcSignature& sig);
+
+  /// @brief 同位体変換リストを求める．
+  /// @param[in] sig シグネチャ
+  /// @param[out] idmap_list 同位体変換のリスト
+  void
+  _find_idmap_list(const LcSignature& sig,
+		  vector<NpnMapM>& idmap_list);
+
+  /// @brief expr から生成されるパタンを登録する．
+  /// @param[in] expr 論理式
+  /// @param[in] fgroup expr の属している機能グループ
+  void
+  _reg_expr(const Expr& expr,
+	    LcGroup* fgroup);
 
 
 private:
@@ -150,18 +184,24 @@ private:
   // この配列上の位置とグループ番号は一致している．
   vector<LcGroup*> mGroupList;
 
+  // シグネチャ文字列をキーとしてグループ番号を保持するハッシュ表
+  HashMap<string, ymuint> mGroupMap;
+
   // NPN同値クラスのリスト
   // この配列上の位置とクラス番号は一致している．
   vector<LcClass*> mClassList;
 
-  // 関数情報を管理するオブジェクト
-  LcLogicMgr mLogicMgr;
+  // 代表シグネチャの文字列をキーとしてクラス番号を保持するハッシュ表
+  HashMap<string, ymuint> mClassMap;
 
-  // FFの情報を管理するオブジェクト
-  LcFFMgr mFFMgr;
+  // 定義済みの論理グループ
+  ymuint mLogicGroup[4];
 
-  // ラッチの情報を管理するオブジェクト
-  LcLatchMgr mLatchMgr;
+  // 定義済みのFFクラス番号
+  ymuint mFFClass[12];
+
+  // 定義済みのラッチクラス番号
+  ymuint mLatchClass[12];
 
   // パタングラフを管理するオブジェクト
   LcPatMgr mPatMgr;

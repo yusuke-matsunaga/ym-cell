@@ -10,12 +10,74 @@
 #include "LcLatchMgr.h"
 #include "LcClass.h"
 #include "LcGroup.h"
-#include "ym/Cell.h"
-#include "ym/Expr.h"
-#include "ym/NpnMapM.h"
+#include "LcSignature.h"
 
 
 BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+
+BEGIN_NONAMESPACE
+
+// has_q, has_xq, has_clear, has_preset をエンコードする．
+inline
+ymuint
+encode(bool has_q,
+       bool has_xq,
+       bool has_clear,
+       bool has_preset)
+{
+  ymuint ans = 0;
+  if ( has_q ) {
+    if ( has_xq ) {
+      ans = 2;
+    }
+    else {
+      ans = 0;
+    }
+  }
+  else {
+    ASSERT_COND( has_xq );
+    ans = 1;
+  }
+  ans <<= 2;
+  if ( has_clear ) {
+    ans |= 1U;
+  }
+  if ( has_preset ) {
+    ans |= 2U;
+  }
+  return ans;
+}
+
+// 整数から　has_q, has_xq, has_clear, has_preset をデコードする．
+inline
+void
+decode(ymuint val,
+       bool& has_q,
+       bool& has_xq,
+       bool& has_clear,
+       bool& has_preset)
+{
+  ymuint val1 = val >> 2;
+  switch ( val1 ) {
+  case 0:
+    has_q = true;
+    has_xq = false;
+    break;
+  case 1:
+    has_q = false;
+    has_xq = true;
+    break;
+  case 2:
+    has_q = true;
+    has_xq = true;
+    break;
+  }
+  has_clear = static_cast<bool>((val >> 0) & 1U);
+  has_preset = static_cast<bool>((val >> 1) & 1U);
+}
+
+END_NONAMESPACE
+
 
 //////////////////////////////////////////////////////////////////////
 // クラスLcLatchMgr
@@ -39,127 +101,53 @@ LcLatchMgr::init()
 {
   clear();
 
-  { // クリアなし，プリセットなしのラッチクラスの登録
-    vector<TvFunc> f_list;
-    f_list.push_back(TvFunc::posi_literal(4, VarId(0)));
-    f_list.push_back(TvFunc::posi_literal(4, VarId(1)));
-    f_list.push_back(TvFunc::const_zero(4));
-    f_list.push_back(TvFunc::const_zero(4));
-    f_list.push_back(TvFunc::posi_literal(4, VarId(2)));
-    f_list.push_back(TvFunc::const_zero(4));
-    TvFuncM f(f_list);
-    LcGroup* group = find_group(f, false);
+  for (ymuint i = 0; i < 12; ++ i) {
+    bool has_q;
+    bool has_xq;
+    bool has_clear;
+    bool has_preset;
+    decode(i, has_q, has_xq, has_clear, has_preset);
+
+    LcSignature sig(LcSignature::kLatchType, has_q, has_xq, has_clear, has_preset);
+    LcGroup* group = find_group(sig, false);
     LcClass* cclass = group->parent();
-    mLatchClass[0] = cclass->id();
-  }
-  { // クリアあり，プリセットなしのラッチクラスの登録
-    vector<TvFunc> f_list;
-    f_list.push_back(TvFunc::posi_literal(5, VarId(0)));
-    f_list.push_back(TvFunc::posi_literal(5, VarId(1)));
-    f_list.push_back(TvFunc::posi_literal(5, VarId(2)));
-    f_list.push_back(TvFunc::const_zero(5));
-    f_list.push_back(TvFunc::posi_literal(5, VarId(3)));
-    f_list.push_back(TvFunc::const_zero(5));
-    TvFuncM f(f_list);
-    LcGroup* group = find_group(f, false);
-    LcClass* cclass = group->parent();
-    mLatchClass[1] = cclass->id();
-  }
-  { // クリアなし，プリセットありのラッチクラスの登録
-    vector<TvFunc> f_list;
-    f_list.push_back(TvFunc::posi_literal(5, VarId(0)));
-    f_list.push_back(TvFunc::posi_literal(5, VarId(1)));
-    f_list.push_back(TvFunc::const_zero(5));
-    f_list.push_back(TvFunc::posi_literal(5, VarId(2)));
-    f_list.push_back(TvFunc::posi_literal(5, VarId(3)));
-    f_list.push_back(TvFunc::const_zero(5));
-    TvFuncM f(f_list);
-    LcGroup* group = find_group(f, false);
-    LcClass* cclass = group->parent();
-    mLatchClass[2] = cclass->id();
-  }
-  { // クリアあり，プリセットありのラッチクラスの登録
-    vector<TvFunc> f_list;
-    f_list.push_back(TvFunc::posi_literal(6, VarId(0)));
-    f_list.push_back(TvFunc::posi_literal(6, VarId(1)));
-    f_list.push_back(TvFunc::posi_literal(6, VarId(2)));
-    f_list.push_back(TvFunc::posi_literal(6, VarId(3)));
-    f_list.push_back(TvFunc::posi_literal(6, VarId(4)));
-    f_list.push_back(TvFunc::const_zero(6));
-    TvFuncM f(f_list);
-    LcGroup* group = find_group(f, false);
-    LcClass* cclass = group->parent();
-    mLatchClass[3] = cclass->id();
+    mLatchClass[i] = cclass->id();
   }
 }
 
 // @brief 定義済みのラッチクラス番号を返す．
-// @param[in] id 番号
-// - 0: クリアなし，プリセットなし
-// - 1: クリアあり，プリセットなし
-// - 2: クリアなし，プリセットあり
-// - 3: クリアあり，プリセットあり
+// @param[in] has_q Q端子の有無
+// @param[in] has_xq 反転Q端子の有無
+// @param[in] has_clear クリア端子の有無
+// @param[in] has_preset プリセット端子の有無
+//
+// has_q == false && has_xq == false は不適
 ymuint
-LcLatchMgr::latch_class(ymuint id) const
+LcLatchMgr::latch_class(bool has_q,
+			bool has_xq,
+			bool has_clear,
+			bool has_preset)
 {
-  ASSERT_COND( id < 4 );
-  return mLatchClass[id];
+  ymuint i = encode(has_q, has_xq, has_clear, has_preset);
+  return mLatchClass[i];
 }
 
-// @brief セルのシグネチャ関数を作る．
-// @param[in] cell セル
-// @param[out] f シグネチャ関数
-void
-LcLatchMgr::gen_signature(const Cell* cell,
-			  TvFuncM& f)
-{
-  // + 2 は状態変数
-  ymuint ni2 = cell->input_num2() + 2;
-  ymuint no2 = cell->output_num2();
-
-  vector<TvFunc> f_list(no2 * 2 + 4);
-  {
-    Expr expr = cell->data_in_expr();
-    f_list[0] = expr.make_tv(ni2);
-  }
-  {
-    Expr expr = cell->enable_expr();
-    f_list[1] = expr.make_tv(ni2);
-  }
-  {
-    Expr expr = cell->clear_expr();
-    f_list[2] = expr.make_tv(ni2);
-  }
-  {
-    Expr expr = cell->preset_expr();
-    f_list[3] = expr.make_tv(ni2);
-  }
-  for (ymuint i = 0; i < no2; ++ i) {
-    Expr lexpr = cell->logic_expr(i);
-    f_list[i * 2 + 4] = lexpr.make_tv(ni2);
-    Expr texpr = cell->tristate_expr(i);
-    f_list[i * 2 + 5] = texpr.make_tv(ni2);
-  }
-  f = TvFuncM(f_list);
-}
-
-// @brief 代表関数を求める．
-// @param[in] f 関数
-// @param[out] repfunc 代表関数
+// @brief 代表シグネチャを求める．
+// @param[in] sig シグネチャ
+// @param[out] rep_sig 代表シグネチャ
 // @param[out] xmap 変換
 void
-LcLatchMgr::find_repfunc(const TvFuncM& f,
-			 TvFuncM& repfunc,
-			 NpnMapM& xmap)
+LcLatchMgr::find_rep(const LcSignature& sig,
+		     LcSignature& rep_sig,
+		     NpnMapM& xmap)
 {
-  default_repfunc(f, repfunc, xmap);
 }
 
 // @brief 同位体変換リストを求める．
-// @param[in] func 対象の関数
+// @param[in] sig シグネチャ
 // @param[out] idmap_list 同位体変換のリスト
 void
-LcLatchMgr::find_idmap_list(const TvFuncM& func,
+LcLatchMgr::find_idmap_list(const LcSignature& sig,
 			    vector<NpnMapM>& idmap_list)
 {
   idmap_list.clear();
