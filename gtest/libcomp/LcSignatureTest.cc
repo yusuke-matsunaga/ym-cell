@@ -34,7 +34,7 @@ TEST(LcSignatureTest, constr)
 // 定数０のシグネチャ
 TEST(LcSignatureTest, const0)
 {
-  Expr expr = Expr::make_zero();
+  Expr expr = Expr::const_zero();
   LcSignature sig(expr);
 
   EXPECT_EQ( LcSignature::kLogicType, sig.type() );
@@ -57,7 +57,7 @@ TEST(LcSignatureTest, const0)
 // バッファのシグネチャ
 TEST(LcSignatureTest, buff)
 {
-  Expr expr = Expr::make_posiliteral(VarId(0));
+  Expr expr = Expr::posi_literal(VarId(0));
   LcSignature sig(expr);
 
   EXPECT_EQ( LcSignature::kLogicType, sig.type() );
@@ -80,8 +80,8 @@ TEST(LcSignatureTest, buff)
 // 2入力ANDのシグネチャ
 TEST(LcSignatureTest, and2)
 {
-  Expr lit0 = Expr::make_posiliteral(VarId(0));
-  Expr lit1 = Expr::make_posiliteral(VarId(1));
+  Expr lit0 = Expr::posi_literal(VarId(0));
+  Expr lit1 = Expr::posi_literal(VarId(1));
   Expr expr = lit0 & lit1;
   LcSignature sig(expr);
 

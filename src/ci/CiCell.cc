@@ -472,7 +472,7 @@ CiCell::ff_info() const
 Expr
 CiCell::next_state_expr() const
 {
-  return Expr::make_zero();
+  return Expr::const_zero();
 }
 
 // @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
@@ -480,7 +480,7 @@ CiCell::next_state_expr() const
 Expr
 CiCell::clock_expr() const
 {
-  return Expr::make_zero();
+  return Expr::const_zero();
 }
 
 // @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
@@ -488,7 +488,7 @@ CiCell::clock_expr() const
 Expr
 CiCell::clock2_expr() const
 {
-  return Expr::make_zero();
+  return Expr::const_zero();
 }
 
 // @brief ラッチセルの場合にFFのピン情報を得る．
@@ -508,7 +508,7 @@ CiCell::latch_info() const
 Expr
 CiCell::data_in_expr() const
 {
-  return Expr::make_zero();
+  return Expr::const_zero();
 }
 
 // @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
@@ -516,7 +516,7 @@ CiCell::data_in_expr() const
 Expr
 CiCell::enable_expr() const
 {
-  return Expr::make_zero();
+  return Expr::const_zero();
 }
 
 // @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
@@ -524,7 +524,7 @@ CiCell::enable_expr() const
 Expr
 CiCell::enable2_expr() const
 {
-  return Expr::make_zero();
+  return Expr::const_zero();
 }
 
 // @brief FFセル/ラッチセルの場合にクリア端子を持っていたら true を返す．
@@ -539,7 +539,7 @@ CiCell::has_clear() const
 Expr
 CiCell::clear_expr() const
 {
-  return Expr::make_zero();
+  return Expr::const_zero();
 }
 
 // @brief FFセル/ラッチセルの場合にプリセット端子を持っていたら true を返す．
@@ -554,7 +554,7 @@ CiCell::has_preset() const
 Expr
 CiCell::preset_expr() const
 {
-  return Expr::make_zero();
+  return Expr::const_zero();
 }
 
 // @brief clear_preset_var1 の取得

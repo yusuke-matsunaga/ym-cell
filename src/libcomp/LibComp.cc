@@ -36,7 +36,7 @@ xform_expr(const Expr& expr,
     VarId src_var(i);
     NpnVmap imap = map.imap(src_var);
     VarId dst_var = imap.var();
-    Expr expr = Expr::make_literal(dst_var, imap.inv());
+    Expr expr = Expr::literal(dst_var, imap.inv());
     vlm.add(src_var, expr);
   }
   Expr cexpr = expr.compose(vlm);
@@ -251,59 +251,59 @@ void
 LibComp::_logic_init()
 {
   { // 定数0グループの登録
-    LcGroup* func0 = _find_group(Expr::make_zero());
+    LcGroup* func0 = _find_group(Expr::const_zero());
     mLogicGroup[0] = func0->id();
   }
   { // 定数1グループの登録
-    LcGroup* func1 = _find_group(Expr::make_one());
+    LcGroup* func1 = _find_group(Expr::const_one());
     mLogicGroup[1] = func1->id();
   }
   { // バッファグループの登録
-    Expr expr = Expr::make_posiliteral(VarId(0));
+    Expr expr = Expr::posi_literal(VarId(0));
     LcGroup* func2 = _find_group(expr);
     mLogicGroup[2] = func2->id();
   }
   { // インバーターグループの登録
-    Expr expr = Expr::make_negaliteral(VarId(0));
+    Expr expr = Expr::nega_literal(VarId(0));
     LcGroup* func3 = _find_group(expr);
     mLogicGroup[3] = func3->id();
   }
 
   // AND2 〜 AND8 のシグネチャを登録しておく．
   for (ymuint ni = 2; ni <= 8; ++ ni) {
-    Expr and_expr = Expr::make_posiliteral(VarId(0));
+    Expr and_expr = Expr::posi_literal(VarId(0));
     for (ymuint i = 1; i < ni; ++ i) {
-      and_expr &= Expr::make_posiliteral(VarId(i));
+      and_expr &= Expr::posi_literal(VarId(i));
     }
     _find_group(and_expr);
   }
 
   // XOR2 〜 XOR4 のシグネチャを登録しておく．
   for (ymuint ni = 2; ni <= 4; ++ ni) {
-    Expr xor_expr = Expr::make_posiliteral(VarId(0));
+    Expr xor_expr = Expr::posi_literal(VarId(0));
     for (ymuint i = 1; i < ni; ++ i) {
-      xor_expr ^= Expr::make_posiliteral(VarId(i));
+      xor_expr ^= Expr::posi_literal(VarId(i));
     }
     _find_group(xor_expr);
   }
 
   // MUX2 のシグネチャを登録しておく．
   {
-    Expr lit0 = Expr::make_posiliteral(VarId(0));
-    Expr lit1 = Expr::make_posiliteral(VarId(1));
-    Expr lit2 = Expr::make_posiliteral(VarId(2));
+    Expr lit0 = Expr::posi_literal(VarId(0));
+    Expr lit1 = Expr::posi_literal(VarId(1));
+    Expr lit2 = Expr::posi_literal(VarId(2));
     Expr mux2_expr = lit0 & ~lit2 | lit1 & lit2;
     _find_group(mux2_expr);
   }
 
   // MUX4 のシグネチャを登録しておく．
   {
-    Expr lit0 = Expr::make_posiliteral(VarId(0));
-    Expr lit1 = Expr::make_posiliteral(VarId(1));
-    Expr lit2 = Expr::make_posiliteral(VarId(2));
-    Expr lit3 = Expr::make_posiliteral(VarId(3));
-    Expr lit4 = Expr::make_posiliteral(VarId(4));
-    Expr lit5 = Expr::make_posiliteral(VarId(5));
+    Expr lit0 = Expr::posi_literal(VarId(0));
+    Expr lit1 = Expr::posi_literal(VarId(1));
+    Expr lit2 = Expr::posi_literal(VarId(2));
+    Expr lit3 = Expr::posi_literal(VarId(3));
+    Expr lit4 = Expr::posi_literal(VarId(4));
+    Expr lit5 = Expr::posi_literal(VarId(5));
     Expr mux4_expr =
       lit0 & ~lit4 & ~lit5 |
       lit1 &  lit4 & ~lit5 |
@@ -314,17 +314,17 @@ LibComp::_logic_init()
 
   // MUX8 のシグネチャを登録しておく．
   if ( 0 ) {
-    Expr lit0 = Expr::make_posiliteral(VarId(0));
-    Expr lit1 = Expr::make_posiliteral(VarId(1));
-    Expr lit2 = Expr::make_posiliteral(VarId(2));
-    Expr lit3 = Expr::make_posiliteral(VarId(3));
-    Expr lit4 = Expr::make_posiliteral(VarId(4));
-    Expr lit5 = Expr::make_posiliteral(VarId(5));
-    Expr lit6 = Expr::make_posiliteral(VarId(6));
-    Expr lit7 = Expr::make_posiliteral(VarId(7));
-    Expr lit8 = Expr::make_posiliteral(VarId(8));
-    Expr lit9 = Expr::make_posiliteral(VarId(9));
-    Expr lit10 = Expr::make_posiliteral(VarId(10));
+    Expr lit0 = Expr::posi_literal(VarId(0));
+    Expr lit1 = Expr::posi_literal(VarId(1));
+    Expr lit2 = Expr::posi_literal(VarId(2));
+    Expr lit3 = Expr::posi_literal(VarId(3));
+    Expr lit4 = Expr::posi_literal(VarId(4));
+    Expr lit5 = Expr::posi_literal(VarId(5));
+    Expr lit6 = Expr::posi_literal(VarId(6));
+    Expr lit7 = Expr::posi_literal(VarId(7));
+    Expr lit8 = Expr::posi_literal(VarId(8));
+    Expr lit9 = Expr::posi_literal(VarId(9));
+    Expr lit10 = Expr::posi_literal(VarId(10));
     Expr mux8_expr =
       lit0 & ~lit8 & ~lit9 & ~lit10 |
       lit1 &  lit8 & ~lit9 & ~lit10 |

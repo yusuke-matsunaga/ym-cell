@@ -46,7 +46,7 @@ MislibConst0::is_expr() const
 Expr
 MislibConst0::to_expr(const HashMap<ShString, ymuint>& name_map) const
 {
-  return Expr::make_zero();
+  return Expr::const_zero();
 }
 
 // 内容を出力する．
@@ -94,7 +94,7 @@ MislibConst1::is_expr() const
 Expr
 MislibConst1::to_expr(const HashMap<ShString, ymuint>& name_map) const
 {
-  return Expr::make_one();
+  return Expr::const_one();
 }
 
 // 内容を出力する．

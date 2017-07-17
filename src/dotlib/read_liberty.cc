@@ -65,16 +65,16 @@ dot2expr(const DotlibNode* node,
 {
   // 特例
   if ( node == nullptr ) {
-    return Expr::make_zero();
+    return Expr::const_zero();
   }
 
   if ( node->is_int() ) {
     int v = node->int_value();
     if ( v == 0 ) {
-      return Expr::make_zero();
+      return Expr::const_zero();
     }
     if ( v == 1 ) {
-      return Expr::make_one();
+      return Expr::const_one();
     }
     ASSERT_NOT_REACHED;
     return Expr();
@@ -92,7 +92,7 @@ dot2expr(const DotlibNode* node,
 		      buf.str());
       return Expr();
     }
-    return Expr::make_posiliteral(VarId(id));
+    return Expr::posi_literal(VarId(id));
   }
   if ( node->is_opr() ) {
     if ( node->type() == DotlibNode::kNot ) {
@@ -197,7 +197,7 @@ gen_expr(const DotlibPin& pin_info,
       output_array.push_back(true);
     }
     else {
-      logic_array.push_back(Expr::make_zero());
+      logic_array.push_back(Expr::const_zero());
       output_array.push_back(false);
     }
     const DotlibNode* three_state = pin_info.three_state();
@@ -206,7 +206,7 @@ gen_expr(const DotlibPin& pin_info,
       tristate_array.push_back(expr);
     }
     else {
-      tristate_array.push_back(Expr::make_zero());
+      tristate_array.push_back(Expr::const_zero());
     }
   }
 }
@@ -339,7 +339,7 @@ gen_timing(CellLibrary* library,
       cond = dot2expr(when_node, pin_map);
     }
     else {
-      cond = Expr::make_one();
+      cond = Expr::const_one();
     }
 
     switch ( library->delay_model() ) {

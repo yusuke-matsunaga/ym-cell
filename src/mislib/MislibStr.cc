@@ -59,7 +59,7 @@ MislibStr::to_expr(const HashMap<ShString, ymuint>& name_map) const
   bool found = name_map.find(str(), id);
   ASSERT_COND( found );
   VarId var(id);
-  return Expr::make_posiliteral(var);
+  return Expr::posi_literal(var);
 }
 
 // 内容を出力する．

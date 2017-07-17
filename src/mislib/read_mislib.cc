@@ -132,7 +132,7 @@ set_library(const string& lib_name,
     Expr function = opin_expr->to_expr(ipin_name_map);
     vector<bool> output_array(1, true);
     vector<Expr> logic_array(1, function);
-    vector<Expr> tristate_array(1, Expr::make_zero());
+    vector<Expr> tristate_array(1, Expr::const_zero());
     library->new_logic_cell(cell_id, name, area,
 			    ni, 1, 0, 0, 0,
 			    output_array,
@@ -148,7 +148,7 @@ set_library(const string& lib_name,
     // 出力ピンの設定
     library->new_cell_output(cell_id, ni, 0, opin_name,
 			     true, function,
-			     Expr::make_zero(),
+			     Expr::const_zero(),
 			     CellCapacitance::infty(),
 			     CellCapacitance(0.0),
 			     CellCapacitance::infty(),
@@ -168,7 +168,7 @@ set_library(const string& lib_name,
 	CellResistance f_r(pt_pin->fall_fanout_delay()->num());
 	library->new_timing_generic(cell_id, i,
 				    kCellTimingCombinational,
-				    Expr::make_one(),
+				    Expr::const_one(),
 				    r_i, f_i,
 				    CellTime(0.0), CellTime(0.0),
 				    r_r, f_r);
@@ -184,7 +184,7 @@ set_library(const string& lib_name,
       CellResistance f_r(pt_pin->fall_fanout_delay()->num());
       library->new_timing_generic(cell_id, 0,
 				  kCellTimingCombinational,
-				  Expr::make_one(),
+				  Expr::const_one(),
 				  r_i, f_i,
 				  CellTime(0.0), CellTime(0.0),
 				  r_r, f_r);

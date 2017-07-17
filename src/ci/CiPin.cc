@@ -121,7 +121,7 @@ CiPin::has_function() const
 Expr
 CiPin::function() const
 {
-  return Expr::make_zero();
+  return Expr::const_zero();
 }
 
 // @brief three_state 属性を持っているときに true を返す．
@@ -135,7 +135,7 @@ CiPin::has_three_state() const
 Expr
 CiPin::three_state() const
 {
-  return Expr::make_zero();
+  return Expr::const_zero();
 }
 
 // @brief 最大ファンアウト容量を返す．
