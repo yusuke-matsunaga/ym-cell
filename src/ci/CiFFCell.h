@@ -12,7 +12,7 @@
 #include "CiCell.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiFFCell CiFFCell.h "CiFFCell.h"
@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_CELL
 class CiFFCell :
   public CiCell
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 protected:
 
@@ -44,10 +44,10 @@ protected:
   /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
-  CiFFCell(CiLibrary* library,
+  CiFFCell(CiCellLibrary* library,
 	   ymuint id,
 	   const ShString& name,
-	   CellArea area,
+	   ClibArea area,
 	   ymuint ni,
 	   ymuint no,
 	   ymuint nio,
@@ -119,7 +119,7 @@ private:
 class CiFFRCell :
   public CiFFCell
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 protected:
 
@@ -143,10 +143,10 @@ protected:
   /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
-  CiFFRCell(CiLibrary* library,
+  CiFFRCell(CiCellLibrary* library,
 	    ymuint id,
 	    const ShString& name,
-	    CellArea area,
+	    ClibArea area,
 	    ymuint ni,
 	    ymuint no,
 	    ymuint nio,
@@ -201,7 +201,7 @@ private:
 class CiFFSCell :
   public CiFFCell
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 protected:
 
@@ -225,10 +225,10 @@ protected:
   /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
-  CiFFSCell(CiLibrary* library,
+  CiFFSCell(CiCellLibrary* library,
 	    ymuint id,
 	    const ShString& name,
-	    CellArea area,
+	    ClibArea area,
 	    ymuint ni,
 	    ymuint no,
 	    ymuint nio,
@@ -283,7 +283,7 @@ private:
 class CiFFSRCell :
   public CiFFRCell
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 protected:
 
@@ -310,10 +310,10 @@ protected:
   /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
-  CiFFSRCell(CiLibrary* library,
+  CiFFSRCell(CiCellLibrary* library,
 	     ymuint id,
 	     const ShString& name,
-	     CellArea area,
+	     ClibArea area,
 	     ymuint ni,
 	     ymuint no,
 	     ymuint nio,
@@ -382,6 +382,6 @@ private:
 
 };
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CIFFCELL_H

@@ -5,24 +5,24 @@
 /// @brief CiBundle のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ym/CellBundle.h"
+#include "ym/ClibBundle.h"
 #include "ym/ShString.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiBundle CiBundle.h "CiBundle.h"
-/// @brief CellBundle の実装クラス
+/// @brief ClibBundle の実装クラス
 //////////////////////////////////////////////////////////////////////
 class CiBundle :
-  public CellBundle
+  public ClibBundle
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
@@ -51,7 +51,7 @@ public:
   /// @brief ピンの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
   virtual
-  const CellPin*
+  const ClibCellPin*
   pin(ymuint pos) const;
 
 
@@ -64,13 +64,13 @@ private:
   ShString mName;
 
   // ピン数
-  ymuint32 mPinNum;
+  ymuint mPinNum;
 
   // ピンのリスト
-  CellPin** mPinList;
+  ClibCellPin** mPinList;
 
 };
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CIBUNDLE_H

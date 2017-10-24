@@ -23,7 +23,7 @@ BEGIN_NONAMESPACE
 END_NONAMESPACE
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 // クラス LcPatMgr
@@ -719,4 +719,4 @@ LcPatMgr::display_edge(ostream& s,
   s << "Node#" << node->fanin(fanin_pos)->id();
 }
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP

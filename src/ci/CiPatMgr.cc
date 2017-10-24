@@ -14,7 +14,7 @@
 #include "LcPatHandle.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 using namespace nsLibcomp;
 
@@ -43,7 +43,7 @@ CiPatMgr::max_input() const
 {
   ymuint ans = 0;
   for (ymuint i = 0; i < mPatNum; ++ i) {
-    const CellPatGraph& pat = this->pat(i);
+    const ClibPatGraph& pat = this->pat(i);
     ymuint ni = pat.input_num();
     if ( ans < ni ) {
       ans = ni;
@@ -54,7 +54,7 @@ CiPatMgr::max_input() const
 
 // @brief パタンを返す．
 // @param[in] id パタン番号 ( 0 <= id < pat_num() )
-const CellPatGraph&
+const ClibPatGraph&
 CiPatMgr::pat(ymuint id) const
 {
   ASSERT_COND( id < pat_num() );
@@ -75,13 +75,13 @@ CiPatMgr::copy(const LcPatMgr& src,
     LcPatNode* src_node = src.node(i);
     ymuint32 v = 0U;
     if ( src_node->is_input() ) {
-      v = kCellPatInput | (src_node->input_id() << 2);
+      v = kClibPatInput | (src_node->input_id() << 2);
     }
     else if ( src_node->is_and() ) {
-      v = kCellPatAnd;
+      v = kClibPatAnd;
     }
     else if ( src_node->is_xor() ) {
-      v = kCellPatXor;
+      v = kClibPatXor;
     }
     mNodeTypeArray[i] = v;
     for (ymuint j = 0; j < 2; ++ j) {
@@ -148,7 +148,7 @@ CiPatMgr::restore(IDO& bis,
     bis >> mNodeTypeArray[i]
 	>> mEdgeArray[i * 2]
 	>> mEdgeArray[i * 2 + 1];
-    if ( node_type(i) == kCellPatInput ) {
+    if ( node_type(i) == kClibPatInput ) {
       ASSERT_COND( input_id(i) == i );
     }
   }
@@ -188,4 +188,4 @@ CiPatMgr::set_pat_num(ymuint np,
   mPatArray = new (p) CiPatGraph[mPatNum];
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

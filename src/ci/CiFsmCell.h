@@ -12,7 +12,7 @@
 #include "CiCell.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiFsmCell CiFsmCell.h "CiFsmCell.h"
@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_CELL
 class CiFsmCell :
   public CiCell
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
@@ -42,10 +42,10 @@ private:
   /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
-  CiFsmCell(CiLibrary* library,
+  CiFsmCell(CiCellLibrary* library,
 	    ymuint id,
 	    const ShString& name,
-	    CellArea area,
+	    ClibArea area,
 	    ymuint ni,
 	    ymuint no,
 	    ymuint nio,
@@ -74,6 +74,6 @@ public:
 
 };
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CIFSMCELL_H

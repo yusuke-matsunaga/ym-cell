@@ -12,14 +12,14 @@
 #include "LcGroup.h"
 #include "LcPatNode.h"
 #include "LcPatHandle.h"
-#include "ym/CellLibrary.h"
-#include "ym/Cell.h"
+#include "ym/ClibCellLibrary.h"
+#include "ym/ClibCell.h"
 #include "ym/Expr.h"
 #include "ym/NpnMap.h"
 #include "ym/HashSet.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 BEGIN_NONAMESPACE
 
@@ -139,7 +139,7 @@ LibComp::pat_mgr() const
 
 // @brief セルのグループ化，クラス化を行う．
 void
-LibComp::compile(CellLibrary& library)
+LibComp::compile(ClibCellLibrary& library)
 {
   mGroupList.clear();
   mGroupMap.clear();
@@ -162,7 +162,7 @@ LibComp::compile(CellLibrary& library)
   // library に含まれるセルを登録する．
   ymuint nc = library.cell_num();
   for (ymuint i = 0; i < nc; ++ i) {
-    Cell* cell = library.cell(i);
+    ClibCell* cell = library.cell(i);
      _add_cell(cell);
   }
 }
@@ -377,7 +377,7 @@ LibComp::_latch_init()
 // @brief セルを追加する．
 // @param[in] cell セル
 void
-LibComp::_add_cell(Cell* cell)
+LibComp::_add_cell(ClibCell* cell)
 {
   LcGroup* fgroup = nullptr;
   if ( !cell->has_logic() || cell->output_num2() == 0 ) {
@@ -552,7 +552,7 @@ void
 LibComp::display(ostream& s) const
 {
   // セルグループの情報を出力する．
-  s << "*** Cell Group BEGIN ***" << endl;
+  s << "*** Clib Group BEGIN ***" << endl;
   for (ymuint i = 0; i < group_num(); ++ i) {
     const LcGroup* group = this->group(i);
     ASSERT_COND( group->id() == i );
@@ -561,15 +561,15 @@ LibComp::display(ostream& s) const
       << ": " << group->map()
       << endl;
     s << "  CELL:";
-    const vector<Cell*>& cell_list = group->cell_list();
-    for (vector<Cell*>::const_iterator p = cell_list.begin();
+    const vector<ClibCell*>& cell_list = group->cell_list();
+    for (vector<ClibCell*>::const_iterator p = cell_list.begin();
 	 p != cell_list.end(); ++ p) {
-      const Cell* cell = *p;
+      const ClibCell* cell = *p;
       s << " " << cell->name();
     }
     s << endl;
   }
-  s << "*** Cell Group END ***" << endl
+  s << "*** Clib Group END ***" << endl
     << endl;
 
   // NPN同値クラスの情報を出力する．
@@ -595,4 +595,4 @@ LibComp::display(ostream& s) const
   mPatMgr.display(s);
 }
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP

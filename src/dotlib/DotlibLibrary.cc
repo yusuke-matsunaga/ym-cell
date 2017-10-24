@@ -34,8 +34,8 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
 {
   init();
 
-  mTechnology = kCellTechCmos;
-  mDelayModel = kCellDelayGenericCmos;
+  mTechnology = kClibTechCmos;
+  mDelayModel = kClibDelayGenericCmos;
   mBusNamingStyle = nullptr;
   mComment = nullptr;
   mDate = nullptr;
@@ -48,7 +48,7 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
   mVoltageUnit = nullptr;
 
   mLutTemplateList.clear();
-  mCellList.clear();
+  mClibList.clear();
 
   // ライブラリ名をを得る．
   mName = lib_node->group_value()->get_string_from_value_list();
@@ -62,7 +62,7 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
       mLutTemplateList.push_back(attr_value);
     }
     else if ( attr_name == "cell" ) {
-      mCellList.push_back(attr_value);
+      mClibList.push_back(attr_value);
     }
     else {
       add(attr_name, attr_value);
@@ -77,10 +77,10 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
   if ( tech_node ) {
     ShString str = tech_node->get_string_from_value_list();
     if ( str == "cmos" ) {
-      mTechnology = kCellTechCmos;
+      mTechnology = kClibTechCmos;
     }
     else if ( str == "fpga" ) {
-      mTechnology = kCellTechFpga;
+      mTechnology = kClibTechFpga;
     }
     else {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -97,23 +97,23 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
   if ( !get_singleton_or_null("delay_model", dm_node) ) {
     return false;
   }
-  CellDelayModel delay_model = kCellDelayGenericCmos;
+  ClibDelayModel delay_model = kClibDelayGenericCmos;
   if ( dm_node != nullptr ) {
     ShString value = dm_node->string_value();
     if ( value == "generic_cmos" ) {
-      delay_model = kCellDelayGenericCmos;
+      delay_model = kClibDelayGenericCmos;
     }
     else if ( value == "table_lookup" ) {
-      delay_model = kCellDelayTableLookup;
+      delay_model = kClibDelayTableLookup;
     }
     else if ( value == "piecewise_cmos" ) {
-      delay_model = kCellDelayPiecewiseCmos;
+      delay_model = kClibDelayPiecewiseCmos;
     }
     else if ( value == "cmos2" ) {
-      delay_model = kCellDelayCmos2;
+      delay_model = kClibDelayCmos2;
     }
     else if ( value == "dcm" ) {
-      delay_model = kCellDelayDcm;
+      delay_model = kClibDelayDcm;
     }
     else {
       ostringstream buf;
@@ -230,14 +230,14 @@ DotlibLibrary::name() const
 }
 
 // @brief "technology" を返す．
-CellTechnology
+ClibTechnology
 DotlibLibrary::technology() const
 {
   return mTechnology;
 }
 
 // @brief "delay_model" を返す．
-CellDelayModel
+ClibDelayModel
 DotlibLibrary::delay_model() const
 {
   return mDelayModel;
@@ -331,7 +331,7 @@ DotlibLibrary::lut_template_list() const
 const list<const DotlibNode*>&
 DotlibLibrary::cell_list() const
 {
-  return mCellList;
+  return mClibList;
 }
 
 END_NAMESPACE_YM_DOTLIB

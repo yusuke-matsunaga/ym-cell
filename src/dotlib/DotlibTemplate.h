@@ -45,18 +45,18 @@ public:
   dimension() const;
 
   /// @brief 'variable_1' を返す．
-  /// @note 未定義なら kCellVarNone を返す．
-  CellVarType
+  /// @note 未定義なら kClibVarNone を返す．
+  ClibVarType
   variable_1() const;
 
   /// @brief 'variable_2' を返す．
-  /// @note 未定義なら kCellVarNone を返す．
-  CellVarType
+  /// @note 未定義なら kClibVarNone を返す．
+  ClibVarType
   variable_2() const;
 
   /// @brief 'variable_3' を返す．
-  /// @note 未定義なら kCellVarNone を返す．
-  CellVarType
+  /// @note 未定義なら kClibVarNone を返す．
+  ClibVarType
   variable_3() const;
 
   /// @brief 'index_1' を返す．
@@ -87,13 +87,13 @@ private:
   ymuint32 mDimension;
 
   // variable_1
-  CellVarType mVar1;
+  ClibVarType mVar1;
 
   // variable_2
-  CellVarType mVar2;
+  ClibVarType mVar2;
 
   // variable_3
-  CellVarType mVar3;
+  ClibVarType mVar3;
 
   // index_1
   const DotlibNode* mIndex1;

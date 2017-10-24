@@ -11,7 +11,7 @@
 #include "CiLutTemplate.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLutHash
@@ -93,4 +93,4 @@ CiLutHash::alloc_table(ymuint req_size)
   }
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

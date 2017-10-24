@@ -13,7 +13,7 @@
 #include "LcSignature.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 BEGIN_NONAMESPACE
 
@@ -154,4 +154,4 @@ LcLatchMgr::find_idmap_list(const LcSignature& sig,
   // 今のところなし．
 }
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP

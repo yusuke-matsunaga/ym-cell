@@ -3,14 +3,14 @@
 /// @brief CiBundle の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "CiBundle.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiBundle
@@ -45,10 +45,10 @@ CiBundle::pin_num() const
 
 // @brief ピンの取得
 // @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
-const CellPin*
+const ClibCellPin*
 CiBundle::pin(ymuint pos) const
 {
   return mPinList[pos];
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

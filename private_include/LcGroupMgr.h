@@ -14,7 +14,7 @@
 #include "ym/HashMap.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 /// @class LcGroupMgr LcGroupMgr.h "LcGroupMgr.h"
@@ -109,6 +109,6 @@ private:
 
 };
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP
 
 #endif // LCGROUPMGR_H

@@ -13,7 +13,7 @@
 #include "ym/TvFunc.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 /// @class LcSignature LcSignature.h "LcSignature.h"
@@ -72,7 +72,7 @@ public:
 
   /// @brief セルを指定したコンストラクタ
   /// @param[in] cell セル
-  LcSignature(const Cell* cell);
+  LcSignature(const ClibCell* cell);
 
   /// @brief デストラクタ
   ~LcSignature();
@@ -345,6 +345,6 @@ LcSignature::tristate_func(ymuint opos) const
   return mTristateFunc[opos];
 }
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP
 
 #endif // LCSIGNATURE_H

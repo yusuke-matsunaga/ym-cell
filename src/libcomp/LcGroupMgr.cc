@@ -12,12 +12,12 @@
 #include "LcGroup.h"
 #include "LcSignature.h"
 #include "LibComp.h"
-#include "ym/Cell.h"
+#include "ym/Clib.h"
 #include "ym/MFSet.h"
 #include "ym/PermGen.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 // クラス LcGroupMgr
@@ -46,7 +46,7 @@ LcGroupMgr::clear()
 
 // @brief セルを追加する．
 void
-LcGroupMgr::add_cell(Cell* cell)
+LcGroupMgr::add_cell(Clib* cell)
 {
   if ( !cell->has_logic() || cell->output_num2() == 0 ) {
     // ひとつでも論理式を持たない出力があるセルは独立したグループとなる．
@@ -289,11 +289,11 @@ LcGroupMgr::dump(ODO& bos) const
     }
 
     // 属しているセル番号をダンプする．
-    const vector<const Cell*>& cell_list = group->cell_list();
+    const vector<const Clib*>& cell_list = group->cell_list();
     ymuint32 nc = cell_list.size();
     bos << nc;
     for (ymuint i = 0; i < nc; ++ i) {
-      const Cell* cell = cell_list[i];
+      const Clib* cell = cell_list[i];
       bos << static_cast<ymuint32>(cell->id());
     }
   }
@@ -314,4 +314,4 @@ LcGroupMgr::dump(ODO& bos) const
 }
 #endif
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP

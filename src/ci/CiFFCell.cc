@@ -10,7 +10,7 @@
 #include "CiFFCell.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiFFCell
@@ -35,10 +35,10 @@ BEGIN_NAMESPACE_YM_CELL
 // @param[in] alloc メモリアロケータ
 // *1: - false 論理式なし
 //     - true 論理式あり
-CiFFCell::CiFFCell(CiLibrary* library,
+CiFFCell::CiFFCell(CiCellLibrary* library,
 		   ymuint id,
 		   const ShString& name,
-		   CellArea area,
+		   ClibArea area,
 		   ymuint ni,
 		   ymuint no,
 		   ymuint nio,
@@ -124,10 +124,10 @@ CiFFCell::clock2_expr() const
 // @param[in] alloc メモリアロケータ
 // *1: - false 論理式なし
 //     - true 論理式あり
-CiFFRCell::CiFFRCell(CiLibrary* library,
+CiFFRCell::CiFFRCell(CiCellLibrary* library,
 		     ymuint id,
 		     const ShString& name,
-		     CellArea area,
+		     ClibArea area,
 		     ymuint ni,
 		     ymuint no,
 		     ymuint nio,
@@ -199,10 +199,10 @@ CiFFRCell::clear_expr() const
 // @param[in] alloc メモリアロケータ
 // *1: - false 論理式なし
 //     - true 論理式あり
-CiFFSCell::CiFFSCell(CiLibrary* library,
+CiFFSCell::CiFFSCell(CiCellLibrary* library,
 		     ymuint id,
 		     const ShString& name,
-		     CellArea area,
+		     ClibArea area,
 		     ymuint ni,
 		     ymuint no,
 		     ymuint nio,
@@ -277,10 +277,10 @@ CiFFSCell::preset_expr() const
 // @param[in] alloc メモリアロケータ
 // *1: - false 論理式なし
 //     - true 論理式あり
-CiFFSRCell::CiFFSRCell(CiLibrary* library,
+CiFFSRCell::CiFFSRCell(CiCellLibrary* library,
 		       ymuint id,
 		       const ShString& name,
-		       CellArea area,
+		       ClibArea area,
 		       ymuint ni,
 		       ymuint no,
 		       ymuint nio,
@@ -353,4 +353,4 @@ CiFFSRCell::clear_preset_var2() const
   return mClearPresetVal[1];
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

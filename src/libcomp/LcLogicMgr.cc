@@ -13,7 +13,7 @@
 #include "ym/Expr.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 // クラス LcLogicMgr
@@ -181,4 +181,4 @@ LcLogicMgr::find_idmap_list(const TvFuncM& func,
 }
 #endif
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP

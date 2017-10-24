@@ -12,7 +12,7 @@
 #include "CiCell.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiLogicCell CiLogicCell.h "CiLogicCell.h"
@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_CELL
 class CiLogicCell :
   public CiCell
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
@@ -41,10 +41,10 @@ private:
   /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
-  CiLogicCell(CiLibrary* library,
+  CiLogicCell(CiCellLibrary* library,
 	      ymuint id,
 	      const ShString& name,
-	      CellArea area,
+	      ClibArea area,
 	      ymuint ni,
 	      ymuint no,
 	      ymuint nio,
@@ -72,6 +72,6 @@ public:
 
 };
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CILOGICCELL_H

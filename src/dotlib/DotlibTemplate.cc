@@ -33,46 +33,46 @@ BEGIN_NONAMESPACE
 
 bool
 node_to_var(const DotlibNode* node,
-	    CellVarType &var)
+	    ClibVarType &var)
 {
   if ( node == nullptr ) {
-    var = kCellVarNone;
+    var = kClibVarNone;
     return true;
   }
 
   ShString tmp_str = node->string_value();
   if ( tmp_str == "input_net_transition" ) {
-    var = kCellVarInputNetTransition;
+    var = kClibVarInputNetTransition;
   }
   else if ( tmp_str == "total_output_net_capacitance" ) {
-    var = kCellVarTotalOutputNetCapacitance;
+    var = kClibVarTotalOutputNetCapacitance;
   }
   else if ( tmp_str == "output_net_length" ) {
-    var = kCellVarOutputNetLength;
+    var = kClibVarOutputNetLength;
   }
   else if ( tmp_str == "output_net_wire_cap" ) {
-    var = kCellVarOutputNetWireCap;
+    var = kClibVarOutputNetWireCap;
   }
   else if ( tmp_str == "output_net_pin_cap" ) {
-    var = kCellVarOutputNetPinCap;
+    var = kClibVarOutputNetPinCap;
   }
   else if ( tmp_str == "related_out_total_output_net_capacitance" ) {
-    var = kCellVarRelatedOutTotalOutputNetCapacitance;
+    var = kClibVarRelatedOutTotalOutputNetCapacitance;
   }
   else if ( tmp_str == "related_out_output_net_length" ) {
-    var = kCellVarRelatedOutOutputNetLength;
+    var = kClibVarRelatedOutOutputNetLength;
   }
   else if ( tmp_str == "related_out_output_net_wire_cap" ) {
-    var = kCellVarRelatedOutOutputNetWireCap;
+    var = kClibVarRelatedOutOutputNetWireCap;
   }
   else if ( tmp_str == "related_out_output_net_pin_cap" ) {
-    var = kCellVarRelatedOutOutputNetPinCap;
+    var = kClibVarRelatedOutOutputNetPinCap;
   }
   else if ( tmp_str == "constrained_pin_transition" ) {
-    var = kCellVarConstrainedPinTransition;
+    var = kClibVarConstrainedPinTransition;
   }
   else if ( tmp_str == "related_pin_transition" ) {
-    var = kCellVarRelatedPinTransition;
+    var = kClibVarRelatedPinTransition;
   }
   else {
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -233,24 +233,24 @@ DotlibTemplate::dimension() const
 }
 
 // @brief 'variable_1' を返す．
-// @note 未定義なら kCellVarNone を返す．
-CellVarType
+// @note 未定義なら kClibVarNone を返す．
+ClibVarType
 DotlibTemplate::variable_1() const
 {
   return mVar1;
 }
 
 // @brief 'variable_2' を返す．
-// @note 未定義なら kCellVarNone を返す．
-CellVarType
+// @note 未定義なら kClibVarNone を返す．
+ClibVarType
 DotlibTemplate::variable_2() const
 {
   return mVar2;
 }
 
 // @brief 'variable_3' を返す．
-// @note 未定義なら kCellVarNone を返す．
-CellVarType
+// @note 未定義なら kClibVarNone を返す．
+ClibVarType
 DotlibTemplate::variable_3() const
 {
   return mVar3;

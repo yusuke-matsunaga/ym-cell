@@ -10,7 +10,7 @@
 #include "LcGroup.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 // クラス LcGroup
@@ -52,14 +52,14 @@ LcGroup::map() const
 }
 
 // @brief 実体を返す．
-CellGroup*
+ClibCellGroup*
 LcGroup::cell_group() const
 {
   return mCellGroup;
 }
 
 // @brief 属しているセルのリストを返す．
-const vector<Cell*>&
+const vector<ClibCell*>&
 LcGroup::cell_list() const
 {
   return mCellList;
@@ -68,9 +68,9 @@ LcGroup::cell_list() const
 // @brief セルを追加する．
 // @param[in] cell セル
 void
-LcGroup::add_cell(Cell* cell)
+LcGroup::add_cell(ClibCell* cell)
 {
   mCellList.push_back(cell);
 }
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP

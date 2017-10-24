@@ -2,29 +2,29 @@
 #define CITIMING_H
 
 /// @file　CiTiming.h
-/// @brief CellTiming の実装クラスのヘッダファイル
+/// @brief ClibTiming の実装クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ym/CellTiming.h"
-#include "ym/CellTime.h"
-#include "ym/CellResistance.h"
+#include "ym/ClibTiming.h"
+#include "ym/ClibTime.h"
+#include "ym/ClibResistance.h"
 #include "ym/Expr.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiTiming CiTiming.h "CiTiming.h"
 /// @brief 共通の基底クラス
 //////////////////////////////////////////////////////////////////////
 class CiTiming :
-  public CellTiming
+  public ClibTiming
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 protected:
 
@@ -33,7 +33,7 @@ protected:
   /// @param[in] type タイミング条件の型
   /// @param[in] cond タイミング条件を表す式
   CiTiming(ymuint id,
-	   CellTimingType type,
+	   ClibTimingType type,
 	   const Expr& cond);
 
   /// @brief デストラクタ
@@ -53,7 +53,7 @@ public:
 
   /// @brief 型の取得
   virtual
-  CellTimingType
+  ClibTimingType
   type() const;
 
   /// @brief タイミング条件式の取得
@@ -70,22 +70,22 @@ public:
 
   /// @brief 立ち上がり固有遅延の取得
   virtual
-  CellTime
+  ClibTime
   intrinsic_rise() const;
 
   /// @brief 立ち下がり固有遅延の取得
   virtual
-  CellTime
+  ClibTime
   intrinsic_fall() const;
 
   /// @brief 立ち上がりスロープ遅延の取得
   virtual
-  CellTime
+  ClibTime
   slope_rise() const;
 
   /// @brief 立ち下がりスロープ遅延の取得
   virtual
-  CellTime
+  ClibTime
   slope_fall() const;
 
 
@@ -96,12 +96,12 @@ public:
 
   /// @brief 立ち上がり遷移遅延の取得
   virtual
-  CellResistance
+  ClibResistance
   rise_resistance() const;
 
   /// @brief 立ち下がり遷移遅延の取得
   virtual
-  CellResistance
+  ClibResistance
   fall_resistance() const;
 
 
@@ -112,22 +112,22 @@ public:
 
   /// @brief 立ち上がり遷移遅延の取得
   virtual
-  CellResistance
+  ClibResistance
   rise_pin_resistance() const;
 
   /// @brief 立ち下がり遷移遅延の取得
   virtual
-  CellResistance
+  ClibResistance
   fall_pin_resistance() const;
 
   /// @brief 立ち上がり？？？
   virtual
-  CellTime
+  ClibTime
   rise_delay_intercept() const;
 
   /// @brief 立ち下がり？？？
   virtual
-  CellTime
+  ClibTime
   fall_delay_intercept() const;
 
 
@@ -138,32 +138,32 @@ public:
 
   /// @brief 立ち上がり遷移遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   rise_transition() const;
 
   /// @brief 立ち下がり遷移遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   fall_transition() const;
 
   /// @brief 立ち上がり伝搬遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   rise_propagation() const;
 
   /// @brief 立ち下がり伝搬遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   fall_propagation() const;
 
   /// @brief 立ち上がりセル遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   cell_rise() const;
 
   /// @brief 立ち下がりセル遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   cell_fall() const;
 
 
@@ -189,7 +189,7 @@ private:
   ymuint32 mId;
 
   // 型
-  CellTimingType mType;
+  ClibTimingType mType;
 
   // タイミング条件
   Expr mCond;
@@ -199,7 +199,7 @@ private:
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiTiming CiTiming.h "CiTiming.h"
-/// @brief CMOSジェネリック/折れ線近似タイプ共通の CellTiming の実装クラス
+/// @brief CMOSジェネリック/折れ線近似タイプ共通の ClibTiming の実装クラス
 //////////////////////////////////////////////////////////////////////
 class CiTimingGP :
   public CiTiming
@@ -215,12 +215,12 @@ protected:
   /// @param[in] slope_rise 立ち上がりスロープ遅延
   /// @param[in] slope_fall 立ち下がりスロープ遅延
   CiTimingGP(ymuint id,
-	     CellTimingType timing_type,
+	     ClibTimingType timing_type,
 	     const Expr& cond,
-	     CellTime intrinsic_rise,
-	     CellTime intrinsic_fall,
-	     CellTime slope_rise,
-	     CellTime slope_fall);
+	     ClibTime intrinsic_rise,
+	     ClibTime intrinsic_fall,
+	     ClibTime slope_rise,
+	     ClibTime slope_fall);
 
   /// @brief デストラクタ
   virtual
@@ -234,22 +234,22 @@ public:
 
   /// @brief 立ち上がり固有遅延の取得
   virtual
-  CellTime
+  ClibTime
   intrinsic_rise() const;
 
   /// @brief 立ち下がり固有遅延の取得
   virtual
-  CellTime
+  ClibTime
   intrinsic_fall() const;
 
   /// @brief 立ち上がりスロープ遅延の取得
   virtual
-  CellTime
+  ClibTime
   slope_rise() const;
 
   /// @brief 立ち下がりスロープ遅延の取得
   virtual
-  CellTime
+  ClibTime
   slope_fall() const;
 
 
@@ -259,28 +259,28 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がり固有遅延
-  CellTime mIntrinsicRise;
+  ClibTime mIntrinsicRise;
 
   // 立ち下がり固有遅延
-  CellTime mIntrinsicFall;
+  ClibTime mIntrinsicFall;
 
   // 立ち上がりスロープ遅延
-  CellTime mSlopeRise;
+  ClibTime mSlopeRise;
 
   // 立ち下がりスロープ遅延
-  CellTime mSlopeFall;
+  ClibTime mSlopeFall;
 
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiTimingGeneric CiTiming.h "CiTiming.h"
-/// @brief CMOSジェネリックタイプの CellTiming の実装クラス
+/// @brief CMOSジェネリックタイプの ClibTiming の実装クラス
 //////////////////////////////////////////////////////////////////////
 class CiTimingGeneric :
   public CiTimingGP
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
@@ -295,14 +295,14 @@ private:
   /// @param[in] rise_resistance 立ち上がり遷移遅延パラメータ
   /// @param[in] fall_resistance 立ち下がり遷移遅延パラメータ
   CiTimingGeneric(ymuint id,
-		  CellTimingType timing_type,
+		  ClibTimingType timing_type,
 		  const Expr& cond,
-		  CellTime intrinsic_rise,
-		  CellTime intrinsic_fall,
-		  CellTime slope_rise,
-		  CellTime slope_fall,
-		  CellResistance rise_resistance,
-		  CellResistance fall_resistance);
+		  ClibTime intrinsic_rise,
+		  ClibTime intrinsic_fall,
+		  ClibTime slope_rise,
+		  ClibTime slope_fall,
+		  ClibResistance rise_resistance,
+		  ClibResistance fall_resistance);
 
   /// @brief デストラクタ
   virtual
@@ -316,12 +316,12 @@ public:
 
   /// @brief 立ち上がり遷移遅延の取得
   virtual
-  CellResistance
+  ClibResistance
   rise_resistance() const;
 
   /// @brief 立ち下がり遷移遅延の取得
   virtual
-  CellResistance
+  ClibResistance
   fall_resistance() const;
 
 
@@ -343,22 +343,22 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がり遷移遅延
-  CellResistance mRiseResistance;
+  ClibResistance mRiseResistance;
 
   // 立ち下がり遷移遅延
-  CellResistance mFallResistance;
+  ClibResistance mFallResistance;
 
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiTimingPiecewise CiTiming.h "CiTiming.h"
-/// @brief CMOS折れ線近似タイプの CellTiming の実装クラス
+/// @brief CMOS折れ線近似タイプの ClibTiming の実装クラス
 //////////////////////////////////////////////////////////////////////
 class CiTimingPiecewise :
   public CiTimingGP
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
@@ -371,14 +371,14 @@ private:
   /// @param[in] slope_rise 立ち上がりスロープ遅延
   /// @param[in] slope_fall 立ち下がりスロープ遅延
   CiTimingPiecewise(ymuint id,
-		    CellTimingType timing_type,
+		    ClibTimingType timing_type,
 		    const Expr& cond,
-		    CellTime intrinsic_rise,
-		    CellTime intrinsic_fall,
-		    CellTime slope_rise,
-		    CellTime slope_fall,
-		    CellResistance rise_pin_resistance,
-		    CellResistance fall_pin_resistance);
+		    ClibTime intrinsic_rise,
+		    ClibTime intrinsic_fall,
+		    ClibTime slope_rise,
+		    ClibTime slope_fall,
+		    ClibResistance rise_pin_resistance,
+		    ClibResistance fall_pin_resistance);
 
   /// @brief デストラクタ
   virtual
@@ -392,22 +392,22 @@ public:
 
   /// @brief 立ち上がり遷移遅延の取得
   virtual
-  CellResistance
+  ClibResistance
   rise_pin_resistance() const;
 
   /// @brief 立ち下がり遷移遅延の取得
   virtual
-  CellResistance
+  ClibResistance
   fall_pin_resistance() const;
 
   /// @brief 立ち上がり？？？
   virtual
-  CellTime
+  ClibTime
   rise_delay_intercept() const;
 
   /// @brief 立ち下がり？？？
   virtual
-  CellTime
+  ClibTime
   fall_delay_intercept() const;
 
 
@@ -429,22 +429,22 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がり遷移遅延
-  CellResistance mRisePinResistance;
+  ClibResistance mRisePinResistance;
 
   // 立ち下がり遷移遅延
-  CellResistance mFallPinResistance;
+  ClibResistance mFallPinResistance;
 
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiTimingLut1 CiTiming.h "CiTiming.h"
-/// @brief CMOS非線形タイプの CellTiming の実装クラス
+/// @brief CMOS非線形タイプの ClibTiming の実装クラス
 //////////////////////////////////////////////////////////////////////
 class CiTimingLut1 :
   public CiTiming
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
@@ -455,12 +455,12 @@ private:
   /// @param[in] cell_rise 立ち上がりセル遅延テーブル
   /// @param[in] cell_fall 立ち下がりセル遅延テーブル
   CiTimingLut1(ymuint id,
-	       CellTimingType timing_type,
+	       ClibTimingType timing_type,
 	       const Expr& cond,
-	       CellLut* cell_rise,
-	       CellLut* cell_fall,
-	       CellLut* rise_transition,
-	       CellLut* fall_transition);
+	       ClibLut* cell_rise,
+	       ClibLut* cell_fall,
+	       ClibLut* rise_transition,
+	       ClibLut* fall_transition);
 
 
   /// @brief デストラクタ
@@ -475,22 +475,22 @@ public:
 
   /// @brief 立ち上がりセル遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   cell_rise() const;
 
   /// @brief 立ち下がりセル遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   cell_fall() const;
 
   /// @brief 立ち上がり遷移遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   rise_transition() const;
 
   /// @brief 立ち下がり遷移遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   fall_transition() const;
 
 
@@ -512,28 +512,28 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がりセル遅延テーブル
-  const CellLut* mCellRise;
+  const ClibLut* mClibRise;
 
   // 立ち下がりセル遅延テーブル
-  const CellLut* mCellFall;
+  const ClibLut* mClibFall;
 
   // 立ち上がり遷移遅延テーブル
-  const CellLut* mRiseTransition;
+  const ClibLut* mRiseTransition;
 
   // 立ち下がり遷移遅延テーブル
-  const CellLut* mFallTransition;
+  const ClibLut* mFallTransition;
 
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiTimingLut2 CiTiming.h "CiTiming.h"
-/// @brief CMOS非線形タイプの CellTiming の実装クラス
+/// @brief CMOS非線形タイプの ClibTiming の実装クラス
 //////////////////////////////////////////////////////////////////////
 class CiTimingLut2 :
   public CiTiming
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
@@ -546,12 +546,12 @@ private:
   /// @param[in] rise_propagation 立ち上がり伝搬遅延テーブル
   /// @param[in] fall_propagation 立ち下がり伝搬遅延テーブル
   CiTimingLut2(ymuint id,
-	       CellTimingType timing_type,
+	       ClibTimingType timing_type,
 	       const Expr& cond,
-	       CellLut* rise_transition,
-	       CellLut* fall_transition,
-	       CellLut* rise_propagation,
-	       CellLut* fall_propagation);
+	       ClibLut* rise_transition,
+	       ClibLut* fall_transition,
+	       ClibLut* rise_propagation,
+	       ClibLut* fall_propagation);
 
 
   /// @brief デストラクタ
@@ -566,22 +566,22 @@ public:
 
   /// @brief 立ち上がり遷移遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   rise_transition() const;
 
   /// @brief 立ち下がり遷移遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   fall_transition() const;
 
   /// @brief 立ち上がり伝搬遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   rise_propagation() const;
 
   /// @brief 立ち下がり伝搬遅延テーブルの取得
   virtual
-  const CellLut*
+  const ClibLut*
   fall_propagation() const;
 
 
@@ -603,19 +603,19 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がり遷移遅延テーブル
-  const CellLut* mRiseTransition;
+  const ClibLut* mRiseTransition;
 
   // 立ち下がり遷移遅延テーブル
-  const CellLut* mFallTransition;
+  const ClibLut* mFallTransition;
 
   // 立ち上がり伝搬遅延テーブル
-  const CellLut* mRisePropagation;
+  const ClibLut* mRisePropagation;
 
   // 立ち下がり伝搬遅延テーブル
-  const CellLut* mFallPropagation;
+  const ClibLut* mFallPropagation;
 
 };
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CITIMING_H

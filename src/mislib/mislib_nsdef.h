@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "ym/ym_cell.h"
+#include "ym/clib.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -18,13 +18,13 @@
 
 /// @brief mislib の名前空間の開始
 #define BEGIN_NAMESPACE_YM_MISLIB \
-BEGIN_NAMESPACE_YM_CELL \
+BEGIN_NAMESPACE_YM_CLIB \
 BEGIN_NAMESPACE(nsMislib)
 
 /// @brief mislib の名前空間の終了
 #define END_NAMESPACE_YM_MISLIB \
 END_NAMESPACE(nsMislib) \
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 
 BEGIN_NAMESPACE_YM_MISLIB

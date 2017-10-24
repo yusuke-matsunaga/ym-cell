@@ -8,11 +8,11 @@
 
 
 #include "LcSignature.h"
-#include "ym/Cell.h"
+#include "ym/ClibCell.h"
 #include "ym/Expr.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 // クラス LcSignature
@@ -134,7 +134,7 @@ LcSignature::LcSignature(Type type,
 
 // @brief コンストラクタ
 // @param[in] cell セル
-LcSignature::LcSignature(const Cell* cell) :
+LcSignature::LcSignature(const ClibCell* cell) :
   mInputNum(cell->input_num()),
   mOutputNum(cell->output_num()),
   mOutputBits(mOutputNum, 0U),
@@ -280,4 +280,4 @@ LcSignature::operator==(const LcSignature& right) const
 }
 
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP

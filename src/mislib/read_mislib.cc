@@ -9,12 +9,12 @@
 
 #include "mislib_nsdef.h"
 
-#include "ym/CellLibrary.h"
-#include "ym/CellArea.h"
-#include "ym/CellCapacitance.h"
-#include "ym/CellResistance.h"
-#include "ym/CellTime.h"
-#include "ym/CellTiming.h"
+#include "ym/ClibCellLibrary.h"
+#include "ym/ClibArea.h"
+#include "ym/ClibCapacitance.h"
+#include "ym/ClibResistance.h"
+#include "ym/ClibTime.h"
+#include "ym/ClibTiming.h"
 
 #include "MislibParser.h"
 #include "MislibMgr.h"
@@ -72,14 +72,14 @@ dfs(const MislibNode* node,
   }
 }
 
-// @brief MislibNode から CellLibrary に設定する．
+// @brief MislibNode から ClibCellLibrary に設定する．
 // @param[in] lib_name ライブラリ名
 // @param[in] gate_list パース木のルート
 // @param[in] library 設定対象のライブラリ
 void
 set_library(const string& lib_name,
 	    const MislibNode* gate_list,
-	    CellLibrary* library)
+	    ClibCellLibrary* library)
 {
   // 名前の設定
   library->set_name(lib_name);
@@ -96,7 +96,7 @@ set_library(const string& lib_name,
   for (const MislibNode* gate = gate_list->top(); gate;
        gate = gate->next(), ++ cell_id) {
     ShString name = gate->name()->str();
-    CellArea area(gate->area()->num());
+    ClibArea area(gate->area()->num());
     ShString opin_name = gate->opin_name()->str();
     const MislibNode* opin_expr = gate->opin_expr();
     const MislibNode* ipin_top = gate->ipin_top();
@@ -142,19 +142,19 @@ set_library(const string& lib_name,
       // 入力ピンの設定
       ShString name = ipin_name_list[i];
       const MislibNode* pin = ipin_array[i];
-      CellCapacitance load(pin->input_load()->num());
+      ClibCapacitance load(pin->input_load()->num());
       library->new_cell_input(cell_id, i, i, name, load, load, load);
     }
     // 出力ピンの設定
     library->new_cell_output(cell_id, ni, 0, opin_name,
 			     true, function,
 			     Expr::const_zero(),
-			     CellCapacitance::infty(),
-			     CellCapacitance(0.0),
-			     CellCapacitance::infty(),
-			     CellCapacitance(0.0),
-			     CellTime::infty(),
-			     CellTime(0.0));
+			     ClibCapacitance::infty(),
+			     ClibCapacitance(0.0),
+			     ClibCapacitance::infty(),
+			     ClibCapacitance(0.0),
+			     ClibTime::infty(),
+			     ClibTime(0.0));
 
     // タイミング情報の生成
     vector<ymuint> tid_array(ni);
@@ -162,15 +162,15 @@ set_library(const string& lib_name,
       library->set_timing_num(cell_id, ni);
       for (ymuint i = 0; i < ni; ++ i) {
 	const MislibNode* pt_pin = ipin_array[i];
-	CellTime r_i(pt_pin->rise_block_delay()->num());
-	CellResistance r_r(pt_pin->rise_fanout_delay()->num());
-	CellTime f_i(pt_pin->fall_block_delay()->num());
-	CellResistance f_r(pt_pin->fall_fanout_delay()->num());
+	ClibTime r_i(pt_pin->rise_block_delay()->num());
+	ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
+	ClibTime f_i(pt_pin->fall_block_delay()->num());
+	ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
 	library->new_timing_generic(cell_id, i,
-				    kCellTimingCombinational,
+				    kClibTimingCombinational,
 				    Expr::const_one(),
 				    r_i, f_i,
-				    CellTime(0.0), CellTime(0.0),
+				    ClibTime(0.0), ClibTime(0.0),
 				    r_r, f_r);
 	tid_array[i] = i;
       }
@@ -178,15 +178,15 @@ set_library(const string& lib_name,
     else { // ipin_list->type() == MislibNode::kPin
       library->set_timing_num(cell_id, 1);
       const MislibNode* pt_pin = ipin_top;
-      CellTime r_i(pt_pin->rise_block_delay()->num());
-      CellResistance r_r(pt_pin->rise_fanout_delay()->num());
-      CellTime f_i(pt_pin->fall_block_delay()->num());
-      CellResistance f_r(pt_pin->fall_fanout_delay()->num());
+      ClibTime r_i(pt_pin->rise_block_delay()->num());
+      ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
+      ClibTime f_i(pt_pin->fall_block_delay()->num());
+      ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
       library->new_timing_generic(cell_id, 0,
-				  kCellTimingCombinational,
+				  kClibTimingCombinational,
 				  Expr::const_one(),
 				  r_i, f_i,
-				  CellTime(0.0), CellTime(0.0),
+				  ClibTime(0.0), ClibTime(0.0),
 				  r_r, f_r);
       for (ymuint i = 0; i < ni; ++ i) {
 	tid_array[i] = 0;
@@ -200,19 +200,19 @@ set_library(const string& lib_name,
       const MislibNode* pt_pin = ipin_array[i];
       TvFunc p_func = tv_function.cofactor(var, false);
       TvFunc n_func = tv_function.cofactor(var, true);
-      CellTimingSense sense_real = kCellNonUnate;
+      ClibTimingSense sense_real = kClibNonUnate;
       bool redundant = false;
       if ( ~p_func && n_func ) {
 	if ( ~n_func && p_func ) {
-	  sense_real = kCellNonUnate;
+	  sense_real = kClibNonUnate;
 	}
 	else {
-	  sense_real = kCellNegaUnate;
+	  sense_real = kClibNegaUnate;
 	}
       }
       else {
 	if ( ~n_func && p_func ) {
-	  sense_real = kCellPosiUnate;
+	  sense_real = kClibPosiUnate;
 	}
 	else {
 	  // つまり p_func == n_func ということ．
@@ -233,18 +233,18 @@ set_library(const string& lib_name,
 	continue;
       }
 
-      CellTimingSense sense = kCellNonUnate;
+      ClibTimingSense sense = kClibNonUnate;
       switch ( pt_pin->phase()->type() ) {
       case MislibNode::kNoninv:
-	sense = kCellPosiUnate;
+	sense = kClibPosiUnate;
 	break;
 
       case MislibNode::kInv:
-	sense = kCellNegaUnate;
+	sense = kClibNegaUnate;
 	break;
 
       case MislibNode::kUnknown:
-	sense = kCellNonUnate;
+	sense = kClibNonUnate;
 	break;
 
       default:
@@ -262,10 +262,10 @@ set_library(const string& lib_name,
 			buf.str());
 	sense = sense_real;
       }
-      if ( sense == kCellNonUnate ) {
-	library->set_timing(cell_id, i, 0, kCellPosiUnate,
+      if ( sense == kClibNonUnate ) {
+	library->set_timing(cell_id, i, 0, kClibPosiUnate,
 			    vector<ymuint>(1, tid_array[i]));
-	library->set_timing(cell_id, i, 0, kCellNegaUnate,
+	library->set_timing(cell_id, i, 0, kClibNegaUnate,
 			    vector<ymuint>(1, tid_array[i]));
       }
       else {
@@ -283,7 +283,7 @@ END_NONAMESPACE
 END_NAMESPACE_YM_MISLIB
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 // @brief mislib 形式のファイルを読み込んでライブラリに設定する．
 // @param[in] filename ファイル名
@@ -291,7 +291,7 @@ BEGIN_NAMESPACE_YM_CELL
 // @return 読み込みが成功したら true を返す．
 bool
 read_mislib(const string& filename,
-	    CellLibrary* library)
+	    ClibCellLibrary* library)
 {
   using namespace nsMislib;
 
@@ -312,9 +312,9 @@ read_mislib(const string& filename,
 // @return 読み込みが成功したら true を返す．
 bool
 read_mislib(const char* filename,
-	    CellLibrary* library)
+	    ClibCellLibrary* library)
 {
   return read_mislib(string(filename), library);
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

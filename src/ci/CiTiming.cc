@@ -8,16 +8,16 @@
 
 
 #include "CiTiming.h"
-#include "ym/CellLut.h"
+#include "ym/ClibLut.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 BEGIN_NONAMESPACE
 
 void
 dump_lut(ODO& s,
-	 const CellLut* lut)
+	 const ClibLut* lut)
 {
   if ( lut ) {
     lut->dump(s);
@@ -38,7 +38,7 @@ END_NONAMESPACE
 // @param[in] type タイミング条件の型
 // @param[in] cond タイミング条件を表す式
 CiTiming::CiTiming(ymuint id,
-		   CellTimingType type,
+		   ClibTimingType type,
 		   const Expr& cond) :
   mId(id),
   mType(type),
@@ -60,7 +60,7 @@ CiTiming::id() const
 }
 
 // @brief 型の取得
-CellTimingType
+ClibTimingType
 CiTiming::type() const
 {
   return mType;
@@ -75,112 +75,112 @@ CiTiming::timing_cond() const
 }
 
 // @brief 立ち上がり固有遅延の取得
-CellTime
+ClibTime
 CiTiming::intrinsic_rise() const
 {
-  return CellTime(0.0);
+  return ClibTime(0.0);
 }
 
 // @brief 立ち下がり固有遅延の取得
-CellTime
+ClibTime
 CiTiming::intrinsic_fall() const
 {
-  return CellTime(0.0);
+  return ClibTime(0.0);
 }
 
 // @brief 立ち上がりスロープ遅延の取得
-CellTime
+ClibTime
 CiTiming::slope_rise() const
 {
-  return CellTime(0.0);
+  return ClibTime(0.0);
 }
 
 // @brief 立ち下がりスロープ遅延の取得
-CellTime
+ClibTime
 CiTiming::slope_fall() const
 {
-  return CellTime(0.0);
+  return ClibTime(0.0);
 }
 
 // @brief 立ち上がり遷遅延の取得
-CellResistance
+ClibResistance
 CiTiming::rise_resistance() const
 {
-  return CellResistance(0.0);
+  return ClibResistance(0.0);
 }
 
 // @brief 立ち下がり遷移遅延の取得
-CellResistance
+ClibResistance
 CiTiming::fall_resistance() const
 {
-  return CellResistance(0.0);
+  return ClibResistance(0.0);
 }
 
 // @brief 立ち上がり遷移遅延の取得
-CellResistance
+ClibResistance
 CiTiming::rise_pin_resistance() const
 {
-  return CellResistance(0.0);
+  return ClibResistance(0.0);
 }
 
 // @brief 立ち下がり遷移遅延の取得
-CellResistance
+ClibResistance
 CiTiming::fall_pin_resistance() const
 {
-  return CellResistance(0.0);
+  return ClibResistance(0.0);
 }
 
 // @brief 立ち上がり？？？
-CellTime
+ClibTime
 CiTiming::rise_delay_intercept() const
 {
-  return CellTime(0.0);
+  return ClibTime(0.0);
 }
 
 // @brief 立ち下がり？？？
-CellTime
+ClibTime
 CiTiming::fall_delay_intercept() const
 {
-  return CellTime(0.0);
+  return ClibTime(0.0);
 }
 
 // @brief 立ち上がり遷移遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTiming::rise_transition() const
 {
   return nullptr;
 }
 
 // @brief 立ち下がり遷移遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTiming::fall_transition() const
 {
   return nullptr;
 }
 
 // @brief 立ち上がり伝搬遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTiming::rise_propagation() const
 {
   return nullptr;
 }
 
 // @brief 立ち下がり伝搬遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTiming::fall_propagation() const
 {
   return nullptr;
 }
 
 // @brief 立ち上がりセル遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTiming::cell_rise() const
 {
   return nullptr;
 }
 
 // @brief 立ち下がりセル遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTiming::cell_fall() const
 {
   return nullptr;
@@ -212,12 +212,12 @@ CiTiming::dump_common(ODO& s,
 // @param[in] slope_rise 立ち上がりスロープ遅延
 // @param[in] slope_fall 立ち下がりスロープ遅延
 CiTimingGP::CiTimingGP(ymuint id,
-		       CellTimingType timing_type,
+		       ClibTimingType timing_type,
 		       const Expr& cond,
-		       CellTime intrinsic_rise,
-		       CellTime intrinsic_fall,
-		       CellTime slope_rise,
-		       CellTime slope_fall) :
+		       ClibTime intrinsic_rise,
+		       ClibTime intrinsic_fall,
+		       ClibTime slope_rise,
+		       ClibTime slope_fall) :
   CiTiming(id, timing_type, cond),
   mIntrinsicRise(intrinsic_rise),
   mIntrinsicFall(intrinsic_fall),
@@ -232,28 +232,28 @@ CiTimingGP::~CiTimingGP()
 }
 
 // @brief 立ち上がり固有遅延の取得
-CellTime
+ClibTime
 CiTimingGP::intrinsic_rise() const
 {
   return mIntrinsicRise;
 }
 
 // @brief 立ち下がり固有遅延の取得
-CellTime
+ClibTime
 CiTimingGP::intrinsic_fall() const
 {
   return mIntrinsicFall;
 }
 
 // @brief 立ち上がりスロープ遅延の取得
-CellTime
+ClibTime
 CiTimingGP::slope_rise() const
 {
   return mSlopeRise;
 }
 
 // @brief 立ち下がりスロープ遅延の取得
-CellTime
+ClibTime
 CiTimingGP::slope_fall() const
 {
   return mSlopeFall;
@@ -275,14 +275,14 @@ CiTimingGP::slope_fall() const
 // @param[in] rise_resistance 立ち上がり遷移遅延パラメータ
 // @param[in] fall_resistance 立ち下がり遷移遅延パラメータ
 CiTimingGeneric::CiTimingGeneric(ymuint id,
-				 CellTimingType timing_type,
+				 ClibTimingType timing_type,
 				 const Expr& cond,
-				 CellTime intrinsic_rise,
-				 CellTime intrinsic_fall,
-				 CellTime slope_rise,
-				 CellTime slope_fall,
-				 CellResistance rise_resistance,
-				 CellResistance fall_resistance) :
+				 ClibTime intrinsic_rise,
+				 ClibTime intrinsic_fall,
+				 ClibTime slope_rise,
+				 ClibTime slope_fall,
+				 ClibResistance rise_resistance,
+				 ClibResistance fall_resistance) :
   CiTimingGP(id, timing_type, cond,
 	     intrinsic_rise, intrinsic_fall,
 	     slope_rise, slope_fall),
@@ -298,14 +298,14 @@ CiTimingGeneric::~CiTimingGeneric()
 
 
 // @brief 立ち上がり遷移遅延の取得
-CellResistance
+ClibResistance
 CiTimingGeneric::rise_resistance() const
 {
   return mRiseResistance;
 }
 
 // @brief 立ち下がり遷移遅延の取得
-CellResistance
+ClibResistance
 CiTimingGeneric::fall_resistance() const
 {
   return mFallResistance;
@@ -340,14 +340,14 @@ CiTimingGeneric::dump(ODO& s) const
 // @param[in] slope_rise 立ち上がりスロープ遅延
 // @param[in] slope_fall 立ち下がりスロープ遅延
 CiTimingPiecewise::CiTimingPiecewise(ymuint id,
-				     CellTimingType timing_type,
+				     ClibTimingType timing_type,
 				     const Expr& cond,
-				     CellTime intrinsic_rise,
-				     CellTime intrinsic_fall,
-				     CellTime slope_rise,
-				     CellTime slope_fall,
-				     CellResistance rise_pin_resistance,
-				     CellResistance fall_pin_resistance) :
+				     ClibTime intrinsic_rise,
+				     ClibTime intrinsic_fall,
+				     ClibTime slope_rise,
+				     ClibTime slope_fall,
+				     ClibResistance rise_pin_resistance,
+				     ClibResistance fall_pin_resistance) :
   CiTimingGP(id, timing_type, cond,
 	     intrinsic_rise, intrinsic_fall,
 	     slope_rise, slope_fall),
@@ -362,33 +362,33 @@ CiTimingPiecewise::~CiTimingPiecewise()
 }
 
 // @brief 立ち上がり遷移遅延の取得
-CellResistance
+ClibResistance
 CiTimingPiecewise::rise_pin_resistance() const
 {
   return mRisePinResistance;
 }
 
 // @brief 立ち下がり遷移遅延の取得
-CellResistance
+ClibResistance
 CiTimingPiecewise::fall_pin_resistance() const
 {
   return mFallPinResistance;
 }
 
 // @brief 立ち上がり？？？
-CellTime
+ClibTime
 CiTimingPiecewise::rise_delay_intercept() const
 {
 #warning "TODO: CiTimingPiecewise::rise_delay_intercept"
-  return CellTime(0.0);
+  return ClibTime(0.0);
 }
 
 // @brief 立ち下がり？？？
-CellTime
+ClibTime
 CiTimingPiecewise::fall_delay_intercept() const
 {
 #warning "TODO: CiTimingPiecewise::fall_delay_intercept"
-  return CellTime(0.0);
+  return ClibTime(0.0);
 }
 
 // @brief 内容をバイナリダンプする．
@@ -418,15 +418,15 @@ CiTimingPiecewise::dump(ODO& s) const
 // @param[in] rise_transition 立ち上がり遷移遅延テーブル
 // @param[in] fall_transition 立ち下がり遷移遅延テーブル
 CiTimingLut1::CiTimingLut1(ymuint id,
-			   CellTimingType timing_type,
+			   ClibTimingType timing_type,
 			   const Expr& cond,
-			   CellLut* cell_rise,
-			   CellLut* cell_fall,
-			   CellLut* rise_transition,
-			   CellLut* fall_transition) :
+			   ClibLut* cell_rise,
+			   ClibLut* cell_fall,
+			   ClibLut* rise_transition,
+			   ClibLut* fall_transition) :
   CiTiming(id, timing_type, cond),
-  mCellRise(cell_rise),
-  mCellFall(cell_fall),
+  mClibRise(cell_rise),
+  mClibFall(cell_fall),
   mRiseTransition(rise_transition),
   mFallTransition(fall_transition)
 {
@@ -438,28 +438,28 @@ CiTimingLut1::~CiTimingLut1()
 }
 
 // @brief 立ち上がりセル遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTimingLut1::cell_rise() const
 {
-  return mCellRise;
+  return mClibRise;
 }
 
 // @brief 立ち下がりセル遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTimingLut1::cell_fall() const
 {
-  return mCellFall;
+  return mClibFall;
 }
 
 // @brief 立ち上がり遷移遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTimingLut1::rise_transition() const
 {
   return mRiseTransition;
 }
 
 // @brief 立ち下がり遷移遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTimingLut1::fall_transition() const
 {
   return mFallTransition;
@@ -492,12 +492,12 @@ CiTimingLut1::dump(ODO& s) const
 // @param[in] rise_propagation 立ち上がり伝搬遅延テーブル
 // @param[in] fall_propagation 立ち下がり伝搬遅延テーブル
 CiTimingLut2::CiTimingLut2(ymuint id,
-			   CellTimingType timing_type,
+			   ClibTimingType timing_type,
 			   const Expr& cond,
-			   CellLut* rise_transition,
-			   CellLut* fall_transition,
-			   CellLut* rise_propagation,
-			   CellLut* fall_propagation) :
+			   ClibLut* rise_transition,
+			   ClibLut* fall_transition,
+			   ClibLut* rise_propagation,
+			   ClibLut* fall_propagation) :
   CiTiming(id, timing_type, cond),
   mRiseTransition(rise_transition),
   mFallTransition(fall_transition),
@@ -512,28 +512,28 @@ CiTimingLut2::~CiTimingLut2()
 }
 
 // @brief 立ち上がり遷移遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTimingLut2::rise_transition() const
 {
   return mRiseTransition;
 }
 
 // @brief 立ち下がり遷移遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTimingLut2::fall_transition() const
 {
   return mFallTransition;
 }
 
 // @brief 立ち上がり伝搬遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTimingLut2::rise_propagation() const
 {
   return mRisePropagation;
 }
 
 // @brief 立ち下がり伝搬遅延テーブルの取得
-const CellLut*
+const ClibLut*
 CiTimingLut2::fall_propagation() const
 {
   return mFallPropagation;
@@ -552,4 +552,4 @@ CiTimingLut2::dump(ODO& s) const
   dump_lut(s, fall_propagation());
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

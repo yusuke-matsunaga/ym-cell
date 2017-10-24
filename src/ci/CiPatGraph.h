@@ -9,20 +9,20 @@
 /// All rights reserved.
 
 
-#include "ym/CellPatGraph.h"
+#include "ym/ClibPatGraph.h"
 #include "ym/Alloc.h"
 #include "ym/IDO.h"
 #include "ym/ODO.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiPatGraph CiPatGraph.h "CiPatGraph.h"
-/// @brief CellPatGraph の実装クラス
+/// @brief ClibPatGraph の実装クラス
 //////////////////////////////////////////////////////////////////////
 class CiPatGraph :
-  public CellPatGraph
+  public ClibPatGraph
 {
 public:
 
@@ -36,7 +36,7 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // CellPatGraph の仮想関数
+  // ClibPatGraph の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 代表関数番号を返す．
@@ -145,6 +145,6 @@ private:
 
 };
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CIPATGRAPH_H

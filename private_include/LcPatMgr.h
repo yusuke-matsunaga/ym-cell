@@ -10,13 +10,13 @@
 
 
 #include "libcomp_nsdef.h"
-#include "ym/ym_logic.h"
+#include "ym/logic.h"
 #include "ym/HashMap.h"
 #include "ym/UnitAlloc.h"
 #include "ym/VarId.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 /// @class LcPatMgr LcPatMgr.h "LcPatMgr.h"
@@ -255,6 +255,6 @@ private:
 
 };
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP
 
 #endif // LCPATMGR_H

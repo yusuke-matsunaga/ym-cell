@@ -1,23 +1,23 @@
 ﻿
 /// @file display.cc
-/// @brief CellLibrary の内容をダンプする関数
+/// @brief ClibCellLibrary の内容をダンプする関数
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ym/CellLibrary.h"
-#include "ym/Cell.h"
-#include "ym/CellLut.h"
-#include "ym/CellLutTemplate.h"
-#include "ym/CellPin.h"
-#include "ym/CellTiming.h"
-#include "ym/CellClass.h"
-#include "ym/CellGroup.h"
-#include "ym/CellPatGraph.h"
-#include "ym/CellCapacitance.h"
-#include "ym/CellTime.h"
+#include "ym/ClibCellLibrary.h"
+#include "ym/ClibCell.h"
+#include "ym/ClibLut.h"
+#include "ym/ClibLutTemplate.h"
+#include "ym/ClibCellPin.h"
+#include "ym/ClibTiming.h"
+#include "ym/ClibCellClass.h"
+#include "ym/ClibCellGroup.h"
+#include "ym/ClibPatGraph.h"
+#include "ym/ClibCapacitance.h"
+#include "ym/ClibTime.h"
 
 #include "ym/Expr.h"
 #include "ym/NpnMapM.h"
@@ -31,14 +31,14 @@ BEGIN_NAMESPACE_YM
 // @return s を返す．
 ostream&
 operator<<(ostream& s,
-	   CellDelayModel delay_model)
+	   ClibDelayModel delay_model)
 {
   switch ( delay_model ) {
-  case kCellDelayGenericCmos:   s << "generic_cmos"; break;
-  case kCellDelayTableLookup:   s << "table_lookup"; break;
-  case kCellDelayPiecewiseCmos: s << "piecewise_cmos"; break;
-  case kCellDelayCmos2:         s << "cmos2"; break;
-  case kCellDelayDcm:           s << "dcm"; break;
+  case kClibDelayGenericCmos:   s << "generic_cmos"; break;
+  case kClibDelayTableLookup:   s << "table_lookup"; break;
+  case kClibDelayPiecewiseCmos: s << "piecewise_cmos"; break;
+  case kClibDelayCmos2:         s << "cmos2"; break;
+  case kClibDelayDcm:           s << "dcm"; break;
   default: ASSERT_NOT_REACHED;
   }
   return s;
@@ -50,12 +50,12 @@ operator<<(ostream& s,
 // @return s を返す．
 ostream&
 operator<<(ostream& s,
-	   CellTimingSense timing_sense)
+	   ClibTimingSense timing_sense)
 {
   switch ( timing_sense ) {
-  case kCellPosiUnate: s << "posi_unate"; break;
-  case kCellNegaUnate: s << "nega_unate"; break;
-  case kCellNonUnate:  s << "non_unate"; break;
+  case kClibPosiUnate: s << "posi_unate"; break;
+  case kClibNegaUnate: s << "nega_unate"; break;
+  case kClibNonUnate:  s << "non_unate"; break;
   default: ASSERT_NOT_REACHED;
   }
   return s;
@@ -67,50 +67,50 @@ operator<<(ostream& s,
 // @return s を返す．
 ostream&
 operator<<(ostream& s,
-	   CellTimingType timing_type)
+	   ClibTimingType timing_type)
 {
   switch ( timing_type ) {
-  case kCellTimingCombinational:         s << "combinational"; break;
-  case kCellTimingCombinationalRise:     s << "combinational_rise"; break;
-  case kCellTimingCombinationalFall:     s << "combinational_fall"; break;
+  case kClibTimingCombinational:         s << "combinational"; break;
+  case kClibTimingCombinationalRise:     s << "combinational_rise"; break;
+  case kClibTimingCombinationalFall:     s << "combinational_fall"; break;
 
-  case kCellTimingThreeStateEnable:      s << "three_state_enable"; break;
-  case kCellTimingThreeStateDisable:     s << "three_state_disable"; break;
-  case kCellTimingThreeStateEnableRise:  s << "three_state_enable_rise"; break;
-  case kCellTimingThreeStateEnableFall:  s << "three_state_enable_fall"; break;
-  case kCellTimingThreeStateDisableRise: s << "three_state_disable_rise"; break;
-  case kCellTimingThreeStateDisableFall: s << "three_state_disable_fall"; break;
+  case kClibTimingThreeStateEnable:      s << "three_state_enable"; break;
+  case kClibTimingThreeStateDisable:     s << "three_state_disable"; break;
+  case kClibTimingThreeStateEnableRise:  s << "three_state_enable_rise"; break;
+  case kClibTimingThreeStateEnableFall:  s << "three_state_enable_fall"; break;
+  case kClibTimingThreeStateDisableRise: s << "three_state_disable_rise"; break;
+  case kClibTimingThreeStateDisableFall: s << "three_state_disable_fall"; break;
 
-  case kCellTimingRisingEdge:            s << "rising_edge"; break;
-  case kCellTimingFallingEdge:           s << "falling_edge"; break;
+  case kClibTimingRisingEdge:            s << "rising_edge"; break;
+  case kClibTimingFallingEdge:           s << "falling_edge"; break;
 
-  case kCellTimingPreset:                s << "preset"; break;
-  case kCellTimingClear:                 s << "clear"; break;
+  case kClibTimingPreset:                s << "preset"; break;
+  case kClibTimingClear:                 s << "clear"; break;
 
-  case kCellTimingHoldRising:            s << "hold_rising"; break;
-  case kCellTimingHoldFalling:           s << "hold_falling"; break;
+  case kClibTimingHoldRising:            s << "hold_rising"; break;
+  case kClibTimingHoldFalling:           s << "hold_falling"; break;
 
-  case kCellTimingSetupRising:           s << "setup_rising"; break;
-  case kCellTimingSetupFalling:          s << "setup_falling"; break;
+  case kClibTimingSetupRising:           s << "setup_rising"; break;
+  case kClibTimingSetupFalling:          s << "setup_falling"; break;
 
-  case kCellTimingRecoveryRising:        s << "recover_rising"; break;
-  case kCellTimingRecoveryFalling:       s << "recover_falling"; break;
+  case kClibTimingRecoveryRising:        s << "recover_rising"; break;
+  case kClibTimingRecoveryFalling:       s << "recover_falling"; break;
 
-  case kCellTimingSkewRising:            s << "skew_rising"; break;
-  case kCellTimingSkewFalling:           s << "skew_falling"; break;
+  case kClibTimingSkewRising:            s << "skew_rising"; break;
+  case kClibTimingSkewFalling:           s << "skew_falling"; break;
 
-  case kCellTimingRemovalRising:         s << "removal_rising"; break;
-  case kCellTimingRemovalFalling:        s << "removal_falling"; break;
+  case kClibTimingRemovalRising:         s << "removal_rising"; break;
+  case kClibTimingRemovalFalling:        s << "removal_falling"; break;
 
-  case kCellTimingNonSeqSetupRising:     s << "non_seq_setup_rising"; break;
-  case kCellTimingNonSeqSetupFalling:    s << "non_seq_setup_falling"; break;
-  case kCellTimingNonSeqHoldRising:      s << "non_seq_hold_rising"; break;
-  case kCellTimingNonSeqHoldFalling:     s << "non_seq_hold_falling"; break;
+  case kClibTimingNonSeqSetupRising:     s << "non_seq_setup_rising"; break;
+  case kClibTimingNonSeqSetupFalling:    s << "non_seq_setup_falling"; break;
+  case kClibTimingNonSeqHoldRising:      s << "non_seq_hold_rising"; break;
+  case kClibTimingNonSeqHoldFalling:     s << "non_seq_hold_falling"; break;
 
-  case kCellTimingNochangeHighHigh:      s << "nochange_high_high"; break;
-  case kCellTimingNochangeHighLow:       s << "nochange_high_low"; break;
-  case kCellTimingNochangeLowHigh:       s << "nochange_low_high"; break;
-  case kCellTimingNochangeLowLow:        s << "nochange_low_low"; break;
+  case kClibTimingNochangeHighHigh:      s << "nochange_high_high"; break;
+  case kClibTimingNochangeHighLow:       s << "nochange_high_low"; break;
+  case kClibTimingNochangeLowHigh:       s << "nochange_low_high"; break;
+  case kClibTimingNochangeLowLow:        s << "nochange_low_low"; break;
 
   default: ASSERT_NOT_REACHED;
   }
@@ -123,54 +123,54 @@ operator<<(ostream& s,
 // @return s を返す．
 ostream&
 operator<<(ostream& s,
-	   CellVarType var_type)
+	   ClibVarType var_type)
 {
   switch ( var_type ) {
-  case kCellVarInputNetTransition:
+  case kClibVarInputNetTransition:
     s << "input_net_transition";
     break;
 
-  case kCellVarTotalOutputNetCapacitance:
+  case kClibVarTotalOutputNetCapacitance:
     s << "total_output_net_capacitance";
     break;
 
-  case kCellVarOutputNetLength:
+  case kClibVarOutputNetLength:
     s << "output_net_length";
     break;
 
-  case kCellVarOutputNetWireCap:
+  case kClibVarOutputNetWireCap:
     s << "output_net_wire_cap";
     break;
 
-  case kCellVarOutputNetPinCap:
+  case kClibVarOutputNetPinCap:
     s << "output_net_pin_cap";
     break;
 
-  case kCellVarRelatedOutTotalOutputNetCapacitance:
+  case kClibVarRelatedOutTotalOutputNetCapacitance:
     s << "related_out_total_output_net_capacitance";
     break;
 
-  case kCellVarRelatedOutOutputNetLength:
+  case kClibVarRelatedOutOutputNetLength:
     s << "related_out_output_net_length";
     break;
 
-  case kCellVarRelatedOutOutputNetWireCap:
+  case kClibVarRelatedOutOutputNetWireCap:
     s << "related_out_output_net_wire_cap";
     break;
 
-  case kCellVarRelatedOutOutputNetPinCap:
+  case kClibVarRelatedOutOutputNetPinCap:
     s << "related_out_output_net_pin_cap";
     break;
 
-  case kCellVarConstrainedPinTransition:
+  case kClibVarConstrainedPinTransition:
     s << "constrained_pin_transition";
     break;
 
-  case kCellVarRelatedPinTransition:
+  case kClibVarRelatedPinTransition:
     s << "related_pin_transition";
     break;
 
-  case kCellVarNone:
+  case kClibVarNone:
     s << "none";
     break;
 
@@ -183,7 +183,7 @@ operator<<(ostream& s,
 END_NAMESPACE_YM
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 BEGIN_NONAMESPACE
 
@@ -191,7 +191,7 @@ BEGIN_NONAMESPACE
 void
 display_lut(ostream& s,
 	    const char* label,
-	    const CellLut* lut)
+	    const ClibLut* lut)
 {
   s << "    " << label << endl;
   ymuint d = lut->dimension();
@@ -271,24 +271,24 @@ display_lut(ostream& s,
 // タイミング情報を出力する．
 void
 display_timing(ostream& s,
-	       const Cell* cell,
+	       const ClibCell* cell,
 	       ymuint ipos,
 	       ymuint opos,
-	       CellTimingSense sense,
-	       CellDelayModel delay_model)
+	       ClibTimingSense sense,
+	       ClibDelayModel delay_model)
 {
   ymuint n = cell->timing_num(ipos, opos, sense);
   for (ymuint i = 0; i < n; ++ i) {
-    const CellTiming* timing = cell->timing(ipos, opos, sense, i);
+    const ClibTiming* timing = cell->timing(ipos, opos, sense, i);
     s << "  Timing:" << endl
       << "    Type             = " << timing->type() << endl
       << "    Input Pin        = " << cell->input(ipos)->name() << endl
       << "    Output Pin       = " << cell->output(opos)->name() << endl
       << "    Sense            = ";
-    if ( sense == kCellPosiUnate ) {
+    if ( sense == kClibPosiUnate ) {
       s << "positive unate";
     }
-    else if ( sense == kCellNegaUnate ) {
+    else if ( sense == kClibNegaUnate ) {
       s << "negative unate";
     }
     else {
@@ -299,16 +299,16 @@ display_timing(ostream& s,
       s << "    When             = " << timing->timing_cond() << endl;
     }
     switch ( delay_model ) {
-    case kCellDelayGenericCmos:
+    case kClibDelayGenericCmos:
       s << "    Rise Intrinsic   = " << timing->intrinsic_rise() << endl
 	<< "    Rise Resistance  = " << timing->rise_resistance() << endl
 	<< "    Fall Intrinsic   = " << timing->intrinsic_fall() << endl
 	<< "    Fall Resistance  = " << timing->fall_resistance() << endl;
       break;
 
-    case kCellDelayTableLookup:
+    case kClibDelayTableLookup:
       if ( timing->cell_rise() ) {
-	display_lut(s, "Cell Rise", timing->cell_rise());
+	display_lut(s, "Clib Rise", timing->cell_rise());
       }
       if ( timing->rise_transition() ) {
 	display_lut(s, "Rise Transition", timing->rise_transition());
@@ -318,7 +318,7 @@ display_timing(ostream& s,
       }
 
       if ( timing->cell_fall() ) {
-	display_lut(s, "Cell Fall", timing->cell_fall());
+	display_lut(s, "Clib Fall", timing->cell_fall());
       }
       if ( timing->fall_transition() ) {
 	display_lut(s, "Fall Transition", timing->fall_transition());
@@ -328,13 +328,13 @@ display_timing(ostream& s,
       }
       break;
 
-    case kCellDelayPiecewiseCmos:
+    case kClibDelayPiecewiseCmos:
       break;
 
-    case kCellDelayCmos2:
+    case kClibDelayCmos2:
       break;
 
-    case kCellDelayDcm:
+    case kClibDelayDcm:
       break;
     }
   }
@@ -344,7 +344,7 @@ display_timing(ostream& s,
 void
 display_class(ostream& s,
 	      const char* title,
-	      const CellClass* cclass)
+	      const ClibCellClass* cclass)
 {
   s << title << endl;
   ymuint n = cclass->idmap_num();
@@ -356,11 +356,11 @@ display_class(ostream& s,
     s << endl;
   }
   for (ymuint i = 0; i < cclass->group_num(); ++ i) {
-    const CellGroup* group = cclass->cell_group(i);
+    const ClibCellGroup* group = cclass->cell_group(i);
     s << "  Group: Map = " << group->map() << endl
-      << "         Cell = ";
+      << "         Clib = ";
     for (ymuint j = 0; j < group->cell_num(); ++ j) {
-      const Cell* cell = group->cell(j);
+      const ClibCell* cell = group->cell(j);
       s << " " << cell->name();
     }
     s << endl;
@@ -387,7 +387,7 @@ display_pos(ostream& s,
 void
 display_ff_class(ostream& s,
 		 const char* title,
-		 const CellClass* cclass)
+		 const ClibCellClass* cclass)
 {
   s << title << endl;
   ymuint n = cclass->idmap_num();
@@ -399,7 +399,7 @@ display_ff_class(ostream& s,
     s << endl;
   }
   for (ymuint i = 0; i < cclass->group_num(); ++ i) {
-    const CellGroup* group = cclass->cell_group(i);
+    const ClibCellGroup* group = cclass->cell_group(i);
     s << "  Group:";
     s << " data-pin = " << group->data_pos();
     display_pos(s, "clock-pin", group->clock_pos(), group->clock_sense());
@@ -408,9 +408,9 @@ display_ff_class(ostream& s,
     s << " q-pin = " << group->q_pos()
       << " xq-pin = " << group->xq_pos()
       << endl;
-    s << "         Cell = ";
+    s << "         Clib = ";
     for (ymuint j = 0; j < group->cell_num(); ++ j) {
-      const Cell* cell = group->cell(j);
+      const ClibCell* cell = group->cell(j);
       s << " " << cell->name();
     }
     s << endl;
@@ -422,7 +422,7 @@ display_ff_class(ostream& s,
 void
 display_latch_class(ostream& s,
 		    const char* title,
-		    const CellClass* cclass)
+		    const ClibCellClass* cclass)
 {
   s << title << endl;
   ymuint n = cclass->idmap_num();
@@ -434,7 +434,7 @@ display_latch_class(ostream& s,
     s << endl;
   }
   for (ymuint i = 0; i < cclass->group_num(); ++ i) {
-    const CellGroup* group = cclass->cell_group(i);
+    const ClibCellGroup* group = cclass->cell_group(i);
     s << "  Group:";
     display_pos(s, "data-pin",  group->data_pos(), group->has_data() ? 1 : 0);
     display_pos(s, "enable-pin", group->enable_pos(), group->enable_sense());
@@ -442,9 +442,9 @@ display_latch_class(ostream& s,
     display_pos(s, "preset-pin", group->preset_pos(), group->preset_sense());
     s << " q-pin = " << group->q_pos()
       << endl;
-    s << "         Cell = ";
+    s << "         Clib = ";
     for (ymuint j = 0; j < group->cell_num(); ++ j) {
-      const Cell* cell = group->cell(j);
+      const ClibCell* cell = group->cell(j);
       s << " " << cell->name();
     }
     s << endl;
@@ -456,12 +456,12 @@ display_latch_class(ostream& s,
 void
 display_group(ostream& s,
 	      const char* title,
-	      const CellGroup* group)
+	      const ClibCellGroup* group)
 {
   s << title << endl
-    << "  Cell =";
+    << "  Clib =";
   for (ymuint i = 0; i < group->cell_num(); ++ i) {
-    const Cell* cell = group->cell(i);
+    const ClibCell* cell = group->cell(i);
     s << " " << cell->name();
   }
   s << endl
@@ -470,7 +470,7 @@ display_group(ostream& s,
 
 void
 display_index(ostream& s,
-	      const CellLutTemplate* templ,
+	      const ClibLutTemplate* templ,
 	      ymuint var)
 {
   ymuint n = templ->index_num(var);
@@ -487,7 +487,7 @@ END_NONAMESPACE
 
 void
 display_library(ostream& s,
-		const CellLibrary& library)
+		const ClibCellLibrary& library)
 {
   // ライブラリ名
   s << "Library(" << library.name() << ")" << endl;
@@ -495,14 +495,14 @@ display_library(ostream& s,
   // テクノロジ
   s << "  technology: ";
   switch ( library.technology() ) {
-  case kCellTechCmos: s << "cmos"; break;
-  case kCellTechFpga: s << "fpga"; break;
+  case kClibTechCmos: s << "cmos"; break;
+  case kClibTechFpga: s << "fpga"; break;
   default: ASSERT_NOT_REACHED; break;
   }
   s << endl;
 
   // 遅延モデル
-  CellDelayModel delay_model = library.delay_model();
+  ClibDelayModel delay_model = library.delay_model();
   s << "  delay_model: " << delay_model << endl;
 
   // バス命名規則
@@ -541,7 +541,7 @@ display_library(ostream& s,
   // lu_table_template
   ymuint lut_template_num = library.lu_table_template_num();
   for (ymuint i = 0; i < lut_template_num; ++ i) {
-    const CellLutTemplate* templ = library.lu_table_template(i);
+    const ClibLutTemplate* templ = library.lu_table_template(i);
     s << "  lu_table_template(" << templ->name() << ")" << endl;
     ymuint d = templ->dimension();
     for (ymuint j = 0; j < d; ++ j) {
@@ -560,13 +560,13 @@ display_library(ostream& s,
   // セル
   ymuint n = library.cell_num();
   for (ymuint i = 0; i < n; ++ i) {
-    const Cell* cell = library.cell(i);
+    const ClibCell* cell = library.cell(i);
     {
-      const Cell* cell1 = library.cell(cell->name());
+      const ClibCell* cell1 = library.cell(cell->name());
       ASSERT_COND( cell1 == cell );
     }
     // セル名とセルの種類を出力
-    s << "Cell#" << cell->id() << " (" << cell->name() << ") : ";
+    s << "Clib#" << cell->id() << " (" << cell->name() << ") : ";
     if ( cell->is_logic() ) {
       s << "Combinational Logic";
     }
@@ -627,7 +627,7 @@ display_library(ostream& s,
     // ピンの情報
     ymuint npin = cell->pin_num();
     for (ymuint pin_id = 0; pin_id < npin; ++ pin_id) {
-      const CellPin* pin = cell->pin(pin_id);
+      const ClibCellPin* pin = cell->pin(pin_id);
       s << "  Pin#" << pin_id << "[ " << pin->name() << " ]: ";
       if ( pin->is_input() ) {
 	// 入力ピン
@@ -685,18 +685,18 @@ display_library(ostream& s,
     ymuint no2 = cell->output_num2();
     for (ymuint ipos = 0; ipos < ni2; ++ ipos) {
       for (ymuint opos = 0; opos < no2; ++ opos) {
-	display_timing(s, cell, ipos, opos, kCellPosiUnate, delay_model);
-	display_timing(s, cell, ipos, opos, kCellNegaUnate, delay_model);
+	display_timing(s, cell, ipos, opos, kClibPosiUnate, delay_model);
+	display_timing(s, cell, ipos, opos, kClibNegaUnate, delay_model);
       }
     }
     s << endl;
   }
 
   // セルグループの情報
-  s << "Cell Group" << endl;
+  s << "Clib Group" << endl;
   ymuint nc = library.npn_class_num();
   for (ymuint i = 0; i < nc; ++ i) {
-    const CellClass* cclass = library.npn_class(i);
+    const ClibCellClass* cclass = library.npn_class(i);
     ostringstream buf;
     buf << "Class#" << i;
     display_class(s, buf.str().c_str(), cclass);
@@ -726,9 +726,9 @@ display_library(ostream& s,
   for (ymuint i = 0; i < nn; ++ i) {
     s << "Node#" << i << ": ";
     switch ( library.pg_node_type(i) ) {
-    case kCellPatInput: s << "INPUT#" << library.pg_input_id(i) ; break;
-    case kCellPatAnd:   s << "AND"; break;
-    case kCellPatXor:   s << "XOR"; break;
+    case kClibPatInput: s << "INPUT#" << library.pg_input_id(i) ; break;
+    case kClibPatAnd:   s << "AND"; break;
+    case kClibPatXor:   s << "XOR"; break;
     default: ASSERT_NOT_REACHED;
     }
     s << endl;
@@ -751,7 +751,7 @@ display_library(ostream& s,
   // パタングラフの情報の出力
   ymuint np = library.pg_pat_num();
   for (ymuint i = 0; i < np; ++ i) {
-    const CellPatGraph& pat = library.pg_pat(i);
+    const ClibPatGraph& pat = library.pg_pat(i);
     s << "Pat#" << i << ": "
       << "Rep#" << pat.rep_id() << ": ";
     if ( pat.root_inv() ) {
@@ -768,4 +768,4 @@ display_library(ostream& s,
   s << "==== PatMgr dump end ====" << endl;
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

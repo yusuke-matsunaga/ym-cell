@@ -134,7 +134,7 @@ MislibParserImpl::read_file(const string& filename,
     const MislibNode* dummy_node;
     if ( cell_map.find(name, dummy_node) ) {
       ostringstream buf;
-      buf << "Cell name, " << name << " is defined more than once. "
+      buf << "Clib name, " << name << " is defined more than once. "
 	  << "Previous definition is " << dummy_node->name()->loc() << ".";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      gate->name()->loc(),

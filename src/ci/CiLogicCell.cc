@@ -10,7 +10,7 @@
 #include "CiLogicCell.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLogicCell
@@ -32,10 +32,10 @@ BEGIN_NAMESPACE_YM_CELL
 // @param[in] alloc メモリアロケータ
 // *1: - false 論理式なし
 //     - true 論理式あり
-CiLogicCell::CiLogicCell(CiLibrary* library,
+CiLogicCell::CiLogicCell(CiCellLibrary* library,
 			 ymuint id,
 			 const ShString& name,
-			 CellArea area,
+			 ClibArea area,
 			 ymuint ni,
 			 ymuint no,
 			 ymuint nio,
@@ -66,4 +66,4 @@ CiLogicCell::is_logic() const
   return true;
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

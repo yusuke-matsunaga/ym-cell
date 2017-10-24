@@ -9,18 +9,18 @@
 /// All rights reserved.
 
 
-#include "ym/CellLutTemplate.h"
+#include "ym/ClibLutTemplate.h"
 #include "ym/ShString.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiLutTemplate CiLutTemplate.h "CiLutTemplate.h"
 /// @brief CiLutTemplateXXX の(擬似)基底クラス
 //////////////////////////////////////////////////////////////////////
 class CiLutTemplate :
-  public CellLutTemplate
+  public ClibLutTemplate
 {
   friend class CiLutHash;
 
@@ -77,13 +77,13 @@ private:
 class CiLutTemplate1D :
   public CiLutTemplate
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
   /// @brief コンストラクタ
   CiLutTemplate1D(ShString name,
-		  CellVarType var_type,
+		  ClibVarType var_type,
 		  const vector<double>& index_array);
 
   /// @brief デストラクタ
@@ -104,7 +104,7 @@ public:
   /// @brief 変数型の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
-  CellVarType
+  ClibVarType
   variable_type(ymuint32 var) const;
 
   /// @brief インデックス数の取得
@@ -128,7 +128,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 変数の型
-  CellVarType mVarType;
+  ClibVarType mVarType;
 
   // デフォルトインデックス値の配列
   vector<double> mIndexArray;
@@ -143,15 +143,15 @@ private:
 class CiLutTemplate2D :
   public CiLutTemplate
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
   /// @brief コンストラクタ
   CiLutTemplate2D(ShString name,
-		  CellVarType var1,
+		  ClibVarType var1,
 		  const vector<double>& index_array1,
-		  CellVarType var2,
+		  ClibVarType var2,
 		  const vector<double>& index_array2);
 
   /// @brief デストラクタ
@@ -169,7 +169,7 @@ public:
   /// @brief 変数型の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
-  CellVarType
+  ClibVarType
   variable_type(ymuint32 var) const;
 
   /// @brief インデックス数の取得
@@ -193,7 +193,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 変数の型
-  CellVarType mVarType[2];
+  ClibVarType mVarType[2];
 
   // デフォルトインデックス値の配列
   vector<double> mIndexArray[2];
@@ -208,17 +208,17 @@ private:
 class CiLutTemplate3D :
   public CiLutTemplate
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
   /// @brief コンストラクタ
   CiLutTemplate3D(ShString name,
-		  CellVarType var1,
+		  ClibVarType var1,
 		  const vector<double>& index_array1,
-		  CellVarType var2,
+		  ClibVarType var2,
 		  const vector<double>& index_array2,
-		  CellVarType var3,
+		  ClibVarType var3,
 		  const vector<double>& index_array3);
 
   /// @brief デストラクタ
@@ -236,7 +236,7 @@ public:
   /// @brief 変数型の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
-  CellVarType
+  ClibVarType
   variable_type(ymuint32 var) const;
 
   /// @brief インデックス数の取得
@@ -260,13 +260,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 変数の型
-  CellVarType mVarType[3];
+  ClibVarType mVarType[3];
 
   // デフォルトインデックス値の配列
   vector<double> mIndexArray[3];
 
 };
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CILUTTEMPLATE_H

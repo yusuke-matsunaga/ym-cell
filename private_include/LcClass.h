@@ -13,7 +13,7 @@
 #include "LcSignature.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 /// @class LcClass LcClass.h "LcClass.h"
@@ -118,6 +118,6 @@ LcClass::group_list() const
   return mGroupList;
 }
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP
 
 #endif // LCCLASS_H

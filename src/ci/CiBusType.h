@@ -5,24 +5,24 @@
 /// @brief CiBusType のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ym/CellBusType.h"
+#include "ym/ClibBusType.h"
 #include "ym/ShString.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiBusType CiBusType.h "CiBusType.h"
-/// @brief CellBusType の実装クラス
+/// @brief ClibBusType の実装クラス
 //////////////////////////////////////////////////////////////////////
 class CiBusType :
-  public CellBusType
+  public ClibBusType
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
@@ -31,8 +31,8 @@ private:
   /// @param[in] bit_from 開始位置
   /// @param[in] bit_to 終了位置
   CiBusType(ShString name,
-	      ymint bit_from,
-	      ymint bit_to);
+	    ymint bit_from,
+	    ymint bit_to);
 
   /// @brief デストラクタ
   virtual
@@ -51,12 +51,12 @@ public:
 
   /// @brief base_type の取得
   virtual
-  tBaseType
+  BaseType
   base_type() const;
 
   /// @brief data_type の取得
   virtual
-  tDataType
+  DataType
   data_type() const;
 
   /// @brief ビット幅の取得
@@ -90,19 +90,19 @@ private:
   ShString mName;
 
   // ビット幅
-  ymuint32 mBitWidth;
+  ymuint mBitWidth;
 
   // 開始ビット
-  ymint32 mBitFrom;
+  ymint mBitFrom;
 
   // 終了ビット
-  ymint32 mBitTo;
+  ymint mBitTo;
 
   // 向き
   bool mDownTo;
 
 };
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CIBUS_H

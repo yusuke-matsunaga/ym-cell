@@ -10,7 +10,7 @@
 #include "CiFsmCell.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiFsmCell
@@ -33,10 +33,10 @@ BEGIN_NAMESPACE_YM_CELL
 // @param[in] alloc メモリアロケータ
 // *1: - false 論理式なし
 //     - true 論理式あり
-CiFsmCell::CiFsmCell(CiLibrary* library,
+CiFsmCell::CiFsmCell(CiCellLibrary* library,
 		     ymuint id,
 		     const ShString& name,
-		     CellArea area,
+		     ClibArea area,
 		     ymuint ni,
 		     ymuint no,
 		     ymuint nio,
@@ -68,4 +68,4 @@ CiFsmCell::is_fsm() const
   return true;
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

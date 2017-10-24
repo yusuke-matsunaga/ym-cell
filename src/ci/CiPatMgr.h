@@ -9,14 +9,14 @@
 /// All rights reserved.
 
 
-#include "ym/ym_cell.h"
+#include "ym/clib.h"
 #include "ym/IDO.h"
 #include "ym/ODO.h"
 #include "ym/Alloc.h"
 #include "libcomp_nsdef.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 class CiPatGraph;
 
@@ -59,7 +59,7 @@ public:
 
   /// @brief ノードの種類を返す．
   /// @param[in] id ノード番号 ( 0 <= id < node_num() )
-  CellPatType
+  ClibPatType
   node_type(ymuint id) const;
 
   /// @brief ノードが入力ノードの時に入力番号を返す．
@@ -104,7 +104,7 @@ public:
 
   /// @brief パタンを返す．
   /// @param[in] id パタン番号 ( 0 <= id < pat_num() )
-  const CellPatGraph&
+  const ClibPatGraph&
   pat(ymuint id) const;
 
   /// @brief バイナリダンプを行う．
@@ -194,10 +194,10 @@ CiPatMgr::node_num() const
 // @brief ノードの種類を返す．
 // @param[in] id ノード番号 ( 0 <= id < node_num() )
 inline
-CellPatType
+ClibPatType
 CiPatMgr::node_type(ymuint id) const
 {
-  return static_cast<CellPatType>(mNodeTypeArray[id] & 3U);
+  return static_cast<ClibPatType>(mNodeTypeArray[id] & 3U);
 }
 
 // @brief ノードが入力ノードの時に入力番号を返す．
@@ -272,6 +272,6 @@ CiPatMgr::pat_num() const
   return mPatNum;
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CIPATMGR_H

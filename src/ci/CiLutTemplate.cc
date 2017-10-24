@@ -10,7 +10,7 @@
 #include "CiLutTemplate.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLutTemplate
@@ -60,7 +60,7 @@ CiLutTemplate::dump(ODO& s) const
 
 // @brief コンストラクタ
 CiLutTemplate1D::CiLutTemplate1D(ShString name,
-				 CellVarType var_type,
+				 ClibVarType var_type,
 				 const vector<double>& index_array) :
   CiLutTemplate(name),
   mVarType(var_type),
@@ -86,7 +86,7 @@ CiLutTemplate1D::dimension() const
 
 // @brief 変数型の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
-CellVarType
+ClibVarType
 CiLutTemplate1D::variable_type(ymuint32 var) const
 {
   ASSERT_COND( var == 0 );
@@ -121,9 +121,9 @@ CiLutTemplate1D::index(ymuint32 var,
 
 // @brief コンストラクタ
 CiLutTemplate2D::CiLutTemplate2D(ShString name,
-				 CellVarType var1,
+				 ClibVarType var1,
 				 const vector<double>& index_array1,
-				 CellVarType var2,
+				 ClibVarType var2,
 				 const vector<double>& index_array2) :
   CiLutTemplate(name)
 {
@@ -156,7 +156,7 @@ CiLutTemplate2D::dimension() const
 
 // @brief 変数型の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
-CellVarType
+ClibVarType
 CiLutTemplate2D::variable_type(ymuint32 var) const
 {
   ASSERT_COND( var < 2  );
@@ -191,11 +191,11 @@ CiLutTemplate2D::index(ymuint32 var,
 
 // @brief コンストラクタ
 CiLutTemplate3D::CiLutTemplate3D(ShString name,
-				 CellVarType var1,
+				 ClibVarType var1,
 				 const vector<double>& index_array1,
-				 CellVarType var2,
+				 ClibVarType var2,
 				 const vector<double>& index_array2,
-				 CellVarType var3,
+				 ClibVarType var3,
 				 const vector<double>& index_array3) :
   CiLutTemplate(name)
 {
@@ -235,7 +235,7 @@ CiLutTemplate3D::dimension() const
 
 // @brief 変数型の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
-CellVarType
+ClibVarType
 CiLutTemplate3D::variable_type(ymuint32 var) const
 {
   ASSERT_COND( var < 3  );
@@ -263,4 +263,4 @@ CiLutTemplate3D::index(ymuint32 var,
   return mIndexArray[var][pos];
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

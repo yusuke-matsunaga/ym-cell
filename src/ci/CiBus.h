@@ -5,24 +5,24 @@
 /// @brief CiBus のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ym/CellBus.h"
+#include "ym/ClibBus.h"
 #include "ym/ShString.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiBus CiBus.h "CiBus.h"
-/// @brief CellBus の実装クラス
+/// @brief ClibBus の実装クラス
 //////////////////////////////////////////////////////////////////////
 class CiBus :
-  public CellBus
+  public ClibBus
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
@@ -45,7 +45,7 @@ public:
 
   /// @brief バスの型の取得
   virtual
-  const CellBusType*
+  const ClibBusType*
   bus_type() const;
 
   /// @brief ピン数の取得
@@ -56,7 +56,7 @@ public:
   /// @brief ピンの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
   virtual
-  const CellPin*
+  const ClibCellPin*
   pin(ymuint pos) const;
 
 
@@ -69,16 +69,16 @@ private:
   ShString mName;
 
   // バスの型
-  const CellBusType* mBusType;
+  const ClibBusType* mBusType;
 
   // ピン数
-  ymuint32 mPinNum;
+  ymuint mPinNum;
 
   // ピンの配列
-  CellPin** mPinList;
+  ClibCellPin** mPinList;
 
 };
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CIBUS_H

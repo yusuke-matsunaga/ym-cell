@@ -12,7 +12,7 @@
 #include "LcGroupMgr.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 /// @class LcLogicMgr LcLogicMgr.h "LcLogicMgr.h"
@@ -88,6 +88,6 @@ private:
 
 };
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP
 
 #endif // LCLOGICMGR_H

@@ -49,11 +49,11 @@ public:
   related_bus_equivalent() const;
 
   /// @brief "timing_sense" を返す．
-  CellTimingSense
+  ClibTimingSense
   timing_sense() const;
 
   /// @brief "timing_type" を返す．
-  CellTimingType
+  ClibTimingType
   timing_type() const;
 
   /// @brief "when" を返す．
@@ -179,10 +179,10 @@ private:
   const DotlibNode* mRiseResistance;
 
   // timing_sense
-  CellTimingSense mTimingSense;
+  ClibTimingSense mTimingSense;
 
   // timing_type
-  CellTimingType mTimingType;
+  ClibTimingType mTimingType;
 
   // when
   const DotlibNode* mWhen;
@@ -221,13 +221,13 @@ private:
   const DotlibNode* mFallPinResistance;
 
   // cell_degradation
-  const DotlibNode* mCellDegradation;
+  const DotlibNode* mClibDegradation;
 
   // cell_rise
-  const DotlibNode* mCellRise;
+  const DotlibNode* mClibRise;
 
   // cell_fall
-  const DotlibNode* mCellFall;
+  const DotlibNode* mClibFall;
 
   // rise_constraint
   const DotlibNode* mRiseConstraint;

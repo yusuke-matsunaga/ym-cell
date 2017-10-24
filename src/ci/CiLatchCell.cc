@@ -10,7 +10,7 @@
 #include "CiLatchCell.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLatchCell
@@ -35,10 +35,10 @@ BEGIN_NAMESPACE_YM_CELL
 // @param[in] alloc メモリアロケータ
 // *1: - false 論理式なし
 //     - true 論理式あり
-CiLatchCell::CiLatchCell(CiLibrary* library,
+CiLatchCell::CiLatchCell(CiCellLibrary* library,
 			 ymuint id,
 			 const ShString& name,
-			 CellArea area,
+			 ClibArea area,
 			 ymuint ni,
 			 ymuint no,
 			 ymuint nio,
@@ -124,10 +124,10 @@ CiLatchCell::enable2_expr() const
 // @param[in] alloc メモリアロケータ
 // *1: - false 論理式なし
 //     - true 論理式あり
-CiLatchRCell::CiLatchRCell(CiLibrary* library,
+CiLatchRCell::CiLatchRCell(CiCellLibrary* library,
 			   ymuint id,
 			   const ShString& name,
-			   CellArea area,
+			   ClibArea area,
 			   ymuint ni,
 			   ymuint no,
 			   ymuint nio,
@@ -199,10 +199,10 @@ CiLatchRCell::clear_expr() const
 // @param[in] alloc メモリアロケータ
 // *1: - false 論理式なし
 //     - true 論理式あり
-CiLatchSCell::CiLatchSCell(CiLibrary* library,
+CiLatchSCell::CiLatchSCell(CiCellLibrary* library,
 			   ymuint id,
 			   const ShString& name,
-			   CellArea area,
+			   ClibArea area,
 			   ymuint ni,
 			   ymuint no,
 			   ymuint nio,
@@ -277,10 +277,10 @@ CiLatchSCell::preset_expr() const
 // @param[in] alloc メモリアロケータ
 // *1: - false 論理式なし
 //     - true 論理式あり
-CiLatchSRCell::CiLatchSRCell(CiLibrary* library,
+CiLatchSRCell::CiLatchSRCell(CiCellLibrary* library,
 			     ymuint id,
 			     const ShString& name,
-			     CellArea area,
+			     ClibArea area,
 			     ymuint ni,
 			     ymuint no,
 			     ymuint nio,
@@ -353,4 +353,4 @@ CiLatchSRCell::clear_preset_var2() const
   return mClearPresetVal[1];
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

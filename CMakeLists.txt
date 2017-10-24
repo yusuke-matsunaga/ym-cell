@@ -18,8 +18,8 @@ add_subdirectory ( gtest )
 #  ソースファイルの設定
 # ===================================================================
 set (main_SOURCES
-  src/CellFFInfo.cc
-  src/CellLatchInfo.cc
+  src/ClibFFInfo.cc
+  src/ClibLatchInfo.cc
   src/display.cc
   )
 
@@ -29,20 +29,20 @@ set (ci_SOURCES
   src/ci/CiBusType.cc
   src/ci/CiCell.cc
   src/ci/CiCellHash.cc
-  src/ci/CiClass.cc
+  src/ci/CiCellClass.cc
+  src/ci/CiCellGroup.cc
+  src/ci/CiCellLibrary.cc
+  src/ci/CiCellPin.cc
+  src/ci/CiCellPinHash.cc
   src/ci/CiFFCell.cc
   src/ci/CiFsmCell.cc
-  src/ci/CiGroup.cc
   src/ci/CiLatchCell.cc
-  src/ci/CiLibrary.cc
   src/ci/CiLogicCell.cc
   src/ci/CiLut.cc
   src/ci/CiLutHash.cc
   src/ci/CiLutTemplate.cc
   src/ci/CiPatGraph.cc
   src/ci/CiPatMgr.cc
-  src/ci/CiPin.cc
-  src/ci/CiPinHash.cc
   src/ci/CiTiming.cc
   )
 

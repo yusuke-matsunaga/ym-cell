@@ -13,7 +13,7 @@
 #include "ym/NpnMapM.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 /// @class LcGroup LcGroup.h "LcGroup.h"
@@ -48,17 +48,17 @@ public:
   map() const;
 
   /// @brief 実体を返す．
-  CellGroup*
+  ClibCellGroup*
   cell_group() const;
 
   /// @brief 属しているセルのリストを返す．
-  const vector<Cell*>&
+  const vector<ClibCell*>&
   cell_list() const;
 
   /// @brief セルを追加する．
   /// @param[in] cell セル
   void
-  add_cell(Cell* cell);
+  add_cell(ClibCell* cell);
 
 
 private:
@@ -76,13 +76,13 @@ private:
   NpnMapM mMap;
 
   // 実体のオブジェクト
-  CellGroup* mCellGroup;
+  ClibCellGroup* mCellGroup;
 
   // セルのリスト
-  vector<Cell*> mCellList;
+  vector<ClibCell*> mCellList;
 
 };
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP
 
 #endif // LCGROUP_H

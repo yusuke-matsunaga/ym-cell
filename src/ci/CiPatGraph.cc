@@ -10,7 +10,7 @@
 #include "CiPatGraph.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiPatGraph
@@ -147,4 +147,4 @@ CiPatGraph::alloc_array(Alloc& alloc)
   }
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

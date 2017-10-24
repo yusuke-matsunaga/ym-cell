@@ -12,7 +12,7 @@
 #include "LcGroupMgr.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 /// @class LcLatchMgr LcLatchMgr.h "LcLatchMgr.h"
@@ -88,6 +88,6 @@ private:
 
 };
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP
 
 #endif // LCLATCHMGR_H

@@ -11,7 +11,7 @@
 #include "LcGroup.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 // クラス LcClass
@@ -42,4 +42,4 @@ LcClass::add_group(LcGroup* group,
   group->mMap = map;
 }
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP

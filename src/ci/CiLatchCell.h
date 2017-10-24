@@ -12,7 +12,7 @@
 #include "CiCell.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiLatchCell CiLatchCell.h "CiLatchCell.h"
@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_CELL
 class CiLatchCell :
   public CiCell
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 protected:
 
@@ -44,10 +44,10 @@ protected:
   /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
-  CiLatchCell(CiLibrary* library,
+  CiLatchCell(CiCellLibrary* library,
 	      ymuint id,
 	      const ShString& name,
-	      CellArea area,
+	      ClibArea area,
 	      ymuint ni,
 	      ymuint no,
 	      ymuint nio,
@@ -119,7 +119,7 @@ private:
 class CiLatchRCell :
   public CiLatchCell
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 protected:
 
@@ -143,10 +143,10 @@ protected:
   /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
-  CiLatchRCell(CiLibrary* library,
+  CiLatchRCell(CiCellLibrary* library,
 	       ymuint id,
 	       const ShString& name,
-	       CellArea area,
+	       ClibArea area,
 	       ymuint ni,
 	       ymuint no,
 	       ymuint nio,
@@ -201,7 +201,7 @@ private:
 class CiLatchSCell :
   public CiLatchCell
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 protected:
 
@@ -225,10 +225,10 @@ protected:
   /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
-  CiLatchSCell(CiLibrary* library,
+  CiLatchSCell(CiCellLibrary* library,
 	       ymuint id,
 	       const ShString& name,
-	       CellArea area,
+	       ClibArea area,
 	       ymuint ni,
 	       ymuint no,
 	       ymuint nio,
@@ -283,7 +283,7 @@ private:
 class CiLatchSRCell :
   public CiLatchRCell
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 protected:
 
@@ -310,10 +310,10 @@ protected:
   /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
-  CiLatchSRCell(CiLibrary* library,
+  CiLatchSRCell(CiCellLibrary* library,
 		ymuint id,
 		const ShString& name,
-		CellArea area,
+		ClibArea area,
 		ymuint ni,
 		ymuint no,
 		ymuint nio,
@@ -382,6 +382,6 @@ private:
 
 };
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CILATCHCELL_H

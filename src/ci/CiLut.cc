@@ -11,14 +11,14 @@
 #include "CiLutTemplate.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLut
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CiLut::CiLut(const CellLutTemplate* lut_template) :
+CiLut::CiLut(const ClibLutTemplate* lut_template) :
   mTemplate(lut_template)
 {
 }
@@ -29,7 +29,7 @@ CiLut::~CiLut()
 }
 
 // @brief テンプレートの取得
-const CellLutTemplate*
+const ClibLutTemplate*
 CiLut::lut_template() const
 {
   return mTemplate;
@@ -44,7 +44,7 @@ CiLut::template_name() const
 
 // @brief 変数型の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
-CellVarType
+ClibVarType
 CiLut::variable_type(ymuint32 var) const
 {
   return lut_template()->variable_type(var);
@@ -121,7 +121,7 @@ CiLut::search(double val,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CiLut1D::CiLut1D(const CellLutTemplate* lut_template,
+CiLut1D::CiLut1D(const ClibLutTemplate* lut_template,
 		 const vector<double>& value_array,
 		 const vector<double>& index_array) :
   CiLut(lut_template)
@@ -227,7 +227,7 @@ CiLut1D::value(const vector<double>& val_array) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CiLut2D::CiLut2D(const CellLutTemplate* lut_template,
+CiLut2D::CiLut2D(const ClibLutTemplate* lut_template,
 		 const vector<double>& value_array,
 		 const vector<double>& index_array1,
 		 const vector<double>& index_array2) :
@@ -372,7 +372,7 @@ CiLut2D::value(const vector<double>& val_array) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CiLut3D::CiLut3D(const CellLutTemplate* lut_template,
+CiLut3D::CiLut3D(const ClibLutTemplate* lut_template,
 		 const vector<double>& value_array,
 		 const vector<double>& index_array1,
 		 const vector<double>& index_array2,
@@ -549,4 +549,4 @@ CiLut3D::value(const vector<double>& val_array) const
 		dy0 * (dz1 * val_110 + dz0 * val_111));
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

@@ -9,16 +9,16 @@
 
 #include "dotlib_nsdef.h"
 
-#include "ym/CellLibrary.h"
-#include "ym/Cell.h"
-#include "ym/CellPin.h"
-#include "ym/CellTiming.h"
-#include "ym/CellArea.h"
-#include "ym/CellResistance.h"
-#include "ym/CellCapacitance.h"
-#include "ym/CellTime.h"
-#include "ym/CellLut.h"
-#include "ym/CellLutTemplate.h"
+#include "ym/ClibCellLibrary.h"
+#include "ym/ClibCell.h"
+#include "ym/ClibCellPin.h"
+#include "ym/ClibTiming.h"
+#include "ym/ClibArea.h"
+#include "ym/ClibResistance.h"
+#include "ym/ClibCapacitance.h"
+#include "ym/ClibTime.h"
+#include "ym/ClibLut.h"
+#include "ym/ClibLutTemplate.h"
 
 #include "DotlibParser.h"
 #include "DotlibMgr.h"
@@ -117,8 +117,8 @@ dot2expr(const DotlibNode* node,
 }
 
 // LUT を読み込む．
-CellLut*
-gen_lut(CellLibrary* library,
+ClibLut*
+gen_lut(ClibCellLibrary* library,
 	const DotlibNode* lut_node)
 {
   DotlibLut lut_info;
@@ -126,7 +126,7 @@ gen_lut(CellLibrary* library,
     return nullptr;
   }
   const char* name = lut_info.template_name();
-  const CellLutTemplate* templ = library->lu_table_template(name);
+  const ClibLutTemplate* templ = library->lu_table_template(name);
   if ( templ == nullptr ) {
     ostringstream buf;
     buf << lut_info.template_name()
@@ -162,7 +162,7 @@ gen_lut(CellLibrary* library,
     lut_info.index_3()->get_vector(index3_array);
   }
 
-  CellLut* lut = nullptr;
+  ClibLut* lut = nullptr;
   if ( d == 1 ) {
     lut = library->new_lut1(templ, value_array,
 			    index1_array);
@@ -213,7 +213,7 @@ gen_expr(const DotlibPin& pin_info,
 
 // ピンを生成する．
 void
-gen_pin(CellLibrary* library,
+gen_pin(ClibCellLibrary* library,
 	const vector<DotlibPin>& pin_info_array,
 	ymuint cell_id,
 	const vector<bool>& output_array,
@@ -226,7 +226,7 @@ gen_pin(CellLibrary* library,
   ymuint it_pos = 0;
   ymuint pin_pos = 0;
 
-  const Cell* cell = library->cell(cell_id);
+  const ClibCell* cell = library->cell(cell_id);
   ymuint ni = cell->input_num();
   ymuint no = cell->output_num();
 
@@ -238,9 +238,9 @@ gen_pin(CellLibrary* library,
     case DotlibPin::kInput:
       // 入力ピンの生成
       for (ymuint i = 0; i < pin_info.num(); ++ i) {
-	CellCapacitance cap(pin_info.capacitance());
-	CellCapacitance rise_cap(pin_info.rise_capacitance());
-	CellCapacitance fall_cap(pin_info.fall_capacitance());
+	ClibCapacitance cap(pin_info.capacitance());
+	ClibCapacitance rise_cap(pin_info.rise_capacitance());
+	ClibCapacitance fall_cap(pin_info.fall_capacitance());
 	library->new_cell_input(cell_id, pin_pos, i_pos,
 				pin_info.name(i),
 				cap, rise_cap, fall_cap);
@@ -252,12 +252,12 @@ gen_pin(CellLibrary* library,
     case DotlibPin::kOutput:
       // 出力の生成
       for (ymuint i = 0; i < pin_info.num(); ++ i) {
-	CellCapacitance max_fanout(pin_info.max_fanout());
-	CellCapacitance min_fanout (pin_info.min_fanout());
-	CellCapacitance max_capacitance(pin_info.max_capacitance());
-	CellCapacitance min_capacitance(pin_info.min_capacitance());
-	CellTime max_transition(pin_info.max_transition());
-	CellTime min_transition(pin_info.min_transition());
+	ClibCapacitance max_fanout(pin_info.max_fanout());
+	ClibCapacitance min_fanout (pin_info.min_fanout());
+	ClibCapacitance max_capacitance(pin_info.max_capacitance());
+	ClibCapacitance min_capacitance(pin_info.min_capacitance());
+	ClibTime max_transition(pin_info.max_transition());
+	ClibTime min_transition(pin_info.min_transition());
 	library->new_cell_output(cell_id, pin_pos, o_pos,
 				 pin_info.name(i),
 				 output_array[i],
@@ -274,15 +274,15 @@ gen_pin(CellLibrary* library,
     case DotlibPin::kInout:
       // 入出力ピンの生成
       for (ymuint i = 0; i < pin_info.num(); ++ i) {
-	CellCapacitance cap(pin_info.capacitance());
-	CellCapacitance rise_cap(pin_info.rise_capacitance());
-	CellCapacitance fall_cap(pin_info.fall_capacitance());
-	CellCapacitance max_fanout(pin_info.max_fanout());
-	CellCapacitance min_fanout(pin_info.min_fanout());
-	CellCapacitance max_capacitance(pin_info.max_capacitance());
-	CellCapacitance min_capacitance(pin_info.min_capacitance());
-	CellTime max_transition(pin_info.max_transition());
-	CellTime min_transition(pin_info.min_transition());
+	ClibCapacitance cap(pin_info.capacitance());
+	ClibCapacitance rise_cap(pin_info.rise_capacitance());
+	ClibCapacitance fall_cap(pin_info.fall_capacitance());
+	ClibCapacitance max_fanout(pin_info.max_fanout());
+	ClibCapacitance min_fanout(pin_info.min_fanout());
+	ClibCapacitance max_capacitance(pin_info.max_capacitance());
+	ClibCapacitance min_capacitance(pin_info.min_capacitance());
+	ClibTime max_transition(pin_info.max_transition());
+	ClibTime min_transition(pin_info.min_transition());
 	ymuint i_pos2 = io_pos + ni;
 	ymuint o_pos2 = io_pos + no;
 	library->new_cell_inout(cell_id, pin_pos, i_pos2, o_pos2,
@@ -317,14 +317,14 @@ gen_pin(CellLibrary* library,
 
 // タイミング情報を生成する．
 void
-gen_timing(CellLibrary* library,
+gen_timing(ClibCellLibrary* library,
 	   const list<const DotlibNode*>& timing_list,
 	   ymuint cell_id,
 	   ymuint& timing_id,
 	   const HashMap<ShString, ymuint>& pin_map,
 	   vector<vector<ymuint> >& tid_list)
 {
-  const Cell* cell = library->cell(cell_id);
+  const ClibCell* cell = library->cell(cell_id);
   for (list<const DotlibNode*>::const_iterator p = timing_list.begin();
        p != timing_list.end(); ++ p) {
     const DotlibNode* dt_timing = *p;
@@ -332,7 +332,7 @@ gen_timing(CellLibrary* library,
     if ( !timing_info.set_data(dt_timing) ) {
       continue;
     }
-    CellTimingType timing_type = timing_info.timing_type();
+    ClibTimingType timing_type = timing_info.timing_type();
     const DotlibNode* when_node = timing_info.when();
     Expr cond;
     if ( when_node ) {
@@ -343,14 +343,14 @@ gen_timing(CellLibrary* library,
     }
 
     switch ( library->delay_model() ) {
-    case kCellDelayGenericCmos:
+    case kClibDelayGenericCmos:
       {
-	CellTime intrinsic_rise(timing_info.intrinsic_rise()->float_value());
-	CellTime intrinsic_fall(timing_info.intrinsic_fall()->float_value());
-	CellTime slope_rise(timing_info.slope_rise()->float_value());
-	CellTime slope_fall(timing_info.slope_fall()->float_value());
-	CellResistance rise_res(timing_info.rise_resistance()->float_value());
-	CellResistance fall_res(timing_info.fall_resistance()->float_value());
+	ClibTime intrinsic_rise(timing_info.intrinsic_rise()->float_value());
+	ClibTime intrinsic_fall(timing_info.intrinsic_fall()->float_value());
+	ClibTime slope_rise(timing_info.slope_rise()->float_value());
+	ClibTime slope_fall(timing_info.slope_fall()->float_value());
+	ClibResistance rise_res(timing_info.rise_resistance()->float_value());
+	ClibResistance fall_res(timing_info.fall_resistance()->float_value());
 	library->new_timing_generic(cell_id, timing_id,
 				    timing_type, cond,
 				    intrinsic_rise, intrinsic_fall,
@@ -359,15 +359,15 @@ gen_timing(CellLibrary* library,
       }
       break;
 
-    case kCellDelayTableLookup:
+    case kClibDelayTableLookup:
       {
 	const DotlibNode* cr_node = timing_info.cell_rise();
 	const DotlibNode* rt_node = timing_info.rise_transition();
 	const DotlibNode* rp_node = timing_info.rise_propagation();
 
-	CellLut* cr_lut = nullptr;
-	CellLut* rt_lut = nullptr;
-	CellLut* rp_lut = nullptr;
+	ClibLut* cr_lut = nullptr;
+	ClibLut* rt_lut = nullptr;
+	ClibLut* rp_lut = nullptr;
 	if ( cr_node != nullptr ) {
 	  if ( rp_node != nullptr ) {
 	    MsgMgr::put_msg(__FILE__, __LINE__,
@@ -413,9 +413,9 @@ gen_timing(CellLibrary* library,
 	const DotlibNode* ft_node = timing_info.fall_transition();
 	const DotlibNode* fp_node = timing_info.fall_propagation();
 
-	CellLut* cf_lut = nullptr;
-	CellLut* ft_lut = nullptr;
-	CellLut* fp_lut = nullptr;
+	ClibLut* cf_lut = nullptr;
+	ClibLut* ft_lut = nullptr;
+	ClibLut* fp_lut = nullptr;
 	if ( cf_node != nullptr ) {
 	  if ( fp_node != nullptr ) {
 	    MsgMgr::put_msg(__FILE__, __LINE__,
@@ -480,20 +480,20 @@ gen_timing(CellLibrary* library,
       }
       break;
 
-    case kCellDelayPiecewiseCmos:
+    case kClibDelayPiecewiseCmos:
       // 未実装
       break;
 
-    case kCellDelayCmos2:
+    case kClibDelayCmos2:
       // 未実装
       break;
 
-    case kCellDelayDcm:
+    case kClibDelayDcm:
       // 未実装
       break;
     }
 
-    CellTimingSense timing_sense = timing_info.timing_sense();
+    ClibTimingSense timing_sense = timing_info.timing_sense();
 
     // タイミング情報の設定
     if ( timing_info.related_pin() ) {
@@ -503,7 +503,7 @@ gen_timing(CellLibrary* library,
       for (vector<string>::const_iterator p = pin_name_list.begin();
 	   p != pin_name_list.end(); ++ p) {
 	string pin_name = *p;
-	const CellPin* ipin = cell->pin(pin_name);
+	const ClibCellPin* ipin = cell->pin(pin_name);
 	if ( ipin == nullptr ) {
 	  ostringstream buf;
 	  buf << pin_name << ": no such pin";
@@ -516,15 +516,15 @@ gen_timing(CellLibrary* library,
 	}
 	ymuint iid = ipin->input_id();
 	switch ( timing_sense ) {
-	case kCellPosiUnate:
+	case kClibPosiUnate:
 	  tid_list[iid * 2 + 0].push_back(timing_id);
 	  break;
 
-	case kCellNegaUnate:
+	case kClibNegaUnate:
 	  tid_list[iid * 2 + 1].push_back(timing_id);
 	  break;
 
-	case kCellNonUnate:
+	case kClibNonUnate:
 	  tid_list[iid * 2 + 0].push_back(timing_id);
 	  tid_list[iid * 2 + 1].push_back(timing_id);
 	  break;
@@ -546,12 +546,12 @@ gen_timing(CellLibrary* library,
   }
 }
 
-// @brief DotlibNode から CellLibrary を生成する．
+// @brief DotlibNode から ClibCellLibrary を生成する．
 // @param[in] library_info ライブラリの情報を持つオブジェクト
 // @param[in] library設定対象のライブラリ
 void
 set_library(const DotlibLibrary& library_info,
-	    CellLibrary* library)
+	    ClibCellLibrary* library)
 {
   // 'name' の設定
   library->set_name(library_info.name());
@@ -694,7 +694,7 @@ set_library(const DotlibLibrary& library_info,
     }
 
     ShString cell_name = cell_info.name();
-    CellArea area(cell_info.area());
+    ClibArea area(cell_info.area());
     const list<const DotlibNode*>& dt_pin_list = cell_info.pin_list();
     const list<const DotlibNode*>& dt_bus_list = cell_info.bus_list();
     const list<const DotlibNode*>& dt_bundle_list = cell_info.bundle_list();
@@ -917,7 +917,7 @@ set_library(const DotlibLibrary& library_info,
     }
     library->set_timing_num(cell_id, nt);
 
-    const Cell* cell = library->cell(cell_id);
+    const ClibCell* cell = library->cell(cell_id);
 
     ymuint timing_id = 0;
     for (ymuint pg_id = 0; pg_id < npg; ++ pg_id) {
@@ -930,7 +930,7 @@ set_library(const DotlibLibrary& library_info,
       ymuint nop = pin_info.num();
       for (ymuint i = 0; i < nop; ++ i) {
 	ShString oname = pin_info.name(i);
-	const CellPin* opin = cell->pin((const char*)oname);
+	const ClibCellPin* opin = cell->pin((const char*)oname);
 	ASSERT_COND( opin != nullptr );
 	ymuint oid = opin->output_id();
 	bool has_logic = cell->has_logic(oid);
@@ -946,30 +946,30 @@ set_library(const DotlibLibrary& library_info,
 	  const vector<ymuint>& tid_list_p = tid_list[iid * 2 + 0];
 	  if ( !tid_list_p.empty() ) {
 	    ymuint tid = tid_list_p[0];
-	    const CellTiming* timing = cell->timing(tid);
+	    const ClibTiming* timing = cell->timing(tid);
 	    bool depend = true;
-	    if ( timing->type() == kCellTimingCombinational ) {
+	    if ( timing->type() == kClibTimingCombinational ) {
 	      if ( has_logic && !(~n_func && p_func) ) {
 		depend = false;
 	      }
 	    }
 	    if ( depend ) {
-	      library->set_timing(cell_id, iid, oid, kCellPosiUnate, tid_list_p);
+	      library->set_timing(cell_id, iid, oid, kClibPosiUnate, tid_list_p);
 	    }
 	  }
 
 	  const vector<ymuint>& tid_list_n = tid_list[iid * 2 + 1];
 	  if ( !tid_list_n.empty() ) {
 	    ymuint tid = tid_list_n[0];
-	    const CellTiming* timing = cell->timing(tid);
+	    const ClibTiming* timing = cell->timing(tid);
 	    bool depend = true;
-	    if ( timing->type() == kCellTimingCombinational ) {
+	    if ( timing->type() == kClibTimingCombinational ) {
 	      if ( has_logic && !(~p_func && n_func) ) {
 		depend = false;
 	      }
 	    }
 	    if ( depend ) {
-	      library->set_timing(cell_id, iid, oid, kCellNegaUnate, tid_list_n);
+	      library->set_timing(cell_id, iid, oid, kClibNegaUnate, tid_list_n);
 	    }
 	  }
 	}
@@ -986,7 +986,7 @@ END_NONAMESPACE
 END_NAMESPACE_YM_DOTLIB
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 // @brief liberty 形式のファイルを読み込んでライブラリに設定する．
 // @param[in] filename ファイル名
@@ -994,7 +994,7 @@ BEGIN_NAMESPACE_YM_CELL
 // @return 読み込みが成功したら true を返す．
 bool
 read_liberty(const string& filename,
-	     CellLibrary* library)
+	     ClibCellLibrary* library)
 {
   using namespace nsDotlib;
 
@@ -1020,9 +1020,9 @@ read_liberty(const string& filename,
 // @return 読み込みが成功したら true を返す．
 bool
 read_liberty(const char* filename,
-	     CellLibrary* library)
+	     ClibCellLibrary* library)
 {
   return read_liberty(string(filename), library);
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

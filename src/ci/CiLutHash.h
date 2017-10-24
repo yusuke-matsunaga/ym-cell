@@ -9,18 +9,18 @@
 /// All rights reserved.
 
 
-#include "ym/ym_cell.h"
+#include "ym/clib.h"
 #include "ym/ShString.h"
 #include "ym/Alloc.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 class CiLutTemplate;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiLutHash CiLutHash.h "CiLutHash.h"
-/// @brief 名前をキーにした CiCell のハッシュ表
+/// @brief 名前をキーにした CiClib のハッシュ表
 //////////////////////////////////////////////////////////////////////
 class CiLutHash
 {
@@ -82,6 +82,6 @@ private:
 
 };
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CILUTHASH_H

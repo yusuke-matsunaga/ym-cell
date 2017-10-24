@@ -43,8 +43,8 @@ DotlibTiming::set_data(const DotlibNode* timing_node)
   mRelatedPin = nullptr;
   mSlopeFall = nullptr;
   mSlopeRise = nullptr;
-  mTimingSense = kCellNonUnate;
-  mTimingType = kCellTimingCombinational;
+  mTimingSense = kClibNonUnate;
+  mTimingType = kClibTimingCombinational;
   mWhen = nullptr;
   mWhenStart = nullptr;
   mWhenEnd = nullptr;
@@ -52,9 +52,9 @@ DotlibTiming::set_data(const DotlibNode* timing_node)
   mRiseDelayIntercept = nullptr;
   mFallPinResistance = nullptr;
   mRisePinResistance = nullptr;
-  mCellDegradation = nullptr;
-  mCellFall = nullptr;
-  mCellRise = nullptr;
+  mClibDegradation = nullptr;
+  mClibFall = nullptr;
+  mClibRise = nullptr;
   mFallConstraint = nullptr;
   mRiseConstraint = nullptr;
   mFallPropagation = nullptr;
@@ -95,18 +95,18 @@ DotlibTiming::set_data(const DotlibNode* timing_node)
     return false;
   }
   if ( ts_node == nullptr ) {
-    mTimingSense = kCellNonUnate;
+    mTimingSense = kClibNonUnate;
   }
   else {
     ShString tmp_str = ts_node->string_value();
     if ( tmp_str == "positive_unate" ) {
-      mTimingSense = kCellPosiUnate;
+      mTimingSense = kClibPosiUnate;
     }
     else if ( tmp_str == "negative_unate" ) {
-      mTimingSense = kCellNegaUnate;
+      mTimingSense = kClibNegaUnate;
     }
     else if ( tmp_str == "non_unate" ) {
-      mTimingSense = kCellNonUnate;
+      mTimingSense = kClibNonUnate;
     }
     else {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -124,102 +124,102 @@ DotlibTiming::set_data(const DotlibNode* timing_node)
     return false;
   }
   if ( tt_node == nullptr ) {
-    mTimingType = kCellTimingCombinational;
+    mTimingType = kClibTimingCombinational;
   }
   else {
     ShString tmp_str = tt_node->string_value();
     if ( tmp_str == "combinational" ) {
-      mTimingType = kCellTimingCombinational;
+      mTimingType = kClibTimingCombinational;
     }
     else if ( tmp_str == "combinational_rise" ) {
-      mTimingType = kCellTimingCombinationalRise;
+      mTimingType = kClibTimingCombinationalRise;
     }
     else if ( tmp_str == "combinational_fall" ) {
-      mTimingType = kCellTimingCombinationalFall;
+      mTimingType = kClibTimingCombinationalFall;
     }
     else if ( tmp_str == "three_state_enable" ) {
-      mTimingType = kCellTimingThreeStateEnable;
+      mTimingType = kClibTimingThreeStateEnable;
     }
     else if ( tmp_str == "three_state_enable_rise" ) {
-      mTimingType = kCellTimingThreeStateEnableRise;
+      mTimingType = kClibTimingThreeStateEnableRise;
     }
     else if ( tmp_str == "three_state_enable_fall" ) {
-      mTimingType = kCellTimingThreeStateEnableFall;
+      mTimingType = kClibTimingThreeStateEnableFall;
     }
     else if ( tmp_str == "three_state_disable" ) {
-      mTimingType = kCellTimingThreeStateDisable;
+      mTimingType = kClibTimingThreeStateDisable;
     }
     else if ( tmp_str == "three_state_disable_rise" ) {
-      mTimingType = kCellTimingThreeStateDisableRise;
+      mTimingType = kClibTimingThreeStateDisableRise;
     }
     else if ( tmp_str == "three_state_disable_fall" ) {
-      mTimingType = kCellTimingThreeStateDisableFall;
+      mTimingType = kClibTimingThreeStateDisableFall;
     }
     else if ( tmp_str == "rising_edge" ) {
-      mTimingType = kCellTimingRisingEdge;
+      mTimingType = kClibTimingRisingEdge;
     }
     else if ( tmp_str == "falling_edge" ) {
-      mTimingType = kCellTimingFallingEdge;
+      mTimingType = kClibTimingFallingEdge;
     }
     else if ( tmp_str == "preset" ) {
-      mTimingType = kCellTimingPreset;
+      mTimingType = kClibTimingPreset;
     }
     else if ( tmp_str == "clear" ) {
-      mTimingType = kCellTimingClear;
+      mTimingType = kClibTimingClear;
     }
     else if ( tmp_str == "hold_rising" ) {
-      mTimingType = kCellTimingHoldRising;
+      mTimingType = kClibTimingHoldRising;
     }
     else if ( tmp_str == "hold_falling" ) {
-      mTimingType = kCellTimingHoldFalling;
+      mTimingType = kClibTimingHoldFalling;
     }
     else if ( tmp_str == "setup_rising" ) {
-      mTimingType = kCellTimingSetupRising;
+      mTimingType = kClibTimingSetupRising;
     }
     else if ( tmp_str == "setup_falling" ) {
-      mTimingType = kCellTimingSetupFalling;
+      mTimingType = kClibTimingSetupFalling;
     }
     else if ( tmp_str == "recovery_rising" ) {
-      mTimingType = kCellTimingRecoveryRising;
+      mTimingType = kClibTimingRecoveryRising;
     }
     else if ( tmp_str == "recovery_falling" ) {
-      mTimingType = kCellTimingRecoveryFalling;
+      mTimingType = kClibTimingRecoveryFalling;
     }
     else if ( tmp_str == "skew_rising" ) {
-      mTimingType = kCellTimingSkewRising;
+      mTimingType = kClibTimingSkewRising;
     }
     else if ( tmp_str == "skew_falling" ) {
-      mTimingType = kCellTimingSkewFalling;
+      mTimingType = kClibTimingSkewFalling;
     }
     else if ( tmp_str == "removal_rising" ) {
-      mTimingType = kCellTimingRemovalRising;
+      mTimingType = kClibTimingRemovalRising;
     }
     else if ( tmp_str == "removal_falling" ) {
-      mTimingType = kCellTimingRemovalFalling;
+      mTimingType = kClibTimingRemovalFalling;
     }
     else if ( tmp_str == "non_seq_setup_rising" ) {
-      mTimingType = kCellTimingNonSeqSetupRising;
+      mTimingType = kClibTimingNonSeqSetupRising;
     }
     else if ( tmp_str == "non_seq_setup_falling" ) {
-      mTimingType = kCellTimingNonSeqSetupFalling;
+      mTimingType = kClibTimingNonSeqSetupFalling;
     }
     else if ( tmp_str == "non_seq_hold_rising" ) {
-      mTimingType = kCellTimingNonSeqHoldRising;
+      mTimingType = kClibTimingNonSeqHoldRising;
     }
     else if ( tmp_str == "non_seq_hold_falling" ) {
-      mTimingType = kCellTimingNonSeqHoldFalling;
+      mTimingType = kClibTimingNonSeqHoldFalling;
     }
     else if ( tmp_str == "nochange_high_high" ) {
-      mTimingType = kCellTimingNochangeHighHigh;
+      mTimingType = kClibTimingNochangeHighHigh;
     }
     else if ( tmp_str == "nochange_high_low" ) {
-      mTimingType = kCellTimingNochangeHighLow;
+      mTimingType = kClibTimingNochangeHighLow;
     }
     else if ( tmp_str == "nochange_low_high" ) {
-      mTimingType = kCellTimingNochangeLowHigh;
+      mTimingType = kClibTimingNochangeLowHigh;
     }
     else if ( tmp_str == "nochange_low_low" ) {
-      mTimingType = kCellTimingNochangeLowLow;
+      mTimingType = kClibTimingNochangeLowLow;
     }
     else {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -297,17 +297,17 @@ DotlibTiming::set_data(const DotlibNode* timing_node)
   }
 
   // 'cell_degradation' を取り出す．
-  if ( !get_singleton_or_null("cell_degradation", mCellDegradation) ) {
+  if ( !get_singleton_or_null("cell_degradation", mClibDegradation) ) {
     return false;
   }
 
   // 'cell_rise' を取り出す．
-  if ( !get_singleton_or_null("cell_rise", mCellRise) ) {
+  if ( !get_singleton_or_null("cell_rise", mClibRise) ) {
     return false;
   }
 
   // 'cell_fall' を取り出す．
-  if ( !get_singleton_or_null("cell_fall", mCellFall) ) {
+  if ( !get_singleton_or_null("cell_fall", mClibFall) ) {
     return false;
   }
 
@@ -428,14 +428,14 @@ DotlibTiming::slope_rise() const
 }
 
 // @brief "timing_sense" を返す．
-CellTimingSense
+ClibTimingSense
 DotlibTiming::timing_sense() const
 {
   return mTimingSense;
 }
 
 // @brief "timing_type" を返す．
-CellTimingType
+ClibTimingType
 DotlibTiming::timing_type() const
 {
   return mTimingType;
@@ -494,21 +494,21 @@ DotlibTiming::rise_pin_resistance() const
 const DotlibNode*
 DotlibTiming::cell_degradation() const
 {
-  return mCellDegradation;
+  return mClibDegradation;
 }
 
 // @brief "cell_fall" を返す．
 const DotlibNode*
 DotlibTiming::cell_fall() const
 {
-  return mCellFall;
+  return mClibFall;
 }
 
 // @brief "cell_rise" を返す．
 const DotlibNode*
 DotlibTiming::cell_rise() const
 {
-  return mCellRise;
+  return mClibRise;
 }
 
 // @brief "fall_constraint" を返す．

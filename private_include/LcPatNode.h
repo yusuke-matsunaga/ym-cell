@@ -12,7 +12,7 @@
 #include "libcomp_nsdef.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 class LcPatMgr;
 
@@ -239,6 +239,6 @@ LcPatNode::fanin_inv1() const
   return static_cast<bool>((mType >> 3) & 1U);
 }
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP
 
 #endif // LCPATNODE_H

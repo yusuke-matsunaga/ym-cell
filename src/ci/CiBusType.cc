@@ -3,14 +3,14 @@
 /// @brief CiBusType の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "CiBusType.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiBusType
@@ -50,14 +50,14 @@ CiBusType::name() const
 }
 
 // @brief base_type の取得
-CellBusType::tBaseType
+ClibBusType::BaseType
 CiBusType::base_type() const
 {
   return kArrayType;
 }
 
 // @brief data_type の取得
-CellBusType::tDataType
+ClibBusType::DataType
 CiBusType::data_type() const
 {
   return kBitType;
@@ -92,4 +92,4 @@ CiBusType::downto() const
   return mDownTo;
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB

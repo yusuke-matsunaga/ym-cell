@@ -12,7 +12,7 @@
 #include "ym/Expr.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 // デフォルトコンストラクタ
 TEST(LcSignatureTest, constr)
@@ -438,4 +438,4 @@ TEST(LcSignatureTest, Latch10RS)
 
 // Cell* からのコンストラクタを未テスト
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP

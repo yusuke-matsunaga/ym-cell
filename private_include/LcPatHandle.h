@@ -12,7 +12,7 @@
 #include "libcomp_nsdef.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 class LcPatNode;
 
@@ -112,6 +112,6 @@ LcPatHandle::set(LcPatNode* node,
   mData = reinterpret_cast<ympuint>(node) | (static_cast<ympuint>(inv) & 1UL);
 }
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP
 
 #endif // LCPATHANDLE_H

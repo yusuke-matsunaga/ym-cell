@@ -13,7 +13,7 @@
 #include "LcPatMgr.h"
 
 
-BEGIN_NAMESPACE_YM_CELL_LIBCOMP
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 //////////////////////////////////////////////////////////////////////
 /// @class LibComp LibComp.h "LibComp.h"
@@ -37,7 +37,7 @@ public:
 
   /// @brief セルのグループ化，クラス化を行う．
   void
-  compile(CellLibrary& library);
+  compile(ClibCellLibrary& library);
 
   /// @brief パタングラフの情報を取り出す．
   const LcPatMgr&
@@ -128,7 +128,7 @@ private:
   /// @brief セルを追加する．
   /// @param[in] cell セル
   void
-  _add_cell(Cell* cell);
+  _add_cell(ClibCell* cell);
 
   /// @brief シグネチャに対応する LcGroup を求める．
   /// @param[in] sig シグネチャ
@@ -208,6 +208,6 @@ private:
 
 };
 
-END_NAMESPACE_YM_CELL_LIBCOMP
+END_NAMESPACE_YM_CLIB_LIBCOMP
 
 #endif // LIBCOMP_H

@@ -10,7 +10,7 @@
 
 
 #include "DotlibAttrMap.h"
-#include "ym/CellLibrary.h"
+#include "ym/ClibCellLibrary.h"
 #include "ym/MsgMgr.h"
 
 
@@ -43,11 +43,11 @@ public:
   name() const;
 
   /// @brief "technology" を返す．
-  CellTechnology
+  ClibTechnology
   technology() const;
 
   /// @brief "delay_model" を返す．
-  CellDelayModel
+  ClibDelayModel
   delay_model() const;
 
   /// @brief "bus_naming_style" を返す．
@@ -113,10 +113,10 @@ private:
   ShString mName;
 
   // "technology"
-  CellTechnology mTechnology;
+  ClibTechnology mTechnology;
 
   // "delay_model"
-  CellDelayModel mDelayModel;
+  ClibDelayModel mDelayModel;
 
   // "bus_naming_style"
   const DotlibNode* mBusNamingStyle;
@@ -155,7 +155,7 @@ private:
   list<const DotlibNode*> mLutTemplateList;
 
   // セル定義のリスト
-  list<const DotlibNode*> mCellList;
+  list<const DotlibNode*> mClibList;
 
 };
 

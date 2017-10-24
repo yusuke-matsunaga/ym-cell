@@ -9,25 +9,25 @@
 /// All rights reserved.
 
 
-#include "ym/CellLut.h"
+#include "ym/ClibLut.h"
 #include "ym/ShString.h"
 
 
-BEGIN_NAMESPACE_YM_CELL
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiLut CiLut.h "CiLut.h"
 /// @brief ルックアップテーブルの実装クラスの基底クラス
 //////////////////////////////////////////////////////////////////////
 class CiLut :
-  public CellLut
+  public ClibLut
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 protected:
 
   /// @brief コンストラクタ
-  CiLut(const CellLutTemplate* lut_template);
+  CiLut(const ClibLutTemplate* lut_template);
 
   /// @brief デストラクタ
   virtual
@@ -41,7 +41,7 @@ public:
 
   /// @brief テンプレートの取得
   virtual
-  const CellLutTemplate*
+  const ClibLutTemplate*
   lut_template() const;
 
   /// @brief テンプレート名の取得
@@ -52,7 +52,7 @@ public:
   /// @brief 変数型の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
-  CellVarType
+  ClibVarType
   variable_type(ymuint32 var) const;
 
   /// @brief インデックス数の取得
@@ -92,7 +92,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // テンプレート
-  const CellLutTemplate* mTemplate;
+  const ClibLutTemplate* mTemplate;
 
 };
 
@@ -104,12 +104,12 @@ private:
 class CiLut1D :
   public CiLut
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
   /// @brief コンストラクタ
-  CiLut1D(const CellLutTemplate* lut_template,
+  CiLut1D(const ClibLutTemplate* lut_template,
 	  const vector<double>& value_array,
 	  const vector<double>& index_array = vector<double>());
 
@@ -181,12 +181,12 @@ private:
 class CiLut2D :
   public CiLut
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
   /// @brief コンストラクタ
-  CiLut2D(const CellLutTemplate* lut_template,
+  CiLut2D(const ClibLutTemplate* lut_template,
 	  const vector<double>& value_array,
 	  const vector<double>& index_array1 = vector<double>(),
 	  const vector<double>& index_array2 = vector<double>());
@@ -254,7 +254,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // テンプレート
-  const CellLutTemplate* mTemplate;
+  const ClibLutTemplate* mTemplate;
 
   // インデックスの配列の配列
   vector<double> mIndexArray[2];
@@ -275,12 +275,12 @@ private:
 class CiLut3D :
   public CiLut
 {
-  friend class CiLibrary;
+  friend class CiCellLibrary;
 
 private:
 
   /// @brief コンストラクタ
-  CiLut3D(const CellLutTemplate* lut_template,
+  CiLut3D(const ClibLutTemplate* lut_template,
 	  const vector<double>& value_array,
 	  const vector<double>& index_array1 = vector<double>(),
 	  const vector<double>& index_array2 = vector<double>(),
@@ -351,7 +351,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // テンプレート
-  const CellLutTemplate* mTemplate;
+  const ClibLutTemplate* mTemplate;
 
   // インデックスの配列の配列
   vector<double> mIndexArray[3];
@@ -393,6 +393,6 @@ CiLut3D::idx(ymuint idx1,
   return ((idx1 * index_num(1) + idx2) * index_num(2)) + idx3;
 }
 
-END_NAMESPACE_YM_CELL
+END_NAMESPACE_YM_CLIB
 
 #endif // CILUT_H
