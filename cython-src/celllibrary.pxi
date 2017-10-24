@@ -5,9 +5,9 @@
 ### Copyright (C) 2017 Yusuke Matsunaga
 ### All rights reserved.
 
-from libcpp cimpot bool
+from libcpp cimport bool
 from CXX_ClibCellLibrary cimport ClibCellLibrary as CXX_ClibCellLibrary
-from CXX_ClibCellLibrary cimport read_mislib
+from CXX_ClibCellLibrary cimport read_mislib, read_liberty
 
 ### @brief ClibCellLibrary クラスの Python バージョン
 cdef class CellLibrary :
@@ -17,7 +17,7 @@ cdef class CellLibrary :
 
     ### @brief 初期化
     def __cinit__(CellLibrary self) :
-        self._this_ptr = CXX_ClibCellLibrary::new_obj()
+        self._this_ptr = CXX_ClibCellLibrary.new_obj()
 
     ### @brief 終了処理
     def __dealloc__(CellLibrary self) :
@@ -32,6 +32,19 @@ cdef class CellLibrary :
         cdef bool stat
         obj = CellLibrary()
         stat = read_mislib(c_filename, obj._this_ptr)
+        if stat :
+            return obj
+        else :
+            return None
+
+    ### @brief dotlib(liberty) からの読み込み
+    ### @param[in] filename ファイル名
+    @staticmethod
+    def read_liberty(filename) :
+        cdef string c_filename = filename.encode('UTF-8')
+        cdef bool stat
+        obj = CellLibrary()
+        stat = read_liberty(c_filename, obj._this_ptr)
         if stat :
             return obj
         else :
