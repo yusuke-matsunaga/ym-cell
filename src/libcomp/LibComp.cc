@@ -439,7 +439,7 @@ LibComp::_find_group(const LcSignature& sig)
   }
   else {
     // まだ登録されていない．
-    LcClass* fclass = _new_class(rep_sig);
+    fclass = _new_class(rep_sig);
     mClassMap.add(rep_sig_str, fclass->id());
   }
 
