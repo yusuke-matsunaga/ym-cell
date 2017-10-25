@@ -2,14 +2,14 @@
 # ===================================================================
 # インクルードパスの設定
 # ===================================================================
+include_directories(
+  ${GTEST_INCLUDE_DIR}
+  )
 
 
 # ===================================================================
 # サブディレクトリの設定
 # ===================================================================
-
-add_subdirectory ( libcomp )
-add_subdirectory ( cell_library )
 
 
 # ===================================================================
@@ -17,6 +17,18 @@ add_subdirectory ( cell_library )
 # ===================================================================
 
 
+
 # ===================================================================
 #  テスト用のターゲットの設定
 # ===================================================================
+
+ym_add_gtest ( ClibCellLibraryTest
+  ClibCellLibraryTest.cc
+  $<TARGET_OBJECTS:ym_base_d>
+  $<TARGET_OBJECTS:ym_logic_d>
+  $<TARGET_OBJECTS:ym_cell_d>
+  )
+
+target_compile_definitions ( ClibCellLibraryTest
+  PRIVATE "-DDATA_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/data\""
+  )
