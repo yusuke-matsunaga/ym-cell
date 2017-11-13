@@ -47,7 +47,7 @@ def read_mislib(filename) :
 
 ### @brief dotlib(liberty) からの読み込み
 ### @param[in] filename ファイル名
-    def read_liberty(filename) :
+def read_liberty(filename) :
     cdef string c_filename = filename.encode('UTF-8')
     cdef bool stat
     obj = CellLibrary()
