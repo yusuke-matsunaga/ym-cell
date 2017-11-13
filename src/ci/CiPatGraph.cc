@@ -41,6 +41,8 @@ CiPatGraph::rep_id() const
 ymuint
 CiPatGraph::root_id() const
 {
+  ASSERT_COND( mEdgeNum > 0 );
+
   // 枝の番号を2で割ればファンアウト先のノード番号
   return mEdgeList[0] / 2;
 }
@@ -72,6 +74,7 @@ ymuint
 CiPatGraph::edge(ymuint pos) const
 {
   ASSERT_COND( pos < edge_num() );
+
   return mEdgeList[pos];
 }
 
@@ -129,6 +132,7 @@ CiPatGraph::set_edge(ymuint pos,
 		     ymuint edge)
 {
   ASSERT_COND( pos < edge_num() );
+
   mEdgeList[pos] = edge;
 }
 

@@ -48,15 +48,14 @@ ClibCellLibrary::new_obj()
 // @brief コンストラクタ
 CiCellLibrary::CiCellLibrary() :
   mAlloc(4096),
-  mLutHash(mAlloc),
-  mClibHash(mAlloc)
+  mPatMgr(mAlloc)
 {
   mTechnology = kClibTechCmos;
   mDelayModel = kClibDelayGenericCmos;
   mLutTemplateNum = 0;
   mLutTemplateArray = nullptr;
-  mClibNum = 0;
-  mClibArray = nullptr;
+  mCellNum = 0;
+  mCellArray = nullptr;
   mGroupNum = 0;
   mGroupArray = nullptr;
   mClassNum = 0;
@@ -214,7 +213,7 @@ CiCellLibrary::bus_type(const char* name) const
 ymuint
 CiCellLibrary::cell_num() const
 {
-  return mClibNum;
+  return mCellNum;
 }
 
 // @brief セルの取得
@@ -223,21 +222,21 @@ const ClibCell*
 CiCellLibrary::cell(ymuint pos) const
 {
   ASSERT_COND( pos < cell_num() );
-  return mClibArray[pos];
+  return mCellArray[pos];
 }
 
 // @brief 名前からのセルの取得
 const ClibCell*
 CiCellLibrary::cell(const char* name) const
 {
-  return mClibHash.get(ShString(name));
+  return mCellHash.get(ShString(name));
 }
 
 // @brief 名前からのセルの取得
 const ClibCell*
 CiCellLibrary::cell(const string& name) const
 {
-  return mClibHash.get(ShString(name));
+  return mCellHash.get(ShString(name));
 }
 
 // @brief セルグループの個数を返す．
@@ -575,8 +574,8 @@ void
 CiCellLibrary::set_lu_table_template_num(ymuint num)
 {
   ASSERT_COND( mLutTemplateNum == 0 );
-  void* p = mAlloc.get_memory(sizeof(ClibLutTemplate*) * num);
   mLutTemplateNum = num;
+  void* p = mAlloc.get_memory(sizeof(ClibLutTemplate*) * num);
   mLutTemplateArray = new (p) CiLutTemplate*[num];
 }
 
@@ -592,6 +591,7 @@ CiCellLibrary::new_lut_template1(ymuint id,
 				 const vector<double>& index_list1)
 {
   ASSERT_COND( id < lu_table_template_num() );
+
   void* p = mAlloc.get_memory(sizeof(CiLutTemplate1D));
   CiLutTemplate* tmpl = new (p) CiLutTemplate1D(ShString(name),
 						var_type1, index_list1);
@@ -615,6 +615,7 @@ CiCellLibrary::new_lut_template2(ymuint id,
 				 const vector<double>& index_list2)
 {
   ASSERT_COND( id < lu_table_template_num() );
+
   void* p = mAlloc.get_memory(sizeof(CiLutTemplate2D));
   CiLutTemplate* tmpl = new (p) CiLutTemplate2D(ShString(name),
 						var_type1, index_list1,
@@ -643,6 +644,7 @@ CiCellLibrary::new_lut_template3(ymuint id,
 				 const vector<double>& index_list3)
 {
   ASSERT_COND( id < lu_table_template_num() );
+
   void* p = mAlloc.get_memory(sizeof(CiLutTemplate3D));
   CiLutTemplate* tmpl = new (p) CiLutTemplate3D(ShString(name),
 						var_type1, index_list1,
@@ -657,10 +659,11 @@ CiCellLibrary::new_lut_template3(ymuint id,
 void
 CiCellLibrary::set_cell_num(ymuint num)
 {
-  ASSERT_COND( mClibNum == 0 );
-  mClibNum = num;
+  ASSERT_COND( mCellNum == 0 );
+
+  mCellNum = num;
   void* p = mAlloc.get_memory(sizeof(CiCell*) * num);
-  mClibArray = new (p) CiCell*[num];
+  mCellArray = new (p) CiCell*[num];
 }
 
 // @brief セルを取り出す．
@@ -668,8 +671,8 @@ CiCellLibrary::set_cell_num(ymuint num)
 ClibCell*
 CiCellLibrary::cell(ymuint pos)
 {
-  ASSERT_COND( pos < mClibNum );
-  return mClibArray[pos];
+  ASSERT_COND( pos < mCellNum );
+  return mCellArray[pos];
 }
 
 // @brief 論理セルを生成する．
@@ -979,7 +982,7 @@ CiCellLibrary::new_cell_input(ymuint cell_id,
 			      ClibCapacitance rise_capacitance,
 			      ClibCapacitance fall_capacitance)
 {
-  CiCell* cell = mClibArray[cell_id];
+  CiCell* cell = mCellArray[cell_id];
   void* p = mAlloc.get_memory(sizeof(CiInputPin));
   CiInputPin* pin = new (p) CiInputPin(cell, ShString(name),
 				       capacitance,
@@ -1020,7 +1023,7 @@ CiCellLibrary::new_cell_output(ymuint cell_id,
 			       ClibTime max_transition,
 			       ClibTime min_transition)
 {
-  CiCell* cell = mClibArray[cell_id];
+  CiCell* cell = mCellArray[cell_id];
   void* p = mAlloc.get_memory(sizeof(CiOutputPin));
   CiOutputPin* pin = new (p) CiOutputPin(cell, ShString(name),
 					 has_logic, logic_expr,
@@ -1072,7 +1075,7 @@ CiCellLibrary::new_cell_inout(ymuint cell_id,
 			      ClibTime max_transition,
 			      ClibTime min_transition)
 {
-  CiCell* cell = mClibArray[cell_id];
+  CiCell* cell = mCellArray[cell_id];
   void* p = mAlloc.get_memory(sizeof(CiInoutPin));
   CiInoutPin* pin =  new (p) CiInoutPin(cell, ShString(name),
 					has_logic, logic_expr,
@@ -1102,7 +1105,7 @@ CiCellLibrary::new_cell_internal(ymuint cell_id,
 				 ymuint internal_id,
 				 const string& name)
 {
-  CiCell* cell = mClibArray[cell_id];
+  CiCell* cell = mCellArray[cell_id];
   void* p = mAlloc.get_memory(sizeof(CiInternalPin));
   CiInternalPin* pin = new (p) CiInternalPin(cell, ShString(name));
   cell->mPinArray[pin_id] = pin;
@@ -1118,7 +1121,7 @@ void
 CiCellLibrary::set_timing_num(ymuint cell_id,
 			      ymuint timing_num)
 {
-  CiCell* cell = mClibArray[cell_id];
+  CiCell* cell = mCellArray[cell_id];
   cell->mTimingNum = timing_num;
   void* p = mAlloc.get_memory(sizeof(CiTiming*) * timing_num);
   cell->mTimingArray = new (p) CiTiming*[timing_num];
@@ -1155,7 +1158,7 @@ CiCellLibrary::new_timing_generic(ymuint cell_id,
 					     slope_fall,
 					     rise_resistance,
 					     fall_resistance);
-  CiCell* cell = mClibArray[cell_id];
+  CiCell* cell = mCellArray[cell_id];
   cell->mTimingArray[tid] = timing;
 }
 
@@ -1188,7 +1191,7 @@ CiCellLibrary::new_timing_piecewise(ymuint cell_id,
 					       slope_fall,
 					       rise_pin_resistance,
 					       fall_pin_resistance);
-  CiCell* cell = mClibArray[cell_id];
+  CiCell* cell = mCellArray[cell_id];
   cell->mTimingArray[tid] = timing;
 }
 
@@ -1215,7 +1218,7 @@ CiCellLibrary::new_timing_lut1(ymuint cell_id,
 					  cell_fall,
 					  rise_transition,
 					  fall_transition);
-  CiCell* cell = mClibArray[cell_id];
+  CiCell* cell = mCellArray[cell_id];
   cell->mTimingArray[tid] = timing;
 }
 
@@ -1244,7 +1247,7 @@ CiCellLibrary::new_timing_lut2(ymuint cell_id,
 					  fall_transition,
 					  rise_propagation,
 					  fall_propagation);
-  CiCell* cell = mClibArray[cell_id];
+  CiCell* cell = mCellArray[cell_id];
   cell->mTimingArray[tid] = timing;
 }
 
@@ -1265,7 +1268,7 @@ CiCellLibrary::set_timing(ymuint cell_id,
 			  ClibTimingSense timing_sense,
 			  const vector<ymuint>& tid_list)
 {
-  CiCell* cell = mClibArray[cell_id];
+  CiCell* cell = mCellArray[cell_id];
   ymuint base = (opin_id * cell->input_num2() + ipin_id) * 2;
   switch ( timing_sense ) {
   case kClibPosiUnate: base += 0; break;
@@ -1378,15 +1381,29 @@ CiCellLibrary::compile()
     mLogicGroup[i] = &mGroupArray[libcomp.logic_group(i)];
   }
 
+  // i の値
+  //  0: Q のみ
+  //  1: XQ のみ
+  //  2: Q/XQ 両方
   for (ymuint i = 0; i < 3; ++ i) {
     bool has_q = (i == 0 || i == 2);
     bool has_xq = (i == 1 || i == 2);
+
+    // j の値
+    //  0: クリアなし
+    //  1: クリアあり
     for (ymuint j = 0; j < 2; ++ j) {
       bool has_clear = (j == 1);
+
+      // k の値
+      //  0: プリセットなし
+      //  1: プリセットあり
       for (ymuint k = 0; k < 2; ++ k) {
 	bool has_preset = (k == 1);
+
 	CiCellClass* cclass = &mClassArray[libcomp.ff_class(has_q, has_xq, has_clear, has_preset)];
 	mFFClass[i * 4 + j * 2 + k] = cclass;
+
 	ymuint n = cclass->group_num();
 	for (ymuint g = 0; g < n; ++ g) {
 	  // ちょっと面倒な手順を踏む．
@@ -1398,9 +1415,11 @@ CiCellLibrary::compile()
 	  ASSERT_COND( ni <= 4 );
 	  for (ymuint i = 0; i < ni; ++ i) {
 	    NpnVmap imap = map.imap(VarId(i));
-	    ymuint pos = imap.var().val();
-	    ymuint pol = imap.inv() ? 16U : 8U;
-	    pos_array[pos] = i | pol;
+	    if ( !imap.is_invalid() ) {
+	      ymuint pos = imap.var().val();
+	      ymuint pol = imap.inv() ? 16U : 8U;
+	      pos_array[pos] = i | pol;
+	    }
 	  }
 #warning "TODO: 反転出力ありと決めつけていいの？"
 	  pos_array[4] = 0;
@@ -1411,16 +1430,30 @@ CiCellLibrary::compile()
     }
   }
 
+  // i の値
+  //  0: Q のみ
+  //  1: XQ のみ
+  //  2: Q/XQ 両方
   for (ymuint i = 0; i < 3; ++ i) {
     bool has_q = (i == 0 || i == 2);
     bool has_xq = (i == 1 || i == 2);
+
+    // j の値
+    //  0: クリアなし
+    //  1: クリアあり
     for (ymuint j = 0; j < 2; ++ j) {
       bool has_clear = (j == 1);
+
+      // k の値
+      //  0: プリセットなし
+      //  1: プリセットあり
       for (ymuint k = 0; k < 2; ++ k) {
 	bool has_preset = (k == 1);
+
 	ymuint id = libcomp.latch_class(has_q, has_xq, has_clear, has_preset);
 	CiCellClass* cclass = &mClassArray[id];
 	mLatchClass[i * 4 + j * 2 + k] = cclass;
+
 	ymuint n = cclass->group_num();
 	for (ymuint g = 0; g < n; ++ g) {
 	  // ちょっと面倒な手順を踏む．
@@ -1432,9 +1465,11 @@ CiCellLibrary::compile()
 	  ASSERT_COND( ni <= 4 );
 	  for (ymuint i = 0; i < ni; ++ i) {
 	    NpnVmap imap = map.imap(VarId(i));
-	    ymuint pos = imap.var().val();
-	    ymuint pol = imap.inv() ? 16U : 8U;
-	    pos_array[pos] = i | pol;
+	    if ( !imap.is_invalid() ) {
+	      ymuint pos = imap.var().val();
+	      ymuint pol = imap.inv() ? 16U : 8U;
+	      pos_array[pos] = i | pol;
+	    }
 	  }
 	  pos_array[4] = 0;
 	  cgroup->set_latch_info(pos_array);
@@ -1443,7 +1478,7 @@ CiCellLibrary::compile()
     }
   }
 
-  mPatMgr.copy(libcomp.pat_mgr(), mAlloc);
+  mPatMgr.copy(libcomp.pat_mgr());
 }
 
 // @brief クラス数を設定する．
@@ -1481,8 +1516,8 @@ void
 CiCellLibrary::add_cell(ymuint id,
 			CiCell* cell)
 {
-  mClibArray[id] = cell;
-  mClibHash.add(cell);
+  mCellArray[id] = cell;
+  mCellHash.add(cell);
 }
 
 /// @brief 内容をバイナリダンプする．
@@ -2015,7 +2050,7 @@ CiCellLibrary::restore(IDO& s)
   }
 
   // パタングラフの情報の設定
-  mPatMgr.restore(s, mAlloc);
+  mPatMgr.restore(s);
 }
 
 // @brief ピンの登録

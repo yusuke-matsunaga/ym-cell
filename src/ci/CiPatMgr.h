@@ -38,7 +38,8 @@ class CiPatMgr
 public:
 
   /// @brief コンストラクタ
-  CiPatMgr();
+  /// @param[in] alloc メモリアロケータ
+  CiPatMgr(Alloc& alloc);
 
   /// @brief デストラクタ
   ~CiPatMgr();
@@ -120,19 +121,15 @@ public:
 
   /// @brief LcPatMgr の情報をコピーする．
   /// @param[in] src コピー元
-  /// @param[in] alloc メモリアロケータ
   void
-  copy(const nsLibcomp::LcPatMgr& src,
-       Alloc& alloc);
+  copy(const nsLibcomp::LcPatMgr& src);
 
   /// @brief データを読み込んでセットする．
   /// @param[in] bis 入力元のストリーム
-  /// @param[in] alloc メモリアロケータ
   /// @retval true 読み込みが成功した．
   /// @retval false 読み込みが失敗した．
   bool
-  restore(IDO& bis,
-	  Alloc& alloc);
+  restore(IDO& bis);
 
 
 private:
@@ -144,19 +141,20 @@ private:
   /// @param[in] nn ノード数
   /// @param[in] alloc メモリアロケータ
   void
-  set_node_num(ymuint nn,
-	       Alloc& alloc);
+  set_node_num(ymuint nn);
 
   /// @brief パタン数を設定する．
   void
-  set_pat_num(ymuint np,
-	      Alloc& alloc);
+  set_pat_num(ymuint np);
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // メモリアロケータ
+  Alloc& mAlloc;
 
   // ノード数
   ymuint32 mNodeNum;

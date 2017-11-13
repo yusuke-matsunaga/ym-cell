@@ -18,9 +18,7 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] alloc メモリアロケータ
-CiCellHash::CiCellHash(Alloc& alloc) :
-  mAlloc(alloc),
+CiCellHash::CiCellHash() :
   mSize(0),
   mTable(nullptr),
   mLimit(0),
@@ -54,7 +52,7 @@ CiCellHash::add(CiCell* cell)
 	mTable[pos] = tmp;
       }
     }
-    mAlloc.put_memory(sizeof(CiCell*) * old_size, old_table);
+    delete [] old_table;
   }
 
   ymuint pos = cell->mName.hash() % mSize;
@@ -86,8 +84,7 @@ CiCellHash::alloc_table(ymuint req_size)
 {
   mSize = req_size;
   mLimit = static_cast<ymuint>(mSize * 1.8);
-  void* p = mAlloc.get_memory(sizeof(CiCell*) * mSize);
-  mTable = new (p) CiCell*[mSize];
+  mTable = new CiCell*[mSize];
   for (ymuint i = 0; i < mSize; ++ i) {
     mTable[i] = nullptr;
   }

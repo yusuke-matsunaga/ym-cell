@@ -970,13 +970,13 @@ private:
   CiLutHash mLutHash;
 
   // セル数
-  ymuint mClibNum;
+  ymuint mCellNum;
 
   // セルのポインタの配列
-  CiCell** mClibArray;
+  CiCell** mCellArray;
 
   // 名前をキーにしたセルのハッシュ表
-  CiCellHash mClibHash;
+  CiCellHash mCellHash;
 
   // ピン名をキーにしたピンのハッシュ表
   CiCellPinHash mPinHash;
@@ -994,13 +994,41 @@ private:
   CiCellClass* mClassArray;
 
   // 論理セルグループの情報
+  // 0: 定数0
+  // 1: 定数1
+  // 2: バッファ
+  // 3: インバータ
   const ClibCellGroup* mLogicGroup[4];
 
   // FFクラスの情報
-  const ClibCellClass* mFFClass[4];
+  //  0:    Q: クリアなし: プリセットなし
+  //  1:    Q: クリアなし: プリセットあり
+  //  2:    Q: クリアあり: プリセットなし
+  //  3:    Q: クリアあり: プリセットあり
+  //  4:   XQ: クリアなし: プリセットなし
+  //  5:   XQ: クリアなし: プリセットあり
+  //  6:   XQ: クリアあり: プリセットなし
+  //  7:   XQ: クリアあり: プリセットあり
+  //  8: Q/XQ: クリアなし: プリセットなし
+  //  9: Q/XQ: クリアなし: プリセットあり
+  // 10: Q/XQ: クリアあり: プリセットなし
+  // 11: Q/XQ: クリアあり: プリセットあり
+  const ClibCellClass* mFFClass[12];
 
   // ラッチクラスの情報
-  const ClibCellClass* mLatchClass[4];
+  //  0:    Q: クリアなし: プリセットなし
+  //  1:    Q: クリアなし: プリセットあり
+  //  2:    Q: クリアあり: プリセットなし
+  //  3:    Q: クリアあり: プリセットあり
+  //  4:   XQ: クリアなし: プリセットなし
+  //  5:   XQ: クリアなし: プリセットあり
+  //  6:   XQ: クリアあり: プリセットなし
+  //  7:   XQ: クリアあり: プリセットあり
+  //  8: Q/XQ: クリアなし: プリセットなし
+  //  9: Q/XQ: クリアなし: プリセットあり
+  // 10: Q/XQ: クリアあり: プリセットなし
+  // 11: Q/XQ: クリアあり: プリセットあり
+  const ClibCellClass* mLatchClass[12];
 
   // パタングラフを管理するクラス
   CiPatMgr mPatMgr;

@@ -18,9 +18,7 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] alloc メモリアロケータ
-CiLutHash::CiLutHash(Alloc& alloc) :
-  mAlloc(alloc),
+CiLutHash::CiLutHash() :
   mSize(0),
   mTable(nullptr),
   mLimit(0),
@@ -32,7 +30,7 @@ CiLutHash::CiLutHash(Alloc& alloc) :
 // @brief デストラクタ
 CiLutHash::~CiLutHash()
 {
-  mAlloc.put_memory(sizeof(CiLutTemplate*) * mNum, mTable);
+  delete [] mTable;
 }
 
 // @brief テンプレートを追加する．
@@ -54,7 +52,7 @@ CiLutHash::add(CiLutTemplate* templ)
 	mTable[pos] = tmp;
       }
     }
-    mAlloc.put_memory(sizeof(CiLutTemplate*) * old_size, old_table);
+    delete [] old_table;
   }
 
   ymuint pos = templ->mName.hash() % mSize;
@@ -86,8 +84,7 @@ CiLutHash::alloc_table(ymuint req_size)
 {
   mSize = req_size;
   mLimit = static_cast<ymuint>(mSize * 1.8);
-  void* p = mAlloc.get_memory(sizeof(CiLutTemplate*) * mSize);
-  mTable = new (p) CiLutTemplate*[mSize];
+  mTable = new CiLutTemplate*[mSize];
   for (ymuint i = 0; i < mSize; ++ i) {
     mTable[i] = nullptr;
   }

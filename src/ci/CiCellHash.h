@@ -11,7 +11,6 @@
 
 #include "ym/clib.h"
 #include "ym/ShString.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -27,8 +26,7 @@ class CiCellHash
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリアロケータ
-  CiCellHash(Alloc& alloc);
+  CiCellHash();
 
   /// @brief デストラクタ
   ~CiCellHash();
@@ -64,9 +62,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // メモリアロケータ
-  Alloc& mAlloc;
 
   // テーブルサイズ
   ymuint32 mSize;

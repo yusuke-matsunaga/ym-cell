@@ -502,6 +502,9 @@ LibComp::_cannonical_map(const LcSignature& sig)
   }
   else {
 #warning "TODO: 未完"
+    NpnMapM ans;
+    ans.set_identity(sig.input_num(), sig.output_num());
+    return ans;
   }
 }
 
