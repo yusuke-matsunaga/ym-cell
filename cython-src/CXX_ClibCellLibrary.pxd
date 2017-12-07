@@ -16,9 +16,6 @@ cdef extern from "ym/ClibCellLibrary.h" namespace "nsYm::nsClib" :
     # ClibCellLibrary の cython バージョン
     cdef cppclass ClibCellLibrary :
 
-        @staticmethod
-        ClibCellLibrary* new_obj()
+        bool read_mislib(const string&)
+        bool read_liberty(const string&)
         string name()
-
-    bool read_mislib(const string&, ClibCellLibrary*)
-    bool read_liberty(const string&, ClibCellLibrary*)
