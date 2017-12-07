@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "CiLogicCell.h"
+#include "ci/CiLogicCell.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB

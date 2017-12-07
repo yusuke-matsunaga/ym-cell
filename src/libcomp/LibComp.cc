@@ -12,8 +12,8 @@
 #include "LcGroup.h"
 #include "LcPatNode.h"
 #include "LcPatHandle.h"
-#include "ym/ClibCellLibrary.h"
-#include "ym/ClibCell.h"
+#include "ci/CiCellLibrary.h"
+#include "ci/CiCell.h"
 #include "ym/Expr.h"
 #include "ym/NpnMap.h"
 #include "ym/HashSet.h"
@@ -139,7 +139,7 @@ LibComp::pat_mgr() const
 
 // @brief セルのグループ化，クラス化を行う．
 void
-LibComp::compile(ClibCellLibrary& library)
+LibComp::compile(CiCellLibrary& library)
 {
   mGroupList.clear();
   mGroupMap.clear();
@@ -162,8 +162,8 @@ LibComp::compile(ClibCellLibrary& library)
   // library に含まれるセルを登録する．
   ymuint nc = library.cell_num();
   for (ymuint i = 0; i < nc; ++ i) {
-    ClibCell* cell = library.cell(i);
-     _add_cell(cell);
+    CiCell* cell = library._cell(i);
+    _add_cell(cell);
   }
 }
 
@@ -377,7 +377,7 @@ LibComp::_latch_init()
 // @brief セルを追加する．
 // @param[in] cell セル
 void
-LibComp::_add_cell(ClibCell* cell)
+LibComp::_add_cell(CiCell* cell)
 {
   LcGroup* fgroup = nullptr;
   if ( !cell->has_logic() || cell->output_num2() == 0 ) {
@@ -564,10 +564,10 @@ LibComp::display(ostream& s) const
       << ": " << group->map()
       << endl;
     s << "  CELL:";
-    const vector<ClibCell*>& cell_list = group->cell_list();
-    for (vector<ClibCell*>::const_iterator p = cell_list.begin();
+    const vector<CiCell*>& cell_list = group->cell_list();
+    for (vector<CiCell*>::const_iterator p = cell_list.begin();
 	 p != cell_list.end(); ++ p) {
-      const ClibCell* cell = *p;
+      CiCell* cell = *p;
       s << " " << cell->name();
     }
     s << endl;

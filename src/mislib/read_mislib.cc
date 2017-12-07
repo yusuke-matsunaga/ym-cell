@@ -3,13 +3,13 @@
 /// @brief read_mislib の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "mislib_nsdef.h"
+#include "ci/CiCellLibrary.h"
 
-#include "ym/ClibCellLibrary.h"
 #include "ym/ClibArea.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibResistance.h"
@@ -79,7 +79,7 @@ dfs(const MislibNode* node,
 void
 set_library(const string& lib_name,
 	    const MislibNode* gate_list,
-	    ClibCellLibrary* library)
+	    CiCellLibrary* library)
 {
   // 名前の設定
   library->set_name(lib_name);
@@ -290,8 +290,7 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] library 設定対象のライブラリ
 // @return 読み込みが成功したら true を返す．
 bool
-read_mislib(const string& filename,
-	    ClibCellLibrary* library)
+CiCellLibrary::read_mislib(const string& filename)
 {
   using namespace nsMislib;
 
@@ -301,20 +300,9 @@ read_mislib(const string& filename,
     return false;
   }
 
-  set_library(filename, mgr.gate_list(), library);
+  set_library(filename, mgr.gate_list(), this);
 
   return true;
-}
-
-// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
-// @param[in] filename ファイル名
-// @param[in] library 設定対象のライブラリ
-// @return 読み込みが成功したら true を返す．
-bool
-read_mislib(const char* filename,
-	    ClibCellLibrary* library)
-{
-  return read_mislib(string(filename), library);
 }
 
 END_NAMESPACE_YM_CLIB

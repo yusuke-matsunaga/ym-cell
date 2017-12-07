@@ -7,9 +7,10 @@
 /// All rights reserved.
 
 
-#include "CiCellGroup.h"
+#include "ci/CiCellGroup.h"
+#include "ci/CiCellLibrary.h"
+#include "ci/CiCell.h"
 
-#include "ym/ClibCellLibrary.h"
 #include "ym/ClibCellClass.h"
 #include "ym/ClibCell.h"
 #include "ym/ClibFFInfo.h"
@@ -283,7 +284,7 @@ CiCellGroup::cell(ymuint pos) const
 void
 CiCellGroup::init(const ClibCellClass* cell_class,
 		  const NpnMapM& map,
-		  const vector<ClibCell*>& cell_list,
+		  const vector<CiCell*>& cell_list,
 		  Alloc& alloc)
 {
   mRepClass = cell_class;
@@ -292,7 +293,7 @@ CiCellGroup::init(const ClibCellClass* cell_class,
 
   alloc_array(alloc);
   for (ymuint i = 0; i < mClibNum; ++ i) {
-    ClibCell* cell = cell_list[i];
+    CiCell* cell = cell_list[i];
     mClibList[i] = cell;
     cell->set_group(this);
   }
@@ -361,7 +362,7 @@ CiCellGroup::dump(ODO& bos) const
 // @param[in] alloc メモリアロケータ
 void
 CiCellGroup::restore(IDO& bis,
-		     ClibCellLibrary& library,
+		     CiCellLibrary& library,
 		     Alloc& alloc)
 {
   ymuint parent_id;
@@ -375,7 +376,7 @@ CiCellGroup::restore(IDO& bis,
   for (ymuint i = 0; i < mClibNum; ++ i) {
     ymuint cell_id;
     bis >> cell_id;
-    ClibCell* cell = library.cell(cell_id);
+    CiCell* cell = library._cell(cell_id);
     mClibList[i] = cell;
     cell->set_group(this);
   }

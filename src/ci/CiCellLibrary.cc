@@ -7,18 +7,18 @@
 /// All rights reserved.
 
 
-#include "CiCellLibrary.h"
-#include "CiCellClass.h"
-#include "CiCellGroup.h"
-#include "CiCell.h"
-#include "CiLogicCell.h"
-#include "CiFFCell.h"
-#include "CiLatchCell.h"
-#include "CiFsmCell.h"
-#include "CiCellPin.h"
-#include "CiTiming.h"
-#include "CiLutTemplate.h"
-#include "CiLut.h"
+#include "ci/CiCellLibrary.h"
+#include "ci/CiCellClass.h"
+#include "ci/CiCellGroup.h"
+#include "ci/CiCell.h"
+#include "ci/CiLogicCell.h"
+#include "ci/CiFFCell.h"
+#include "ci/CiLatchCell.h"
+#include "ci/CiFsmCell.h"
+#include "ci/CiCellPin.h"
+#include "ci/CiTiming.h"
+#include "ci/CiLutTemplate.h"
+#include "ci/CiLut.h"
 
 #include "LibComp.h"
 #include "LcClass.h"
@@ -28,18 +28,6 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 using namespace nsLibcomp;
-
-//////////////////////////////////////////////////////////////////////
-// クラス ClibCellLibrary
-//////////////////////////////////////////////////////////////////////
-
-// @brief 実際のオブジェクトを作るクラスメソッド
-ClibCellLibrary*
-ClibCellLibrary::new_obj()
-{
-  return new CiCellLibrary();
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellLibrary
@@ -668,8 +656,8 @@ CiCellLibrary::set_cell_num(ymuint num)
 
 // @brief セルを取り出す．
 // @param[in] pos 位置番号 ( 0 <= pos < cell_num() )
-ClibCell*
-CiCellLibrary::cell(ymuint pos)
+CiCell*
+CiCellLibrary::_cell(ymuint pos)
 {
   ASSERT_COND( pos < mCellNum );
   return mCellArray[pos];
@@ -1360,7 +1348,7 @@ CiCellLibrary::compile()
     const LcGroup* src_group = libcomp.group(g);
     CiCellGroup& dst_group = mGroupArray[g];
     const ClibCellClass* parent = npn_class(src_group->parent()->id());
-    const vector<ClibCell*>& cell_list = src_group->cell_list();
+    const vector<CiCell*>& cell_list = src_group->cell_list();
     dst_group.init(parent, src_group->map(), cell_list, mAlloc);
   }
 

@@ -8,9 +8,9 @@
 
 
 #include "dotlib_nsdef.h"
+#include "ci/CiCellLibrary.h"
+#include "ci/CiCell.h"
 
-#include "ym/ClibCellLibrary.h"
-#include "ym/ClibCell.h"
 #include "ym/ClibCellPin.h"
 #include "ym/ClibTiming.h"
 #include "ym/ClibArea.h"
@@ -118,7 +118,7 @@ dot2expr(const DotlibNode* node,
 
 // LUT を読み込む．
 ClibLut*
-gen_lut(ClibCellLibrary* library,
+gen_lut(CiCellLibrary* library,
 	const DotlibNode* lut_node)
 {
   DotlibLut lut_info;
@@ -213,7 +213,7 @@ gen_expr(const DotlibPin& pin_info,
 
 // ピンを生成する．
 void
-gen_pin(ClibCellLibrary* library,
+gen_pin(CiCellLibrary* library,
 	const vector<DotlibPin>& pin_info_array,
 	ymuint cell_id,
 	const vector<bool>& output_array,
@@ -226,7 +226,7 @@ gen_pin(ClibCellLibrary* library,
   ymuint it_pos = 0;
   ymuint pin_pos = 0;
 
-  const ClibCell* cell = library->cell(cell_id);
+  CiCell* cell = library->_cell(cell_id);
   ymuint ni = cell->input_num();
   ymuint no = cell->output_num();
 
@@ -317,7 +317,7 @@ gen_pin(ClibCellLibrary* library,
 
 // タイミング情報を生成する．
 void
-gen_timing(ClibCellLibrary* library,
+gen_timing(CiCellLibrary* library,
 	   const list<const DotlibNode*>& timing_list,
 	   ymuint cell_id,
 	   ymuint& timing_id,
@@ -546,12 +546,12 @@ gen_timing(ClibCellLibrary* library,
   }
 }
 
-// @brief DotlibNode から ClibCellLibrary を生成する．
+// @brief DotlibNode から CiCellLibrary を生成する．
 // @param[in] library_info ライブラリの情報を持つオブジェクト
 // @param[in] library設定対象のライブラリ
 void
 set_library(const DotlibLibrary& library_info,
-	    ClibCellLibrary* library)
+	    CiCellLibrary* library)
 {
   // 'name' の設定
   library->set_name(library_info.name());
@@ -993,8 +993,7 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] library 設定対象のライブラリ
 // @return 読み込みが成功したら true を返す．
 bool
-read_liberty(const string& filename,
-	     ClibCellLibrary* library)
+CiCellLibrary::read_liberty(const string& filename)
 {
   using namespace nsDotlib;
 
@@ -1009,20 +1008,9 @@ read_liberty(const string& filename,
     return false;
   }
 
-  set_library(library_info, library);
+  set_library(library_info, this);
 
   return true;
-}
-
-// @brief liberty 形式のファイルを読み込んでライブラリに設定する．
-// @param[in] filename ファイル名
-// @param[in] library 設定対象のライブラリ
-// @return 読み込みが成功したら true を返す．
-bool
-read_liberty(const char* filename,
-	     ClibCellLibrary* library)
-{
-  return read_liberty(string(filename), library);
 }
 
 END_NAMESPACE_YM_CLIB

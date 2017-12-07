@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "CiLatchCell.h"
+#include "ci/CiLatchCell.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB

@@ -12,6 +12,11 @@
 #include "libcomp_nsdef.h"
 #include "ym/NpnMapM.h"
 
+BEGIN_NAMESPACE_YM_CLIB
+
+class CiCell;
+
+END_NAMESPACE_YM_CLIB
 
 BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
@@ -52,13 +57,13 @@ public:
   cell_group() const;
 
   /// @brief 属しているセルのリストを返す．
-  const vector<ClibCell*>&
+  const vector<CiCell*>&
   cell_list() const;
 
   /// @brief セルを追加する．
   /// @param[in] cell セル
   void
-  add_cell(ClibCell* cell);
+  add_cell(CiCell* cell);
 
 
 private:
@@ -79,7 +84,7 @@ private:
   ClibCellGroup* mCellGroup;
 
   // セルのリスト
-  vector<ClibCell*> mCellList;
+  vector<CiCell*> mCellList;
 
 };
 

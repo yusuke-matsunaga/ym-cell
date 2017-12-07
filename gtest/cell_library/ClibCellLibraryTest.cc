@@ -17,12 +17,10 @@ TEST(ClibCellLibraryTest, read_mislib)
 {
   try {
     string filename = string(DATA_DIR) + string("/lib2.genlib");
-    ClibCellLibrary* library = ClibCellLibrary::new_obj();
-    bool stat = read_mislib(filename, library);
+    ClibCellLibrary library;
+    bool stat = library.read_mislib(filename);
 
     EXPECT_TRUE( stat );
-
-    delete library;
   }
   catch ( AssertError obj ) {
     cout << obj << endl;
@@ -34,12 +32,10 @@ TEST(ClibCellLibraryTest, read_liberty)
 {
   try {
     string filename = string(DATA_DIR) + string("/HIT018.typ.snp");
-    ClibCellLibrary* library = ClibCellLibrary::new_obj();
-    bool stat = read_liberty(filename, library);
+    ClibCellLibrary library;
+    bool stat = library.read_liberty(filename);
 
     EXPECT_TRUE( stat );
-
-    delete library;
   }
   catch ( AssertError obj ) {
     cout << obj << endl;

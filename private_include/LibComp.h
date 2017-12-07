@@ -12,6 +12,13 @@
 #include "libcomp_nsdef.h"
 #include "LcPatMgr.h"
 
+BEGIN_NAMESPACE_YM_CLIB
+
+class CiCellLibrary;
+class CiCell;
+
+END_NAMESPACE_YM_CLIB
+
 
 BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
@@ -37,7 +44,7 @@ public:
 
   /// @brief セルのグループ化，クラス化を行う．
   void
-  compile(ClibCellLibrary& library);
+  compile(CiCellLibrary& library);
 
   /// @brief パタングラフの情報を取り出す．
   const LcPatMgr&
@@ -128,7 +135,7 @@ private:
   /// @brief セルを追加する．
   /// @param[in] cell セル
   void
-  _add_cell(ClibCell* cell);
+  _add_cell(CiCell* cell);
 
   /// @brief シグネチャに対応する LcGroup を求める．
   /// @param[in] sig シグネチャ

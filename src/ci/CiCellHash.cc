@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "CiCellHash.h"
-#include "CiCell.h"
+#include "ci/CiCellHash.h"
+#include "ci/CiCell.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB

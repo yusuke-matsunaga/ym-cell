@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "CiPatMgr.h"
-#include "CiPatGraph.h"
+#include "ci/CiPatMgr.h"
+#include "ci/CiPatGraph.h"
 #include "LcPatMgr.h"
 #include "LcPatNode.h"
 #include "LcPatHandle.h"

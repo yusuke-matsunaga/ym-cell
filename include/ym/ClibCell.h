@@ -370,17 +370,6 @@ public:
   void
   dump(ODO& s) const = 0;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 設定用の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief セルグループを設定する．
-  virtual
-  void
-  set_group(const ClibCellGroup* group) = 0;
-
 };
 
 END_NAMESPACE_YM_CLIB

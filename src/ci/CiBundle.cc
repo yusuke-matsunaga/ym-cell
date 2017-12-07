@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "CiBundle.h"
+#include "ci/CiBundle.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB

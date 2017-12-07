@@ -426,7 +426,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief セルグループを設定する．
-  virtual
   void
   set_group(const ClibCellGroup* group);
 

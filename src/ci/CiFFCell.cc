@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "CiFFCell.h"
+#include "ci/CiFFCell.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB

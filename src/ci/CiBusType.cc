@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "CiBusType.h"
+#include "ci/CiBusType.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB

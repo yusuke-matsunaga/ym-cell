@@ -18,6 +18,9 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiCellLibrary;
+class CiCell;
+
 //////////////////////////////////////////////////////////////////////
 /// @class CiCellGroup CiCellGroup.h "CiCellGroup.h"
 /// @brief ClibCellGroup の実装クラス
@@ -205,7 +208,7 @@ public:
   void
   init(const ClibCellClass* cell_class,
        const NpnMapM& map,
-       const vector<ClibCell*>& cell_list,
+       const vector<CiCell*>& cell_list,
        Alloc& alloc);
 
   /// @brief FFのピン情報を設定する．
@@ -248,7 +251,7 @@ public:
   /// @param[in] alloc メモリアロケータ
   void
   restore(IDO& bis,
-	  ClibCellLibrary& library,
+	  CiCellLibrary& library,
 	  Alloc& alloc);
 
 

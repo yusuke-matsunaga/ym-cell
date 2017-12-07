@@ -18,6 +18,7 @@ add_subdirectory ( gtest )
 #  ソースファイルの設定
 # ===================================================================
 set (main_SOURCES
+  src/ClibCellLibrary.cc
   src/ClibFFInfo.cc
   src/ClibLatchInfo.cc
   src/display.cc

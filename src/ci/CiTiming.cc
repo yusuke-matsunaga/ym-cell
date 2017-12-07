@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "CiTiming.h"
+#include "ci/CiTiming.h"
 #include "ym/ClibLut.h"
 
 

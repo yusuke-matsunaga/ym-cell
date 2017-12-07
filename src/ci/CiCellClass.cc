@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "CiCellClass.h"
+#include "ci/CiCellClass.h"
 #include "ym/ClibCellLibrary.h"
 #include "ym/ClibCellGroup.h"
 #include "ym/NpnMapM.h"

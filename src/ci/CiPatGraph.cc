@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "CiPatGraph.h"
+#include "ci/CiPatGraph.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
