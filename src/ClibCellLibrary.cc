@@ -84,9 +84,12 @@ ClibCellLibrary::change_impl(CiCellLibrary* new_impl)
 bool
 ClibCellLibrary::read_mislib(const string& filename)
 {
-  mImpl->
-  mImpl = new CiCellLibrary();
-  return mImpl->read_mislib(filename);
+  CiCellLibrary* new_impl = new CiCellLibrary();
+  bool stat = new_impl->read_mislib(filename);
+  if ( stat ) {
+    change_impl(new_impl);
+  }
+  return stat;
 }
 
 // @brief mislib 形式のファイルを読み込んでライブラリに設定する．
@@ -95,9 +98,7 @@ ClibCellLibrary::read_mislib(const string& filename)
 bool
 ClibCellLibrary::read_mislib(const char* filename)
 {
-  delete mImpl;
-  mImpl = new CiCellLibrary();
-  return mImpl->read_mislib(string(filename));
+  return read_mislib(string(filename));
 }
 
 // @brief liberty 形式のファイルを読み込んでライブラリに設定する．
@@ -106,9 +107,12 @@ ClibCellLibrary::read_mislib(const char* filename)
 bool
 ClibCellLibrary::read_liberty(const string& filename)
 {
-  delete mImpl;
-  mImpl = new CiCellLibrary();
-  return mImpl->read_liberty(filename);
+  CiCellLibrary* new_impl = new CiCellLibrary();
+  bool stat = new_impl->read_liberty(filename);
+  if ( stat ) {
+    change_impl(new_impl);
+  }
+  return stat;
 }
 
 // @brief liberty 形式のファイルを読み込んでライブラリに設定する．
@@ -117,9 +121,7 @@ ClibCellLibrary::read_liberty(const string& filename)
 bool
 ClibCellLibrary::read_liberty(const char* filename)
 {
-  delete mImpl;
-  mImpl = new CiCellLibrary();
-  return mImpl->read_liberty(string(filename));
+  return read_liberty(string(filename));
 }
 
 // @brief 名前の取得

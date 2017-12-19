@@ -56,24 +56,32 @@ public:
   /// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
   /// @param[in] filename ファイル名
   /// @return 読み込みが成功したら true を返す．
+  ///
+  /// 読み込みが失敗した場合はなにもしないで false を返す．
   bool
   read_mislib(const string& filename);
 
   /// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
   /// @param[in] filename ファイル名
   /// @return 読み込みが成功したら true を返す．
+  ///
+  /// 読み込みが失敗した場合はなにもしないで false を返す．
   bool
   read_mislib(const char* filename);
 
   /// @brief liberty 形式のファイルを読み込んでライブラリに設定する．
   /// @param[in] filename ファイル名
   /// @return 読み込みが成功したら true を返す．
+  ///
+  /// 読み込みが失敗した場合はなにもしないで false を返す．
   bool
   read_liberty(const string& filename);
 
   /// @brief liberty 形式のファイルを読み込んでライブラリに設定する．
   /// @param[in] filename ファイル名
   /// @return 読み込みが成功したら true を返す．
+  ///
+  /// 読み込みが失敗した場合はなにもしないで false を返す．
   bool
   read_liberty(const char* filename);
 
