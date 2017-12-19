@@ -28,15 +28,54 @@ END_NONAMESPACE
 // @brief コンストラクタ
 //
 // 空の状態で初期化される．
-ClibCellLibrary::ClibCellLibrary()
+ClibCellLibrary::ClibCellLibrary() :
+  mImpl(nullptr)
 {
-  mImpl = nullptr;
+}
+
+// @brief コピーコンストラクタ
+// @param[in] src コピー元のオブジェクト
+//
+// '浅い'コピーを行う．
+ClibCellLibrary::ClibCellLibrary(const ClibCellLibrary& src) :
+  mImpl(nullptr)
+{
+  change_impl(src.mImpl);
+}
+
+// @brief 代入演算子
+// @param[in] src コピー元のオブジェクト
+const ClibCellLibrary&
+ClibCellLibrary::operator=(const ClibCellLibrary& src)
+{
+  change_impl(src.mImpl);
+  return *this;
 }
 
 // @brief デストラクタ
 ClibCellLibrary::~ClibCellLibrary()
 {
-  delete mImpl;
+  change_impl(nullptr);
+}
+
+// @brief mImpl を切り替える．
+void
+ClibCellLibrary::change_impl(CiCellLibrary* new_impl)
+{
+  if ( mImpl == new_impl ) {
+    // なにもしない．
+    return;
+  }
+
+  if ( mImpl != nullptr ) {
+    // 古いオブジェクトの参照回数を一つ減らす．
+    mImpl->dec_ref();
+  }
+  if ( new_impl != nullptr ) {
+    // 新しいオブジェクトの参照回数を一つ増やす．
+    new_impl->inc_ref();
+  }
+  mImpl = new_impl;
 }
 
 // @brief mislib 形式のファイルを読み込んでライブラリに設定する．
@@ -45,7 +84,7 @@ ClibCellLibrary::~ClibCellLibrary()
 bool
 ClibCellLibrary::read_mislib(const string& filename)
 {
-  delete mImpl;
+  mImpl->
   mImpl = new CiCellLibrary();
   return mImpl->read_mislib(filename);
 }

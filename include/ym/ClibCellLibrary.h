@@ -33,6 +33,17 @@ public:
   /// 空の状態で初期化される．
   ClibCellLibrary();
 
+  /// @brief コピーコンストラクタ
+  /// @param[in] src コピー元のオブジェクト
+  ///
+  /// '浅い'コピーを行う．
+  ClibCellLibrary(const ClibCellLibrary& src);
+
+  /// @brief 代入演算子
+  /// @param[in] src コピー元のオブジェクト
+  const ClibCellLibrary&
+  operator=(const ClibCellLibrary& src);
+
   /// @brief デストラクタ
   ~ClibCellLibrary();
 
@@ -339,6 +350,20 @@ public:
   /// @param[in] s 入力元のストリーム
   void
   restore(IDO& s);
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief mImpl を切り替える．
+  /// @param[in] new_impl 新しいオブジェクト
+  ///
+  /// CiCellLibrary の参照回数を適切に管理する．
+  /// mImpl はこの関数以外では変更しない．
+  void
+  change_impl(CiCellLibrary* new_impl);
 
 
 private:

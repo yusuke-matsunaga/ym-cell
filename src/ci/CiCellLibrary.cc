@@ -35,6 +35,7 @@ using namespace nsLibcomp;
 
 // @brief コンストラクタ
 CiCellLibrary::CiCellLibrary() :
+  mRefCount(0),
   mAlloc(4096),
   mPatMgr(mAlloc)
 {
@@ -53,6 +54,24 @@ CiCellLibrary::CiCellLibrary() :
 // @brief デストラクタ
 CiCellLibrary::~CiCellLibrary()
 {
+}
+
+// @brief 参照回数を増やす．
+void
+CiCellLibrary::inc_ref()
+{
+  ++ mRefCount;
+}
+
+// @brief 参照回数を減らす．
+void
+CiCellLibrary::dec_ref()
+{
+  -- mRefCount;
+  if ( mRefCount == 0 ) {
+    // 自殺する．
+    delete this;
+  }
 }
 
 // @brief 名前の取得
