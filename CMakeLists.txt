@@ -29,9 +29,11 @@ set (ci_SOURCES
   src/ci/CiBus.cc
   src/ci/CiBusType.cc
   src/ci/CiCell.cc
+  src/ci/CiCellList.cc
   src/ci/CiCellHash.cc
   src/ci/CiCellClass.cc
   src/ci/CiCellGroup.cc
+  src/ci/CiCellGroupList.cc
   src/ci/CiCellLibrary.cc
   src/ci/CiCellPin.cc
   src/ci/CiCellPinHash.cc
@@ -45,6 +47,7 @@ set (ci_SOURCES
   src/ci/CiPatGraph.cc
   src/ci/CiPatMgr.cc
   src/ci/CiTiming.cc
+  src/ci/CiTimingList.cc
   )
 
 set (dotlib_SOURCES

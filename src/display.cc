@@ -9,12 +9,14 @@
 
 #include "ym/ClibCellLibrary.h"
 #include "ym/ClibCell.h"
+#include "ym/ClibCellList.h"
 #include "ym/ClibLut.h"
 #include "ym/ClibLutTemplate.h"
 #include "ym/ClibCellPin.h"
 #include "ym/ClibTiming.h"
 #include "ym/ClibCellClass.h"
 #include "ym/ClibCellGroup.h"
+#include "ym/ClibCellGroupList.h"
 #include "ym/ClibPatGraph.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibTime.h"
@@ -355,12 +357,10 @@ display_class(ostream& s,
     }
     s << endl;
   }
-  for (ymuint i = 0; i < cclass->group_num(); ++ i) {
-    const ClibCellGroup* group = cclass->cell_group(i);
+  for ( auto group: cclass->group_list() ) {
     s << "  Group: Map = " << group->map() << endl
       << "         Clib = ";
-    for (ymuint j = 0; j < group->cell_num(); ++ j) {
-      const ClibCell* cell = group->cell(j);
+    for ( auto cell: group->cell_list() ) {
       s << " " << cell->name();
     }
     s << endl;
@@ -398,8 +398,7 @@ display_ff_class(ostream& s,
     }
     s << endl;
   }
-  for (ymuint i = 0; i < cclass->group_num(); ++ i) {
-    const ClibCellGroup* group = cclass->cell_group(i);
+  for ( auto group: cclass->group_list() ) {
     s << "  Group:";
     s << " data-pin = " << group->data_pos();
     display_pos(s, "clock-pin", group->clock_pos(), group->clock_sense());
@@ -409,8 +408,7 @@ display_ff_class(ostream& s,
       << " xq-pin = " << group->xq_pos()
       << endl;
     s << "         Clib = ";
-    for (ymuint j = 0; j < group->cell_num(); ++ j) {
-      const ClibCell* cell = group->cell(j);
+    for ( auto cell: group->cell_list() ) {
       s << " " << cell->name();
     }
     s << endl;
@@ -433,8 +431,7 @@ display_latch_class(ostream& s,
     }
     s << endl;
   }
-  for (ymuint i = 0; i < cclass->group_num(); ++ i) {
-    const ClibCellGroup* group = cclass->cell_group(i);
+  for ( auto group: cclass->group_list() ) {
     s << "  Group:";
     display_pos(s, "data-pin",  group->data_pos(), group->has_data() ? 1 : 0);
     display_pos(s, "enable-pin", group->enable_pos(), group->enable_sense());
@@ -443,8 +440,7 @@ display_latch_class(ostream& s,
     s << " q-pin = " << group->q_pos()
       << endl;
     s << "         Clib = ";
-    for (ymuint j = 0; j < group->cell_num(); ++ j) {
-      const ClibCell* cell = group->cell(j);
+    for ( auto cell: group->cell_list() ) {
       s << " " << cell->name();
     }
     s << endl;
@@ -460,8 +456,7 @@ display_group(ostream& s,
 {
   s << title << endl
     << "  Clib =";
-  for (ymuint i = 0; i < group->cell_num(); ++ i) {
-    const ClibCell* cell = group->cell(i);
+  for ( auto cell: group->cell_list() ) {
     s << " " << cell->name();
   }
   s << endl

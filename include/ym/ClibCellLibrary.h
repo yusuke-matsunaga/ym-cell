@@ -208,18 +208,18 @@ public:
   const ClibCell*
   cell(const string& name) const;
 
-  /// @brief セルグループの個数を返す．
-  ymuint
-  group_num() const;
+  /// @brief セルグループのリストを返す．
+  const ClibCellGroupList&
+  group_list() const;
 
   /// @brief セルグループを返す．
   /// @param[in] id グループ番号　( 0 <= id < group_num() )
   const ClibCellGroup*
   group(ymuint id) const;
 
-  /// @brief NPN同値クラスの個数を返す．
-  ymuint
-  npn_class_num() const;
+  /// @brief NPN同値クラスのリストを返す．
+  const ClibCellClassList&
+  npn_class_list() const;
 
   /// @brief NPN同値クラスを返す．
   /// @param[in] id クラス番号 ( 0 <= id < npn_class_num() )

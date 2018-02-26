@@ -183,18 +183,18 @@ public:
   const ClibCell*
   cell(const string& name) const;
 
-  /// @brief セルグループの個数を返す．
-  ymuint
-  group_num() const;
+  /// @brief セルグループのリストを返す．
+  const ClibCellGroupList&
+  group_list() const;
 
   /// @brief セルグループを返す．
   /// @param[in] id グループ番号　( 0 <= id < group_num() )
   const ClibCellGroup*
   group(ymuint id) const;
 
-  /// @brief NPN同値クラスの個数を返す．
-  ymuint
-  npn_class_num() const;
+  /// @brief NPN同値クラスのリストを返す．
+  const ClibCellClassList&
+  npn_class_list() const;
 
   /// @brief NPN同値クラスを返す．
   /// @param[in] id クラス番号 ( 0 <= id < npn_class_num() )
@@ -930,11 +930,8 @@ private:
   // 遅延テンプレートのハッシュ表
   CiLutHash mLutHash;
 
-  // セル数
-  ymuint mCellNum;
-
-  // セルのポインタの配列
-  CiCell** mCellArray;
+  // セルのリスト
+  CiCellList mCellList;
 
   // 名前をキーにしたセルのハッシュ表
   CiCellHash mCellHash;
@@ -942,17 +939,11 @@ private:
   // ピン名をキーにしたピンのハッシュ表
   CiCellPinHash mPinHash;
 
-  // セルグループ数
-  ymuint mGroupNum;
+  // セルグループのリスト
+  CiCellGrupList mGroupList;
 
-  // セルグループの配列
-  CiCellGroup* mGroupArray;
-
-  // NPN同値クラスの数
-  ymuint mClassNum;
-
-  // NPN同値クラスの配列
-  CiCellClass* mClassArray;
+  // NPN同値クラスのリスト
+  CiCellClassList mClassList;
 
   // 論理セルグループの情報
   // 0: 定数0

@@ -174,16 +174,10 @@ public:
   // このグループに属しているセルの情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セル数を返す．
+  /// @brief セルのリストを返す．
   virtual
-  ymuint
-  cell_num() const = 0;
-
-  /// @brief セルを返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < cell_num() )
-  virtual
-  const ClibCell*
-  cell(ymuint pos) const = 0;
+  const ClibCellList&
+  cell_list() const = 0;
 
 };
 

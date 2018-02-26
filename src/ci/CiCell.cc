@@ -93,12 +93,9 @@ CiCell::CiCell(CiCellLibrary* library,
   }
 
   {
-    ymuint n = ni2 * no2 * 2;
-    void* s = alloc.get_memory(sizeof(const CiTimingArray*) * n);
-    mTimingMap = new (s) CiTimingArray*[n];
-    for (ymuint i = 0; i < n; ++ i) {
-      mTimingMap[i] = nullptr;
-    }
+    int n = ni2 * no2 * 2;
+    void* s = alloc.get_memory(sizeof(const CiTimingList) * n);
+    mTimingMap = new (s) CiTimingList[n];
   }
 
   // バス，バンドル関係は未完
@@ -312,27 +309,26 @@ CiCell::bundle(const string& name) const
   return nullptr;
 }
 
-// @brief タイミング情報の数の取得
-ymuint
-CiCell::timing_num() const
+// @brief タイミング情報のリストを返す．
+const ClibTimingList&
+CiCell::timing_list() const
 {
-  return mTimingNum;
+  return mTimingList;
 }
 
-// @brief タイミング情報の取得
-// @param[in] pos 位置番号 ( 0 <= pos < timing_num() )
+// @brief タイミング情報を返す．
+// @param[in] tid タイミング番号 ( 0 <= tid < timing_list().num() )
 const ClibTiming*
-CiCell::timing(ymuint pos) const
+CiCell::timing(int pos) const
 {
-  ASSERT_COND( pos < timing_num() );
-  return mTimingArray[pos];
+  return mTimingList[pos];
 }
 
-// @brief 条件に合致するタイミング情報の数の取得
+// @brief 条件に合致するタイミング情報のリストを返す．
 // @param[in] ipos 開始ピン番号 ( 0 <= ipos < input_num2() )
 // @param[in] opos 終了ピン番号 ( 0 <= opos < output_num2() )
 // @param[in] timing_sense タイミング情報の摘要条件
-ymuint
+const ClibTimingList&
 CiCell::timing_num(ymuint ipos,
 		   ymuint opos,
 		   ClibTimingSense sense) const
@@ -344,33 +340,7 @@ CiCell::timing_num(ymuint ipos,
   default:
     ASSERT_NOT_REACHED;
   }
-  if ( mTimingMap[base] == nullptr ) {
-    return 0;
-  }
-  return mTimingMap[base]->mNum;
-}
-
-// @brief タイミング情報の取得
-// @param[in] ipos 開始ピン番号
-// @param[in] opos 終了ピン番号
-// @param[in] timing_sense タイミング情報の摘要条件
-// @param[in] pos 位置番号 ( 0 <= pos < timing_num(ipos, opos, timing_sense) )
-// @return 条件に合致するタイミング情報を返す．
-const ClibTiming*
-CiCell::timing(ymuint ipos,
-	       ymuint opos,
-	       ClibTimingSense sense,
-	       ymuint pos) const
-{
-  ASSERT_COND( pos < timing_num(ipos, opos, sense) );
-  ymuint base = (opos * input_num2() + ipos) * 2;
-  switch ( sense ) {
-  case kClibPosiUnate: base += 0; break;
-  case kClibNegaUnate: base += 1; break;
-  default:
-    ASSERT_NOT_REACHED;
-  }
-  return mTimingMap[base]->mArray[pos];
+  return mTimingMap[base];
 }
 
 // @brief 属している ClibCellGroup を返す．

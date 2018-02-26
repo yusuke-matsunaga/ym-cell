@@ -62,9 +62,7 @@ END_NONAMESPACE
 // @brief コンストラクタ
 CiCellGroup::CiCellGroup() :
   mRepClass(nullptr),
-  mPinInfo(0U),
-  mClibNum(0),
-  mClibList(nullptr)
+  mPinInfo(0U)
 {
 }
 
@@ -260,20 +258,11 @@ CiCellGroup::xq_pos() const
   return get_pos(mPinInfo, OUTPUT2);
 }
 
-// @brief セル数を返す．
-ymuint
-CiCellGroup::cell_num() const
+// @brief セルのリストを返す．
+const ClibCellList&
+CiCellGroup::cell_list() const
 {
-  return mClibNum;
-}
-
-// @brief セルを返す．
-// @param[in] pos 位置番号 ( 0 <= pos < cell_num() )
-const ClibCell*
-CiCellGroup::cell(ymuint pos) const
-{
-  ASSERT_COND( pos < mClibNum );
-  return mClibList[pos];
+  return mCellList;
 }
 
 // @brief 初期化する．
@@ -289,14 +278,8 @@ CiCellGroup::init(const ClibCellClass* cell_class,
 {
   mRepClass = cell_class;
   mMap = map;
-  mClibNum = cell_list.size();
 
-  alloc_array(alloc);
-  for (ymuint i = 0; i < mClibNum; ++ i) {
-    CiCell* cell = cell_list[i];
-    mClibList[i] = cell;
-    cell->set_group(this);
-  }
+  init_cell_list(cell_list, alloc);
 }
 
 // @brief FFのピン情報を設定する．
@@ -349,10 +332,9 @@ CiCellGroup::dump(ODO& bos) const
   bos << parent_id
       << mMap
       << mPinInfo
-      << mClibNum;
-  for (ymuint i = 0; i < mClibNum; ++ i) {
-    ymuint cell_id = mClibList[i]->id();
-    bos << cell_id;
+      << mCellList.num();
+  for ( auto cell: mCellList ) {
+    bos << cell->id();
   }
 }
 
@@ -366,33 +348,33 @@ CiCellGroup::restore(IDO& bis,
 		     Alloc& alloc)
 {
   ymuint parent_id;
+  int cell_num;
   bis >> parent_id
       >> mMap
       >> mPinInfo
-      >> mClibNum;
+      >> cell_num;
   mRepClass = library.npn_class(parent_id);
 
-  alloc_array(alloc);
-  for (ymuint i = 0; i < mClibNum; ++ i) {
+  vector<CiCell*> cell_list(cell_num);
+  for ( int i = 0; i < cell_num; ++ i ) {
     ymuint cell_id;
     bis >> cell_id;
     CiCell* cell = library._cell(cell_id);
-    mClibList[i] = cell;
-    cell->set_group(this);
+    cell_list[i] = cell;
   }
+  init_cell_list(cell_list, alloc);
 }
 
-// @brief メモリ領域の確保を行う．
+// @brief セルリストを初期化する．
+// @param[in] cell_list セルのリスト
 // @param[in] alloc メモリアロケータ
 void
-CiCellGroup::alloc_array(Alloc& alloc)
+CiCellGroup::init_cell_list(const vector<CiCell*>& cell_list,
+			    Alloc& alloc)
 {
-  if ( mClibNum > 0 ) {
-    void* p = alloc.get_memory(sizeof(const ClibCell*) * mClibNum);
-    mClibList = new (p) const ClibCell*[mClibNum];
-  }
-  else {
-    mClibList = nullptr;
+  mCellList.init(cell_list, alloc);
+  for ( auto cell: cell_list ) {
+    cell->set_group(this);
   }
 }
 

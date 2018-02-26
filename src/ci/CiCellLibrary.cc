@@ -43,12 +43,6 @@ CiCellLibrary::CiCellLibrary() :
   mDelayModel = kClibDelayGenericCmos;
   mLutTemplateNum = 0;
   mLutTemplateArray = nullptr;
-  mCellNum = 0;
-  mCellArray = nullptr;
-  mGroupNum = 0;
-  mGroupArray = nullptr;
-  mClassNum = 0;
-  mClassArray = nullptr;
 }
 
 // @brief デストラクタ
@@ -216,20 +210,19 @@ CiCellLibrary::bus_type(const char* name) const
   return nullptr;
 }
 
-// @brief このライブラリの持つセル数の取得
-ymuint
-CiCellLibrary::cell_num() const
+// @brief セルのリストの取得
+const ClibCellList&
+CiCellLibrary::cell_list() const
 {
-  return mCellNum;
+  return mCellList;
 }
 
 // @brief セルの取得
-// @param[in] pos 位置番号( 0 <= pos < cell_num() )
+// @param[in] pos 位置番号( 0 <= pos < cell_list().num() )
 const ClibCell*
 CiCellLibrary::cell(ymuint pos) const
 {
-  ASSERT_COND( pos < cell_num() );
-  return mCellArray[pos];
+  return mCellList[pos];
 }
 
 // @brief 名前からのセルの取得
@@ -246,11 +239,11 @@ CiCellLibrary::cell(const string& name) const
   return mCellHash.get(ShString(name));
 }
 
-// @brief セルグループの個数を返す．
-ymuint
-CiCellLibrary::group_num() const
+// @brief セルグループのリストを返す．
+const ClibCellGroupList&
+CiCellLibrary::group_list() const
 {
-  return mGroupNum;
+  return mGroupList;
 }
 
 // @brief セルグループを返す．
@@ -258,15 +251,14 @@ CiCellLibrary::group_num() const
 const ClibCellGroup*
 CiCellLibrary::group(ymuint id) const
 {
-  ASSERT_COND( id < group_num() );
-  return &mGroupArray[id];
+  return mGroupList[id];
 }
 
-// @brief NPN同値クラスの個数を返す．
-ymuint
-CiCellLibrary::npn_class_num() const
+// @brief NPN同値クラスのリストを返す．
+const ClibCellClassList&
+CiCellLibrary::npn_class_list() const
 {
-  return mClassNum;
+  return mClassList;
 }
 
 // @brief NPN同値クラスを返す．
@@ -274,8 +266,7 @@ CiCellLibrary::npn_class_num() const
 const ClibCellClass*
 CiCellLibrary::npn_class(ymuint id) const
 {
-  ASSERT_COND( id < npn_class_num() );
-  return &mClassArray[id];
+  return mClassList[id];
 }
 
 // @brief 定数0セルのグループを返す．
@@ -666,11 +657,7 @@ CiCellLibrary::new_lut_template3(ymuint id,
 void
 CiCellLibrary::set_cell_num(ymuint num)
 {
-  ASSERT_COND( mCellNum == 0 );
-
-  mCellNum = num;
-  void* p = mAlloc.get_memory(sizeof(CiCell*) * num);
-  mCellArray = new (p) CiCell*[num];
+  mCellList.init(num, mAlloc);
 }
 
 // @brief セルを取り出す．
@@ -1129,9 +1116,7 @@ CiCellLibrary::set_timing_num(ymuint cell_id,
 			      ymuint timing_num)
 {
   CiCell* cell = mCellArray[cell_id];
-  cell->mTimingNum = timing_num;
-  void* p = mAlloc.get_memory(sizeof(CiTiming*) * timing_num);
-  cell->mTimingArray = new (p) CiTiming*[timing_num];
+  cell->mTimingList.init(timing_num, mAlloc);
 }
 
 // @brief タイミング情報を作る(ジェネリック遅延モデル)．
@@ -1166,7 +1151,7 @@ CiCellLibrary::new_timing_generic(ymuint cell_id,
 					     rise_resistance,
 					     fall_resistance);
   CiCell* cell = mCellArray[cell_id];
-  cell->mTimingArray[tid] = timing;
+  cell->mTimingList.set(tid, timing);
 }
 
 // @brief タイミング情報を作る(折れ線近似)．
@@ -1199,7 +1184,7 @@ CiCellLibrary::new_timing_piecewise(ymuint cell_id,
 					       rise_pin_resistance,
 					       fall_pin_resistance);
   CiCell* cell = mCellArray[cell_id];
-  cell->mTimingArray[tid] = timing;
+  cell->mTimingList.set(tid, timing);
 }
 
 // @brief タイミング情報を作る(非線形タイプ1)．
@@ -1226,7 +1211,7 @@ CiCellLibrary::new_timing_lut1(ymuint cell_id,
 					  rise_transition,
 					  fall_transition);
   CiCell* cell = mCellArray[cell_id];
-  cell->mTimingArray[tid] = timing;
+  cell->mTimingList.set(tid, timing);
 }
 
 // @brief タイミング情報を作る(非線形タイプ2)．
@@ -1255,7 +1240,7 @@ CiCellLibrary::new_timing_lut2(ymuint cell_id,
 					  rise_propagation,
 					  fall_propagation);
   CiCell* cell = mCellArray[cell_id];
-  cell->mTimingArray[tid] = timing;
+  cell->mTimingList.set(tid, timing);
 }
 
 // @brief タイミング情報をセットする．
@@ -1284,18 +1269,10 @@ CiCellLibrary::set_timing(ymuint cell_id,
   }
 
   ymuint n = tid_list.size();
-  if ( n == 0 ) {
-    cell->mTimingMap[base] = nullptr;
-  }
-  else {
-    void* p = mAlloc.get_memory(sizeof(CiTimingArray) + sizeof(CiTiming*) * (n - 1));
-    CiTimingArray* tarray = new (p) CiTimingArray;
-    tarray->mNum = n;
-    for (ymuint i = 0; i < n; ++ i) {
-      ymuint tid = tid_list[i];
-      tarray->mArray[i] = cell->mTimingArray[tid];
-    }
-    cell->mTimingMap[base] = tarray;
+  cell->mTimingMap[base].init(n);
+  for ( int i = 0; i < n; ++ i ) {
+    ymuint tid = tid_list[i];
+    cell->mTimingMap[base].set(i, cell->timing(tid));
   }
 }
 
@@ -1411,10 +1388,9 @@ CiCellLibrary::compile()
 	CiCellClass* cclass = &mClassArray[libcomp.ff_class(has_q, has_xq, has_clear, has_preset)];
 	mFFClass[i * 4 + j * 2 + k] = cclass;
 
-	ymuint n = cclass->group_num();
-	for (ymuint g = 0; g < n; ++ g) {
+	for ( auto group: cclass->group_list() ) {
 	  // ちょっと面倒な手順を踏む．
-	  ymuint gid = cclass->cell_group(g)->id();
+	  ymuint gid = group->id();
 	  CiCellGroup* cgroup = &mGroupArray[gid];
 	  NpnMapM map = cgroup->map();
 	  ymuint pos_array[6] = { 0, 0, 0, 0, 0, 0 };
@@ -1461,10 +1437,9 @@ CiCellLibrary::compile()
 	CiCellClass* cclass = &mClassArray[id];
 	mLatchClass[i * 4 + j * 2 + k] = cclass;
 
-	ymuint n = cclass->group_num();
-	for (ymuint g = 0; g < n; ++ g) {
+	for ( auto group: cclass->group_list() ) {
 	  // ちょっと面倒な手順を踏む．
-	  ymuint gid = cclass->cell_group(g)->id();
+	  ymuint gid = group->id();
 	  CiCellGroup* cgroup = &mGroupArray[gid];
 	  NpnMapM map = cgroup->map();
 	  ymuint pos_array[5] = { 0, 0, 0, 0, 0 };

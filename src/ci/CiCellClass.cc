@@ -22,9 +22,7 @@ BEGIN_NAMESPACE_YM_CLIB
 // @brief コンストラクタ
 CiCellClass::CiCellClass() :
   mIdmapNum(0),
-  mIdmapList(nullptr),
-  mGroupNum(0),
-  mGroupList(nullptr)
+  mIdmapList(nullptr)
 {
 }
 
@@ -59,20 +57,11 @@ CiCellClass::idmap(ymuint pos) const
   return mIdmapList[pos];
 }
 
-// @brief NPN同値類の数を返す．
-ymuint
-CiCellClass::group_num() const
+// @brief セルグループのリストを返す．
+const ClibCellGroupList&
+CiCellClass::group_list() const
 {
-  return mGroupNum;
-}
-
-// @brief ClibCellGroup を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < func_num() )
-const ClibCellGroup*
-CiCellClass::cell_group(ymuint pos) const
-{
-  ASSERT_COND( pos < mGroupNum );
-  return mGroupList[pos];
+  return mGroupList;
 }
 
 // @brief 初期化する．
@@ -85,16 +74,11 @@ CiCellClass::init(const vector<NpnMapM>& idmap_list,
 		  Alloc& alloc)
 {
   mIdmapNum = idmap_list.size();
-  mGroupNum = group_list.size();
-  alloc_array(alloc);
-
   for (ymuint i = 0; i < mIdmapNum; ++ i) {
     mIdmapList[i] = idmap_list[i];
   }
 
-  for (ymuint i = 0; i < mGroupNum; ++ i) {
-    mGroupList[i] = group_list[i];
-  }
+  mGroupList.init(group_list, alloc);
 }
 
 // @brief バイナリダンプを行う．
@@ -103,18 +87,16 @@ void
 CiCellClass::dump(ODO& bos) const
 {
   bos << mIdmapNum
-      << mGroupNum;
+      << mGroupList.num();
 
   // 同位体変換情報のダンプ
-  for (ymuint i = 0; i < mIdmapNum; ++ i) {
+  for ( int i = 0; i < mIdmapNum; ++ i ) {
     bos << mIdmapList[i];
   }
 
   // グループ情報のダンプ
-  for (ymuint j = 0; j < mGroupNum; ++ j) {
-    const ClibCellGroup* group = mGroupList[j];
-    ymuint group_id = group->id();
-    bos << group_id;
+  for ( auto group: mGroupList ) {
+    bos << group->id();
   }
 }
 
@@ -127,22 +109,25 @@ CiCellClass::restore(IDO& bis,
 		     const ClibCellLibrary& library,
 		     Alloc& alloc)
 {
+  int group_num;
   bis >> mIdmapNum
-      >> mGroupNum;
+      >> group_num;
   alloc_array(alloc);
 
   // 同位体変換情報の設定
-  for (ymuint i = 0; i < mIdmapNum; ++ i) {
+  for ( int i = 0; i < mIdmapNum; ++ i ) {
     bis >> mIdmapList[i];
   }
 
   // グループ情報の設定
-  for (ymuint i = 0; i < mGroupNum; ++ i) {
+  vector<const ClibCellGroup*> group_list(group_num);
+  for ( int i = 0; i < group_num; ++ i ) {
     ymuint group_id;
     bis >> group_id;
     const ClibCellGroup* group = library.group(group_id);
-    mGroupList[i] = group;
+    group_list[i] = group;
   }
+  mGroupList.init(group_list, alloc);
 }
 
 // @brief 配列領域の確保を行う．
@@ -157,14 +142,6 @@ CiCellClass::alloc_array(Alloc& alloc)
   }
   else {
     mIdmapList = nullptr;
-  }
-
-  if ( mGroupNum > 0 ) {
-    void* p = alloc.get_memory(sizeof(const ClibCellGroup*) * mGroupNum);
-    mGroupList = new (p) const ClibCellGroup*[mGroupNum];
-  }
-  else {
-    mGroupList = nullptr;
   }
 }
 

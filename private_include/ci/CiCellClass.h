@@ -14,6 +14,8 @@
 #include "ym/IDO.h"
 #include "ym/ODO.h"
 
+#include "CiCellGroupList.h"
+
 
 BEGIN_NAMESPACE_YM_CLIB
 
@@ -65,16 +67,10 @@ public:
   // このクラスに属しているセルグループの情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セルグループの数を返す．
+  /// @brief セルグループのリストを返す．
   virtual
-  ymuint
-  group_num() const;
-
-  /// @brief セルグループを返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < group_num() )
-  virtual
-  const ClibCellGroup*
-  cell_group(ymuint pos) const;
+  const ClibCellGroupList&
+  group_list() const;
 
 
 public:
@@ -138,11 +134,8 @@ private:
   // 同位体変換の配列
   NpnMapM* mIdmapList;
 
-  // グループの数
-  ymuint mGroupNum;
-
-  // グループの配列
-  const ClibCellGroup** mGroupList;
+  // セルグループのリスト
+  CiCellGroupList mGroupList;
 
 };
 

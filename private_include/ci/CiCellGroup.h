@@ -15,6 +15,7 @@
 #include "ym/IDO.h"
 #include "ym/ODO.h"
 
+#include "ci/CiCellList.h"
 
 BEGIN_NAMESPACE_YM_CLIB
 
@@ -183,16 +184,10 @@ public:
   // このグループに属しているセルの情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セル数を返す．
+  /// @brief セルのリストを返す．
   virtual
-  ymuint
-  cell_num() const;
-
-  /// @brief セルを返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < cell_num() )
-  virtual
-  const ClibCell*
-  cell(ymuint pos) const;
+  const ClibCellList&
+  cell_list() const;
 
 
 public:
@@ -260,10 +255,12 @@ private:
   // 下請け関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief メモリ領域の確保を行う．
+  /// @brief セルリストを初期化する．
+  /// @param[in] cell_list セルのリスト
   /// @param[in] alloc メモリアロケータ
   void
-  alloc_array(Alloc& alloc);
+  init_cell_list(const vector<CiCell*>& cell_list,
+		 Alloc& alloc);
 
 
 private:
@@ -283,11 +280,8 @@ private:
   // FF/ラッチのピン情報
   ymuint mPinInfo;
 
-  // セル数
-  ymuint mClibNum;
-
-  // セルのポインタの配列
-  const ClibCell** mClibList;
+  // セルのリスト
+  CiCellList mCellList;
 
 };
 

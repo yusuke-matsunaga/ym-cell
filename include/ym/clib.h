@@ -49,7 +49,9 @@ class ClibResistance;
 
 class ClibCellLibrary;
 class ClibCell;
+class ClibCellList;
 class ClibCellPin;
+class ClibCellPinList;
 class ClibBusType;
 class ClibBus;
 class ClibBundle;
@@ -65,6 +67,7 @@ class ClibDumper;
 class ClibRestorer;
 
 class ClibCellGroup;
+class ClibCellGroupList;
 class ClibCellClass;
 class ClibFFInfo;
 class ClibLatchInfo;

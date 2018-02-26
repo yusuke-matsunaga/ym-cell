@@ -58,16 +58,10 @@ public:
   // このクラスに属しているセルグループの情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ClibCellGroup の数を返す．
+  /// @brief ClibCellGroup のリストを返す．
   virtual
-  ymuint
-  group_num() const = 0;
-
-  /// @brief ClibCellGroup を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < func_num() )
-  virtual
-  const ClibCellGroup*
-  cell_group(ymuint pos) const = 0;
+  const ClibCellGroupList&
+  group_list() const = 0;
 
 };
 
