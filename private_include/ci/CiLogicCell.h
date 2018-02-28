@@ -34,6 +34,7 @@ private:
   /// @param[in] inout_list 入出力ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   CiLogicCell(CiCellLibrary* library,
 	      const ShString& name,
 	      ClibArea area,
@@ -42,6 +43,7 @@ private:
 	      const vector<CiInoutPin*>& inout_list,
 	      const vector<CiBus*>& bus_list,
 	      const vector<CiBundle*>& bundle_list,
+	      const vector<CiTiming*>& timing_list,
 	      Alloc& alloc);
 
   /// @brief デストラクタ

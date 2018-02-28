@@ -207,6 +207,14 @@ CiCell::dump(ODO& s) const
   int nbundle = bundle_num();
   s << nbundle;
 
+  // タイミング情報のダンプ
+  const ClibTimingList& timing_list = this->timing_list();
+  int nt = timing_list.num();
+  s << nt;
+  for ( auto timing: timing_list ) {
+    timing->dump(s);
+  }
+
   // セルの付加的な情報のダンプ
   if ( is_ff() ) {
     s << next_state_expr()
@@ -225,14 +233,6 @@ CiCell::dump(ODO& s) const
       << preset_expr()
       << static_cast<ymuint8>(clear_preset_var1())
       << static_cast<ymuint8>(clear_preset_var2());
-  }
-
-  // タイミング情報のダンプ
-  const ClibTimingList& timing_list = this->timing_list();
-  int nt = timing_list.num();
-  s << nt;
-  for ( auto timing: timing_list ) {
-    timing->dump(s);
   }
 
   // 個別の条件ごとのタイミング情報のダンプ

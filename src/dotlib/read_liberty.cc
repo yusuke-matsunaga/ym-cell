@@ -62,7 +62,7 @@ split(const string& src_str,
 // DotlibNode から　Expr を作る．
 Expr
 dot2expr(const DotlibNode* node,
-	 const HashMap<ShString, ymuint>& pin_map)
+	 const HashMap<ShString, int>& pin_map)
 {
   // 特例
   if ( node == nullptr ) {
@@ -82,7 +82,7 @@ dot2expr(const DotlibNode* node,
   }
   if ( node->is_string() ) {
     ShString name = node->string_value();
-    ymuint id;
+    int id;
     if ( !pin_map.find(name, id) ) {
       ostringstream buf;
       buf << name << ": No such pin-name.";
@@ -185,7 +185,7 @@ gen_lut(CiCellLibrary* library,
 // 論理式を生成する．
 Expr
 gen_expr(const DotlibNode* expr_node,
-	 const HashMap<ShString, ymuint>& pin_map,
+	 const HashMap<ShString, int>& pin_map,
 	 bool& has_expr)
 {
   if ( expr_node ) {
@@ -201,7 +201,7 @@ gen_expr(const DotlibNode* expr_node,
 // ピンを生成する．
 void
 gen_pin(const vector<DotlibPin>& pin_info_array,
-	const HashMap<ShString, ymuint>& pin_map,
+	const HashMap<ShString, int>& pin_map,
 	CiCellLibrary* library,
 	vector<CiInputPin*>& input_list,
 	vector<CiOutputPin*>& output_list,
@@ -293,13 +293,13 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
     }
   }
 }
-
+#if 0
 // タイミング情報を生成する．
 void
 gen_timing(const list<const DotlibNode*>& dt_timing_list,
 	   CiCellLibrary* library,
 	   CiCell* cell,
-	   const HashMap<ShString, ymuint>& pin_map,
+	   const HashMap<ShString, int>& pin_map,
 	   vector<CiTiming*>& timing_list,
 	   vector<vector<CiTiming*> >& timing_list_array)
 {
@@ -520,6 +520,231 @@ gen_timing(const list<const DotlibNode*>& dt_timing_list,
     }
   }
 }
+#endif
+
+void
+gen_timing_list(const vector<DotlibPin>& pin_info_array,
+		const HashMap<ShString, int>& pin_map,
+		CiCellLibrary* library,
+		vector<CiTiming*>& timing_list,
+		vector<vector<CiTiming*> >& timing_list_array)
+{
+  for ( const DotlibPin& pin_info: pin_info_array ) {
+    const list<const DotlibNode*>& dt_timing_list = pin_info.timing_list();
+    for ( auto dt_timing: dt_timing_list ) {
+      DotlibTiming timing_info;
+      if ( !timing_info.set_data(dt_timing) ) {
+	continue;
+      }
+      ClibTimingType timing_type = timing_info.timing_type();
+      const DotlibNode* when_node = timing_info.when();
+      Expr cond;
+      if ( when_node ) {
+	cond = dot2expr(when_node, pin_map);
+      }
+      else {
+	cond = Expr::const_one();
+      }
+
+      CiTiming* timing = nullptr;
+      switch ( library->delay_model() ) {
+      case kClibDelayGenericCmos:
+	{
+	  ClibTime intrinsic_rise(timing_info.intrinsic_rise()->float_value());
+	  ClibTime intrinsic_fall(timing_info.intrinsic_fall()->float_value());
+	  ClibTime slope_rise(timing_info.slope_rise()->float_value());
+	  ClibTime slope_fall(timing_info.slope_fall()->float_value());
+	  ClibResistance rise_res(timing_info.rise_resistance()->float_value());
+	  ClibResistance fall_res(timing_info.fall_resistance()->float_value());
+	  timing = library->new_timing_generic(timing_type, cond,
+					       intrinsic_rise, intrinsic_fall,
+					       slope_rise, slope_fall,
+					       rise_res, fall_res);
+	}
+	break;
+
+      case kClibDelayTableLookup:
+	{
+	  const DotlibNode* cr_node = timing_info.cell_rise();
+	  const DotlibNode* rt_node = timing_info.rise_transition();
+	  const DotlibNode* rp_node = timing_info.rise_propagation();
+
+	  ClibLut* cr_lut = nullptr;
+	  ClibLut* rt_lut = nullptr;
+	  ClibLut* rp_lut = nullptr;
+	  if ( cr_node != nullptr ) {
+	    if ( rp_node != nullptr ) {
+	      MsgMgr::put_msg(__FILE__, __LINE__,
+			      dt_timing->loc(),
+			      kMsgError,
+			      "DOTLIB_PARSER",
+			      "cell_rise and rise_propagation are mutually exclusive.");
+	      continue;
+	    }
+	    if ( rt_node == nullptr ) {
+	      MsgMgr::put_msg(__FILE__, __LINE__,
+			      dt_timing->loc(),
+			      kMsgError,
+			      "DOTLIB_PARSER",
+			      "rise_transition is missing.");
+	      continue;
+	    }
+	    cr_lut = gen_lut(library, cr_node);
+	    rt_lut = gen_lut(library, rt_node);
+	  }
+	  else if ( rp_node != nullptr ) {
+	    if ( rt_node == nullptr ) {
+	      MsgMgr::put_msg(__FILE__, __LINE__,
+			      dt_timing->loc(),
+			      kMsgError,
+			      "DOTLIB_PARSER",
+			      "rise_transition is missing.");
+	      continue;
+	    }
+	    rt_lut = gen_lut(library, rt_node);
+	    rp_lut = gen_lut(library, rp_node);
+	  }
+	  else if ( rt_node != nullptr ) {
+	    MsgMgr::put_msg(__FILE__, __LINE__,
+			    dt_timing->loc(),
+			    kMsgError,
+			    "DOTLIB_PARSER",
+			    "Either cell_rise or rise_propagation should be present.");
+	    continue;
+	  }
+
+	  const DotlibNode* cf_node = timing_info.cell_fall();
+	  const DotlibNode* ft_node = timing_info.fall_transition();
+	  const DotlibNode* fp_node = timing_info.fall_propagation();
+
+	  ClibLut* cf_lut = nullptr;
+	  ClibLut* ft_lut = nullptr;
+	  ClibLut* fp_lut = nullptr;
+	  if ( cf_node != nullptr ) {
+	    if ( fp_node != nullptr ) {
+	      MsgMgr::put_msg(__FILE__, __LINE__,
+			      dt_timing->loc(),
+			      kMsgError,
+			      "DOTLIB_PARSER",
+			      "cell_fall and fall_propagation are mutually exclusive.");
+	      continue;
+	    }
+	    if ( ft_node == nullptr ) {
+	      MsgMgr::put_msg(__FILE__, __LINE__,
+			      dt_timing->loc(),
+			      kMsgError,
+			      "DOTLIB_PARSER",
+			      "fall_transition is missing.");
+	      continue;
+	    }
+	    cf_lut = gen_lut(library, cf_node);
+	    ft_lut = gen_lut(library, ft_node);
+	  }
+	  else if ( fp_node != nullptr ) {
+	    if ( ft_node == nullptr ) {
+	      MsgMgr::put_msg(__FILE__, __LINE__,
+			      dt_timing->loc(),
+			      kMsgError,
+			      "DOTLIB_PARSER",
+			      "fall_transition is missing.");
+	      continue;
+	    }
+	    ft_lut = gen_lut(library, ft_node);
+	    fp_lut = gen_lut(library, fp_node);
+	  }
+	  else if ( ft_node != nullptr ) {
+	    MsgMgr::put_msg(__FILE__, __LINE__,
+			    dt_timing->loc(),
+			    kMsgError,
+			    "DOTLIB_PARSER",
+			    "Either cell_fall or fall_propagation should be present.");
+	    continue;
+	  }
+
+	  if ( cr_lut != nullptr || cf_lut != nullptr ) {
+	    if ( fp_lut != nullptr ) {
+	      MsgMgr::put_msg(__FILE__, __LINE__,
+			      dt_timing->loc(),
+			      kMsgError,
+			      "DOTLIB_PARSER",
+			      "cell_rise and fall_propagation are mutually exclusive.");
+	      continue;
+	    }
+	    timing = library->new_timing_lut1(timing_type, cond,
+					      cr_lut, cf_lut,
+					      rt_lut, ft_lut);
+	  }
+	  else { // cr_lut == nullptr && cf_lut == nullptr
+	    timing = library->new_timing_lut2(timing_type, cond,
+					      rt_lut, ft_lut,
+					      rp_lut, fp_lut);
+	  }
+	}
+	break;
+
+      case kClibDelayPiecewiseCmos:
+	// 未実装
+	break;
+
+      case kClibDelayCmos2:
+	// 未実装
+	break;
+
+      case kClibDelayDcm:
+	// 未実装
+	break;
+      }
+      timing_list.push_back(timing);
+
+      ClibTimingSense timing_sense = timing_info.timing_sense();
+
+      // タイミング情報の設定
+      if ( timing_info.related_pin() ) {
+	string tmp_str = timing_info.related_pin()->string_value();
+	vector<string> pin_name_list;
+	split(tmp_str, pin_name_list);
+	for ( auto pin_name: pin_name_list ) {
+	  int id;
+	  if ( !pin_map.find(ShString(pin_name), id) ) {
+	    ostringstream buf;
+	    buf << pin_name << ": no such pin";
+	    MsgMgr::put_msg(__FILE__, __LINE__,
+			    dt_timing->loc(),
+			    kMsgError,
+			    "DOTLIB_PARSER",
+			    buf.str());
+	    continue;
+	  }
+	  switch ( timing_sense ) {
+	  case kClibPosiUnate:
+	    timing_list_array[id * 2 + 0].push_back(timing);
+	    break;
+
+	  case kClibNegaUnate:
+	    timing_list_array[id * 2 + 1].push_back(timing);
+	    break;
+
+	  case kClibNonUnate:
+	    timing_list_array[id * 2 + 0].push_back(timing);
+	    timing_list_array[id * 2 + 1].push_back(timing);
+	    break;
+
+	  default:
+	    ASSERT_NOT_REACHED;
+	    break;
+	  }
+	}
+      }
+      else {
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			dt_timing->loc(),
+			kMsgError,
+			"DOTLIB_PARSER",
+			"No \"related_pin\"");
+      }
+    }
+  }
+}
 
 // @brief DotlibNode から CiCellLibrary を生成する．
 // @param[in] library_info ライブラリの情報を持つオブジェクト
@@ -649,12 +874,9 @@ set_library(const DotlibLibrary& library_info,
   // セルの内容の設定
   const list<const DotlibNode*>& dt_cell_list = library_info.cell_list();
   int nc = dt_cell_list.size();
-  vector<CiCell*> cell_list(nc);
-  int cell_id = 0;
-  for (list<const DotlibNode*>::const_iterator p = dt_cell_list.begin();
-       p != dt_cell_list.end(); ++ p, ++ cell_id) {
-    const DotlibNode* dt_cell = *p;
-
+  vector<CiCell*> cell_list;
+  cell_list.reserve(nc);
+  for ( const DotlibNode* dt_cell: dt_cell_list ) {
     // セル情報の読み出し
     DotlibCell cell_info;
     if ( !cell_info.set_data(dt_cell) ) {
@@ -670,68 +892,50 @@ set_library(const DotlibLibrary& library_info,
     int nbus = dt_bus_list.size();
     int nbundle = dt_bundle_list.size();
 
-    // ピン情報の配列
-    vector<DotlibPin> pin_info_array(npg);
-
-    // ピン名とピン番号の連想配列
-    HashMap<ShString, ymuint> pin_map;
-
     // ピン情報の読み出し
-    int ni = 0;
-    int no = 0;
-    int nio = 0;
-    int nit = 0;
+    vector<DotlibPin> pin_info_array(npg);
     {
-      int pg_id = 0;
+      int i = 0;
       bool error = false;
-      for (list<const DotlibNode*>::const_iterator q = dt_pin_list.begin();
-	   q != dt_pin_list.end(); ++ q, ++ pg_id) {
-	const DotlibNode* dt_pin = *q;
-
+      for ( const DotlibNode* dt_pin: dt_pin_list ) {
 	// ピン情報の読み出し
-	DotlibPin& pin_info = pin_info_array[pg_id];
+	DotlibPin& pin_info = pin_info_array[i]; ++ i;
 	if ( !pin_info.set_data(dt_pin) ) {
 	  error = true;
-	  continue;
-	}
-
-	// 各タイプの個数のカウント
-	ymuint nn = pin_info.num();
-	switch ( pin_info.direction() ) {
-	case DotlibPin::kInput:
-	  ni += nn;
-	  break;
-
-	case DotlibPin::kOutput:
-	  no += nn;
-	  break;
-
-	case DotlibPin::kInout:
-	  nio += nn;
-	  break;
-
-	case DotlibPin::kInternal:
-	  nit += nn;
-	  break;
-
-	default:
-	  ASSERT_NOT_REACHED;
 	  break;
 	}
       }
       if ( error ) {
 	continue;
       }
-      ASSERT_COND( pg_id == npg );
+      ASSERT_COND( i == npg );
     }
+
+    // 各タイプの個数のカウント
+    int ni = 0;
+    int no = 0;
+    int nio = 0;
+    int nit = 0;
+    for ( const DotlibPin& pin_info: pin_info_array ) {
+      int nn = pin_info.num();
+      switch ( pin_info.direction() ) {
+      case DotlibPin::kInput:    ni += nn; break;
+      case DotlibPin::kOutput:   no += nn; break;
+      case DotlibPin::kInout:    nio += nn; break;
+      case DotlibPin::kInternal: nit += nn; break;
+      default: ASSERT_NOT_REACHED; break;
+      }
+    }
+
     int ni2 = ni + nio;
+    int no2 = no + nio;
 
     // ピン名とピン番号の対応づけを行う．
+    HashMap<ShString, int> pin_map;
     {
       int ipos = 0;
       int itpos = 0;
-      for ( int pg_id = 0; pg_id < npg; ++ pg_id ) {
-	DotlibPin& pin_info = pin_info_array[pg_id];
+      for ( const DotlibPin& pin_info: pin_info_array ) {
 	switch ( pin_info.direction() ) {
 	case DotlibPin::kInput:
 	case DotlibPin::kInout:
@@ -806,6 +1010,13 @@ set_library(const DotlibLibrary& library_info,
 	    inout_list,
 	    internal_list);
 
+    // タイミング情報の生成
+    vector<CiTiming*> timing_list;
+    vector<vector<CiTiming*> > timing_list_array(ni2 * 2);
+    gen_timing_list(pin_info_array, pin_map, library,
+		    timing_list,
+		    timing_list_array);
+
     // セルの生成
     CiCell* cell = nullptr;
     if ( dt_ff ) {
@@ -822,6 +1033,7 @@ set_library(const DotlibLibrary& library_info,
 				  inout_list,
 				  bus_list,
 				  bundle_list,
+				  timing_list,
 				  next_state,
 				  clocked_on, clocked_on_also,
 				  clear, preset,
@@ -842,6 +1054,7 @@ set_library(const DotlibLibrary& library_info,
 				     inout_list,
 				     bus_list,
 				     bundle_list,
+				     timing_list,
 				     data_in,
 				     enable, enable_also,
 				     clear, preset,
@@ -854,7 +1067,8 @@ set_library(const DotlibLibrary& library_info,
 				   inout_list,
 				   internal_list,
 				   bus_list,
-				   bundle_list);
+				   bundle_list,
+				   timing_list);
     }
     else {
       cell = library->new_logic_cell(cell_name, area,
@@ -862,67 +1076,53 @@ set_library(const DotlibLibrary& library_info,
 				     output_list,
 				     inout_list,
 				     bus_list,
-				     bundle_list);
+				     bundle_list,
+				     timing_list);
     }
-    cell_list[cell_id] = cell;
+    cell_list.push_back(cell);
 
-    // タイミング情報の生成
-    vector<CiTiming*> timing_list;
-    for ( int pg_id = 0; pg_id < npg; ++ pg_id ) {
-      const DotlibPin& pin_info = pin_info_array[pg_id];
-      vector<vector<CiTiming*> > timing_list_array(ni2 * 2);
-      const list<const DotlibNode*>& dt_timing_list = pin_info.timing_list();
-      gen_timing(dt_timing_list,
-		 library, cell, pin_map,
-		 timing_list, timing_list_array);
+    // 個別の条件ごとのタイミング情報の設定
+    for ( int oid = 0; oid < no2; ++ oid ) {
+      const ClibCellPin* opin = cell->output(oid);
+      ASSERT_COND( opin != nullptr );
+      TvFunc tv_function;
+      if ( opin->has_function() ) {
+	Expr expr = opin->function();
+	tv_function = expr.make_tv(ni2);
+      }
+      for ( int iid = 0; iid < ni2; ++ iid ) {
+	TvFunc p_func = tv_function.cofactor(VarId(iid), false);
+	TvFunc n_func = tv_function.cofactor(VarId(iid), true);
 
-      int nop = pin_info.num();
-      for ( int i = 0; i < nop; ++ i ) {
-	ShString oname = pin_info.name(i);
-	const ClibCellPin* opin = cell->pin((const char*)oname);
-	ASSERT_COND( opin != nullptr );
-	int oid = opin->output_id();
-	bool has_logic = cell->has_logic(oid);
-	TvFunc tv_function;
-	if ( has_logic ) {
-	  Expr expr = cell->logic_expr(oid);
-	  tv_function = expr.make_tv(ni2);
-	}
-	for ( int iid = 0; iid < ni2; ++ iid ) {
-	  TvFunc p_func = tv_function.cofactor(VarId(iid), false);
-	  TvFunc n_func = tv_function.cofactor(VarId(iid), true);
-
-	  const vector<CiTiming*>& timing_list_p = timing_list_array[iid * 2 + 0];
-	  if ( !timing_list_p.empty() ) {
-	    CiTiming* timing = timing_list_p[0];
-	    bool depend = true;
-	    if ( timing->type() == kClibTimingCombinational ) {
-	      if ( has_logic && !(~n_func && p_func) ) {
-		depend = false;
-	      }
-	    }
-	    if ( depend ) {
-	      library->set_timing(cell, iid, oid, kClibPosiUnate, timing_list_p);
+	const vector<CiTiming*>& timing_list_p = timing_list_array[iid * 2 + 0];
+	if ( !timing_list_p.empty() ) {
+	  CiTiming* timing = timing_list_p[0];
+	  bool depend = true;
+	  if ( timing->type() == kClibTimingCombinational ) {
+	    if ( opin->has_function() && !(~n_func && p_func) ) {
+	      depend = false;
 	    }
 	  }
+	  if ( depend ) {
+	    library->set_timing(cell, iid, oid, kClibPosiUnate, timing_list_p);
+	  }
+	}
 
-	  const vector<CiTiming*>& timing_list_n = timing_list_array[iid * 2 + 1];
-	  if ( !timing_list_n.empty() ) {
-	    CiTiming* timing = timing_list_n[0];
-	    bool depend = true;
-	    if ( timing->type() == kClibTimingCombinational ) {
-	      if ( has_logic && !(~p_func && n_func) ) {
-		depend = false;
-	      }
+	const vector<CiTiming*>& timing_list_n = timing_list_array[iid * 2 + 1];
+	if ( !timing_list_n.empty() ) {
+	  CiTiming* timing = timing_list_n[0];
+	  bool depend = true;
+	  if ( timing->type() == kClibTimingCombinational ) {
+	    if ( opin->has_function() && !(~p_func && n_func) ) {
+	      depend = false;
 	    }
-	    if ( depend ) {
-	      library->set_timing(cell, iid, oid, kClibNegaUnate, timing_list_n);
-	    }
+	  }
+	  if ( depend ) {
+	    library->set_timing(cell, iid, oid, kClibNegaUnate, timing_list_n);
 	  }
 	}
       }
     }
-    library->set_timing_list(cell, timing_list);
   }
 
   library->set_cell_list(cell_list);

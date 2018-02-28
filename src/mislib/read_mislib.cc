@@ -150,15 +150,6 @@ set_library(const string& lib_name,
 						 ClibTime::infty(),
 						 ClibTime(0.0));
 
-    // セルを作る．
-    CiCell* cell = library->new_logic_cell(name, area,
-					   input_list,
-					   vector<CiOutputPin*>(1, opin),
-					   vector<CiInoutPin*>(),
-					   vector<CiBus*>(),
-					   vector<CiBundle*>());
-    cell_list.push_back(cell);
-
     // タイミング情報の生成
     vector<CiTiming*> timing_list(ni);
     if ( !wildcard_pin ) {
@@ -192,7 +183,16 @@ set_library(const string& lib_name,
 	timing_list[i] = timing;
       }
     }
-    library->set_timing_list(cell, timing_list);
+
+    // セルを作る．
+    CiCell* cell = library->new_logic_cell(name, area,
+					   input_list,
+					   vector<CiOutputPin*>(1, opin),
+					   vector<CiInoutPin*>(),
+					   vector<CiBus*>(),
+					   vector<CiBundle*>(),
+					   timing_list);
+    cell_list.push_back(cell);
 
     TvFunc tv_function = function.make_tv(ni);
     for ( int i = 0; i < ni; ++ i ) {

@@ -34,6 +34,7 @@ protected:
   /// @param[in] inout_list 入出力ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   /// @param[in] data_in "data_in" 関数の式
   /// @param[in] enable "enable" 関数の式
   /// @param[in] enable_also "enable_also" 関数の式
@@ -48,6 +49,7 @@ protected:
 	      const vector<CiInoutPin*>& inout_list,
 	      const vector<CiBus*>& bus_list,
 	      const vector<CiBundle*>& bundle_list,
+	      const vector<CiTiming*>& timing_list,
 	      const Expr& data_in,
 	      const Expr& enable,
 	      const Expr& enable_also,
@@ -124,6 +126,7 @@ protected:
   /// @param[in] inout_list 入出力ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   /// @param[in] data_in "data_in" 関数の式
   /// @param[in] enable "enable" 関数の式
   /// @param[in] enable_also "enable_also" 関数の式
@@ -139,6 +142,7 @@ protected:
 	       const vector<CiInoutPin*>& inout_list,
 	       const vector<CiBus*>& bus_list,
 	       const vector<CiBundle*>& bundle_list,
+	       const vector<CiTiming*>& timing_list,
 	       const Expr& data_in,
 	       const Expr& enable,
 	       const Expr& enable_also,
@@ -198,6 +202,7 @@ protected:
   /// @param[in] inout_list 入出力ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   /// @param[in] data_in "data_in" 関数の式
   /// @param[in] enable "enable" 関数の式
   /// @param[in] enable_also "enable_also" 関数の式
@@ -213,6 +218,7 @@ protected:
 	       const vector<CiInoutPin*>& inout_list,
 	       const vector<CiBus*>& bus_list,
 	       const vector<CiBundle*>& bundle_list,
+	       const vector<CiTiming*>& timing_list,
 	       const Expr& data_in,
 	       const Expr& enable,
 	       const Expr& enable_also,
@@ -272,6 +278,7 @@ protected:
   /// @param[in] inout_list 入出力ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   /// @param[in] data_in "data_in" 関数の式
   /// @param[in] enable "enable" 関数の式
   /// @param[in] enable_also "enable_also" 関数の式
@@ -290,6 +297,7 @@ protected:
 		const vector<CiInoutPin*>& inout_list,
 		const vector<CiBus*>& bus_list,
 		const vector<CiBundle*>& bundle_list,
+		const vector<CiTiming*>& timing_list,
 		const Expr& data_in,
 		const Expr& enable,
 		const Expr& enable_also,

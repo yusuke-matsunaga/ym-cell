@@ -34,6 +34,7 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] internal_list 内部ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 // @param[in] alloc メモリアロケータ
 CiCell::CiCell(CiCellLibrary* library,
 	       const ShString& name,
@@ -44,6 +45,7 @@ CiCell::CiCell(CiCellLibrary* library,
 	       const vector<CiInternalPin*>& internal_list,
 	       const vector<CiBus*>& bus_list,
 	       const vector<CiBundle*>& bundle_list,
+	       const vector<CiTiming*>& timing_list,
 	       Alloc& alloc)
 {
   mLibrary = library;
@@ -161,6 +163,12 @@ CiCell::CiCell(CiCellLibrary* library,
 
     mInternalArray[i] = pin;
     pin->mInternalId = i;
+  }
+
+  mTimingList.init(timing_list, alloc);
+
+  for ( int id = 0; id < timing_list.size(); ++ id ) {
+    timing_list[id]->mId = id;
   }
 }
 

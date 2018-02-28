@@ -24,7 +24,7 @@ BEGIN_NAMESPACE_YM_CLIB
 class CiTiming :
   public ClibTiming
 {
-  friend class CiCellLibrary;
+  friend class CiCell;
 
 protected:
 

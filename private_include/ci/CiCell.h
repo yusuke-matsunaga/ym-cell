@@ -51,6 +51,7 @@ protected:
   /// @param[in] internal_list 内部ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   /// @param[in] alloc メモリアロケータ
   CiCell(CiCellLibrary* library,
 	 const ShString& name,
@@ -61,6 +62,7 @@ protected:
 	 const vector<CiInternalPin*>& internal_list,
 	 const vector<CiBus*>& bus_list,
 	 const vector<CiBundle*>& bundle_list,
+	 const vector<CiTiming*>& timing_list,
 	 Alloc& alloc);
 
   /// @brief デストラクタ

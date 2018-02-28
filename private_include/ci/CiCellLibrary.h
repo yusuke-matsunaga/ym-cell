@@ -422,6 +422,7 @@ public:
   /// @param[in] inout_list 入出力ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   CiCell*
   new_logic_cell(const string& name,
 		 ClibArea area,
@@ -429,7 +430,8 @@ public:
 		 const vector<CiOutputPin*>& output_list,
 		 const vector<CiInoutPin*>& inout_list,
 		 const vector<CiBus*>& bus_list,
-		 const vector<CiBundle*>& bundle_list);
+		 const vector<CiBundle*>& bundle_list,
+		 const vector<CiTiming*>& timing_list);
 
   /// @brief FFセルを生成する．
   /// @param[in] name 名前
@@ -439,6 +441,7 @@ public:
   /// @param[in] inout_list 入出力ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   /// @param[in] next_state "next_state" 関数の式
   /// @param[in] clocked_on "clocked_on" 関数の式
   /// @param[in] clocked_on_also "clocked_on_also" 関数の式
@@ -454,6 +457,7 @@ public:
 	      const vector<CiInoutPin*>& inout_list,
 	      const vector<CiBus*>& bus_list,
 	      const vector<CiBundle*>& bundle_list,
+	      const vector<CiTiming*>& timing_list,
 	      const Expr& next_state,
 	      const Expr& clocked_on,
 	      const Expr& clocked_on_also,
@@ -470,6 +474,7 @@ public:
   /// @param[in] inout_list 入出力ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   /// @param[in] data_in "data_in" 関数の式
   /// @param[in] enable "enable" 関数の式
   /// @param[in] clear "clear" 関数の式
@@ -485,6 +490,7 @@ public:
 		 const vector<CiInoutPin*>& inout_list,
 		 const vector<CiBus*>& bus_list,
 		 const vector<CiBundle*>& bundle_list,
+		 const vector<CiTiming*>& timing_list,
 		 const Expr& data_in,
 		 const Expr& enable,
 		 const Expr& enable_also,
@@ -502,6 +508,7 @@ public:
   /// @param[in] internal_list 内部ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   CiCell*
   new_fsm_cell(const string& name,
 	       ClibArea area,
@@ -510,7 +517,8 @@ public:
 	       const vector<CiInoutPin*>& inout_list,
 	       const vector<CiInternalPin*>& internal_list,
 	       const vector<CiBus*>& bus_list,
-	       const vector<CiBundle*>& bundle_list);
+	       const vector<CiBundle*>& bundle_list,
+	       const vector<CiTiming*>& timing_list);
 
   /// @brief セルの入力ピンを生成する．
   /// @param[in] name 入力ピン名
@@ -617,14 +625,12 @@ public:
 		       ClibResistance fall_pin_resistance);
 
   /// @brief タイミング情報を作る(非線形タイプ1)．
-  /// @param[in] cell_id セル番号 ( 0 <= cell_id < cell_num() )
-  /// @param[in] opin_id 出力(入出力)ピン番号 ( *1 )
-  /// @param[in] ipin_id 関連する入力(入出力)ピン番号 ( *2 )
   /// @param[in] timing_type タイミングの型
-  /// @param[in] timing_sense タイミングセンス
   /// @param[in] cond タイミング条件を表す式
   /// @param[in] cell_rise 立ち上がりセル遅延テーブル
   /// @param[in] cell_fall 立ち下がりセル遅延テーブル
+  /// @param[in] risze_transition 立ち上がり遷移テーブル
+  /// @param[in] fall_transition 立ち下がり遷移テーブル
   CiTiming*
   new_timing_lut1(ClibTimingType timing_type,
 		  const Expr& cond,
@@ -647,13 +653,6 @@ public:
 		  ClibLut* fall_transition,
 		  ClibLut* rise_propagation,
 		  ClibLut* fall_propagation);
-
-  /// @brief タイミング情報のリストを設定する．
-  /// @param[in] cell セル
-  /// @param[in] timing_list タイミング情報のリスト
-  void
-  set_timing_list(CiCell* cell,
-		  const vector<CiTiming*>& timing_list);
 
   /// @brief タイミング情報をセットする．
   /// @param[in] cell セル
@@ -750,6 +749,7 @@ private:
   new_cell_class(int id,
 		 const vector<NpnMapM>& idmap_list,
 		 const vector<CiCellGroup*>& group_list);
+
   /// @brief LUT テンプレートを読み込む．
   void
   restore_lut_template(IDO& s);

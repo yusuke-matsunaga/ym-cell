@@ -353,6 +353,11 @@ CiCellLibrary::restore_cell(IDO& s,
     s >> nbundle;
     vector<CiBundle*> bundle_list(nbundle);
 
+    // タイミング情報の読み込み
+    vector<CiTiming*> timing_list;
+    restore_timing(s, timing_list);
+
+    // セル本体の読み込み
     CiCell* cell = nullptr;
     switch ( type ) {
     case 0: // kLogic
@@ -361,7 +366,8 @@ CiCellLibrary::restore_cell(IDO& s,
 			    output_list,
 			    inout_list,
 			    bus_list,
-			    bundle_list);
+			    bundle_list,
+			    timing_list);
       break;
 
     case 1: // kFF
@@ -386,6 +392,7 @@ CiCellLibrary::restore_cell(IDO& s,
 			   inout_list,
 			   bus_list,
 			   bundle_list,
+			   timing_list,
 			   next_state,
 			   clocked_on, clocked_on_also,
 			   clear, preset,
@@ -416,6 +423,7 @@ CiCellLibrary::restore_cell(IDO& s,
 			      inout_list,
 			      bus_list,
 			      bundle_list,
+			      timing_list,
 			      data_in,
 			      enable, enable_also,
 			      clear, preset,
@@ -431,7 +439,8 @@ CiCellLibrary::restore_cell(IDO& s,
 			  inout_list,
 			  internal_list,
 			  bus_list,
-			  bundle_list);
+			  bundle_list,
+			  timing_list);
       break;
 
     default:
@@ -439,11 +448,6 @@ CiCellLibrary::restore_cell(IDO& s,
       break;
     }
     cell_list[cell_id] = cell;
-
-    // タイミング情報の生成
-    vector<CiTiming*> timing_list;
-    restore_timing(s, timing_list);
-    set_timing_list(cell, timing_list);
 
     // 個別の条件ごとのタイミング情報の設定
     for ( int ipos = 0; ipos < ni + nio; ++ ipos ) {

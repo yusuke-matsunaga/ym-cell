@@ -25,6 +25,7 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] inout_list 入出力ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 // @param[in] data_in "data_in" 関数の式
 // @param[in] enable "enable" 関数の式
 // @param[in] enable_also "enable_also" 関数の式
@@ -37,6 +38,7 @@ CiLatchCell::CiLatchCell(CiCellLibrary* library,
 			 const vector<CiInoutPin*>& inout_list,
 			 const vector<CiBus*>& bus_list,
 			 const vector<CiBundle*>& bundle_list,
+			 const vector<CiTiming*>& timing_list,
 			 const Expr& data_in,
 			 const Expr& enable,
 			 const Expr& enable_also,
@@ -48,6 +50,7 @@ CiLatchCell::CiLatchCell(CiCellLibrary* library,
 	 vector<CiInternalPin*>(),
 	 bus_list,
 	 bundle_list,
+	 timing_list,
 	 alloc),
   mDataIn(data_in),
   mEnable(enable),
@@ -105,6 +108,7 @@ CiLatchCell::enable2_expr() const
 // @param[in] inout_list 入出力ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 // @param[in] data_in "data_in" 関数の式
 // @param[in] enable "enable" 関数の式
 // @param[in] enable_also "enable_also" 関数の式
@@ -118,6 +122,7 @@ CiLatchRCell::CiLatchRCell(CiCellLibrary* library,
 			   const vector<CiInoutPin*>& inout_list,
 			   const vector<CiBus*>& bus_list,
 			   const vector<CiBundle*>& bundle_list,
+			   const vector<CiTiming*>& timing_list,
 			   const Expr& data_in,
 			   const Expr& enable,
 			   const Expr& enable_also,
@@ -129,6 +134,7 @@ CiLatchRCell::CiLatchRCell(CiCellLibrary* library,
 	      inout_list,
 	      bus_list,
 	      bundle_list,
+	      timing_list,
 	      data_in,
 	      enable,
 	      enable_also,
@@ -171,6 +177,7 @@ CiLatchRCell::clear_expr() const
 // @param[in] inout_list 入出力ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 // @param[in] data_in "data_in" 関数の式
 // @param[in] enable "enable" 関数の式
 // @param[in] enable_also "enable_also" 関数の式
@@ -186,6 +193,7 @@ CiLatchSCell::CiLatchSCell(CiCellLibrary* library,
 			   const vector<CiInoutPin*>& inout_list,
 			   const vector<CiBus*>& bus_list,
 			   const vector<CiBundle*>& bundle_list,
+			   const vector<CiTiming*>& timing_list,
 			   const Expr& data_in,
 			   const Expr& enable,
 			   const Expr& enable_also,
@@ -197,6 +205,7 @@ CiLatchSCell::CiLatchSCell(CiCellLibrary* library,
 	      inout_list,
 	      bus_list,
 	      bundle_list,
+	      timing_list,
 	      data_in,
 	      enable,
 	      enable_also,
@@ -239,6 +248,7 @@ CiLatchSCell::preset_expr() const
 // @param[in] inout_list 入出力ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 // @param[in] data_in "data_in" 関数の式
 // @param[in] enable "enable" 関数の式
 // @param[in] enable_also "enable_also" 関数の式
@@ -257,6 +267,7 @@ CiLatchSRCell::CiLatchSRCell(CiCellLibrary* library,
 			     const vector<CiInoutPin*>& inout_list,
 			     const vector<CiBus*>& bus_list,
 			     const vector<CiBundle*>& bundle_list,
+			     const vector<CiTiming*>& timing_list,
 			     const Expr& data_in,
 			     const Expr& enable,
 			     const Expr& enable_also,
@@ -271,6 +282,7 @@ CiLatchSRCell::CiLatchSRCell(CiCellLibrary* library,
 	       inout_list,
 	       bus_list,
 	       bundle_list,
+	       timing_list,
 	       data_in,
 	       enable,
 	       enable_also,

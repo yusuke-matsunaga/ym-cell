@@ -25,6 +25,7 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] inout_list 入出力ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 // @param[in] next_state "next_state" 関数の式
 // @param[in] clocked_on "clocked_on" 関数の式
 // @param[in] clocked_on_also "clocked_on_also" 関数の式
@@ -37,6 +38,7 @@ CiFFCell::CiFFCell(CiCellLibrary* library,
 		   const vector<CiInoutPin*>& inout_list,
 		   const vector<CiBus*>& bus_list,
 		   const vector<CiBundle*>& bundle_list,
+		   const vector<CiTiming*>& timing_list,
 		   const Expr& next_state,
 		   const Expr& clocked_on,
 		   const Expr& clocked_on_also,
@@ -48,6 +50,7 @@ CiFFCell::CiFFCell(CiCellLibrary* library,
 	 vector<CiInternalPin*>(),
 	 bus_list,
 	 bundle_list,
+	 timing_list,
 	 alloc),
   mNextState(next_state),
   mClock(clocked_on),
@@ -100,21 +103,17 @@ CiFFCell::clock2_expr() const
 // @param[in] library 親のセルライブラリ
 // @param[in] name 名前
 // @param[in] area 面積
-// @param[in] ni 入力ピン数
-// @param[in] no 出力ピン数
-// @param[in] nio 入出力ピン数
-// @param[in] nb バス数
-// @param[in] nc バンドル数
-// @param[in] output_array 出力の情報の配列(*1)
-// @param[in] logic_array 出力の論理式の配列
-// @param[in] tristate_array トライステート条件の論理式の配列
+// @param[in] input_list 入力ピンのリスト
+// @param[in] output_list 出力ピンのリスト
+// @param[in] inout_list 入出力ピンのリスト
+// @param[in] bus_list バスのリスト
+// @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 // @param[in] next_state "next_state" 関数の式
 // @param[in] clocked_on "clocked_on" 関数の式
 // @param[in] clocked_on_also "clocked_on_also" 関数の式
 // @param[in] clear "clear" 関数の式
 // @param[in] alloc メモリアロケータ
-// *1: - false 論理式なし
-//     - true 論理式あり
 CiFFRCell::CiFFRCell(CiCellLibrary* library,
 		     const ShString& name,
 		     ClibArea area,
@@ -123,6 +122,7 @@ CiFFRCell::CiFFRCell(CiCellLibrary* library,
 		     const vector<CiInoutPin*>& inout_list,
 		     const vector<CiBus*>& bus_list,
 		     const vector<CiBundle*>& bundle_list,
+		     const vector<CiTiming*>& timing_list,
 		     const Expr& next_state,
 		     const Expr& clocked_on,
 		     const Expr& clocked_on_also,
@@ -134,6 +134,7 @@ CiFFRCell::CiFFRCell(CiCellLibrary* library,
 	   inout_list,
 	   bus_list,
 	   bundle_list,
+	   timing_list,
 	   next_state,
 	   clocked_on,
 	   clocked_on_also,
@@ -176,6 +177,7 @@ CiFFRCell::clear_expr() const
 // @param[in] inout_list 入出力ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 // @param[in] next_state "next_state" 関数の式
 // @param[in] clocked_on "clocked_on" 関数の式
 // @param[in] clocked_on_also "clocked_on_also" 関数の式
@@ -189,6 +191,7 @@ CiFFSCell::CiFFSCell(CiCellLibrary* library,
 		     const vector<CiInoutPin*>& inout_list,
 		     const vector<CiBus*>& bus_list,
 		     const vector<CiBundle*>& bundle_list,
+		     const vector<CiTiming*>& timing_list,
 		     const Expr& next_state,
 		     const Expr& clocked_on,
 		     const Expr& clocked_on_also,
@@ -200,6 +203,7 @@ CiFFSCell::CiFFSCell(CiCellLibrary* library,
 	   inout_list,
 	   bus_list,
 	   bundle_list,
+	   timing_list,
 	   next_state,
 	   clocked_on,
 	   clocked_on_also,
@@ -242,6 +246,7 @@ CiFFSCell::preset_expr() const
 // @param[in] inout_list 入出力ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 // @param[in] next_state "next_state" 関数の式
 // @param[in] clocked_on "clocked_on" 関数の式
 // @param[in] clocked_on_also "clocked_on_also" 関数の式
@@ -258,6 +263,7 @@ CiFFSRCell::CiFFSRCell(CiCellLibrary* library,
 		       const vector<CiInoutPin*>& inout_list,
 		       const vector<CiBus*>& bus_list,
 		       const vector<CiBundle*>& bundle_list,
+		       const vector<CiTiming*>& timing_list,
 		       const Expr& next_state,
 		       const Expr& clocked_on,
 		       const Expr& clocked_on_also,
@@ -272,6 +278,7 @@ CiFFSRCell::CiFFSRCell(CiCellLibrary* library,
 	    inout_list,
 	    bus_list,
 	    bundle_list,
+	    timing_list,
 	    next_state,
 	    clocked_on,
 	    clocked_on_also,

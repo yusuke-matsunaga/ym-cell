@@ -652,6 +652,7 @@ CiCellLibrary::set_cell_list(const vector<CiCell*>& cell_list,
 // @param[in] inout_list 入出力ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 CiCell*
 CiCellLibrary::new_logic_cell(const string& name,
 			      ClibArea area,
@@ -659,7 +660,8 @@ CiCellLibrary::new_logic_cell(const string& name,
 			      const vector<CiOutputPin*>& output_list,
 			      const vector<CiInoutPin*>& inout_list,
 			      const vector<CiBus*>& bus_list,
-			      const vector<CiBundle*>& bundle_list)
+			      const vector<CiBundle*>& bundle_list,
+			      const vector<CiTiming*>& timing_list)
 {
   void* p = mAlloc.get_memory(sizeof(CiLogicCell));
   CiCell* cell = new (p) CiLogicCell(this, ShString(name), area,
@@ -668,6 +670,7 @@ CiCellLibrary::new_logic_cell(const string& name,
 				     inout_list,
 				     bus_list,
 				     bundle_list,
+				     timing_list,
 				     mAlloc);
 
   return cell;
@@ -681,6 +684,7 @@ CiCellLibrary::new_logic_cell(const string& name,
 // @param[in] inout_list 入出力ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 // @param[in] next_state "next_state" 関数の式
 // @param[in] clocked_on "clocked_on" 関数の式
 // @param[in] clocked_on_also "clocked_on_also" 関数の式
@@ -694,6 +698,7 @@ CiCellLibrary::new_ff_cell(const string& name,
 			   const vector<CiInoutPin*>& inout_list,
 			   const vector<CiBus*>& bus_list,
 			   const vector<CiBundle*>& bundle_list,
+			   const vector<CiTiming*>& timing_list,
 			   const Expr& next_state,
 			   const Expr& clocked_on,
 			   const Expr& clocked_on_also,
@@ -717,6 +722,7 @@ CiCellLibrary::new_ff_cell(const string& name,
 				inout_list,
 				bus_list,
 				bundle_list,
+				timing_list,
 				next_state,
 				clocked_on,
 				clocked_on_also,
@@ -734,6 +740,7 @@ CiCellLibrary::new_ff_cell(const string& name,
 			       inout_list,
 			       bus_list,
 			       bundle_list,
+			       timing_list,
 			       next_state,
 			       clocked_on,
 			       clocked_on_also,
@@ -750,6 +757,7 @@ CiCellLibrary::new_ff_cell(const string& name,
 			       inout_list,
 			       bus_list,
 			       bundle_list,
+			       timing_list,
 			       next_state,
 			       clocked_on,
 			       clocked_on_also,
@@ -764,6 +772,7 @@ CiCellLibrary::new_ff_cell(const string& name,
 			      inout_list,
 			      bus_list,
 			      bundle_list,
+			      timing_list,
 			      next_state,
 			      clocked_on,
 			      clocked_on_also,
@@ -782,6 +791,7 @@ CiCellLibrary::new_ff_cell(const string& name,
 // @param[in] inout_list 入出力ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 // @param[in] data_in "data_in" 関数の式
 // @param[in] enable "enable" 関数の式
 // @param[in] enable_also "enable_also" 関数の式
@@ -799,6 +809,7 @@ CiCellLibrary::new_latch_cell(const string& name,
 			      const vector<CiInoutPin*>& inout_list,
 			      const vector<CiBus*>& bus_list,
 			      const vector<CiBundle*>& bundle_list,
+			      const vector<CiTiming*>& timing_list,
 			      const Expr& data_in,
 			      const Expr& enable,
 			      const Expr& enable_also,
@@ -822,6 +833,7 @@ CiCellLibrary::new_latch_cell(const string& name,
 				   inout_list,
 				   bus_list,
 				   bundle_list,
+				   timing_list,
 				   data_in,
 				   enable,
 				   enable_also,
@@ -839,6 +851,7 @@ CiCellLibrary::new_latch_cell(const string& name,
 				  inout_list,
 				  bus_list,
 				  bundle_list,
+				  timing_list,
 				  data_in,
 				  enable,
 				  enable_also,
@@ -855,6 +868,7 @@ CiCellLibrary::new_latch_cell(const string& name,
 				  inout_list,
 				  bus_list,
 				  bundle_list,
+				  timing_list,
 				  data_in,
 				  enable,
 				  enable_also,
@@ -869,6 +883,7 @@ CiCellLibrary::new_latch_cell(const string& name,
 				 inout_list,
 				 bus_list,
 				 bundle_list,
+				 timing_list,
 				 data_in,
 				 enable,
 				 enable_also,
@@ -888,6 +903,7 @@ CiCellLibrary::new_latch_cell(const string& name,
 // @param[in] internal_list 内部ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 CiCell*
 CiCellLibrary::new_fsm_cell(const string& name,
 			    ClibArea area,
@@ -896,7 +912,8 @@ CiCellLibrary::new_fsm_cell(const string& name,
 			    const vector<CiInoutPin*>& inout_list,
 			    const vector<CiInternalPin*>& internal_list,
 			    const vector<CiBus*>& bus_list,
-			    const vector<CiBundle*>& bundle_list)
+			    const vector<CiBundle*>& bundle_list,
+			    const vector<CiTiming*>& timing_list)
 {
   void* p = mAlloc.get_memory(sizeof(CiFsmCell));
   CiCell* cell = new (p) CiFsmCell(this, ShString(name), area,
@@ -906,6 +923,7 @@ CiCellLibrary::new_fsm_cell(const string& name,
 				   internal_list,
 				   bus_list,
 				   bundle_list,
+				   timing_list,
 				   mAlloc);
 
   return cell;
@@ -1123,20 +1141,6 @@ CiCellLibrary::new_timing_lut2(ClibTimingType timing_type,
 					  fall_propagation);
 
   return timing;
-}
-
-// @brief タイミング情報のリストを設定する．
-// @param[in] cell セル
-// @param[in] timing_list タイミング情報のリスト
-void
-CiCellLibrary::set_timing_list(CiCell* cell,
-			       const vector<CiTiming*>& timing_list)
-{
-  cell->mTimingList.init(timing_list, mAlloc);
-
-  for ( int id = 0; id < timing_list.size(); ++ id ) {
-    timing_list[id]->mId = id;
-  }
 }
 
 // @brief タイミング情報をセットする．

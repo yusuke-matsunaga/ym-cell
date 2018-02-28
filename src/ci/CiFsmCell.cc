@@ -26,6 +26,7 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] internal_list 内部ピンのリスト
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
+// @param[in] timing_list タイミング情報のリスト
 // @param[in] alloc メモリアロケータ
 CiFsmCell::CiFsmCell(CiCellLibrary* library,
 		     const ShString& name,
@@ -36,6 +37,7 @@ CiFsmCell::CiFsmCell(CiCellLibrary* library,
 		     const vector<CiInternalPin*>& internal_list,
 		     const vector<CiBus*>& bus_list,
 		     const vector<CiBundle*>& bundle_list,
+		     const vector<CiTiming*>& timing_list,
 		     Alloc& alloc) :
   CiCell(library, name, area,
 	 input_list,
@@ -44,6 +46,7 @@ CiFsmCell::CiFsmCell(CiCellLibrary* library,
 	 internal_list,
 	 bus_list,
 	 bundle_list,
+	 timing_list,
 	 alloc)
 {
 }

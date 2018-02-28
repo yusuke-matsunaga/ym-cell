@@ -34,6 +34,7 @@ protected:
   /// @param[in] inout_list 入出力ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   /// @param[in] next_state "next_state" 関数の式
   /// @param[in] clocked_on "clocked_on" 関数の式
   /// @param[in] clocked_on_also "clocked_on_also" 関数の式
@@ -46,6 +47,7 @@ protected:
 	   const vector<CiInoutPin*>& inout_list,
 	   const vector<CiBus*>& bus_list,
 	   const vector<CiBundle*>& bundle_list,
+	   const vector<CiTiming*>& timing_list,
 	   const Expr& next_state,
 	   const Expr& clocked_on,
 	   const Expr& clocked_on_also,
@@ -122,6 +124,7 @@ protected:
   /// @param[in] inout_list 入出力ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   /// @param[in] next_state "next_state" 関数の式
   /// @param[in] clocked_on "clocked_on" 関数の式
   /// @param[in] clocked_on_also "clocked_on_also" 関数の式
@@ -135,6 +138,7 @@ protected:
 	    const vector<CiInoutPin*>& inout_list,
 	    const vector<CiBus*>& bus_list,
 	    const vector<CiBundle*>& bundle_list,
+	    const vector<CiTiming*>& timing_list,
 	    const Expr& next_state,
 	    const Expr& clocked_on,
 	    const Expr& clocked_on_also,
@@ -194,6 +198,7 @@ protected:
   /// @param[in] inout_list 入出力ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   /// @param[in] next_state "next_state" 関数の式
   /// @param[in] clocked_on "clocked_on" 関数の式
   /// @param[in] clocked_on_also "clocked_on_also" 関数の式
@@ -209,6 +214,7 @@ protected:
 	    const vector<CiInoutPin*>& inout_list,
 	    const vector<CiBus*>& bus_list,
 	    const vector<CiBundle*>& bundle_list,
+	    const vector<CiTiming*>& timing_list,
 	    const Expr& next_state,
 	    const Expr& clocked_on,
 	    const Expr& clocked_on_also,
@@ -268,6 +274,7 @@ protected:
   /// @param[in] inout_list 入出力ピンのリスト
   /// @param[in] bus_list バスのリスト
   /// @param[in] bundle_list バンドルのリスト
+  /// @param[in] timing_list タイミング情報のリスト
   /// @param[in] next_state "next_state" 関数の式
   /// @param[in] clocked_on "clocked_on" 関数の式
   /// @param[in] clocked_on_also "clocked_on_also" 関数の式
@@ -284,6 +291,7 @@ protected:
 	     const vector<CiInoutPin*>& inout_list,
 	     const vector<CiBus*>& bus_list,
 	     const vector<CiBundle*>& bundle_list,
+	     const vector<CiTiming*>& timing_list,
 	     const Expr& next_state,
 	     const Expr& clocked_on,
 	     const Expr& clocked_on_also,
