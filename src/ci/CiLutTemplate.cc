@@ -35,24 +35,6 @@ CiLutTemplate::name() const
   return mName;
 }
 
-// @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
-void
-CiLutTemplate::dump(ODO& s) const
-{
-  ymuint8 d = dimension();
-  s << name()
-    << d;
-  for (ymuint i = 0; i < d; ++ i) {
-    s << static_cast<ymuint8>(variable_type(i));
-    ymuint8 n = index_num(i);
-    s << n;
-    for (ymuint j = 0; j < n; ++ j) {
-      s << index(i, j);
-    }
-  }
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLutTemplate1D

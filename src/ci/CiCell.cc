@@ -26,106 +26,141 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief コンストラクタ
 // @param[in] library 親のセルライブラリ
-// @param[in] id ID番号
 // @param[in] name 名前
 // @param[in] area 面積
-// @param[in] ni 入力ピン数
-// @param[in] no 出力ピン数
-// @param[in] nio 入出力ピン数
-// @param[in] nit 内部ピン数
-// @param[in] nb バス数
-// @param[in] nc バンドル数
-// @param[in] output_array 出力の情報の配列(*1)
-// @param[in] logic_array 出力の論理式の配列
-// @param[in] tristated_array トライステート条件の論理式の配列
+// @param[in] input_list 入力ピンのリスト
+// @param[in] output_list 出力ピンのリスト
+// @param[in] inout_list 入出力ピンのリスト
+// @param[in] internal_list 内部ピンのリスト
+// @param[in] bus_list バスのリスト
+// @param[in] bundle_list バンドルのリスト
 // @param[in] alloc メモリアロケータ
-// *1: - false 論理式なし
-//     - true 論理式あり
 CiCell::CiCell(CiCellLibrary* library,
-	       ymuint id,
 	       const ShString& name,
 	       ClibArea area,
-	       ymuint ni,
-	       ymuint no,
-	       ymuint nio,
-	       ymuint nit,
-	       ymuint nb,
-	       ymuint nc,
-	       const vector<bool>& output_array,
-	       const vector<Expr>& logic_array,
-	       const vector<Expr>& tristate_array,
+	       const vector<CiInputPin*>& input_list,
+	       const vector<CiOutputPin*>& output_list,
+	       const vector<CiInoutPin*>& inout_list,
+	       const vector<CiInternalPin*>& internal_list,
+	       const vector<CiBus*>& bus_list,
+	       const vector<CiBundle*>& bundle_list,
 	       Alloc& alloc)
 {
   mLibrary = library;
 
-  mId = id;
   mName = name;
   mArea = area;
 
-  ymuint ni2 = ni + nio;
-  ymuint no2 = no + nio;
+  mInputNum = input_list.size();
+  mOutputNum = output_list.size();
+  mInOutNum = inout_list.size();
+  mInternalNum = internal_list.size();
 
-  mPinNum = ni + no + nio + nit;
-  {
+  int ni2 = mInputNum + mInOutNum;
+  int no2 = mOutputNum + mInOutNum;
+
+  mPinNum = mInputNum + mOutputNum + mInOutNum + mInternalNum;
+  if ( mPinNum > 0 ) {
     void* p = alloc.get_memory(sizeof(CiCellPin*) * mPinNum);
     mPinArray = new (p) CiCellPin*[mPinNum];
   }
+  else {
+    mPinArray = nullptr;
+  }
 
-  mInputNum = ni;
-  {
+  if ( ni2 > 0 ) {
     void* p = alloc.get_memory(sizeof(CiCellPin*) * ni2);
     mInputArray = new (p) CiCellPin*[ni2];
   }
+  else {
+    mInputArray = nullptr;
+  }
 
-  mOutputNum = no;
-  {
+  if ( no2 > 0 ) {
     void* q = alloc.get_memory(sizeof(CiCellPin*) * no2);
     mOutputArray = new (q) CiCellPin*[no2];
   }
+  else {
+    mOutputArray = nullptr;
+  }
 
-  mInternalNum = nit;
-  if ( nit > 0 ) {
-    void* p = alloc.get_memory(sizeof(CiCellPin*) * nit);
-    mInternalArray = new (p) CiCellPin*[nit];
+  if ( mInternalNum > 0 ) {
+    void* p = alloc.get_memory(sizeof(CiCellPin*) * mInternalNum);
+    mInternalArray = new (p) CiCellPin*[mInternalNum];
   }
   else {
     mInternalArray = nullptr;
   }
 
-  {
+  if ( ni2 > 0 && no2 > 0 ) {
     int n = ni2 * no2 * 2;
     void* s = alloc.get_memory(sizeof(const CiTimingList) * n);
     mTimingMap = new (s) CiTimingList[n];
   }
+  else {
+    mTimingMap = nullptr;
+  }
 
   // バス，バンドル関係は未完
 
-  mBusNum = nb;
+  mBusNum = bus_list.size();
 
-  mBundleNum = nc;
+  mBundleNum = bundle_list.size();
 
-  void* x = alloc.get_memory(sizeof(ymuint8) * no2);
-  mLTArray = new (x) ymuint8[no2];
+  int pin_id = 0;
+  for ( int i = 0; i < mInputNum; ++ i ) {
+    CiInputPin* pin = input_list[i];
 
-  void* t = alloc.get_memory(sizeof(Expr) * no2);
-  mLogicArray = new (t) Expr[no2];
+    pin->mCell = this;
+    mLibrary->reg_pin(pin);
 
-  void* u = alloc.get_memory(sizeof(Expr) * no2);
-  mTristateArray = new (u) Expr[no2];
+    mPinArray[pin_id] = pin;
+    pin->mId = pin_id; ++ pin_id;
 
-  for (ymuint i = 0; i < no2; ++ i) {
-    ymuint8 val = 0U;
-    if ( output_array[i] ) {
-      if ( !tristate_array[i].is_zero() ) {
-	val = 2U;
-      }
-      else {
-	val = 1U;
-      }
-    }
-    mLTArray[i] = val;
-    mLogicArray[i] = logic_array[i];
-    mTristateArray[i] = tristate_array[i];
+    mInputArray[i] = pin;
+    pin->mInputId = i;
+  }
+
+  for ( int i = 0; i < mOutputNum; ++ i ) {
+    CiOutputPin* pin = output_list[i];
+
+    pin->mCell = this;
+    mLibrary->reg_pin(pin);
+
+    mPinArray[pin_id] = pin;
+    pin->mId = pin_id; ++ pin_id;
+
+    mOutputArray[i] = pin;
+    pin->mOutputId = i;
+  }
+
+  for ( int i = 0; i < mInOutNum; ++ i ) {
+    CiInoutPin* pin = inout_list[i];
+
+    pin->mCell = this;
+    mLibrary->reg_pin(pin);
+
+    mPinArray[pin_id] = pin;
+    pin->mId = pin_id; ++ pin_id;
+
+    mInputArray[i + mInputNum] = pin;
+    pin->mInputId = i + mInputNum;
+
+    mOutputArray[i + mOutputNum] = pin;
+    pin->mOutputId = i + mOutputNum;
+  }
+
+  for ( int i = 0; i < mInternalNum; ++ i ) {
+    CiInternalPin* pin = internal_list[i];
+
+    pin->mCell = this;
+    mLibrary->reg_pin(pin);
+
+    mPinArray[pin_id] = pin;
+    pin->mId = pin_id; ++ pin_id;
+
+    mInternalArray[i] = pin;
+    pin->mInternalId = i;
   }
 }
 
@@ -137,7 +172,7 @@ CiCell::~CiCell()
 
 // @brief ID番号の取得
 // @note ここで返される番号は ClibCellLibrary::cell() の引数に対応する．
-ymuint
+int
 CiCell::id() const
 {
   return mId;
@@ -158,7 +193,7 @@ CiCell::area() const
 }
 
 // @brief ピン数の取得
-ymuint
+int
 CiCell::pin_num() const
 {
   return mPinNum;
@@ -167,7 +202,7 @@ CiCell::pin_num() const
 // @brief ピンの取得
 // @param[in] id ピン番号 ( 0 <= id < pin_num() )
 const ClibCellPin*
-CiCell::pin(ymuint id) const
+CiCell::pin(int id) const
 {
   return mPinArray[id];
 }
@@ -193,28 +228,28 @@ CiCell::pin(const char* name) const
 }
 
 // @brief 入力ピン数の取得
-ymuint
+int
 CiCell::input_num() const
 {
   return mInputNum;
 }
 
 // @brief 出力ピン数の取得
-ymuint
+int
 CiCell::output_num() const
 {
   return mOutputNum;
 }
 
 // @brief 入出力ピン数の取得
-ymuint
+int
 CiCell::inout_num() const
 {
-  return mPinNum - mInputNum - mOutputNum - mInternalNum;
+  return mInOutNum;
 }
 
 // @brief 内部ピン数の取得
-ymuint
+int
 CiCell::internal_num() const
 {
   return mInternalNum;
@@ -222,46 +257,52 @@ CiCell::internal_num() const
 
 // @brief 入力ピン+入出力ピン数の取得
 // @note input_num() + inout_num() に等しい．
-ymuint
+int
 CiCell::input_num2() const
 {
-  return mInputNum + inout_num();
+  return mInputNum + mInOutNum;
 }
 
 // @brief 入力ピンの取得
 // @param[in] pos 位置番号 ( 0 <= pos < input_num2() )
 const ClibCellPin*
-CiCell::input(ymuint pos) const
+CiCell::input(int pos) const
 {
+  ASSERT_COND( pos >= 0 && pos < input_num2() );
+
   return mInputArray[pos];
 }
 
 // @brief 出力ピン+入出力ピン数の取得
 // @note output_num() + inout_num() に等しい．
-ymuint
+int
 CiCell::output_num2() const
 {
-  return mOutputNum + inout_num();
+  return mOutputNum + mInOutNum;
 }
 
 // @brief 出力ピンの取得
 // @param[in] pos 位置番号 ( 0 <= pos < output_num2() )
 const ClibCellPin*
-CiCell::output(ymuint pos) const
+CiCell::output(int pos) const
 {
+  ASSERT_COND( pos >= 0 && pos < output_num2() );
+
   return mOutputArray[pos];
 }
 
 // @brief 内部ピンの取得
-// @param[in] internal_id 内部ピン番号 ( 0 <= internal_id < internal_num() )
+// @param[in] pos 内部ピン番号 ( 0 <= pos < internal_num() )
 const ClibCellPin*
-CiCell::internal(ymuint internal_id) const
+CiCell::internal(int pos) const
 {
-  return mInternalArray[internal_id];
+  ASSERT_COND( pos >= 0 && pos < internal_num() );
+
+  return mInternalArray[pos];
 }
 
 // @brief バス数の取得
-ymuint
+int
 CiCell::bus_num() const
 {
   return mBusNum;
@@ -270,7 +311,7 @@ CiCell::bus_num() const
 // @brief バスの取得
 // @param[in] pos 位置番号 ( 0 <= pos < bus_num() )
 const ClibBus*
-CiCell::bus(ymuint pos) const
+CiCell::bus(int pos) const
 {
   return &mBusArray[pos];
 }
@@ -287,7 +328,7 @@ CiCell::bus(const string& name) const
 }
 
 // @brief バンドル数の取得
-ymuint
+int
 CiCell::bundle_num() const
 {
   return mBundleNum;
@@ -296,7 +337,7 @@ CiCell::bundle_num() const
 // @brief バンドルの取得
 // @param[in] pos 位置番号 ( 0 <= pos < bundle_num() )
 const ClibBundle*
-CiCell::bundle(ymuint pos) const
+CiCell::bundle(int pos) const
 {
   return &mBundleArray[pos];
 }
@@ -329,11 +370,11 @@ CiCell::timing(int pos) const
 // @param[in] opos 終了ピン番号 ( 0 <= opos < output_num2() )
 // @param[in] timing_sense タイミング情報の摘要条件
 const ClibTimingList&
-CiCell::timing_num(ymuint ipos,
-		   ymuint opos,
-		   ClibTimingSense sense) const
+CiCell::timing_list(int ipos,
+		    int opos,
+		    ClibTimingSense sense) const
 {
-  ymuint base = (opos * input_num2() + ipos) * 2;
+  int base = (opos * input_num2() + ipos) * 2;
   switch ( sense ) {
   case kClibPosiUnate: base += 0; break;
   case kClibNegaUnate: base += 1; break;
@@ -381,16 +422,16 @@ CiCell::is_fsm() const
 // @brief 出力の論理式を持っている時に true を返す．
 // @param[in] pin_id 出力ピン番号 ( 0 <= pin_id < output_num2() )
 bool
-CiCell::has_logic(ymuint pin_id) const
+CiCell::has_logic(int pin_id) const
 {
-  return mLTArray[pin_id] != 0U;
+  return output(pin_id)->has_function();
 }
 
 // @brief 全ての出力が論理式を持っているときに true を返す．
 bool
 CiCell::has_logic() const
 {
-  for (ymuint i = 0; i < output_num2(); ++ i) {
+  for ( int i = 0; i < output_num2(); ++ i ) {
     if ( !has_logic(i) ) {
       return false;
     }
@@ -402,17 +443,17 @@ CiCell::has_logic() const
 // @param[in] pin_id 出力ピン番号 ( 0 <= pin_id < output_num2() )
 // @note 論理式中の変数番号は入力ピン番号に対応する．
 Expr
-CiCell::logic_expr(ymuint pin_id) const
+CiCell::logic_expr(int pin_id) const
 {
-  return mLogicArray[pin_id];
+  return output(pin_id)->function();
 }
 
 // @brief 出力がトライステート条件を持っている時に true を返す．
 // @param[in] pin_id 出力ピン番号 ( 0 <= pin_id < output_num2() )
 bool
-CiCell::has_tristate(ymuint pin_id) const
+CiCell::has_tristate(int pin_id) const
 {
-  return mLTArray[pin_id] == 2U;
+  return output(pin_id)->has_three_state();
 }
 
 // @brief トライステートセルの場合にトライステート条件式を返す．
@@ -420,9 +461,9 @@ CiCell::has_tristate(ymuint pin_id) const
 // @note 論理式中の変数番号は入力ピン番号に対応する．
 // @note 通常の論理セルの場合には定数0を返す．
 Expr
-CiCell::tristate_expr(ymuint pin_id) const
+CiCell::tristate_expr(int pin_id) const
 {
-  return mTristateArray[pin_id];
+  return output(pin_id)->three_state();
 }
 
 // @brief FFセルの場合にFFのピン情報を得る．
@@ -531,7 +572,7 @@ CiCell::preset_expr() const
 // @retval 0 "L"
 // @retval 1 "H"
 // @note FFセルとラッチセルの時に意味を持つ．
-ymuint
+int
 CiCell::clear_preset_var1() const
 {
   return 0;
@@ -541,130 +582,10 @@ CiCell::clear_preset_var1() const
 // @retval 0 "L"
 // @retval 1 "H"
 // @note FFセルとラッチセルの時に意味を持つ．
-ymuint
+int
 CiCell::clear_preset_var2() const
 {
   return 0;
-}
-
-// @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
-void
-CiCell::dump(ODO& s) const
-{
-  ymuint8 tid = 0;
-  if ( is_logic() ) {
-    tid = 0;
-  }
-  else if ( is_ff() ) {
-    tid = 1;
-  }
-  else if ( is_latch() ) {
-    tid = 2;
-  }
-  else if ( is_fsm() ) {
-    tid = 3;
-  }
-  else {
-    // 無視？
-    ASSERT_NOT_REACHED;
-  }
-  ymuint ni = input_num();
-  ymuint no = output_num();
-  ymuint nio = inout_num();
-  ymuint nit = internal_num();
-  ymuint nbus = bus_num();
-  ymuint nbundle = bundle_num();
-
-  s << tid
-    << name()
-    << area()
-    << ni
-    << no
-    << nio
-    << nit
-    << nbus
-    << nbundle;
-
-  ymuint no2 = no + nio;
-  for (ymuint opos = 0; opos < no2; ++ opos) {
-    s << has_logic()
-      << logic_expr(opos)
-      << tristate_expr(opos);
-  }
-
-  if ( is_ff() ) {
-    s << next_state_expr()
-      << clock_expr()
-      << clock2_expr()
-      << clear_expr()
-      << preset_expr()
-      << static_cast<ymuint8>(clear_preset_var1())
-      << static_cast<ymuint8>(clear_preset_var2());
-  }
-  else if ( is_latch() ) {
-    s << data_in_expr()
-      << enable_expr()
-      << enable2_expr()
-      << clear_expr()
-      << preset_expr()
-      << static_cast<ymuint8>(clear_preset_var1())
-      << static_cast<ymuint8>(clear_preset_var2());
-  }
-
-  // 入力ピンのダンプ
-  for (ymuint ipin = 0; ipin < ni; ++ ipin) {
-    input(ipin)->dump(s);
-  }
-
-  // 出力ピンのダンプ
-  for (ymuint opin = 0; opin < no; ++ opin) {
-    output(opin)->dump(s);
-  }
-
-  // 入出力ピンのダンプ
-  for (ymuint iopin = 0; iopin < nio; ++ iopin) {
-    output(iopin)->dump(s);
-  }
-
-  // 内部ピンのダンプ
-  for (ymuint itpin = 0; itpin < nit; ++ itpin) {
-    internal(itpin)->dump(s);
-  }
-
-  // タイミング情報のダンプ
-  ymuint nt = timing_num();
-  s << nt;
-  for (ymuint i = 0; i < nt; ++ i) {
-    timing(i)->dump(s);
-  }
-
-  // ちょっと効率が悪いけど線形探索を用いている．
-  // 効率が気になるならハッシュ関数を用いればよい．
-  for (ymuint ipos = 0; ipos < ni + nio; ++ ipos) {
-    for (ymuint opos = 0; opos < no + nio; ++ opos) {
-      ymuint np = timing_num(ipos, opos, kClibPosiUnate);
-      s << np;
-      for (ymuint i = 0; i < np; ++ i) {
-	const ClibTiming* timing1 = timing(ipos, opos, kClibPosiUnate, i);
-	for (ymuint j = 0; j < nt; ++ j) {
-	  if ( timing(j) == timing1 ) {
-	    s << j;
-	  }
-	}
-      }
-      ymuint nn = timing_num(ipos, opos, kClibNegaUnate);
-      s << nn;
-      for (ymuint i = 0; i < nn; ++ i) {
-	const ClibTiming* timing1 = timing(ipos, opos, kClibNegaUnate, i);
-	for (ymuint j = 0; j < nt; ++ j) {
-	  if ( timing(j) == timing1 ) {
-	    s << j;
-	  }
-	}
-      }
-    }
-  }
 }
 
 // @brief セルグループを設定する．

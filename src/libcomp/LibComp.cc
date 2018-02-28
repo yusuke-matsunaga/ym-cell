@@ -28,11 +28,11 @@ Expr
 xform_expr(const Expr& expr,
 	   const NpnMapM& map)
 {
-  ymuint ni = map.input_num();
-  ymuint no = map.output_num();
+  int ni = map.input_num();
+  int no = map.output_num();
   ASSERT_COND( no == 1 );
   HashMap<VarId, Expr> vlm;
-  for (ymuint i = 0; i < ni; ++ i) {
+  for ( int i = 0; i < ni; ++ i ) {
     VarId src_var(i);
     NpnVmap imap = map.imap(src_var);
     VarId dst_var = imap.var();
@@ -48,13 +48,13 @@ xform_expr(const Expr& expr,
 
 // has_q, has_xq, has_clear, has_preset をエンコードする．
 inline
-ymuint
+int
 encode(bool has_q,
        bool has_xq,
        bool has_clear,
        bool has_preset)
 {
-  ymuint ans = 0;
+  int ans = 0;
   if ( has_q ) {
     if ( has_xq ) {
       ans = 2;
@@ -77,16 +77,16 @@ encode(bool has_q,
   return ans;
 }
 
-// 整数から　has_q, has_xq, has_clear, has_preset をデコードする．
+// 整数から has_q, has_xq, has_clear, has_preset をデコードする．
 inline
 void
-decode(ymuint val,
+decode(int val,
        bool& has_q,
        bool& has_xq,
        bool& has_clear,
        bool& has_preset)
 {
-  ymuint val1 = val >> 2;
+  int val1 = val >> 2;
   switch ( val1 ) {
   case 0:
     has_q = true;
@@ -101,8 +101,8 @@ decode(ymuint val,
     has_xq = true;
     break;
   }
-  has_clear = static_cast<bool>((val >> 0) & 1U);
-  has_preset = static_cast<bool>((val >> 1) & 1U);
+  has_clear = static_cast<bool>((val >> 0) & 1);
+  has_preset = static_cast<bool>((val >> 1) & 1);
 }
 
 END_NONAMESPACE
@@ -120,13 +120,11 @@ LibComp::LibComp()
 // @brief デストラクタ
 LibComp::~LibComp()
 {
-  for (vector<LcGroup*>::iterator p = mGroupList.begin();
-       p != mGroupList.end(); ++ p) {
-    delete *p;
+  for ( auto lcgroup: mGroupList ) {
+    delete lcgroup;
   }
-  for (vector<LcClass*>::iterator p = mClassList.begin();
-       p != mClassList.end(); ++ p) {
-    delete *p;
+  for ( auto lcclass: mClassList ) {
+    delete lcclass;
   }
 }
 
@@ -138,8 +136,9 @@ LibComp::pat_mgr() const
 }
 
 // @brief セルのグループ化，クラス化を行う．
+// @param[in] cell_list セルのリスト
 void
-LibComp::compile(CiCellLibrary& library)
+LibComp::compile(const vector<CiCell*>& cell_list)
 {
   mGroupList.clear();
   mGroupMap.clear();
@@ -159,16 +158,14 @@ LibComp::compile(CiCellLibrary& library)
   // ラッチの基本タイプを登録
   _latch_init();
 
-  // library に含まれるセルを登録する．
-  ymuint nc = library.cell_num();
-  for (ymuint i = 0; i < nc; ++ i) {
-    CiCell* cell = library._cell(i);
+  // セルを登録する．
+  for ( auto cell: cell_list ) {
     _add_cell(cell);
   }
 }
 
 // @brief セルグループの数を返す．
-ymuint
+int
 LibComp::group_num() const
 {
   return mGroupList.size();
@@ -177,14 +174,14 @@ LibComp::group_num() const
 // @brief セルグループを返す．
 // @param[in] id グループ番号 ( 0 <= id < group_num() )
 LcGroup*
-LibComp::group(ymuint id) const
+LibComp::group(int id) const
 {
-  ASSERT_COND( id < group_num() );
+  ASSERT_COND( id >= 0 && id < group_num() );
   return mGroupList[id];
 }
 
 // @brief NPN同値クラスの数を返す．
-ymuint
+int
 LibComp::npn_class_num() const
 {
   return mClassList.size();
@@ -193,9 +190,9 @@ LibComp::npn_class_num() const
 // @brief NPN同値クラスを返す．
 // @param[in] id クラス番号 ( 0 <= id < npn_class_num() )
 LcClass*
-LibComp::npn_class(ymuint id) const
+LibComp::npn_class( int id) const
 {
-  ASSERT_COND( id < npn_class_num() );
+  ASSERT_COND( id >= 0 && id < npn_class_num() );
   return mClassList[id];
 }
 
@@ -205,10 +202,10 @@ LibComp::npn_class(ymuint id) const
 // - 1: 定数1
 // - 2: バッファ
 // - 3: インバーター
-ymuint
-LibComp::logic_group(ymuint id) const
+int
+LibComp::logic_group(int id) const
 {
-  ASSERT_COND( id < 4 );
+  ASSERT_COND( id >= 0 && id < 4 );
   return mLogicGroup[id];
 }
 
@@ -219,13 +216,13 @@ LibComp::logic_group(ymuint id) const
 // @param[in] has_preset プリセット端子の有無
 //
 // has_q == false && has_xq == false は不適
-ymuint
+int
 LibComp::ff_class(bool has_q,
 		  bool has_xq,
 		  bool has_clear,
 		  bool has_preset) const
 {
-  ymuint i = encode(has_q, has_xq, has_clear, has_preset);
+  int i = encode(has_q, has_xq, has_clear, has_preset);
   return mFFClass[i];
 }
 
@@ -236,13 +233,13 @@ LibComp::ff_class(bool has_q,
 // @param[in] has_preset プリセット端子の有無
 //
 // has_q == false && has_xq == false は不適
-ymuint
+int
 LibComp::latch_class(bool has_q,
 		     bool has_xq,
 		     bool has_clear,
 		     bool has_preset)
 {
-  ymuint i = encode(has_q, has_xq, has_clear, has_preset);
+  int i = encode(has_q, has_xq, has_clear, has_preset);
   return mLatchClass[i];
 }
 
@@ -270,18 +267,18 @@ LibComp::_logic_init()
   }
 
   // AND2 〜 AND8 のシグネチャを登録しておく．
-  for (ymuint ni = 2; ni <= 8; ++ ni) {
+  for ( int ni: {2, 3, 4, 5, 6, 7, 8} ) {
     Expr and_expr = Expr::posi_literal(VarId(0));
-    for (ymuint i = 1; i < ni; ++ i) {
+    for ( int i = 1; i < ni; ++ i ) {
       and_expr &= Expr::posi_literal(VarId(i));
     }
     _find_group(and_expr);
   }
 
   // XOR2 〜 XOR4 のシグネチャを登録しておく．
-  for (ymuint ni = 2; ni <= 4; ++ ni) {
+  for ( int ni: {2, 3, 4} ) {
     Expr xor_expr = Expr::posi_literal(VarId(0));
-    for (ymuint i = 1; i < ni; ++ i) {
+    for ( int i = 1; i < ni; ++ i ) {
       xor_expr ^= Expr::posi_literal(VarId(i));
     }
     _find_group(xor_expr);
@@ -342,7 +339,7 @@ LibComp::_logic_init()
 void
 LibComp::_ff_init()
 {
-  for (ymuint i = 0; i < 12; ++ i) {
+  for ( int i = 0; i < 12; ++ i ) {
     bool has_q;
     bool has_xq;
     bool has_clear;
@@ -360,7 +357,7 @@ LibComp::_ff_init()
 void
 LibComp::_latch_init()
 {
-  for (ymuint i = 0; i < 12; ++ i) {
+  for ( int i = 0; i < 12; ++ i ) {
     bool has_q;
     bool has_xq;
     bool has_clear;
@@ -384,8 +381,8 @@ LibComp::_add_cell(CiCell* cell)
     // ひとつでも論理式を持たない出力があるセルは独立したグループとなる．
     fgroup = _new_group();
 
-    ymuint ni = cell->input_num2();
-    ymuint no = cell->output_num2();
+    int ni = cell->input_num2();
+    int no = cell->output_num2();
     LcClass* fclass = _new_class(LcSignature());
     NpnMapM xmap;
     xmap.set_identity(ni, no);
@@ -417,7 +414,7 @@ LcGroup*
 LibComp::_find_group(const LcSignature& sig)
 {
   string sig_str = sig.str();
-  ymuint fgid;
+  int fgid;
   if ( mGroupMap.find(sig_str, fgid) ) {
     // 既に登録されていた．
     return mGroupList[fgid];
@@ -432,7 +429,7 @@ LibComp::_find_group(const LcSignature& sig)
   LcSignature rep_sig(sig, xmap);
   string rep_sig_str = rep_sig.str();
   LcClass* fclass = nullptr;
-  ymuint fcid;
+  int fcid;
   if ( mClassMap.find(rep_sig_str, fcid) ) {
     // 登録されていた．
     fclass = mClassList[fcid];
@@ -469,7 +466,7 @@ LibComp::_find_group(const Expr& expr)
 LcGroup*
 LibComp::_new_group()
 {
-  ymuint new_id = mGroupList.size();
+  int new_id = mGroupList.size();
   LcGroup* fgroup = new LcGroup(new_id);
   mGroupList.push_back(fgroup);
 
@@ -481,7 +478,7 @@ LibComp::_new_group()
 LcClass*
 LibComp::_new_class(const LcSignature& rep_sig)
 {
-  ymuint new_id = mClassList.size();
+  int new_id = mClassList.size();
   LcClass* fclass = new LcClass(new_id, rep_sig);
   mClassList.push_back(fclass);
   _find_idmap_list(rep_sig, fclass->mIdmapList);
@@ -530,7 +527,7 @@ LibComp::_reg_expr(const Expr& expr,
   // fclass->rep_func() を用いる理由は論理式に現れる変数が
   // 真のサポートとは限らないから
 
-  ymuint ni = fclass->rep_sig().input_num();
+  int ni = fclass->rep_sig().input_num();
 
   if ( ni <= 1 ) {
     // 定数関数およびバッファ，インバータは別に処理する．
@@ -556,7 +553,7 @@ LibComp::display(ostream& s) const
 {
   // セルグループの情報を出力する．
   s << "*** Clib Group BEGIN ***" << endl;
-  for (ymuint i = 0; i < group_num(); ++ i) {
+  for ( int i = 0; i < group_num(); ++ i ) {
     const LcGroup* group = this->group(i);
     ASSERT_COND( group->id() == i );
     s << "GROUP#" << i
@@ -565,9 +562,7 @@ LibComp::display(ostream& s) const
       << endl;
     s << "  CELL:";
     const vector<CiCell*>& cell_list = group->cell_list();
-    for (vector<CiCell*>::const_iterator p = cell_list.begin();
-	 p != cell_list.end(); ++ p) {
-      CiCell* cell = *p;
+    for ( auto cell: cell_list ) {
       s << " " << cell->name();
     }
     s << endl;
@@ -577,7 +572,7 @@ LibComp::display(ostream& s) const
 
   // NPN同値クラスの情報を出力する．
   s << "*** NPN Class BEGIN ***" << endl;
-  for (ymuint i = 0; i < npn_class_num(); ++ i) {
+  for ( int i = 0; i < npn_class_num(); ++ i ) {
     const LcClass* cclass = npn_class(i);
     ASSERT_COND( cclass->id() == i );
     s << "CLASS#" << i << ": ";
@@ -586,8 +581,8 @@ LibComp::display(ostream& s) const
     s << endl;
     s << "  equivalence = ";
     const vector<LcGroup*>& group_list = cclass->group_list();
-    for (ymuint j = 0; j < group_list.size(); ++ j) {
-	s << " GROUP#" << group_list[j]->id();
+    for ( auto group: group_list ) {
+      s << " GROUP#" << group->id();
     }
     s << endl;
   }

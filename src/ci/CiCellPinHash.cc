@@ -60,7 +60,7 @@ CiCellPinHash::add(CiCellPin* pin)
       for (CiCellPin* pin = old_table[i]; pin; ) {
 	CiCellPin* tmp = pin;
 	pin = pin->mLink;
-	ymuint pos = hash_func(tmp->mClib, tmp->mName) % mSize;
+	ymuint pos = hash_func(tmp->mCell, tmp->mName) % mSize;
 	tmp->mLink = mTable[pos];
 	mTable[pos] = tmp;
       }
@@ -68,7 +68,7 @@ CiCellPinHash::add(CiCellPin* pin)
     delete [] old_table;
   }
 
-  ymuint pos = hash_func(pin->mClib, pin->mName) % mSize;
+  ymuint pos = hash_func(pin->mCell, pin->mName) % mSize;
   pin->mLink = mTable[pos];
   mTable[pos] = pin;
   ++ mNum;
@@ -85,7 +85,7 @@ CiCellPinHash::get(const CiCell* cell,
 {
   ymuint pos = hash_func(cell, name) % mSize;
   for (CiCellPin* pin = mTable[pos]; pin; pin = pin->mLink) {
-    if ( pin->mClib == cell && pin->mName == name ) {
+    if ( pin->mCell == cell && pin->mName == name ) {
       return pin;
     }
   }

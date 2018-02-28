@@ -18,44 +18,36 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief コンストラクタ
 // @param[in] library 親のセルライブラリ
-// @param[in] id ID番号
 // @param[in] name 名前
 // @param[in] area 面積
-// @param[in] ni 入力ピン数
-// @param[in] no 出力ピン数
-// @param[in] nio 入出力ピン数
-// @param[in] nb バス数
-// @param[in] nc バンドル数
-// @param[in] output_array 出力の情報の配列(*1)
-// @param[in] logic_array 出力の論理式の配列
-// @param[in] tristated_array トライステート条件の論理式の配列
+// @param[in] input_list 入力ピンのリスト
+// @param[in] output_list 出力ピンのリスト
+// @param[in] inout_list 入出力ピンのリスト
+// @param[in] bus_list バスのリスト
+// @param[in] bundle_list バンドルのリスト
 // @param[in] data_in "data_in" 関数の式
 // @param[in] enable "enable" 関数の式
 // @param[in] enable_also "enable_also" 関数の式
 // @param[in] alloc メモリアロケータ
-// *1: - false 論理式なし
-//     - true 論理式あり
 CiLatchCell::CiLatchCell(CiCellLibrary* library,
-			 ymuint id,
 			 const ShString& name,
 			 ClibArea area,
-			 ymuint ni,
-			 ymuint no,
-			 ymuint nio,
-			 ymuint nb,
-			 ymuint nc,
-			 const vector<bool>& output_array,
-			 const vector<Expr>& logic_array,
-			 const vector<Expr>& tristate_array,
+			 const vector<CiInputPin*>& input_list,
+			 const vector<CiOutputPin*>& output_list,
+			 const vector<CiInoutPin*>& inout_list,
+			 const vector<CiBus*>& bus_list,
+			 const vector<CiBundle*>& bundle_list,
 			 const Expr& data_in,
 			 const Expr& enable,
 			 const Expr& enable_also,
 			 Alloc& alloc) :
-  CiCell(library, id, name, area,
-	 ni, no, nio, 0, nb, nc,
-	 output_array,
-	 logic_array,
-	 tristate_array,
+  CiCell(library, name, area,
+	 input_list,
+	 output_list,
+	 inout_list,
+	 vector<CiInternalPin*>(),
+	 bus_list,
+	 bundle_list,
 	 alloc),
   mDataIn(data_in),
   mEnable(enable),
@@ -106,46 +98,37 @@ CiLatchCell::enable2_expr() const
 
 // @brief コンストラクタ
 // @param[in] library 親のセルライブラリ
-// @param[in] id ID番号
 // @param[in] name 名前
 // @param[in] area 面積
-// @param[in] ni 入力ピン数
-// @param[in] no 出力ピン数
-// @param[in] nio 入出力ピン数
-// @param[in] nb バス数
-// @param[in] nc バンドル数
-// @param[in] output_array 出力の情報の配列(*1)
-// @param[in] logic_array 出力の論理式の配列
-// @param[in] tristated_array トライステート条件の論理式の配列
+// @param[in] input_list 入力ピンのリスト
+// @param[in] output_list 出力ピンのリスト
+// @param[in] inout_list 入出力ピンのリスト
+// @param[in] bus_list バスのリスト
+// @param[in] bundle_list バンドルのリスト
 // @param[in] data_in "data_in" 関数の式
 // @param[in] enable "enable" 関数の式
 // @param[in] enable_also "enable_also" 関数の式
 // @param[in] clear "clear" 関数の式
 // @param[in] alloc メモリアロケータ
-// *1: - false 論理式なし
-//     - true 論理式あり
 CiLatchRCell::CiLatchRCell(CiCellLibrary* library,
-			   ymuint id,
 			   const ShString& name,
 			   ClibArea area,
-			   ymuint ni,
-			   ymuint no,
-			   ymuint nio,
-			   ymuint nb,
-			   ymuint nc,
-			   const vector<bool>& output_array,
-			   const vector<Expr>& logic_array,
-			   const vector<Expr>& tristate_array,
+			   const vector<CiInputPin*>& input_list,
+			   const vector<CiOutputPin*>& output_list,
+			   const vector<CiInoutPin*>& inout_list,
+			   const vector<CiBus*>& bus_list,
+			   const vector<CiBundle*>& bundle_list,
 			   const Expr& data_in,
 			   const Expr& enable,
 			   const Expr& enable_also,
 			   const Expr& clear,
 			   Alloc& alloc) :
-  CiLatchCell(library, id, name, area,
-	      ni, no, nio, nb, nc,
-	      output_array,
-	      logic_array,
-	      tristate_array,
+  CiLatchCell(library, name, area,
+	      input_list,
+	      output_list,
+	      inout_list,
+	      bus_list,
+	      bundle_list,
 	      data_in,
 	      enable,
 	      enable_also,
@@ -181,17 +164,13 @@ CiLatchRCell::clear_expr() const
 
 // @brief コンストラクタ
 // @param[in] library 親のセルライブラリ
-// @param[in] id ID番号
 // @param[in] name 名前
 // @param[in] area 面積
-// @param[in] ni 入力ピン数
-// @param[in] no 出力ピン数
-// @param[in] nio 入出力ピン数
-// @param[in] nb バス数
-// @param[in] nc バンドル数
-// @param[in] output_array 出力の情報の配列(*1)
-// @param[in] logic_array 出力の論理式の配列
-// @param[in] tristated_array トライステート条件の論理式の配列
+// @param[in] input_list 入力ピンのリスト
+// @param[in] output_list 出力ピンのリスト
+// @param[in] inout_list 入出力ピンのリスト
+// @param[in] bus_list バスのリスト
+// @param[in] bundle_list バンドルのリスト
 // @param[in] data_in "data_in" 関数の式
 // @param[in] enable "enable" 関数の式
 // @param[in] enable_also "enable_also" 関数の式
@@ -200,27 +179,24 @@ CiLatchRCell::clear_expr() const
 // *1: - false 論理式なし
 //     - true 論理式あり
 CiLatchSCell::CiLatchSCell(CiCellLibrary* library,
-			   ymuint id,
 			   const ShString& name,
 			   ClibArea area,
-			   ymuint ni,
-			   ymuint no,
-			   ymuint nio,
-			   ymuint nb,
-			   ymuint nc,
-			   const vector<bool>& output_array,
-			   const vector<Expr>& logic_array,
-			   const vector<Expr>& tristate_array,
+			   const vector<CiInputPin*>& input_list,
+			   const vector<CiOutputPin*>& output_list,
+			   const vector<CiInoutPin*>& inout_list,
+			   const vector<CiBus*>& bus_list,
+			   const vector<CiBundle*>& bundle_list,
 			   const Expr& data_in,
 			   const Expr& enable,
 			   const Expr& enable_also,
 			   const Expr& preset,
 			   Alloc& alloc) :
-  CiLatchCell(library, id, name, area,
-	      ni, no, nio, nb, nc,
-	      output_array,
-	      logic_array,
-	      tristate_array,
+  CiLatchCell(library, name, area,
+	      input_list,
+	      output_list,
+	      inout_list,
+	      bus_list,
+	      bundle_list,
 	      data_in,
 	      enable,
 	      enable_also,
@@ -256,17 +232,13 @@ CiLatchSCell::preset_expr() const
 
 // @brief コンストラクタ
 // @param[in] library 親のセルライブラリ
-// @param[in] id ID番号
 // @param[in] name 名前
 // @param[in] area 面積
-// @param[in] ni 入力ピン数
-// @param[in] no 出力ピン数
-// @param[in] nio 入出力ピン数
-// @param[in] nb バス数
-// @param[in] nc バンドル数
-// @param[in] output_array 出力の情報の配列(*1)
-// @param[in] logic_array 出力の論理式の配列
-// @param[in] tristated_array トライステート条件の論理式の配列
+// @param[in] input_list 入力ピンのリスト
+// @param[in] output_list 出力ピンのリスト
+// @param[in] inout_list 入出力ピンのリスト
+// @param[in] bus_list バスのリスト
+// @param[in] bundle_list バンドルのリスト
 // @param[in] data_in "data_in" 関数の式
 // @param[in] enable "enable" 関数の式
 // @param[in] enable_also "enable_also" 関数の式
@@ -278,30 +250,27 @@ CiLatchSCell::preset_expr() const
 // *1: - false 論理式なし
 //     - true 論理式あり
 CiLatchSRCell::CiLatchSRCell(CiCellLibrary* library,
-			     ymuint id,
 			     const ShString& name,
 			     ClibArea area,
-			     ymuint ni,
-			     ymuint no,
-			     ymuint nio,
-			     ymuint nb,
-			     ymuint nc,
-			     const vector<bool>& output_array,
-			     const vector<Expr>& logic_array,
-			     const vector<Expr>& tristate_array,
+			     const vector<CiInputPin*>& input_list,
+			     const vector<CiOutputPin*>& output_list,
+			     const vector<CiInoutPin*>& inout_list,
+			     const vector<CiBus*>& bus_list,
+			     const vector<CiBundle*>& bundle_list,
 			     const Expr& data_in,
 			     const Expr& enable,
 			     const Expr& enable_also,
 			     const Expr& clear,
 			     const Expr& preset,
-			     ymuint clear_preset_var1,
-			     ymuint clear_preset_var2,
+			     int clear_preset_var1,
+			     int clear_preset_var2,
 			     Alloc& alloc) :
-  CiLatchRCell(library, id, name, area,
-	       ni, no, nio, nb, nc,
-	       output_array,
-	       logic_array,
-	       tristate_array,
+  CiLatchRCell(library, name, area,
+	       input_list,
+	       output_list,
+	       inout_list,
+	       bus_list,
+	       bundle_list,
 	       data_in,
 	       enable,
 	       enable_also,
@@ -337,7 +306,7 @@ CiLatchSRCell::preset_expr() const
 // @retval 0 "L"
 // @retval 1 "H"
 // @note FFセルとラッチセルの時に意味を持つ．
-ymuint
+int
 CiLatchSRCell::clear_preset_var1() const
 {
   return mClearPresetVal[0];
@@ -347,7 +316,7 @@ CiLatchSRCell::clear_preset_var1() const
 // @retval 0 "L"
 // @retval 1 "H"
 // @note FFセルとラッチセルの時に意味を持つ．
-ymuint
+int
 CiLatchSRCell::clear_preset_var2() const
 {
   return mClearPresetVal[1];

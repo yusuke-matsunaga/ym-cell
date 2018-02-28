@@ -37,7 +37,7 @@ public:
   ///  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
   ///  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
   ///  - pos_array[4] : 肯定出力のピン番号       (3bit)
-  ClibLatchInfo(ymuint pos_array[]);
+  ClibLatchInfo(int pos_array[]);
 
   /// @brief デストラクタ
   ~ClibLatchInfo();
@@ -52,21 +52,21 @@ public:
   /// @retval 0 なし
   /// @retval 1 positive edge
   /// @retval 2 negative edge
-  ymuint
+  int
   enable_sense() const;
 
   /// @brief クリア入力のタイプを返す．
   /// @retval 0 なし
   /// @retval 1 High sensitive
   /// @retval 2 Low sensitive
-  ymuint
+  int
   clear_sense() const;
 
   /// @brief プリセット入力のタイプを返す．
   /// @retval 0 なし
   /// @retval 1 High sensitive
   /// @retval 2 Low sensitive
-  ymuint
+  int
   preset_sense() const;
 
   /// @brief データ入力を持つとき true を返す．
@@ -86,25 +86,25 @@ public:
   has_preset() const;
 
   /// @brief データ入力のピン番号を返す．
-  ymuint
+  int
   data_pos() const;
 
   /// @brief イネーブル入力のピン番号を返す．
-  ymuint
+  int
   enable_pos() const;
 
   /// @brief クリア入力のピン番号を返す．
   /// @note クリア入力がない場合の値は不定
-  ymuint
+  int
   clear_pos() const;
 
   /// @brief プリセット入力のピン番号を返す．
   /// @note プリセット入力がない場合の値は不定
-  ymuint
+  int
   preset_pos() const;
 
   /// @brief 肯定出力のピン番号を返す．
-  ymuint
+  int
   q_pos() const;
 
 

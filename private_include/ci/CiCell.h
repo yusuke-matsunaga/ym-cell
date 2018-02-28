@@ -21,6 +21,10 @@ BEGIN_NAMESPACE_YM_CLIB
 
 class CiCellLibrary;
 class CiCellPin;
+class CiInputPin;
+class CiOutputPin;
+class CiInoutPin;
+class CiInternalPin;
 class CiBus;
 class CiBundle;
 class CiTiming;
@@ -39,34 +43,24 @@ protected:
 
   /// @brief コンストラクタ
   /// @param[in] library 親のセルライブラリ
-  /// @param[in] id ID番号
   /// @param[in] name 名前
   /// @param[in] area 面積
-  /// @param[in] ni 入力ピン数
-  /// @param[in] no 出力ピン数
-  /// @param[in] nio 入出力ピン数
-  /// @param[in] nit 内部ピン数
-  /// @param[in] nb バス数
-  /// @param[in] nc バンドル数
-  /// @param[in] output_array 出力の情報の配列(*1)
-  /// @param[in] logic_array 出力の論理式の配列
-  /// @param[in] tristated_array トライステート条件の論理式の配列
+  /// @param[in] input_list 入力ピンのリスト
+  /// @param[in] output_list 出力ピンのリスト
+  /// @param[in] inout_list 入出力ピンのリスト
+  /// @param[in] internal_list 内部ピンのリスト
+  /// @param[in] bus_list バスのリスト
+  /// @param[in] bundle_list バンドルのリスト
   /// @param[in] alloc メモリアロケータ
-  /// *1: - false 論理式なし
-  ///     - true 論理式あり
   CiCell(CiCellLibrary* library,
-	 ymuint id,
 	 const ShString& name,
 	 ClibArea area,
-	 ymuint ni,
-	 ymuint no,
-	 ymuint nio,
-	 ymuint nit,
-	 ymuint nb,
-	 ymuint nc,
-	 const vector<bool>& output_array,
-	 const vector<Expr>& logic_array,
-	 const vector<Expr>& tristate_array,
+	 const vector<CiInputPin*>& input_list,
+	 const vector<CiOutputPin*>& output_list,
+	 const vector<CiInoutPin*>& inout_list,
+	 const vector<CiInternalPin*>& internal_list,
+	 const vector<CiBus*>& bus_list,
+	 const vector<CiBundle*>& bundle_list,
 	 Alloc& alloc);
 
   /// @brief デストラクタ
@@ -82,7 +76,7 @@ public:
   /// @brief ID番号の取得
   /// @note ここで返される番号は ClibCellLibrary::cell() の引数に対応する．
   virtual
-  ymuint
+  int
   id() const;
 
   /// @brief 名前の取得
@@ -103,14 +97,14 @@ public:
 
   /// @brief ピン数の取得
   virtual
-  ymuint
+  int
   pin_num() const;
 
   /// @brief ピンの取得
   /// @param[in] id ピン番号 ( 0 <= id < pin_num() )
   virtual
   const ClibCellPin*
-  pin(ymuint id) const;
+  pin(int id) const;
 
   /// @brief 名前からピンの取得
   /// @param[in] name ピン名
@@ -130,28 +124,28 @@ public:
 
   /// @brief 入力ピン数の取得
   virtual
-  ymuint
+  int
   input_num() const;
 
   /// @brief 出力ピン数の取得
   virtual
-  ymuint
+  int
   output_num() const;
 
   /// @brief 入出力ピン数の取得
   virtual
-  ymuint
+  int
   inout_num() const;
 
   /// @brief 内部ピン数の取得
   virtual
-  ymuint
+  int
   internal_num() const;
 
   /// @brief 入力ピン+入出力ピン数の取得
   /// @note input_num() + inout_num() に等しい．
   virtual
-  ymuint
+  int
   input_num2() const;
 
   /// @brief 入力ピンの取得
@@ -159,12 +153,12 @@ public:
   /// @note pos >= input_num() の場合には入出力ピンが返される．
   virtual
   const ClibCellPin*
-  input(ymuint input_id) const;
+  input(int input_id) const;
 
   /// @brief 出力ピン+入出力ピン数の取得
   /// @note output_num() + inout_num() に等しい．
   virtual
-  ymuint
+  int
   output_num2() const;
 
   /// @brief 出力ピンの取得
@@ -172,24 +166,24 @@ public:
   /// @note pos >= output_num() の場合には入出力ピンが返される．
   virtual
   const ClibCellPin*
-  output(ymuint output_id) const;
+  output(int output_id) const;
 
   /// @brief 内部ピンの取得
   /// @param[in] internal_id 内部ピン番号 ( 0 <= internal_id < internal_num() )
   virtual
   const ClibCellPin*
-  internal(ymuint internal_id) const;
+  internal(int internal_id) const;
 
   /// @brief バス数の取得
   virtual
-  ymuint
+  int
   bus_num() const;
 
   /// @brief バスの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < bus_num() )
   virtual
   const ClibBus*
-  bus(ymuint pos) const;
+  bus(int pos) const;
 
   /// @brief 名前からバスの取得
   /// @param[in] name バス名
@@ -201,14 +195,14 @@ public:
 
   /// @brief バンドル数の取得
   virtual
-  ymuint
+  int
   bundle_num() const;
 
   /// @brief バンドルの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < bundle_num() )
   virtual
   const ClibBundle*
-  bundle(ymuint pos) const;
+  bundle(int pos) const;
 
   /// @brief 名前からバンドルの取得
   virtual
@@ -238,9 +232,9 @@ public:
   /// @param[in] timing_sense タイミング情報の摘要条件
   virtual
   const ClibTimingList&
-  timing_num(ymuint ipos,
-	     ymuint opos,
-	     ClibTimingSense sense) const;
+  timing_list(int ipos,
+	      int opos,
+	      ClibTimingSense sense) const;
 
 
 public:
@@ -277,7 +271,7 @@ public:
   /// @param[in] pin_id 出力ピン番号 ( 0 <= pin_id < output_num2() )
   virtual
   bool
-  has_logic(ymuint pin_id) const;
+  has_logic(int pin_id) const;
 
   /// @brief 全ての出力が論理式を持っているときに true を返す．
   virtual
@@ -289,13 +283,13 @@ public:
   /// @note 論理式中の変数番号は入力ピン番号に対応する．
   virtual
   Expr
-  logic_expr(ymuint pin_id) const;
+  logic_expr(int pin_id) const;
 
   /// @brief 出力がトライステート条件を持っている時に true を返す．
   /// @param[in] pin_id 出力ピン番号 ( 0 <= pin_id < output_num2() )
   virtual
   bool
-  has_tristate(ymuint pin_id) const;
+  has_tristate(int pin_id) const;
 
   /// @brief トライステートセルの場合にトライステート条件式を返す．
   /// @param[in] pin_id 出力ピン番号 ( 0 <= pin_id < output_num2() )
@@ -303,7 +297,7 @@ public:
   /// @note 通常の論理セルの場合には定数0を返す．
   virtual
   Expr
-  tristate_expr(ymuint pin_id) const;
+  tristate_expr(int pin_id) const;
 
   /// @brief FFセルの場合にFFのピン情報を得る．
   virtual
@@ -378,7 +372,7 @@ public:
   /// @retval 1 "H"
   /// @note FFセルとラッチセルの時に意味を持つ．
   virtual
-  ymuint
+  int
   clear_preset_var1() const;
 
   /// @brief clear_preset_var2 の取得
@@ -386,7 +380,7 @@ public:
   /// @retval 1 "H"
   /// @note FFセルとラッチセルの時に意味を持つ．
   virtual
-  ymuint
+  int
   clear_preset_var2() const;
 
 
@@ -414,6 +408,12 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
@@ -424,7 +424,7 @@ private:
   CiCell* mLink;
 
   // ID番号
-  ymuint mId;
+  int mId;
 
   // 名前
   ShString mName;
@@ -433,37 +433,44 @@ private:
   ClibArea mArea;
 
   // ピン数
-  ymuint mPinNum;
+  int mPinNum;
 
   // ピンの配列
+  // サイズは mPinNum;
   CiCellPin** mPinArray;
 
   // 入力ピン数
-  ymuint mInputNum;
+  int mInputNum;
 
   // 出力ピン数
-  ymuint mOutputNum;
+  int mOutputNum;
+
+  // 入出力ピン数
+  int mInOutNum;
 
   // 内部ピン数
-  ymuint mInternalNum;
+  int mInternalNum;
 
   // 入力ピンの配列
+  // サイズは mInputNum + mInOutNum
   CiCellPin** mInputArray;
 
   // 出力ピンの配列
+  // サイズは mOutputNum + mInOutNum
   CiCellPin** mOutputArray;
 
   // 内部ピンの配列
+  // サイズは mInternalNum;
   CiCellPin** mInternalArray;
 
   // バス数
-  ymuint mBusNum;
+  int mBusNum;
 
   // バスピンの配列
   CiBus* mBusArray;
 
   // バンドル数
-  ymuint mBundleNum;
+  int mBundleNum;
 
   // バンドルピンの配列
   CiBundle* mBundleArray;
@@ -472,23 +479,11 @@ private:
   CiTimingList mTimingList;
 
   // 条件ごとのタイミング情報のリストの配列
-  // サイズは(入力数＋入出力数) x (出力数+入出力ピン数)  x 2
+  // サイズは(入力数＋入出力数) x (出力数+入出力数)  x 2
   CiTimingList* mTimingMap;
 
   // セルグループ
   const ClibCellGroup* mClibCellGroup;
-
-  // 出力の情報を格納する配列
-  // サイズは output_num2()
-  ymuint8* mLTArray;
-
-  // 出力の論理式を格納する配列
-  // サイズは output_num2()
-  Expr* mLogicArray;
-
-  // 出力のトライステート条件を格納する配列
-  // サイズは output_num2()
-  Expr* mTristateArray;
 
 };
 

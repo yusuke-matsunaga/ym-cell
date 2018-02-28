@@ -78,34 +78,6 @@ CiPatGraph::edge(ymuint pos) const
   return mEdgeList[pos];
 }
 
-// @brief バイナリダンプを行う．
-// @param[in] bos 出力先のストリーム
-void
-CiPatGraph::dump(ODO& bos) const
-{
-  bos << mRepId
-      << mInputNum
-      << mEdgeNum;
-  for (ymuint i = 0; i < mEdgeNum; ++ i) {
-    bos << mEdgeList[i];
-  }
-}
-
-// @brief バイナリファイルを読み込む．
-// @param[in] bis 入力元のストリーム
-void
-CiPatGraph::restore(IDO& bis,
-		    Alloc& alloc)
-{
-  bis >> mRepId
-      >> mInputNum
-      >> mEdgeNum;
-  alloc_array(alloc);
-  for (ymuint i = 0; i < mEdgeNum; ++ i) {
-    bis >> mEdgeList[i];
-  }
-}
-
 // @brief 初期化する．
 // @param[in] rep_id 代表番号
 // @param[in] input_num 入力数

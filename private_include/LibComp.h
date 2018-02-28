@@ -43,8 +43,9 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief セルのグループ化，クラス化を行う．
+  /// @param[in] cell_list セルのリスト
   void
-  compile(CiCellLibrary& library);
+  compile(const vector<CiCell*>& cell_list);
 
   /// @brief パタングラフの情報を取り出す．
   const LcPatMgr&
@@ -62,22 +63,22 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief セルグループの数を返す．
-  ymuint
+  int
   group_num() const;
 
   /// @brief セルグループを返す．
   /// @param[in] id セルグループ番号 ( 0 <= id < group_num() )
   LcGroup*
-  group(ymuint id) const;
+  group(int id) const;
 
   /// @brief NPN同値クラスの数を返す．
-  ymuint
+  int
   npn_class_num() const;
 
   /// @brief NPN同値クラスを返す．
   /// @param[in] id NPN同値クラス番号 ( 0 <= id < npn_class_num() )
   LcClass*
-  npn_class(ymuint id) const;
+  npn_class(int id) const;
 
   /// @brief 定義済みの論理グループ番号を返す．
   /// @param[in] id 番号
@@ -85,8 +86,8 @@ public:
   /// - 1: 定数1
   /// - 2: バッファ
   /// - 3: インバーター
-  ymuint
-  logic_group(ymuint id) const;
+  int
+  logic_group(int id) const;
 
   /// @brief 定義済みのFFクラス番号を返す．
   /// @param[in] has_q Q端子の有無
@@ -95,7 +96,7 @@ public:
   /// @param[in] has_preset プリセット端子の有無
   ///
   /// has_q == false && has_xq == false は不適
-  ymuint
+  int
   ff_class(bool has_q,
 	   bool has_xq,
 	   bool has_clear,
@@ -108,7 +109,7 @@ public:
   /// @param[in] has_preset プリセット端子の有無
   ///
   /// has_q == false && has_xq == false は不適
-  ymuint
+  int
   latch_class(bool has_q,
 	      bool has_xq,
 	      bool has_clear,
@@ -192,23 +193,23 @@ private:
   vector<LcGroup*> mGroupList;
 
   // シグネチャ文字列をキーとしてグループ番号を保持するハッシュ表
-  HashMap<string, ymuint> mGroupMap;
+  HashMap<string, int> mGroupMap;
 
   // NPN同値クラスのリスト
   // この配列上の位置とクラス番号は一致している．
   vector<LcClass*> mClassList;
 
   // 代表シグネチャの文字列をキーとしてクラス番号を保持するハッシュ表
-  HashMap<string, ymuint> mClassMap;
+  HashMap<string, int> mClassMap;
 
   // 定義済みの論理グループ
-  ymuint mLogicGroup[4];
+  int mLogicGroup[4];
 
   // 定義済みのFFクラス番号
-  ymuint mFFClass[12];
+  int mFFClass[12];
 
   // 定義済みのラッチクラス番号
-  ymuint mLatchClass[12];
+  int mLatchClass[12];
 
   // パタングラフを管理するオブジェクト
   LcPatMgr mPatMgr;

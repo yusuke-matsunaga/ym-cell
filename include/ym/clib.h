@@ -56,6 +56,7 @@ class ClibBusType;
 class ClibBus;
 class ClibBundle;
 class ClibTiming;
+class ClibTimingList;
 class ClibLutTemplate;
 class ClibLut;
 
@@ -69,6 +70,7 @@ class ClibRestorer;
 class ClibCellGroup;
 class ClibCellGroupList;
 class ClibCellClass;
+class ClibCellClassList;
 class ClibFFInfo;
 class ClibLatchInfo;
 class ClibPatGraph;

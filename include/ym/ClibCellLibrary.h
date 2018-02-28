@@ -163,13 +163,13 @@ public:
   leakage_power_unit() const;
 
   /// @brief 遅延テーブルのテンプレート数の取得
-  ymuint
+  int
   lu_table_template_num() const;
 
   /// @brief 遅延テーブルのテンプレートの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < lu_table_template_num() )
   const ClibLutTemplate*
-  lu_table_template(ymuint pos) const;
+  lu_table_template(int pos) const;
 
   /// @brief 遅延テーブルのテンプレートの取得
   /// @param[in] name テンプレート名
@@ -191,14 +191,13 @@ public:
   // セル情報の取得
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief このライブラリの持つセル数の取得
-  ymuint
-  cell_num() const;
+  /// @brief このライブラリの持つセルのリストの取得
+  const ClibCellList&
+  cell_list() const;
 
-  /// @brief セルの取得
-  /// @param[in] pos 位置番号( 0 <= pos < cell_num() )
-  const ClibCell*
-  cell(ymuint pos) const;
+  /// @brief このライブラリの持つセル数の取得
+  int
+  cell_num() const;
 
   /// @brief 名前からのセルの取得
   const ClibCell*
@@ -212,19 +211,9 @@ public:
   const ClibCellGroupList&
   group_list() const;
 
-  /// @brief セルグループを返す．
-  /// @param[in] id グループ番号　( 0 <= id < group_num() )
-  const ClibCellGroup*
-  group(ymuint id) const;
-
   /// @brief NPN同値クラスのリストを返す．
   const ClibCellClassList&
   npn_class_list() const;
-
-  /// @brief NPN同値クラスを返す．
-  /// @param[in] id クラス番号 ( 0 <= id < npn_class_num() )
-  const ClibCellClass*
-  npn_class(ymuint id) const;
 
 
 public:
@@ -285,63 +274,63 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 総パタン数を返す．
-  ymuint
+  int
   pg_pat_num() const;
 
   /// @brief パタンを返す．
   /// @param[in] id パタン番号 ( 0 <= id < pg_pat_num() )
   const ClibPatGraph&
-  pg_pat(ymuint id) const;
+  pg_pat(int id) const;
 
   /// @brief パタンの最大の入力数を得る．
-  ymuint
+  int
   pg_max_input() const;
 
   /// @brief 総ノード数を返す．
-  ymuint
+  int
   pg_node_num() const;
 
   /// @brief ノードの種類を返す．
   /// @param[in] id ノード番号 ( 0 <= id < pg_node_num() )
   ClibPatType
-  pg_node_type(ymuint id) const;
+  pg_node_type(int id) const;
 
   /// @brief ノードが入力ノードの時に入力番号を返す．
   /// @param[in] id ノード番号 ( 0 <= id < pg_node_num() )
   ///
   /// 入力ノードでない場合の返り値は不定
-  ymuint
-  pg_input_id(ymuint id) const;
+  int
+  pg_input_id(int id) const;
 
   /// @brief 入力のノード番号を返す．
   /// @param[in] input_id 入力番号 ( 0 <= input_id < pg_input_num() )
   /// @return input_id の入力に対応するノードのノード番号
-  ymuint
-  pg_input_node(ymuint input_id) const;
+  int
+  pg_input_node(int input_id) const;
 
   /// @brief 総枝数を返す．
-  ymuint
+  int
   pg_edge_num() const;
 
   /// @brief 枝のファンイン元のノード番号を返す．
   /// @param[in] id 枝番号 ( 0 <= id < edge_num() )
-  ymuint
-  pg_edge_from(ymuint id) const;
+  int
+  pg_edge_from(int id) const;
 
   /// @brief 枝のファンアウト先のノード番号を返す．
   /// @param[in] id 枝番号 ( 0 <= id < edge_num() )
-  ymuint
-  pg_edge_to(ymuint id) const;
+  int
+  pg_edge_to(int id) const;
 
   /// @brief 枝のファンアウト先の入力位置( 0 or 1 ) を返す．
   /// @param[in] id 枝番号 ( 0 <= id < edge_num() )
-  ymuint
-  pg_edge_pos(ymuint id) const;
+  int
+  pg_edge_pos(int id) const;
 
   /// @brief 枝の反転属性を返す．
   /// @param[in] id 枝番号 ( 0 <= id < edge_num() )
   bool
-  pg_edge_inv(ymuint id) const;
+  pg_edge_inv(int id) const;
 
 
 public:

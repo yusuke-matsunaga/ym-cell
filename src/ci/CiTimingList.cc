@@ -8,6 +8,7 @@
 
 
 #include "ci/CiTimingList.h"
+#include "ci/CiTiming.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -29,31 +30,20 @@ CiTimingList::~CiTimingList()
 }
 
 // @brief 内容を初期化する．
-// @param[in] num 要素数
+// @param[in] timing_list 要素のリスト
 // @param[in] alloc メモリアロケータ
-//
-// ここでは領域を確保するだけ．
 void
-CiTimingList::init(int num,
+CiTimingList::init(const vector<CiTiming*>& timing_list,
 		   Alloc& alloc)
 {
-  if ( mNum == 0 ) {
-    return;
+  mNum = timing_list.size();
+  if ( mNum > 0 ) {
+    void* p = alloc.get_memory(sizeof(const ClibTiming*) * mNum);
+    mArray = new (p) const ClibTiming*[mNum];
+    for ( int i = 0; i < mNum; ++ i ) {
+      mArray[i] = timing_list[i];
+    }
   }
-  void* p = alloc.get_memory(sizeof(const ClibTiming*) * mNum);
-  mArray = new (p) const ClibTiming*[mNum];
-}
-
-// @brief 要素を設定する．
-// @param[in] pos 位置番号 ( 0 <= pos < num() )
-// @param[in] timing 設定する要素
-void
-CiTimingList::set(int pos,
-		  const ClibTiming* timing)
-{
-  ASSERT_COND( pos >= 0 && pos < num() );
-
-  mArray[pos] = timing;
 }
 
 // @brief 要素数を返す．

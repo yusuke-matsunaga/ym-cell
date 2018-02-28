@@ -39,7 +39,7 @@ public:
   /// @brief ID番号の取得
   /// @note timing = cell->timing(id); の時，timing->id() = id となる．
   virtual
-  ymuint
+  int
   id() const = 0;
 
   /// @brief 型の取得

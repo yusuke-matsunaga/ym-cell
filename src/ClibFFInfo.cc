@@ -32,7 +32,7 @@ encode(ymuint val,
 }
 
 inline
-ymuint
+int
 get_sense(ymuint bits,
 	  int idx)
 {
@@ -40,7 +40,7 @@ get_sense(ymuint bits,
 }
 
 inline
-ymuint
+int
 get_pos(ymuint bits,
 	int idx)
 {
@@ -69,7 +69,7 @@ ClibFFInfo::ClibFFInfo() :
 //  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
 //  - pos_array[4] : 肯定出力のピン番号       (3bit)
 //  - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか(1bit)
-ClibFFInfo::ClibFFInfo(ymuint pos_array[]) :
+ClibFFInfo::ClibFFInfo(int pos_array[]) :
   mBits(0U)
 {
   mBits |= encode(pos_array[0], INPUT);
@@ -88,7 +88,7 @@ ClibFFInfo::~ClibFFInfo()
 // @brief クロック入力のタイプを返す．
 // @retval 1 positive edge
 // @retval 2 negative edge
-ymuint
+int
 ClibFFInfo::clock_sense() const
 {
   return get_sense(mBits, CLOCK);
@@ -98,7 +98,7 @@ ClibFFInfo::clock_sense() const
 // @retval 0 なし
 // @retval 1 High sensitive
 // @retval 2 Low sensitive
-ymuint
+int
 ClibFFInfo::clear_sense() const
 {
   return get_sense(mBits, CLEAR);
@@ -108,7 +108,7 @@ ClibFFInfo::clear_sense() const
 // @retval 0 なし
 // @retval 1 High sensitive
 // @retval 2 Low sensitive
-ymuint
+int
 ClibFFInfo::preset_sense() const
 {
   return get_sense(mBits, PRESET);
@@ -136,14 +136,14 @@ ClibFFInfo::has_preset() const
 }
 
 // @brief データ入力のピン番号を返す．
-ymuint
+int
 ClibFFInfo::data_pos() const
 {
   return get_pos(mBits, INPUT);
 }
 
 // @brief クロック入力のピン番号を返す．
-ymuint
+int
 ClibFFInfo::clock_pos() const
 {
   return get_pos(mBits, CLOCK);
@@ -151,7 +151,7 @@ ClibFFInfo::clock_pos() const
 
 // @brief クリア入力のピン番号を返す．
 // @note クリア入力がない場合の値は不定
-ymuint
+int
 ClibFFInfo::clear_pos() const
 {
   return get_pos(mBits, CLEAR);
@@ -159,21 +159,21 @@ ClibFFInfo::clear_pos() const
 
 // @brief プリセット入力のピン番号を返す．
 // @note プリセット入力がない場合の値は不定
-ymuint
+int
 ClibFFInfo::preset_pos() const
 {
   return get_pos(mBits, PRESET);
 }
 
 // @brief 肯定出力のピン番号を返す．
-ymuint
+int
 ClibFFInfo::q_pos() const
 {
   return get_pos(mBits, OUTPUT1);
 }
 
 // @brief 否定出力のピン番号を返す．
-ymuint
+int
 ClibFFInfo::xq_pos() const
 {
   return get_pos(mBits, OUTPUT2);

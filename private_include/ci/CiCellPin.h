@@ -27,16 +27,14 @@ class CiCell;
 class CiCellPin :
   public ClibCellPin
 {
-  friend class CiCellLibrary;
+  friend class CiCell;
   friend class CiCellPinHash;
 
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] cell 親のセル
   /// @param[in] name ピン名
-  CiCellPin(CiCell* cell,
-	    const ShString& name);
+  CiCellPin(const ShString& name);
 
   /// @brief デストラクタ
   virtual
@@ -50,7 +48,7 @@ public:
 
   /// @brief ピン番号を返す．
   virtual
-  ymuint
+  int
   pin_id() const;
 
   /// @brief ピン名を返す．
@@ -87,7 +85,7 @@ public:
   /// @brief 入力ピン番号を返す．
   /// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
   virtual
-  ymuint
+  int
   input_id() const;
 
   /// @brief 負荷容量を返す．
@@ -114,7 +112,7 @@ public:
   /// @brief 出力ピン番号を返す．
   /// @note 出力ピンもしくは入出力ピンの時のみ意味を持つ．
   virtual
-  ymuint
+  int
   output_id() const;
 
   /// @brief 論理式を持っているときに true を返す．
@@ -176,7 +174,7 @@ public:
   /// @brief 内部ピン番号を返す．
   /// @note 内部ピンの時のみ意味を持つ．
   virtual
-  ymuint
+  int
   internal_id() const;
 
 
@@ -199,10 +197,10 @@ private:
   CiCellPin* mLink;
 
   // 親のセル
-  CiCell* mClib;
+  CiCell* mCell;
 
   // ピン番号
-  ymuint mId;
+  int mId;
 
   // 名前
   ShString mName;
@@ -217,18 +215,17 @@ private:
 class CiInputPin :
   public CiCellPin
 {
+  friend class CiCell;
   friend class CiCellLibrary;
 
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] cell 親のセル
   /// @param[in] name ピン名
   /// @param[in] capacitance 負荷容量
   /// @param[in] rise_capacitance 立ち上がり時の負荷容量
   /// @param[in] fall_capacitance 立ち下がり時の負荷容量
-  CiInputPin(CiCell* cell,
-	     const ShString& name,
+  CiInputPin(const ShString& name,
 	     ClibCapacitance capacitance,
 	     ClibCapacitance rise_capacitance,
 	     ClibCapacitance fall_capacitance);
@@ -262,7 +259,7 @@ public:
   /// @brief 入力ピン番号を返す．
   /// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
   virtual
-  ymuint
+  int
   input_id() const;
 
   /// @brief 負荷容量を返す．
@@ -299,7 +296,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 入力ピン番号
-  ymuint mInputId;
+  int mInputId;
 
   // 負荷
   ClibCapacitance mCapacitance;
@@ -320,12 +317,11 @@ private:
 class CiOutputPinBase :
   public CiCellPin
 {
-  friend class CiCellLibrary;
+  friend class CiCell;
 
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] cell 親のセル
   /// @param[in] name ピン名
   /// @param[in] has_logic 論理式を持つとき true にするフラグ
   /// @param[in] logic_expr 論理式
@@ -336,8 +332,7 @@ protected:
   /// @param[in] min_capacitance 最小負荷容量
   /// @param[in] max_transition 最大遷移時間
   /// @param[in] min_transition 最小遷移時間
-  CiOutputPinBase(CiCell* cell,
-		  const ShString& name,
+  CiOutputPinBase(const ShString& name,
 		  bool has_logic,
 		  const Expr& logic_expr,
 		  const Expr& tristate_expr,
@@ -361,7 +356,7 @@ public:
   /// @brief 出力ピン番号を返す．
   /// @note 出力ピンもしくは入出力ピンの時のみ意味を持つ．
   virtual
-  ymuint
+  int
   output_id() const;
 
   /// @brief 論理式を持っているときに true を返す．
@@ -421,10 +416,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 出力ピン番号
-  ymuint mOutputId;
+  int mOutputId;
 
   // 論理式を持っているかどうかを表すフラグ
-  ymuint mHasFunction;
+  ymuint8 mHasFunction;
 
   // 出力の論理式
   Expr mFunction;
@@ -463,12 +458,12 @@ private:
 class CiOutputPin :
   public CiOutputPinBase
 {
+  friend class CiCell;
   friend class CiCellLibrary;
 
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] cell 親のセル
   /// @param[in] name ピン名
   /// @param[in] has_logic 論理式を持つとき true にするフラグ
   /// @param[in] logic_expr 論理式
@@ -479,8 +474,7 @@ private:
   /// @param[in] min_capacitance 最小負荷容量
   /// @param[in] max_transition 最大遷移時間
   /// @param[in] min_transition 最小遷移時間
-  CiOutputPin(CiCell* cell,
-	      const ShString& name,
+  CiOutputPin(const ShString& name,
 	      bool has_logic,
 	      const Expr& logic_expr,
 	      const Expr& tristate_expr,
@@ -534,12 +528,12 @@ public:
 class CiInoutPin :
   public CiOutputPinBase
 {
+  friend class CiCell;
   friend class CiCellLibrary;
 
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] cell 親のセル
   /// @param[in] name ピン名
   /// @param[in] has_logic 論理式を持つとき true にするフラグ
   /// @param[in] logic_expr 論理式
@@ -553,8 +547,7 @@ private:
   /// @param[in] min_capacitance 最小負荷容量
   /// @param[in] max_transition 最大遷移時間
   /// @param[in] min_transition 最小遷移時間
-  CiInoutPin(CiCell* cell,
-	     const ShString& name,
+  CiInoutPin(const ShString& name,
 	     bool has_logic,
 	     const Expr& logic_expr,
 	     const Expr& tristate_expr,
@@ -597,7 +590,7 @@ public:
   /// @brief 入力ピン番号を返す．
   /// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
   virtual
-  ymuint
+  int
   input_id() const;
 
   /// @brief 負荷容量を返す．
@@ -634,7 +627,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 入力ピン番号
-  ymuint mInputId;
+  int mInputId;
 
   // 負荷
   ClibCapacitance mCapacitance;
@@ -655,15 +648,14 @@ private:
 class CiInternalPin :
   public CiCellPin
 {
+  friend class CiCell;
   friend class CiCellLibrary;
 
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] cell 親のセル
   /// @param[in] name ピン名
-  CiInternalPin(CiCell* cell,
-		const ShString& name);
+  CiInternalPin(const ShString& name);
 
   /// @brief デストラクタ
   virtual
@@ -694,7 +686,7 @@ public:
   /// @brief 内部ピン番号を返す．
   /// @note 内部ピンの時のみ意味を持つ．
   virtual
-  ymuint
+  int
   internal_id() const;
 
 
@@ -716,7 +708,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 内部ピン番号
-  ymuint mInternalId;
+  int mInternalId;
 
 };
 

@@ -14,7 +14,9 @@
 #include "ym/ClibLutTemplate.h"
 #include "ym/ClibCellPin.h"
 #include "ym/ClibTiming.h"
+#include "ym/ClibTimingList.h"
 #include "ym/ClibCellClass.h"
+#include "ym/ClibCellClassList.h"
 #include "ym/ClibCellGroup.h"
 #include "ym/ClibCellGroupList.h"
 #include "ym/ClibPatGraph.h"
@@ -279,9 +281,7 @@ display_timing(ostream& s,
 	       ClibTimingSense sense,
 	       ClibDelayModel delay_model)
 {
-  ymuint n = cell->timing_num(ipos, opos, sense);
-  for (ymuint i = 0; i < n; ++ i) {
-    const ClibTiming* timing = cell->timing(ipos, opos, sense, i);
+  for ( auto timing : cell->timing_list(ipos, opos, sense) ) {
     s << "  Timing:" << endl
       << "    Type             = " << timing->type() << endl
       << "    Input Pin        = " << cell->input(ipos)->name() << endl
@@ -553,13 +553,7 @@ display_library(ostream& s,
   s << endl;
 
   // セル
-  ymuint n = library.cell_num();
-  for (ymuint i = 0; i < n; ++ i) {
-    const ClibCell* cell = library.cell(i);
-    {
-      const ClibCell* cell1 = library.cell(cell->name());
-      ASSERT_COND( cell1 == cell );
-    }
+  for ( auto cell: library.cell_list() ) {
     // セル名とセルの種類を出力
     s << "Clib#" << cell->id() << " (" << cell->name() << ") : ";
     if ( cell->is_logic() ) {
@@ -689,11 +683,10 @@ display_library(ostream& s,
 
   // セルグループの情報
   s << "Clib Group" << endl;
-  ymuint nc = library.npn_class_num();
-  for (ymuint i = 0; i < nc; ++ i) {
-    const ClibCellClass* cclass = library.npn_class(i);
+  int i = 0;
+  for ( auto cclass: library.npn_class_list() ) {
     ostringstream buf;
-    buf << "Class#" << i;
+    buf << "Class#" << i; ++ i;
     display_class(s, buf.str().c_str(), cclass);
   }
 

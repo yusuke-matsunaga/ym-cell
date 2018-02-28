@@ -37,7 +37,7 @@ public:
 
   /// @brief ピン番号を返す．
   virtual
-  ymuint
+  int
   pin_id() const = 0;
 
   /// @brief ピン名を返す．
@@ -83,7 +83,7 @@ public:
   /// @brief 入力ピン番号を返す．
   /// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
   virtual
-  ymuint
+  int
   input_id() const = 0;
 
   /// @brief 負荷容量を返す．
@@ -110,7 +110,7 @@ public:
   /// @brief 出力ピン番号を返す．
   /// @note 出力ピンもしくは入出力ピンの時のみ意味を持つ．
   virtual
-  ymuint
+  int
   output_id() const = 0;
 
   /// @brief 論理式を持っているときに true を返す．
@@ -172,7 +172,7 @@ public:
   /// @brief 内部ピン番号を返す．
   /// @note 内部ピンの時のみ意味を持つ．
   virtual
-  ymuint
+  int
   internal_id() const = 0;
 
 

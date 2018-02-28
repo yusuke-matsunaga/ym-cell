@@ -18,40 +18,32 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief コンストラクタ
 // @param[in] library 親のセルライブラリ
-// @param[in] id ID番号
 // @param[in] name 名前
 // @param[in] area 面積
-// @param[in] ni 入力ピン数
-// @param[in] no 出力ピン数
-// @param[in] nio 入出力ピン数
-// @param[in] nit 内部ピン数
-// @param[in] nb バス数
-// @param[in] nc バンドル数
-// @param[in] output_array 出力の情報の配列(*1)
-// @param[in] logic_array 出力の論理式の配列
-// @param[in] tristated_array トライステート条件の論理式の配列
+// @param[in] input_list 入力ピンのリスト
+// @param[in] output_list 出力ピンのリスト
+// @param[in] inout_list 入出力ピンのリスト
+// @param[in] internal_list 内部ピンのリスト
+// @param[in] bus_list バスのリスト
+// @param[in] bundle_list バンドルのリスト
 // @param[in] alloc メモリアロケータ
-// *1: - false 論理式なし
-//     - true 論理式あり
 CiFsmCell::CiFsmCell(CiCellLibrary* library,
-		     ymuint id,
 		     const ShString& name,
 		     ClibArea area,
-		     ymuint ni,
-		     ymuint no,
-		     ymuint nio,
-		     ymuint nit,
-		     ymuint nb,
-		     ymuint nc,
-		     const vector<bool>& output_array,
-		     const vector<Expr>& logic_array,
-		     const vector<Expr>& tristate_array,
+		     const vector<CiInputPin*>& input_list,
+		     const vector<CiOutputPin*>& output_list,
+		     const vector<CiInoutPin*>& inout_list,
+		     const vector<CiInternalPin*>& internal_list,
+		     const vector<CiBus*>& bus_list,
+		     const vector<CiBundle*>& bundle_list,
 		     Alloc& alloc) :
-  CiCell(library, id, name, area,
-	 ni, no, nio, nit, nb, nc,
-	 output_array,
-	 logic_array,
-	 tristate_array,
+  CiCell(library, name, area,
+	 input_list,
+	 output_list,
+	 inout_list,
+	 internal_list,
+	 bus_list,
+	 bundle_list,
 	 alloc)
 {
 }

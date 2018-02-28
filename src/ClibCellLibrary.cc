@@ -9,12 +9,24 @@
 
 #include "ym/ClibCellLibrary.h"
 #include "ci/CiCellLibrary.h"
+#include "ci/CiCellList.h"
+#include "ci/CiCellGroupList.h"
+#include "ci/CiCellClassList.h"
 #include "ci/CiPatGraph.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 BEGIN_NONAMESPACE
+
+// ClibCellList のデフォルト用オブジェクト
+CiCellList sCellList;
+
+// ClibCellGroupList のデフォルト用オブジェクト
+CiCellGroupList sCellGroupList;
+
+// ClibCellClassList のデフォルト用オブジェクト
+CiCellClassList sCellClassList;
 
 // pg_pat() のデフォルト用のオブジェクト
 CiPatGraph sPatGraph;
@@ -293,7 +305,7 @@ ClibCellLibrary::leakage_power_unit() const
 }
 
 // @brief 遅延テーブルのテンプレート数の取得
-ymuint
+int
 ClibCellLibrary::lu_table_template_num() const
 {
   if ( mImpl ) {
@@ -306,7 +318,7 @@ ClibCellLibrary::lu_table_template_num() const
 // @brief 遅延テーブルのテンプレートの取得
 // @param[in] pos 位置番号 ( 0 <= pos < lu_table_template_num() )
 const ClibLutTemplate*
-ClibCellLibrary::lu_table_template(ymuint pos) const
+ClibCellLibrary::lu_table_template(int pos) const
 {
   if ( mImpl ) {
     return mImpl->lu_table_template(pos);
@@ -343,27 +355,26 @@ ClibCellLibrary::bus_type(const char* name) const
   return nullptr;
 }
 
+// @brief このライブラリの持つセルのリストの取得
+const ClibCellList&
+ClibCellLibrary::cell_list() const
+{
+  if ( mImpl ) {
+    return mImpl->cell_list();
+  }
+  // デフォルト値
+  return sCellList;
+}
+
 // @brief このライブラリの持つセル数の取得
-ymuint
+int
 ClibCellLibrary::cell_num() const
 {
   if ( mImpl ) {
-    return mImpl->cell_num();
+    return mImpl->cell_list().num();
   }
   // デフォルト値
   return 0;
-}
-
-/// @brief セルの取得
-// @param[in] pos 位置番号( 0 <= pos < cell_num() )
-const ClibCell*
-ClibCellLibrary::cell(ymuint pos) const
-{
-  if ( mImpl ) {
-    return mImpl->cell(pos);
-  }
-  // デフォルト値
-  return nullptr;
 }
 
 // @brief 名前からのセルの取得
@@ -388,50 +399,26 @@ ClibCellLibrary::cell(const string& name) const
   return nullptr;
 }
 
-// @brief セルグループの個数を返す．
-ymuint
-ClibCellLibrary::group_num() const
+// @brief セルグループのリストを返す．
+const ClibCellGroupList&
+ClibCellLibrary::group_list() const
 {
   if ( mImpl ) {
-    return mImpl->group_num();
+    return mImpl->group_list();
   }
   // デフォルト値
-  return 0;
+  return sCellGroupList;
 }
 
-// @brief セルグループを返す．
-// @param[in] id グループ番号　( 0 <= id < group_num() )
-const ClibCellGroup*
-ClibCellLibrary::group(ymuint id) const
+// @brief NPN同値クラスのリストを返す．
+const ClibCellClassList&
+ClibCellLibrary::npn_class_list() const
 {
   if ( mImpl ) {
-    return mImpl->group(id);
+    return mImpl->npn_class_list();
   }
   // デフォルト値
-  return nullptr;
-}
-
-// @brief NPN同値クラスの個数を返す．
-ymuint
-ClibCellLibrary::npn_class_num() const
-{
-  if ( mImpl ) {
-    return mImpl->npn_class_num();
-  }
-  // デフォルト値
-  return 0;
-}
-
-// @brief NPN同値クラスを返す．
-// @param[in] id クラス番号 ( 0 <= id < npn_class_num() )
-const ClibCellClass*
-ClibCellLibrary::npn_class(ymuint id) const
-{
-  if ( mImpl ) {
-    return mImpl->npn_class(id);
-  }
-  // デフォルト値
-  return nullptr;
+  return sCellClassList;
 }
 
 // @brief 定数0セルのグループを返す．
@@ -511,7 +498,7 @@ ClibCellLibrary::simple_latch_class(bool has_clear,
 }
 
 // @brief 総パタン数を返す．
-ymuint
+int
 ClibCellLibrary::pg_pat_num() const
 {
   if ( mImpl ) {
@@ -524,7 +511,7 @@ ClibCellLibrary::pg_pat_num() const
 // @brief パタンを返す．
 // @param[in] id パタン番号 ( 0 <= id < pg_pat_num() )
 const ClibPatGraph&
-ClibCellLibrary::pg_pat(ymuint id) const
+ClibCellLibrary::pg_pat(int id) const
 {
   if ( mImpl ) {
     return mImpl->pg_pat(id);
@@ -534,7 +521,7 @@ ClibCellLibrary::pg_pat(ymuint id) const
 }
 
 // @brief パタンの最大の入力数を得る．
-ymuint
+int
 ClibCellLibrary::pg_max_input() const
 {
   if ( mImpl ) {
@@ -545,7 +532,7 @@ ClibCellLibrary::pg_max_input() const
 }
 
 // @brief 総ノード数を返す．
-ymuint
+int
 ClibCellLibrary::pg_node_num() const
 {
   if ( mImpl ) {
@@ -558,7 +545,7 @@ ClibCellLibrary::pg_node_num() const
 // @brief ノードの種類を返す．
 // @param[in] id ノード番号 ( 0 <= id < pg_node_num() )
 ClibPatType
-ClibCellLibrary::pg_node_type(ymuint id) const
+ClibCellLibrary::pg_node_type(int id) const
 {
   if ( mImpl ) {
     return mImpl->pg_node_type(id);
@@ -571,8 +558,8 @@ ClibCellLibrary::pg_node_type(ymuint id) const
 // @param[in] id ノード番号 ( 0 <= id < pg_node_num() )
 //
 // 入力ノードでない場合の返り値は不定
-ymuint
-ClibCellLibrary::pg_input_id(ymuint id) const
+int
+ClibCellLibrary::pg_input_id(int id) const
 {
   if ( mImpl ) {
     return mImpl->pg_input_id(id);
@@ -584,8 +571,8 @@ ClibCellLibrary::pg_input_id(ymuint id) const
 // @brief 入力のノード番号を返す．
 // @param[in] input_id 入力番号 ( 0 <= input_id < pg_input_num() )
 // @return input_id の入力に対応するノードのノード番号
-ymuint
-ClibCellLibrary::pg_input_node(ymuint input_id) const
+int
+ClibCellLibrary::pg_input_node(int input_id) const
 {
   if ( mImpl ) {
     return mImpl->pg_input_node(input_id);
@@ -595,7 +582,7 @@ ClibCellLibrary::pg_input_node(ymuint input_id) const
 }
 
 // @brief 総枝数を返す．
-ymuint
+int
 ClibCellLibrary::pg_edge_num() const
 {
   if ( mImpl ) {
@@ -607,8 +594,8 @@ ClibCellLibrary::pg_edge_num() const
 
 // @brief 枝のファンイン元のノード番号を返す．
 // @param[in] id 枝番号 ( 0 <= id < edge_num() )
-ymuint
-ClibCellLibrary::pg_edge_from(ymuint id) const
+int
+ClibCellLibrary::pg_edge_from(int id) const
 {
   if ( mImpl ) {
     return mImpl->pg_edge_from(id);
@@ -619,8 +606,8 @@ ClibCellLibrary::pg_edge_from(ymuint id) const
 
 // @brief 枝のファンアウト先のノード番号を返す．
 // @param[in] id 枝番号 ( 0 <= id < edge_num() )
-ymuint
-ClibCellLibrary::pg_edge_to(ymuint id) const
+int
+ClibCellLibrary::pg_edge_to(int id) const
 {
   if ( mImpl ) {
     return mImpl->pg_edge_to(id);
@@ -631,8 +618,8 @@ ClibCellLibrary::pg_edge_to(ymuint id) const
 
 // @brief 枝のファンアウト先の入力位置( 0 or 1 ) を返す．
 // @param[in] id 枝番号 ( 0 <= id < edge_num() )
-ymuint
-ClibCellLibrary::pg_edge_pos(ymuint id) const
+int
+ClibCellLibrary::pg_edge_pos(int id) const
 {
   if ( mImpl ) {
     return mImpl->pg_edge_pos(id);
@@ -644,7 +631,7 @@ ClibCellLibrary::pg_edge_pos(ymuint id) const
 // @brief 枝の反転属性を返す．
 // @param[in] id 枝番号 ( 0 <= id < edge_num() )
 bool
-ClibCellLibrary::pg_edge_inv(ymuint id) const
+ClibCellLibrary::pg_edge_inv(int id) const
 {
   if ( mImpl ) {
     return mImpl->pg_edge_inv(id);
@@ -668,9 +655,9 @@ ClibCellLibrary::dump(ODO& s) const
 void
 ClibCellLibrary::restore(IDO& s)
 {
-  if ( mImpl ) {
-    return mImpl->restore(s);
-  }
+  CiCellLibrary* new_impl = new CiCellLibrary();
+  new_impl->restore(s);
+  change_impl(new_impl);
 }
 
 END_NAMESPACE_YM_CLIB

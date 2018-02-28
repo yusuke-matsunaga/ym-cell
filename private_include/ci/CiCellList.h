@@ -41,17 +41,16 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 内容を初期化する．
-  /// @param[in] src_list セルのリスト
-  /// @param[in] alloc メモリアロケータ
-  void
-  init(const vector<CiCell*>& cell_list,
-       Alloc& alloc);
-
   /// @brief 要素数を返す．
   virtual
   int
   num() const;
+
+  /// @brief 要素を返す．
+  /// @param[in] pos 位置番号 ( 0 <= pos < num() )
+  virtual
+  const ClibCell*
+  operator[](int pos) const;
 
   /// @brief 先頭の反復子を返す．
   virtual
@@ -62,6 +61,24 @@ public:
   virtual
   iterator
   end() const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // CiCellList に固有の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を初期化する．
+  /// @param[in] src_list セルのリスト
+  /// @param[in] alloc メモリアロケータ
+  void
+  init(const vector<CiCell*>& cell_list,
+       Alloc& alloc);
+
+  /// @brief 要素を返す．
+  /// @param[in] pos 位置番号 ( 0 <= pos < num() )
+  const CiCell*
+  _elem(int pos) const;
 
 
 private:
@@ -79,7 +96,7 @@ private:
   int mNum;
 
   // セルへのポインタ配列
-  const ClibCell** mArray;
+  CiCell** mArray;
 
 };
 

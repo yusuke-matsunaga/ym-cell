@@ -17,11 +17,8 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] cell 親のセル
 // @param[in] name ピン名
-CiCellPin::CiCellPin(CiCell* cell,
-		     const ShString& name) :
-  mClib(cell),
+CiCellPin::CiCellPin(const ShString& name) :
   mName(name)
 {
 }
@@ -32,7 +29,7 @@ CiCellPin::~CiCellPin()
 }
 
 // @brief ピン番号を返す．
-ymuint
+int
 CiCellPin::pin_id() const
 {
   return mId;
@@ -75,7 +72,7 @@ CiCellPin::is_internal() const
 
 // @brief 入力ピン番号を返す．
 // @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-ymuint
+int
 CiCellPin::input_id() const
 {
   return 0;
@@ -104,7 +101,7 @@ CiCellPin::fall_capacitance() const
 
 // @brief 出力ピン番号を返す．
 // @note 出力ピンもしくは入出力ピンの時のみ意味を持つ．
-ymuint
+int
 CiCellPin::output_id() const
 {
   return 0;
@@ -182,18 +179,10 @@ CiCellPin::min_transition() const
 
 // @brief 内部ピン番号を返す．
 // @note 内部ピンの時のみ意味を持つ．
-ymuint
+int
 CiCellPin::internal_id() const
 {
   return 0;
-}
-
-// @brief dump 用の共通情報を出力する．
-void
-CiCellPin::dump_common(ODO& s) const
-{
-  s << name()
-    << pin_id();
 }
 
 
@@ -202,17 +191,15 @@ CiCellPin::dump_common(ODO& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] cell 親のセル
 // @param[in] name ピン名
 // @param[in] capacitance 負荷容量
 // @param[in] rise_capacitance 立ち上がり時の負荷容量
 // @param[in] fall_capacitance 立ち下がり時の負荷容量
-CiInputPin::CiInputPin(CiCell* cell,
-		       const ShString& name,
+CiInputPin::CiInputPin(const ShString& name,
 		       ClibCapacitance capacitance,
 		       ClibCapacitance rise_capacitance,
 		       ClibCapacitance fall_capacitance) :
-  CiCellPin(cell, name),
+  CiCellPin(name),
   mCapacitance(capacitance),
   mRiseCapacitance(rise_capacitance),
   mFallCapacitance(fall_capacitance)
@@ -240,7 +227,7 @@ CiInputPin::is_input() const
 
 // @brief 入力ピン番号を返す．
 // @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-ymuint
+int
 CiInputPin::input_id() const
 {
   return mInputId;
@@ -267,25 +254,12 @@ CiInputPin::fall_capacitance() const
   return mFallCapacitance;
 }
 
-// @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
-void
-CiInputPin::dump(ODO& s) const
-{
-  dump_common(s);
-
-  s << capacitance()
-    << rise_capacitance()
-    << fall_capacitance();
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiOutputPinBase
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] cell 親のセル
 // @param[in] name ピン名
 // @param[in] has_logic 論理式を持つとき true にするフラグ
 // @param[in] logic_expr 論理式
@@ -296,8 +270,7 @@ CiInputPin::dump(ODO& s) const
 // @param[in] min_capacitance 最小負荷容量
 // @param[in] max_transition 最大遷移時間
 // @param[in] min_transition 最小遷移時間
-CiOutputPinBase::CiOutputPinBase(CiCell* cell,
-				 const ShString& name,
+CiOutputPinBase::CiOutputPinBase(const ShString& name,
 				 bool has_logic,
 				 const Expr& logic_expr,
 				 const Expr& tristate_expr,
@@ -307,7 +280,7 @@ CiOutputPinBase::CiOutputPinBase(CiCell* cell,
 				 ClibCapacitance min_capacitance,
 				 ClibTime max_transition,
 				 ClibTime min_transition) :
-  CiCellPin(cell, name),
+  CiCellPin(name),
   mHasFunction(0U),
   mFunction(logic_expr),
   mThreeState(tristate_expr),
@@ -335,7 +308,7 @@ CiOutputPinBase::~CiOutputPinBase()
 
 // @brief 出力ピン番号を返す．
 // @note 出力ピンもしくは入出力ピンの時のみ意味を持つ．
-ymuint
+int
 CiOutputPinBase::output_id() const
 {
   return mOutputId;
@@ -417,7 +390,6 @@ CiOutputPinBase::min_transition() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] cell 親のセル
 // @param[in] name ピン名
 // @param[in] has_logic 論理式を持つとき true にするフラグ
 // @param[in] logic_expr 論理式
@@ -428,8 +400,7 @@ CiOutputPinBase::min_transition() const
 // @param[in] min_capacitance 最小負荷容量
 // @param[in] max_transition 最大遷移時間
 // @param[in] min_transition 最小遷移時間
-CiOutputPin::CiOutputPin(CiCell* cell,
-			 const ShString& name,
+CiOutputPin::CiOutputPin(const ShString& name,
 			 bool has_logic,
 			 const Expr& logic_expr,
 			 const Expr& tristate_expr,
@@ -439,7 +410,7 @@ CiOutputPin::CiOutputPin(CiCell* cell,
 			 ClibCapacitance min_capacitance,
 			 ClibTime max_transition,
 			 ClibTime min_transition) :
-  CiOutputPinBase(cell, name,
+  CiOutputPinBase(name,
 		  has_logic, logic_expr, tristate_expr,
 		  max_fanout, min_fanout,
 		  max_capacitance, min_capacitance,
@@ -466,28 +437,12 @@ CiOutputPin::is_output() const
   return true;
 }
 
-// @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
-void
-CiOutputPin::dump(ODO& s) const
-{
-  dump_common(s);
-
-  s << max_fanout()
-    << min_fanout()
-    << max_capacitance()
-    << min_capacitance()
-    << max_transition()
-    << min_transition();
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiInoutPin
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] cell 親のセル
 // @param[in] name ピン名
 // @param[in] has_logic 論理式を持つとき true にするフラグ
 // @param[in] logic_expr 論理式
@@ -501,8 +456,7 @@ CiOutputPin::dump(ODO& s) const
 // @param[in] min_capacitance 最小負荷容量
 // @param[in] max_transition 最大遷移時間
 // @param[in] min_transition 最小遷移時間
-CiInoutPin::CiInoutPin(CiCell* cell,
-		       const ShString& name,
+CiInoutPin::CiInoutPin(const ShString& name,
 		       bool has_logic,
 		       const Expr& logic_expr,
 		       const Expr& tristate_expr,
@@ -515,7 +469,7 @@ CiInoutPin::CiInoutPin(CiCell* cell,
 		       ClibCapacitance min_capacitance,
 		       ClibTime max_transition,
 		       ClibTime min_transition) :
-  CiOutputPinBase(cell, name,
+  CiOutputPinBase(name,
 		  has_logic, logic_expr, tristate_expr,
 		  max_fanout, min_fanout,
 		  max_capacitance, min_capacitance,
@@ -547,7 +501,7 @@ CiInoutPin::is_inout() const
 
 // @brief 入力ピン番号を返す．
 // @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-ymuint
+int
 CiInoutPin::input_id() const
 {
   return mInputId;
@@ -574,35 +528,15 @@ CiInoutPin::fall_capacitance() const
   return mFallCapacitance;
 }
 
-// @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
-void
-CiInoutPin::dump(ODO& s) const
-{
-  dump_common(s);
-
-  s << capacitance()
-    << rise_capacitance()
-    << fall_capacitance()
-    << max_fanout()
-    << min_fanout()
-    << max_capacitance()
-    << min_capacitance()
-    << max_transition()
-    << min_transition();
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiInternalPin
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] cell 親のセル
 // @param[in] name ピン名
-CiInternalPin::CiInternalPin(CiCell* cell,
-			     const ShString& name) :
-  CiCellPin(cell, name)
+CiInternalPin::CiInternalPin(const ShString& name) :
+  CiCellPin(name)
 {
 }
 
@@ -627,20 +561,10 @@ CiInternalPin::is_internal() const
 
 // @brief 内部ピン番号を返す．
 // @note 内部ピンの時のみ意味を持つ．
-ymuint
+int
 CiInternalPin::internal_id() const
 {
   return mInternalId;
-}
-
-// @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
-void
-CiInternalPin::dump(ODO& s) const
-{
-  dump_common(s);
-
-  s << internal_id();
 }
 
 END_NAMESPACE_YM_CLIB

@@ -10,6 +10,7 @@
 #include "dotlib_nsdef.h"
 #include "ci/CiCellLibrary.h"
 #include "ci/CiCell.h"
+#include "ci/CiTiming.h"
 
 #include "ym/ClibCellPin.h"
 #include "ym/ClibTiming.h"
@@ -182,98 +183,80 @@ gen_lut(CiCellLibrary* library,
 }
 
 // 論理式を生成する．
-void
-gen_expr(const DotlibPin& pin_info,
+Expr
+gen_expr(const DotlibNode* expr_node,
 	 const HashMap<ShString, ymuint>& pin_map,
-	 vector<bool>& output_array,
-	 vector<Expr>& logic_array,
-	 vector<Expr>& tristate_array)
+	 bool& has_expr)
 {
-  for (ymuint i = 0; i < pin_info.num(); ++ i) {
-    const DotlibNode* func_node = pin_info.function();
-    if ( func_node ) {
-      Expr expr = dot2expr(func_node, pin_map);
-      logic_array.push_back(expr);
-      output_array.push_back(true);
-    }
-    else {
-      logic_array.push_back(Expr::const_zero());
-      output_array.push_back(false);
-    }
-    const DotlibNode* three_state = pin_info.three_state();
-    if ( three_state ) {
-      Expr expr = dot2expr(three_state, pin_map);
-      tristate_array.push_back(expr);
-    }
-    else {
-      tristate_array.push_back(Expr::const_zero());
-    }
+  if ( expr_node ) {
+    has_expr = true;
+    return dot2expr(expr_node, pin_map);
+  }
+  else {
+    has_expr = false;
+    return Expr::const_zero();
   }
 }
 
 // ピンを生成する．
 void
-gen_pin(CiCellLibrary* library,
-	const vector<DotlibPin>& pin_info_array,
-	ymuint cell_id,
-	const vector<bool>& output_array,
-	const vector<Expr>& logic_array,
-	const vector<Expr>& tristate_array)
+gen_pin(const vector<DotlibPin>& pin_info_array,
+	const HashMap<ShString, ymuint>& pin_map,
+	CiCellLibrary* library,
+	vector<CiInputPin*>& input_list,
+	vector<CiOutputPin*>& output_list,
+	vector<CiInoutPin*>& inout_list,
+	vector<CiInternalPin*>& internal_list)
 {
-  ymuint i_pos = 0;
-  ymuint o_pos = 0;
-  ymuint io_pos = 0;
-  ymuint it_pos = 0;
-  ymuint pin_pos = 0;
-
-  CiCell* cell = library->_cell(cell_id);
-  ymuint ni = cell->input_num();
-  ymuint no = cell->output_num();
-
-  ymuint npg = pin_info_array.size();
-  for (ymuint pg_id = 0; pg_id < npg; ++ pg_id) {
-    const DotlibPin& pin_info = pin_info_array[pg_id];
-
+  for ( const DotlibPin& pin_info: pin_info_array ) {
     switch ( pin_info.direction() ) {
     case DotlibPin::kInput:
       // 入力ピンの生成
-      for (ymuint i = 0; i < pin_info.num(); ++ i) {
+      {
 	ClibCapacitance cap(pin_info.capacitance());
 	ClibCapacitance rise_cap(pin_info.rise_capacitance());
 	ClibCapacitance fall_cap(pin_info.fall_capacitance());
-	library->new_cell_input(cell_id, pin_pos, i_pos,
-				pin_info.name(i),
-				cap, rise_cap, fall_cap);
-	++ pin_pos;
-	++ i_pos;
+	for (  int i = 0; i < pin_info.num(); ++ i ) {
+	  CiInputPin* pin = library->new_cell_input(pin_info.name(i),
+						    cap, rise_cap, fall_cap);
+	  input_list.push_back(pin);
+	}
       }
       break;
 
     case DotlibPin::kOutput:
       // 出力の生成
-      for (ymuint i = 0; i < pin_info.num(); ++ i) {
+      {
+	bool has_logic;
+	Expr logic_expr = gen_expr(pin_info.function(), pin_map, has_logic);
+	bool dummy;
+	Expr tristate_expr = gen_expr(pin_info.three_state(), pin_map, dummy);
 	ClibCapacitance max_fanout(pin_info.max_fanout());
 	ClibCapacitance min_fanout (pin_info.min_fanout());
 	ClibCapacitance max_capacitance(pin_info.max_capacitance());
 	ClibCapacitance min_capacitance(pin_info.min_capacitance());
 	ClibTime max_transition(pin_info.max_transition());
 	ClibTime min_transition(pin_info.min_transition());
-	library->new_cell_output(cell_id, pin_pos, o_pos,
-				 pin_info.name(i),
-				 output_array[i],
-				 logic_array[i],
-				 tristate_array[i],
-				 max_fanout, min_fanout,
-				 max_capacitance, min_capacitance,
-				 max_transition, min_transition);
-	++ pin_pos;
-	++ o_pos;
+	for ( int i = 0; i < pin_info.num(); ++ i ) {
+	  CiOutputPin* pin = library->new_cell_output(pin_info.name(i),
+						      has_logic,
+						      logic_expr,
+						      tristate_expr,
+						      max_fanout, min_fanout,
+						      max_capacitance, min_capacitance,
+						      max_transition, min_transition);
+	  output_list.push_back(pin);
+	}
       }
       break;
 
     case DotlibPin::kInout:
       // 入出力ピンの生成
-      for (ymuint i = 0; i < pin_info.num(); ++ i) {
+      {
+	bool has_logic;
+	Expr logic_expr = gen_expr(pin_info.function(), pin_map, has_logic);
+	bool dummy;
+	Expr tristate_expr = gen_expr(pin_info.three_state(), pin_map, dummy);
 	ClibCapacitance cap(pin_info.capacitance());
 	ClibCapacitance rise_cap(pin_info.rise_capacitance());
 	ClibCapacitance fall_cap(pin_info.fall_capacitance());
@@ -283,29 +266,25 @@ gen_pin(CiCellLibrary* library,
 	ClibCapacitance min_capacitance(pin_info.min_capacitance());
 	ClibTime max_transition(pin_info.max_transition());
 	ClibTime min_transition(pin_info.min_transition());
-	ymuint i_pos2 = io_pos + ni;
-	ymuint o_pos2 = io_pos + no;
-	library->new_cell_inout(cell_id, pin_pos, i_pos2, o_pos2,
-				pin_info.name(i),
-				output_array[i],
-				logic_array[i],
-				tristate_array[i],
-				cap, rise_cap, fall_cap,
-				max_fanout, min_fanout,
-				max_capacitance, min_capacitance,
-				max_transition, min_transition);
-	++ pin_pos;
-	++ io_pos;
+	for ( int i = 0; i < pin_info.num(); ++ i ) {
+	  CiInoutPin* pin = library->new_cell_inout(pin_info.name(i),
+						    has_logic,
+						    logic_expr,
+						    tristate_expr,
+						    cap, rise_cap, fall_cap,
+						    max_fanout, min_fanout,
+						    max_capacitance, min_capacitance,
+						    max_transition, min_transition);
+	  inout_list.push_back(pin);
+	}
       }
       break;
 
     case DotlibPin::kInternal:
       // 内部ピンの生成
-      for (ymuint i = 0; i < pin_info.num(); ++ i) {
-	library->new_cell_internal(cell_id, pin_pos, it_pos,
-				   pin_info.name(i));
-	++ pin_pos;
-	++ it_pos;
+      for ( int i = 0; i < pin_info.num(); ++ i ) {
+	CiInternalPin* pin = library->new_cell_internal(pin_info.name(i));
+	internal_list.push_back(pin);
       }
       break;
 
@@ -317,17 +296,14 @@ gen_pin(CiCellLibrary* library,
 
 // タイミング情報を生成する．
 void
-gen_timing(CiCellLibrary* library,
-	   const list<const DotlibNode*>& timing_list,
-	   ymuint cell_id,
-	   ymuint& timing_id,
+gen_timing(const list<const DotlibNode*>& dt_timing_list,
+	   CiCellLibrary* library,
+	   CiCell* cell,
 	   const HashMap<ShString, ymuint>& pin_map,
-	   vector<vector<ymuint> >& tid_list)
+	   vector<CiTiming*>& timing_list,
+	   vector<vector<CiTiming*> >& timing_list_array)
 {
-  const ClibCell* cell = library->cell(cell_id);
-  for (list<const DotlibNode*>::const_iterator p = timing_list.begin();
-       p != timing_list.end(); ++ p) {
-    const DotlibNode* dt_timing = *p;
+  for ( auto dt_timing: dt_timing_list ) {
     DotlibTiming timing_info;
     if ( !timing_info.set_data(dt_timing) ) {
       continue;
@@ -342,6 +318,7 @@ gen_timing(CiCellLibrary* library,
       cond = Expr::const_one();
     }
 
+    CiTiming* timing = nullptr;
     switch ( library->delay_model() ) {
     case kClibDelayGenericCmos:
       {
@@ -351,11 +328,10 @@ gen_timing(CiCellLibrary* library,
 	ClibTime slope_fall(timing_info.slope_fall()->float_value());
 	ClibResistance rise_res(timing_info.rise_resistance()->float_value());
 	ClibResistance fall_res(timing_info.fall_resistance()->float_value());
-	library->new_timing_generic(cell_id, timing_id,
-				    timing_type, cond,
-				    intrinsic_rise, intrinsic_fall,
-				    slope_rise, slope_fall,
-				    rise_res, fall_res);
+	timing = library->new_timing_generic(timing_type, cond,
+					     intrinsic_rise, intrinsic_fall,
+					     slope_rise, slope_fall,
+					     rise_res, fall_res);
       }
       break;
 
@@ -466,16 +442,14 @@ gen_timing(CiCellLibrary* library,
 			    "cell_rise and fall_propagation are mutually exclusive.");
 	    continue;
 	  }
-	  library->new_timing_lut1(cell_id, timing_id,
-				   timing_type, cond,
-				   cr_lut, cf_lut,
-				   rt_lut, ft_lut);
+	  timing = library->new_timing_lut1(timing_type, cond,
+					    cr_lut, cf_lut,
+					    rt_lut, ft_lut);
 	}
 	else { // cr_lut == nullptr && cf_lut == nullptr
-	  library->new_timing_lut2(cell_id, timing_id,
-				   timing_type, cond,
-				   rt_lut, ft_lut,
-				   rp_lut, fp_lut);
+	  timing = library->new_timing_lut2(timing_type, cond,
+					    rt_lut, ft_lut,
+					    rp_lut, fp_lut);
 	}
       }
       break;
@@ -492,6 +466,8 @@ gen_timing(CiCellLibrary* library,
       // 未実装
       break;
     }
+
+    timing_list.push_back(timing);
 
     ClibTimingSense timing_sense = timing_info.timing_sense();
 
@@ -517,16 +493,16 @@ gen_timing(CiCellLibrary* library,
 	ymuint iid = ipin->input_id();
 	switch ( timing_sense ) {
 	case kClibPosiUnate:
-	  tid_list[iid * 2 + 0].push_back(timing_id);
+	  timing_list_array[iid * 2 + 0].push_back(timing);
 	  break;
 
 	case kClibNegaUnate:
-	  tid_list[iid * 2 + 1].push_back(timing_id);
+	  timing_list_array[iid * 2 + 1].push_back(timing);
 	  break;
 
 	case kClibNonUnate:
-	  tid_list[iid * 2 + 0].push_back(timing_id);
-	  tid_list[iid * 2 + 1].push_back(timing_id);
+	  timing_list_array[iid * 2 + 0].push_back(timing);
+	  timing_list_array[iid * 2 + 1].push_back(timing);
 	  break;
 
 	default:
@@ -542,7 +518,6 @@ gen_timing(CiCellLibrary* library,
 		      "DOTLIB_PARSER",
 		      "No \"related_pin\"");
     }
-    ++ timing_id;
   }
 }
 
@@ -626,63 +601,56 @@ set_library(const DotlibLibrary& library_info,
   // 'lu_table_template' の設定
   const list<const DotlibNode*>& dt_lut_template_list =
     library_info.lut_template_list();
-  library->set_lu_table_template_num(dt_lut_template_list.size());
-  ymuint templ_id = 0;
-  for (list<const DotlibNode*>::const_iterator p = dt_lut_template_list.begin();
-       p != dt_lut_template_list.end(); ++ p, ++ templ_id) {
+  vector<CiLutTemplate*> template_list;
+  template_list.reserve(dt_lut_template_list.size());
+  for ( auto dt_node: dt_lut_template_list ) {
     DotlibTemplate templ_info;
-    if ( !templ_info.set_data(*p) ) {
+    if ( !templ_info.set_data(dt_node) ) {
       return;
     }
+
+    CiLutTemplate* tmpl = nullptr;
+    vector<double> index_1;
+    vector<double> index_2;
+    vector<double> index_3;
     ymuint d = templ_info.dimension();
     switch ( d ) {
     case 1:
-      {
-	vector<double> index_1;
-	templ_info.index_1()->get_vector(index_1);
-	library->new_lut_template1(templ_id, templ_info.name(),
-				   templ_info.variable_1(), index_1);
-      }
+      templ_info.index_1()->get_vector(index_1);
+      tmpl = library->new_lut_template1(templ_info.name(),
+					templ_info.variable_1(), index_1);
       break;
 
     case 2:
-      {
-	vector<double> index_1;
-	templ_info.index_1()->get_vector(index_1);
-	vector<double> index_2;
-	templ_info.index_2()->get_vector(index_2);
-	library->new_lut_template2(templ_id, templ_info.name(),
-				   templ_info.variable_1(), index_1,
-				   templ_info.variable_2(), index_2);
-      }
+      templ_info.index_1()->get_vector(index_1);
+      templ_info.index_2()->get_vector(index_2);
+      tmpl = library->new_lut_template2(templ_info.name(),
+					templ_info.variable_1(), index_1,
+					templ_info.variable_2(), index_2);
       break;
 
     case 3:
-      {
-	vector<double> index_1;
-	templ_info.index_1()->get_vector(index_1);
-	vector<double> index_2;
-	templ_info.index_2()->get_vector(index_2);
-	vector<double> index_3;
-	templ_info.index_3()->get_vector(index_3);
-	library->new_lut_template3(templ_id, templ_info.name(),
-				   templ_info.variable_1(), index_1,
-				   templ_info.variable_2(), index_2,
-				   templ_info.variable_3(), index_3);
-      }
+      templ_info.index_1()->get_vector(index_1);
+      templ_info.index_2()->get_vector(index_2);
+      templ_info.index_3()->get_vector(index_3);
+      tmpl = library->new_lut_template3(templ_info.name(),
+					templ_info.variable_1(), index_1,
+					templ_info.variable_2(), index_2,
+					templ_info.variable_3(), index_3);
       break;
 
     default:
       ASSERT_NOT_REACHED;
     }
+    template_list.push_back(tmpl);
   }
-
-  // セル数の設定
-  const list<const DotlibNode*>& dt_cell_list = library_info.cell_list();
-  library->set_cell_num(dt_cell_list.size());
+  library->set_lu_table_template_list(template_list);
 
   // セルの内容の設定
-  ymuint cell_id = 0;
+  const list<const DotlibNode*>& dt_cell_list = library_info.cell_list();
+  int nc = dt_cell_list.size();
+  vector<CiCell*> cell_list(nc);
+  int cell_id = 0;
   for (list<const DotlibNode*>::const_iterator p = dt_cell_list.begin();
        p != dt_cell_list.end(); ++ p, ++ cell_id) {
     const DotlibNode* dt_cell = *p;
@@ -698,9 +666,9 @@ set_library(const DotlibLibrary& library_info,
     const list<const DotlibNode*>& dt_pin_list = cell_info.pin_list();
     const list<const DotlibNode*>& dt_bus_list = cell_info.bus_list();
     const list<const DotlibNode*>& dt_bundle_list = cell_info.bundle_list();
-    ymuint npg = dt_pin_list.size();
-    ymuint nbus = dt_bus_list.size();
-    ymuint nbundle = dt_bundle_list.size();
+    int npg = dt_pin_list.size();
+    int nbus = dt_bus_list.size();
+    int nbundle = dt_bundle_list.size();
 
     // ピン情報の配列
     vector<DotlibPin> pin_info_array(npg);
@@ -709,12 +677,12 @@ set_library(const DotlibLibrary& library_info,
     HashMap<ShString, ymuint> pin_map;
 
     // ピン情報の読み出し
-    ymuint ni = 0;
-    ymuint no = 0;
-    ymuint nio = 0;
-    ymuint nit = 0;
+    int ni = 0;
+    int no = 0;
+    int nio = 0;
+    int nit = 0;
     {
-      ymuint pg_id = 0;
+      int pg_id = 0;
       bool error = false;
       for (list<const DotlibNode*>::const_iterator q = dt_pin_list.begin();
 	   q != dt_pin_list.end(); ++ q, ++ pg_id) {
@@ -756,25 +724,25 @@ set_library(const DotlibLibrary& library_info,
       }
       ASSERT_COND( pg_id == npg );
     }
-    ymuint ni2 = ni + nio;
+    int ni2 = ni + nio;
 
     // ピン名とピン番号の対応づけを行う．
     {
-      ymuint ipos = 0;
-      ymuint itpos = 0;
-      for (ymuint pg_id = 0; pg_id < npg; ++ pg_id) {
+      int ipos = 0;
+      int itpos = 0;
+      for ( int pg_id = 0; pg_id < npg; ++ pg_id ) {
 	DotlibPin& pin_info = pin_info_array[pg_id];
 	switch ( pin_info.direction() ) {
 	case DotlibPin::kInput:
 	case DotlibPin::kInout:
-	  for (ymuint i = 0; i < pin_info.num(); ++ i) {
+	  for ( int i = 0; i < pin_info.num(); ++ i ) {
 	    pin_map.add(pin_info.name(i), ipos);
 	    ++ ipos;
 	  }
 	  break;
 
 	case DotlibPin::kInternal:
-	  for (ymuint i = 0; i < pin_info.num(); ++ i) {
+	  for ( int i = 0; i < pin_info.num(); ++ i ) {
 	    pin_map.add(pin_info.name(i), itpos + ni2);
 	    ++ itpos;
 	  }
@@ -819,54 +787,45 @@ set_library(const DotlibLibrary& library_info,
     // 遷移表情報の読み出し
     const DotlibNode* dt_fsm = cell_info.statetable();
 
-    // 出力ピン(入出力ピン)の論理式を作る．
-    vector<bool> output_array;
-    vector<Expr> logic_array;
-    vector<Expr> tristate_array;
-    ymuint no2 = no + nio;
-    output_array.reserve(no2);
-    logic_array.reserve(no2);
-    tristate_array.reserve(no2);
+    vector<CiInputPin*> input_list;
+    vector<CiOutputPin*> output_list;
+    vector<CiInoutPin*> inout_list;
+    vector<CiInternalPin*> internal_list;
+    vector<CiBus*> bus_list;
+    vector<CiBundle*> bundle_list;
 
-    // 0 - (no - 1) に出力ピンの論理式
-    // no - (no2 - 1) に入出力ピンの論理式を格納する．
-    for (ymuint pg_id = 0; pg_id < npg; ++ pg_id) {
-      const DotlibPin& pin_info = pin_info_array[pg_id];
-      if ( pin_info.direction() == DotlibPin::kOutput ) {
-	gen_expr(pin_info, pin_map,
-		 output_array,
-		 logic_array,
-		 tristate_array);
-      }
-    }
-    for (ymuint pg_id = 0; pg_id < npg; ++ pg_id) {
-      const DotlibPin& pin_info = pin_info_array[pg_id];
-      if ( pin_info.direction() == DotlibPin::kInout ) {
-	gen_expr(pin_info, pin_map,
-		 output_array,
-		 logic_array,
-		 tristate_array);
-      }
-    }
+    input_list.reserve(ni);
+    output_list.reserve(no);
+    inout_list.reserve(nio);
+    internal_list.reserve(nit);
+
+    // ピンの生成
+    gen_pin(pin_info_array, pin_map, library,
+	    input_list,
+	    output_list,
+	    inout_list,
+	    internal_list);
 
     // セルの生成
+    CiCell* cell = nullptr;
     if ( dt_ff ) {
       Expr next_state = dot2expr(ff_info.next_state(), pin_map);
       Expr clocked_on = dot2expr(ff_info.clocked_on(), pin_map);
       Expr clocked_on_also = dot2expr(ff_info.clocked_on_also(), pin_map);
       Expr clear = dot2expr(ff_info.clear(), pin_map);
       Expr preset = dot2expr(ff_info.preset(), pin_map);
-      ymuint v1 = ff_info.clear_preset_var1();
-      ymuint v2 = ff_info.clear_preset_var2();
-      library->new_ff_cell(cell_id, cell_name, area,
-			   ni, no, nio, nbus, nbundle,
-			   output_array,
-			   logic_array,
-			   tristate_array,
-			   next_state,
-			   clocked_on, clocked_on_also,
-			   clear, preset,
-			   v1, v2);
+      int v1 = ff_info.clear_preset_var1();
+      int v2 = ff_info.clear_preset_var2();
+      cell = library->new_ff_cell(cell_name, area,
+				  input_list,
+				  output_list,
+				  inout_list,
+				  bus_list,
+				  bundle_list,
+				  next_state,
+				  clocked_on, clocked_on_also,
+				  clear, preset,
+				  v1, v2);
 
     }
     else if ( dt_latch ) {
@@ -875,78 +834,67 @@ set_library(const DotlibLibrary& library_info,
       Expr enable_also = dot2expr(latch_info.enable_also(), pin_map);
       Expr clear = dot2expr(latch_info.clear(), pin_map);
       Expr preset = dot2expr(latch_info.preset(), pin_map);
-      ymuint v1 = latch_info.clear_preset_var1();
-      ymuint v2 = latch_info.clear_preset_var2();
-      library->new_latch_cell(cell_id, cell_name, area,
-			      ni, no, nio, nbus, nbundle,
-			      output_array,
-			      logic_array,
-			      tristate_array,
-			      data_in,
-			      enable, enable_also,
-			      clear, preset,
-			      v1, v2);
+      int v1 = latch_info.clear_preset_var1();
+      int v2 = latch_info.clear_preset_var2();
+      cell = library->new_latch_cell(cell_name, area,
+				     input_list,
+				     output_list,
+				     inout_list,
+				     bus_list,
+				     bundle_list,
+				     data_in,
+				     enable, enable_also,
+				     clear, preset,
+				     v1, v2);
     }
     else if ( dt_fsm ) {
-      library->new_fsm_cell(cell_id, cell_name, area,
-			    ni, no, nio, nit, nbus, nbundle,
-			    output_array,
-			    logic_array,
-			    tristate_array);
+      cell = library->new_fsm_cell(cell_name, area,
+				   input_list,
+				   output_list,
+				   inout_list,
+				   internal_list,
+				   bus_list,
+				   bundle_list);
     }
     else {
-      library->new_logic_cell(cell_id, cell_name, area,
-			      ni, no, nio, nbus, nbundle,
-			      output_array,
-			      logic_array,
-			      tristate_array);
+      cell = library->new_logic_cell(cell_name, area,
+				     input_list,
+				     output_list,
+				     inout_list,
+				     bus_list,
+				     bundle_list);
     }
-
-    // ピンの生成
-    gen_pin(library, pin_info_array, cell_id,
-	    output_array,
-	    logic_array,
-	    tristate_array);
+    cell_list[cell_id] = cell;
 
     // タイミング情報の生成
-    ymuint nt = 0;
-    for (ymuint pg_id = 0; pg_id < npg; ++ pg_id) {
+    vector<CiTiming*> timing_list;
+    for ( int pg_id = 0; pg_id < npg; ++ pg_id ) {
       const DotlibPin& pin_info = pin_info_array[pg_id];
-      const list<const DotlibNode*>& timing_list = pin_info.timing_list();
-      nt += timing_list.size();
-    }
-    library->set_timing_num(cell_id, nt);
+      vector<vector<CiTiming*> > timing_list_array(ni2 * 2);
+      const list<const DotlibNode*>& dt_timing_list = pin_info.timing_list();
+      gen_timing(dt_timing_list,
+		 library, cell, pin_map,
+		 timing_list, timing_list_array);
 
-    const ClibCell* cell = library->cell(cell_id);
-
-    ymuint timing_id = 0;
-    for (ymuint pg_id = 0; pg_id < npg; ++ pg_id) {
-      const DotlibPin& pin_info = pin_info_array[pg_id];
-      vector<vector<ymuint> > tid_list(ni2 * 2);
-      const list<const DotlibNode*>& timing_list = pin_info.timing_list();
-
-      gen_timing(library, timing_list, cell_id, timing_id, pin_map, tid_list);
-
-      ymuint nop = pin_info.num();
-      for (ymuint i = 0; i < nop; ++ i) {
+      int nop = pin_info.num();
+      for ( int i = 0; i < nop; ++ i ) {
 	ShString oname = pin_info.name(i);
 	const ClibCellPin* opin = cell->pin((const char*)oname);
 	ASSERT_COND( opin != nullptr );
-	ymuint oid = opin->output_id();
+	int oid = opin->output_id();
 	bool has_logic = cell->has_logic(oid);
 	TvFunc tv_function;
 	if ( has_logic ) {
 	  Expr expr = cell->logic_expr(oid);
 	  tv_function = expr.make_tv(ni2);
 	}
-	for (ymuint iid = 0; iid < ni2; ++ iid) {
+	for ( int iid = 0; iid < ni2; ++ iid ) {
 	  TvFunc p_func = tv_function.cofactor(VarId(iid), false);
 	  TvFunc n_func = tv_function.cofactor(VarId(iid), true);
 
-	  const vector<ymuint>& tid_list_p = tid_list[iid * 2 + 0];
-	  if ( !tid_list_p.empty() ) {
-	    ymuint tid = tid_list_p[0];
-	    const ClibTiming* timing = cell->timing(tid);
+	  const vector<CiTiming*>& timing_list_p = timing_list_array[iid * 2 + 0];
+	  if ( !timing_list_p.empty() ) {
+	    CiTiming* timing = timing_list_p[0];
 	    bool depend = true;
 	    if ( timing->type() == kClibTimingCombinational ) {
 	      if ( has_logic && !(~n_func && p_func) ) {
@@ -954,14 +902,13 @@ set_library(const DotlibLibrary& library_info,
 	      }
 	    }
 	    if ( depend ) {
-	      library->set_timing(cell_id, iid, oid, kClibPosiUnate, tid_list_p);
+	      library->set_timing(cell, iid, oid, kClibPosiUnate, timing_list_p);
 	    }
 	  }
 
-	  const vector<ymuint>& tid_list_n = tid_list[iid * 2 + 1];
-	  if ( !tid_list_n.empty() ) {
-	    ymuint tid = tid_list_n[0];
-	    const ClibTiming* timing = cell->timing(tid);
+	  const vector<CiTiming*>& timing_list_n = timing_list_array[iid * 2 + 1];
+	  if ( !timing_list_n.empty() ) {
+	    CiTiming* timing = timing_list_n[0];
 	    bool depend = true;
 	    if ( timing->type() == kClibTimingCombinational ) {
 	      if ( has_logic && !(~p_func && n_func) ) {
@@ -969,16 +916,16 @@ set_library(const DotlibLibrary& library_info,
 	      }
 	    }
 	    if ( depend ) {
-	      library->set_timing(cell_id, iid, oid, kClibNegaUnate, tid_list_n);
+	      library->set_timing(cell, iid, oid, kClibNegaUnate, timing_list_n);
 	    }
 	  }
 	}
       }
     }
-    ASSERT_COND( timing_id == nt );
+    library->set_timing_list(cell, timing_list);
   }
 
-  library->compile();
+  library->set_cell_list(cell_list);
 }
 
 END_NONAMESPACE

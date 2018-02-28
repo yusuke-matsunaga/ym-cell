@@ -89,12 +89,11 @@ set_library(const string& lib_name,
   for (const MislibNode* gate = gate_list->top(); gate; gate = gate->next()) {
     ++ cell_num;
   }
-  library->set_cell_num(cell_num);
 
   // セルの内容の設定
-  ymuint cell_id = 0;
-  for (const MislibNode* gate = gate_list->top(); gate;
-       gate = gate->next(), ++ cell_id) {
+  vector<CiCell*> cell_list;
+  for ( const MislibNode* gate = gate_list->top(); gate;
+	gate = gate->next() ) {
     ShString name = gate->name()->str();
     ClibArea area(gate->area()->num());
     ShString opin_name = gate->opin_name()->str();
@@ -128,73 +127,75 @@ set_library(const string& lib_name,
       }
     }
 
-    ymuint ni = ipin_name_list.size();
-    Expr function = opin_expr->to_expr(ipin_name_map);
-    vector<bool> output_array(1, true);
-    vector<Expr> logic_array(1, function);
-    vector<Expr> tristate_array(1, Expr::const_zero());
-    library->new_logic_cell(cell_id, name, area,
-			    ni, 1, 0, 0, 0,
-			    output_array,
-			    logic_array,
-			    tristate_array);
-    for (ymuint i = 0; i < ni; ++ i) {
+    // 入力ピンのリストを作る．
+    int ni = ipin_name_list.size();
+    vector<CiInputPin*> input_list(ni);
+    for ( int i = 0; i < ni; ++ i ) {
       // 入力ピンの設定
       ShString name = ipin_name_list[i];
       const MislibNode* pin = ipin_array[i];
       ClibCapacitance load(pin->input_load()->num());
-      library->new_cell_input(cell_id, i, i, name, load, load, load);
+      input_list[i] = library->new_cell_input(name, load, load, load);
     }
-    // 出力ピンの設定
-    library->new_cell_output(cell_id, ni, 0, opin_name,
-			     true, function,
-			     Expr::const_zero(),
-			     ClibCapacitance::infty(),
-			     ClibCapacitance(0.0),
-			     ClibCapacitance::infty(),
-			     ClibCapacitance(0.0),
-			     ClibTime::infty(),
-			     ClibTime(0.0));
+
+    // 出力ピンを作る．
+    Expr function = opin_expr->to_expr(ipin_name_map);
+    CiOutputPin* opin = library->new_cell_output(opin_name,
+						 true, function,
+						 Expr::const_zero(),
+						 ClibCapacitance::infty(),
+						 ClibCapacitance(0.0),
+						 ClibCapacitance::infty(),
+						 ClibCapacitance(0.0),
+						 ClibTime::infty(),
+						 ClibTime(0.0));
+
+    // セルを作る．
+    CiCell* cell = library->new_logic_cell(name, area,
+					   input_list,
+					   vector<CiOutputPin*>(1, opin),
+					   vector<CiInoutPin*>(),
+					   vector<CiBus*>(),
+					   vector<CiBundle*>());
+    cell_list.push_back(cell);
 
     // タイミング情報の生成
-    vector<ymuint> tid_array(ni);
+    vector<CiTiming*> timing_list(ni);
     if ( !wildcard_pin ) {
-      library->set_timing_num(cell_id, ni);
-      for (ymuint i = 0; i < ni; ++ i) {
+      for ( int i = 0; i < ni; ++ i ) {
 	const MislibNode* pt_pin = ipin_array[i];
 	ClibTime r_i(pt_pin->rise_block_delay()->num());
 	ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
 	ClibTime f_i(pt_pin->fall_block_delay()->num());
 	ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
-	library->new_timing_generic(cell_id, i,
-				    kClibTimingCombinational,
-				    Expr::const_one(),
-				    r_i, f_i,
-				    ClibTime(0.0), ClibTime(0.0),
-				    r_r, f_r);
-	tid_array[i] = i;
+	CiTiming* timing = library->new_timing_generic(kClibTimingCombinational,
+						       Expr::const_one(),
+						       r_i, f_i,
+						       ClibTime(0.0), ClibTime(0.0),
+						       r_r, f_r);
+	timing_list[i] = timing;
       }
     }
     else { // ipin_list->type() == MislibNode::kPin
-      library->set_timing_num(cell_id, 1);
+      vector<CiTiming*> timing_list(1);
       const MislibNode* pt_pin = ipin_top;
       ClibTime r_i(pt_pin->rise_block_delay()->num());
       ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
       ClibTime f_i(pt_pin->fall_block_delay()->num());
       ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
-      library->new_timing_generic(cell_id, 0,
-				  kClibTimingCombinational,
-				  Expr::const_one(),
-				  r_i, f_i,
-				  ClibTime(0.0), ClibTime(0.0),
-				  r_r, f_r);
-      for (ymuint i = 0; i < ni; ++ i) {
-	tid_array[i] = 0;
+      CiTiming* timing = library->new_timing_generic(kClibTimingCombinational,
+						     Expr::const_one(),
+						     r_i, f_i,
+						     ClibTime(0.0), ClibTime(0.0),
+						     r_r, f_r);
+      for ( int i = 0; i < ni; ++ i ) {
+	timing_list[i] = timing;
       }
     }
+    library->set_timing_list(cell, timing_list);
 
     TvFunc tv_function = function.make_tv(ni);
-    for (ymuint i = 0; i < ni; ++ i) {
+    for ( int i = 0; i < ni; ++ i ) {
       // タイミング情報の設定
       VarId var(i);
       const MislibNode* pt_pin = ipin_array[i];
@@ -263,19 +264,19 @@ set_library(const string& lib_name,
 	sense = sense_real;
       }
       if ( sense == kClibNonUnate ) {
-	library->set_timing(cell_id, i, 0, kClibPosiUnate,
-			    vector<ymuint>(1, tid_array[i]));
-	library->set_timing(cell_id, i, 0, kClibNegaUnate,
-			    vector<ymuint>(1, tid_array[i]));
+	library->set_timing(cell, i, 0, kClibPosiUnate,
+			    vector<CiTiming*>(1, timing_list[i]));
+	library->set_timing(cell, i, 0, kClibNegaUnate,
+			    vector<CiTiming*>(1, timing_list[i]));
       }
       else {
-	library->set_timing(cell_id, i, 0, sense,
-			    vector<ymuint>(1, tid_array[i]));
+	library->set_timing(cell, i, 0, sense,
+			    vector<CiTiming*>(1, timing_list[i]));
       }
     }
   }
 
-  library->compile();
+  library->set_cell_list(cell_list);
 }
 
 END_NONAMESPACE

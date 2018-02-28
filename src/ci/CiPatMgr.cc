@@ -111,57 +111,6 @@ CiPatMgr::copy(const LcPatMgr& src)
   }
 }
 
-// @brief バイナリダンプを行う．
-// @param[in] bos 出力先のストリーム
-void
-CiPatMgr::dump(ODO& bos) const
-{
-  // パタングラフのノード情報のダンプ
-  bos << mNodeNum;
-  for (ymuint i = 0; i < mNodeNum; ++ i) {
-    bos << mNodeTypeArray[i]
-	<< mEdgeArray[i * 2 + 0]
-	<< mEdgeArray[i * 2 + 1];
-  }
-
-  // パタングラフの情報のダンプ
-  bos << mPatNum;
-  for (ymuint i = 0; i < mPatNum; ++ i) {
-    mPatArray[i].dump(bos);
-  }
-}
-
-// @brief データを読み込んでセットする．
-// @param[in] bis 入力元のストリーム
-// @retval true 読み込みが成功した．
-// @retval false 読み込みが失敗した．
-bool
-CiPatMgr::restore(IDO& bis)
-{
-  // ノードと枝の情報を読み込む．
-  ymuint32 nn;
-  bis >> nn;
-  set_node_num(nn);
-  for (ymuint i = 0; i < nn; ++ i) {
-    bis >> mNodeTypeArray[i]
-	>> mEdgeArray[i * 2]
-	>> mEdgeArray[i * 2 + 1];
-    if ( node_type(i) == kClibPatInput ) {
-      ASSERT_COND( input_id(i) == i );
-    }
-  }
-
-  // パタングラフの情報を読み込む．
-  ymuint32 np;
-  bis >> np;
-  set_pat_num(np);
-  for (ymuint id = 0; id < mPatNum; ++ id) {
-    mPatArray[id].restore(bis, mAlloc);
-  }
-
-  return true;
-}
-
 // @brief ノード数を設定する．
 // @param[in] nn ノード数
 void

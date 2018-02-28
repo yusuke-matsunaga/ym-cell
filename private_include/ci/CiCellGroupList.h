@@ -41,17 +41,16 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 内容を初期化する．
-  /// @param[in] group_list セルグループのリスト
-  /// @param[in] alloc メモリアロケータ
-  void
-  init(const vector<const ClibCellGroup*>& group_list,
-       Alloc& alloc);
-
   /// @brief 要素数を返す．
   virtual
   int
   num() const;
+
+  /// @brief 要素を返す．
+  /// @param[in] pos 位置番号 ( 0 <= pos < num() )
+  virtual
+  const ClibCellGroup*
+  operator[](int pos) const;
 
   /// @brief 先頭の反復子を返す．
   virtual
@@ -62,6 +61,24 @@ public:
   virtual
   iterator
   end() const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // CiCellGroupList に固有の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を初期化する．
+  /// @param[in] group_list 要素のリスト
+  /// @param[in] alloc メモリアロケータ
+  void
+  init(const vector<CiCellGroup*>& group_list,
+       Alloc& alloc);
+
+  /// @brief 要素を返す．
+  /// @param[in] pos 位置番号 ( 0 <= pos < num() )
+  const CiCellGroup*
+  _elem(int pos) const;
 
 
 private:
@@ -78,8 +95,8 @@ private:
   // 要素数
   int mNum;
 
-  // セルグループへのポインタ配列
-  const ClibCellGroup** mArray;
+  // セルグループのポインタの配列
+  CiCellGroup** mArray;
 
 };
 

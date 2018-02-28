@@ -29,7 +29,7 @@ encode(ymuint val,
 }
 
 inline
-ymuint
+int
 get_sense(ymuint bits,
 	  int idx)
 {
@@ -37,7 +37,7 @@ get_sense(ymuint bits,
 }
 
 inline
-ymuint
+int
 get_pos(ymuint bits,
 	int idx)
 {
@@ -65,7 +65,7 @@ ClibLatchInfo::ClibLatchInfo() :
 //  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
 //  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
 //  - pos_array[4] : 肯定出力のピン番号       (3bit)
-ClibLatchInfo::ClibLatchInfo(ymuint pos_array[]) :
+ClibLatchInfo::ClibLatchInfo(int pos_array[]) :
   mBits(0U)
 {
   mBits |= encode(pos_array[0], INPUT);
@@ -84,7 +84,7 @@ ClibLatchInfo::~ClibLatchInfo()
 // @retval 0 なし
 // @retval 1 positive edge
 // @retval 2 negative edge
-ymuint
+int
 ClibLatchInfo::enable_sense() const
 {
   return get_sense(mBits, ENABLE);
@@ -94,7 +94,7 @@ ClibLatchInfo::enable_sense() const
 // @retval 0 なし
 // @retval 1 High sensitive
 // @retval 2 Low sensitive
-ymuint
+int
 ClibLatchInfo::clear_sense() const
 {
   return get_sense(mBits, CLEAR);
@@ -104,7 +104,7 @@ ClibLatchInfo::clear_sense() const
 // @retval 0 なし
 // @retval 1 High sensitive
 // @retval 2 Low sensitive
-ymuint
+int
 ClibLatchInfo::preset_sense() const
 {
   return get_sense(mBits, PRESET);
@@ -139,14 +139,14 @@ ClibLatchInfo::has_preset() const
 }
 
 // @brief データ入力のピン番号を返す．
-ymuint
+int
 ClibLatchInfo::data_pos() const
 {
   return get_pos(mBits, INPUT);
 }
 
 // @brief クロック入力のピン番号を返す．
-ymuint
+int
 ClibLatchInfo::enable_pos() const
 {
   return get_pos(mBits, ENABLE);
@@ -154,7 +154,7 @@ ClibLatchInfo::enable_pos() const
 
 // @brief クリア入力のピン番号を返す．
 // @note クリア入力がない場合の値は不定
-ymuint
+int
 ClibLatchInfo::clear_pos() const
 {
   return get_pos(mBits, CLEAR);
@@ -162,14 +162,14 @@ ClibLatchInfo::clear_pos() const
 
 // @brief プリセット入力のピン番号を返す．
 // @note プリセット入力がない場合の値は不定
-ymuint
+int
 ClibLatchInfo::preset_pos() const
 {
   return get_pos(mBits, PRESET);
 }
 
 // @brief 肯定出力のピン番号を返す．
-ymuint
+int
 ClibLatchInfo::q_pos() const
 {
   return get_pos(mBits, OUTPUT1);

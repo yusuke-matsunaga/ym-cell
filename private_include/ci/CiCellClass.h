@@ -19,6 +19,8 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiCellLibrary;
+
 //////////////////////////////////////////////////////////////////////
 /// @class CiCellClass CiCellClass.h "CiCellClass.h"
 /// @brief ClibCellClass の実装クラスの基底クラス
@@ -46,20 +48,20 @@ public:
   /// @brief ID番号を返す．
   /// @note ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
   virtual
-  ymuint
+  int
   id() const;
 
   /// @brief 同位体変換の個数を得る．
   /// @note 恒等変換は含まない．
   virtual
-  ymuint
+  int
   idmap_num() const;
 
   /// @brief 同位体変換を得る．
   /// @param[in] pos 位置番号 ( 0 <= pos < idmap_num() )
   virtual
   const NpnMapM&
-  idmap(ymuint pos) const;
+  idmap(int pos) const;
 
 
 public:
@@ -79,12 +81,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 初期化する．
+  /// @param[in] id 番号
   /// @param[in] idmap_list 同位体変換リスト
   /// @param[in] group_list グループのリスト
   /// @param[in] alloc メモリアロケータ
   void
-  init(const vector<NpnMapM>& idmap_list,
-       const vector<const ClibCellGroup*>& group_list,
+  init(int id,
+       const vector<NpnMapM>& idmap_list,
+       const vector<CiCellGroup*>& group_list,
        Alloc& alloc);
 
 
@@ -97,28 +101,28 @@ public:
   /// @param[in] bos 出力先のストリーム
   void
   dump(ODO& bos) const;
-
+#if 0
   /// @brief バイナリファイルを読み込む．
   /// @param[in] bis 入力元のストリーム
   /// @param[in] library セルライブラリ
   /// @param[in] alloc メモリアロケータ
   void
   restore(IDO& bis,
-	  const ClibCellLibrary& library,
+	  CiCellLibrary& library,
 	  Alloc& alloc);
-
+#endif
 
 private:
   //////////////////////////////////////////////////////////////////////
   // メモリ確保用の下請け関数
   //////////////////////////////////////////////////////////////////////
-
+#if 0
   /// @brief 配列領域の確保を行う．
   /// @param[in] alloc メモリアロケータ
   /// @note mIdmapNum, mGroupNum が適切に設定されている必要がある．
   void
   alloc_array(Alloc& alloc);
-
+#endif
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -126,10 +130,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID番号
-  ymuint mId;
+  int mId;
 
   // 同位体変換の数
-  ymuint mIdmapNum;
+  int mIdmapNum;
 
   // 同位体変換の配列
   NpnMapM* mIdmapList;

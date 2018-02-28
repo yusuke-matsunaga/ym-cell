@@ -18,44 +18,36 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief コンストラクタ
 // @param[in] library 親のセルライブラリ
-// @param[in] id ID番号
 // @param[in] name 名前
 // @param[in] area 面積
-// @param[in] ni 入力ピン数
-// @param[in] no 出力ピン数
-// @param[in] nio 入出力ピン数
-// @param[in] nb バス数
-// @param[in] nc バンドル数
-// @param[in] output_array 出力の情報の配列(*1)
-// @param[in] logic_array 出力の論理式の配列
-// @param[in] tristate_array トライステート条件の論理式の配列
+// @param[in] input_list 入力ピンのリスト
+// @param[in] output_list 出力ピンのリスト
+// @param[in] inout_list 入出力ピンのリスト
+// @param[in] bus_list バスのリスト
+// @param[in] bundle_list バンドルのリスト
 // @param[in] next_state "next_state" 関数の式
 // @param[in] clocked_on "clocked_on" 関数の式
 // @param[in] clocked_on_also "clocked_on_also" 関数の式
 // @param[in] alloc メモリアロケータ
-// *1: - false 論理式なし
-//     - true 論理式あり
 CiFFCell::CiFFCell(CiCellLibrary* library,
-		   ymuint id,
 		   const ShString& name,
 		   ClibArea area,
-		   ymuint ni,
-		   ymuint no,
-		   ymuint nio,
-		   ymuint nb,
-		   ymuint nc,
-		   const vector<bool>& output_array,
-		   const vector<Expr>& logic_array,
-		   const vector<Expr>& tristate_array,
+		   const vector<CiInputPin*>& input_list,
+		   const vector<CiOutputPin*>& output_list,
+		   const vector<CiInoutPin*>& inout_list,
+		   const vector<CiBus*>& bus_list,
+		   const vector<CiBundle*>& bundle_list,
 		   const Expr& next_state,
 		   const Expr& clocked_on,
 		   const Expr& clocked_on_also,
 		   Alloc& alloc) :
-  CiCell(library, id, name, area,
-	 ni, no, nio, 0, nb, nc,
-	 output_array,
-	 logic_array,
-	 tristate_array,
+  CiCell(library, name, area,
+	 input_list,
+	 output_list,
+	 inout_list,
+	 vector<CiInternalPin*>(),
+	 bus_list,
+	 bundle_list,
 	 alloc),
   mNextState(next_state),
   mClock(clocked_on),
@@ -106,7 +98,6 @@ CiFFCell::clock2_expr() const
 
 // @brief コンストラクタ
 // @param[in] library 親のセルライブラリ
-// @param[in] id ID番号
 // @param[in] name 名前
 // @param[in] area 面積
 // @param[in] ni 入力ピン数
@@ -125,27 +116,24 @@ CiFFCell::clock2_expr() const
 // *1: - false 論理式なし
 //     - true 論理式あり
 CiFFRCell::CiFFRCell(CiCellLibrary* library,
-		     ymuint id,
 		     const ShString& name,
 		     ClibArea area,
-		     ymuint ni,
-		     ymuint no,
-		     ymuint nio,
-		     ymuint nb,
-		     ymuint nc,
-		     const vector<bool>& output_array,
-		     const vector<Expr>& logic_array,
-		     const vector<Expr>& tristate_array,
+		     const vector<CiInputPin*>& input_list,
+		     const vector<CiOutputPin*>& output_list,
+		     const vector<CiInoutPin*>& inout_list,
+		     const vector<CiBus*>& bus_list,
+		     const vector<CiBundle*>& bundle_list,
 		     const Expr& next_state,
 		     const Expr& clocked_on,
 		     const Expr& clocked_on_also,
 		     const Expr& clear,
 		     Alloc& alloc) :
-  CiFFCell(library, id, name, area,
-	   ni, no, nio, nb, nc,
-	   output_array,
-	   logic_array,
-	   tristate_array,
+  CiFFCell(library, name, area,
+	   input_list,
+	   output_list,
+	   inout_list,
+	   bus_list,
+	   bundle_list,
 	   next_state,
 	   clocked_on,
 	   clocked_on_also,
@@ -181,46 +169,37 @@ CiFFRCell::clear_expr() const
 
 // @brief コンストラクタ
 // @param[in] library 親のセルライブラリ
-// @param[in] id ID番号
 // @param[in] name 名前
 // @param[in] area 面積
-// @param[in] ni 入力ピン数
-// @param[in] no 出力ピン数
-// @param[in] nio 入出力ピン数
-// @param[in] nb バス数
-// @param[in] nc バンドル数
-// @param[in] output_array 出力の情報の配列(*1)
-// @param[in] logic_array 出力の論理式の配列
-// @param[in] tristate_array トライステート条件の論理式の配列
+// @param[in] input_list 入力ピンのリスト
+// @param[in] output_list 出力ピンのリスト
+// @param[in] inout_list 入出力ピンのリスト
+// @param[in] bus_list バスのリスト
+// @param[in] bundle_list バンドルのリスト
 // @param[in] next_state "next_state" 関数の式
 // @param[in] clocked_on "clocked_on" 関数の式
 // @param[in] clocked_on_also "clocked_on_also" 関数の式
 // @param[in] preset "preset" 関数の式
 // @param[in] alloc メモリアロケータ
-// *1: - false 論理式なし
-//     - true 論理式あり
 CiFFSCell::CiFFSCell(CiCellLibrary* library,
-		     ymuint id,
 		     const ShString& name,
 		     ClibArea area,
-		     ymuint ni,
-		     ymuint no,
-		     ymuint nio,
-		     ymuint nb,
-		     ymuint nc,
-		     const vector<bool>& output_array,
-		     const vector<Expr>& logic_array,
-		     const vector<Expr>& tristate_array,
+		     const vector<CiInputPin*>& input_list,
+		     const vector<CiOutputPin*>& output_list,
+		     const vector<CiInoutPin*>& inout_list,
+		     const vector<CiBus*>& bus_list,
+		     const vector<CiBundle*>& bundle_list,
 		     const Expr& next_state,
 		     const Expr& clocked_on,
 		     const Expr& clocked_on_also,
 		     const Expr& preset,
 		     Alloc& alloc) :
-  CiFFCell(library, id, name, area,
-	   ni, no, nio, nb, nc,
-	   output_array,
-	   logic_array,
-	   tristate_array,
+  CiFFCell(library, name, area,
+	   input_list,
+	   output_list,
+	   inout_list,
+	   bus_list,
+	   bundle_list,
 	   next_state,
 	   clocked_on,
 	   clocked_on_also,
@@ -256,17 +235,13 @@ CiFFSCell::preset_expr() const
 
 // @brief コンストラクタ
 // @param[in] library 親のセルライブラリ
-// @param[in] id ID番号
 // @param[in] name 名前
 // @param[in] area 面積
-// @param[in] ni 入力ピン数
-// @param[in] no 出力ピン数
-// @param[in] nio 入出力ピン数
-// @param[in] nb バス数
-// @param[in] nc バンドル数
-// @param[in] output_array 出力の情報の配列(*1)
-// @param[in] logic_array 出力の論理式の配列
-// @param[in] tristate_array トライステート条件の論理式の配列
+// @param[in] input_list 入力ピンのリスト
+// @param[in] output_list 出力ピンのリスト
+// @param[in] inout_list 入出力ピンのリスト
+// @param[in] bus_list バスのリスト
+// @param[in] bundle_list バンドルのリスト
 // @param[in] next_state "next_state" 関数の式
 // @param[in] clocked_on "clocked_on" 関数の式
 // @param[in] clocked_on_also "clocked_on_also" 関数の式
@@ -275,33 +250,28 @@ CiFFSCell::preset_expr() const
 // @param[in] clear_preset_var1 clear と preset が同時にオンになったときの値1
 // @param[in] clear_preset_var2 clear と preset が同時にオンになったときの値1
 // @param[in] alloc メモリアロケータ
-// *1: - false 論理式なし
-//     - true 論理式あり
 CiFFSRCell::CiFFSRCell(CiCellLibrary* library,
-		       ymuint id,
 		       const ShString& name,
 		       ClibArea area,
-		       ymuint ni,
-		       ymuint no,
-		       ymuint nio,
-		       ymuint nb,
-		       ymuint nc,
-		       const vector<bool>& output_array,
-		       const vector<Expr>& logic_array,
-		       const vector<Expr>& tristate_array,
+		       const vector<CiInputPin*>& input_list,
+		       const vector<CiOutputPin*>& output_list,
+		       const vector<CiInoutPin*>& inout_list,
+		       const vector<CiBus*>& bus_list,
+		       const vector<CiBundle*>& bundle_list,
 		       const Expr& next_state,
 		       const Expr& clocked_on,
 		       const Expr& clocked_on_also,
 		       const Expr& clear,
 		       const Expr& preset,
-		       ymuint clear_preset_var1,
-		       ymuint clear_preset_var2,
+		       int clear_preset_var1,
+		       int clear_preset_var2,
 		       Alloc& alloc) :
-  CiFFRCell(library, id, name, area,
-	    ni, no, nio, nb, nc,
-	    output_array,
-	    logic_array,
-	    tristate_array,
+  CiFFRCell(library, name, area,
+	    input_list,
+	    output_list,
+	    inout_list,
+	    bus_list,
+	    bundle_list,
 	    next_state,
 	    clocked_on,
 	    clocked_on_also,
@@ -337,7 +307,7 @@ CiFFSRCell::preset_expr() const
 // @retval 0 "L"
 // @retval 1 "H"
 // @note FFセルとラッチセルの時に意味を持つ．
-ymuint
+int
 CiFFSRCell::clear_preset_var1() const
 {
   return mClearPresetVal[0];
@@ -347,7 +317,7 @@ CiFFSRCell::clear_preset_var1() const
 // @retval 0 "L"
 // @retval 1 "H"
 // @note FFセルとラッチセルの時に意味を持つ．
-ymuint
+int
 CiFFSRCell::clear_preset_var2() const
 {
   return mClearPresetVal[1];

@@ -37,7 +37,7 @@ public:
   /// @brief ID番号を返す．
   /// @note ClibCellLibrary::group(id) で返されるオブジェクトの id() は id となる．
   virtual
-  ymuint
+  int
   id() const = 0;
 
 
@@ -86,7 +86,7 @@ public:
 
   /// @brief データ入力のピン番号を返す．
   virtual
-  ymuint
+  int
   data_pos() const = 0;
 
   /// @brief クロック入力のタイプを返す．
@@ -94,12 +94,12 @@ public:
   /// @retval 1 positive edge
   /// @retval 2 negative edge
   virtual
-  ymuint
+  int
   clock_sense() const = 0;
 
   /// @brief クロック入力のピン番号を返す．
   virtual
-  ymuint
+  int
   clock_pos() const = 0;
 
   /// @brief イネーブル入力を持つとき true を返す．
@@ -112,12 +112,12 @@ public:
   /// @retval 1 positive edge
   /// @retval 2 negative edge
   virtual
-  ymuint
+  int
   enable_sense() const = 0;
 
   /// @brief イネーブル入力のピン番号を返す．
   virtual
-  ymuint
+  int
   enable_pos() const = 0;
 
   /// @brief クリア入力を持つタイプの時に true を返す．
@@ -130,13 +130,13 @@ public:
   /// @retval 1 High sensitive
   /// @retval 2 Low sensitive
   virtual
-  ymuint
+  int
   clear_sense() const = 0;
 
   /// @brief クリア入力のピン番号を返す．
   /// @note クリア入力がない場合の値は不定
   virtual
-  ymuint
+  int
   clear_pos() const = 0;
 
   /// @brief プリセット入力を持つタイプの時に true を返す．
@@ -149,23 +149,23 @@ public:
   /// @retval 1 High sensitive
   /// @retval 2 Low sensitive
   virtual
-  ymuint
+  int
   preset_sense() const = 0;
 
   /// @brief プリセット入力のピン番号を返す．
   /// @note プリセット入力がない場合の値は不定
   virtual
-  ymuint
+  int
   preset_pos() const = 0;
 
   /// @brief 肯定出力のピン番号を返す．
   virtual
-  ymuint
+  int
   q_pos() const = 0;
 
   /// @brief 否定出力のピン番号を返す．
   virtual
-  ymuint
+  int
   xq_pos() const = 0;
 
 

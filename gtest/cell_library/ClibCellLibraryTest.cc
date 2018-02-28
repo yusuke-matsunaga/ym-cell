@@ -9,6 +9,8 @@
 
 #include "gtest/gtest.h"
 #include "ym/ClibCellLibrary.h"
+#include "ym/FileIDO.h"
+#include "ym/FileODO.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -21,6 +23,8 @@ TEST(ClibCellLibraryTest, read_mislib)
     bool stat = library.read_mislib(filename);
 
     EXPECT_TRUE( stat );
+
+    EXPECT_EQ( 29, library.cell_num() );
   }
   catch ( AssertError obj ) {
     cout << obj << endl;
@@ -36,6 +40,23 @@ TEST(ClibCellLibraryTest, read_liberty)
     bool stat = library.read_liberty(filename);
 
     EXPECT_TRUE( stat );
+
+    EXPECT_EQ( 310, library.cell_num() );
+
+    string dump_filename = "./foo.dump";
+
+    FileODO odo;
+    bool r = odo.open(dump_filename);
+    ASSERT_TRUE ( r );
+    library.dump(odo);
+
+    FileIDO ido;
+    r = ido.open(dump_filename);
+    ASSERT_TRUE ( r );
+    ClibCellLibrary library2;
+    library2.restore(ido);
+
+    EXPECT_EQ( library.cell_num(), library2.cell_num() );
   }
   catch ( AssertError obj ) {
     cout << obj << endl;

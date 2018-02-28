@@ -29,11 +29,9 @@ class CiTiming :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] id ID番号
   /// @param[in] type タイミング条件の型
   /// @param[in] cond タイミング条件を表す式
-  CiTiming(ymuint id,
-	   ClibTimingType type,
+  CiTiming(ClibTimingType type,
 	   const Expr& cond);
 
   /// @brief デストラクタ
@@ -48,7 +46,7 @@ public:
   /// @brief ID番号の取得
   /// @note timing = cell->timing(id); の時，timing->id() = id となる．
   virtual
-  ymuint
+  int
   id() const;
 
   /// @brief 型の取得
@@ -186,7 +184,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID
-  ymuint32 mId;
+  int mId;
 
   // 型
   ClibTimingType mType;
@@ -207,15 +205,13 @@ class CiTimingGP :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] id ID番号
   /// @param[in] timing_type タイミングの型
   /// @param[in] cond タイミング条件を表す式
   /// @param[in] intrinsic_rise 立ち上がり固有遅延
   /// @param[in] intrinsic_fall 立ち下がり固有遅延
   /// @param[in] slope_rise 立ち上がりスロープ遅延
   /// @param[in] slope_fall 立ち下がりスロープ遅延
-  CiTimingGP(ymuint id,
-	     ClibTimingType timing_type,
+  CiTimingGP(ClibTimingType timing_type,
 	     const Expr& cond,
 	     ClibTime intrinsic_rise,
 	     ClibTime intrinsic_fall,
@@ -285,7 +281,6 @@ class CiTimingGeneric :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] id ID番号
   /// @param[in] timing_type タイミングの型
   /// @param[in] cond タイミング条件を表す式
   /// @param[in] intrinsic_rise 立ち上がり固有遅延
@@ -294,8 +289,7 @@ private:
   /// @param[in] slope_fall 立ち下がりスロープ遅延
   /// @param[in] rise_resistance 立ち上がり遷移遅延パラメータ
   /// @param[in] fall_resistance 立ち下がり遷移遅延パラメータ
-  CiTimingGeneric(ymuint id,
-		  ClibTimingType timing_type,
+  CiTimingGeneric(ClibTimingType timing_type,
 		  const Expr& cond,
 		  ClibTime intrinsic_rise,
 		  ClibTime intrinsic_fall,
@@ -363,15 +357,13 @@ class CiTimingPiecewise :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] id ID番号
   /// @param[in] timing_type タイミングの型
   /// @param[in] cond タイミング条件を表す式
   /// @param[in] intrinsic_rise 立ち上がり固有遅延
   /// @param[in] intrinsic_fall 立ち下がり固有遅延
   /// @param[in] slope_rise 立ち上がりスロープ遅延
   /// @param[in] slope_fall 立ち下がりスロープ遅延
-  CiTimingPiecewise(ymuint id,
-		    ClibTimingType timing_type,
+  CiTimingPiecewise(ClibTimingType timing_type,
 		    const Expr& cond,
 		    ClibTime intrinsic_rise,
 		    ClibTime intrinsic_fall,
@@ -449,13 +441,11 @@ class CiTimingLut1 :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] id ID番号
   /// @param[in] timing_type タイミングの型
   /// @param[in] cond タイミング条件を表す式
   /// @param[in] cell_rise 立ち上がりセル遅延テーブル
   /// @param[in] cell_fall 立ち下がりセル遅延テーブル
-  CiTimingLut1(ymuint id,
-	       ClibTimingType timing_type,
+  CiTimingLut1(ClibTimingType timing_type,
 	       const Expr& cond,
 	       ClibLut* cell_rise,
 	       ClibLut* cell_fall,
@@ -538,15 +528,13 @@ class CiTimingLut2 :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] id ID番号
   /// @param[in] timing_type タイミングの型
   /// @param[in] cond タイミング条件を表す式
   /// @param[in] rise_transition 立ち上がり遷移遅延テーブル
   /// @param[in] fall_transition 立ち下がり遷移遅延テーブル
   /// @param[in] rise_propagation 立ち上がり伝搬遅延テーブル
   /// @param[in] fall_propagation 立ち下がり伝搬遅延テーブル
-  CiTimingLut2(ymuint id,
-	       ClibTimingType timing_type,
+  CiTimingLut2(ClibTimingType timing_type,
 	       const Expr& cond,
 	       ClibLut* rise_transition,
 	       ClibLut* fall_transition,

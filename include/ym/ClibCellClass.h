@@ -37,20 +37,20 @@ public:
   /// @brief ID番号を返す．
   /// @note ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
   virtual
-  ymuint
+  int
   id() const = 0;
 
   /// @brief 同位体変換の個数を得る．
   /// @note 恒等変換は含まない．
   virtual
-  ymuint
+  int
   idmap_num() const = 0;
 
   /// @brief 同位体変換を得る．
   /// @param[in] pos 位置番号 ( 0 <= pos < idmap_num() )
   virtual
   const NpnMapM&
-  idmap(ymuint pos) const = 0;
+  idmap(int pos) const = 0;
 
 
 public:

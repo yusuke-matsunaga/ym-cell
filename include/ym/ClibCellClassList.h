@@ -10,10 +10,66 @@
 
 
 #include "ym/clib.h"
-#include "ym/ArrayIterator.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class CiCellClass;
+
+//////////////////////////////////////////////////////////////////////
+/// @class ClibCellClassListIterator ClibCellClassList.h "ClibCellClassList.h"
+/// @brief ClibCellClassList 用の反復子
+//////////////////////////////////////////////////////////////////////
+class ClibCellClassListIterator
+{
+public:
+
+  /// @brief コンストラクタ
+  /// @brief obj_ptr 要素へのポインタ
+  ClibCellClassListIterator(CiCellClass** obj_ptr);
+
+  /// @brief デストラクタ
+  ~ClibCellClassListIterator();
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief dereference 演算子
+  const ClibCellClass*
+  operator*() const;
+
+  /// @brief increment 演算子
+  const ClibCellClassListIterator&
+  operator++();
+
+  /// @brief 等価比較演算子
+  bool
+  operator==(const ClibCellClassListIterator& right) const;
+
+  /// @brief 非等価比較演算子
+  bool
+  operator!=(const ClibCellClassListIterator& right) const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 要素へのポインタ
+  CiCellClass** mObjPtr;
+
+};
+
 
 //////////////////////////////////////////////////////////////////////
 /// @class ClibCellClassList ClibCellClassList.h "ClibCellClassList.h"
@@ -30,7 +86,7 @@ BEGIN_NAMESPACE_YM_CLIB
 class ClibCellClassList
 {
 public:
-  typedef ArrayIterator<const ClibCellClass*> iterator;
+  typedef ClibCellClassListIterator iterator;
 
   /// @brief デストラクタ
   virtual
@@ -46,6 +102,12 @@ public:
   virtual
   int
   num() const = 0;
+
+  /// @brief 要素を返す．
+  /// @param[in] pos 位置番号 ( 0 <= pos < num() )
+  virtual
+  const ClibCellClass*
+  operator[](int pos) const = 0;
 
   /// @brief 先頭の反復子を返す．
   virtual

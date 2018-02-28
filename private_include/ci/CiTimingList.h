@@ -42,20 +42,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を初期化する．
-  /// @param[in] num 要素数
+  /// @param[in] timing_list 要素のリスト
   /// @param[in] alloc メモリアロケータ
-  ///
-  /// ここでは領域を確保するだけ．
   void
-  init(int num,
+  init(const vector<CiTiming*>& timing_list,
        Alloc& alloc);
-
-  /// @brief 要素を設定する．
-  /// @param[in] pos 位置番号 ( 0 <= pos < num() )
-  /// @param[in] timing 設定する要素
-  void
-  set(int pos,
-      const ClibTiming* timing);
 
   /// @brief 要素数を返す．
   virtual

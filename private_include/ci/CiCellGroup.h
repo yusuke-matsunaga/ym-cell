@@ -21,6 +21,7 @@ BEGIN_NAMESPACE_YM_CLIB
 
 class CiCellLibrary;
 class CiCell;
+class CiCellClass;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiCellGroup CiCellGroup.h "CiCellGroup.h"
@@ -49,7 +50,7 @@ public:
   /// @brief ID番号を返す．
   /// @note ClibCellLibrary::group(id) で返されるオブジェクトの id() は id となる．
   virtual
-  ymuint
+  int
   id() const;
 
 
@@ -96,7 +97,7 @@ public:
 
   /// @brief データ入力のピン番号を返す．
   virtual
-  ymuint
+  int
   data_pos() const;
 
   /// @brief クロック入力のタイプを返す．
@@ -104,12 +105,12 @@ public:
   /// @retval 1 positive edge
   /// @retval 2 negative edge
   virtual
-  ymuint
+  int
   clock_sense() const;
 
   /// @brief クロック入力のピン番号を返す．
   virtual
-  ymuint
+  int
   clock_pos() const;
 
   /// @brief イネーブル入力を持つとき true を返す．
@@ -122,12 +123,12 @@ public:
   /// @retval 1 positive edge
   /// @retval 2 negative edge
   virtual
-  ymuint
+  int
   enable_sense() const;
 
   /// @brief イネーブル入力のピン番号を返す．
   virtual
-  ymuint
+  int
   enable_pos() const;
 
   /// @brief クリア入力を持つタイプの時に true を返す．
@@ -140,13 +141,13 @@ public:
   /// @retval 1 High sensitive
   /// @retval 2 Low sensitive
   virtual
-  ymuint
+  int
   clear_sense() const;
 
   /// @brief クリア入力のピン番号を返す．
   /// @note クリア入力がない場合の値は不定
   virtual
-  ymuint
+  int
   clear_pos() const;
 
   /// @brief プリセット入力を持つタイプの時に true を返す．
@@ -159,23 +160,23 @@ public:
   /// @retval 1 High sensitive
   /// @retval 2 Low sensitive
   virtual
-  ymuint
+  int
   preset_sense() const;
 
   /// @brief プリセット入力のピン番号を返す．
   /// @note プリセット入力がない場合の値は不定
   virtual
-  ymuint
+  int
   preset_pos() const;
 
   /// @brief 肯定出力のピン番号を返す．
   virtual
-  ymuint
+  int
   q_pos() const;
 
   /// @brief 否定出力のピン番号を返す．
   virtual
-  ymuint
+  int
   xq_pos() const;
 
 
@@ -196,15 +197,25 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 初期化する．
-  /// @param[in] cell_class 代表クラス
+  /// @param[in] id 番号
   /// @param[in] map 変換マップ
+  /// @param[in] pininfo ピン情報
   /// @param[in] cell_list セルのリスト
   /// @param[in] alloc メモリアロケータ
+  ///
+  /// pininfo は restore() 時のみ指定する．
+  /// それ以外は後で set_ff_info()/set_latch_info() で設定する．
   void
-  init(const ClibCellClass* cell_class,
+  init(int id,
        const NpnMapM& map,
+       int pininfo,
        const vector<CiCell*>& cell_list,
        Alloc& alloc);
+
+  /// @brief 親のセルクラスを設定する．
+  /// @param[in] cell_class 親のクラス
+  void
+  set_class(CiCellClass* cell_class);
 
   /// @brief FFのピン情報を設定する．
   /// @param[in] pos_array ピン位置と極性情報の配列
@@ -216,7 +227,7 @@ public:
   ///  - pos_array[4] : 肯定出力のピン番号       (3bit)
   ///  - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか (1bit)
   void
-  set_ff_info(ymuint pos_array[]);
+  set_ff_info(int pos_array[]);
 
   /// @brief ラッチのピン情報を設定する．
   /// @param[in] pos_array ピン位置と極性情報の配列
@@ -227,7 +238,7 @@ public:
   ///  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
   ///  - pos_array[4] : 肯定出力のピン番号       (3bit)
    void
-  set_latch_info(ymuint pos_array[]);
+  set_latch_info(int pos_array[]);
 
 
 public:
@@ -240,27 +251,11 @@ public:
   void
   dump(ODO& bos) const;
 
-  /// @brief バイナリファイルを読み込む．
-  /// @param[in] bis 入力元のストリーム
-  /// @param[in] library セルライブラリ
-  /// @param[in] alloc メモリアロケータ
-  void
-  restore(IDO& bis,
-	  CiCellLibrary& library,
-	  Alloc& alloc);
-
 
 private:
   //////////////////////////////////////////////////////////////////////
   // 下請け関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief セルリストを初期化する．
-  /// @param[in] cell_list セルのリスト
-  /// @param[in] alloc メモリアロケータ
-  void
-  init_cell_list(const vector<CiCell*>& cell_list,
-		 Alloc& alloc);
 
 
 private:
@@ -269,7 +264,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID 番号
-  ymuint mId;
+  int mId;
 
   // 属している ClibCellClass
   const ClibCellClass* mRepClass;
@@ -278,7 +273,7 @@ private:
   NpnMapM mMap;
 
   // FF/ラッチのピン情報
-  ymuint mPinInfo;
+  int mPinInfo;
 
   // セルのリスト
   CiCellList mCellList;

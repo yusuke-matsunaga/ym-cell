@@ -58,38 +58,6 @@ CiLut::index_num(ymuint32 var) const
   return lut_template()->index_num(var);
 }
 
-// @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
-void
-CiLut::dump(ODO& s) const
-{
-  s << template_name();
-  ymuint d = dimension();
-  for (ymuint i = 0; i < d; ++ i) {
-    ymuint8 n = index_num(i);
-    s << n;
-    for (ymuint j = 0; j < n; ++ j) {
-      s << index(i, j);
-    }
-  }
-
-  vector<ymuint32> pos_array(d);
-  ymuint n = 1;
-  for (ymuint i = 0; i < d; ++ i) {
-    n *= index_num(i);
-  }
-  for (ymuint v = 0; v < n; ++ v) {
-    ymuint v0 = v;
-    for (ymuint j = 0; j < d; ++ j) {
-      ymuint var = d - j - 1;
-      pos_array[var] = v0 % index_num(var);
-      v0 /= index_num(var);
-    }
-    double val = grid_value(pos_array);
-    s << val;
-  }
-}
-
 // @brief val に対応する区間を求める．
 ymuint
 CiLut::search(double val,
