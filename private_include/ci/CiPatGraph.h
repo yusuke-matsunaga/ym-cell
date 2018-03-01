@@ -41,12 +41,12 @@ public:
 
   /// @brief 代表関数番号を返す．
   virtual
-  ymuint
+  int
   rep_id() const;
 
   /// @brief 根のノード番号を返す．
   virtual
-  ymuint
+  int
   root_id() const;
 
   /// @brief 根の反転属性を返す．
@@ -56,19 +56,19 @@ public:
 
   /// @brief 入力数を返す．
   virtual
-  ymuint
+  int
   input_num() const;
 
   /// @brief 枝数を返す．
   virtual
-  ymuint
+  int
   edge_num() const;
 
   /// @brief 枝(の番号)を返す．
   /// @param[in] pos 位置 ( 0 <= pos < edge_num() )
   virtual
-  ymuint
-  edge(ymuint pos) const;
+  int
+  edge(int pos) const;
 
 
 public:
@@ -100,9 +100,9 @@ public:
   /// @param[in] edge_num 枝数
   /// @param[in] alloc メモリアロケータ
   void
-  init(ymuint rep_id,
-       ymuint input_num,
-       ymuint edge_num,
+  init(int rep_id,
+       int input_num,
+       int edge_num,
        Alloc& alloc);
 
   /// @brief 枝のデータを設定する．
@@ -110,8 +110,8 @@ public:
   /// @param[in] edge 枝
   /// @note この関数を呼ぶ前に init() が呼ばれている必要がある．
   void
-  set_edge(ymuint pos,
-	   ymuint edge);
+  set_edge(int pos,
+	   int edge);
 
 
 private:
@@ -132,16 +132,16 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 代表関数番号
-  ymuint32 mRepId;
+  int mRepId;
 
   // 入力数 + 根の反転属性
-  ymuint32 mInputNum;
+  int mInputNum;
 
   // 枝数
-  ymuint32 mEdgeNum;
+  int mEdgeNum;
 
   // 枝番号の配列
-  ymuint32* mEdgeList;
+  int* mEdgeList;
 
 };
 

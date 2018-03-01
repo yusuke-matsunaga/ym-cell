@@ -11,6 +11,7 @@
 
 #include "ym/clib.h"
 #include "ym/logic.h"
+#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -62,6 +63,18 @@ public:
   virtual
   const ClibCellGroupList&
   group_list() const = 0;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  /// @param[in] s 出力先のストリーム
+  virtual
+  void
+  dump(ODO& s) const = 0;
 
 };
 

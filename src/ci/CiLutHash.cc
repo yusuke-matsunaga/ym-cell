@@ -40,14 +40,14 @@ CiLutHash::add(CiLutTemplate* templ)
 {
   if ( mNum > mLimit ) {
     // テーブルを拡張する．
-    ymuint old_size = mSize;
+    int old_size = mSize;
     CiLutTemplate** old_table = mTable;
     alloc_table(old_size << 1);
-    for (ymuint i = 0; i < old_size; ++ i) {
-      for (CiLutTemplate* templ = old_table[i]; templ; ) {
+    for ( int i = 0; i < old_size; ++ i ) {
+      for ( CiLutTemplate* templ = old_table[i]; templ; ) {
 	CiLutTemplate* tmp = templ;
 	templ = tmp->mLink;
-	ymuint pos = tmp->mName.hash() % mSize;
+	int pos = tmp->mName.hash() % mSize;
 	tmp->mLink = mTable[pos];
 	mTable[pos] = tmp;
       }
@@ -55,7 +55,7 @@ CiLutHash::add(CiLutTemplate* templ)
     delete [] old_table;
   }
 
-  ymuint pos = templ->mName.hash() % mSize;
+  int pos = templ->mName.hash() % mSize;
   templ->mLink = mTable[pos];
   mTable[pos] = templ;
   ++ mNum;
@@ -68,8 +68,8 @@ CiLutHash::add(CiLutTemplate* templ)
 CiLutTemplate*
 CiLutHash::get(ShString name) const
 {
-  ymuint pos = name.hash() % mSize;
-  for (CiLutTemplate* templ = mTable[pos]; templ; templ = templ->mLink) {
+  int pos = name.hash() % mSize;
+  for ( CiLutTemplate* templ = mTable[pos]; templ; templ = templ->mLink ) {
     if ( templ->mName == name ) {
       return templ;
     }
@@ -80,12 +80,12 @@ CiLutHash::get(ShString name) const
 // @brief テーブルの領域を確保する．
 // @param[in] req_size 要求するサイズ
 void
-CiLutHash::alloc_table(ymuint req_size)
+CiLutHash::alloc_table(int req_size)
 {
   mSize = req_size;
-  mLimit = static_cast<ymuint>(mSize * 1.8);
+  mLimit = static_cast<int>(mSize * 1.8);
   mTable = new CiLutTemplate*[mSize];
-  for (ymuint i = 0; i < mSize; ++ i) {
+  for ( int i = 0; i < mSize; ++ i ) {
     mTable[i] = nullptr;
   }
 }

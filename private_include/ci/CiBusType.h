@@ -31,8 +31,8 @@ private:
   /// @param[in] bit_from 開始位置
   /// @param[in] bit_to 終了位置
   CiBusType(ShString name,
-	    ymint bit_from,
-	    ymint bit_to);
+	    int bit_from,
+	    int bit_to);
 
   /// @brief デストラクタ
   virtual
@@ -61,17 +61,17 @@ public:
 
   /// @brief ビット幅の取得
   virtual
-  ymuint
+  int
   bit_width() const;
 
   /// @brief 開始ビットの取得
   virtual
-  ymint
+  int
   bit_from() const;
 
   /// @brief 終了ビットの取得
   virtual
-  ymint
+  int
   bit_to() const;
 
   /// @brief 向きの取得
@@ -90,13 +90,13 @@ private:
   ShString mName;
 
   // ビット幅
-  ymuint mBitWidth;
+  int mBitWidth;
 
   // 開始ビット
-  ymint mBitFrom;
+  int mBitFrom;
 
   // 終了ビット
-  ymint mBitTo;
+  int mBitTo;
 
   // 向き
   bool mDownTo;

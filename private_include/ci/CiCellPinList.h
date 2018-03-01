@@ -1,40 +1,39 @@
-#ifndef CLIBCELLCLASSLIST_H
-#define CLIBCELLCLASSLIST_H
+#ifndef CICELLPINLIST_H
+#define CICELLPINLIST_H
 
-/// @file ClibCellClassList.h
-/// @brief ClibCellClassList のヘッダファイル
+/// @file CiCellPinList.h
+/// @brief CiCellPinList のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ym/clib.h"
-#include "ym/ArrayIterator.h"
+#include "ym/ClibCellPinList.h"
+#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiCellPin;
+
 //////////////////////////////////////////////////////////////////////
-/// @class ClibCellClassList ClibCellClassList.h "ClibCellClassList.h"
-/// @brief ClibCell のリストを表すクラス
-///
-/// @code
-/// const ClibCellClassList& class_list = ...;
-/// for ( auto cell_class: class_list ) {
-///   ...
-/// }
-/// @endcode
-/// というふうに使える．
+/// @class CiCellPinList CiCellPinList.h "CiCellPinList.h"
+/// @brief ClibCellPinList の実装クラス
 //////////////////////////////////////////////////////////////////////
-class ClibCellClassList
+class CiCellPinList :
+  public ClibCellPinList
 {
 public:
-  typedef ArrayIterator<const ClibCellClass*> iterator;
+
+  /// @brief コンストラクタ
+  ///
+  /// 内容は不定
+  CiCellPinList();
 
   /// @brief デストラクタ
   virtual
-  ~ClibCellClassList() { }
+  ~CiCellPinList();
 
 
 public:
@@ -45,23 +44,36 @@ public:
   /// @brief 要素数を返す．
   virtual
   int
-  num() const = 0;
+  num() const;
 
   /// @brief 要素を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < num() )
   virtual
-  const ClibCellClass*
-  operator[](int pos) const = 0;
+  const ClibCellPin*
+  operator[](int pos) const;
 
   /// @brief 先頭の反復子を返す．
   virtual
   iterator
-  begin() const = 0;
+  begin() const;
 
   /// @brief 末尾の反復子を返す．
   virtual
   iterator
-  end() const = 0;
+  end() const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // CiCellPinList に固有の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を初期化する．
+  /// @param[in] group_list 要素のリスト
+  /// @param[in] alloc メモリアロケータ
+  void
+  init(const vector<CiCellPin*>& group_list,
+       Alloc& alloc);
 
 
 private:
@@ -75,9 +87,14 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // 要素数
+  int mNum;
+
+  // セルグループのポインタの配列
+  const ClibCellPin** mArray;
 
 };
 
 END_NAMESPACE_YM_CLIB
 
-#endif // CLIBCELLCLASSLIST_H
+#endif // CICELLPINLIST_H

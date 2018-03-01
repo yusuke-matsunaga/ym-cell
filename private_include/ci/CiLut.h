@@ -53,13 +53,13 @@ public:
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
   ClibVarType
-  variable_type(ymuint32 var) const;
+  variable_type(int var) const;
 
   /// @brief インデックス数の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
-  ymuint32
-  index_num(ymuint32 var) const;
+  int
+  index_num(int var) const;
 
 
 public:
@@ -81,7 +81,7 @@ protected:
 
   /// @brief val に対応する区間を求める．
   static
-  ymuint
+  int
   search(double val,
 	 const vector<double>& index_array);
 
@@ -125,29 +125,29 @@ public:
 
   /// @brief 次元数の取得
   virtual
-  ymuint32
+  int
   dimension() const;
 
   /// @brief インデックス数の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
-  ymuint32
-  index_num(ymuint32 var) const;
+  int
+  index_num(int var) const;
 
   /// @brief インデックス値の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
   virtual
   double
-  index(ymuint32 var,
-	ymuint32 pos) const;
+  index(int var,
+	int pos) const;
 
   /// @brief 格子点の値の取得
   /// @param[in] pos_array 格子点座標
   /// @note pos_array のサイズは dimension() と同じ
   virtual
   double
-  grid_value(const vector<ymuint32>& pos_array) const;
+  grid_value(const vector<int>& pos_array) const;
 
   /// @brief 値の取得
   /// @param[in] val_array 入力の値の配列
@@ -203,29 +203,29 @@ public:
 
   /// @brief 次元数の取得
   virtual
-  ymuint32
+  int
   dimension() const;
 
   /// @brief インデックス数の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
-  ymuint32
-  index_num(ymuint32 var) const;
+  int
+  index_num(int var) const;
 
   /// @brief インデックス値の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
   virtual
   double
-  index(ymuint32 var,
-	ymuint32 pos) const;
+  index(int var,
+	int pos) const;
 
   /// @brief 格子点の値の取得
   /// @param[in] pos_array 格子点座標
   /// @note pos_array のサイズは dimension() と同じ
   virtual
   double
-  grid_value(const vector<ymuint32>& pos_array) const;
+  grid_value(const vector<int>& pos_array) const;
 
   /// @brief 値の取得
   /// @param[in] val_array 入力の値の配列
@@ -243,9 +243,9 @@ private:
   /// @brief mValueArray のインデックスを計算する．
   /// @param[in] idx1 1番めのインデックス
   /// @param[in] idx2 2番めのインデックス
-  ymuint
-  idx(ymuint idx1,
-      ymuint idx2) const;
+  int
+  idx(int idx1,
+      int idx2) const;
 
 
 private:
@@ -298,29 +298,29 @@ public:
 
   /// @brief 次元数の取得
   virtual
-  ymuint32
+  int
   dimension() const;
 
   /// @brief インデックス数の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
-  ymuint32
-  index_num(ymuint32 var) const;
+  int
+  index_num(int var) const;
 
   /// @brief インデックス値の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
   virtual
   double
-  index(ymuint32 var,
-	ymuint32 pos) const;
+  index(int var,
+	int pos) const;
 
   /// @brief 格子点の値の取得
   /// @param[in] pos_array 格子点座標
   /// @note pos_array のサイズは dimension() と同じ
   virtual
   double
-  grid_value(const vector<ymuint32>& pos_array) const;
+  grid_value(const vector<int>& pos_array) const;
 
   /// @brief 値の取得
   /// @param[in] val_array 入力の値の配列
@@ -339,10 +339,10 @@ private:
   /// @param[in] idx1 1番めのインデックス
   /// @param[in] idx2 2番めのインデックス
   /// @param[in] idx3 3番めのインデックス
-  ymuint
-  idx(ymuint idx1,
-      ymuint idx2,
-      ymuint idx3) const;
+  int
+  idx(int idx1,
+      int idx2,
+      int idx3) const;
 
 
 private:
@@ -373,9 +373,9 @@ private:
 // @param[in] idx1 1番めのインデックス
 // @param[in] idx2 2番めのインデックス
 inline
-ymuint
-CiLut2D::idx(ymuint idx1,
-	     ymuint idx2) const
+int
+CiLut2D::idx(int idx1,
+	     int idx2) const
 {
   return idx1 * index_num(1) + idx2;
 }
@@ -385,10 +385,10 @@ CiLut2D::idx(ymuint idx1,
 // @param[in] idx2 2番めのインデックス
 // @param[in] idx3 3番めのインデックス
 inline
-ymuint
-CiLut3D::idx(ymuint idx1,
-	     ymuint idx2,
-	     ymuint idx3) const
+int
+CiLut3D::idx(int idx1,
+	     int idx2,
+	     int idx3) const
 {
   return ((idx1 * index_num(1) + idx2) * index_num(2)) + idx3;
 }

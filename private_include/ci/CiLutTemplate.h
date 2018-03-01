@@ -98,28 +98,28 @@ public:
 
   /// @brief 次元数の取得
   virtual
-  ymuint32
+  int
   dimension() const;
 
   /// @brief 変数型の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
   ClibVarType
-  variable_type(ymuint32 var) const;
+  variable_type(int var) const;
 
   /// @brief インデックス数の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
-  ymuint32
-  index_num(ymuint32 var) const;
+  int
+  index_num(int var) const;
 
   /// @brief デフォルトインデックス値の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
   virtual
   double
-  index(ymuint32 var,
-	ymuint32 pos) const;
+  index(int var,
+	int pos) const;
 
 
 private:
@@ -163,28 +163,28 @@ public:
 
   /// @brief 次元数の取得
   virtual
-  ymuint32
+  int
   dimension() const;
 
   /// @brief 変数型の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
   ClibVarType
-  variable_type(ymuint32 var) const;
+  variable_type(int var) const;
 
   /// @brief インデックス数の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
-  ymuint32
-  index_num(ymuint32 var) const;
+  int
+  index_num(int var) const;
 
   /// @brief デフォルトインデックス値の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
   virtual
   double
-  index(ymuint32 var,
-	ymuint32 pos) const;
+  index(int var,
+	int pos) const;
 
 
 private:
@@ -230,28 +230,28 @@ public:
 
   /// @brief 次元数の取得
   virtual
-  ymuint32
+  int
   dimension() const;
 
   /// @brief 変数型の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
   ClibVarType
-  variable_type(ymuint32 var) const;
+  variable_type(int var) const;
 
   /// @brief インデックス数の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
-  ymuint32
-  index_num(ymuint32 var) const;
+  int
+  index_num(int var) const;
 
   /// @brief デフォルトインデックス値の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
   virtual
   double
-  index(ymuint32 var,
-	ymuint32 pos) const;
+  index(int var,
+	int pos) const;
 
 
 private:

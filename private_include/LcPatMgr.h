@@ -48,7 +48,7 @@ public:
   /// @param[in] rep_id このパタンが属する代表関数番号
   void
   reg_pat(const Expr& expr,
-	  ymuint rep_id);
+	  int rep_id);
 
   /// @brief 内容を出力する．(デバッグ用)
   /// @param[in] s 出力先のストリーム
@@ -62,35 +62,35 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 全ノード数を返す．
-  ymuint
+  int
   node_num() const;
 
   /// @brief ノードを返す．
   /// @param[in] pos ノード番号 ( 0 <= pos < node_num() )
   LcPatNode*
-  node(ymuint pos) const;
+  node(int pos) const;
 
   /// @brief パタン数を返す．
-  ymuint
+  int
   pat_num() const;
 
   /// @brief パタンの根のハンドルを返す．
   /// @param[in] id パタン番号 ( 0 <= id < pat_num() )
   LcPatHandle
-  pat_root(ymuint id) const;
+  pat_root(int id) const;
 
   /// @brief パタンのノードリストを返す．
   /// @param[in] id パタン番号 ( 0 <= id < pat_num() )
   /// @param[out] node_list パタンを DFS 順でたどった時のノード番号のリスト
   /// @return このパタンの入力数を返す．
-  ymuint
-  pat_node_list(ymuint id,
-		vector<ymuint>& node_list) const;
+  int
+  pat_node_list(int id,
+		vector<int>& node_list) const;
 
   /// @brief パタンの属している代表関数番号を返す．
   /// @param[in] id パタン番号 ( 0 <= id < pat_num() )
-  ymuint
-  rep_id(ymuint id) const;
+  int
+  rep_id(int id) const;
 
 
 private:
@@ -115,8 +115,8 @@ private:
   bool
   ceq_sub(LcPatNode* node1,
 	  LcPatNode* node2,
-	  HashMap<ymuint, ymuint>& map1,
-	  HashMap<ymuint, ymuint>& map2);
+	  HashMap<int, int>& map1,
+	  HashMap<int, int>& map2);
 
   /// @brief パタングラフを生成する再帰関数
   /// @param[in] expr 元になる論理式
@@ -134,7 +134,7 @@ private:
   make_bintree(const Expr& expr,
 	       const vector<LcPatHandle>& input,
 	       int pat[],
-	       ymuint& pos);
+	       int& pos);
 
   /// @brief 入力ノードを作る．
   /// @param[in] var 入力変数
@@ -166,12 +166,12 @@ private:
 
   /// @brief ハッシュ表を確保する．
   void
-  alloc_table(ymuint req_size);
+  alloc_table(int req_size);
 
   /// @brief LcPatNode のハッシュ関数
   static
-  ymuint
-  hash_func(ymuint type,
+  int
+  hash_func(int type,
 	    LcPatNode* l_node,
 	    LcPatNode* r_node);
 
@@ -185,9 +185,9 @@ private:
   /// @param[in] node 親のノード
   /// @param[in] fanin_pos ファンイン番号
   static
-  ymuint32
+  int
   encode_edge(LcPatNode* node,
-	      ymuint fanin_pos);
+	      int fanin_pos);
 
 
   /// @brief パタングラフを DFS でたどって内容を val_list に入れる．
@@ -196,10 +196,10 @@ private:
   /// @param[out] val_list ノードの情報を格納するリスト
   /// @return 最大入力番号+1を返す．
   static
-  ymuint
+  int
   dump_dfs(LcPatNode* node,
 	   vector<bool>& vmark,
-	   vector<ymuint>& val_list);
+	   vector<int>& val_list);
 
 
 private:
@@ -215,7 +215,7 @@ private:
   void
   display_edge(ostream& s,
 	       LcPatNode* node,
-	       ymuint fanin_pos);
+	       int fanin_pos);
 
 
 private:
@@ -236,10 +236,10 @@ private:
   LcPatNode** mHashTable;
 
   // mHashTable のサイズ
-  ymuint32 mHashSize;
+  int mHashSize;
 
   // ハッシュ表を拡大する目安
-  ymuint32 mNextLimit;
+  int mNextLimit;
 
   // パタンの根のハンドルのリスト
   // 配列のインデックスはパタン番号
@@ -247,7 +247,7 @@ private:
 
   // 代表関数番号のリスト
   // 配列のインデックスはパタン番号
-  vector<ymuint32> mRepList;
+  vector<int> mRepList;
 
   // 処理済みの論理式を収めたリストの配列
   // 配列のキーは代表関数番号

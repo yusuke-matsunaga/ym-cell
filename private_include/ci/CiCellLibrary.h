@@ -26,6 +26,7 @@
 #include "CiCellPinHash.h"
 #include "CiCellGroupList.h"
 #include "CiCellClassList.h"
+#include "CiLutTemplateList.h"
 #include "CiPatMgr.h"
 
 
@@ -144,14 +145,9 @@ public:
   string
   leakage_power_unit() const;
 
-  /// @brief 遅延テーブルのテンプレート数の取得
-  int
-  lu_table_template_num() const;
-
-  /// @brief 遅延テーブルのテンプレートの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < lu_table_template_num() )
-  const ClibLutTemplate*
-  lu_table_template(int pos) const;
+  /// @brief 遅延テーブルのテンプレートのリストの取得
+  const ClibLutTemplateList&
+  lu_table_template_list() const;
 
   /// @brief ルックアップテーブルのテンプレートの取得
   /// @param[in] name テンプレート名
@@ -851,13 +847,10 @@ private:
   // 遅延モデル
   ClibDelayModel mDelayModel;
 
-  // 遅延テンプレート数
-  int mLutTemplateNum;
+  // 遅延テンプレートのリスト
+  CiLutTemplateList mLutTemplateList;
 
-  // 遅延テンプレートの配列
-  CiLutTemplate** mLutTemplateArray;
-
-  // 遅延テンプレートのハッシュ表
+  // 名前をキーにした遅延テンプレートのハッシュ表
   CiLutHash mLutHash;
 
   // セルのリスト

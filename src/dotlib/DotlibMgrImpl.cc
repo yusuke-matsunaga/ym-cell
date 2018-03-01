@@ -96,7 +96,7 @@ DotlibMgrImpl::new_vector(const vector<double>& value_list,
 			  const FileRegion& loc)
 {
   ++ mVectNum;
-  ymuint n = value_list.size();
+  int n = value_list.size();
   void* p = mAlloc.get_memory(sizeof(DotlibVector) + (n - 1) * sizeof(double));
   mVectElemSize += (n - 1);
   DotlibNodeImpl* node = new (p) DotlibVector(value_list, loc);

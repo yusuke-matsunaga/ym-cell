@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 // @brief コンストラクタ
 // @param[in] id ID番号
 // @param[in] rep_sig 代表シグネチャ
-LcClass::LcClass(ymuint id,
+LcClass::LcClass(int id,
 		 const LcSignature& rep_sig) :
   mId(id),
   mRepSig(rep_sig)

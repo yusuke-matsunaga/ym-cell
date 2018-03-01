@@ -31,14 +31,14 @@ CiPatGraph::~CiPatGraph()
 }
 
 // @brief 代表関数番号を返す．
-ymuint
+int
 CiPatGraph::rep_id() const
 {
   return mRepId;
 }
 
 // @brief 根のノード番号を返す．
-ymuint
+int
 CiPatGraph::root_id() const
 {
   ASSERT_COND( mEdgeNum > 0 );
@@ -55,14 +55,14 @@ CiPatGraph::root_inv() const
 }
 
 // @brief 入力数を返す．
-ymuint
+int
 CiPatGraph::input_num() const
 {
   return (mInputNum >> 1);
 }
 
 // @brief 枝数を返す．
-ymuint
+int
 CiPatGraph::edge_num() const
 {
   return mEdgeNum;
@@ -70,8 +70,8 @@ CiPatGraph::edge_num() const
 
 // @brief 枝(の番号)を返す．
 // @param[in] pos 位置 ( 0 <= pos < edge_num() )
-ymuint
-CiPatGraph::edge(ymuint pos) const
+int
+CiPatGraph::edge(int pos) const
 {
   ASSERT_COND( pos < edge_num() );
 
@@ -84,9 +84,9 @@ CiPatGraph::edge(ymuint pos) const
 // @param[in] edge_num 枝数
 // @param[in] alloc メモリアロケータ
 void
-CiPatGraph::init(ymuint rep_id,
-		 ymuint input_num,
-		 ymuint edge_num,
+CiPatGraph::init(int rep_id,
+		 int input_num,
+		 int edge_num,
 		 Alloc& alloc)
 {
   mRepId = rep_id;
@@ -100,8 +100,8 @@ CiPatGraph::init(ymuint rep_id,
 // @param[in] edge 枝
 // @note この関数を呼ぶ前に init() が呼ばれている必要がある．
 void
-CiPatGraph::set_edge(ymuint pos,
-		     ymuint edge)
+CiPatGraph::set_edge(int pos,
+		     int edge)
 {
   ASSERT_COND( pos < edge_num() );
 
@@ -115,8 +115,8 @@ void
 CiPatGraph::alloc_array(Alloc& alloc)
 {
   if ( mEdgeNum > 0 ) {
-    void* p = alloc.get_memory(sizeof(ymuint32) * mEdgeNum);
-    mEdgeList = new (p) ymuint32[mEdgeNum];
+    void* p = alloc.get_memory(sizeof(int) * mEdgeNum);
+    mEdgeList = new (p) int[mEdgeNum];
   }
   else {
     mEdgeList = nullptr;

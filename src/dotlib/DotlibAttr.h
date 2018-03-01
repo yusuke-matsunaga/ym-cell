@@ -63,7 +63,7 @@ public:
   /// @param[in] indent インデント量
   void
   dump(ostream& s,
-       ymuint indent = 0) const;
+       int indent = 0) const;
 
 
 private:

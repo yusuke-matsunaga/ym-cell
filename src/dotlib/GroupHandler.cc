@@ -252,7 +252,7 @@ EmptyGroupHandler::check_group_value(const ShString& attr_name,
 				     const FileRegion& attr_loc,
 				     DotlibNodeImpl* value_list)
 {
-  ymuint n = value_list->list_size();
+  int n = value_list->list_size();
   if ( n > 0 ) {
     const DotlibNode* top = value_list->list_elem(0);
     FileRegion loc = top->loc();
@@ -303,7 +303,7 @@ Str1GroupHandler::check_group_value(const ShString& attr_name,
 				    const FileRegion& attr_loc,
 				    DotlibNodeImpl* value_list)
 {
-  ymuint n = value_list->list_size();
+  int n = value_list->list_size();
   if ( n == 0 ) {
     ostringstream buf;
     buf << attr_name << " statement requires a string parameter.";
@@ -366,7 +366,7 @@ Str2GroupHandler::check_group_value(const ShString& attr_name,
 				    const FileRegion& attr_loc,
 				    DotlibNodeImpl* value_list)
 {
-  ymuint n = value_list->list_size();
+  int n = value_list->list_size();
   if ( n < 2 ) {
     ostringstream buf;
     buf << attr_name << " statement requires two string parameters.";
@@ -437,7 +437,7 @@ Str2IntGroupHandler::check_group_value(const ShString& attr_name,
 				       const FileRegion& attr_loc,
 				       DotlibNodeImpl* value_list)
 {
-  ymuint n = value_list->list_size();
+  int n = value_list->list_size();
   if ( n < 3 ) {
     ostringstream buf;
     buf << attr_name

@@ -157,14 +157,14 @@ DotlibFL::preset() const
 }
 
 // @brief "clear_preset_var1" を返す．
-ymuint
+int
 DotlibFL::clear_preset_var1() const
 {
   return mClearPresetVar1;
 }
 
 // @brief "clear_preset_var2" を返す．
-ymuint
+int
 DotlibFL::clear_preset_var2() const
 {
   return mClearPresetVar2;

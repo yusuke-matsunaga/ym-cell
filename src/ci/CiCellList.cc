@@ -13,54 +13,6 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
-
-//////////////////////////////////////////////////////////////////////
-// クラス ClibCellListIterator
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @brief obj_ptr 要素へのポインタ
-ClibCellListIterator::ClibCellListIterator(CiCell** obj_ptr) :
-  mObjPtr(obj_ptr)
-{
-}
-
-// @brief デストラクタ
-ClibCellListIterator::~ClibCellListIterator()
-{
-}
-
-// @brief dereference 演算子
-const ClibCell*
-ClibCellListIterator::operator*() const
-{
-  return static_cast<const ClibCell*>(*mObjPtr);
-}
-
-// @brief increment 演算子
-const ClibCellListIterator&
-ClibCellListIterator::operator++()
-{
-  ++ mObjPtr;
-
-  return *this;
-}
-
-// @brief 等価比較演算子
-bool
-ClibCellListIterator::operator==(const ClibCellListIterator& right) const
-{
-  return mObjPtr == right.mObjPtr;
-}
-
-// @brief 非等価比較演算子
-bool
-ClibCellListIterator::operator!=(const ClibCellListIterator& right) const
-{
-  return !operator==(right);
-}
-
-
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellList
 //////////////////////////////////////////////////////////////////////
@@ -89,21 +41,23 @@ CiCellList::num() const
 const ClibCell*
 CiCellList::operator[](int pos) const
 {
-  return _elem(pos);
+  ASSERT_COND( pos >= 0 && pos < num() );
+
+  return mArray[pos];
 }
 
 // @brief 先頭の反復子を返す．
 ClibCellList::iterator
 CiCellList::begin() const
 {
-  return ClibCellList::iterator(&mArray[0]);
+  return iterator(&mArray[0]);
 }
 
 // @brief 末尾の反復子を返す．
 ClibCellList::iterator
 CiCellList::end() const
 {
-  return ClibCellList::iterator(&mArray[mNum]);
+  return iterator(&mArray[mNum]);
 }
 
 // @brief 内容を初期化する．
@@ -117,22 +71,12 @@ CiCellList::init(const vector<CiCell*>& cell_list,
   if ( mNum == 0 ) {
     return;
   }
-  void* p = alloc.get_memory(sizeof(CiCell*) * mNum);
-  mArray = new (p) CiCell*[mNum];
+  void* p = alloc.get_memory(sizeof(const ClibCell*) * mNum);
+  mArray = new (p) const ClibCell*[mNum];
   for ( int i = 0; i < mNum; ++ i ) {
     CiCell* cell = cell_list[i];
     mArray[i] = cell;
   }
-}
-
-// @brief 要素を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < num() )
-const CiCell*
-CiCellList::_elem(int pos) const
-{
-  ASSERT_COND( pos >= 0 && pos < num() );
-
-  return mArray[pos];
 }
 
 END_NAMESPACE_YM_CLIB

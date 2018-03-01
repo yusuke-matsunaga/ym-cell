@@ -1,45 +1,47 @@
 
-/// @file CiCellClassList.cc
-/// @brief CiCellClassList の実装ファイル
+/// @file CiLutTemplateList.cc
+/// @brief CiLutTemplateList の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ci/CiCellClassList.h"
-#include "ci/CiCellClass.h"
+#include "ci/CiLutTemplateList.h"
+#include "ci/CiLutTemplate.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiCellClassList
+// クラス CiLutTemplateList
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CiCellClassList::CiCellClassList()
+//
+// 内容は不定
+CiLutTemplateList::CiLutTemplateList()
 {
   mNum = 0;
   mArray = nullptr;
 }
 
 // @brief デストラクタ
-CiCellClassList::~CiCellClassList()
+CiLutTemplateList::~CiLutTemplateList()
 {
 }
 
 // @brief 要素数を返す．
 int
-CiCellClassList::num() const
+CiLutTemplateList::num() const
 {
   return mNum;
 }
 
 // @brief 要素を返す．
 // @param[in] pos 位置番号 ( 0 <= pos < num() )
-const ClibCellClass*
-CiCellClassList::operator[](int pos) const
+const ClibLutTemplate*
+CiLutTemplateList::operator[](int pos) const
 {
   ASSERT_COND( pos >= 0 && pos < num() );
 
@@ -47,34 +49,34 @@ CiCellClassList::operator[](int pos) const
 }
 
 // @brief 先頭の反復子を返す．
-ClibCellClassList::iterator
-CiCellClassList::begin() const
+ClibLutTemplateList::iterator
+CiLutTemplateList::begin() const
 {
   return iterator(&mArray[0]);
 }
 
 // @brief 末尾の反復子を返す．
-ClibCellClassList::iterator
-CiCellClassList::end() const
+ClibLutTemplateList::iterator
+CiLutTemplateList::end() const
 {
   return iterator(&mArray[mNum]);
 }
 
 // @brief 内容を初期化する．
-// @param[in] class_list セルクラスのリスト
+// @param[in] templ_list 要素のリスト
 // @param[in] alloc メモリアロケータ
 void
-CiCellClassList::init(const vector<CiCellClass*>& class_list,
-		      Alloc& alloc)
+CiLutTemplateList::init(const vector<CiLutTemplate*>& templ_list,
+			Alloc& alloc)
 {
-  mNum = class_list.size();
+  mNum = templ_list.size();
   if ( mNum == 0 ) {
     return;
   }
-  void* p = alloc.get_memory(sizeof(const ClibCellClass*) * mNum);
-  mArray = new (p) const ClibCellClass*[mNum];
+  void* p = alloc.get_memory(sizeof(const ClibLutTemplate*) * mNum);
+  mArray = new (p) const ClibLutTemplate*[mNum];
   for ( int i = 0; i < mNum; ++ i ) {
-    mArray[i] = class_list[i];
+    mArray[i] = templ_list[i];
   }
 }
 

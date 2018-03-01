@@ -41,7 +41,7 @@ public:
   name() const;
 
   /// @brief 次元数を返す．
-  ymuint
+  int
   dimension() const;
 
   /// @brief 'variable_1' を返す．
@@ -84,7 +84,7 @@ private:
   ShString mName;
 
   // 次元数
-  ymuint32 mDimension;
+  int mDimension;
 
   // variable_1
   ClibVarType mVar1;

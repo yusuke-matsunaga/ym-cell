@@ -48,8 +48,8 @@ CiLutTemplate1D::CiLutTemplate1D(ShString name,
   mVarType(var_type),
   mIndexArray(index_array.size())
 {
-  ymuint32 n = index_array.size();
-  for (ymuint32 i = 0; i < n; ++ i) {
+  int n = index_array.size();
+  for ( int i = 0; i < n; ++ i ) {
     mIndexArray[i] = index_array[i];
   }
 }
@@ -60,7 +60,7 @@ CiLutTemplate1D::~CiLutTemplate1D()
 }
 
 // @brief 次元数の取得
-ymuint32
+int
 CiLutTemplate1D::dimension() const
 {
   return 1;
@@ -69,7 +69,7 @@ CiLutTemplate1D::dimension() const
 // @brief 変数型の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
 ClibVarType
-CiLutTemplate1D::variable_type(ymuint32 var) const
+CiLutTemplate1D::variable_type(int var) const
 {
   ASSERT_COND( var == 0 );
   return mVarType;
@@ -77,8 +77,8 @@ CiLutTemplate1D::variable_type(ymuint32 var) const
 
 // @brief インデックス数の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
-ymuint32
-CiLutTemplate1D::index_num(ymuint32 var) const
+int
+CiLutTemplate1D::index_num(int var) const
 {
   ASSERT_COND( var == 0 );
   return mIndexArray.size();
@@ -88,8 +88,8 @@ CiLutTemplate1D::index_num(ymuint32 var) const
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
 // @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
 double
-CiLutTemplate1D::index(ymuint32 var,
-		       ymuint32 pos) const
+CiLutTemplate1D::index(int var,
+		       int pos) const
 {
   ASSERT_COND( var == 0 );
   ASSERT_COND( pos < index_num(0) );
@@ -110,16 +110,16 @@ CiLutTemplate2D::CiLutTemplate2D(ShString name,
   CiLutTemplate(name)
 {
   mVarType[0] = var1;
-  ymuint32 n1 = index_array1.size();
+  int n1 = index_array1.size();
   mIndexArray[0].resize(n1);
-  for (ymuint32 i = 0; i < n1; ++ i) {
+  for ( int i = 0; i < n1; ++ i ) {
     mIndexArray[0][i] = index_array1[i];
   }
 
   mVarType[1] = var2;
-  ymuint32 n2 = index_array2.size();
+  int n2 = index_array2.size();
   mIndexArray[1].resize(n2);
-  for (ymuint32 i = 0; i < n2; ++ i) {
+  for ( int i = 0; i < n2; ++ i ) {
     mIndexArray[1][i] = index_array2[i];
   }
 }
@@ -130,7 +130,7 @@ CiLutTemplate2D::~CiLutTemplate2D()
 }
 
 // @brief 次元数の取得
-ymuint32
+int
 CiLutTemplate2D::dimension() const
 {
   return 2;
@@ -139,7 +139,7 @@ CiLutTemplate2D::dimension() const
 // @brief 変数型の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
 ClibVarType
-CiLutTemplate2D::variable_type(ymuint32 var) const
+CiLutTemplate2D::variable_type(int var) const
 {
   ASSERT_COND( var < 2  );
   return mVarType[var];
@@ -147,8 +147,8 @@ CiLutTemplate2D::variable_type(ymuint32 var) const
 
 // @brief インデックス数の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
-ymuint32
-CiLutTemplate2D::index_num(ymuint32 var) const
+int
+CiLutTemplate2D::index_num(int var) const
 {
   ASSERT_COND( var < 2  );
   return mIndexArray[var].size();
@@ -158,8 +158,8 @@ CiLutTemplate2D::index_num(ymuint32 var) const
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
 // @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
 double
-CiLutTemplate2D::index(ymuint32 var,
-			 ymuint32 pos) const
+CiLutTemplate2D::index(int var,
+			 int pos) const
 {
   ASSERT_COND( var < 2  );
   ASSERT_COND( pos < index_num(var)  );
@@ -182,23 +182,23 @@ CiLutTemplate3D::CiLutTemplate3D(ShString name,
   CiLutTemplate(name)
 {
   mVarType[0] = var1;
-  ymuint32 n1 = index_array1.size();
+  int n1 = index_array1.size();
   mIndexArray[0].resize(n1);
-  for (ymuint32 i = 0; i < n1; ++ i) {
+  for ( int i = 0; i < n1; ++ i ) {
     mIndexArray[0][i] = index_array1[i];
   }
 
   mVarType[1] = var2;
-  ymuint32 n2 = index_array2.size();
+  int n2 = index_array2.size();
   mIndexArray[1].resize(n2);
-  for (ymuint32 i = 0; i < n2; ++ i) {
+  for ( int i = 0; i < n2; ++ i ) {
     mIndexArray[1][i] = index_array2[i];
   }
 
   mVarType[2] = var3;
-  ymuint32 n3 = index_array3.size();
+  int n3 = index_array3.size();
   mIndexArray[2].resize(n3);
-  for (ymuint32 i = 0; i < n3; ++ i) {
+  for ( int i = 0; i < n3; ++ i ) {
     mIndexArray[2][i] = index_array3[i];
   }
 }
@@ -209,7 +209,7 @@ CiLutTemplate3D::~CiLutTemplate3D()
 }
 
 // @brief 次元数の取得
-ymuint32
+int
 CiLutTemplate3D::dimension() const
 {
   return 3;
@@ -218,7 +218,7 @@ CiLutTemplate3D::dimension() const
 // @brief 変数型の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
 ClibVarType
-CiLutTemplate3D::variable_type(ymuint32 var) const
+CiLutTemplate3D::variable_type(int var) const
 {
   ASSERT_COND( var < 3  );
   return mVarType[var];
@@ -226,8 +226,8 @@ CiLutTemplate3D::variable_type(ymuint32 var) const
 
 // @brief インデックス数の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
-ymuint32
-CiLutTemplate3D::index_num(ymuint32 var) const
+int
+CiLutTemplate3D::index_num(int var) const
 {
   ASSERT_COND( var < 3  );
   return mIndexArray[var].size();
@@ -237,8 +237,8 @@ CiLutTemplate3D::index_num(ymuint32 var) const
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
 // @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
 double
-CiLutTemplate3D::index(ymuint32 var,
-			 ymuint32 pos) const
+CiLutTemplate3D::index(int var,
+		       int pos) const
 {
   ASSERT_COND( var < 3  );
   ASSERT_COND( pos < index_num(var)  );

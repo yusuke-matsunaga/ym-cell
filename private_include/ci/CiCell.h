@@ -15,6 +15,7 @@
 #include "ym/Alloc.h"
 #include "ym/ODO.h"
 
+#include "ci/CiCellPinList.h"
 #include "ci/CiTimingList.h"
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -102,11 +103,10 @@ public:
   int
   pin_num() const;
 
-  /// @brief ピンの取得
-  /// @param[in] id ピン番号 ( 0 <= id < pin_num() )
+  /// @brief ピンのリストの取得
   virtual
-  const ClibCellPin*
-  pin(int id) const;
+  const ClibCellPinList&
+  pin_list() const;
 
   /// @brief 名前からピンの取得
   /// @param[in] name ピン名
@@ -151,11 +151,11 @@ public:
   input_num2() const;
 
   /// @brief 入力ピンの取得
-  /// @param[in] input_id 入力番号 ( 0 <= pos < input_num2() )
-  /// @note pos >= input_num() の場合には入出力ピンが返される．
+  /// @param[in] id 入力番号 ( 0 <= id < input_num2() )
+  /// @note id >= input_num() の場合には入出力ピンが返される．
   virtual
   const ClibCellPin*
-  input(int input_id) const;
+  input(int id) const;
 
   /// @brief 出力ピン+入出力ピン数の取得
   /// @note output_num() + inout_num() に等しい．
@@ -164,17 +164,23 @@ public:
   output_num2() const;
 
   /// @brief 出力ピンの取得
-  /// @param[in] output_id 出力番号 ( 0 <= pos < output_num2() )
-  /// @note pos >= output_num() の場合には入出力ピンが返される．
+  /// @param[in] id 出力番号 ( 0 <= id < output_num2() )
+  /// @note id >= output_num() の場合には入出力ピンが返される．
   virtual
   const ClibCellPin*
-  output(int output_id) const;
+  output(int id) const;
+
+  /// @brief 入出力ピンの取得
+  /// @param[in] id 番号 ( 0 <= id < inout_num() )
+  virtual
+  const ClibCellPin*
+  inout(int id) const;
 
   /// @brief 内部ピンの取得
-  /// @param[in] internal_id 内部ピン番号 ( 0 <= internal_id < internal_num() )
+  /// @param[in] id 内部ピン番号 ( 0 <= id < internal_num() )
   virtual
   const ClibCellPin*
-  internal(int internal_id) const;
+  internal(int id) const;
 
   /// @brief バス数の取得
   virtual
@@ -221,12 +227,6 @@ public:
   virtual
   const ClibTimingList&
   timing_list() const;
-
-  /// @brief タイミング情報を返す．
-  /// @param[in] tid タイミング番号 ( 0 <= tid < timing_list().num() )
-  virtual
-  const ClibTiming*
-  timing(int pos) const;
 
   /// @brief 条件に合致するタイミング情報のリストを返す．
   /// @param[in] ipos 開始ピン番号 ( 0 <= ipos < input_num2() )
@@ -434,12 +434,8 @@ private:
   // 面積
   ClibArea mArea;
 
-  // ピン数
-  int mPinNum;
-
-  // ピンの配列
-  // サイズは mPinNum;
-  CiCellPin** mPinArray;
+  // ピンのリスト
+  CiCellPinList mPinList;
 
   // 入力ピン数
   int mInputNum;
@@ -450,20 +446,14 @@ private:
   // 入出力ピン数
   int mInOutNum;
 
-  // 内部ピン数
-  int mInternalNum;
+  // 入力ピン+入出力ピンのリスト
+  CiCellPinList mInputList;
 
-  // 入力ピンの配列
-  // サイズは mInputNum + mInOutNum
-  CiCellPin** mInputArray;
+  // 出力ピン+入出力ピンのリスト
+  CiCellPinList mOutputList;
 
-  // 出力ピンの配列
-  // サイズは mOutputNum + mInOutNum
-  CiCellPin** mOutputArray;
-
-  // 内部ピンの配列
-  // サイズは mInternalNum;
-  CiCellPin** mInternalArray;
+  // 内部ピンのリスト
+  CiCellPinList mInternalList;
 
   // バス数
   int mBusNum;

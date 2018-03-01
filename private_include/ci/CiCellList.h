@@ -75,11 +75,6 @@ public:
   init(const vector<CiCell*>& cell_list,
        Alloc& alloc);
 
-  /// @brief 要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < num() )
-  const CiCell*
-  _elem(int pos) const;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -96,7 +91,7 @@ private:
   int mNum;
 
   // セルへのポインタ配列
-  CiCell** mArray;
+  const ClibCell** mArray;
 
 };
 

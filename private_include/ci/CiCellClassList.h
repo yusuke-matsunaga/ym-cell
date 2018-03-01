@@ -75,11 +75,6 @@ public:
   init(const vector<CiCellClass*>& class_list,
        Alloc& alloc);
 
-  /// @brief 要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < num() )
-  const CiCellClass*
-  _elem(int pos) const;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -96,7 +91,7 @@ private:
   int mNum;
 
   // セルクラスへのポインタ配列
-  CiCellClass** mArray;
+  const ClibCellClass** mArray;
 
 };
 

@@ -55,13 +55,13 @@ public:
   set_data(const DotlibNode* pin_node);
 
   /// @brief 名前のリストの要素数を返す．
-  ymuint
+  int
   num() const;
 
   /// @brief 名前を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < num() )
   ShString
-  name(ymuint pos) const;
+  name(int pos) const;
 
   /// @brief "direction" を返す．
   tDirection

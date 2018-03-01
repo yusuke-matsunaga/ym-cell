@@ -17,10 +17,10 @@ BEGIN_NONAMESPACE
 
 // インデント用の空白文字列を作る．
 string
-indent_str(ymuint indent)
+indent_str(int indent)
 {
   string ans;
-  for (ymuint i = 0; i < indent; ++ i) {
+  for (int i = 0; i < indent; ++ i) {
     ans += ' ';
   }
   return ans;
@@ -149,7 +149,7 @@ DotlibNodeImpl::string_value() const
 
 // @brief ベクタの要素数を返す．
 // @note is_vector() = true の時のみ意味を持つ．
-ymuint
+int
 DotlibNodeImpl::vector_size() const
 {
   dump(cout);
@@ -162,7 +162,7 @@ DotlibNodeImpl::vector_size() const
 // @param[in] pos 位置番号 ( 0 <= pos < vector_size() )
 // @note is_vector() = true の時のみ意味を持つ．
 double
-DotlibNodeImpl::vector_elem(ymuint pos) const
+DotlibNodeImpl::vector_elem(int pos) const
 {
   dump(cout);
   cout << endl;
@@ -205,7 +205,7 @@ DotlibNodeImpl::opr2() const
 
 // @brief リストの要素数を返す．
 // @note is_list() = true の時のみ意味を持つ．
-ymuint
+int
 DotlibNodeImpl::list_size() const
 {
   dump(cout);
@@ -218,7 +218,7 @@ DotlibNodeImpl::list_size() const
 // @param[in] pos 位置番号 ( 0 <= pos < list_size() )
 // @note is_list() == true の時のみ意味を持つ．
 const DotlibNode*
-DotlibNodeImpl::list_elem(ymuint pos) const
+DotlibNodeImpl::list_elem(int pos) const
 {
   dump(cout);
   cout << endl;
@@ -356,7 +356,7 @@ DotlibInt::float_value() const
 // @param[in] indent インデント量
 void
 DotlibInt::dump(ostream& s,
-		ymuint indent) const
+		int indent) const
 {
   s << int_value();
 }
@@ -408,7 +408,7 @@ DotlibFloat::float_value() const
 // @param[in] indent インデント量
 void
 DotlibFloat::dump(ostream& s,
-		  ymuint indent) const
+		  int indent) const
 {
   s << float_value();
 }
@@ -460,7 +460,7 @@ DotlibString::string_value() const
 // @param[in] indent インデント量
 void
 DotlibString::dump(ostream& s,
-		   ymuint indent) const
+		   int indent) const
 {
   dump_str(s, string_value());
 }
@@ -478,7 +478,7 @@ DotlibVector::DotlibVector(const vector<double>& value_list,
   DotlibNodeBase(loc),
   mNum(value_list.size())
 {
-  for (ymuint i = 0; i < mNum; ++ i) {
+  for (int i = 0; i < mNum; ++ i) {
     mBody[i] = value_list[i];
   }
 }
@@ -504,7 +504,7 @@ DotlibVector::is_vector() const
 
 // @brief ベクタの要素数を返す．
 // @note is_vector() = true の時のみ意味を持つ．
-ymuint
+int
 DotlibVector::vector_size() const
 {
   return mNum;
@@ -514,7 +514,7 @@ DotlibVector::vector_size() const
 // @param[in] pos 位置番号 ( 0 <= pos < vector_size() )
 // @note is_vector() = true の時のみ意味を持つ．
 double
-DotlibVector::vector_elem(ymuint pos) const
+DotlibVector::vector_elem(int pos) const
 {
   return mBody[pos];
 }
@@ -527,7 +527,7 @@ DotlibVector::get_vector(vector<double>& vector) const
 {
   vector.clear();
   vector.resize(mNum);
-  for (ymuint i = 0; i < mNum; ++ i) {
+  for (int i = 0; i < mNum; ++ i) {
     vector[i] = mBody[i];
   }
 }
@@ -537,11 +537,11 @@ DotlibVector::get_vector(vector<double>& vector) const
 // @param[in] indent インデント量
 void
 DotlibVector::dump(ostream& s,
-		   ymuint indent) const
+		   int indent) const
 {
   const char* comma = "";
   s << "(";
-  for (ymuint i = 0; i < mNum; ++ i) {
+  for (int i = 0; i < mNum; ++ i) {
     s << comma << mBody[i];
     comma = ", ";
   }
@@ -595,9 +595,9 @@ DotlibNot::opr1() const
 // @param[in] indent インデント量
 void
 DotlibNot::dump(ostream& s,
-		ymuint indent) const
+		int indent) const
 {
-  for (ymuint i = 0; i < indent; ++ i) {
+  for (int i = 0; i < indent; ++ i) {
     s << ' ';
   }
   s << "!( ";
@@ -669,9 +669,9 @@ DotlibOpr::opr2() const
 // @param[in] indent インデント量
 void
 DotlibOpr::dump(ostream& s,
-		ymuint indent) const
+		int indent) const
 {
-  for (ymuint i = 0; i < indent; ++ i) {
+  for (int i = 0; i < indent; ++ i) {
     s << ' ';
   }
   s << "( ";
@@ -732,7 +732,7 @@ DotlibList::loc() const
 
 // @brief リストの要素数を返す．
 // @note is_list() = true の時のみ意味を持つ．
-ymuint
+int
 DotlibList::list_size() const
 {
   return mBody.size();
@@ -742,7 +742,7 @@ DotlibList::list_size() const
 // @param[in] pos 位置番号 ( 0 <= pos < list_size() )
 // @note is_list() == true の時のみ意味を持つ．
 const DotlibNode*
-DotlibList::list_elem(ymuint pos) const
+DotlibList::list_elem(int pos) const
 {
   return mBody[pos];
 }
@@ -752,7 +752,7 @@ DotlibList::list_elem(ymuint pos) const
 // @param[in] indent インデント量
 void
 DotlibList::dump(ostream& s,
-		 ymuint indent) const
+		 int indent) const
 {
   s << "(";
   const char* comma = "";
@@ -832,7 +832,7 @@ DotlibGroup::attr_top() const
 // @param[in] indent インデント量
 void
 DotlibGroup::dump(ostream& s,
-		  ymuint indent) const
+		  int indent) const
 {
   s << ' ';
   group_value()->dump(s, 0);

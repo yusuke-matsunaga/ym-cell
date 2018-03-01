@@ -76,6 +76,7 @@ CiCellClass::init(int id,
 		  Alloc& alloc)
 {
   mId = id;
+
   mIdmapNum = idmap_list.size();
   if ( mIdmapNum > 0 ) {
     void* p = alloc.get_memory(sizeof(NpnMapM) * mIdmapNum);
@@ -87,6 +88,7 @@ CiCellClass::init(int id,
   for ( int i = 0; i < mIdmapNum; ++ i ) {
     mIdmapList[i] = idmap_list[i];
   }
+
   mGroupList.init(group_list, alloc);
   for ( auto group: group_list ) {
     group->set_class(this);

@@ -37,6 +37,7 @@ set (ci_SOURCES
   src/ci/CiCellGroupList.cc
   src/ci/CiCellLibrary.cc
   src/ci/CiCellPin.cc
+  src/ci/CiCellPinList.cc
   src/ci/CiCellPinHash.cc
   src/ci/CiFFCell.cc
   src/ci/CiFsmCell.cc
@@ -45,6 +46,7 @@ set (ci_SOURCES
   src/ci/CiLut.cc
   src/ci/CiLutHash.cc
   src/ci/CiLutTemplate.cc
+  src/ci/CiLutTemplateList.cc
   src/ci/CiPatGraph.cc
   src/ci/CiPatMgr.cc
   src/ci/CiTiming.cc

@@ -109,7 +109,7 @@ MislibParserImpl::read_file(const string& filename,
   mMislibMgr = mgr;
   mMislibMgr->clear();
 
-  ymuint prev_errnum = MsgMgr::error_num();
+  int prev_errnum = MsgMgr::error_num();
 
   // パース木を作る．
   // 結果は MislibMgrImpl が持っている．
@@ -451,7 +451,7 @@ MislibParserImpl::read_pin_list()
 
     // あとは 6 個の NUM
     MislibNode* val[6];
-    for (ymuint i = 0; i < 6; ++ i) {
+    for (int i = 0; i < 6; ++ i) {
       tok = scan(node, loc);
       if ( tok != NUM ) {
 	// シンタックスエラー
@@ -468,7 +468,7 @@ MislibParserImpl::read_pin_list()
   }
 
   // 名前が nullptr (STAR) のピンがある場合はそれが唯一の要素である場合に限る．
-  ymuint npin = 0;
+  int npin = 0;
   bool has_star = false;
   for (const MislibNode* pin = pin_list->top(); pin != nullptr; pin = pin->next(), ++ npin) {
     if ( pin->name() == nullptr ) {

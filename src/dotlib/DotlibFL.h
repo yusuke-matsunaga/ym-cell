@@ -53,11 +53,11 @@ public:
   preset() const;
 
   /// @brief "clear_preset_var1" を返す．
-  ymuint
+  int
   clear_preset_var1() const;
 
   /// @brief "clear_preset_var2" を返す．
-  ymuint
+  int
   clear_preset_var2() const;
 
 
@@ -79,10 +79,10 @@ private:
   const DotlibNode* mPreset;
 
   // clear_preset_var1
-  ymuint mClearPresetVar1;
+  int mClearPresetVar1;
 
   // clear_preset_var2
-  ymuint mClearPresetVar2;
+  int mClearPresetVar2;
 
 };
 

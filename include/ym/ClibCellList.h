@@ -10,66 +10,10 @@
 
 
 #include "ym/clib.h"
+#include "ym/ArrayIterator.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
-
-class CiCell;
-
-//////////////////////////////////////////////////////////////////////
-/// @class ClibCellListIterator ClibCellList.h "ClibCellList.h"
-/// @brief ClibCellList 用の反復子
-//////////////////////////////////////////////////////////////////////
-class ClibCellListIterator
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @brief obj_ptr 要素へのポインタ
-  ClibCellListIterator(CiCell** obj_ptr);
-
-  /// @brief デストラクタ
-  ~ClibCellListIterator();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief dereference 演算子
-  const ClibCell*
-  operator*() const;
-
-  /// @brief increment 演算子
-  const ClibCellListIterator&
-  operator++();
-
-  /// @brief 等価比較演算子
-  bool
-  operator==(const ClibCellListIterator& right) const;
-
-  /// @brief 非等価比較演算子
-  bool
-  operator!=(const ClibCellListIterator& right) const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 要素へのポインタ
-  CiCell** mObjPtr;
-
-};
-
 
 //////////////////////////////////////////////////////////////////////
 /// @class ClibCellList ClibCellList.h "ClibCellList.h"
@@ -86,7 +30,7 @@ private:
 class ClibCellList
 {
 public:
-  typedef ClibCellListIterator iterator;
+  typedef ArrayIterator<const ClibCell*> iterator;
 
   /// @brief デストラクタ
   virtual

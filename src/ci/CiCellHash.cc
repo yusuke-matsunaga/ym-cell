@@ -40,14 +40,14 @@ CiCellHash::add(CiCell* cell)
 {
   if ( mNum > mLimit ) {
     // テーブルを拡張する．
-    ymuint old_size = mSize;
+    int old_size = mSize;
     CiCell** old_table = mTable;
     alloc_table(old_size << 1);
-    for (ymuint i = 0; i < old_size; ++ i) {
+    for (int i = 0; i < old_size; ++ i) {
       for (CiCell* cell = old_table[i]; cell; ) {
 	CiCell* tmp = cell;
 	cell = tmp->mLink;
-	ymuint pos = tmp->mName.hash() % mSize;
+	int pos = tmp->mName.hash() % mSize;
 	tmp->mLink = mTable[pos];
 	mTable[pos] = tmp;
       }
@@ -55,7 +55,7 @@ CiCellHash::add(CiCell* cell)
     delete [] old_table;
   }
 
-  ymuint pos = cell->mName.hash() % mSize;
+  int pos = cell->mName.hash() % mSize;
   cell->mLink = mTable[pos];
   mTable[pos] = cell;
   ++ mNum;
@@ -68,7 +68,7 @@ CiCellHash::add(CiCell* cell)
 CiCell*
 CiCellHash::get(ShString name) const
 {
-  ymuint pos = name.hash() % mSize;
+  int pos = name.hash() % mSize;
   for (CiCell* cell = mTable[pos]; cell; cell = cell->mLink) {
     if ( cell->mName == name ) {
       return cell;
@@ -80,12 +80,12 @@ CiCellHash::get(ShString name) const
 // @brief テーブルの領域を確保する．
 // @param[in] req_size 要求するサイズ
 void
-CiCellHash::alloc_table(ymuint req_size)
+CiCellHash::alloc_table(int req_size)
 {
   mSize = req_size;
-  mLimit = static_cast<ymuint>(mSize * 1.8);
+  mLimit = static_cast<int>(mSize * 1.8);
   mTable = new CiCell*[mSize];
-  for (ymuint i = 0; i < mSize; ++ i) {
+  for (int i = 0; i < mSize; ++ i) {
     mTable[i] = nullptr;
   }
 }

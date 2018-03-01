@@ -17,9 +17,7 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CiBundle::CiBundle() :
-  mPinNum(0),
-  mPinList(nullptr)
+CiBundle::CiBundle()
 {
 }
 
@@ -37,18 +35,28 @@ CiBundle::name() const
 }
 
 // @brief ピン数の取得
-ymuint
+int
 CiBundle::pin_num() const
 {
-  return mPinNum;
+  return mPinList.num();
 }
 
 // @brief ピンの取得
 // @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
 const ClibCellPin*
-CiBundle::pin(ymuint pos) const
+CiBundle::pin(int pos) const
 {
   return mPinList[pos];
+}
+
+// @brief 内容を初期化する．
+void
+CiBundle::init(const ShString& name,
+	       const vector<CiCellPin*>& pin_list,
+	       Alloc& alloc)
+{
+  mName = name;
+  mPinList.init(pin_list, alloc);
 }
 
 END_NAMESPACE_YM_CLIB

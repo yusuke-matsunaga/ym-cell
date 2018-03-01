@@ -44,10 +44,10 @@ DotlibPin::set_data(const DotlibNode* pin_node)
 
   // 名前のリストを設定する．
   const DotlibNode* list_node = pin_node->group_value();
-  ymuint n = list_node->list_size();
+  int n = list_node->list_size();
   mNameList.clear();
   mNameList.resize(n);
-  for (ymuint i = 0; i < n; ++ i) {
+  for (int i = 0; i < n; ++ i) {
     const DotlibNode* str_node = list_node->list_elem(i);
     if ( !str_node->is_string() ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -245,7 +245,7 @@ DotlibPin::set_data(const DotlibNode* pin_node)
 }
 
 // @brief 名前のリストの要素数を返す．
-ymuint
+int
 DotlibPin::num() const
 {
   return mNameList.size();
@@ -254,7 +254,7 @@ DotlibPin::num() const
 // @brief 名前を返す．
 // @param[in] pos 位置番号 ( 0 <= pos < num() )
 ShString
-DotlibPin::name(ymuint pos) const
+DotlibPin::name(int pos) const
 {
   ASSERT_COND( pos < num() );
   return mNameList[pos];

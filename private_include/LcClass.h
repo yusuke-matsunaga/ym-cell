@@ -28,7 +28,7 @@ public:
   /// @brief コンストラクタ
   /// @param[in] id ID番号
   /// @param[in] rep_sig 代表シグネチャ
-  LcClass(ymuint id,
+  LcClass(int id,
 	  const LcSignature& rep_sig);
 
   /// @brief デストラクタ
@@ -41,7 +41,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ID番号を返す．
-  ymuint
+  int
   id() const;
 
   /// @brief 代表シグネチャを返す．
@@ -68,7 +68,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID番号
-  ymuint mId;
+  int mId;
 
   // 代表シグネチャ
   LcSignature mRepSig;
@@ -88,7 +88,7 @@ private:
 
 // @brief ID番号を返す．
 inline
-ymuint
+int
 LcClass::id() const
 {
   return mId;

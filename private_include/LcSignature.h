@@ -88,11 +88,11 @@ public:
   type() const;
 
   /// @brief 入力数
-  ymuint
+  int
   input_num() const;
 
   /// @brief 出力数
-  ymuint
+  int
   output_num() const;
 
   /// @brief クロック/イネーブルの論理関数を返す．
@@ -136,26 +136,26 @@ public:
   /// @brief 論理式を持つ時に true を返す．
   /// @param[in] opos 出力位置 ( 0 <= opos < output_num() )
   bool
-  has_logic(ymuint opos) const;
+  has_logic(int opos) const;
 
   /// @brief 出力の論理関数を返す．
   /// @param[in] opos 出力位置 ( 0 <= opos < output_num() )
   ///
   /// has_state_var() == true の時は変数の数が input_num() + 2 となる．
   TvFunc
-  output_func(ymuint opos) const;
+  output_func(int opos) const;
 
   /// @brief tristate 条件を持つ時に true を返す．
   /// @param[in] opos 出力位置 ( 0 <= opos < output_num() )
   bool
-  is_tristate(ymuint opos) const;
+  is_tristate(int opos) const;
 
   /// @brief tristate 条件を返す．
   /// @param[in] opos 出力位置 ( 0 <= opos < output_num() )
   ///
   /// is_tristate(opos) == false の時の値は不定
   TvFunc
-  tristate_func(ymuint opos) const;
+  tristate_func(int opos) const;
 
   /// @brief 内容を表す文字列を作る．
   string
@@ -181,17 +181,17 @@ private:
   // 0-1: タイプ
   // 2: クリア端子
   // 3: プリセット端子
-  ymuint mTypeBits;
+  int mTypeBits;
 
   // 入力ピン数
-  ymuint mInputNum;
+  int mInputNum;
 
   // 出力ピン数
-  ymuint mOutputNum;
+  int mOutputNum;
 
   // 論理式を持つかどうかのフラグと tristate 条件を持つかどうかのフラグの配列
   // 要素数は mOutputNum
-  vector<ymuint> mOutputBits;
+  vector<int> mOutputBits;
 
   // クロックの論理関数
   TvFunc mClockFunc;
@@ -230,7 +230,7 @@ LcSignature::type() const
 
 // @brief 入力数
 inline
-ymuint
+int
 LcSignature::input_num() const
 {
   return mInputNum;
@@ -238,7 +238,7 @@ LcSignature::input_num() const
 
 // @brief 出力数
 inline
-ymuint
+int
 LcSignature::output_num() const
 {
   return mOutputNum;
@@ -305,7 +305,7 @@ LcSignature::preset_func() const
 // @param[in] opos 出力位置 ( 0 <= opos < output_num() )
 inline
 bool
-LcSignature::has_logic(ymuint opos) const
+LcSignature::has_logic(int opos) const
 {
   ASSERT_COND( opos < output_num() );
   return static_cast<bool>((mOutputBits[opos] >> 0) & 1U);
@@ -317,7 +317,7 @@ LcSignature::has_logic(ymuint opos) const
 // has_state_var() == true の時は変数の数が input_num() + 2 となる．
 inline
 TvFunc
-LcSignature::output_func(ymuint opos) const
+LcSignature::output_func(int opos) const
 {
   ASSERT_COND( opos < output_num() );
   return mOutputFunc[opos];
@@ -327,7 +327,7 @@ LcSignature::output_func(ymuint opos) const
 // @param[in] opos 出力位置 ( 0 <= opos < output_num() )
 inline
 bool
-LcSignature::is_tristate(ymuint opos) const
+LcSignature::is_tristate(int opos) const
 {
   ASSERT_COND( opos < output_num() );
   return static_cast<bool>((mOutputBits[opos] >> 1) & 1U);
@@ -339,7 +339,7 @@ LcSignature::is_tristate(ymuint opos) const
 // is_tristate(opos) == false の時の値は不定
 inline
 TvFunc
-LcSignature::tristate_func(ymuint opos) const
+LcSignature::tristate_func(int opos) const
 {
   ASSERT_COND( opos < output_num() );
   return mTristateFunc[opos];

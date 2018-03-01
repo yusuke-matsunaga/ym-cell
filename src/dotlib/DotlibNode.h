@@ -134,7 +134,7 @@ public:
   /// @brief ベクタの要素数を返す．
   /// @note is_vector() = true の時のみ意味を持つ．
   virtual
-  ymuint
+  int
   vector_size() const = 0;
 
   /// @brief ベクタの要素を返す．
@@ -142,7 +142,7 @@ public:
   /// @note is_vector() = true の時のみ意味を持つ．
   virtual
   double
-  vector_elem(ymuint pos) const = 0;
+  vector_elem(int pos) const = 0;
 
   /// @brief ベクタの全体を取り出す．
   /// @param[out] vector 結果を格納する変数
@@ -166,7 +166,7 @@ public:
   /// @brief リストの要素数を返す．
   /// @note is_list() = true の時のみ意味を持つ．
   virtual
-  ymuint
+  int
   list_size() const = 0;
 
   /// @brief リストの要素を返す．
@@ -174,7 +174,7 @@ public:
   /// @note is_list() == true の時のみ意味を持つ．
   virtual
   const DotlibNode*
-  list_elem(ymuint pos) const = 0;
+  list_elem(int pos) const = 0;
 
   /// @brief グループの値を得る．
   /// @note is_group() = true の時のみ意味を持つ．
@@ -195,7 +195,7 @@ public:
   virtual
   void
   dump(ostream& s,
-       ymuint indent = 0) const = 0;
+       int indent = 0) const = 0;
 
 
 public:

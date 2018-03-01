@@ -75,11 +75,6 @@ public:
   init(const vector<CiCellGroup*>& group_list,
        Alloc& alloc);
 
-  /// @brief 要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < num() )
-  const CiCellGroup*
-  _elem(int pos) const;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -96,7 +91,7 @@ private:
   int mNum;
 
   // セルグループのポインタの配列
-  CiCellGroup** mArray;
+  const ClibCellGroup** mArray;
 
 };
 

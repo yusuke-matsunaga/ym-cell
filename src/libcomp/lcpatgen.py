@@ -40,7 +40,7 @@ def lcpatgen(ni) :
     ne = ni * 2 - 1
 
     print "// %d入力の分解パタン" % ni
-    print "const ymuint n_pat%d = %d;" % (ni, nl)
+    print "const int n_pat%d = %d;" % (ni, nl)
     print "int pat%d[n_pat%d][%d] = {" % (ni, ni, ne)
     for p in range(0, nl) :
         pat = pat_list[p]

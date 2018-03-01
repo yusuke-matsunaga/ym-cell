@@ -58,7 +58,7 @@ private:
   /// @brief テーブルの領域を確保する．
   /// @param[in] req_size 要求するサイズ
   void
-  alloc_table(ymuint req_size);
+  alloc_table(int req_size);
 
 
 private:
@@ -67,16 +67,16 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // テーブルサイズ
-  ymuint mSize;
+  int mSize;
 
   // ハッシュ表
   CiCellPin** mTable;
 
   // ハッシュ表を拡大するしきい値
-  ymuint mLimit;
+  int mLimit;
 
   // 要素数
-  ymuint mNum;
+  int mNum;
 
 };
 

@@ -58,6 +58,7 @@ class ClibBundle;
 class ClibTiming;
 class ClibTimingList;
 class ClibLutTemplate;
+class ClibLutTemplateList;
 class ClibLut;
 
 class ClibReader;

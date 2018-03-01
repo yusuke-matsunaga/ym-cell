@@ -1,40 +1,39 @@
-#ifndef CLIBCELLCLASSLIST_H
-#define CLIBCELLCLASSLIST_H
+#ifndef CILUTTEMPLATELIST_H
+#define CILUTTEMPLATELIST_H
 
-/// @file ClibCellClassList.h
-/// @brief ClibCellClassList のヘッダファイル
+/// @file CiLutTemplateList.h
+/// @brief CiLutTemplateList のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ym/clib.h"
-#include "ym/ArrayIterator.h"
+#include "ym/ClibLutTemplateList.h"
+#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiLutTemplate;
+
 //////////////////////////////////////////////////////////////////////
-/// @class ClibCellClassList ClibCellClassList.h "ClibCellClassList.h"
-/// @brief ClibCell のリストを表すクラス
-///
-/// @code
-/// const ClibCellClassList& class_list = ...;
-/// for ( auto cell_class: class_list ) {
-///   ...
-/// }
-/// @endcode
-/// というふうに使える．
+/// @class CiLutTemplateList CiLutTemplateList.h "CiLutTemplateList.h"
+/// @brief ClibLutTemplateList の実装クラス
 //////////////////////////////////////////////////////////////////////
-class ClibCellClassList
+class CiLutTemplateList :
+  public ClibLutTemplateList
 {
 public:
-  typedef ArrayIterator<const ClibCellClass*> iterator;
+
+  /// @brief コンストラクタ
+  ///
+  /// 内容は不定
+  CiLutTemplateList();
 
   /// @brief デストラクタ
   virtual
-  ~ClibCellClassList() { }
+  ~CiLutTemplateList();
 
 
 public:
@@ -45,23 +44,36 @@ public:
   /// @brief 要素数を返す．
   virtual
   int
-  num() const = 0;
+  num() const;
 
   /// @brief 要素を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < num() )
   virtual
-  const ClibCellClass*
-  operator[](int pos) const = 0;
+  const ClibLutTemplate*
+  operator[](int pos) const;
 
   /// @brief 先頭の反復子を返す．
   virtual
   iterator
-  begin() const = 0;
+  begin() const;
 
   /// @brief 末尾の反復子を返す．
   virtual
   iterator
-  end() const = 0;
+  end() const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // CiLutTemplateList に固有の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を初期化する．
+  /// @param[in] templ_list 要素のリスト
+  /// @param[in] alloc メモリアロケータ
+  void
+  init(const vector<CiLutTemplate*>& templ_list,
+       Alloc& alloc);
 
 
 private:
@@ -75,9 +87,14 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // 要素数
+  int mNum;
+
+  // 要素のポインタ配列
+  const ClibLutTemplate** mArray;
 
 };
 
 END_NAMESPACE_YM_CLIB
 
-#endif // CLIBCELLCLASSLIST_H
+#endif // CILUTTEMPLATELIST_H

@@ -12,6 +12,7 @@
 #include "ym/clib.h"
 #include "ym/logic.h"
 #include "ym/ClibArea.h"
+#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -63,11 +64,10 @@ public:
   int
   pin_num() const = 0;
 
-  /// @brief ピンの取得
-  /// @param[in] id ピン番号 ( 0 <= id < pin_num() )
+  /// @brief ピンのリストの取得
   virtual
-  const ClibCellPin*
-  pin(int id) const = 0;
+  const ClibCellPinList&
+  pin_list() const = 0;
 
   /// @brief 名前からピンの取得
   /// @param[in] name ピン名
@@ -112,11 +112,11 @@ public:
   input_num2() const = 0;
 
   /// @brief 入力ピンの取得
-  /// @param[in] input_id 入力番号 ( 0 <= pos < input_num2() )
-  /// @note pos >= input_num() の場合には入出力ピンが返される．
+  /// @param[in] id 番号 ( 0 <= id < input_num2() )
+  /// @note id >= input_num() の場合には入出力ピンが返される．
   virtual
   const ClibCellPin*
-  input(int input_id) const = 0;
+  input(int id) const = 0;
 
   /// @brief 出力ピン+入出力ピン数の取得
   /// @note output_num() + inout_num() に等しい．
@@ -125,17 +125,23 @@ public:
   output_num2() const = 0;
 
   /// @brief 出力ピンの取得
-  /// @param[in] output_id 出力番号 ( 0 <= pos < output_num2() )
-  /// @note pos >= output_num() の場合には入出力ピンが返される．
+  /// @param[in] id 出力番号 ( 0 <= id < output_num2() )
+  /// @note id >= output_num() の場合には入出力ピンが返される．
   virtual
   const ClibCellPin*
-  output(int output_id) const = 0;
+  output(int id) const = 0;
+
+  /// @brief 入出力ピンの取得
+  /// @param[in] id 番号 ( 0 <= id < inout_num() )
+  virtual
+  const ClibCellPin*
+  inout(int id) const = 0;
 
   /// @brief 内部ピンの取得
-  /// @param[in] internal_id 内部ピン番号 ( 0 <= internal_id < internal_num() )
+  /// @param[in] id 内部ピン番号 ( 0 <= id < internal_num() )
   virtual
   const ClibCellPin*
-  internal(int internal_id) const = 0;
+  internal(int id) const = 0;
 
   /// @brief バス数の取得
   virtual
@@ -182,12 +188,6 @@ public:
   virtual
   const ClibTimingList&
   timing_list() const = 0;
-
-  /// @brief タイミング情報を返す．
-  /// @param[in] tid タイミング番号 ( 0 <= tid < timing_list().num() )
-  virtual
-  const ClibTiming*
-  timing(int pos) const = 0;
 
   /// @brief 条件に合致するタイミング情報のリストを返す．
   /// @param[in] ipos 開始ピン番号 ( 0 <= ipos < input_num2() )

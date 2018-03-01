@@ -35,12 +35,12 @@ public:
 
   /// @brief 代表関数番号を返す．
   virtual
-  ymuint
+  int
   rep_id() const = 0;
 
   /// @brief 根のノード番号を返す．
   virtual
-  ymuint
+  int
   root_id() const = 0;
 
   /// @brief 根の反転属性を返す．
@@ -50,19 +50,19 @@ public:
 
   /// @brief 入力数を返す．
   virtual
-  ymuint
+  int
   input_num() const = 0;
 
   /// @brief 枝数を返す．
   virtual
-  ymuint
+  int
   edge_num() const = 0;
 
   /// @brief 枝(の番号)を返す．
   /// @param[in] pos 位置 ( 0 <= pos < edge_num() )
   virtual
-  ymuint
-  edge(ymuint pos) const = 0;
+  int
+  edge(int pos) const = 0;
 
 };
 

@@ -92,13 +92,13 @@ private:
   FileRegion mSrcLoc;
 
   // 現在の読み出し位置
-  ymuint mCurPos;
+  int mCurPos;
 
   // 現在のトークン文字列
   StrBuff mCurString;
 
   // 最初のコラム位置
-  ymuint32 mFirstColumn;
+  int mFirstColumn;
 
 };
 

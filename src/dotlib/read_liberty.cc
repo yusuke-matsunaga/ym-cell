@@ -140,11 +140,11 @@ gen_lut(CiCellLibrary* library,
     return nullptr;
   }
 
-  ymuint d = templ->dimension();
+  int d = templ->dimension();
 
   vector<double> value_array;
-  ymuint n = lut_info.value_list()->list_size();
-  for (ymuint i = 0; i < n; ++ i) {
+  int n = lut_info.value_list()->list_size();
+  for ( int i = 0; i < n; ++ i ) {
     vector<double> tmp_array;
     lut_info.value_list()->list_elem(i)->get_vector(tmp_array);
     value_array.insert(value_array.end(), tmp_array.begin(), tmp_array.end());
@@ -490,7 +490,7 @@ gen_timing(const list<const DotlibNode*>& dt_timing_list,
 			  buf.str());
 	  continue;
 	}
-	ymuint iid = ipin->input_id();
+	int iid = ipin->input_id();
 	switch ( timing_sense ) {
 	case kClibPosiUnate:
 	  timing_list_array[iid * 2 + 0].push_back(timing);
@@ -838,7 +838,7 @@ set_library(const DotlibLibrary& library_info,
     vector<double> index_1;
     vector<double> index_2;
     vector<double> index_3;
-    ymuint d = templ_info.dimension();
+    int d = templ_info.dimension();
     switch ( d ) {
     case 1:
       templ_info.index_1()->get_vector(index_1);

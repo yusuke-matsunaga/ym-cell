@@ -53,8 +53,8 @@ LcGroupMgr::add_cell(Clib* cell)
     LcGroup* fgroup = mLibComp.new_group();
     fgroup->add_cell(cell);
 
-    ymuint ni = cell->input_num2();
-    ymuint no = cell->output_num2();
+    int ni = cell->input_num2();
+    int no = cell->output_num2();
     LcClass* fclass = mLibComp.new_class(LcSignature(), false);
     NpnMapM xmap;
     xmap.set_identity(ni, no);
@@ -81,7 +81,7 @@ LcGroupMgr::find_group(const LcSignature& sig,
 		       bool builtin)
 {
   string sig_str = sig.str();
-  ymuint fgid;
+  int fgid;
   if ( mGroupMap.find(sig_str, fgid) ) {
     // 既に登録されていた．
     return mLibComp.group(fgid);
@@ -98,7 +98,7 @@ LcGroupMgr::find_group(const LcSignature& sig,
 
   string rep_sig_str = rep_sig.str();
   LcClass* fclass = nullptr;
-  ymuint fcid;
+  int fcid;
   if ( mClassMap.find(rep_sig_str, fcid) ) {
     // 登録されていた．
     fclass = mLibComp.npn_class(fcid);
@@ -120,12 +120,12 @@ LcGroupMgr::find_group(const LcSignature& sig,
 BEGIN_NONAMESPACE
 
 // サポートを表すビットベクタを作る．
-ymuint32
+int
 gen_support(const TvFunc& f)
 {
-  ymuint ni = f.input_num();
-  ymuint32 ans = 0U;
-  for (ymuint i = 0; i < ni; ++ i) {
+  int ni = f.input_num();
+  int ans = 0U;
+  for (int i = 0; i < ni; ++ i) {
     VarId var(i);
     if ( f.check_sup(var) ) {
       ans |= (1U << i);
@@ -135,23 +135,23 @@ gen_support(const TvFunc& f)
 }
 
 // f を最大化する変換を求める．
-ymuint
+int
 gen_maxmap(const LcSignature& sig,
-	   ymuint offset,
+	   int offset,
 	   NpnMapM& xmap)
 {
-  ymuint ni = f.input_num();
-  ymuint no = f.output_num();
+  int ni = f.input_num();
+  int no = f.output_num();
 
   vector<VarId> i_list;
   i_list.reserve(ni);
-  for (ymuint i = 0; i < ni; ++ i) {
+  for (int i = 0; i < ni; ++ i) {
     VarId var(i);
     if ( f.check_sup(var) ) {
       i_list.push_back(var);
     }
   }
-  ymuint ni1 = i_list.size();
+  int ni1 = i_list.size();
   if ( ni1 == 0 ) {
     return 0;
   }
@@ -159,14 +159,14 @@ gen_maxmap(const LcSignature& sig,
   NpnMapM map;
   bool first = true;
   TvFuncM repfunc;
-  ymuint nip = 1U << ni1;
+  int nip = 1U << ni1;
   for (PermGen pg(ni1, ni1); !pg.is_end(); ++ pg) {
     NpnMapM map1(ni, no);
-    for (ymuint i = 0; i < no; ++ i) {
+    for (int i = 0; i < no; ++ i) {
       map1.set_omap(VarId(i), VarId(i), false);
     }
-    for (ymuint x = 0U; x < nip; ++ x) {
-      for (ymuint i = 0; i < ni1; ++ i) {
+    for (int x = 0U; x < nip; ++ x) {
+      for (int i = 0; i < ni1; ++ i) {
 	bool inv = (x & (1U << i)) ? false : true;
 	VarId src_var = i_list[i];
 	VarId dst_var(pg(i) + offset);
@@ -199,24 +199,24 @@ LcGroupMgr::default_repfunc(const TvFuncM& f,
 			    TvFuncM& repfunc,
 			    NpnMapM& xmap)
 {
-  ymuint ni = f.input_num();
-  ymuint no = f.output_num();
+  int ni = f.input_num();
+  int no = f.output_num();
 
   // 各出力のサポートをビットベクタの形で求める．
-  vector<ymuint32> sup_array(no);
-  for (ymuint o = 0; o < no; ++ o) {
+  vector<int> sup_array(no);
+  for (int o = 0; o < no; ++ o) {
     VarId ovar(o);
     TvFunc func1 = f.output(ovar);
-    ymuint32 supbits = gen_support(func1);
+    int supbits = gen_support(func1);
     sup_array[o] = supbits;
   }
 
   // サポートが共通な出力を同じグループにマージする．
   MFSet mfset(no);
-  for (ymuint o = 0; o < no; ++ o) {
-    ymuint supbits0 = sup_array[o];
-    for (ymuint o1 = o + 1; o1 < no; ++o1) {
-      ymuint supbits1 = sup_array[o1];
+  for (int o = 0; o < no; ++ o) {
+    int supbits0 = sup_array[o];
+    for (int o1 = o + 1; o1 < no; ++o1) {
+      int supbits1 = sup_array[o1];
       if ( supbits0 & supbits1 ) {
 	mfset.merge(o, o1);
       }
@@ -225,14 +225,14 @@ LcGroupMgr::default_repfunc(const TvFuncM& f,
 
   // 一つ一つのグループを独立に処理する．
   xmap.set_identity(ni, no);
-  ymuint offset = 0;
-  for (ymuint first = 0; first < no; ++ first) {
+  int offset = 0;
+  for (int first = 0; first < no; ++ first) {
     if ( mfset.find(first) != first ) continue;
-    vector<ymuint> o_list;
+    vector<int> o_list;
     o_list.reserve(no);
     vector<TvFunc> f_list;
     f_list.reserve(no);
-    for (ymuint o = 0; o < no; ++ o) {
+    for (int o = 0; o < no; ++ o) {
       VarId ovar(o);
       if ( mfset.find(o) == first ) {
 	o_list.push_back(o);
@@ -241,7 +241,7 @@ LcGroupMgr::default_repfunc(const TvFuncM& f,
     }
     TvFuncM f1(f_list);
     NpnMapM map1;
-    ymuint ni1 = gen_maxmap(f1, offset, xmap);
+    int ni1 = gen_maxmap(f1, offset, xmap);
     offset += ni1;
   }
 
@@ -256,32 +256,32 @@ void
 LcGroupMgr::dump(ODO& bos) const
 {
   // セルグループの情報をダンプする．
-  ymuint32 ng = group_num();
+  int ng = group_num();
   bos << ng;
-  for (ymuint i = 0; i < ng; ++ i) {
+  for (int i = 0; i < ng; ++ i) {
     const LcGroup* group = this->group(i);
     ASSERT_COND( group->id() == i );
 
     // 論理クラスに対する変換マップをダンプする．
     const NpnMapM& map = group->map();
-    ymuint32 ni = map.input_num();
+    int ni = map.input_num();
     bos << ni;
-    for (ymuint i = 0; i < ni; ++ i) {
+    for (int i = 0; i < ni; ++ i) {
       NpnVmap imap = map.imap(i);
-      // 手抜きでは imap を ymuint32 にキャストすればよい．
-      ymuint j = imap.pos();
-      ymuint32 v = (j << 1);
+      // 手抜きでは imap を int にキャストすればよい．
+      int j = imap.pos();
+      int v = (j << 1);
       if ( imap.pol() == kPolNega ) {
 	v |= 1U;
       }
       bos << v;
     }
-    ymuint32 no = map.output_num();
+    int no = map.output_num();
     bos << no;
-    for (ymuint i = 0; i < no; ++ i) {
+    for (int i = 0; i < no; ++ i) {
       NpnVmap omap = map.omap(i);
-      ymuint j = omap.pos();
-      ymuint32 v = (j << 1);
+      int j = omap.pos();
+      int v = (j << 1);
       if ( omap.pol() == kPolNega ) {
 	v |= 1U;
       }
@@ -290,25 +290,25 @@ LcGroupMgr::dump(ODO& bos) const
 
     // 属しているセル番号をダンプする．
     const vector<const Clib*>& cell_list = group->cell_list();
-    ymuint32 nc = cell_list.size();
+    int nc = cell_list.size();
     bos << nc;
-    for (ymuint i = 0; i < nc; ++ i) {
+    for (int i = 0; i < nc; ++ i) {
       const Clib* cell = cell_list[i];
-      bos << static_cast<ymuint32>(cell->id());
+      bos << static_cast<int>(cell->id());
     }
   }
 
   // NPN同値クラスの情報をダンプする．
-  ymuint32 nc = npn_class_num();
+  int nc = npn_class_num();
   bos << nc;
-  for (ymuint i = 0; i < nc; ++ i) {
+  for (int i = 0; i < nc; ++ i) {
     const LcClass* rep = npn_class(i);
     ASSERT_COND( rep->id() == i  );
     const vector<LcGroup*>& group_list = rep->group_list();
-    ymuint32 ng = group_list.size();
+    int ng = group_list.size();
     bos << ng;
-    for (ymuint j = 0; j < ng; ++ j) {
-      bos << static_cast<ymuint32>(group_list[j]->id());
+    for (int j = 0; j < ng; ++ j) {
+      bos << static_cast<int>(group_list[j]->id());
     }
   }
 }

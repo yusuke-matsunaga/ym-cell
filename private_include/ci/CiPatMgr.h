@@ -51,62 +51,62 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief パタンの最大の入力数を得る．
-  ymuint
+  int
   max_input() const;
 
   /// @brief 総ノード数を返す．
-  ymuint
+  int
   node_num() const;
 
   /// @brief ノードの種類を返す．
   /// @param[in] id ノード番号 ( 0 <= id < node_num() )
   ClibPatType
-  node_type(ymuint id) const;
+  node_type(int id) const;
 
   /// @brief ノードが入力ノードの時に入力番号を返す．
   /// @param[in] id ノード番号 ( 0 <= id < node_num() )
   /// @note 入力ノードでない場合の返り値は不定
-  ymuint
-  input_id(ymuint id) const;
+  int
+  input_id(int id) const;
 
   /// @brief 入力のノード番号を返す．
   /// @param[in] input_id 入力番号 ( 0 <= input_id < input_num() )
   /// @return input_id の入力に対応するノードのノード番号
-  ymuint
-  input_node(ymuint input_id) const;
+  int
+  input_node(int input_id) const;
 
   /// @brief 総枝数を返す．
-  ymuint
+  int
   edge_num() const;
 
   /// @brief 枝のファンイン元のノード番号を返す．
   /// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
-  ymuint
-  edge_from(ymuint id) const;
+  int
+  edge_from(int id) const;
 
   /// @brief 枝のファンアウト先のノード番号を返す．
   /// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
-  ymuint
+  int
   edge_to(ymint id) const;
 
   /// @brief 枝のファンアウト先の入力位置( 0 or 1 ) を返す．
   /// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
-  ymuint
-  edge_pos(ymuint id) const;
+  int
+  edge_pos(int id) const;
 
   /// @brief 枝の反転属性を返す．
   /// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
   bool
-  edge_inv(ymuint id) const;
+  edge_inv(int id) const;
 
   /// @brief 総パタン数を返す．
-  ymuint
+  int
   pat_num() const;
 
   /// @brief パタンを返す．
   /// @param[in] id パタン番号 ( 0 <= id < pat_num() )
   const ClibPatGraph&
-  pat(ymuint id) const;
+  pat(int id) const;
 
   /// @brief バイナリダンプを行う．
   /// @param[in] bos 出力先のストリーム
@@ -141,11 +141,11 @@ private:
   /// @param[in] nn ノード数
   /// @param[in] alloc メモリアロケータ
   void
-  set_node_num(ymuint nn);
+  set_node_num(int nn);
 
   /// @brief パタン数を設定する．
   void
-  set_pat_num(ymuint np);
+  set_pat_num(int np);
 
 
 private:
@@ -157,18 +157,18 @@ private:
   Alloc& mAlloc;
 
   // ノード数
-  ymuint32 mNodeNum;
+  int mNodeNum;
 
   // ノードの種類+入力番号を納めた配列
   // サイズは mNodeNum
-  ymuint32* mNodeTypeArray;
+  int* mNodeTypeArray;
 
   // ファンインのノード番号＋反転属性を納めた配列
   // サイズは mNodeNum * 2
-  ymuint32* mEdgeArray;
+  int* mEdgeArray;
 
   // パタン数
-  ymuint32 mPatNum;
+  int mPatNum;
 
   // パタンの配列
   // サイズは mPatNum
@@ -183,7 +183,7 @@ private:
 
 // @brief ノード数を返す．
 inline
-ymuint
+int
 CiPatMgr::node_num() const
 {
   return mNodeNum;
@@ -193,7 +193,7 @@ CiPatMgr::node_num() const
 // @param[in] id ノード番号 ( 0 <= id < node_num() )
 inline
 ClibPatType
-CiPatMgr::node_type(ymuint id) const
+CiPatMgr::node_type(int id) const
 {
   return static_cast<ClibPatType>(mNodeTypeArray[id] & 3U);
 }
@@ -202,8 +202,8 @@ CiPatMgr::node_type(ymuint id) const
 // @param[in] id ノード番号 ( 0 <= id < node_num() )
 // @note 入力ノードでない場合の返り値は不定
 inline
-ymuint
-CiPatMgr::input_id(ymuint id) const
+int
+CiPatMgr::input_id(int id) const
 {
   return (mNodeTypeArray[id] >> 2);
 }
@@ -212,15 +212,15 @@ CiPatMgr::input_id(ymuint id) const
 // @param[in] input_id 入力番号 ( 0 <= input_id < input_num() )
 // @return input_id の入力に対応するノードのノード番号
 inline
-ymuint
-CiPatMgr::input_node(ymuint input_id) const
+int
+CiPatMgr::input_node(int input_id) const
 {
   return input_id;
 }
 
 // @brief 総枝数を返す．
 inline
-ymuint
+int
 CiPatMgr::edge_num() const
 {
   return node_num() * 2;
@@ -229,8 +229,8 @@ CiPatMgr::edge_num() const
 // @brief 枝のファンイン元のノード番号を返す．
 // @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
 inline
-ymuint
-CiPatMgr::edge_from(ymuint id) const
+int
+CiPatMgr::edge_from(int id) const
 {
   return (mEdgeArray[id] >> 1);
 }
@@ -238,7 +238,7 @@ CiPatMgr::edge_from(ymuint id) const
 // @brief 枝のファンアウト先のノード番号を返す．
 // @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
 inline
-ymuint
+int
 CiPatMgr::edge_to(ymint id) const
 {
   return (id / 2);
@@ -247,8 +247,8 @@ CiPatMgr::edge_to(ymint id) const
 // @brief 枝のファンアウト先の入力位置( 0 or 1 ) を返す．
 // @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
 inline
-ymuint
-CiPatMgr::edge_pos(ymuint id) const
+int
+CiPatMgr::edge_pos(int id) const
 {
   return (id & 1U);
 }
@@ -257,14 +257,14 @@ CiPatMgr::edge_pos(ymuint id) const
 // @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
 inline
 bool
-CiPatMgr::edge_inv(ymuint id) const
+CiPatMgr::edge_inv(int id) const
 {
   return static_cast<bool>(mEdgeArray[id] & 1U);
 }
 
 // @brief 総パタン数を返す．
 inline
-ymuint
+int
 CiPatMgr::pat_num() const
 {
   return mPatNum;

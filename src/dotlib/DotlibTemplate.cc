@@ -226,7 +226,7 @@ DotlibTemplate::name() const
 }
 
 // @brief 次元数を返す．
-ymuint
+int
 DotlibTemplate::dimension() const
 {
   return mDimension;

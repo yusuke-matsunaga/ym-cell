@@ -475,7 +475,7 @@ CiCellLibrary::restore_cell_group(IDO& s,
   group_list.resize(ng);
   for ( int g = 0; g < ng; ++ g ) {
     NpnMapM npnmap;
-    ymuint pininfo;
+    int pininfo;
     int cell_num;
     s >> npnmap
       >> pininfo
@@ -675,7 +675,7 @@ CiCellLibrary::restore_lut(IDO& s)
 	index_array2[i] = val;
       }
 
-      ymuint n = n1 * n2;
+      int n = n1 * n2;
       vector<double> value_array(n);
       for ( int i = 0; i < n; ++ i ) {
 	double val;
@@ -717,7 +717,7 @@ CiCellLibrary::restore_lut(IDO& s)
 	index_array3[i] = val;
       }
 
-      ymuint n = n1 * n2 * n3;
+      int n = n1 * n2 * n3;
       vector<double> value_array(n);
       for ( int i = 0; i < n; ++ i ) {
 	double val;
@@ -752,7 +752,7 @@ bool
 CiPatMgr::restore(IDO& bis)
 {
   // ノードと枝の情報を読み込む．
-  ymuint32 nn;
+  int nn;
   bis >> nn;
   set_node_num(nn);
   for ( int i = 0; i < nn; ++ i ) {
@@ -765,7 +765,7 @@ CiPatMgr::restore(IDO& bis)
   }
 
   // パタングラフの情報を読み込む．
-  ymuint32 np;
+  int np;
   bis >> np;
   set_pat_num(np);
   for ( int id = 0; id < mPatNum; ++ id ) {

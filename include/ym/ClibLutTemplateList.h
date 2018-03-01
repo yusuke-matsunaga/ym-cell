@@ -1,8 +1,8 @@
-#ifndef CLIBCELLCLASSLIST_H
-#define CLIBCELLCLASSLIST_H
+#ifndef CLIBLUTTEMPLATELIST_H
+#define CLIBLUTTEMPLATELIST_H
 
-/// @file ClibCellClassList.h
-/// @brief ClibCellClassList のヘッダファイル
+/// @file ClibLutTemplateList.h
+/// @brief ClibLutTemplateList のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
@@ -16,25 +16,25 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class ClibCellClassList ClibCellClassList.h "ClibCellClassList.h"
-/// @brief ClibCell のリストを表すクラス
+/// @class ClibLutTemplateList ClibLutTemplateList.h "ClibLutTemplateList.h"
+/// @brief ClibLutTemplate のリストを表すクラス
 ///
 /// @code
-/// const ClibCellClassList& class_list = ...;
-/// for ( auto cell_class: class_list ) {
+/// const ClibLutTemplateList& lut_templ_list = ...;
+/// for ( auto lut_templ: lut_templ_list ) {
 ///   ...
 /// }
 /// @endcode
-/// というふうに使える．
+/// という風に使える．
 //////////////////////////////////////////////////////////////////////
-class ClibCellClassList
+class ClibLutTemplateList
 {
 public:
-  typedef ArrayIterator<const ClibCellClass*> iterator;
+  typedef ArrayIterator<const ClibLutTemplate*> iterator;
 
   /// @brief デストラクタ
   virtual
-  ~ClibCellClassList() { }
+  ~ClibLutTemplateList() { }
 
 
 public:
@@ -50,7 +50,7 @@ public:
   /// @brief 要素を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < num() )
   virtual
-  const ClibCellClass*
+  const ClibLutTemplate*
   operator[](int pos) const = 0;
 
   /// @brief 先頭の反復子を返す．
@@ -80,4 +80,4 @@ private:
 
 END_NAMESPACE_YM_CLIB
 
-#endif // CLIBCELLCLASSLIST_H
+#endif // CLIBLUTTEMPLATELIST_H

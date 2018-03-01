@@ -39,14 +39,14 @@ public:
 
   /// @brief ピン数の取得
   virtual
-  ymuint
+  int
   pin_num() const = 0;
 
   /// @brief ピンの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
   virtual
   const ClibCellPin*
-  pin(ymuint pos) const = 0;
+  pin(int pos) const = 0;
 
 };
 

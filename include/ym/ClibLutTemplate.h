@@ -41,28 +41,28 @@ public:
 
   /// @brief 次元数の取得
   virtual
-  ymuint
+  int
   dimension() const = 0;
 
   /// @brief 変数型の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
   ClibVarType
-  variable_type(ymuint var) const = 0;
+  variable_type(int var) const = 0;
 
   /// @brief インデックス数の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
-  ymuint
-  index_num(ymuint var) const = 0;
+  int
+  index_num(int var) const = 0;
 
   /// @brief デフォルトインデックス値の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
   virtual
   double
-  index(ymuint var,
-	ymuint pos) const = 0;
+  index(int var,
+	int pos) const = 0;
 
 
 public:

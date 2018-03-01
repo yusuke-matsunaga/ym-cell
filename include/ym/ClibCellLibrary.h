@@ -162,14 +162,9 @@ public:
   string
   leakage_power_unit() const;
 
-  /// @brief 遅延テーブルのテンプレート数の取得
-  int
-  lu_table_template_num() const;
-
-  /// @brief 遅延テーブルのテンプレートの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < lu_table_template_num() )
-  const ClibLutTemplate*
-  lu_table_template(int pos) const;
+  /// @brief 遅延テーブルのテンプレートのリストの取得
+  const ClibLutTemplateList&
+  lu_table_template_list() const;
 
   /// @brief 遅延テーブルのテンプレートの取得
   /// @param[in] name テンプレート名

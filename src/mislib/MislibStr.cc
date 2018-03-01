@@ -53,9 +53,9 @@ MislibStr::str() const
 // @brief 対応する論理式を生成する．
 // @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
 Expr
-MislibStr::to_expr(const HashMap<ShString, ymuint>& name_map) const
+MislibStr::to_expr(const HashMap<ShString, int>& name_map) const
 {
-  ymuint id;
+  int id;
   bool found = name_map.find(str(), id);
   ASSERT_COND( found );
   VarId var(id);

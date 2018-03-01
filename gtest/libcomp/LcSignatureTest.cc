@@ -112,9 +112,9 @@ TEST(LcSignatureTest, FF10)
   LcSignature sig(LcSignature::kFFType,
 		  true, false,
 		  false, false);
-  ymuint ni = 2;
-  ymuint no = 1;
-  ymuint nfi = ni + 2;
+  int ni = 2;
+  int no = 1;
+  int nfi = ni + 2;
 
   EXPECT_EQ( LcSignature::kFFType, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
@@ -141,9 +141,9 @@ TEST(LcSignatureTest, FF01)
   LcSignature sig(LcSignature::kFFType,
 		  false, true,
 		  false, false);
-  ymuint ni = 2;
-  ymuint no = 1;
-  ymuint nfi = ni + 2;
+  int ni = 2;
+  int no = 1;
+  int nfi = ni + 2;
 
   EXPECT_EQ( LcSignature::kFFType, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
@@ -170,9 +170,9 @@ TEST(LcSignatureTest, FF11)
   LcSignature sig(LcSignature::kFFType,
 		  true, true,
 		  false, false);
-  ymuint ni = 2;
-  ymuint no = 2;
-  ymuint nfi = ni + 2;
+  int ni = 2;
+  int no = 2;
+  int nfi = ni + 2;
 
   EXPECT_EQ( LcSignature::kFFType, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
@@ -204,9 +204,9 @@ TEST(LcSignatureTest, FF10R)
   LcSignature sig(LcSignature::kFFType,
 		  true, false,
 		  true, false);
-  ymuint ni = 3;
-  ymuint no = 1;
-  ymuint nfi = ni + 2;
+  int ni = 3;
+  int no = 1;
+  int nfi = ni + 2;
 
   EXPECT_EQ( LcSignature::kFFType, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
@@ -233,9 +233,9 @@ TEST(LcSignatureTest, FF10S)
   LcSignature sig(LcSignature::kFFType,
 		  true, false,
 		  false, true);
-  ymuint ni = 3;
-  ymuint no = 1;
-  ymuint nfi = ni + 2;
+  int ni = 3;
+  int no = 1;
+  int nfi = ni + 2;
 
   EXPECT_EQ( LcSignature::kFFType, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
@@ -262,9 +262,9 @@ TEST(LcSignatureTest, FF10RS)
   LcSignature sig(LcSignature::kFFType,
 		  true, false,
 		  true, true);
-  ymuint ni = 4;
-  ymuint no = 1;
-  ymuint nfi = ni + 2;
+  int ni = 4;
+  int no = 1;
+  int nfi = ni + 2;
 
   EXPECT_EQ( LcSignature::kFFType, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
@@ -292,9 +292,9 @@ TEST(LcSignatureTest, Latch01)
   LcSignature sig(LcSignature::kLatchType,
 		  false, true,
 		  false, false);
-  ymuint ni = 2;
-  ymuint no = 1;
-  ymuint nfi = ni + 2;
+  int ni = 2;
+  int no = 1;
+  int nfi = ni + 2;
 
   EXPECT_EQ( LcSignature::kLatchType, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
@@ -321,9 +321,9 @@ TEST(LcSignatureTest, Latch11)
   LcSignature sig(LcSignature::kLatchType,
 		  true, true,
 		  false, false);
-  ymuint ni = 2;
-  ymuint no = 2;
-  ymuint nfi = ni + 2;
+  int ni = 2;
+  int no = 2;
+  int nfi = ni + 2;
 
   EXPECT_EQ( LcSignature::kLatchType, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
@@ -355,9 +355,9 @@ TEST(LcSignatureTest, Latch10R)
   LcSignature sig(LcSignature::kLatchType,
 		  true, false,
 		  true, false);
-  ymuint ni = 3;
-  ymuint no = 1;
-  ymuint nfi = ni + 2;
+  int ni = 3;
+  int no = 1;
+  int nfi = ni + 2;
 
   EXPECT_EQ( LcSignature::kLatchType, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
@@ -384,9 +384,9 @@ TEST(LcSignatureTest, Latch10S)
   LcSignature sig(LcSignature::kLatchType,
 		  true, false,
 		  false, true);
-  ymuint ni = 3;
-  ymuint no = 1;
-  ymuint nfi = ni + 2;
+  int ni = 3;
+  int no = 1;
+  int nfi = ni + 2;
 
   EXPECT_EQ( LcSignature::kLatchType, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
@@ -413,9 +413,9 @@ TEST(LcSignatureTest, Latch10RS)
   LcSignature sig(LcSignature::kLatchType,
 		  true, false,
 		  true, true);
-  ymuint ni = 4;
-  ymuint no = 1;
-  ymuint nfi = ni + 2;
+  int ni = 4;
+  int no = 1;
+  int nfi = ni + 2;
 
   EXPECT_EQ( LcSignature::kLatchType, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );

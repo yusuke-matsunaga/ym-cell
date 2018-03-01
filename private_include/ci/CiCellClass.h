@@ -101,28 +101,7 @@ public:
   /// @param[in] bos 出力先のストリーム
   void
   dump(ODO& bos) const;
-#if 0
-  /// @brief バイナリファイルを読み込む．
-  /// @param[in] bis 入力元のストリーム
-  /// @param[in] library セルライブラリ
-  /// @param[in] alloc メモリアロケータ
-  void
-  restore(IDO& bis,
-	  CiCellLibrary& library,
-	  Alloc& alloc);
-#endif
 
-private:
-  //////////////////////////////////////////////////////////////////////
-  // メモリ確保用の下請け関数
-  //////////////////////////////////////////////////////////////////////
-#if 0
-  /// @brief 配列領域の確保を行う．
-  /// @param[in] alloc メモリアロケータ
-  /// @note mIdmapNum, mGroupNum が適切に設定されている必要がある．
-  void
-  alloc_array(Alloc& alloc);
-#endif
 
 private:
   //////////////////////////////////////////////////////////////////////

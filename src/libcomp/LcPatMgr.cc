@@ -60,7 +60,7 @@ LcPatMgr::init()
 }
 
 // @brief 全ノード数を返す．
-ymuint
+int
 LcPatMgr::node_num() const
 {
   return mNodeList.size();
@@ -69,13 +69,13 @@ LcPatMgr::node_num() const
 // @brief ノードを返す．
 // @param[in] pos ノード番号 ( 0 <= pos < node_num() )
 LcPatNode*
-LcPatMgr::node(ymuint pos) const
+LcPatMgr::node(int pos) const
 {
   return mNodeList[pos];
 }
 
 // @brief パタン数を返す．
-ymuint
+int
 LcPatMgr::pat_num() const
 {
   return mPatList.size();
@@ -84,7 +84,7 @@ LcPatMgr::pat_num() const
 // @brief パタンの根のハンドルを返す．
 // @param[in] id パタン番号 ( 0 <= id < pat_num() )
 LcPatHandle
-LcPatMgr::pat_root(ymuint id) const
+LcPatMgr::pat_root(int id) const
 {
   ASSERT_COND( id < pat_num() );
   return mPatList[id];
@@ -92,8 +92,8 @@ LcPatMgr::pat_root(ymuint id) const
 
 // @brief パタンの属している代表関数番号を返す．
 // @param[in] id パタン番号 ( 0 <= id < pat_num() )
-ymuint
-LcPatMgr::rep_id(ymuint id) const
+int
+LcPatMgr::rep_id(int id) const
 {
   return mRepList[id];
 }
@@ -103,7 +103,7 @@ LcPatMgr::rep_id(ymuint id) const
 // @param[in] rep_id このパタンが属する代表関数番号
 void
 LcPatMgr::reg_pat(const Expr& expr,
-		  ymuint rep_id)
+		  int rep_id)
 {
   if ( mExprList.size() <= rep_id ) {
     mExprList.resize(rep_id + 1, vector<Expr>());
@@ -133,10 +133,10 @@ LcPatMgr::reg_pat(const Expr& expr,
   }
 
   // 入力ノードの整列
-  for (ymuint i = 0; i < mNodeList.size(); ++ i) {
+  for (int i = 0; i < mNodeList.size(); ++ i) {
     LcPatNode* node = mNodeList[i];
     if ( !node->is_input() ) continue;
-    ymuint iid = node->input_id();
+    int iid = node->input_id();
     if ( iid == i ) continue;
     LcPatNode* node1 = mNodeList[iid];
     mNodeList[iid] = node;
@@ -183,7 +183,7 @@ LcPatMgr::check_equivalent(const Expr& expr1,
     return false;
   }
 
-  ymuint n = expr1.child_num();
+  int n = expr1.child_num();
   if ( expr2.child_num() != n ) {
     return false;
   }
@@ -200,7 +200,7 @@ LcPatMgr::check_equivalent(const Expr& expr1,
 
   for (PermGen pg(n, n); !pg.is_end(); ++ pg) {
     bool match = true;
-    for (ymuint i = 0; i < n; ++ i) {
+    for (int i = 0; i < n; ++ i) {
       if ( !check_equivalent(expr1.child(i), expr2.child(pg(i))) ) {
 	match = false;
 	break;
@@ -222,8 +222,8 @@ LcPatMgr::check_equivalent(LcPatHandle handle1,
     return false;
   }
 
-  HashMap<ymuint, ymuint> map1;
-  HashMap<ymuint, ymuint> map2;
+  HashMap<int, int> map1;
+  HashMap<int, int> map2;
 
   return ceq_sub(handle1.node(), handle2.node(), map1, map2);
 }
@@ -232,14 +232,14 @@ LcPatMgr::check_equivalent(LcPatHandle handle1,
 bool
 LcPatMgr::ceq_sub(LcPatNode* node1,
 		  LcPatNode* node2,
-		  HashMap<ymuint, ymuint>& map1,
-		  HashMap<ymuint, ymuint>& map2)
+		  HashMap<int, int>& map1,
+		  HashMap<int, int>& map2)
 {
   if ( node1->is_input() && node2->is_input() ) {
-    ymuint id1 = node1->input_id();
-    ymuint id2 = node2->input_id();
-    ymuint id1_reg;
-    ymuint id2_reg;
+    int id1 = node1->input_id();
+    int id2 = node2->input_id();
+    int id1_reg;
+    int id2_reg;
     if ( !map1.find(id1, id2_reg) ) {
       map1.add(id1, id2);
     }
@@ -289,11 +289,11 @@ LcPatMgr::pg_sub(const Expr& expr,
     pg_list.push_back(LcPatHandle(node, inv));
   }
   else {
-    ymuint n = expr.child_num();
+    int n = expr.child_num();
     // ファンインの式に対するパタングラフを求める．
     vector<vector<LcPatHandle> > input_pg_list(n);
-    vector<pair<ymuint, ymuint> > nk_array(n);
-    for (ymuint i = 0; i < n; ++ i) {
+    vector<pair<int, int> > nk_array(n);
+    for (int i = 0; i < n; ++ i) {
       pg_sub(expr.child(i), input_pg_list[i]);
       nk_array[i] = make_pair(input_pg_list[i].size(), 1);
     }
@@ -302,51 +302,51 @@ LcPatMgr::pg_sub(const Expr& expr,
     for (MultiCombiGen mcg(nk_array); !mcg.is_end(); ++ mcg) {
       // 各ファンインから1つずつパタンを取り出して tmp_input に入れる．
       vector<LcPatHandle> tmp_input(n);
-      for (ymuint i = 0; i < n; ++ i) {
+      for (int i = 0; i < n; ++ i) {
 	tmp_input[i] = input_pg_list[i][mcg(i, 0)];
       }
 
       // tmp_input のなかで同形なパタンを求める．
       MFSet mfset(n);
-      for (ymuint i1 = 1; i1 < n; ++ i1) {
+      for (int i1 = 1; i1 < n; ++ i1) {
 	LcPatHandle pat1 = tmp_input[i1];
-	for (ymuint i2 = 0; i2 < i1; ++ i2) {
+	for (int i2 = 0; i2 < i1; ++ i2) {
 	  LcPatHandle pat2 = tmp_input[i2];
 	  if ( check_equivalent(pat1, pat2) ) {
 	    mfset.merge(i1, i2);
 	  }
 	}
       }
-      vector<ymuint> rep_id;
+      vector<int> rep_id;
       rep_id.reserve(n);
-      vector<ymuint> rev_map(n);
-      for (ymuint i = 0; i < n; ++ i) {
-	ymuint x = mfset.find(i);
+      vector<int> rev_map(n);
+      for (int i = 0; i < n; ++ i) {
+	int x = mfset.find(i);
 	if ( x == i ) {
 	  rev_map[i] = rep_id.size();
 	  rep_id.push_back(x);
 	}
       }
-      ymuint ng = rep_id.size();
+      int ng = rep_id.size();
 
       // group_list[0〜(ng - 1)] に同形なパタンのリストを格納する．
-      vector<vector<ymuint> > group_list(ng);
-      for (ymuint i = 0; i < n; ++ i) {
-	ymuint x = mfset.find(i);
-	ymuint id = rev_map[x];
+      vector<vector<int> > group_list(ng);
+      for (int i = 0; i < n; ++ i) {
+	int x = mfset.find(i);
+	int id = rev_map[x];
 	group_list[id].push_back(i);
       }
 
-      vector<ymuint> num_array(ng);
-      for (ymuint g = 0; g < ng; ++ g) {
+      vector<int> num_array(ng);
+      for (int g = 0; g < ng; ++ g) {
 	num_array[g] = group_list[g].size();
       }
 
       vector<LcPatHandle> input(n);
       for (MultiSetPermGen mspg(num_array, n); !mspg.is_end(); ++ mspg) {
-	vector<ymuint> count(ng, 0);
-	for (ymuint i = 0; i < n; ++ i) {
-	  ymuint g = mspg(i);
+	vector<int> count(ng, 0);
+	for (int i = 0; i < n; ++ i) {
+	  int g = mspg(i);
 	  input[i] = tmp_input[group_list[g][count[g]]];
 	  ++ count[g];
 	}
@@ -359,48 +359,48 @@ LcPatMgr::pg_sub(const Expr& expr,
 	  break;
 
 	case 3:
-	  for (ymuint i = 0; i < n_pat3; ++ i) {
-	    ymuint pos = 0;
+	  for (int i = 0; i < n_pat3; ++ i) {
+	    int pos = 0;
 	    LcPatHandle handle = make_bintree(expr, input, pat3[i], pos);
 	    pg_list.push_back(handle);
 	  }
 	  break;
 
 	case 4:
-	  for (ymuint i = 0; i < n_pat4; ++ i) {
-	    ymuint pos = 0;
+	  for (int i = 0; i < n_pat4; ++ i) {
+	    int pos = 0;
 	    LcPatHandle handle = make_bintree(expr, input, pat4[i], pos);
 	    pg_list.push_back(handle);
 	  }
 	  break;
 
 	case 5:
-	  for (ymuint i = 0; i < n_pat5; ++ i) {
-	    ymuint pos = 0;
+	  for (int i = 0; i < n_pat5; ++ i) {
+	    int pos = 0;
 	    LcPatHandle handle = make_bintree(expr, input, pat5[i], pos);
 	    pg_list.push_back(handle);
 	  }
 	  break;
 
 	case 6:
-	  for (ymuint i = 0; i < n_pat6; ++ i) {
-	    ymuint pos = 0;
+	  for (int i = 0; i < n_pat6; ++ i) {
+	    int pos = 0;
 	    LcPatHandle handle = make_bintree(expr, input, pat6[i], pos);
 	    pg_list.push_back(handle);
 	  }
 	  break;
 
 	case 7:
-	  for (ymuint i = 0; i < n_pat7; ++ i) {
-	    ymuint pos = 0;
+	  for (int i = 0; i < n_pat7; ++ i) {
+	    int pos = 0;
 	    LcPatHandle handle = make_bintree(expr, input, pat7[i], pos);
 	    pg_list.push_back(handle);
 	  }
 	  break;
 
 	case 8:
-	  for (ymuint i = 0; i < n_pat8; ++ i) {
-	    ymuint pos = 0;
+	  for (int i = 0; i < n_pat8; ++ i) {
+	    int pos = 0;
 	    LcPatHandle handle = make_bintree(expr, input, pat8[i], pos);
 	    pg_list.push_back(handle);
 	  }
@@ -424,7 +424,7 @@ LcPatHandle
 LcPatMgr::make_bintree(const Expr& expr,
 		       const vector<LcPatHandle>& input,
 		       int pat[],
-		       ymuint& pos)
+		       int& pos)
 {
   int p = pat[pos];
   ++ pos;
@@ -436,7 +436,7 @@ LcPatMgr::make_bintree(const Expr& expr,
   }
   else {
     // 終端ノード
-    ymuint id = static_cast<ymuint>(p);
+    int id = static_cast<int>(p);
     return input[id];
   }
 }
@@ -447,10 +447,10 @@ LcPatMgr::make_bintree(const Expr& expr,
 LcPatNode*
 LcPatMgr::make_input(VarId var)
 {
-  ymuint id = var.val();
+  int id = var.val();
   while ( mInputList.size() <= id ) {
     LcPatNode* node = new_node();
-    ymuint input_id = mInputList.size();
+    int input_id = mInputList.size();
     node->mType = (input_id << 2) | LcPatNode::kInput;
     mInputList.push_back(node);
   }
@@ -476,7 +476,7 @@ LcPatMgr::make_node(const Expr& expr,
   bool r_inv = r_handle.inv();
 
   bool oinv = false;
-  ymuint32 type = 0U;
+  int type = 0U;
   if ( expr.is_and() ) {
     type = LcPatNode::kAnd;
   }
@@ -503,8 +503,8 @@ LcPatMgr::make_node(const Expr& expr,
   }
 
   // (type, l_node, r_node) というノードがすでにあったらそれを使う．
-  ymuint pos = hash_func(type, l_node, r_node);
-  ymuint idx = pos % mHashSize;
+  int pos = hash_func(type, l_node, r_node);
+  int idx = pos % mHashSize;
   for (LcPatNode* node = mHashTable[idx]; node; node = node->mLink) {
     if ( node->mType == type &&
 	 node->mFanin[0] == l_node &&
@@ -553,10 +553,10 @@ LcPatMgr::delete_node(LcPatNode* node)
 
 // @brief ハッシュ表を確保する．
 void
-LcPatMgr::alloc_table(ymuint req_size)
+LcPatMgr::alloc_table(int req_size)
 {
   LcPatNode** old_table = mHashTable;
-  ymuint old_size = mHashSize;
+  int old_size = mHashSize;
 
   if ( mHashSize == 0 ) {
     mHashSize = 1024;
@@ -565,28 +565,28 @@ LcPatMgr::alloc_table(ymuint req_size)
     mHashSize <<= 1;
   }
   mHashTable = new LcPatNode*[mHashSize];
-  for (ymuint i = 0; i < mHashSize; ++ i) {
+  for (int i = 0; i < mHashSize; ++ i) {
     mHashTable[i] = nullptr;
   }
   if ( old_size > 0 ) {
-    for (ymuint i = 0; i < old_size; ++ i) {
+    for (int i = 0; i < old_size; ++ i) {
       LcPatNode* next = nullptr;
       for (LcPatNode* node = old_table[i]; node; node = next) {
 	next = node->mLink;
-	ymuint pos = hash_func(node->mType, node->mFanin[0], node->mFanin[1]);
-	ymuint idx = pos % mHashSize;
+	int pos = hash_func(node->mType, node->mFanin[0], node->mFanin[1]);
+	int idx = pos % mHashSize;
 	node->mLink = mHashTable[idx];
 	mHashTable[idx] = node;
       }
     }
     delete [] old_table;
   }
-  mNextLimit = static_cast<ymuint32>(mHashSize * 1.8);
+  mNextLimit = static_cast<int>(mHashSize * 1.8);
 }
 
 // @brief LcPatNode のハッシュ関数
-ymuint
-LcPatMgr::hash_func(ymuint type,
+int
+LcPatMgr::hash_func(int type,
 		    LcPatNode* l_node,
 		    LcPatNode* r_node)
 {
@@ -604,10 +604,10 @@ BEGIN_NONAMESPACE
 // @param[in] vmark 訪れたかどうかの情報を持つ配列
 // @param[out] val_list ノードの情報を格納するリスト
 // @return 最大入力番号+1を返す．
-ymuint
+int
 dfs(LcPatNode* node,
     vector<bool>& vmark,
-    vector<ymuint>& val_list)
+    vector<int>& val_list)
 {
   if ( node->is_input() ) {
     return node->input_id() + 1;
@@ -617,9 +617,9 @@ dfs(LcPatNode* node,
   }
   vmark[node->id()] = true;
   val_list.push_back(node->id() * 2);
-  ymuint id = dfs(node->fanin(0), vmark, val_list);
+  int id = dfs(node->fanin(0), vmark, val_list);
   val_list.push_back(node->id() * 2 + 1);
-  ymuint id1 = dfs(node->fanin(1), vmark, val_list);
+  int id1 = dfs(node->fanin(1), vmark, val_list);
   if ( id < id1 ) {
     id = id1;
   }
@@ -632,16 +632,16 @@ END_NONAMESPACE
 // @param[in] id パタン番号 ( 0 <= id < pat_num() )
 // @param[out] node_list パタンを DFS 順でたどった時のノード番号のリスト
 // @return このパタンの入力数を返す．
-ymuint
-LcPatMgr::pat_node_list(ymuint id,
-			vector<ymuint>& node_list) const
+int
+LcPatMgr::pat_node_list(int id,
+			vector<int>& node_list) const
 {
   LcPatHandle root = pat_root(id);
   node_list.clear();
   node_list.reserve(node_num());
   vector<bool> vmark(node_num(), false);
-  ymuint max_input =dfs(root.node(), vmark, node_list);
-  ymuint32 v = max_input << 1;
+  int max_input =dfs(root.node(), vmark, node_list);
+  int v = max_input << 1;
   if ( root.inv() ) {
     v |= 1U;
   }
@@ -661,8 +661,8 @@ LcPatMgr::display(ostream& s) const
   s << "*** LcPatMgr BEGIN ***" << endl;
 
   s << "*** NODE SECTION ***" << endl;
-  ymuint n = node_num();
-  for (ymuint i = 0; i < n; ++ i) {
+  int n = node_num();
+  for (int i = 0; i < n; ++ i) {
     LcPatNode* node = this->node(i);
 
     s << "Node#" << node->id() << ": ";
@@ -690,8 +690,8 @@ LcPatMgr::display(ostream& s) const
   s << endl;
 
   s << "*** PATTERN SECTION ***" << endl;
-  ymuint np = pat_num();
-  for (ymuint i = 0; i < np; ++ i) {
+  int np = pat_num();
+  for (int i = 0; i < np; ++ i) {
     LcPatHandle root = pat_root(i);
     s << "Pat#" << i << ": ";
     if ( root.inv() ) {
@@ -711,7 +711,7 @@ LcPatMgr::display(ostream& s) const
 void
 LcPatMgr::display_edge(ostream& s,
 		       LcPatNode* node,
-		       ymuint fanin_pos)
+		       int fanin_pos)
 {
   if ( node->fanin_inv(fanin_pos) ) {
     s << "~";

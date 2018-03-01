@@ -21,8 +21,8 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] bit_from 開始位置
 // @param[in] bit_to 終了位置
 CiBusType::CiBusType(ShString name,
-		     ymint bit_from,
-		     ymint bit_to) :
+		     int bit_from,
+		     int bit_to) :
   mName(name),
   mBitFrom(bit_from),
   mBitTo(bit_to)
@@ -64,21 +64,21 @@ CiBusType::data_type() const
 }
 
 // @brief ビット幅の取得
-ymuint
+int
 CiBusType::bit_width() const
 {
   return mBitWidth;
 }
 
 // @brief 開始ビットの取得
-ymint
+int
 CiBusType::bit_from() const
 {
   return mBitFrom;
 }
 
 // @brief 終了ビットの取得
-ymint
+int
 CiBusType::bit_to() const
 {
   return mBitTo;

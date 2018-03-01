@@ -18,9 +18,7 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief コンストラクタ
 CiBus::CiBus() :
-  mBusType(nullptr),
-  mPinNum(0),
-  mPinList(nullptr)
+  mBusType(nullptr)
 {
 }
 
@@ -45,18 +43,30 @@ CiBus::bus_type() const
 }
 
 // @brief ピン数の取得
-ymuint
+int
 CiBus::pin_num() const
 {
-  return mPinNum;
+  return mPinList.num();
 }
 
 // @brief ピンの取得
 // @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
 const ClibCellPin*
-CiBus::pin(ymuint pos) const
+CiBus::pin(int pos) const
 {
   return mPinList[pos];
+}
+
+// @brief 内容を初期化する．
+void
+CiBus::init(const ShString& name,
+	    const ClibBusType* bus_type,
+	    const vector<CiCellPin*>& pin_list,
+	    Alloc& alloc)
+{
+  mName = name;
+  mBusType = bus_type;
+  mPinList.init(pin_list, alloc);
 }
 
 END_NAMESPACE_YM_CLIB

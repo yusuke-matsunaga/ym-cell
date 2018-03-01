@@ -160,16 +160,16 @@ private:
   DotlibNode* mRoot;
 
   // 個々の要素の使用数
-  ymuint32 mIntNum;
-  ymuint32 mFloatNum;
-  ymuint32 mStrNum;
-  ymuint32 mVectNum;
-  ymuint32 mVectElemSize;
-  ymuint32 mOprNum;
-  ymuint32 mNotNum;
-  ymuint32 mListNum;
-  ymuint32 mGroupNum;
-  ymuint32 mAttrNum;
+  int mIntNum;
+  int mFloatNum;
+  int mStrNum;
+  int mVectNum;
+  int mVectElemSize;
+  int mOprNum;
+  int mNotNum;
+  int mListNum;
+  int mGroupNum;
+  int mAttrNum;
 };
 
 END_NAMESPACE_YM_DOTLIB

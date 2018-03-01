@@ -210,7 +210,7 @@ VectorListComplexHandler::set_value(const ShString& attr_name,
 				    const FileRegion& end_loc)
 {
   ASSERT_COND( value->is_list()  );
-  ymuint n = value->list_size();
+  int n = value->list_size();
   if ( n == 0 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value->loc(),
@@ -219,7 +219,7 @@ VectorListComplexHandler::set_value(const ShString& attr_name,
 		    "Syntax error, one ore moare vectors expected.");
     return false;
   }
-  for (ymuint i = 0; i < n; ++ i) {
+  for (int i = 0; i < n; ++ i) {
     const DotlibNode* elem = value->list_elem(i);
     ASSERT_COND( elem->is_vector() );
   }

@@ -29,7 +29,7 @@ BEGIN_NAMESPACE_YM_MISLIB
 
 BEGIN_NONAMESPACE
 
-typedef HashMap<ShString, ymuint> NameMap;
+typedef HashMap<ShString, int> NameMap;
 
 // 論理式を表すパース木をスキャンして端子名のリストを作る．
 // param[in] node パース木の根のノード
@@ -85,7 +85,7 @@ set_library(const string& lib_name,
   library->set_name(lib_name);
 
   // セル数の設定
-  ymuint cell_num = 0;
+  int cell_num = 0;
   for (const MislibNode* gate = gate_list->top(); gate; gate = gate->next()) {
     ++ cell_num;
   }
@@ -107,7 +107,7 @@ set_library(const string& lib_name,
       if ( ipin_top->name() != nullptr ) {
 	// 通常の入力ピン定義がある場合
 	// ipin_list の順に入力ピンを作る．
-	for (const MislibNode* pin = ipin_top; pin; pin = pin->next()) {
+	for ( const MislibNode* pin = ipin_top; pin; pin = pin->next() ) {
 	  ASSERT_COND( pin->type() == MislibNode::kPin );
 	  ShString name = pin->name()->str();
 	  ASSERT_COND( !ipin_name_map.check(name) );
@@ -121,7 +121,7 @@ set_library(const string& lib_name,
 	// 論理式に現れる順に入力ピンを作る．
 	wildcard_pin = true;
 	dfs(opin_expr, ipin_name_list, ipin_name_map);
-	for (ymuint i = 0; i < ipin_name_list.size(); ++ i) {
+	for ( int i = 0; i < ipin_name_list.size(); ++ i ) {
 	  ipin_array.push_back(ipin_top);
 	}
       }

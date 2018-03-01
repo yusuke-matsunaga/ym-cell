@@ -12,7 +12,9 @@
 #include "ym/ClibCellList.h"
 #include "ym/ClibLut.h"
 #include "ym/ClibLutTemplate.h"
+#include "ym/ClibLutTemplateList.h"
 #include "ym/ClibCellPin.h"
+#include "ym/ClibCellPinList.h"
 #include "ym/ClibTiming.h"
 #include "ym/ClibTimingList.h"
 #include "ym/ClibCellClass.h"
@@ -198,16 +200,16 @@ display_lut(ostream& s,
 	    const ClibLut* lut)
 {
   s << "    " << label << endl;
-  ymuint d = lut->dimension();
-  for (ymuint i = 0; i < d; ++ i) {
+  int d = lut->dimension();
+  for ( int i = 0; i < d; ++ i ) {
     s << "      Variable_" << (i + 1) << " = " << lut->variable_type(i) << endl;
   }
-  for (ymuint i = 0; i < d; ++ i) {
+  for ( int i = 0; i < d; ++ i ) {
     s << "      Index_" << (i + 1) << "    = ";
-    ymuint n = lut->index_num(i);
+    int n = lut->index_num(i);
     const char* comma = "";
     s << "(";
-    for (ymuint j = 0; j < n; ++ j) {
+    for ( int j = 0; j < n; ++ j ) {
       s << comma << lut->index(i, j);
       comma = ", ";
     }
@@ -216,10 +218,10 @@ display_lut(ostream& s,
 
   if ( d == 1) {
     s << "      Values = (";
-    ymuint n1 = lut->index_num(0);
-    vector<ymuint32> pos_array(1);
+    int n1 = lut->index_num(0);
+    vector<int> pos_array(1);
     const char* comma = "";
-    for (ymuint i1 = 0; i1 < n1; ++ i1) {
+    for ( int i1 = 0; i1 < n1; ++ i1 ) {
       pos_array[0] = i1;
       s << comma << lut->grid_value(pos_array);
       comma = ", ";
@@ -228,14 +230,14 @@ display_lut(ostream& s,
   }
   else if ( d == 2 ) {
     s << "      Values = (" << endl;
-    ymuint n1 = lut->index_num(0);
-    ymuint n2 = lut->index_num(1);
-    vector<ymuint32> pos_array(2);
-    for (ymuint i1 = 0; i1 < n1; ++ i1) {
+    int n1 = lut->index_num(0);
+    int n2 = lut->index_num(1);
+    vector<int> pos_array(2);
+    for ( int i1 = 0; i1 < n1; ++ i1 ) {
       s << "                (";
       pos_array[0] = i1;
       const char* comma = "";
-      for (ymuint i2 = 0; i2 < n2; ++ i2) {
+      for ( int i2 = 0; i2 < n2; ++ i2 ) {
 	pos_array[1] = i2;
 	s << comma << lut->grid_value(pos_array);
 	comma = ", ";
@@ -246,19 +248,19 @@ display_lut(ostream& s,
   }
   else if ( d == 3 ) {
     s << "      Values = (" << endl;
-    ymuint n1 = lut->index_num(0);
-    ymuint n2 = lut->index_num(1);
-    ymuint n3 = lut->index_num(2);
-    vector<ymuint32> pos_array(3);
-    for (ymuint i1 = 0; i1 < n1; ++ i1) {
+    int n1 = lut->index_num(0);
+    int n2 = lut->index_num(1);
+    int n3 = lut->index_num(2);
+    vector<int> pos_array(3);
+    for ( int i1 = 0; i1 < n1; ++ i1 ) {
       s << "                (";
       pos_array[0] = i1;
       const char* comma2 = "";
-      for (ymuint i2 = 0; i2 < n2; ++ i2) {
+      for ( int i2 = 0; i2 < n2; ++ i2 ) {
 	pos_array[1] = i2;
 	s << comma2 << "(";
 	const char* comma3 = "";
-	for (ymuint i3 = 0; i3 < n3; ++ i3) {
+	for ( int i3 = 0; i3 < n3; ++ i3 ) {
 	  pos_array[2] = i3;
 	  s << comma3 << lut->grid_value(pos_array);
 	  comma3 = ", ";
@@ -276,8 +278,8 @@ display_lut(ostream& s,
 void
 display_timing(ostream& s,
 	       const ClibCell* cell,
-	       ymuint ipos,
-	       ymuint opos,
+	       int ipos,
+	       int opos,
 	       ClibTimingSense sense,
 	       ClibDelayModel delay_model)
 {
@@ -349,10 +351,10 @@ display_class(ostream& s,
 	      const ClibCellClass* cclass)
 {
   s << title << endl;
-  ymuint n = cclass->idmap_num();
+  int n = cclass->idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
-    for (ymuint i = 0; i < n; ++ i) {
+    for ( int i = 0; i < n; ++ i ) {
       s << cclass->idmap(i) << endl;
     }
     s << endl;
@@ -371,8 +373,8 @@ display_class(ostream& s,
 void
 display_pos(ostream& s,
 	    const char* title,
-	    ymuint pos,
-	    ymuint sense)
+	    int pos,
+	    int sense)
 {
   if ( sense > 0 ) {
     s << " " << title << " = ";
@@ -390,10 +392,10 @@ display_ff_class(ostream& s,
 		 const ClibCellClass* cclass)
 {
   s << title << endl;
-  ymuint n = cclass->idmap_num();
+  int n = cclass->idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
-    for (ymuint i = 0; i < n; ++ i) {
+    for ( int i = 0; i < n; ++ i ) {
       s << cclass->idmap(i) << endl;
     }
     s << endl;
@@ -423,10 +425,10 @@ display_latch_class(ostream& s,
 		    const ClibCellClass* cclass)
 {
   s << title << endl;
-  ymuint n = cclass->idmap_num();
+  int n = cclass->idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
-    for (ymuint i = 0; i < n; ++ i) {
+    for ( int i = 0; i < n; ++ i ) {
       s << cclass->idmap(i) << endl;
     }
     s << endl;
@@ -466,12 +468,12 @@ display_group(ostream& s,
 void
 display_index(ostream& s,
 	      const ClibLutTemplate* templ,
-	      ymuint var)
+	      int var)
 {
-  ymuint n = templ->index_num(var);
+  int n = templ->index_num(var);
   s << "(";
   const char* comma = "";
-  for (ymuint i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     s << comma << templ->index(var, i);
     comma = ", ";
   }
@@ -534,15 +536,13 @@ display_library(ostream& s,
   s << endl;
 
   // lu_table_template
-  ymuint lut_template_num = library.lu_table_template_num();
-  for (ymuint i = 0; i < lut_template_num; ++ i) {
-    const ClibLutTemplate* templ = library.lu_table_template(i);
+  for ( auto templ: library.lu_table_template_list() ) {
     s << "  lu_table_template(" << templ->name() << ")" << endl;
-    ymuint d = templ->dimension();
-    for (ymuint j = 0; j < d; ++ j) {
+    int d = templ->dimension();
+    for ( int j = 0; j < d; ++ j ) {
       s << "    variable_" << (j + 1) << ": " << templ->variable_type(j) << endl;
     }
-    for (ymuint j = 0; j < d; ++ j) {
+    for ( int j = 0; j < d; ++ j ) {
       s << "    index_" << (j + 1) << "   : ";
       display_index(s, templ, j);
       s << endl;
@@ -614,10 +614,8 @@ display_library(ostream& s,
     }
 
     // ピンの情報
-    ymuint npin = cell->pin_num();
-    for (ymuint pin_id = 0; pin_id < npin; ++ pin_id) {
-      const ClibCellPin* pin = cell->pin(pin_id);
-      s << "  Pin#" << pin_id << "[ " << pin->name() << " ]: ";
+    for ( auto pin: cell->pin_list() ) {
+      s << "  Pin#" << pin->pin_id() << "[ " << pin->name() << " ]: ";
       if ( pin->is_input() ) {
 	// 入力ピン
 	s << "Input#" << pin->input_id() << endl
@@ -627,7 +625,7 @@ display_library(ostream& s,
       }
       else if ( pin->is_output() ) {
 	// 出力ピン
-	ymuint opos = pin->output_id();
+	int opos = pin->output_id();
 	s << "Output# " << opos << endl;
 	if ( cell->has_logic(opos) ) {
 	  s << "    Logic            = " << cell->logic_expr(opos) << endl;
@@ -644,7 +642,7 @@ display_library(ostream& s,
       }
       else if ( pin->is_inout() ) {
 	// 入出力ピン
-	ymuint opos = pin->output_id();
+	int opos = pin->output_id();
 	s << "Inout#(" << pin->input_id() << ", " << opos << ")" << endl;
 	if ( cell->has_logic(opos) ) {
 	  s << "    Logic            = " << cell->logic_expr(opos) << endl;
@@ -664,16 +662,16 @@ display_library(ostream& s,
       }
       else if ( pin->is_internal() ) {
 	// 内部ピン
-	ymuint itpos = pin->internal_id();
+	int itpos = pin->internal_id();
 	s << "Internal#(" << itpos << ")" << endl;
       }
     }
 
     // タイミング情報
-    ymuint ni2 = cell->input_num2();
-    ymuint no2 = cell->output_num2();
-    for (ymuint ipos = 0; ipos < ni2; ++ ipos) {
-      for (ymuint opos = 0; opos < no2; ++ opos) {
+    int ni2 = cell->input_num2();
+    int no2 = cell->output_num2();
+    for ( int ipos = 0; ipos < ni2; ++ ipos ) {
+      for ( int opos = 0; opos < no2; ++ opos ) {
 	display_timing(s, cell, ipos, opos, kClibPosiUnate, delay_model);
 	display_timing(s, cell, ipos, opos, kClibNegaUnate, delay_model);
       }
@@ -710,8 +708,8 @@ display_library(ostream& s,
   s << "==== PatMgr dump start ====" << endl;
 
   // ノードの種類の出力
-  ymuint nn = library.pg_node_num();
-  for (ymuint i = 0; i < nn; ++ i) {
+  int nn = library.pg_node_num();
+  for ( int i = 0; i < nn; ++ i ) {
     s << "Node#" << i << ": ";
     switch ( library.pg_node_type(i) ) {
     case kClibPatInput: s << "INPUT#" << library.pg_input_id(i) ; break;
@@ -724,8 +722,8 @@ display_library(ostream& s,
   s << endl;
 
   // 枝の情報の出力
-  ymuint ne = library.pg_edge_num();
-  for (ymuint i = 0; i < ne; ++ i) {
+  int ne = library.pg_edge_num();
+  for ( int i = 0; i < ne; ++ i ) {
     s << "Edge#" << i << ": " << library.pg_edge_from(i)
       << " -> " << library.pg_edge_to(i)
       << "(" << library.pg_edge_pos(i) << ")";
@@ -737,8 +735,8 @@ display_library(ostream& s,
   s << endl;
 
   // パタングラフの情報の出力
-  ymuint np = library.pg_pat_num();
-  for (ymuint i = 0; i < np; ++ i) {
+  int np = library.pg_pat_num();
+  for ( int i = 0; i < np; ++ i ) {
     const ClibPatGraph& pat = library.pg_pat(i);
     s << "Pat#" << i << ": "
       << "Rep#" << pat.rep_id() << ": ";
@@ -746,8 +744,8 @@ display_library(ostream& s,
       s << "[inv]";
     }
     s << "(" << pat.input_num() << "), ";
-    ymuint n = pat.edge_num();
-    for (ymuint i = 0; i < n; ++ i) {
+    int n = pat.edge_num();
+    for ( int i = 0; i < n; ++ i ) {
       s << " " << pat.edge(i);
     }
     s << endl;

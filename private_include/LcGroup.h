@@ -32,7 +32,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] id ID番号
-  LcGroup(ymuint id);
+  LcGroup(int id);
 
   /// @brief デストラクタ
   ~LcGroup();
@@ -41,7 +41,7 @@ public:
 public:
 
   /// @brief ID番号を返す．
-  ymuint
+  int
   id() const;
 
   /// @brief 親の LcClass を返す．
@@ -72,7 +72,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID番号
-  ymuint32 mId;
+  int mId;
 
   // 親の LcClass
   LcClass* mParent;

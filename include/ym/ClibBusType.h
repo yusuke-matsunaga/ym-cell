@@ -64,17 +64,17 @@ public:
 
   /// @brief ビット幅の取得
   virtual
-  ymuint
+  int
   bit_width() const = 0;
 
   /// @brief 開始ビットの取得
   virtual
-  ymint
+  int
   bit_from() const = 0;
 
   /// @brief 終了ビットの取得
   virtual
-  ymint
+  int
   bit_to() const = 0;
 
   /// @brief 向きの取得

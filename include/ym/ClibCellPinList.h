@@ -1,8 +1,8 @@
-#ifndef CLIBCELLCLASSLIST_H
-#define CLIBCELLCLASSLIST_H
+#ifndef CLIBCELLPINLIST_H
+#define CLIBCELLPINLIST_H
 
-/// @file ClibCellClassList.h
-/// @brief ClibCellClassList のヘッダファイル
+/// @file ClibCellPinList.h
+/// @brief ClibCellPinList のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
@@ -16,25 +16,25 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class ClibCellClassList ClibCellClassList.h "ClibCellClassList.h"
-/// @brief ClibCell のリストを表すクラス
+/// @class ClibCellPinList ClibCellPinList.h "ClibCellPinList.h"
+/// @brief ClibCellPin のリストを表すクラス
 ///
 /// @code
-/// const ClibCellClassList& class_list = ...;
-/// for ( auto cell_class: class_list ) {
+/// const ClibCellPinList& pin_list = ...;
+/// for ( auto pin: pin_list ) {
 ///   ...
 /// }
 /// @endcode
 /// というふうに使える．
 //////////////////////////////////////////////////////////////////////
-class ClibCellClassList
+class ClibCellPinList
 {
 public:
-  typedef ArrayIterator<const ClibCellClass*> iterator;
+  typedef ArrayIterator<const ClibCellPin*> iterator;
 
   /// @brief デストラクタ
   virtual
-  ~ClibCellClassList() { }
+  ~ClibCellPinList() { }
 
 
 public:
@@ -50,7 +50,7 @@ public:
   /// @brief 要素を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < num() )
   virtual
-  const ClibCellClass*
+  const ClibCellPin*
   operator[](int pos) const = 0;
 
   /// @brief 先頭の反復子を返す．
@@ -80,4 +80,4 @@ private:
 
 END_NAMESPACE_YM_CLIB
 
-#endif // CLIBCELLCLASSLIST_H
+#endif // CLIBCELLPINLIST_H

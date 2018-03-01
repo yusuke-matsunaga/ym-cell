@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 // @brief コンストラクタ
 // @param[in] id ID番号
-LcGroup::LcGroup(ymuint id) :
+LcGroup::LcGroup(int id) :
   mId(id),
   mParent(nullptr),
   mCellGroup(nullptr)
@@ -31,7 +31,7 @@ LcGroup::~LcGroup()
 }
 
 // @brief ID番号を返す．
-ymuint
+int
 LcGroup::id() const
 {
   return mId;

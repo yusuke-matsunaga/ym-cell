@@ -45,25 +45,25 @@ CiLut::template_name() const
 // @brief 変数型の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
 ClibVarType
-CiLut::variable_type(ymuint32 var) const
+CiLut::variable_type(int var) const
 {
   return lut_template()->variable_type(var);
 }
 
 // @brief インデックス数の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
-ymuint32
-CiLut::index_num(ymuint32 var) const
+int
+CiLut::index_num(int var) const
 {
   return lut_template()->index_num(var);
 }
 
 // @brief val に対応する区間を求める．
-ymuint
+int
 CiLut::search(double val,
 	      const vector<double>& index_array)
 {
-  ymuint n = index_array.size();
+  int n = index_array.size();
 
   if ( val <= index_array[0] ) {
     // 値が小さすぎる時は [0, 1] を返す．
@@ -74,7 +74,7 @@ CiLut::search(double val,
     return n - 2;
   }
   // 単純な線形探索を行う．
-  for (ymuint i = 0; i < n - 1; ++ i) {
+  for (int i = 0; i < n - 1; ++ i) {
     if ( val < index_array[i + 1] ) {
       return i;
     }
@@ -94,30 +94,30 @@ CiLut1D::CiLut1D(const ClibLutTemplate* lut_template,
 		 const vector<double>& index_array) :
   CiLut(lut_template)
 {
-  ymuint n = 0;
+  int n = 0;
   if ( index_array.empty() ) {
     n = lut_template->index_num(0);
     mIndexArray.resize(n);
-    for (ymuint32 i = 0; i < n; ++ i) {
+    for (int i = 0; i < n; ++ i) {
       mIndexArray[i] = lut_template->index(0, i);
     }
   }
   else {
     n = index_array.size();
     mIndexArray.resize(n);
-    for (ymuint32 i = 0; i < n; ++ i) {
+    for (int i = 0; i < n; ++ i) {
       mIndexArray[i] = index_array[i];
     }
   }
   ASSERT_COND( n != 0 );
   mIndexWidthArray.resize(n - 1);
-  for (ymuint i = 0; i < n - 1; ++ i) {
+  for (int i = 0; i < n - 1; ++ i) {
     mIndexWidthArray[i] = mIndexArray[i + 1] - mIndexArray[i];
   }
 
   ASSERT_COND( value_array.size() == n );
   mValueArray.resize(n);
-  for (ymuint i = 0; i < n; ++ i) {
+  for (int i = 0; i < n; ++ i) {
     mValueArray[i] = value_array[i];
   }
 }
@@ -128,7 +128,7 @@ CiLut1D::~CiLut1D()
 }
 
 // @brief 次元数の取得
-ymuint32
+int
 CiLut1D::dimension() const
 {
   return 1;
@@ -136,8 +136,8 @@ CiLut1D::dimension() const
 
 // @brief インデックス数の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
-ymuint32
-CiLut1D::index_num(ymuint32 var) const
+int
+CiLut1D::index_num(int var) const
 {
   ASSERT_COND( var < 1  );
   return mIndexArray.size();
@@ -147,8 +147,8 @@ CiLut1D::index_num(ymuint32 var) const
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
 // @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
 double
-CiLut1D::index(ymuint32 var,
-	       ymuint32 pos) const
+CiLut1D::index(int var,
+	       int pos) const
 {
   ASSERT_COND( var < 1  );
   ASSERT_COND( pos < index_num(var)  );
@@ -159,10 +159,10 @@ CiLut1D::index(ymuint32 var,
 // @param[in] pos_array 格子点座標
 // @note pos_array のサイズは dimension() と同じ
 double
-CiLut1D::grid_value(const vector<ymuint32>& pos_array) const
+CiLut1D::grid_value(const vector<int>& pos_array) const
 {
   ASSERT_COND( pos_array.size() == 1 );
-  ymuint pos1 = pos_array[0];
+  int pos1 = pos_array[0];
   ASSERT_COND( pos1 < index_num(0) );
   return mValueArray[pos1];
 }
@@ -177,8 +177,8 @@ CiLut1D::value(const vector<double>& val_array) const
 
   double val = val_array[0];
 
-  ymuint idx_a = search(val, mIndexArray);
-  ymuint idx_b = idx_a + 1;
+  int idx_a = search(val, mIndexArray);
+  int idx_b = idx_a + 1;
   double x0 = mIndexArray[idx_a];
   double x1 = mIndexArray[idx_b];
   double w  = mIndexWidthArray[idx_a];
@@ -201,52 +201,52 @@ CiLut2D::CiLut2D(const ClibLutTemplate* lut_template,
 		 const vector<double>& index_array2) :
   CiLut(lut_template)
 {
-  ymuint n1 = 0;
+  int n1 = 0;
   if ( index_array1.empty() ) {
     n1 = lut_template->index_num(0);
     mIndexArray[0].resize(n1);
-    for (ymuint32 i = 0; i < n1; ++ i) {
+    for (int i = 0; i < n1; ++ i) {
       mIndexArray[0][i] = lut_template->index(0, i);
     }
   }
   else {
     n1 = index_array1.size();
     mIndexArray[0].resize(n1);
-    for (ymuint32 i = 0; i < n1; ++ i) {
+    for (int i = 0; i < n1; ++ i) {
       mIndexArray[0][i] = index_array1[i];
     }
   }
   ASSERT_COND( n1 != 0 );
   mIndexWidthArray[0].resize(n1 - 1);
-  for (ymuint i = 0; i < n1 - 1; ++ i) {
+  for (int i = 0; i < n1 - 1; ++ i) {
     mIndexWidthArray[0][i] = mIndexArray[0][i + 1] - mIndexArray[0][i];
   }
 
-  ymuint n2 = 0;
+  int n2 = 0;
   if ( index_array2.empty() ) {
     n2 = lut_template->index_num(1);
     mIndexArray[1].resize(n2);
-    for (ymuint32 i = 0; i < n2; ++ i) {
+    for (int i = 0; i < n2; ++ i) {
       mIndexArray[1][i] = lut_template->index(1, i);
     }
   }
   else {
     n2 = index_array2.size();
     mIndexArray[1].resize(n2);
-    for (ymuint32 i = 0; i < n2; ++ i) {
+    for (int i = 0; i < n2; ++ i) {
       mIndexArray[1][i] = index_array2[i];
     }
   }
   ASSERT_COND( n2 != 0 );
   mIndexWidthArray[1].resize(n2 - 1);
-  for (ymuint i = 0; i < n2 - 1; ++ i) {
+  for (int i = 0; i < n2 - 1; ++ i) {
     mIndexWidthArray[1][i] = mIndexArray[1][i + 1] - mIndexArray[1][i];
   }
 
-  ymuint n = n1 * n2;
+  int n = n1 * n2;
   ASSERT_COND( value_array.size() == n );
   mValueArray.resize(n);
-  for (ymuint i = 0; i < n; ++ i) {
+  for (int i = 0; i < n; ++ i) {
     mValueArray[i] = value_array[i];
   }
 }
@@ -257,7 +257,7 @@ CiLut2D::~CiLut2D()
 }
 
 // @brief 次元数の取得
-ymuint32
+int
 CiLut2D::dimension() const
 {
   return 2;
@@ -265,8 +265,8 @@ CiLut2D::dimension() const
 
 // @brief インデックス数の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
-ymuint32
-CiLut2D::index_num(ymuint32 var) const
+int
+CiLut2D::index_num(int var) const
 {
   ASSERT_COND( var < 2 );
   return mIndexArray[var].size();
@@ -276,8 +276,8 @@ CiLut2D::index_num(ymuint32 var) const
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
 // @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
 double
-CiLut2D::index(ymuint32 var,
-	       ymuint32 pos) const
+CiLut2D::index(int var,
+	       int pos) const
 {
   ASSERT_COND( var < 2 );
   ASSERT_COND( pos < index_num(var) );
@@ -288,11 +288,11 @@ CiLut2D::index(ymuint32 var,
 // @param[in] pos_array 格子点座標
 // @note pos_array のサイズは dimension() と同じ
 double
-CiLut2D::grid_value(const vector<ymuint32>& pos_array) const
+CiLut2D::grid_value(const vector<int>& pos_array) const
 {
   ASSERT_COND( pos_array.size() == 2 );
-  ymuint pos1 = pos_array[0];
-  ymuint pos2 = pos_array[1];
+  int pos1 = pos_array[0];
+  int pos2 = pos_array[1];
   ASSERT_COND( pos1 < index_num(0) );
   ASSERT_COND( pos2 < index_num(1) );
   return mValueArray[idx(pos1, pos2)];
@@ -307,14 +307,14 @@ CiLut2D::value(const vector<double>& val_array) const
   ASSERT_COND( val_array.size() == 2 );
 
   double val1 = val_array[0];
-  ymuint idx1_a = search(val1, mIndexArray[0]);
-  ymuint idx1_b = idx1_a + 1;
+  int idx1_a = search(val1, mIndexArray[0]);
+  int idx1_b = idx1_a + 1;
   double x0 = mIndexArray[0][idx1_a];
   double x1 = mIndexArray[0][idx1_b];
 
   double val2 = val_array[1];
-  ymuint idx2_a = search(val2, mIndexArray[1]);
-  ymuint idx2_b = idx2_a + 1;
+  int idx2_a = search(val2, mIndexArray[1]);
+  int idx2_b = idx2_a + 1;
   double y0 = mIndexArray[1][idx2_a];
   double y1 = mIndexArray[1][idx2_b];
 
@@ -347,73 +347,73 @@ CiLut3D::CiLut3D(const ClibLutTemplate* lut_template,
 		 const vector<double>& index_array3) :
   CiLut(lut_template)
 {
-  ymuint n1 = 0;
+  int n1 = 0;
   if ( index_array1.empty() ) {
     n1 = lut_template->index_num(0);
     mIndexArray[0].resize(n1);
-    for (ymuint32 i = 0; i < n1; ++ i) {
+    for (int i = 0; i < n1; ++ i) {
       mIndexArray[0][i] = lut_template->index(0, i);
     }
   }
   else {
     n1 = index_array1.size();
     mIndexArray[0].resize(n1);
-    for (ymuint32 i = 0; i < n1; ++ i) {
+    for (int i = 0; i < n1; ++ i) {
       mIndexArray[0][i] = index_array1[i];
     }
   }
   ASSERT_COND( n1 != 0 );
   mIndexWidthArray[0].resize(n1 - 1);
-  for (ymuint i = 0; i < n1 - 1; ++ i) {
+  for (int i = 0; i < n1 - 1; ++ i) {
     mIndexWidthArray[0][i] = mIndexArray[0][i + 1] - mIndexArray[0][i];
   }
 
-  ymuint n2 = 0;
+  int n2 = 0;
   if ( index_array2.empty() ) {
     n2 = lut_template->index_num(1);
     mIndexArray[1].resize(n2);
-    for (ymuint32 i = 0; i < n2; ++ i) {
+    for (int i = 0; i < n2; ++ i) {
       mIndexArray[1][i] = lut_template->index(1, i);
     }
   }
   else {
     n2 = index_array2.size();
     mIndexArray[1].resize(n2);
-    for (ymuint32 i = 0; i < n2; ++ i) {
+    for (int i = 0; i < n2; ++ i) {
       mIndexArray[1][i] = index_array2[i];
     }
   }
   ASSERT_COND( n2 != 0 );
   mIndexWidthArray[1].resize(n2 - 1);
-  for (ymuint i = 0; i < n2 - 1; ++ i) {
+  for (int i = 0; i < n2 - 1; ++ i) {
     mIndexWidthArray[1][i] = mIndexArray[1][i + 1] - mIndexArray[1][i];
   }
 
-  ymuint n3 = 0;
+  int n3 = 0;
   if ( index_array3.empty() ) {
     n3 = lut_template->index_num(2);
     mIndexArray[2].resize(n3);
-    for (ymuint32 i = 0; i < n3; ++ i) {
+    for (int i = 0; i < n3; ++ i) {
       mIndexArray[2][i] = lut_template->index(2, i);
     }
   }
   else {
     n3 = index_array3.size();
     mIndexArray[2].resize(n3);
-    for (ymuint32 i = 0; i < n3; ++ i) {
+    for (int i = 0; i < n3; ++ i) {
       mIndexArray[2][i] = index_array3[i];
     }
   }
   ASSERT_COND( n3 != 0 );
   mIndexWidthArray[2].resize(n3 - 1);
-  for (ymuint i = 0; i < n3 - 1; ++ i) {
+  for (int i = 0; i < n3 - 1; ++ i) {
     mIndexWidthArray[2][i] = mIndexArray[2][i + 1] - mIndexArray[2][i];
   }
 
-  ymuint n = n1 * n2 * n3;
+  int n = n1 * n2 * n3;
   ASSERT_COND( value_array.size() == n );
   mValueArray.resize(n);
-  for (ymuint i = 0; i < n; ++ i) {
+  for (int i = 0; i < n; ++ i) {
     mValueArray[i] = value_array[i];
   }
 }
@@ -424,7 +424,7 @@ CiLut3D::~CiLut3D()
 }
 
 // @brief 次元数の取得
-ymuint32
+int
 CiLut3D::dimension() const
 {
   return 3;
@@ -432,8 +432,8 @@ CiLut3D::dimension() const
 
 // @brief インデックス数の取得
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
-ymuint32
-CiLut3D::index_num(ymuint32 var) const
+int
+CiLut3D::index_num(int var) const
 {
   ASSERT_COND( var < 3 );
   return mIndexArray[var].size();
@@ -443,8 +443,8 @@ CiLut3D::index_num(ymuint32 var) const
 // @param[in] var 変数番号 ( 0 <= var < dimension() )
 // @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
 double
-CiLut3D::index(ymuint32 var,
-	       ymuint32 pos) const
+CiLut3D::index(int var,
+	       int pos) const
 {
   ASSERT_COND( var < 3 );
   ASSERT_COND( pos < index_num(var) );
@@ -455,12 +455,12 @@ CiLut3D::index(ymuint32 var,
 // @param[in] pos_array 格子点座標
 // @note pos_array のサイズは dimension() と同じ
 double
-CiLut3D::grid_value(const vector<ymuint32>& pos_array) const
+CiLut3D::grid_value(const vector<int>& pos_array) const
 {
   ASSERT_COND( pos_array.size() == 3 );
-  ymuint pos1 = pos_array[0];
-  ymuint pos2 = pos_array[1];
-  ymuint pos3 = pos_array[2];
+  int pos1 = pos_array[0];
+  int pos2 = pos_array[1];
+  int pos3 = pos_array[2];
   ASSERT_COND( pos1 < index_num(0) );
   ASSERT_COND( pos2 < index_num(1) );
   ASSERT_COND( pos3 < index_num(2) );
@@ -475,20 +475,20 @@ CiLut3D::value(const vector<double>& val_array) const
 {
   ASSERT_COND( val_array.size() == 3 );
   double val1 = val_array[0];
-  ymuint idx1_a = search(val1, mIndexArray[0]);
-  ymuint idx1_b = idx1_a + 1;
+  int idx1_a = search(val1, mIndexArray[0]);
+  int idx1_b = idx1_a + 1;
   double x0 = mIndexArray[0][idx1_a];
   double x1 = mIndexArray[0][idx1_b];
 
   double val2 = val_array[1];
-  ymuint idx2_a = search(val2, mIndexArray[1]);
-  ymuint idx2_b = idx2_a + 1;
+  int idx2_a = search(val2, mIndexArray[1]);
+  int idx2_b = idx2_a + 1;
   double y0 = mIndexArray[1][idx2_a];
   double y1 = mIndexArray[1][idx2_b];
 
   double val3 = val_array[2];
-  ymuint idx3_a = search(val3, mIndexArray[2]);
-  ymuint idx3_b = idx3_a + 1;
+  int idx3_a = search(val3, mIndexArray[2]);
+  int idx3_b = idx3_a + 1;
   double z0 = mIndexArray[2][idx3_a];
   double z1 = mIndexArray[3][idx3_b];
 

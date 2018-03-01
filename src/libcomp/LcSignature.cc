@@ -99,7 +99,7 @@ LcSignature::LcSignature(Type type,
   VarId data_var(3);
   VarId clear_var;
   VarId preset_var;
-  ymuint ni = 4;
+  int ni = 4;
   if ( has_clear ) {
     clear_var = VarId(ni);
     ++ ni;
@@ -119,7 +119,7 @@ LcSignature::LcSignature(Type type,
   if ( has_preset ) {
     mPresetFunc = TvFunc::posi_literal(ni, preset_var);
   }
-  ymuint no = 0;
+  int no = 0;
   if ( has_q ) {
     mOutputBits[no] = 1U;
     mOutputFunc[no] = TvFunc::posi_literal(ni, iq_var);
@@ -141,7 +141,7 @@ LcSignature::LcSignature(const ClibCell* cell) :
   mOutputFunc(mOutputNum),
   mTristateFunc(mOutputNum)
 {
-  ymuint ni = mInputNum;
+  int ni = mInputNum;
   if ( cell->is_logic() ) {
     mTypeBits = kLogicType;
   }
@@ -167,7 +167,7 @@ LcSignature::LcSignature(const ClibCell* cell) :
     }
   }
 
-  for (ymuint i = 0; i < mOutputNum; ++ i) {
+  for (int i = 0; i < mOutputNum; ++ i) {
     if ( cell->has_logic(i) ) {
       mOutputBits[i] |= 1U;
       mOutputFunc[i] = cell->logic_expr(i).make_tv(ni);
@@ -191,8 +191,8 @@ void
 tvfunc_to_str(const TvFunc& f,
 	      ostream& buf)
 {
-  ymuint n = f.nblk();
-  for (ymuint i = 0; i < n; ++ i) {
+  int n = f.nblk();
+  for (int i = 0; i < n; ++ i) {
     ymuint64 b = f.raw_data(i);
     buf << hex << b << dec;
   }
@@ -221,7 +221,7 @@ LcSignature::str() const
     }
     buf << ":";
   }
-  for (ymuint i = 0; i < mOutputNum; ++ i) {
+  for (int i = 0; i < mOutputNum; ++ i) {
     if ( has_logic(i) ) {
       tvfunc_to_str(mOutputFunc[i], buf);
     }
@@ -264,7 +264,7 @@ LcSignature::operator==(const LcSignature& right) const
     return false;
   }
 
-  for (ymuint i = 0; i < mOutputNum; ++ i ) {
+  for (int i = 0; i < mOutputNum; ++ i ) {
     if ( mOutputBits[i] != right.mOutputBits[i] ) {
       return false;
     }

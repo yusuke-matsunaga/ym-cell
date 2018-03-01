@@ -12,12 +12,16 @@
 #include "ci/CiCellList.h"
 #include "ci/CiCellGroupList.h"
 #include "ci/CiCellClassList.h"
+#include "ci/CiLutTemplateList.h"
 #include "ci/CiPatGraph.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 BEGIN_NONAMESPACE
+
+// ClibLutTemplateList のデフォルト用オブジェクト
+CiLutTemplateList sLutTemplateList;
 
 // ClibCellList のデフォルト用オブジェクト
 CiCellList sCellList;
@@ -304,6 +308,18 @@ ClibCellLibrary::leakage_power_unit() const
   return string();
 }
 
+// @brief 遅延テーブルのテンプレートのリストの取得
+const ClibLutTemplateList&
+ClibCellLibrary::lu_table_template_list() const
+{
+  if ( mImpl ) {
+    return mImpl->lu_table_template_list();
+  }
+  // デフォルト値
+  return sLutTemplateList;
+}
+
+#if 0
 // @brief 遅延テーブルのテンプレート数の取得
 int
 ClibCellLibrary::lu_table_template_num() const
@@ -326,6 +342,7 @@ ClibCellLibrary::lu_table_template(int pos) const
   // デフォルト値
   return nullptr;
 }
+#endif
 
 // @brief 遅延テーブルのテンプレートの取得
 // @param[in] name テンプレート名

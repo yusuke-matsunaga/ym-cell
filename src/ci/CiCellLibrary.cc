@@ -41,8 +41,6 @@ CiCellLibrary::CiCellLibrary() :
 {
   mTechnology = kClibTechCmos;
   mDelayModel = kClibDelayGenericCmos;
-  mLutTemplateNum = 0;
-  mLutTemplateArray = nullptr;
 }
 
 // @brief デストラクタ
@@ -175,20 +173,11 @@ CiCellLibrary::leakage_power_unit() const
   return mLeakagePowerUnit;
 }
 
-// @brief 遅延テーブルのテンプレート数の取得
-int
-CiCellLibrary::lu_table_template_num() const
+// @brief 遅延テーブルのテンプレートのリストの取得
+const ClibLutTemplateList&
+CiCellLibrary::lu_table_template_list() const
 {
-  return mLutTemplateNum;
-}
-
-// @brief 遅延テーブルのテンプレートの取得
-// @param[in] pos 位置番号 ( 0 <= pos < lu_table_template_num() )
-const ClibLutTemplate*
-CiCellLibrary::lu_table_template(int pos) const
-{
-  ASSERT_COND( pos < lu_table_template_num() );
-  return mLutTemplateArray[pos];
+  return mLutTemplateList;
 }
 
 // @brief ルックアップテーブルのテンプレートの取得
@@ -547,13 +536,8 @@ CiCellLibrary::set_attr(const string& attr_name,
 void
 CiCellLibrary::set_lu_table_template_list(const vector<CiLutTemplate*>& template_list)
 {
-  int num = template_list.size();
-  mLutTemplateNum = num;
-  void* p = mAlloc.get_memory(sizeof(ClibLutTemplate*) * num);
-  mLutTemplateArray = new (p) CiLutTemplate*[num];
-  for ( int i = 0; i < num; ++ i ){
-    CiLutTemplate* tmpl = template_list[i];
-    mLutTemplateArray[i] = tmpl;
+  mLutTemplateList.init(template_list, mAlloc);
+  for ( auto tmpl: template_list ) {
     mLutHash.add(tmpl);
   }
 }

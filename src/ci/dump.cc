@@ -93,10 +93,9 @@ CiCellLibrary::dump(ODO& s) const
   s << leakage_power_unit();
 
   // 遅延テーブルのテンプレート
-  int ntempl = lu_table_template_num();
-  s << ntempl;
-  for ( int i = 0; i < ntempl; ++ i ) {
-    lu_table_template(i)->dump(s);
+  s << lu_table_template_list().num();
+  for ( auto temp: lu_table_template_list() ) {
+    temp->dump(s);
   }
 
   // セル数
@@ -108,30 +107,25 @@ CiCellLibrary::dump(ODO& s) const
 
   // セルグループ情報のダンプ
   s << group_list().num();
-  for ( int i = 0; i < mGroupList.num(); ++ i ) {
-    const CiCellGroup* group = mGroupList._elem(i);
+  for ( auto group: group_list() ) {
     group->dump(s);
   }
 
   // セルクラス情報のダンプ
   s << npn_class_list().num();
-  for ( int i = 0; i < mClassList.num(); ++ i ) {
-    const CiCellClass* cclass = mClassList._elem(i);
+  for ( auto cclass: npn_class_list() ) {
     cclass->dump(s);
   }
 
   // 組み込み型の情報のダンプ
   for ( int i = 0; i < 4; ++ i ) {
-    int group_id = mLogicGroup[i]->id();
-    s << group_id;
+    s << mLogicGroup[i]->id();
   }
   for ( int i = 0; i < 4; ++ i ) {
-    int class_id = mFFClass[i]->id();
-    s << class_id;
+    s << mFFClass[i]->id();
   }
   for ( int i = 0; i < 4; ++ i ) {
-    int class_id = mLatchClass[i]->id();
-    s << class_id;
+    s << mLatchClass[i]->id();
   }
 
   // パタングラフの情報のダンプ
@@ -171,32 +165,31 @@ CiCell::dump(ODO& s) const
     << name()
     << area();
 
+  // input_list(), output_list() は入出力ピンを含むので
+  // そのままでは使えない．
+
   // 入力ピンのダンプ
-  int ni = input_num();
-  s << ni;
-  for ( int ipin = 0; ipin < ni; ++ ipin ) {
-    input(ipin)->dump(s);
+  s << input_num();
+  for ( int i = 0; i < input_num(); ++ i ) {
+    input(i)->dump(s);
   }
 
   // 出力ピンのダンプ
-  int no = output_num();
-  s << no;
-  for ( int opin = 0; opin < no; ++ opin ) {
-    output(opin)->dump(s);
+  s << output_num();
+  for ( int i = 0; i <  output_num(); ++ i ) {
+    output(i)->dump(s);
   }
 
   // 入出力ピンのダンプ
-  int nio = inout_num();
-  s << nio;
-  for ( int iopin = 0; iopin < nio; ++ iopin ) {
-    output(iopin)->dump(s);
+  s << inout_num();
+  for ( int i = 0; i < inout_num(); ++ i ) {
+    inout(i)->dump(s);
   }
 
   // 内部ピンのダンプ
-  int nit = internal_num();
-  s << nit;
-  for ( int itpin = 0; itpin < nit; ++ itpin ) {
-    internal(itpin)->dump(s);
+  s << internal_num();
+  for ( int i = 0; i < internal_num(); ++ i ) {
+    internal(i)->dump(s);
   }
 
   // バスのダンプ
@@ -208,10 +201,8 @@ CiCell::dump(ODO& s) const
   s << nbundle;
 
   // タイミング情報のダンプ
-  const ClibTimingList& timing_list = this->timing_list();
-  int nt = timing_list.num();
-  s << nt;
-  for ( auto timing: timing_list ) {
+  s << timing_list().num();
+  for ( auto timing: timing_list() ) {
     timing->dump(s);
   }
 
@@ -236,8 +227,8 @@ CiCell::dump(ODO& s) const
   }
 
   // 個別の条件ごとのタイミング情報のダンプ
-  for ( int ipos = 0; ipos < ni + nio; ++ ipos ) {
-    for ( int opos = 0; opos < no + nio; ++ opos ) {
+  for ( int ipos = 0; ipos < input_num2(); ++ ipos ) {
+    for ( int opos = 0; opos < output_num2(); ++ opos ) {
       const ClibTimingList& timing_list1 = this->timing_list(ipos, opos, kClibPosiUnate);
       s << timing_list1.num();
       for ( auto timing: timing_list1 ) {
@@ -456,7 +447,7 @@ CiLut::dump(ODO& s) const
     }
   }
 
-  vector<ymuint32> pos_array(d);
+  vector<int> pos_array(d);
   int n = 1;
   for ( int i = 0; i < d; ++ i ) {
     n *= index_num(i);

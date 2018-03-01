@@ -36,7 +36,7 @@ private:
 public:
 
   /// @brief ノード番号を返す．
-  ymuint
+  int
   id() const;
 
   /// @brief 入力の時 true を返す．
@@ -52,13 +52,13 @@ public:
   is_xor() const;
 
   /// @brief 入力の時に入力番号を返す．
-  ymuint
+  int
   input_id() const;
 
   /// @brief AND/XOR の時にファンインのノードを返す．
   /// @param[in] pos 位置 ( 0 or 1 )
   LcPatNode*
-  fanin(ymuint pos) const;
+  fanin(int pos) const;
 
   /// @brief AND/XOR の時にファンイン0のノードを返す．
   LcPatNode*
@@ -73,7 +73,7 @@ public:
   /// @retval true 反転あり
   /// @retval false 反転なし
   bool
-  fanin_inv(ymuint pos) const;
+  fanin_inv(int pos) const;
 
   /// @brief AND/XOR の時にファンイン0の極性を返す．
   /// @retval true 反転あり
@@ -107,13 +107,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ノード番号
-  ymuint32 mId;
+  int mId;
 
   // ノードの種類 ( 2bit )
   //  + 入力番号 ( 30bit)
   // or
   //  + ファンインの極性 ( 1bit x 2)
-  ymuint32 mType;
+  int mType;
 
   // ファンインのノード
   LcPatNode* mFanin[2];
@@ -145,7 +145,7 @@ LcPatNode::~LcPatNode()
 
 // @brief ノード番号を返す．
 inline
-ymuint
+int
 LcPatNode::id() const
 {
   return mId;
@@ -177,7 +177,7 @@ LcPatNode::is_xor() const
 
 // @brief 入力の時に入力番号を返す．
 inline
-ymuint
+int
 LcPatNode::input_id() const
 {
   return mType >> 2;
@@ -187,7 +187,7 @@ LcPatNode::input_id() const
 // @param[in] pos 位置 ( 0 or 1 )
 inline
 LcPatNode*
-LcPatNode::fanin(ymuint pos) const
+LcPatNode::fanin(int pos) const
 {
   return mFanin[pos];
 }
@@ -214,7 +214,7 @@ LcPatNode::fanin1() const
 // @retval false 反転なし
 inline
 bool
-LcPatNode::fanin_inv(ymuint pos) const
+LcPatNode::fanin_inv(int pos) const
 {
   return static_cast<bool>((mType >> (pos + 2)) & 1U);
 }

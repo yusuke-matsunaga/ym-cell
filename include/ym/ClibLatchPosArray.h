@@ -29,7 +29,7 @@ public:
 
   /// @brief シグネチャを指定するコンストラクタ
   explicit
-  ClibLatchPosArray(ymuint sig);
+  ClibLatchPosArray(int sig);
 
   /// @brief デストラクタ
   ~ClibLatchPosArray();
@@ -41,22 +41,22 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief シグネチャを返す．
-  ymuint
+  int
   signature() const;
 
   /// @brief データ入力のピン番号を返す．
-  ymuint
+  int
   data_pos() const;
 
   /// @brief イネーブル入力のピン番号を返す．
-  ymuint
+  int
   enable_pos() const;
 
   /// @brief イネーブル入力の極性情報を返す．
   /// @retval 0 なし
   /// @retval 1 positive edge
   /// @retval 2 negative edge
-  ymuint
+  int
   enable_sense() const;
 
   /// @brief イネーブル入力を持つとき true を返す．
@@ -65,14 +65,14 @@ public:
 
   /// @brief クリア入力のピン番号を返す．
   /// @note クリア入力がない場合の値は不定
-  ymuint
+  int
   clear_pos() const;
 
   /// @brief クリア入力の極性情報を返す．
   /// @retval 0 なし
   /// @retval 1 High sensitive
   /// @retval 2 Low sensitive
-  ymuint
+  int
   clear_sense() const;
 
   /// @brief クリア入力を持つとき true を返す．
@@ -81,14 +81,14 @@ public:
 
   /// @brief プリセット入力のピン番号を返す．
   /// @note プリセット入力がない場合の値は不定
-  ymuint
+  int
   preset_pos() const;
 
   /// @brief プリセット入力の極性情報を返す．
   /// @retval 0 なし
   /// @retval 1 High sensitive
   /// @retval 2 Low sensitive
-  ymuint
+  int
   preset_sense() const;
 
   /// @brief プリセット入力を持つとき true を返す．
@@ -96,11 +96,11 @@ public:
   has_preset() const;
 
   /// @brief 肯定出力のピン番号を返す．
-  ymuint
+  int
   q_pos() const;
 
   /// @brief 否定出力のピン番号を返す．
-  ymuint
+  int
   iq_pos() const;
 
 
@@ -112,7 +112,7 @@ public:
   /// @brief シグネチャを設定する．
   /// @param[in] sig 設定するシグネチャ
   void
-  set_signature(ymuint sig);
+  set_signature(int sig);
 
   /// @brief 個々の情報を設定する．
   /// @param[in] data_pos データ入力のピン番号
@@ -125,15 +125,15 @@ public:
   /// @param[in] q_pos 肯定出力のピン番号
   /// @param[in] iq_pos 否定出力のピン番号
   void
-  set(ymuint data_pos,
-      ymuint enable_pos,
-      ymuint enable_sense,
-      ymuint clear_pos,
-      ymuint clear_sense,
-      ymuint preset_pos,
-      ymuint preset_sense,
-      ymuint q_pos,
-      ymuint iq_pos);
+  set(int data_pos,
+      int enable_pos,
+      int enable_sense,
+      int clear_pos,
+      int clear_sense,
+      int preset_pos,
+      int preset_sense,
+      int q_pos,
+      int iq_pos);
 
 
 private:
@@ -142,7 +142,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ピン番号をパックしたもの
-  ymuint32 mData;
+  int mData;
 
 };
 

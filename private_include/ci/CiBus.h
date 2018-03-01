@@ -11,6 +11,8 @@
 
 #include "ym/ClibBus.h"
 #include "ym/ShString.h"
+#include "ci/CiCellPinList.h"
+#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -50,14 +52,27 @@ public:
 
   /// @brief ピン数の取得
   virtual
-  ymuint
+  int
   pin_num() const;
 
   /// @brief ピンの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
   virtual
   const ClibCellPin*
-  pin(ymuint pos) const;
+  pin(int pos) const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 設定用の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を初期化する．
+  void
+  init(const ShString& name,
+       const ClibBusType* bus_type,
+       const vector<CiCellPin*>& pin_list,
+       Alloc& alloc);
 
 
 private:
@@ -71,11 +86,8 @@ private:
   // バスの型
   const ClibBusType* mBusType;
 
-  // ピン数
-  ymuint mPinNum;
-
-  // ピンの配列
-  ClibCellPin** mPinList;
+  // ピンのリスト
+  CiCellPinList mPinList;
 
 };
 

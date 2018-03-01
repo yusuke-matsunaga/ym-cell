@@ -102,10 +102,10 @@ private:
   LibComp& mLibComp;
 
   // シグネチャ文字列をキーとしてグループ番号を保持するハッシュ表
-  HashMap<string, ymuint> mGroupMap;
+  HashMap<string, int> mGroupMap;
 
   // 代表シグネチャの文字列をキーとしてクラス番号を保持するハッシュ表
-  HashMap<string, ymuint> mClassMap;
+  HashMap<string, int> mClassMap;
 
 };
 

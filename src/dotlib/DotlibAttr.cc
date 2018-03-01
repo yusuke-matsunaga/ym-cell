@@ -17,10 +17,10 @@ BEGIN_NONAMESPACE
 
 // インデント用の空白文字列を作る．
 string
-indent_str(ymuint indent)
+indent_str(int indent)
 {
   string ans;
-  for (ymuint i = 0; i < indent; ++ i) {
+  for (int i = 0; i < indent; ++ i) {
     ans += ' ';
   }
   return ans;
@@ -85,7 +85,7 @@ DotlibAttr::next() const
 // @param[in] indent インデント量
 void
 DotlibAttr::dump(ostream& s,
-		 ymuint indent) const
+		 int indent) const
 {
   s << indent_str(indent) << attr_name() << ": ";
   attr_value()->dump(s, indent);

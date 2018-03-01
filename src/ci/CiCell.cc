@@ -56,44 +56,9 @@ CiCell::CiCell(CiCellLibrary* library,
   mInputNum = input_list.size();
   mOutputNum = output_list.size();
   mInOutNum = inout_list.size();
-  mInternalNum = internal_list.size();
 
   int ni2 = mInputNum + mInOutNum;
   int no2 = mOutputNum + mInOutNum;
-
-  mPinNum = mInputNum + mOutputNum + mInOutNum + mInternalNum;
-  if ( mPinNum > 0 ) {
-    void* p = alloc.get_memory(sizeof(CiCellPin*) * mPinNum);
-    mPinArray = new (p) CiCellPin*[mPinNum];
-  }
-  else {
-    mPinArray = nullptr;
-  }
-
-  if ( ni2 > 0 ) {
-    void* p = alloc.get_memory(sizeof(CiCellPin*) * ni2);
-    mInputArray = new (p) CiCellPin*[ni2];
-  }
-  else {
-    mInputArray = nullptr;
-  }
-
-  if ( no2 > 0 ) {
-    void* q = alloc.get_memory(sizeof(CiCellPin*) * no2);
-    mOutputArray = new (q) CiCellPin*[no2];
-  }
-  else {
-    mOutputArray = nullptr;
-  }
-
-  if ( mInternalNum > 0 ) {
-    void* p = alloc.get_memory(sizeof(CiCellPin*) * mInternalNum);
-    mInternalArray = new (p) CiCellPin*[mInternalNum];
-  }
-  else {
-    mInternalArray = nullptr;
-  }
-
   if ( ni2 > 0 && no2 > 0 ) {
     int n = ni2 * no2 * 2;
     void* s = alloc.get_memory(sizeof(const CiTimingList) * n);
@@ -109,6 +74,11 @@ CiCell::CiCell(CiCellLibrary* library,
 
   mBundleNum = bundle_list.size();
 
+  vector<CiCellPin*> _pin_list;
+  vector<CiCellPin*> _input_list;
+  vector<CiCellPin*> _output_list;
+  vector<CiCellPin*> _internal_list;
+
   int pin_id = 0;
   for ( int i = 0; i < mInputNum; ++ i ) {
     CiInputPin* pin = input_list[i];
@@ -116,10 +86,10 @@ CiCell::CiCell(CiCellLibrary* library,
     pin->mCell = this;
     mLibrary->reg_pin(pin);
 
-    mPinArray[pin_id] = pin;
-    pin->mId = pin_id; ++ pin_id;
+    _pin_list.push_back(pin);
+    _input_list.push_back(pin);
 
-    mInputArray[i] = pin;
+    pin->mId = pin_id; ++ pin_id;
     pin->mInputId = i;
   }
 
@@ -129,10 +99,10 @@ CiCell::CiCell(CiCellLibrary* library,
     pin->mCell = this;
     mLibrary->reg_pin(pin);
 
-    mPinArray[pin_id] = pin;
-    pin->mId = pin_id; ++ pin_id;
+    _pin_list.push_back(pin);
+    _output_list.push_back(pin);
 
-    mOutputArray[i] = pin;
+    pin->mId = pin_id; ++ pin_id;
     pin->mOutputId = i;
   }
 
@@ -142,31 +112,35 @@ CiCell::CiCell(CiCellLibrary* library,
     pin->mCell = this;
     mLibrary->reg_pin(pin);
 
-    mPinArray[pin_id] = pin;
+    _pin_list.push_back(pin);
+    _input_list.push_back(pin);
+    _output_list.push_back(pin);
+
+
     pin->mId = pin_id; ++ pin_id;
-
-    mInputArray[i + mInputNum] = pin;
     pin->mInputId = i + mInputNum;
-
-    mOutputArray[i + mOutputNum] = pin;
     pin->mOutputId = i + mOutputNum;
   }
 
-  for ( int i = 0; i < mInternalNum; ++ i ) {
+  for ( int i = 0; i < internal_list.size(); ++ i ) {
     CiInternalPin* pin = internal_list[i];
 
     pin->mCell = this;
     mLibrary->reg_pin(pin);
 
-    mPinArray[pin_id] = pin;
-    pin->mId = pin_id; ++ pin_id;
+    _pin_list.push_back(pin);
+    _internal_list.push_back(pin);
 
-    mInternalArray[i] = pin;
+    pin->mId = pin_id; ++ pin_id;
     pin->mInternalId = i;
   }
 
-  mTimingList.init(timing_list, alloc);
+  mPinList.init(_pin_list, alloc);
+  mInputList.init(_input_list, alloc);
+  mOutputList.init(_output_list, alloc);
+  mInternalList.init(_internal_list, alloc);
 
+  mTimingList.init(timing_list, alloc);
   for ( int id = 0; id < timing_list.size(); ++ id ) {
     timing_list[id]->mId = id;
   }
@@ -204,15 +178,14 @@ CiCell::area() const
 int
 CiCell::pin_num() const
 {
-  return mPinNum;
+  return mPinList.num();
 }
 
-// @brief ピンの取得
-// @param[in] id ピン番号 ( 0 <= id < pin_num() )
-const ClibCellPin*
-CiCell::pin(int id) const
+// @brief ピンのリストの取得
+const ClibCellPinList&
+CiCell::pin_list() const
 {
-  return mPinArray[id];
+  return mPinList;
 }
 
 // @brief 名前からピンの取得
@@ -260,7 +233,7 @@ CiCell::inout_num() const
 int
 CiCell::internal_num() const
 {
-  return mInternalNum;
+  return mInternalList.num();
 }
 
 // @brief 入力ピン+入出力ピン数の取得
@@ -268,7 +241,7 @@ CiCell::internal_num() const
 int
 CiCell::input_num2() const
 {
-  return mInputNum + mInOutNum;
+  return mInputList.num();
 }
 
 // @brief 入力ピンの取得
@@ -276,9 +249,7 @@ CiCell::input_num2() const
 const ClibCellPin*
 CiCell::input(int pos) const
 {
-  ASSERT_COND( pos >= 0 && pos < input_num2() );
-
-  return mInputArray[pos];
+  return mInputList[pos];
 }
 
 // @brief 出力ピン+入出力ピン数の取得
@@ -286,7 +257,7 @@ CiCell::input(int pos) const
 int
 CiCell::output_num2() const
 {
-  return mOutputNum + mInOutNum;
+  return mOutputList.num();
 }
 
 // @brief 出力ピンの取得
@@ -294,9 +265,15 @@ CiCell::output_num2() const
 const ClibCellPin*
 CiCell::output(int pos) const
 {
-  ASSERT_COND( pos >= 0 && pos < output_num2() );
+  return mOutputList[pos];
+}
 
-  return mOutputArray[pos];
+// @brief 入出力ピンの取得
+// @param[in] id 番号 ( 0 <= id < inout_num() )
+const ClibCellPin*
+CiCell::inout(int id) const
+{
+  return mInputList[id + input_num()];
 }
 
 // @brief 内部ピンの取得
@@ -304,9 +281,7 @@ CiCell::output(int pos) const
 const ClibCellPin*
 CiCell::internal(int pos) const
 {
-  ASSERT_COND( pos >= 0 && pos < internal_num() );
-
-  return mInternalArray[pos];
+  return mInternalList[pos];
 }
 
 // @brief バス数の取得
@@ -363,14 +338,6 @@ const ClibTimingList&
 CiCell::timing_list() const
 {
   return mTimingList;
-}
-
-// @brief タイミング情報を返す．
-// @param[in] tid タイミング番号 ( 0 <= tid < timing_list().num() )
-const ClibTiming*
-CiCell::timing(int pos) const
-{
-  return mTimingList[pos];
 }
 
 // @brief 条件に合致するタイミング情報のリストを返す．
