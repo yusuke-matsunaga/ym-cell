@@ -9,6 +9,7 @@
 /// All rights reserved.
 
 
+#include "dotlib_int.h"
 #include "DotlibNode.h"
 
 
@@ -26,10 +27,10 @@ class DotlibAttr
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] value 値
   /// @param[in] loc ファイル上の位置
-  DotlibAttr(const ShString& attr_name,
+  DotlibAttr(AttrType attr_type,
 	     const DotlibNode* value,
 	     const FileRegion& loc);
 
@@ -46,9 +47,9 @@ public:
   FileRegion
   loc() const;
 
-  /// @brief 属性名を得る．
-  ShString
-  attr_name() const;
+  /// @brief 属性を得る．
+  AttrType
+  attr_type() const;
 
   /// @brief 属性の値を得る．
   const DotlibNode*
@@ -74,8 +75,8 @@ private:
   // ファイル上の位置
   FileRegion mLoc;
 
-  // 属性名
-  ShString mAttrName;
+  // 属性
+  AttrType mAttrType;
 
   // 値
   const DotlibNode* mValue;

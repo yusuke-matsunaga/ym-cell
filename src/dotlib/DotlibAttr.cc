@@ -34,14 +34,14 @@ END_NONAMESPACE
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] attr_name 属性名
+// @param[in] attr_type 属性
 // @param[in] value 値
 // @param[in] loc ファイル上の位置
-DotlibAttr::DotlibAttr(const ShString& attr_name,
+DotlibAttr::DotlibAttr(AttrType attr_type,
 		       const DotlibNode* value,
 		       const FileRegion& loc) :
   mLoc(loc),
-  mAttrName(attr_name),
+  mAttrType(attr_type),
   mValue(value),
   mNext(nullptr)
 {
@@ -59,11 +59,11 @@ DotlibAttr::loc() const
   return mLoc;
 }
 
-// @brief 属性名を得る．
-ShString
-DotlibAttr::attr_name() const
+// @brief 属性を得る．
+AttrType
+DotlibAttr::attr_type() const
 {
-  return mAttrName;
+  return mAttrType;
 }
 
 // @brief 属性の値を得る．
@@ -87,7 +87,7 @@ void
 DotlibAttr::dump(ostream& s,
 		 int indent) const
 {
-  s << indent_str(indent) << attr_name() << ": ";
+  s << indent_str(indent) << attr_type() << ": ";
   attr_value()->dump(s, indent);
   if ( attr_value()->type() != DotlibNode::kGroup ) {
     s << ";";

@@ -43,7 +43,7 @@ public:
   /// @param[out] loc ファイル上の位置情報を格納する変数
   /// @param[in] symbol_mode 数字も文字とみなすモード
   /// @return トークンの型を返す．
-  tTokenType
+  TokenType
   read_token(FileRegion& loc,
 	     bool symbol_mode = false);
 
@@ -69,7 +69,7 @@ private:
 
   /// @brief read_token() の下請け関数
   /// @return トークンの型を返す．
-  tTokenType
+  TokenType
   scan();
 
   /// @brief c が文字の時に true を返す．

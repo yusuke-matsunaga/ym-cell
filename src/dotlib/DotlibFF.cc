@@ -41,17 +41,17 @@ DotlibFF::set_data(const DotlibNode* ff_node)
   mClockedOnAlso = nullptr;
 
   // next_state を取り出す．
-  if ( !get_singleton("next_state", ff_node->loc(), mNextState) ) {
+  if ( !expect_singleton(ATTR_NEXTSTATE, ff_node->loc(), mNextState) ) {
     return false;
   }
 
   // clocked_on を取り出す．
-  if ( !get_singleton("clocked_on", ff_node->loc(), mClockedOn) ) {
+  if ( !expect_singleton(ATTR_CLOCKED_ON, ff_node->loc(), mClockedOn) ) {
     return false;
   }
 
   // clocked_on_also を取り出す．
-  if ( !get_singleton_or_null("clocked_on_also", mClockedOnAlso) ) {
+  if ( !expect_singleton_or_null(ATTR_CLOCKED_ON_ALSO, mClockedOnAlso) ) {
     return false;
   }
 

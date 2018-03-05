@@ -33,7 +33,14 @@ class CiCellClass :
 public:
 
   /// @brief コンストラクタ
-  CiCellClass();
+  /// @param[in] id 番号
+  /// @param[in] idmap_list 同位体変換リスト
+  /// @param[in] group_list グループのリスト
+  /// @param[in] alloc メモリアロケータ
+  CiCellClass(int id,
+	      const vector<NpnMapM>& idmap_list,
+	      const vector<CiCellGroup*>& group_list,
+	      Alloc& alloc);
 
   /// @brief デストラクタ
   virtual
@@ -73,23 +80,6 @@ public:
   virtual
   const ClibCellGroupList&
   group_list() const;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 情報を設定する関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 初期化する．
-  /// @param[in] id 番号
-  /// @param[in] idmap_list 同位体変換リスト
-  /// @param[in] group_list グループのリスト
-  /// @param[in] alloc メモリアロケータ
-  void
-  init(int id,
-       const vector<NpnMapM>& idmap_list,
-       const vector<CiCellGroup*>& group_list,
-       Alloc& alloc);
 
 
 public:

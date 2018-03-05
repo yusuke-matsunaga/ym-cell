@@ -71,8 +71,7 @@ CiCellPinList::init(const vector<CiCellPin*>& group_list,
   if ( mNum == 0 ) {
     return;
   }
-  void* p = alloc.get_memory(sizeof(const ClibCellPin*) * mNum);
-  mArray = new (p) const ClibCellPin*[mNum];
+  mArray = alloc.get_array<const ClibCellPin*>(mNum);
   for ( int i = 0; i < mNum; ++ i ) {
     mArray[i] = group_list[i];
   }

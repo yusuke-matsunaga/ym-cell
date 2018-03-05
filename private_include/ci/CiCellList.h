@@ -26,10 +26,16 @@ class CiCellList :
 {
 public:
 
-  /// @brief コンストラクタ
+  /// @brief 空のコンストラクタ
   ///
   /// 内容は不定
   CiCellList();
+
+  /// @brief コンストラクタ
+  /// @param[in] src_list セルのリスト
+  /// @param[in] alloc メモリアロケータ
+  CiCellList(const vector<CiCell*>& cell_list,
+	     Alloc& alloc);
 
   /// @brief デストラクタ
   virtual
@@ -68,7 +74,7 @@ public:
   // CiCellList に固有の関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 内容を初期化する．
+  /// @brief 内容を設定する．
   /// @param[in] src_list セルのリスト
   /// @param[in] alloc メモリアロケータ
   void

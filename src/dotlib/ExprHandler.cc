@@ -51,15 +51,22 @@ DotlibNodeImpl*
 ExprHandler::read_primary()
 {
   FileRegion loc;
-  tTokenType type = parser().read_token(loc);
+  TokenType type = parser().read_token(loc);
   if ( type == LP ) {
     return read_expr(RP);
   }
   if ( type == SYMBOL ) {
-    ShString name(parser().cur_string());
-    if ( name != "VDD" &&
-	 name != "VSS" &&
-	 name != "VCC" ) {
+    const char* name =  parser().cur_string();
+    if ( strcmp(name, "VDD") == 0 ) {
+      type = SYMBOL_VDD;
+    }
+    else if ( strcmp(name, "VSS") == 0 ) {
+      type = SYMBOL_VSS;
+    }
+    else if ( strcmp(name, "VCC") == 0 ) {
+      type = SYMBOL_VCC;
+    }
+    else {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
 		      kMsgError,
@@ -68,7 +75,7 @@ ExprHandler::read_primary()
 		      "Only 'VDD', 'VSS', and 'VCC' are allowed.");
       return nullptr;
     }
-    return mgr()->new_string(name, loc);
+    return mgr()->new_symbol(type, loc);
   }
   if ( type == FLOAT_NUM || type == INT_NUM ) {
     return mgr()->new_float(parser().cur_float(), loc);
@@ -93,7 +100,7 @@ ExprHandler::read_product()
 
   for ( ; ; ) {
     FileRegion loc;
-    tTokenType type = parser().read_token(loc);
+    TokenType type = parser().read_token(loc);
     if ( type == MULT || type == DIV ) {
       DotlibNodeImpl* opr2 = read_primary();
       if ( opr2 == nullptr ) {
@@ -117,7 +124,7 @@ ExprHandler::read_product()
 
 // @brief expression を読み込む．
 DotlibNodeImpl*
-ExprHandler::read_expr(tTokenType end_marker)
+ExprHandler::read_expr(TokenType end_marker)
 {
   // ここだけ mUngetType, mUngetLoc を考慮する必要があるので
   // じかに parser().read_token() を呼んではいけない．
@@ -128,7 +135,7 @@ ExprHandler::read_expr(tTokenType end_marker)
   }
   for ( ; ; ) {
     FileRegion loc;
-    tTokenType type = read_token(loc);
+    TokenType type = read_token(loc);
     if ( type == end_marker ) {
       return opr1;
     }
@@ -157,11 +164,11 @@ ExprHandler::read_expr(tTokenType end_marker)
 
 // @brief トークンを読み込む．
 // @param[out] loc 対応するファイル上の位置情報を格納する変数
-tTokenType
+TokenType
 ExprHandler::read_token(FileRegion& loc)
 {
   if ( mUngetType != ERROR ) {
-    tTokenType ans = mUngetType;
+    TokenType ans = mUngetType;
     loc = mUngetLoc;
     mUngetType = ERROR;
     return ans;

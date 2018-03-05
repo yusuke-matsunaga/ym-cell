@@ -67,18 +67,18 @@ private:
 
   /// @brief expression を読み込む．
   DotlibNodeImpl*
-  read_expr(tTokenType end_marker);
+  read_expr(TokenType end_marker);
 
   /// @brief トークンを読み込む．
   /// @param[out] loc 対応するファイル上の位置情報を格納する変数
-  tTokenType
+  TokenType
   read_token(FileRegion& loc);
 
   /// @brief 読み込んだトークンを戻す．
   /// @param[in] type トークンの型
   /// @param[in] loc トークンの位置
   void
-  unget_token(tTokenType type,
+  unget_token(TokenType type,
 	      const FileRegion& loc);
 
 
@@ -91,7 +91,7 @@ private:
   FhScanner mScanner;
 
   // 読み戻したトークンの型
-  tTokenType mUngetType;
+  TokenType mUngetType;
 
   // 読み戻したトークンの位置
   FileRegion mUngetLoc;

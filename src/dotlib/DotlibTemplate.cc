@@ -97,16 +97,16 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
   mName = template_node->group_value()->get_string_from_value_list();
 
   // 属性を内部のハッシュに登録する．
-  for (const DotlibAttr* attr = template_node->attr_top();
-       attr; attr = attr->next()) {
-    ShString attr_name = attr->attr_name();
+  for ( const DotlibAttr* attr = template_node->attr_top();
+	attr; attr = attr->next() ) {
+    AttrType attr_type = attr->attr_type();
     const DotlibNode* attr_value = attr->attr_value();
-    add(attr_name, attr_value);
+    add(attr_type, attr_value);
   }
 
   // 'variable_1' の翻訳をする．
   const DotlibNode* var1_node;
-  if ( !get_singleton("variable_1", template_node->loc(), var1_node) ) {
+  if ( !expect_singleton(ATTR_VARIABLE_1, template_node->loc(), var1_node) ) {
     // 'variable_1' がないのはエラー
     return false;
   }
@@ -116,7 +116,7 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
 
   // 'variable_2' の翻訳をする．
   const DotlibNode* var2_node;
-  if ( !get_singleton_or_null("variable_2", var2_node) ) {
+  if ( !expect_singleton_or_null(ATTR_VARIABLE_2, var2_node) ) {
     return false;
   }
   if ( !node_to_var(var2_node, mVar2) ) {
@@ -125,7 +125,7 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
 
   // 'variable_3' の翻訳をする．
   const DotlibNode* var3_node;
-  if ( !get_singleton_or_null("variable_3", var3_node) ) {
+  if ( !expect_singleton_or_null(ATTR_VARIABLE_3, var3_node) ) {
     return false;
   }
   if ( var3_node != nullptr && var2_node == nullptr ) {
@@ -143,7 +143,7 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
 
   // 'index_1' を取り出す．
   const DotlibNode* index1_node;
-  if ( !get_singleton("index_1", template_node->loc(), index1_node) ) {
+  if ( !expect_singleton(ATTR_INDEX_1, template_node->loc(), index1_node) ) {
     // index_1 がないのはエラー
     return false;
   }
@@ -151,7 +151,7 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
 
   // 'index_2' を取り出す．
   const DotlibNode* index2_node;
-  if ( !get_singleton_or_null("index_2", index2_node) ) {
+  if ( !expect_singleton_or_null(ATTR_INDEX_2, index2_node) ) {
     return false;
   }
   if ( var2_node != nullptr && index2_node == nullptr ) {
@@ -179,7 +179,7 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
 
   // 'index_3' を取り出す．
   const DotlibNode* index3_node;
-  if ( !get_singleton_or_null("index_3", index3_node) ) {
+  if ( !expect_singleton_or_null(ATTR_INDEX_3, index3_node) ) {
     return false;
   }
   if ( var3_node != nullptr && index3_node == nullptr ) {

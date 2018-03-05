@@ -71,8 +71,7 @@ CiCellClassList::init(const vector<CiCellClass*>& class_list,
   if ( mNum == 0 ) {
     return;
   }
-  void* p = alloc.get_memory(sizeof(const ClibCellClass*) * mNum);
-  mArray = new (p) const ClibCellClass*[mNum];
+  mArray = alloc.get_array<const ClibCellClass*>(mNum);
   for ( int i = 0; i < mNum; ++ i ) {
     mArray[i] = class_list[i];
   }

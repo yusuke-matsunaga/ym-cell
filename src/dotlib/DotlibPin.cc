@@ -61,21 +61,21 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   }
 
   // 属性のリストを作る．
-  for (const DotlibAttr* attr = pin_node->attr_top();
-       attr; attr = attr->next()) {
-    ShString attr_name = attr->attr_name();
+  for ( const DotlibAttr* attr = pin_node->attr_top();
+	attr; attr = attr->next() ) {
+    AttrType attr_type = attr->attr_type();
     const DotlibNode* attr_value = attr->attr_value();
-    if ( attr_name == "timing" ) {
+    if ( attr_type == ATTR_TIMING ) {
       mTimingList.push_back(attr_value);
     }
     else {
-      add(attr_name, attr_value);
+      add(attr_type, attr_value);
     }
   }
 
   // 'direction' の翻訳をする．
   const DotlibNode* direction_node;
-  if ( !get_singleton("direction", pin_node->loc(), direction_node) ) {
+  if ( !expect_singleton(ATTR_DIRECTION, pin_node->loc(), direction_node) ) {
     // 'direction' がないのはエラー
     return false;
   }
@@ -107,11 +107,11 @@ DotlibPin::set_data(const DotlibNode* pin_node)
 
   // 'capacitance' を取り出す．
   const DotlibNode* cap_node = nullptr;
-  if ( !get_singleton_or_null("capacitance", cap_node) ) {
+  if ( !expect_singleton_or_null(ATTR_CAPACITANCE, cap_node) ) {
     return false;
   }
   if ( cap_node ) {
-    if ( !cap_node->get_float(mCapacitance) ) {
+    if ( !cap_node->expect_float(mCapacitance) ) {
       return false;
     }
   }
@@ -121,17 +121,17 @@ DotlibPin::set_data(const DotlibNode* pin_node)
 
   const DotlibNode* rcap_node = nullptr;
   const DotlibNode* fcap_node = nullptr;
-  if ( !get_singleton_or_null("rise_capacitance", rcap_node) ) {
+  if ( !expect_singleton_or_null(ATTR_RISE_CAPACITANCE, rcap_node) ) {
     return false;
   }
-  if ( !get_singleton_or_null("fall_capacitance", fcap_node) ) {
+  if ( !expect_singleton_or_null(ATTR_FALL_CAPACITANCE, fcap_node) ) {
     return false;
   }
   if ( rcap_node && fcap_node ) {
-    if ( !rcap_node->get_float(mRiseCapacitance) ) {
+    if ( !rcap_node->expect_float(mRiseCapacitance) ) {
       return false;
     }
-    if ( !fcap_node->get_float(mFallCapacitance) ) {
+    if ( !fcap_node->expect_float(mFallCapacitance) ) {
       return false;
     }
   }
@@ -142,11 +142,11 @@ DotlibPin::set_data(const DotlibNode* pin_node)
 
   // 'max_fanout' を取り出す．
   const DotlibNode* max_fo_node = nullptr;
-  if ( !get_singleton_or_null("max_fanout", max_fo_node) ) {
+  if ( !expect_singleton_or_null(ATTR_MAX_FANOUT, max_fo_node) ) {
     return false;
   }
   if ( max_fo_node ) {
-    if ( !max_fo_node->get_float(mMaxFanout) ) {
+    if ( !max_fo_node->expect_float(mMaxFanout) ) {
       return false;
     }
   }
@@ -155,11 +155,11 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   }
   // 'min_fanout' を取り出す．
   const DotlibNode* min_fo_node = nullptr;
-  if ( !get_singleton_or_null("min_fanout", min_fo_node) ) {
+  if ( !expect_singleton_or_null(ATTR_MIN_FANOUT, min_fo_node) ) {
     return false;
   }
   if ( min_fo_node ) {
-    if ( !min_fo_node->get_float(mMinFanout) ) {
+    if ( !min_fo_node->expect_float(mMinFanout) ) {
       return false;
     }
   }
@@ -169,11 +169,11 @@ DotlibPin::set_data(const DotlibNode* pin_node)
 
   // 'max_capacitance' を取り出す．
   const DotlibNode* max_cap_node = nullptr;
-  if ( !get_singleton_or_null("max_capacitance", max_cap_node) ) {
+  if ( !expect_singleton_or_null(ATTR_MAX_CAPACITANCE, max_cap_node) ) {
     return false;
   }
   if ( max_cap_node ) {
-    if ( !max_cap_node->get_float(mMaxCapacitance) ) {
+    if ( !max_cap_node->expect_float(mMaxCapacitance) ) {
       return false;
     }
   }
@@ -182,11 +182,11 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   }
   // 'min_capacitance' を取り出す．
   const DotlibNode* min_cap_node = nullptr;
-  if ( !get_singleton_or_null("min_capacitance", min_cap_node) ) {
+  if ( !expect_singleton_or_null(ATTR_MIN_CAPACITANCE, min_cap_node) ) {
     return false;
   }
   if ( min_cap_node ) {
-    if ( !min_cap_node->get_float(mMinCapacitance) ) {
+    if ( !min_cap_node->expect_float(mMinCapacitance) ) {
       return false;
     }
   }
@@ -196,11 +196,11 @@ DotlibPin::set_data(const DotlibNode* pin_node)
 
   // 'max_transition' を取り出す．
   const DotlibNode* max_trans_node = nullptr;
-  if ( !get_singleton_or_null("max_transition", max_trans_node) ) {
+  if ( !expect_singleton_or_null(ATTR_MAX_TRANSITION, max_trans_node) ) {
     return false;
   }
   if ( max_trans_node ) {
-    if ( !max_trans_node->get_float(mMaxTransition) ) {
+    if ( !max_trans_node->expect_float(mMaxTransition) ) {
       return false;
     }
   }
@@ -209,11 +209,11 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   }
   // 'min_transition' を取り出す．
   const DotlibNode* min_trans_node = nullptr;
-  if ( !get_singleton_or_null("min_transition", min_trans_node) ) {
+  if ( !expect_singleton_or_null(ATTR_MIN_TRANSITION, min_trans_node) ) {
     return false;
   }
   if ( min_trans_node ) {
-    if ( !min_trans_node->get_float(mMinTransition) ) {
+    if ( !min_trans_node->expect_float(mMinTransition) ) {
       return false;
     }
   }
@@ -222,22 +222,22 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   }
 
   // 'function' を取り出す．
-  if ( !get_singleton_or_null("function", mFunction) ) {
+  if ( !expect_singleton_or_null(ATTR_FUNCTION, mFunction) ) {
     return false;
   }
 
   // 'three_state' を取り出す．
-  if ( !get_singleton_or_null("three_state", mThreeState) ) {
+  if ( !expect_singleton_or_null(ATTR_THREE_STATE, mThreeState) ) {
     return false;
   }
 
   // 'internal_node' を取り出す．
-  if ( !get_singleton_or_null("internal_node", mInternalNode) ) {
+  if ( !expect_singleton_or_null(ATTR_INTERNAL_NODE, mInternalNode) ) {
     return false;
   }
 
   // 'pin_func_type' を取り出す．
-  if ( !get_singleton_or_null("pin_func_type", mPinFuncType) ) {
+  if ( !expect_singleton_or_null(ATTR_PIN_FUNC_TYPE, mPinFuncType) ) {
     return false;
   }
 

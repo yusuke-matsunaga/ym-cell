@@ -73,8 +73,7 @@ CiLutTemplateList::init(const vector<CiLutTemplate*>& templ_list,
   if ( mNum == 0 ) {
     return;
   }
-  void* p = alloc.get_memory(sizeof(const ClibLutTemplate*) * mNum);
-  mArray = new (p) const ClibLutTemplate*[mNum];
+  mArray = alloc.get_array<const ClibLutTemplate*>(mNum);
   for ( int i = 0; i < mNum; ++ i ) {
     mArray[i] = templ_list[i];
   }

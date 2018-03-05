@@ -33,11 +33,11 @@ ComplexHandler::~ComplexHandler()
 }
 
 // @brief 構文要素を処理する．
-// @param[in] attr_name 属性名
+// @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
 // @return エラーが起きたら false を返す．
 bool
-ComplexHandler::read_attr(const ShString& attr_name,
+ComplexHandler::read_attr(AttrType attr_type,
 			  const FileRegion& attr_loc)
 {
   FileRegion end_loc;
@@ -51,10 +51,10 @@ ComplexHandler::read_attr(const ShString& attr_name,
   }
 
   if ( debug() ) {
-    cout << attr_name << value << endl;
+    cout << attr_type << value << endl;
   }
 
-  if ( !set_value(attr_name, attr_loc, value, end_loc) ) {
+  if ( !set_value(attr_type, attr_loc, value, end_loc) ) {
     return false;
   }
 
@@ -62,18 +62,18 @@ ComplexHandler::read_attr(const ShString& attr_name,
 }
 
 // @brief 値を読み込んだ時の処理
-// @param[in] attr_name 属性名
+// @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
 // @param[in] value_list 値のリスト
 // @param[in] end_loc 右括弧の位置
 bool
-ComplexHandler::set_value(const ShString& attr_name,
+ComplexHandler::set_value(AttrType attr_type,
 			  const FileRegion& attr_loc,
 			  DotlibNodeImpl* value,
 			  const FileRegion& end_loc)
 {
   FileRegion loc(attr_loc, end_loc);
-  return parent()->add_attr(attr_name, value, loc);
+  return parent()->add_attr(attr_type, value, loc);
 }
 
 // @brief vector_mode で読み込むとき true を返す．
@@ -101,12 +101,12 @@ Str1ComplexHandler::~Str1ComplexHandler()
 }
 
 // @brief 値を読み込んだ時の処理
-// @param[in] attr_name 属性名
+// @param[in] attr_type 属性名
 // @param[in] attr_loc ファイル上の位置
 // @param[in] value 値のリスト
 // @param[in] end_loc 右括弧の位置
 bool
-Str1ComplexHandler::set_value(const ShString& attr_name,
+Str1ComplexHandler::set_value(AttrType attr_type,
 			      const FileRegion& attr_loc,
 			      DotlibNodeImpl* value,
 			      const FileRegion& end_loc)
@@ -130,7 +130,7 @@ Str1ComplexHandler::set_value(const ShString& attr_name,
     return false;
   }
 
-  return ComplexHandler::set_value(attr_name, attr_loc, value, end_loc);
+  return ComplexHandler::set_value(attr_type, attr_loc, value, end_loc);
 }
 
 
@@ -151,12 +151,12 @@ VectorComplexHandler::~VectorComplexHandler()
 }
 
 // @brief 値を読み込んだ時の処理
-// @param[in] attr_name 属性名
+// @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
 // @param[in] value 値のリスト
 // @param[in] end_loc 右括弧の位置
 bool
-VectorComplexHandler::set_value(const ShString& attr_name,
+VectorComplexHandler::set_value(AttrType attr_type,
 				const FileRegion& attr_loc,
 				DotlibNodeImpl* value,
 				const FileRegion& end_loc)
@@ -171,7 +171,7 @@ VectorComplexHandler::set_value(const ShString& attr_name,
     return false;
   }
   ASSERT_COND( value->list_elem(0)->is_vector() );
-  return ComplexHandler::set_value(attr_name, attr_loc, value, end_loc);
+  return ComplexHandler::set_value(attr_type, attr_loc, value, end_loc);
 }
 
 // @brief vector_mode で読み込むとき true を返す．
@@ -199,12 +199,12 @@ VectorListComplexHandler::~VectorListComplexHandler()
 }
 
 // @brief 値を読み込んだ時の処理
-// @param[in] attr_name 属性名
+// @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
 // @param[in] value 値のリスト
 // @param[in] end_loc 右括弧の位置
 bool
-VectorListComplexHandler::set_value(const ShString& attr_name,
+VectorListComplexHandler::set_value(AttrType attr_type,
 				    const FileRegion& attr_loc,
 				    DotlibNodeImpl* value,
 				    const FileRegion& end_loc)
@@ -219,12 +219,12 @@ VectorListComplexHandler::set_value(const ShString& attr_name,
 		    "Syntax error, one ore moare vectors expected.");
     return false;
   }
-  for (int i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     const DotlibNode* elem = value->list_elem(i);
     ASSERT_COND( elem->is_vector() );
   }
 
-  return ComplexHandler::set_value(attr_name, attr_loc, value, end_loc);
+  return ComplexHandler::set_value(attr_type, attr_loc, value, end_loc);
 }
 
 
@@ -245,12 +245,12 @@ UnitComplexHandler::~UnitComplexHandler()
 }
 
 // @brief 値を読み込んだ時の処理
-// @param[in] attr_name 属性名
+// @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
 // @param[in] value 値のリスト
 // @param[in] end_loc 右括弧の位置
 bool
-UnitComplexHandler::set_value(const ShString& attr_name,
+UnitComplexHandler::set_value(AttrType attr_type,
 			      const FileRegion& attr_loc,
 			      DotlibNodeImpl* value,
 			      const FileRegion& end_loc)
@@ -283,7 +283,7 @@ UnitComplexHandler::set_value(const ShString& attr_name,
     return false;
   }
 
-  return ComplexHandler::set_value(attr_name, attr_loc, value, end_loc);
+  return ComplexHandler::set_value(attr_type, attr_loc, value, end_loc);
 }
 
 
@@ -304,12 +304,12 @@ PwComplexHandler::~PwComplexHandler()
 }
 
 // @brief 値を読み込んだ時の処理
-// @param[in] attr_name 属性名
+// @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
 // @param[in] value 値のリスト
 // @param[in] end_loc 右括弧の位置
 bool
-PwComplexHandler::set_value(const ShString& attr_name,
+PwComplexHandler::set_value(AttrType attr_type,
 			    const FileRegion& attr_loc,
 			    DotlibNodeImpl* value,
 			    const FileRegion& end_loc)
@@ -342,7 +342,7 @@ PwComplexHandler::set_value(const ShString& attr_name,
     return false;
   }
 
-  return ComplexHandler::set_value(attr_name, attr_loc, value, end_loc);
+  return ComplexHandler::set_value(attr_type, attr_loc, value, end_loc);
 }
 
 END_NAMESPACE_YM_DOTLIB

@@ -44,19 +44,19 @@ DotlibScanner::cur_float() const
 // @brief トークンを一つとってくる．
 // @param[out] loc ファイル上の位置情報を格納する変数
 // @param[in] symbol_mode 数字も文字とみなすモード
-tTokenType
+TokenType
 DotlibScanner::read_token(FileRegion& loc,
 			  bool symbol_mode)
 {
   mSymbolMode = symbol_mode;
-  tTokenType type = scan();
+  TokenType type = scan();
   loc = cur_loc();
   return type;
 }
 
 // @brief read_token() の下請け関数
 // @return トークンの型を返す．
-tTokenType
+TokenType
 DotlibScanner::scan()
 {
   int c;

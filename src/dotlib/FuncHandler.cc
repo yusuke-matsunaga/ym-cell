@@ -41,7 +41,7 @@ DotlibNodeImpl*
 FuncHandler::read_value()
 {
   FileRegion loc;
-  tTokenType value_type = parser().read_token(loc, false);
+  TokenType value_type = parser().read_token(loc, false);
   if ( value_type != SYMBOL ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
@@ -64,7 +64,7 @@ DotlibNodeImpl*
 FuncHandler::read_primary()
 {
   FileRegion loc;
-  tTokenType type = read_token(loc);
+  TokenType type = read_token(loc);
   if ( type == LP ) {
     return read_expr(RP);
   }
@@ -98,7 +98,7 @@ DotlibNodeImpl*
 FuncHandler::read_primary2()
 {
   FileRegion loc;
-  tTokenType type = read_token(loc);
+  TokenType type = read_token(loc);
   if ( type == NOT ) {
     DotlibNodeImpl* opr = read_primary();
     if ( opr == nullptr ) {
@@ -133,7 +133,7 @@ FuncHandler::read_product()
 
   for ( ; ; ) {
     FileRegion loc;
-    tTokenType type = read_token(loc);
+    TokenType type = read_token(loc);
     if ( type == AND ) {
       DotlibNodeImpl* opr2 = read_primary2();
       if ( opr2 == nullptr ) {
@@ -159,7 +159,7 @@ FuncHandler::read_product()
 
 // @brief expression を読み込む．
 DotlibNodeImpl*
-FuncHandler::read_expr(tTokenType end_marker)
+FuncHandler::read_expr(TokenType end_marker)
 {
   DotlibNodeImpl* opr1 = read_product();
   if ( opr1 == nullptr ) {
@@ -167,7 +167,7 @@ FuncHandler::read_expr(tTokenType end_marker)
   }
   for ( ; ; ) {
     FileRegion loc;
-    tTokenType type = read_token(loc);
+    TokenType type = read_token(loc);
     if ( type == end_marker ) {
       return opr1;
     }
@@ -196,11 +196,11 @@ FuncHandler::read_expr(tTokenType end_marker)
 
 // @brief トークンを読み込む．
 // @param[out] loc 対応するファイル上の位置情報を格納する変数
-tTokenType
+TokenType
 FuncHandler::read_token(FileRegion& loc)
 {
   if ( mUngetType != ERROR ) {
-    tTokenType ans = mUngetType;
+    TokenType ans = mUngetType;
     loc = mUngetLoc;
     mUngetType = ERROR;
     return ans;
@@ -214,7 +214,7 @@ FuncHandler::read_token(FileRegion& loc)
 // @param[in] type トークンの型
 // @param[in] loc トークンの位置
 void
-FuncHandler::unget_token(tTokenType type,
+FuncHandler::unget_token(TokenType type,
 			 const FileRegion& loc)
 {
   mUngetType = type;

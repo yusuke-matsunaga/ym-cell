@@ -41,31 +41,31 @@ DotlibFL::set_data(const DotlibNode* fl_node)
   mClearPresetVar2 = 0;
 
   // 状態変数名を得る．
-  if ( !fl_node->group_value()->get_string_pair(mVar1, mVar2) ) {
+  if ( !fl_node->group_value()->expect_string_pair(mVar1, mVar2) ) {
     return false;
   }
 
   // 属性のリストを作る．
-  for (const DotlibAttr* attr = fl_node->attr_top();
-       attr; attr = attr->next()) {
-    ShString attr_name = attr->attr_name();
+  for ( const DotlibAttr* attr = fl_node->attr_top();
+       attr; attr = attr->next() ) {
+    AttrType attr_type = attr->attr_type();
     const DotlibNode* attr_value = attr->attr_value();
-    add(attr_name, attr_value);
+    add(attr_type, attr_value);
   }
 
   // clear を取り出す．
-  if ( !get_singleton_or_null("clear", mClear) ) {
+  if ( !expect_singleton_or_null(ATTR_CLEAR, mClear) ) {
     return false;
   }
 
   // preset を取り出す．
-  if ( !get_singleton_or_null("preset", mPreset) ) {
+  if ( !expect_singleton_or_null(ATTR_PRESET, mPreset) ) {
     return false;
   }
 
   // clear_preset_var1 を取り出す．
   const DotlibNode* tmp_node1 = nullptr;
-  if ( !get_singleton_or_null("clear_preset_var1", tmp_node1) ) {
+  if ( !expect_singleton_or_null(ATTR_CLEAR_PRESET_VAR1, tmp_node1) ) {
     return false;
   }
   if ( tmp_node1 ) {
@@ -77,11 +77,11 @@ DotlibFL::set_data(const DotlibNode* fl_node)
 		      "String value is expected.");
       return false;
     }
-    ShString str = tmp_node1->string_value();
-    if ( str == "L" || str == "l" ) {
+    const char* str = tmp_node1->string_value();
+    if ( strcmp(str, "L") == 0 || strcmp(str, "l") == 0 ) {
       mClearPresetVar1 = 0;
     }
-    else if ( str == "H" || str == "h" ) {
+    else if ( strcmp(str, "H") == 0 || strcmp(str, "h") == 0 ) {
       mClearPresetVar1 = 1;
     }
     else {
@@ -96,7 +96,7 @@ DotlibFL::set_data(const DotlibNode* fl_node)
 
   // clear_preset_var2 を取り出す．
   const DotlibNode* tmp_node2 = nullptr;
-  if ( !get_singleton_or_null("clear_preset_var2", tmp_node2) ) {
+  if ( !expect_singleton_or_null(ATTR_CLEAR_PRESET_VAR2, tmp_node2) ) {
     return false;
   }
   if ( tmp_node2 ) {
@@ -108,11 +108,11 @@ DotlibFL::set_data(const DotlibNode* fl_node)
 		      "String value is expected.");
       return false;
     }
-    ShString str = tmp_node2->string_value();
-    if ( str == "L" || str == "l" ) {
+    const char* str = tmp_node2->string_value();
+    if ( strcmp(str, "L") == 0 || strcmp(str, "l") == 0 ) {
       mClearPresetVar2 = 0;
     }
-    else if ( str == "H" || str == "h" ) {
+    else if ( strcmp(str, "H") == 0 || strcmp(str, "h") == 0 ) {
       mClearPresetVar2 = 1;
     }
     else {

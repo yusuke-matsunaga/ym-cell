@@ -11,7 +11,6 @@
 
 #include "dotlib_int.h"
 #include "ym/FileRegion.h"
-#include "ym/ShString.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -48,7 +47,7 @@ public:
   /// @return エラーが起きたら false を返す．
   virtual
   bool
-  read_attr(const ShString& attr_name,
+  read_attr(AttrType attr_type,
 	    const FileRegion& attr_loc) = 0;
 
   /// @brief 対応するノードを得る．
@@ -92,14 +91,14 @@ protected:
   /// @param[in] loc ファイル上の位置情報
   /// @note 残りの情報は parser() からとってくる．
   DotlibNodeImpl*
-  new_value(tTokenType type,
+  new_value(TokenType type,
 	    bool vector_mode,
 	    const FileRegion& loc);
 
   /// @brief 引数の種類のトークンでなければエラーメッセージを出力する．
   /// @param[in] req_type 要求するトークンの型
   bool
-  expect(tTokenType req_type);
+  expect(TokenType req_type);
 
   /// @brief 行末まで読み込む．
   bool

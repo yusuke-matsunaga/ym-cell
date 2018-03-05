@@ -43,12 +43,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 属性値を読み込む．
-  /// @param[in] attr_token 属性名を表すトークン
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @return エラーが起きたら false を返す．
   virtual
   bool
-  read_attr(const ShString& attr_name,
+  read_attr(AttrType attr_type,
 	    const FileRegion& attr_loc);
 
 
@@ -58,26 +58,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ハンドラの登録を行う．
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] handler 対応付けるハンドラ
   /// @note エラーが起きたら false を返す．
   bool
-  reg_handler(const char* attr_name,
-	      DotlibHandler* handler);
-
-  /// @brief ハンドラの登録を行う．
-  /// @param[in] attr_name 属性名
-  /// @param[in] handler 対応付けるハンドラ
-  /// @note エラーが起きたら false を返す．
-  bool
-  reg_handler(const ShString& attr_name,
+  reg_handler(AttrType attr_type,
 	      DotlibHandler* handler);
 
   /// @brief ハンドラを取り出す．
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @note なければ nullptr を返す．
   DotlibHandler*
-  find_handler(const ShString& attr_name);
+  find_handler(AttrType attr_type);
 
 
 public:
@@ -86,14 +78,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief attribute を設定する．
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] value 値
   /// @param[in] loc ファイル上の位置
   /// @return 設定が失敗したら false を返す．
   /// @note デフォルトの実装はエラーとなる．
   virtual
   bool
-  add_attr(const ShString& attr_name,
+  add_attr(AttrType attr_type,
 	   DotlibNodeImpl* value,
 	   const FileRegion& loc);
 
@@ -109,34 +101,34 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief group statement の最初に呼ばれる関数
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値を表すトークンのリスト
   virtual
   bool
-  begin_group(const ShString& attr_name,
+  begin_group(AttrType attr_type,
 	      const FileRegion& attr_loc,
 	      DotlibNodeImpl* value);
 
   /// @brief group statement の最後に呼ばれる関数
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc attr_name のファイル上の位置
   /// @param[in] end_loc 閉じ括弧のファイル上の位置
   virtual
   bool
-  end_group(const ShString& attr_name,
+  end_group(AttrType attr_type,
 	    const FileRegion& attr_loc,
 	    const FileRegion& end_loc);
 
   /// @brief group statement の引数のチェックを行う仮想関数
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値を表すトークンのリスト
   /// @note begin_group() の中で呼ばれる．
   /// @note デフォルトの実装はなにもしないで true を返す．
   virtual
   bool
-  check_group_value(const ShString& attr_name,
+  check_group_value(AttrType attr_type,
 		    const FileRegion& attr_loc,
 		    DotlibNodeImpl* value);
 
@@ -147,7 +139,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ハンドラの連想配列
-  HashMap<ShString, DotlibHandler*> mHandlerMap;
+  HashMap<AttrType, DotlibHandler*> mHandlerMap;
 
   // 対応する DotlibNode
   DotlibNodeImpl* mNode;
@@ -179,14 +171,14 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief group statement の引数のチェックを行う仮想関数
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値を表すトークンのリスト
   /// @note begin_group() の中で呼ばれる．
   /// @note デフォルトの実装はなにもしないで true を返す．
   virtual
   bool
-  check_group_value(const ShString& attr_name,
+  check_group_value(AttrType attr_type,
 		    const FileRegion& attr_loc,
 		    DotlibNodeImpl* value);
 
@@ -221,14 +213,14 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief group statement の引数のチェックを行う仮想関数
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値を表すトークンのリスト
   /// @note begin_group() の中で呼ばれる．
   /// @note デフォルトの実装はなにもしないで true を返す．
   virtual
   bool
-  check_group_value(const ShString& attr_name,
+  check_group_value(AttrType attr_type,
 		    const FileRegion& attr_loc,
 		    DotlibNodeImpl* value);
 
@@ -259,14 +251,14 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief group statement の引数のチェックを行う仮想関数
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値を表すトークンのリスト
   /// @note begin_group() の中で呼ばれる．
   /// @note デフォルトの実装はなにもしないで true を返す．
   virtual
   bool
-  check_group_value(const ShString& attr_name,
+  check_group_value(AttrType attr_type,
 		    const FileRegion& attr_loc,
 		    DotlibNodeImpl* value);
 
@@ -297,14 +289,14 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief group statement の引数のチェックを行う仮想関数
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値を表すトークンのリスト
   /// @note begin_group() の中で呼ばれる．
   /// @note デフォルトの実装はなにもしないで true を返す．
   virtual
   bool
-  check_group_value(const ShString& attr_name,
+  check_group_value(AttrType attr_type,
 		    const FileRegion& attr_loc,
 		    DotlibNodeImpl* value);
 

@@ -75,6 +75,16 @@ DotlibMgrImpl::new_float(double value,
   return node;
 }
 
+// @brief 予約語シンボルを表す DotlibNode を生成する．
+// @param[in] token_type トークンの種類
+// @param[in] loc ファイル上の位置
+DotlibNodeImpl*
+DotlibMgrImpl::new_symbol(TokenType token_type,
+			  const FileRegion& loc)
+{
+  return nullptr;
+}
+
 // @brief 定数シンボルを表す DotlibNode を生成する．
 // @param[in] value 値
 // @param[in] loc ファイル上の位置
@@ -225,13 +235,13 @@ DotlibMgrImpl::new_group(const DotlibNode* value,
 
 // @brief DotlibAttr を生成する．
 DotlibAttr*
-DotlibMgrImpl::new_attr(const ShString& attr_name,
+DotlibMgrImpl::new_attr(AttrType attr_type,
 			const DotlibNode* value,
 			const FileRegion& loc)
 {
   ++ mAttrNum;
   void* p = mAlloc.get_memory(sizeof(DotlibAttr));
-  DotlibAttr* attr =  new (p) DotlibAttr(attr_name, value, loc);
+  DotlibAttr* attr =  new (p) DotlibAttr(attr_type, value, loc);
   return attr;
 }
 

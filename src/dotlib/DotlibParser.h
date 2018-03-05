@@ -40,7 +40,8 @@ public:
   /// @param[in] debug デバッグモード
   /// @param[in] allow_no_semi 行末のセミコロンなしを許すかどうか
   /// @return 読み込みが成功したら true を返す．
-  /// @note パース木は mgr にセットされる．
+  ///
+  /// パース木は mgr にセットされる．
   bool
   read_file(const string& filename,
 	    DotlibMgr& mgr,

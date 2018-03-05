@@ -34,11 +34,11 @@ DefineHandler::~DefineHandler()
 }
 
 // @brief 構文要素を処理する．
-// @param[in] attr_name 属性名
+// @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
 // @return エラーが起きたら false を返す．
 bool
-DefineHandler::read_attr(const ShString& attr_name,
+DefineHandler::read_attr(AttrType attr_type,
 			 const FileRegion& attr_loc)
 {
   FileRegion dummy_loc;
@@ -52,7 +52,7 @@ DefineHandler::read_attr(const ShString& attr_name,
   }
 
   if ( debug() ) {
-    cout << attr_name << " : " << value << endl;
+    cout << attr_type << " : " << value << endl;
   }
 
   const DotlibNode* keyword = value->list_elem(0);
@@ -66,7 +66,7 @@ DefineHandler::read_attr(const ShString& attr_name,
   }
 
   const DotlibNode* group = value->list_elem(1);
-  if ( group == nullptr || !group->is_string() ) {
+  if ( group == nullptr || !group->is_attr() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group->loc(),
 		    kMsgError,
@@ -85,7 +85,7 @@ DefineHandler::read_attr(const ShString& attr_name,
     return false;
   }
 
-  DotlibHandler* handler = parent()->find_handler(group->string_value());
+  DotlibHandler* handler = parent()->find_handler(group->attr_type());
   if ( handler == nullptr ) {
     ostringstream buf;
     buf << group->string_value() << ": Unknown attribute. ignored.";
@@ -110,14 +110,14 @@ DefineHandler::read_attr(const ShString& attr_name,
   }
 
   DotlibHandler* new_handler = nullptr;
-  ShString type_str = type_token->string_value();
-  if ( type_str == "int" ) {
+  const char* type_str = type_token->string_value();
+  if ( strcmp(type_str, "int") == 0 ) {
     new_handler = new IntSimpleHandler(g_handler);
   }
-  else if ( type_str == "float" ) {
+  else if ( strcmp(type_str, "float") == 0 ) {
     new_handler = new FloatSimpleHandler(g_handler);
   }
-  else if ( type_str == "string" ) {
+  else if ( strcmp(type_str, "string") == 0 ) {
     new_handler = new StrSimpleHandler(g_handler, false);
   }
   else {
@@ -131,7 +131,8 @@ DefineHandler::read_attr(const ShString& attr_name,
     return false;
   }
 
-  g_handler->reg_handler(keyword->string_value(), new_handler);
+  AttrType key_attr; // = keyword->string_value();
+  g_handler->reg_handler(key_attr, new_handler);
 
   return true;
 }

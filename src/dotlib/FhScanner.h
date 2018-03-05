@@ -42,7 +42,7 @@ public:
 
   /// @brief トークンを読み込む．
   /// @param[out] loc 対応するファイル上の位置情報を格納する変数
-  tTokenType
+  TokenType
   read_token(FileRegion& loc);
 
   /// @brief 直前の read_token() で読んだトークンの文字列を返す．

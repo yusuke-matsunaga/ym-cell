@@ -40,17 +40,17 @@ DotlibLatch::set_data(const DotlibNode* latch_node)
   mEnableAlso = nullptr;
 
   // data_in を取り出す．
-  if ( !get_singleton_or_null("data_in", mDataIn) ) {
+  if ( !expect_singleton_or_null(ATTR_DATA_IN, mDataIn) ) {
     return false;
   }
 
   // enable を取り出す．
-  if ( !get_singleton_or_null("enable", mEnable) ) {
+  if ( !expect_singleton_or_null(ATTR_ENABLE, mEnable) ) {
     return false;
   }
 
   // enable_also を取り出す．
-  if ( !get_singleton_or_null("enable_also", mEnableAlso) ) {
+  if ( !expect_singleton_or_null(ATTR_ENABLE_ALSO, mEnableAlso) ) {
     return false;
   }
 

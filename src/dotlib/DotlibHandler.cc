@@ -65,7 +65,7 @@ DotlibHandler::parse_complex(bool vector_mode,
 
   DotlibNodeImpl* value_list = mgr()->new_list();
   FileRegion loc;
-  tTokenType type = parser().read_token(loc);
+  TokenType type = parser().read_token(loc);
   if ( type != RP ) {
     for ( ; ; ) {
       DotlibNodeImpl* value = new_value(type, vector_mode, loc);
@@ -75,7 +75,7 @@ DotlibHandler::parse_complex(bool vector_mode,
 
       value_list->add_node(value);
 
-      tTokenType type1 = parser().read_token(loc);
+      TokenType type1 = parser().read_token(loc);
       if ( type1 == RP ) {
 	break;
       }
@@ -101,7 +101,7 @@ DotlibHandler::parse_complex(bool vector_mode,
 // @param[in] loc ファイル上の位置情報
 // @note 残りの情報は parser() からとってくる．
 DotlibNodeImpl*
-DotlibHandler::new_value(tTokenType type,
+DotlibHandler::new_value(TokenType type,
 			 bool vector_mode,
 			 const FileRegion& loc)
 {
@@ -118,7 +118,7 @@ DotlibHandler::new_value(tTokenType type,
       vector<double> value_list;
       string buf;
       char c = '\0';
-      for (const char* s = tmp_str; (c = *s) ; ++ s) {
+      for ( const char* s = tmp_str; (c = *s) ; ++ s ) {
 	if ( isspace(c) ) {
 	  continue;
 	}
@@ -144,6 +144,7 @@ DotlibHandler::new_value(tTokenType type,
       return mgr()->new_vector(value_list, loc);
     }
     else {
+      cout << "DotlibHandler::new_value(" << parser().cur_string() << ", " << loc  << ")" << endl;
       return mgr()->new_string(ShString(parser().cur_string()), loc);
     }
 
@@ -160,7 +161,7 @@ DotlibHandler::new_value(tTokenType type,
 
 // @brief 引数の種類のトークンでなければエラーメッセージを出力する．
 bool
-DotlibHandler::expect(tTokenType type)
+DotlibHandler::expect(TokenType type)
 {
   return mParser.expect(type);
 }
@@ -200,10 +201,10 @@ DotlibHandler::debug()
   return mParser.debug();
 }
 
-// @brief tTokenType 内容をストリームに出力する．
+// @brief TokenType 内容をストリームに出力する．
 ostream&
 operator<<(ostream& s,
-	   tTokenType type)
+	   TokenType type)
 {
   const char* type_str = nullptr;
   switch ( type ) {

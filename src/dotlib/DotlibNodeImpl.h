@@ -74,6 +74,11 @@ public:
   bool
   is_group() const;
 
+  /// @brief 属性型(kAttr)の時に true を返す．
+  virtual
+  bool
+  is_attr() const;
+
   /// @brief 整数値を返す．
   /// @note is_int() = true の時のみ意味を持つ．
   virtual
@@ -148,6 +153,13 @@ public:
   virtual
   const DotlibAttr*
   attr_top() const;
+
+  /// @brief 属性の型を得る．
+  ///
+  /// is_attr() = true の時のみ意味を持つ．
+  virtual
+  AttrType
+  attr_type() const;
 
 
 public:
@@ -233,7 +245,7 @@ public:
 
   /// @brief 型を得る．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 整数型(kInt)の時に true を返す．
@@ -304,7 +316,7 @@ public:
 
   /// @brief 型を得る．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 数値型(kInt か kFloat)の時に true を返す．
@@ -363,7 +375,7 @@ public:
 
   /// @brief 型を得る．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 文字列型(kString)の時に true を返す．
@@ -422,7 +434,7 @@ public:
 
   /// @brief 型を得る．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief ベクタ型(kVector)の時に true を返す．
@@ -499,7 +511,7 @@ public:
 
   /// @brief 型を得る．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 演算子型(kPlus, kMinsu, kMult, kDiv)の時に true を返す．
@@ -547,7 +559,7 @@ private:
   /// @brief コンストラクタ
   /// @param[in] type 演算子の型
   /// @param[in] opr1, opr2 オペランド
-  DotlibOpr(tType type,
+  DotlibOpr(Type type,
 	    const DotlibNode* opr1,
 	    const DotlibNode* opr2);
 
@@ -560,7 +572,7 @@ public:
 
   /// @brief 型を得る．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 演算子型(kPlus, kMinsu, kMult, kDiv)の時に true を返す．
@@ -600,7 +612,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 型
-  tType mType;
+  Type mType;
 
   // 第一オペランド
   const DotlibNode* mOpr1;
@@ -634,7 +646,7 @@ public:
 
   /// @brief 型を得る．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief リスト型(kList)の時に true を返す．
@@ -720,7 +732,7 @@ public:
 
   /// @brief 型を得る．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief グループ型(kGroup)の時に true を返す．

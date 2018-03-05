@@ -53,6 +53,13 @@ public:
   new_float(double value,
 	    const FileRegion& loc);
 
+  /// @brief 予約語シンボルを表す DotlibNode を生成する．
+  /// @param[in] token_type トークンの種類
+  /// @param[in] loc ファイル上の位置
+  DotlibNodeImpl*
+  new_symbol(TokenType token_type,
+	     const FileRegion& loc);
+
   /// @brief 文字列シンボルを表す DotlibNode を生成する．
   /// @param[in] value 値
   /// @param[in] loc ファイル上の位置
@@ -130,7 +137,7 @@ public:
 
   /// @brief DotlibAttr を生成する．
   DotlibAttr*
-  new_attr(const ShString& attr_name,
+  new_attr(AttrType attr_type,
 	   const DotlibNode* value,
 	   const FileRegion& loc);
 

@@ -174,6 +174,7 @@ CiCellLibrary::restore_lut_template(IDO& s)
     ymuint8 d;
     s >> name
       >> d;
+    ShString shname(name);
     ClibVarType var_type1;
     ClibVarType var_type2;
     ClibVarType var_type3;
@@ -184,14 +185,14 @@ CiCellLibrary::restore_lut_template(IDO& s)
     switch ( d ) {
     case 1:
       var_type1 = restore_1dim(s, index_array1);
-      tmpl = new_lut_template1(name,
+      tmpl = new_lut_template1(shname,
 			       var_type1, index_array1);
       break;
 
     case 2:
       var_type1 = restore_1dim(s, index_array1);
       var_type2 = restore_1dim(s, index_array2);
-      tmpl = new_lut_template2(name,
+      tmpl = new_lut_template2(shname,
 			       var_type1, index_array1,
 			       var_type2, index_array2);
       break;
@@ -200,7 +201,7 @@ CiCellLibrary::restore_lut_template(IDO& s)
       var_type1 = restore_1dim(s, index_array1);
       var_type2 = restore_1dim(s, index_array2);
       var_type3 = restore_1dim(s, index_array3);
-      tmpl = new_lut_template3(name,
+      tmpl = new_lut_template3(shname,
 			       var_type1, index_array1,
 			       var_type2, index_array2,
 			       var_type3, index_array3);
@@ -246,6 +247,8 @@ CiCellLibrary::restore_cell(IDO& s,
       >> name
       >> area;
 
+    ShString shname(name);
+
     // 入力ピンの読み込み
     int ni;
     s >> ni;
@@ -259,7 +262,7 @@ CiCellLibrary::restore_cell(IDO& s,
 	>> cap
 	>> r_cap
 	>> f_cap;
-      input_list[i] = new_cell_input(name, cap, r_cap, f_cap);
+      input_list[i] = new_cell_input(ShString(name), cap, r_cap, f_cap);
     }
 
     // 出力ピンの読み込み
@@ -287,7 +290,7 @@ CiCellLibrary::restore_cell(IDO& s,
 	>> min_c
 	>> max_t
 	>> min_t;
-      output_list[i] = new_cell_output(name,
+      output_list[i] = new_cell_output(ShString(name),
 				       has_logic, logic_expr, tristate_expr,
 				       max_f, min_f,
 				       max_c, min_c,
@@ -325,7 +328,7 @@ CiCellLibrary::restore_cell(IDO& s,
 	>> min_c
 	>> max_t
 	>> min_t;
-      inout_list[i] = new_cell_inout(name,
+      inout_list[i] = new_cell_inout(ShString(name),
 				     has_logic, logic_expr, tristate_expr,
 				     cap, r_cap, f_cap,
 				     max_f, min_f,
@@ -340,7 +343,7 @@ CiCellLibrary::restore_cell(IDO& s,
     for ( int i = 0; i < nit; ++ i ) {
       string name;
       s >> name;
-      internal_list[i] = new_cell_internal(name);
+      internal_list[i] = new_cell_internal(ShString(name));
     }
 
     // バスピンの読み込み
@@ -361,7 +364,7 @@ CiCellLibrary::restore_cell(IDO& s,
     CiCell* cell = nullptr;
     switch ( type ) {
     case 0: // kLogic
-      cell = new_logic_cell(name, area,
+      cell = new_logic_cell(shname, area,
 			    input_list,
 			    output_list,
 			    inout_list,
@@ -386,7 +389,7 @@ CiCellLibrary::restore_cell(IDO& s,
 	  >> preset
 	  >> clear_preset_var1
 	  >> clear_preset_var2;
-	cell = new_ff_cell(name, area,
+	cell = new_ff_cell(shname, area,
 			   input_list,
 			   output_list,
 			   inout_list,
@@ -417,7 +420,7 @@ CiCellLibrary::restore_cell(IDO& s,
 	  >> preset
 	  >> clear_preset_var1
 	  >> clear_preset_var2;
-	cell = new_latch_cell(name, area,
+	cell = new_latch_cell(shname, area,
 			      input_list,
 			      output_list,
 			      inout_list,
@@ -433,7 +436,7 @@ CiCellLibrary::restore_cell(IDO& s,
       break;
 
     case 3: // kFSM
-      cell = new_fsm_cell(name, area,
+      cell = new_fsm_cell(shname, area,
 			  input_list,
 			  output_list,
 			  inout_list,
@@ -628,7 +631,7 @@ CiCellLibrary::restore_lut(IDO& s)
     return nullptr;
   }
 
-  const ClibLutTemplate* templ = lu_table_template(template_name.c_str());
+  const ClibLutTemplate* templ = lu_table_template(template_name);
   ASSERT_COND( templ != nullptr );
 
   int d = templ->dimension();

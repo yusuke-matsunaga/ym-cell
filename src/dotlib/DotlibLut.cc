@@ -39,17 +39,16 @@ DotlibLut::set_data(const DotlibNode* lut_node)
   mName = lut_node->group_value()->get_string_from_value_list();
 
   // 属性を内部のハッシュに登録する．
-  for (const DotlibAttr* attr = lut_node->attr_top();
-       attr; attr = attr->next()) {
-    ShString attr_name = attr->attr_name();
+  for ( const DotlibAttr* attr = lut_node->attr_top();
+	attr; attr = attr->next() ) {
+    AttrType attr_type = attr->attr_type();
     const DotlibNode* attr_value = attr->attr_value();
-    add(attr_name, attr_value);
+    add(attr_type, attr_value);
   }
-
 
   // 'index_1' を取り出す．
   const DotlibNode* index1_node;
-  if ( !get_singleton_or_null("index_1", index1_node) ) {
+  if ( !expect_singleton_or_null(ATTR_INDEX_1, index1_node) ) {
     return false;
   }
   if ( index1_node ) {
@@ -61,7 +60,7 @@ DotlibLut::set_data(const DotlibNode* lut_node)
 
   // 'index_2' を取り出す．
   const DotlibNode* index2_node;
-  if ( !get_singleton_or_null("index_2", index2_node) ) {
+  if ( !expect_singleton_or_null(ATTR_INDEX_2, index2_node) ) {
     return false;
   }
   if ( index2_node ) {
@@ -73,7 +72,7 @@ DotlibLut::set_data(const DotlibNode* lut_node)
 
   // 'index_3' を取り出す．
   const DotlibNode* index3_node;
-  if ( !get_singleton_or_null("index_3", index3_node) ) {
+  if ( !expect_singleton_or_null(ATTR_INDEX_3, index3_node) ) {
     return false;
   }
   if ( index3_node ) {
@@ -84,7 +83,7 @@ DotlibLut::set_data(const DotlibNode* lut_node)
   }
 
   // 'values' を取り出す．
-  if ( !get_singleton("values", lut_node->loc(), mValueList) ) {
+  if ( !expect_singleton(ATTR_VALUES, lut_node->loc(), mValueList) ) {
     return false;
   }
 

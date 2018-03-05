@@ -42,7 +42,7 @@ SimpleHandler::~SimpleHandler()
 // @param[in] attr_loc ファイル上の位置
 // @return エラーが起きたら false を返す．
 bool
-SimpleHandler::read_attr(const ShString& attr_name,
+SimpleHandler::read_attr(AttrType attr_type,
 			 const FileRegion& attr_loc)
 {
   if ( !expect(COLON) ) {
@@ -58,10 +58,10 @@ SimpleHandler::read_attr(const ShString& attr_name,
   }
 
   if ( debug() ) {
-    cout << attr_name << " : " << value << endl;
+    cout << attr_type << " : " << value << endl;
   }
 
-  if ( !set_value(attr_name, attr_loc, value) ) {
+  if ( !set_value(attr_type, attr_loc, value) ) {
     return false;
   }
 
@@ -76,7 +76,7 @@ DotlibNodeImpl*
 SimpleHandler::read_value()
 {
   FileRegion loc;
-  tTokenType value_type = parser().read_token(loc, mSymMode);
+  TokenType value_type = parser().read_token(loc, mSymMode);
   DotlibNodeImpl* value = new_value(value_type, false, loc);
   return value;
 }
@@ -86,7 +86,7 @@ SimpleHandler::read_value()
 // @param[in] attr_loc ファイル上の位置
 // @param[in] value 値
 bool
-SimpleHandler::set_value(const ShString& attr_name,
+SimpleHandler::set_value(const char* attr_name,
 			 const FileRegion& attr_loc,
 			 DotlibNodeImpl* value)
 {

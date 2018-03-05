@@ -84,12 +84,6 @@ set_library(const string& lib_name,
   // 名前の設定
   library->set_name(lib_name);
 
-  // セル数の設定
-  int cell_num = 0;
-  for (const MislibNode* gate = gate_list->top(); gate; gate = gate->next()) {
-    ++ cell_num;
-  }
-
   // セルの内容の設定
   vector<CiCell*> cell_list;
   for ( const MislibNode* gate = gate_list->top(); gate;

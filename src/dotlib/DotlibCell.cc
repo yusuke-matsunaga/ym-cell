@@ -49,45 +49,45 @@ DotlibCell::set_data(const DotlibNode* cell_node)
   mName = cell_node->group_value()->get_string_from_value_list();
 
   // 属性のリストを作る．
-  for (const DotlibAttr* attr = cell_node->attr_top();
-       attr; attr = attr->next()) {
-    ShString attr_name = attr->attr_name();
+  for ( const DotlibAttr* attr = cell_node->attr_top();
+       attr; attr = attr->next() ) {
+    AttrType attr_type = attr->attr_type();
     const DotlibNode* attr_value = attr->attr_value();
-    if ( attr_name == "pin" ) {
+    if ( attr_type == ATTR_PIN ) {
       mPinList.push_back(attr_value);
     }
-    else if ( attr_name == "bus" ) {
+    else if ( attr_type == ATTR_BUS ) {
       mBusList.push_back(attr_value);
     }
-    else if ( attr_name == "bundle" ) {
+    else if ( attr_type == ATTR_BUNDLE ) {
       mBundleList.push_back(attr_value);
     }
     else {
-      add(attr_name, attr_value);
+      add(attr_type, attr_value);
     }
   }
 
   // 面積を得る．
   const DotlibNode* area_node;
-  if ( !get_singleton("area", cell_node->loc(), area_node) ) {
+  if ( !expect_singleton(ATTR_AREA, cell_node->loc(), area_node) ) {
     return false;
   }
-  if ( !area_node->get_float(mArea) ) {
+  if ( !area_node->expect_float(mArea) ) {
     return false;
   }
 
   // ff を取り出す．
-  if ( !get_singleton_or_null("ff", mFF) ) {
+  if ( !expect_singleton_or_null(ATTR_FF, mFF) ) {
     return false;
   }
 
   // latch を取り出す．
-  if ( !get_singleton_or_null("latch", mLatch) ) {
+  if ( !expect_singleton_or_null(ATTR_LATCH, mLatch) ) {
     return false;
   }
 
   // statetable を取り出す．
-  if ( !get_singleton_or_null("statetable", mStateTable) ) {
+  if ( !expect_singleton_or_null(ATTR_STATETABLE, mStateTable) ) {
     return false;
   }
 

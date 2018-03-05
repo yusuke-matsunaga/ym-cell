@@ -59,10 +59,25 @@ END_NONAMESPACE
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CiCellGroup::CiCellGroup() :
+// @param[in] id 番号
+// @param[in] map 変換マップ
+// @param[in] pininfo ピン情報
+// @param[in] cell_list セルのリスト
+// @param[in] alloc メモリアロケータ
+CiCellGroup::CiCellGroup(int id,
+			 const NpnMapM& map,
+			 int pininfo,
+			 const vector<CiCell*>& cell_list,
+			 Alloc& alloc) :
+  mId(id),
   mRepClass(nullptr),
-  mPinInfo(0U)
+  mMap(map),
+  mPinInfo(pininfo),
+  mCellList(cell_list, alloc)
 {
+  for ( auto cell: cell_list ) {
+    cell->set_group(this);
+  }
 }
 
 // @brief デストラクタ
@@ -263,28 +278,6 @@ CiCellGroup::cell_list() const
   return mCellList;
 }
 
-// @brief 初期化する．
-// @param[in] id 番号
-// @param[in] map 変換マップ
-// @param[in] pininfo ピン情報
-// @param[in] cell_list セルのリスト
-// @param[in] alloc メモリアロケータ
-void
-CiCellGroup::init(int id,
-		  const NpnMapM& map,
-		  int pininfo,
-		  const vector<CiCell*>& cell_list,
-		  Alloc& alloc)
-{
-  mId = id;
-  mMap = map;
-  mPinInfo = pininfo;
-  mCellList.init(cell_list, alloc);
-  for ( auto cell: cell_list ) {
-    cell->set_group(this);
-  }
-}
-
 // @brief 親のセルクラスを設定する．
 // @param[in] cell_class 親のクラス
 void
@@ -332,6 +325,7 @@ CiCellGroup::set_latch_info(int pos_array[])
   mPinInfo |= encode(pos_array[2], CLEAR);
   mPinInfo |= encode(pos_array[3], PRESET);
   mPinInfo |= encode(pos_array[4], OUTPUT1);
+  mPinInfo |= encode(pos_array[5], OUTPUT2);
 }
 
 END_NAMESPACE_YM_CLIB

@@ -20,10 +20,26 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CiCellClass::CiCellClass() :
-  mIdmapNum(0),
-  mIdmapList(nullptr)
+// @param[in] id 番号
+// @param[in] idmap_list 同位体変換リスト
+// @param[in] group_list グループのリスト
+// @param[in] alloc メモリアロケータ
+CiCellClass::CiCellClass(int id,
+			 const vector<NpnMapM>& idmap_list,
+			 const vector<CiCellGroup*>& group_list,
+			 Alloc& alloc) :
+  mId(id),
+  mIdmapNum(idmap_list.size()),
+  mIdmapList(alloc.get_array<NpnMapM>(mIdmapNum)),
+  mGroupList(group_list, alloc)
 {
+  for ( int i = 0; i < mIdmapNum; ++ i ) {
+    mIdmapList[i] = idmap_list[i];
+  }
+
+  for ( auto group: group_list ) {
+    group->set_class(this);
+  }
 }
 
 // @brief デストラクタ
@@ -53,7 +69,8 @@ CiCellClass::idmap_num() const
 const NpnMapM&
 CiCellClass::idmap(int pos) const
 {
-  ASSERT_COND( pos < mIdmapNum );
+  ASSERT_COND( pos >= 0 && pos < mIdmapNum );
+
   return mIdmapList[pos];
 }
 
@@ -62,37 +79,6 @@ const ClibCellGroupList&
 CiCellClass::group_list() const
 {
   return mGroupList;
-}
-
-// @brief 初期化する．
-// @param[in] id 番号
-// @param[in] idmap_list 同位体変換リスト
-// @param[in] group_list グループのリスト
-// @param[in] alloc メモリアロケータ
-void
-CiCellClass::init(int id,
-		  const vector<NpnMapM>& idmap_list,
-		  const vector<CiCellGroup*>& group_list,
-		  Alloc& alloc)
-{
-  mId = id;
-
-  mIdmapNum = idmap_list.size();
-  if ( mIdmapNum > 0 ) {
-    void* p = alloc.get_memory(sizeof(NpnMapM) * mIdmapNum);
-    mIdmapList = new (p) NpnMapM[mIdmapNum];
-  }
-  else {
-    mIdmapList = nullptr;
-  }
-  for ( int i = 0; i < mIdmapNum; ++ i ) {
-    mIdmapList[i] = idmap_list[i];
-  }
-
-  mGroupList.init(group_list, alloc);
-  for ( auto group: group_list ) {
-    group->set_class(this);
-  }
 }
 
 END_NAMESPACE_YM_CLIB

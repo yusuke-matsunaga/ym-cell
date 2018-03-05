@@ -54,24 +54,24 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
   mName = lib_node->group_value()->get_string_from_value_list();
 
   // 属性のリストを作る．
-  for (const DotlibAttr* attr = lib_node->attr_top();
-       attr; attr = attr->next()) {
-    ShString attr_name = attr->attr_name();
+  for ( const DotlibAttr* attr = lib_node->attr_top();
+	attr; attr = attr->next() ) {
+    AttrType attr_type = attr->attr_type();
     const DotlibNode* attr_value = attr->attr_value();
-    if ( attr_name == "lu_table_template" ) {
+    if ( attr_type == ATTR_LU_TABLE_TEMPLATE ) {
       mLutTemplateList.push_back(attr_value);
     }
-    else if ( attr_name == "cell" ) {
+    else if ( attr_type == ATTR_CELL ) {
       mClibList.push_back(attr_value);
     }
     else {
-      add(attr_name, attr_value);
+      add(attr_type, attr_value);
     }
   }
 
   // 'technology' を取り出す．
   const DotlibNode* tech_node = nullptr;
-  if ( !get_singleton_or_null("technology", tech_node) ) {
+  if ( !expect_singleton_or_null(ATTR_TECHNOLOGY, tech_node) ) {
     return false;
   }
   if ( tech_node ) {
@@ -94,7 +94,7 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
 
   // 'delay_model' を取り出す．
   const DotlibNode* dm_node = nullptr;
-  if ( !get_singleton_or_null("delay_model", dm_node) ) {
+  if ( !expect_singleton_or_null(ATTR_DELAY_MODEL, dm_node) ) {
     return false;
   }
   ClibDelayModel delay_model = kClibDelayGenericCmos;
@@ -131,44 +131,44 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
   mDelayModel = delay_model;
 
   // 'bus_naming_style' を取り出す．
-  if ( !get_singleton_or_null("bus_naming_style", mBusNamingStyle) ) {
+  if ( !expect_singleton_or_null(ATTR_BUS_NAMING_STYLE, mBusNamingStyle) ) {
     return false;
   }
 
   // 'comment' を取り出す．
-  if ( !get_singleton_or_null("comment", mComment) ) {
+  if ( !expect_singleton_or_null(ATTR_COMMENT, mComment) ) {
     return false;
   }
 
   // 'date' を取り出す．
-  if ( !get_singleton_or_null("date", mDate) ) {
+  if ( !expect_singleton_or_null(ATTR_DATE, mDate) ) {
     return false;
   }
 
   // 'revision' を取り出す．
-  if ( !get_singleton_or_null("revision", mRevision) ) {
+  if ( !expect_singleton_or_null(ATTR_REVISION, mRevision) ) {
     return false;
   }
 
   // 'current_unit' を取り出す．
-  if ( !get_singleton_or_null("current_unit", mCurrentUnit) ) {
+  if ( !expect_singleton_or_null(ATTR_CURRENT_UNIT, mCurrentUnit) ) {
     return false;
   }
 
   // 'leakage_power_unit' を取り出す．
-  if ( !get_singleton_or_null("leakage_power_unit", mLeakagePowerUnit) ) {
+  if ( !expect_singleton_or_null(ATTR_LEAKAGE_POWER_UNIT, mLeakagePowerUnit) ) {
     return false;
   }
 
   // 'pulling_resistance_unit' を取り出す．
-  if ( !get_singleton_or_null("pulling_resistance_unit",
-			      mPullingResistanceUnit) ) {
+  if ( !expect_singleton_or_null(ATTR_PULLING_RESISTANCE_UNIT,
+				 mPullingResistanceUnit) ) {
     return false;
   }
 
   // 'capacitive_load_unit' を取り出す．
   const DotlibNode* clu = nullptr;
-  if ( !get_singleton_or_null("capacitive_load_unit", clu) ) {
+  if ( !expect_singleton_or_null(ATTR_CAPACITIVE_LOAD_UNIT, clu) ) {
     return false;
   }
   if ( clu ) {
@@ -210,12 +210,12 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
   }
 
   // 'time_unit' を取り出す．
-  if ( !get_singleton_or_null("time_unit", mTimeUnit) ) {
+  if ( !expect_singleton_or_null(ATTR_TIME_UNIT, mTimeUnit) ) {
     return false;
   }
 
   // 'voltage_unit' を取り出す．
-  if ( !get_singleton_or_null("voltage_unit", mVoltageUnit) ) {
+  if ( !expect_singleton_or_null(ATTR_VOLTAGE_UNIT, mVoltageUnit) ) {
     return false;
   }
 

@@ -38,12 +38,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 属性値を読み込む．
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @return エラーが起きたら false を返す．
   virtual
   bool
-  read_attr(const ShString& attr_name,
+  read_attr(AttrType attr_type,
 	    const FileRegion& attr_loc);
 
 
@@ -53,13 +53,13 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値のリスト
   /// @param[in] end_loc 右括弧の位置
   virtual
   bool
-  set_value(const ShString& attr_name,
+  set_value(AttrType attr_type,
 	    const FileRegion& attr_loc,
 	    DotlibNodeImpl* value,
 	    const FileRegion& end_loc);
@@ -96,13 +96,13 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値のリスト
   /// @param[in] end_loc 右括弧の位置
   virtual
   bool
-  set_value(const ShString& attr_name,
+  set_value(AttrType attr_type,
 	    const FileRegion& attr_loc,
 	    DotlibNodeImpl* value,
 	    const FileRegion& end_loc);
@@ -134,13 +134,13 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値のリスト
   /// @param[in] end_loc 右括弧の位置
   virtual
   bool
-  set_value(const ShString& attr_name,
+  set_value(AttrType attr_type,
 	    const FileRegion& attr_loc,
 	    DotlibNodeImpl* value,
 	    const FileRegion& end_loc);
@@ -177,13 +177,13 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値のリスト
   /// @param[in] end_loc 右括弧の位置
   virtual
   bool
-  set_value(const ShString& attr_name,
+  set_value(AttrType attr_type,
 	    const FileRegion& attr_loc,
 	    DotlibNodeImpl* value,
 	    const FileRegion& end_loc);
@@ -215,13 +215,13 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値のリスト
   /// @param[in] end_loc 右括弧の位置
   virtual
   bool
-  set_value(const ShString& attr_name,
+  set_value(AttrType attr_type,
 	    const FileRegion& attr_loc,
 	    DotlibNodeImpl* value,
 	    const FileRegion& end_loc);
@@ -253,19 +253,18 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値のリスト
   /// @param[in] end_loc 右括弧の位置
   virtual
   bool
-  set_value(const ShString& attr_name,
+  set_value(AttrType attr_type,
 	    const FileRegion& attr_loc,
 	    DotlibNodeImpl* value,
 	    const FileRegion& end_loc);
 
 };
-
 
 END_NAMESPACE_YM_DOTLIB
 

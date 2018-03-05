@@ -315,7 +315,7 @@ DotlibInt::~DotlibInt()
 }
 
 // @brief 型を得る．
-DotlibNode::tType
+DotlibNode::Type
 DotlibInt::type() const
 {
   return kInt;
@@ -382,7 +382,7 @@ DotlibFloat::~DotlibFloat()
 }
 
 // @brief 型を得る．
-DotlibNode::tType
+DotlibNode::Type
 DotlibFloat::type() const
 {
   return kFloat;
@@ -434,7 +434,7 @@ DotlibString::~DotlibString()
 }
 
 // @brief 型を得る．
-DotlibNode::tType
+DotlibNode::Type
 DotlibString::type() const
 {
   return kString;
@@ -489,7 +489,7 @@ DotlibVector::~DotlibVector()
 }
 
 // @brief 型を得る．
-DotlibNode::tType
+DotlibNode::Type
 DotlibVector::type() const
 {
   return kVector;
@@ -569,7 +569,7 @@ DotlibNot::~DotlibNot()
 }
 
 // @brief 型を得る．
-DotlibNode::tType
+DotlibNode::Type
 DotlibNot::type() const
 {
   return kNot;
@@ -613,7 +613,7 @@ DotlibNot::dump(ostream& s,
 // @brief 表すコンストラクタ
 // @param[in] type 演算子の型
 // @param[in] opr1, opr2 オペランド
-DotlibOpr::DotlibOpr(tType type,
+DotlibOpr::DotlibOpr(Type type,
 		     const DotlibNode* opr1,
 		     const DotlibNode* opr2) :
   mType(type),
@@ -628,7 +628,7 @@ DotlibOpr::~DotlibOpr()
 }
 
 // @brief 型を得る．
-DotlibNode::tType
+DotlibNode::Type
 DotlibOpr::type() const
 {
   return mType;
@@ -707,7 +707,7 @@ DotlibList::~DotlibList()
 }
 
 // @brief 型を得る．
-DotlibNode::tType
+DotlibNode::Type
 DotlibList::type() const
 {
   return kList;
@@ -798,7 +798,7 @@ DotlibGroup::~DotlibGroup()
 }
 
 // @brief 型を得る．
-DotlibNode::tType
+DotlibNode::Type
 DotlibGroup::type() const
 {
   return kGroup;

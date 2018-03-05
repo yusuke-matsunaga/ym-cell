@@ -35,7 +35,19 @@ class CiCellGroup :
 public:
 
   /// @brief コンストラクタ
-  CiCellGroup();
+  /// @param[in] id 番号
+  /// @param[in] map 変換マップ
+  /// @param[in] pininfo ピン情報
+  /// @param[in] cell_list セルのリスト
+  /// @param[in] alloc メモリアロケータ
+  ///
+  /// pininfo は restore() 時のみ指定する．
+  /// それ以外は後で set_ff_info()/set_latch_info() で設定する．
+  CiCellGroup(int id,
+	      const NpnMapM& map,
+	      int pininfo,
+	      const vector<CiCell*>& cell_list,
+	      Alloc& alloc);
 
   /// @brief デストラクタ
   virtual

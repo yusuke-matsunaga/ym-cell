@@ -10,6 +10,7 @@
 
 
 #include "DotlibAttrMap.h"
+#include "ym/ShString.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

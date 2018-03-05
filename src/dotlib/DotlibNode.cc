@@ -36,8 +36,8 @@ DotlibNode::get_string_from_value_list() const
 // @retval false エラーが起こった．
 // @note エラーは MsgMgr に出力する．
 bool
-DotlibNode::get_string_pair(ShString& str1,
-			    ShString& str2) const
+DotlibNode::expect_string_pair(ShString& str1,
+			       ShString& str2) const
 {
   ASSERT_COND ( is_list() );
   if ( list_size() != 2 ) {
@@ -76,7 +76,7 @@ DotlibNode::get_string_pair(ShString& str1,
 // @brief float 値を取り出す．
 // @note 型が違ったらエラーを MsgMgr に出力する．
 bool
-DotlibNode::get_float(double& value) const
+DotlibNode::expect_float(double& value) const
 {
   if ( !is_float() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -93,7 +93,7 @@ DotlibNode::get_float(double& value) const
 // @brief 文字列を取り出す．
 // @note 型が違ったらエラーを MsgMgr に出力する．
 bool
-DotlibNode::get_string(ShString& value) const
+DotlibNode::expect_string(ShString& value) const
 {
   if ( !is_string() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,

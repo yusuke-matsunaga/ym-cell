@@ -54,7 +54,7 @@ public:
 
   /// @brief 引数の種類のトークンでなければエラーメッセージを出力する．
   bool
-  expect(tTokenType type);
+  expect(TokenType type);
 
   /// @brief 行末まで読み込む．
   bool
@@ -64,7 +64,7 @@ public:
   /// @param[out] loc ファイル上の位置情報を格納する変数
   /// @param[in] symbol_mode 数字も文字とみなすモード
   /// @return トークンの型を返す．
-  tTokenType
+  TokenType
   read_token(FileRegion& loc,
 	     bool symbol_mode = false);
 
@@ -81,6 +81,10 @@ public:
   /// @note 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
   double
   cur_float() const;
+
+  /// @brief 直前の read_token() に対応する属性を返す．
+  AttrType
+  cur_attr() const;
 
   /// @brief DotlibMgrImpl* を返す．
   DotlibMgrImpl*
@@ -123,7 +127,7 @@ private:
 // @param[in] symbol_mode 数字も文字とみなすモード
 // @return トークンの型を返す．
 inline
-tTokenType
+TokenType
 DotlibParserImpl::read_token(FileRegion& loc,
 			     bool symbol_mode)
 {

@@ -29,23 +29,6 @@ CiTimingList::~CiTimingList()
 {
 }
 
-// @brief 内容を初期化する．
-// @param[in] timing_list 要素のリスト
-// @param[in] alloc メモリアロケータ
-void
-CiTimingList::init(const vector<CiTiming*>& timing_list,
-		   Alloc& alloc)
-{
-  mNum = timing_list.size();
-  if ( mNum > 0 ) {
-    void* p = alloc.get_memory(sizeof(const ClibTiming*) * mNum);
-    mArray = new (p) const ClibTiming*[mNum];
-    for ( int i = 0; i < mNum; ++ i ) {
-      mArray[i] = timing_list[i];
-    }
-  }
-}
-
 // @brief 要素数を返す．
 int
 CiTimingList::num() const
@@ -75,6 +58,23 @@ CiTimingList::operator[](int pos) const
   ASSERT_COND( pos >= 0 && pos < num() );
 
   return mArray[pos];
+}
+
+// @brief 内容を初期化する．
+// @param[in] timing_list 要素のリスト
+// @param[in] alloc メモリアロケータ
+void
+CiTimingList::init(const vector<CiTiming*>& timing_list,
+		   Alloc& alloc)
+{
+  mNum = timing_list.size();
+  if ( mNum == 0 ) {
+    return;
+  }
+  mArray = alloc.get_array<const ClibTiming*>(mNum);
+  for ( int i = 0; i < mNum; ++ i ) {
+    mArray[i] = timing_list[i];
+  }
 }
 
 END_NAMESPACE_YM_CLIB

@@ -24,6 +24,19 @@ CiCellGroupList::CiCellGroupList()
   mArray = nullptr;
 }
 
+// @brief 内容を指定したコンストラクタ
+// @param[in] group_list 要素のリスト
+// @param[in] alloc メモリアロケータ
+CiCellGroupList::CiCellGroupList(const vector<CiCellGroup*>& group_list,
+				 Alloc& alloc) :
+  mNum(group_list.size()),
+  mArray(alloc.get_array<const ClibCellGroup*>(mNum))
+{
+  for ( int i = 0; i < mNum; ++ i ) {
+    mArray[i] = group_list[i];
+  }
+}
+
 // @brief デストラクタ
 CiCellGroupList::~CiCellGroupList()
 {
@@ -68,11 +81,7 @@ CiCellGroupList::init(const vector<CiCellGroup*>& group_list,
 		      Alloc& alloc)
 {
   mNum = group_list.size();
-  if ( mNum == 0 ) {
-    return;
-  }
-  void* p = alloc.get_memory(sizeof(const ClibCellGroup*) * mNum);
-  mArray = new (p) const ClibCellGroup*[mNum];
+  mArray = alloc.get_array<const ClibCellGroup*>(mNum);
   for ( int i = 0; i < mNum; ++ i ) {
     mArray[i] = group_list[i];
   }

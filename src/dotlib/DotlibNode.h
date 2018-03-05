@@ -10,6 +10,7 @@
 
 
 #include "dotlib_nsdef.h"
+#include "dotlib_int.h"
 #include "ym/FileRegion.h"
 #include "ym/ShString.h"
 
@@ -19,13 +20,32 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 /// @class DotlibNode DotlibNode.h "DotlibNode.h"
 /// @brief パース木の構造を表すための基底クラス
+///
+/// ノードの種類は以下の通り
+/// - 数値型
+///   * 整数型:       kInt    int
+///   * 浮動小数点型: kFloat  double
+/// - ベクタ型:       kVector vector<double>
+/// - 文字列型:       kString ShString
+/// - 演算子型
+///   * +演算:        kPlus   (DotlibNode*, NodelibNode*)
+///   * -演算:        kMinus  (DotlibNode*, NodelibNode*)
+///   * *演算:        kMult   (DotlibNode*, NodelibNode*)
+///   * /演算:        kDiv    (DotlibNode*, NodelibNode*)
+///   * NOT演算:      kNot    DotlibNode*
+///   * AND演算:      kAnd    (DotlibNode*, NodelibNode*)
+///   * OR演算:       kOr     (DotlibNode*, NodelibNode*)
+///   * XOR演算:      kXor    (DotlibNode*, NodelibNode*)
+/// - リスト型:       kList   [DotlibNode* ...]
+/// - グループ型:     kGroup
+/// - 属性型:         kAttr   AttrType
 //////////////////////////////////////////////////////////////////////
 class DotlibNode
 {
 public:
 
   /// @brief 型の定義
-  enum tType {
+  enum Type {
     /// @brief 整数型の定数
     kInt,
     /// @brief 浮動小数点型の定数
@@ -53,7 +73,9 @@ public:
     /// @brief リスト
     kList,
     /// @brief グループ
-    kGroup
+    kGroup,
+    /// @brief 属性
+    kAttr,
   };
 
 protected:
@@ -70,7 +92,7 @@ public:
 
   /// @brief 型を得る．
   virtual
-  tType
+  Type
   type() const = 0;
 
   /// @brief 整数型(kInt)の時に true を返す．
@@ -107,6 +129,11 @@ public:
   virtual
   bool
   is_group() const = 0;
+
+  /// @brief 属性型(kAttr)の時に true を返す．
+  virtual
+  bool
+  is_attr() const = 0;
 
   /// @brief ファイル上の位置を返す．
   virtual
@@ -189,6 +216,13 @@ public:
   const DotlibAttr*
   attr_top() const = 0;
 
+  /// @brief 属性の型を得る．
+  ///
+  /// is_attr() = true の時のみ意味を持つ．
+  virtual
+  AttrType
+  attr_type() const = 0;
+
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
@@ -215,18 +249,18 @@ public:
   /// @retval false エラーが起こった．
   /// @note エラーは MsgMgr に出力する．
   bool
-  get_string_pair(ShString& str1,
-		  ShString& str2) const;
+  expect_string_pair(ShString& str1,
+		     ShString& str2) const;
 
   /// @brief float 値を取り出す．
   /// @note 型が違ったらエラーを MsgMgr に出力する．
   bool
-  get_float(double& value) const;
+  expect_float(double& value) const;
 
   /// @brief 文字列を取り出す．
   /// @note 型が違ったらエラーを MsgMgr に出力する．
   bool
-  get_string(ShString& value) const;
+  expect_string(ShString& value) const;
 
 };
 

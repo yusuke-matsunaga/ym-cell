@@ -46,9 +46,9 @@ HandlerFactory::new_library(DotlibParserImpl& parser)
   DotlibHandler* symstr_simple = new StrSimpleHandler(handler, true);
   DotlibHandler* flt_simple = new FloatSimpleHandler(handler);
 
-  handler->reg_handler("bus_naming_style",                       str_simple);
-  handler->reg_handler("comment",                                str_simple);
-  handler->reg_handler("current_unit",                           symstr_simple);
+  handler->reg_handler(ATTR_BUS_NAMING_STYLE,                       str_simple);
+  handler->reg_handler(ATTR_COMMENT,                                str_simple);
+  handler->reg_handler(ATTR_CURRENT_UNIT,                           symstr_simple);
   handler->reg_handler("date",                                   str_simple);
   handler->reg_handler("delay_model",                            str_simple);
   handler->reg_handler("em_temp_degradation_factor",             flt_simple);

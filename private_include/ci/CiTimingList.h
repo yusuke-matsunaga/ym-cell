@@ -41,13 +41,6 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 内容を初期化する．
-  /// @param[in] timing_list 要素のリスト
-  /// @param[in] alloc メモリアロケータ
-  void
-  init(const vector<CiTiming*>& timing_list,
-       Alloc& alloc);
-
   /// @brief 要素数を返す．
   virtual
   int
@@ -68,6 +61,19 @@ public:
   virtual
   const ClibTiming*
   operator[](int pos) const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // CiTimingList に固有の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を初期化する．
+  /// @param[in] timing_list 要素のリスト
+  /// @param[in] alloc メモリアロケータ
+  void
+  init(const vector<CiTiming*>& timing_list,
+       Alloc& alloc);
 
 
 private:

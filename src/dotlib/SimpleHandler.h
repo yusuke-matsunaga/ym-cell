@@ -46,7 +46,7 @@ public:
   /// @return エラーが起きたら false を返す．
   virtual
   bool
-  read_attr(const ShString& attr_name,
+  read_attr(AttrType attr_type,
 	    const FileRegion& attr_loc);
 
 
@@ -69,7 +69,7 @@ protected:
   /// @param[in] value 値
   virtual
   bool
-  set_value(const ShString& attr_name,
+  set_value(const char* attr_name,
 	    const FileRegion& attr_loc,
 	    DotlibNodeImpl* value);
 

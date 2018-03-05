@@ -151,15 +151,45 @@ public:
 
   /// @brief ルックアップテーブルのテンプレートの取得
   /// @param[in] name テンプレート名
-  /// @note なければ nullptr を返す．
+  ///
+  /// なければ nullptr を返す．
   const ClibLutTemplate*
   lu_table_template(const char* name) const;
 
+  /// @brief ルックアップテーブルのテンプレートの取得
+  /// @param[in] name テンプレート名
+  ///
+  /// なければ nullptr を返す．
+  const ClibLutTemplate*
+  lu_table_template(const string& name) const;
+
+  /// @brief ルックアップテーブルのテンプレートの取得
+  /// @param[in] name テンプレート名
+  ///
+  /// なければ nullptr を返す．
+  const ClibLutTemplate*
+  lu_table_template(const ShString& name) const;
+
   /// @brief バスタイプの取得
   /// @param[in] name バスタイプ名
-  /// @note なければ nullptr を返す．
+  ///
+  /// なければ nullptr を返す．
   const ClibBusType*
   bus_type(const char* name) const;
+
+  /// @brief バスタイプの取得
+  /// @param[in] name バスタイプ名
+  ///
+  /// なければ nullptr を返す．
+  const ClibBusType*
+  bus_type(const string& name) const;
+
+  /// @brief バスタイプの取得
+  /// @param[in] name バスタイプ名
+  ///
+  /// なければ nullptr を返す．
+  const ClibBusType*
+  bus_type(const ShString& name) const;
 
 
 public:
@@ -178,6 +208,10 @@ public:
   /// @brief 名前からのセルの取得
   const ClibCell*
   cell(const string& name) const;
+
+  /// @brief 名前からのセルの取得
+  const ClibCell*
+  cell(const ShString& name) const;
 
   /// @brief セルグループのリストを返す．
   const ClibCellGroupList&
@@ -367,7 +401,7 @@ public:
   /// @param[in] var_type1 変数型
   /// @param[in] index_list1 インデックス値のリスト
   CiLutTemplate*
-  new_lut_template1(const string& name,
+  new_lut_template1(const ShString& name,
 		    ClibVarType var_type1,
 		    const vector<double>& index_list1);
 
@@ -378,7 +412,7 @@ public:
   /// @param[in] var_type2 変数型
   /// @param[in] index_list2 インデックス値のリスト
   CiLutTemplate*
-  new_lut_template2(const string& name,
+  new_lut_template2(const ShString& name,
 		    ClibVarType var_type1,
 		    const vector<double>& index_list1,
 		    ClibVarType var_type2,
@@ -393,7 +427,7 @@ public:
   /// @param[in] var_type3 変数型
   /// @param[in] index_list3 インデックス値のリスト
   CiLutTemplate*
-  new_lut_template3(const string& name,
+  new_lut_template3(const ShString& name,
 		    ClibVarType var_type1,
 		    const vector<double>& index_list1,
 		    ClibVarType var_type2,
@@ -420,7 +454,7 @@ public:
   /// @param[in] bundle_list バンドルのリスト
   /// @param[in] timing_list タイミング情報のリスト
   CiCell*
-  new_logic_cell(const string& name,
+  new_logic_cell(const ShString& name,
 		 ClibArea area,
 		 const vector<CiInputPin*>& input_list,
 		 const vector<CiOutputPin*>& output_list,
@@ -446,7 +480,7 @@ public:
   /// @param[in] clear_preset_var1 clear と preset が同時にオンになったときの値1
   /// @param[in] clear_preset_var2 clear と preset が同時にオンになったときの値2
   CiCell*
-  new_ff_cell(const string& name,
+  new_ff_cell(const ShString& name,
 	      ClibArea area,
 	      const vector<CiInputPin*>& input_list,
 	      const vector<CiOutputPin*>& output_list,
@@ -479,7 +513,7 @@ public:
   /// @param[in] clear_preset_var1 clear と preset が同時にオンになったときの値1
   /// @param[in] clear_preset_var2 clear と preset が同時にオンになったときの値2
   CiCell*
-  new_latch_cell(const string& name,
+  new_latch_cell(const ShString& name,
 		 ClibArea area,
 		 const vector<CiInputPin*>& input_list,
 		 const vector<CiOutputPin*>& output_list,
@@ -506,7 +540,7 @@ public:
   /// @param[in] bundle_list バンドルのリスト
   /// @param[in] timing_list タイミング情報のリスト
   CiCell*
-  new_fsm_cell(const string& name,
+  new_fsm_cell(const ShString& name,
 	       ClibArea area,
 	       const vector<CiInputPin*>& input_list,
 	       const vector<CiOutputPin*>& output_list,
@@ -522,7 +556,7 @@ public:
   /// @param[in] rise_capacitance 入力ピンの立ち上がり負荷容量
   /// @param[in] fall_capacitance 入力ピンの立ち下がり負荷容量
   CiInputPin*
-  new_cell_input(const string& name,
+  new_cell_input(const ShString& name,
 		 ClibCapacitance capacitance,
 		 ClibCapacitance rise_capacitance,
 		 ClibCapacitance fall_capacitance);
@@ -539,7 +573,7 @@ public:
   /// @param[in] max_transition 最大遷移時間
   /// @param[in] min_transition 最小遷移時間
   CiOutputPin*
-  new_cell_output(const string& name,
+  new_cell_output(const ShString& name,
 		  bool has_logic,
 		  const Expr& logic_expr,
 		  const Expr& tristate_expr,
@@ -565,7 +599,7 @@ public:
   /// @param[in] max_transition 最大遷移時間
   /// @param[in] min_transition 最小遷移時間
   CiInoutPin*
-  new_cell_inout(const string& name,
+  new_cell_inout(const ShString& name,
 		 bool has_logic,
 		 const Expr& logic_expr,
 		 const Expr& tristate_expr,
@@ -582,7 +616,7 @@ public:
   /// @brief セルの内部ピンを生成する．
   /// @param[in] name 内部ピン名
   CiInternalPin*
-  new_cell_internal(const string& name);
+  new_cell_internal(const ShString& name);
 
   /// @brief タイミング情報を作る(ジェネリック遅延モデル)．
   /// @param[in] type タイミングの型

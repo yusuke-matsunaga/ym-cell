@@ -43,7 +43,7 @@ FhScanner::init(const char* str,
 
 // @brief トークンを読み込む．
 // @param[out] loc 対応するファイル上の位置情報を格納する変数
-tTokenType
+TokenType
 FhScanner::read_token(FileRegion& loc)
 {
   int c;

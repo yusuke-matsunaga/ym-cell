@@ -67,12 +67,14 @@ DotlibParserImpl::read_file(const string& filename,
   mScanner = new DotlibScanner(ido);
 
   bool error = false;
-  tTokenType type;
+  TokenType type;
   FileRegion loc;
   // 空行を読み飛ばす．
-  for (type = read_token(loc); type == NL; type = read_token(loc)) { }
-  ShString name(cur_string());
-  if ( type != SYMBOL || name != "library" ) {
+  for ( type = read_token(loc); type == NL; type = read_token(loc) ) { }
+
+  // 先頭のトークンが "library" であるかチェックする．
+  AttrType attr_type = cur_attr();
+  if ( type != ATTR || attr_type != ATTR_LIBRARY ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
 		    kMsgError,
@@ -83,7 +85,7 @@ DotlibParserImpl::read_file(const string& filename,
     goto last;
   }
 
-  if ( !mLibraryHandler->read_attr(name, loc) ) {
+  if ( !mLibraryHandler->read_attr(attr_type, loc) ) {
     error = true;
     goto last;
   }
@@ -93,7 +95,7 @@ DotlibParserImpl::read_file(const string& filename,
     goto last;
   }
   for ( ; ; ) {
-    tTokenType type = read_token(loc);
+    TokenType type = read_token(loc);
     if ( type == END ) {
       break;
     }
@@ -117,10 +119,10 @@ DotlibParserImpl::read_file(const string& filename,
 
 // @brief 引数の種類のトークンでなければエラーメッセージを出力する．
 bool
-DotlibParserImpl::expect(tTokenType req_type)
+DotlibParserImpl::expect(TokenType req_type)
 {
   FileRegion loc;
-  tTokenType type = read_token(loc);
+  TokenType type = read_token(loc);
   if ( type == req_type ) {
     return true;
   }
@@ -148,8 +150,7 @@ DotlibParserImpl::expect(tTokenType req_type)
   case FLOAT_NUM:  type_str = "FLOAT"; break;
   case EXPRESSION: type_str = "EXPRESSION"; break;
   case NL:         type_str = "new-line"; break;
-  case ERROR:      ASSERT_NOT_REACHED;
-  case END:        ASSERT_NOT_REACHED;
+  default:         ASSERT_NOT_REACHED;
   }
   ostringstream buf;
   buf << "syntax error. " << type_str << " is expected.";
@@ -167,7 +168,7 @@ DotlibParserImpl::expect_nl()
 {
   if ( mAllowNoSemi ) {
     FileRegion loc;
-    tTokenType type = read_token(loc);
+    TokenType type = read_token(loc);
     if ( type == SEMI ) {
       type = read_token(loc);
     }

@@ -31,6 +31,12 @@ public:
   /// 内容は不定
   CiCellGroupList();
 
+  /// @brief 内容を指定したコンストラクタ
+  /// @param[in] group_list 要素のリスト
+  /// @param[in] alloc メモリアロケータ
+  CiCellGroupList(const vector<CiCellGroup*>& group_list,
+		  Alloc& alloc);
+
   /// @brief デストラクタ
   virtual
   ~CiCellGroupList();

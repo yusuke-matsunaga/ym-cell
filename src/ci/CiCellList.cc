@@ -17,11 +17,26 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiCellList
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-CiCellList::CiCellList()
+// @brief 空のコンストラクタ
+//
+// 内容は不定
+CiCellList::CiCellList() :
+  mNum(0),
+  mArray(nullptr)
 {
-  mNum = 0;
-  mArray = nullptr;
+}
+
+// @brief コンストラクタ
+// @param[in] src_list セルのリスト
+// @param[in] alloc メモリアロケータ
+CiCellList::CiCellList(const vector<CiCell*>& cell_list,
+		       Alloc& alloc) :
+  mNum(cell_list.size()),
+  mArray(alloc.get_array<const ClibCell*>(mNum))
+{
+  for ( int i = 0; i < mNum; ++ i ) {
+    mArray[i] = cell_list[i];
+  }
 }
 
 // @brief デストラクタ
@@ -68,14 +83,9 @@ CiCellList::init(const vector<CiCell*>& cell_list,
 		 Alloc& alloc)
 {
   mNum = cell_list.size();
-  if ( mNum == 0 ) {
-    return;
-  }
-  void* p = alloc.get_memory(sizeof(const ClibCell*) * mNum);
-  mArray = new (p) const ClibCell*[mNum];
+  mArray = alloc.get_array<const ClibCell*>(mNum);
   for ( int i = 0; i < mNum; ++ i ) {
-    CiCell* cell = cell_list[i];
-    mArray[i] = cell;
+    mArray[i] = cell_list[i];
   }
 }
 
