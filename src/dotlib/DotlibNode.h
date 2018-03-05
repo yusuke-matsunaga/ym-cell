@@ -10,7 +10,7 @@
 
 
 #include "dotlib_nsdef.h"
-#include "dotlib_int.h"
+#include "AttrType.h"
 #include "ym/FileRegion.h"
 #include "ym/ShString.h"
 

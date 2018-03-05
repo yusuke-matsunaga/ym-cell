@@ -10,6 +10,7 @@
 
 
 #include "dotlib_int.h"
+#include "AttrType.h"
 #include "ym/ShString.h"
 #include "ym/FileRegion.h"
 #include "ym/SimpleAlloc.h"

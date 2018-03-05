@@ -41,7 +41,7 @@ DotlibFF::set_data(const DotlibNode* ff_node)
   mClockedOnAlso = nullptr;
 
   // next_state を取り出す．
-  if ( !expect_singleton(ATTR_NEXTSTATE, ff_node->loc(), mNextState) ) {
+  if ( !expect_singleton(ATTR_NEXT_STATE, ff_node->loc(), mNextState) ) {
     return false;
   }
 

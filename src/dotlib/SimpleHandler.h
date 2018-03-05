@@ -64,12 +64,12 @@ protected:
   read_value();
 
   /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_name 属性名
+  /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
   /// @param[in] value 値
   virtual
   bool
-  set_value(const char* attr_name,
+  set_value(AttrType attr_type,
 	    const FileRegion& attr_loc,
 	    DotlibNodeImpl* value);
 

@@ -72,9 +72,19 @@ DotlibParserImpl::read_file(const string& filename,
   // 空行を読み飛ばす．
   for ( type = read_token(loc); type == NL; type = read_token(loc) ) { }
 
-  // 先頭のトークンが "library" であるかチェックする．
+  // 先頭のトークンが属性名であるかチェックする．
   AttrType attr_type = cur_attr();
-  if ( type != ATTR || attr_type != ATTR_LIBRARY ) {
+  if ( attr_type == ATTR_NONE ) {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    loc,
+		    kMsgError,
+		    "DOTLIB_PARSER",
+		    "attribute keyword is expected.");
+    error = true;
+    goto last;
+  }
+  // 先頭のトークンが "library" であるかチェックする．
+  if ( attr_type != ATTR_LIBRARY ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
 		    kMsgError,
@@ -191,6 +201,14 @@ DotlibParserImpl::expect_nl()
     }
   }
   return true;
+}
+
+// @brief 直前の read_token() に対応する属性値を返す．
+//
+// 対応する属性がない場合には ATTR_NONE が返される．
+AttrType
+DotlibParserImpl::cur_attr() const
+{
 }
 
 // @brief デバッグモードの時 true を返す．

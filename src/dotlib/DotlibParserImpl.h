@@ -10,6 +10,7 @@
 
 
 #include "dotlib_int.h"
+#include "AttrType.h"
 #include "DotlibScanner.h"
 #include "ym/FileRegion.h"
 
@@ -73,16 +74,20 @@ public:
   cur_string() const;
 
   /// @brief 直前の read_token() に対応する整数値を返す．
-  /// @note 型が INT_NUM でなかったときの値は不定
+  ///
+  /// 型が INT_NUM でなかったときの値は不定
   int
   cur_int() const;
 
   /// @brief 直前の read_token() に対応する実数値を返す．
-  /// @note 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
+  ///
+  /// 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
   double
   cur_float() const;
 
-  /// @brief 直前の read_token() に対応する属性を返す．
+  /// @brief 直前の read_token() に対応する属性値を返す．
+  ///
+  /// 対応する属性がない場合には ATTR_NONE が返される．
   AttrType
   cur_attr() const;
 

@@ -49,254 +49,254 @@ HandlerFactory::new_library(DotlibParserImpl& parser)
   handler->reg_handler(ATTR_BUS_NAMING_STYLE,                       str_simple);
   handler->reg_handler(ATTR_COMMENT,                                str_simple);
   handler->reg_handler(ATTR_CURRENT_UNIT,                           symstr_simple);
-  handler->reg_handler("date",                                   str_simple);
-  handler->reg_handler("delay_model",                            str_simple);
-  handler->reg_handler("em_temp_degradation_factor",             flt_simple);
-  handler->reg_handler("fpga_technology",                        str_simple);
-  handler->reg_handler("in_place_swap_mode",                     str_simple);
-  handler->reg_handler("input_threshold_pct_fall",               simple);
-  handler->reg_handler("input_threshold_pct_rise",               simple);
-  handler->reg_handler("leakage_power_unit",                     symstr_simple);
-  handler->reg_handler("nom_calc_mode",                          str_simple);
-  handler->reg_handler("nom_process",                            flt_simple);
-  handler->reg_handler("nom_temperature",                        flt_simple);
-  handler->reg_handler("nom_voltage",                            flt_simple);
-  handler->reg_handler("output_threshold_pct_fall",              simple);
-  handler->reg_handler("output_threshold_pct_rise",              simple);
-  handler->reg_handler("piece_type",                             str_simple);
-  handler->reg_handler("power_model",                            str_simple);
-  handler->reg_handler("preferred_output_pad_slew_rate_control", str_simple);
-  handler->reg_handler("preferred_input_pad_voltage",            str_simple);
-  handler->reg_handler("preferred_output_pad_voltage",           str_simple);
-  handler->reg_handler("pulling_resistance_unit",                symstr_simple);
-  handler->reg_handler("revision",                               symstr_simple);
-  handler->reg_handler("simulation",                             str_simple);
-  handler->reg_handler("slew_derate_from_library",               simple);
-  handler->reg_handler("slew_lower_threshold_pct_fall",          simple);
-  handler->reg_handler("slew_lower_threshold_pct_rise",          simple);
-  handler->reg_handler("slew_upper_threshold_pct_fall",          simple);
-  handler->reg_handler("slew_upper_threshold_pct_rise",          simple);
-  handler->reg_handler("time_unit",                              symstr_simple);
-  handler->reg_handler("voltage_unit",                           symstr_simple);
+  handler->reg_handler(ATTR_DATE,                                   str_simple);
+  handler->reg_handler(ATTR_DELAY_MODEL,                            str_simple);
+  handler->reg_handler(ATTR_EM_TEMP_DEGRADATION_FACTOR,             flt_simple);
+  handler->reg_handler(ATTR_FPGA_TECHNOLOGY,                        str_simple);
+  handler->reg_handler(ATTR_IN_PLACE_SWAP_MODE,                     str_simple);
+  handler->reg_handler(ATTR_INPUT_THRESHOLD_PCT_FALL,               simple);
+  handler->reg_handler(ATTR_INPUT_THRESHOLD_PCT_RISE,               simple);
+  handler->reg_handler(ATTR_LEAKAGE_POWER_UNIT,                     symstr_simple);
+  handler->reg_handler(ATTR_NOM_CALC_MODE,                          str_simple);
+  handler->reg_handler(ATTR_NOM_PROCESS,                            flt_simple);
+  handler->reg_handler(ATTR_NOM_TEMPERATURE,                        flt_simple);
+  handler->reg_handler(ATTR_NOM_VOLTAGE,                            flt_simple);
+  handler->reg_handler(ATTR_OUTPUT_THRESHOLD_PCT_FALL,              simple);
+  handler->reg_handler(ATTR_OUTPUT_THRESHOLD_PCT_RISE,              simple);
+  handler->reg_handler(ATTR_PIECE_TYPE,                             str_simple);
+  handler->reg_handler(ATTR_POWER_MODEL,                            str_simple);
+  handler->reg_handler(ATTR_PREFERRED_INPUT_PAD_VOLTAGE,            str_simple);
+  handler->reg_handler(ATTR_PREFERRED_OUTPUT_PAD_VOLTAGE,           str_simple);
+  handler->reg_handler(ATTR_PREFERRED_OUTPUT_PAD_SLEW_RATE_CONTROL, str_simple);
+  handler->reg_handler(ATTR_PULLING_RESISTANCE_UNIT,                symstr_simple);
+  handler->reg_handler(ATTR_REVISION,                               symstr_simple);
+  handler->reg_handler(ATTR_SIMULATION,                             str_simple);
+  handler->reg_handler(ATTR_SLEW_DERATE_FROM_LIBRARY,               simple);
+  handler->reg_handler(ATTR_SLEW_LOWER_THRESHOLD_PCT_FALL,          simple);
+  handler->reg_handler(ATTR_SLEW_LOWER_THRESHOLD_PCT_RISE,          simple);
+  handler->reg_handler(ATTR_SLEW_UPPER_THRESHOLD_PCT_FALL,          simple);
+  handler->reg_handler(ATTR_SLEW_UPPER_THRESHOLD_PCT_RISE,          simple);
+  handler->reg_handler(ATTR_TIME_UNIT,                              symstr_simple);
+  handler->reg_handler(ATTR_VOLTAGE_UNIT,                           symstr_simple);
 
   // default attributes
-  handler->reg_handler("default_cell_leakage_power",             flt_simple);
-  handler->reg_handler("default_connection_class",               str_simple);
-  handler->reg_handler("default_fall_delay_intercept",           flt_simple);
-  handler->reg_handler("default_fall_pin_resistance",            flt_simple);
-  handler->reg_handler("default_fanout_load",                    flt_simple);
-  handler->reg_handler("default_inout_pin_cap",                  flt_simple);
-  handler->reg_handler("default_inout_pin_fall_res",             flt_simple);
-  handler->reg_handler("default_inout_pin_rise_res",             flt_simple);
-  handler->reg_handler("default_input_pin_cap",                  flt_simple);
-  handler->reg_handler("default_intrinsic_fall",                 flt_simple);
-  handler->reg_handler("default_intrinsic_rise",                 flt_simple);
-  handler->reg_handler("default_leakage_power_density",          flt_simple);
-  handler->reg_handler("default_max_capacitance",                flt_simple);
-  handler->reg_handler("default_max_fanout",                     flt_simple);
-  handler->reg_handler("default_max_transition",                 flt_simple);
-  handler->reg_handler("default_max_utilization",                flt_simple);
-  handler->reg_handler("default_min_porosity",                   flt_simple);
-  handler->reg_handler("default_operating_conditions",           str_simple);
-  handler->reg_handler("default_output_pin_cap",                 flt_simple);
-  handler->reg_handler("default_output_pin_fall_res",            flt_simple);
-  handler->reg_handler("default_output_pin_rise_res",            flt_simple);
-  handler->reg_handler("default_rise_delay_intercept",           flt_simple);
-  handler->reg_handler("default_rise_pin_resistance",            flt_simple);
-  handler->reg_handler("default_slope_fall",                     flt_simple);
-  handler->reg_handler("default_slope_rise",                     flt_simple);
-  handler->reg_handler("default_wire_load",                      str_simple);
-  handler->reg_handler("default_wire_load_area",                 flt_simple);
-  handler->reg_handler("default_wire_load_capacitance",          flt_simple);
-  handler->reg_handler("default_wire_load_mode",                 str_simple);
-  handler->reg_handler("default_wire_load_resistance",           flt_simple);
-  handler->reg_handler("default_wire_load_selection",            str_simple);
+  handler->reg_handler(ATTR_DEFAULT_CELL_LEAKAGE_POWER,             flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_CONNECTION_CLASS,               str_simple);
+  handler->reg_handler(ATTR_DEFAULT_FALL_DELAY_INTERCEPT,           flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_FALL_PIN_RESISTANCE,            flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_FANOUT_LOAD,                    flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_INOUT_PIN_CAP,                  flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_INOUT_PIN_FALL_RES,             flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_INOUT_PIN_RISE_RES,             flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_INPUT_PIN_CAP,                  flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_INTRINSIC_FALL,                 flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_INTRINSIC_RISE,                 flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_LEAKAGE_POWER_DENSITY,          flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_MAX_CAPACITANCE,                flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_MAX_FANOUT,                     flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_MAX_TRANSITION,                 flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_MAX_UTILIZATION,                flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_MIN_POROSITY,                   flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_OPERATING_CONDITIONS,           str_simple);
+  handler->reg_handler(ATTR_DEFAULT_OUTPUT_PIN_CAP,                 flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_OUTPUT_PIN_FALL_RES,            flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_OUTPUT_PIN_RISE_RES,            flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_RISE_DELAY_INTERCEPT,           flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_RISE_PIN_RESISTANCE,            flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_SLOPE_FALL,                     flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_SLOPE_RISE,                     flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_WIRE_LOAD,                      str_simple);
+  handler->reg_handler(ATTR_DEFAULT_WIRE_LOAD_AREA,                 flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_WIRE_LOAD_CAPACITANCE,          flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_WIRE_LOAD_MODE,                 str_simple);
+  handler->reg_handler(ATTR_DEFAULT_WIRE_LOAD_RESISTANCE,           flt_simple);
+  handler->reg_handler(ATTR_DEFAULT_WIRE_LOAD_SELECTION,            str_simple);
 
   // scaling attributes
-  handler->reg_handler("k_process_cell_fall",                    flt_simple);
-  handler->reg_handler("k_process_cell_leakage_power",           flt_simple);
-  handler->reg_handler("k_process_cell_rise",                    flt_simple);
-  handler->reg_handler("k_process_drive_current",                flt_simple);
-  handler->reg_handler("k_process_drive_fall",                   flt_simple);
-  handler->reg_handler("k_process_drive_rise",                   flt_simple);
-  handler->reg_handler("k_process_fall_delay_intercept",         flt_simple);
-  handler->reg_handler("k_process_fall_pin_resistance",          flt_simple);
-  handler->reg_handler("k_process_fall_propagation",             flt_simple);
-  handler->reg_handler("k_process_fall_transition",              flt_simple);
-  handler->reg_handler("k_process_hold_fall",                    flt_simple);
-  handler->reg_handler("k_process_hold_rise",                    flt_simple);
-  handler->reg_handler("k_process_internal_power",               flt_simple);
-  handler->reg_handler("k_process_intrinsic_fall",               flt_simple);
-  handler->reg_handler("k_process_intrinsic_rise",               flt_simple);
-  handler->reg_handler("k_process_min_period",                   flt_simple);
-  handler->reg_handler("k_process_min_pulse_width_high",         flt_simple);
-  handler->reg_handler("k_process_min_pulse_width_low",          flt_simple);
-  handler->reg_handler("k_process_nochange_fall",                flt_simple);
-  handler->reg_handler("k_process_nochange_rise",                flt_simple);
-  handler->reg_handler("k_process_pin_cap",                      flt_simple);
-  handler->reg_handler("k_process_recovery_fall",                flt_simple);
-  handler->reg_handler("k_process_recovery_rise",                flt_simple);
-  handler->reg_handler("k_process_removal_fall",                 flt_simple);
-  handler->reg_handler("k_process_removal_rise",                 flt_simple);
-  handler->reg_handler("k_process_rise_delay_intercept",         flt_simple);
-  handler->reg_handler("k_process_rise_pin_resistance",          flt_simple);
-  handler->reg_handler("k_process_rise_propagation",             flt_simple);
-  handler->reg_handler("k_process_rise_transition",              flt_simple);
-  handler->reg_handler("k_process_setup_fall",                   flt_simple);
-  handler->reg_handler("k_process_setup_rise",                   flt_simple);
-  handler->reg_handler("k_process_skew_fall",                    flt_simple);
-  handler->reg_handler("k_process_skew_rise",                    flt_simple);
-  handler->reg_handler("k_process_slope_fall",                   flt_simple);
-  handler->reg_handler("k_process_slope_rise",                   flt_simple);
-  handler->reg_handler("k_process_wire_cap",                     flt_simple);
-  handler->reg_handler("k_process_wire_res",                     flt_simple);
-  handler->reg_handler("k_temp_cell_fall",                       flt_simple);
-  handler->reg_handler("k_temp_cell_leakage_power",              flt_simple);
-  handler->reg_handler("k_temp_cell_rise",                       flt_simple);
-  handler->reg_handler("k_temp_drive_current",                   flt_simple);
-  handler->reg_handler("k_temp_drive_fall",                      flt_simple);
-  handler->reg_handler("k_temp_drive_rise",                      flt_simple);
-  handler->reg_handler("k_temp_fall_delay_intercept",            flt_simple);
-  handler->reg_handler("k_temp_fall_pin_resistance",             flt_simple);
-  handler->reg_handler("k_temp_fall_propagation",                flt_simple);
-  handler->reg_handler("k_temp_fall_transition",                 flt_simple);
-  handler->reg_handler("k_temp_hold_fall",                       flt_simple);
-  handler->reg_handler("k_temp_hold_rise",                       flt_simple);
-  handler->reg_handler("k_temp_internal_power",                  flt_simple);
-  handler->reg_handler("k_temp_intrinsic_fall",                  flt_simple);
-  handler->reg_handler("k_temp_intrinsic_rise",                  flt_simple);
-  handler->reg_handler("k_temp_min_period",                      flt_simple);
-  handler->reg_handler("k_temp_min_pulse_width_high",            flt_simple);
-  handler->reg_handler("k_temp_min_pulse_width_low",             flt_simple);
-  handler->reg_handler("k_temp_nochange_fall",                   flt_simple);
-  handler->reg_handler("k_temp_nochange_rise",                   flt_simple);
-  handler->reg_handler("k_temp_pin_cap",                         flt_simple);
-  handler->reg_handler("k_temp_recovery_fall",                   flt_simple);
-  handler->reg_handler("k_temp_recovery_rise",                   flt_simple);
-  handler->reg_handler("k_temp_removal_fall",                    flt_simple);
-  handler->reg_handler("k_temp_removal_rise",                    flt_simple);
-  handler->reg_handler("k_temp_rise_delay_intercept",            flt_simple);
-  handler->reg_handler("k_temp_rise_pin_resistance",             flt_simple);
-  handler->reg_handler("k_temp_rise_propagation",                flt_simple);
-  handler->reg_handler("k_temp_rise_transition",                 flt_simple);
-  handler->reg_handler("k_temp_setup_fall",                      flt_simple);
-  handler->reg_handler("k_temp_setup_rise",                      flt_simple);
-  handler->reg_handler("k_temp_skew_fall",                       flt_simple);
-  handler->reg_handler("k_temp_skew_rise",                       flt_simple);
-  handler->reg_handler("k_temp_slope_fall",                      flt_simple);
-  handler->reg_handler("k_temp_slope_rise",                      flt_simple);
-  handler->reg_handler("k_temp_wire_cap",                        flt_simple);
-  handler->reg_handler("k_temp_wire_res",                        flt_simple);
-  handler->reg_handler("k_volt_cell_fall",                       flt_simple);
-  handler->reg_handler("k_volt_cell_leakage_power",              flt_simple);
-  handler->reg_handler("k_volt_cell_rise",                       flt_simple);
-  handler->reg_handler("k_volt_drive_current",                   flt_simple);
-  handler->reg_handler("k_volt_drive_fall",                      flt_simple);
-  handler->reg_handler("k_volt_drive_rise",                      flt_simple);
-  handler->reg_handler("k_volt_fall_delay_intercept",            flt_simple);
-  handler->reg_handler("k_volt_fall_pin_resistance",             flt_simple);
-  handler->reg_handler("k_volt_fall_propagation",                flt_simple);
-  handler->reg_handler("k_volt_fall_transition",                 flt_simple);
-  handler->reg_handler("k_volt_hold_fall",                       flt_simple);
-  handler->reg_handler("k_volt_hold_rise",                       flt_simple);
-  handler->reg_handler("k_volt_internal_power",                  flt_simple);
-  handler->reg_handler("k_volt_intrinsic_fall",                  flt_simple);
-  handler->reg_handler("k_volt_intrinsic_rise",                  flt_simple);
-  handler->reg_handler("k_volt_min_period",                      flt_simple);
-  handler->reg_handler("k_volt_min_pulse_width_high",            flt_simple);
-  handler->reg_handler("k_volt_min_pulse_width_low",             flt_simple);
-  handler->reg_handler("k_volt_nochange_fall",                   flt_simple);
-  handler->reg_handler("k_volt_nochange_rise",                   flt_simple);
-  handler->reg_handler("k_volt_pin_cap",                         flt_simple);
-  handler->reg_handler("k_volt_recovery_fall",                   flt_simple);
-  handler->reg_handler("k_volt_recovery_rise",                   flt_simple);
-  handler->reg_handler("k_volt_removal_fall",                    flt_simple);
-  handler->reg_handler("k_volt_removal_rise",                    flt_simple);
-  handler->reg_handler("k_volt_rise_delay_intercept",            flt_simple);
-  handler->reg_handler("k_volt_rise_pin_resistance",             flt_simple);
-  handler->reg_handler("k_volt_rise_propagation",                flt_simple);
-  handler->reg_handler("k_volt_rise_transition",                 flt_simple);
-  handler->reg_handler("k_volt_setup_fall",                      flt_simple);
-  handler->reg_handler("k_volt_setup_rise",                      flt_simple);
-  handler->reg_handler("k_volt_skew_fall",                       flt_simple);
-  handler->reg_handler("k_volt_skew_rise",                       flt_simple);
-  handler->reg_handler("k_volt_slope_fall",                      flt_simple);
-  handler->reg_handler("k_volt_slope_rise",                      flt_simple);
-  handler->reg_handler("k_volt_wire_cap",                        flt_simple);
-  handler->reg_handler("k_volt_wire_res",                        flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_CELL_FALL,                    flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_CELL_LEAKAGE_POWER,           flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_CELL_RISE,                    flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_DRIVE_CURRENT,                flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_DRIVE_FALL,                   flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_DRIVE_RISE,                   flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_FALL_DELAY_INTERCEPT,         flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_FALL_PIN_RESISTANCE,          flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_FALL_PROPAGATION,             flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_FALL_TRANSITION,              flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_HOLD_FALL,                    flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_HOLD_RISE,                    flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_INTERNAL_POWER,               flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_INTRINSIC_FALL,               flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_INTRINSIC_RISE,               flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_MIN_PERIOD,                   flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_MIN_PULSE_WIDTH_HIGH,         flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_MIN_PULSE_WIDTH_LOW,          flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_NOCHANGE_FALL,                flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_NOCHANGE_RISE,                flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_PIN_CAP,                      flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_RECOVERY_FALL,                flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_RECOVERY_RISE,                flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_REMOVAL_FALL,                 flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_REMOVAL_RISE,                 flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_RISE_DELAY_INTERCEPT,         flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_RISE_PIN_RESISTANCE,          flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_RISE_PROPAGATION,             flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_RISE_TRANSITION,              flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_SETUP_FALL,                   flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_SETUP_RISE,                   flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_SKEW_FALL,                    flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_SKEW_RISE,                    flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_SLOPE_FALL,                   flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_SLOPE_RISE,                   flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_WIRE_CAP,                     flt_simple);
+  handler->reg_handler(ATTR_K_PROCESS_WIRE_RES,                     flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_CELL_FALL,                       flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_CELL_LEAKAGE_POWER,              flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_CELL_RISE,                       flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_DRIVE_CURRENT,                   flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_DRIVE_FALL,                      flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_DRIVE_RISE,                      flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_FALL_DELAY_INTERCEPT,            flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_FALL_PIN_RESISTANCE,             flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_FALL_PROPAGATION,                flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_FALL_TRANSITION,                 flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_HOLD_FALL,                       flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_HOLD_RISE,                       flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_INTERNAL_POWER,                  flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_INTRINSIC_FALL,                  flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_INTRINSIC_RISE,                  flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_MIN_PERIOD,                      flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_MIN_PULSE_WIDTH_HIGH,            flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_MIN_PULSE_WIDTH_LOW,             flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_NOCHANGE_FALL,                   flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_NOCHANGE_RISE,                   flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_PIN_CAP,                         flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_RECOVERY_FALL,                   flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_RECOVERY_RISE,                   flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_REMOVAL_FALL,                    flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_REMOVAL_RISE,                    flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_RISE_DELAY_INTERCEPT,            flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_RISE_PIN_RESISTANCE,             flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_RISE_PROPAGATION,                flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_RISE_TRANSITION,                 flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_SETUP_FALL,                      flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_SETUP_RISE,                      flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_SKEW_FALL,                       flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_SKEW_RISE,                       flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_SLOPE_FALL,                      flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_SLOPE_RISE,                      flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_WIRE_CAP,                        flt_simple);
+  handler->reg_handler(ATTR_K_TEMP_WIRE_RES,                        flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_CELL_FALL,                       flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_CELL_LEAKAGE_POWER,              flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_CELL_RISE,                       flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_DRIVE_CURRENT,                   flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_DRIVE_FALL,                      flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_DRIVE_RISE,                      flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_FALL_DELAY_INTERCEPT,            flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_FALL_PIN_RESISTANCE,             flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_FALL_PROPAGATION,                flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_FALL_TRANSITION,                 flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_HOLD_FALL,                       flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_HOLD_RISE,                       flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_INTERNAL_POWER,                  flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_INTRINSIC_FALL,                  flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_INTRINSIC_RISE,                  flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_MIN_PERIOD,                      flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_MIN_PULSE_WIDTH_HIGH,            flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_MIN_PULSE_WIDTH_LOW,             flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_NOCHANGE_FALL,                   flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_NOCHANGE_RISE,                   flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_PIN_CAP,                         flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_RECOVERY_FALL,                   flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_RECOVERY_RISE,                   flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_REMOVAL_FALL,                    flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_REMOVAL_RISE,                    flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_RISE_DELAY_INTERCEPT,            flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_RISE_PIN_RESISTANCE,             flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_RISE_PROPAGATION,                flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_RISE_TRANSITION,                 flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_SETUP_FALL,                      flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_SETUP_RISE,                      flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_SKEW_FALL,                       flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_SKEW_RISE,                       flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_SLOPE_FALL,                      flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_SLOPE_RISE,                      flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_WIRE_CAP,                        flt_simple);
+  handler->reg_handler(ATTR_K_VOLT_WIRE_RES,                        flt_simple);
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(handler);
   DotlibHandler* str1_complex = new Str1ComplexHandler(handler);
   DotlibHandler* unit_complex = new UnitComplexHandler(handler);
   DotlibHandler* define = new DefineHandler(handler);
-  handler->reg_handler("capacitive_load_unit",                   unit_complex);
-  handler->reg_handler("default_part",                           complex);
-  handler->reg_handler("define",                                 define);
-  handler->reg_handler("define_cell_area",                       complex);
-  handler->reg_handler("define_group",                           complex);
-  handler->reg_handler("library_features",                       str1_complex);
-  handler->reg_handler("piece_define",                           str1_complex);
-  handler->reg_handler("routing_layers",                         complex);
-  handler->reg_handler("technology",                             str1_complex);
+  handler->reg_handler(ATTR_CAPACITIVE_LOAD_UNIT,                   unit_complex);
+  handler->reg_handler(ATTR_DEFAULT_PART,                           complex);
+  handler->reg_handler(ATTR_DEFINE,                                 define);
+  handler->reg_handler(ATTR_DEFINE_CELL_AREA,                       complex);
+  handler->reg_handler(ATTR_DEFINE_GROUP,                           complex);
+  handler->reg_handler(ATTR_LIBRARY_FEATURES,                       str1_complex);
+  handler->reg_handler(ATTR_PIECE_DEFINE,                           str1_complex);
+  handler->reg_handler(ATTR_ROUTING_LAYERS,                         complex);
+  handler->reg_handler(ATTR_TECHNOLOGY,                             str1_complex);
 
   //fall_net_delay : name ;
   //rise_net_delay : name ;
 
   // group statements
-  handler->reg_handler("cell",
+  handler->reg_handler(ATTR_CELL,
 		       new_cell(handler));
-  handler->reg_handler("dc_current_template",
+  handler->reg_handler(ATTR_DC_CURRENT_TEMPLATE,
 		       new_template(handler));
-  handler->reg_handler("em_lut_template",
+  handler->reg_handler(ATTR_EM_LUT_TEMPLATE,
 		       new_template(handler));
-  handler->reg_handler("fall_transition_degradation",
+  handler->reg_handler(ATTR_FALL_TRANSITION_DEGRADATION,
 		       new_group(handler));
-  handler->reg_handler("faults_lut_template",
+  handler->reg_handler(ATTR_FAULTS_LUT_TEMPLATE,
 		       new_template(handler));
-  handler->reg_handler("input_voltage",
+  handler->reg_handler(ATTR_INPUT_VOLTAGE,
 		       new_input_voltage(handler));
-  handler->reg_handler("iv_lut_template",
+  handler->reg_handler(ATTR_IV_LUT_TEMPLATE,
 		       new_template(handler));
-  handler->reg_handler("lu_table_template",
+  handler->reg_handler(ATTR_LU_TABLE_TEMPLATE,
 		       new_template(handler));
-  handler->reg_handler("noise_lut_template",
+  handler->reg_handler(ATTR_NOISE_LUT_TEMPLATE,
 		       new_template(handler));
-  handler->reg_handler("operating_conditions",
+  handler->reg_handler(ATTR_OPERATING_CONDITIONS,
 		       new_operating_conditions(handler));
-  handler->reg_handler("output_voltage",
+  handler->reg_handler(ATTR_OUTPUT_CURRENT_TEMPLATE,
+		       new_template(handler));
+  handler->reg_handler(ATTR_OUTPUT_VOLTAGE,
 		       new_output_voltage(handler));
-  handler->reg_handler("output_current_template",
+  handler->reg_handler(ATTR_PART,
+		       new_group(handler));
+  handler->reg_handler(ATTR_POLY_TEMPLATE,
 		       new_template(handler));
-  handler->reg_handler("part",
-		       new_group(handler));
-  handler->reg_handler("poly_template",
+  handler->reg_handler(ATTR_POWER_LUT_TEMPLATE,
 		       new_template(handler));
-  handler->reg_handler("power_lut_template",
+  handler->reg_handler(ATTR_POWER_POLY_TEMPLATE,
 		       new_template(handler));
-  handler->reg_handler("power_poly_template",
+  handler->reg_handler(ATTR_POWER_SUPPLY,
+		       new_group(handler));
+  handler->reg_handler(ATTR_PROPAGATION_LUT_TEMPLATE,
 		       new_template(handler));
-  handler->reg_handler("power_supply",
+  handler->reg_handler(ATTR_RISE_TRANSITION_DEGRADATION,
 		       new_group(handler));
-  handler->reg_handler("propagation_lut_template",
-		       new_template(handler));
-  handler->reg_handler("rise_transition_degradation",
+  handler->reg_handler(ATTR_SCALED_CELL,
 		       new_group(handler));
-  handler->reg_handler("scaled_cell",
+  handler->reg_handler(ATTR_SCALING_FACTORS,
 		       new_group(handler));
-  handler->reg_handler("scaling_factors",
+  handler->reg_handler(ATTR_TIMING,
 		       new_group(handler));
-  handler->reg_handler("timing",
+  handler->reg_handler(ATTR_TIMING_RANGE,
 		       new_group(handler));
-  handler->reg_handler("timing_range",
+  handler->reg_handler(ATTR_TYPE,
 		       new_group(handler));
-  handler->reg_handler("type",
-		       new_group(handler));
-  handler->reg_handler("wire_load",
+  handler->reg_handler(ATTR_WIRE_LOAD,
 		       new_wire_load(handler));
-  handler->reg_handler("wire_load_selection",
+  handler->reg_handler(ATTR_WIRE_LOAD_SELECTION,
 		       new_wire_load_selection(handler));
-  handler->reg_handler("wire_load_table",
+  handler->reg_handler(ATTR_WIRE_LOAD_TABLE,
 		       new_wire_load_table(handler));
 
   return handler;
@@ -311,10 +311,10 @@ HandlerFactory::new_input_voltage(GroupHandler* parent)
 
   // simple attributes
   DotlibHandler* expr_handler = new ExprHandler(handler);
-  handler->reg_handler("vil",   expr_handler);
-  handler->reg_handler("vih",   expr_handler);
-  handler->reg_handler("vimin", expr_handler);
-  handler->reg_handler("vimax", expr_handler);
+  handler->reg_handler(ATTR_VIL,   expr_handler);
+  handler->reg_handler(ATTR_VIH,   expr_handler);
+  handler->reg_handler(ATTR_VIMIN, expr_handler);
+  handler->reg_handler(ATTR_VIMAX, expr_handler);
 
   return handler;
 }
@@ -328,10 +328,10 @@ HandlerFactory::new_output_voltage(GroupHandler* parent)
 
   // simple attributes
   DotlibHandler* expr_handler = new ExprHandler(handler);
-  handler->reg_handler("vol",   expr_handler);
-  handler->reg_handler("voh",   expr_handler);
-  handler->reg_handler("vomin", expr_handler);
-  handler->reg_handler("vomax", expr_handler);
+  handler->reg_handler(ATTR_VOL,   expr_handler);
+  handler->reg_handler(ATTR_VOH,   expr_handler);
+  handler->reg_handler(ATTR_VOMIN, expr_handler);
+  handler->reg_handler(ATTR_VOMAX, expr_handler);
 
   return handler;
 }
@@ -347,20 +347,20 @@ HandlerFactory::new_operating_conditions(GroupHandler* parent)
   DotlibHandler* simple = new SimpleHandler(handler, false);
   DotlibHandler* str_simple = new StrSimpleHandler(handler, false);
   DotlibHandler* flt_simple = new FloatSimpleHandler(handler);
-  handler->reg_handler("calc_mode",   simple);
-  handler->reg_handler("parameter1",  simple);
-  handler->reg_handler("parameter2",  simple);
-  handler->reg_handler("parameter3",  simple);
-  handler->reg_handler("parameter4",  simple);
-  handler->reg_handler("parameter5",  simple);
-  handler->reg_handler("process",     flt_simple);
-  handler->reg_handler("temperature", flt_simple);
-  handler->reg_handler("tree_type",   str_simple);
-  handler->reg_handler("voltage",     flt_simple);
+  handler->reg_handler(ATTR_CALC_MODE,   simple);
+  handler->reg_handler(ATTR_PARAMETER1,  simple);
+  handler->reg_handler(ATTR_PARAMETER2,  simple);
+  handler->reg_handler(ATTR_PARAMETER3,  simple);
+  handler->reg_handler(ATTR_PARAMETER4,  simple);
+  handler->reg_handler(ATTR_PARAMETER5,  simple);
+  handler->reg_handler(ATTR_PROCESS,     flt_simple);
+  handler->reg_handler(ATTR_TEMPERATURE, flt_simple);
+  handler->reg_handler(ATTR_TREE_TYPE,   str_simple);
+  handler->reg_handler(ATTR_VOLTAGE,     flt_simple);
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(handler);
-  handler->reg_handler("power_rail", complex);
+  handler->reg_handler(ATTR_POWER_RAIL, complex);
 
   return handler;
 }
@@ -374,18 +374,18 @@ HandlerFactory::new_template(GroupHandler* parent)
 
   // simple attributes
   DotlibHandler* str_simple = new StrSimpleHandler(handler, false);
-  handler->reg_handler("variable_1", str_simple);
-  handler->reg_handler("variable_2", str_simple);
-  handler->reg_handler("variable_3", str_simple);
+  handler->reg_handler(ATTR_VARIABLE_1, str_simple);
+  handler->reg_handler(ATTR_VARIABLE_2, str_simple);
+  handler->reg_handler(ATTR_VARIABLE_3, str_simple);
 
   // complex attributes
   DotlibHandler* index_handler = new VectorComplexHandler(handler);
-  handler->reg_handler("index_1",    index_handler);
-  handler->reg_handler("index_2",    index_handler);
-  handler->reg_handler("index_3",    index_handler);
+  handler->reg_handler(ATTR_INDEX_1,    index_handler);
+  handler->reg_handler(ATTR_INDEX_2,    index_handler);
+  handler->reg_handler(ATTR_INDEX_3,    index_handler);
 
   // group statements
-  handler->reg_handler("domain", new_group(handler));
+  handler->reg_handler(ATTR_DOMAIN, new_group(handler));
 
   return handler;
 }
@@ -399,14 +399,14 @@ HandlerFactory::new_wire_load(GroupHandler* parent)
 
   // simple attributes
   DotlibHandler* flt_simple = new FloatSimpleHandler(handler);
-  handler->reg_handler("area",        flt_simple);
-  handler->reg_handler("capacitance", flt_simple);
-  handler->reg_handler("resistance",  flt_simple);
-  handler->reg_handler("slope",       flt_simple);
+  handler->reg_handler(ATTR_AREA,        flt_simple);
+  handler->reg_handler(ATTR_CAPACITANCE, flt_simple);
+  handler->reg_handler(ATTR_RESISTANCE,  flt_simple);
+  handler->reg_handler(ATTR_SLOPE,       flt_simple);
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(handler);
-  handler->reg_handler("fanout_length", complex);
+  handler->reg_handler(ATTR_FANOUT_LENGTH, complex);
 
   return handler;
 }
@@ -420,7 +420,7 @@ HandlerFactory::new_wire_load_selection(GroupHandler* parent)
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(handler);
-  handler->reg_handler("wire_load_from_area", complex);
+  handler->reg_handler(ATTR_WIRE_LOAD_FROM_AREA, complex);
 
   return handler;
 }
@@ -434,10 +434,10 @@ HandlerFactory::new_wire_load_table(GroupHandler* parent)
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(handler);
-  handler->reg_handler("fanout_area",        complex);
-  handler->reg_handler("fanout_capacitance", complex);
-  handler->reg_handler("fanout_length",      complex);
-  handler->reg_handler("fanout_resistance",  complex);
+  handler->reg_handler(ATTR_FANOUT_AREA,        complex);
+  handler->reg_handler(ATTR_FANOUT_CAPACITANCE, complex);
+  handler->reg_handler(ATTR_FANOUT_LENGTH,      complex);
+  handler->reg_handler(ATTR_FANOUT_RESISTANCE,  complex);
 
   return handler;
 }
@@ -453,69 +453,69 @@ HandlerFactory::new_cell(GroupHandler* parent)
   DotlibHandler* simple = new SimpleHandler(handler, false);
   DotlibHandler* str_simple = new StrSimpleHandler(handler, false);
   DotlibHandler* flt_simple = new FloatSimpleHandler(handler);
-  handler->reg_handler("area",                         flt_simple);
-  handler->reg_handler("auxiliary_pad_cell",           simple);
-  handler->reg_handler("base_name",                    str_simple);
-  handler->reg_handler("bus_naming_style",             str_simple);
-  handler->reg_handler("cell_footprint",               str_simple);
-  handler->reg_handler("cell_leakage_power",           simple);
-  handler->reg_handler("clock_gating_integrated_cell", simple);
-  handler->reg_handler("contention_condition",         simple);
-  handler->reg_handler("dont_fault",                   simple);
-  handler->reg_handler("dont_touch",                   simple);
-  handler->reg_handler("dont_use",                     simple);
-  handler->reg_handler("driver_type",                  simple);
-  handler->reg_handler("edif_name",                    simple);
-  handler->reg_handler("em_temp_degradation_factor",   simple);
-  handler->reg_handler("fpga_domain_style",            simple);
-  handler->reg_handler("geometry_print",               simple);
-  handler->reg_handler("handle_negative_constraint",   simple);
-  handler->reg_handler("interface_timing",             simple);
-  handler->reg_handler("io_type",                      simple);
-  handler->reg_handler("is_clock_gating_cell",         simple);
-  handler->reg_handler("map_only",                     simple);
-  handler->reg_handler("pad_cell",                     simple);
-  handler->reg_handler("pad_type",                     simple);
-  handler->reg_handler("power_cell_type",              simple);
-  handler->reg_handler("preferred",                    simple);
-  handler->reg_handler("scaling_factors",              simple);
-  handler->reg_handler("single_bit_degenerate",        simple);
-  handler->reg_handler("slew_type",                    simple);
-  handler->reg_handler("timing_model_type",            simple);
-  handler->reg_handler("use_for_size_only",            simple);
-  handler->reg_handler("vhdl_name",                    simple);
+  handler->reg_handler(ATTR_AREA,                         flt_simple);
+  handler->reg_handler(ATTR_AUXILIARY_PAD_CELL,           simple);
+  handler->reg_handler(ATTR_BASE_NAME,                    str_simple);
+  handler->reg_handler(ATTR_BUS_NAMING_STYLE,             str_simple);
+  handler->reg_handler(ATTR_CELL_FOOTPRINT,               str_simple);
+  handler->reg_handler(ATTR_CELL_LEAKAGE_POWER,           simple);
+  handler->reg_handler(ATTR_CLOCK_GATING_INTEGRATED_CELL, simple);
+  handler->reg_handler(ATTR_CONTENTION_CONDITION,         simple);
+  handler->reg_handler(ATTR_DONT_FAULT,                   simple);
+  handler->reg_handler(ATTR_DONT_TOUCH,                   simple);
+  handler->reg_handler(ATTR_DONT_USE,                     simple);
+  handler->reg_handler(ATTR_DRIVER_TYPE,                  simple);
+  handler->reg_handler(ATTR_EDIF_NAME,                    simple);
+  handler->reg_handler(ATTR_EM_TEMP_DEGRADATION_FACTOR,   simple);
+  handler->reg_handler(ATTR_FPGA_DOMAIN_STYLE,            simple);
+  handler->reg_handler(ATTR_GEOMETRY_PRINT,               simple);
+  handler->reg_handler(ATTR_HANDLE_NEGATIVE_CONSTRAINT,   simple);
+  handler->reg_handler(ATTR_INTERFACE_TIMING,             simple);
+  handler->reg_handler(ATTR_IO_TYPE,                      simple);
+  handler->reg_handler(ATTR_IS_CLOCK_GATING_CELL,         simple);
+  handler->reg_handler(ATTR_MAP_ONLY,                     simple);
+  handler->reg_handler(ATTR_PAD_CELL,                     simple);
+  handler->reg_handler(ATTR_PAD_TYPE,                     simple);
+  handler->reg_handler(ATTR_POWER_CELL_TYPE,              simple);
+  handler->reg_handler(ATTR_PREFERRED,                    simple);
+  handler->reg_handler(ATTR_SCALING_FACTORS,              simple);
+  handler->reg_handler(ATTR_SINGLE_BIT_DEGENERATE,        simple);
+  handler->reg_handler(ATTR_SLEW_TYPE,                    simple);
+  handler->reg_handler(ATTR_TIMING_MODEL_TYPE,            simple);
+  handler->reg_handler(ATTR_USE_FOR_SIZE_ONLY,            simple);
+  handler->reg_handler(ATTR_VHDL_NAME,                    simple);
 
-  handler->reg_handler("is_filler_cell",               simple);
+  handler->reg_handler(ATTR_IS_FILLER_CELL,               simple);
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(handler);
-  handler->reg_handler("pin_opposite",                 complex);
-  handler->reg_handler("rail_connection",              complex);
-  handler->reg_handler("power_supply_namestring",      complex);
-  handler->reg_handler("resource_usage",               complex);
+  handler->reg_handler(ATTR_PIN_OPPOSITE,                 complex);
+  handler->reg_handler(ATTR_RAIL_CONNECTION,              complex);
+  handler->reg_handler(ATTR_POWER_SUPPLY_NAMESTRING,      complex);
+  handler->reg_handler(ATTR_RESOURCE_USAGE,               complex);
 
   // group statements
-  handler->reg_handler("bus",                          new_bus(handler));
-  handler->reg_handler("bundle",                       new_bundle(handler));
-  handler->reg_handler("dynamic_current",              new_group(handler));
-  handler->reg_handler("ff",                           new_ff(handler));
-  handler->reg_handler("ff_bank",                      new_ff_bank(handler));
-  handler->reg_handler("functional_yield_metric",      new_group(handler));
-  handler->reg_handler("generated_clock",              new_group(handler));
-  handler->reg_handler("intrinsic_parasitic",          new_group(handler));
-  handler->reg_handler("latch",                        new_latch(handler));
-  handler->reg_handler("latch_bank",                   new_latch_bank(handler));
-  handler->reg_handler("leakage_current",              new_group(handler));
-  handler->reg_handler("leakage_power",                new_leakage_power(handler));
-  handler->reg_handler("lut",                          new_group(handler));
-  handler->reg_handler("mode_definition",              new_group(handler));
-  handler->reg_handler("pin",                          new_pin(handler));
-  handler->reg_handler("routing_track",                new_group(handler));
-  handler->reg_handler("statetable",                   new_statetable(handler));
+  handler->reg_handler(ATTR_BUS,                          new_bus(handler));
+  handler->reg_handler(ATTR_BUNDLE,                       new_bundle(handler));
+  handler->reg_handler(ATTR_DYNAMIC_CURRENT,              new_group(handler));
+  handler->reg_handler(ATTR_FF,                           new_ff(handler));
+  handler->reg_handler(ATTR_FF_BANK,                      new_ff_bank(handler));
+  handler->reg_handler(ATTR_FUNCTIONAL_YIELD_METRIC,      new_group(handler));
+  handler->reg_handler(ATTR_GENERATED_CLOCK,              new_group(handler));
+  handler->reg_handler(ATTR_INTRINSIC_PARASITIC,          new_group(handler));
+  handler->reg_handler(ATTR_LATCH,                        new_latch(handler));
+  handler->reg_handler(ATTR_LATCH_BANK,                   new_latch_bank(handler));
+  handler->reg_handler(ATTR_LEAKAGE_CURRENT,              new_group(handler));
+  handler->reg_handler(ATTR_LEAKAGE_POWER,                new_leakage_power(handler));
+  handler->reg_handler(ATTR_LUT,                          new_group(handler));
+  handler->reg_handler(ATTR_MODE_DEFINITION,              new_group(handler));
+  handler->reg_handler(ATTR_PIN,                          new_pin(handler));
+  handler->reg_handler(ATTR_ROUTING_TRACK,                new_group(handler));
+  handler->reg_handler(ATTR_STATETABLE,                   new_statetable(handler));
 
-  handler->reg_handler("internal_power", new_cell_internal_power(handler));
+  handler->reg_handler(ATTR_INTERNAL_POWER, new_cell_internal_power(handler));
 
-  handler->reg_handler("test_cell",                    new_test_cell(handler));
+  handler->reg_handler(ATTR_TEST_CELL,                    new_test_cell(handler));
 
   return handler;
 }
@@ -532,10 +532,10 @@ HandlerFactory::new_leakage_power(GroupHandler* parent)
   DotlibHandler* str_simple = new StrSimpleHandler(handler, false);
   DotlibHandler* func_handler = new FuncHandler(handler);
   DotlibHandler* flt_simple = new FloatSimpleHandler(handler);
-  handler->reg_handler("power_level",    simple);
-  handler->reg_handler("related_pg_pin", str_simple);
-  handler->reg_handler("when",           func_handler);
-  handler->reg_handler("value",          flt_simple);
+  handler->reg_handler(ATTR_POWER_LEVEL,    simple);
+  handler->reg_handler(ATTR_RELATED_PG_PIN, str_simple);
+  handler->reg_handler(ATTR_WHEN,           func_handler);
+  handler->reg_handler(ATTR_VALUE,          flt_simple);
 
   return handler;
 }
@@ -548,21 +548,21 @@ HandlerFactory::new_test_cell(GroupHandler* parent)
   GroupHandler* handler = new_group(parent);
 
   // group statements
-  handler->reg_handler("bus", new_bus(handler));
-  handler->reg_handler("dynamic_current", new_group(handler));
-  handler->reg_handler("ff", new_ff(handler));
-  handler->reg_handler("ff_bank", new_ff_bank(handler));
-  handler->reg_handler("functional_yield_metric", new_group(handler));
-  handler->reg_handler("generated_clock", new_group(handler));
-  handler->reg_handler("intrinsic_parasitic", new_group(handler));
-  handler->reg_handler("latch", new_latch(handler));
-  handler->reg_handler("latch_bank", new_latch_bank(handler));
-  handler->reg_handler("leakage_current", new_group(handler));
-  handler->reg_handler("leakage_power", new_leakage_power(handler));
-  handler->reg_handler("lut", new_group(handler));
-  handler->reg_handler("mode_definition", new_group(handler));
-  handler->reg_handler("pin", new_pin(handler));
-  handler->reg_handler("statetable", new_statetable(handler));
+  handler->reg_handler(ATTR_BUS, new_bus(handler));
+  handler->reg_handler(ATTR_DYNAMIC_CURRENT, new_group(handler));
+  handler->reg_handler(ATTR_FF, new_ff(handler));
+  handler->reg_handler(ATTR_FF_BANK, new_ff_bank(handler));
+  handler->reg_handler(ATTR_FUNCTIONAL_YIELD_METRIC, new_group(handler));
+  handler->reg_handler(ATTR_GENERATED_CLOCK, new_group(handler));
+  handler->reg_handler(ATTR_INTRINSIC_PARASITIC, new_group(handler));
+  handler->reg_handler(ATTR_LATCH, new_latch(handler));
+  handler->reg_handler(ATTR_LATCH_BANK, new_latch_bank(handler));
+  handler->reg_handler(ATTR_LEAKAGE_CURRENT, new_group(handler));
+  handler->reg_handler(ATTR_LEAKAGE_POWER, new_leakage_power(handler));
+  handler->reg_handler(ATTR_LUT, new_group(handler));
+  handler->reg_handler(ATTR_MODE_DEFINITION, new_group(handler));
+  handler->reg_handler(ATTR_PIN, new_pin(handler));
+  handler->reg_handler(ATTR_STATETABLE, new_statetable(handler));
 
   return handler;
 }
@@ -577,13 +577,13 @@ HandlerFactory::new_ff(GroupHandler* parent)
   // simple attributes
   DotlibHandler* str_simple = new StrSimpleHandler(handler, false);
   DotlibHandler* fhandler = new FuncHandler(handler);
-  handler->reg_handler("clear",             fhandler);
-  handler->reg_handler("clear_preset_var1", str_simple);
-  handler->reg_handler("clear_preset_var2", str_simple);
-  handler->reg_handler("clocked_on",        fhandler);
-  handler->reg_handler("clocked_on_also",   fhandler);
-  handler->reg_handler("next_state",        fhandler);
-  handler->reg_handler("preset",            fhandler);
+  handler->reg_handler(ATTR_CLEAR,             fhandler);
+  handler->reg_handler(ATTR_CLEAR_PRESET_VAR1, str_simple);
+  handler->reg_handler(ATTR_CLEAR_PRESET_VAR2, str_simple);
+  handler->reg_handler(ATTR_CLOCKED_ON,        fhandler);
+  handler->reg_handler(ATTR_CLOCKED_ON_ALSO,   fhandler);
+  handler->reg_handler(ATTR_NEXT_STATE,        fhandler);
+  handler->reg_handler(ATTR_PRESET,            fhandler);
 
   return handler;
 }
@@ -598,13 +598,13 @@ HandlerFactory::new_ff_bank(GroupHandler* parent)
   // simple attributes
   DotlibHandler* str_simple = new StrSimpleHandler(handler, false);
   DotlibHandler* fhandler = new FuncHandler(handler);
-  handler->reg_handler("clear",             fhandler);
-  handler->reg_handler("clear_preset_var1", str_simple);
-  handler->reg_handler("clear_preset_var2", str_simple);
-  handler->reg_handler("clocked_on",        fhandler);
-  handler->reg_handler("clocked_on_also",   fhandler);
-  handler->reg_handler("next_state",        fhandler);
-  handler->reg_handler("preset",            fhandler);
+  handler->reg_handler(ATTR_CLEAR,             fhandler);
+  handler->reg_handler(ATTR_CLEAR_PRESET_VAR1, str_simple);
+  handler->reg_handler(ATTR_CLEAR_PRESET_VAR2, str_simple);
+  handler->reg_handler(ATTR_CLOCKED_ON,        fhandler);
+  handler->reg_handler(ATTR_CLOCKED_ON_ALSO,   fhandler);
+  handler->reg_handler(ATTR_NEXT_STATE,        fhandler);
+  handler->reg_handler(ATTR_PRESET,            fhandler);
 
   return handler;
 }
@@ -619,13 +619,13 @@ HandlerFactory::new_latch(GroupHandler* parent)
   // simple attributes
   DotlibHandler* str_simple = new StrSimpleHandler(handler, false);
   DotlibHandler* fhandler = new FuncHandler(handler);
-  handler->reg_handler("clear",             fhandler);
-  handler->reg_handler("clear_preset_var1", str_simple);
-  handler->reg_handler("clear_preset_var2", str_simple);
-  handler->reg_handler("data_in",           fhandler);
-  handler->reg_handler("enable",            fhandler);
-  handler->reg_handler("enable_also",       fhandler);
-  handler->reg_handler("preset",            fhandler);
+  handler->reg_handler(ATTR_CLEAR,             fhandler);
+  handler->reg_handler(ATTR_CLEAR_PRESET_VAR1, str_simple);
+  handler->reg_handler(ATTR_CLEAR_PRESET_VAR2, str_simple);
+  handler->reg_handler(ATTR_DATA_IN,           fhandler);
+  handler->reg_handler(ATTR_ENABLE,            fhandler);
+  handler->reg_handler(ATTR_ENABLE_ALSO,       fhandler);
+  handler->reg_handler(ATTR_PRESET,            fhandler);
 
   return handler;
 }
@@ -640,13 +640,13 @@ HandlerFactory::new_latch_bank(GroupHandler* parent)
   // simple attributes
   DotlibHandler* str_simple = new StrSimpleHandler(handler, false);
   DotlibHandler* fhandler = new FuncHandler(handler);
-  handler->reg_handler("clear",             fhandler);
-  handler->reg_handler("clear_preset_var1", str_simple);
-  handler->reg_handler("clear_preset_var2", str_simple);
-  handler->reg_handler("data_in",           fhandler);
-  handler->reg_handler("enable",            fhandler);
-  handler->reg_handler("enable_also",       fhandler);
-  handler->reg_handler("preset",            fhandler);
+  handler->reg_handler(ATTR_CLEAR,             fhandler);
+  handler->reg_handler(ATTR_CLEAR_PRESET_VAR1, str_simple);
+  handler->reg_handler(ATTR_CLEAR_PRESET_VAR2, str_simple);
+  handler->reg_handler(ATTR_DATA_IN,           fhandler);
+  handler->reg_handler(ATTR_ENABLE,            fhandler);
+  handler->reg_handler(ATTR_ENABLE_ALSO,       fhandler);
+  handler->reg_handler(ATTR_PRESET,            fhandler);
 
   return handler;
 }
@@ -659,12 +659,12 @@ HandlerFactory::new_cell_internal_power(GroupHandler* parent)
 
   // simple attributes
   DotlibHandler* simple = new SimpleHandler(handler, false);
-  handler->reg_handler("related_inputs", simple);
-  handler->reg_handler("related_outputs", simple);
+  handler->reg_handler(ATTR_RELATED_INPUTS, simple);
+  handler->reg_handler(ATTR_RELATED_OUTPUTS, simple);
 
   // complex attribute
   DotlibHandler* complex = new ComplexHandler(handler);
-  handler->reg_handler("values", complex);
+  handler->reg_handler(ATTR_VALUES, complex);
 
   return handler;
 }
@@ -682,16 +682,16 @@ HandlerFactory::new_power(GroupHandler* parent)
   DotlibHandler* index_handler = new VectorComplexHandler(handler);
   DotlibHandler* value_handler = new VectorListComplexHandler(handler);
   DotlibHandler* complex = new ComplexHandler(handler);
-  handler->reg_handler("index_1", index_handler);
-  handler->reg_handler("index_2", index_handler);
-  handler->reg_handler("index_3", index_handler);
-  handler->reg_handler("values",  value_handler);
+  handler->reg_handler(ATTR_INDEX_1, index_handler);
+  handler->reg_handler(ATTR_INDEX_2, index_handler);
+  handler->reg_handler(ATTR_INDEX_3, index_handler);
+  handler->reg_handler(ATTR_VALUES,  value_handler);
 
-  handler->reg_handler("orders",  complex);
-  handler->reg_handler("coefs",   complex);
+  handler->reg_handler(ATTR_ORDERS,  complex);
+  handler->reg_handler(ATTR_COEFS,   complex);
 
   // group statements
-  handler->reg_handler("domain", new_group(handler));
+  handler->reg_handler(ATTR_DOMAIN, new_group(handler));
 
   return handler;
 }
@@ -705,7 +705,7 @@ HandlerFactory::new_statetable(GroupHandler* parent)
 
   // simple attributes
   DotlibHandler* simple = new StrSimpleHandler(handler, false);
-  handler->reg_handler("table", simple);
+  handler->reg_handler(ATTR_TABLE, simple);
 
   return handler;
 }
@@ -719,10 +719,10 @@ HandlerFactory::new_bus(GroupHandler* parent)
 
   // simple attributes
   DotlibHandler* simple = new StrSimpleHandler(handler, false);
-  handler->reg_handler("bus_type", simple);
+  handler->reg_handler(ATTR_BUS_TYPE, simple);
 
   // group statements
-  handler->reg_handler("pin", new_pin(handler));
+  handler->reg_handler(ATTR_PIN, new_pin(handler));
 
   return handler;
 }
@@ -738,27 +738,27 @@ HandlerFactory::new_bundle(GroupHandler* parent)
   DotlibHandler* simple = new SimpleHandler(handler, false);
   DotlibHandler* flt_simple = new FloatSimpleHandler(handler);
   DotlibHandler* func_handler = new FuncHandler(handler);
-  handler->reg_handler("capacitance", flt_simple);
-  handler->reg_handler("direction",   simple);
-  handler->reg_handler("function",    func_handler);
+  handler->reg_handler(ATTR_CAPACITANCE, flt_simple);
+  handler->reg_handler(ATTR_DIRECTION,   simple);
+  handler->reg_handler(ATTR_FUNCTION,    func_handler);
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(handler);
-  handler->reg_handler("members",     complex);
+  handler->reg_handler(ATTR_MEMBERS,     complex);
 
   // group statements
-  handler->reg_handler("pin", new_pin(handler));
-  handler->reg_handler("electromigration", new_group(handler));
-  handler->reg_handler("hyperbolic_noise_above_high", new_group(handler));
-  handler->reg_handler("hyperbolic_noise_below_low", new_group(handler));
-  handler->reg_handler("hyperbolic_noise_high", new_group(handler));
-  handler->reg_handler("hyperbolic_noise_low", new_group(handler));
-  handler->reg_handler("internal_power", new_internal_power(handler));
-  handler->reg_handler("max_trans", new_group(handler));
-  handler->reg_handler("min_pulse_width", new_group(handler));
-  handler->reg_handler("minimum_period", new_group(handler));
-  handler->reg_handler("timing", new_timing(handler));
-  handler->reg_handler("tlatch", new_group(handler));
+  handler->reg_handler(ATTR_PIN, new_pin(handler));
+  handler->reg_handler(ATTR_ELECTROMIGRATION, new_group(handler));
+  handler->reg_handler(ATTR_HYPERBOLIC_NOISE_ABOVE_HIGH, new_group(handler));
+  handler->reg_handler(ATTR_HYPERBOLIC_NOISE_BELOW_LOW, new_group(handler));
+  handler->reg_handler(ATTR_HYPERBOLIC_NOISE_HIGH, new_group(handler));
+  handler->reg_handler(ATTR_HYPERBOLIC_NOISE_LOW, new_group(handler));
+  handler->reg_handler(ATTR_INTERNAL_POWER, new_internal_power(handler));
+  handler->reg_handler(ATTR_MAX_TRANS, new_group(handler));
+  handler->reg_handler(ATTR_MIN_PULSE_WIDTH, new_group(handler));
+  handler->reg_handler(ATTR_MINIMUM_PERIOD, new_group(handler));
+  handler->reg_handler(ATTR_TIMING, new_timing(handler));
+  handler->reg_handler(ATTR_TLATCH, new_group(handler));
 
   return handler;
 }
@@ -775,87 +775,87 @@ HandlerFactory::new_pin(GroupHandler* parent)
   DotlibHandler* str_simple = new StrSimpleHandler(handler, false);
   DotlibHandler* flt_simple = new FloatSimpleHandler(handler);
   DotlibHandler* func_handler = new FuncHandler(handler);
-  handler->reg_handler("bit_width", simple);
-  handler->reg_handler("capacitance",                         flt_simple);
-  handler->reg_handler("clock",                               simple);
-  handler->reg_handler("clock_gate_clock_pin",                simple);
-  handler->reg_handler("clock_gate_enable_pin",               simple);
-  handler->reg_handler("clock_gate_test_pin",                 simple);
-  handler->reg_handler("clock_gate_obs_pin",                  simple);
-  handler->reg_handler("clock_gate_out_pin",                  simple);
-  handler->reg_handler("complementary_pin",                   simple);
-  handler->reg_handler("connection_class",                    simple);
-  handler->reg_handler("direction",                           str_simple);
-  handler->reg_handler("dont_fault",                          simple);
-  handler->reg_handler("drive_current",                       simple);
-  handler->reg_handler("driver_type",                         simple);
-  handler->reg_handler("fall_capacitance",                    simple);
-  handler->reg_handler("fall_current_slope_after_threshold",  simple);
-  handler->reg_handler("fall_current_slope_before_threshold", simple);
-  handler->reg_handler("fall_time_after_threshold",           simple);
-  handler->reg_handler("fall_time_before_threshold",          simple);
-  handler->reg_handler("fanout_load",                         flt_simple);
-  handler->reg_handler("fault_model",                         simple);
-  handler->reg_handler("function",                            func_handler);
-  handler->reg_handler("has_builtin_pad",                     simple);
-  handler->reg_handler("hysteresis",                          simple);
-  handler->reg_handler("input_map",                           simple);
-  handler->reg_handler("input_signal_level",                  simple);
-  handler->reg_handler("input_voltage",                       simple);
-  handler->reg_handler("internal_node",                       simple);
-  handler->reg_handler("inverted_output",                     simple);
-  handler->reg_handler("is_pad",                              simple);
-  handler->reg_handler("max_capacitance",                     flt_simple);
-  handler->reg_handler("max_fanout",                          flt_simple);
-  handler->reg_handler("max_input_noise_width",               simple);
-  handler->reg_handler("max_transition",                      flt_simple);
-  handler->reg_handler("min_capacitance",                     flt_simple);
-  handler->reg_handler("min_fanout",                          flt_simple);
-  handler->reg_handler("min_input_noise_width",               simple);
-  handler->reg_handler("min_period",                          simple);
-  handler->reg_handler("min_pulse_width_high",                simple);
-  handler->reg_handler("min_pulse_width_low",                 simple);
-  handler->reg_handler("min_transition",                      flt_simple);
-  handler->reg_handler("multicell_pad_pin",                   simple);
-  handler->reg_handler("nextstate_type",                      simple);
-  handler->reg_handler("output_signal_level",                 simple);
-  handler->reg_handler("output_voltage",                      flt_simple);
-  handler->reg_handler("pin_func_type",                       simple);
-  handler->reg_handler("prefer_tied",                         simple);
-  handler->reg_handler("primary_output",                      simple);
-  handler->reg_handler("pulling_current",                     flt_simple);
-  handler->reg_handler("pulling_resistance",                  flt_simple);
-  handler->reg_handler("rise_capacitance",                    flt_simple);
-  handler->reg_handler("rise_current_slope_after_threshold",  flt_simple);
-  handler->reg_handler("rise_current_slope_before_threshold", flt_simple);
-  handler->reg_handler("rise_time_after_threshold",           flt_simple);
-  handler->reg_handler("rise_time_before_threshold",          flt_simple);
-  handler->reg_handler("signal_type",                         simple);
-  handler->reg_handler("slew_control",                        simple);
-  handler->reg_handler("state_function",                      simple);
-  handler->reg_handler("test_output_only",                    simple);
-  handler->reg_handler("three_state",
+  handler->reg_handler(ATTR_BIT_WIDTH, simple);
+  handler->reg_handler(ATTR_CAPACITANCE,                         flt_simple);
+  handler->reg_handler(ATTR_CLOCK,                               simple);
+  handler->reg_handler(ATTR_CLOCK_GATE_CLOCK_PIN,                simple);
+  handler->reg_handler(ATTR_CLOCK_GATE_ENABLE_PIN,               simple);
+  handler->reg_handler(ATTR_CLOCK_GATE_TEST_PIN,                 simple);
+  handler->reg_handler(ATTR_CLOCK_GATE_OBS_PIN,                  simple);
+  handler->reg_handler(ATTR_CLOCK_GATE_OUT_PIN,                  simple);
+  handler->reg_handler(ATTR_COMPLEMENTARY_PIN,                   simple);
+  handler->reg_handler(ATTR_CONNECTION_CLASS,                    simple);
+  handler->reg_handler(ATTR_DIRECTION,                           str_simple);
+  handler->reg_handler(ATTR_DONT_FAULT,                          simple);
+  handler->reg_handler(ATTR_DRIVE_CURRENT,                       simple);
+  handler->reg_handler(ATTR_DRIVER_TYPE,                         simple);
+  handler->reg_handler(ATTR_FALL_CAPACITANCE,                    simple);
+  handler->reg_handler(ATTR_FALL_CURRENT_SLOPE_AFTER_THRESHOLD,  simple);
+  handler->reg_handler(ATTR_FALL_CURRENT_SLOPE_BEFORE_THRESHOLD, simple);
+  handler->reg_handler(ATTR_FALL_TIME_AFTER_THRESHOLD,           simple);
+  handler->reg_handler(ATTR_FALL_TIME_BEFORE_THRESHOLD,          simple);
+  handler->reg_handler(ATTR_FANOUT_LOAD,                         flt_simple);
+  handler->reg_handler(ATTR_FAULT_MODEL,                         simple);
+  handler->reg_handler(ATTR_FUNCTION,                            func_handler);
+  handler->reg_handler(ATTR_HAS_BUILTIN_PAD,                     simple);
+  handler->reg_handler(ATTR_HYSTERESIS,                          simple);
+  handler->reg_handler(ATTR_INPUT_MAP,                           simple);
+  handler->reg_handler(ATTR_INPUT_SIGNAL_LEVEL,                  simple);
+  handler->reg_handler(ATTR_INPUT_VOLTAGE,                       simple);
+  handler->reg_handler(ATTR_INTERNAL_NODE,                       simple);
+  handler->reg_handler(ATTR_INVERTED_OUTPUT,                     simple);
+  handler->reg_handler(ATTR_IS_PAD,                              simple);
+  handler->reg_handler(ATTR_MAX_CAPACITANCE,                     flt_simple);
+  handler->reg_handler(ATTR_MAX_FANOUT,                          flt_simple);
+  handler->reg_handler(ATTR_MAX_INPUT_NOISE_WIDTH,               simple);
+  handler->reg_handler(ATTR_MAX_TRANSITION,                      flt_simple);
+  handler->reg_handler(ATTR_MIN_CAPACITANCE,                     flt_simple);
+  handler->reg_handler(ATTR_MIN_FANOUT,                          flt_simple);
+  handler->reg_handler(ATTR_MIN_INPUT_NOISE_WIDTH,               simple);
+  handler->reg_handler(ATTR_MIN_PERIOD,                          simple);
+  handler->reg_handler(ATTR_MIN_PULSE_WIDTH_HIGH,                simple);
+  handler->reg_handler(ATTR_MIN_PULSE_WIDTH_LOW,                 simple);
+  handler->reg_handler(ATTR_MIN_TRANSITION,                      flt_simple);
+  handler->reg_handler(ATTR_MULTICELL_PAD_PIN,                   simple);
+  handler->reg_handler(ATTR_NEXTSTATE_TYPE,                      simple);
+  handler->reg_handler(ATTR_OUTPUT_SIGNAL_LEVEL,                 simple);
+  handler->reg_handler(ATTR_OUTPUT_VOLTAGE,                      flt_simple);
+  handler->reg_handler(ATTR_PIN_FUNC_TYPE,                       simple);
+  handler->reg_handler(ATTR_PREFER_TIED,                         simple);
+  handler->reg_handler(ATTR_PRIMARY_OUTPUT,                      simple);
+  handler->reg_handler(ATTR_PULLING_CURRENT,                     flt_simple);
+  handler->reg_handler(ATTR_PULLING_RESISTANCE,                  flt_simple);
+  handler->reg_handler(ATTR_RISE_CAPACITANCE,                    flt_simple);
+  handler->reg_handler(ATTR_RISE_CURRENT_SLOPE_AFTER_THRESHOLD,  flt_simple);
+  handler->reg_handler(ATTR_RISE_CURRENT_SLOPE_BEFORE_THRESHOLD, flt_simple);
+  handler->reg_handler(ATTR_RISE_TIME_AFTER_THRESHOLD,           flt_simple);
+  handler->reg_handler(ATTR_RISE_TIME_BEFORE_THRESHOLD,          flt_simple);
+  handler->reg_handler(ATTR_SIGNAL_TYPE,                         simple);
+  handler->reg_handler(ATTR_SLEW_CONTROL,                        simple);
+  handler->reg_handler(ATTR_STATE_FUNCTION,                      simple);
+  handler->reg_handler(ATTR_TEST_OUTPUT_ONLY,                    simple);
+  handler->reg_handler(ATTR_THREE_STATE,
 		       new FuncHandler(handler));
-  handler->reg_handler("vhdl_name",                           str_simple);
-  handler->reg_handler("x_function",                          simple);
+  handler->reg_handler(ATTR_VHDL_NAME,                           str_simple);
+  handler->reg_handler(ATTR_X_FUNCTION,                          simple);
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(handler);
-  handler->reg_handler("fall_capacitance_range",              complex);
-  handler->reg_handler("rise_capacitance_range",              complex);
+  handler->reg_handler(ATTR_FALL_CAPACITANCE_RANGE,              complex);
+  handler->reg_handler(ATTR_RISE_CAPACITANCE_RANGE,              complex);
 
   // group statements
-  handler->reg_handler("electromigration", new_group(handler));
-  handler->reg_handler("hyperbolic_noise_above_high", new_group(handler));
-  handler->reg_handler("hyperbolic_noise_below_low", new_group(handler));
-  handler->reg_handler("hyperbolic_noise_high", new_group(handler));
-  handler->reg_handler("hyperbolic_noise_low", new_group(handler));
-  handler->reg_handler("internal_power", new_internal_power(handler));
-  handler->reg_handler("max_trans", new_group(handler));
-  handler->reg_handler("min_pulse_width", new_group(handler));
-  handler->reg_handler("minimum_period", new_group(handler));
-  handler->reg_handler("timing", new_timing(handler));
-  handler->reg_handler("tlatch", new_group(handler));
+  handler->reg_handler(ATTR_ELECTROMIGRATION, new_group(handler));
+  handler->reg_handler(ATTR_HYPERBOLIC_NOISE_ABOVE_HIGH, new_group(handler));
+  handler->reg_handler(ATTR_HYPERBOLIC_NOISE_BELOW_LOW, new_group(handler));
+  handler->reg_handler(ATTR_HYPERBOLIC_NOISE_HIGH, new_group(handler));
+  handler->reg_handler(ATTR_HYPERBOLIC_NOISE_LOW, new_group(handler));
+  handler->reg_handler(ATTR_INTERNAL_POWER, new_internal_power(handler));
+  handler->reg_handler(ATTR_MAX_TRANS, new_group(handler));
+  handler->reg_handler(ATTR_MIN_PULSE_WIDTH, new_group(handler));
+  handler->reg_handler(ATTR_MINIMUM_PERIOD, new_group(handler));
+  handler->reg_handler(ATTR_TIMING, new_timing(handler));
+  handler->reg_handler(ATTR_TLATCH, new_group(handler));
 
   return handler;
 }
@@ -871,22 +871,22 @@ HandlerFactory::new_internal_power(GroupHandler* parent)
   DotlibHandler* simple = new SimpleHandler(handler, false);
   DotlibHandler* str_simple = new StrSimpleHandler(handler, false);
   DotlibHandler* func_handler = new FuncHandler(handler);
-  handler->reg_handler("equal_or_opposite_output", simple);
-  handler->reg_handler("falling_together_group",   simple);
-  handler->reg_handler("power_level",              simple);
-  handler->reg_handler("related_pin",              str_simple);
-  handler->reg_handler("rising_together_group",    simple);
-  handler->reg_handler("switching_interval",       simple);
-  handler->reg_handler("switching_together_group", simple);
-  handler->reg_handler("when",                     func_handler);
+  handler->reg_handler(ATTR_EQUAL_OR_OPPOSITE_OUTPUT, simple);
+  handler->reg_handler(ATTR_FALLING_TOGETHER_GROUP,   simple);
+  handler->reg_handler(ATTR_POWER_LEVEL,              simple);
+  handler->reg_handler(ATTR_RELATED_PIN,              str_simple);
+  handler->reg_handler(ATTR_RISING_TOGETHER_GROUP,    simple);
+  handler->reg_handler(ATTR_SWITCHING_INTERVAL,       simple);
+  handler->reg_handler(ATTR_SWITCHING_TOGETHER_GROUP, simple);
+  handler->reg_handler(ATTR_WHEN,                     func_handler);
 
   // complex attribute
 
   // group statements
-  handler->reg_handler("power",                    new_power(handler));
-  handler->reg_handler("fall_power",               new_power(handler));
-  handler->reg_handler("rise_power",               new_power(handler));
-  handler->reg_handler("domain",                   new_group(handler));
+  handler->reg_handler(ATTR_POWER,                    new_power(handler));
+  handler->reg_handler(ATTR_FALL_POWER,               new_power(handler));
+  handler->reg_handler(ATTR_RISE_POWER,               new_power(handler));
+  handler->reg_handler(ATTR_DOMAIN,                   new_group(handler));
 
   return handler;
 }
@@ -904,119 +904,119 @@ HandlerFactory::new_timing(GroupHandler* parent)
   DotlibHandler* flt_simple = new FloatSimpleHandler(handler);
   DotlibHandler* func_handler = new FuncHandler(handler);
 
-  handler->reg_handler("related_bus_equivalent",   str_simple);
-  handler->reg_handler("related_bus_pins",         str_simple);
-  handler->reg_handler("related_output_pin",       str_simple);
-  handler->reg_handler("related_pin",              str_simple);
+  handler->reg_handler(ATTR_RELATED_BUS_EQUIVALENT,   str_simple);
+  handler->reg_handler(ATTR_RELATED_BUS_PINS,         str_simple);
+  handler->reg_handler(ATTR_RELATED_OUTPUT_PIN,       str_simple);
+  handler->reg_handler(ATTR_RELATED_PIN,              str_simple);
 
-  handler->reg_handler("timing_sense",             str_simple);
-  handler->reg_handler("timing_type",              str_simple);
+  handler->reg_handler(ATTR_TIMING_SENSE,             str_simple);
+  handler->reg_handler(ATTR_TIMING_TYPE,              str_simple);
 
-  handler->reg_handler("edge_rate_sensitivity_f0", simple);
-  handler->reg_handler("edge_rate_sensitivity_f1", simple);
-  handler->reg_handler("edge_rate_sensitivity_r0", simple);
-  handler->reg_handler("edge_rate_sensitivity_r1", simple);
+  handler->reg_handler(ATTR_EDGE_RATE_SENSITIVITY_F0, simple);
+  handler->reg_handler(ATTR_EDGE_RATE_SENSITIVITY_F1, simple);
+  handler->reg_handler(ATTR_EDGE_RATE_SENSITIVITY_R0, simple);
+  handler->reg_handler(ATTR_EDGE_RATE_SENSITIVITY_R1, simple);
 
-  handler->reg_handler("rise_resistance",          flt_simple);
-  handler->reg_handler("fall_resistance",          flt_simple);
-  handler->reg_handler("intrinsic_rise",           flt_simple);
-  handler->reg_handler("intrinsic_fall",           flt_simple);
+  handler->reg_handler(ATTR_RISE_RESISTANCE,          flt_simple);
+  handler->reg_handler(ATTR_FALL_RESISTANCE,          flt_simple);
+  handler->reg_handler(ATTR_INTRINSIC_RISE,           flt_simple);
+  handler->reg_handler(ATTR_INTRINSIC_FALL,           flt_simple);
 
-  handler->reg_handler("sdf_cond",                 simple);
-  handler->reg_handler("sdf_cond_end",             simple);
-  handler->reg_handler("sdf_cond_start",           simple);
-  handler->reg_handler("sdf_edges",                simple);
+  handler->reg_handler(ATTR_SDF_COND,                 simple);
+  handler->reg_handler(ATTR_SDF_COND_END,             simple);
+  handler->reg_handler(ATTR_SDF_COND_START,           simple);
+  handler->reg_handler(ATTR_SDF_EDGES,                simple);
 
-  handler->reg_handler("slope_fall",               flt_simple);
-  handler->reg_handler("slope_rise",               flt_simple);
+  handler->reg_handler(ATTR_SLOPE_FALL,               flt_simple);
+  handler->reg_handler(ATTR_SLOPE_RISE,               flt_simple);
 
-  handler->reg_handler("when",                     func_handler);
-  handler->reg_handler("when_end",                 func_handler);
-  handler->reg_handler("when_start",               func_handler);
+  handler->reg_handler(ATTR_WHEN,                     func_handler);
+  handler->reg_handler(ATTR_WHEN_END,                 func_handler);
+  handler->reg_handler(ATTR_WHEN_START,               func_handler);
 
   // complex attribute
   DotlibHandler* complex = new ComplexHandler(handler);
   DotlibHandler* pw_complex = new PwComplexHandler(handler);
-  handler->reg_handler("rise_delay_intercept",     pw_complex);
-  handler->reg_handler("fall_delay_intercept",     pw_complex);
-  handler->reg_handler("rise_pin_resistance",      pw_complex);
-  handler->reg_handler("fall_pin_resistance",      pw_complex);
-  handler->reg_handler("orders",                   complex);
-  handler->reg_handler("coefs",                    complex);
+  handler->reg_handler(ATTR_RISE_DELAY_INTERCEPT,     pw_complex);
+  handler->reg_handler(ATTR_FALL_DELAY_INTERCEPT,     pw_complex);
+  handler->reg_handler(ATTR_RISE_PIN_RESISTANCE,      pw_complex);
+  handler->reg_handler(ATTR_FALL_PIN_RESISTANCE,      pw_complex);
+  handler->reg_handler(ATTR_ORDERS,                   complex);
+  handler->reg_handler(ATTR_COEFS,                    complex);
 
   // group statements
-  handler->reg_handler("cell_degradation",
+  handler->reg_handler(ATTR_CELL_DEGRADATION,
 		       new_group(handler));
 
-  handler->reg_handler("cell_rise",
+  handler->reg_handler(ATTR_CELL_RISE,
 		       new_table(handler));
-  handler->reg_handler("cell_fall",
-		       new_table(handler));
-
-  handler->reg_handler("rise_constraint",
-		       new_table(handler));
-  handler->reg_handler("fall_constraint",
+  handler->reg_handler(ATTR_CELL_FALL,
 		       new_table(handler));
 
-  handler->reg_handler("rise_propagation",
+  handler->reg_handler(ATTR_RISE_CONSTRAINT,
 		       new_table(handler));
-  handler->reg_handler("fall_propagation",
-		       new_table(handler));
-
-  handler->reg_handler("rise_transition",
-		       new_table(handler));
-  handler->reg_handler("fall_transition",
+  handler->reg_handler(ATTR_FALL_CONSTRAINT,
 		       new_table(handler));
 
-  handler->reg_handler("noise_immunity_above_high",
+  handler->reg_handler(ATTR_RISE_PROPAGATION,
+		       new_table(handler));
+  handler->reg_handler(ATTR_FALL_PROPAGATION,
+		       new_table(handler));
+
+  handler->reg_handler(ATTR_RISE_TRANSITION,
+		       new_table(handler));
+  handler->reg_handler(ATTR_FALL_TRANSITION,
+		       new_table(handler));
+
+  handler->reg_handler(ATTR_NOISE_IMMUNITY_ABOVE_HIGH,
 		       new_group(handler));
-  handler->reg_handler("noise_immunity_below_low",
+  handler->reg_handler(ATTR_NOISE_IMMUNITY_BELOW_LOW,
 		       new_group(handler));
-  handler->reg_handler("noise_immunity_high",
+  handler->reg_handler(ATTR_NOISE_IMMUNITY_HIGH,
 		       new_group(handler));
-  handler->reg_handler("noise_immunity_low",
+  handler->reg_handler(ATTR_NOISE_IMMUNITY_LOW,
 		       new_group(handler));
 
-  handler->reg_handler("propogated_noise_height_above_high",
+  handler->reg_handler(ATTR_PROPAGATED_NOISE_HEIGHT_ABOVE_HIGH,
 		       new_group(handler));
-  handler->reg_handler("propogated_noise_height_below_low",
+  handler->reg_handler(ATTR_PROPAGATED_NOISE_HEIGHT_BELOW_LOW,
 		       new_group(handler));
-  handler->reg_handler("propogated_noise_height_high",
+  handler->reg_handler(ATTR_PROPAGATED_NOISE_HEIGHT_HIGH,
 		       new_group(handler));
-  handler->reg_handler("propogated_noise_height_low",
+  handler->reg_handler(ATTR_PROPAGATED_NOISE_HEIGHT_LOW,
 		       new_group(handler));
-  handler->reg_handler("propogated_noise_peak_time_ratio_above_high",
+  handler->reg_handler(ATTR_PROPAGATED_NOISE_PEAK_TIME_RATIO_ABOVE_HIGH,
 		       new_group(handler));
-  handler->reg_handler("propogated_noise_peak_time_ratio__below_low",
+  handler->reg_handler(ATTR_PROPAGATED_NOISE_PEAK_TIME_RATIO_BELOW_LOW,
 		       new_group(handler));
-  handler->reg_handler("propogated_noise_peak_time_ratio_high",
+  handler->reg_handler(ATTR_PROPAGATED_NOISE_PEAK_TIME_RATIO_HIGH,
 		       new_group(handler));
-  handler->reg_handler("propogated_noise_peak_time_ratio_low",
+  handler->reg_handler(ATTR_PROPAGATED_NOISE_PEAK_TIME_RATIO_LOW,
 		       new_group(handler));
-  handler->reg_handler("propogated_noise_width_above_high",
+  handler->reg_handler(ATTR_PROPAGATED_NOISE_WIDTH_ABOVE_HIGH,
 		       new_group(handler));
-  handler->reg_handler("propogated_noise_width_below_low",
+  handler->reg_handler(ATTR_PROPAGATED_NOISE_WIDTH_BELOW_LOW,
 		       new_group(handler));
-  handler->reg_handler("propogated_noise_width_high",
+  handler->reg_handler(ATTR_PROPAGATED_NOISE_WIDTH_HIGH,
 		       new_group(handler));
-  handler->reg_handler("propogated_noise_width_low",
-		       new_group(handler));
-
-  handler->reg_handler("retaining_rise",
-		       new_group(handler));
-  handler->reg_handler("retaining_fall",
+  handler->reg_handler(ATTR_PROPAGATED_NOISE_WIDTH_LOW,
 		       new_group(handler));
 
-  handler->reg_handler("retain_fall_slew",
+  handler->reg_handler(ATTR_RETAINING_RISE,
 		       new_group(handler));
-  handler->reg_handler("retain_rise_slew",
+  handler->reg_handler(ATTR_RETAINING_FALL,
 		       new_group(handler));
 
-  handler->reg_handler("steady_state_current_high",
+  handler->reg_handler(ATTR_RETAIN_FALL_SLEW,
 		       new_group(handler));
-  handler->reg_handler("steady_state_current_low",
+  handler->reg_handler(ATTR_RETAIN_RISE_SLEW,
 		       new_group(handler));
-  handler->reg_handler("steady_state_current_tristate",
+
+  handler->reg_handler(ATTR_STEADY_STATE_CURRENT_HIGH,
+		       new_group(handler));
+  handler->reg_handler(ATTR_STEADY_STATE_CURRENT_LOW,
+		       new_group(handler));
+  handler->reg_handler(ATTR_STEADY_STATE_CURRENT_TRISTATE,
 		       new_group(handler));
 
   return handler;
@@ -1034,13 +1034,13 @@ HandlerFactory::new_table(GroupHandler* parent)
   // complex attribute
   DotlibHandler* index_handler = new VectorComplexHandler(handler);
   DotlibHandler* value_handler = new VectorListComplexHandler(handler);
-  handler->reg_handler("index_1", index_handler);
-  handler->reg_handler("index_2", index_handler);
-  handler->reg_handler("index_3", index_handler);
-  handler->reg_handler("values",  value_handler);
+  handler->reg_handler(ATTR_INDEX_1, index_handler);
+  handler->reg_handler(ATTR_INDEX_2, index_handler);
+  handler->reg_handler(ATTR_INDEX_3, index_handler);
+  handler->reg_handler(ATTR_VALUES,  value_handler);
 
   // group statements
-  handler->reg_handler("domain", new_group(handler));
+  handler->reg_handler(ATTR_DOMAIN, new_group(handler));
 
   return handler;
 }
