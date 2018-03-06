@@ -11,6 +11,7 @@
 
 #include "dotlib_int.h"
 #include "AttrType.h"
+#include "AttrDic.h"
 #include "DotlibScanner.h"
 #include "ym/FileRegion.h"
 
@@ -85,11 +86,9 @@ public:
   double
   cur_float() const;
 
-  /// @brief 直前の read_token() に対応する属性値を返す．
-  ///
-  /// 対応する属性がない場合には ATTR_NONE が返される．
+  /// @brief 文字列を属性値に変換する．
   AttrType
-  cur_attr() const;
+  conv_to_attr(const char* str);
 
   /// @brief DotlibMgrImpl* を返す．
   DotlibMgrImpl*
@@ -113,6 +112,9 @@ private:
 
   // library グループを処理するハンドラ
   DotlibHandler* mLibraryHandler;
+
+  // 属性用の辞書
+  AttrDic mAttrDic;
 
   // デバッグモード
   bool mDebug;

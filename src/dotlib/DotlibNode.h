@@ -130,11 +130,6 @@ public:
   bool
   is_group() const = 0;
 
-  /// @brief 属性型(kAttr)の時に true を返す．
-  virtual
-  bool
-  is_attr() const = 0;
-
   /// @brief ファイル上の位置を返す．
   virtual
   FileRegion
@@ -215,13 +210,6 @@ public:
   virtual
   const DotlibAttr*
   attr_top() const = 0;
-
-  /// @brief 属性の型を得る．
-  ///
-  /// is_attr() = true の時のみ意味を持つ．
-  virtual
-  AttrType
-  attr_type() const = 0;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム

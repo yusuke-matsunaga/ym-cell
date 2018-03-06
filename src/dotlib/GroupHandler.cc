@@ -86,7 +86,7 @@ GroupHandler::read_attr(AttrType attr_type,
       return false;
     }
     const char* name = parser().cur_string();
-    AttrType name_type;
+    AttrType name_type = parser().conv_to_attr(name);
     DotlibHandler* handler = find_handler(name_type);
     if ( handler == nullptr ) {
       ostringstream buf;

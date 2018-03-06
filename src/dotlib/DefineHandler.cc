@@ -66,7 +66,7 @@ DefineHandler::read_attr(AttrType attr_type,
   }
 
   const DotlibNode* group = value->list_elem(1);
-  if ( group == nullptr || !group->is_attr() ) {
+  if ( group == nullptr || !group->is_string() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group->loc(),
 		    kMsgError,
@@ -85,7 +85,8 @@ DefineHandler::read_attr(AttrType attr_type,
     return false;
   }
 
-  DotlibHandler* handler = parent()->find_handler(group->attr_type());
+  AttrType group_attr = parser().conv_to_attr(group->string_value());
+  DotlibHandler* handler = parent()->find_handler(group_attr);
   if ( handler == nullptr ) {
     ostringstream buf;
     buf << group->string_value() << ": Unknown attribute. ignored.";
@@ -131,7 +132,9 @@ DefineHandler::read_attr(AttrType attr_type,
     return false;
   }
 
-  AttrType key_attr; // = keyword->string_value();
+#warning "TODO"
+  // keyword->string_value() を新規の属性名として定義する．
+  AttrType key_attr = parser().conv_to_attr(keyword->string_value());
   g_handler->reg_handler(key_attr, new_handler);
 
   return true;

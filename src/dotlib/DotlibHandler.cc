@@ -144,7 +144,6 @@ DotlibHandler::new_value(TokenType type,
       return mgr()->new_vector(value_list, loc);
     }
     else {
-      cout << "DotlibHandler::new_value(" << parser().cur_string() << ", " << loc  << ")" << endl;
       return mgr()->new_string(ShString(parser().cur_string()), loc);
     }
 

@@ -57,6 +57,7 @@ set (ci_SOURCES
 
 set (dotlib_SOURCES
   src/dotlib/read_liberty.cc
+  src/dotlib/AttrDic.cc
   src/dotlib/ComplexHandler.cc
   src/dotlib/DefineHandler.cc
   src/dotlib/DotlibAttr.cc

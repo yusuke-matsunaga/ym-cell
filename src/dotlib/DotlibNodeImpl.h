@@ -74,11 +74,6 @@ public:
   bool
   is_group() const;
 
-  /// @brief 属性型(kAttr)の時に true を返す．
-  virtual
-  bool
-  is_attr() const;
-
   /// @brief 整数値を返す．
   /// @note is_int() = true の時のみ意味を持つ．
   virtual
@@ -153,13 +148,6 @@ public:
   virtual
   const DotlibAttr*
   attr_top() const;
-
-  /// @brief 属性の型を得る．
-  ///
-  /// is_attr() = true の時のみ意味を持つ．
-  virtual
-  AttrType
-  attr_type() const;
 
 
 public:
