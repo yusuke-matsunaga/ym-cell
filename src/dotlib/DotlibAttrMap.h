@@ -92,7 +92,8 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ハッシュ表
-  HashMap<AttrType, vector<const DotlibNode*> > mHash;
+  //HashMap<AttrType, vector<const DotlibNode*> > mHash;
+  vector<const DotlibNode*> mArray[ATTR_END];
 
 };
 

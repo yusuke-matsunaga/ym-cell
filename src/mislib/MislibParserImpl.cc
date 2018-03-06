@@ -126,9 +126,9 @@ MislibParserImpl::read_file(const string& filename,
   // 重複したセル名がないかチェック
   // また，セル内のピン名が重複していないか，出力ピンの論理式に現れるピン名
   // と入力ピンに齟齬がないかもチェックする．
-  const MislibNode* gate_list = mgr->gate_list();
+  const vector<const MislibNode*>& gate_list = mgr->gate_list();
   HashMap<ShString, const MislibNode*> cell_map;
-  for (const MislibNode* gate = gate_list->top(); gate; gate = gate->next()) {
+  for ( auto gate: gate_list ) {
     ASSERT_COND( gate->type() == MislibNode::kGate );
     ShString name = gate->name()->str();
     const MislibNode* dummy_node;
@@ -148,67 +148,63 @@ MislibParserImpl::read_file(const string& filename,
     cell_map.add(name, gate);
 
     // 入力ピン名のチェック
-    const MislibNode* ipin_top = gate->ipin_top();
-    if ( ipin_top != nullptr && ipin_top->name() != nullptr ) {
-      // 通常の入力ピン定義の場合
-      HashMap<ShString, const MislibNode*> ipin_map;
-      for (const MislibNode* ipin = ipin_top; ipin; ipin = ipin->next()) {
-	ASSERT_COND( ipin->type() == MislibNode::kPin );
-	ShString name = ipin->name()->str();
-	const MislibNode* dummy_node;
-	if ( ipin_map.find(name, dummy_node) ) {
-	  ostringstream buf;
-	  buf << "Pin name, " << name << " is defined more than once. "
-	      << "Previous definition is "
-	      << dummy_node->name()->loc() << ".";
-	  MsgMgr::put_msg(__FILE__, __LINE__,
-			  ipin->name()->loc(),
-			  kMsgError,
-			  "MISLIB_PARSER",
-			  buf.str());
-	}
-	else {
-	  ipin_map.add(name, ipin);
-	}
+    HashMap<ShString, const MislibNode*> ipin_map;
+    for ( auto ipin: gate->ipin_list() ) {
+      ASSERT_COND( ipin->type() == MislibNode::kPin );
+      ShString name = ipin->name()->str();
+      const MislibNode* dummy_node;
+      if ( ipin_map.find(name, dummy_node) ) {
+	ostringstream buf;
+	buf << "Pin name, " << name << " is defined more than once. "
+	    << "Previous definition is "
+	    << dummy_node->name()->loc() << ".";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			ipin->name()->loc(),
+			kMsgError,
+			"MISLIB_PARSER",
+			buf.str());
       }
-      // 論理式に現れる名前の集合を求める．
-      HashSet<ShString> ipin_set;
-      get_ipin_names(gate->opin_expr(), ipin_set);
-      for (HashMapIterator<ShString, const MislibNode*> p = ipin_map.begin();
-	   p != ipin_map.end(); ++ p) {
-	ShString name = p.key();
-	if ( !ipin_set.check(name) ) {
-	  // ピン定義に現れる名前が論理式中に現れない．
-	  // エラーではないが，このピンのタイミング情報は意味をもたない．
-	  const MislibNode* node;
-	  ipin_map.find(name, node);
-	  ostringstream buf;
-	  buf << "Input pin, " << name
-	      << " does not appear in the logic expression. "
-	      << "Timing information will be ignored.";
-	  MsgMgr::put_msg(__FILE__, __LINE__,
-			  node->loc(),
-			  kMsgWarning,
-			  "MISLIB_PARSER",
-			  buf.str());
-	}
+      else {
+	ipin_map.add(name, ipin);
       }
-      for (HashSetIterator<ShString> p = ipin_set.begin();
-	   p != ipin_set.end(); ++ p) {
-	ShString name = p.key();
-	const MislibNode* dummy;
-	if ( !ipin_map.find(name, dummy) ) {
-	  // 論理式中に現れる名前の入力ピンが存在しない．
-	  // これはエラー
-	  ostringstream buf;
-	  buf << name << " appears in the logic expression, "
-	      << "but is not defined in PIN statement.";
-	  MsgMgr::put_msg(__FILE__, __LINE__,
-			  gate->opin_expr()->loc(),
-			  kMsgError,
-			  "MISLIB_PARSER",
-			  buf.str());
-	}
+    }
+    // 論理式に現れる名前の集合を求める．
+    HashSet<ShString> ipin_set;
+    get_ipin_names(gate->opin_expr(), ipin_set);
+    for ( HashMapIterator<ShString, const MislibNode*> p = ipin_map.begin();
+	  p != ipin_map.end(); ++ p ) {
+      ShString name = p.key();
+      if ( !ipin_set.check(name) ) {
+	// ピン定義に現れる名前が論理式中に現れない．
+	// エラーではないが，このピンのタイミング情報は意味をもたない．
+	const MislibNode* node;
+	ipin_map.find(name, node);
+	ostringstream buf;
+	buf << "Input pin, " << name
+	    << " does not appear in the logic expression. "
+	    << "Timing information will be ignored.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			node->loc(),
+			kMsgWarning,
+			"MISLIB_PARSER",
+			buf.str());
+      }
+    }
+    for ( HashSetIterator<ShString> p = ipin_set.begin();
+	  p != ipin_set.end(); ++ p ) {
+      ShString name = p.key();
+      const MislibNode* dummy;
+      if ( !ipin_map.find(name, dummy) ) {
+	// 論理式中に現れる名前の入力ピンが存在しない．
+	// これはエラー
+	ostringstream buf;
+	buf << name << " appears in the logic expression, "
+	    << "but is not defined in PIN statement.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			gate->opin_expr()->loc(),
+			kMsgError,
+			"MISLIB_PARSER",
+			buf.str());
       }
     }
   }
@@ -289,12 +285,13 @@ MislibParserImpl::read_gate()
     FileRegion loc1 = loc;
 
     // 次はピンリスト
-    MislibNode* pin_list = read_pin_list();
-    if ( pin_list == nullptr ) {
+    vector<const MislibNode*> pin_list;
+    if ( !read_pin_list(pin_list) ) {
       // エラー
       return false;
     }
-    for (const MislibNode* pin = pin_list->top(); pin != nullptr; pin = pin->next()) {
+    // 末尾のノードを位置を loc1 に設定する．
+    for ( auto pin: pin_list ) {
       loc1 = pin->loc();
     }
 
@@ -407,10 +404,9 @@ MislibParserImpl::read_literal()
 //
 // エラーが起きたら nullptr を返す．
 // ピン名の代わりに * の場合があるので注意
-MislibNode*
-MislibParserImpl::read_pin_list()
+bool
+MislibParserImpl::read_pin_list(vector<const MislibNode*>& pin_list)
 {
-  MislibNodeImpl* pin_list = mMislibMgr->new_list();
   for ( ; ; ) {
     MislibNodeImpl* node;
     FileRegion loc;
@@ -436,16 +432,14 @@ MislibParserImpl::read_pin_list()
     }
     else {
       // シンタックスエラー
-
-      return nullptr;
+      return false;
     }
 
     // 次は NONINV/INV/UNKNOWN のいずれか
     tok = scan(node, loc);
     if ( tok != NONINV && tok != INV && tok != UNKNOWN ) {
       // シンタックスエラー
-
-      return nullptr;
+      return false;
     }
     MislibNode* phase = node;
 
@@ -455,8 +449,7 @@ MislibParserImpl::read_pin_list()
       tok = scan(node, loc);
       if ( tok != NUM ) {
 	// シンタックスエラー
-
-	return nullptr;
+	return false;
       }
       val[i] = node;
     }
@@ -464,23 +457,22 @@ MislibParserImpl::read_pin_list()
     MislibNodeImpl* pin = mMislibMgr->new_pin(FileRegion(loc0, loc), name, phase,
 					      val[0], val[1], val[2],
 					      val[3], val[4], val[5]);
-    pin_list->push_back(pin);
+    pin_list.push_back(pin);
   }
 
   // 名前が nullptr (STAR) のピンがある場合はそれが唯一の要素である場合に限る．
-  int npin = 0;
   bool has_star = false;
-  for (const MislibNode* pin = pin_list->top(); pin != nullptr; pin = pin->next(), ++ npin) {
+  for ( auto pin: pin_list ) {
     if ( pin->name() == nullptr ) {
       has_star = true;
     }
   }
-  if ( npin > 1 && has_star ) {
+  if ( pin_list.size() > 1 && has_star ) {
     // シンタックスエラー
-    return nullptr;
+    return false;
   }
 
-  return pin_list;
+  return true;
 }
 
 // @brief 次のトークンを盗み見る．

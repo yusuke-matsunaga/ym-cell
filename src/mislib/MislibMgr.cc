@@ -37,7 +37,7 @@ MislibMgr::clear()
 }
 
 // @brief ゲートのリストを返す．
-const MislibNode*
+const vector<const MislibNode*>&
 MislibMgr::gate_list() const
 {
   return mImpl->gate_list();

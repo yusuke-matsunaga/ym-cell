@@ -954,6 +954,7 @@ operator<<(ostream& s,
   case ATTR_WIRE_LOAD_TABLE: s << "wire_load_table"; break;
   case ATTR_WIRE_LOAD: s << "wire_load"; break;
   case ATTR_X_FUNCTION: s << "x_function"; break;
+  case ATTR_END: s << "---"; break;
   }
   return s;
 }

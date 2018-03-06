@@ -40,7 +40,7 @@ public:
   clear();
 
   /// @brief ゲートのリストを返す．
-  const MislibNode*
+  const vector<const MislibNode*>&
   gate_list() const;
 
 

@@ -36,6 +36,7 @@
 #include "ym/Expr.h"
 #include "ym/TvFunc.h"
 #include "ym/MsgMgr.h"
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -144,7 +145,7 @@ gen_lut(CiCellLibrary* library,
 
   vector<double> value_array;
   int n = lut_info.value_list()->list_size();
-  for ( int i = 0; i < n; ++ i ) {
+  for ( auto i: Range(n) ) {
     vector<double> tmp_array;
     lut_info.value_list()->list_elem(i)->get_vector(tmp_array);
     value_array.insert(value_array.end(), tmp_array.begin(), tmp_array.end());
@@ -216,9 +217,9 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
 	ClibCapacitance cap(pin_info.capacitance());
 	ClibCapacitance rise_cap(pin_info.rise_capacitance());
 	ClibCapacitance fall_cap(pin_info.fall_capacitance());
-	for (  int i = 0; i < pin_info.num(); ++ i ) {
-	  CiInputPin* pin = library->new_cell_input(pin_info.name(i),
-						    cap, rise_cap, fall_cap);
+	for ( auto i: Range(pin_info.num()) ) {
+	  ShString name = pin_info.name(i);
+	  CiInputPin* pin = library->new_cell_input(name, cap, rise_cap, fall_cap);
 	  input_list.push_back(pin);
 	}
       }
@@ -237,8 +238,9 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
 	ClibCapacitance min_capacitance(pin_info.min_capacitance());
 	ClibTime max_transition(pin_info.max_transition());
 	ClibTime min_transition(pin_info.min_transition());
-	for ( int i = 0; i < pin_info.num(); ++ i ) {
-	  CiOutputPin* pin = library->new_cell_output(pin_info.name(i),
+	for ( auto i: Range(pin_info.num()) ) {
+	  ShString name = pin_info.name(i);
+	  CiOutputPin* pin = library->new_cell_output(name,
 						      has_logic,
 						      logic_expr,
 						      tristate_expr,
@@ -266,8 +268,9 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
 	ClibCapacitance min_capacitance(pin_info.min_capacitance());
 	ClibTime max_transition(pin_info.max_transition());
 	ClibTime min_transition(pin_info.min_transition());
-	for ( int i = 0; i < pin_info.num(); ++ i ) {
-	  CiInoutPin* pin = library->new_cell_inout(pin_info.name(i),
+	for ( auto i: Range(pin_info.num()) ) {
+	  ShString name = pin_info.name(i);
+	  CiInoutPin* pin = library->new_cell_inout(name,
 						    has_logic,
 						    logic_expr,
 						    tristate_expr,
@@ -282,8 +285,9 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
 
     case DotlibPin::kInternal:
       // 内部ピンの生成
-      for ( int i = 0; i < pin_info.num(); ++ i ) {
-	CiInternalPin* pin = library->new_cell_internal(pin_info.name(i));
+      for ( auto i: Range(pin_info.num()) ) {
+	ShString name = pin_info.name(i);
+	CiInternalPin* pin = library->new_cell_internal(name);
 	internal_list.push_back(pin);
       }
       break;
@@ -301,7 +305,7 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 		vector<CiTiming*>& timing_list,
 		vector<vector<CiTiming*> >& timing_list_array)
 {
-  for ( const DotlibPin& pin_info: pin_info_array ) {
+  for ( auto pin_info: pin_info_array ) {
     const list<const DotlibNode*>& dt_timing_list = pin_info.timing_list();
     for ( auto dt_timing: dt_timing_list ) {
       DotlibTiming timing_info;

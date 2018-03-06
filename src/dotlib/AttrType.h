@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 /// @brief 属性を表す列挙型
 enum AttrType {
-  ATTR_NONE,
+  ATTR_NONE = 0,
 
   ATTR_AREA,
   ATTR_AUXILIARY_PAD_CELL,
@@ -470,6 +470,8 @@ enum AttrType {
   ATTR_WIRE_LOAD_TABLE,
   ATTR_WIRE_LOAD,
   ATTR_X_FUNCTION,
+
+  ATTR_END
 };
 
 /// @brief AttrType の内容をストリームに出力する．

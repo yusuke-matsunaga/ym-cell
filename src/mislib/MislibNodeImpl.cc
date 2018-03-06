@@ -12,6 +12,12 @@
 
 BEGIN_NAMESPACE_YM_MISLIB
 
+BEGIN_NONAMESPACE
+
+vector<const MislibNode*> sIpinList;
+
+END_NONAMESPACE
+
 //////////////////////////////////////////////////////////////////////
 // クラス MislibNodeImpl
 //////////////////////////////////////////////////////////////////////
@@ -150,36 +156,6 @@ MislibNodeImpl::fall_fanout_delay() const
   return nullptr;
 }
 
-// 次のピンを設定する．
-// デフォルトでは何もしない．
-void
-MislibNodeImpl::set_next(MislibNodeImpl* pin)
-{
-}
-
-// 次のピンを取り出す．
-// デフォルトでは nullptr を返す．
-const MislibNode*
-MislibNodeImpl::next() const
-{
-  return nullptr;
-}
-
-// 末尾に要素を追加する．
-// デフォルトでは何もしない．
-void
-MislibNodeImpl::push_back(MislibNodeImpl* pin)
-{
-}
-
-// 先頭の要素を取り出す．
-// デフォルトでは nullptr を返す．
-const MislibNode*
-MislibNodeImpl::top() const
-{
-  return nullptr;
-}
-
 // @brief 面積を表すオブジェクトを返す．
 // @note デフォルトでは nullptr を返す．
 const MislibNode*
@@ -204,12 +180,11 @@ MislibNodeImpl::opin_expr() const
   return nullptr;
 }
 
-// @brief 入力ピンの先頭を表すオブジェクトを返す．
-// @note デフォルトでは nullptr を返す．
-const MislibNode*
-MislibNodeImpl::ipin_top() const
+// @brief 入力ピンのリストを返す．
+const vector<const MislibNode*>&
+MislibNodeImpl::ipin_list() const
 {
-  return nullptr;
+  return sIpinList;
 }
 
 // 位置を出力する．

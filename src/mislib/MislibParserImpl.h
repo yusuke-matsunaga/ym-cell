@@ -82,12 +82,12 @@ private:
   read_literal();
 
   /// @brief ピンリスト記述を読み込む．
-  /// @return ピンリストを表す AST のノードを返す．
+  /// @param[out] pin_list ピンリストを表す AST のノードを格納するリスト
+  /// @return 成功したら true を返す．
   ///
-  /// エラーが起きたら nullptr を返す．
   /// ピン名の代わりに * の場合があるので注意
-  MislibNode*
-  read_pin_list();
+  bool
+  read_pin_list(vector<const MislibNode*>& pin_list);
 
 
 private:

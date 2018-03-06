@@ -44,8 +44,6 @@ public:
     kConst0,
     /// @brief 定数1
     kConst1,
-    /// @brief リスト
-    kList,
     /// @brief NOT論理式
     kNot,
     /// @brief AND論理式
@@ -184,21 +182,12 @@ public:
   const MislibNode*
   fall_fanout_delay() const = 0;
 
+#if 0
   /// @brief 次の要素を取り出す．
   virtual
   const MislibNode*
   next() const = 0;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // リスト型のときに意味のある関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 先頭の要素を取り出す．
-  virtual
-  const MislibNode*
-  top() const = 0;
+#endif
 
 
 public:
@@ -221,10 +210,10 @@ public:
   const MislibNode*
   opin_expr() const = 0;
 
-  /// @brief 入力ピンの先頭を表すオブジェクトを返す．
+  /// @brief 入力ピンのリストを返す．
   virtual
-  const MislibNode*
-  ipin_top() const = 0;
+  const vector<const MislibNode*>&
+  ipin_list() const = 0;
 
 };
 

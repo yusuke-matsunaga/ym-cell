@@ -12,7 +12,6 @@
 #include "MislibNot.h"
 #include "MislibBop.h"
 #include "MislibPin.h"
-#include "MislibList.h"
 #include "MislibSymbol.h"
 #include "MislibConst.h"
 #include "MislibNum.h"
@@ -42,11 +41,11 @@ void
 MislibMgrImpl::clear()
 {
   mAlloc.destroy();
-  mGateList = nullptr;
+  mGateList.clear();
 }
 
 // @brief ゲートのリストを返す．
-const MislibNode*
+const vector<const MislibNode*>&
 MislibMgrImpl::gate_list() const
 {
   return mGateList;
@@ -149,14 +148,6 @@ MislibMgrImpl::new_xor(const FileRegion& loc,
   return new (p) MislibXor(loc, child1, child2);
 }
 
-// リストノードを生成する．
-MislibNodeImpl*
-MislibMgrImpl::new_list()
-{
-  void* p = mAlloc.get_memory(sizeof(MislibList));
-  return new (p) MislibList();
-}
-
 // PIN ノードを生成する．
 MislibNodeImpl*
 MislibMgrImpl::new_pin(const FileRegion& loc,
@@ -184,7 +175,7 @@ MislibMgrImpl::new_gate(const FileRegion& loc,
 			const MislibNode* pt_area,
 			const MislibNode* pt_oname,
 			const MislibNode* pt_expr,
-			const MislibNode* pt_ipin_list)
+			const vector<const MislibNode*>& pt_ipin_list)
 {
   ASSERT_COND(pt_name );
   ASSERT_COND(pt_name->type() == MislibNode::kStr );
@@ -194,17 +185,12 @@ MislibMgrImpl::new_gate(const FileRegion& loc,
   ASSERT_COND(pt_oname->type() == MislibNode::kStr );
   ASSERT_COND(pt_expr );
   ASSERT_COND(pt_expr->is_expr() );
-  ASSERT_COND(pt_ipin_list );
-  ASSERT_COND(pt_ipin_list->type() == MislibNode::kList );
 
   void* p = mAlloc.get_memory(sizeof(MislibGate));
   MislibNodeImpl* gate = new (p) MislibGate(loc, pt_name, pt_area,
 					    pt_oname, pt_expr,
-					    pt_ipin_list->top());
-  if ( mGateList == nullptr ) {
-    mGateList = new_list();
-  }
-  mGateList->push_back(gate);
+					    pt_ipin_list);
+  mGateList.push_back(gate);
 }
 
 END_NAMESPACE_YM_MISLIB

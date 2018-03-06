@@ -31,13 +31,13 @@ private:
   /// @param[in] area 面積を表すパース木
   /// @param[in] opin_name 出力ピン名を表すパース木
   /// @param[in] opin_expr 出力の論理式を表すパース木
-  /// @param[in] ipin_top 先頭の入力ピンを表すパース木
+  /// @param[in] ipin_list 入力ピンを表すパース木のリスト
   MislibGate(const FileRegion& loc,
 	     const MislibNode* name,
 	     const MislibNode* area,
 	     const MislibNode* opin_name,
 	     const MislibNode* opin_expr,
-	     const MislibNode* ipin_top);
+	     const vector<const MislibNode*>& ipin_list);
 
   /// @brief デストラクタ
   virtual
@@ -74,10 +74,10 @@ public:
   const MislibNode*
   opin_expr() const;
 
-  /// @brief 入力ピンの先頭を表すオブジェクトを返す．
+  /// @brief 入力ピンのリストを返す．
   virtual
-  const MislibNode*
-  ipin_top() const;
+  const vector<const MislibNode*>&
+  ipin_list() const;
 
   /// @brief 次の要素を設定する．
   virtual
@@ -113,8 +113,8 @@ private:
   // 出力の論理式
   const MislibNode* mOpinExpr;
 
-  // 先頭の入力ピン
-  const MislibNode* mIpinTop;
+  // 入力ピンのリスト
+  vector<const MislibNode*> mIpinList;
 
   // 次の要素
   MislibNodeImpl* mNext;

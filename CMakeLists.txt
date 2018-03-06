@@ -101,7 +101,6 @@ set (mislib_SOURCES
   src/mislib/MislibBop.cc
   src/mislib/MislibConst.cc
   src/mislib/MislibGate.cc
-  src/mislib/MislibList.cc
   src/mislib/MislibMgr.cc
   src/mislib/MislibMgrImpl.cc
   src/mislib/MislibNode.h

@@ -44,7 +44,7 @@ public:
   clear();
 
   /// @brief ゲートのリストを返す．
-  const MislibNode*
+  const vector<const MislibNode*>&
   gate_list() const;
 
 
@@ -61,7 +61,7 @@ public:
 	   const MislibNode* area,
 	   const MislibNode* oname,
 	   const MislibNode* expr,
-	   const MislibNode* ipin_list);
+	   const vector<const MislibNode*>& ipin_list);
 
   /// @brief PIN ノードを生成する．
   MislibNodeImpl*
@@ -74,10 +74,6 @@ public:
 	  const MislibNode* rise_fanout_delay,
 	  const MislibNode* fall_block_delay,
 	  const MislibNode* fall_fanout_delay);
-
-  /// @brief リストノードを生成する．
-  MislibNodeImpl*
-  new_list();
 
   /// @brief NOT ノードを生成する．
   MislibNodeImpl*
@@ -152,7 +148,7 @@ private:
   SimpleAlloc mAlloc;
 
   // ゲートのリスト
-  MislibNodeImpl* mGateList;
+  vector<const MislibNode*> mGateList;
 
 };
 
