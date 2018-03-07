@@ -1,5 +1,5 @@
-﻿#ifndef CIPINHASH_H
-#define CIPINHASH_H
+﻿#ifndef CICELLPINHASH_H
+#define CICELLPINHASH_H
 
 /// @file CiCellPinHash.h
 /// @brief CiCellPinHash のヘッダファイル
@@ -58,7 +58,14 @@ private:
   /// @brief テーブルの領域を確保する．
   /// @param[in] req_size 要求するサイズ
   void
-  alloc_table(int req_size);
+  alloc_table(SizeType req_size);
+
+  /// @brief 要素をリンクに追加する．
+  /// @param[in] pos 追加する位置
+  /// @param[in] pin 追加する要素
+  void
+  add_pin(SizeType pos,
+	  CiCellPin* pin);
 
 
 private:
@@ -67,19 +74,23 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // テーブルサイズ
-  int mSize;
+  SizeType mSize;
 
   // ハッシュ表
   CiCellPin** mTable;
 
   // ハッシュ表を拡大するしきい値
-  int mLimit;
+  SizeType mLimit;
 
   // 要素数
-  int mNum;
+  SizeType mNum;
 
 };
 
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
 END_NAMESPACE_YM_CLIB
 
-#endif // CIPINHASH_H
+#endif // CICELLPINHASH_H
