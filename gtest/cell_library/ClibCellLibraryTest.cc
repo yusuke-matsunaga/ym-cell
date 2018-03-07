@@ -45,6 +45,8 @@ TEST(ClibCellLibraryTest, read_liberty)
     EXPECT_TRUE( stat );
 
     EXPECT_EQ( 310, library.cell_num() );
+
+    display_library(cout, library);
   }
   catch ( AssertError obj ) {
     cout << obj << endl;
@@ -77,6 +79,8 @@ TEST(ClibCellLibraryTest, dump_restore)
     library2.restore(ido);
 
     EXPECT_EQ( library.cell_num(), library2.cell_num() );
+
+    display_library(cout, library2);
   }
   catch ( AssertError obj ) {
     cout << obj << endl;

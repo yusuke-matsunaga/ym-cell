@@ -44,7 +44,7 @@ int
 CiPatMgr::max_input() const
 {
   int ans = 0;
-  for (int i = 0; i < mPatNum; ++ i) {
+  for ( int i = 0; i < mPatNum; ++ i ) {
     const ClibPatGraph& pat = this->pat(i);
     int ni = pat.input_num();
     if ( ans < ni ) {
@@ -117,10 +117,8 @@ void
 CiPatMgr::set_node_num(int nn)
 {
   mNodeNum = nn;
-  void* p = mAlloc.get_memory(sizeof(int) * mNodeNum);
-  mNodeTypeArray = new (p) int[mNodeNum];
-  void* q = mAlloc.get_memory(sizeof(int) * mNodeNum * 2);
-  mEdgeArray = new (q) int[mNodeNum * 2];
+  mNodeTypeArray = mAlloc.get_array<int>(mNodeNum);
+  mEdgeArray = mAlloc.get_array<int>(mNodeNum * 2);
 }
 
 // @brief パタン数を設定する．
@@ -128,8 +126,7 @@ void
 CiPatMgr::set_pat_num(int np)
 {
   mPatNum = np;
-  void* p = mAlloc.get_memory(sizeof(CiPatGraph) * mPatNum);
-  mPatArray = new (p) CiPatGraph[mPatNum];
+  mPatArray = mAlloc.get_array<CiPatGraph>(mPatNum);
 }
 
 END_NAMESPACE_YM_CLIB
