@@ -46,6 +46,12 @@ DotlibMgrImpl::clear()
   mNotNum = 0;
   mListNum = 0;
   mGroupNum = 0;
+  mTechnologyNum = 0;
+  mDelayModelNum = 0;
+  mCellPinDirectionNum = 0;
+  mTimingSenseNum = 0;
+  mTimingTypeNum = 0;
+  mVarTypeNum = 0;
   mAttrNum = 0;
 }
 
@@ -230,6 +236,84 @@ DotlibMgrImpl::new_group(const DotlibNode* value,
   ++ mGroupNum;
   void* p = mAlloc.get_memory(sizeof(DotlibGroup));
   DotlibNodeImpl* node =  new (p) DotlibGroup(value, loc);
+  return node;
+}
+
+// @brief technology を表す DotlibNode を生成する．
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+DotlibNodeImpl*
+DotlibMgrImpl::new_technology(ClibTechnology value,
+			      const FileRegion& loc)
+{
+  ++ mTechnologyNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibTechnology));
+  DotlibNodeImpl* node = new (p) DotlibTechnology(value, loc);
+  return node;
+}
+
+// @brief delay model を表す DotlibNode を生成する．
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+DotlibNodeImpl*
+DotlibMgrImpl::new_delay_model(ClibDelayModel value,
+			       const FileRegion& loc)
+{
+  ++ mDelayModelNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibDelayModel));
+  DotlibNodeImpl* node = new (p) DotlibDelayModel(value, loc);
+  return node;
+}
+
+// @brief cell_pin_direction を表す DotlibNode を生成する．
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+DotlibNodeImpl*
+DotlibMgrImpl::new_cell_pin_direction(ClibCellPinDirection value,
+				      const FileRegion& loc)
+{
+  ++ mCellPinDirectionNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibCellPinDirection));
+  DotlibNodeImpl* node = new (p) DotlibCellPinDirection(value, loc);
+  return node;
+}
+
+// @brief timing_sense を表す DotlibNode を生成する．
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+DotlibNodeImpl*
+DotlibMgrImpl::new_timing_sense(ClibTimingSense value,
+				const FileRegion& loc)
+{
+  ++ mTimingSenseNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibTimingSense));
+  DotlibNodeImpl* node = new (p) DotlibTimingSense(value, loc);
+  return node;
+}
+
+// @brief timing_type を表す DotlibNode を生成する．
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+DotlibNodeImpl*
+DotlibMgrImpl::new_timing_type(ClibTimingType value,
+			       const FileRegion& loc)
+{
+  ++ mTimingTypeNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibTimingType));
+  DotlibNodeImpl* node = new (p) DotlibTimingType(value, loc);
+  return node;
+}
+
+// @brief var_type を表す DotlibNode を生成する．
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+DotlibNodeImpl*
+DotlibMgrImpl::new_var_type(ClibVarType value,
+			    const FileRegion& loc)
+{
+  ++ mVarTypeNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibVarType));
+  DotlibNodeImpl* node = new (p) DotlibVarType(value, loc);
   return node;
 }
 

@@ -47,7 +47,7 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   int n = list_node->list_size();
   mNameList.clear();
   mNameList.resize(n);
-  for (int i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     const DotlibNode* str_node = list_node->list_elem(i);
     if ( !str_node->is_string() ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -79,31 +79,8 @@ DotlibPin::set_data(const DotlibNode* pin_node)
     // 'direction' がないのはエラー
     return false;
   }
-  // 'direction' のハンドラは StrSimpleHandler なので文字列のはず．
-  ShString value = direction_node->string_value();
-  if ( value == "input" ) {
-    mDirection = DotlibPin::kInput;
-  }
-  else if ( value == "output" ) {
-    mDirection = DotlibPin::kOutput;
-  }
-  else if ( value == "inout" ) {
-    mDirection = DotlibPin::kInout;
-  }
-  else if ( value == "internal" ) {
-    mDirection = DotlibPin::kInternal;
-  }
-  else {
-    ostringstream buf;
-    buf << value << ": Illegal value for 'direction'."
-	<< " 'input', 'output', 'inout' or 'internal' are expected.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    direction_node->loc(),
-		    kMsgError,
-		    "DOTLIB_PARSER",
-		    buf.str());
-    return false;
-  }
+  ASSERT_COND( direction_node->type() == DotlibNode::kCellPinDirection );
+  mDirection = direction_node->cell_pin_direction();
 
   // 'capacitance' を取り出す．
   const DotlibNode* cap_node = nullptr;
@@ -261,7 +238,7 @@ DotlibPin::name(int pos) const
 }
 
 // @brief "direction" を返す．
-DotlibPin::tDirection
+ClibCellPinDirection
 DotlibPin::direction() const
 {
   return mDirection;

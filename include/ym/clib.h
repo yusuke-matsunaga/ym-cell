@@ -212,6 +212,9 @@ enum ClibVarType {
   kClibVarOutputNetWireCap,
   kClibVarOutputNetPinCap,
 
+  kClibVarEqualOrOppositeOutputNetCapacitance,
+  kClibVarInputTransitionTime,
+
   kClibVarRelatedOutTotalOutputNetCapacitance,
   kClibVarRelatedOutOutputNetLength,
   kClibVarRelatedOutOutputNetWireCap,

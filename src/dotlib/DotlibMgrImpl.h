@@ -136,6 +136,48 @@ public:
   new_group(const DotlibNode* value,
 	    const FileRegion& loc);
 
+  /// @brief technology を表す DotlibNode を生成する．
+  /// @param[in] value 値
+  /// @param[in] loc ファイル上の位置
+  DotlibNodeImpl*
+  new_technology(ClibTechnology value,
+		 const FileRegion& loc);
+
+  /// @brief delay model を表す DotlibNode を生成する．
+  /// @param[in] value 値
+  /// @param[in] loc ファイル上の位置
+  DotlibNodeImpl*
+  new_delay_model(ClibDelayModel value,
+		  const FileRegion& loc);
+
+  /// @brief cell_pin_direction を表す DotlibNode を生成する．
+  /// @param[in] value 値
+  /// @param[in] loc ファイル上の位置
+  DotlibNodeImpl*
+  new_cell_pin_direction(ClibCellPinDirection value,
+			 const FileRegion& loc);
+
+  /// @brief timing_sense を表す DotlibNode を生成する．
+  /// @param[in] value 値
+  /// @param[in] loc ファイル上の位置
+  DotlibNodeImpl*
+  new_timing_sense(ClibTimingSense value,
+		   const FileRegion& loc);
+
+  /// @brief timing_type を表す DotlibNode を生成する．
+  /// @param[in] value 値
+  /// @param[in] loc ファイル上の位置
+  DotlibNodeImpl*
+  new_timing_type(ClibTimingType value,
+		  const FileRegion& loc);
+
+  /// @brief var_type を表す DotlibNode を生成する．
+  /// @param[in] value 値
+  /// @param[in] loc ファイル上の位置
+  DotlibNodeImpl*
+  new_var_type(ClibVarType value,
+	       const FileRegion& loc);
+
   /// @brief DotlibAttr を生成する．
   DotlibAttr*
   new_attr(AttrType attr_type,
@@ -177,6 +219,12 @@ private:
   int mNotNum;
   int mListNum;
   int mGroupNum;
+  int mTechnologyNum;
+  int mDelayModelNum;
+  int mCellPinDirectionNum;
+  int mTimingSenseNum;
+  int mTimingTypeNum;
+  int mVarTypeNum;
   int mAttrNum;
 };
 

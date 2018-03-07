@@ -75,11 +75,11 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
     return false;
   }
   if ( tech_node ) {
-    ShString str = tech_node->get_string_from_value_list();
-    if ( str == "cmos" ) {
+    const char* str = tech_node->get_string_from_value_list();
+    if ( strcmp(str, "cmos") == 0 ) {
       mTechnology = kClibTechCmos;
     }
-    else if ( str == "fpga" ) {
+    else if ( strcmp(str, "fpga") == 0 ) {
       mTechnology = kClibTechFpga;
     }
     else {
@@ -97,38 +97,8 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
   if ( !expect_singleton_or_null(ATTR_DELAY_MODEL, dm_node) ) {
     return false;
   }
-  ClibDelayModel delay_model = kClibDelayGenericCmos;
-  if ( dm_node != nullptr ) {
-    ShString value = dm_node->string_value();
-    if ( value == "generic_cmos" ) {
-      delay_model = kClibDelayGenericCmos;
-    }
-    else if ( value == "table_lookup" ) {
-      delay_model = kClibDelayTableLookup;
-    }
-    else if ( value == "piecewise_cmos" ) {
-      delay_model = kClibDelayPiecewiseCmos;
-    }
-    else if ( value == "cmos2" ) {
-      delay_model = kClibDelayCmos2;
-    }
-    else if ( value == "dcm" ) {
-      delay_model = kClibDelayDcm;
-    }
-    else {
-      ostringstream buf;
-      buf << value << ": Illegal value for 'delay_model'."
-	  << " 'generic_cmos', 'table_lookup', "
-	  << "'piecewise_cmos', 'cmos2' or 'dcm' are expected.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      dm_node->loc(),
-		      kMsgError,
-		      "DOTLIB_PARSER",
-		      buf.str());
-      return false;
-    }
-  }
-  mDelayModel = delay_model;
+  ASSERT_COND( dm_node->type() == DotlibNode::kDelayModel );
+  mDelayModel = dm_node->delay_model();
 
   // 'bus_naming_style' を取り出す．
   if ( !expect_singleton_or_null(ATTR_BUS_NAMING_STYLE, mBusNamingStyle) ) {

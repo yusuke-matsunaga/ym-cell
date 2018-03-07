@@ -23,24 +23,6 @@ class DotlibPin :
   public DotlibAttrMap
 {
 public:
-  //////////////////////////////////////////////////////////////////////
-  // 列挙型の定義
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief ピンの方向を表す型
-  enum tDirection {
-    /// @brief 入力
-    kInput,
-    /// @brief 出力
-    kOutput,
-    /// @brief 入出力
-    kInout,
-    /// @brief 内部ピン
-    kInternal
-  };
-
-
-public:
 
   /// @brief コンストラクタ
   DotlibPin();
@@ -65,7 +47,7 @@ public:
   name(int pos) const;
 
   /// @brief "direction" を返す．
-  tDirection
+  ClibCellPinDirection
   direction() const;
 
   /// @brief "capacitance" を返す．
@@ -134,7 +116,7 @@ private:
   vector<ShString> mNameList;
 
   // "direction"
-  tDirection mDirection;
+  ClibCellPinDirection mDirection;
 
   // "capacitance"
   double mCapacitance;

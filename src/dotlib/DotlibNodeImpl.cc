@@ -30,7 +30,7 @@ indent_str(int indent)
 // " " で囲んで出力する．
 void
 dump_str(ostream& s,
-	 const ShString& str)
+	 const char* str)
 {
   bool need_quote = false;
   for (const char* p = str; *p; ++ p) {
@@ -268,6 +268,78 @@ DotlibNodeImpl::add_attr(DotlibAttr* attr)
   dump(cout);
   cout << endl;
   ASSERT_NOT_REACHED;
+}
+
+// @brief Technology を返す．
+//
+// type() == kTechnology の時のみ意味を持つ．
+ClibTechnology
+DotlibNodeImpl::technology() const
+{
+  dump(cout);
+  cout << endl;
+  ASSERT_NOT_REACHED;
+  return kClibTechCmos;
+}
+
+// @brief DelayModel を返す．
+//
+// type() == kDelayModel の時のみ意味を持つ．
+ClibDelayModel
+DotlibNodeImpl::delay_model() const
+{
+  dump(cout);
+  cout << endl;
+  ASSERT_NOT_REACHED;
+  return kClibDelayGenericCmos;
+}
+
+// @brief CellPinDirection を返す．
+//
+// type() == kCellPinDirection の時のみ意味を持つ．
+ClibCellPinDirection
+DotlibNodeImpl::cell_pin_direction() const
+{
+  dump(cout);
+  cout << endl;
+  ASSERT_NOT_REACHED;
+  return kClibCellPinInput;
+}
+
+// @brief TimingSense を返す．
+//
+// type() == kTimingSense の時のみ意味を持つ．
+ClibTimingSense
+DotlibNodeImpl::timing_sense() const
+{
+  dump(cout);
+  cout << endl;
+  ASSERT_NOT_REACHED;
+  return kClibPosiUnate;
+}
+
+// @brief TimingType を返す．
+//
+// type() == kTimingType の時のみ意味を持つ．
+ClibTimingType
+DotlibNodeImpl::timing_type() const
+{
+  dump(cout);
+  cout << endl;
+  ASSERT_NOT_REACHED;
+  return kClibTimingCombinational;
+}
+
+// @brief VarType を返す．
+//
+// type() == kVarType の時のみ意味を持つ．
+ClibVarType
+DotlibNodeImpl::var_type() const
+{
+  dump(cout);
+  cout << endl;
+  ASSERT_NOT_REACHED;
+  return kClibVarNone;
 }
 
 
@@ -855,6 +927,316 @@ DotlibGroup::add_attr(DotlibAttr* attr)
   }
   else {
     mAttrTop = mAttrTail = attr;
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス DotlibTechnology
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+DotlibTechnology::DotlibTechnology(ClibTechnology value,
+				   const FileRegion& loc) :
+  DotlibNodeBase(loc),
+  mValue(value)
+{
+}
+
+// @brief デストラクタ
+DotlibTechnology::~DotlibTechnology()
+{
+}
+
+// @brief 型を得る．
+DotlibNode::Type
+DotlibTechnology::type() const
+{
+  return kTechnology;
+}
+
+// @brief Technology を返す．
+//
+// type() == kTechnology の時のみ意味を持つ．
+ClibTechnology
+DotlibTechnology::technology() const
+{
+  return mValue;
+}
+
+// @brief 内容をストリーム出力する．
+// @param[in] s 出力先のストリーム
+// @param[in] indent インデント量
+void
+DotlibTechnology::dump(ostream& s,
+		       int indent) const
+{
+  switch ( mValue ) {
+  case kClibTechCmos: dump_str(s, "cmos"); break;
+  case kClibTechFpga: dump_str(s, "fpga"); break;
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス DotlibDelayModel
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+DotlibDelayModel::DotlibDelayModel(ClibDelayModel value,
+				   const FileRegion& loc) :
+  DotlibNodeBase(loc),
+  mValue(value)
+{
+}
+
+// @brief デストラクタ
+DotlibDelayModel::~DotlibDelayModel()
+{
+}
+
+// @brief 型を得る．
+DotlibNode::Type
+DotlibDelayModel::type() const
+{
+  return kDelayModel;
+}
+
+// @brief DelayModel を返す．
+//
+// type() == kDelayModel の時のみ意味を持つ．
+ClibDelayModel
+DotlibDelayModel::delay_model() const
+{
+  return mValue;
+}
+
+// @brief 内容をストリーム出力する．
+// @param[in] s 出力先のストリーム
+// @param[in] indent インデント量
+void
+DotlibDelayModel::dump(ostream& s,
+		       int indent) const
+{
+  switch ( mValue ) {
+  case kClibDelayGenericCmos:   dump_str(s, "generic cmos"); break;
+  case kClibDelayTableLookup:   dump_str(s, "table lookup"); break;
+  case kClibDelayPiecewiseCmos: dump_str(s, "piesewise cmos"); break;
+  case kClibDelayCmos2:         dump_str(s, "cmos2"); break;
+  case kClibDelayDcm:           dump_str(s, "dcm"); break;
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス DotlibCellPinDirection
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+DotlibCellPinDirection::DotlibCellPinDirection(ClibCellPinDirection value,
+					       const FileRegion& loc) :
+  DotlibNodeBase(loc),
+  mValue(value)
+{
+}
+
+// @brief デストラクタ
+DotlibCellPinDirection::~DotlibCellPinDirection()
+{
+}
+
+// @brief 型を得る．
+DotlibNode::Type
+DotlibCellPinDirection::type() const
+{
+  return kCellPinDirection;
+}
+
+// @brief CellPinDirection を返す．
+//
+// type() == kCellPinDirection の時のみ意味を持つ．
+ClibCellPinDirection
+DotlibCellPinDirection::cell_pin_direction() const
+{
+  return mValue;
+}
+
+// @brief 内容をストリーム出力する．
+// @param[in] s 出力先のストリーム
+// @param[in] indent インデント量
+void
+DotlibCellPinDirection::dump(ostream& s,
+		       int indent) const
+{
+  switch ( mValue ) {
+  case kClibCellPinInput:    dump_str(s, "input"); break;
+  case kClibCellPinOutput:   dump_str(s, "output"); break;
+  case kClibCellPinInout:    dump_str(s, "inout"); break;
+  case kClibCellPinInternal: dump_str(s, "internal"); break;
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス DotlibTimingSense
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+DotlibTimingSense::DotlibTimingSense(ClibTimingSense value,
+				     const FileRegion& loc) :
+  DotlibNodeBase(loc),
+  mValue(value)
+{
+}
+
+// @brief デストラクタ
+DotlibTimingSense::~DotlibTimingSense()
+{
+}
+
+// @brief 型を得る．
+DotlibNode::Type
+DotlibTimingSense::type() const
+{
+  return kTimingSense;
+}
+
+// @brief TimingSense を返す．
+//
+// type() == kTimingSense の時のみ意味を持つ．
+ClibTimingSense
+DotlibTimingSense::timing_sense() const
+{
+  return mValue;
+}
+
+// @brief 内容をストリーム出力する．
+// @param[in] s 出力先のストリーム
+// @param[in] indent インデント量
+void
+DotlibTimingSense::dump(ostream& s,
+			int indent) const
+{
+  switch ( mValue ) {
+  case kClibPosiUnate: dump_str(s, "positive unate"); break;
+  case kClibNegaUnate: dump_str(s, "negative unate"); break;
+  case kClibNonUnate:  dump_str(s, "non unate"); break;
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス DotlibTimingType
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+DotlibTimingType::DotlibTimingType(ClibTimingType value,
+				   const FileRegion& loc) :
+  DotlibNodeBase(loc),
+  mValue(value)
+{
+}
+
+// @brief デストラクタ
+DotlibTimingType::~DotlibTimingType()
+{
+}
+
+// @brief 型を得る．
+DotlibNode::Type
+DotlibTimingType::type() const
+{
+  return kTimingType;
+}
+
+// @brief TimingType を返す．
+//
+// type() == kTimingType の時のみ意味を持つ．
+ClibTimingType
+DotlibTimingType::timing_type() const
+{
+  return mValue;
+}
+
+// @brief 内容をストリーム出力する．
+// @param[in] s 出力先のストリーム
+// @param[in] indent インデント量
+void
+DotlibTimingType::dump(ostream& s,
+		       int indent) const
+{
+  switch ( mValue ) {
+  case kClibTimingCombinational: dump_str(s, "combinational"); break;
+  default: dump_str(s, "---"); break;
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス DotlibVarType
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+DotlibVarType::DotlibVarType(ClibVarType value,
+			     const FileRegion& loc) :
+  DotlibNodeBase(loc),
+  mValue(value)
+{
+}
+
+// @brief デストラクタ
+DotlibVarType::~DotlibVarType()
+{
+}
+
+// @brief 型を得る．
+DotlibNode::Type
+DotlibVarType::type() const
+{
+  return kVarType;
+}
+
+// @brief VarType を返す．
+//
+// type() == kVarType の時のみ意味を持つ．
+ClibVarType
+DotlibVarType::var_type() const
+{
+  return mValue;
+}
+
+// @brief 内容をストリーム出力する．
+// @param[in] s 出力先のストリーム
+// @param[in] indent インデント量
+void
+DotlibVarType::dump(ostream& s,
+		    int indent) const
+{
+  switch ( mValue ) {
+  case kClibVarInputNetTransition:                  dump_str(s, "input net transition"); break;
+  case kClibVarTotalOutputNetCapacitance:           dump_str(s, "output net capacitance"); break;
+  case kClibVarOutputNetLength:                     dump_str(s, "output net length"); break;
+  case kClibVarOutputNetWireCap:                    dump_str(s, "output net wire cap"); break;
+  case kClibVarOutputNetPinCap:                     dump_str(s, "output net pin cap"); break;
+  case kClibVarRelatedOutTotalOutputNetCapacitance: dump_str(s, "related out total output net capacitance"); break;
+  case kClibVarRelatedOutOutputNetLength:           dump_str(s, "related out output net length"); break;
+  case kClibVarRelatedOutOutputNetWireCap:          dump_str(s, "related out output net wire cap"); break;
+  case kClibVarRelatedOutOutputNetPinCap:           dump_str(s, "related out output net pin cap"); break;
+  case kClibVarConstrainedPinTransition:            dump_str(s, "constrained pin transition"); break;
+  case kClibVarRelatedPinTransition:                dump_str(s, "related pin transition"); break;
+  case kClibVarNone:                                dump_str(s, "none"); break;
   }
 }
 

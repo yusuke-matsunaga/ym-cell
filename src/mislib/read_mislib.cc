@@ -269,7 +269,7 @@ set_library(const string& lib_name,
     }
   }
 
-  //library->set_cell_list(cell_list);
+  library->set_cell_list(cell_list);
 }
 
 END_NONAMESPACE

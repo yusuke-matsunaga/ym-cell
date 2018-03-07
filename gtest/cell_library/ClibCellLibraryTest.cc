@@ -11,6 +11,8 @@
 #include "ym/ClibCellLibrary.h"
 #include "ym/FileIDO.h"
 #include "ym/FileODO.h"
+#include "ym/MsgHandler.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -33,6 +35,24 @@ TEST(ClibCellLibraryTest, read_mislib)
 }
 
 TEST(ClibCellLibraryTest, read_liberty)
+{
+  try {
+    MsgMgr::reg_handler(new StreamMsgHandler(&cout));
+    string filename = string(DATA_DIR) + string("/HIT018.typ.snp");
+    ClibCellLibrary library;
+    bool stat = library.read_liberty(filename);
+
+    EXPECT_TRUE( stat );
+
+    EXPECT_EQ( 310, library.cell_num() );
+  }
+  catch ( AssertError obj ) {
+    cout << obj << endl;
+    EXPECT_TRUE( false );
+  }
+}
+
+TEST(ClibCellLibraryTest, dump_restore)
 {
   try {
     string filename = string(DATA_DIR) + string("/HIT018.typ.snp");

@@ -38,7 +38,13 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///   * XOR演算:      kXor    (DotlibNode*, NodelibNode*)
 /// - リスト型:       kList   [DotlibNode* ...]
 /// - グループ型:     kGroup
-/// - 属性型:         kAttr   AttrType
+/// - 属性値型
+///   * ClibTechnology:
+///   * ClibDelayModel:
+///   * ClibCellPinDirection:
+///   * ClibTimingSense:
+///   * ClibTimingType:
+///   * ClibVarType:
 //////////////////////////////////////////////////////////////////////
 class DotlibNode
 {
@@ -74,9 +80,20 @@ public:
     kList,
     /// @brief グループ
     kGroup,
-    /// @brief 属性
-    kAttr,
+    /// @brief ClibTechnology
+    kTechnology,
+    /// @brief ClibDelayModel
+    kDelayModel,
+    /// @brief ClibCellPinDirection
+    kCellPinDirection,
+    /// @brief ClibTimingSense
+    kTimingSense,
+    /// @brief ClibTimingType
+    kTimingType,
+    /// @brief ClibVarType
+    kVarType,
   };
+
 
 protected:
 
@@ -205,11 +222,53 @@ public:
   group_value() const = 0;
 
   /// @brief 先頭の属性を得る．
-  /// @note is_group() = true の時のみ意味を持つ．
-  /// @note 返り値のノードの型は kAttr
+  ///
+  /// is_group() = true の時のみ意味を持つ．
   virtual
   const DotlibAttr*
   attr_top() const = 0;
+
+  /// @brief Technology を返す．
+  ///
+  /// type() == kTechnology の時のみ意味を持つ．
+  virtual
+  ClibTechnology
+  technology() const = 0;
+
+  /// @brief DelayModel を返す．
+  ///
+  /// type() == kDelayModel の時のみ意味を持つ．
+  virtual
+  ClibDelayModel
+  delay_model() const = 0;
+
+  /// @brief CellPinDirection を返す．
+  ///
+  /// type() == kCellPinDirection の時のみ意味を持つ．
+  virtual
+  ClibCellPinDirection
+  cell_pin_direction() const = 0;
+
+  /// @brief TimingSense を返す．
+  ///
+  /// type() == kTimingSense の時のみ意味を持つ．
+  virtual
+  ClibTimingSense
+  timing_sense() const = 0;
+
+  /// @brief TimingType を返す．
+  ///
+  /// type() == kTimingType の時のみ意味を持つ．
+  virtual
+  ClibTimingType
+  timing_type() const = 0;
+
+  /// @brief VarType を返す．
+  ///
+  /// type() == kVarType の時のみ意味を持つ．
+  virtual
+  ClibVarType
+  var_type() const = 0;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム

@@ -50,7 +50,7 @@ HandlerFactory::new_library(DotlibParserImpl& parser)
   handler->reg_handler(ATTR_COMMENT,                                str_simple);
   handler->reg_handler(ATTR_CURRENT_UNIT,                           symstr_simple);
   handler->reg_handler(ATTR_DATE,                                   str_simple);
-  handler->reg_handler(ATTR_DELAY_MODEL,                            str_simple);
+  handler->reg_handler(ATTR_DELAY_MODEL,                            new DelayModelHandler(handler));
   handler->reg_handler(ATTR_EM_TEMP_DEGRADATION_FACTOR,             flt_simple);
   handler->reg_handler(ATTR_FPGA_TECHNOLOGY,                        str_simple);
   handler->reg_handler(ATTR_IN_PLACE_SWAP_MODE,                     str_simple);
@@ -373,10 +373,10 @@ HandlerFactory::new_template(GroupHandler* parent)
   GroupHandler* handler = new Str1GroupHandler(parent);
 
   // simple attributes
-  DotlibHandler* str_simple = new StrSimpleHandler(handler, false);
-  handler->reg_handler(ATTR_VARIABLE_1, str_simple);
-  handler->reg_handler(ATTR_VARIABLE_2, str_simple);
-  handler->reg_handler(ATTR_VARIABLE_3, str_simple);
+  DotlibHandler* var_type = new VarTypeHandler(handler);
+  handler->reg_handler(ATTR_VARIABLE_1, var_type);
+  handler->reg_handler(ATTR_VARIABLE_2, var_type);
+  handler->reg_handler(ATTR_VARIABLE_3, var_type);
 
   // complex attributes
   DotlibHandler* index_handler = new VectorComplexHandler(handler);
@@ -739,7 +739,7 @@ HandlerFactory::new_bundle(GroupHandler* parent)
   DotlibHandler* flt_simple = new FloatSimpleHandler(handler);
   DotlibHandler* func_handler = new FuncHandler(handler);
   handler->reg_handler(ATTR_CAPACITANCE, flt_simple);
-  handler->reg_handler(ATTR_DIRECTION,   simple);
+  handler->reg_handler(ATTR_DIRECTION,   new CellPinDirectionHandler(handler));
   handler->reg_handler(ATTR_FUNCTION,    func_handler);
 
   // complex attributes
@@ -785,7 +785,7 @@ HandlerFactory::new_pin(GroupHandler* parent)
   handler->reg_handler(ATTR_CLOCK_GATE_OUT_PIN,                  simple);
   handler->reg_handler(ATTR_COMPLEMENTARY_PIN,                   simple);
   handler->reg_handler(ATTR_CONNECTION_CLASS,                    simple);
-  handler->reg_handler(ATTR_DIRECTION,                           str_simple);
+  handler->reg_handler(ATTR_DIRECTION,                           new CellPinDirectionHandler(handler));
   handler->reg_handler(ATTR_DONT_FAULT,                          simple);
   handler->reg_handler(ATTR_DRIVE_CURRENT,                       simple);
   handler->reg_handler(ATTR_DRIVER_TYPE,                         simple);
@@ -909,8 +909,8 @@ HandlerFactory::new_timing(GroupHandler* parent)
   handler->reg_handler(ATTR_RELATED_OUTPUT_PIN,       str_simple);
   handler->reg_handler(ATTR_RELATED_PIN,              str_simple);
 
-  handler->reg_handler(ATTR_TIMING_SENSE,             str_simple);
-  handler->reg_handler(ATTR_TIMING_TYPE,              str_simple);
+  handler->reg_handler(ATTR_TIMING_SENSE,             new TimingSenseHandler(handler));
+  handler->reg_handler(ATTR_TIMING_TYPE,              new TimingTypeHandler(handler));
 
   handler->reg_handler(ATTR_EDGE_RATE_SENSITIVITY_F0, simple);
   handler->reg_handler(ATTR_EDGE_RATE_SENSITIVITY_F1, simple);

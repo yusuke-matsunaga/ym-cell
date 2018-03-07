@@ -31,6 +31,7 @@ DotlibTemplate::~DotlibTemplate()
 
 BEGIN_NONAMESPACE
 
+inline
 bool
 node_to_var(const DotlibNode* node,
 	    ClibVarType &var)
@@ -40,48 +41,8 @@ node_to_var(const DotlibNode* node,
     return true;
   }
 
-  ShString tmp_str = node->string_value();
-  if ( tmp_str == "input_net_transition" ) {
-    var = kClibVarInputNetTransition;
-  }
-  else if ( tmp_str == "total_output_net_capacitance" ) {
-    var = kClibVarTotalOutputNetCapacitance;
-  }
-  else if ( tmp_str == "output_net_length" ) {
-    var = kClibVarOutputNetLength;
-  }
-  else if ( tmp_str == "output_net_wire_cap" ) {
-    var = kClibVarOutputNetWireCap;
-  }
-  else if ( tmp_str == "output_net_pin_cap" ) {
-    var = kClibVarOutputNetPinCap;
-  }
-  else if ( tmp_str == "related_out_total_output_net_capacitance" ) {
-    var = kClibVarRelatedOutTotalOutputNetCapacitance;
-  }
-  else if ( tmp_str == "related_out_output_net_length" ) {
-    var = kClibVarRelatedOutOutputNetLength;
-  }
-  else if ( tmp_str == "related_out_output_net_wire_cap" ) {
-    var = kClibVarRelatedOutOutputNetWireCap;
-  }
-  else if ( tmp_str == "related_out_output_net_pin_cap" ) {
-    var = kClibVarRelatedOutOutputNetPinCap;
-  }
-  else if ( tmp_str == "constrained_pin_transition" ) {
-    var = kClibVarConstrainedPinTransition;
-  }
-  else if ( tmp_str == "related_pin_transition" ) {
-    var = kClibVarRelatedPinTransition;
-  }
-  else {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    node->loc(),
-		    kMsgError,
-		    "DOTLIB_PARSER",
-		    "Syntax error. illegal string for variable type.");
-    return false;
-  }
+  ASSERT_COND( node->type() == DotlibNode::kVarType );
+  var = node->var_type();
   return true;
 }
 

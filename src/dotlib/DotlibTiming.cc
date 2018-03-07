@@ -98,24 +98,8 @@ DotlibTiming::set_data(const DotlibNode* timing_node)
     mTimingSense = kClibNonUnate;
   }
   else {
-    ShString tmp_str = ts_node->string_value();
-    if ( tmp_str == "positive_unate" ) {
-      mTimingSense = kClibPosiUnate;
-    }
-    else if ( tmp_str == "negative_unate" ) {
-      mTimingSense = kClibNegaUnate;
-    }
-    else if ( tmp_str == "non_unate" ) {
-      mTimingSense = kClibNonUnate;
-    }
-    else {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      ts_node->loc(),
-		      kMsgError,
-		      "DOTLIB_PARSER",
-		      "Syntax error. Only 'positive_unate', 'negative_unate', or 'non_unate' are allowed here.");
-      return false;
-    }
+    ASSERT_COND( ts_node->type() == DotlibNode::kTimingSense );
+    mTimingSense = ts_node->timing_sense();
   }
 
   // 'timing_type' を取り出す．
@@ -127,108 +111,8 @@ DotlibTiming::set_data(const DotlibNode* timing_node)
     mTimingType = kClibTimingCombinational;
   }
   else {
-    ShString tmp_str = tt_node->string_value();
-    if ( tmp_str == "combinational" ) {
-      mTimingType = kClibTimingCombinational;
-    }
-    else if ( tmp_str == "combinational_rise" ) {
-      mTimingType = kClibTimingCombinationalRise;
-    }
-    else if ( tmp_str == "combinational_fall" ) {
-      mTimingType = kClibTimingCombinationalFall;
-    }
-    else if ( tmp_str == "three_state_enable" ) {
-      mTimingType = kClibTimingThreeStateEnable;
-    }
-    else if ( tmp_str == "three_state_enable_rise" ) {
-      mTimingType = kClibTimingThreeStateEnableRise;
-    }
-    else if ( tmp_str == "three_state_enable_fall" ) {
-      mTimingType = kClibTimingThreeStateEnableFall;
-    }
-    else if ( tmp_str == "three_state_disable" ) {
-      mTimingType = kClibTimingThreeStateDisable;
-    }
-    else if ( tmp_str == "three_state_disable_rise" ) {
-      mTimingType = kClibTimingThreeStateDisableRise;
-    }
-    else if ( tmp_str == "three_state_disable_fall" ) {
-      mTimingType = kClibTimingThreeStateDisableFall;
-    }
-    else if ( tmp_str == "rising_edge" ) {
-      mTimingType = kClibTimingRisingEdge;
-    }
-    else if ( tmp_str == "falling_edge" ) {
-      mTimingType = kClibTimingFallingEdge;
-    }
-    else if ( tmp_str == "preset" ) {
-      mTimingType = kClibTimingPreset;
-    }
-    else if ( tmp_str == "clear" ) {
-      mTimingType = kClibTimingClear;
-    }
-    else if ( tmp_str == "hold_rising" ) {
-      mTimingType = kClibTimingHoldRising;
-    }
-    else if ( tmp_str == "hold_falling" ) {
-      mTimingType = kClibTimingHoldFalling;
-    }
-    else if ( tmp_str == "setup_rising" ) {
-      mTimingType = kClibTimingSetupRising;
-    }
-    else if ( tmp_str == "setup_falling" ) {
-      mTimingType = kClibTimingSetupFalling;
-    }
-    else if ( tmp_str == "recovery_rising" ) {
-      mTimingType = kClibTimingRecoveryRising;
-    }
-    else if ( tmp_str == "recovery_falling" ) {
-      mTimingType = kClibTimingRecoveryFalling;
-    }
-    else if ( tmp_str == "skew_rising" ) {
-      mTimingType = kClibTimingSkewRising;
-    }
-    else if ( tmp_str == "skew_falling" ) {
-      mTimingType = kClibTimingSkewFalling;
-    }
-    else if ( tmp_str == "removal_rising" ) {
-      mTimingType = kClibTimingRemovalRising;
-    }
-    else if ( tmp_str == "removal_falling" ) {
-      mTimingType = kClibTimingRemovalFalling;
-    }
-    else if ( tmp_str == "non_seq_setup_rising" ) {
-      mTimingType = kClibTimingNonSeqSetupRising;
-    }
-    else if ( tmp_str == "non_seq_setup_falling" ) {
-      mTimingType = kClibTimingNonSeqSetupFalling;
-    }
-    else if ( tmp_str == "non_seq_hold_rising" ) {
-      mTimingType = kClibTimingNonSeqHoldRising;
-    }
-    else if ( tmp_str == "non_seq_hold_falling" ) {
-      mTimingType = kClibTimingNonSeqHoldFalling;
-    }
-    else if ( tmp_str == "nochange_high_high" ) {
-      mTimingType = kClibTimingNochangeHighHigh;
-    }
-    else if ( tmp_str == "nochange_high_low" ) {
-      mTimingType = kClibTimingNochangeHighLow;
-    }
-    else if ( tmp_str == "nochange_low_high" ) {
-      mTimingType = kClibTimingNochangeLowHigh;
-    }
-    else if ( tmp_str == "nochange_low_low" ) {
-      mTimingType = kClibTimingNochangeLowLow;
-    }
-    else {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      ts_node->loc(),
-		      kMsgError,
-		      "DOTLIB_PARSER",
-		      "Syntax error. Illegal string for timing type.");
-      return false;
-    }
+    ASSERT_COND( tt_node->type() == DotlibNode::kTimingType );
+    mTimingType = tt_node->timing_type();
   }
 
   // 'when' を取り出す．

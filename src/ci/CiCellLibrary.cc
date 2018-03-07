@@ -658,7 +658,6 @@ void
 CiCellLibrary::set_cell_list(const vector<CiCell*>& cell_list,
 			     bool do_compile)
 {
-#if 0
   mCellList.init(cell_list, mAlloc);
 
   // セルに id を設定する．
@@ -674,7 +673,6 @@ CiCellLibrary::set_cell_list(const vector<CiCell*>& cell_list,
   if ( do_compile ) {
     compile(cell_list);
   }
-#endif
 }
 
 // @brief 論理セルを生成する．

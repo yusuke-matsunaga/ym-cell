@@ -211,7 +211,7 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
 {
   for ( const DotlibPin& pin_info: pin_info_array ) {
     switch ( pin_info.direction() ) {
-    case DotlibPin::kInput:
+    case kClibCellPinInput:
       // 入力ピンの生成
       {
 	ClibCapacitance cap(pin_info.capacitance());
@@ -225,7 +225,7 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
       }
       break;
 
-    case DotlibPin::kOutput:
+    case kClibCellPinOutput:
       // 出力の生成
       {
 	bool has_logic;
@@ -252,7 +252,7 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
       }
       break;
 
-    case DotlibPin::kInout:
+    case kClibCellPinInout:
       // 入出力ピンの生成
       {
 	bool has_logic;
@@ -283,7 +283,7 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
       }
       break;
 
-    case DotlibPin::kInternal:
+    case kClibCellPinInternal:
       // 内部ピンの生成
       for ( auto i: Range(pin_info.num()) ) {
 	ShString name = pin_info.name(i);
@@ -695,10 +695,10 @@ set_library(const DotlibLibrary& library_info,
     for ( const DotlibPin& pin_info: pin_info_array ) {
       int nn = pin_info.num();
       switch ( pin_info.direction() ) {
-      case DotlibPin::kInput:    ni += nn; break;
-      case DotlibPin::kOutput:   no += nn; break;
-      case DotlibPin::kInout:    nio += nn; break;
-      case DotlibPin::kInternal: nit += nn; break;
+      case kClibCellPinInput:    ni += nn; break;
+      case kClibCellPinOutput:   no += nn; break;
+      case kClibCellPinInout:    nio += nn; break;
+      case kClibCellPinInternal: nit += nn; break;
       default: ASSERT_NOT_REACHED; break;
       }
     }
@@ -713,15 +713,15 @@ set_library(const DotlibLibrary& library_info,
       int itpos = 0;
       for ( const DotlibPin& pin_info: pin_info_array ) {
 	switch ( pin_info.direction() ) {
-	case DotlibPin::kInput:
-	case DotlibPin::kInout:
+	case kClibCellPinInput:
+	case kClibCellPinInout:
 	  for ( int i = 0; i < pin_info.num(); ++ i ) {
 	    pin_map.add(pin_info.name(i), ipos);
 	    ++ ipos;
 	  }
 	  break;
 
-	case DotlibPin::kInternal:
+	case kClibCellPinInternal:
 	  for ( int i = 0; i < pin_info.num(); ++ i ) {
 	    pin_map.add(pin_info.name(i), itpos + ni2);
 	    ++ itpos;

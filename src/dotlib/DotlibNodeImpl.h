@@ -149,6 +149,48 @@ public:
   const DotlibAttr*
   attr_top() const;
 
+  /// @brief Technology を返す．
+  ///
+  /// type() == kTechnology の時のみ意味を持つ．
+  virtual
+  ClibTechnology
+  technology() const;
+
+  /// @brief DelayModel を返す．
+  ///
+  /// type() == kDelayModel の時のみ意味を持つ．
+  virtual
+  ClibDelayModel
+  delay_model() const;
+
+  /// @brief CellPinDirection を返す．
+  ///
+  /// type() == kCellPinDirection の時のみ意味を持つ．
+  virtual
+  ClibCellPinDirection
+  cell_pin_direction() const;
+
+  /// @brief TimingSense を返す．
+  ///
+  /// type() == kTimingSense の時のみ意味を持つ．
+  virtual
+  ClibTimingSense
+  timing_sense() const;
+
+  /// @brief TimingType を返す．
+  ///
+  /// type() == kTimingType の時のみ意味を持つ．
+  virtual
+  ClibTimingType
+  timing_type() const;
+
+  /// @brief VarType を返す．
+  ///
+  /// type() == kVarType の時のみ意味を持つ．
+  virtual
+  ClibVarType
+  var_type() const;
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -775,6 +817,336 @@ private:
 
   // 属性の末尾
   DotlibAttr* mAttrTail;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class DotlibTechnology DotlibNodeImpl.h "DotlibNodeImpl.h"
+/// @brief technologyを表すクラス
+//////////////////////////////////////////////////////////////////////
+class DotlibTechnology :
+  public DotlibNodeBase
+{
+  friend class DotlibMgrImpl;
+
+private:
+
+  /// @brief コンストラクタ
+  /// @param[in] value 値
+  /// @param[in] loc ファイル上の位置
+  DotlibTechnology(ClibTechnology value,
+		   const FileRegion& loc);
+
+  /// @brief デストラクタ
+  ~DotlibTechnology();
+
+
+public:
+
+  /// @brief 型を得る．
+  virtual
+  Type
+  type() const;
+
+  /// @brief Technology を返す．
+  ///
+  /// type() == kTechnology の時のみ意味を持つ．
+  virtual
+  ClibTechnology
+  technology() const;
+
+  /// @brief 内容をストリーム出力する．
+  /// @param[in] s 出力先のストリーム
+  /// @param[in] indent インデント量
+  virtual
+  void
+  dump(ostream& s,
+       int indent = 0) const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 値
+  ClibTechnology mValue;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class DotlibDelayModel DotlibNodeImpl.h "DotlibNodeImpl.h"
+/// @brief delay modelを表すクラス
+//////////////////////////////////////////////////////////////////////
+class DotlibDelayModel :
+  public DotlibNodeBase
+{
+  friend class DotlibMgrImpl;
+
+private:
+
+  /// @brief コンストラクタ
+  /// @param[in] value 値
+  /// @param[in] loc ファイル上の位置
+  DotlibDelayModel(ClibDelayModel value,
+		   const FileRegion& loc);
+
+  /// @brief デストラクタ
+  ~DotlibDelayModel();
+
+
+public:
+
+  /// @brief 型を得る．
+  virtual
+  Type
+  type() const;
+
+  /// @brief DelayModel を返す．
+  ///
+  /// type() == kDelayModel の時のみ意味を持つ．
+  virtual
+  ClibDelayModel
+  delay_model() const;
+
+  /// @brief 内容をストリーム出力する．
+  /// @param[in] s 出力先のストリーム
+  /// @param[in] indent インデント量
+  virtual
+  void
+  dump(ostream& s,
+       int indent = 0) const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 値
+  ClibDelayModel mValue;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class DotlibCellPinDirection DotlibNodeImpl.h "DotlibNodeImpl.h"
+/// @brief cell pin directionを表すクラス
+//////////////////////////////////////////////////////////////////////
+class DotlibCellPinDirection :
+  public DotlibNodeBase
+{
+  friend class DotlibMgrImpl;
+
+private:
+
+  /// @brief コンストラクタ
+  /// @param[in] value 値
+  /// @param[in] loc ファイル上の位置
+  DotlibCellPinDirection(ClibCellPinDirection value,
+			 const FileRegion& loc);
+
+  /// @brief デストラクタ
+  ~DotlibCellPinDirection();
+
+
+public:
+
+  /// @brief 型を得る．
+  virtual
+  Type
+  type() const;
+
+  /// @brief CellPinDirection を返す．
+  ///
+  /// type() == kCellPinDirection の時のみ意味を持つ．
+  virtual
+  ClibCellPinDirection
+  cell_pin_direction() const;
+
+  /// @brief 内容をストリーム出力する．
+  /// @param[in] s 出力先のストリーム
+  /// @param[in] indent インデント量
+  virtual
+  void
+  dump(ostream& s,
+       int indent = 0) const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 値
+  ClibCellPinDirection mValue;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class DotlibTimingSense DotlibNodeImpl.h "DotlibNodeImpl.h"
+/// @brief timing sense を表すクラス
+//////////////////////////////////////////////////////////////////////
+class DotlibTimingSense :
+  public DotlibNodeBase
+{
+  friend class DotlibMgrImpl;
+
+private:
+
+  /// @brief コンストラクタ
+  /// @param[in] value 値
+  /// @param[in] loc ファイル上の位置
+  DotlibTimingSense(ClibTimingSense value,
+		    const FileRegion& loc);
+
+  /// @brief デストラクタ
+  ~DotlibTimingSense();
+
+
+public:
+
+  /// @brief 型を得る．
+  virtual
+  Type
+  type() const;
+
+  /// @brief TimingSense を返す．
+  ///
+  /// type() == kTimingSense の時のみ意味を持つ．
+  virtual
+  ClibTimingSense
+  timing_sense() const;
+
+  /// @brief 内容をストリーム出力する．
+  /// @param[in] s 出力先のストリーム
+  /// @param[in] indent インデント量
+  virtual
+  void
+  dump(ostream& s,
+       int indent = 0) const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 値
+  ClibTimingSense mValue;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class DotlibTimingType DotlibNodeImpl.h "DotlibNodeImpl.h"
+/// @brief timing typeを表すクラス
+//////////////////////////////////////////////////////////////////////
+class DotlibTimingType :
+  public DotlibNodeBase
+{
+  friend class DotlibMgrImpl;
+
+private:
+
+  /// @brief コンストラクタ
+  /// @param[in] value 値
+  /// @param[in] loc ファイル上の位置
+  DotlibTimingType(ClibTimingType value,
+		   const FileRegion& loc);
+
+  /// @brief デストラクタ
+  ~DotlibTimingType();
+
+
+public:
+
+  /// @brief 型を得る．
+  virtual
+  Type
+  type() const;
+
+  /// @brief TimingType を返す．
+  ///
+  /// type() == kTimingType の時のみ意味を持つ．
+  virtual
+  ClibTimingType
+  timing_type() const;
+
+  /// @brief 内容をストリーム出力する．
+  /// @param[in] s 出力先のストリーム
+  /// @param[in] indent インデント量
+  virtual
+  void
+  dump(ostream& s,
+       int indent = 0) const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 値
+  ClibTimingType mValue;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class DotlibVarType DotlibNodeImpl.h "DotlibNodeImpl.h"
+/// @brief var typeを表すクラス
+//////////////////////////////////////////////////////////////////////
+class DotlibVarType :
+  public DotlibNodeBase
+{
+  friend class DotlibMgrImpl;
+
+private:
+
+  /// @brief コンストラクタ
+  /// @param[in] value 値
+  /// @param[in] loc ファイル上の位置
+  DotlibVarType(ClibVarType value,
+		   const FileRegion& loc);
+
+  /// @brief デストラクタ
+  ~DotlibVarType();
+
+
+public:
+
+  /// @brief 型を得る．
+  virtual
+  Type
+  type() const;
+
+  /// @brief VarType を返す．
+  ///
+  /// type() == kVarType の時のみ意味を持つ．
+  virtual
+  ClibVarType
+  var_type() const;
+
+  /// @brief 内容をストリーム出力する．
+  /// @param[in] s 出力先のストリーム
+  /// @param[in] indent インデント量
+  virtual
+  void
+  dump(ostream& s,
+       int indent = 0) const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 値
+  ClibVarType mValue;
 
 };
 
