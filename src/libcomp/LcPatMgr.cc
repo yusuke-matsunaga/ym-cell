@@ -7,15 +7,16 @@
 /// All rights reserved.
 
 
-#include "LcPatMgr.h"
-#include "LcPatNode.h"
-#include "LcPatHandle.h"
+#include "lc/LcPatMgr.h"
+#include "lc/LcPatNode.h"
+#include "lc/LcPatHandle.h"
 
 #include "ym/Expr.h"
 #include "ym/MFSet.h"
 #include "ym/PermGen.h"
 #include "ym/MultiCombiGen.h"
 #include "ym/MultiSetPermGen.h"
+#include "ym/Range.h"
 
 
 BEGIN_NONAMESPACE
@@ -86,7 +87,8 @@ LcPatMgr::pat_num() const
 LcPatHandle
 LcPatMgr::pat_root(int id) const
 {
-  ASSERT_COND( id < pat_num() );
+  ASSERT_COND( id >= 0 && id < pat_num() );
+
   return mPatList[id];
 }
 
@@ -95,6 +97,8 @@ LcPatMgr::pat_root(int id) const
 int
 LcPatMgr::rep_id(int id) const
 {
+  ASSERT_COND( id >= 0 && id < pat_num() );
+
   return mRepList[id];
 }
 
@@ -105,35 +109,32 @@ void
 LcPatMgr::reg_pat(const Expr& expr,
 		  int rep_id)
 {
+  ASSERT_COND( rep_id >= 0 );
+
   if ( mExprList.size() <= rep_id ) {
     mExprList.resize(rep_id + 1, vector<Expr>());
   }
 
   { // 同じ論理式を処理済みならなにもしない．
-    vector<Expr>& expr_list = mExprList[rep_id];
-    for (vector<Expr>::iterator p = expr_list.begin();
-	 p != expr_list.end(); ++ p) {
-      const Expr& expr1 = *p;
+    for ( auto expr1: mExprList[rep_id] ) {
       if ( check_equivalent(expr, expr1) ) {
 	return;
       }
     }
     // 論理式を登録しておく．
-    expr_list.push_back(expr);
+    mExprList[rep_id].push_back(expr);
   }
 
   vector<LcPatHandle> tmp_pat_list;
   pg_sub(expr, tmp_pat_list);
 
-  for (vector<LcPatHandle>::iterator p = tmp_pat_list.begin();
-       p != tmp_pat_list.end(); ++ p) {
-    LcPatHandle pat1 = *p;
+  for ( auto pat1: tmp_pat_list ) {
     mPatList.push_back(pat1);
     mRepList.push_back(rep_id);
   }
 
   // 入力ノードの整列
-  for (int i = 0; i < mNodeList.size(); ++ i) {
+  for ( int i = 0; i < mNodeList.size(); ++ i ) {
     LcPatNode* node = mNodeList[i];
     if ( !node->is_input() ) continue;
     int iid = node->input_id();
@@ -198,9 +199,9 @@ LcPatMgr::check_equivalent(const Expr& expr1,
     return false;
   }
 
-  for (PermGen pg(n, n); !pg.is_end(); ++ pg) {
+  for ( PermGen pg(n, n); !pg.is_end(); ++ pg ) {
     bool match = true;
-    for (int i = 0; i < n; ++ i) {
+    for ( int i: Range(n) ) {
       if ( !check_equivalent(expr1.child(i), expr2.child(pg(i))) ) {
 	match = false;
 	break;
@@ -503,9 +504,9 @@ LcPatMgr::make_node(const Expr& expr,
   }
 
   // (type, l_node, r_node) というノードがすでにあったらそれを使う．
-  int pos = hash_func(type, l_node, r_node);
-  int idx = pos % mHashSize;
-  for (LcPatNode* node = mHashTable[idx]; node; node = node->mLink) {
+  SizeType pos = hash_func(type, l_node, r_node);
+  SizeType idx = pos % mHashSize;
+  for ( LcPatNode* node = mHashTable[idx]; node; node = node->mLink ) {
     if ( node->mType == type &&
 	 node->mFanin[0] == l_node &&
 	 node->mFanin[1] == r_node ) {
@@ -553,10 +554,10 @@ LcPatMgr::delete_node(LcPatNode* node)
 
 // @brief ハッシュ表を確保する．
 void
-LcPatMgr::alloc_table(int req_size)
+LcPatMgr::alloc_table(SizeType req_size)
 {
   LcPatNode** old_table = mHashTable;
-  int old_size = mHashSize;
+  SizeType old_size = mHashSize;
 
   if ( mHashSize == 0 ) {
     mHashSize = 1024;
@@ -564,28 +565,27 @@ LcPatMgr::alloc_table(int req_size)
   while ( mHashSize < req_size ) {
     mHashSize <<= 1;
   }
+  mNextLimit = static_cast<SizeType>(mHashSize * 1.8);
   mHashTable = new LcPatNode*[mHashSize];
-  for (int i = 0; i < mHashSize; ++ i) {
+  for ( SizeType i = 0; i < mHashSize; ++ i) {
     mHashTable[i] = nullptr;
   }
-  if ( old_size > 0 ) {
-    for (int i = 0; i < old_size; ++ i) {
-      LcPatNode* next = nullptr;
-      for (LcPatNode* node = old_table[i]; node; node = next) {
-	next = node->mLink;
-	int pos = hash_func(node->mType, node->mFanin[0], node->mFanin[1]);
-	int idx = pos % mHashSize;
-	node->mLink = mHashTable[idx];
-	mHashTable[idx] = node;
-      }
+  for ( SizeType i = 0; i < old_size; ++ i ) {
+    LcPatNode* next = nullptr;
+    for ( LcPatNode* node = old_table[i]; node; node = next ) {
+      next = node->mLink;
+      int pos = hash_func(node->mType, node->mFanin[0], node->mFanin[1]);
+      int idx = pos % mHashSize;
+      node->mLink = mHashTable[idx];
+      mHashTable[idx] = node;
     }
-    delete [] old_table;
   }
-  mNextLimit = static_cast<int>(mHashSize * 1.8);
+  delete [] old_table;
+
 }
 
 // @brief LcPatNode のハッシュ関数
-int
+SizeType
 LcPatMgr::hash_func(int type,
 		    LcPatNode* l_node,
 		    LcPatNode* r_node)

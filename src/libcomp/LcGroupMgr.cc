@@ -7,11 +7,11 @@
 /// All rights reserved.
 
 
-#include "LcGroupMgr.h"
-#include "LcClass.h"
-#include "LcGroup.h"
-#include "LcSignature.h"
-#include "LibComp.h"
+#include "lc/LcGroupMgr.h"
+#include "lc/LcClass.h"
+#include "lc/LcGroup.h"
+#include "lc/LcSignature.h"
+#include "lc/LibComp.h"
 #include "ym/Clib.h"
 #include "ym/MFSet.h"
 #include "ym/PermGen.h"

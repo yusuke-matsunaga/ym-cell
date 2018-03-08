@@ -9,9 +9,9 @@
 
 #include "ci/CiPatMgr.h"
 #include "ci/CiPatGraph.h"
-#include "LcPatMgr.h"
-#include "LcPatNode.h"
-#include "LcPatHandle.h"
+#include "lc/LcPatMgr.h"
+#include "lc/LcPatNode.h"
+#include "lc/LcPatHandle.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB

@@ -8,7 +8,7 @@
 
 
 #include "gtest/gtest.h"
-#include "LcSignature.h"
+#include "lc/LcSignature.h"
 #include "ym/Expr.h"
 
 

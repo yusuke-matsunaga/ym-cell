@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "libcomp_nsdef.h"
+#include "lc/libcomp_nsdef.h"
 #include "ym/TvFunc.h"
 
 
@@ -181,7 +181,7 @@ private:
   // 0-1: タイプ
   // 2: クリア端子
   // 3: プリセット端子
-  int mTypeBits;
+  ymuint mTypeBits;
 
   // 入力ピン数
   int mInputNum;
@@ -191,7 +191,7 @@ private:
 
   // 論理式を持つかどうかのフラグと tristate 条件を持つかどうかのフラグの配列
   // 要素数は mOutputNum
-  vector<int> mOutputBits;
+  vector<ymuint> mOutputBits;
 
   // クロックの論理関数
   TvFunc mClockFunc;

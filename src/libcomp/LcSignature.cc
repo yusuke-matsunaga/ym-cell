@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "LcSignature.h"
+#include "lc/LcSignature.h"
 #include "ym/ClibCell.h"
 #include "ym/Expr.h"
 

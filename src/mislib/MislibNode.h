@@ -58,7 +58,7 @@ public:
     kGate
   };
 
-protected:
+public:
 
   /// @brief デストラクタ
   virtual

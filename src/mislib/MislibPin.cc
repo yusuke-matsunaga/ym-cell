@@ -42,6 +42,13 @@ MislibPin::MislibPin(const FileRegion& loc,
 // デストラクタ
 MislibPin::~MislibPin()
 {
+  delete mInputLoad;
+  delete mMaxLoad;
+  delete mRiseBlockDelay;
+  delete mRiseFanoutDelay;
+  delete mFallBlockDelay;
+  delete mFallFanoutDelay;
+  delete mNext;
 }
 
 // 種類を取り出す．

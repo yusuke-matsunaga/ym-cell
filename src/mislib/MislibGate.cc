@@ -41,6 +41,11 @@ MislibGate::MislibGate(const FileRegion& loc,
 // @brief デストラクタ
 MislibGate::~MislibGate()
 {
+  delete mName;
+  delete mArea;
+  delete mOpinName;
+  delete mOpinExpr;
+  delete mIpinTop;
 }
 
 // @brief 種類を取り出す．

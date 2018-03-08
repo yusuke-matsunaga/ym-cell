@@ -13,7 +13,7 @@
 #include "ym/IDO.h"
 #include "ym/ODO.h"
 #include "ym/Alloc.h"
-#include "libcomp_nsdef.h"
+#include "lc/libcomp_nsdef.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB

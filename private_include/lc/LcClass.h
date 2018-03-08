@@ -5,12 +5,12 @@
 /// @brief LcClass のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "libcomp_nsdef.h"
-#include "LcSignature.h"
+#include "lc/libcomp_nsdef.h"
+#include "lc/LcSignature.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB_LIBCOMP

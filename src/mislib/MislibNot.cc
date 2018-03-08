@@ -27,6 +27,7 @@ MislibNot::MislibNot(const FileRegion& loc,
 // デストラクタ
 MislibNot::~MislibNot()
 {
+  delete mChild1;
 }
 
 // 種類を取り出す．

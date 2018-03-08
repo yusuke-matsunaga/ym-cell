@@ -48,8 +48,12 @@ MislibNodeImpl*
 MislibMgrImpl::new_str(const FileRegion& loc,
 		       ShString str)
 {
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibStr));
   return new (p) MislibStr(loc, str);
+#else
+  return new MislibStr(loc, str);
+#endif
 }
 
 // 数値ノードを生成する．
@@ -57,48 +61,72 @@ MislibNodeImpl*
 MislibMgrImpl::new_num(const FileRegion& loc,
 		       double num)
 {
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibNum));
   return new (p) MislibNum(loc, num);
+#else
+  return new MislibNum(loc, num);
+#endif
 }
 
 // NONINV ノードを生成する．
 MislibNodeImpl*
 MislibMgrImpl::new_noninv(const FileRegion& loc)
 {
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibNoninv));
   return new (p) MislibNoninv(loc);
+#else
+  return new MislibNoninv(loc);
+#endif
 }
 
 // INV ノードを生成する．
 MislibNodeImpl*
 MislibMgrImpl::new_inv(const FileRegion& loc)
 {
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibInv));
   return new (p) MislibInv(loc);
+#else
+  return new MislibInv(loc);
+#endif
 }
 
 // UNKNOWN ノードを生成する．
 MislibNodeImpl*
 MislibMgrImpl::new_unknown(const FileRegion& loc)
 {
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibUnknown));
   return new (p) MislibUnknown(loc);
+#else
+  return new MislibUnknown(loc);
+#endif
 }
 
 // 定数0ノードを生成する．
 MislibNodeImpl*
 MislibMgrImpl::new_const0(const FileRegion& loc)
 {
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibConst0));
   return new (p) MislibConst0(loc);
+#else
+  return new MislibConst0(loc);
+#endif
 }
 
 // 定数1ノードを生成する．
 MislibNodeImpl*
 MislibMgrImpl::new_const1(const FileRegion& loc)
 {
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibConst1));
   return new (p) MislibConst1(loc);
+#else
+  return new MislibConst1(loc);
+#endif
 }
 
 // NOT ノードを生成する．
@@ -106,8 +134,12 @@ MislibNodeImpl*
 MislibMgrImpl::new_not(const FileRegion& loc,
 		       const MislibNode* child1)
 {
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibNot));
   return new (p) MislibNot(loc, child1);
+#else
+  return new MislibNot(loc, child1);
+#endif
 }
 
 // AND ノードを生成する．
@@ -116,8 +148,12 @@ MislibMgrImpl::new_and(const FileRegion& loc,
 		       const MislibNode* child1,
 		       const MislibNode* child2)
 {
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibAnd));
   return new (p) MislibAnd(loc, child1, child2);
+#else
+  return new MislibAnd(loc, child1, child2);
+#endif
 }
 
 // OR ノードを生成する．
@@ -126,8 +162,12 @@ MislibMgrImpl::new_or(const FileRegion& loc,
 		      const MislibNode* child1,
 		      const MislibNode* child2)
 {
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibOr));
   return new (p) MislibOr(loc, child1, child2);
+#else
+  return new MislibOr(loc, child1, child2);
+#endif
 }
 
 // XOR ノードを生成する．
@@ -136,8 +176,12 @@ MislibMgrImpl::new_xor(const FileRegion& loc,
 		       const MislibNode* child1,
 		       const MislibNode* child2)
 {
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibXor));
   return new (p) MislibXor(loc, child1, child2);
+#else
+  return new MislibXor(loc, child1, child2);
+#endif
 }
 
 // PIN ノードを生成する．
@@ -152,12 +196,20 @@ MislibMgrImpl::new_pin(const FileRegion& loc,
 		       const MislibNode* fall_block_delay,
 		       const MislibNode* fall_fanout_delay)
 {
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibPin));
   return new (p) MislibPin(loc,
 			   name, phase,
 			   input_load, max_load,
 			   rise_block_delay, rise_fanout_delay,
 			   fall_block_delay, fall_fanout_delay);
+#else
+  return new MislibPin(loc,
+		       name, phase,
+		       input_load, max_load,
+		       rise_block_delay, rise_fanout_delay,
+		       fall_block_delay, fall_fanout_delay);
+#endif
 }
 
 // GATE ノードを生成する．
@@ -178,11 +230,17 @@ MislibMgrImpl::new_gate(const FileRegion& loc,
   ASSERT_COND(pt_expr );
   ASSERT_COND(pt_expr->is_expr() );
 
+#if 0
   void* p = mAlloc.get_memory(sizeof(MislibGate));
   MislibNodeImpl* gate = new (p) MislibGate(loc, pt_name, pt_area,
 					    pt_oname, pt_expr,
 					    pt_ipin_top);
   return gate;
+#else
+  return new MislibGate(loc, pt_name, pt_area,
+			pt_oname, pt_expr,
+			pt_ipin_top);
+#endif
 }
 
 END_NAMESPACE_YM_MISLIB

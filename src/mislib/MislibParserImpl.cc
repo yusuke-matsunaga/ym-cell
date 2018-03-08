@@ -112,7 +112,6 @@ MislibParserImpl::read_file(const string& filename,
 
   // パース木を作る．
   bool stat = parse(ido, gate_list);
-  cout << "parse() end" << endl;
 
   if ( MsgMgr::error_num() > prev_errnum ) {
     // 異常終了

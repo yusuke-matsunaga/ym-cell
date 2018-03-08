@@ -29,6 +29,8 @@ MislibBop::MislibBop(const FileRegion& loc,
 // デストラクタ
 MislibBop::~MislibBop()
 {
+  delete mChild1;
+  delete mChild2;
 }
 
 // @brief 論理式を表す型のときに true を返す．

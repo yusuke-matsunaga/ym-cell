@@ -9,8 +9,8 @@
 /// All rights reserved.
 
 
-#include "libcomp_nsdef.h"
-#include "LcPatMgr.h"
+#include "lc/libcomp_nsdef.h"
+#include "lc/LcPatMgr.h"
 
 BEGIN_NAMESPACE_YM_CLIB
 

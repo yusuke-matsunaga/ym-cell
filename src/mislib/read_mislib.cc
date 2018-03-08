@@ -72,6 +72,184 @@ dfs(const MislibNode* node,
   }
 }
 
+CiCell*
+new_gate(const MislibNode* gate,
+	 CiCellLibrary* library)
+{
+  ShString name = gate->name()->str();
+  ClibArea area(gate->area()->num());
+
+  ShString opin_name = gate->opin_name()->str();
+  const MislibNode* opin_expr = gate->opin_expr();
+
+  const MislibNode* ipin_top = gate->ipin_top();
+  vector<const MislibNode*> ipin_array;
+  vector<ShString> ipin_name_list;
+  NameMap ipin_name_map;
+  bool wildcard_pin = false;
+  if ( ipin_top != nullptr ) {
+    if ( ipin_top->name() != nullptr ) {
+      // 通常の入力ピン定義がある場合
+      // ipin_list の順に入力ピンを作る．
+      for ( auto pin = ipin_top; pin != nullptr; pin = pin->next() ) {
+	ASSERT_COND( pin->type() == MislibNode::kPin );
+	ShString name = pin->name()->str();
+	ASSERT_COND( !ipin_name_map.check(name) );
+	ipin_name_map.add(name, ipin_array.size());
+	ipin_array.push_back(pin);
+	ipin_name_list.push_back(name);
+      }
+    }
+    else {
+      // ワイルドカードの場合
+      // 論理式に現れる順に入力ピンを作る．
+      wildcard_pin = true;
+      dfs(opin_expr, ipin_name_list, ipin_name_map);
+      for ( int i = 0; i < ipin_name_list.size(); ++ i ) {
+	ipin_array.push_back(ipin_top);
+      }
+    }
+  }
+
+  // 入力ピンのリストを作る．
+  int ni = ipin_name_list.size();
+  vector<CiInputPin*> input_list(ni);
+  for ( int i = 0; i < ni; ++ i ) {
+    // 入力ピンの設定
+    ShString name = ipin_name_list[i];
+    const MislibNode* pin = ipin_array[i];
+    ClibCapacitance load(pin->input_load()->num());
+    input_list[i] = library->new_cell_input(name, load, load, load);
+  }
+
+  // 出力ピンを作る．
+  Expr function = opin_expr->to_expr(ipin_name_map);
+  CiOutputPin* opin = library->new_cell_output(opin_name,
+					       true, function,
+					       Expr::const_zero(),
+					       ClibCapacitance::infty(),
+					       ClibCapacitance(0.0),
+					       ClibCapacitance::infty(),
+					       ClibCapacitance(0.0),
+					       ClibTime::infty(),
+					       ClibTime(0.0));
+
+  // タイミング情報の生成
+  vector<CiTiming*> timing_list(ni);
+  if ( !wildcard_pin ) {
+    for ( int i = 0; i < ni; ++ i ) {
+      const MislibNode* pt_pin = ipin_array[i];
+      ClibTime r_i(pt_pin->rise_block_delay()->num());
+      ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
+      ClibTime f_i(pt_pin->fall_block_delay()->num());
+      ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
+      CiTiming* timing = library->new_timing_generic(kClibTimingCombinational,
+						     Expr::const_one(),
+						     r_i, f_i,
+						     ClibTime(0.0), ClibTime(0.0),
+						     r_r, f_r);
+      timing_list[i] = timing;
+    }
+  }
+  else { // ipin_list->type() == MislibNode::kPin
+    vector<CiTiming*> timing_list(1);
+    const MislibNode* pt_pin = ipin_top;
+    ClibTime r_i(pt_pin->rise_block_delay()->num());
+    ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
+    ClibTime f_i(pt_pin->fall_block_delay()->num());
+    ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
+    CiTiming* timing = library->new_timing_generic(kClibTimingCombinational,
+						   Expr::const_one(),
+						   r_i, f_i,
+						   ClibTime(0.0), ClibTime(0.0),
+						   r_r, f_r);
+    for ( int i = 0; i < ni; ++ i ) {
+      timing_list[i] = timing;
+    }
+  }
+
+  // セルを作る．
+  CiCell* cell = library->new_logic_cell(name, area,
+					 input_list,
+					 vector<CiOutputPin*>(1, opin),
+					 vector<CiInoutPin*>(),
+					 vector<CiBus*>(),
+					 vector<CiBundle*>(),
+					 timing_list);
+
+  TvFunc tv_function = function.make_tv(ni);
+  for ( int i = 0; i < ni; ++ i ) {
+    // タイミング情報の設定
+    VarId var(i);
+    const MislibNode* pt_pin = ipin_array[i];
+    TvFunc p_func = tv_function.cofactor(var, false);
+    TvFunc n_func = tv_function.cofactor(var, true);
+    ClibTimingSense sense_real = kClibNonUnate;
+    bool redundant = false;
+    if ( ~p_func && n_func ) {
+      if ( ~n_func && p_func ) {
+	sense_real = kClibNonUnate;
+      }
+      else {
+	sense_real = kClibNegaUnate;
+      }
+    }
+    else {
+      if ( ~n_func && p_func ) {
+	sense_real = kClibPosiUnate;
+      }
+      else {
+	// つまり p_func == n_func ということ．
+	// つまりこの変数は出力に影響しない．
+	ostringstream buf;
+	buf << "The output function does not depend on the input pin, "
+	    << pt_pin->name()->str() << ".";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			pt_pin->loc(),
+			kMsgWarning,
+			"MISLIB_PARSER",
+			buf.str());
+	redundant = true;
+      }
+    }
+
+    if ( redundant ) {
+      continue;
+    }
+
+    ClibTimingSense sense = kClibNonUnate;
+    switch ( pt_pin->phase()->type() ) {
+    case MislibNode::kNoninv:  sense = kClibPosiUnate; break;
+    case MislibNode::kInv:     sense = kClibNegaUnate; break;
+    case MislibNode::kUnknown: sense = kClibNonUnate; break;
+    default: ASSERT_NOT_REACHED; break;
+    }
+    if ( sense != sense_real ) {
+      ostringstream buf;
+      buf << "Phase description does not match the logic expression. "
+	  << "Ignored.";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      pt_pin->phase()->loc(),
+		      kMsgWarning,
+		      "MISLIB_PARSER",
+		      buf.str());
+      sense = sense_real;
+    }
+    if ( sense == kClibNonUnate ) {
+      library->set_timing(cell, i, 0, kClibPosiUnate,
+			  vector<CiTiming*>(1, timing_list[i]));
+      library->set_timing(cell, i, 0, kClibNegaUnate,
+			  vector<CiTiming*>(1, timing_list[i]));
+    }
+    else {
+      library->set_timing(cell, i, 0, sense,
+			  vector<CiTiming*>(1, timing_list[i]));
+    }
+  }
+
+  return cell;
+}
+
 // @brief MislibNode から ClibCellLibrary に設定する．
 // @param[in] lib_name ライブラリ名
 // @param[in] gate_list パース木のルート
@@ -87,187 +265,11 @@ set_library(const string& lib_name,
   // セルの内容の設定
   vector<CiCell*> cell_list;
   for ( auto gate: gate_list ) {
-    ShString name = gate->name()->str();
-    ClibArea area(gate->area()->num());
-    ShString opin_name = gate->opin_name()->str();
-    const MislibNode* opin_expr = gate->opin_expr();
-    const MislibNode* ipin_top = gate->ipin_top();
-    vector<const MislibNode*> ipin_array;
-    vector<ShString> ipin_name_list;
-    NameMap ipin_name_map;
-    bool wildcard_pin = false;
-    if ( ipin_top != nullptr ) {
-      if ( ipin_top->name() != nullptr ) {
-	// 通常の入力ピン定義がある場合
-	// ipin_list の順に入力ピンを作る．
-	for ( auto pin = ipin_top; pin != nullptr; pin = pin->next() ) {
-	  ASSERT_COND( pin->type() == MislibNode::kPin );
-	  ShString name = pin->name()->str();
-	  ASSERT_COND( !ipin_name_map.check(name) );
-	  ipin_name_map.add(name, ipin_array.size());
-	  ipin_array.push_back(pin);
-	  ipin_name_list.push_back(name);
-	}
-      }
-      else {
-	// ワイルドカードの場合
-	// 論理式に現れる順に入力ピンを作る．
-	wildcard_pin = true;
-	dfs(opin_expr, ipin_name_list, ipin_name_map);
-	for ( int i = 0; i < ipin_name_list.size(); ++ i ) {
-	  ipin_array.push_back(ipin_top);
-	}
-      }
-    }
-
-    // 入力ピンのリストを作る．
-    int ni = ipin_name_list.size();
-    vector<CiInputPin*> input_list(ni);
-    for ( int i = 0; i < ni; ++ i ) {
-      // 入力ピンの設定
-      ShString name = ipin_name_list[i];
-      const MislibNode* pin = ipin_array[i];
-      ClibCapacitance load(pin->input_load()->num());
-      input_list[i] = library->new_cell_input(name, load, load, load);
-    }
-
-    // 出力ピンを作る．
-    Expr function = opin_expr->to_expr(ipin_name_map);
-    CiOutputPin* opin = library->new_cell_output(opin_name,
-						 true, function,
-						 Expr::const_zero(),
-						 ClibCapacitance::infty(),
-						 ClibCapacitance(0.0),
-						 ClibCapacitance::infty(),
-						 ClibCapacitance(0.0),
-						 ClibTime::infty(),
-						 ClibTime(0.0));
-
-    // タイミング情報の生成
-    vector<CiTiming*> timing_list(ni);
-    if ( !wildcard_pin ) {
-      for ( int i = 0; i < ni; ++ i ) {
-	const MislibNode* pt_pin = ipin_array[i];
-	ClibTime r_i(pt_pin->rise_block_delay()->num());
-	ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
-	ClibTime f_i(pt_pin->fall_block_delay()->num());
-	ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
-	CiTiming* timing = library->new_timing_generic(kClibTimingCombinational,
-						       Expr::const_one(),
-						       r_i, f_i,
-						       ClibTime(0.0), ClibTime(0.0),
-						       r_r, f_r);
-	timing_list[i] = timing;
-      }
-    }
-    else { // ipin_list->type() == MislibNode::kPin
-      vector<CiTiming*> timing_list(1);
-      const MislibNode* pt_pin = ipin_top;
-      ClibTime r_i(pt_pin->rise_block_delay()->num());
-      ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
-      ClibTime f_i(pt_pin->fall_block_delay()->num());
-      ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
-      CiTiming* timing = library->new_timing_generic(kClibTimingCombinational,
-						     Expr::const_one(),
-						     r_i, f_i,
-						     ClibTime(0.0), ClibTime(0.0),
-						     r_r, f_r);
-      for ( int i = 0; i < ni; ++ i ) {
-	timing_list[i] = timing;
-      }
-    }
-
-    // セルを作る．
-    CiCell* cell = library->new_logic_cell(name, area,
-					   input_list,
-					   vector<CiOutputPin*>(1, opin),
-					   vector<CiInoutPin*>(),
-					   vector<CiBus*>(),
-					   vector<CiBundle*>(),
-					   timing_list);
+    CiCell* cell = new_gate(gate, library);
     cell_list.push_back(cell);
-
-    TvFunc tv_function = function.make_tv(ni);
-    for ( int i = 0; i < ni; ++ i ) {
-      // タイミング情報の設定
-      VarId var(i);
-      const MislibNode* pt_pin = ipin_array[i];
-      TvFunc p_func = tv_function.cofactor(var, false);
-      TvFunc n_func = tv_function.cofactor(var, true);
-      ClibTimingSense sense_real = kClibNonUnate;
-      bool redundant = false;
-      if ( ~p_func && n_func ) {
-	if ( ~n_func && p_func ) {
-	  sense_real = kClibNonUnate;
-	}
-	else {
-	  sense_real = kClibNegaUnate;
-	}
-      }
-      else {
-	if ( ~n_func && p_func ) {
-	  sense_real = kClibPosiUnate;
-	}
-	else {
-	  // つまり p_func == n_func ということ．
-	  // つまりこの変数は出力に影響しない．
-	  ostringstream buf;
-	  buf << "The output function does not depend on the input pin, "
-	      << pt_pin->name()->str() << ".";
-	  MsgMgr::put_msg(__FILE__, __LINE__,
-			  pt_pin->loc(),
-			  kMsgWarning,
-			  "MISLIB_PARSER",
-			  buf.str());
-	  redundant = true;
-	}
-      }
-
-      if ( redundant ) {
-	continue;
-      }
-
-      ClibTimingSense sense = kClibNonUnate;
-      switch ( pt_pin->phase()->type() ) {
-      case MislibNode::kNoninv:
-	sense = kClibPosiUnate;
-	break;
-
-      case MislibNode::kInv:
-	sense = kClibNegaUnate;
-	break;
-
-      case MislibNode::kUnknown:
-	sense = kClibNonUnate;
-	break;
-
-      default:
-	ASSERT_NOT_REACHED; break;
-      }
-
-      if ( sense != sense_real ) {
-	ostringstream buf;
-	buf << "Phase description does not match the logic expression. "
-	    << "Ignored.";
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			pt_pin->phase()->loc(),
-			kMsgWarning,
-			"MISLIB_PARSER",
-			buf.str());
-	sense = sense_real;
-      }
-      if ( sense == kClibNonUnate ) {
-	library->set_timing(cell, i, 0, kClibPosiUnate,
-			    vector<CiTiming*>(1, timing_list[i]));
-	library->set_timing(cell, i, 0, kClibNegaUnate,
-			    vector<CiTiming*>(1, timing_list[i]));
-      }
-      else {
-	library->set_timing(cell, i, 0, sense,
-			    vector<CiTiming*>(1, timing_list[i]));
-      }
-    }
+    delete gate;
   }
+
   library->set_cell_list(cell_list);
 }
 

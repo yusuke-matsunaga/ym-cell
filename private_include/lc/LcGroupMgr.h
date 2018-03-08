@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "libcomp_nsdef.h"
+#include "lc/libcomp_nsdef.h"
 #include "ym/NpnMapM.h"
 #include "ym/HashMap.h"
 

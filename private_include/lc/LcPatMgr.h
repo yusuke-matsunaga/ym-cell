@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "libcomp_nsdef.h"
+#include "lc/libcomp_nsdef.h"
 #include "ym/logic.h"
 #include "ym/HashMap.h"
 #include "ym/UnitAlloc.h"
@@ -166,11 +166,11 @@ private:
 
   /// @brief ハッシュ表を確保する．
   void
-  alloc_table(int req_size);
+  alloc_table(SizeType req_size);
 
   /// @brief LcPatNode のハッシュ関数
   static
-  int
+  SizeType
   hash_func(int type,
 	    LcPatNode* l_node,
 	    LcPatNode* r_node);
@@ -236,10 +236,10 @@ private:
   LcPatNode** mHashTable;
 
   // mHashTable のサイズ
-  int mHashSize;
+  SizeType mHashSize;
 
   // ハッシュ表を拡大する目安
-  int mNextLimit;
+  SizeType mNextLimit;
 
   // パタンの根のハンドルのリスト
   // 配列のインデックスはパタン番号

@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "LcClass.h"
-#include "LcGroup.h"
+#include "lc/LcClass.h"
+#include "lc/LcGroup.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB_LIBCOMP

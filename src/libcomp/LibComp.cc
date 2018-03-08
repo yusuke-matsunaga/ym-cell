@@ -7,11 +7,11 @@
 /// All rights reserved.
 
 
-#include "LibComp.h"
-#include "LcClass.h"
-#include "LcGroup.h"
-#include "LcPatNode.h"
-#include "LcPatHandle.h"
+#include "lc/LibComp.h"
+#include "lc/LcClass.h"
+#include "lc/LcGroup.h"
+#include "lc/LcPatNode.h"
+#include "lc/LcPatHandle.h"
 #include "ci/CiCellLibrary.h"
 #include "ci/CiCell.h"
 #include "ym/Expr.h"

@@ -29,6 +29,9 @@ protected:
   /// @param[in] loc 位置情報
   MislibNodeImpl(const FileRegion& loc);
 
+
+public:
+
   /// @brief デストラクタ
   virtual
   ~MislibNodeImpl();

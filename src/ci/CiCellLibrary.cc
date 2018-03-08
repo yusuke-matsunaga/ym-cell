@@ -20,9 +20,9 @@
 #include "ci/CiLutTemplate.h"
 #include "ci/CiLut.h"
 
-#include "LibComp.h"
-#include "LcClass.h"
-#include "LcGroup.h"
+#include "lc/LibComp.h"
+#include "lc/LcClass.h"
+#include "lc/LcGroup.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -669,6 +669,7 @@ CiCellLibrary::set_cell_list(const vector<CiCell*>& cell_list,
   for ( auto cell: cell_list ) {
     mCellHash.add(cell);
   }
+
 
   if ( do_compile ) {
     compile(cell_list);
