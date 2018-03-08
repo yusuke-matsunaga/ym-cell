@@ -36,11 +36,4 @@ MislibMgr::clear()
   mImpl->clear();
 }
 
-// @brief ゲートのリストを返す．
-const vector<const MislibNode*>&
-MislibMgr::gate_list() const
-{
-  return mImpl->gate_list();
-}
-
 END_NAMESPACE_YM_MISLIB

@@ -39,10 +39,6 @@ public:
   void
   clear();
 
-  /// @brief ゲートのリストを返す．
-  const vector<const MislibNode*>&
-  gate_list() const;
-
 
 private:
   //////////////////////////////////////////////////////////////////////

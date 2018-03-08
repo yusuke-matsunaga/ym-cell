@@ -96,7 +96,7 @@ public:
 
   /// @brief 種類を取り出す．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 対応する論理式を生成する．
@@ -142,7 +142,7 @@ public:
 
   /// @brief 種類を取り出す．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 対応する論理式を生成する．
@@ -188,7 +188,7 @@ public:
 
   /// @brief 種類を取り出す．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 対応する論理式を生成する．

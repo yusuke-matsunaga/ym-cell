@@ -41,14 +41,6 @@ void
 MislibMgrImpl::clear()
 {
   mAlloc.destroy();
-  mGateList.clear();
-}
-
-// @brief ゲートのリストを返す．
-const vector<const MislibNode*>&
-MislibMgrImpl::gate_list() const
-{
-  return mGateList;
 }
 
 // 文字列ノードを生成する．
@@ -169,13 +161,13 @@ MislibMgrImpl::new_pin(const FileRegion& loc,
 }
 
 // GATE ノードを生成する．
-void
+MislibNode*
 MislibMgrImpl::new_gate(const FileRegion& loc,
 			const MislibNode* pt_name,
 			const MislibNode* pt_area,
 			const MislibNode* pt_oname,
 			const MislibNode* pt_expr,
-			const vector<const MislibNode*>& pt_ipin_list)
+			const MislibNode* pt_ipin_top)
 {
   ASSERT_COND(pt_name );
   ASSERT_COND(pt_name->type() == MislibNode::kStr );
@@ -189,8 +181,8 @@ MislibMgrImpl::new_gate(const FileRegion& loc,
   void* p = mAlloc.get_memory(sizeof(MislibGate));
   MislibNodeImpl* gate = new (p) MislibGate(loc, pt_name, pt_area,
 					    pt_oname, pt_expr,
-					    pt_ipin_list);
-  mGateList.push_back(gate);
+					    pt_ipin_top);
+  return gate;
 }
 
 END_NAMESPACE_YM_MISLIB

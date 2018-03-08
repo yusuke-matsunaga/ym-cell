@@ -71,7 +71,7 @@ MislibAnd::~MislibAnd()
 }
 
 // 種類を取り出す．
-MislibNode::tType
+MislibNode::Type
 MislibAnd::type() const
 {
   return kAnd;
@@ -123,7 +123,7 @@ MislibOr::~MislibOr()
 }
 
 // 種類を取り出す．
-MislibNode::tType
+MislibNode::Type
 MislibOr::type() const
 {
   return kOr;
@@ -175,7 +175,7 @@ MislibXor::~MislibXor()
 }
 
 // 種類を取り出す．
-MislibNode::tType
+MislibNode::Type
 MislibXor::type() const
 {
   return kXor;

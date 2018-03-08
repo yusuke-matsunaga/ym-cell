@@ -91,16 +91,16 @@ set_library(const string& lib_name,
     ClibArea area(gate->area()->num());
     ShString opin_name = gate->opin_name()->str();
     const MislibNode* opin_expr = gate->opin_expr();
-    const vector<const MislibNode*>& ipin_list = gate->ipin_list();
+    const MislibNode* ipin_top = gate->ipin_top();
     vector<const MislibNode*> ipin_array;
     vector<ShString> ipin_name_list;
     NameMap ipin_name_map;
     bool wildcard_pin = false;
-    if ( !ipin_list.empty() ) {
-      if ( ipin_list[0]->name() != nullptr ) {
+    if ( ipin_top != nullptr ) {
+      if ( ipin_top->name() != nullptr ) {
 	// 通常の入力ピン定義がある場合
 	// ipin_list の順に入力ピンを作る．
-	for ( auto pin: ipin_list ) {
+	for ( auto pin = ipin_top; pin != nullptr; pin = pin->next() ) {
 	  ASSERT_COND( pin->type() == MislibNode::kPin );
 	  ShString name = pin->name()->str();
 	  ASSERT_COND( !ipin_name_map.check(name) );
@@ -115,7 +115,7 @@ set_library(const string& lib_name,
 	wildcard_pin = true;
 	dfs(opin_expr, ipin_name_list, ipin_name_map);
 	for ( int i = 0; i < ipin_name_list.size(); ++ i ) {
-	  ipin_array.push_back(ipin_list[0]);
+	  ipin_array.push_back(ipin_top);
 	}
       }
     }
@@ -162,7 +162,7 @@ set_library(const string& lib_name,
     }
     else { // ipin_list->type() == MislibNode::kPin
       vector<CiTiming*> timing_list(1);
-      const MislibNode* pt_pin = ipin_list[0];
+      const MislibNode* pt_pin = ipin_top;
       ClibTime r_i(pt_pin->rise_block_delay()->num());
       ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
       ClibTime f_i(pt_pin->fall_block_delay()->num());
@@ -268,7 +268,6 @@ set_library(const string& lib_name,
       }
     }
   }
-
   library->set_cell_list(cell_list);
 }
 
@@ -288,13 +287,14 @@ CiCellLibrary::read_mislib(const string& filename)
 {
   using namespace nsMislib;
 
-  MislibMgr mgr;
   MislibParser parser;
-  if ( !parser.read_file(filename, mgr) ) {
+  MislibMgr mgr;
+  vector<const MislibNode*> gate_list;
+  if ( !parser.read_file(filename, mgr, gate_list) ) {
     return false;
   }
 
-  set_library(filename, mgr.gate_list(), this);
+  set_library(filename, gate_list, this);
 
   return true;
 }

@@ -38,7 +38,7 @@ public:
 
   /// @brief 種類を取り出す．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 内容を出力する．
@@ -74,7 +74,7 @@ public:
 
   /// @brief 種類を取り出す．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 内容を出力する．
@@ -110,7 +110,7 @@ public:
 
   /// @brief 種類を取り出す．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 内容を出力する．

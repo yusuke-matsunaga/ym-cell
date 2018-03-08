@@ -153,7 +153,6 @@ public:
   const MislibNode*
   fall_fanout_delay() const;
 
-#if 0
   /// @brief 次の要素を設定する．
   /// @note デフォルトでは何もしない．
   virtual
@@ -165,7 +164,6 @@ public:
   virtual
   const MislibNode*
   next() const;
-#endif
 
 
 public:
@@ -191,10 +189,10 @@ public:
   const MislibNode*
   opin_expr() const;
 
-  /// @brief 入力ピンのリストを返す．
+  /// @brief 先頭の入力ピンを返す．
   virtual
-  const vector<const MislibNode*>&
-  ipin_list() const;
+  const MislibNode*
+  ipin_top() const;
 
 
 protected:

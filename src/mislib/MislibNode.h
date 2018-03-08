@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_MISLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class MislibNode MislibNode.h "MislibNode.h"
-/// @brief トークンを表す基底クラス
+/// @brief mislib 形式のASTを表すクラス
 //////////////////////////////////////////////////////////////////////
 class MislibNode
 {
@@ -29,7 +29,7 @@ public:
 public:
 
   /// @brief ノードの種類
-  enum tType {
+  enum Type {
     /// @brief 文字列
     kStr,
     /// @brief 数値
@@ -77,7 +77,7 @@ public:
 
   /// @brief 種類を取り出す．
   virtual
-  tType
+  Type
   type() const = 0;
 
   /// @brief 論理式を表す型のときに true を返す．
@@ -182,12 +182,10 @@ public:
   const MislibNode*
   fall_fanout_delay() const = 0;
 
-#if 0
   /// @brief 次の要素を取り出す．
   virtual
   const MislibNode*
   next() const = 0;
-#endif
 
 
 public:
@@ -210,10 +208,10 @@ public:
   const MislibNode*
   opin_expr() const = 0;
 
-  /// @brief 入力ピンのリストを返す．
+  /// @brief 先頭の入力ピンを返す．
   virtual
-  const vector<const MislibNode*>&
-  ipin_list() const = 0;
+  const MislibNode*
+  ipin_top() const = 0;
 
 };
 

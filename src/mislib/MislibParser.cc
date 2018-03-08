@@ -33,13 +33,15 @@ MislibParser::~MislibParser()
 // @brief mislib ファイルを読み込んでライブラリを生成する．
 // @param[in] filename ファイル名
 // @param[in] mgr MislibNode を管理するクラス
+// @param[out] gate_list ゲートのASTを格納するリスト
 // @retval true 読み込みが成功した．
 // @retval false 読み込みが失敗した．
 bool
 MislibParser::read_file(const string& filename,
-			MislibMgr& mgr)
+			MislibMgr& mgr,
+			vector<const MislibNode*>& gate_list)
 {
-  return mImpl->read_file(filename, mgr.mImpl);
+  return mImpl->read_file(filename, mgr.mImpl, gate_list);
 }
 
 END_NAMESPACE_YM_MISLIB

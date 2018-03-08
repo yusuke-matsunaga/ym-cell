@@ -28,7 +28,7 @@ MislibConst0::~MislibConst0()
 }
 
 // 種類を取り出す．
-MislibNode::tType
+MislibNode::Type
 MislibConst0::type() const
 {
   return kConst0;
@@ -76,7 +76,7 @@ MislibConst1::~MislibConst1()
 }
 
 // 種類を取り出す．
-MislibNode::tType
+MislibNode::Type
 MislibConst1::type() const
 {
   return kConst1;

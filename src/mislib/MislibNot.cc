@@ -30,7 +30,7 @@ MislibNot::~MislibNot()
 }
 
 // 種類を取り出す．
-MislibNode::tType
+MislibNode::Type
 MislibNot::type() const
 {
   return kNot;

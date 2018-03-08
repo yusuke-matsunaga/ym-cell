@@ -36,11 +36,13 @@ public:
   /// @brief mislib ファイルを読み込む．
   /// @param[in] filename ファイル名
   /// @param[in] mgr MislibNode を管理するクラス
+  /// @param[out] gate_list ゲートのASTを格納するリスト
   /// @retval true 読み込みが成功した．
   /// @retval false 読み込みが失敗した．
   bool
   read_file(const string& filename,
-	    MislibMgr& mgr);
+	    MislibMgr& mgr,
+	    vector<const MislibNode*>& gate_list);
 
 
 private:

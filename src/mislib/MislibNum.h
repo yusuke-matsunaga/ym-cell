@@ -39,7 +39,7 @@ public:
 
   /// @brief 種類を取り出す．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 数値を取り出す

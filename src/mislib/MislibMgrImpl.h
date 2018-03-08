@@ -43,10 +43,6 @@ public:
   void
   clear();
 
-  /// @brief ゲートのリストを返す．
-  const vector<const MislibNode*>&
-  gate_list() const;
-
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -54,14 +50,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief GATE ノードを生成する．(通常版)
-  /// @note 結果はゲートのリストに追加される．
-  void
+  MislibNode*
   new_gate(const FileRegion& loc,
 	   const MislibNode* name,
 	   const MislibNode* area,
 	   const MislibNode* oname,
 	   const MislibNode* expr,
-	   const vector<const MislibNode*>& ipin_list);
+	   const MislibNode* ipin_top);
 
   /// @brief PIN ノードを生成する．
   MislibNodeImpl*
@@ -134,10 +129,6 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ゲートを追加する．
-  void
-  add_gate(MislibNodeImpl* gate);
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -146,9 +137,6 @@ private:
 
   // MislibNode のメモリ確保用アロケータ
   SimpleAlloc mAlloc;
-
-  // ゲートのリスト
-  vector<const MislibNode*> mGateList;
 
 };
 

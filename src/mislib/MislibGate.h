@@ -31,13 +31,13 @@ private:
   /// @param[in] area 面積を表すパース木
   /// @param[in] opin_name 出力ピン名を表すパース木
   /// @param[in] opin_expr 出力の論理式を表すパース木
-  /// @param[in] ipin_list 入力ピンを表すパース木のリスト
+  /// @param[in] ipin_top 先頭の入力ピンを表すパース木
   MislibGate(const FileRegion& loc,
 	     const MislibNode* name,
 	     const MislibNode* area,
 	     const MislibNode* opin_name,
 	     const MislibNode* opin_expr,
-	     const vector<const MislibNode*>& ipin_list);
+	     const MislibNode* ipin_top);
 
   /// @brief デストラクタ
   virtual
@@ -51,7 +51,7 @@ public:
 
   /// @brief 種類を取り出す．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief ピン名/ゲート名を表すオブジェクトを取り出す．
@@ -76,18 +76,8 @@ public:
 
   /// @brief 入力ピンのリストを返す．
   virtual
-  const vector<const MislibNode*>&
-  ipin_list() const;
-
-  /// @brief 次の要素を設定する．
-  virtual
-  void
-  set_next(MislibNodeImpl* next);
-
-  /// @brief 次の要素を取り出す．
-  virtual
   const MislibNode*
-  next() const;
+  ipin_top() const;
 
   /// @brief 内容を出力する．
   /// デバッグ用
@@ -113,11 +103,8 @@ private:
   // 出力の論理式
   const MislibNode* mOpinExpr;
 
-  // 入力ピンのリスト
-  vector<const MislibNode*> mIpinList;
-
-  // 次の要素
-  MislibNodeImpl* mNext;
+  // 先頭の入力ピン
+  const MislibNode* mIpinTop;
 
 };
 

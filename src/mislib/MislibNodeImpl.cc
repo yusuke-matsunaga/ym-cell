@@ -156,6 +156,21 @@ MislibNodeImpl::fall_fanout_delay() const
   return nullptr;
 }
 
+// @brief 次の要素を設定する．
+// @note デフォルトでは何もしない．
+void
+MislibNodeImpl::set_next(MislibNodeImpl* pin)
+{
+}
+
+// @brief 次の要素を取り出す．
+// @note デフォルトでは nullptr を返す．
+const MislibNode*
+MislibNodeImpl::next() const
+{
+  return nullptr;
+}
+
 // @brief 面積を表すオブジェクトを返す．
 // @note デフォルトでは nullptr を返す．
 const MislibNode*
@@ -180,11 +195,11 @@ MislibNodeImpl::opin_expr() const
   return nullptr;
 }
 
-// @brief 入力ピンのリストを返す．
-const vector<const MislibNode*>&
-MislibNodeImpl::ipin_list() const
+// @brief 先頭の入力ピンを返す．
+const MislibNode*
+MislibNodeImpl::ipin_top() const
 {
-  return sIpinList;
+  return nullptr;
 }
 
 // 位置を出力する．

@@ -54,7 +54,7 @@ public:
 
   /// @brief 種類を取り出す．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief ピン名を表すオブジェクトを取り出す．

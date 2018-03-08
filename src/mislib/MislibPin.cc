@@ -45,7 +45,7 @@ MislibPin::~MislibPin()
 }
 
 // 種類を取り出す．
-MislibNode::tType
+MislibNode::Type
 MislibPin::type() const
 {
   return kPin;

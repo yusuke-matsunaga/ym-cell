@@ -32,7 +32,11 @@ CiCellList::CiCellList() :
 CiCellList::CiCellList(const vector<CiCell*>& cell_list,
 		       Alloc& alloc) :
   mNum(cell_list.size()),
+#if 0
   mArray(alloc.get_array<const ClibCell*>(mNum))
+#else
+  mArray(new const ClibCell*[mNum])
+#endif
 {
   for ( int i = 0; i < mNum; ++ i ) {
     mArray[i] = cell_list[i];
@@ -83,7 +87,11 @@ CiCellList::init(const vector<CiCell*>& cell_list,
 		 Alloc& alloc)
 {
   mNum = cell_list.size();
+#if 0
   mArray = alloc.get_array<const ClibCell*>(mNum);
+#else
+  mArray = new const ClibCell*[mNum];
+#endif
   for ( int i = 0; i < mNum; ++ i ) {
     mArray[i] = cell_list[i];
   }

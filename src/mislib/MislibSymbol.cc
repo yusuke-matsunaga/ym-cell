@@ -28,7 +28,7 @@ MislibNoninv::~MislibNoninv()
 }
 
 // 種類を取り出す．
-MislibNode::tType
+MislibNode::Type
 MislibNoninv::type() const
 {
   return kNoninv;
@@ -61,7 +61,7 @@ MislibInv::~MislibInv()
 }
 
 // 種類を取り出す．
-MislibNode::tType
+MislibNode::Type
 MislibInv::type() const
 {
   return kInv;
@@ -94,7 +94,7 @@ MislibUnknown::~MislibUnknown()
 }
 
 // 種類を取り出す．
-MislibNode::tType
+MislibNode::Type
 MislibUnknown::type() const
 {
   return kUnknown;

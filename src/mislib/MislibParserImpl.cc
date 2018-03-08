@@ -39,7 +39,6 @@ MislibParserImpl::MislibParserImpl()
 // デストラクタ
 MislibParserImpl::~MislibParserImpl()
 {
-  delete mScanner;
 }
 
 
@@ -89,7 +88,8 @@ END_NONAMESPACE
 // @note 読み込みが失敗したら false を返す．
 bool
 MislibParserImpl::read_file(const string& filename,
-			    MislibMgrImpl* mgr)
+			    MislibMgrImpl* mgr,
+			    vector<const MislibNode*>& gate_list)
 {
   FileIDO ido;
   if ( !ido.open(filename) ) {
@@ -105,18 +105,14 @@ MislibParserImpl::read_file(const string& filename,
   }
 
   // 初期化
-  mScanner = new MislibScanner(ido);
   mMislibMgr = mgr;
   mMislibMgr->clear();
 
   int prev_errnum = MsgMgr::error_num();
 
   // パース木を作る．
-  // 結果は MislibMgrImpl が持っている．
-  bool stat = read_gate();
-
-  delete mScanner;
-  mScanner = nullptr;
+  bool stat = parse(ido, gate_list);
+  cout << "parse() end" << endl;
 
   if ( MsgMgr::error_num() > prev_errnum ) {
     // 異常終了
@@ -126,7 +122,6 @@ MislibParserImpl::read_file(const string& filename,
   // 重複したセル名がないかチェック
   // また，セル内のピン名が重複していないか，出力ピンの論理式に現れるピン名
   // と入力ピンに齟齬がないかもチェックする．
-  const vector<const MislibNode*>& gate_list = mgr->gate_list();
   HashMap<ShString, const MislibNode*> cell_map;
   for ( auto gate: gate_list ) {
     ASSERT_COND( gate->type() == MislibNode::kGate );
@@ -149,7 +144,7 @@ MislibParserImpl::read_file(const string& filename,
 
     // 入力ピン名のチェック
     HashMap<ShString, const MislibNode*> ipin_map;
-    for ( auto ipin: gate->ipin_list() ) {
+    for ( auto ipin = gate->ipin_top(); ipin != nullptr; ipin = ipin->next() ) {
       ASSERT_COND( ipin->type() == MislibNode::kPin );
       ShString name = ipin->name()->str();
       const MislibNode* dummy_node;
@@ -218,10 +213,15 @@ MislibParserImpl::read_file(const string& filename,
 }
 
 // @brief ゲートを読み込む．
+// @param[in] ido 入力データオブジェクト
+// @param[out] gate_list ゲートのASTを格納するリスト
 // @return 読み込みが成功したら true を返す．
 bool
-MislibParserImpl::read_gate()
+MislibParserImpl::parse(IDO& ido,
+			vector<const MislibNode*>& gate_list)
 {
+  MislibScanner scanner(ido);
+  mScanner = &scanner;
   for ( ; ; ) {
     MislibNodeImpl* node;
     FileRegion loc;
@@ -285,18 +285,22 @@ MislibParserImpl::read_gate()
     FileRegion loc1 = loc;
 
     // 次はピンリスト
-    vector<const MislibNode*> pin_list;
-    if ( !read_pin_list(pin_list) ) {
+    bool error = false;
+    const MislibNode* ipin_top = read_pin_list(error);
+    if ( error ) {
       // エラー
       return false;
     }
     // 末尾のノードを位置を loc1 に設定する．
-    for ( auto pin: pin_list ) {
+    for ( auto pin = ipin_top; pin != nullptr; pin = pin->next() ) {
       loc1 = pin->loc();
     }
 
-    mMislibMgr->new_gate(FileRegion(loc0, loc1), name, area, opin, expr, pin_list);
+    MislibNode* gate = mMislibMgr->new_gate(FileRegion(loc0, loc1), name, area,
+					    opin, expr, ipin_top);
+    gate_list.push_back(gate);
   }
+  mScanner = nullptr;
 }
 
 // @brief 式を読み込む．
@@ -404,9 +408,11 @@ MislibParserImpl::read_literal()
 //
 // エラーが起きたら nullptr を返す．
 // ピン名の代わりに * の場合があるので注意
-bool
-MislibParserImpl::read_pin_list(vector<const MislibNode*>& pin_list)
+MislibNode*
+MislibParserImpl::read_pin_list(bool& error)
 {
+  MislibNodeImpl* top_node = nullptr;
+  MislibNodeImpl* prev_node = nullptr;
   for ( ; ; ) {
     MislibNodeImpl* node;
     FileRegion loc;
@@ -432,14 +438,16 @@ MislibParserImpl::read_pin_list(vector<const MislibNode*>& pin_list)
     }
     else {
       // シンタックスエラー
-      return false;
+      error = true;
+      return nullptr;
     }
 
     // 次は NONINV/INV/UNKNOWN のいずれか
     tok = scan(node, loc);
     if ( tok != NONINV && tok != INV && tok != UNKNOWN ) {
       // シンタックスエラー
-      return false;
+      error = true;
+      return nullptr;
     }
     MislibNode* phase = node;
 
@@ -449,7 +457,8 @@ MislibParserImpl::read_pin_list(vector<const MislibNode*>& pin_list)
       tok = scan(node, loc);
       if ( tok != NUM ) {
 	// シンタックスエラー
-	return false;
+	error = true;
+	return nullptr;
       }
       val[i] = node;
     }
@@ -457,22 +466,28 @@ MislibParserImpl::read_pin_list(vector<const MislibNode*>& pin_list)
     MislibNodeImpl* pin = mMislibMgr->new_pin(FileRegion(loc0, loc), name, phase,
 					      val[0], val[1], val[2],
 					      val[3], val[4], val[5]);
-    pin_list.push_back(pin);
+    if ( prev_node != nullptr ) {
+      prev_node->set_next(pin);
+    }
+    else {
+      top_node = pin;
+    }
+    prev_node = pin;
   }
 
   // 名前が nullptr (STAR) のピンがある場合はそれが唯一の要素である場合に限る．
   bool has_star = false;
-  for ( auto pin: pin_list ) {
+  for ( const MislibNode* pin = top_node; pin != nullptr; pin = pin->next() ) {
     if ( pin->name() == nullptr ) {
       has_star = true;
     }
   }
-  if ( pin_list.size() > 1 && has_star ) {
+  if ( has_star && top_node->next() != nullptr ) {
     // シンタックスエラー
-    return false;
+    error = true;
   }
 
-  return true;
+  return top_node;
 }
 
 // @brief 次のトークンを盗み見る．

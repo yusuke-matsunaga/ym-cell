@@ -43,11 +43,13 @@ public:
   /// @brief mislib ファイルを読み込む．
   /// @param[in] filename ファイル名
   /// @param[in] mgr MislibNode を管理するオブジェクト
-  /// @return パース木の根のノードを返す．
-  /// @note 読み込みが失敗したら false を返す．
+  /// @param[out] gate_list ゲートのASTを格納するリスト
+  /// @retval true 読み込みが成功した．
+  /// @retval false読み込みが失敗した．
   bool
   read_file(const string& filename,
-	    MislibMgrImpl* mgr);
+	    MislibMgrImpl* mgr,
+	    vector<const MislibNode*>& gate_list);
 
 
 private:
@@ -55,10 +57,13 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ゲートを読み込む．
+  /// @brief パーズする．
+  /// @param[in] ido 入力データオブジェクト
+  /// @param[out] gate_list ゲートのASTを格納するリスト
   /// @return 読み込みが成功したら true を返す．
   bool
-  read_gate();
+  parse(IDO& ido,
+	vector<const MislibNode*>& gate_list);
 
   /// @brief 式を読み込む．
   /// @return 式を表す AST のノードを返す．
@@ -86,8 +91,8 @@ private:
   /// @return 成功したら true を返す．
   ///
   /// ピン名の代わりに * の場合があるので注意
-  bool
-  read_pin_list(vector<const MislibNode*>& pin_list);
+  MislibNode*
+  read_pin_list(bool& error);
 
 
 private:

@@ -40,7 +40,7 @@ public:
 
   /// @brief 種類を取り出す．
   virtual
-  tType
+  Type
   type() const;
 
   /// @brief 論理式を表す型のときに true を返す．

@@ -30,7 +30,7 @@ MislibStr::~MislibStr()
 }
 
 // 種類を取り出す．
-MislibNode::tType
+MislibNode::Type
 MislibStr::type() const
 {
   return kStr;

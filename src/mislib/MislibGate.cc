@@ -28,14 +28,13 @@ MislibGate::MislibGate(const FileRegion& loc,
 		       const MislibNode* area,
 		       const MislibNode* opin_name,
 		       const MislibNode* opin_expr,
-		       const vector<const MislibNode*>& ipin_list) :
+		       const MislibNode* ipin_top) :
   MislibNodeImpl(loc),
   mName(name),
   mArea(area),
   mOpinName(opin_name),
   mOpinExpr(opin_expr),
-  mIpinList(ipin_list),
-  mNext(nullptr)
+  mIpinTop(ipin_top)
 {
 }
 
@@ -45,7 +44,7 @@ MislibGate::~MislibGate()
 }
 
 // @brief 種類を取り出す．
-MislibNode::tType
+MislibNode::Type
 MislibGate::type() const
 {
   return kGate;
@@ -79,25 +78,11 @@ MislibGate::opin_expr() const
   return mOpinExpr;
 }
 
-// @brief 入力ピンのリストを返す．
-const vector<const MislibNode*>&
-MislibGate::ipin_list() const
-{
-  return mIpinList;
-}
-
-// 次の要素を設定する．
-void
-MislibGate::set_next(MislibNodeImpl* next)
-{
-  mNext = next;
-}
-
-// 次の要素を取り出す．
+// @brief 先頭の入力ピンを返す．
 const MislibNode*
-MislibGate::next() const
+MislibGate::ipin_top() const
 {
-  return mNext;
+  return mIpinTop;
 }
 
 // @brief 内容を出力する．
@@ -124,7 +109,7 @@ MislibGate::dump(ostream& s) const
   s << "</OPIN_EXPR>" << endl;
 
   s << "<IPIN_LIST>" << endl;
-  for ( auto pin: ipin_list() ) {
+  for ( auto pin = ipin_top(); pin != nullptr; pin = pin->next() ) {
     pin->dump(s);
   }
   s << "</IPIN_LIST>" << endl;
