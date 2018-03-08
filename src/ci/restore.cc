@@ -758,7 +758,7 @@ CiPatMgr::restore(IDO& bis)
   int nn;
   bis >> nn;
   set_node_num(nn);
-  for ( int i = 0; i < nn; ++ i ) {
+  for ( int i = 0; i < mNodeNum; ++ i ) {
     bis >> mNodeTypeArray[i]
 	>> mEdgeArray[i * 2]
 	>> mEdgeArray[i * 2 + 1];
