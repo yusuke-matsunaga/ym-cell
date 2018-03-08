@@ -1,39 +1,46 @@
-﻿#ifndef MISLIBBOP_H
-#define MISLIBBOP_H
+﻿#ifndef MISLIBPHASE_H
+#define MISLIBPHASE_H
 
-/// @file MislibBop.h
-/// @brief MislibBop の派生クラスのヘッダファイル(その2)
+/// @file MislibPhase.h
+/// @brief MislibNoninv, MislibInv, MislibUnknown のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "MislibExpr.h"
+#include "MislibNode.h"
 
 
 BEGIN_NAMESPACE_YM_MISLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class MislibBop MislibBop.h "MislibBop.h"
-/// @brief 2項演算子を表すクラス
+/// @class MislibPhase MislibPhase.h "MislibPhase.h"
+/// @brief 極性を表すクラス
 //////////////////////////////////////////////////////////////////////
-class MislibBop :
-  public MislibExpr
+class MislibPhase :
+  public MislibNode
 {
+  friend class MislibMgr;
+public:
+
+  /// @breif 極性の種類
+  enum Type {
+    kNoninv,
+    kInv,
+    kUnknown,
+  };
+
+
 protected:
 
   /// @brief コンストラクタ
   /// @param[in] loc 位置情報
-  /// @param[in] child1 1番目の子供
-  /// @param[in] child2 2番目の子供
-  MislibBop(const FileRegion& loc,
-	    const MislibExpr* child1,
-	    const MislibExpr* child2);
+  MislibPhase(const FileRegion& loc);
 
   /// @brief デストラクタ
   virtual
-  ~MislibBop();
+  ~MislibPhase();
 
 
 public:
@@ -41,37 +48,26 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 1番目の子供を取り出す．
+  /// @brief 種類を取り出す．
   virtual
-  const MislibExpr*
-  child1() const;
+  Type
+  type() const = 0;
 
-  /// @brief 2番目の子供を取り出す．
+  /// @brief 内容を出力する．
+  /// デバッグ用
   virtual
-  const MislibExpr*
-  child2() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 1番目の子供
-  const MislibExpr* mChild1;
-
-  // 2番目の子供
-  const MislibExpr* mChild2;
+  void
+  dump(ostream& s) const = 0;
 
 };
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class MislibAnd MislibBop.h "MislibBop.h"
-/// @brief AND論理式を表すクラス
+/// @class MislibNoninv MislibPhase.h "MislibPhase.h"
+/// @brief NONINV 極性を表すクラス
 //////////////////////////////////////////////////////////////////////
-class MislibAnd :
-  public MislibBop
+class MislibNoninv :
+  public MislibPhase
 {
   friend class MislibMgr;
 
@@ -79,15 +75,11 @@ private:
 
   /// @brief コンストラクタ
   /// @param[in] loc 位置情報
-  /// @param[in] child1 1番目の子供
-  /// @param[in] child2 2番目の子供
-  MislibAnd(const FileRegion& loc,
-	    const MislibExpr* child1,
-	    const MislibExpr* child2);
+  MislibNoninv(const FileRegion& loc);
 
   /// @brief デストラクタ
   virtual
-  ~MislibAnd();
+  ~MislibNoninv();
 
 
 public:
@@ -99,12 +91,6 @@ public:
   virtual
   Type
   type() const;
-
-  /// @brief 対応する論理式を生成する．
-  /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
-  virtual
-  Expr
-  to_expr(const HashMap<ShString, int>& name_map) const;
 
   /// @brief 内容を出力する．
   /// デバッグ用
@@ -116,11 +102,11 @@ public:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class MislibOr MislibBop.h "MislibBop.h"
-/// @brief OR論理式を表すクラス
+/// @class MislibInv MislibPhase.h "MislibPhase.h"
+/// @brief INV 極性を表すクラス
 //////////////////////////////////////////////////////////////////////
-class MislibOr :
-  public MislibBop
+class MislibInv :
+  public MislibPhase
 {
   friend class MislibMgr;
 
@@ -128,15 +114,11 @@ private:
 
   /// @brief コンストラクタ
   /// @param[in] loc 位置情報
-  /// @param[in] child1 1番目の子供
-  /// @param[in] child2 2番目の子供
-  MislibOr(const FileRegion& loc,
-	   const MislibExpr* child1,
-	   const MislibExpr* child2);
+  MislibInv(const FileRegion& loc);
 
   /// @brief デストラクタ
   virtual
-  ~MislibOr();
+  ~MislibInv();
 
 
 public:
@@ -148,12 +130,6 @@ public:
   virtual
   Type
   type() const;
-
-  /// @brief 対応する論理式を生成する．
-  /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
-  virtual
-  Expr
-  to_expr(const HashMap<ShString, int>& name_map) const;
 
   /// @brief 内容を出力する．
   /// デバッグ用
@@ -165,11 +141,11 @@ public:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class MislibXor MislibBop.h "MislibBop.h"
-/// @brief XOR論理式を表すクラス
+/// @class MislibUnknown MislibPhase.h "MislibPhase.h"
+/// @brief UNKNOWN 極性を表すクラス
 //////////////////////////////////////////////////////////////////////
-class MislibXor :
-  public MislibBop
+class MislibUnknown :
+  public MislibPhase
 {
   friend class MislibMgr;
 
@@ -177,15 +153,11 @@ private:
 
   /// @brief コンストラクタ
   /// @param[in] loc 位置情報
-  /// @param[in] child1 1番目の子供
-  /// @param[in] child2 2番目の子供
-  MislibXor(const FileRegion& loc,
-	    const MislibExpr* child1,
-	    const MislibExpr* child2);
+  MislibUnknown(const FileRegion& loc);
 
   /// @brief デストラクタ
   virtual
-  ~MislibXor();
+  ~MislibUnknown();
 
 
 public:
@@ -197,12 +169,6 @@ public:
   virtual
   Type
   type() const;
-
-  /// @brief 対応する論理式を生成する．
-  /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
-  virtual
-  Expr
-  to_expr(const HashMap<ShString, int>& name_map) const;
 
   /// @brief 内容を出力する．
   /// デバッグ用
@@ -214,4 +180,4 @@ public:
 
 END_NAMESPACE_YM_MISLIB
 
-#endif // MISLIBBOP_H
+#endif // MISLIBPHASE_H

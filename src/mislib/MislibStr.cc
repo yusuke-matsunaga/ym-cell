@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_MISLIB
 // コンストラクタ
 MislibStr::MislibStr(const FileRegion& loc,
 		     ShString str) :
-  MislibNodeImpl(loc),
+  MislibNode(loc),
   mStr(str)
 {
 }
@@ -29,39 +29,6 @@ MislibStr::~MislibStr()
 {
 }
 
-// 種類を取り出す．
-MislibNode::Type
-MislibStr::type() const
-{
-  return kStr;
-}
-
-// @brief 論理式を表す型のときに true を返す．
-bool
-MislibStr::is_expr() const
-{
-  return true;
-}
-
-// 文字列を取り出す
-ShString
-MislibStr::str() const
-{
-  return mStr;
-}
-
-// @brief 対応する論理式を生成する．
-// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
-Expr
-MislibStr::to_expr(const HashMap<ShString, int>& name_map) const
-{
-  int id;
-  bool found = name_map.find(str(), id);
-  ASSERT_COND( found );
-  VarId var(id);
-  return Expr::posi_literal(var);
-}
-
 // 内容を出力する．
 // デバッグ用
 void
@@ -69,7 +36,7 @@ MislibStr::dump(ostream& s) const
 {
   s << "<STR>" << endl;
   dump_loc(s);
-  s << ShString(str()) << endl
+  s << str() << endl
     << "</STR>" << endl;
 }
 

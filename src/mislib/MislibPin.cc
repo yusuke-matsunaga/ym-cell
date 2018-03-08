@@ -8,6 +8,9 @@
 
 
 #include "MislibPin.h"
+#include "MislibStr.h"
+#include "MislibNum.h"
+#include "MislibPhase.h"
 
 
 BEGIN_NAMESPACE_YM_MISLIB
@@ -18,15 +21,15 @@ BEGIN_NAMESPACE_YM_MISLIB
 
 // コンストラクタ
 MislibPin::MislibPin(const FileRegion& loc,
-		     const MislibNode* name,
-		     const MislibNode* phase,
-		     const MislibNode* input_load,
-		     const MislibNode* max_load,
-		     const MislibNode* rise_block_delay,
-		     const MislibNode* rise_fanout_delay,
-		     const MislibNode* fall_block_delay,
-		     const MislibNode* fall_fanout_delay) :
-  MislibNodeImpl(loc),
+		     const MislibStr* name,
+		     const MislibPhase* phase,
+		     const MislibNum* input_load,
+		     const MislibNum* max_load,
+		     const MislibNum* rise_block_delay,
+		     const MislibNum* rise_fanout_delay,
+		     const MislibNum* fall_block_delay,
+		     const MislibNum* fall_fanout_delay) :
+  MislibNode(loc),
   mName(name),
   mPhase(phase),
   mInputLoad(input_load),
@@ -42,90 +45,6 @@ MislibPin::MislibPin(const FileRegion& loc,
 // デストラクタ
 MislibPin::~MislibPin()
 {
-  delete mInputLoad;
-  delete mMaxLoad;
-  delete mRiseBlockDelay;
-  delete mRiseFanoutDelay;
-  delete mFallBlockDelay;
-  delete mFallFanoutDelay;
-  delete mNext;
-}
-
-// 種類を取り出す．
-MislibNode::Type
-MislibPin::type() const
-{
-  return kPin;
-}
-
-// ピン名を表すオブジェクトを取り出す．
-const MislibNode*
-MislibPin::name() const
-{
-  return mName;
-}
-
-// 極性情報を表すオブジェクトを取り出す．
-const MislibNode*
-MislibPin::phase() const
-{
-  return mPhase;
-}
-
-// 入力負荷を表すオブジェクトを取り出す．
-const MislibNode*
-MislibPin::input_load() const
-{
-  return mInputLoad;
-}
-
-// 最大駆動負荷を表すオブジェクトを取り出す．
-const MislibNode*
-MislibPin::max_load() const
-{
-  return mMaxLoad;
-}
-
-// 立ち上がり固定遅延を表すオブジェクトを取り出す．
-const MislibNode*
-MislibPin::rise_block_delay() const
-{
-  return mRiseBlockDelay;
-}
-
-// 立ち上がり負荷依存遅延を表すオブジェクトを取り出す．
-const MislibNode*
-MislibPin::rise_fanout_delay() const
-{
-  return mRiseFanoutDelay;
-}
-
-// 立ち下がり固定遅延を表すオブジェクトを取り出す．
-const MislibNode*
-MislibPin::fall_block_delay() const
-{
-  return mFallBlockDelay;
-}
-
-// 立ち下がり負荷依存遅延を表すオブジェクトを取り出す．
-const MislibNode*
-MislibPin::fall_fanout_delay() const
-{
-  return mFallFanoutDelay;
-}
-
-// 次の要素を設定する．
-void
-MislibPin::set_next(MislibNodeImpl* pin)
-{
-  mNext = pin;
-}
-
-// 次の要素を取り出す．
-const MislibNode*
-MislibPin::next() const
-{
-  return mNext;
 }
 
 // 内容を出力する．

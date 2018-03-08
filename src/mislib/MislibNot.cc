@@ -18,8 +18,8 @@ BEGIN_NAMESPACE_YM_MISLIB
 
 // コンストラクタ
 MislibNot::MislibNot(const FileRegion& loc,
-		     const MislibNode* child1) :
-  MislibNodeImpl(loc),
+		     const MislibExpr* child1) :
+  MislibExpr(loc),
   mChild1(child1)
 {
 }
@@ -27,25 +27,17 @@ MislibNot::MislibNot(const FileRegion& loc,
 // デストラクタ
 MislibNot::~MislibNot()
 {
-  delete mChild1;
 }
 
 // 種類を取り出す．
-MislibNode::Type
+MislibExpr::Type
 MislibNot::type() const
 {
   return kNot;
 }
 
-// @brief 論理式を表す型のときに true を返す．
-bool
-MislibNot::is_expr() const
-{
-  return true;
-}
-
 // 1番目の子供を取り出す．
-const MislibNode*
+const MislibExpr*
 MislibNot::child1() const
 {
   return mChild1;

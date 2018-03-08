@@ -5,11 +5,12 @@
 /// @brief MislibStr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "MislibNodeImpl.h"
+#include "MislibNode.h"
+#include "ym/ShString.h"
 
 
 BEGIN_NAMESPACE_YM_MISLIB
@@ -19,9 +20,9 @@ BEGIN_NAMESPACE_YM_MISLIB
 /// @brief 文字列を表すクラス
 //////////////////////////////////////////////////////////////////////
 class MislibStr :
-  public MislibNodeImpl
+  public MislibNode
 {
-  friend class MislibMgrImpl;
+  friend class MislibMgr;
 
 private:
 
@@ -37,30 +38,12 @@ private:
 
 public:
 
-  /// @brief 種類を取り出す．
-  virtual
-  Type
-  type() const;
-
-  /// @brief 論理式を表す型のときに true を返す．
-  virtual
-  bool
-  is_expr() const;
-
   /// @brief 文字列を取り出す
-  virtual
   ShString
   str() const;
 
-  /// @brief 対応する論理式を生成する．
-  /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
-  virtual
-  Expr
-  to_expr(const HashMap<ShString, int>& name_map) const;
-
   /// @brief 内容を出力する．
   /// デバッグ用
-  virtual
   void
   dump(ostream& s) const;
 
@@ -74,6 +57,19 @@ private:
   ShString mStr;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// 文字列を取り出す
+inline
+ShString
+MislibStr::str() const
+{
+  return mStr;
+}
 
 END_NAMESPACE_YM_MISLIB
 

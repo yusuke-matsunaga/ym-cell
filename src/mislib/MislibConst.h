@@ -5,11 +5,11 @@
 /// @brief MislibConst0, MislibConst1 のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "MislibNodeImpl.h"
+#include "MislibExpr.h"
 
 
 BEGIN_NAMESPACE_YM_MISLIB
@@ -19,9 +19,9 @@ BEGIN_NAMESPACE_YM_MISLIB
 /// @brief 定数0を表すクラス
 //////////////////////////////////////////////////////////////////////
 class MislibConst0 :
-  public MislibNodeImpl
+  public MislibExpr
 {
-  friend class MislibMgrImpl;
+  friend class MislibMgr;
 
 private:
 
@@ -35,16 +35,14 @@ private:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 種類を取り出す．
   virtual
   Type
   type() const;
-
-  /// @brief 論理式を表す型のときに true を返す．
-  virtual
-  bool
-  is_expr() const;
 
   /// @brief 対応する論理式を生成する．
   /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
@@ -66,9 +64,9 @@ public:
 /// @brief 定数1を表すクラス
 //////////////////////////////////////////////////////////////////////
 class MislibConst1 :
-  public MislibNodeImpl
+  public MislibExpr
 {
-  friend class MislibMgrImpl;
+  friend class MislibMgr;
 
 private:
 
@@ -82,16 +80,14 @@ private:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 種類を取り出す．
   virtual
   Type
   type() const;
-
-  /// @brief 論理式を表す型のときに true を返す．
-  virtual
-  bool
-  is_expr() const;
 
   /// @brief 対応する論理式を生成する．
   /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列

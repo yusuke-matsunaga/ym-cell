@@ -1,5 +1,5 @@
 ﻿
-/// @file MislibSymbol.cc
+/// @file MislibPhase.cc
 /// @brief MislibNoinv, MislibInv, MislibUnknown の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
@@ -7,10 +7,27 @@
 /// All rights reserved.
 
 
-#include "MislibSymbol.h"
+#include "MislibPhase.h"
 
 
 BEGIN_NAMESPACE_YM_MISLIB
+
+//////////////////////////////////////////////////////////////////////
+// クラス MislibPhase
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+// @param[in] loc 位置情報
+MislibPhase::MislibPhase(const FileRegion& loc) :
+  MislibNode(loc)
+{
+}
+
+// @brief デストラクタ
+MislibPhase::~MislibPhase()
+{
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス MislibNoinv
@@ -18,7 +35,7 @@ BEGIN_NAMESPACE_YM_MISLIB
 
 // コンストラクタ
 MislibNoninv::MislibNoninv(const FileRegion& loc) :
-  MislibNodeImpl(loc)
+  MislibPhase(loc)
 {
 }
 
@@ -28,7 +45,7 @@ MislibNoninv::~MislibNoninv()
 }
 
 // 種類を取り出す．
-MislibNode::Type
+MislibPhase::Type
 MislibNoninv::type() const
 {
   return kNoninv;
@@ -51,7 +68,7 @@ MislibNoninv::dump(ostream& s) const
 
 // コンストラクタ
 MislibInv::MislibInv(const FileRegion& loc) :
-  MislibNodeImpl(loc)
+  MislibPhase(loc)
 {
 }
 
@@ -61,7 +78,7 @@ MislibInv::~MislibInv()
 }
 
 // 種類を取り出す．
-MislibNode::Type
+MislibPhase::Type
 MislibInv::type() const
 {
   return kInv;
@@ -84,7 +101,7 @@ MislibInv::dump(ostream& s) const
 
 // コンストラクタ
 MislibUnknown::MislibUnknown(const FileRegion& loc) :
-  MislibNodeImpl(loc)
+  MislibPhase(loc)
 {
 }
 
@@ -94,7 +111,7 @@ MislibUnknown::~MislibUnknown()
 }
 
 // 種類を取り出す．
-MislibNode::Type
+MislibPhase::Type
 MislibUnknown::type() const
 {
   return kUnknown;

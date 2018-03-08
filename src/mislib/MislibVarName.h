@@ -1,11 +1,11 @@
-﻿#ifndef MISLIBNOT_H
-#define MISLIBNOT_H
+﻿#ifndef MISLIBVARNAME_H
+#define MISLIBVARNAME_H
 
-/// @file MislibNot.h
-/// @brief MislibNot のヘッダファイル
+/// @file MislibVarName.h
+/// @brief MislibVarName のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -15,10 +15,10 @@
 BEGIN_NAMESPACE_YM_MISLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class MislibNot MislibNot.h "MislibNot.h"
-/// @brief NOT論理式を表すクラス
+/// @class MislibVarName MislibVarName.h "MislibVarName.h"
+/// @brief 変数名を表すクラス
 //////////////////////////////////////////////////////////////////////
-class MislibNot :
+class MislibVarName :
   public MislibExpr
 {
   friend class MislibMgr;
@@ -27,13 +27,12 @@ private:
 
   /// @brief コンストラクタ
   /// @param[in] loc 位置情報
-  /// @param[in] child1 1番目の子供
-  MislibNot(const FileRegion& loc,
-	    const MislibExpr* child1);
+  /// @param[in] str 共有された文字列のID
+  MislibVarName(const FileRegion& loc,
+	    ShString str);
 
   /// @brief デストラクタ
-  virtual
-  ~MislibNot();
+  ~MislibVarName();
 
 
 public:
@@ -58,10 +57,10 @@ public:
   void
   dump(ostream& s) const;
 
-  /// @brief 1番目の子供を取り出す．
+  /// @brief 変数名を取り出す
   virtual
-  const MislibExpr*
-  child1() const;
+  ShString
+  varname() const;
 
 
 private:
@@ -69,11 +68,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 子供
-  const MislibExpr* mChild1;
+  // 変数名
+  ShString mVarName;
 
 };
 
 END_NAMESPACE_YM_MISLIB
 
-#endif // MISLIBNOT_H
+#endif // MISLIBVARNAME_H

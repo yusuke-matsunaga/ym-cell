@@ -5,11 +5,11 @@
 /// @brief MislibNum のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "MislibNodeImpl.h"
+#include "MislibNode.h"
 
 
 BEGIN_NAMESPACE_YM_MISLIB
@@ -19,9 +19,9 @@ BEGIN_NAMESPACE_YM_MISLIB
 /// @brief 数値を表すクラス
 //////////////////////////////////////////////////////////////////////
 class MislibNum :
-  public MislibNodeImpl
+  public MislibNode
 {
-  friend class MislibMgrImpl;
+  friend class MislibMgr;
 
 private:
 
@@ -37,19 +37,12 @@ private:
 
 public:
 
-  /// @brief 種類を取り出す．
-  virtual
-  Type
-  type() const;
-
   /// @brief 数値を取り出す
-  virtual
   double
   num() const;
 
   /// @brief 内容を出力する．
   /// デバッグ用
-  virtual
   void
   dump(ostream& s) const;
 
@@ -63,6 +56,19 @@ private:
   double mNum;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// 数値を取り出す
+inline
+double
+MislibNum::num() const
+{
+  return mNum;
+}
 
 END_NAMESPACE_YM_MISLIB
 

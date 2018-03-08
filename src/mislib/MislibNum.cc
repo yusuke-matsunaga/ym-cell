@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_MISLIB
 // コンストラクタ
 MislibNum::MislibNum(const FileRegion& loc,
 		     double num) :
-  MislibNodeImpl(loc),
+  MislibNode(loc),
   mNum(num)
 {
 }
@@ -27,20 +27,6 @@ MislibNum::MislibNum(const FileRegion& loc,
 // デストラクタ
 MislibNum::~MislibNum()
 {
-}
-
-// 種類を取り出す．
-MislibNode::Type
-MislibNum::type() const
-{
-  return kNum;
-}
-
-// 数値を取り出す
-double
-MislibNum::num() const
-{
-  return mNum;
 }
 
 // 内容を出力する．

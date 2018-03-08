@@ -3,7 +3,7 @@
 /// @brief MislibConst0, MislibConst1 の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_YM_MISLIB
 
 // コンストラクタ
 MislibConst0::MislibConst0(const FileRegion& loc) :
-  MislibNodeImpl(loc)
+  MislibExpr(loc)
 {
 }
 
@@ -28,17 +28,10 @@ MislibConst0::~MislibConst0()
 }
 
 // 種類を取り出す．
-MislibNode::Type
+MislibExpr::Type
 MislibConst0::type() const
 {
   return kConst0;
-}
-
-// @brief 論理式を表す型のときに true を返す．
-bool
-MislibConst0::is_expr() const
-{
-  return true;
 }
 
 // @brief 対応する論理式を生成する．
@@ -66,7 +59,7 @@ MislibConst0::dump(ostream& s) const
 
 // コンストラクタ
 MislibConst1::MislibConst1(const FileRegion& loc) :
-  MislibNodeImpl(loc)
+  MislibExpr(loc)
 {
 }
 
@@ -76,17 +69,10 @@ MislibConst1::~MislibConst1()
 }
 
 // 種類を取り出す．
-MislibNode::Type
+MislibExpr::Type
 MislibConst1::type() const
 {
   return kConst1;
-}
-
-// @brief 論理式を表す型のときに true を返す．
-bool
-MislibConst1::is_expr() const
-{
-  return true;
 }
 
 // @brief 対応する論理式を生成する．

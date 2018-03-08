@@ -8,6 +8,10 @@
 
 
 #include "MislibGate.h"
+#include "MislibStr.h"
+#include "MislibNum.h"
+#include "MislibExpr.h"
+#include "MislibPin.h"
 
 
 BEGIN_NAMESPACE_YM_MISLIB
@@ -24,12 +28,12 @@ BEGIN_NAMESPACE_YM_MISLIB
 // @param[in] opin_expr 出力の論理式を表すパース木
 // @param[in] ipin_top 先頭の入力ピンを表すパース木
 MislibGate::MislibGate(const FileRegion& loc,
-		       const MislibNode* name,
-		       const MislibNode* area,
-		       const MislibNode* opin_name,
-		       const MislibNode* opin_expr,
-		       const MislibNode* ipin_top) :
-  MislibNodeImpl(loc),
+		       const MislibStr* name,
+		       const MislibNum* area,
+		       const MislibStr* opin_name,
+		       const MislibExpr* opin_expr,
+		       const MislibPin* ipin_top) :
+  MislibNode(loc),
   mName(name),
   mArea(area),
   mOpinName(opin_name),
@@ -41,53 +45,6 @@ MislibGate::MislibGate(const FileRegion& loc,
 // @brief デストラクタ
 MislibGate::~MislibGate()
 {
-  delete mName;
-  delete mArea;
-  delete mOpinName;
-  delete mOpinExpr;
-  delete mIpinTop;
-}
-
-// @brief 種類を取り出す．
-MislibNode::Type
-MislibGate::type() const
-{
-  return kGate;
-}
-
-// @brief ピン名/ゲート名を表すオブジェクトを取り出す．
-const MislibNode*
-MislibGate::name() const
-{
-  return mName;
-}
-
-// @brief 面積を表すオブジェクトを返す．
-const MislibNode*
-MislibGate::area() const
-{
-  return mArea;
-}
-
-// @brief 出力ピン名を表すオブジェクトを返す．
-const MislibNode*
-MislibGate::opin_name() const
-{
-  return mOpinName;
-}
-
-// @brief 出力の論理式を表すオブジェクトを返す．
-const MislibNode*
-MislibGate::opin_expr() const
-{
-  return mOpinExpr;
-}
-
-// @brief 先頭の入力ピンを返す．
-const MislibNode*
-MislibGate::ipin_top() const
-{
-  return mIpinTop;
 }
 
 // @brief 内容を出力する．

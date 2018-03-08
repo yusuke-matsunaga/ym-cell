@@ -31,8 +31,14 @@ BEGIN_NAMESPACE_YM_MISLIB
 
 // クラス名の前方宣言
 class MislibMgr;
-class MislibNode;
 class MislibParser;
+class MislibNode;
+class MislibStr;
+class MislibNum;
+class MislibExpr;
+class MislibPhase;
+class MislibPin;
+class MislibGate;
 
 END_NAMESPACE_YM_MISLIB
 

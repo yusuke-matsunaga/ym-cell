@@ -3,7 +3,7 @@
 /// @brief read_mislib の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -19,7 +19,14 @@
 #include "MislibParser.h"
 #include "MislibMgr.h"
 #include "MislibNode.h"
+#include "MislibGate.h"
+#include "MislibPin.h"
+#include "MislibPhase.h"
+#include "MislibExpr.h"
+#include "MislibStr.h"
+#include "MislibNum.h"
 
+#include "ym/FileIDO.h"
 #include "ym/Expr.h"
 #include "ym/TvFunc.h"
 #include "ym/MsgMgr.h"
@@ -36,18 +43,18 @@ typedef HashMap<ShString, int> NameMap;
 // param[out] name_list 名前が現れた順に格納されたリスト
 // param[out] name_map 名前をキーにして name_list 中の位置を返す連想配列
 void
-dfs(const MislibNode* node,
+dfs(const MislibExpr* expr,
     vector<ShString>& name_list,
     NameMap& name_map)
 {
-  switch ( node->type() ) {
-  case MislibNode::kConst0:
-  case MislibNode::kConst1:
+  switch ( expr->type() ) {
+  case MislibExpr::kConst0:
+  case MislibExpr::kConst1:
     return;
 
-  case MislibNode::kStr:
+  case MislibExpr::kVarName:
     {
-      ShString name = node->str();
+      ShString name = expr->varname();
       if ( !name_map.check(name) ) {
 	// 登録する．
 	name_map.add(name, name_list.size());
@@ -56,15 +63,15 @@ dfs(const MislibNode* node,
     }
     break;
 
-  case MislibNode::kNot:
-    dfs(node->child1(), name_list, name_map);
+  case MislibExpr::kNot:
+    dfs(expr->child1(), name_list, name_map);
     break;
 
-  case MislibNode::kAnd:
-  case MislibNode::kOr:
-  case MislibNode::kXor:
-    dfs(node->child1(), name_list, name_map);
-    dfs(node->child2(), name_list, name_map);
+  case MislibExpr::kAnd:
+  case MislibExpr::kOr:
+  case MislibExpr::kXor:
+    dfs(expr->child1(), name_list, name_map);
+    dfs(expr->child2(), name_list, name_map);
     break;
 
   default:
@@ -73,17 +80,17 @@ dfs(const MislibNode* node,
 }
 
 CiCell*
-new_gate(const MislibNode* gate,
+new_gate(const MislibGate* gate,
 	 CiCellLibrary* library)
 {
   ShString name = gate->name()->str();
   ClibArea area(gate->area()->num());
 
   ShString opin_name = gate->opin_name()->str();
-  const MislibNode* opin_expr = gate->opin_expr();
+  const MislibExpr* opin_expr = gate->opin_expr();
 
-  const MislibNode* ipin_top = gate->ipin_top();
-  vector<const MislibNode*> ipin_array;
+  const MislibPin* ipin_top = gate->ipin_top();
+  vector<const MislibPin*> ipin_array;
   vector<ShString> ipin_name_list;
   NameMap ipin_name_map;
   bool wildcard_pin = false;
@@ -92,7 +99,6 @@ new_gate(const MislibNode* gate,
       // 通常の入力ピン定義がある場合
       // ipin_list の順に入力ピンを作る．
       for ( auto pin = ipin_top; pin != nullptr; pin = pin->next() ) {
-	ASSERT_COND( pin->type() == MislibNode::kPin );
 	ShString name = pin->name()->str();
 	ASSERT_COND( !ipin_name_map.check(name) );
 	ipin_name_map.add(name, ipin_array.size());
@@ -117,7 +123,7 @@ new_gate(const MislibNode* gate,
   for ( int i = 0; i < ni; ++ i ) {
     // 入力ピンの設定
     ShString name = ipin_name_list[i];
-    const MislibNode* pin = ipin_array[i];
+    const MislibPin* pin = ipin_array[i];
     ClibCapacitance load(pin->input_load()->num());
     input_list[i] = library->new_cell_input(name, load, load, load);
   }
@@ -138,7 +144,7 @@ new_gate(const MislibNode* gate,
   vector<CiTiming*> timing_list(ni);
   if ( !wildcard_pin ) {
     for ( int i = 0; i < ni; ++ i ) {
-      const MislibNode* pt_pin = ipin_array[i];
+      const MislibPin* pt_pin = ipin_array[i];
       ClibTime r_i(pt_pin->rise_block_delay()->num());
       ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
       ClibTime f_i(pt_pin->fall_block_delay()->num());
@@ -151,9 +157,9 @@ new_gate(const MislibNode* gate,
       timing_list[i] = timing;
     }
   }
-  else { // ipin_list->type() == MislibNode::kPin
+  else {
     vector<CiTiming*> timing_list(1);
-    const MislibNode* pt_pin = ipin_top;
+    const MislibPin* pt_pin = ipin_top;
     ClibTime r_i(pt_pin->rise_block_delay()->num());
     ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
     ClibTime f_i(pt_pin->fall_block_delay()->num());
@@ -181,7 +187,7 @@ new_gate(const MislibNode* gate,
   for ( int i = 0; i < ni; ++ i ) {
     // タイミング情報の設定
     VarId var(i);
-    const MislibNode* pt_pin = ipin_array[i];
+    const MislibPin* pt_pin = ipin_array[i];
     TvFunc p_func = tv_function.cofactor(var, false);
     TvFunc n_func = tv_function.cofactor(var, true);
     ClibTimingSense sense_real = kClibNonUnate;
@@ -219,9 +225,9 @@ new_gate(const MislibNode* gate,
 
     ClibTimingSense sense = kClibNonUnate;
     switch ( pt_pin->phase()->type() ) {
-    case MislibNode::kNoninv:  sense = kClibPosiUnate; break;
-    case MislibNode::kInv:     sense = kClibNegaUnate; break;
-    case MislibNode::kUnknown: sense = kClibNonUnate; break;
+    case MislibPhase::kNoninv:  sense = kClibPosiUnate; break;
+    case MislibPhase::kInv:     sense = kClibNegaUnate; break;
+    case MislibPhase::kUnknown: sense = kClibNonUnate; break;
     default: ASSERT_NOT_REACHED; break;
     }
     if ( sense != sense_real ) {
@@ -256,7 +262,7 @@ new_gate(const MislibNode* gate,
 // @param[in] library 設定対象のライブラリ
 void
 set_library(const string& lib_name,
-	    const vector<const MislibNode*>& gate_list,
+	    const vector<const MislibGate*>& gate_list,
 	    CiCellLibrary* library)
 {
   // 名前の設定
@@ -267,7 +273,6 @@ set_library(const string& lib_name,
   for ( auto gate: gate_list ) {
     CiCell* cell = new_gate(gate, library);
     cell_list.push_back(cell);
-    delete gate;
   }
 
   library->set_cell_list(cell_list);
@@ -289,10 +294,23 @@ CiCellLibrary::read_mislib(const string& filename)
 {
   using namespace nsMislib;
 
-  MislibParser parser;
+  FileIDO ido;
+  if ( !ido.open(filename) ) {
+    // エラー
+    ostringstream buf;
+    buf << filename << " : No such file.";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    FileRegion(),
+		    kMsgFailure,
+		    "MISLIB_PARSER",
+		    buf.str());
+    return false;
+  }
+
   MislibMgr mgr;
-  vector<const MislibNode*> gate_list;
-  if ( !parser.read_file(filename, mgr, gate_list) ) {
+  MislibParser parser(ido, mgr);
+  vector<const MislibGate*> gate_list;
+  if ( !parser.parse(gate_list) ) {
     return false;
   }
 

@@ -18,9 +18,9 @@ BEGIN_NAMESPACE_YM_MISLIB
 
 // コンストラクタ
 MislibBop::MislibBop(const FileRegion& loc,
-		     const MislibNode* child1,
-		     const MislibNode* child2) :
-  MislibNodeImpl(loc),
+		     const MislibExpr* child1,
+		     const MislibExpr* child2) :
+  MislibExpr(loc),
   mChild1(child1),
   mChild2(child2)
 {
@@ -29,26 +29,17 @@ MislibBop::MislibBop(const FileRegion& loc,
 // デストラクタ
 MislibBop::~MislibBop()
 {
-  delete mChild1;
-  delete mChild2;
-}
-
-// @brief 論理式を表す型のときに true を返す．
-bool
-MislibBop::is_expr() const
-{
-  return true;
 }
 
 // 1番目の子供を取り出す．
-const MislibNode*
+const MislibExpr*
 MislibBop::child1() const
 {
   return mChild1;
 }
 
 // 2番目の子供を取り出す．
-const MislibNode*
+const MislibExpr*
 MislibBop::child2() const
 {
   return mChild2;
@@ -61,8 +52,8 @@ MislibBop::child2() const
 
 // コンストラクタ
 MislibAnd::MislibAnd(const FileRegion& loc,
-		     const MislibNode* child1,
-		     const MislibNode* child2) :
+		     const MislibExpr* child1,
+		     const MislibExpr* child2) :
   MislibBop(loc, child1, child2)
 {
 }
@@ -73,7 +64,7 @@ MislibAnd::~MislibAnd()
 }
 
 // 種類を取り出す．
-MislibNode::Type
+MislibExpr::Type
 MislibAnd::type() const
 {
   return kAnd;
@@ -113,8 +104,8 @@ MislibAnd::dump(ostream& s) const
 
 // コンストラクタ
 MislibOr::MislibOr(const FileRegion& loc,
-		   const MislibNode* child1,
-		   const MislibNode* child2) :
+		   const MislibExpr* child1,
+		   const MislibExpr* child2) :
   MislibBop(loc, child1, child2)
 {
 }
@@ -125,7 +116,7 @@ MislibOr::~MislibOr()
 }
 
 // 種類を取り出す．
-MislibNode::Type
+MislibExpr::Type
 MislibOr::type() const
 {
   return kOr;
@@ -165,8 +156,8 @@ MislibOr::dump(ostream& s) const
 
 // コンストラクタ
 MislibXor::MislibXor(const FileRegion& loc,
-		     const MislibNode* child1,
-		     const MislibNode* child2) :
+		     const MislibExpr* child1,
+		     const MislibExpr* child2) :
   MislibBop(loc, child1, child2)
 {
 }
@@ -177,7 +168,7 @@ MislibXor::~MislibXor()
 }
 
 // 種類を取り出す．
-MislibNode::Type
+MislibExpr::Type
 MislibXor::type() const
 {
   return kXor;
