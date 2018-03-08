@@ -161,11 +161,11 @@ private:
 
   // ノードの種類+入力番号を納めた配列
   // サイズは mNodeNum
-  int* mNodeTypeArray;
+  ymuint* mNodeTypeArray;
 
   // ファンインのノード番号＋反転属性を納めた配列
   // サイズは mNodeNum * 2
-  int* mEdgeArray;
+  ymuint* mEdgeArray;
 
   // パタン数
   int mPatNum;

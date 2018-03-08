@@ -67,16 +67,20 @@ TEST(ClibCellLibraryTest, dump_restore)
 
     string dump_filename = "./foo.dump";
 
-    FileODO odo;
-    bool r = odo.open(dump_filename);
-    ASSERT_TRUE ( r );
-    library.dump(odo);
+    {
+      FileODO odo;
+      bool r = odo.open(dump_filename);
+      ASSERT_TRUE ( r );
+      library.dump(odo);
+    }
 
-    FileIDO ido;
-    r = ido.open(dump_filename);
-    ASSERT_TRUE ( r );
     ClibCellLibrary library2;
-    library2.restore(ido);
+    {
+      FileIDO ido;
+      bool r = ido.open(dump_filename);
+      ASSERT_TRUE ( r );
+      library2.restore(ido);
+    }
 
     EXPECT_EQ( library.cell_num(), library2.cell_num() );
 

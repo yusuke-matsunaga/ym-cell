@@ -135,7 +135,7 @@ private:
   int mRepId;
 
   // 入力数 + 根の反転属性
-  int mInputNum;
+  ymuint mInputNum;
 
   // 枝数
   int mEdgeNum;

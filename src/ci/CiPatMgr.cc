@@ -117,8 +117,8 @@ void
 CiPatMgr::set_node_num(int nn)
 {
   mNodeNum = nn;
-  mNodeTypeArray = mAlloc.get_array<int>(mNodeNum);
-  mEdgeArray = mAlloc.get_array<int>(mNodeNum * 2);
+  mNodeTypeArray = mAlloc.get_array<ymuint>(mNodeNum);
+  mEdgeArray = mAlloc.get_array<ymuint>(mNodeNum * 2);
 }
 
 // @brief パタン数を設定する．
