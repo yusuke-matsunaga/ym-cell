@@ -20,7 +20,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-DotlibFL::DotlibFL()
+// @param[in] loc 位置情報
+DotlibFL(const FileRegion& loc) :
+  DotlibBase(loc)
 {
 }
 
@@ -29,13 +31,11 @@ DotlibFL::~DotlibFL()
 {
 }
 
-// @brief 内容を初期化する．
+// @brief データを持っている時に true を返す．
 bool
-DotlibFL::set_data(const DotlibNode* node)
+DotlibFL::has_data() const
 {
-  DotlibAttrMap attr_map(node->attr_top());
-
-  return set_data_sub(node, attr_map);
+  return mHasData;
 }
 
 // @brief set_data() の下請け関数
@@ -125,6 +125,7 @@ DotlibFL::set_data_sub(const DotlibNode* node,
       return false;
     }
   }
+  mHasData = true;
 
   return true;
 }

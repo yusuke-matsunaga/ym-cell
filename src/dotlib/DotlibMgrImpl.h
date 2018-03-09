@@ -132,10 +132,10 @@ public:
   DotlibNodeImpl*
   new_list();
 
-  /// @brief グループを表す DotlibNode を生成する．
+  /// @brief グループを表す DotlibGroup を生成する．
   /// @param[in] value 値
   /// @param[in] loc ファイル上の位置
-  DotlibNodeImpl*
+  DotlibGroup*
   new_group(const DotlibNode* value,
 	    const FileRegion& loc);
 

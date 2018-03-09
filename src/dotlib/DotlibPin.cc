@@ -21,7 +21,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-DotlibPin::DotlibPin()
+// @param[in] loc 位置情報
+DotlibPin::DotlibPin(const FileRegion& loc) :
+  DotlibBase(loc)
 {
 }
 
@@ -38,8 +40,7 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   mThreeState = nullptr;
   mInternalNode = nullptr;
   mPinFuncType = nullptr;
-
-  mTimingList.clear();
+  mTmingTop = nullptr;
 
   // 名前のリストを設定する．
   const DotlibNode* list_node = pin_node->group_value();
@@ -208,130 +209,12 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   }
 
   // 'timing' を取り出す．
-  attr_map.get_value(ATTR_TIMING, mTimingList);
+  vector<const DotlibNode*> timing_list;
+  attr_map.get_value(ATTR_TIMING, timing_list);
+
+#warning "TODO: timing_list から DotlibTiming のリストを作る．"
 
   return true;
-}
-
-// @brief 名前のリストの要素数を返す．
-int
-DotlibPin::num() const
-{
-  return mNameList.size();
-}
-
-// @brief 名前を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < num() )
-ShString
-DotlibPin::name(int pos) const
-{
-  ASSERT_COND( pos < num() );
-  return mNameList[pos];
-}
-
-// @brief "direction" を返す．
-ClibCellPinDirection
-DotlibPin::direction() const
-{
-  return mDirection;
-}
-
-// @brief "capacitance" を返す．
-double
-DotlibPin::capacitance() const
-{
-  return mCapacitance;
-}
-
-// @brief "rise_capacitance" を返す．
-double
-DotlibPin::rise_capacitance() const
-{
-  return mRiseCapacitance;
-}
-
-// @brief "fall_capacitance" を返す．
-double
-DotlibPin::fall_capacitance() const
-{
-  return mFallCapacitance;
-}
-
-// @brief "max_fanout" を返す．
-double
-DotlibPin::max_fanout() const
-{
-  return mMaxFanout;
-}
-
-// @brief "min_fanout" を返す．
-double
-DotlibPin::min_fanout() const
-{
-  return mMinFanout;
-}
-
-// @brief "max_capacitance" を返す．
-double
-DotlibPin::max_capacitance() const
-{
-  return mMaxCapacitance;
-}
-
-// @brief "min_capacitance" を返す．
-double
-DotlibPin::min_capacitance() const
-{
-  return mMinCapacitance;
-}
-
-// @brief "max_transition" を返す．
-double
-DotlibPin::max_transition() const
-{
-  return mMaxTransition;
-}
-
-// @brief "min_transition" を返す．
-double
-DotlibPin::min_transition() const
-{
-  return mMinTransition;
-}
-
-// @brief "function" を返す．
-const DotlibNode*
-DotlibPin::function() const
-{
-  return mFunction;
-}
-
-// @brief "three_state" を返す．
-const DotlibNode*
-DotlibPin::three_state() const
-{
-  return mThreeState;
-}
-
-// @brief "internal_node" を返す．
-const DotlibNode*
-DotlibPin::internal_node() const
-{
-  return mInternalNode;
-}
-
-// @brief "pin_func_type" を返す．
-const DotlibNode*
-DotlibPin::pin_func_type() const
-{
-  return mPinFuncType;
-}
-
-// @brief "timing" グループのリストを得る．
-const vector<const DotlibNode*>&
-DotlibPin::timing_list() const
-{
-  return mTimingList;
 }
 
 END_NAMESPACE_YM_DOTLIB

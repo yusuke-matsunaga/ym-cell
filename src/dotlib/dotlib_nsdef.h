@@ -35,12 +35,16 @@ class DotlibAttrMap;
 class DotlibMgr;
 class DotlibParser;
 class DotlibNode;
+class DotlibGroup;
 class DotlibLibrary;
 class DotlibClib;
 class DotlibFL;
 class DotlibFF;
 class DotlibLatch;
+class DotlibStateTable;
 class DotlibPin;
+class DotlibBus;
+class DotlibBundle;
 class DotlibTiming;
 
 END_NAMESPACE_YM_DOTLIB

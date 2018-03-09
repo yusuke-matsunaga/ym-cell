@@ -11,6 +11,7 @@
 #include "DotlibNode.h"
 #include "DotlibAttr.h"
 #include "DotlibAttrMap.h"
+#include "DotlibPin.h"
 #include "ym/MsgMgr.h"
 
 
@@ -36,13 +37,12 @@ DotlibCell::set_data(const DotlibNode* node)
 {
   mArea = 0.0;
   mBusNamingStyle = nullptr;
+  mPinTop = nullptr;
+  mBusTop = nullptr;
+  mBundleTop = nullptr;
   mFF = nullptr;
   mLatch = nullptr;
   mStateTable = nullptr;
-
-  mPinList.clear();
-  mBusList.clear();
-  mBundleList.clear();
 
   // セル名を得る．
   mName = node->group_value()->get_string_from_value_list();
@@ -61,33 +61,34 @@ DotlibCell::set_data(const DotlibNode* node)
 
   // ピングループを取り出す．
   // 定義されていなくてもエラーにはならない．
-  const vector<const DotlibNode*> pin_list;
+  vector<const DotlibNode*> pin_list;
   attr_map.get_value(ATTR_PIN, pin_list);
-  int npg = dt_pin_list.size();
-  mPinInfoArray.resize(npg);
-  {
-    int i = 0;
-    bool error = false;
-    for ( const DotlibNode* pin_node: pin_list ) {
-      // ピン情報の読み出し
-      DotlibPin& pin_info = mPinInfoArray[i]; ++ i;
-      if ( !pin_info.set_data(pin_node) ) {
-	return false;
-      }
+  DotlibPin* prev_pin = nullptr;
+  for ( const DotlibNode* pin_node: pin_list ) {
+    // ピン情報の読み出し
+    DotlibPin* pin = new DotlibPin(pin_node);
+    if ( pin == nullptr ) {
+      return false;
     }
-    if ( error ) {
-      continue;
+    if ( mPinTop == nullptr ) {
+      mPinTop = pin;
     }
-    ASSERT_COND( i == npg );
+    else {
+      ASSERT_COND( prev_pin != nullptr );
+      prev_pin->set_next(pin);
+    }
+    prev_pin = pin;
   }
 
   // バスグループを取り出す．
   // 定義されていなくてもエラーにはならない．
-  attr_map.get_value(ATTR_BUS, mBusList);
+  vector<const DotlibNode*> bus_list;
+  attr_map.get_value(ATTR_BUS, bus_list);
 
   // バンドルグループを取り出す．
   // 定義されていなくてもエラーにはならない．
-  attr_map.get_value(ATTR_BUNDLE, mBundleList);
+  vector<const DotlibNode*> bundle_list;
+  attr_map.get_value(ATTR_BUNDLE, bundle_list);
 
   // ff を取り出す．
   const DotlibNode* ff_node;
@@ -95,18 +96,27 @@ DotlibCell::set_data(const DotlibNode* node)
     return false;
   }
   if ( ff_node != nullptr ) {
-    if ( !mFF.set_data(ff_node) ) {
+    mFF = new DotlibFF(ff_node);
+    if ( mFF == nullptr ) {
       return false;
     }
   }
 
   // latch を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_LATCH, mLatch) ) {
+  const DotlibNode* latch_node;
+  if ( !attr_map.expect_singleton_or_null(ATTR_LATCH, latch_node) ) {
     return false;
+  }
+  if ( latch_node != nullptr ) {
+    mLatch = new DotlibLatch(latch_node);
+    if ( mLatch == nullptr ) {
+      return false;
+    }
   }
 
   // statetable を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_STATETABLE, mStateTable) ) {
+  const DotlibNode* state_node;
+  if ( !attr_map.expect_singleton_or_null(ATTR_STATETABLE, state_node) ) {
     return false;
   }
 
@@ -178,65 +188,6 @@ DotlibCell::set_data(const DotlibNode* node)
     }
   }
   return true;
-}
-
-// @brief 名前を返す．
-ShString
-DotlibCell::name() const
-{
-  return mName;
-}
-
-// @brief 面積を返す．
-double
-DotlibCell::area() const
-{
-  return mArea;
-}
-
-// @brief ピングループのリストを返す．
-const vector<const DotlibNode*>&
-DotlibCell::pin_list() const
-{
-  return mPinList;
-}
-
-// @brief バスグループのリストを返す．
-const vector<const DotlibNode*>&
-DotlibCell::bus_list() const
-{
-  return mBusList;
-}
-
-// @brief バンドルグループのリストを返す．
-const vector<const DotlibNode*>&
-DotlibCell::bundle_list() const
-{
-  return mBundleList;
-}
-
-// @brief ff グループを返す．
-// @note なければ nullptr を返す．
-const DotlibNode*
-DotlibCell::ff() const
-{
-  return mFF;
-}
-
-// @brief latch グループを返す．
-// @note なければ nullptr を返す．
-const DotlibNode*
-DotlibCell::latch() const
-{
-  return mLatch;
-}
-
-// @brief statetable グループを返す．
-// @note なければ nullptr を返す．
-const DotlibNode*
-DotlibCell::statetable() const
-{
-  return mStateTable;
 }
 
 END_NAMESPACE_YM_DOTLIB

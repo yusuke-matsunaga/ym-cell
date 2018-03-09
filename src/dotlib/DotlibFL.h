@@ -10,6 +10,7 @@
 
 
 #include "dotlib_nsdef.h"
+#include "DotlibBase.h"
 #include "ym/ShString.h"
 
 
@@ -19,12 +20,14 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class DotlibFL DotlibFL.h "DotlibFL.h"
 /// @brief DotlibFF と DotlibLatch の基底クラス
 //////////////////////////////////////////////////////////////////////
-class DotlibFL
+class DotlibFL :
+  public DotlibBase
 {
 public:
 
   /// @brief コンストラクタ
-  DotlibFL();
+  /// @param[in] loc 位置情報
+  DotlibFL(const FileRegion& loc);
 
   /// @brief デストラクタ
   ~DotlibFL();
@@ -35,9 +38,9 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 内容を初期化する．
+  /// @brief データを持っている時に true を返す．
   bool
-  set_data(const DotlibNode* node);
+  has_data() const;
 
   /// @brief var1 の名前を返す．
   ShString
@@ -79,6 +82,8 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  bool mHasData;
 
   // var1
   ShString mVar1;

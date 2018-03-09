@@ -10,6 +10,7 @@
 
 
 #include "dotlib_nsdef.h"
+#include "DotlibBase.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -18,12 +19,14 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class DotlibTiming DotlibTiming.h "DotlibTiming.h"
 /// @brief DotlibNode の木から取り出したタイミング情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class DotlibTiming
+class DotlibTiming :
+  public DotlibBase
 {
 public:
 
   /// @brief コンストラクタ
-  DotlibTiming();
+  /// @param[in] loc 位置情報
+  DotlibTiming(const FileRegion& loc);
 
   /// @brief デストラクタ
   ~DotlibTiming();
@@ -162,6 +165,10 @@ public:
   const DotlibNode*
   retain_fall_slew() const;
 
+  /// @brief 次の要素を返す．
+  const DotlibTiming*
+  next() const;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -261,7 +268,263 @@ private:
   // retain_fall_slew
   const DotlibNode* mRetainFallSlew;
 
+  // 次の要素
+  DotlibTiming* mNext;
+
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief "fall_resistance" を返す．
+inline
+const DotlibNode*
+DotlibTiming::fall_resistance() const
+{
+  return mFallResistance;
+}
+
+// @brief "rise_resistance" を返す．
+inline
+const DotlibNode*
+DotlibTiming::rise_resistance() const
+{
+  return mRiseResistance;
+}
+
+// @brief "intrinsic_fall" を返す．
+inline
+const DotlibNode*
+DotlibTiming::intrinsic_fall() const
+{
+  return mIntrinsicFall;
+}
+
+// @brief "intrinsic_rise" を返す．
+inline
+const DotlibNode*
+DotlibTiming::intrinsic_rise() const
+{
+  return mIntrinsicRise;
+}
+
+// @brief "related_bus_equivalent" を返す．
+inline
+const DotlibNode*
+DotlibTiming::related_bus_equivalent() const
+{
+  return mRelatedBusEquivalent;
+}
+
+// @brief "related_bus_pins" を返す．
+inline
+const DotlibNode*
+DotlibTiming::related_bus_pins() const
+{
+  return mRelatedBusPins;
+}
+
+// @brief "related_pin" を返す．
+inline
+const DotlibNode*
+DotlibTiming::related_pin() const
+{
+  return mRelatedPin;
+}
+
+// @brief "slope_fall" を返す．
+inline
+const DotlibNode*
+DotlibTiming::slope_fall() const
+{
+  return mSlopeFall;
+}
+
+// @brief "slope_rise" を返す．
+inline
+const DotlibNode*
+DotlibTiming::slope_rise() const
+{
+  return mSlopeRise;
+}
+
+// @brief "timing_sense" を返す．
+inline
+ClibTimingSense
+DotlibTiming::timing_sense() const
+{
+  return mTimingSense;
+}
+
+// @brief "timing_type" を返す．
+inline
+ClibTimingType
+DotlibTiming::timing_type() const
+{
+  return mTimingType;
+}
+
+// @brief "when" を返す．
+inline
+const DotlibNode*
+DotlibTiming::when() const
+{
+  return mWhen;
+}
+
+// @brief "when_start" を返す．
+inline
+const DotlibNode*
+DotlibTiming::when_start() const
+{
+  return mWhenStart;
+}
+
+// @brief "when_end" を返す．
+inline
+const DotlibNode*
+DotlibTiming::when_end() const
+{
+  return mWhenEnd;
+}
+
+// @brief "fall_delay_intercept" を返す．
+inline
+const DotlibNode*
+DotlibTiming::fall_delay_intercept() const
+{
+  return mFallDelayIntercept;
+}
+
+// @brief "rise_delay_intercept" を返す．
+inline
+const DotlibNode*
+DotlibTiming::rise_delay_intercept() const
+{
+  return mRiseDelayIntercept;
+}
+
+// @brief "fall_pin_resistance" を返す．
+inline
+const DotlibNode*
+DotlibTiming::fall_pin_resistance() const
+{
+  return mFallPinResistance;
+}
+
+// @brief "rise_pin_resistance" を返す．
+inline
+const DotlibNode*
+DotlibTiming::rise_pin_resistance() const
+{
+  return mRisePinResistance;
+}
+
+// @brief "cell_degradation" を返す．
+inline
+const DotlibNode*
+DotlibTiming::cell_degradation() const
+{
+  return mClibDegradation;
+}
+
+// @brief "cell_fall" を返す．
+inline
+const DotlibNode*
+DotlibTiming::cell_fall() const
+{
+  return mClibFall;
+}
+
+// @brief "cell_rise" を返す．
+inline
+const DotlibNode*
+DotlibTiming::cell_rise() const
+{
+  return mClibRise;
+}
+
+// @brief "fall_constraint" を返す．
+inline
+const DotlibNode*
+DotlibTiming::fall_constraint() const
+{
+  return mFallConstraint;
+}
+
+// @brief "rise_constraint" を返す．
+inline
+const DotlibNode*
+DotlibTiming::rise_constraint() const
+{
+  return mRiseConstraint;
+}
+
+// @brief "fall_propagation" を返す．
+inline
+const DotlibNode*
+DotlibTiming::fall_propagation() const
+{
+  return mFallPropagation;
+}
+
+// @brief "rise_propagation" を返す．
+inline
+const DotlibNode*
+DotlibTiming::rise_propagation() const
+{
+  return mRisePropagation;
+}
+
+// @brief "fall_transition" を返す．
+inline
+const DotlibNode*
+DotlibTiming::fall_transition() const
+{
+  return mFallTransition;
+}
+
+// @brief "rise_transition" を返す．
+inline
+const DotlibNode*
+DotlibTiming::rise_transition() const
+{
+  return mRiseTransition;
+}
+
+// @brief "retaining_fall" を返す．
+inline
+const DotlibNode*
+DotlibTiming::retaining_fall() const
+{
+  return mRetainingFall;
+}
+
+// @brief "retaining_rise" を返す．
+inline
+const DotlibNode*
+DotlibTiming::retaining_rise() const
+{
+  return mRetainingRise;
+}
+
+// @brief "retain_fall_slew" を返す．
+inline
+const DotlibNode*
+DotlibTiming::retain_fall_slew() const
+{
+  return mRetainFallSlew;
+}
+
+// @brief "retain_rise_slew" を返す．
+inline
+const DotlibNode*
+DotlibTiming::retain_rise_slew() const
+{
+  return mRetainRiseSlew;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

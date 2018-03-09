@@ -201,7 +201,7 @@ gen_expr(const DotlibNode* expr_node,
 
 // ピンを生成する．
 void
-gen_pin(const vector<DotlibPin>& pin_info_array,
+gen_pin(const DotlibPin* pin_top,
 	const HashMap<ShString, int>& pin_map,
 	CiCellLibrary* library,
 	vector<CiInputPin*>& input_list,
@@ -209,16 +209,17 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
 	vector<CiInoutPin*>& inout_list,
 	vector<CiInternalPin*>& internal_list)
 {
-  for ( const DotlibPin& pin_info: pin_info_array ) {
-    switch ( pin_info.direction() ) {
+  for ( const DotlibPin* pin_info = pin_top;
+	pin_info != nullptr; pin_info = pin_info->next() ) {
+    switch ( pin_info->direction() ) {
     case kClibCellPinInput:
       // 入力ピンの生成
       {
-	ClibCapacitance cap(pin_info.capacitance());
-	ClibCapacitance rise_cap(pin_info.rise_capacitance());
-	ClibCapacitance fall_cap(pin_info.fall_capacitance());
-	for ( auto i: Range(pin_info.num()) ) {
-	  ShString name = pin_info.name(i);
+	ClibCapacitance cap(pin_info->capacitance());
+	ClibCapacitance rise_cap(pin_info->rise_capacitance());
+	ClibCapacitance fall_cap(pin_info->fall_capacitance());
+	for ( auto i: Range(pin_info->num()) ) {
+	  ShString name = pin_info->name(i);
 	  CiInputPin* pin = library->new_cell_input(name, cap, rise_cap, fall_cap);
 	  input_list.push_back(pin);
 	}
@@ -229,17 +230,17 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
       // 出力の生成
       {
 	bool has_logic;
-	Expr logic_expr = gen_expr(pin_info.function(), pin_map, has_logic);
+	Expr logic_expr = gen_expr(pin_info->function(), pin_map, has_logic);
 	bool dummy;
-	Expr tristate_expr = gen_expr(pin_info.three_state(), pin_map, dummy);
-	ClibCapacitance max_fanout(pin_info.max_fanout());
-	ClibCapacitance min_fanout (pin_info.min_fanout());
-	ClibCapacitance max_capacitance(pin_info.max_capacitance());
-	ClibCapacitance min_capacitance(pin_info.min_capacitance());
-	ClibTime max_transition(pin_info.max_transition());
-	ClibTime min_transition(pin_info.min_transition());
-	for ( auto i: Range(pin_info.num()) ) {
-	  ShString name = pin_info.name(i);
+	Expr tristate_expr = gen_expr(pin_info->three_state(), pin_map, dummy);
+	ClibCapacitance max_fanout(pin_info->max_fanout());
+	ClibCapacitance min_fanout (pin_info->min_fanout());
+	ClibCapacitance max_capacitance(pin_info->max_capacitance());
+	ClibCapacitance min_capacitance(pin_info->min_capacitance());
+	ClibTime max_transition(pin_info->max_transition());
+	ClibTime min_transition(pin_info->min_transition());
+	for ( auto i: Range(pin_info->num()) ) {
+	  ShString name = pin_info->name(i);
 	  CiOutputPin* pin = library->new_cell_output(name,
 						      has_logic,
 						      logic_expr,
@@ -256,20 +257,20 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
       // 入出力ピンの生成
       {
 	bool has_logic;
-	Expr logic_expr = gen_expr(pin_info.function(), pin_map, has_logic);
+	Expr logic_expr = gen_expr(pin_info->function(), pin_map, has_logic);
 	bool dummy;
-	Expr tristate_expr = gen_expr(pin_info.three_state(), pin_map, dummy);
-	ClibCapacitance cap(pin_info.capacitance());
-	ClibCapacitance rise_cap(pin_info.rise_capacitance());
-	ClibCapacitance fall_cap(pin_info.fall_capacitance());
-	ClibCapacitance max_fanout(pin_info.max_fanout());
-	ClibCapacitance min_fanout(pin_info.min_fanout());
-	ClibCapacitance max_capacitance(pin_info.max_capacitance());
-	ClibCapacitance min_capacitance(pin_info.min_capacitance());
-	ClibTime max_transition(pin_info.max_transition());
-	ClibTime min_transition(pin_info.min_transition());
-	for ( auto i: Range(pin_info.num()) ) {
-	  ShString name = pin_info.name(i);
+	Expr tristate_expr = gen_expr(pin_info->three_state(), pin_map, dummy);
+	ClibCapacitance cap(pin_info->capacitance());
+	ClibCapacitance rise_cap(pin_info->rise_capacitance());
+	ClibCapacitance fall_cap(pin_info->fall_capacitance());
+	ClibCapacitance max_fanout(pin_info->max_fanout());
+	ClibCapacitance min_fanout(pin_info->min_fanout());
+	ClibCapacitance max_capacitance(pin_info->max_capacitance());
+	ClibCapacitance min_capacitance(pin_info->min_capacitance());
+	ClibTime max_transition(pin_info->max_transition());
+	ClibTime min_transition(pin_info->min_transition());
+	for ( auto i: Range(pin_info->num()) ) {
+	  ShString name = pin_info->name(i);
 	  CiInoutPin* pin = library->new_cell_inout(name,
 						    has_logic,
 						    logic_expr,
@@ -285,8 +286,8 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
 
     case kClibCellPinInternal:
       // 内部ピンの生成
-      for ( auto i: Range(pin_info.num()) ) {
-	ShString name = pin_info.name(i);
+      for ( auto i: Range(pin_info->num()) ) {
+	ShString name = pin_info->name(i);
 	CiInternalPin* pin = library->new_cell_internal(name);
 	internal_list.push_back(pin);
       }
@@ -299,21 +300,18 @@ gen_pin(const vector<DotlibPin>& pin_info_array,
 }
 
 void
-gen_timing_list(const vector<DotlibPin>& pin_info_array,
+gen_timing_list(const DotlibPin* pin_top,
 		const HashMap<ShString, int>& pin_map,
 		CiCellLibrary* library,
 		vector<CiTiming*>& timing_list,
 		vector<vector<CiTiming*> >& timing_list_array)
 {
-  for ( auto pin_info: pin_info_array ) {
-    const vector<const DotlibNode*>& dt_timing_list = pin_info.timing_list();
-    for ( auto dt_timing: dt_timing_list ) {
-      DotlibTiming timing_info;
-      if ( !timing_info.set_data(dt_timing) ) {
-	continue;
-      }
-      ClibTimingType timing_type = timing_info.timing_type();
-      const DotlibNode* when_node = timing_info.when();
+  for ( auto pin_info = pin_top;
+	pin_info != nullptr; pin_info = pin_info->next() ) {
+    for ( auto dl_timing = pin_info->timing_top();
+	  dl_timing != nullptr; dl_timing = dl_timing->next() ) {
+      ClibTimingType timing_type = dl_timing->timing_type();
+      const DotlibNode* when_node = dl_timing->when();
       Expr cond;
       if ( when_node ) {
 	cond = dot2expr(when_node, pin_map);
@@ -326,12 +324,12 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
       switch ( library->delay_model() ) {
       case kClibDelayGenericCmos:
 	{
-	  ClibTime intrinsic_rise(timing_info.intrinsic_rise()->float_value());
-	  ClibTime intrinsic_fall(timing_info.intrinsic_fall()->float_value());
-	  ClibTime slope_rise(timing_info.slope_rise()->float_value());
-	  ClibTime slope_fall(timing_info.slope_fall()->float_value());
-	  ClibResistance rise_res(timing_info.rise_resistance()->float_value());
-	  ClibResistance fall_res(timing_info.fall_resistance()->float_value());
+	  ClibTime intrinsic_rise(dl_timing->intrinsic_rise()->float_value());
+	  ClibTime intrinsic_fall(dl_timing->intrinsic_fall()->float_value());
+	  ClibTime slope_rise(dl_timing->slope_rise()->float_value());
+	  ClibTime slope_fall(dl_timing->slope_fall()->float_value());
+	  ClibResistance rise_res(dl_timing->rise_resistance()->float_value());
+	  ClibResistance fall_res(dl_timing->fall_resistance()->float_value());
 	  timing = library->new_timing_generic(timing_type, cond,
 					       intrinsic_rise, intrinsic_fall,
 					       slope_rise, slope_fall,
@@ -341,9 +339,9 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 
       case kClibDelayTableLookup:
 	{
-	  const DotlibNode* cr_node = timing_info.cell_rise();
-	  const DotlibNode* rt_node = timing_info.rise_transition();
-	  const DotlibNode* rp_node = timing_info.rise_propagation();
+	  const DotlibNode* cr_node = dl_timing->cell_rise();
+	  const DotlibNode* rt_node = dl_timing->rise_transition();
+	  const DotlibNode* rp_node = dl_timing->rise_propagation();
 
 	  ClibLut* cr_lut = nullptr;
 	  ClibLut* rt_lut = nullptr;
@@ -351,7 +349,7 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 	  if ( cr_node != nullptr ) {
 	    if ( rp_node != nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dt_timing->loc(),
+			      dl_timing->loc(),
 			      kMsgError,
 			      "DOTLIB_PARSER",
 			      "cell_rise and rise_propagation are mutually exclusive.");
@@ -359,7 +357,7 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 	    }
 	    if ( rt_node == nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dt_timing->loc(),
+			      dl_timing->loc(),
 			      kMsgError,
 			      "DOTLIB_PARSER",
 			      "rise_transition is missing.");
@@ -371,7 +369,7 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 	  else if ( rp_node != nullptr ) {
 	    if ( rt_node == nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dt_timing->loc(),
+			      dl_timing->loc(),
 			      kMsgError,
 			      "DOTLIB_PARSER",
 			      "rise_transition is missing.");
@@ -382,16 +380,16 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 	  }
 	  else if ( rt_node != nullptr ) {
 	    MsgMgr::put_msg(__FILE__, __LINE__,
-			    dt_timing->loc(),
+			    dl_timing->loc(),
 			    kMsgError,
 			    "DOTLIB_PARSER",
 			    "Either cell_rise or rise_propagation should be present.");
 	    continue;
 	  }
 
-	  const DotlibNode* cf_node = timing_info.cell_fall();
-	  const DotlibNode* ft_node = timing_info.fall_transition();
-	  const DotlibNode* fp_node = timing_info.fall_propagation();
+	  const DotlibNode* cf_node = dl_timing->cell_fall();
+	  const DotlibNode* ft_node = dl_timing->fall_transition();
+	  const DotlibNode* fp_node = dl_timing->fall_propagation();
 
 	  ClibLut* cf_lut = nullptr;
 	  ClibLut* ft_lut = nullptr;
@@ -399,7 +397,7 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 	  if ( cf_node != nullptr ) {
 	    if ( fp_node != nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dt_timing->loc(),
+			      dl_timing->loc(),
 			      kMsgError,
 			      "DOTLIB_PARSER",
 			      "cell_fall and fall_propagation are mutually exclusive.");
@@ -407,7 +405,7 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 	    }
 	    if ( ft_node == nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dt_timing->loc(),
+			      dl_timing->loc(),
 			      kMsgError,
 			      "DOTLIB_PARSER",
 			      "fall_transition is missing.");
@@ -419,7 +417,7 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 	  else if ( fp_node != nullptr ) {
 	    if ( ft_node == nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dt_timing->loc(),
+			      dl_timing->loc(),
 			      kMsgError,
 			      "DOTLIB_PARSER",
 			      "fall_transition is missing.");
@@ -430,7 +428,7 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 	  }
 	  else if ( ft_node != nullptr ) {
 	    MsgMgr::put_msg(__FILE__, __LINE__,
-			    dt_timing->loc(),
+			    dl_timing->loc(),
 			    kMsgError,
 			    "DOTLIB_PARSER",
 			    "Either cell_fall or fall_propagation should be present.");
@@ -440,7 +438,7 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 	  if ( cr_lut != nullptr || cf_lut != nullptr ) {
 	    if ( fp_lut != nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dt_timing->loc(),
+			      dl_timing->loc(),
 			      kMsgError,
 			      "DOTLIB_PARSER",
 			      "cell_rise and fall_propagation are mutually exclusive.");
@@ -472,11 +470,11 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
       }
       timing_list.push_back(timing);
 
-      ClibTimingSense timing_sense = timing_info.timing_sense();
+      ClibTimingSense timing_sense = dl_timing->timing_sense();
 
       // タイミング情報の設定
-      if ( timing_info.related_pin() ) {
-	ShString tmp_str = timing_info.related_pin()->string_value();
+      if ( dl_timing->related_pin() ) {
+	ShString tmp_str = dl_timing->related_pin()->string_value();
 	vector<string> pin_name_list;
 	split(tmp_str, pin_name_list);
 	for ( auto pin_name: pin_name_list ) {
@@ -485,7 +483,7 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 	    ostringstream buf;
 	    buf << pin_name << ": no such pin";
 	    MsgMgr::put_msg(__FILE__, __LINE__,
-			    dt_timing->loc(),
+			    dl_timing->loc(),
 			    kMsgError,
 			    "DOTLIB_PARSER",
 			    buf.str());
@@ -513,7 +511,7 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
       }
       else {
 	MsgMgr::put_msg(__FILE__, __LINE__,
-			dt_timing->loc(),
+			dl_timing->loc(),
 			kMsgError,
 			"DOTLIB_PARSER",
 			"No \"related_pin\"");
@@ -661,40 +659,16 @@ set_library(const DotlibLibrary& library_info,
 
     ShString cell_name = cell_info.name();
     ClibArea area(cell_info.area());
-    const vector<const DotlibNode*>& dt_pin_list = cell_info.pin_list();
-    const vector<const DotlibNode*>& dt_bus_list = cell_info.bus_list();
-    const vector<const DotlibNode*>& dt_bundle_list = cell_info.bundle_list();
-    int npg = dt_pin_list.size();
-    int nbus = dt_bus_list.size();
-    int nbundle = dt_bundle_list.size();
-
-    // ピン情報の読み出し
-    vector<DotlibPin> pin_info_array(npg);
-    {
-      int i = 0;
-      bool error = false;
-      for ( const DotlibNode* dt_pin: dt_pin_list ) {
-	// ピン情報の読み出し
-	DotlibPin& pin_info = pin_info_array[i]; ++ i;
-	if ( !pin_info.set_data(dt_pin) ) {
-	  error = true;
-	  break;
-	}
-      }
-      if ( error ) {
-	continue;
-      }
-      ASSERT_COND( i == npg );
-    }
 
     // 各タイプの個数のカウント
     int ni = 0;
     int no = 0;
     int nio = 0;
     int nit = 0;
-    for ( const DotlibPin& pin_info: pin_info_array ) {
-      int nn = pin_info.num();
-      switch ( pin_info.direction() ) {
+    for ( const DotlibPin* pin_info = cell_info.pin_top();
+	  pin_info != nullptr; pin_info = pin_info->next() ) {
+      int nn = pin_info->num();
+      switch ( pin_info->direction() ) {
       case kClibCellPinInput:    ni += nn; break;
       case kClibCellPinOutput:   no += nn; break;
       case kClibCellPinInout:    nio += nn; break;
@@ -711,19 +685,20 @@ set_library(const DotlibLibrary& library_info,
     {
       int ipos = 0;
       int itpos = 0;
-      for ( const DotlibPin& pin_info: pin_info_array ) {
-	switch ( pin_info.direction() ) {
+      for ( const DotlibPin* pin_info = cell_info.pin_top();
+	    pin_info != nullptr; pin_info = pin_info->next() ) {
+	switch ( pin_info->direction() ) {
 	case kClibCellPinInput:
 	case kClibCellPinInout:
-	  for ( int i = 0; i < pin_info.num(); ++ i ) {
-	    pin_map.add(pin_info.name(i), ipos);
+	  for ( int i = 0; i < pin_info->num(); ++ i ) {
+	    pin_map.add(pin_info->name(i), ipos);
 	    ++ ipos;
 	  }
 	  break;
 
 	case kClibCellPinInternal:
-	  for ( int i = 0; i < pin_info.num(); ++ i ) {
-	    pin_map.add(pin_info.name(i), itpos + ni2);
+	  for ( int i = 0; i < pin_info->num(); ++ i ) {
+	    pin_map.add(pin_info->name(i), itpos + ni2);
 	    ++ itpos;
 	  }
 	  break;
@@ -737,35 +712,27 @@ set_library(const DotlibLibrary& library_info,
     }
 
     // FF情報の読み出し
-    const DotlibNode* dt_ff = cell_info.ff();
-    DotlibFF ff_info;
-    if ( dt_ff != nullptr ) {
-      if ( !ff_info.set_data(dt_ff) ) {
-	continue;
-      }
-      ShString var1 = ff_info.var1_name();
-      ShString var2 = ff_info.var2_name();
+    const DotlibFF* ff_info = cell_info.ff();
+    if ( ff_info != nullptr ) {
+      ShString var1 = ff_info->var1_name();
+      ShString var2 = ff_info->var2_name();
       // pin_map に登録しておく
       pin_map.add(var1, ni2 + 0);
       pin_map.add(var2, ni2 + 1);
     }
 
     // ラッチ情報の読み出し
-    const DotlibNode* dt_latch = cell_info.latch();
-    DotlibLatch latch_info;
-    if ( dt_latch != nullptr) {
-      if ( !latch_info.set_data(dt_latch) ) {
-	continue;
-      }
-      ShString var1 = latch_info.var1_name();
-      ShString var2 = latch_info.var2_name();
+    const DotlibLatch* latch_info = cell_info.latch();
+    if ( latch_info != nullptr) {
+      ShString var1 = latch_info->var1_name();
+      ShString var2 = latch_info->var2_name();
       // pin_map に登録しておく
       pin_map.add(var1, ni2 + 0);
       pin_map.add(var2, ni2 + 1);
     }
 
     // 遷移表情報の読み出し
-    const DotlibNode* dt_fsm = cell_info.statetable();
+    const DotlibStateTable* statetable_info = cell_info.statetable();
 
     vector<CiInputPin*> input_list;
     vector<CiOutputPin*> output_list;
@@ -780,7 +747,7 @@ set_library(const DotlibLibrary& library_info,
     internal_list.reserve(nit);
 
     // ピンの生成
-    gen_pin(pin_info_array, pin_map, library,
+    gen_pin(cell_info.pin_top(), pin_map, library,
 	    input_list,
 	    output_list,
 	    inout_list,
@@ -789,20 +756,20 @@ set_library(const DotlibLibrary& library_info,
     // タイミング情報の生成
     vector<CiTiming*> timing_list;
     vector<vector<CiTiming*> > timing_list_array(ni2 * 2);
-    gen_timing_list(pin_info_array, pin_map, library,
+    gen_timing_list(cell_info.pin_top(), pin_map, library,
 		    timing_list,
 		    timing_list_array);
 
     // セルの生成
     CiCell* cell = nullptr;
-    if ( dt_ff ) {
-      Expr next_state = dot2expr(ff_info.next_state(), pin_map);
-      Expr clocked_on = dot2expr(ff_info.clocked_on(), pin_map);
-      Expr clocked_on_also = dot2expr(ff_info.clocked_on_also(), pin_map);
-      Expr clear = dot2expr(ff_info.clear(), pin_map);
-      Expr preset = dot2expr(ff_info.preset(), pin_map);
-      int v1 = ff_info.clear_preset_var1();
-      int v2 = ff_info.clear_preset_var2();
+    if ( ff_info ) {
+      Expr next_state = dot2expr(ff_info->next_state(), pin_map);
+      Expr clocked_on = dot2expr(ff_info->clocked_on(), pin_map);
+      Expr clocked_on_also = dot2expr(ff_info->clocked_on_also(), pin_map);
+      Expr clear = dot2expr(ff_info->clear(), pin_map);
+      Expr preset = dot2expr(ff_info->preset(), pin_map);
+      int v1 = ff_info->clear_preset_var1();
+      int v2 = ff_info->clear_preset_var2();
       cell = library->new_ff_cell(cell_name, area,
 				  input_list,
 				  output_list,
@@ -816,14 +783,14 @@ set_library(const DotlibLibrary& library_info,
 				  v1, v2);
 
     }
-    else if ( dt_latch ) {
-      Expr data_in = dot2expr(latch_info.data_in(), pin_map);
-      Expr enable = dot2expr(latch_info.enable(), pin_map);
-      Expr enable_also = dot2expr(latch_info.enable_also(), pin_map);
-      Expr clear = dot2expr(latch_info.clear(), pin_map);
-      Expr preset = dot2expr(latch_info.preset(), pin_map);
-      int v1 = latch_info.clear_preset_var1();
-      int v2 = latch_info.clear_preset_var2();
+    else if ( latch_info ) {
+      Expr data_in = dot2expr(latch_info->data_in(), pin_map);
+      Expr enable = dot2expr(latch_info->enable(), pin_map);
+      Expr enable_also = dot2expr(latch_info->enable_also(), pin_map);
+      Expr clear = dot2expr(latch_info->clear(), pin_map);
+      Expr preset = dot2expr(latch_info->preset(), pin_map);
+      int v1 = latch_info->clear_preset_var1();
+      int v2 = latch_info->clear_preset_var2();
       cell = library->new_latch_cell(cell_name, area,
 				     input_list,
 				     output_list,
@@ -836,7 +803,7 @@ set_library(const DotlibLibrary& library_info,
 				     clear, preset,
 				     v1, v2);
     }
-    else if ( dt_fsm ) {
+    else if ( statetable_info ) {
       cell = library->new_fsm_cell(cell_name, area,
 				   input_list,
 				   output_list,

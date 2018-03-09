@@ -51,11 +51,13 @@ public:
   read_attr(AttrType attr_type,
 	    const FileRegion& attr_loc) = 0;
 
+#if 0
   /// @brief 対応するノードを得る．
   /// @note デフォルトの実装は nullptr を返す．
   virtual
   const DotlibNode*
   node();
+#endif
 
 
 public:

@@ -10,6 +10,9 @@
 
 
 #include "dotlib_nsdef.h"
+#include "DotlibPin.h"
+#include "DotlibFF.h"
+#include "DotlibLatch.h"
 #include "ym/ShString.h"
 
 
@@ -47,31 +50,28 @@ public:
   double
   area() const;
 
-  /// @brief ピングループのリストを返す．
-  const vector<const DotlibNode*>&
-  pin_list() const;
+  /// @brief ピングループのリストの先頭を返す．
+  const DotlibPin*
+  pin_top() const;
 
-  /// @brief バスグループのリストを返す．
-  const vector<const DotlibNode*>&
-  bus_list() const;
+  /// @brief バスグループのリストの先頭を返す．
+  const DotlibBus*
+  bus_top() const;
 
-  /// @brief バンドルグループのリストを返す．
-  const vector<const DotlibNode*>&
-  bundle_list() const;
+  /// @brief バンドルグループのリストの先頭を返す．
+  const DotlibBundle*
+  bundle_top() const;
 
   /// @brief ff グループを返す．
-  /// @note なければ nullptr を返す．
-  const DotlibNode*
+  const DotlibFF*
   ff() const;
 
   /// @brief latch グループを返す．
-  /// @note なければ nullptr を返す．
-  const DotlibNode*
+  const DotlibLatch*
   latch() const;
 
   /// @brief statetable グループを返す．
-  /// @note なければ nullptr を返す．
-  const DotlibNode*
+  const DotlibStateTable*
   statetable() const;
 
 
@@ -89,25 +89,89 @@ private:
   // "bus_naming_style"
   const DotlibNode* mBusNamingStyle;
 
-  // ピングループのリスト
-  vector<const DotlibNode*> mPinList;
+  // ピングループのリストの先頭
+  const DotlibPin* mPinTop;
 
-  // バスグループのリスト
-  vector<const DotlibNode*> mBusList;
+  // バスグループのリストの先頭
+  const DotlibBus* mBusTop;
 
-  // バンドルグループのリスト
-  vector<const DotlibNode*> mBundleList;
+  // バンドルグループのリストの先頭
+  const DotlibBundle* mBundleTop;
 
   // ff グループ
-  const DotlibNode* mFF;
+  const DotlibFF* mFF;
 
   // latch グループ
-  const DotlibNode* mLatch;
+  const DotlibLatch* mLatch;
 
   // statetable グループ
-  const DotlibNode* mStateTable;
+  const DotlibStateTable* mStateTable;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 名前を返す．
+inline
+ShString
+DotlibCell::name() const
+{
+  return mName;
+}
+
+// @brief 面積を返す．
+inline
+double
+DotlibCell::area() const
+{
+  return mArea;
+}
+
+// @brief ピングループのリストの先頭を返す．
+inline
+const DotlibPin*
+DotlibCell::pin_top() const
+{
+  return mPinTop;
+}
+
+// @brief バスグループのリストの先頭を返す．
+const DotlibBus*
+DotlibCell::bus_top() const
+{
+  return mBusTop;
+}
+
+// @brief バンドルグループのリストの先頭を返す．
+const DotlibBundle*
+DotlibCell::bundle_top() const
+{
+  return mBundleTop;
+}
+
+// @brief ff グループを返す．
+const DotlibFF*
+DotlibCell::ff() const
+{
+  return mFF;
+}
+
+// @brief latch グループを返す．
+const DotlibLatch*
+DotlibCell::latch() const
+{
+  return mLatch;
+}
+
+// @brief statetable グループを返す．
+const DotlibStateTable*
+DotlibCell::statetable() const
+{
+  return mStateTable;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

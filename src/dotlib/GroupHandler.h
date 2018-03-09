@@ -91,7 +91,7 @@ public:
 
   /// @brief 対応するノードを得る．
   virtual
-  const DotlibNode*
+  const DotlibGroup*
   node();
 
 
@@ -141,8 +141,8 @@ private:
   // ハンドラの連想配列
   HashMap<AttrType, DotlibHandler*> mHandlerMap;
 
-  // 対応する DotlibNode
-  DotlibNodeImpl* mNode;
+  // 対応する DotlibGroup
+  DotlibGroup* mGroup;
 
 };
 

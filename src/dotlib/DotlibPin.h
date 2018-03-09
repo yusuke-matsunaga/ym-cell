@@ -10,6 +10,7 @@
 
 
 #include "dotlib_nsdef.h"
+#include "DotlibBase.h"
 #include "ym/ShString.h"
 
 
@@ -19,12 +20,14 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class DotlibPin DotlibPin.h "DotlibPin.h"
 /// @brief DotlibNode の木から取り出したピンの情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class DotlibPin
+class DotlibPin :
+  public DotlibBase
 {
 public:
 
   /// @brief コンストラクタ
-  DotlibPin();
+  /// @param[in] loc 位置情報
+  DotlibPin(const FileRegion& loc);
 
   /// @brief デストラクタ
   ~DotlibPin();
@@ -104,9 +107,17 @@ public:
   const DotlibNode*
   pin_func_type() const;
 
-  /// @brief "timing" グループのリストを得る．
-  const vector<const DotlibNode*>&
-  timing_list() const;
+  /// @brief "timing" グループのリストの先頭を得る．
+  const DotlibTiming*
+  timing_top() const;
+
+  /// @brief 次の要素を返す．
+  const DotlibPin*
+  next() const;
+
+  /// @brief 次の要素を設定する．
+  void
+  set_next(const DotlibPin* next);
 
 
 private:
@@ -160,9 +171,171 @@ private:
   const DotlibNode* mPinFuncType;
 
   // "timing"
-  vector<const DotlibNode*> mTimingList;
+  const DotlibTiming* mTimingTop;
+
+  // 次の要素
+  const DotlibPin* mNext;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 名前のリストの要素数を返す．
+inline
+int
+DotlibPin::num() const
+{
+  return mNameList.size();
+}
+
+// @brief 名前を返す．
+// @param[in] pos 位置番号 ( 0 <= pos < num() )
+inline
+ShString
+DotlibPin::name(int pos) const
+{
+  ASSERT_COND( pos < num() );
+  return mNameList[pos];
+}
+
+// @brief "direction" を返す．
+inline
+ClibCellPinDirection
+DotlibPin::direction() const
+{
+  return mDirection;
+}
+
+// @brief "capacitance" を返す．
+inline
+double
+DotlibPin::capacitance() const
+{
+  return mCapacitance;
+}
+
+// @brief "rise_capacitance" を返す．
+inline
+double
+DotlibPin::rise_capacitance() const
+{
+  return mRiseCapacitance;
+}
+
+// @brief "fall_capacitance" を返す．
+inline
+double
+DotlibPin::fall_capacitance() const
+{
+  return mFallCapacitance;
+}
+
+// @brief "max_fanout" を返す．
+inline
+double
+DotlibPin::max_fanout() const
+{
+  return mMaxFanout;
+}
+
+// @brief "min_fanout" を返す．
+inline
+double
+DotlibPin::min_fanout() const
+{
+  return mMinFanout;
+}
+
+// @brief "max_capacitance" を返す．
+inline
+double
+DotlibPin::max_capacitance() const
+{
+  return mMaxCapacitance;
+}
+
+// @brief "min_capacitance" を返す．
+inline
+double
+DotlibPin::min_capacitance() const
+{
+  return mMinCapacitance;
+}
+
+// @brief "max_transition" を返す．
+inline
+double
+DotlibPin::max_transition() const
+{
+  return mMaxTransition;
+}
+
+// @brief "min_transition" を返す．
+inline
+double
+DotlibPin::min_transition() const
+{
+  return mMinTransition;
+}
+
+// @brief "function" を返す．
+inline
+const DotlibNode*
+DotlibPin::function() const
+{
+  return mFunction;
+}
+
+// @brief "three_state" を返す．
+inline
+const DotlibNode*
+DotlibPin::three_state() const
+{
+  return mThreeState;
+}
+
+// @brief "internal_node" を返す．
+inline
+const DotlibNode*
+DotlibPin::internal_node() const
+{
+  return mInternalNode;
+}
+
+// @brief "pin_func_type" を返す．
+inline
+const DotlibNode*
+DotlibPin::pin_func_type() const
+{
+  return mPinFuncType;
+}
+
+// @brief "timing" グループのリストの先頭を得る．
+inline
+const DotlibTiming*
+DotlibPin::timing_top() const
+{
+  return mTimingTop;
+}
+
+// @brief 次の要素を返す．
+inline
+const DotlibPin*
+DotlibPin::next() const
+{
+  return mNext;
+}
+
+// @brief 次の要素を設定する．
+inline
+void
+DotlibPin::set_next(const DotlibPin* next)
+{
+  mNext = next;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

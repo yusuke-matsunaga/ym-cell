@@ -126,7 +126,7 @@ GroupHandler::add_attr(AttrType attr_type,
 		       const FileRegion& loc)
 {
   DotlibAttr* attr = mgr()->new_attr(attr_type, value, loc);
-  mNode->add_attr(attr);
+  mGroup->add_attr(attr);
   return true;
 }
 
@@ -170,7 +170,7 @@ GroupHandler::begin_group(AttrType attr_type,
     return false;
   }
 
-  mNode = mgr()->new_group(value_list, attr_loc);
+  mGroup = mgr()->new_group(value_list, attr_loc);
   return true;
 }
 
@@ -188,17 +188,17 @@ GroupHandler::end_group(AttrType attr_type,
     mgr()->set_root_node(mNode);
   }
   else {
-    parent()->add_attr(attr_type, mNode, loc);
+    parent()->add_attr(attr_type, mGroup, loc);
   }
-  mNode = nullptr;
+  mGroup = nullptr;
   return true;
 }
 
 // @brief 対応するノードを得る．
-const DotlibNode*
+const DotlibGroup*
 GroupHandler::node()
 {
-  return mNode;
+  return mGroup;
 }
 
 // @brief group statement の引数のチェックを行う仮想関数
@@ -445,7 +445,7 @@ Str2IntGroupHandler::check_group_value(AttrType attr_type,
   const DotlibNode* third = value_list->list_elem(2);
   if ( n > 3 ) {
     const DotlibNode* forth = value_list->list_elem(3);
-  FileRegion loc = forth->loc();
+    FileRegion loc = forth->loc();
     ostringstream buf;
     buf << attr_type << " statement has two string and an integer parameters.";
     MsgMgr::put_msg(__FILE__, __LINE__, loc,
