@@ -5,11 +5,11 @@
 /// @brief DotlibLut のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "DotlibAttrMap.h"
+#include "dotlib_nsdef.h"
 #include "ym/ShString.h"
 
 
@@ -19,8 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class DotlibLut DotlibLut.h "DotlibLut.h"
 /// @brief LUT 情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class DotlibLut :
-  public DotlibAttrMap
+class DotlibLut
 {
 public:
 
@@ -32,6 +31,9 @@ public:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をセットする．
   bool

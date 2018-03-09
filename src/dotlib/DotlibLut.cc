@@ -10,6 +10,7 @@
 #include "DotlibLut.h"
 #include "DotlibNode.h"
 #include "DotlibAttr.h"
+#include "DotlibAttrMap.h"
 #include "ym/MsgMgr.h"
 
 
@@ -31,24 +32,17 @@ DotlibLut::~DotlibLut()
 
 // @brief 内容をセットする．
 bool
-DotlibLut::set_data(const DotlibNode* lut_node)
+DotlibLut::set_data(const DotlibNode* node)
 {
-  init();
-
   // 名前をセットする．
-  mName = lut_node->group_value()->get_string_from_value_list();
+  mName = node->group_value()->get_string_from_value_list();
 
-  // 属性を内部のハッシュに登録する．
-  for ( const DotlibAttr* attr = lut_node->attr_top();
-	attr; attr = attr->next() ) {
-    AttrType attr_type = attr->attr_type();
-    const DotlibNode* attr_value = attr->attr_value();
-    add(attr_type, attr_value);
-  }
+  // 属性を attr_map に登録する．
+  DotlibAttrMap attr_map(node->attr_top());
 
   // 'index_1' を取り出す．
   const DotlibNode* index1_node;
-  if ( !expect_singleton_or_null(ATTR_INDEX_1, index1_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_INDEX_1, index1_node) ) {
     return false;
   }
   if ( index1_node ) {
@@ -60,7 +54,7 @@ DotlibLut::set_data(const DotlibNode* lut_node)
 
   // 'index_2' を取り出す．
   const DotlibNode* index2_node;
-  if ( !expect_singleton_or_null(ATTR_INDEX_2, index2_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_INDEX_2, index2_node) ) {
     return false;
   }
   if ( index2_node ) {
@@ -72,7 +66,7 @@ DotlibLut::set_data(const DotlibNode* lut_node)
 
   // 'index_3' を取り出す．
   const DotlibNode* index3_node;
-  if ( !expect_singleton_or_null(ATTR_INDEX_3, index3_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_INDEX_3, index3_node) ) {
     return false;
   }
   if ( index3_node ) {
@@ -83,7 +77,7 @@ DotlibLut::set_data(const DotlibNode* lut_node)
   }
 
   // 'values' を取り出す．
-  if ( !expect_singleton(ATTR_VALUES, lut_node->loc(), mValueList) ) {
+  if ( !attr_map.expect_singleton(ATTR_VALUES, node->loc(), mValueList) ) {
     return false;
   }
 

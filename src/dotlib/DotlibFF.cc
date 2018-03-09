@@ -9,6 +9,7 @@
 
 #include "DotlibFF.h"
 #include "DotlibAttr.h"
+#include "DotlibAttrMap.h"
 #include "ym/MsgMgr.h"
 
 
@@ -30,9 +31,11 @@ DotlibFF::~DotlibFF()
 
 // @brief 内容を初期化する．
 bool
-DotlibFF::set_data(const DotlibNode* ff_node)
+DotlibFF::set_data(const DotlibNode* node)
 {
-  if ( !DotlibFL::set_data(ff_node) ) {
+  DotlibAttrMap attr_map(node->attr_top());
+
+  if ( !DotlibFL::set_data_sub(node, attr_map) ) {
     return false;
   }
 
@@ -41,17 +44,17 @@ DotlibFF::set_data(const DotlibNode* ff_node)
   mClockedOnAlso = nullptr;
 
   // next_state を取り出す．
-  if ( !expect_singleton(ATTR_NEXT_STATE, ff_node->loc(), mNextState) ) {
+  if ( !attr_map.expect_singleton(ATTR_NEXT_STATE, node->loc(), mNextState) ) {
     return false;
   }
 
   // clocked_on を取り出す．
-  if ( !expect_singleton(ATTR_CLOCKED_ON, ff_node->loc(), mClockedOn) ) {
+  if ( !attr_map.expect_singleton(ATTR_CLOCKED_ON, node->loc(), mClockedOn) ) {
     return false;
   }
 
   // clocked_on_also を取り出す．
-  if ( !expect_singleton_or_null(ATTR_CLOCKED_ON_ALSO, mClockedOnAlso) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_CLOCKED_ON_ALSO, mClockedOnAlso) ) {
     return false;
   }
 

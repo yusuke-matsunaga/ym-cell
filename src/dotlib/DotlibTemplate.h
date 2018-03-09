@@ -5,11 +5,11 @@
 /// @brief DotlibTemplate のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "DotlibAttrMap.h"
+#include "dotlib_nsdef.h"
 #include "ym/ShString.h"
 
 
@@ -19,8 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class DotlibTemplate DotlibTemplate.h "DotlibTemplate.h"
 /// @brief LUT 用のテンプレート情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class DotlibTemplate :
-  public DotlibAttrMap
+class DotlibTemplate
 {
 public:
 
@@ -32,6 +31,9 @@ public:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をセットする．
   bool

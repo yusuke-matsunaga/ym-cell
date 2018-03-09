@@ -10,6 +10,7 @@
 #include "DotlibPin.h"
 #include "DotlibNode.h"
 #include "DotlibAttr.h"
+#include "DotlibAttrMap.h"
 #include "ym/MsgMgr.h"
 
 
@@ -33,8 +34,6 @@ DotlibPin::~DotlibPin()
 bool
 DotlibPin::set_data(const DotlibNode* pin_node)
 {
-  init();
-
   mFunction = nullptr;
   mThreeState = nullptr;
   mInternalNode = nullptr;
@@ -60,22 +59,12 @@ DotlibPin::set_data(const DotlibNode* pin_node)
     mNameList[i] = str_node->string_value();
   }
 
-  // 属性のリストを作る．
-  for ( const DotlibAttr* attr = pin_node->attr_top();
-	attr; attr = attr->next() ) {
-    AttrType attr_type = attr->attr_type();
-    const DotlibNode* attr_value = attr->attr_value();
-    if ( attr_type == ATTR_TIMING ) {
-      mTimingList.push_back(attr_value);
-    }
-    else {
-      add(attr_type, attr_value);
-    }
-  }
+  // 属性を attr_map に登録する．
+  DotlibAttrMap attr_map(pin_node->attr_top());
 
   // 'direction' の翻訳をする．
   const DotlibNode* direction_node;
-  if ( !expect_singleton(ATTR_DIRECTION, pin_node->loc(), direction_node) ) {
+  if ( !attr_map.expect_singleton(ATTR_DIRECTION, pin_node->loc(), direction_node) ) {
     // 'direction' がないのはエラー
     return false;
   }
@@ -84,7 +73,7 @@ DotlibPin::set_data(const DotlibNode* pin_node)
 
   // 'capacitance' を取り出す．
   const DotlibNode* cap_node = nullptr;
-  if ( !expect_singleton_or_null(ATTR_CAPACITANCE, cap_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_CAPACITANCE, cap_node) ) {
     return false;
   }
   if ( cap_node ) {
@@ -98,10 +87,10 @@ DotlibPin::set_data(const DotlibNode* pin_node)
 
   const DotlibNode* rcap_node = nullptr;
   const DotlibNode* fcap_node = nullptr;
-  if ( !expect_singleton_or_null(ATTR_RISE_CAPACITANCE, rcap_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_RISE_CAPACITANCE, rcap_node) ) {
     return false;
   }
-  if ( !expect_singleton_or_null(ATTR_FALL_CAPACITANCE, fcap_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_FALL_CAPACITANCE, fcap_node) ) {
     return false;
   }
   if ( rcap_node && fcap_node ) {
@@ -119,7 +108,7 @@ DotlibPin::set_data(const DotlibNode* pin_node)
 
   // 'max_fanout' を取り出す．
   const DotlibNode* max_fo_node = nullptr;
-  if ( !expect_singleton_or_null(ATTR_MAX_FANOUT, max_fo_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_MAX_FANOUT, max_fo_node) ) {
     return false;
   }
   if ( max_fo_node ) {
@@ -132,7 +121,7 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   }
   // 'min_fanout' を取り出す．
   const DotlibNode* min_fo_node = nullptr;
-  if ( !expect_singleton_or_null(ATTR_MIN_FANOUT, min_fo_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_MIN_FANOUT, min_fo_node) ) {
     return false;
   }
   if ( min_fo_node ) {
@@ -146,7 +135,7 @@ DotlibPin::set_data(const DotlibNode* pin_node)
 
   // 'max_capacitance' を取り出す．
   const DotlibNode* max_cap_node = nullptr;
-  if ( !expect_singleton_or_null(ATTR_MAX_CAPACITANCE, max_cap_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_MAX_CAPACITANCE, max_cap_node) ) {
     return false;
   }
   if ( max_cap_node ) {
@@ -159,7 +148,7 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   }
   // 'min_capacitance' を取り出す．
   const DotlibNode* min_cap_node = nullptr;
-  if ( !expect_singleton_or_null(ATTR_MIN_CAPACITANCE, min_cap_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_MIN_CAPACITANCE, min_cap_node) ) {
     return false;
   }
   if ( min_cap_node ) {
@@ -173,7 +162,7 @@ DotlibPin::set_data(const DotlibNode* pin_node)
 
   // 'max_transition' を取り出す．
   const DotlibNode* max_trans_node = nullptr;
-  if ( !expect_singleton_or_null(ATTR_MAX_TRANSITION, max_trans_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_MAX_TRANSITION, max_trans_node) ) {
     return false;
   }
   if ( max_trans_node ) {
@@ -186,7 +175,7 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   }
   // 'min_transition' を取り出す．
   const DotlibNode* min_trans_node = nullptr;
-  if ( !expect_singleton_or_null(ATTR_MIN_TRANSITION, min_trans_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_MIN_TRANSITION, min_trans_node) ) {
     return false;
   }
   if ( min_trans_node ) {
@@ -199,24 +188,27 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   }
 
   // 'function' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_FUNCTION, mFunction) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_FUNCTION, mFunction) ) {
     return false;
   }
 
   // 'three_state' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_THREE_STATE, mThreeState) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_THREE_STATE, mThreeState) ) {
     return false;
   }
 
   // 'internal_node' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_INTERNAL_NODE, mInternalNode) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_INTERNAL_NODE, mInternalNode) ) {
     return false;
   }
 
   // 'pin_func_type' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_PIN_FUNC_TYPE, mPinFuncType) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_PIN_FUNC_TYPE, mPinFuncType) ) {
     return false;
   }
+
+  // 'timing' を取り出す．
+  attr_map.get_value(ATTR_TIMING, mTimingList);
 
   return true;
 }
@@ -336,7 +328,7 @@ DotlibPin::pin_func_type() const
 }
 
 // @brief "timing" グループのリストを得る．
-const list<const DotlibNode*>&
+const vector<const DotlibNode*>&
 DotlibPin::timing_list() const
 {
   return mTimingList;

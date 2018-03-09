@@ -9,6 +9,7 @@
 
 #include "DotlibFL.h"
 #include "DotlibAttr.h"
+#include "DotlibAttrMap.h"
 #include "ym/MsgMgr.h"
 
 
@@ -30,10 +31,18 @@ DotlibFL::~DotlibFL()
 
 // @brief 内容を初期化する．
 bool
-DotlibFL::set_data(const DotlibNode* fl_node)
+DotlibFL::set_data(const DotlibNode* node)
 {
-  init();
+  DotlibAttrMap attr_map(node->attr_top());
 
+  return set_data_sub(node, attr_map);
+}
+
+// @brief set_data() の下請け関数
+bool
+DotlibFL::set_data_sub(const DotlibNode* node,
+		       const DotlibAttrMap& attr_map)
+{
   mClear = nullptr;
   mPreset = nullptr;
 
@@ -41,31 +50,23 @@ DotlibFL::set_data(const DotlibNode* fl_node)
   mClearPresetVar2 = 0;
 
   // 状態変数名を得る．
-  if ( !fl_node->group_value()->expect_string_pair(mVar1, mVar2) ) {
+  if ( !node->group_value()->expect_string_pair(mVar1, mVar2) ) {
     return false;
   }
 
-  // 属性のリストを作る．
-  for ( const DotlibAttr* attr = fl_node->attr_top();
-       attr; attr = attr->next() ) {
-    AttrType attr_type = attr->attr_type();
-    const DotlibNode* attr_value = attr->attr_value();
-    add(attr_type, attr_value);
-  }
-
   // clear を取り出す．
-  if ( !expect_singleton_or_null(ATTR_CLEAR, mClear) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_CLEAR, mClear) ) {
     return false;
   }
 
   // preset を取り出す．
-  if ( !expect_singleton_or_null(ATTR_PRESET, mPreset) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_PRESET, mPreset) ) {
     return false;
   }
 
   // clear_preset_var1 を取り出す．
   const DotlibNode* tmp_node1 = nullptr;
-  if ( !expect_singleton_or_null(ATTR_CLEAR_PRESET_VAR1, tmp_node1) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_CLEAR_PRESET_VAR1, tmp_node1) ) {
     return false;
   }
   if ( tmp_node1 ) {
@@ -96,7 +97,7 @@ DotlibFL::set_data(const DotlibNode* fl_node)
 
   // clear_preset_var2 を取り出す．
   const DotlibNode* tmp_node2 = nullptr;
-  if ( !expect_singleton_or_null(ATTR_CLEAR_PRESET_VAR2, tmp_node2) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_CLEAR_PRESET_VAR2, tmp_node2) ) {
     return false;
   }
   if ( tmp_node2 ) {

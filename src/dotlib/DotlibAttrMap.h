@@ -26,7 +26,8 @@ class DotlibAttrMap
 public:
 
   /// @brief コンストラクタ
-  DotlibAttrMap();
+  /// @param[in] attr_top 先頭の属性ノード
+  DotlibAttrMap(const DotlibAttr* attr_top);
 
   /// @brief デストラクタ
   ~DotlibAttrMap();
@@ -69,9 +70,9 @@ public:
 			   const DotlibNode*& node) const;
 
 
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
-  // DotlibNode から用いられる関数
+  // 情報を設定する関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を初期化する．
@@ -92,8 +93,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ハッシュ表
-  //HashMap<AttrType, vector<const DotlibNode*> > mHash;
-  vector<const DotlibNode*> mArray[ATTR_END];
+  HashMap<AttrType, vector<const DotlibNode*> > mHash;
 
 };
 

@@ -10,6 +10,7 @@
 #include "DotlibTemplate.h"
 #include "DotlibNode.h"
 #include "DotlibAttr.h"
+#include "DotlibAttrMap.h"
 #include "ym/MsgMgr.h"
 
 
@@ -50,24 +51,17 @@ END_NONAMESPACE
 
 // @brief 内容をセットする．
 bool
-DotlibTemplate::set_data(const DotlibNode* template_node)
+DotlibTemplate::set_data(const DotlibNode* node)
 {
-  init();
-
   // 名前を設定する．
-  mName = template_node->group_value()->get_string_from_value_list();
+  mName = node->group_value()->get_string_from_value_list();
 
-  // 属性を内部のハッシュに登録する．
-  for ( const DotlibAttr* attr = template_node->attr_top();
-	attr; attr = attr->next() ) {
-    AttrType attr_type = attr->attr_type();
-    const DotlibNode* attr_value = attr->attr_value();
-    add(attr_type, attr_value);
-  }
+  // 属性を attr_map に登録する．
+  DotlibAttrMap attr_map(node->attr_top());
 
   // 'variable_1' の翻訳をする．
   const DotlibNode* var1_node;
-  if ( !expect_singleton(ATTR_VARIABLE_1, template_node->loc(), var1_node) ) {
+  if ( !attr_map.expect_singleton(ATTR_VARIABLE_1, node->loc(), var1_node) ) {
     // 'variable_1' がないのはエラー
     return false;
   }
@@ -77,7 +71,7 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
 
   // 'variable_2' の翻訳をする．
   const DotlibNode* var2_node;
-  if ( !expect_singleton_or_null(ATTR_VARIABLE_2, var2_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_VARIABLE_2, var2_node) ) {
     return false;
   }
   if ( !node_to_var(var2_node, mVar2) ) {
@@ -86,7 +80,7 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
 
   // 'variable_3' の翻訳をする．
   const DotlibNode* var3_node;
-  if ( !expect_singleton_or_null(ATTR_VARIABLE_3, var3_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_VARIABLE_3, var3_node) ) {
     return false;
   }
   if ( var3_node != nullptr && var2_node == nullptr ) {
@@ -104,7 +98,7 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
 
   // 'index_1' を取り出す．
   const DotlibNode* index1_node;
-  if ( !expect_singleton(ATTR_INDEX_1, template_node->loc(), index1_node) ) {
+  if ( !attr_map.expect_singleton(ATTR_INDEX_1, node->loc(), index1_node) ) {
     // index_1 がないのはエラー
     return false;
   }
@@ -112,12 +106,12 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
 
   // 'index_2' を取り出す．
   const DotlibNode* index2_node;
-  if ( !expect_singleton_or_null(ATTR_INDEX_2, index2_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_INDEX_2, index2_node) ) {
     return false;
   }
   if ( var2_node != nullptr && index2_node == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    template_node->loc(),
+		    node->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "Syntax error. missing 'index_2'.");
@@ -125,7 +119,7 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
   }
   if ( var2_node == nullptr && index2_node != nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    template_node->loc(),
+		    node->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "Syntax error. missing 'variable_2'.");
@@ -140,12 +134,12 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
 
   // 'index_3' を取り出す．
   const DotlibNode* index3_node;
-  if ( !expect_singleton_or_null(ATTR_INDEX_3, index3_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_INDEX_3, index3_node) ) {
     return false;
   }
   if ( var3_node != nullptr && index3_node == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    template_node->loc(),
+		    node->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "Syntax error. missing 'index_3'.");
@@ -153,7 +147,7 @@ DotlibTemplate::set_data(const DotlibNode* template_node)
   }
   if ( var3_node == nullptr && index3_node != nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    template_node->loc(),
+		    node->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "Syntax error. missing 'variable_3'.");

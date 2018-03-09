@@ -5,11 +5,11 @@
 /// @brief DotlibCell のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "DotlibAttrMap.h"
+#include "dotlib_nsdef.h"
 #include "ym/ShString.h"
 
 
@@ -19,8 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class DotlibCell DotlibCell.h "DotlibCell.h"
 /// @brief DotlibNode の木から取り出したセルの情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class DotlibCell :
-  public DotlibAttrMap
+class DotlibCell
 {
 public:
 
@@ -32,10 +31,13 @@ public:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を設定する．
   bool
-  set_data(const DotlibNode* cell_node);
+  set_data(const DotlibNode* node);
 
   /// @brief 名前を返す．
   ShString
@@ -46,15 +48,15 @@ public:
   area() const;
 
   /// @brief ピングループのリストを返す．
-  const list<const DotlibNode*>&
+  const vector<const DotlibNode*>&
   pin_list() const;
 
   /// @brief バスグループのリストを返す．
-  const list<const DotlibNode*>&
+  const vector<const DotlibNode*>&
   bus_list() const;
 
   /// @brief バンドルグループのリストを返す．
-  const list<const DotlibNode*>&
+  const vector<const DotlibNode*>&
   bundle_list() const;
 
   /// @brief ff グループを返す．
@@ -88,13 +90,13 @@ private:
   const DotlibNode* mBusNamingStyle;
 
   // ピングループのリスト
-  list<const DotlibNode*> mPinList;
+  vector<const DotlibNode*> mPinList;
 
   // バスグループのリスト
-  list<const DotlibNode*> mBusList;
+  vector<const DotlibNode*> mBusList;
 
   // バンドルグループのリスト
-  list<const DotlibNode*> mBundleList;
+  vector<const DotlibNode*> mBundleList;
 
   // ff グループ
   const DotlibNode* mFF;

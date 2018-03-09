@@ -1226,7 +1226,9 @@ DotlibVarType::dump(ostream& s,
 {
   switch ( mValue ) {
   case kClibVarInputNetTransition:                  dump_str(s, "input net transition"); break;
+  case kClibVarInputTransitionTime:                 dump_str(s, "input transition time"); break;
   case kClibVarTotalOutputNetCapacitance:           dump_str(s, "output net capacitance"); break;
+  case kClibVarEqualOrOppositeOutputNetCapacitance: dump_str(s, "equal or opposite output net capacitance"); break;
   case kClibVarOutputNetLength:                     dump_str(s, "output net length"); break;
   case kClibVarOutputNetWireCap:                    dump_str(s, "output net wire cap"); break;
   case kClibVarOutputNetPinCap:                     dump_str(s, "output net pin cap"); break;

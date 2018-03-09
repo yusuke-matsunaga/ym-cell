@@ -5,11 +5,11 @@
 /// @brief DotlibFL のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "DotlibAttrMap.h"
+#include "dotlib_nsdef.h"
 #include "ym/ShString.h"
 
 
@@ -19,8 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class DotlibFL DotlibFL.h "DotlibFL.h"
 /// @brief DotlibFF と DotlibLatch の基底クラス
 //////////////////////////////////////////////////////////////////////
-class DotlibFL :
-  public DotlibAttrMap
+class DotlibFL
 {
 public:
 
@@ -32,10 +31,13 @@ public:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を初期化する．
   bool
-  set_data(const DotlibNode* fl_node);
+  set_data(const DotlibNode* node);
 
   /// @brief var1 の名前を返す．
   ShString
@@ -60,6 +62,17 @@ public:
   /// @brief "clear_preset_var2" を返す．
   int
   clear_preset_var2() const;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief set_data() の下請け関数
+  bool
+  set_data_sub(const DotlibNode* node,
+	       const DotlibAttrMap& attr_map);
 
 
 private:

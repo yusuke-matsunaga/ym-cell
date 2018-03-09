@@ -10,6 +10,7 @@
 #include "DotlibLibrary.h"
 #include "DotlibNode.h"
 #include "DotlibAttr.h"
+#include "DotlibAttrMap.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -30,10 +31,8 @@ DotlibLibrary::~DotlibLibrary()
 
 // @brief 内容を初期化する．
 bool
-DotlibLibrary::set_data(const DotlibNode* lib_node)
+DotlibLibrary::set_data(const DotlibNode* node)
 {
-  init();
-
   mTechnology = kClibTechCmos;
   mDelayModel = kClibDelayGenericCmos;
   mBusNamingStyle = nullptr;
@@ -48,30 +47,17 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
   mVoltageUnit = nullptr;
 
   mLutTemplateList.clear();
-  mClibList.clear();
+  mCellList.clear();
 
   // ライブラリ名をを得る．
-  mName = lib_node->group_value()->get_string_from_value_list();
+  mName = node->group_value()->get_string_from_value_list();
 
   // 属性のリストを作る．
-  for ( const DotlibAttr* attr = lib_node->attr_top();
-	attr; attr = attr->next() ) {
-    AttrType attr_type = attr->attr_type();
-    const DotlibNode* attr_value = attr->attr_value();
-    if ( attr_type == ATTR_LU_TABLE_TEMPLATE ) {
-      mLutTemplateList.push_back(attr_value);
-    }
-    else if ( attr_type == ATTR_CELL ) {
-      mClibList.push_back(attr_value);
-    }
-    else {
-      add(attr_type, attr_value);
-    }
-  }
+  DotlibAttrMap attr_map(node->attr_top());
 
   // 'technology' を取り出す．
   const DotlibNode* tech_node = nullptr;
-  if ( !expect_singleton_or_null(ATTR_TECHNOLOGY, tech_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_TECHNOLOGY, tech_node) ) {
     return false;
   }
   if ( tech_node ) {
@@ -94,51 +80,51 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
 
   // 'delay_model' を取り出す．
   const DotlibNode* dm_node = nullptr;
-  if ( !expect_singleton_or_null(ATTR_DELAY_MODEL, dm_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_DELAY_MODEL, dm_node) ) {
     return false;
   }
   ASSERT_COND( dm_node->type() == DotlibNode::kDelayModel );
   mDelayModel = dm_node->delay_model();
 
   // 'bus_naming_style' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_BUS_NAMING_STYLE, mBusNamingStyle) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_BUS_NAMING_STYLE, mBusNamingStyle) ) {
     return false;
   }
 
   // 'comment' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_COMMENT, mComment) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_COMMENT, mComment) ) {
     return false;
   }
 
   // 'date' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_DATE, mDate) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_DATE, mDate) ) {
     return false;
   }
 
   // 'revision' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_REVISION, mRevision) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_REVISION, mRevision) ) {
     return false;
   }
 
   // 'current_unit' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_CURRENT_UNIT, mCurrentUnit) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_CURRENT_UNIT, mCurrentUnit) ) {
     return false;
   }
 
   // 'leakage_power_unit' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_LEAKAGE_POWER_UNIT, mLeakagePowerUnit) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_LEAKAGE_POWER_UNIT, mLeakagePowerUnit) ) {
     return false;
   }
 
   // 'pulling_resistance_unit' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_PULLING_RESISTANCE_UNIT,
+  if ( !attr_map.expect_singleton_or_null(ATTR_PULLING_RESISTANCE_UNIT,
 				 mPullingResistanceUnit) ) {
     return false;
   }
 
   // 'capacitive_load_unit' を取り出す．
   const DotlibNode* clu = nullptr;
-  if ( !expect_singleton_or_null(ATTR_CAPACITIVE_LOAD_UNIT, clu) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_CAPACITIVE_LOAD_UNIT, clu) ) {
     return false;
   }
   if ( clu ) {
@@ -180,15 +166,17 @@ DotlibLibrary::set_data(const DotlibNode* lib_node)
   }
 
   // 'time_unit' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_TIME_UNIT, mTimeUnit) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_TIME_UNIT, mTimeUnit) ) {
     return false;
   }
 
   // 'voltage_unit' を取り出す．
-  if ( !expect_singleton_or_null(ATTR_VOLTAGE_UNIT, mVoltageUnit) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_VOLTAGE_UNIT, mVoltageUnit) ) {
     return false;
   }
 
+  attr_map.get_value(ATTR_LU_TABLE_TEMPLATE, mLutTemplateList);
+  attr_map.get_value(ATTR_CELL, mCellList);
   return true;
 }
 
@@ -291,17 +279,17 @@ DotlibLibrary::voltage_unit() const
 }
 
 // @brief lu_table_template のリストを返す．
-const list<const DotlibNode*>&
+const vector<const DotlibNode*>&
 DotlibLibrary::lut_template_list() const
 {
   return mLutTemplateList;
 }
 
 // @brief セル定義のリストを返す．
-const list<const DotlibNode*>&
+const vector<const DotlibNode*>&
 DotlibLibrary::cell_list() const
 {
-  return mClibList;
+  return mCellList;
 }
 
 END_NAMESPACE_YM_DOTLIB

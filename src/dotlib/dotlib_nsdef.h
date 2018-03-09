@@ -31,6 +31,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // クラス名の前方宣言
 class DotlibAttr;
+class DotlibAttrMap;
 class DotlibMgr;
 class DotlibParser;
 class DotlibNode;

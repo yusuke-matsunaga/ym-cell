@@ -8,6 +8,8 @@
 
 
 #include "DotlibLatch.h"
+#include "DotlibAttrMap.h"
+#include "DotlibNode.h"
 #include "ym/MsgMgr.h"
 
 
@@ -29,9 +31,11 @@ DotlibLatch::~DotlibLatch()
 
 // @brief 内容を初期化する．
 bool
-DotlibLatch::set_data(const DotlibNode* latch_node)
+DotlibLatch::set_data(const DotlibNode* node)
 {
-  if ( !DotlibFL::set_data(latch_node) ) {
+  DotlibAttrMap attr_map(node->attr_top());
+
+  if ( !DotlibFL::set_data_sub(node, attr_map) ) {
     return false;
   }
 
@@ -40,17 +44,17 @@ DotlibLatch::set_data(const DotlibNode* latch_node)
   mEnableAlso = nullptr;
 
   // data_in を取り出す．
-  if ( !expect_singleton_or_null(ATTR_DATA_IN, mDataIn) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_DATA_IN, mDataIn) ) {
     return false;
   }
 
   // enable を取り出す．
-  if ( !expect_singleton_or_null(ATTR_ENABLE, mEnable) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_ENABLE, mEnable) ) {
     return false;
   }
 
   // enable_also を取り出す．
-  if ( !expect_singleton_or_null(ATTR_ENABLE_ALSO, mEnableAlso) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_ENABLE_ALSO, mEnableAlso) ) {
     return false;
   }
 

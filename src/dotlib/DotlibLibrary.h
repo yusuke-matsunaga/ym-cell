@@ -5,11 +5,11 @@
 /// @brief DotlibLibrary のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "DotlibAttrMap.h"
+#include "dotlib_nsdef.h"
 #include "ym/ClibCellLibrary.h"
 #include "ym/MsgMgr.h"
 #include "ym/ShString.h"
@@ -21,8 +21,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class DotlibLibrary DotlibLibrary.h "DotlibLibrary.h"
 /// @brief DotlibNode の木から取り出したライブラリの情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class DotlibLibrary :
-  public DotlibAttrMap
+class DotlibLibrary
 {
 public:
 
@@ -34,6 +33,9 @@ public:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を設定する．
   bool
@@ -97,11 +99,11 @@ public:
   voltage_unit() const;
 
   /// @brief lu_table_template のリストを返す．
-  const list<const DotlibNode*>&
+  const vector<const DotlibNode*>&
   lut_template_list() const;
 
   /// @brief セル定義のリストを返す．
-  const list<const DotlibNode*>&
+  const vector<const DotlibNode*>&
   cell_list() const;
 
 
@@ -153,10 +155,10 @@ private:
   const DotlibNode* mVoltageUnit;
 
   // lu_table_template のリスト
-  list<const DotlibNode*> mLutTemplateList;
+  vector<const DotlibNode*> mLutTemplateList;
 
   // セル定義のリスト
-  list<const DotlibNode*> mClibList;
+  vector<const DotlibNode*> mCellList;
 
 };
 

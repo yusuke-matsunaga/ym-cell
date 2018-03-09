@@ -5,11 +5,11 @@
 /// @brief DolibTiming のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "DotlibAttrMap.h"
+#include "dotlib_nsdef.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -18,8 +18,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class DotlibTiming DotlibTiming.h "DotlibTiming.h"
 /// @brief DotlibNode の木から取り出したタイミング情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class DotlibTiming :
-  public DotlibAttrMap
+class DotlibTiming
 {
 public:
 
@@ -31,6 +30,9 @@ public:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をセットする．
   bool

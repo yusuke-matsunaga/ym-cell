@@ -306,7 +306,7 @@ gen_timing_list(const vector<DotlibPin>& pin_info_array,
 		vector<vector<CiTiming*> >& timing_list_array)
 {
   for ( auto pin_info: pin_info_array ) {
-    const list<const DotlibNode*>& dt_timing_list = pin_info.timing_list();
+    const vector<const DotlibNode*>& dt_timing_list = pin_info.timing_list();
     for ( auto dt_timing: dt_timing_list ) {
       DotlibTiming timing_info;
       if ( !timing_info.set_data(dt_timing) ) {
@@ -600,7 +600,7 @@ set_library(const DotlibLibrary& library_info,
   }
 
   // 'lu_table_template' の設定
-  const list<const DotlibNode*>& dt_lut_template_list =
+  const vector<const DotlibNode*>& dt_lut_template_list =
     library_info.lut_template_list();
   vector<CiLutTemplate*> template_list;
   template_list.reserve(dt_lut_template_list.size());
@@ -648,7 +648,7 @@ set_library(const DotlibLibrary& library_info,
   library->set_lu_table_template_list(template_list);
 
   // セルの内容の設定
-  const list<const DotlibNode*>& dt_cell_list = library_info.cell_list();
+  const vector<const DotlibNode*>& dt_cell_list = library_info.cell_list();
   int nc = dt_cell_list.size();
   vector<CiCell*> cell_list;
   cell_list.reserve(nc);
@@ -661,9 +661,9 @@ set_library(const DotlibLibrary& library_info,
 
     ShString cell_name = cell_info.name();
     ClibArea area(cell_info.area());
-    const list<const DotlibNode*>& dt_pin_list = cell_info.pin_list();
-    const list<const DotlibNode*>& dt_bus_list = cell_info.bus_list();
-    const list<const DotlibNode*>& dt_bundle_list = cell_info.bundle_list();
+    const vector<const DotlibNode*>& dt_pin_list = cell_info.pin_list();
+    const vector<const DotlibNode*>& dt_bus_list = cell_info.bus_list();
+    const vector<const DotlibNode*>& dt_bundle_list = cell_info.bundle_list();
     int npg = dt_pin_list.size();
     int nbus = dt_bus_list.size();
     int nbundle = dt_bundle_list.size();

@@ -8,7 +8,8 @@
 
 
 #include "DotlibAttrMap.h"
-#include "DotlibNode.h"
+#include "DotlibAttr.h"
+//#include "DotlibNode.h"
 #include "ym/Range.h"
 #include "ym/MsgMgr.h"
 
@@ -20,8 +21,15 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-DotlibAttrMap::DotlibAttrMap()
+// @param[in] attr_top 先頭の属性ノード
+DotlibAttrMap::DotlibAttrMap(const DotlibAttr* attr_top)
 {
+  for ( const DotlibAttr* attr = attr_top;
+	attr; attr = attr->next() ) {
+    AttrType attr_type = attr->attr_type();
+    const DotlibNode* attr_value = attr->attr_value();
+    add(attr_type, attr_value);
+  }
 }
 
 // @brief デストラクタ
@@ -38,21 +46,11 @@ bool
 DotlibAttrMap::get_value(AttrType attr,
 			 vector<const DotlibNode*>& node_list) const
 {
-#if 0
   if ( !mHash.check(attr) ) {
     return false;
   }
-#else
-  if ( mArray[attr].empty() ) {
-    return false;
-  }
-#endif
 
-#if 0
   const vector<const DotlibNode*>& src_node_list = mHash[attr];
-#else
-  const vector<const DotlibNode*>& src_node_list = mArray[attr];
-#endif
   node_list.clear();
   node_list.reserve(src_node_list.size());
   for ( auto node: src_node_list ) {
@@ -99,23 +97,12 @@ bool
 DotlibAttrMap::expect_singleton_or_null(AttrType attr,
 					const DotlibNode*& node) const
 {
-#if 0
   if ( !mHash.check(attr) ) {
     node = nullptr;
     return true;
   }
-#else
-  if ( mArray[attr].empty() ) {
-    node = nullptr;
-    return true;
-  }
-#endif
 
-#if 0
   const vector<const DotlibNode*>& node_list = mHash[attr];
-#else
-  const vector<const DotlibNode*>& node_list = mArray[attr];
-#endif
   if ( node_list.size() != 1 ) {
     const DotlibNode* second = node_list[1];
     ostringstream buf;
@@ -137,13 +124,7 @@ DotlibAttrMap::expect_singleton_or_null(AttrType attr,
 void
 DotlibAttrMap::init()
 {
-#if 0
   mHash.clear();
-#else
-  for ( auto i: Range(ATTR_END) ) {
-    mArray[i].clear();
-  }
-#endif
 }
 
 // @brief 値を追加する．
@@ -153,14 +134,10 @@ void
 DotlibAttrMap::add(AttrType attr,
 		   const DotlibNode* node)
 {
-#if 0
   if ( !mHash.check(attr) ) {
     mHash.add(attr, vector<const DotlibNode*>());
   }
   mHash[attr].push_back(node);
-#else
-  mArray[attr].push_back(node);
-#endif
 }
 
 END_NAMESPACE_YM_DOTLIB

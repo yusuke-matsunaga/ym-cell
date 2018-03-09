@@ -5,7 +5,7 @@
 /// @brief DotlibFF のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -31,10 +31,13 @@ public:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を初期化する．
   bool
-  set_data(const DotlibNode* ff_node);
+  set_data(const DotlibNode* node);
 
   /// @brief "next_state" を返す．
   const DotlibNode*

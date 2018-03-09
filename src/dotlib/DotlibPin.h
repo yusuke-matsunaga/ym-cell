@@ -5,11 +5,11 @@
 /// @brief DotlibPin のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "DotlibAttrMap.h"
+#include "dotlib_nsdef.h"
 #include "ym/ShString.h"
 
 
@@ -19,8 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class DotlibPin DotlibPin.h "DotlibPin.h"
 /// @brief DotlibNode の木から取り出したピンの情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class DotlibPin :
-  public DotlibAttrMap
+class DotlibPin
 {
 public:
 
@@ -32,6 +31,9 @@ public:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をセットする．
   bool
@@ -103,7 +105,7 @@ public:
   pin_func_type() const;
 
   /// @brief "timing" グループのリストを得る．
-  const list<const DotlibNode*>&
+  const vector<const DotlibNode*>&
   timing_list() const;
 
 
@@ -158,7 +160,7 @@ private:
   const DotlibNode* mPinFuncType;
 
   // "timing"
-  list<const DotlibNode*> mTimingList;
+  vector<const DotlibNode*> mTimingList;
 
 };
 
