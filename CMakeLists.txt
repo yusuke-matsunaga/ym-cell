@@ -55,39 +55,6 @@ set (ci_SOURCES
   src/ci/restore.cc
   )
 
-set (dotlib_SOURCES
-  src/dotlib/read_liberty.cc
-  src/dotlib/AttrDic.cc
-  src/dotlib/ComplexHandler.cc
-  src/dotlib/DefineHandler.cc
-  src/dotlib/DotlibAttr.cc
-  src/dotlib/DotlibAttrMap.cc
-  src/dotlib/DotlibCell.cc
-  src/dotlib/DotlibFF.cc
-  src/dotlib/DotlibFL.cc
-  src/dotlib/DotlibHandler.cc
-  src/dotlib/DotlibLatch.cc
-  src/dotlib/DotlibLibrary.cc
-  src/dotlib/DotlibLut.cc
-  src/dotlib/DotlibMgr.cc
-  src/dotlib/DotlibMgrImpl.cc
-  src/dotlib/DotlibNode.cc
-  src/dotlib/DotlibNodeImpl.cc
-  src/dotlib/DotlibParser.cc
-  src/dotlib/DotlibParserImpl.cc
-  src/dotlib/DotlibPin.cc
-  src/dotlib/DotlibScanner.cc
-#  src/dotlib/DotlibStateTable.cc
-  src/dotlib/DotlibTemplate.cc
-  src/dotlib/DotlibTiming.cc
-  src/dotlib/ExprHandler.cc
-  src/dotlib/FhScanner.cc
-  src/dotlib/FuncHandler.cc
-  src/dotlib/GroupHandler.cc
-  src/dotlib/HandlerFactory.cc
-  src/dotlib/SimpleHandler.cc
-  )
-
 set (libcomp_SOURCES
   src/libcomp/LcClass.cc
   src/libcomp/LcGroup.cc
@@ -114,12 +81,58 @@ set (mislib_SOURCES
   src/mislib/MislibVarName.cc
   )
 
+set (dotlib_SOURCES
+  src/dotlib/read_liberty.cc
+  src/dotlib/DotlibAttrMap.cc
+  src/dotlib/DotlibMgr.cc
+  src/dotlib/DotlibMgrImpl.cc
+
+  src/dotlib/parser/AttrDic.cc
+  src/dotlib/parser/DotlibParser.cc
+  src/dotlib/parser/DotlibParserImpl.cc
+  src/dotlib/parser/DotlibScanner.cc
+  src/dotlib/parser/FhScanner.cc
+
+  src/dotlib/handler/DotlibHandler.cc
+  src/dotlib/handler/HandlerFactory.cc
+  src/dotlib/handler/ComplexHandler.cc
+  src/dotlib/handler/DefineHandler.cc
+  src/dotlib/handler/ExprHandler.cc
+  src/dotlib/handler/FuncHandler.cc
+  src/dotlib/handler/GroupHandler.cc
+  src/dotlib/handler/SimpleHandler.cc
+
+  src/dotlib/ast/DotlibAttr.cc
+  src/dotlib/ast/DotlibCell.cc
+  src/dotlib/ast/DotlibDelayModel.cc
+  src/dotlib/ast/DotlibFF.cc
+  src/dotlib/ast/DotlibFL.cc
+  src/dotlib/ast/DotlibFloat.cc
+  src/dotlib/ast/DotlibFloatVector.cc
+  src/dotlib/ast/DotlibInt.cc
+  src/dotlib/ast/DotlibLatch.cc
+  src/dotlib/ast/DotlibLibrary.cc
+  src/dotlib/ast/DotlibList.cc
+  src/dotlib/ast/DotlibLut.cc
+  src/dotlib/ast/DotlibNode.cc
+  src/dotlib/ast/DotlibPin.cc
+  src/dotlib/ast/DotlibPinDirection.cc
+  src/dotlib/ast/DotlibStateTable.cc
+  src/dotlib/ast/DotlibString.cc
+  src/dotlib/ast/DotlibTemplate.cc
+  src/dotlib/ast/DotlibTiming.cc
+  src/dotlib/ast/DotlibTimingSense.cc
+  src/dotlib/ast/DotlibTimingType.cc
+  src/dotlib/ast/DotlibTechnology.cc
+  src/dotlib/ast/DotlibVarType.cc
+  )
+
 set ( ym_cell_SOURCES
   ${main_SOURCES}
   ${ci_SOURCES}
-  ${dotlib_SOURCES}
   ${libcomp_SOURCES}
   ${mislib_SOURCES}
+  ${dotlib_SOURCES}
   )
 
 

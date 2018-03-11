@@ -7,9 +7,20 @@
 /// All rights reserved.
 
 
-#include "DotlibMgrImpl.h"
-#include "DotlibNodeImpl.h"
-#include "DotlibAttr.h"
+#include "dotlib/DotlibMgrImpl.h"
+#include "dotlib/DotlibInt.h"
+#include "dotlib/DotlibFloat.h"
+#include "dotlib/DotlibFloatVector.h"
+#include "dotlib/DotlibString.h"
+#include "dotlib/DotlibExpr.h"
+#include "dotlib/DotlibList.h"
+#include "dotlib/DotlibTechnology.h"
+#include "dotlib/DotlibDelayModel.h"
+#include "dotlib/DotlibPinDirection.h"
+#include "dotlib/DotlibTimingSense.h"
+#include "dotlib/DotlibTimingType.h"
+#include "dotlib/DotlibVarType.h"
+#include "dotlib/DotlibAttr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -44,8 +55,12 @@ DotlibMgrImpl::clear()
   mVectElemSize = 0;
   mOprNum = 0;
   mNotNum = 0;
+  mBoolExprNum = 0;
+  mFloatExprNum = 0;
+  mSymbolExprNum = 0;
+  mStrExprNum = 0;
   mListNum = 0;
-  mGroupNum = 0;
+  mListElemSize = 0;
   mTechnologyNum = 0;
   mDelayModelNum = 0;
   mCellPinDirectionNum = 0;
@@ -56,291 +71,310 @@ DotlibMgrImpl::clear()
 }
 
 // @brief 整数値を表す DotlibNode を生成する．
-// @param[in] value 値
 // @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_int(int value,
-		       const FileRegion& loc)
+// @param[in] value 値
+DotlibNode*
+DotlibMgrImpl::new_int(const FileRegion& loc,
+		       int value)
 {
   ++ mIntNum;
   void* p = mAlloc.get_memory(sizeof(DotlibInt));
-  DotlibNodeImpl* node = new (p) DotlibInt(value, loc);
-  return node;
+  return new (p) DotlibInt(loc, value);
 }
 
 // @brief 実数値を表す DotlibNode を生成する．
-// @param[in] value 値
 // @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_float(double value,
-			 const FileRegion& loc)
+// @param[in] value 値
+DotlibNode*
+DotlibMgrImpl::new_float(const FileRegion& loc,
+			 double value)
 {
   ++ mFloatNum;
   void* p = mAlloc.get_memory(sizeof(DotlibFloat));
-  DotlibNodeImpl* node = new (p) DotlibFloat(value, loc);
-  return node;
+  return new (p) DotlibFloat(loc, value);
 }
 
 // @brief 予約語シンボルを表す DotlibNode を生成する．
-// @param[in] token_type トークンの種類
 // @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_symbol(TokenType token_type,
-			  const FileRegion& loc)
+// @param[in] token_type トークンの種類
+DotlibNode*
+DotlibMgrImpl::new_symbol(const FileRegion& loc,
+			  TokenType token_type)
 {
   return nullptr;
 }
 
 // @brief 定数シンボルを表す DotlibNode を生成する．
-// @param[in] value 値
 // @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_string(ShString value,
-			  const FileRegion& loc)
+// @param[in] value 値
+DotlibNode*
+DotlibMgrImpl::new_string(const FileRegion& loc,
+			  ShString value)
 {
   ++ mStrNum;
   void* p = mAlloc.get_memory(sizeof(DotlibString));
-  DotlibNodeImpl* node = new (p) DotlibString(value, loc);
-  return node;
+  return new (p) DotlibString(loc, value);
 }
 
 // @brief ベクタを表す DotlibNode を生成する．
+// @param[in] loc ファイル上の位置
 // @param[in] value_list 値のリスト
-// @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_vector(const vector<double>& value_list,
-			  const FileRegion& loc)
+DotlibNode*
+DotlibMgrImpl::new_vector(const FileRegion& loc,
+			  const vector<double>& value_list)
 {
-  ++ mVectNum;
   int n = value_list.size();
-  void* p = mAlloc.get_memory(sizeof(DotlibVector) + (n - 1) * sizeof(double));
+  ++ mVectNum;
   mVectElemSize += (n - 1);
-  DotlibNodeImpl* node = new (p) DotlibVector(value_list, loc);
-  return node;
+  void* p = mAlloc.get_memory(sizeof(DotlibFloatVector) + (n - 1) * sizeof(double));
+  return new (p) DotlibFloatVector(loc, value_list);
 }
 
-// @brief + 演算子を表す DotlibNode を生成する．
+// @brief + 演算子を表す DotlibExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-DotlibNodeImpl*
-DotlibMgrImpl::new_plus(const DotlibNode* opr1,
-			const DotlibNode* opr2)
+DotlibExpr*
+DotlibMgrImpl::new_plus(const DotlibExpr* opr1,
+			const DotlibExpr* opr2)
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  DotlibNodeImpl* node = new (p) DotlibOpr(DotlibNode::kPlus, opr1, opr2);
-  return node;
+  return new (p) DotlibOpr(DotlibExpr::kPlus, opr1, opr2);
 }
 
-// @brief - 演算子を表す DotlibNode を生成する．
+// @brief - 演算子を表す DotlibExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-DotlibNodeImpl*
-DotlibMgrImpl::new_minus(const DotlibNode* opr1,
-			 const DotlibNode* opr2)
+DotlibExpr*
+DotlibMgrImpl::new_minus(const DotlibExpr* opr1,
+			 const DotlibExpr* opr2)
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  DotlibNodeImpl* node = new (p) DotlibOpr(DotlibNode::kMinus, opr1, opr2);
-  return node;
+  return new (p) DotlibOpr(DotlibExpr::kMinus, opr1, opr2);
 }
 
-// @brief * 演算子を表す DotlibNode を生成する．
+// @brief * 演算子を表す DotlibExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-DotlibNodeImpl*
-DotlibMgrImpl::new_mult(const DotlibNode* opr1,
-			const DotlibNode* opr2)
+DotlibExpr*
+DotlibMgrImpl::new_mult(const DotlibExpr* opr1,
+			const DotlibExpr* opr2)
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  DotlibNodeImpl* node =  new (p) DotlibOpr(DotlibNode::kMult, opr1, opr2);
-  return node;
+  return new (p) DotlibOpr(DotlibExpr::kMult, opr1, opr2);
 }
 
-// @brief / 演算子を表す DotlibNode を生成する．
+// @brief / 演算子を表す DotlibExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-DotlibNodeImpl*
-DotlibMgrImpl::new_div(const DotlibNode* opr1,
-		       const DotlibNode* opr2)
+DotlibExpr*
+DotlibMgrImpl::new_div(const DotlibExpr* opr1,
+		       const DotlibExpr* opr2)
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  DotlibNodeImpl* node = new (p) DotlibOpr(DotlibNode::kDiv, opr1, opr2);
-  return node;
+  return new (p) DotlibOpr(DotlibExpr::kDiv, opr1, opr2);
 }
 
-// @brief NOT 演算子を表す DotlibNode を生成する．
-// @param[in] opr オペランド
+// @brief NOT 演算子を表す DotlibExpr を生成する．
 // @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_not(const DotlibNode* opr,
-		       const FileRegion& loc)
+// @param[in] opr オペランド
+DotlibExpr*
+DotlibMgrImpl::new_not(const FileRegion& loc,
+		       const DotlibExpr* opr)
 {
   ++ mNotNum;
   void* p = mAlloc.get_memory(sizeof(DotlibNot));
-  DotlibNodeImpl* node = new (p) DotlibNot(opr, loc);
-  return node;
+  return new (p) DotlibNot(loc, opr);
 }
 
-// @brief AND 演算子を表す DotlibNode を生成する．
+// @brief AND 演算子を表す DotlibExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-DotlibNodeImpl*
-DotlibMgrImpl::new_and(const DotlibNode* opr1,
-		       const DotlibNode* opr2)
+DotlibExpr*
+DotlibMgrImpl::new_and(const DotlibExpr* opr1,
+		       const DotlibExpr* opr2)
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  DotlibNodeImpl* node = new (p) DotlibOpr(DotlibNode::kAnd, opr1, opr2);
-  return node;
+  return new (p) DotlibOpr(DotlibExpr::kAnd, opr1, opr2);
 }
 
-// @brief OR 演算子を表す DotlibNode を生成する．
+// @brief OR 演算子を表す DotlibExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-DotlibNodeImpl*
-DotlibMgrImpl::new_or(const DotlibNode* opr1,
-		      const DotlibNode* opr2)
+DotlibExpr*
+DotlibMgrImpl::new_or(const DotlibExpr* opr1,
+		      const DotlibExpr* opr2)
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  DotlibNodeImpl* node = new (p) DotlibOpr(DotlibNode::kOr, opr1, opr2);
-  return node;
+  return new (p) DotlibOpr(DotlibExpr::kOr, opr1, opr2);
 }
 
-// @brief XOR 演算子を表す DotlibNode を生成する．
+// @brief XOR 演算子を表す DotlibExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-DotlibNodeImpl*
-DotlibMgrImpl::new_xor(const DotlibNode* opr1,
-		       const DotlibNode* opr2)
+DotlibExpr*
+DotlibMgrImpl::new_xor(const DotlibExpr* opr1,
+		       const DotlibExpr* opr2)
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  DotlibNodeImpl* node = new (p) DotlibOpr(DotlibNode::kXor, opr1, opr2);
-  return node;
+  return new (p) DotlibOpr(DotlibExpr::kXor, opr1, opr2);
+}
+
+// @brief ブール値(0 or 1)を表す DotlibExpr を生成する．
+// @param[in] loc ファイル上の位置
+// @param[in] val 値
+DotlibExpr*
+DotlibMgrImpl::new_bool_expr(const FileRegion& loc,
+			     bool val)
+{
+  ++ mBoolExprNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibBoolExpr));
+  return new (p) DotlibBoolExpr(loc, val);
+}
+
+// @brief 実数値を表す DotlibExpr を生成する．
+// @param[in] loc ファイル乗の位置
+// @param[in] val 値
+DotlibExpr*
+DotlibMgrImpl::new_float_expr(const FileRegion& loc,
+			      double val)
+{
+  ++ mFloatExprNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibFloatExpr));
+  return new (p) DotlibFloatExpr(loc, val);
+}
+
+// @brief VDDを表す DotlibExpr を生成する．
+// @param[in] loc ファイル上の位置
+DotlibExpr*
+DotlibMgrImpl::new_vdd_expr(const FileRegion& loc)
+{
+  ++ mSymbolExprNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibSymbolExpr));
+  return new (p) DotlibSymbolExpr(loc, DotlibExpr::kVDD);
+}
+
+// @brief VSSを表す DotlibExpr を生成する．
+// @param[in] loc ファイル上の位置
+DotlibExpr*
+DotlibMgrImpl::new_vss_expr(const FileRegion& loc)
+{
+  ++ mSymbolExprNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibSymbolExpr));
+  return new (p) DotlibSymbolExpr(loc, DotlibExpr::kVSS);
+}
+
+// @brief VCCを表す DotlibExpr を生成する．
+// @param[in] loc ファイル上の位置
+DotlibExpr*
+DotlibMgrImpl::new_vcc_expr(const FileRegion& loc)
+{
+  ++ mSymbolExprNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibSymbolExpr));
+  return new (p) DotlibSymbolExpr(loc, DotlibExpr::kVCC);
+}
+
+// @brief 文字列を表す DotlibExpr を生成する．
+DotlibExpr*
+DotlibMgrImpl::new_str_expr(const FileRegion& loc,
+			    const ShString& str)
+{
+  ++ mStrExprNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibStrExpr));
+  return new (p) DotlibStrExpr(loc, str);
 }
 
 // @brief リストを表す DotlibNode を生成する．
-DotlibNodeImpl*
-DotlibMgrImpl::new_list()
+DotlibList*
+DotlibMgrImpl::new_list(const vector<const DotlibNode*>& elem_list)
 {
+  int n = elem_list.size();
   ++ mListNum;
-  void* p = mAlloc.get_memory(sizeof(DotlibList));
-  DotlibNodeImpl* node =  new (p) DotlibList();
-  return node;
-}
-
-// @brief グループを表す DotlibNode を生成する．
-// @param[in] value 値
-// @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_group(const DotlibNode* value,
-			 const FileRegion& loc)
-{
-  ++ mGroupNum;
-  void* p = mAlloc.get_memory(sizeof(DotlibGroup));
-  DotlibNodeImpl* node =  new (p) DotlibGroup(value, loc);
-  return node;
+  mListElemSize += (n - 1);
+  void* p = mAlloc.get_memory(sizeof(DotlibList) + sizeof(const DotlibNode*) * (n - 1));
+  return new (p) DotlibList(elem_list);
 }
 
 // @brief technology を表す DotlibNode を生成する．
-// @param[in] value 値
 // @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_technology(ClibTechnology value,
-			      const FileRegion& loc)
+// @param[in] value 値
+DotlibTechnology*
+DotlibMgrImpl::new_technology(const FileRegion& loc,
+			      ClibTechnology value)
 {
   ++ mTechnologyNum;
   void* p = mAlloc.get_memory(sizeof(DotlibTechnology));
-  DotlibNodeImpl* node = new (p) DotlibTechnology(value, loc);
-  return node;
+  return new (p) DotlibTechnology(loc, value);
 }
 
 // @brief delay model を表す DotlibNode を生成する．
-// @param[in] value 値
 // @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_delay_model(ClibDelayModel value,
-			       const FileRegion& loc)
+// @param[in] value 値
+DotlibDelayModel*
+DotlibMgrImpl::new_delay_model(const FileRegion& loc,
+			       ClibDelayModel value)
 {
   ++ mDelayModelNum;
   void* p = mAlloc.get_memory(sizeof(DotlibDelayModel));
-  DotlibNodeImpl* node = new (p) DotlibDelayModel(value, loc);
-  return node;
+  return new (p) DotlibDelayModel(loc, value);
 }
 
 // @brief cell_pin_direction を表す DotlibNode を生成する．
-// @param[in] value 値
 // @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_cell_pin_direction(ClibCellPinDirection value,
-				      const FileRegion& loc)
+// @param[in] value 値
+DotlibPinDirection*
+DotlibMgrImpl::new_cell_pin_direction(const FileRegion& loc,
+				      ClibCellPinDirection value)
 {
   ++ mCellPinDirectionNum;
-  void* p = mAlloc.get_memory(sizeof(DotlibCellPinDirection));
-  DotlibNodeImpl* node = new (p) DotlibCellPinDirection(value, loc);
-  return node;
+  void* p = mAlloc.get_memory(sizeof(DotlibPinDirection));
+  return new (p) DotlibPinDirection(loc, value);
 }
 
 // @brief timing_sense を表す DotlibNode を生成する．
-// @param[in] value 値
 // @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_timing_sense(ClibTimingSense value,
-				const FileRegion& loc)
+// @param[in] value 値
+DotlibTimingSense*
+DotlibMgrImpl::new_timing_sense(const FileRegion& loc,
+				ClibTimingSense value)
 {
   ++ mTimingSenseNum;
   void* p = mAlloc.get_memory(sizeof(DotlibTimingSense));
-  DotlibNodeImpl* node = new (p) DotlibTimingSense(value, loc);
-  return node;
+  return new (p) DotlibTimingSense(loc, value);
 }
 
 // @brief timing_type を表す DotlibNode を生成する．
-// @param[in] value 値
 // @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_timing_type(ClibTimingType value,
-			       const FileRegion& loc)
+// @param[in] value 値
+DotlibTimingType*
+DotlibMgrImpl::new_timing_type(const FileRegion& loc,
+			       ClibTimingType value)
 {
   ++ mTimingTypeNum;
   void* p = mAlloc.get_memory(sizeof(DotlibTimingType));
-  DotlibNodeImpl* node = new (p) DotlibTimingType(value, loc);
-  return node;
+  return new (p) DotlibTimingType(loc, value);
 }
 
 // @brief var_type を表す DotlibNode を生成する．
-// @param[in] value 値
 // @param[in] loc ファイル上の位置
-DotlibNodeImpl*
-DotlibMgrImpl::new_var_type(ClibVarType value,
-			    const FileRegion& loc)
+// @param[in] value 値
+DotlibVarType*
+DotlibMgrImpl::new_var_type(const FileRegion& loc,
+			    ClibVarType value)
 {
   ++ mVarTypeNum;
   void* p = mAlloc.get_memory(sizeof(DotlibVarType));
-  DotlibNodeImpl* node = new (p) DotlibVarType(value, loc);
-  return node;
+  return new (p) DotlibVarType(loc, value);
 }
 
 // @brief DotlibAttr を生成する．
 DotlibAttr*
-DotlibMgrImpl::new_attr(AttrType attr_type,
-			const DotlibNode* value,
-			const FileRegion& loc)
+DotlibMgrImpl::new_attr(const FileRegion& loc,
+			AttrType attr_type,
+			const DotlibNode* value)
 {
   ++ mAttrNum;
   void* p = mAlloc.get_memory(sizeof(DotlibAttr));
-  DotlibAttr* attr =  new (p) DotlibAttr(attr_type, value, loc);
-  return attr;
-}
-
-// @brief 根のノードを設定する．
-void
-DotlibMgrImpl::set_root_node(DotlibNode* root)
-{
-  mRoot = root;
-}
-
-// @brief 根のノードを返す．
-const DotlibNode*
-DotlibMgrImpl::root_node() const
-{
-  return mRoot;
+  return new (p) DotlibAttr(loc, attr_type, value);
 }
 
 // @brief 使用メモリ量の一覧を出力する．
@@ -361,8 +395,8 @@ DotlibMgrImpl::show_stats(ostream& s) const
     << " = " << setw(10) << mStrNum * sizeof(DotlibString) << endl
 
     << "DotlibVector:       " << setw(7) << mVectNum
-    << " x " << setw(3) << sizeof(DotlibVector)
-    << " = " << setw(10) << mVectNum * sizeof(DotlibVector) << endl
+    << " x " << setw(3) << sizeof(DotlibFloatVector)
+    << " = " << setw(10) << mVectNum * sizeof(DotlibFloatVector) << endl
 
     << "Vector Elements:    " << setw(7) << mVectElemSize
     << " x " << setw(3) << sizeof(double)
@@ -379,10 +413,6 @@ DotlibMgrImpl::show_stats(ostream& s) const
     << "DotlibList:         " << setw(7) << mListNum
     << " x " << setw(3) << sizeof(DotlibList)
     << " = " << setw(10) << mListNum * sizeof(DotlibList) << endl
-
-    << "DotlibGroup:        " << setw(7) << mGroupNum
-    << " x " << setw(3) << sizeof(DotlibGroup)
-    << " = " << setw(10) << mGroupNum * sizeof(DotlibGroup) << endl
 
     << "DotlibAttr:         " << setw(7) << mAttrNum
     << " x " << setw(3) << sizeof(DotlibAttr)

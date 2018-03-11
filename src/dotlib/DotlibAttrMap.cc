@@ -7,9 +7,8 @@
 /// All rights reserved.
 
 
-#include "DotlibAttrMap.h"
-#include "DotlibAttr.h"
-//#include "DotlibNode.h"
+#include "dotlib/DotlibAttrMap.h"
+#include "dotlib/DotlibAttr.h"
 #include "ym/Range.h"
 #include "ym/MsgMgr.h"
 

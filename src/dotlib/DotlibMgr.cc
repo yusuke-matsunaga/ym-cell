@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "DotlibMgr.h"
-#include "DotlibMgrImpl.h"
+#include "dotlib/DotlibMgr.h"
+#include "dotlib/DotlibMgrImpl.h"
 #include "ym/MsgMgr.h"
 
 
@@ -36,13 +36,6 @@ void
 DotlibMgr::clear()
 {
   mImpl->clear();
-}
-
-// @brief 根のノードを返す．
-const DotlibNode*
-DotlibMgr::root_node() const
-{
-  return mImpl->root_node();
 }
 
 // @brief 使用メモリ量の一覧を出力する．
