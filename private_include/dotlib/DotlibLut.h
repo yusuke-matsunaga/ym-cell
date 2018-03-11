@@ -37,6 +37,7 @@ public:
 	    const DotlibList* value_list);
 
   /// @brief デストラクタ
+  virtual
   ~DotlibLut();
 
 

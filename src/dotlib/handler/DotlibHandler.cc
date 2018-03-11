@@ -8,7 +8,7 @@
 
 
 #include "dotlib/DotlibHandler.h"
-#include "dotlib/DotlibParserImpl.h"
+#include "dotlib/DotlibParser.h"
 #include "dotlib/DotlibMgrImpl.h"
 #include "GroupHandler.h"
 #include "ym/MsgMgr.h"
@@ -22,17 +22,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief 親のハンドラを持たない場合のコンストラクタ
 // @param[in] parser パーサー
-DotlibHandler::DotlibHandler(DotlibParserImpl& parser) :
-  mParser(parser),
-  mParent(nullptr)
-{
-}
-
-// @brief 親のハンドラを持つ場合のコンストラクタ
-// @param[in] parent 親のハンドラ
-DotlibHandler::DotlibHandler(GroupHandler* parent) :
-  mParser(parent->parser()),
-  mParent(parent)
+DotlibHandler::DotlibHandler(DotlibParser& parser) :
+  mParser(parser)
 {
 }
 
@@ -164,7 +155,7 @@ DotlibHandler::expect_nl()
 }
 
 // @brief パーサーを得る．
-DotlibParserImpl&
+DotlibParser&
 DotlibHandler::parser()
 {
   return mParser;
@@ -177,12 +168,14 @@ DotlibHandler::mgr()
   return mParser.mgr();
 }
 
+#if 0
 // @brief 親のハンドラを得る．
 GroupHandler*
 DotlibHandler::parent()
 {
   return mParent;
 }
+#endif
 
 // @brief デバッグモードの時に true を返す．
 bool

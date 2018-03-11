@@ -6,7 +6,7 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
+#include "dotlib/HandlerFactory.h"
 #include "SimpleHandler.h"
 #include "DotlibParserImpl.h"
 #include "DotlibMgrImpl.h"
@@ -21,12 +21,13 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のハンドラ
+// @param[in] parser パーサー
 // @param[in] sym_mode シンボルモード
-// @note シンボルモードの時は数字で始まっていても文字列とみなす．
-SimpleHandler::SimpleHandler(GroupHandler* parent,
+//
+// シンボルモードの時は数字で始まっていても文字列とみなす．
+SimpleHandler::SimpleHandler(DotlibParser& parser,
 			     bool sym_mode) :
-  DotlibHandler(parent),
+  DotlibHandler(parser),
   mSymMode(sym_mode)
 {
 }
@@ -84,12 +85,12 @@ SimpleHandler::read_value()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のハンドラ
+// @param[in] parser パーサー
 // @param[in] sym_mode シンボルモード
 // @note シンボルモードの時は数字で始まっていても文字列とみなす．
-StrSimpleHandler::StrSimpleHandler(GroupHandler* parent,
+StrSimpleHandler::StrSimpleHandler(DotlibParser& parser,
 				   bool sym_mode) :
-  SimpleHandler(parent, sym_mode)
+  SimpleHandler(parser, sym_mode)
 {
 }
 
@@ -121,8 +122,9 @@ StrSimpleHandler::read_value()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-IntSimpleHandler::IntSimpleHandler(GroupHandler* parent) :
-  SimpleHandler(parent, false)
+// @param[in] parser パーサー
+IntSimpleHandler::IntSimpleHandler(DotlibParser& parser) :
+  SimpleHandler(parser, false)
 {
 }
 
@@ -154,8 +156,9 @@ IntSimpleHandler::read_value()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-FloatSimpleHandler::FloatSimpleHandler(GroupHandler* parent) :
-  SimpleHandler(parent, false)
+// @param[in] parser パーサー
+FloatSimpleHandler::FloatSimpleHandler(DotlibParser& parser) :
+  SimpleHandler(parser, false)
 {
 }
 
@@ -187,8 +190,9 @@ FloatSimpleHandler::read_value()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-TechnologyHandler::TechnologyHandler(GroupHandler* parent) :
-  SimpleHandler(parent, false)
+// @param[in] parser パーサー
+TechnologyHandler::TechnologyHandler(DotlibParser& parser) :
+  SimpleHandler(parser, false)
 {
 }
 
@@ -237,8 +241,9 @@ TechnologyHandler::read_value()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-DelayModelHandler::DelayModelHandler(GroupHandler* parent) :
-  SimpleHandler(parent, false)
+// @param[in] parser パーサー
+DelayModelHandler::DelayModelHandler(DotlibParser& parser) :
+  SimpleHandler(parser, false)
 {
 }
 
@@ -300,8 +305,9 @@ DelayModelHandler::read_value()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CellPinDirectionHandler::CellPinDirectionHandler(GroupHandler* parent) :
-  SimpleHandler(parent, false)
+// @param[in] parser パーサー
+CellPinDirectionHandler::CellPinDirectionHandler(DotlibParser& parser) :
+  SimpleHandler(parser, false)
 {
 }
 
@@ -359,8 +365,9 @@ CellPinDirectionHandler::read_value()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-TimingSenseHandler::TimingSenseHandler(GroupHandler* parent) :
-  SimpleHandler(parent, false)
+// @param[in] parser パーサー
+TimingSenseHandler::TimingSenseHandler(DotlibParser& parser) :
+  SimpleHandler(parser, false)
 {
 }
 
@@ -412,8 +419,9 @@ TimingSenseHandler::read_value()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-TimingTypeHandler::TimingTypeHandler(GroupHandler* parent) :
-  SimpleHandler(parent, false)
+// @param[in] parser パーサー
+TimingTypeHandler::TimingTypeHandler(DotlibParser& parser) :
+  SimpleHandler(parser, false)
 {
 }
 
@@ -549,8 +557,9 @@ TimingTypeHandler::read_value()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-VarTypeHandler::VarTypeHandler(GroupHandler* parent) :
-  SimpleHandler(parent, false)
+// @param[in] parser パーサー
+VarTypeHandler::VarTypeHandler(DotlibParser& parser) :
+  SimpleHandler(parser, false)
 {
 }
 

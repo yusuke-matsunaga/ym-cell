@@ -294,6 +294,59 @@ DotlibMgrImpl::new_list(const vector<const DotlibNode*>& elem_list)
   return new (p) DotlibList(elem_list);
 }
 
+// @brief LUT template を表す DotlibNode を生成する．
+DotlibTemplate*
+DotlibMgrImpl::new_template(const FileRegion& loc,
+			    const DotlibString* name,
+			    int dimension,
+			    const DotlibVarType* var_1,
+			    const DotlibVarType* var_2,
+			    const DotlibVarType* var_3,
+			    const DotlibFloatVector* index_1,
+			    const DotlibFloatVector* index_2,
+			    const DotlibFloatVector* index_3)
+{
+  ++ mTemplateNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibTemplate));
+  return new (p) DotlibTemplate(loc, name, dimension, var_1, var_2, var_3, index_1, index_2, index_3);
+}
+
+// @brief input voltage を表す DotlibNode を生成する．
+// @param[in] loc ファイル上の位置
+// @param[in] vil 'vil'
+// @param[in] vih 'vih'
+// @param[in] vimin 'vimin'
+// @param[in] vimax 'vimax'
+DotlibInputVoltage*
+DotlibMgrImpl::new_input_voltage(const FileRegion& loc,
+				 const DotlibExpr* vil,
+				 const DotlibExpr* vih,
+				 const DotlibExpr* vimin,
+				 const DotlibExpr* vimax)
+{
+  ++ mInputVolNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibInputVoltage));
+  return new (p) DotlibInputVoltage(loc, vil, vih, vimin, vimax);
+}
+
+// @brief output voltage を表す DotlibNode を生成する．．
+// @param[in] loc ファイル上の位置
+// @param[in] vol 'voil'
+// @param[in] voh 'voh'
+// @param[in] vomin 'vomin'
+// @param[in] vomax 'vomax'
+DotlibOutputVoltage*
+DotlibMgrImpl::new_output_voltage(const FileRegion& loc,
+				  const DotlibExpr* vol,
+				  const DotlibExpr* voh,
+				  const DotlibExpr* vomin,
+				  const DotlibExpr* vomax)
+{
+  ++ mOutputVolNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibOutputVoltage));
+  return new (p) DotlibOutputVoltage(loc, vol, voh, vomin, vomax);
+}
+
 // @brief technology を表す DotlibNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値

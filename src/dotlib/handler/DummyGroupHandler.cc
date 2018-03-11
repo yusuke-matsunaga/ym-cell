@@ -30,6 +30,13 @@ GroupHandler::GroupHandler(DotlibParserImpl& parser) :
 {
 }
 
+// @brief 親を持つハンドラ用のコンストラクタ
+// @param[in] parent 親のハンドラ
+GroupHandler::GroupHandler(GroupHandler* parent) :
+  DotlibHandler(parent)
+{
+}
+
 // @brief デストラクタ
 GroupHandler::~GroupHandler()
 {
@@ -53,12 +60,9 @@ GroupHandler::read_attr(AttrType attr_type,
     cout << attr_type << value_list << " {" << endl;
   }
 
-  if ( !check_group_value(attr_type, attr_loc, value_list) ) {
+  if ( !begin_group(attr_type, attr_loc, value_list) ) {
     return nullptr;
   }
-
-  mAttrTop = nullptr;
-  mAttrTail = nullptr;
 
   if ( !expect(LCB) ) {
     return nullptr;
@@ -71,6 +75,9 @@ GroupHandler::read_attr(AttrType attr_type,
       continue;
     }
     if ( type == RCB ) {
+      if ( !end_group(attr_type, attr_loc, loc) ) {
+	return nullptr;
+      }
       break;
     }
     if ( type != SYMBOL ) {
@@ -94,18 +101,9 @@ GroupHandler::read_attr(AttrType attr_type,
 		      buf.str());
       return nullptr;
     }
-    DotlibNode* value = handler->read_attr(name_type, loc);
-    if ( value == nullptr ) {
+    if ( !handler->read_attr(name_type, loc) ) {
       return nullptr;
     }
-    DotlibAttr* attr = mgr()->new_attr(loc, name_type, value);
-    if ( mAttrTop == nullptr ) {
-      mAttrTop = attr;
-    }
-    else {
-      mAttrTail->mNext = attr;
-    }
-    mAttrTail = attr;
   }
 
   if ( !expect(NL) ) {
@@ -116,7 +114,30 @@ GroupHandler::read_attr(AttrType attr_type,
     cout << "}" << endl;
   }
 
-  return gen_value(loc, value_list, mAttrTop);
+#warning "TODO: 未完成"
+  return nullptr;
+}
+
+// @brief attribute を設定する．
+// @param[in] attr_type 属性
+// @param[in] value 値
+// @param[in] loc ファイル上の位置
+// @return 設定が失敗したら false を返す．
+// @note デフォルトの実装はエラーとなる．
+bool
+GroupHandler::add_attr(AttrType attr_type,
+		       DotlibNode* value,
+		       const FileRegion& loc)
+{
+  DotlibAttr* attr = mgr()->new_attr(loc, attr_type, value);
+  if ( mAttrTop == nullptr ) {
+    mAttrTop = attr;
+  }
+  else {
+    mAttrTail->mNext = attr;
+  }
+  mAttrTail = attr;
+  return true;
 }
 
 // @brief ハンドラの登録を行う．
@@ -146,6 +167,46 @@ GroupHandler::find_handler(AttrType attr_type)
   }
 }
 
+// @brief group statement の最初に呼ばれる関数
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @param[in] value_list 値を表すトークンのリスト
+bool
+GroupHandler::begin_group(AttrType attr_type,
+			  const FileRegion& attr_loc,
+			  DotlibList* value_list)
+{
+  if ( !check_group_value(attr_type, attr_loc, value_list) ) {
+    return false;
+  }
+
+  mAttrTop = nullptr;
+  mAttrTail = nullptr;
+
+  return true;
+}
+
+// @brief group statement の最後に呼ばれる関数
+// @param[in] attr_type 属性
+// @param[in] attr_loc attr_name のファイル上の位置
+// @param[in] end_loc 閉じ括弧のファイル上の位置
+bool
+GroupHandler::end_group(AttrType attr_type,
+			const FileRegion& attr_loc,
+			const FileRegion& end_loc)
+{
+#if 0
+  FileRegion loc(attr_loc, end_loc);
+  if ( attr_type == ATTR_LIBRARY ) {
+    mgr()->set_root_node(mNode);
+  }
+  else {
+    parent()->add_attr(attr_type, mGroup, loc);
+  }
+#endif
+  return true;
+}
+
 // @brief group statement の引数のチェックを行う仮想関数
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
@@ -166,9 +227,9 @@ GroupHandler::check_group_value(AttrType attr_type,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parser パーサー
-EmptyGroupHandler::EmptyGroupHandler(DotlibParser& parser) :
-  GroupHandler(parser)
+// @param[in] parent 親のハンドラ
+EmptyGroupHandler::EmptyGroupHandler(GroupHandler* parent) :
+  GroupHandler(parent)
 {
 }
 
@@ -211,8 +272,15 @@ EmptyGroupHandler::check_group_value(AttrType attr_type,
 
 // @brief 親を持たないハンドラ用のコンストラクタ
 // @param[in] parser パーサー
-Str1GroupHandler::Str1GroupHandler(DotlibParser& parser) :
+Str1GroupHandler::Str1GroupHandler(DotlibParserImpl& parser) :
   GroupHandler(parser)
+{
+}
+
+// @brief 親を持つハンドラ用のコンストラクタ
+// @param[in] parent 親のハンドラ
+Str1GroupHandler::Str1GroupHandler(GroupHandler* parent) :
+  GroupHandler(parent)
 {
 }
 
@@ -273,9 +341,9 @@ Str1GroupHandler::check_group_value(AttrType attr_type,
 //////////////////////////////////////////////////////////////////////
 
 // @brief ハンドラ用のコンストラクタ
-// @param[in] parser パーサー
-Str2GroupHandler::Str2GroupHandler(DotlibParser& parser) :
-  GroupHandler(parser)
+// @param[in] parent 親のハンドラ
+Str2GroupHandler::Str2GroupHandler(GroupHandler* parent) :
+  GroupHandler(parent)
 {
 }
 
@@ -344,9 +412,9 @@ Str2GroupHandler::check_group_value(AttrType attr_type,
 //////////////////////////////////////////////////////////////////////
 
 // @brief ハンドラ用のコンストラクタ
-// @param[in] parser パーサー
-Str2IntGroupHandler::Str2IntGroupHandler(DotlibParser& parser) :
-  GroupHandler(parser)
+// @param[in] parent 親のハンドラ
+Str2IntGroupHandler::Str2IntGroupHandler(GroupHandler* parent) :
+  GroupHandler(parent)
 {
 }
 

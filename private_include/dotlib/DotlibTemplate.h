@@ -32,7 +32,7 @@ public:
   /// @param[in] index_1, index_2, index_3 インデックスのベクタ
   DotlibTemplate(const FileRegion& loc,
 		 const DotlibString* name,
-		 const DotlibInt* dimension,
+		 int dimension,
 		 const DotlibVarType* var_1,
 		 const DotlibVarType* var_2,
 		 const DotlibVarType* var_3,
@@ -50,18 +50,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-#if 0
-  /// @brief 内容をセットする．
-  bool
-  set_data(const DotlibNode* template_node);
-#endif
-
   /// @brief 名前を返す．
   const DotlibString*
   name() const;
 
   /// @brief 次元数を返す．
-  const DotlibInt*
+  int
   dimension() const;
 
   /// @brief 'variable_1' を返す．
@@ -106,7 +100,7 @@ private:
   const DotlibString* mName;
 
   // 次元数
-  const DotlibInt* mDimension;
+  int mDimension;
 
   // variable_1
   const DotlibVarType* mVar1;
@@ -143,7 +137,7 @@ DotlibTemplate::name() const
 
 // @brief 次元数を返す．
 inline
-const DotlibInt*
+int
 DotlibTemplate::dimension() const
 {
   return mDimension;

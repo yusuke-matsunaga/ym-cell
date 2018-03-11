@@ -78,6 +78,16 @@ public:
   new_vector(const FileRegion& loc,
 	     const vector<double>& value_list);
 
+  /// @brief セルを表す DotlibNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  DotlibNode*
+  new_cell(const FileRegion& loc);
+
+  /// @brief ピンを表す DotlibNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  DotlibNode*
+  new_pin(const FileRegion& loc);
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -172,6 +182,53 @@ public:
   DotlibList*
   new_list(const vector<const DotlibNode*>& elem_list);
 
+  /// @brief LUT template を表す DotlibNode を生成する．
+  DotlibTemplate*
+  new_template(const FileRegion& loc,
+	       const DotlibString* name,
+	       int dimension,
+	       const DotlibVarType* var_1,
+	       const DotlibVarType* var_2,
+	       const DotlibVarType* var_3,
+	       const DotlibFloatVector* index_1,
+	       const DotlibFloatVector* index_2,
+	       const DotlibFloatVector* index_3);
+
+  /// @brief LUT を表す DotlibNode を生成する．
+  DotlibLut*
+  new_lut(const FileRegion& loc,
+	  const DotlibString* name,
+	  const DotlibFloatVector* index_1,
+	  const DotlibFloatVector* index_2,
+	  const DotlibFloatVector* index_3,
+	  const DotlibList* value_list);
+
+  /// @brief input voltage を表す DotlibNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  /// @param[in] vil 'vil'
+  /// @param[in] vih 'vih'
+  /// @param[in] vimin 'vimin'
+  /// @param[in] vimax 'vimax'
+  DotlibInputVoltage*
+  new_input_voltage(const FileRegion& loc,
+		    const DotlibExpr* vil,
+		    const DotlibExpr* vih,
+		    const DotlibExpr* vimin,
+		    const DotlibExpr* vimax);
+
+  /// @brief output voltage を表す DotlibNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  /// @param[in] vol 'voil'
+  /// @param[in] voh 'voh'
+  /// @param[in] vomin 'vomin'
+  /// @param[in] vomax 'vomax'
+  DotlibOutputVoltage*
+  new_output_voltage(const FileRegion& loc,
+		     const DotlibExpr* vol,
+		     const DotlibExpr* voh,
+		     const DotlibExpr* vomin,
+		     const DotlibExpr* vomax);
+
   /// @brief technology を表す DotlibNode を生成する．
   /// @param[in] loc ファイル上の位置
   /// @param[in] value 値
@@ -251,6 +308,10 @@ private:
   int mStrExprNum;
   int mListNum;
   int mListElemSize;
+  int mTemplateNum;
+  int mLutNum;
+  int mInputVolNum;
+  int mOutputVolNum;
   int mTechnologyNum;
   int mDelayModelNum;
   int mCellPinDirectionNum;

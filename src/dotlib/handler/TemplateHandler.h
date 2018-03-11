@@ -1,0 +1,62 @@
+#ifndef TEMPLATEHANDLER_H
+#define TEMPLATEHANDLER_H
+
+/// @file TemplateHandler.h
+/// @brief TemplateHandler のヘッダファイル
+/// @author Yusuke Matsunaga (松永 裕介)
+///
+/// Copyright (C) 2018 Yusuke Matsunaga
+/// All rights reserved.
+
+#include "GroupHandler.h"
+
+
+BEGIN_NAMESPACE_YM_DOTLIB
+
+//////////////////////////////////////////////////////////////////////
+/// @class TemplateHandler TemplateHandler.h "TemplateHandler.h"
+/// @brief lut template 用のハンドラ
+//////////////////////////////////////////////////////////////////////
+class TemplateHandler :
+  public Str1GroupHandler
+{
+public:
+
+  /// @brief コンストラクタ
+  /// @param[in] parser パーサー
+  TemplateHandler(DotlibParser& parser);
+
+  /// @brief デストラクタ
+  virtual
+  ~TemplateHandler();
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 値を作る．
+  virtual
+  DotlibNode*
+  gen_value(const DotlibList* value_list,
+	    const DotlibAttr* attr_top);
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+
+};
+
+END_NAMESPACE_YM_DOTLIB
+
+#endif // TEMPLATEHANDLER_H

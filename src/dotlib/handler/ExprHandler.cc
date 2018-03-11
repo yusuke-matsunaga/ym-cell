@@ -17,14 +17,23 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
+// @brief 式をパーズするハンドラを作る．
+// @param[in] parser パーサー
+DotlibHandler*
+HandlerFactory::new_expr(DotlibParser& parser)
+{
+  return new ExprHandler(parser);
+}
+
+
 //////////////////////////////////////////////////////////////////////
 // クラス ExprHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のハンドラ
-ExprHandler::ExprHandler(GroupHandler* parent) :
-  SimpleHandler(parent, false),
+// @param[in] parser パーサー
+ExprHandler::ExprHandler(DotlibParser& parser) :
+  SimpleHandler(parser, false),
   mUngetType(ERROR)
 {
 }

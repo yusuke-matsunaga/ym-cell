@@ -26,8 +26,8 @@ class FuncHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  FuncHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  FuncHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual

@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "DotlibHandler.h"
+#include "dotlib/DotlibHandler.h"
 #include "ym/HashMap.h"
 
 
@@ -24,13 +24,9 @@ class GroupHandler :
 {
 public:
 
-  /// @brief 親を持たないハンドラ用のコンストラクタ
+  /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  GroupHandler(DotlibParserImpl& parser);
-
-  /// @brief 親を持つハンドラ用のコンストラクタ
-  /// @param[in] parent 親のハンドラ
-  GroupHandler(GroupHandler* parent);
+  GroupHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual
@@ -72,48 +68,10 @@ public:
   find_handler(AttrType attr_type);
 
 
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部から用いられる GroupHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief attribute を設定する．
-  /// @param[in] attr_type 属性
-  /// @param[in] value 値
-  /// @param[in] loc ファイル上の位置
-  /// @return 設定が失敗したら false を返す．
-  /// @note デフォルトの実装はエラーとなる．
-  virtual
-  bool
-  add_attr(AttrType attr_type,
-	   DotlibNode* value,
-	   const FileRegion& loc);
-
-
 protected:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief group statement の最初に呼ばれる関数
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[in] value 値を表すトークンのリスト
-  virtual
-  bool
-  begin_group(AttrType attr_type,
-	      const FileRegion& attr_loc,
-	      DotlibList* value_list);
-
-  /// @brief group statement の最後に呼ばれる関数
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc attr_name のファイル上の位置
-  /// @param[in] end_loc 閉じ括弧のファイル上の位置
-  virtual
-  bool
-  end_group(AttrType attr_type,
-	    const FileRegion& attr_loc,
-	    const FileRegion& end_loc);
 
   /// @brief group statement の引数のチェックを行う仮想関数
   /// @param[in] attr_type 属性
@@ -130,7 +88,8 @@ protected:
   /// @brief 値を作る．
   virtual
   DotlibNode*
-  gen_value(const DotlibAttr* attr_top) = 0;
+  gen_value(const DotlibList* value_list,
+	    const DotlibAttr* attr_top) = 0;
 
 
 private:
@@ -140,6 +99,9 @@ private:
 
   // ハンドラの連想配列
   HashMap<AttrType, DotlibHandler*> mHandlerMap;
+
+  // グループの値
+  DotlibList* mValueList;
 
   // 属性値の先頭
   DotlibAttr* mAttrTop;
@@ -160,8 +122,8 @@ class EmptyGroupHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  EmptyGroupHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  EmptyGroupHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual
@@ -199,11 +161,7 @@ public:
 
   /// @brief 親を持たないハンドラ用のコンストラクタ
   /// @param[in] parser パーサー
-  Str1GroupHandler(DotlibParserImpl& parser);
-
-  /// @brief 親を持つハンドラ用のコンストラクタ
-  /// @param[in] parent 親のハンドラ
-  Str1GroupHandler(GroupHandler* parent);
+  Str1GroupHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual
@@ -240,8 +198,8 @@ class Str2GroupHandler :
 public:
 
   /// @brief 親を持つハンドラ用のコンストラクタ
-  /// @param[in] parent 親のハンドラ
-  Str2GroupHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  Str2GroupHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual
@@ -278,8 +236,8 @@ class Str2IntGroupHandler :
 public:
 
   /// @brief 親を持つハンドラ用のコンストラクタ
-  /// @param[in] parent 親のハンドラ
-  Str2IntGroupHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  Str2IntGroupHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual

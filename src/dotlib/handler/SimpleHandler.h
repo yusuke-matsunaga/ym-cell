@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "DotlibHandler.h"
+#include "dotlib/DotlibHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -24,10 +24,11 @@ class SimpleHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
+  /// @param[in] parser パーサー
   /// @param[in] sym_mode シンボルモード
-  /// @note シンボルモードの時は数字で始まっていても文字列とみなす．
-  SimpleHandler(GroupHandler* parent,
+  ///
+  /// シンボルモードの時は数字で始まっていても文字列とみなす．
+  SimpleHandler(DotlibParser& parser,
 		bool sym_mode);
 
   /// @brief デストラクタ
@@ -97,10 +98,11 @@ class StrSimpleHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
+  /// @param[in] parser パーサー
   /// @param[in] sym_mode シンボルモード
-  /// @note シンボルモードの時は数字で始まっていても文字列とみなす．
-  StrSimpleHandler(GroupHandler* parent,
+  ///
+  /// シンボルモードの時は数字で始まっていても文字列とみなす．
+  StrSimpleHandler(DotlibParser& parser,
 		   bool sym_mode);
 
   /// @brief デストラクタ
@@ -130,8 +132,8 @@ class IntSimpleHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  IntSimpleHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  IntSimpleHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   ~IntSimpleHandler();
@@ -160,8 +162,8 @@ class BoolSimpleHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  BoolSimpleHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  BoolSimpleHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   ~BoolSimpleHandler();
@@ -190,8 +192,8 @@ class FloatSimpleHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  FloatSimpleHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  FloatSimpleHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   ~FloatSimpleHandler();
@@ -220,8 +222,8 @@ class TechnologyHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  TechnologyHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  TechnologyHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   ~TechnologyHandler();
@@ -250,8 +252,8 @@ class DelayModelHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  DelayModelHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  DelayModelHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   ~DelayModelHandler();
@@ -280,8 +282,8 @@ class CellPinDirectionHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  CellPinDirectionHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  CellPinDirectionHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   ~CellPinDirectionHandler();
@@ -310,8 +312,8 @@ class TimingSenseHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  TimingSenseHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  TimingSenseHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   ~TimingSenseHandler();
@@ -340,8 +342,8 @@ class TimingTypeHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  TimingTypeHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  TimingTypeHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   ~TimingTypeHandler();
@@ -370,8 +372,8 @@ class VarTypeHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  VarTypeHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  VarTypeHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   ~VarTypeHandler();

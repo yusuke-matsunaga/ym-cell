@@ -91,16 +91,22 @@ set (dotlib_SOURCES
   src/dotlib/parser/DotlibParser.cc
   src/dotlib/parser/DotlibParserImpl.cc
   src/dotlib/parser/DotlibScanner.cc
-  src/dotlib/parser/FhScanner.cc
 
   src/dotlib/handler/DotlibHandler.cc
+  src/dotlib/handler/FhScanner.cc
   src/dotlib/handler/HandlerFactory.cc
   src/dotlib/handler/ComplexHandler.cc
   src/dotlib/handler/DefineHandler.cc
   src/dotlib/handler/ExprHandler.cc
   src/dotlib/handler/FuncHandler.cc
   src/dotlib/handler/GroupHandler.cc
+  src/dotlib/handler/IndexHandler.cc
+  src/dotlib/handler/PwComplexHandler.cc
   src/dotlib/handler/SimpleHandler.cc
+  src/dotlib/handler/Str1ComplexHandler.cc
+  src/dotlib/handler/TableHandler.cc
+  src/dotlib/handler/UnitComplexHandler.cc
+  src/dotlib/handler/ValuesHandler.cc
 
   src/dotlib/ast/DotlibAttr.cc
   src/dotlib/ast/DotlibCell.cc
@@ -124,6 +130,7 @@ set (dotlib_SOURCES
   src/dotlib/ast/DotlibTimingSense.cc
   src/dotlib/ast/DotlibTimingType.cc
   src/dotlib/ast/DotlibTechnology.cc
+  src/dotlib/ast/DotlibUnit.cc
   src/dotlib/ast/DotlibVarType.cc
   )
 

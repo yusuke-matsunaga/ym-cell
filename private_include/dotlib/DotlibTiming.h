@@ -72,15 +72,15 @@ public:
 	       const DotlibFloat* intrinsic_fall,
 	       const DotlibFloat* slope_rise,
 	       const DotlibFloat* slope_fall,
-	       const DotlibFloat* rise_delay_intercept,
-	       const DotlibFloat* fall_delay_intercept,
-	       const DotlibFloat* rise_pin_resistance,
-	       const DotlibFloat* fall_pin_resistance,
+	       const DotlibList* rise_delay_intercept,
+	       const DotlibList* fall_delay_intercept,
+	       const DotlibList* rise_pin_resistance,
+	       const DotlibList* fall_pin_resistance,
 	       const DotlibFloat* cell_degradation,
 	       const DotlibLut* cell_rise,
 	       const DotlibLut* cell_fall,
-	       const DotlibFloat* rise_constraint,
-	       const DotlibFloat* fall_constraint,
+	       const DotlibLut* rise_constraint,
+	       const DotlibLut* fall_constraint,
 	       const DotlibLut* rise_propagation,
 	       const DotlibLut* fall_propagation,
 	       const DotlibLut* rise_transition,
@@ -163,19 +163,19 @@ public:
   slope_fall() const;
 
   /// @brief "rise_delay_intercept" を返す．
-  const DotlibFloat*
+  const DotlibList*
   rise_delay_intercept() const;
 
   /// @brief "fall_delay_intercept" を返す．
-  const DotlibFloat*
+  const DotlibList*
   fall_delay_intercept() const;
 
   /// @brief "rise_pin_resistance" を返す．
-  const DotlibFloat*
+  const DotlibList*
   rise_pin_resistance() const;
 
   /// @brief "fall_pin_resistance" を返す．
-  const DotlibFloat*
+  const DotlibList*
   fall_pin_resistance() const;
 
   /// @brief "cell_degradation" を返す．
@@ -191,11 +191,11 @@ public:
   cell_fall() const;
 
   /// @brief "rise_constraint" を返す．
-  const DotlibFloat*
+  const DotlibLut*
   rise_constraint() const;
 
   /// @brief "fall_constraint" を返す．
-  const DotlibFloat*
+  const DotlibLut*
   fall_constraint() const;
 
   /// @brief "rise_propagation" を返す．
@@ -291,16 +291,16 @@ private:
   const DotlibFloat* mSlopeFall;
 
   // rise_delay_intercept
-  const DotlibFloat* mRiseDelayIntercept;
+  const DotlibList* mRiseDelayIntercept;
 
   // fall_delay_intercept
-  const DotlibFloat* mFallDelayIntercept;
+  const DotlibList* mFallDelayIntercept;
 
   // rise_pin_resistance
-  const DotlibFloat* mRisePinResistance;
+  const DotlibList* mRisePinResistance;
 
   // fall_pin_resistance
-  const DotlibFloat* mFallPinResistance;
+  const DotlibList* mFallPinResistance;
 
   // cell_degradation
   const DotlibFloat* mCellDegradation;
@@ -312,10 +312,10 @@ private:
   const DotlibLut* mCellFall;
 
   // rise_constraint
-  const DotlibFloat* mRiseConstraint;
+  const DotlibLut* mRiseConstraint;
 
   // fall_constraint
-  const DotlibFloat* mFallConstraint;
+  const DotlibLut* mFallConstraint;
 
   // rise_propagation
   const DotlibLut* mRisePropagation;
@@ -465,7 +465,7 @@ DotlibTiming::slope_rise() const
 
 // @brief "fall_delay_intercept" を返す．
 inline
-const DotlibFloat*
+const DotlibList*
 DotlibTiming::fall_delay_intercept() const
 {
   return mFallDelayIntercept;
@@ -473,7 +473,7 @@ DotlibTiming::fall_delay_intercept() const
 
 // @brief "rise_delay_intercept" を返す．
 inline
-const DotlibFloat*
+const DotlibList*
 DotlibTiming::rise_delay_intercept() const
 {
   return mRiseDelayIntercept;
@@ -481,7 +481,7 @@ DotlibTiming::rise_delay_intercept() const
 
 // @brief "fall_pin_resistance" を返す．
 inline
-const DotlibFloat*
+const DotlibList*
 DotlibTiming::fall_pin_resistance() const
 {
   return mFallPinResistance;
@@ -489,7 +489,7 @@ DotlibTiming::fall_pin_resistance() const
 
 // @brief "rise_pin_resistance" を返す．
 inline
-const DotlibFloat*
+const DotlibList*
 DotlibTiming::rise_pin_resistance() const
 {
   return mRisePinResistance;
@@ -521,7 +521,7 @@ DotlibTiming::cell_rise() const
 
 // @brief "fall_constraint" を返す．
 inline
-const DotlibFloat*
+const DotlibLut*
 DotlibTiming::fall_constraint() const
 {
   return mFallConstraint;
@@ -529,7 +529,7 @@ DotlibTiming::fall_constraint() const
 
 // @brief "rise_constraint" を返す．
 inline
-const DotlibFloat*
+const DotlibLut*
 DotlibTiming::rise_constraint() const
 {
   return mRiseConstraint;

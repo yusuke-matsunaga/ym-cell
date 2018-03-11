@@ -26,7 +26,7 @@ public:
 
   /// @brief 親のハンドラを持たない場合のコンストラクタ
   /// @param[in] parser パーサー
-  DotlibHandler(DotlibParserImpl& parser);
+  DotlibHandler(DotlibParser& parser);
 
   /// @brief 親のハンドラを持つ場合のコンストラクタ
   /// @param[in] parent 親のハンドラ
@@ -60,7 +60,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief パーサーを得る．
-  DotlibParserImpl&
+  DotlibParser&
   parser();
 
   /// @brief DotlibMgrImpl を得る．
@@ -103,9 +103,11 @@ protected:
   bool
   expect_nl();
 
+#if 0
   /// @brief 親のハンドラを得る．
   GroupHandler*
   parent();
+#endif
 
   /// @brief デバッグモードの時に true を返す．
   bool
@@ -118,10 +120,12 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // パーサー
-  DotlibParserImpl& mParser;
+  DotlibParser& mParser;
 
+#if 0
   // 親のハンドラ
   GroupHandler* mParent;
+#endif
 
 };
 

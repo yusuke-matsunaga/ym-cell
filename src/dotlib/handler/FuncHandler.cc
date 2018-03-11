@@ -8,14 +8,23 @@
 
 
 #include "FuncHandler.h"
-#include "DotlibParserImpl.h"
-#include "DotlibMgrImpl.h"
-#include "GroupHandler.h"
-#include "DotlibExpr.h"
+//#include "DotlibParser.h"
+//#include "DotlibMgrImpl.h"
+//#include "GroupHandler.h"
+//#include "DotlibExpr.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
+
+// @brief function group 用のハンドラを作る．
+// @param[in] parser パーサー
+DotlibHandler*
+HandlerFactory::new_function(DotlibParser& parser)
+{
+  return new FuncHandler(parser);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス FuncHandler
@@ -23,8 +32,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief コンストラクタ
 // @param[in] parent 親のハンドラ
-FuncHandler::FuncHandler(GroupHandler* parent) :
-  SimpleHandler(parent, false)
+FuncHandler::FuncHandler(DotlibParser& parser) :
+  SimpleHandler(parser, false)
 {
 }
 

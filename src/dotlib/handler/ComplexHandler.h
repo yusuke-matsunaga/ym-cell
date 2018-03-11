@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "DotlibHandler.h"
+#include "dotlib/DotlibHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -24,8 +24,10 @@ class ComplexHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  ComplexHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  /// @param[in] vector_mode ベクターモードで読み込むとき true にするフラグ
+  ComplexHandler(DotlibParser& parser,
+		 bool vector_mode = false);
 
   /// @brief デストラクタ
   virtual
@@ -54,22 +56,19 @@ protected:
   // ComplexHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
+  /// @brief 値を表すノードを作る．
   /// @param[in] value_list 値のリスト
-  /// @param[in] end_loc 右括弧の位置
   virtual
-  bool
-  set_value(AttrType attr_type,
-	    const FileRegion& attr_loc,
-	    DotlibList* value_list,
-	    const FileRegion& end_loc);
+  DotlibNode*
+  gen_value(DotlibList* value_list) = 0;
 
-  /// @brief vector_mode で読み込むとき true を返す．
-  virtual
-  bool
-  vector_mode() const;
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // parse_complex() 中でベクターモードで読み込む時 true にするフラグ
+  bool mVectorMode;
 
 };
 
@@ -84,8 +83,8 @@ class Str1ComplexHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  Str1ComplexHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  Str1ComplexHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual
@@ -96,137 +95,6 @@ protected:
   //////////////////////////////////////////////////////////////////////
   // ComplexHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[in] value_list 値のリスト
-  /// @param[in] end_loc 右括弧の位置
-  virtual
-  bool
-  set_value(AttrType attr_type,
-	    const FileRegion& attr_loc,
-	    DotlibList* value_list,
-	    const FileRegion& end_loc);
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class VectorComplexHandler ComplexHandler.h "ComplexHandler.h"
-/// @brief 1つのベクタ型をとる complex attribute ハンドラ
-//////////////////////////////////////////////////////////////////////
-class VectorComplexHandler :
-  public ComplexHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  VectorComplexHandler(GroupHandler* parent);
-
-  /// @brief デストラクタ
-  virtual
-  ~VectorComplexHandler();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // ComplexHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[in] value_list 値のリスト
-  /// @param[in] end_loc 右括弧の位置
-  virtual
-  bool
-  set_value(AttrType attr_type,
-	    const FileRegion& attr_loc,
-	    DotlibList* value_list,
-	    const FileRegion& end_loc);
-
-  /// @brief vector_mode で読み込むとき true を返す．
-  virtual
-  bool
-  vector_mode() const;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class VectorListComplexHandler ComplexHandler.h "ComplexHandler.h"
-/// @brief ベクタのリストをとる complex attribute ハンドラ
-//////////////////////////////////////////////////////////////////////
-class VectorListComplexHandler :
-  public VectorComplexHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  VectorListComplexHandler(GroupHandler* parent);
-
-  /// @brief デストラクタ
-  virtual
-  ~VectorListComplexHandler();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // ComplexHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[in] value_list 値のリスト
-  /// @param[in] end_loc 右括弧の位置
-  virtual
-  bool
-  set_value(AttrType attr_type,
-	    const FileRegion& attr_loc,
-	    DotlibList* value_list,
-	    const FileRegion& end_loc);
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class UnitComplexHandler ComplexHandler.h "ComplexHandler.h"
-/// @brief 単位型のcomplex attribute ハンドラ
-//////////////////////////////////////////////////////////////////////
-class UnitComplexHandler :
-  public ComplexHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  UnitComplexHandler(GroupHandler* parent);
-
-  /// @brief デストラクタ
-  virtual
-  ~UnitComplexHandler();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // ComplexHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[in] value_list 値のリスト
-  /// @param[in] end_loc 右括弧の位置
-  virtual
-  bool
-  set_value(AttrType attr_type,
-	    const FileRegion& attr_loc,
-	    DotlibList* value_list,
-	    const FileRegion& end_loc);
 
 };
 
@@ -241,8 +109,8 @@ class PwComplexHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  PwComplexHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  PwComplexHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual
