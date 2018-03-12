@@ -101,10 +101,10 @@ DotlibBoolExpr::~DotlibBoolExpr()
 }
 
 // @brief 型を返す．
-DotlibExpr::Type
+DotlibExprType
 DotlibBoolExpr::type() const
 {
-  return kBool;
+  return Type::kBool;
 }
 
 // @brief ブール値を返す．
@@ -160,10 +160,10 @@ DotlibFloatExpr::~DotlibFloatExpr()
 }
 
 // @brief 型を返す．
-DotlibExpr::Type
+DotlibExprType
 DotlibFloatExpr::type() const
 {
-  return kFloat;
+  return Type::kFloat;
 }
 
 // @brief 浮動小数点値を返す．
@@ -215,10 +215,10 @@ DotlibStrExpr::~DotlibStrExpr()
 }
 
 // @brief 型を返す．
-DotlibExpr::Type
+DotlibExprType
 DotlibStrExpr::type() const
 {
-  return kStr;
+  return Type::kStr;
 }
 
 // @brief 文字列値を返す．
@@ -280,7 +280,7 @@ DotlibSymbolExpr::~DotlibSymbolExpr()
 }
 
 // @brief 型を返す．
-DotlibExpr::Type
+DotlibExprType
 DotlibSymbolExpr::type() const
 {
   return mType;
@@ -327,10 +327,10 @@ DotlibNot::~DotlibNot()
 }
 
 // @brief 型を得る．
-DotlibExpr::Type
+DotlibExprType
 DotlibNot::type() const
 {
-  return kNot;
+  return Type::kNot;
 }
 
 // @brief 第一オペランドを返す．
@@ -388,7 +388,7 @@ DotlibOpr::~DotlibOpr()
 }
 
 // @brief 型を得る．
-DotlibExpr::Type
+DotlibExprType
 DotlibOpr::type() const
 {
   return mType;
@@ -433,9 +433,9 @@ DotlibOpr::to_expr(const HashMap<ShString, int>& pin_map) const
   Expr expr1 = opr1()->to_expr(pin_map);
   Expr expr2 = opr2()->to_expr(pin_map);
   switch ( type() ) {
-  case DotlibExpr::kAnd: return expr1 & expr2;
-  case DotlibExpr::kOr:  return expr1 | expr2;
-  case DotlibExpr::kXor: return expr1 ^ expr2;
+  case Type::kAnd: return expr1 & expr2;
+  case Type::kOr:  return expr1 | expr2;
+  case Type::kXor: return expr1 ^ expr2;
   default: break;
   }
   ASSERT_NOT_REACHED;
@@ -453,14 +453,14 @@ DotlibOpr::dump(ostream& s,
   s << "( ";
   opr1()->dump(s, 0);
   switch ( type() ) {
-  case kPlus:  s << " + "; break;
-  case kMinus: s << " - "; break;
-  case kMult:  s << " * "; break;
-  case kDiv:   s << " / "; break;
-  case kAnd:   s << " & "; break;
-  case kOr:    s << " | "; break;
-  case kXor:   s << " ^ "; break;
-  default:     ASSERT_NOT_REACHED; break;
+  case Type::kPlus:  s << " + "; break;
+  case Type::kMinus: s << " - "; break;
+  case Type::kMult:  s << " * "; break;
+  case Type::kDiv:   s << " / "; break;
+  case Type::kAnd:   s << " & "; break;
+  case Type::kOr:    s << " | "; break;
+  case Type::kXor:   s << " ^ "; break;
+  default:           ASSERT_NOT_REACHED; break;
   }
   opr2()->dump(s, 0);
   s << " )";

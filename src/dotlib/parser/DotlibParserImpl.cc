@@ -10,7 +10,7 @@
 #include "DotlibParserImpl.h"
 #include "dotlib/DotlibMgrImpl.h"
 #include "dotlib/DotlibHandler.h"
-#include "dotlib/HandlerFactory.h"
+#include "dotlib/DotlibLibrary.h"
 #include "dotlib/TokenType.h"
 #include "ym/FileIDO.h"
 #include "ym/MsgMgr.h"
@@ -67,9 +67,12 @@ DotlibParserImpl::read_file(const string& filename,
 
   mScanner = new DotlibScanner(ido);
 
+  // goto 文を使う関係で変数はここで宣言しておかなければならない．
+  const DotlibLibrary* root_node = nullptr;
   bool error = false;
   TokenType type;
   FileRegion loc;
+
   // 空行を読み飛ばす．
   for ( type = read_token(loc); type == TokenType::NL; type = read_token(loc) ) { }
 
@@ -85,7 +88,8 @@ DotlibParserImpl::read_file(const string& filename,
     goto last;
   }
 
-  if ( !mLibraryHandler->read_attr(ATTR_LIBRARY, loc) ) {
+  root_node = dynamic_cast<const DotlibLibrary*>(mLibraryHandler->read_attr(AttrType::LIBRARY, loc));
+  if ( root_node == nullptr ) {
     error = true;
     goto last;
   }
@@ -114,8 +118,7 @@ DotlibParserImpl::read_file(const string& filename,
     return nullptr;
   }
 
-#warning "TODO: 未完"
-  return nullptr;
+  return root_node;
 }
 
 // @brief 引数の種類のトークンでなければエラーメッセージを出力する．

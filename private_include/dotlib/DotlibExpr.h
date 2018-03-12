@@ -15,6 +15,24 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
+/// @brief 型を表す列挙型
+enum class DotlibExprType {
+  kBool,
+  kFloat,
+  kStr,
+  kVDD,
+  kVSS,
+  kVCC,
+  kNot,
+  kPlus,
+  kMinus,
+  kMult,
+  kDiv,
+  kAnd,
+  kOr,
+  kXor,
+};
+
 //////////////////////////////////////////////////////////////////////
 /// @class DotlibExpr DotlibExpr.h "DotlibExpr.h"
 /// @brief 式を表すノードのクラス
@@ -24,24 +42,7 @@ class DotlibExpr :
 {
 public:
 
-  /// @brief 型を表す列挙型
-  enum Type {
-    kBool,
-    kFloat,
-    kStr,
-    kVDD,
-    kVSS,
-    kVCC,
-    kNot,
-    kPlus,
-    kMinus,
-    kMult,
-    kDiv,
-    kAnd,
-    kOr,
-    kXor,
-  };
-
+  using Type = DotlibExprType;
 
 protected:
 

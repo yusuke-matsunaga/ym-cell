@@ -37,22 +37,22 @@ InternalPowerHandler::InternalPowerHandler(DotlibParser& parser) :
   DotlibHandler* g_handler = HandlerFactory::new_group(parser);
 
   // simple attributes
-  reg_handler(ATTR_EQUAL_OR_OPPOSITE_OUTPUT, simple);
-  reg_handler(ATTR_FALLING_TOGETHER_GROUP,   simple);
-  reg_handler(ATTR_POWER_LEVEL,              simple);
-  reg_handler(ATTR_RELATED_PIN,              str_simple);
-  reg_handler(ATTR_RISING_TOGETHER_GROUP,    simple);
-  reg_handler(ATTR_SWITCHING_INTERVAL,       simple);
-  reg_handler(ATTR_SWITCHING_TOGETHER_GROUP, simple);
-  reg_handler(ATTR_WHEN,                     func_handler);
+  reg_handler(AttrType::EQUAL_OR_OPPOSITE_OUTPUT, simple);
+  reg_handler(AttrType::FALLING_TOGETHER_GROUP,   simple);
+  reg_handler(AttrType::POWER_LEVEL,              simple);
+  reg_handler(AttrType::RELATED_PIN,              str_simple);
+  reg_handler(AttrType::RISING_TOGETHER_GROUP,    simple);
+  reg_handler(AttrType::SWITCHING_INTERVAL,       simple);
+  reg_handler(AttrType::SWITCHING_TOGETHER_GROUP, simple);
+  reg_handler(AttrType::WHEN,                     func_handler);
 
   // complex attribute
 
   // group statements
-  reg_handler(ATTR_POWER,                    power_handler);
-  reg_handler(ATTR_FALL_POWER,               power_handler);
-  reg_handler(ATTR_RISE_POWER,               power_handler);
-  reg_handler(ATTR_DOMAIN,                   g_handler);
+  reg_handler(AttrType::POWER,                    power_handler);
+  reg_handler(AttrType::FALL_POWER,               power_handler);
+  reg_handler(AttrType::RISE_POWER,               power_handler);
+  reg_handler(AttrType::DOMAIN,                   g_handler);
 }
 
 // @brief デストラクタ

@@ -67,6 +67,7 @@ class DotlibUnit;
 class DotlibVarType;
 
 enum class TokenType;
+enum class AttrType;
 
 END_NAMESPACE_YM_DOTLIB
 

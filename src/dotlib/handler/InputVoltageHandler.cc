@@ -39,10 +39,10 @@ InputVoltageHandler::InputVoltageHandler(DotlibParser& parser) :
 {
   // simple attributes
   DotlibHandler* expr_handler = HandlerFactory::new_expr(parser);
-  reg_handler(ATTR_VIL,   expr_handler);
-  reg_handler(ATTR_VIH,   expr_handler);
-  reg_handler(ATTR_VIMIN, expr_handler);
-  reg_handler(ATTR_VIMAX, expr_handler);
+  reg_handler(AttrType::VIL,   expr_handler);
+  reg_handler(AttrType::VIH,   expr_handler);
+  reg_handler(AttrType::VIMIN, expr_handler);
+  reg_handler(AttrType::VIMAX, expr_handler);
 
   // complex attribute
 
@@ -65,7 +65,7 @@ InputVoltageHandler::gen_value(const FileRegion& loc,
   const DotlibExpr* vimin = nullptr;
   const DotlibExpr* vimax = nullptr;
   for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == ATTR_VIL ) {
+    if ( attr->attr_type() == AttrType::VIL ) {
       if ( vil != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -78,7 +78,7 @@ InputVoltageHandler::gen_value(const FileRegion& loc,
       vil = dynamic_cast<const DotlibExpr*>(attr->attr_value());
       ASSERT_COND ( vil != nullptr );
     }
-    else if ( attr->attr_type() == ATTR_VIH ) {
+    else if ( attr->attr_type() == AttrType::VIH ) {
       if ( vih != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -91,7 +91,7 @@ InputVoltageHandler::gen_value(const FileRegion& loc,
       vih = dynamic_cast<const DotlibExpr*>(attr->attr_value());
       ASSERT_COND ( vih != nullptr );
     }
-    else if ( attr->attr_type() == ATTR_VIMIN ) {
+    else if ( attr->attr_type() == AttrType::VIMIN ) {
       if ( vimin != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -104,7 +104,7 @@ InputVoltageHandler::gen_value(const FileRegion& loc,
       vimin = dynamic_cast<const DotlibExpr*>(attr->attr_value());
       ASSERT_COND ( vimin != nullptr );
     }
-    else if ( attr->attr_type() == ATTR_VIMAX ) {
+    else if ( attr->attr_type() == AttrType::VIMAX ) {
       if ( vimax != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,

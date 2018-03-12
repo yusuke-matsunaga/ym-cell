@@ -47,16 +47,16 @@ PowerHandler::PowerHandler(DotlibParser& parser) :
   // simple attributes
 
   // complex attribute
-  reg_handler(ATTR_INDEX_1,          index_handler);
-  reg_handler(ATTR_INDEX_2,          index_handler);
-  reg_handler(ATTR_INDEX_3,          index_handler);
-  reg_handler(ATTR_VALUES,           values_handler);
+  reg_handler(AttrType::INDEX_1,          index_handler);
+  reg_handler(AttrType::INDEX_2,          index_handler);
+  reg_handler(AttrType::INDEX_3,          index_handler);
+  reg_handler(AttrType::VALUES,           values_handler);
 
-  reg_handler(ATTR_ORDERS,           complex);
-  reg_handler(ATTR_COEFS,            complex);
+  reg_handler(AttrType::ORDERS,           complex);
+  reg_handler(AttrType::COEFS,            complex);
 
   // group statements
-  reg_handler(ATTR_DOMAIN,           dummy_handler);
+  reg_handler(AttrType::DOMAIN,           dummy_handler);
 }
 
 // @brief デストラクタ
@@ -75,7 +75,7 @@ PowerHandler::gen_value(const FileRegion& loc,
   const DotlibFloatVector* index_3 = nullptr;
   const DotlibList* values = nullptr;
   for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == ATTR_INDEX_1 ) {
+    if ( attr->attr_type() == AttrType::INDEX_1 ) {
       if ( index_1 != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -88,7 +88,7 @@ PowerHandler::gen_value(const FileRegion& loc,
       index_1 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
       ASSERT_COND( index_1 != nullptr );
     }
-    if ( attr->attr_type() == ATTR_INDEX_2 ) {
+    if ( attr->attr_type() == AttrType::INDEX_2 ) {
       if ( index_2 != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -101,7 +101,7 @@ PowerHandler::gen_value(const FileRegion& loc,
       index_2 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
       ASSERT_COND( index_2 != nullptr );
     }
-    if ( attr->attr_type() == ATTR_INDEX_3 ) {
+    if ( attr->attr_type() == AttrType::INDEX_3 ) {
       if ( index_3 != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -114,7 +114,7 @@ PowerHandler::gen_value(const FileRegion& loc,
       index_3 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
       ASSERT_COND ( index_3 != nullptr );
     }
-    if ( attr->attr_type() == ATTR_VALUES ) {
+    if ( attr->attr_type() == AttrType::VALUES ) {
       if ( values != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,

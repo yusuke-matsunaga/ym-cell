@@ -219,7 +219,7 @@ DotlibMgrImpl::new_plus(const DotlibExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  return new (p) DotlibOpr(DotlibExpr::kPlus, opr1, opr2);
+  return new (p) DotlibOpr(DotlibExprType::kPlus, opr1, opr2);
 }
 
 // @brief - 演算子を表す DotlibExpr を生成する．
@@ -230,7 +230,7 @@ DotlibMgrImpl::new_minus(const DotlibExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  return new (p) DotlibOpr(DotlibExpr::kMinus, opr1, opr2);
+  return new (p) DotlibOpr(DotlibExprType::kMinus, opr1, opr2);
 }
 
 // @brief * 演算子を表す DotlibExpr を生成する．
@@ -241,7 +241,7 @@ DotlibMgrImpl::new_mult(const DotlibExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  return new (p) DotlibOpr(DotlibExpr::kMult, opr1, opr2);
+  return new (p) DotlibOpr(DotlibExprType::kMult, opr1, opr2);
 }
 
 // @brief / 演算子を表す DotlibExpr を生成する．
@@ -252,7 +252,7 @@ DotlibMgrImpl::new_div(const DotlibExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  return new (p) DotlibOpr(DotlibExpr::kDiv, opr1, opr2);
+  return new (p) DotlibOpr(DotlibExprType::kDiv, opr1, opr2);
 }
 
 // @brief NOT 演算子を表す DotlibExpr を生成する．
@@ -275,7 +275,7 @@ DotlibMgrImpl::new_and(const DotlibExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  return new (p) DotlibOpr(DotlibExpr::kAnd, opr1, opr2);
+  return new (p) DotlibOpr(DotlibExprType::kAnd, opr1, opr2);
 }
 
 // @brief OR 演算子を表す DotlibExpr を生成する．
@@ -286,7 +286,7 @@ DotlibMgrImpl::new_or(const DotlibExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  return new (p) DotlibOpr(DotlibExpr::kOr, opr1, opr2);
+  return new (p) DotlibOpr(DotlibExprType::kOr, opr1, opr2);
 }
 
 // @brief XOR 演算子を表す DotlibExpr を生成する．
@@ -297,7 +297,7 @@ DotlibMgrImpl::new_xor(const DotlibExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOpr));
-  return new (p) DotlibOpr(DotlibExpr::kXor, opr1, opr2);
+  return new (p) DotlibOpr(DotlibExprType::kXor, opr1, opr2);
 }
 
 // @brief ブール値(0 or 1)を表す DotlibExpr を生成する．
@@ -331,7 +331,7 @@ DotlibMgrImpl::new_vdd_expr(const FileRegion& loc)
 {
   ++ mSymbolExprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibSymbolExpr));
-  return new (p) DotlibSymbolExpr(loc, DotlibExpr::kVDD);
+  return new (p) DotlibSymbolExpr(loc, DotlibExprType::kVDD);
 }
 
 // @brief VSSを表す DotlibExpr を生成する．
@@ -341,7 +341,7 @@ DotlibMgrImpl::new_vss_expr(const FileRegion& loc)
 {
   ++ mSymbolExprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibSymbolExpr));
-  return new (p) DotlibSymbolExpr(loc, DotlibExpr::kVSS);
+  return new (p) DotlibSymbolExpr(loc, DotlibExprType::kVSS);
 }
 
 // @brief VCCを表す DotlibExpr を生成する．
@@ -351,7 +351,7 @@ DotlibMgrImpl::new_vcc_expr(const FileRegion& loc)
 {
   ++ mSymbolExprNum;
   void* p = mAlloc.get_memory(sizeof(DotlibSymbolExpr));
-  return new (p) DotlibSymbolExpr(loc, DotlibExpr::kVCC);
+  return new (p) DotlibSymbolExpr(loc, DotlibExprType::kVCC);
 }
 
 // @brief 文字列を表す DotlibExpr を生成する．

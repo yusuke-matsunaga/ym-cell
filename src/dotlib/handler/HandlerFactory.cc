@@ -47,20 +47,20 @@ HandlerFactory::new_operating_conditions(DotlibParser& parser)
   DotlibHandler* simple = new SimpleHandler(parser, false);
   DotlibHandler* str_simple = new StrSimpleHandler(parser, false);
   DotlibHandler* flt_simple = new FloatSimpleHandler(parser);
-  handler->reg_handler(ATTR_CALC_MODE,   simple);
-  handler->reg_handler(ATTR_PARAMETER1,  simple);
-  handler->reg_handler(ATTR_PARAMETER2,  simple);
-  handler->reg_handler(ATTR_PARAMETER3,  simple);
-  handler->reg_handler(ATTR_PARAMETER4,  simple);
-  handler->reg_handler(ATTR_PARAMETER5,  simple);
-  handler->reg_handler(ATTR_PROCESS,     flt_simple);
-  handler->reg_handler(ATTR_TEMPERATURE, flt_simple);
-  handler->reg_handler(ATTR_TREE_TYPE,   str_simple);
-  handler->reg_handler(ATTR_VOLTAGE,     flt_simple);
+  handler->reg_handler(AttrType::CALC_MODE,   simple);
+  handler->reg_handler(AttrType::PARAMETER1,  simple);
+  handler->reg_handler(AttrType::PARAMETER2,  simple);
+  handler->reg_handler(AttrType::PARAMETER3,  simple);
+  handler->reg_handler(AttrType::PARAMETER4,  simple);
+  handler->reg_handler(AttrType::PARAMETER5,  simple);
+  handler->reg_handler(AttrType::PROCESS,     flt_simple);
+  handler->reg_handler(AttrType::TEMPERATURE, flt_simple);
+  handler->reg_handler(AttrType::TREE_TYPE,   str_simple);
+  handler->reg_handler(AttrType::VOLTAGE,     flt_simple);
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(parser);
-  handler->reg_handler(ATTR_POWER_RAIL, complex);
+  handler->reg_handler(AttrType::POWER_RAIL, complex);
 
   return handler;
 }
@@ -74,14 +74,14 @@ HandlerFactory::new_wire_load(DotlibParser& parser)
 
   // simple attributes
   DotlibHandler* flt_simple = new FloatSimpleHandler(parser);
-  handler->reg_handler(ATTR_AREA,        flt_simple);
-  handler->reg_handler(ATTR_CAPACITANCE, flt_simple);
-  handler->reg_handler(ATTR_RESISTANCE,  flt_simple);
-  handler->reg_handler(ATTR_SLOPE,       flt_simple);
+  handler->reg_handler(AttrType::AREA,        flt_simple);
+  handler->reg_handler(AttrType::CAPACITANCE, flt_simple);
+  handler->reg_handler(AttrType::RESISTANCE,  flt_simple);
+  handler->reg_handler(AttrType::SLOPE,       flt_simple);
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(parser);
-  handler->reg_handler(ATTR_FANOUT_LENGTH, complex);
+  handler->reg_handler(AttrType::FANOUT_LENGTH, complex);
 
   return handler;
 }
@@ -95,7 +95,7 @@ HandlerFactory::new_wire_load_selection(DotlibParser& parser)
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(parser);
-  handler->reg_handler(ATTR_WIRE_LOAD_FROM_AREA, complex);
+  handler->reg_handler(AttrType::WIRE_LOAD_FROM_AREA, complex);
 
   return handler;
 }
@@ -109,10 +109,10 @@ HandlerFactory::new_wire_load_table(DotlibParser& parser)
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(parser);
-  handler->reg_handler(ATTR_FANOUT_AREA,        complex);
-  handler->reg_handler(ATTR_FANOUT_CAPACITANCE, complex);
-  handler->reg_handler(ATTR_FANOUT_LENGTH,      complex);
-  handler->reg_handler(ATTR_FANOUT_RESISTANCE,  complex);
+  handler->reg_handler(AttrType::FANOUT_AREA,        complex);
+  handler->reg_handler(AttrType::FANOUT_CAPACITANCE, complex);
+  handler->reg_handler(AttrType::FANOUT_LENGTH,      complex);
+  handler->reg_handler(AttrType::FANOUT_RESISTANCE,  complex);
 
   return handler;
 }
@@ -128,69 +128,69 @@ HandlerFactory::new_cell(DotlibParser& parser)
   DotlibHandler* simple = new SimpleHandler(parser, false);
   DotlibHandler* str_simple = new StrSimpleHandler(parser, false);
   DotlibHandler* flt_simple = new FloatSimpleHandler(parser);
-  handler->reg_handler(ATTR_AREA,                         flt_simple);
-  handler->reg_handler(ATTR_AUXILIARY_PAD_CELL,           simple);
-  handler->reg_handler(ATTR_BASE_NAME,                    str_simple);
-  handler->reg_handler(ATTR_BUS_NAMING_STYLE,             str_simple);
-  handler->reg_handler(ATTR_CELL_FOOTPRINT,               str_simple);
-  handler->reg_handler(ATTR_CELL_LEAKAGE_POWER,           simple);
-  handler->reg_handler(ATTR_CLOCK_GATING_INTEGRATED_CELL, simple);
-  handler->reg_handler(ATTR_CONTENTION_CONDITION,         simple);
-  handler->reg_handler(ATTR_DONT_FAULT,                   simple);
-  handler->reg_handler(ATTR_DONT_TOUCH,                   simple);
-  handler->reg_handler(ATTR_DONT_USE,                     simple);
-  handler->reg_handler(ATTR_DRIVER_TYPE,                  simple);
-  handler->reg_handler(ATTR_EDIF_NAME,                    simple);
-  handler->reg_handler(ATTR_EM_TEMP_DEGRADATION_FACTOR,   simple);
-  handler->reg_handler(ATTR_FPGA_DOMAIN_STYLE,            simple);
-  handler->reg_handler(ATTR_GEOMETRY_PRINT,               simple);
-  handler->reg_handler(ATTR_HANDLE_NEGATIVE_CONSTRAINT,   simple);
-  handler->reg_handler(ATTR_INTERFACE_TIMING,             simple);
-  handler->reg_handler(ATTR_IO_TYPE,                      simple);
-  handler->reg_handler(ATTR_IS_CLOCK_GATING_CELL,         simple);
-  handler->reg_handler(ATTR_MAP_ONLY,                     simple);
-  handler->reg_handler(ATTR_PAD_CELL,                     simple);
-  handler->reg_handler(ATTR_PAD_TYPE,                     simple);
-  handler->reg_handler(ATTR_POWER_CELL_TYPE,              simple);
-  handler->reg_handler(ATTR_PREFERRED,                    simple);
-  handler->reg_handler(ATTR_SCALING_FACTORS,              simple);
-  handler->reg_handler(ATTR_SINGLE_BIT_DEGENERATE,        simple);
-  handler->reg_handler(ATTR_SLEW_TYPE,                    simple);
-  handler->reg_handler(ATTR_TIMING_MODEL_TYPE,            simple);
-  handler->reg_handler(ATTR_USE_FOR_SIZE_ONLY,            simple);
-  handler->reg_handler(ATTR_VHDL_NAME,                    simple);
+  handler->reg_handler(AttrType::AREA,                         flt_simple);
+  handler->reg_handler(AttrType::AUXILIARY_PAD_CELL,           simple);
+  handler->reg_handler(AttrType::BASE_NAME,                    str_simple);
+  handler->reg_handler(AttrType::BUS_NAMING_STYLE,             str_simple);
+  handler->reg_handler(AttrType::CELL_FOOTPRINT,               str_simple);
+  handler->reg_handler(AttrType::CELL_LEAKAGE_POWER,           simple);
+  handler->reg_handler(AttrType::CLOCK_GATING_INTEGRATED_CELL, simple);
+  handler->reg_handler(AttrType::CONTENTION_CONDITION,         simple);
+  handler->reg_handler(AttrType::DONT_FAULT,                   simple);
+  handler->reg_handler(AttrType::DONT_TOUCH,                   simple);
+  handler->reg_handler(AttrType::DONT_USE,                     simple);
+  handler->reg_handler(AttrType::DRIVER_TYPE,                  simple);
+  handler->reg_handler(AttrType::EDIF_NAME,                    simple);
+  handler->reg_handler(AttrType::EM_TEMP_DEGRADATION_FACTOR,   simple);
+  handler->reg_handler(AttrType::FPGA_DOMAIN_STYLE,            simple);
+  handler->reg_handler(AttrType::GEOMETRY_PRINT,               simple);
+  handler->reg_handler(AttrType::HANDLE_NEGATIVE_CONSTRAINT,   simple);
+  handler->reg_handler(AttrType::INTERFACE_TIMING,             simple);
+  handler->reg_handler(AttrType::IO_TYPE,                      simple);
+  handler->reg_handler(AttrType::IS_CLOCK_GATING_CELL,         simple);
+  handler->reg_handler(AttrType::MAP_ONLY,                     simple);
+  handler->reg_handler(AttrType::PAD_CELL,                     simple);
+  handler->reg_handler(AttrType::PAD_TYPE,                     simple);
+  handler->reg_handler(AttrType::POWER_CELL_TYPE,              simple);
+  handler->reg_handler(AttrType::PREFERRED,                    simple);
+  handler->reg_handler(AttrType::SCALING_FACTORS,              simple);
+  handler->reg_handler(AttrType::SINGLE_BIT_DEGENERATE,        simple);
+  handler->reg_handler(AttrType::SLEW_TYPE,                    simple);
+  handler->reg_handler(AttrType::TIMING_MODEL_TYPE,            simple);
+  handler->reg_handler(AttrType::USE_FOR_SIZE_ONLY,            simple);
+  handler->reg_handler(AttrType::VHDL_NAME,                    simple);
 
-  handler->reg_handler(ATTR_IS_FILLER_CELL,               simple);
+  handler->reg_handler(AttrType::IS_FILLER_CELL,               simple);
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(parser);
-  handler->reg_handler(ATTR_PIN_OPPOSITE,                 complex);
-  handler->reg_handler(ATTR_RAIL_CONNECTION,              complex);
-  handler->reg_handler(ATTR_POWER_SUPPLY_NAMESTRING,      complex);
-  handler->reg_handler(ATTR_RESOURCE_USAGE,               complex);
+  handler->reg_handler(AttrType::PIN_OPPOSITE,                 complex);
+  handler->reg_handler(AttrType::RAIL_CONNECTION,              complex);
+  handler->reg_handler(AttrType::POWER_SUPPLY_NAMESTRING,      complex);
+  handler->reg_handler(AttrType::RESOURCE_USAGE,               complex);
 
   // group statements
-  handler->reg_handler(ATTR_BUS,                          new_bus(parser));
-  handler->reg_handler(ATTR_BUNDLE,                       new_bundle(parser));
-  handler->reg_handler(ATTR_DYNAMIC_CURRENT,              new_group(parser));
-  handler->reg_handler(ATTR_FF,                           new_ff(parser));
-  handler->reg_handler(ATTR_FF_BANK,                      new_ff_bank(parser));
-  handler->reg_handler(ATTR_FUNCTIONAL_YIELD_METRIC,      new_group(parser));
-  handler->reg_handler(ATTR_GENERATED_CLOCK,              new_group(parser));
-  handler->reg_handler(ATTR_INTRINSIC_PARASITIC,          new_group(parser));
-  handler->reg_handler(ATTR_LATCH,                        new_latch(parser));
-  handler->reg_handler(ATTR_LATCH_BANK,                   new_latch_bank(parser));
-  handler->reg_handler(ATTR_LEAKAGE_CURRENT,              new_group(parser));
-  handler->reg_handler(ATTR_LEAKAGE_POWER,                new_leakage_power(parser));
-  handler->reg_handler(ATTR_LUT,                          new_group(parser));
-  handler->reg_handler(ATTR_MODE_DEFINITION,              new_group(parser));
-  handler->reg_handler(ATTR_PIN,                          new_pin(parser));
-  handler->reg_handler(ATTR_ROUTING_TRACK,                new_group(parser));
-  handler->reg_handler(ATTR_STATETABLE,                   new_statetable(parser));
+  handler->reg_handler(AttrType::BUS,                          new_bus(parser));
+  handler->reg_handler(AttrType::BUNDLE,                       new_bundle(parser));
+  handler->reg_handler(AttrType::DYNAMIC_CURRENT,              new_group(parser));
+  handler->reg_handler(AttrType::FF,                           new_ff(parser));
+  handler->reg_handler(AttrType::FF_BANK,                      new_ff_bank(parser));
+  handler->reg_handler(AttrType::FUNCTIONAL_YIELD_METRIC,      new_group(parser));
+  handler->reg_handler(AttrType::GENERATED_CLOCK,              new_group(parser));
+  handler->reg_handler(AttrType::INTRINSIC_PARASITIC,          new_group(parser));
+  handler->reg_handler(AttrType::LATCH,                        new_latch(parser));
+  handler->reg_handler(AttrType::LATCH_BANK,                   new_latch_bank(parser));
+  handler->reg_handler(AttrType::LEAKAGE_CURRENT,              new_group(parser));
+  handler->reg_handler(AttrType::LEAKAGE_POWER,                new_leakage_power(parser));
+  handler->reg_handler(AttrType::LUT,                          new_group(parser));
+  handler->reg_handler(AttrType::MODE_DEFINITION,              new_group(parser));
+  handler->reg_handler(AttrType::PIN,                          new_pin(parser));
+  handler->reg_handler(AttrType::ROUTING_TRACK,                new_group(parser));
+  handler->reg_handler(AttrType::STATETABLE,                   new_statetable(parser));
 
-  handler->reg_handler(ATTR_INTERNAL_POWER,               new_cell_internal_power(parser));
+  handler->reg_handler(AttrType::INTERNAL_POWER,               new_cell_internal_power(parser));
 
-  handler->reg_handler(ATTR_TEST_CELL,                    new_test_cell(parser));
+  handler->reg_handler(AttrType::TEST_CELL,                    new_test_cell(parser));
 
   return handler;
 }
@@ -207,10 +207,10 @@ HandlerFactory::new_leakage_power(DotlibParser& parser)
   DotlibHandler* str_simple = new StrSimpleHandler(parser, false);
   DotlibHandler* func_handler = new_function(parser);
   DotlibHandler* flt_simple = new FloatSimpleHandler(parser);
-  handler->reg_handler(ATTR_POWER_LEVEL,    simple);
-  handler->reg_handler(ATTR_RELATED_PG_PIN, str_simple);
-  handler->reg_handler(ATTR_WHEN,           func_handler);
-  handler->reg_handler(ATTR_VALUE,          flt_simple);
+  handler->reg_handler(AttrType::POWER_LEVEL,    simple);
+  handler->reg_handler(AttrType::RELATED_PG_PIN, str_simple);
+  handler->reg_handler(AttrType::WHEN,           func_handler);
+  handler->reg_handler(AttrType::VALUE,          flt_simple);
 
   return handler;
 }
@@ -223,21 +223,21 @@ HandlerFactory::new_test_cell(DotlibParser& parser)
   GroupHandler* handler = new_group(parser);
 
   // group statements
-  handler->reg_handler(ATTR_BUS, new_bus(parser));
-  handler->reg_handler(ATTR_DYNAMIC_CURRENT, new_group(parser));
-  handler->reg_handler(ATTR_FF, new_ff(parser));
-  handler->reg_handler(ATTR_FF_BANK, new_ff_bank(parser));
-  handler->reg_handler(ATTR_FUNCTIONAL_YIELD_METRIC, new_group(parser));
-  handler->reg_handler(ATTR_GENERATED_CLOCK, new_group(parser));
-  handler->reg_handler(ATTR_INTRINSIC_PARASITIC, new_group(parser));
-  handler->reg_handler(ATTR_LATCH, new_latch(parser));
-  handler->reg_handler(ATTR_LATCH_BANK, new_latch_bank(parser));
-  handler->reg_handler(ATTR_LEAKAGE_CURRENT, new_group(parser));
-  handler->reg_handler(ATTR_LEAKAGE_POWER, new_leakage_power(parser));
-  handler->reg_handler(ATTR_LUT, new_group(parser));
-  handler->reg_handler(ATTR_MODE_DEFINITION, new_group(parser));
-  handler->reg_handler(ATTR_PIN, new_pin(parser));
-  handler->reg_handler(ATTR_STATETABLE, new_statetable(parser));
+  handler->reg_handler(AttrType::BUS, new_bus(parser));
+  handler->reg_handler(AttrType::DYNAMIC_CURRENT, new_group(parser));
+  handler->reg_handler(AttrType::FF, new_ff(parser));
+  handler->reg_handler(AttrType::FF_BANK, new_ff_bank(parser));
+  handler->reg_handler(AttrType::FUNCTIONAL_YIELD_METRIC, new_group(parser));
+  handler->reg_handler(AttrType::GENERATED_CLOCK, new_group(parser));
+  handler->reg_handler(AttrType::INTRINSIC_PARASITIC, new_group(parser));
+  handler->reg_handler(AttrType::LATCH, new_latch(parser));
+  handler->reg_handler(AttrType::LATCH_BANK, new_latch_bank(parser));
+  handler->reg_handler(AttrType::LEAKAGE_CURRENT, new_group(parser));
+  handler->reg_handler(AttrType::LEAKAGE_POWER, new_leakage_power(parser));
+  handler->reg_handler(AttrType::LUT, new_group(parser));
+  handler->reg_handler(AttrType::MODE_DEFINITION, new_group(parser));
+  handler->reg_handler(AttrType::PIN, new_pin(parser));
+  handler->reg_handler(AttrType::STATETABLE, new_statetable(parser));
 
   return handler;
 }
@@ -252,13 +252,13 @@ HandlerFactory::new_ff(DotlibParser& parser)
   // simple attributes
   DotlibHandler* str_simple = new StrSimpleHandler(parser, false);
   DotlibHandler* fhandler = new_function(parser);
-  handler->reg_handler(ATTR_CLEAR,             fhandler);
-  handler->reg_handler(ATTR_CLEAR_PRESET_VAR1, str_simple);
-  handler->reg_handler(ATTR_CLEAR_PRESET_VAR2, str_simple);
-  handler->reg_handler(ATTR_CLOCKED_ON,        fhandler);
-  handler->reg_handler(ATTR_CLOCKED_ON_ALSO,   fhandler);
-  handler->reg_handler(ATTR_NEXT_STATE,        fhandler);
-  handler->reg_handler(ATTR_PRESET,            fhandler);
+  handler->reg_handler(AttrType::CLEAR,             fhandler);
+  handler->reg_handler(AttrType::CLEAR_PRESET_VAR1, str_simple);
+  handler->reg_handler(AttrType::CLEAR_PRESET_VAR2, str_simple);
+  handler->reg_handler(AttrType::CLOCKED_ON,        fhandler);
+  handler->reg_handler(AttrType::CLOCKED_ON_ALSO,   fhandler);
+  handler->reg_handler(AttrType::NEXT_STATE,        fhandler);
+  handler->reg_handler(AttrType::PRESET,            fhandler);
 
   return handler;
 }
@@ -273,13 +273,13 @@ HandlerFactory::new_ff_bank(DotlibParser& parser)
   // simple attributes
   DotlibHandler* str_simple = new StrSimpleHandler(parser, false);
   DotlibHandler* fhandler = new_function(parser);
-  handler->reg_handler(ATTR_CLEAR,             fhandler);
-  handler->reg_handler(ATTR_CLEAR_PRESET_VAR1, str_simple);
-  handler->reg_handler(ATTR_CLEAR_PRESET_VAR2, str_simple);
-  handler->reg_handler(ATTR_CLOCKED_ON,        fhandler);
-  handler->reg_handler(ATTR_CLOCKED_ON_ALSO,   fhandler);
-  handler->reg_handler(ATTR_NEXT_STATE,        fhandler);
-  handler->reg_handler(ATTR_PRESET,            fhandler);
+  handler->reg_handler(AttrType::CLEAR,             fhandler);
+  handler->reg_handler(AttrType::CLEAR_PRESET_VAR1, str_simple);
+  handler->reg_handler(AttrType::CLEAR_PRESET_VAR2, str_simple);
+  handler->reg_handler(AttrType::CLOCKED_ON,        fhandler);
+  handler->reg_handler(AttrType::CLOCKED_ON_ALSO,   fhandler);
+  handler->reg_handler(AttrType::NEXT_STATE,        fhandler);
+  handler->reg_handler(AttrType::PRESET,            fhandler);
 
   return handler;
 }
@@ -294,13 +294,13 @@ HandlerFactory::new_latch(DotlibParser& parser)
   // simple attributes
   DotlibHandler* str_simple = new StrSimpleHandler(parser, false);
   DotlibHandler* fhandler = new_function(parser);
-  handler->reg_handler(ATTR_CLEAR,             fhandler);
-  handler->reg_handler(ATTR_CLEAR_PRESET_VAR1, str_simple);
-  handler->reg_handler(ATTR_CLEAR_PRESET_VAR2, str_simple);
-  handler->reg_handler(ATTR_DATA_IN,           fhandler);
-  handler->reg_handler(ATTR_ENABLE,            fhandler);
-  handler->reg_handler(ATTR_ENABLE_ALSO,       fhandler);
-  handler->reg_handler(ATTR_PRESET,            fhandler);
+  handler->reg_handler(AttrType::CLEAR,             fhandler);
+  handler->reg_handler(AttrType::CLEAR_PRESET_VAR1, str_simple);
+  handler->reg_handler(AttrType::CLEAR_PRESET_VAR2, str_simple);
+  handler->reg_handler(AttrType::DATA_IN,           fhandler);
+  handler->reg_handler(AttrType::ENABLE,            fhandler);
+  handler->reg_handler(AttrType::ENABLE_ALSO,       fhandler);
+  handler->reg_handler(AttrType::PRESET,            fhandler);
 
   return handler;
 }
@@ -315,13 +315,13 @@ HandlerFactory::new_latch_bank(DotlibParser& parser)
   // simple attributes
   DotlibHandler* str_simple = new StrSimpleHandler(parser, false);
   DotlibHandler* fhandler = new_function(parser);
-  handler->reg_handler(ATTR_CLEAR,             fhandler);
-  handler->reg_handler(ATTR_CLEAR_PRESET_VAR1, str_simple);
-  handler->reg_handler(ATTR_CLEAR_PRESET_VAR2, str_simple);
-  handler->reg_handler(ATTR_DATA_IN,           fhandler);
-  handler->reg_handler(ATTR_ENABLE,            fhandler);
-  handler->reg_handler(ATTR_ENABLE_ALSO,       fhandler);
-  handler->reg_handler(ATTR_PRESET,            fhandler);
+  handler->reg_handler(AttrType::CLEAR,             fhandler);
+  handler->reg_handler(AttrType::CLEAR_PRESET_VAR1, str_simple);
+  handler->reg_handler(AttrType::CLEAR_PRESET_VAR2, str_simple);
+  handler->reg_handler(AttrType::DATA_IN,           fhandler);
+  handler->reg_handler(AttrType::ENABLE,            fhandler);
+  handler->reg_handler(AttrType::ENABLE_ALSO,       fhandler);
+  handler->reg_handler(AttrType::PRESET,            fhandler);
 
   return handler;
 }
@@ -335,7 +335,7 @@ HandlerFactory::new_statetable(DotlibParser& parser)
 
   // simple attributes
   DotlibHandler* simple = new StrSimpleHandler(parser, false);
-  handler->reg_handler(ATTR_TABLE, simple);
+  handler->reg_handler(AttrType::TABLE, simple);
 
   return handler;
 }
@@ -349,10 +349,10 @@ HandlerFactory::new_bus(DotlibParser& parser)
 
   // simple attributes
   DotlibHandler* simple = new StrSimpleHandler(parser, false);
-  handler->reg_handler(ATTR_BUS_TYPE, simple);
+  handler->reg_handler(AttrType::BUS_TYPE, simple);
 
   // group statements
-  handler->reg_handler(ATTR_PIN, new_pin(parser));
+  handler->reg_handler(AttrType::PIN, new_pin(parser));
 
   return handler;
 }
@@ -369,27 +369,27 @@ HandlerFactory::new_bundle(DotlibParser& parser)
   DotlibHandler* flt_simple = new FloatSimpleHandler(parser);
   DotlibHandler* func_handler = new_function(parser);
   DotlibHandler* pin_direction = new_pin_direction(parser);
-  handler->reg_handler(ATTR_CAPACITANCE, flt_simple);
-  handler->reg_handler(ATTR_DIRECTION,   pin_direction);
-  handler->reg_handler(ATTR_FUNCTION,    func_handler);
+  handler->reg_handler(AttrType::CAPACITANCE, flt_simple);
+  handler->reg_handler(AttrType::DIRECTION,   pin_direction);
+  handler->reg_handler(AttrType::FUNCTION,    func_handler);
 
   // complex attributes
   DotlibHandler* complex = new ComplexHandler(parser);
-  handler->reg_handler(ATTR_MEMBERS,     complex);
+  handler->reg_handler(AttrType::MEMBERS,     complex);
 
   // group statements
-  handler->reg_handler(ATTR_PIN, new_pin(parser));
-  handler->reg_handler(ATTR_ELECTROMIGRATION, new_group(parser));
-  handler->reg_handler(ATTR_HYPERBOLIC_NOISE_ABOVE_HIGH, new_group(parser));
-  handler->reg_handler(ATTR_HYPERBOLIC_NOISE_BELOW_LOW, new_group(parser));
-  handler->reg_handler(ATTR_HYPERBOLIC_NOISE_HIGH, new_group(parser));
-  handler->reg_handler(ATTR_HYPERBOLIC_NOISE_LOW, new_group(parser));
-  handler->reg_handler(ATTR_INTERNAL_POWER, new_internal_power(parser));
-  handler->reg_handler(ATTR_MAX_TRANS, new_group(parser));
-  handler->reg_handler(ATTR_MIN_PULSE_WIDTH, new_group(parser));
-  handler->reg_handler(ATTR_MINIMUM_PERIOD, new_group(parser));
-  handler->reg_handler(ATTR_TIMING, new_timing(parser));
-  handler->reg_handler(ATTR_TLATCH, new_group(parser));
+  handler->reg_handler(AttrType::PIN, new_pin(parser));
+  handler->reg_handler(AttrType::ELECTROMIGRATION, new_group(parser));
+  handler->reg_handler(AttrType::HYPERBOLIC_NOISE_ABOVE_HIGH, new_group(parser));
+  handler->reg_handler(AttrType::HYPERBOLIC_NOISE_BELOW_LOW, new_group(parser));
+  handler->reg_handler(AttrType::HYPERBOLIC_NOISE_HIGH, new_group(parser));
+  handler->reg_handler(AttrType::HYPERBOLIC_NOISE_LOW, new_group(parser));
+  handler->reg_handler(AttrType::INTERNAL_POWER, new_internal_power(parser));
+  handler->reg_handler(AttrType::MAX_TRANS, new_group(parser));
+  handler->reg_handler(AttrType::MIN_PULSE_WIDTH, new_group(parser));
+  handler->reg_handler(AttrType::MINIMUM_PERIOD, new_group(parser));
+  handler->reg_handler(AttrType::TIMING, new_timing(parser));
+  handler->reg_handler(AttrType::TLATCH, new_group(parser));
 
   return handler;
 }

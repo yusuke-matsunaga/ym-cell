@@ -42,17 +42,17 @@ TemplateHandler::TemplateHandler(DotlibParser& parser) :
   DotlibHandler* g_group = HandlerFactory::new_group(parser);
 
   // simple attributes
-  reg_handler(ATTR_VARIABLE_1, var_type);
-  reg_handler(ATTR_VARIABLE_2, var_type);
-  reg_handler(ATTR_VARIABLE_3, var_type);
+  reg_handler(AttrType::VARIABLE_1, var_type);
+  reg_handler(AttrType::VARIABLE_2, var_type);
+  reg_handler(AttrType::VARIABLE_3, var_type);
 
   // complex attribute
-  reg_handler(ATTR_INDEX_1,    index_handler);
-  reg_handler(ATTR_INDEX_2,    index_handler);
-  reg_handler(ATTR_INDEX_3,    index_handler);
+  reg_handler(AttrType::INDEX_1,    index_handler);
+  reg_handler(AttrType::INDEX_2,    index_handler);
+  reg_handler(AttrType::INDEX_3,    index_handler);
 
   // group statements
-  reg_handler(ATTR_DOMAIN,     g_group);
+  reg_handler(AttrType::DOMAIN,     g_group);
 }
 
 // @brief デストラクタ
@@ -73,7 +73,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
   const DotlibFloatVector* index_2 = nullptr;
   const DotlibFloatVector* index_3 = nullptr;
   for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == ATTR_VARIABLE_1 ) {
+    if ( attr->attr_type() == AttrType::VARIABLE_1 ) {
       if ( var_1 != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -86,7 +86,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
       var_1 = dynamic_cast<const DotlibVarType*>(attr->attr_value());
       ASSERT_COND ( var_1 != nullptr );
     }
-    else if ( attr->attr_type() == ATTR_VARIABLE_2 ) {
+    else if ( attr->attr_type() == AttrType::VARIABLE_2 ) {
       if ( var_2 != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -99,7 +99,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
       var_2 = dynamic_cast<const DotlibVarType*>(attr->attr_value());
       ASSERT_COND ( var_2 != nullptr );
     }
-    else if ( attr->attr_type() == ATTR_VARIABLE_3 ) {
+    else if ( attr->attr_type() == AttrType::VARIABLE_3 ) {
       if ( var_3 != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -112,7 +112,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
       var_3 = dynamic_cast<const DotlibVarType*>(attr->attr_value());
       ASSERT_COND ( var_3 != nullptr );
     }
-    else if ( attr->attr_type() == ATTR_INDEX_1 ) {
+    else if ( attr->attr_type() == AttrType::INDEX_1 ) {
       if ( index_1 != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -125,7 +125,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
       index_1 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
       ASSERT_COND ( index_1 != nullptr );
     }
-    else if ( attr->attr_type() == ATTR_INDEX_2 ) {
+    else if ( attr->attr_type() == AttrType::INDEX_2 ) {
       if ( index_2 != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -138,7 +138,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
       index_2 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
       ASSERT_COND ( index_2 != nullptr );
     }
-    else if ( attr->attr_type() == ATTR_INDEX_3 ) {
+    else if ( attr->attr_type() == AttrType::INDEX_3 ) {
       if ( index_3 != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,

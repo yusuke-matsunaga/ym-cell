@@ -40,10 +40,10 @@ CellInternalPowerHandler::CellInternalPowerHandler(DotlibParser& parser) :
   DotlibHandler* simple = new SimpleHandler(parser, false);
   DotlibHandler* values_handler = new ValuesHandler(parser);
 
-  reg_handler(ATTR_RELATED_INPUTS,  simple);
-  reg_handler(ATTR_RELATED_OUTPUTS, simple);
+  reg_handler(AttrType::RELATED_INPUTS,  simple);
+  reg_handler(AttrType::RELATED_OUTPUTS, simple);
 
-  reg_handler(ATTR_VALUES,          values_handler);
+  reg_handler(AttrType::VALUES,          values_handler);
 }
 
 // @brief デストラクタ
@@ -58,7 +58,7 @@ CellInternalPowerHandler::gen_value(const FileRegion& loc,
 				    const vector<DotlibAttr*>& attr_list)
 {
   for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == ATTR_RELATED_PIN ) {
+    if ( attr->attr_type() == AttrType::RELATED_PIN ) {
     }
   }
 #warning "TODO: 未完成"

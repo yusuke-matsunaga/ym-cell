@@ -45,13 +45,13 @@ TableHandler::TableHandler(DotlibParser& parser) :
   // simple attributes
 
   // complex attribute
-  reg_handler(ATTR_INDEX_1, index_handler);
-  reg_handler(ATTR_INDEX_2, index_handler);
-  reg_handler(ATTR_INDEX_3, index_handler);
-  reg_handler(ATTR_VALUES,  values_handler);
+  reg_handler(AttrType::INDEX_1, index_handler);
+  reg_handler(AttrType::INDEX_2, index_handler);
+  reg_handler(AttrType::INDEX_3, index_handler);
+  reg_handler(AttrType::VALUES,  values_handler);
 
   // group statements
-  reg_handler(ATTR_DOMAIN,  dummy_handler);
+  reg_handler(AttrType::DOMAIN,  dummy_handler);
 }
 
 // @brief デストラクタ
@@ -70,7 +70,7 @@ TableHandler::gen_value(const FileRegion& loc,
   const DotlibFloatVector* index_3 = nullptr;
   const DotlibList* values = nullptr;
   for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == ATTR_INDEX_1 ) {
+    if ( attr->attr_type() == AttrType::INDEX_1 ) {
       if ( index_1 != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -91,7 +91,7 @@ TableHandler::gen_value(const FileRegion& loc,
 	return nullptr;
       }
     }
-    if ( attr->attr_type() == ATTR_INDEX_2 ) {
+    if ( attr->attr_type() == AttrType::INDEX_2 ) {
       if ( index_2 != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -112,7 +112,7 @@ TableHandler::gen_value(const FileRegion& loc,
 	return nullptr;
       }
     }
-    if ( attr->attr_type() == ATTR_INDEX_3 ) {
+    if ( attr->attr_type() == AttrType::INDEX_3 ) {
       if ( index_3 != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -133,7 +133,7 @@ TableHandler::gen_value(const FileRegion& loc,
 	return nullptr;
       }
     }
-    if ( attr->attr_type() == ATTR_VALUES ) {
+    if ( attr->attr_type() == AttrType::VALUES ) {
       if ( values != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
