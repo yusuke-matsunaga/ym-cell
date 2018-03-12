@@ -24,8 +24,8 @@ class Str1ComplexHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  Str1ComplexHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  Str1ComplexHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual
@@ -41,7 +41,7 @@ protected:
   /// @param[in] value_list 値のリスト
   virtual
   DotlibNode*
-  gen_value(DotlibList* value_list);
+  gen_value(const vector<DotlibNode*>& value_list);
 
 };
 

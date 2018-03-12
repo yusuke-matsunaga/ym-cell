@@ -8,6 +8,7 @@
 
 
 #include "DotlibScanner.h"
+#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -81,14 +82,14 @@ DotlibScanner::scan()
     goto ST_DOT;
 
   case EOF:
-    return END;
+    return TokenType::END;
 
   case ' ':
   case '\t':
     goto ST_INIT; // 最初の空白は読み飛ばす．
 
   case '\n':
-    return NL;
+    return TokenType::NL;
 
   case '\"':
     goto ST_DQ;
@@ -107,34 +108,34 @@ DotlibScanner::scan()
     goto ST_COMMENT1;
 
   case ':':
-    return COLON;
+    return TokenType::COLON;
 
   case ';':
-    return SEMI;
+    return TokenType::SEMI;
 
   case ',':
-    return COMMA;
+    return TokenType::COMMA;
 
   case '+':
-    return PLUS;
+    return TokenType::PLUS;
 
   case '-':
     goto ST_MINUS;
 
   case '*':
-    return MULT;
+    return TokenType::MULT;
 
   case '(':
-    return LP;
+    return TokenType::LP;
 
   case ')':
-    return RP;
+    return TokenType::RP;
 
   case '{':
-    return LCB;
+    return TokenType::LCB;
 
   case '}':
-    return RCB;
+    return TokenType::RCB;
 
   default:
     // それ以外はエラーなんじゃない？
@@ -143,7 +144,7 @@ DotlibScanner::scan()
 		    kMsgError,
 		    "DOTLIB_LEX",
 		    "syntax error");
-    return ERROR;
+    return TokenType::ERROR;
   }
   ASSERT_NOT_REACHED;
 
@@ -155,7 +156,7 @@ DotlibScanner::scan()
     mCurString.put_char(c);
     goto ST_NUM1;
   }
-  return MINUS;
+  return TokenType::MINUS;
 
  ST_NUM1: // 一文字目が[0-9]の時
   c = peek();
@@ -169,7 +170,7 @@ DotlibScanner::scan()
     mCurString.put_char(c);
     goto ST_DOT;
   }
-  return INT_NUM;
+  return TokenType::INT_NUM;
 
  ST_DOT: // [0-9]*'.' を読み込んだ時
   c = peek();
@@ -186,7 +187,7 @@ DotlibScanner::scan()
 		    kMsgError,
 		    "DOTLIB_LEX",
 		    buf.str());
-    return ERROR;
+    return TokenType::ERROR;
   }
 
  ST_NUM2: // [0-9]*'.'[0-9]* を読み込んだ時
@@ -201,7 +202,7 @@ DotlibScanner::scan()
     mCurString.put_char(c);
     goto ST_NUM3;
   }
-  return FLOAT_NUM;
+  return TokenType::FLOAT_NUM;
 
  ST_NUM3: // [0-9]*'.'[0-9]*(e|E)を読み込んだ時
   c = peek();
@@ -223,7 +224,7 @@ DotlibScanner::scan()
 		    kMsgError,
 		    "DOTLIB_LEX",
 		    buf.str());
-    return ERROR;
+    return TokenType::ERROR;
   }
 
  ST_NUM4: // [0-9]*'.'[0-9]*(e|E)(+|-)?[0-9]*を読み込んだ直後
@@ -233,7 +234,7 @@ DotlibScanner::scan()
     mCurString.put_char(c);
     goto ST_NUM4;
   }
-  return FLOAT_NUM;
+  return TokenType::FLOAT_NUM;
 
  ST_ID: // 一文字目が[a-zA-Z_]の時
   c = peek();
@@ -242,12 +243,12 @@ DotlibScanner::scan()
     mCurString.put_char(c);
     goto ST_ID;
   }
-  return SYMBOL;
+  return TokenType::SYMBOL;
 
  ST_DQ: // "があったら次の"までを強制的に文字列だと思う．
   c = get();
   if ( c == '\"' ) {
-    return SYMBOL;
+    return TokenType::SYMBOL;
   }
   if ( c == '\n' ) {
     ostringstream buf;
@@ -257,7 +258,7 @@ DotlibScanner::scan()
 		    kMsgError,
 		    "DOTLIB_LEX",
 		    buf.str());
-    return ERROR;
+    return TokenType::ERROR;
   }
   if ( c == EOF ) {
     ostringstream buf;
@@ -267,7 +268,7 @@ DotlibScanner::scan()
 		    kMsgError,
 		    "DOTLIB_LEX",
 		    buf.str());
-    return ERROR;
+    return TokenType::ERROR;
   }
   if ( c == '\\' ) {
     c = get();
@@ -289,7 +290,7 @@ DotlibScanner::scan()
     accept();
     goto ST_COMMENT3;
   }
-  return DIV;
+  return TokenType::DIV;
 
  ST_COMMENT2: // 改行まで読み飛ばす．
   c = get();
@@ -297,7 +298,7 @@ DotlibScanner::scan()
     goto ST_INIT;
   }
   if ( c == EOF ) {
-    return END;
+    return TokenType::END;
   }
   goto ST_COMMENT2;
 
@@ -334,7 +335,7 @@ DotlibScanner::scan()
 		    "DOTLIB_LEX",
 		    buf.str());
   }
-  return ERROR;
+  return TokenType::ERROR;
 }
 
 // @brief c が文字の時に true を返す．

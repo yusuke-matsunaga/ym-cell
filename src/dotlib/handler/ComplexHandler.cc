@@ -8,14 +8,8 @@
 
 
 #include "ComplexHandler.h"
-//#include "DotlibParserImpl.h"
-//#include "DotlibList.h"
-//#include "DotlibInt.h"
-//#include "DotlibFloat.h"
-//#include "DotlibFloatVector.h"
-//#include "DotlibString.h"
-//#include "GroupHandler.h"
-//#include "ym/MsgMgr.h"
+#include "dotlib/DotlibList.h"
+#include "dotlib/DotlibMgrImpl.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -49,9 +43,8 @@ DotlibNode*
 ComplexHandler::read_attr(AttrType attr_type,
 			  const FileRegion& attr_loc)
 {
-  FileRegion end_loc;
-  DotlibList* value_list = parse_complex(mVectorMode, end_loc);
-  if ( value_list == nullptr ) {
+  vector<DotlibNode*> value_list;
+  if ( !parse_complex(mVectorMode, value_list) ) {
     return nullptr;
   }
 
@@ -60,10 +53,22 @@ ComplexHandler::read_attr(AttrType attr_type,
   }
 
   if ( debug() ) {
-    cout << attr_type << value_list << endl;
+    cout << attr_type << "(";
+    for ( auto value: value_list ) {
+      cout << " " << value;
+    }
+    cout << ")" << endl;
   }
 
   return gen_value(value_list);
+}
+
+// @brief 値を表すノードを作る．
+// @param[in] value_list 値のリスト
+DotlibNode*
+ComplexHandler::gen_value(const vector<DotlibNode*>& value_list)
+{
+  return mgr()->new_list(value_list);
 }
 
 END_NAMESPACE_YM_DOTLIB

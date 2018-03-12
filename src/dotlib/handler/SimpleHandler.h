@@ -66,16 +66,6 @@ protected:
   DotlibNode*
   read_value();
 
-  /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[in] value 値
-  virtual
-  bool
-  set_value(AttrType attr_type,
-	    const FileRegion& attr_loc,
-	    DotlibNodeImpl* value);
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -117,7 +107,7 @@ protected:
   /// @brief 値を読み込む．
   virtual
   DotlibNode*
-  read_value();
+  read_value() override;
 
 };
 
@@ -147,7 +137,7 @@ protected:
   /// @brief 値を読み込む．
   virtual
   DotlibNode*
-  read_value();
+  read_value() override;
 
 };
 
@@ -177,7 +167,7 @@ protected:
   /// @brief 値を読み込む．
   virtual
   DotlibNode*
-  read_value();
+  read_value() override;
 
 };
 
@@ -207,187 +197,7 @@ protected:
   /// @brief 値を読み込む．
   virtual
   DotlibNode*
-  read_value();
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class TechnologyHandler SimpleHandler.h "SimpleHandler.h"
-/// @brief Technology値を取る属性用のハンドラ
-//////////////////////////////////////////////////////////////////////
-class TechnologyHandler :
-  public SimpleHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  TechnologyHandler(DotlibParser& parser);
-
-  /// @brief デストラクタ
-  ~TechnologyHandler();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込む．
-  virtual
-  DotlibNode*
-  read_value();
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class DelayModelHandler SimpleHandler.h "SimpleHandler.h"
-/// @brief DelayModel値を取る属性用のハンドラ
-//////////////////////////////////////////////////////////////////////
-class DelayModelHandler :
-  public SimpleHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  DelayModelHandler(DotlibParser& parser);
-
-  /// @brief デストラクタ
-  ~DelayModelHandler();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込む．
-  virtual
-  DotlibNode*
-  read_value();
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class CellPinDirectionHandler SimpleHandler.h "SimpleHandler.h"
-/// @brief CellPinDirection値を取る属性用のハンドラ
-//////////////////////////////////////////////////////////////////////
-class CellPinDirectionHandler :
-  public SimpleHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  CellPinDirectionHandler(DotlibParser& parser);
-
-  /// @brief デストラクタ
-  ~CellPinDirectionHandler();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込む．
-  virtual
-  DotlibNode*
-  read_value();
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class TimingSenseHandler SimpleHandler.h "SimpleHandler.h"
-/// @brief TimingSense値を取る属性用のハンドラ
-//////////////////////////////////////////////////////////////////////
-class TimingSenseHandler :
-  public SimpleHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  TimingSenseHandler(DotlibParser& parser);
-
-  /// @brief デストラクタ
-  ~TimingSenseHandler();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込む．
-  virtual
-  DotlibNode*
-  read_value();
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class TimingTypeHandler SimpleHandler.h "SimpleHandler.h"
-/// @brief TimingType値を取る属性用のハンドラ
-//////////////////////////////////////////////////////////////////////
-class TimingTypeHandler :
-  public SimpleHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  TimingTypeHandler(DotlibParser& parser);
-
-  /// @brief デストラクタ
-  ~TimingTypeHandler();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込む．
-  virtual
-  DotlibNode*
-  read_value();
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class VarTypeHandler SimpleHandler.h "SimpleHandler.h"
-/// @brief VarType値を取る属性用のハンドラ
-//////////////////////////////////////////////////////////////////////
-class VarTypeHandler :
-  public SimpleHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  VarTypeHandler(DotlibParser& parser);
-
-  /// @brief デストラクタ
-  ~VarTypeHandler();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込む．
-  virtual
-  DotlibNode*
-  read_value();
+  read_value() override;
 
 };
 

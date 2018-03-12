@@ -7,8 +7,11 @@
 /// All rights reserved.
 
 
-#include "CellInternalPowerHandler.h"
-#include "dotlib/HanderFactory.h"
+#include "CellInternalPower.h"
+#include "dotlib/HandlerFactory.h"
+#include "dotlib/DotlibAttr.h"
+#include "SimpleHandler.h"
+#include "ValuesHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -50,11 +53,11 @@ CellInternalPowerHandler::~CellInternalPowerHandler()
 
 // @brief 値を作る．
 DotlibNode*
-CellInternalPowerHandler::gen_value(const DotlibList* value_list,
-				    const DotlibAttr* attr_top)
+CellInternalPowerHandler::gen_value(const FileRegion& loc,
+				    const DotlibString* name,
+				    const vector<DotlibAttr*>& attr_list)
 {
-  const DotlibString* name = value_list->get_string_from_value_list();
-  for ( auto attr = attr_top; attr != nullptr; attr = attr->next() ) {
+  for ( auto attr: attr_list ) {
     if ( attr->attr_type() == ATTR_RELATED_PIN ) {
     }
   }

@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "DotlibLut.h"
+#include "dotlib/DotlibLut.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

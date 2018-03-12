@@ -8,10 +8,13 @@
 
 
 #include "dotlib/HandlerFactory.h"
-
 #include "TemplateHandler.h"
-#include "InputHandler.h"
-#include "VarTypeHandler.h"
+#include "dotlib/DotlibMgrImpl.h"
+#include "dotlib/DotlibFloatVector.h"
+#include "dotlib/DotlibVarType.h"
+#include "dotlib/DotlibAttr.h"
+#include "dotlib/DotlibTemplate.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -34,20 +37,22 @@ HandlerFactory::new_template(DotlibParser& parser)
 TemplateHandler::TemplateHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
+  DotlibHandler* var_type = HandlerFactory::new_var_type(parser);
+  DotlibHandler* index_handler = HandlerFactory::new_index(parser);
+  DotlibHandler* g_group = HandlerFactory::new_group(parser);
+
   // simple attributes
-  DotlibHandler* var_type = new VarTypeHandler(parser);
   reg_handler(ATTR_VARIABLE_1, var_type);
   reg_handler(ATTR_VARIABLE_2, var_type);
   reg_handler(ATTR_VARIABLE_3, var_type);
 
   // complex attribute
-  DotlibHandler* index_handler = new IndexHandler(parser);
   reg_handler(ATTR_INDEX_1,    index_handler);
   reg_handler(ATTR_INDEX_2,    index_handler);
   reg_handler(ATTR_INDEX_3,    index_handler);
 
   // group statements
-  reg_handler(ATTR_DOMAIN,     new_group(handler));
+  reg_handler(ATTR_DOMAIN,     g_group);
 }
 
 // @brief デストラクタ
@@ -57,17 +62,17 @@ TemplateHandler::~TemplateHandler()
 
 // @brief 値を作る．
 DotlibNode*
-TemplateHandler::gen_value(const DotlibList* value_list,
-			   const DotlibAttr* attr_top)
+TemplateHandler::gen_value(const FileRegion& loc,
+			   const DotlibString* name,
+			   const vector<DotlibAttr*>& attr_list)
 {
-  const DotlibString* name = value_list->get_string_from_value_list();
   const DotlibVarType* var_1 = nullptr;
   const DotlibVarType* var_2 = nullptr;
   const DotlibVarType* var_3 = nullptr;
   const DotlibFloatVector* index_1 = nullptr;
   const DotlibFloatVector* index_2 = nullptr;
   const DotlibFloatVector* index_3 = nullptr;
-  for ( auto attr = attr_top; attr != nullptr; attr = attr->next() ) {
+  for ( auto attr: attr_list ) {
     if ( attr->attr_type() == ATTR_VARIABLE_1 ) {
       if ( var_1 != nullptr ) {
 	// エラー
@@ -151,7 +156,7 @@ TemplateHandler::gen_value(const DotlibList* value_list,
   int dimension = 0;
   if ( var_1 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    node->loc(),
+		    loc,
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "Syntax error. missing 'variable_1'.");
@@ -159,7 +164,7 @@ TemplateHandler::gen_value(const DotlibList* value_list,
   }
   if ( index_1 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    node->loc(),
+		    loc,
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "Syntax error. missing 'index_1'.");
@@ -170,7 +175,7 @@ TemplateHandler::gen_value(const DotlibList* value_list,
     dimension = 1;
     if ( var_3 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
-		      node->loc(),
+		      loc,
 		      kMsgError,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'variable_3' while missing 'variable_2'.");
@@ -178,7 +183,7 @@ TemplateHandler::gen_value(const DotlibList* value_list,
     }
     if ( index_2 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
-		      node->loc(),
+		      loc,
 		      kMsgError,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'index_2' while missing 'variable_2'.");
@@ -189,7 +194,7 @@ TemplateHandler::gen_value(const DotlibList* value_list,
     dimension = 2;
     if ( index_2 == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
-		      node->loc(),
+		      loc,
 		      kMsgError,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'variable_2' while missing 'index_2'.");
@@ -197,7 +202,7 @@ TemplateHandler::gen_value(const DotlibList* value_list,
     }
     if ( index_3 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
-		      node->loc(),
+		      loc,
 		      kMsgError,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'index_3' while missing 'variable_3'.");
@@ -208,7 +213,7 @@ TemplateHandler::gen_value(const DotlibList* value_list,
     dimension = 3;
     if ( index_3 == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
-		      node->loc(),
+		      loc,
 		      kMsgError,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'variable_3' while missing 'index_3'.");

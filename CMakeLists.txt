@@ -95,32 +95,50 @@ set (dotlib_SOURCES
   src/dotlib/handler/DotlibHandler.cc
   src/dotlib/handler/FhScanner.cc
   src/dotlib/handler/HandlerFactory.cc
+  src/dotlib/handler/CellInternalPower.cc
   src/dotlib/handler/ComplexHandler.cc
   src/dotlib/handler/DefineHandler.cc
+  src/dotlib/handler/DelayModelHandler.cc
   src/dotlib/handler/ExprHandler.cc
   src/dotlib/handler/FuncHandler.cc
   src/dotlib/handler/GroupHandler.cc
+  src/dotlib/handler/LibraryHandler.cc
   src/dotlib/handler/IndexHandler.cc
+  src/dotlib/handler/InputVoltageHandler.cc
+  src/dotlib/handler/InternalPowerHandler.cc
+  src/dotlib/handler/OutputVoltageHandler.cc
+  src/dotlib/handler/PinHandler.cc
+  src/dotlib/handler/PinDirectionHandler.cc
+  src/dotlib/handler/PowerHandler.cc
   src/dotlib/handler/PwComplexHandler.cc
   src/dotlib/handler/SimpleHandler.cc
   src/dotlib/handler/Str1ComplexHandler.cc
   src/dotlib/handler/TableHandler.cc
+  src/dotlib/handler/TechnologyHandler.cc
+  src/dotlib/handler/TemplateHandler.cc
+  src/dotlib/handler/TimingHandler.cc
+  src/dotlib/handler/TimingSenseHandler.cc
+  src/dotlib/handler/TimingTypeHandler.cc
   src/dotlib/handler/UnitComplexHandler.cc
   src/dotlib/handler/ValuesHandler.cc
+  src/dotlib/handler/VarTypeHandler.cc
 
   src/dotlib/ast/DotlibAttr.cc
   src/dotlib/ast/DotlibCell.cc
   src/dotlib/ast/DotlibDelayModel.cc
+  src/dotlib/ast/DotlibExpr.cc
   src/dotlib/ast/DotlibFF.cc
   src/dotlib/ast/DotlibFL.cc
   src/dotlib/ast/DotlibFloat.cc
   src/dotlib/ast/DotlibFloatVector.cc
+  src/dotlib/ast/DotlibInputVoltage.cc
   src/dotlib/ast/DotlibInt.cc
   src/dotlib/ast/DotlibLatch.cc
   src/dotlib/ast/DotlibLibrary.cc
   src/dotlib/ast/DotlibList.cc
   src/dotlib/ast/DotlibLut.cc
   src/dotlib/ast/DotlibNode.cc
+  src/dotlib/ast/DotlibOutputVoltage.cc
   src/dotlib/ast/DotlibPin.cc
   src/dotlib/ast/DotlibPinDirection.cc
   src/dotlib/ast/DotlibStateTable.cc

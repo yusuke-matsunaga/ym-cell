@@ -79,6 +79,7 @@ private:
 
 // @brief 数値を返す．
 // @note type() が kFloat の時のみ意味を持つ．
+inline
 double
 DotlibFloat::value() const
 {

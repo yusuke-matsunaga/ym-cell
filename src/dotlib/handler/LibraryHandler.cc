@@ -11,6 +11,10 @@
 
 #include "LibraryHandler.h"
 #include "SimpleHandler.h"
+#include "ComplexHandler.h"
+#include "Str1ComplexHandler.h"
+#include "UnitComplexHandler.h"
+#include "DefineHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -33,17 +37,31 @@ HandlerFactory::new_library(DotlibParser& parser)
 LibraryHandler::LibraryHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
-  // simple attributes
   DotlibHandler* simple = new SimpleHandler(parser, false);
   DotlibHandler* str_simple = new StrSimpleHandler(parser, false);
   DotlibHandler* symstr_simple = new StrSimpleHandler(parser, true);
   DotlibHandler* flt_simple = new FloatSimpleHandler(parser);
+  DotlibHandler* delay_model = HandlerFactory::new_delay_model(parser);
+  DotlibHandler* complex = new ComplexHandler(parser);
+  DotlibHandler* str1_complex = new Str1ComplexHandler(parser);
+  DotlibHandler* unit_complex = new UnitComplexHandler(parser);
+  DotlibHandler* define = new DefineHandler(parser, this);
+  DotlibHandler* tmpl_handler = HandlerFactory::new_template(parser);
+  DotlibHandler* group_handler = HandlerFactory::new_group(parser);
+  DotlibHandler* cell_handler = HandlerFactory::new_cell(parser);
+  DotlibHandler* iv_handler = HandlerFactory::new_input_voltage(parser);
+  DotlibHandler* ov_handler = HandlerFactory::new_output_voltage(parser);
+  DotlibHandler* oc_handler = HandlerFactory::new_operating_conditions(parser);
+  DotlibHandler* wl_handler = HandlerFactory::new_wire_load(parser);
+  DotlibHandler* wls_handler = HandlerFactory::new_wire_load_selection(parser);
+  DotlibHandler* wlt_handler = HandlerFactory::new_wire_load_table(parser);
 
+  // simple attributes
   reg_handler(ATTR_BUS_NAMING_STYLE,                       str_simple);
   reg_handler(ATTR_COMMENT,                                str_simple);
   reg_handler(ATTR_CURRENT_UNIT,                           symstr_simple);
   reg_handler(ATTR_DATE,                                   str_simple);
-  reg_handler(ATTR_DELAY_MODEL,                            new DelayModelHandler(parser));
+  reg_handler(ATTR_DELAY_MODEL,                            delay_model);
   reg_handler(ATTR_EM_TEMP_DEGRADATION_FACTOR,             flt_simple);
   reg_handler(ATTR_FPGA_TECHNOLOGY,                        str_simple);
   reg_handler(ATTR_IN_PLACE_SWAP_MODE,                     str_simple);
@@ -219,10 +237,6 @@ LibraryHandler::LibraryHandler(DotlibParser& parser) :
   reg_handler(ATTR_K_VOLT_WIRE_RES,                        flt_simple);
 
   // complex attributes
-  DotlibHandler* complex = new ComplexHandler(parser);
-  DotlibHandler* str1_complex = new Str1ComplexHandler(parser);
-  DotlibHandler* unit_complex = new UnitComplexHandler(parser);
-  DotlibHandler* define = new DefineHandler(parser);
   reg_handler(ATTR_CAPACITIVE_LOAD_UNIT,                   unit_complex);
   reg_handler(ATTR_DEFAULT_PART,                           complex);
   reg_handler(ATTR_DEFINE,                                 define);
@@ -237,20 +251,18 @@ LibraryHandler::LibraryHandler(DotlibParser& parser) :
   //rise_net_delay : name ;
 
   // group statements
-  DotlibHandler* tmpl_handler = new_template(parser);
-  DotlibHandler* group_handler = new_group(parser);
-  reg_handler(ATTR_CELL,   		                   new_cell(parser));
+  reg_handler(ATTR_CELL,   		                   cell_handler);
   reg_handler(ATTR_DC_CURRENT_TEMPLATE,                    tmpl_handler);
   reg_handler(ATTR_EM_LUT_TEMPLATE,                        tmpl_handler);
   reg_handler(ATTR_FALL_TRANSITION_DEGRADATION,            group_handler);
   reg_handler(ATTR_FAULTS_LUT_TEMPLATE,                    tmpl_handler);
-  reg_handler(ATTR_INPUT_VOLTAGE,		           new_input_voltage(parser));
+  reg_handler(ATTR_INPUT_VOLTAGE,		           iv_handler);
   reg_handler(ATTR_IV_LUT_TEMPLATE,                        tmpl_handler);
   reg_handler(ATTR_LU_TABLE_TEMPLATE,                      tmpl_handler);
   reg_handler(ATTR_NOISE_LUT_TEMPLATE,                     tmpl_handler);
-  reg_handler(ATTR_OPERATING_CONDITIONS,	           new_operating_conditions(parser));
+  reg_handler(ATTR_OPERATING_CONDITIONS,	           oc_handler);
   reg_handler(ATTR_OUTPUT_CURRENT_TEMPLATE,                tmpl_handler);
-  reg_handler(ATTR_OUTPUT_VOLTAGE,		           new_output_voltage(parser));
+  reg_handler(ATTR_OUTPUT_VOLTAGE,		           ov_handler);
   reg_handler(ATTR_PART,                                   group_handler);
   reg_handler(ATTR_POLY_TEMPLATE,                          tmpl_handler);
   reg_handler(ATTR_POWER_LUT_TEMPLATE,                     tmpl_handler);
@@ -263,9 +275,9 @@ LibraryHandler::LibraryHandler(DotlibParser& parser) :
   reg_handler(ATTR_TIMING,                                 group_handler);
   reg_handler(ATTR_TIMING_RANGE,                           group_handler);
   reg_handler(ATTR_TYPE,                                   group_handler);
-  reg_handler(ATTR_WIRE_LOAD,                              new_wire_load(parser));
-  reg_handler(ATTR_WIRE_LOAD_SELECTION,		           new_wire_load_selection(parser));
-  reg_handler(ATTR_WIRE_LOAD_TABLE,		           new_wire_load_table(parser));
+  reg_handler(ATTR_WIRE_LOAD,                              wl_handler);
+  reg_handler(ATTR_WIRE_LOAD_SELECTION,		           wls_handler);
+  reg_handler(ATTR_WIRE_LOAD_TABLE,		           wlt_handler);
 }
 
 // @brief デストラクタ
@@ -275,9 +287,12 @@ LibraryHandler::~LibraryHandler()
 
 // @brief 値を作る．
 DotlibNode*
-LibraryHandler::gen_value(const DotlibList* value_list,
-			const DotlibAttr* attr_top)
+LibraryHandler::gen_value(const FileRegion& loc,
+			  const DotlibString* name,
+			  const vector<DotlibAttr*>& attr_list)
 {
+#warning "TODO: 未完成"
+  return nullptr;
 }
 
 END_NAMESPACE_YM_DOTLIB

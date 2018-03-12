@@ -11,6 +11,7 @@
 #include "dotlib/DotlibMgrImpl.h"
 #include "dotlib/DotlibHandler.h"
 #include "dotlib/HandlerFactory.h"
+#include "dotlib/TokenType.h"
 #include "ym/FileIDO.h"
 #include "ym/MsgMgr.h"
 #include "ym/ShString.h"
@@ -21,7 +22,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 DotlibParserImpl::DotlibParserImpl() :
   mDotlibMgr(nullptr),
-  mLibraryHandler( HandlerFactory::new_library(*this) )
+  mLibraryHandler(nullptr)
 {
   mScanner = nullptr;
 }
@@ -29,7 +30,6 @@ DotlibParserImpl::DotlibParserImpl() :
 // デストラクタ
 DotlibParserImpl::~DotlibParserImpl()
 {
-  delete mLibraryHandler;
   delete mScanner;
 }
 
@@ -44,10 +44,12 @@ DotlibParserImpl::~DotlibParserImpl()
 const DotlibLibrary*
 DotlibParserImpl::read_file(const string& filename,
 			    DotlibMgrImpl* mgr,
+			    DotlibHandler* lib_handler,
 			    bool debug,
 			    bool allow_no_semi)
 {
   mDotlibMgr = mgr;
+  mLibraryHandler = lib_handler;
   mDebug = debug;
   mAllowNoSemi = allow_no_semi;
 
@@ -69,10 +71,10 @@ DotlibParserImpl::read_file(const string& filename,
   TokenType type;
   FileRegion loc;
   // 空行を読み飛ばす．
-  for ( type = read_token(loc); type == NL; type = read_token(loc) ) { }
+  for ( type = read_token(loc); type == TokenType::NL; type = read_token(loc) ) { }
 
   // 先頭のトークンが "library" であるかチェックする．
-  if ( type != SYMBOL || strcmp(cur_string(), "library") != 0 ) {
+  if ( type != TokenType::SYMBOL || strcmp(cur_string(), "library") != 0 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
 		    kMsgError,
@@ -94,7 +96,7 @@ DotlibParserImpl::read_file(const string& filename,
   }
   for ( ; ; ) {
     TokenType type = read_token(loc);
-    if ( type == END ) {
+    if ( type == TokenType::END ) {
       break;
     }
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -128,28 +130,28 @@ DotlibParserImpl::expect(TokenType req_type)
 
   const char* type_str = nullptr;
   switch ( req_type ) {
-  case COLON:      type_str = "':'"; break;
-  case SEMI:       type_str = "';'"; break;
-  case COMMA:      type_str = "','"; break;
-  case PLUS:       type_str = "'+'"; break;
-  case MINUS:      type_str = "'-'"; break;
-  case MULT:       type_str = "'*'"; break;
-  case DIV:        type_str = "'/'"; break;
-  case NOT:        type_str = "'!'"; break;
-  case AND:        type_str = "'&'"; break;
-  case OR:         type_str = "'|'"; break;
-  case XOR:        type_str = "'^'"; break;
-  case PRIME:      type_str = "'"; break;
-  case LP:         type_str = "'('"; break;
-  case RP:         type_str = "')'"; break;
-  case LCB:        type_str = "'{'"; break;
-  case RCB:        type_str = "'}'"; break;
-  case SYMBOL:     type_str = "STR"; break;
-  case INT_NUM:    type_str = "INT"; break;
-  case FLOAT_NUM:  type_str = "FLOAT"; break;
-  case EXPRESSION: type_str = "EXPRESSION"; break;
-  case NL:         type_str = "new-line"; break;
-  default:         ASSERT_NOT_REACHED;
+  case TokenType::COLON:      type_str = "':'"; break;
+  case TokenType::SEMI:       type_str = "';'"; break;
+  case TokenType::COMMA:      type_str = "','"; break;
+  case TokenType::PLUS:       type_str = "'+'"; break;
+  case TokenType::MINUS:      type_str = "'-'"; break;
+  case TokenType::MULT:       type_str = "'*'"; break;
+  case TokenType::DIV:        type_str = "'/'"; break;
+  case TokenType::NOT:        type_str = "'!'"; break;
+  case TokenType::AND:        type_str = "'&'"; break;
+  case TokenType::OR:         type_str = "'|'"; break;
+  case TokenType::XOR:        type_str = "'^'"; break;
+  case TokenType::PRIME:      type_str = "'"; break;
+  case TokenType::LP:         type_str = "'('"; break;
+  case TokenType::RP:         type_str = "')'"; break;
+  case TokenType::LCB:        type_str = "'{'"; break;
+  case TokenType::RCB:        type_str = "'}'"; break;
+  case TokenType::SYMBOL:     type_str = "STR"; break;
+  case TokenType::INT_NUM:    type_str = "INT"; break;
+  case TokenType::FLOAT_NUM:  type_str = "FLOAT"; break;
+  case TokenType::EXPRESSION: type_str = "EXPRESSION"; break;
+  case TokenType::NL:         type_str = "new-line"; break;
+  default:                    ASSERT_NOT_REACHED;
   }
   ostringstream buf;
   buf << "syntax error. " << type_str << " is expected.";
@@ -168,10 +170,10 @@ DotlibParserImpl::expect_nl()
   if ( mAllowNoSemi ) {
     FileRegion loc;
     TokenType type = read_token(loc);
-    if ( type == SEMI ) {
+    if ( type == TokenType::SEMI ) {
       type = read_token(loc);
     }
-    if ( type == NL || type == END ) {
+    if ( type == TokenType::NL || type == TokenType::END ) {
       return true;
     }
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -182,14 +184,21 @@ DotlibParserImpl::expect_nl()
     return false;
   }
   else {
-    if ( !expect(SEMI) ) {
+    if ( !expect(TokenType::SEMI) ) {
       return false;
     }
-    if ( !expect(NL) ) {
+    if ( !expect(TokenType::NL) ) {
       return false;
     }
   }
   return true;
+}
+
+// @brief 直前の read_token() に対応する位置を返す．
+FileRegion
+DotlibParserImpl::cur_loc() const
+{
+  return mCurLoc;
 }
 
 // @brief 文字列を属性値に変換する．

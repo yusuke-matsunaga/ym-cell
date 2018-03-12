@@ -8,16 +8,17 @@
 
 #include "dotlib/HandlerFactory.h"
 #include "InternalPowerHandler.h"
+#include "SimpleHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief internal_power group 用のハンドラを作る．
-// @param[in] parent 親のハンドラ
+// @param[in] parser パーサー
 DotlibHandler*
-HandlerFactory::new_internal_power(GroupHandler* parent)
+HandlerFactory::new_internal_power(DotlibParser& parser)
 {
-  return new InternalPowerHandler(parent);
+  return new InternalPowerHandler(parser);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -31,8 +32,9 @@ InternalPowerHandler::InternalPowerHandler(DotlibParser& parser) :
 {
   DotlibHandler* simple = new SimpleHandler(parser, false);
   DotlibHandler* str_simple = new StrSimpleHandler(parser, false);
-  DotlibHandler* func_handler = new FuncHandler(parser);
-  DotlibHandler* power_handler = new_power(parser);
+  DotlibHandler* func_handler = HandlerFactory::new_function(parser);
+  DotlibHandler* power_handler = HandlerFactory::new_power(parser);
+  DotlibHandler* g_handler = HandlerFactory::new_group(parser);
 
   // simple attributes
   reg_handler(ATTR_EQUAL_OR_OPPOSITE_OUTPUT, simple);
@@ -50,7 +52,7 @@ InternalPowerHandler::InternalPowerHandler(DotlibParser& parser) :
   reg_handler(ATTR_POWER,                    power_handler);
   reg_handler(ATTR_FALL_POWER,               power_handler);
   reg_handler(ATTR_RISE_POWER,               power_handler);
-  reg_handler(ATTR_DOMAIN,                   new_group(handler));
+  reg_handler(ATTR_DOMAIN,                   g_handler);
 }
 
 // @brief デストラクタ
@@ -60,11 +62,14 @@ InternalPowerHandler::~InternalPowerHandler()
 
 // @brief 値を作る．
 DotlibNode*
-InternalPowerHandler::gen_value(const DotlibList* value_list,
-				const DotlibAttr* attr_top)
+InternalPowerHandler::gen_value(const FileRegion& loc,
+				const vector<DotlibAttr*>& attr_list)
 {
-  for ( auto attr = attr_top; attr != nullptr; attr = attr->next() ) {
+  for ( auto attr: attr_list ) {
+    ;
   }
+#warning "TODO: 未完成"
+  return nullptr;
 }
 
 END_NAMESPACE_YM_DOTLIB

@@ -80,13 +80,61 @@ public:
 
   /// @brief セルを表す DotlibNode を生成する．
   /// @param[in] loc ファイル上の位置
+  /// @param[in] name 名前
+  /// @param[in] area 面積
+  /// @param[in] bus_naming_style 'bus_naming_style' の値
+  /// @param[in] pin_top ピンの先頭
+  /// @param[in] bus_top バスの先頭
+  /// @param[in] bundle_top バンドルの先頭
+  /// @param[in] ff FFグループ
+  /// @param[in] latch ラッチグループ
+  /// @param[in] statetable StateTable グループ
   DotlibNode*
-  new_cell(const FileRegion& loc);
+  new_cell(const FileRegion& loc,
+	   const DotlibString* name,
+	   const DotlibFloat* area,
+	   const DotlibString* bus_naming_style,
+	   const DotlibPin* pin_top,
+	   const DotlibBus* bus_top,
+	   const DotlibBundle* bundle_top,
+	   const DotlibFF* ff,
+	   const DotlibLatch* latch,
+	   const DotlibStateTable* statetable);
 
   /// @brief ピンを表す DotlibNode を生成する．
   /// @param[in] loc ファイル上の位置
+  /// @param[in] pin_direction 方向
+  /// @param[in] capacitance 容量
+  /// @param[in] rise_capacitance 立ち上がり容量
+  /// @param[in] fall_capacitance 立ち下がり容量
+  /// @param[in] max_fanout 最大ファンアウト
+  /// @param[in] min_fanout 最小ファンアウト
+  /// @param[in] max_capacitance 最大容量
+  /// @param[in] min_capacitance 最小容量
+  /// @param[in] max_transition 最大遷移時間
+  /// @param[in] min_transition 最小遷移時間
+  /// @param[in] function 関数
+  /// @param[in] three_state スリーステート条件
+  /// @param[in] internal_node 対応する内部ノード
+  /// @param[in] pin_func_type 'pin_func_type'
+  /// @param[in] timing_top タイミングの先頭
   DotlibNode*
-  new_pin(const FileRegion& loc);
+  new_pin(const FileRegion& loc,
+	  const DotlibPinDirection* pin_direction,
+	  const DotlibFloat* capacitance,
+	  const DotlibFloat* rise_capacitance,
+	  const DotlibFloat* fall_capacitance,
+	  const DotlibFloat* max_fanout,
+	  const DotlibFloat* min_fanout,
+	  const DotlibFloat* max_capacitance,
+	  const DotlibFloat* min_capacitance,
+	  const DotlibFloat* max_transition,
+	  const DotlibFloat* min_transition,
+	  const DotlibExpr* function,
+	  const DotlibExpr* three_state,
+	  const DotlibNode* internal_node,
+	  const DotlibNode* pin_func_type,
+	  const DotlibTiming* timing_top);
 
 
 public:
@@ -180,7 +228,7 @@ public:
   /// @brief リストを表す DotlibNode を生成する．
   /// @param[in] elem_list 要素のリスト
   DotlibList*
-  new_list(const vector<const DotlibNode*>& elem_list);
+  new_list(const vector<DotlibNode*>& elem_list);
 
   /// @brief LUT template を表す DotlibNode を生成する．
   DotlibTemplate*
@@ -211,6 +259,7 @@ public:
   /// @param[in] vimax 'vimax'
   DotlibInputVoltage*
   new_input_voltage(const FileRegion& loc,
+		    const DotlibString* name,
 		    const DotlibExpr* vil,
 		    const DotlibExpr* vih,
 		    const DotlibExpr* vimin,
@@ -224,10 +273,29 @@ public:
   /// @param[in] vomax 'vomax'
   DotlibOutputVoltage*
   new_output_voltage(const FileRegion& loc,
+		     const DotlibString* name,
 		     const DotlibExpr* vol,
 		     const DotlibExpr* voh,
 		     const DotlibExpr* vomin,
 		     const DotlibExpr* vomax);
+
+  /// @brief 汎用のグループ構造を表す DotlibNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  /// @param[in] value_list 値のリスト
+  /// @param[in] attr_top 属性の先頭
+  DotlibGenGroup*
+  new_gen_group(const FileRegion& loc,
+		const vector<DotlibNode*>& value_list,
+		const vector<DotlibAttr*>& attr_list);
+
+  /// @brief 単位を表す DotlibNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  /// @param[in] unit_val 数値
+  /// @param[in] unit_str 単位を表す文字列
+  DotlibUnit*
+  new_unit(const FileRegion& loc,
+	   double unit_val,
+	   const ShString& unit_str);
 
   /// @brief technology を表す DotlibNode を生成する．
   /// @param[in] loc ファイル上の位置

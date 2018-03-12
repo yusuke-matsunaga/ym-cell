@@ -75,13 +75,11 @@ protected:
 
   /// @brief complex attribute 用のパースを行う．
   /// @param[in] vector_mode ベクタモードの時 true にするフラグ
-  /// @param[out] end_loc 右括弧の位置を格納する変数
-  /// @return 読み込んだ値(リスト)を返す．
-  ///
-  /// エラーが起きたら nullptr を返す．
-  DotlibList*
+  /// @param[out] value_list 読み込んだ値のリストを格納する変数
+  /// @return 正しく読み込めたら true を返す．
+  bool
   parse_complex(bool vector_mode,
-		FileRegion& end_loc);
+		vector<DotlibNode*>& value_list);
 
   /// @brief DotlibNode (の派生クラス)を生成する．
   /// @param[in] loc ファイル上の位置情報
@@ -102,12 +100,6 @@ protected:
   /// @brief 行末まで読み込む．
   bool
   expect_nl();
-
-#if 0
-  /// @brief 親のハンドラを得る．
-  GroupHandler*
-  parent();
-#endif
 
   /// @brief デバッグモードの時に true を返す．
   bool

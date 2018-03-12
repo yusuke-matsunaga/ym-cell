@@ -46,6 +46,7 @@ public:
   const DotlibLibrary*
   read_file(const string& filename,
 	    DotlibMgrImpl* mgr,
+	    DotlibHandler* lib_handler,
 	    bool debug,
 	    bool allow_no_semi = true);
 
@@ -87,6 +88,10 @@ public:
   double
   cur_float() const;
 
+  /// @brief 直前の read_token() に対応する位置を返す．
+  FileRegion
+  cur_loc() const;
+
   /// @brief 文字列を属性値に変換する．
   AttrType
   conv_to_attr(const char* str);
@@ -114,6 +119,9 @@ private:
   // library グループを処理するハンドラ
   DotlibHandler* mLibraryHandler;
 
+  // 直前の位置
+  FileRegion mCurLoc;
+
   // 属性用の辞書
   AttrDic mAttrDic;
 
@@ -139,7 +147,9 @@ TokenType
 DotlibParserImpl::read_token(FileRegion& loc,
 			     bool symbol_mode)
 {
-  return mScanner->read_token(loc, symbol_mode);
+  auto ans = mScanner->read_token(loc, symbol_mode);
+  mCurLoc = loc;
+  return ans;
 }
 
 // @brief 直前の read_token() に対応する文字列を返す．

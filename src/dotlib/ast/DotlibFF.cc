@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "DotlibFF.h"
+#include "dotlib/DotlibFF.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -72,5 +72,15 @@ DotlibFF::set_data(const DotlibNode* node)
   return true;
 }
 #endif
+
+// @brief 内容をストリーム出力する．
+// @param[in] s 出力先のストリーム
+// @param[in] indent インデント量
+void
+DotlibFF::dump(ostream& s,
+	       int indent) const
+{
+#warning "TODO: 未完成"
+}
 
 END_NAMESPACE_YM_DOTLIB

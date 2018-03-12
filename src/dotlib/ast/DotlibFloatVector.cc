@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "DotlibFloatVector.h"
+#include "dotlib/DotlibFloatVector.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

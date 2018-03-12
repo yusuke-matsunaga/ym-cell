@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "DotlibVarType.h"
+#include "dotlib/DotlibVarType.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

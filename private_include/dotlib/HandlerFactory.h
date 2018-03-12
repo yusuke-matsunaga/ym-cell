@@ -190,6 +190,46 @@ public:
   DotlibHandler*
   new_expr(DotlibParser& parser);
 
+  /// @brief 'index_?' 用のハンドラを作る．
+  static
+  DotlibHandler*
+  new_index(DotlibParser& parser);
+
+  /// @brief 'values' 用のハンドラを作る．
+  static
+  DotlibHandler*
+  new_values(DotlibParser& parser);
+
+  /// @brief 'technology' 用のハンドラを作る．
+  static
+  DotlibHandler*
+  new_technology(DotlibParser& parser);
+
+  /// @brief 'delay model' 用のハンドラを作る．
+  static
+  DotlibHandler*
+  new_delay_model(DotlibParser& parser);
+
+  /// @brief 'direction' 用のハンドラを作る．
+  static
+  DotlibHandler*
+  new_pin_direction(DotlibParser& parser);
+
+  /// @brief 'timing sense' 用のハンドラを作る．
+  static
+  DotlibHandler*
+  new_timing_sense(DotlibParser& parser);
+
+  /// @brief 'timing type' 用のハンドラを作る．
+  static
+  DotlibHandler*
+  new_timing_type(DotlibParser& parser);
+
+  /// @brief 'var type' 用のハンドラを作る．
+  static
+  DotlibHandler*
+  new_var_type(DotlibParser& parser);
+
   /// @brief 汎用の group 用のハンドラを作る．
   static
   GroupHandler*

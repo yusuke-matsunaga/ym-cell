@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "DotlibTiming.h"
+#include "dotlib/DotlibTiming.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -64,15 +64,15 @@ DotlibTiming::DotlibTiming(const FileRegion& loc,
 			   const DotlibFloat* intrinsic_fall,
 			   const DotlibFloat* slope_rise,
 			   const DotlibFloat* slope_fall,
-			   const DotlibFloat* rise_delay_intercept,
-			   const DotlibFloat* fall_delay_intercept,
-			   const DotlibFloat* rise_pin_resistance,
-			   const DotlibFloat* fall_pin_resistance,
+			   const DotlibList* rise_delay_intercept,
+			   const DotlibList* fall_delay_intercept,
+			   const DotlibList* rise_pin_resistance,
+			   const DotlibList* fall_pin_resistance,
 			   const DotlibFloat* cell_degradation,
 			   const DotlibLut* cell_rise,
 			   const DotlibLut* cell_fall,
-			   const DotlibFloat* rise_constraint,
-			   const DotlibFloat* fall_constraint,
+			   const DotlibLut* rise_constraint,
+			   const DotlibLut* fall_constraint,
 			   const DotlibLut* rise_propagation,
 			   const DotlibLut* fall_propagation,
 			   const DotlibLut* rise_transition,

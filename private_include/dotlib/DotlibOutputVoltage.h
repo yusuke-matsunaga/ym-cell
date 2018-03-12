@@ -69,7 +69,7 @@ public:
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
-  vortual
+  virtual
   void
   dump(ostream& s,
        int indent = 0) const;
@@ -121,7 +121,7 @@ inline
 const DotlibExpr*
 DotlibOutputVoltage::vol() const
 {
-  return mVil;
+  return mVol;
 }
 
 // @brief 'voh' を返す．
@@ -129,7 +129,7 @@ inline
 const DotlibExpr*
 DotlibOutputVoltage::voh() const
 {
-  return mVih;
+  return mVoh;
 }
 
 // @brief 'vomin' を返す．
@@ -137,7 +137,7 @@ inline
 const DotlibExpr*
 DotlibOutputVoltage::vomin() const
 {
-  return mViMin;
+  return mVoMin;
 }
 
 // @brief 'vomax' を返す．
@@ -145,7 +145,7 @@ inline
 const DotlibExpr*
 DotlibOutputVoltage::vomax() const
 {
-  return mViMax;
+  return mVoMax;
 }
 
 END_NAMESPACE_YM_DOTLIB

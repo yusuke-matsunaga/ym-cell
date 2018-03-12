@@ -8,10 +8,11 @@
 
 
 #include "ExprHandler.h"
-#include "DotlibParserImpl.h"
-#include "DotlibMgrImpl.h"
-#include "GroupHandler.h"
-#include "DotlibExpr.h"
+#include "dotlib/HandlerFactory.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/DotlibMgrImpl.h"
+#include "dotlib/DotlibExpr.h"
+#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -34,7 +35,7 @@ HandlerFactory::new_expr(DotlibParser& parser)
 // @param[in] parser パーサー
 ExprHandler::ExprHandler(DotlibParser& parser) :
   SimpleHandler(parser, false),
-  mUngetType(ERROR)
+  mUngetType(TokenType::ERROR)
 {
 }
 
@@ -48,7 +49,7 @@ ExprHandler::~ExprHandler()
 DotlibNode*
 ExprHandler::read_value()
 {
-  return read_expr(SEMI);
+  return read_expr(TokenType::SEMI);
 }
 
 // @brief primary を読み込む．
@@ -57,10 +58,10 @@ ExprHandler::read_primary()
 {
   FileRegion loc;
   TokenType type = parser().read_token(loc);
-  if ( type == LP ) {
-    return read_expr(RP);
+  if ( type == TokenType::LP ) {
+    return read_expr(TokenType::RP);
   }
-  if ( type == SYMBOL ) {
+  if ( type == TokenType::SYMBOL ) {
     const char* name =  parser().cur_string();
     if ( strcmp(name, "VDD") == 0 ) {
       return mgr()->new_vdd_expr(loc);
@@ -81,7 +82,7 @@ ExprHandler::read_primary()
       return nullptr;
     }
   }
-  if ( type == FLOAT_NUM || type == INT_NUM ) {
+  if ( type == TokenType::FLOAT_NUM || type == TokenType::INT_NUM ) {
     double val = parser().cur_float();
     return mgr()->new_float_expr(loc, val);
   }
@@ -106,12 +107,12 @@ ExprHandler::read_product()
   for ( ; ; ) {
     FileRegion loc;
     TokenType type = parser().read_token(loc);
-    if ( type == MULT || type == DIV ) {
+    if ( type == TokenType::MULT || type == TokenType::DIV ) {
       DotlibExpr* opr2 = read_primary();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
-      if ( type == MULT ) {
+      if ( type == TokenType::MULT ) {
 	opr1 = mgr()->new_mult(opr1, opr2);
       }
       else {
@@ -144,12 +145,12 @@ ExprHandler::read_expr(TokenType end_marker)
     if ( type == end_marker ) {
       return opr1;
     }
-    if ( type == PLUS || type == MINUS ) {
+    if ( type == TokenType::PLUS || type == TokenType::MINUS ) {
       DotlibExpr* opr2 = read_product();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
-      if ( type == PLUS ) {
+      if ( type == TokenType::PLUS ) {
 	opr1 = mgr()->new_plus(opr1, opr2);
       }
       else {
@@ -172,10 +173,10 @@ ExprHandler::read_expr(TokenType end_marker)
 TokenType
 ExprHandler::read_token(FileRegion& loc)
 {
-  if ( mUngetType != ERROR ) {
+  if ( mUngetType != TokenType::ERROR ) {
     TokenType ans = mUngetType;
     loc = mUngetLoc;
-    mUngetType = ERROR;
+    mUngetType = TokenType::ERROR;
     return ans;
   }
   else {

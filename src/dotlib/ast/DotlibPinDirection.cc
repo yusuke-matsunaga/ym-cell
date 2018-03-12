@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "DotlibPinDirection.h"
+#include "dotlib/DotlibPinDirection.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

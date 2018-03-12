@@ -91,6 +91,14 @@ public:
   const DotlibStateTable*
   statetable() const;
 
+  /// @brief 内容をストリーム出力する．
+  /// @param[in] s 出力先のストリーム
+  /// @param[in] indent インデント量
+  virtual
+  void
+  dump(ostream& s,
+       int indent = 0) const;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -164,6 +172,7 @@ DotlibCell::pin_top() const
 }
 
 // @brief バスグループのリストの先頭を返す．
+inline
 const DotlibBus*
 DotlibCell::bus_top() const
 {
@@ -171,6 +180,7 @@ DotlibCell::bus_top() const
 }
 
 // @brief バンドルグループのリストの先頭を返す．
+inline
 const DotlibBundle*
 DotlibCell::bundle_top() const
 {
@@ -178,6 +188,7 @@ DotlibCell::bundle_top() const
 }
 
 // @brief ff グループを返す．
+inline
 const DotlibFF*
 DotlibCell::ff() const
 {
@@ -185,6 +196,7 @@ DotlibCell::ff() const
 }
 
 // @brief latch グループを返す．
+inline
 const DotlibLatch*
 DotlibCell::latch() const
 {
@@ -192,6 +204,7 @@ DotlibCell::latch() const
 }
 
 // @brief statetable グループを返す．
+inline
 const DotlibStateTable*
 DotlibCell::statetable() const
 {

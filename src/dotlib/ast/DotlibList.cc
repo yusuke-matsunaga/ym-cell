@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "DotlibList.h"
+#include "dotlib/DotlibList.h"
 #include "ym/MsgMgr.h"
 
 
@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 BEGIN_NONAMESPACE
 
 FileRegion
-get_loc(const vector<const DotlibNode*>& elem_list)
+get_loc(const vector<DotlibNode*>& elem_list)
 {
   int n = elem_list.size();
   if ( n > 0 ) {
@@ -35,9 +35,13 @@ END_NONAMESPACE
 
 // @brief コンストラクタ
 // @param[in] elem_list 要素のリスト
-DotlibList::DotlibList(const vector<const DotlibNode*>& elem_list) :
+DotlibList::DotlibList(const vector<DotlibNode*>& elem_list) :
   DotlibNode(get_loc(elem_list))
 {
+  mNum = elem_list.size();
+  for ( int i = 0; i < mNum; ++ i ) {
+    mList[i] = elem_list[i];
+  }
 }
 
 // @brief デストラクタ

@@ -8,7 +8,11 @@
 
 
 #include "TimingHandler.h"
-#include "HanderFactory.h"
+#include "dotlib/HandlerFactory.h"
+#include "dotlib/DotlibAttr.h"
+#include "SimpleHandler.h"
+#include "ComplexHandler.h"
+#include "PwComplexHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -16,11 +20,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief timing group 用のハンドラを作る．
 // @param[in] parent 親のハンドラ
 DotlibHandler*
-HandlerFactory::new_timing(GroupHandler* parent)
+HandlerFactory::new_timing(DotlibParser& parser)
 {
-  GroupHandler* handler = new EmptyGroupHandler(parent);
-
-  return handler;
+  return new EmptyGroupHandler(parser);
 }
 
 
@@ -37,12 +39,13 @@ TimingHandler::TimingHandler(DotlibParser& parser) :
   DotlibHandler* simple = new SimpleHandler(parser, false);
   DotlibHandler* str_simple = new StrSimpleHandler(parser, false);
   DotlibHandler* flt_simple = new FloatSimpleHandler(parser);
-  DotlibHandler* func_handler = new_function(parser);
-  DotlibHandler* ts_handler = new TimingSenseHandler(parser);
-  DotlibHandler* tt_handler = new TimingTypeHandler(parser);
-  DotlibHandler* complex = new ComplexHandler(handler);
-  DotlibHandler* pw_complex = new PwComplexHandler(handler);
-  DotlibHandler* table_handler = new_table(handler);
+  DotlibHandler* func_handler = HandlerFactory::new_function(parser);
+  DotlibHandler* ts_handler = HandlerFactory::new_timing_sense(parser);
+  DotlibHandler* tt_handler = HandlerFactory::new_timing_type(parser);
+  DotlibHandler* complex = new ComplexHandler(parser);
+  DotlibHandler* pw_complex = new PwComplexHandler(parser);
+  DotlibHandler* table_handler = HandlerFactory::new_table(parser);
+  DotlibHandler* g_group = HandlerFactory::new_group(parser);
 
   reg_handler(ATTR_RELATED_BUS_EQUIVALENT,                      str_simple);
   reg_handler(ATTR_RELATED_BUS_PINS,                            str_simple);
@@ -83,7 +86,7 @@ TimingHandler::TimingHandler(DotlibParser& parser) :
   reg_handler(ATTR_COEFS,                                       complex);
 
   // group statements
-  reg_handler(ATTR_CELL_DEGRADATION,                            new_group(handler));
+  reg_handler(ATTR_CELL_DEGRADATION,                            g_group);
 
   reg_handler(ATTR_CELL_RISE,                                   table_handler);
   reg_handler(ATTR_CELL_FALL,                                   table_handler);
@@ -97,33 +100,33 @@ TimingHandler::TimingHandler(DotlibParser& parser) :
   reg_handler(ATTR_RISE_TRANSITION,                             table_handler);
   reg_handler(ATTR_FALL_TRANSITION,                             table_handler);
 
-  reg_handler(ATTR_NOISE_IMMUNITY_ABOVE_HIGH,                   new_group(handler));
-  reg_handler(ATTR_NOISE_IMMUNITY_BELOW_LOW,                    new_group(handler));
-  reg_handler(ATTR_NOISE_IMMUNITY_HIGH,                         new_group(handler));
-  reg_handler(ATTR_NOISE_IMMUNITY_LOW,                          new_group(handler));
+  reg_handler(ATTR_NOISE_IMMUNITY_ABOVE_HIGH,                   g_group);
+  reg_handler(ATTR_NOISE_IMMUNITY_BELOW_LOW,                    g_group);
+  reg_handler(ATTR_NOISE_IMMUNITY_HIGH,                         g_group);
+  reg_handler(ATTR_NOISE_IMMUNITY_LOW,                          g_group);
 
-  reg_handler(ATTR_PROPAGATED_NOISE_HEIGHT_ABOVE_HIGH,	        new_group(handler));
-  reg_handler(ATTR_PROPAGATED_NOISE_HEIGHT_BELOW_LOW,	        new_group(handler));
-  reg_handler(ATTR_PROPAGATED_NOISE_HEIGHT_HIGH,	        new_group(handler));
-  reg_handler(ATTR_PROPAGATED_NOISE_HEIGHT_LOW,		        new_group(handler));
-  reg_handler(ATTR_PROPAGATED_NOISE_PEAK_TIME_RATIO_ABOVE_HIGH, new_group(handler));
-  reg_handler(ATTR_PROPAGATED_NOISE_PEAK_TIME_RATIO_BELOW_LOW,  new_group(handler));
-  reg_handler(ATTR_PROPAGATED_NOISE_PEAK_TIME_RATIO_HIGH,       new_group(handler));
-  reg_handler(ATTR_PROPAGATED_NOISE_PEAK_TIME_RATIO_LOW,        new_group(handler));
-  reg_handler(ATTR_PROPAGATED_NOISE_WIDTH_ABOVE_HIGH,  	        new_group(handler));
-  reg_handler(ATTR_PROPAGATED_NOISE_WIDTH_BELOW_LOW, 	        new_group(handler));
-  reg_handler(ATTR_PROPAGATED_NOISE_WIDTH_HIGH,		        new_group(handler));
-  reg_handler(ATTR_PROPAGATED_NOISE_WIDTH_LOW,		        new_group(handler));
+  reg_handler(ATTR_PROPAGATED_NOISE_HEIGHT_ABOVE_HIGH,	        g_group);
+  reg_handler(ATTR_PROPAGATED_NOISE_HEIGHT_BELOW_LOW,	        g_group);
+  reg_handler(ATTR_PROPAGATED_NOISE_HEIGHT_HIGH,	        g_group);
+  reg_handler(ATTR_PROPAGATED_NOISE_HEIGHT_LOW,		        g_group);
+  reg_handler(ATTR_PROPAGATED_NOISE_PEAK_TIME_RATIO_ABOVE_HIGH, g_group);
+  reg_handler(ATTR_PROPAGATED_NOISE_PEAK_TIME_RATIO_BELOW_LOW,  g_group);
+  reg_handler(ATTR_PROPAGATED_NOISE_PEAK_TIME_RATIO_HIGH,       g_group);
+  reg_handler(ATTR_PROPAGATED_NOISE_PEAK_TIME_RATIO_LOW,        g_group);
+  reg_handler(ATTR_PROPAGATED_NOISE_WIDTH_ABOVE_HIGH,  	        g_group);
+  reg_handler(ATTR_PROPAGATED_NOISE_WIDTH_BELOW_LOW, 	        g_group);
+  reg_handler(ATTR_PROPAGATED_NOISE_WIDTH_HIGH,		        g_group);
+  reg_handler(ATTR_PROPAGATED_NOISE_WIDTH_LOW,		        g_group);
 
-  reg_handler(ATTR_RETAINING_RISE,		                new_group(handler));
-  reg_handler(ATTR_RETAINING_FALL,		                new_group(handler));
+  reg_handler(ATTR_RETAINING_RISE,		                g_group);
+  reg_handler(ATTR_RETAINING_FALL,		                g_group);
 
-  reg_handler(ATTR_RETAIN_FALL_SLEW,		                new_group(handler));
-  reg_handler(ATTR_RETAIN_RISE_SLEW,		                new_group(handler));
+  reg_handler(ATTR_RETAIN_FALL_SLEW,		                g_group);
+  reg_handler(ATTR_RETAIN_RISE_SLEW,		                g_group);
 
-  reg_handler(ATTR_STEADY_STATE_CURRENT_HIGH,		        new_group(handler));
-  reg_handler(ATTR_STEADY_STATE_CURRENT_LOW,		        new_group(handler));
-  reg_handler(ATTR_STEADY_STATE_CURRENT_TRISTATE,	        new_group(handler));
+  reg_handler(ATTR_STEADY_STATE_CURRENT_HIGH,		        g_group);
+  reg_handler(ATTR_STEADY_STATE_CURRENT_LOW,		        g_group);
+  reg_handler(ATTR_STEADY_STATE_CURRENT_TRISTATE,	        g_group);
 }
 
 // @brief デストラクタ
@@ -133,13 +136,17 @@ TimingHandler::~TimingHandler()
 
 // @brief 値を作る．
 DotlibNode*
-TimingHandler::gen_value(const DotlibList* value_list,
-			 const DotlibAttr* attr_top)
+TimingHandler::gen_value(const FileRegion& loc,
+			 const vector<DotlibAttr*>& attr_list)
 {
-  for ( auto attr = attr_top; attr != nullptr; attr = attr->next() ) {
+  for ( auto attr: attr_list ) {
     if ( attr->attr_type() == ATTR_RELATED_PIN ) {
+      ;
     }
   }
+
+#warning "TODO: 未完成"
+  return nullptr;
 }
 
 END_NAMESPACE_YM_DOTLIB

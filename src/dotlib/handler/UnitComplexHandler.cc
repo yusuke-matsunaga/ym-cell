@@ -1,14 +1,19 @@
 ﻿
-/// @file ComplexHandler.cc
-/// @brief ComplexHandler の実装ファイル
+/// @file UnitComplexHandler.cc
+/// @brief UnitComplexHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ComplexHandler.h"
+#include "UnitComplexHandler.h"
 #include "dotlib/DotlibMgrImpl.h"
+#include "dotlib/DotlibNode.h"
+#include "dotlib/DotlibInt.h"
+#include "dotlib/DotlibFloat.h"
+#include "dotlib/DotlibString.h"
+#include "dotlib/DotlibUnit.h"
 #include "ym/MsgMgr.h"
 
 
@@ -19,9 +24,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のハンドラ
-UnitComplexHandler::UnitComplexHandler(GroupHandler* parent) :
-  ComplexHandler(parent)
+// @param[in] parser パーサー
+UnitComplexHandler::UnitComplexHandler(DotlibParser& parser) :
+  ComplexHandler(parser)
 {
 }
 
@@ -33,18 +38,18 @@ UnitComplexHandler::~UnitComplexHandler()
 // @brief 値を表すノードを作る．
 // @param[in] value_list 値のリスト
 DotlibNode*
-UnitComplexHandler::gen_value(DotlibList* value_list)
+UnitComplexHandler::gen_value(const vector<DotlibNode*>& value_list)
 {
-  if ( value_list->list_size() != 2 ) {
+  if ( value_list.size() != 2 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_list->loc(),
+		    value_list[0]->loc(), // TODO: 空の時に失敗する．
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "Syntax error, (number, string) pair expected.");
     return nullptr;
   }
 
-  const DotlibNode* top = value_list->list_elem(0);
+  const DotlibNode* top = value_list[0];
   double unit_val = 0.0;
   const DotlibFloat* float_node = dynamic_cast<const DotlibFloat*>(top);
   if ( float_node != nullptr ) {
@@ -65,8 +70,8 @@ UnitComplexHandler::gen_value(DotlibList* value_list)
     return nullptr;
   }
 
-  const DotlibNode* next = value_list->list_elem(1);
-  const DotlibNode* str_node = dynamic_cast<const DotlibString*>(next);
+  const DotlibNode* next = value_list[1];
+  const DotlibString* str_node = dynamic_cast<const DotlibString*>(next);
   if ( str_node == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    next->loc(),

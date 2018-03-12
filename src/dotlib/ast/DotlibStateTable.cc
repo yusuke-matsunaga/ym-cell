@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "DotlibStateTable.h"
+#include "dotlib/DotlibStateTable.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

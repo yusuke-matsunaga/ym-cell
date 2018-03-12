@@ -8,10 +8,14 @@
 
 
 #include "dotlib/HandlerFactory.h"
-
 #include "TableHandler.h"
-#include "IndexHandler.h"
-#include "ValuesHandler.h"
+#include "dotlib/DotlibMgrImpl.h"
+#include "dotlib/DotlibLut.h"
+#include "dotlib/DotlibString.h"
+#include "dotlib/DotlibFloatVector.h"
+#include "dotlib/DotlibList.h"
+#include "dotlib/DotlibAttr.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -34,18 +38,19 @@ HandlerFactory::new_table(DotlibParser& parser)
 TableHandler::TableHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
+  DotlibHandler* index_handler = HandlerFactory::new_index(parser);
+  DotlibHandler* values_handler = HandlerFactory::new_values(parser);
+  DotlibHandler* dummy_handler = new GroupHandler(parser);
+
   // simple attributes
 
   // complex attribute
-  DotlibHandler* index_handler = new IndexHandler(parser);
-  DotlibHandler* values_handler = new ValuesHandler(parser);
   reg_handler(ATTR_INDEX_1, index_handler);
   reg_handler(ATTR_INDEX_2, index_handler);
   reg_handler(ATTR_INDEX_3, index_handler);
   reg_handler(ATTR_VALUES,  values_handler);
 
   // group statements
-  DotlibHandler* dummy_handler = new DummyGroupHandler(parser);
   reg_handler(ATTR_DOMAIN,  dummy_handler);
 }
 
@@ -54,17 +59,17 @@ TableHandler::~TableHandler()
 {
 }
 
-// @brief 値を作る．
+/// @brief 値を作る．
 DotlibNode*
-TableHandler::gen_value(const DotlibList* value_list,
-			const DotlibAttr* attr_top)
+TableHandler::gen_value(const FileRegion& loc,
+			const DotlibString* name,
+			const vector<DotlibAttr*>& attr_list)
 {
-  const DotlibString* name = value_list->get_string_from_value_list();
   const DotlibFloatVector* index_1 = nullptr;
   const DotlibFloatVector* index_2 = nullptr;
   const DotlibFloatVector* index_3 = nullptr;
   const DotlibList* values = nullptr;
-  for ( auto attr = attr_top; attr != nullptr; attr = attr->next() ) {
+  for ( auto attr: attr_list ) {
     if ( attr->attr_type() == ATTR_INDEX_1 ) {
       if ( index_1 != nullptr ) {
 	// エラー

@@ -551,7 +551,7 @@ set_library(const DotlibLibrary* dt_library,
     vector<double> index_1;
     vector<double> index_2;
     vector<double> index_3;
-    int d = dt_template->dimension()->value();
+    int d = dt_template->dimension();
     switch ( d ) {
     case 1:
       dt_template->index_1()->get_vector(index_1);

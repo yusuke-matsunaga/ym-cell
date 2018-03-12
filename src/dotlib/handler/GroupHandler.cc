@@ -8,12 +8,14 @@
 
 
 #include "GroupHandler.h"
-#include "DotlibParserImpl.h"
-#include "DotlibMgrImpl.h"
-#include "DotlibList.h"
-#include "DotlibInt.h"
-#include "DotlibString.h"
-#include "DotlibAttr.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/DotlibMgrImpl.h"
+#include "dotlib/DotlibList.h"
+#include "dotlib/DotlibInt.h"
+#include "dotlib/DotlibString.h"
+#include "dotlib/DotlibAttr.h"
+#include "dotlib/DotlibGenGroup.h"
+#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -25,7 +27,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief 親がない場合のコンストラクタ
 // @param[in] parser パーサー
-GroupHandler::GroupHandler(DotlibParserImpl& parser) :
+GroupHandler::GroupHandler(DotlibParser& parser) :
   DotlibHandler(parser)
 {
 }
@@ -43,37 +45,41 @@ DotlibNode*
 GroupHandler::read_attr(AttrType attr_type,
 			const FileRegion& attr_loc)
 {
-  FileRegion dummy_loc;
-  DotlibList* value_list = parse_complex(false, dummy_loc);
-  if ( value_list == nullptr ) {
+  vector<DotlibNode*> value_list;
+  if ( !parse_complex(false, value_list) ) {
     return nullptr;
   }
 
   if ( debug() ) {
-    cout << attr_type << value_list << " {" << endl;
+    cout << attr_type << ": (";
+    for ( auto value: value_list ) {
+      cout << " " << value;
+    }
+    cout << ")" << " {" << endl;
   }
 
   if ( !check_group_value(attr_type, attr_loc, value_list) ) {
     return nullptr;
   }
 
-  mAttrTop = nullptr;
-  mAttrTail = nullptr;
-
-  if ( !expect(LCB) ) {
+  if ( !expect(TokenType::LCB) ) {
     return nullptr;
   }
 
+  FileRegion first_loc = parser().cur_loc();
+  vector<DotlibAttr*> attr_list;
+  FileRegion last_loc;
   for ( ; ; ) {
     FileRegion loc;
     TokenType type = parser().read_token(loc);
-    if ( type == NL ) {
+    if ( type == TokenType::NL ) {
       continue;
     }
-    if ( type == RCB ) {
+    if ( type == TokenType::RCB ) {
+      last_loc = loc;
       break;
     }
-    if ( type != SYMBOL ) {
+    if ( type != TokenType::SYMBOL ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
 		      kMsgError,
@@ -99,16 +105,10 @@ GroupHandler::read_attr(AttrType attr_type,
       return nullptr;
     }
     DotlibAttr* attr = mgr()->new_attr(loc, name_type, value);
-    if ( mAttrTop == nullptr ) {
-      mAttrTop = attr;
-    }
-    else {
-      mAttrTail->mNext = attr;
-    }
-    mAttrTail = attr;
+    attr_list.push_back(attr);
   }
 
-  if ( !expect(NL) ) {
+  if ( !expect(TokenType::NL) ) {
     return nullptr;
   }
 
@@ -116,7 +116,7 @@ GroupHandler::read_attr(AttrType attr_type,
     cout << "}" << endl;
   }
 
-  return gen_value(loc, value_list, mAttrTop);
+  return gen_value(FileRegion(first_loc, last_loc), value_list, attr_list);
 }
 
 // @brief ハンドラの登録を行う．
@@ -155,9 +155,18 @@ GroupHandler::find_handler(AttrType attr_type)
 bool
 GroupHandler::check_group_value(AttrType attr_type,
 				const FileRegion& attr_loc,
-				DotlibList* value_list)
+				const vector<DotlibNode*>& value_list)
 {
   return true;
+}
+
+// @brief 値を作る．
+DotlibNode*
+GroupHandler::gen_value(const FileRegion& loc,
+			const vector<DotlibNode*>& value_list,
+			const vector<DotlibAttr*>& attr_list)
+{
+  return mgr()->new_gen_group(loc, value_list, attr_list);
 }
 
 
@@ -181,16 +190,14 @@ EmptyGroupHandler::~EmptyGroupHandler()
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
 // @param[in] value_list 値を表すトークンのリスト
-// @note begin_group() の中で呼ばれる．
-// @note デフォルトの実装はなにもしないで true を返す．
 bool
 EmptyGroupHandler::check_group_value(AttrType attr_type,
 				     const FileRegion& attr_loc,
-				     DotlibList* value_list)
+				     const vector<DotlibNode*>& value_list)
 {
-  int n = value_list->list_size();
+  int n = value_list.size();
   if ( n > 0 ) {
-    const DotlibNode* top = value_list->list_elem(0);
+    const DotlibNode* top = value_list[0];
     FileRegion loc = top->loc();
     ostringstream buf;
     buf << attr_type << " statement does not have parameters.";
@@ -202,6 +209,30 @@ EmptyGroupHandler::check_group_value(AttrType attr_type,
   }
 
   return true;
+}
+
+// @brief 値を作る．
+// @param[in] loc 全体のファイル上の位置
+// @param[in] value_list 値のリスト
+// @param[in] attr_list 属性のリスト
+DotlibNode*
+EmptyGroupHandler::gen_value(const FileRegion& loc,
+			     const vector<DotlibNode*>& value_list,
+			     const vector<DotlibAttr*>& attr_list)
+{
+  ASSERT_COND( value_list.empty() );
+  return gen_value(loc, attr_list);
+}
+
+// @brief 値を作る．
+// @param[in] loc 全体のファイル上の位置
+// @param[in] attr_list 属性のリスト
+DotlibNode*
+EmptyGroupHandler::gen_value(const FileRegion& loc,
+			     const vector<DotlibAttr*>& attr_list)
+{
+#warning "TODO: 未完成"
+  return nullptr;
 }
 
 
@@ -225,14 +256,12 @@ Str1GroupHandler::~Str1GroupHandler()
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
 // @param[in] value_list 値を表すトークンのリスト
-// @note begin_group() の中で呼ばれる．
-// @note デフォルトの実装はなにもしないで true を返す．
 bool
 Str1GroupHandler::check_group_value(AttrType attr_type,
 				    const FileRegion& attr_loc,
-				    DotlibList* value_list)
+				    const vector<DotlibNode*>& value_list)
 {
-  int n = value_list->list_size();
+  int n = value_list.size();
   if ( n == 0 ) {
     ostringstream buf;
     buf << attr_type << " statement requires a string parameter.";
@@ -243,9 +272,9 @@ Str1GroupHandler::check_group_value(AttrType attr_type,
     return false;
   }
 
-  const DotlibNode* top = value_list->list_elem(0);
+  const DotlibNode* top = value_list[0];
   if ( n > 1 ) {
-    const DotlibNode* second = value_list->list_elem(1);
+    const DotlibNode* second = value_list[1];
     FileRegion loc = second->loc();
     ostringstream buf;
     buf << attr_type << " statement has only one string parameter.";
@@ -265,6 +294,29 @@ Str1GroupHandler::check_group_value(AttrType attr_type,
   }
 
   return true;
+}
+
+// @brief 値を作る．
+DotlibNode*
+Str1GroupHandler::gen_value(const FileRegion& loc,
+			    const vector<DotlibNode*>& value_list,
+			    const vector<DotlibAttr*>& attr_list)
+{
+  // check_group_value() でチェックしているので value_list は
+  // 文字列のシングルトンのはず．
+  ASSERT_COND( value_list.size() == 1 );
+  const DotlibString* str_value = dynamic_cast<const DotlibString*>(value_list[0]);
+  return gen_value(loc, str_value, attr_list);
+}
+
+// @brief 値を作る．
+DotlibNode*
+Str1GroupHandler::gen_value(const FileRegion& loc,
+			    const DotlibString* value,
+			    const vector<DotlibAttr*>& attr_list)
+{
+#warning "TODO: 未完成"
+  return nullptr;
 }
 
 
@@ -293,9 +345,9 @@ Str2GroupHandler::~Str2GroupHandler()
 bool
 Str2GroupHandler::check_group_value(AttrType attr_type,
 				    const FileRegion& attr_loc,
-				    DotlibList* value_list)
+				    const vector<DotlibNode*>& value_list)
 {
-  int n = value_list->list_size();
+  int n = value_list.size();
   if ( n < 2 ) {
     ostringstream buf;
     buf << attr_type << " statement requires two string parameters.";
@@ -306,10 +358,10 @@ Str2GroupHandler::check_group_value(AttrType attr_type,
     return false;
   }
 
-  const DotlibNode* top = value_list->list_elem(0);
-  const DotlibNode* second = value_list->list_elem(1);
+  const DotlibNode* top = value_list[0];
+  const DotlibNode* second = value_list[1];
   if ( n > 2 ) {
-    const DotlibNode* third = value_list->list_elem(2);
+    const DotlibNode* third = value_list[2];
     FileRegion loc = third->loc();
     ostringstream buf;
     buf << attr_type << " statement has two string parameters.";
@@ -338,6 +390,29 @@ Str2GroupHandler::check_group_value(AttrType attr_type,
   return true;
 }
 
+// @brief 値を作る．
+DotlibNode*
+Str2GroupHandler::gen_value(const FileRegion& loc,
+			    const vector<DotlibNode*>& value_list,
+			    const vector<DotlibAttr*>& attr_list)
+{
+  ASSERT_COND( value_list.size() == 2 );
+  auto value1 = dynamic_cast<const DotlibString*>(value_list[0]);
+  auto value2 = dynamic_cast<const DotlibString*>(value_list[1]);
+  return gen_value(loc, value1, value2, attr_list);
+}
+
+// @brief 値を作る．
+DotlibNode*
+Str2GroupHandler::gen_value(const FileRegion& loc,
+			    const DotlibString* value1,
+			    const DotlibString* value2,
+			    const vector<DotlibAttr*>& attr_list)
+{
+#warning "TODO: 未完成"
+  return nullptr;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス Str2IntGroupHandler
@@ -364,9 +439,9 @@ Str2IntGroupHandler::~Str2IntGroupHandler()
 bool
 Str2IntGroupHandler::check_group_value(AttrType attr_type,
 				       const FileRegion& attr_loc,
-				       DotlibList* value_list)
+				       const vector<DotlibNode*>& value_list)
 {
-  int n = value_list->list_size();
+  int n = value_list.size();
   if ( n < 3 ) {
     ostringstream buf;
     buf << attr_type
@@ -378,11 +453,11 @@ Str2IntGroupHandler::check_group_value(AttrType attr_type,
     return false;
   }
 
-  const DotlibNode* top = value_list->list_elem(0);
-  const DotlibNode* second = value_list->list_elem(1);
-  const DotlibNode* third = value_list->list_elem(2);
+  const DotlibNode* top = value_list[0];
+  const DotlibNode* second = value_list[1];
+  const DotlibNode* third = value_list[2];
   if ( n > 3 ) {
-    const DotlibNode* forth = value_list->list_elem(3);
+    const DotlibNode* forth = value_list[4];
     FileRegion loc = forth->loc();
     ostringstream buf;
     buf << attr_type << " statement has two string and an integer parameters.";
@@ -416,6 +491,31 @@ Str2IntGroupHandler::check_group_value(AttrType attr_type,
   }
 
   return true;
+}
+
+// @brief 値を作る．
+DotlibNode*
+Str2IntGroupHandler::gen_value(const FileRegion& loc,
+			    const vector<DotlibNode*>& value_list,
+			    const vector<DotlibAttr*>& attr_list)
+{
+  ASSERT_COND( value_list.size() == 3 );
+  auto value1 = dynamic_cast<const DotlibString*>(value_list[0]);
+  auto value2 = dynamic_cast<const DotlibString*>(value_list[1]);
+  auto value3 = dynamic_cast<const DotlibInt*>(value_list[2]);
+  return gen_value(loc, value1, value2, value3, attr_list);
+}
+
+// @brief 値を作る．
+DotlibNode*
+Str2IntGroupHandler::gen_value(const FileRegion& loc,
+			       const DotlibString* value1,
+			       const DotlibString* value2,
+			       const DotlibInt* value3,
+			       const vector<DotlibAttr*>& attr_list)
+{
+#warning "TODO: 未完成"
+  return nullptr;
 }
 
 END_NAMESPACE_YM_DOTLIB

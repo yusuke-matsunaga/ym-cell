@@ -7,11 +7,11 @@
 /// All rights reserved.
 
 
-#include "DotlibPin.h"
-#include "DotlibNode.h"
-#include "DotlibAttr.h"
-#include "DotlibAttrMap.h"
-#include "ym/MsgMgr.h"
+#include "dotlib/DotlibPin.h"
+//#include "DotlibNode.h"
+//#include "DotlibAttr.h"
+//#include "DotlibAttrMap.h"
+//#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -262,5 +262,15 @@ DotlibPin::set_data(const DotlibNode* pin_node)
   return true;
 }
 #endif
+
+// @brief 内容をストリーム出力する．
+// @param[in] s 出力先のストリーム
+// @param[in] indent インデント量
+void
+DotlibPin::dump(ostream& s,
+		int indent) const
+{
+  #warning "TODO: 未完成"
+}
 
 END_NAMESPACE_YM_DOTLIB

@@ -8,6 +8,9 @@
 
 
 #include "PwComplexHandler.h"
+#include "dotlib/DotlibNode.h"
+#include "dotlib/DotlibInt.h"
+#include "dotlib/DotlibFloat.h"
 #include "ym/MsgMgr.h"
 
 
@@ -18,9 +21,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のハンドラ
-PwComplexHandler::PwComplexHandler(GroupHandler* parent) :
-  ComplexHandler(parent)
+// @param[in] parser パーサー
+PwComplexHandler::PwComplexHandler(DotlibParser& parser) :
+  ComplexHandler(parser)
 {
 }
 
@@ -32,17 +35,17 @@ PwComplexHandler::~PwComplexHandler()
 // @brief 値を表すノードを作る．
 // @param[in] value_list 値のリスト
 DotlibNode*
-PwComplexHandler::gen_value(DotlibList* value_list)
+PwComplexHandler::gen_value(const vector<DotlibNode*>& value_list)
 {
-  if ( value_list->list_size() != 2 ) {
+  if ( value_list.size() != 2 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_list->loc(),
+		    value_list[0]->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "Syntax error, (integer, float) pair expected.");
     return nullptr;
   }
-  const DotlibNode* top = value_list->list_elem(0);
+  const DotlibNode* top = value_list[0];
   if ( dynamic_cast<const DotlibInt*>(top) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    top->loc(),
@@ -51,7 +54,7 @@ PwComplexHandler::gen_value(DotlibList* value_list)
 		    "Syntax error, first element should be an integer number.");
     return nullptr;
   }
-  const DotlibNode* next = value_list->list_elem(1);
+  const DotlibNode* next = value_list[1];
   if ( dynamic_cast<const DotlibFloat*>(next) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    next->loc(),
@@ -60,7 +63,9 @@ PwComplexHandler::gen_value(DotlibList* value_list)
 		    "Syntax error, second element should be a float number.");
     return nullptr;
   }
-  return value_list;
+#warning "TODO: 未完成"
+  // 本当は (integer, float) を表す DotlibNode の派生クラスを作ってそれを返す．
+  return nullptr;
 
 }
 

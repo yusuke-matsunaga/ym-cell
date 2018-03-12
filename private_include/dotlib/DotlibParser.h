@@ -10,6 +10,7 @@
 
 
 #include "dotlib/dotlib_nsdef.h"
+#include "dotlib/AttrType.h"
 #include "ym/FileRegion.h"
 
 
@@ -84,6 +85,14 @@ public:
   double
   cur_float() const;
 
+  /// @brief 直前の read_token() に対応する位置を返す．
+  FileRegion
+  cur_loc() const;
+
+  /// @brief 文字列を属性値に変換する．
+  AttrType
+  conv_to_attr(const char* str);
+
   /// @brief DotlibMgrImpl* を返す．
   DotlibMgrImpl*
   mgr();
@@ -100,6 +109,9 @@ private:
 
   // パーサーの実体
   DotlibParserImpl* mImpl;
+
+  // 'library' グループのハンドラ
+  DotlibHandler* mLibHandler;
 
 };
 

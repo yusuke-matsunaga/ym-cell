@@ -27,7 +27,7 @@ private:
 
   /// @brief コンストラクタ
   /// @param[in] elem_list 要素のリスト
-  DotlibList(const vector<const DotlibNode*>& elem_list);
+  DotlibList(const vector<DotlibNode*>& elem_list);
 
   /// @brief デストラクタ
   virtual

@@ -151,6 +151,14 @@ public:
   void
   set_next(const DotlibPin* next);
 
+  /// @brief 内容をストリーム出力する．
+  /// @param[in] s 出力先のストリーム
+  /// @param[in] indent インデント量
+  virtual
+  void
+  dump(ostream& s,
+       int indent = 0) const;
+
 
 private:
   //////////////////////////////////////////////////////////////////////

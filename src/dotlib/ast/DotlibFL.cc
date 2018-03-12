@@ -7,10 +7,10 @@
 /// All rights reserved.
 
 
-#include "DotlibFL.h"
-#include "DotlibAttr.h"
-#include "DotlibAttrMap.h"
-#include "ym/MsgMgr.h"
+#include "dotlib/DotlibFL.h"
+//#include "DotlibAttr.h"
+//#include "DotlibAttrMap.h"
+//#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

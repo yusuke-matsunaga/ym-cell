@@ -60,7 +60,8 @@ protected:
   /// @param[in] value_list 値のリスト
   virtual
   DotlibNode*
-  gen_value(DotlibList* value_list) = 0;
+  gen_value(const vector<DotlibNode*>& value_list);
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -69,70 +70,6 @@ private:
 
   // parse_complex() 中でベクターモードで読み込む時 true にするフラグ
   bool mVectorMode;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class Str1ComplexHandler ComplexHandler.h "ComplexHandler.h"
-/// @brief 1つの文字列型をとる complex attribute ハンドラ
-//////////////////////////////////////////////////////////////////////
-class Str1ComplexHandler :
-  public ComplexHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  Str1ComplexHandler(DotlibParser& parser);
-
-  /// @brief デストラクタ
-  virtual
-  ~Str1ComplexHandler();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // ComplexHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class PwComplexHandler ComplexHandler.h "ComplexHandler.h"
-/// @brief 折れ線近似モデル用ののcomplex attribute ハンドラ
-//////////////////////////////////////////////////////////////////////
-class PwComplexHandler :
-  public ComplexHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  PwComplexHandler(DotlibParser& parser);
-
-  /// @brief デストラクタ
-  virtual
-  ~PwComplexHandler();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // ComplexHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込んだ時の処理
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[in] value_list 値のリスト
-  /// @param[in] end_loc 右括弧の位置
-  virtual
-  bool
-  set_value(AttrType attr_type,
-	    const FileRegion& attr_loc,
-	    DotlibList* value_list,
-	    const FileRegion& end_loc);
 
 };
 

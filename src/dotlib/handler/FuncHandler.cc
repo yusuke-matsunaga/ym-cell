@@ -8,10 +8,11 @@
 
 
 #include "FuncHandler.h"
-//#include "DotlibParser.h"
-//#include "DotlibMgrImpl.h"
-//#include "GroupHandler.h"
-//#include "DotlibExpr.h"
+#include "dotlib/HandlerFactory.h"
+#include "dotlib/DotlibExpr.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/DotlibMgrImpl.h"
+#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -49,7 +50,7 @@ FuncHandler::read_value()
 {
   FileRegion loc;
   TokenType value_type = parser().read_token(loc, false);
-  if ( value_type != SYMBOL ) {
+  if ( value_type != TokenType::SYMBOL ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
 		    kMsgError,
@@ -59,9 +60,9 @@ FuncHandler::read_value()
   }
 
   mScanner.init(parser().cur_string(), loc);
-  mUngetType = ERROR;
+  mUngetType = TokenType::ERROR;
 
-  return read_expr(END);
+  return read_expr(TokenType::END);
 }
 
 // @brief primary を読み込む．
@@ -70,14 +71,14 @@ FuncHandler::read_primary()
 {
   FileRegion loc;
   TokenType type = read_token(loc);
-  if ( type == LP ) {
-    return read_expr(RP);
+  if ( type == TokenType::LP ) {
+    return read_expr(TokenType::RP);
   }
-  if ( type == SYMBOL ) {
+  if ( type == TokenType::SYMBOL ) {
     ShString name(mScanner.cur_string());
     return mgr()->new_str_expr(loc, name);
   }
-  if ( type == INT_NUM ) {
+  if ( type == TokenType::INT_NUM ) {
     int v = mScanner.cur_int();
     if ( v != 0 && v != 1 ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -104,7 +105,7 @@ FuncHandler::read_primary2()
 {
   FileRegion loc;
   TokenType type = read_token(loc);
-  if ( type == NOT ) {
+  if ( type == TokenType::NOT ) {
     DotlibExpr* opr = read_primary();
     if ( opr == nullptr ) {
       return nullptr;
@@ -119,7 +120,7 @@ FuncHandler::read_primary2()
   }
 
   type = read_token(loc);
-  if ( type == PRIME ) {
+  if ( type == TokenType::PRIME ) {
     return mgr()->new_not(FileRegion(node->loc(), loc), node);
   }
   unget_token(type, loc);
@@ -139,14 +140,14 @@ FuncHandler::read_product()
   for ( ; ; ) {
     FileRegion loc;
     TokenType type = read_token(loc);
-    if ( type == AND ) {
+    if ( type == TokenType::AND ) {
       DotlibExpr* opr2 = read_primary2();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
       opr1 = mgr()->new_and(opr1, opr2);
     }
-    else if ( type == NOT || type == LP || type == SYMBOL ) {
+    else if ( type == TokenType::NOT || type == TokenType::LP || type == TokenType::SYMBOL ) {
       unget_token(type, loc);
       DotlibExpr* opr2 = read_primary2();
       if ( opr2 == nullptr ) {
@@ -176,12 +177,12 @@ FuncHandler::read_expr(TokenType end_marker)
     if ( type == end_marker ) {
       return opr1;
     }
-    if ( type == OR || type == XOR ) {
+    if ( type == TokenType::OR || type == TokenType::XOR ) {
       DotlibExpr* opr2 = read_product();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
-      if ( type == XOR ) {
+      if ( type == TokenType::XOR ) {
 	opr1 = mgr()->new_xor(opr1, opr2);
       }
       else {
@@ -204,10 +205,10 @@ FuncHandler::read_expr(TokenType end_marker)
 TokenType
 FuncHandler::read_token(FileRegion& loc)
 {
-  if ( mUngetType != ERROR ) {
+  if ( mUngetType != TokenType::ERROR ) {
     TokenType ans = mUngetType;
     loc = mUngetLoc;
-    mUngetType = ERROR;
+    mUngetType = TokenType::ERROR;
     return ans;
   }
   else {

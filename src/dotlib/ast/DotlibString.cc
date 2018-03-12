@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "DotlibString.h"
+#include "dotlib/DotlibString.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

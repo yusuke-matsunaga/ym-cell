@@ -7,7 +7,8 @@
 /// All rights reserved.
 
 
-#include "DotlibExpr.h"
+#include "dotlib/DotlibExpr.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -35,15 +36,15 @@ DotlibExpr::is_opr() const
   return false;
 }
 
-// @brief 整数値を返す．
+// @brief ブール値を返す．
 //
-// kInt の時のみ意味を持つ．
-int
-DotlibExpr::int_value() const
+// kBool の時のみ意味を持つ．
+bool
+DotlibExpr::bool_value() const
 {
   ASSERT_NOT_REACHED;
 
-  return 0;
+  return false;
 }
 
 // @brief 文字列シンボルを返す．
@@ -81,36 +82,36 @@ DotlibExpr::opr2() const
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス DotlibIntExpr
+// クラス DotlibBoolExpr
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] loc 位置情報
 // @param[in] val 値
-DotlibIntExpr::DotlibIntExpr(const FileRegion& loc,
-			     int val) :
+DotlibBoolExpr::DotlibBoolExpr(const FileRegion& loc,
+			       bool val) :
   DotlibExpr(loc),
   mValue(val)
 {
 }
 
 // @brief デストラクタ
-DotlibIntExpr::~DotlibIntExpr()
+DotlibBoolExpr::~DotlibBoolExpr()
 {
 }
 
 // @brief 型を返す．
 DotlibExpr::Type
-DotlibIntExpr::type() const
+DotlibBoolExpr::type() const
 {
-  return kInt;
+  return kBool;
 }
 
-// @brief 整数値を返す．
+// @brief ブール値を返す．
 //
-// kInt の時のみ意味を持つ．
-int
-DotlibIntExpr::int_value() const
+// kBool の時のみ意味を持つ．
+bool
+DotlibBoolExpr::bool_value() const
 {
   return mValue;
 }
@@ -119,14 +120,67 @@ DotlibIntExpr::int_value() const
 // @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
 // @return 対応する式(Expr)を返す．
 Expr
-DotlibIntExpr::to_expr(const HashMap<ShString, int>& pin_map) const
+DotlibBoolExpr::to_expr(const HashMap<ShString, int>& pin_map) const
 {
-  if ( mValue == 0 ) {
+  if ( mValue ) {
     return Expr::const_zero();
   }
-  if ( mValue == 1 ) {
+  else {
     return Expr::const_one();
   }
+}
+
+// @brief 内容をストリーム出力する．
+// @param[in] s 出力先のストリーム
+// @param[in] indent インデント量
+void
+DotlibBoolExpr::dump(ostream& s,
+		     int indent) const
+{
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス DotlibFlotExpr
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+// @param[in] loc 位置情報
+// @param[in] val 値
+DotlibFloatExpr::DotlibFloatExpr(const FileRegion& loc,
+				 double val) :
+  DotlibExpr(loc),
+  mValue(val)
+{
+}
+
+// @brief デストラクタ
+DotlibFloatExpr::~DotlibFloatExpr()
+{
+}
+
+// @brief 型を返す．
+DotlibExpr::Type
+DotlibFloatExpr::type() const
+{
+  return kFloat;
+}
+
+// @brief 浮動小数点値を返す．
+//
+// kFloat の時のみ意味を持つ．
+double
+DotlibFloatExpr::float_value() const
+{
+  return mValue;
+}
+
+// @brief Expr を作る．
+// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
+// @return 対応する式(Expr)を返す．
+Expr
+DotlibFloatExpr::to_expr(const HashMap<ShString, int>& pin_map) const
+{
   ASSERT_NOT_REACHED;
   return Expr();
 }
@@ -135,8 +189,8 @@ DotlibIntExpr::to_expr(const HashMap<ShString, int>& pin_map) const
 // @param[in] s 出力先のストリーム
 // @param[in] indent インデント量
 void
-DotlibIntExpr::dump(ostream& s,
-		    int indent) const
+DotlibFloatExpr::dump(ostream& s,
+		      int indent) const
 {
 }
 
@@ -258,10 +312,10 @@ DotlibSymbolExpr::dump(ostream& s,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] opr オペランド
 // @param[in] loc ファイル上の位置
-DotlibNot::DotlibNot(const DotlibExpr* opr,
-		     const FileRegion& loc) :
+// @param[in] opr オペランド
+DotlibNot::DotlibNot(const FileRegion& loc,
+		     const DotlibExpr* opr) :
   DotlibExpr(loc),
   mOpr1(opr)
 {
@@ -293,7 +347,7 @@ DotlibNot::opr1() const
 Expr
 DotlibNot::to_expr(const HashMap<ShString, int>& pin_map) const
 {
-  Expr expr1 = expr_node->opr1()->to_expr(pin_map);
+  Expr expr1 = opr1()->to_expr(pin_map);
   return ~expr1;
 }
 
@@ -376,9 +430,9 @@ DotlibOpr::opr2() const
 Expr
 DotlibOpr::to_expr(const HashMap<ShString, int>& pin_map) const
 {
-  Expr expr1 = expr_node->opr1()->to_expr(pin_map);
-  Expr expr2 = expr_node->opr2()->to_expr(pin_map);
-  switch ( node->type() ) {
+  Expr expr1 = opr1()->to_expr(pin_map);
+  Expr expr2 = opr2()->to_expr(pin_map);
+  switch ( type() ) {
   case DotlibExpr::kAnd: return expr1 & expr2;
   case DotlibExpr::kOr:  return expr1 | expr2;
   case DotlibExpr::kXor: return expr1 ^ expr2;

@@ -8,6 +8,7 @@
 
 
 #include "FhScanner.h"
+#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -65,7 +66,7 @@ FhScanner::read_token(FileRegion& loc)
   switch ( c ) {
   case '\0':
     loc = cur_loc();
-    return END;
+    return TokenType::END;
 
   case ' ':
   case '\t':
@@ -73,33 +74,33 @@ FhScanner::read_token(FileRegion& loc)
 
   case '!':
     loc = cur_loc();
-    return NOT;
+    return TokenType::NOT;
 
   case '|':
   case '+':
     loc = cur_loc();
-    return OR;
+    return TokenType::OR;
 
   case '&':
   case '*':
     loc = cur_loc();
-    return AND;
+    return TokenType::AND;
 
   case '^':
     loc = cur_loc();
-    return XOR;
+    return TokenType::XOR;
 
   case '(':
     loc = cur_loc();
-    return LP;
+    return TokenType::LP;
 
   case ')':
     loc = cur_loc();
-    return RP;
+    return TokenType::RP;
 
   case '\'':
     loc = cur_loc();
-    return PRIME;
+    return TokenType::PRIME;
 
   default:
     // それ以外はエラー
@@ -109,7 +110,7 @@ FhScanner::read_token(FileRegion& loc)
 		    "DOTLIB_PARSER",
 		    "Syntax error");
     loc = cur_loc();
-    return ERROR;
+    return TokenType::ERROR;
   }
 
  ST_ID: // 文字列モード
@@ -120,7 +121,7 @@ FhScanner::read_token(FileRegion& loc)
     goto ST_ID;
   }
   loc = cur_loc();
-  return SYMBOL;
+  return TokenType::SYMBOL;
 
  ST_NUM: // 数字モード
   c = peek();
@@ -130,7 +131,7 @@ FhScanner::read_token(FileRegion& loc)
     goto ST_NUM;
   }
   loc = cur_loc();
-  return INT_NUM;
+  return TokenType::INT_NUM;
 }
 
 // @brief 直前の read_token() で読んだトークン文字列を返す．

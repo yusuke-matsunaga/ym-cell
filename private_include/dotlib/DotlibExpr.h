@@ -190,7 +190,7 @@ public:
   /// @param[in] loc 位置情報
   /// @param[in] val 値
   DotlibFloatExpr(const FileRegion& loc,
-		  int val);
+		  double val);
 
   /// @brief デストラクタ
   virtual

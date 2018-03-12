@@ -8,9 +8,9 @@
 
 
 #include "DefineHandler.h"
-#include "DotlibParserImpl.h"
-#include "DotlibList.h"
-#include "DotlibString.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/DotlibList.h"
+#include "dotlib/DotlibString.h"
 #include "SimpleHandler.h"
 #include "GroupHandler.h"
 #include "ym/MsgMgr.h"
@@ -23,9 +23,12 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
+// @param[in] parser パーサー
 // @param[in] parent 親のハンドラ
-DefineHandler::DefineHandler(GroupHandler* parent) :
-  ComplexHandler(parent)
+DefineHandler::DefineHandler(DotlibParser& parser,
+			     GroupHandler* parent) :
+  ComplexHandler(parser),
+  mParent(parent)
 {
 }
 
@@ -44,9 +47,8 @@ DotlibNode*
 DefineHandler::read_attr(AttrType attr_type,
 			 const FileRegion& attr_loc)
 {
-  FileRegion dummy_loc;
-  const DotlibList* value_list = parse_complex(false, dummy_loc);
-  if ( value_list == nullptr ) {
+  vector<DotlibNode*> value_list;
+  if ( !parse_complex(false, value_list) ) {
     return nullptr;
   }
 
@@ -55,10 +57,16 @@ DefineHandler::read_attr(AttrType attr_type,
   }
 
   if ( debug() ) {
-    cout << attr_type << " : " << value_list << endl;
+    cout << attr_type << " : (";
+    for ( auto value: value_list ) {
+      cout << " " << value;
+    }
+    cout << ")" << endl;
   }
 
-  const DotlibString* keyword = dynamic_cast<const DotlibString*>(value_list->list_elem(0));
+  ASSERT_COND( value_list.size() == 3 );
+
+  const DotlibString* keyword = dynamic_cast<const DotlibString*>(value_list[0]);
   if ( keyword == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    keyword->loc(),
@@ -68,7 +76,7 @@ DefineHandler::read_attr(AttrType attr_type,
     return nullptr;
   }
 
-  const DotlibString* group = dynamic_cast<const DotlibString*>(value_list->list_elem(1));
+  const DotlibString* group = dynamic_cast<const DotlibString*>(value_list[1]);
   if ( group == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group->loc(),
@@ -78,7 +86,7 @@ DefineHandler::read_attr(AttrType attr_type,
     return nullptr;
   }
 
-  const DotlibString* type_token = dynamic_cast<const DotlibString*>(value_list->list_elem(2));
+  const DotlibString* type_token = dynamic_cast<const DotlibString*>(value_list[2]);
   if ( type_token == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    type_token->loc(),
@@ -89,7 +97,7 @@ DefineHandler::read_attr(AttrType attr_type,
   }
 
   AttrType group_attr = parser().conv_to_attr(group->value());
-  DotlibHandler* handler = parent()->find_handler(group_attr);
+  DotlibHandler* handler = mParent->find_handler(group_attr);
   if ( handler == nullptr ) {
     ostringstream buf;
     buf << group->value() << ": Unknown attribute. ignored.";
@@ -116,13 +124,13 @@ DefineHandler::read_attr(AttrType attr_type,
   DotlibHandler* new_handler = nullptr;
   const char* type_str = type_token->value();
   if ( strcmp(type_str, "int") == 0 ) {
-    new_handler = new IntSimpleHandler(g_handler);
+    new_handler = new IntSimpleHandler(parser());
   }
   else if ( strcmp(type_str, "float") == 0 ) {
-    new_handler = new FloatSimpleHandler(g_handler);
+    new_handler = new FloatSimpleHandler(parser());
   }
   else if ( strcmp(type_str, "string") == 0 ) {
-    new_handler = new StrSimpleHandler(g_handler, false);
+    new_handler = new StrSimpleHandler(parser(), false);
   }
   else {
     ostringstream buf;

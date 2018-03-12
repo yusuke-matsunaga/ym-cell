@@ -3,13 +3,14 @@
 /// @brief DotlibHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "dotlib/DotlibHandler.h"
 #include "dotlib/DotlibParser.h"
 #include "dotlib/DotlibMgrImpl.h"
+#include "dotlib/TokenType.h"
 #include "GroupHandler.h"
 #include "ym/MsgMgr.h"
 
@@ -34,48 +35,44 @@ DotlibHandler::~DotlibHandler()
 
 // @brief group attribute 用のパースを行う．
 // @param[in] vector_mode ベクタモードの時 true にするフラグ
-// @param[out] end_loc 右括弧の位置を格納する変数
-// @return 読み込んだ値(リスト)を返す．
-//
-// エラーが起きたら nullptr を返す．
-DotlibList*
+// @param[out] value_list 読み込んだ値のリストを格納する変数
+// @return 正しく読み込めたら true を返す．
+bool
 DotlibHandler::parse_complex(bool vector_mode,
-			     FileRegion& end_loc)
+			     vector<DotlibNode*>& value_list)
 {
-  if ( !expect(LP) ) {
-    return nullptr;
+  if ( !expect(TokenType::LP) ) {
+    return false;
   }
 
-  vector<const DotlibNode*> tmp_list;
   FileRegion loc;
   TokenType type = parser().read_token(loc);
-  if ( type != RP ) {
+  if ( type != TokenType::RP ) {
     for ( ; ; ) {
       DotlibNode* value = new_value(loc, type, vector_mode);
       if ( value == nullptr ) {
-	return nullptr;
+	return false;
       }
 
-      tmp_list.push_back(value);
+      value_list.push_back(value);
 
       TokenType type1 = parser().read_token(loc);
-      if ( type1 == RP ) {
+      if ( type1 == TokenType::RP ) {
 	break;
       }
-      if ( type1 != COMMA ) {
+      if ( type1 != TokenType::COMMA ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			loc,
 			kMsgError,
 			"DOTLIB_PARSER",
 			"syntax error. ',' is expected.");
-	return nullptr;
+	return false;
       }
       type = parser().read_token(loc);
     }
   }
-  end_loc = loc;
 
-  return mgr()->new_list(tmp_list);
+  return true;
 }
 
 // @brief DotlibNode を生成する．
@@ -88,13 +85,13 @@ DotlibHandler::new_value(const FileRegion& loc,
 			 bool vector_mode)
 {
   switch ( type ) {
-  case INT_NUM:
+  case TokenType::INT_NUM:
     return mgr()->new_int(loc, parser().cur_int());
 
-  case FLOAT_NUM:
+  case TokenType::FLOAT_NUM:
     return mgr()->new_float(loc, parser().cur_float());
 
-  case SYMBOL:
+  case TokenType::SYMBOL:
     if ( vector_mode ) {
       const char* tmp_str = parser().cur_string();
       vector<double> value_list;
@@ -168,15 +165,6 @@ DotlibHandler::mgr()
   return mParser.mgr();
 }
 
-#if 0
-// @brief 親のハンドラを得る．
-GroupHandler*
-DotlibHandler::parent()
-{
-  return mParent;
-}
-#endif
-
 // @brief デバッグモードの時に true を返す．
 bool
 DotlibHandler::debug()
@@ -191,24 +179,24 @@ operator<<(ostream& s,
 {
   const char* type_str = nullptr;
   switch ( type ) {
-  case COLON:      type_str = "':'"; break;
-  case SEMI:       type_str = "';'"; break;
-  case COMMA:      type_str = "','"; break;
-  case PLUS:       type_str = "'+'"; break;
-  case MINUS:      type_str = "'-'"; break;
-  case MULT:       type_str = "'*'"; break;
-  case DIV:        type_str = "'/'"; break;
-  case LP:         type_str = "'('"; break;
-  case RP:         type_str = "')'"; break;
-  case LCB:        type_str = "'{'"; break;
-  case RCB:        type_str = "'}'"; break;
-  case INT_NUM:    type_str = "INT"; break;
-  case FLOAT_NUM:  type_str = "FLOAT"; break;
-  case SYMBOL:     type_str = "SYMBOL"; break;
-  case EXPRESSION: type_str = "EXPRESSION"; break;
-  case NL:         type_str = "new-line"; break;
-  case ERROR :     type_str = "error"; break;
-  case END:        type_str = "end-of-file"; break;
+  case TokenType::COLON:      type_str = "':'"; break;
+  case TokenType::SEMI:       type_str = "';'"; break;
+  case TokenType::COMMA:      type_str = "','"; break;
+  case TokenType::PLUS:       type_str = "'+'"; break;
+  case TokenType::MINUS:      type_str = "'-'"; break;
+  case TokenType::MULT:       type_str = "'*'"; break;
+  case TokenType::DIV:        type_str = "'/'"; break;
+  case TokenType::LP:         type_str = "'('"; break;
+  case TokenType::RP:         type_str = "')'"; break;
+  case TokenType::LCB:        type_str = "'{'"; break;
+  case TokenType::RCB:        type_str = "'}'"; break;
+  case TokenType::INT_NUM:    type_str = "INT"; break;
+  case TokenType::FLOAT_NUM:  type_str = "FLOAT"; break;
+  case TokenType::SYMBOL:     type_str = "SYMBOL"; break;
+  case TokenType::EXPRESSION: type_str = "EXPRESSION"; break;
+  case TokenType::NL:         type_str = "new-line"; break;
+  case TokenType::ERROR :     type_str = "error"; break;
+  case TokenType::END:        type_str = "end-of-file"; break;
   default:
     ASSERT_NOT_REACHED;
   }

@@ -24,8 +24,10 @@ class DefineHandler :
 public:
 
   /// @brief コンストラクタ
+  /// @param[in] parser パーサー
   /// @param[in] parent 親のハンドラ
-  DefineHandler(GroupHandler* parent);
+  DefineHandler(DotlibParser& parser,
+		GroupHandler* parent);
 
   /// @brief デストラクタ
   virtual
@@ -47,6 +49,15 @@ public:
   DotlibNode*
   read_attr(AttrType attr_type,
 	    const FileRegion& attr_loc);
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 親のハンドラ
+  GroupHandler* mParent;
 
 };
 

@@ -9,6 +9,12 @@
 
 #include "dotlib/HandlerFactory.h"
 #include "PinHandler.h"
+#include "SimpleHandler.h"
+#include "ComplexHandler.h"
+#include "dotlib/DotlibMgrImpl.h"
+#include "dotlib/DotlibString.h"
+#include "dotlib/DotlibAttr.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -18,7 +24,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 DotlibHandler*
 HandlerFactory::new_pin(DotlibParser& parser)
 {
-  return new PinHandler(pareser);
+  return new PinHandler(parser);
 }
 
 
@@ -34,9 +40,12 @@ PinHandler::PinHandler(DotlibParser& parser) :
   DotlibHandler* simple       = new SimpleHandler(parser, false);
   DotlibHandler* str_simple   = new StrSimpleHandler(parser, false);
   DotlibHandler* flt_simple   = new FloatSimpleHandler(parser);
-  DotlibHandler* func_handler = new_function(parser);
-  DotlibHandler* dir_handler  = new CellPinDirectionHandler(parser);
+  DotlibHandler* func_handler = HandlerFactory::new_function(parser);
+  DotlibHandler* dir_handler  = HandlerFactory::new_pin_direction(parser);
   DotlibHandler* complex      = new ComplexHandler(parser);
+  DotlibHandler* g_handler    = HandlerFactory::new_group(parser);
+  DotlibHandler* ip_handler   = HandlerFactory::new_internal_power(parser);
+  DotlibHandler* timing_handler = HandlerFactory::new_timing(parser);
 
   // simple attributes
   reg_handler(ATTR_BIT_WIDTH,                           simple);
@@ -107,17 +116,17 @@ PinHandler::PinHandler(DotlibParser& parser) :
   reg_handler(ATTR_RISE_CAPACITANCE_RANGE,              complex);
 
   // group statements
-  reg_handler(ATTR_ELECTROMIGRATION, new_group(handler));
-  reg_handler(ATTR_HYPERBOLIC_NOISE_ABOVE_HIGH, new_group(handler));
-  reg_handler(ATTR_HYPERBOLIC_NOISE_BELOW_LOW, new_group(handler));
-  reg_handler(ATTR_HYPERBOLIC_NOISE_HIGH, new_group(handler));
-  reg_handler(ATTR_HYPERBOLIC_NOISE_LOW, new_group(handler));
-  reg_handler(ATTR_INTERNAL_POWER, new_internal_power(handler));
-  reg_handler(ATTR_MAX_TRANS, new_group(handler));
-  reg_handler(ATTR_MIN_PULSE_WIDTH, new_group(handler));
-  reg_handler(ATTR_MINIMUM_PERIOD, new_group(handler));
-  reg_handler(ATTR_TIMING, new_timing(handler));
-  reg_handler(ATTR_TLATCH, new_group(handler));
+  reg_handler(ATTR_ELECTROMIGRATION,                    g_handler);
+  reg_handler(ATTR_HYPERBOLIC_NOISE_ABOVE_HIGH,         g_handler);
+  reg_handler(ATTR_HYPERBOLIC_NOISE_BELOW_LOW,          g_handler);
+  reg_handler(ATTR_HYPERBOLIC_NOISE_HIGH,               g_handler);
+  reg_handler(ATTR_HYPERBOLIC_NOISE_LOW,                g_handler);
+  reg_handler(ATTR_INTERNAL_POWER,                      ip_handler);
+  reg_handler(ATTR_MAX_TRANS,                           g_handler);
+  reg_handler(ATTR_MIN_PULSE_WIDTH,                     g_handler);
+  reg_handler(ATTR_MINIMUM_PERIOD,                      g_handler);
+  reg_handler(ATTR_TIMING,                              timing_handler);
+  reg_handler(ATTR_TLATCH,                              g_handler);
 }
 
 // @brief デストラクタ
@@ -127,14 +136,15 @@ PinHandler::~PinHandler()
 
 // @brief 値を作る．
 DotlibNode*
-PinHandler::gen_value(const DotlibList* value_list,
-		      const DotlibAttr* attr_top)
+PinHandler::gen_value(const FileRegion& loc,
+		      const vector<DotlibNode*>& value_list,
+		      const vector<DotlibAttr*>& attr_list)
 {
   // ピン名のリストを作る．
-  int n = value_list->list_size();
+  int n = value_list.size();
   vector<const DotlibString*> name_list(n);
   for ( int i = 0; i < n; ++ i ) {
-    const DotlibNode* elem = value_list->list_elem(i)
+    const DotlibNode* elem = value_list[i];
     const DotlibString* str_node = dynamic_cast<const DotlibString*>(elem);
     if ( str_node == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -163,8 +173,8 @@ PinHandler::gen_value(const DotlibList* value_list,
   const DotlibNode* internal_node = nullptr;
   const DotlibNode* pin_func_type = nullptr;
   const DotlibTiming* timing_top = nullptr;
-  for ( auto attr = attr_top; attr != nullptr; attr = attr->next() ) {
-    if ( attr->attr_top == ATTR_DIRECTION ) {
+  for ( auto attr: attr_list ) {
+    if ( attr->attr_type() == ATTR_DIRECTION ) {
     }
   }
 

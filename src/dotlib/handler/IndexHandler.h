@@ -23,8 +23,8 @@ class IndexHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のハンドラ
-  IndexHandler(GroupHandler* parent);
+  /// @param[in] parser パーサー
+  IndexHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual
@@ -40,7 +40,7 @@ public:
   /// @param[in] value_list 値のリスト
   virtual
   DotlibNode*
-  gen_value(DotlibList* value_list);
+  gen_value(const vector<DotlibNode*>& value_list) override;
 
 
 private:

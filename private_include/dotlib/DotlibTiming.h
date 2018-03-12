@@ -599,6 +599,14 @@ DotlibTiming::retain_rise_slew() const
   return mRetainRiseSlew;
 }
 
+// @brief 次の要素を返す．
+inline
+const DotlibTiming*
+DotlibTiming::next() const
+{
+  return mNext;
+}
+
 END_NAMESPACE_YM_DOTLIB
 
 #endif // DOTLIBTIMING_H

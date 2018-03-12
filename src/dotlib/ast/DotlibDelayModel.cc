@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "DotlibDelayModel.h"
+#include "dotlib/DotlibDelayModel.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

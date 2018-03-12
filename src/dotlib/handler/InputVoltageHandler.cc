@@ -10,7 +10,11 @@
 #include "dotlib/HandlerFactory.h"
 
 #include "InputVoltageHandler.h"
-#include "ExprHandler.h"
+#include "dotlib/DotlibMgrImpl.h"
+#include "dotlib/DotlibExpr.h"
+#include "dotlib/DotlibAttr.h"
+#include "dotlib/DotlibInputVoltage.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -34,7 +38,7 @@ InputVoltageHandler::InputVoltageHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
   // simple attributes
-  DotlibHandler* expr_handler = new ExprHandler(handler);
+  DotlibHandler* expr_handler = HandlerFactory::new_expr(parser);
   reg_handler(ATTR_VIL,   expr_handler);
   reg_handler(ATTR_VIH,   expr_handler);
   reg_handler(ATTR_VIMIN, expr_handler);
@@ -52,15 +56,15 @@ InputVoltageHandler::~InputVoltageHandler()
 
 // @brief 値を作る．
 DotlibNode*
-InputVoltageHandler::gen_value(const DotlibList* value_list,
-			       const DotlibAttr* attr_top)
+InputVoltageHandler::gen_value(const FileRegion& loc,
+			       const DotlibString* name,
+			       const vector<DotlibAttr*>& attr_list)
 {
-  const DotlibString* name = value_list->get_string_from_value_list();
   const DotlibExpr* vil = nullptr;
   const DotlibExpr* vih = nullptr;
   const DotlibExpr* vimin = nullptr;
   const DotlibExpr* vimax = nullptr;
-  for ( auto attr = attr_top; attr != nullptr; attr = attr->next() ) {
+  for ( auto attr: attr_list ) {
     if ( attr->attr_type() == ATTR_VIL ) {
       if ( vil != nullptr ) {
 	// エラー

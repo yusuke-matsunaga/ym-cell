@@ -8,10 +8,15 @@
 
 
 #include "dotlib/HandlerFactory.h"
-
 #include "PowerHandler.h"
-#include "IndexHandler.h"
-#include "ValuesHandler.h"
+#include "ComplexHandler.h"
+#include "dotlib/DotlibMgrImpl.h"
+#include "dotlib/DotlibFloatVector.h"
+#include "dotlib/DotlibList.h"
+#include "dotlib/DotlibLut.h"
+#include "dotlib/DotlibAttr.h"
+#include "ym/MsgMgr.h"
+
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -34,9 +39,10 @@ HandlerFactory::new_power(DotlibParser& parser)
 PowerHandler::PowerHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
-  DotlibHandler* index_handler = new IndexHandler(parser);
-  DotlibHandler* values_handler = new ValuesHandler(parser);
-  DotlibHandler* dummy_handler = new DummyGroupHandler(parser);
+  DotlibHandler* index_handler = HandlerFactory::new_index(parser);
+  DotlibHandler* values_handler = HandlerFactory::new_values(parser);
+  DotlibHandler* complex        = new ComplexHandler(parser);
+  DotlibHandler* dummy_handler = HandlerFactory::new_group(parser);
 
   // simple attributes
 
@@ -60,15 +66,15 @@ PowerHandler::~PowerHandler()
 
 // @brief 値を作る．
 DotlibNode*
-PowerHandler::gen_value(const DotlibList* value_list,
-			const DotlibAttr* attr_top)
+PowerHandler::gen_value(const FileRegion& loc,
+			const DotlibString* name,
+			const vector<DotlibAttr*>& attr_list)
 {
-  const DotlibString* name = value_list->get_string_from_value_list();
   const DotlibFloatVector* index_1 = nullptr;
   const DotlibFloatVector* index_2 = nullptr;
   const DotlibFloatVector* index_3 = nullptr;
   const DotlibList* values = nullptr;
-  for ( auto attr = attr_top; attr != nullptr; attr = attr->next() ) {
+  for ( auto attr: attr_list ) {
     if ( attr->attr_type() == ATTR_INDEX_1 ) {
       if ( index_1 != nullptr ) {
 	// エラー
@@ -80,7 +86,7 @@ PowerHandler::gen_value(const DotlibList* value_list,
 	return nullptr;
       }
       index_1 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
-      ASSERT_COND( ( index_1 != nullptr );
+      ASSERT_COND( index_1 != nullptr );
     }
     if ( attr->attr_type() == ATTR_INDEX_2 ) {
       if ( index_2 != nullptr ) {

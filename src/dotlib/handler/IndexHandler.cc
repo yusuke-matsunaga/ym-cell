@@ -8,18 +8,29 @@
 
 
 #include "IndexHandler.h"
+#include "dotlib/HandlerFactory.h"
+#include "dotlib/DotlibList.h"
+#include "dotlib/DotlibFloatVector.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
+
+// @brief 'index_?' 用のハンドラを作る．
+DotlibHandler*
+HandlerFactory::new_index(DotlibParser& parser)
+{
+  return new IndexHandler(parser);
+}
 
 //////////////////////////////////////////////////////////////////////
 // クラス IndexHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のハンドラ
-IndexHandler::IndexHandler(GroupHandler* parent) :
-  ComplexHandler(parent, true)
+// @param[in] parser パーサー
+IndexHandler::IndexHandler(DotlibParser& parser) :
+  ComplexHandler(parser, true)
 {
 }
 
@@ -31,17 +42,17 @@ IndexHandler::~IndexHandler()
 // @brief 値を表すノードを作る．
 // @param[in] value_list 値のリスト
 DotlibNode*
-INdexHandler::gen_value(DotlibList* value_list)
+IndexHandler::gen_value(const vector<DotlibNode*>& value_list)
 {
-  if ( value_list->list_size() != 1 ) {
+  if ( value_list.size() != 1 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_list->loc(),
+		    value_list[0]->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "Syntax error, singleton expected.");
     return nullptr;
   }
-  DotlibNode* elem = value_list->list_elem(0);
+  DotlibNode* elem = value_list[0];
   if ( dynamic_cast<DotlibFloatVector*>(elem) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    elem->loc(),

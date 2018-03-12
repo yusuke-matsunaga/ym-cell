@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "DotlibTimingType.h"
+#include "dotlib/DotlibTimingType.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

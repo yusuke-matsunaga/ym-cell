@@ -12,13 +12,20 @@
 #include "dotlib/DotlibFloat.h"
 #include "dotlib/DotlibFloatVector.h"
 #include "dotlib/DotlibString.h"
+#include "dotlib/DotlibCell.h"
+#include "dotlib/DotlibPin.h"
 #include "dotlib/DotlibExpr.h"
 #include "dotlib/DotlibList.h"
+#include "dotlib/DotlibTemplate.h"
+#include "dotlib/DotlibLut.h"
+#include "dotlib/DotlibInputVoltage.h"
+#include "dotlib/DotlibOutputVoltage.h"
 #include "dotlib/DotlibTechnology.h"
 #include "dotlib/DotlibDelayModel.h"
 #include "dotlib/DotlibPinDirection.h"
 #include "dotlib/DotlibTimingSense.h"
 #include "dotlib/DotlibTimingType.h"
+#include "dotlib/DotlibUnit.h"
 #include "dotlib/DotlibVarType.h"
 #include "dotlib/DotlibAttr.h"
 
@@ -128,6 +135,80 @@ DotlibMgrImpl::new_vector(const FileRegion& loc,
   mVectElemSize += (n - 1);
   void* p = mAlloc.get_memory(sizeof(DotlibFloatVector) + (n - 1) * sizeof(double));
   return new (p) DotlibFloatVector(loc, value_list);
+}
+
+// @brief セルを表す DotlibNode を生成する．
+// @param[in] loc ファイル上の位置
+// @param[in] name 名前
+// @param[in] area 面積
+// @param[in] bus_naming_style 'bus_naming_style' の値
+// @param[in] pin_top ピンの先頭
+// @param[in] bus_top バスの先頭
+// @param[in] bundle_top バンドルの先頭
+// @param[in] ff FFグループ
+// @param[in] latch ラッチグループ
+// @param[in] statetable StateTable グループ
+DotlibNode*
+DotlibMgrImpl::new_cell(const FileRegion& loc,
+			const DotlibString* name,
+			const DotlibFloat* area,
+			const DotlibString* bus_naming_style,
+			const DotlibPin* pin_top,
+			const DotlibBus* bus_top,
+			const DotlibBundle* bundle_top,
+			const DotlibFF* ff,
+			const DotlibLatch* latch,
+			const DotlibStateTable* statetable)
+{
+  void* p = mAlloc.get_memory(sizeof(DotlibCell));
+  return new (p) DotlibCell(loc,name, area, bus_naming_style,
+			    pin_top, bus_top, bundle_top,
+			    ff, latch, statetable);
+}
+
+// @brief ピンを表す DotlibNode を生成する．
+// @param[in] loc ファイル上の位置
+// @param[in] pin_direction 方向
+// @param[in] capacitance 容量
+// @param[in] rise_capacitance 立ち上がり容量
+// @param[in] fall_capacitance 立ち下がり容量
+// @param[in] max_fanout 最大ファンアウト
+// @param[in] min_fanout 最小ファンアウト
+// @param[in] max_capacitance 最大容量
+// @param[in] min_capacitance 最小容量
+// @param[in] max_transition 最大遷移時間
+// @param[in] min_transition 最小遷移時間
+// @param[in] function 関数
+// @param[in] three_state スリーステート条件
+// @param[in] internal_node 対応する内部ノード
+// @param[in] pin_func_type 'pin_func_type'
+// @param[in] timing_top タイミングの先頭
+DotlibNode*
+DotlibMgrImpl::new_pin(const FileRegion& loc,
+		       const DotlibPinDirection* pin_direction,
+		       const DotlibFloat* capacitance,
+		       const DotlibFloat* rise_capacitance,
+		       const DotlibFloat* fall_capacitance,
+		       const DotlibFloat* max_fanout,
+		       const DotlibFloat* min_fanout,
+		       const DotlibFloat* max_capacitance,
+		       const DotlibFloat* min_capacitance,
+		       const DotlibFloat* max_transition,
+		       const DotlibFloat* min_transition,
+		       const DotlibExpr* function,
+		       const DotlibExpr* three_state,
+		       const DotlibNode* internal_node,
+		       const DotlibNode* pin_func_type,
+		       const DotlibTiming* timing_top)
+{
+  void* p = mAlloc.get_memory(sizeof(DotlibPin));
+  return new (p) DotlibPin(loc, pin_direction,
+			   capacitance, rise_capacitance, fall_capacitance,
+			   max_fanout, min_fanout,
+			   max_capacitance, min_capacitance,
+			   max_transition, min_transition,
+			   function, three_state,
+			   internal_node, pin_func_type, timing_top);
 }
 
 // @brief + 演算子を表す DotlibExpr を生成する．
@@ -285,7 +366,7 @@ DotlibMgrImpl::new_str_expr(const FileRegion& loc,
 
 // @brief リストを表す DotlibNode を生成する．
 DotlibList*
-DotlibMgrImpl::new_list(const vector<const DotlibNode*>& elem_list)
+DotlibMgrImpl::new_list(const vector<DotlibNode*>& elem_list)
 {
   int n = elem_list.size();
   ++ mListNum;
@@ -311,6 +392,20 @@ DotlibMgrImpl::new_template(const FileRegion& loc,
   return new (p) DotlibTemplate(loc, name, dimension, var_1, var_2, var_3, index_1, index_2, index_3);
 }
 
+// @brief LUT を表す DotlibNode を生成する．
+DotlibLut*
+DotlibMgrImpl::new_lut(const FileRegion& loc,
+		       const DotlibString* name,
+		       const DotlibFloatVector* index_1,
+		       const DotlibFloatVector* index_2,
+		       const DotlibFloatVector* index_3,
+		       const DotlibList* value_list)
+{
+  ++ mLutNum;
+  void* p = mAlloc.get_memory(sizeof(DotlibLut));
+  return new (p) DotlibLut(loc, name, index_1, index_2, index_3, value_list);
+}
+
 // @brief input voltage を表す DotlibNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] vil 'vil'
@@ -319,6 +414,7 @@ DotlibMgrImpl::new_template(const FileRegion& loc,
 // @param[in] vimax 'vimax'
 DotlibInputVoltage*
 DotlibMgrImpl::new_input_voltage(const FileRegion& loc,
+				 const DotlibString* name,
 				 const DotlibExpr* vil,
 				 const DotlibExpr* vih,
 				 const DotlibExpr* vimin,
@@ -326,7 +422,7 @@ DotlibMgrImpl::new_input_voltage(const FileRegion& loc,
 {
   ++ mInputVolNum;
   void* p = mAlloc.get_memory(sizeof(DotlibInputVoltage));
-  return new (p) DotlibInputVoltage(loc, vil, vih, vimin, vimax);
+  return new (p) DotlibInputVoltage(loc, name, vil, vih, vimin, vimax);
 }
 
 // @brief output voltage を表す DotlibNode を生成する．．
@@ -337,6 +433,7 @@ DotlibMgrImpl::new_input_voltage(const FileRegion& loc,
 // @param[in] vomax 'vomax'
 DotlibOutputVoltage*
 DotlibMgrImpl::new_output_voltage(const FileRegion& loc,
+				  const DotlibString* name,
 				  const DotlibExpr* vol,
 				  const DotlibExpr* voh,
 				  const DotlibExpr* vomin,
@@ -344,7 +441,33 @@ DotlibMgrImpl::new_output_voltage(const FileRegion& loc,
 {
   ++ mOutputVolNum;
   void* p = mAlloc.get_memory(sizeof(DotlibOutputVoltage));
-  return new (p) DotlibOutputVoltage(loc, vol, voh, vomin, vomax);
+  return new (p) DotlibOutputVoltage(loc, name, vol, voh, vomin, vomax);
+}
+
+// @brief 汎用のグループ構造を表す DotlibNode を生成する．
+// @param[in] loc ファイル上の位置
+// @param[in] value_list 値のリスト
+// @param[in] attr_top 属性の先頭
+DotlibGenGroup*
+DotlibMgrImpl::new_gen_group(const FileRegion& loc,
+			     const vector<DotlibNode*>& value_list,
+			     const vector<DotlibAttr*>& attr_list)
+{
+#warning "TODO: 未完成"
+  return nullptr;
+}
+
+// @brief 単位を表す DotlibNode を生成する．
+// @param[in] loc ファイル上の位置
+// @param[in] unit_val 数値
+// @param[in] unit_str 単位を表す文字列
+DotlibUnit*
+DotlibMgrImpl::new_unit(const FileRegion& loc,
+			double unit_val,
+			const ShString& unit_str)
+{
+  void* p = mAlloc.get_memory(sizeof(DotlibUnit));
+  return new (p) DotlibUnit(loc, unit_val, unit_str);
 }
 
 // @brief technology を表す DotlibNode を生成する．
