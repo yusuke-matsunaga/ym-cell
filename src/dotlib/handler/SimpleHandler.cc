@@ -105,15 +105,16 @@ StrSimpleHandler::read_value()
 {
   FileRegion loc;
   TokenType value_type = parser().read_token(loc, false);
-  if ( value_type != TokenType::SYMBOL ) {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc,
-		    kMsgError,
-		    "DOTLIB_PARSER",
-		    "Syntax error. string value is expected.");
-    return nullptr;
+  if ( value_type == TokenType::SYMBOL ) {
+    return mgr()->new_string(loc, ShString(parser().cur_string()));
   }
-  return mgr()->new_string(loc, ShString(parser().cur_string()));
+
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  loc,
+		  kMsgError,
+		  "DOTLIB_PARSER",
+		  "Syntax error. string value is expected.");
+  return nullptr;
 }
 
 
@@ -139,15 +140,16 @@ IntSimpleHandler::read_value()
 {
   FileRegion loc;
   TokenType value_type = parser().read_token(loc, false);
-  if ( value_type != TokenType::INT_NUM ) {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc,
-		    kMsgError,
-		    "DOTLIB_PARSER",
-		    "Syntax error. int value is expected.");
-    return nullptr;
+  if ( value_type == TokenType::INT_NUM ) {
+    return mgr()->new_int(loc, parser().cur_int());
   }
-  return mgr()->new_int(loc, parser().cur_int());
+
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  loc,
+		  kMsgError,
+		  "DOTLIB_PARSER",
+		  "Syntax error. int value is expected.");
+  return nullptr;
 }
 
 
@@ -173,15 +175,19 @@ FloatSimpleHandler::read_value()
 {
   FileRegion loc;
   TokenType value_type = parser().read_token(loc, false);
-  if ( value_type != TokenType::FLOAT_NUM ) {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc,
-		    kMsgError,
-		    "DOTLIB_PARSER",
-		    "Syntax error. float value is expected.");
-    return nullptr;
+  if ( value_type == TokenType::FLOAT_NUM ) {
+    return mgr()->new_float(loc, parser().cur_float());
   }
-  return mgr()->new_float(loc, parser().cur_float());
+  if ( value_type == TokenType::INT_NUM ) {
+    return mgr()->new_int(loc, parser().cur_int());
+  }
+
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  loc,
+		  kMsgError,
+		  "DOTLIB_PARSER",
+		  "Syntax error. float value is expected.");
+  return nullptr;
 }
 
 END_NAMESPACE_YM_DOTLIB

@@ -5,7 +5,7 @@
 /// @brief ComplexHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -57,10 +57,15 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を表すノードを作る．
+  /// @param[in] loc ファイル上の位置
   /// @param[in] value_list 値のリスト
+  /// @return value_list に対応した DotlibNode を返す．
+  ///
+  /// このクラスでは DotlibList を返す．
   virtual
   DotlibNode*
-  gen_value(const vector<DotlibNode*>& value_list);
+  gen_value(const FileRegion& loc,
+	    const vector<DotlibNode*>& value_list);
 
 
 private:

@@ -43,8 +43,9 @@ DotlibNode*
 ComplexHandler::read_attr(AttrType attr_type,
 			  const FileRegion& attr_loc)
 {
+  FileRegion value_loc;
   vector<DotlibNode*> value_list;
-  if ( !parse_complex(mVectorMode, value_list) ) {
+  if ( !parse_complex(mVectorMode, value_loc, value_list) ) {
     return nullptr;
   }
 
@@ -60,13 +61,15 @@ ComplexHandler::read_attr(AttrType attr_type,
     cout << ")" << endl;
   }
 
-  return gen_value(value_list);
+  return gen_value(value_loc, value_list);
 }
 
 // @brief 値を表すノードを作る．
+// @param[in] loc ファイル上の位置
 // @param[in] value_list 値のリスト
 DotlibNode*
-ComplexHandler::gen_value(const vector<DotlibNode*>& value_list)
+ComplexHandler::gen_value(const FileRegion& loc,
+			  const vector<DotlibNode*>& value_list)
 {
   return mgr()->new_list(value_list);
 }

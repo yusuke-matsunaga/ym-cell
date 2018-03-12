@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @param[in] value 値
 DotlibFloat::DotlibFloat(const FileRegion& loc,
 			 double value) :
-  DotlibNode(loc),
+  DotlibNum(loc),
   mValue(value)
 {
 }
@@ -29,6 +29,13 @@ DotlibFloat::DotlibFloat(const FileRegion& loc,
 // @brief デストラクタ
 DotlibFloat::~DotlibFloat()
 {
+}
+
+// @brief 数値を返す．
+double
+DotlibFloat::float_value() const
+{
+  return mValue;
 }
 
 // @brief float 値を取り出す．

@@ -9,17 +9,17 @@
 /// All rights reserved.
 
 
-#include "DotlibNode.h"
+#include "DotlibNum.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class DotlibFloat DotlibNodeImpl.h "DotlibNodeImpl.h"
+/// @class DotlibFloat DotlibFloat.h "DotlibFloat.h"
 /// @brief 実数値を表すクラス
 //////////////////////////////////////////////////////////////////////
 class DotlibFloat :
-  public DotlibNode
+  public DotlibNum
 {
   friend class DotlibMgrImpl;
 
@@ -45,6 +45,11 @@ public:
   /// @note type() が kFloat の時のみ意味を持つ．
   double
   value() const;
+
+  /// @brief 数値を返す．
+  virtual
+  double
+  float_value() const;
 
   /// @brief float 値を取り出す．
   ///

@@ -38,10 +38,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を表すノードを作る．
+  /// @param[in] loc ファイル上の位置
   /// @param[in] value_list 値のリスト
+  ///
+  /// 多次元の場合でも1次元の FloatVector に変換する．
   virtual
   DotlibNode*
-  gen_value(const vector<DotlibNode*>& value_list) override;
+  gen_value(const FileRegion& loc,
+	    const vector<DotlibNode*>& value_list) override;
 
 
 private:
@@ -54,7 +58,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
 
 };
 

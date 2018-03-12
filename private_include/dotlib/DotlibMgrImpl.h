@@ -249,7 +249,7 @@ public:
 	  const DotlibFloatVector* index_1,
 	  const DotlibFloatVector* index_2,
 	  const DotlibFloatVector* index_3,
-	  const DotlibList* value_list);
+	  const DotlibFloatVector* value_list);
 
   /// @brief input voltage を表す DotlibNode を生成する．
   /// @param[in] loc ファイル上の位置

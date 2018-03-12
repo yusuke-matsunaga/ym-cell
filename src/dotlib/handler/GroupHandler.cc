@@ -45,8 +45,9 @@ DotlibNode*
 GroupHandler::read_attr(AttrType attr_type,
 			const FileRegion& attr_loc)
 {
+  FileRegion value_loc;
   vector<DotlibNode*> value_list;
-  if ( !parse_complex(false, value_list) ) {
+  if ( !parse_complex(false, value_loc, value_list) ) {
     return nullptr;
   }
 
@@ -58,7 +59,7 @@ GroupHandler::read_attr(AttrType attr_type,
     cout << ")" << " {" << endl;
   }
 
-  if ( !check_group_value(attr_type, attr_loc, value_list) ) {
+  if ( !check_value(attr_type, attr_loc, value_loc, value_list) ) {
     return nullptr;
   }
 
@@ -149,13 +150,15 @@ GroupHandler::find_handler(AttrType attr_type)
 // @brief group statement の引数のチェックを行う仮想関数
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
-// @param[in] value 値を表すトークンのリスト
+// @param[in] value_loc 値全体のファイル上の位置
+// @param[in] value_list 値を表すトークンのリスト
 // @note begin_group() の中で呼ばれる．
 // @note デフォルトの実装はなにもしないで true を返す．
 bool
-GroupHandler::check_group_value(AttrType attr_type,
-				const FileRegion& attr_loc,
-				const vector<DotlibNode*>& value_list)
+GroupHandler::check_value(AttrType attr_type,
+			  const FileRegion& attr_loc,
+			  const FileRegion& value_loc,
+			  const vector<DotlibNode*>& value_list)
 {
   return true;
 }
@@ -189,19 +192,20 @@ EmptyGroupHandler::~EmptyGroupHandler()
 // @brief group statement の引数のチェックを行う仮想関数
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
+// @param[in] value_loc 値全体のファイル上の位置
 // @param[in] value_list 値を表すトークンのリスト
 bool
-EmptyGroupHandler::check_group_value(AttrType attr_type,
-				     const FileRegion& attr_loc,
-				     const vector<DotlibNode*>& value_list)
+EmptyGroupHandler::check_value(AttrType attr_type,
+			       const FileRegion& attr_loc,
+			       const FileRegion& value_loc,
+			       const vector<DotlibNode*>& value_list)
 {
   int n = value_list.size();
   if ( n > 0 ) {
-    const DotlibNode* top = value_list[0];
-    FileRegion loc = top->loc();
     ostringstream buf;
     buf << attr_type << " statement does not have parameters.";
-    MsgMgr::put_msg(__FILE__, __LINE__, loc,
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    value_loc,
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    buf.str());
@@ -255,17 +259,20 @@ Str1GroupHandler::~Str1GroupHandler()
 // @brief group statement の引数のチェックを行う仮想関数
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
+// @param[in] value_loc 値全体のファイル上の位置
 // @param[in] value_list 値を表すトークンのリスト
 bool
-Str1GroupHandler::check_group_value(AttrType attr_type,
-				    const FileRegion& attr_loc,
-				    const vector<DotlibNode*>& value_list)
+Str1GroupHandler::check_value(AttrType attr_type,
+			      const FileRegion& attr_loc,
+			      const FileRegion& value_loc,
+			      const vector<DotlibNode*>& value_list)
 {
   int n = value_list.size();
   if ( n == 0 ) {
     ostringstream buf;
     buf << attr_type << " statement requires a string parameter.";
-    MsgMgr::put_msg(__FILE__, __LINE__, attr_loc,
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    value_loc,
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    buf.str());
@@ -339,19 +346,21 @@ Str2GroupHandler::~Str2GroupHandler()
 // @brief group statement の引数のチェックを行う仮想関数
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
+// @param[in] value_loc 値全体のファイル上の位置
 // @param[in] value_list 値を表すトークンのリスト
 // @note begin_group() の中で呼ばれる．
-// @note デフォルトの実装はなにもしないで true を返す．
 bool
-Str2GroupHandler::check_group_value(AttrType attr_type,
-				    const FileRegion& attr_loc,
-				    const vector<DotlibNode*>& value_list)
+Str2GroupHandler::check_value(AttrType attr_type,
+			      const FileRegion& attr_loc,
+			      const FileRegion& value_loc,
+			      const vector<DotlibNode*>& value_list)
 {
   int n = value_list.size();
   if ( n < 2 ) {
     ostringstream buf;
     buf << attr_type << " statement requires two string parameters.";
-    MsgMgr::put_msg(__FILE__, __LINE__, attr_loc,
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    value_loc,
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    buf.str());
@@ -365,7 +374,8 @@ Str2GroupHandler::check_group_value(AttrType attr_type,
     FileRegion loc = third->loc();
     ostringstream buf;
     buf << attr_type << " statement has two string parameters.";
-    MsgMgr::put_msg(__FILE__, __LINE__, loc,
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    loc,
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    buf.str());
@@ -373,14 +383,16 @@ Str2GroupHandler::check_group_value(AttrType attr_type,
   }
 
   if ( dynamic_cast<const DotlibString*>(top) == nullptr ) {
-    MsgMgr::put_msg(__FILE__, __LINE__, top->loc(),
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    top->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "string value is expected.");
     return false;
   }
   if ( dynamic_cast<const DotlibString*>(second) == nullptr ) {
-    MsgMgr::put_msg(__FILE__, __LINE__, second->loc(),
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    second->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "string value is expected.");
@@ -433,20 +445,23 @@ Str2IntGroupHandler::~Str2IntGroupHandler()
 // @brief group statement の引数のチェックを行う仮想関数
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
+// @param[in] value_loc 値全体のファイル上の位置
 // @param[in] value_list 値を表すトークンのリスト
 // @note begin_group() の中で呼ばれる．
 // @note デフォルトの実装はなにもしないで true を返す．
 bool
-Str2IntGroupHandler::check_group_value(AttrType attr_type,
-				       const FileRegion& attr_loc,
-				       const vector<DotlibNode*>& value_list)
+Str2IntGroupHandler::check_value(AttrType attr_type,
+				 const FileRegion& attr_loc,
+				 const FileRegion& value_loc,
+				 const vector<DotlibNode*>& value_list)
 {
   int n = value_list.size();
   if ( n < 3 ) {
     ostringstream buf;
     buf << attr_type
 	<< " statement requires two string and an integer parameters.";
-    MsgMgr::put_msg(__FILE__, __LINE__, attr_loc,
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    value_loc,
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    buf.str());
@@ -469,21 +484,24 @@ Str2IntGroupHandler::check_group_value(AttrType attr_type,
   }
 
   if ( dynamic_cast<const DotlibString*>(top) == nullptr ) {
-    MsgMgr::put_msg(__FILE__, __LINE__, top->loc(),
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    top->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "string value is expected.");
     return false;
   }
   if ( dynamic_cast<const DotlibString*>(second) == nullptr ) {
-    MsgMgr::put_msg(__FILE__, __LINE__, second->loc(),
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    second->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "string value is expected.");
     return false;
   }
   if ( dynamic_cast<const DotlibInt*>(third) == nullptr ) {
-    MsgMgr::put_msg(__FILE__, __LINE__, second->loc(),
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    second->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "integer value is expected.");
@@ -496,8 +514,8 @@ Str2IntGroupHandler::check_group_value(AttrType attr_type,
 // @brief 値を作る．
 DotlibNode*
 Str2IntGroupHandler::gen_value(const FileRegion& loc,
-			    const vector<DotlibNode*>& value_list,
-			    const vector<DotlibAttr*>& attr_list)
+			       const vector<DotlibNode*>& value_list,
+			       const vector<DotlibAttr*>& attr_list)
 {
   ASSERT_COND( value_list.size() == 3 );
   auto value1 = dynamic_cast<const DotlibString*>(value_list[0]);

@@ -26,7 +26,7 @@ DotlibLut::DotlibLut(const FileRegion& loc,
 		     const DotlibFloatVector* index_1,
 		     const DotlibFloatVector* index_2,
 		     const DotlibFloatVector* index_3,
-		     const DotlibList* value_list) :
+		     const DotlibFloatVector* value_list) :
   DotlibNode(loc),
   mName(name),
   mIndex1(index_1),

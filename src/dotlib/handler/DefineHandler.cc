@@ -47,8 +47,9 @@ DotlibNode*
 DefineHandler::read_attr(AttrType attr_type,
 			 const FileRegion& attr_loc)
 {
+  FileRegion value_loc;
   vector<DotlibNode*> value_list;
-  if ( !parse_complex(false, value_list) ) {
+  if ( !parse_complex(false, value_loc, value_list) ) {
     return nullptr;
   }
 

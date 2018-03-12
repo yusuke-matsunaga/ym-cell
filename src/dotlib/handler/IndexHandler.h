@@ -37,10 +37,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を表すノードを作る．
+  /// @param[in] value_loc ファイル上の位置
   /// @param[in] value_list 値のリスト
   virtual
   DotlibNode*
-  gen_value(const vector<DotlibNode*>& value_list) override;
+  gen_value(const FileRegion& value_loc,
+	    const vector<DotlibNode*>& value_list) override;
 
 
 private:

@@ -23,6 +23,7 @@ HandlerFactory::new_index(DotlibParser& parser)
   return new IndexHandler(parser);
 }
 
+
 //////////////////////////////////////////////////////////////////////
 // クラス IndexHandler
 //////////////////////////////////////////////////////////////////////
@@ -40,18 +41,21 @@ IndexHandler::~IndexHandler()
 }
 
 // @brief 値を表すノードを作る．
+// @param[in] value_loc ファイル上の位置
 // @param[in] value_list 値のリスト
 DotlibNode*
-IndexHandler::gen_value(const vector<DotlibNode*>& value_list)
+IndexHandler::gen_value(const FileRegion& value_loc,
+			const vector<DotlibNode*>& value_list)
 {
   if ( value_list.size() != 1 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_list[0]->loc(),
+		    value_loc,
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "Syntax error, singleton expected.");
     return nullptr;
   }
+
   DotlibNode* elem = value_list[0];
   if ( dynamic_cast<DotlibFloatVector*>(elem) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,

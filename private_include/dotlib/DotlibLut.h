@@ -34,7 +34,7 @@ public:
 	    const DotlibFloatVector* index_1,
 	    const DotlibFloatVector* index_2,
 	    const DotlibFloatVector* index_3,
-	    const DotlibList* value_list);
+	    const DotlibFloatVector* value_list);
 
   /// @brief デストラクタ
   virtual
@@ -75,9 +75,7 @@ public:
   index_3() const;
 
   /// @brief 値のリストを返す．
-  ///
-  /// 1次元でもリストとなる．
-  const DotlibList*
+  const DotlibFloatVector*
   value_list() const;
 
   /// @brief 内容をストリーム出力する．
@@ -107,7 +105,7 @@ private:
   const DotlibFloatVector* mIndex3;
 
   // 値のリスト
-  const DotlibList* mValueList;
+  const DotlibFloatVector* mValueList;
 
 };
 
@@ -150,7 +148,7 @@ DotlibLut::index_3() const
 
 // @brief 値のリストを返す．
 inline
-const DotlibList*
+const DotlibFloatVector*
 DotlibLut::value_list() const
 {
   return mValueList;

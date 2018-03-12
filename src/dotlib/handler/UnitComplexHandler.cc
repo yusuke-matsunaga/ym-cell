@@ -36,13 +36,15 @@ UnitComplexHandler::~UnitComplexHandler()
 }
 
 // @brief 値を表すノードを作る．
+// @param[in] value_loc ファイル上の位置
 // @param[in] value_list 値のリスト
 DotlibNode*
-UnitComplexHandler::gen_value(const vector<DotlibNode*>& value_list)
+UnitComplexHandler::gen_value(const FileRegion& value_loc,
+			      const vector<DotlibNode*>& value_list)
 {
   if ( value_list.size() != 2 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_list[0]->loc(), // TODO: 空の時に失敗する．
+		    value_loc,
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "Syntax error, (number, string) pair expected.");
@@ -50,18 +52,8 @@ UnitComplexHandler::gen_value(const vector<DotlibNode*>& value_list)
   }
 
   const DotlibNode* top = value_list[0];
-  double unit_val = 0.0;
-  const DotlibFloat* float_node = dynamic_cast<const DotlibFloat*>(top);
-  if ( float_node != nullptr ) {
-    unit_val = float_node->value();
-  }
-  else {
-    const DotlibInt* int_node = dynamic_cast<const DotlibInt*>(top);
-    if ( int_node != nullptr ) {
-      unit_val = int_node->value();
-    }
-  }
-  if ( unit_val == 0.0 ) {
+  const DotlibNum* num_node = dynamic_cast<const DotlibNum*>(top);
+  if ( num_node == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    top->loc(),
 		    kMsgError,
@@ -69,6 +61,7 @@ UnitComplexHandler::gen_value(const vector<DotlibNode*>& value_list)
 		    "Syntax error, first element should be a number.");
     return nullptr;
   }
+  double unit_val = num_node->float_value();
 
   const DotlibNode* next = value_list[1];
   const DotlibString* str_node = dynamic_cast<const DotlibString*>(next);
@@ -81,7 +74,8 @@ UnitComplexHandler::gen_value(const vector<DotlibNode*>& value_list)
     return nullptr;
   }
   ShString unit_str = str_node->value();
-  return mgr()->new_unit(FileRegion(top->loc(), next->loc()), unit_val, unit_str);
+
+  return mgr()->new_unit(value_loc, unit_val, unit_str);
 }
 
 END_NAMESPACE_YM_DOTLIB

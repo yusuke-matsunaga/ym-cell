@@ -68,7 +68,7 @@ TableHandler::gen_value(const FileRegion& loc,
   const DotlibFloatVector* index_1 = nullptr;
   const DotlibFloatVector* index_2 = nullptr;
   const DotlibFloatVector* index_3 = nullptr;
-  const DotlibList* values = nullptr;
+  const DotlibFloatVector* values = nullptr;
   for ( auto attr: attr_list ) {
     if ( attr->attr_type() == AttrType::INDEX_1 ) {
       if ( index_1 != nullptr ) {
@@ -143,7 +143,7 @@ TableHandler::gen_value(const FileRegion& loc,
 			"'values' defined more than once.");
 	return nullptr;
       }
-      values = dynamic_cast<const DotlibList*>(attr->attr_value());
+      values = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
       if ( values == nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,

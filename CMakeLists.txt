@@ -138,6 +138,7 @@ set (dotlib_SOURCES
   src/dotlib/ast/DotlibList.cc
   src/dotlib/ast/DotlibLut.cc
   src/dotlib/ast/DotlibNode.cc
+  src/dotlib/ast/DotlibNum.cc
   src/dotlib/ast/DotlibOutputVoltage.cc
   src/dotlib/ast/DotlibPin.cc
   src/dotlib/ast/DotlibPinDirection.cc

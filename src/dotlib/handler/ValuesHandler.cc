@@ -41,22 +41,29 @@ ValuesHandler::~ValuesHandler()
 }
 
 // @brief 値を表すノードを作る．
+// @param[in] loc ファイル上の位置
 // @param[in] value_list 値のリスト
+//
+// 多次元の場合でも1次元の FloatVector に変換する．
 DotlibNode*
-ValuesHandler::gen_value(const vector<DotlibNode*>& value_list)
+ValuesHandler::gen_value(const FileRegion& loc,
+			 const vector<DotlibNode*>& value_list)
 {
   int n = value_list.size();
   if ( n == 0 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_list[0]->loc(), // TODO 空の時に失敗する．
+		    loc,
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "Syntax error, list of one ore more vectors expected.");
     return nullptr;
   }
+
+  vector<double> tmp_list;
   for ( int i = 0; i < n; ++ i ) {
     DotlibNode* elem = value_list[i];
-    if ( dynamic_cast<DotlibFloatVector*>(elem) == nullptr ) {
+    auto fv_node = dynamic_cast<DotlibFloatVector*>(elem);
+    if ( fv_node == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      elem->loc(),
 		      kMsgError,
@@ -64,8 +71,12 @@ ValuesHandler::gen_value(const vector<DotlibNode*>& value_list)
 		      "Syntax error, vector expected.");
       return nullptr;
     }
+    vector<double> tmp_list1;
+    fv_node->get_vector(tmp_list1);
+    tmp_list.insert(tmp_list.end(), tmp_list1.begin(), tmp_list1.end());
   }
-  return mgr()->new_list(value_list);
+
+  return mgr()->new_vector(loc, tmp_list);
 }
 
 END_NAMESPACE_YM_DOTLIB

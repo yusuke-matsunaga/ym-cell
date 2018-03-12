@@ -28,10 +28,6 @@ public:
   /// @param[in] parser パーサー
   DotlibHandler(DotlibParser& parser);
 
-  /// @brief 親のハンドラを持つ場合のコンストラクタ
-  /// @param[in] parent 親のハンドラ
-  DotlibHandler(GroupHandler* parent);
-
   /// @brief デストラクタ
   virtual
   ~DotlibHandler();
@@ -75,10 +71,12 @@ protected:
 
   /// @brief complex attribute 用のパースを行う．
   /// @param[in] vector_mode ベクタモードの時 true にするフラグ
+  /// @param[out] value_loc 読み込んだ値全体のファイル上の位置
   /// @param[out] value_list 読み込んだ値のリストを格納する変数
   /// @return 正しく読み込めたら true を返す．
   bool
   parse_complex(bool vector_mode,
+		FileRegion& value_loc,
 		vector<DotlibNode*>& value_list);
 
   /// @brief DotlibNode (の派生クラス)を生成する．

@@ -36,14 +36,18 @@ DotlibHandler::~DotlibHandler()
 // @brief group attribute 用のパースを行う．
 // @param[in] vector_mode ベクタモードの時 true にするフラグ
 // @param[out] value_list 読み込んだ値のリストを格納する変数
+// @param[out] value_loc 読み込んだ値全体のファイル上の位置
 // @return 正しく読み込めたら true を返す．
 bool
 DotlibHandler::parse_complex(bool vector_mode,
+			     FileRegion& value_loc,
 			     vector<DotlibNode*>& value_list)
 {
   if ( !expect(TokenType::LP) ) {
     return false;
   }
+
+  FileRegion first_loc = parser().cur_loc();
 
   FileRegion loc;
   TokenType type = parser().read_token(loc);
@@ -71,6 +75,7 @@ DotlibHandler::parse_complex(bool vector_mode,
       type = parser().read_token(loc);
     }
   }
+  value_loc = FileRegion(first_loc, loc);
 
   return true;
 }

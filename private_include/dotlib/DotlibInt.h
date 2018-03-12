@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "DotlibNode.h"
+#include "DotlibNum.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief 整数値を表すクラス
 //////////////////////////////////////////////////////////////////////
 class DotlibInt :
-  public DotlibNode
+  public DotlibNum
 {
   friend class DotlibMgrImpl;
 
@@ -44,6 +44,11 @@ public:
   /// @brief 整数値を返す．
   int
   value() const;
+
+  /// @brief 数値を返す．
+  virtual
+  double
+  float_value() const;
 
   /// @brief float 値を取り出す．
   ///

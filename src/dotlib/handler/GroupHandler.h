@@ -78,14 +78,17 @@ protected:
   /// @brief group statement の引数のチェックを行う仮想関数
   /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
+  /// @param[in] value_loc 値全体のファイル上の位置
   /// @param[in] value_list 値を表すトークンのリスト
   /// @note begin_group() の中で呼ばれる．
-  /// @note デフォルトの実装はなにもしないで true を返す．
+  ///
+  /// デフォルトの実装はなにもしないで true を返す．
   virtual
   bool
-  check_group_value(AttrType attr_type,
-		    const FileRegion& attr_loc,
-		    const vector<DotlibNode*>& value_list);
+  check_value(AttrType attr_type,
+	      const FileRegion& attr_loc,
+	      const FileRegion& value_loc,
+	      const vector<DotlibNode*>& value_list);
 
   /// @brief 値を作る．
   /// @param[in] loc 全体のファイル上の位置
@@ -135,14 +138,16 @@ protected:
   /// @brief group statement の引数のチェックを行う仮想関数
   /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
+  /// @param[in] value_loc 値全体のファイル上の位置
   /// @param[in] value_list 値を表すトークンのリスト
   /// @note begin_group() の中で呼ばれる．
   /// @note デフォルトの実装はなにもしないで true を返す．
   virtual
   bool
-  check_group_value(AttrType attr_type,
-		    const FileRegion& attr_loc,
-		    const vector<DotlibNode*>& value_list) override;
+  check_value(AttrType attr_type,
+	      const FileRegion& attr_loc,
+	      const FileRegion& value_loc,
+	      const vector<DotlibNode*>& value_list) override;
 
   /// @brief 値を作る．
   /// @param[in] loc 全体のファイル上の位置
@@ -198,14 +203,16 @@ protected:
   /// @brief group statement の引数のチェックを行う仮想関数
   /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
+  /// @param[in] value_loc 値全体のファイル上の位置
   /// @param[in] value_list 値を表すトークンのリスト
   /// @note begin_group() の中で呼ばれる．
   /// @note デフォルトの実装はなにもしないで true を返す．
   virtual
   bool
-  check_group_value(AttrType attr_type,
-		    const FileRegion& attr_loc,
-		    const vector<DotlibNode*>& value_list) override;
+  check_value(AttrType attr_type,
+	      const FileRegion& attr_loc,
+	      const FileRegion& value_loc,
+	      const vector<DotlibNode*>& value_list) override;
 
   /// @brief 値を作る．
   virtual
@@ -256,14 +263,16 @@ protected:
   /// @brief group statement の引数のチェックを行う仮想関数
   /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
+  /// @param[in] value_loc 値全体のファイル上の位置
   /// @param[in] value_list 値を表すトークンのリスト
   /// @note begin_group() の中で呼ばれる．
   /// @note デフォルトの実装はなにもしないで true を返す．
   virtual
   bool
-  check_group_value(AttrType attr_type,
-		    const FileRegion& attr_loc,
-		    const vector<DotlibNode*>& value_list) override;
+  check_value(AttrType attr_type,
+	      const FileRegion& attr_loc,
+	      const FileRegion& value_loc,
+	      const vector<DotlibNode*>& value_list) override;
 
   /// @brief 値を作る．
   virtual
@@ -315,14 +324,16 @@ protected:
   /// @brief group statement の引数のチェックを行う仮想関数
   /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
+  /// @param[in] value_loc 値全体のファイル上の位置
   /// @param[in] value_list 値を表すトークンのリスト
   /// @note begin_group() の中で呼ばれる．
   /// @note デフォルトの実装はなにもしないで true を返す．
   virtual
   bool
-  check_group_value(AttrType attr_type,
-		    const FileRegion& attr_loc,
-		    const vector<DotlibNode*>& value_list) override;
+  check_value(AttrType attr_type,
+	      const FileRegion& attr_loc,
+	      const FileRegion& value_loc,
+	      const vector<DotlibNode*>& value_list) override;
 
   /// @brief 値を作る．
   virtual

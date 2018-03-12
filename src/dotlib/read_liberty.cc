@@ -91,17 +91,6 @@ gen_lut(CiCellLibrary* library,
 
   int d = templ->dimension();
 
-  const DotlibList* list_node = lut_node->value_list();
-  vector<double> value_array;
-  int n = list_node->list_size();
-  for ( auto i: Range(n) ) {
-    auto vector_node = dynamic_cast<const DotlibFloatVector*>(list_node->list_elem(i));
-    ASSERT_COND( vector_node );
-    vector<double> tmp_array;
-    vector_node->get_vector(tmp_array);
-    value_array.insert(value_array.end(), tmp_array.begin(), tmp_array.end());
-  }
-
   vector<double> index1_array;
   if ( lut_node->index_1() ) {
     lut_node->index_1()->get_vector(index1_array);
@@ -114,6 +103,10 @@ gen_lut(CiCellLibrary* library,
   if ( d >= 3 && lut_node->index_3() ) {
     lut_node->index_3()->get_vector(index3_array);
   }
+
+  const DotlibFloatVector* vector_node = lut_node->value_list();
+  vector<double> value_array;
+  vector_node->get_vector(value_array);
 
   ClibLut* lut = nullptr;
   if ( d == 1 ) {

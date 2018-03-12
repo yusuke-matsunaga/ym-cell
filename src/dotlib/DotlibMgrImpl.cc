@@ -399,7 +399,7 @@ DotlibMgrImpl::new_lut(const FileRegion& loc,
 		       const DotlibFloatVector* index_1,
 		       const DotlibFloatVector* index_2,
 		       const DotlibFloatVector* index_3,
-		       const DotlibList* value_list)
+		       const DotlibFloatVector* value_list)
 {
   ++ mLutNum;
   void* p = mAlloc.get_memory(sizeof(DotlibLut));
