@@ -7,12 +7,19 @@
 /// All rights reserved.
 
 
+#include "HandlerFactory.h"
 #include "ComplexHandler.h"
-#include "dotlib/DotlibList.h"
-#include "dotlib/DotlibMgrImpl.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
+
+// @brief ダミーの complex ハンドラを作る．
+DotlibHandler*
+HandlerFactory::new_complex(DotlibParser& parser)
+{
+  return new ComplexHandler(parser, false);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス ComplexHandler
@@ -39,12 +46,12 @@ ComplexHandler::~ComplexHandler()
 // @return 読み込んだ属性値を返す．
 //
 // エラーが起きたら nullptr を返す．
-DotlibNode*
-ComplexHandler::read_attr(AttrType attr_type,
-			  const FileRegion& attr_loc)
+const AstNode*
+ComplexHandler::parse_attr_value(AttrType attr_type,
+				 const FileRegion& attr_loc)
 {
   FileRegion value_loc;
-  vector<DotlibNode*> value_list;
+  vector<const AstNode*> value_list;
   if ( !parse_complex(mVectorMode, value_loc, value_list) ) {
     return nullptr;
   }
@@ -61,17 +68,18 @@ ComplexHandler::read_attr(AttrType attr_type,
     cout << ")" << endl;
   }
 
-  return gen_value(value_loc, value_list);
+  return gen_node(value_loc, value_list);
 }
 
 // @brief 値を表すノードを作る．
 // @param[in] loc ファイル上の位置
 // @param[in] value_list 値のリスト
-DotlibNode*
-ComplexHandler::gen_value(const FileRegion& loc,
-			  const vector<DotlibNode*>& value_list)
+// @return value_list に対応した AstNode を返す．
+const AstNode*
+ComplexHandler::gen_node(const FileRegion& loc,
+			 const vector<const AstNode*>& value_list)
 {
-  return mgr()->new_list(value_list);
+  return nullptr;
 }
 
 END_NAMESPACE_YM_DOTLIB

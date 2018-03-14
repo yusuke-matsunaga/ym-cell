@@ -38,9 +38,9 @@ public:
 
   /// @brief 値を作る．
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& loc,
-	    const vector<DotlibAttr*>& attr_list) override;
+  const AstNode*
+  gen_node(const FileRegion& loc,
+	   const vector<const AstAttr*>& attr_list) override;
 
 
 private:

@@ -6,12 +6,12 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 #include "PinDirectionHandler.h"
-#include "dotlib/DotlibParser.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibPinDirection.h"
-#include "dotlib/TokenType.h"
+#include "DotlibParser.h"
+#include "AstMgr.h"
+#include "AstPinDirection.h"
+#include "TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -41,7 +41,7 @@ PinDirectionHandler::~PinDirectionHandler()
 }
 
 // @brief 値を読み込む．
-DotlibNode*
+AstNode*
 PinDirectionHandler::read_value()
 {
   FileRegion loc;
@@ -80,7 +80,7 @@ PinDirectionHandler::read_value()
     return nullptr;
   }
 
-  return mgr()->new_cell_pin_direction(loc, value);
+  return mgr().new_pin_direction(loc, value);
 }
 
 END_NAMESPACE_YM_DOTLIB

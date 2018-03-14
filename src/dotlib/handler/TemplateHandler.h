@@ -44,10 +44,10 @@ private:
 
   /// @brief 値を作る．
   virtual
-  DotlibNode*
+  AstNode*
   gen_value(const FileRegion& loc,
-	    const DotlibString* name,
-	    const vector<DotlibAttr*>& attr_list);
+	    const AstString* name,
+	    const vector<AstAttr*>& attr_list);
 
 
 private:

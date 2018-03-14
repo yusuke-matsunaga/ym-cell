@@ -7,14 +7,23 @@
 /// All rights reserved.
 
 
+#include "HandlerFactory.h"
 #include "PwComplexHandler.h"
-#include "dotlib/DotlibNode.h"
-#include "dotlib/DotlibInt.h"
-#include "dotlib/DotlibFloat.h"
+#include "AstNode.h"
+#include "AstInt.h"
+#include "AstFloat.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
+
+// @brief piece wise 用のハンドラを作る．
+DotlibHandler*
+HandlerFactory::new_piece_wise(DotlibParser& parser)
+{
+  return new PwComplexHandler(parser);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス PwComplexHandler
@@ -35,9 +44,9 @@ PwComplexHandler::~PwComplexHandler()
 // @brief 値を表すノードを作る．
 // @param[in] value_loc ファイル上の位置
 // @param[in] value_list 値のリスト
-DotlibNode*
-PwComplexHandler::gen_value(const FileRegion& value_loc,
-			    const vector<DotlibNode*>& value_list)
+const AstNode*
+PwComplexHandler::gen_node(const FileRegion& value_loc,
+			   const vector<const AstNode*>& value_list)
 {
   if ( value_list.size() != 2 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -48,8 +57,8 @@ PwComplexHandler::gen_value(const FileRegion& value_loc,
     return nullptr;
   }
 
-  const DotlibNode* top = value_list[0];
-  if ( dynamic_cast<const DotlibInt*>(top) == nullptr ) {
+  const AstNode* top = value_list[0];
+  if ( dynamic_cast<const AstInt*>(top) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    top->loc(),
 		    kMsgError,
@@ -58,8 +67,8 @@ PwComplexHandler::gen_value(const FileRegion& value_loc,
     return nullptr;
   }
 
-  const DotlibNode* next = value_list[1];
-  if ( dynamic_cast<const DotlibFloat*>(next) == nullptr ) {
+  const AstNode* next = value_list[1];
+  if ( dynamic_cast<const AstFloat*>(next) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    next->loc(),
 		    kMsgError,
@@ -69,7 +78,7 @@ PwComplexHandler::gen_value(const FileRegion& value_loc,
   }
 
 #warning "TODO: 未完成"
-  // 本当は (integer, float) を表す DotlibNode の派生クラスを作ってそれを返す．
+  // 本当は (integer, float) を表す AstNode の派生クラスを作ってそれを返す．
   return nullptr;
 
 }

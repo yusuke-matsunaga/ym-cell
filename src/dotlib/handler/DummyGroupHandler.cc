@@ -9,11 +9,11 @@
 
 #include "GroupHandler.h"
 #include "DotlibParserImpl.h"
-#include "DotlibMgrImpl.h"
-#include "DotlibList.h"
-#include "DotlibInt.h"
-#include "DotlibString.h"
-#include "DotlibAttr.h"
+#include "AstMgr.h"
+#include "AstList.h"
+#include "AstInt.h"
+#include "AstString.h"
+#include "AstAttr.h"
 #include "ym/MsgMgr.h"
 
 
@@ -46,7 +46,7 @@ GroupHandler::~GroupHandler()
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
 // @return エラーが起きたら false を返す．
-DotlibNode*
+AstNode*
 GroupHandler::read_attr(AttrType attr_type,
 			const FileRegion& attr_loc)
 {
@@ -126,10 +126,10 @@ GroupHandler::read_attr(AttrType attr_type,
 // @note デフォルトの実装はエラーとなる．
 bool
 GroupHandler::add_attr(AttrType attr_type,
-		       DotlibNode* value,
+		       AstNode* value,
 		       const FileRegion& loc)
 {
-  DotlibAttr* attr = mgr()->new_attr(loc, attr_type, value);
+  AstAttr* attr = mgr()->new_attr(loc, attr_type, value);
   if ( mAttrTop == nullptr ) {
     mAttrTop = attr;
   }
@@ -251,7 +251,7 @@ EmptyGroupHandler::check_group_value(AttrType attr_type,
 {
   int n = value_list->list_size();
   if ( n > 0 ) {
-    const DotlibNode* top = value_list->list_elem(0);
+    const AstNode* top = value_list->list_elem(0);
     FileRegion loc = top->loc();
     ostringstream buf;
     buf << attr_type << " statement does not have parameters.";
@@ -311,9 +311,9 @@ Str1GroupHandler::check_group_value(AttrType attr_type,
     return false;
   }
 
-  const DotlibNode* top = value_list->list_elem(0);
+  const AstNode* top = value_list->list_elem(0);
   if ( n > 1 ) {
-    const DotlibNode* second = value_list->list_elem(1);
+    const AstNode* second = value_list->list_elem(1);
     FileRegion loc = second->loc();
     ostringstream buf;
     buf << attr_type << " statement has only one string parameter.";
@@ -324,7 +324,7 @@ Str1GroupHandler::check_group_value(AttrType attr_type,
     return false;
   }
 
-  if ( dynamic_cast<const DotlibString*>(top) == nullptr ) {
+  if ( dynamic_cast<const AstString*>(top) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__, top->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
@@ -374,10 +374,10 @@ Str2GroupHandler::check_group_value(AttrType attr_type,
     return false;
   }
 
-  const DotlibNode* top = value_list->list_elem(0);
-  const DotlibNode* second = value_list->list_elem(1);
+  const AstNode* top = value_list->list_elem(0);
+  const AstNode* second = value_list->list_elem(1);
   if ( n > 2 ) {
-    const DotlibNode* third = value_list->list_elem(2);
+    const AstNode* third = value_list->list_elem(2);
     FileRegion loc = third->loc();
     ostringstream buf;
     buf << attr_type << " statement has two string parameters.";
@@ -388,14 +388,14 @@ Str2GroupHandler::check_group_value(AttrType attr_type,
     return false;
   }
 
-  if ( dynamic_cast<const DotlibString*>(top) == nullptr ) {
+  if ( dynamic_cast<const AstString*>(top) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__, top->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "string value is expected.");
     return false;
   }
-  if ( dynamic_cast<const DotlibString*>(second) == nullptr ) {
+  if ( dynamic_cast<const AstString*>(second) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__, second->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
@@ -446,11 +446,11 @@ Str2IntGroupHandler::check_group_value(AttrType attr_type,
     return false;
   }
 
-  const DotlibNode* top = value_list->list_elem(0);
-  const DotlibNode* second = value_list->list_elem(1);
-  const DotlibNode* third = value_list->list_elem(2);
+  const AstNode* top = value_list->list_elem(0);
+  const AstNode* second = value_list->list_elem(1);
+  const AstNode* third = value_list->list_elem(2);
   if ( n > 3 ) {
-    const DotlibNode* forth = value_list->list_elem(3);
+    const AstNode* forth = value_list->list_elem(3);
     FileRegion loc = forth->loc();
     ostringstream buf;
     buf << attr_type << " statement has two string and an integer parameters.";
@@ -461,21 +461,21 @@ Str2IntGroupHandler::check_group_value(AttrType attr_type,
     return false;
   }
 
-  if ( dynamic_cast<const DotlibString*>(top) == nullptr ) {
+  if ( dynamic_cast<const AstString*>(top) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__, top->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "string value is expected.");
     return false;
   }
-  if ( dynamic_cast<const DotlibString*>(second) == nullptr ) {
+  if ( dynamic_cast<const AstString*>(second) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__, second->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
 		    "string value is expected.");
     return false;
   }
-  if ( dynamic_cast<const DotlibInt*>(third) == nullptr ) {
+  if ( dynamic_cast<const AstInt*>(third) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__, second->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",

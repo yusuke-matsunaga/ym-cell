@@ -46,9 +46,9 @@ public:
   ///
   /// エラーが起きたら nullptr を返す．
   virtual
-  DotlibNode*
-  read_attr(AttrType attr_type,
-	    const FileRegion& attr_loc);
+  const AstNode*
+  parse_attr_value(AttrType attr_type,
+		   const FileRegion& attr_loc) override;
 
 
 private:

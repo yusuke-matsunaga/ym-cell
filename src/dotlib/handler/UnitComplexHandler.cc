@@ -7,17 +7,26 @@
 /// All rights reserved.
 
 
+#include "HandlerFactory.h"
 #include "UnitComplexHandler.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibNode.h"
-#include "dotlib/DotlibInt.h"
-#include "dotlib/DotlibFloat.h"
-#include "dotlib/DotlibString.h"
-#include "dotlib/DotlibUnit.h"
+#include "AstMgr.h"
+#include "AstNode.h"
+#include "AstInt.h"
+#include "AstFloat.h"
+#include "AstString.h"
+#include "AstUnit.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
+
+// @brief unit 用のハンドラを作る．
+DotlibHandler*
+HandlerFactory::new_unit(DotlibParser& parser)
+{
+  return new UnitComplexHandler(parser);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス UnitComplexHandler
@@ -38,9 +47,9 @@ UnitComplexHandler::~UnitComplexHandler()
 // @brief 値を表すノードを作る．
 // @param[in] value_loc ファイル上の位置
 // @param[in] value_list 値のリスト
-DotlibNode*
-UnitComplexHandler::gen_value(const FileRegion& value_loc,
-			      const vector<DotlibNode*>& value_list)
+const AstNode*
+UnitComplexHandler::gen_node(const FileRegion& value_loc,
+			     const vector<const AstNode*>& value_list)
 {
   if ( value_list.size() != 2 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -51,8 +60,8 @@ UnitComplexHandler::gen_value(const FileRegion& value_loc,
     return nullptr;
   }
 
-  const DotlibNode* top = value_list[0];
-  const DotlibNum* num_node = dynamic_cast<const DotlibNum*>(top);
+  const AstNode* top = value_list[0];
+  const AstFloat* num_node = dynamic_cast<const AstFloat*>(top);
   if ( num_node == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    top->loc(),
@@ -61,10 +70,10 @@ UnitComplexHandler::gen_value(const FileRegion& value_loc,
 		    "Syntax error, first element should be a number.");
     return nullptr;
   }
-  double unit_val = num_node->float_value();
+  double unit_val = num_node->value();
 
-  const DotlibNode* next = value_list[1];
-  const DotlibString* str_node = dynamic_cast<const DotlibString*>(next);
+  const AstNode* next = value_list[1];
+  const AstString* str_node = dynamic_cast<const AstString*>(next);
   if ( str_node == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    next->loc(),
@@ -75,7 +84,7 @@ UnitComplexHandler::gen_value(const FileRegion& value_loc,
   }
   ShString unit_str = str_node->value();
 
-  return mgr()->new_unit(value_loc, unit_val, unit_str);
+  return mgr().new_unit(value_loc, unit_val, unit_str);
 }
 
 END_NAMESPACE_YM_DOTLIB

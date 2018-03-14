@@ -43,9 +43,9 @@ public:
   ///
   /// 多次元の場合でも1次元の FloatVector に変換する．
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& loc,
-	    const vector<DotlibNode*>& value_list) override;
+  const AstNode*
+  gen_node(const FileRegion& loc,
+	   const vector<const AstNode*>& value_list) override;
 
 
 private:

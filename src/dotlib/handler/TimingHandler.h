@@ -36,11 +36,21 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 属性値を読み込む．
+  /// @param[in] attr_type 属性
+  /// @param[in] attr_loc ファイル上の位置
+  /// @return 読み込んだ値を表す AstTiming を返す．
+  ///
+  /// エラーの場合には nullptr を返す．
+  const AstTiming*
+  parse_timing_value(AttrType attr_type,
+		     const FileRegion& attr_loc);
+
   /// @brief 値を作る．
   virtual
-  DotlibNode*
+  const AstNode*
   gen_value(const FileRegion& loc,
-	    const vector<DotlibAttr*>& attr_list);
+	    const vector<const AstAttr*>& attr_list);
 
 
 private:

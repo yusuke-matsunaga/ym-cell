@@ -8,10 +8,10 @@
 
 
 #include "ValuesHandler.h"
-#include "dotlib/HandlerFactory.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibFloatVector.h"
-#include "dotlib/DotlibList.h"
+#include "HandlerFactory.h"
+#include "AstMgr.h"
+#include "AstFloatVector.h"
+#include "AstList.h"
 #include "ym/MsgMgr.h"
 
 
@@ -45,9 +45,9 @@ ValuesHandler::~ValuesHandler()
 // @param[in] value_list 値のリスト
 //
 // 多次元の場合でも1次元の FloatVector に変換する．
-DotlibNode*
-ValuesHandler::gen_value(const FileRegion& loc,
-			 const vector<DotlibNode*>& value_list)
+const AstNode*
+ValuesHandler::gen_node(const FileRegion& loc,
+			const vector<const AstNode*>& value_list)
 {
   int n = value_list.size();
   if ( n == 0 ) {
@@ -59,10 +59,11 @@ ValuesHandler::gen_value(const FileRegion& loc,
     return nullptr;
   }
 
+  // 多次元でも1次元のリストに変換する．
   vector<double> tmp_list;
   for ( int i = 0; i < n; ++ i ) {
-    DotlibNode* elem = value_list[i];
-    auto fv_node = dynamic_cast<DotlibFloatVector*>(elem);
+    const AstNode* elem = value_list[i];
+    auto fv_node = dynamic_cast<const AstFloatVector*>(elem);
     if ( fv_node == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      elem->loc(),
@@ -76,7 +77,7 @@ ValuesHandler::gen_value(const FileRegion& loc,
     tmp_list.insert(tmp_list.end(), tmp_list1.begin(), tmp_list1.end());
   }
 
-  return mgr()->new_vector(loc, tmp_list);
+  return mgr().new_vector(loc, tmp_list);
 }
 
 END_NAMESPACE_YM_DOTLIB

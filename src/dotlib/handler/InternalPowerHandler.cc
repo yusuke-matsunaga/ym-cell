@@ -6,7 +6,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 #include "InternalPowerHandler.h"
 #include "SimpleHandler.h"
 
@@ -61,9 +61,9 @@ InternalPowerHandler::~InternalPowerHandler()
 }
 
 // @brief 値を作る．
-DotlibNode*
-InternalPowerHandler::gen_value(const FileRegion& loc,
-				const vector<DotlibAttr*>& attr_list)
+const AstNode*
+InternalPowerHandler::gen_node(const FileRegion& loc,
+			       const vector<const AstAttr*>& attr_list)
 {
   for ( auto attr: attr_list ) {
     ;

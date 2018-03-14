@@ -40,8 +40,8 @@ protected:
   /// @brief 値を表すノードを作る．
   /// @param[in] value_list 値のリスト
   virtual
-  DotlibNode*
-  gen_value(const vector<DotlibNode*>& value_list);
+  const AstNode*
+  gen_value(const vector<const AstNode*>& value_list);
 
 };
 

@@ -7,13 +7,9 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 
 #include "LibraryHandler.h"
-#include "SimpleHandler.h"
-#include "ComplexHandler.h"
-#include "Str1ComplexHandler.h"
-#include "UnitComplexHandler.h"
 #include "DefineHandler.h"
 
 
@@ -37,14 +33,14 @@ HandlerFactory::new_library(DotlibParser& parser)
 LibraryHandler::LibraryHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
-  DotlibHandler* simple = new SimpleHandler(parser, false);
-  DotlibHandler* str_simple = new StrSimpleHandler(parser, false);
-  DotlibHandler* symstr_simple = new StrSimpleHandler(parser, true);
-  DotlibHandler* flt_simple = new FloatSimpleHandler(parser);
+  DotlibHandler* simple = HandlerFactory::new_simple(parser);
+  DotlibHandler* str_simple = HandlerFactory::new_string(parser, false);
+  DotlibHandler* symstr_simple = HandlerFactory::new_string(parser, true);
+  DotlibHandler* flt_simple = HandlerFactory::new_float(parser);
   DotlibHandler* delay_model = HandlerFactory::new_delay_model(parser);
-  DotlibHandler* complex = new ComplexHandler(parser);
-  DotlibHandler* str1_complex = new Str1ComplexHandler(parser);
-  DotlibHandler* unit_complex = new UnitComplexHandler(parser);
+  DotlibHandler* complex = HandlerFactory::new_complex(parser);
+  DotlibHandler* str1_complex = HandlerFactory::new_str1_complex(parser);
+  DotlibHandler* unit_complex = HandlerFactory::new_unit(parser);
   DotlibHandler* define = new DefineHandler(parser, this);
   DotlibHandler* tmpl_handler = HandlerFactory::new_template(parser);
   DotlibHandler* group_handler = HandlerFactory::new_group(parser);
@@ -286,10 +282,10 @@ LibraryHandler::~LibraryHandler()
 }
 
 // @brief 値を作る．
-DotlibNode*
-LibraryHandler::gen_value(const FileRegion& loc,
-			  const DotlibString* name,
-			  const vector<DotlibAttr*>& attr_list)
+const AstNode*
+LibraryHandler::gen_node(const FileRegion& loc,
+			 const AstString* name,
+			 const vector<const AstAttr*>& attr_list)
 {
 #warning "TODO: 未完成"
   return nullptr;

@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "dotlib/dotlib_int.h"
+#include "dotlib_nsdef.h"
 #include "ym/StrBuff.h"
 #include "ym/FileRegion.h"
 

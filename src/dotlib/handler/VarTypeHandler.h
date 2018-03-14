@@ -38,7 +38,7 @@ protected:
 
   /// @brief 値を読み込む．
   virtual
-  DotlibNode*
+  AstNode*
   read_value();
 
 };

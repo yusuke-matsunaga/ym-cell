@@ -8,14 +8,14 @@
 
 
 #include "GroupHandler.h"
-#include "dotlib/DotlibParser.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibList.h"
-#include "dotlib/DotlibInt.h"
-#include "dotlib/DotlibString.h"
-#include "dotlib/DotlibAttr.h"
-#include "dotlib/DotlibGenGroup.h"
-#include "dotlib/TokenType.h"
+#include "DotlibParser.h"
+#include "AstMgr.h"
+#include "AstList.h"
+#include "AstInt.h"
+#include "AstString.h"
+#include "AstAttr.h"
+#include "AstGenGroup.h"
+#include "TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -41,12 +41,12 @@ GroupHandler::~GroupHandler()
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
 // @return エラーが起きたら false を返す．
-DotlibNode*
-GroupHandler::read_attr(AttrType attr_type,
-			const FileRegion& attr_loc)
+const AstNode*
+GroupHandler::parse_attr_value(AttrType attr_type,
+			       const FileRegion& attr_loc)
 {
   FileRegion value_loc;
-  vector<DotlibNode*> value_list;
+  vector<const AstNode*> value_list;
   if ( !parse_complex(false, value_loc, value_list) ) {
     return nullptr;
   }
@@ -67,8 +67,9 @@ GroupHandler::read_attr(AttrType attr_type,
     return nullptr;
   }
 
+  begin_group();
+
   FileRegion first_loc = parser().cur_loc();
-  vector<DotlibAttr*> attr_list;
   FileRegion last_loc;
   for ( ; ; ) {
     FileRegion loc;
@@ -90,8 +91,9 @@ GroupHandler::read_attr(AttrType attr_type,
     }
     const char* name = parser().cur_string();
     AttrType name_type = parser().conv_to_attr(name);
-    DotlibHandler* handler = find_handler(name_type);
-    if ( handler == nullptr ) {
+    int r = parse_attr(name_type, loc);
+    if ( r == 0 ) {
+      // 見つからなかった
       ostringstream buf;
       buf << name << ": unknown keyword.";
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -101,12 +103,14 @@ GroupHandler::read_attr(AttrType attr_type,
 		      buf.str());
       return nullptr;
     }
-    DotlibNode* value = handler->read_attr(name_type, loc);
-    if ( value == nullptr ) {
+    else if ( r == 1 ) {
+      // 正常に処理した．
+      continue;
+    }
+    else if ( r == 2 ) {
+      // エラーが起こった．
       return nullptr;
     }
-    DotlibAttr* attr = mgr()->new_attr(loc, name_type, value);
-    attr_list.push_back(attr);
   }
 
   if ( !expect(TokenType::NL) ) {
@@ -117,19 +121,17 @@ GroupHandler::read_attr(AttrType attr_type,
     cout << "}" << endl;
   }
 
-  return gen_value(FileRegion(first_loc, last_loc), value_list, attr_list);
+  return gen_node(FileRegion(first_loc, last_loc), value_list, mAttrList);
 }
 
 // @brief ハンドラの登録を行う．
 // @param[in] attr_type 属性
 // @param[in] handler 対応付けるハンドラ
-// @note エラーが起きたら false を返す．
-bool
+void
 GroupHandler::reg_handler(AttrType attr_type,
 			  DotlibHandler* handler)
 {
-  mHandlerMap.add(attr_type, handler);
-  return true;
+  mHandlerList.push_back(make_pair(attr_type, handler));
 }
 
 // @brief ハンドラを取り出す．
@@ -138,13 +140,43 @@ GroupHandler::reg_handler(AttrType attr_type,
 DotlibHandler*
 GroupHandler::find_handler(AttrType attr_type)
 {
-  DotlibHandler* ans;
-  if ( mHandlerMap.find(attr_type, ans) ) {
-    return ans;
+  for ( auto p: mHandlerList ) {
+    if ( p.first == attr_type ) {
+      return p.second;
+    }
   }
-  else {
-    return nullptr;
+  return nullptr;
+}
+
+// @brief グループ開始の処理を行う．
+void
+GroupHandler::begin_group()
+{
+  mAttrList.clear();
+}
+
+// @brief attr_type に対応する属性を読み込む．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval 0 処理しなかった．
+// @retval 1 正常に処理した．
+// @retval 2 処理中にエラーが起こった．
+int
+GroupHandler::parse_attr(AttrType attr_type,
+			 const FileRegion& attr_loc)
+{
+  // デフォルトの処理を行う．
+  DotlibHandler* handler = find_handler(attr_type);
+  if ( handler == nullptr ) {
+    return 0;
   }
+  const AstNode* value = handler->parse_attr_value(attr_type, attr_loc);
+  if ( value == nullptr ) {
+    return 2;
+  }
+  AstAttr* attr = mgr().new_attr(attr_loc, attr_type, value);
+  mAttrList.push_back(attr);
+  return 1;
 }
 
 // @brief group statement の引数のチェックを行う仮想関数
@@ -158,18 +190,18 @@ bool
 GroupHandler::check_value(AttrType attr_type,
 			  const FileRegion& attr_loc,
 			  const FileRegion& value_loc,
-			  const vector<DotlibNode*>& value_list)
+			  const vector<const AstNode*>& value_list)
 {
   return true;
 }
 
 // @brief 値を作る．
-DotlibNode*
-GroupHandler::gen_value(const FileRegion& loc,
-			const vector<DotlibNode*>& value_list,
-			const vector<DotlibAttr*>& attr_list)
+const AstNode*
+GroupHandler::gen_node(const FileRegion& loc,
+		       const vector<const AstNode*>& value_list,
+		       const vector<const AstAttr*>& attr_list)
 {
-  return mgr()->new_gen_group(loc, value_list, attr_list);
+  return mgr().new_gen_group(loc, value_list, attr_list);
 }
 
 
@@ -198,7 +230,7 @@ bool
 EmptyGroupHandler::check_value(AttrType attr_type,
 			       const FileRegion& attr_loc,
 			       const FileRegion& value_loc,
-			       const vector<DotlibNode*>& value_list)
+			       const vector<const AstNode*>& value_list)
 {
   int n = value_list.size();
   if ( n > 0 ) {
@@ -219,21 +251,21 @@ EmptyGroupHandler::check_value(AttrType attr_type,
 // @param[in] loc 全体のファイル上の位置
 // @param[in] value_list 値のリスト
 // @param[in] attr_list 属性のリスト
-DotlibNode*
-EmptyGroupHandler::gen_value(const FileRegion& loc,
-			     const vector<DotlibNode*>& value_list,
-			     const vector<DotlibAttr*>& attr_list)
+const AstNode*
+EmptyGroupHandler::gen_node(const FileRegion& loc,
+			    const vector<const AstNode*>& value_list,
+			    const vector<const AstAttr*>& attr_list)
 {
   ASSERT_COND( value_list.empty() );
-  return gen_value(loc, attr_list);
+  return gen_node(loc, attr_list);
 }
 
 // @brief 値を作る．
 // @param[in] loc 全体のファイル上の位置
 // @param[in] attr_list 属性のリスト
-DotlibNode*
-EmptyGroupHandler::gen_value(const FileRegion& loc,
-			     const vector<DotlibAttr*>& attr_list)
+const AstNode*
+EmptyGroupHandler::gen_node(const FileRegion& loc,
+			    const vector<const AstAttr*>& attr_list)
 {
 #warning "TODO: 未完成"
   return nullptr;
@@ -265,7 +297,7 @@ bool
 Str1GroupHandler::check_value(AttrType attr_type,
 			      const FileRegion& attr_loc,
 			      const FileRegion& value_loc,
-			      const vector<DotlibNode*>& value_list)
+			      const vector<const AstNode*>& value_list)
 {
   int n = value_list.size();
   if ( n == 0 ) {
@@ -279,9 +311,9 @@ Str1GroupHandler::check_value(AttrType attr_type,
     return false;
   }
 
-  const DotlibNode* top = value_list[0];
+  const AstNode* top = value_list[0];
   if ( n > 1 ) {
-    const DotlibNode* second = value_list[1];
+    const AstNode* second = value_list[1];
     FileRegion loc = second->loc();
     ostringstream buf;
     buf << attr_type << " statement has only one string parameter.";
@@ -292,7 +324,7 @@ Str1GroupHandler::check_value(AttrType attr_type,
     return false;
   }
 
-  if ( dynamic_cast<const DotlibString*>(top) == nullptr ) {
+  if ( dynamic_cast<const AstString*>(top) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__, top->loc(),
 		    kMsgError,
 		    "DOTLIB_PARSER",
@@ -304,23 +336,23 @@ Str1GroupHandler::check_value(AttrType attr_type,
 }
 
 // @brief 値を作る．
-DotlibNode*
-Str1GroupHandler::gen_value(const FileRegion& loc,
-			    const vector<DotlibNode*>& value_list,
-			    const vector<DotlibAttr*>& attr_list)
+const AstNode*
+Str1GroupHandler::gen_node(const FileRegion& loc,
+			   const vector<const AstNode*>& value_list,
+			   const vector<const AstAttr*>& attr_list)
 {
   // check_group_value() でチェックしているので value_list は
   // 文字列のシングルトンのはず．
   ASSERT_COND( value_list.size() == 1 );
-  const DotlibString* str_value = dynamic_cast<const DotlibString*>(value_list[0]);
-  return gen_value(loc, str_value, attr_list);
+  const AstString* str_value = dynamic_cast<const AstString*>(value_list[0]);
+  return gen_node(loc, str_value, attr_list);
 }
 
 // @brief 値を作る．
-DotlibNode*
-Str1GroupHandler::gen_value(const FileRegion& loc,
-			    const DotlibString* value,
-			    const vector<DotlibAttr*>& attr_list)
+const AstNode*
+Str1GroupHandler::gen_node(const FileRegion& loc,
+			   const AstString* value,
+			   const vector<const AstAttr*>& attr_list)
 {
 #warning "TODO: 未完成"
   return nullptr;
@@ -353,7 +385,7 @@ bool
 Str2GroupHandler::check_value(AttrType attr_type,
 			      const FileRegion& attr_loc,
 			      const FileRegion& value_loc,
-			      const vector<DotlibNode*>& value_list)
+			      const vector<const AstNode*>& value_list)
 {
   int n = value_list.size();
   if ( n < 2 ) {
@@ -367,10 +399,10 @@ Str2GroupHandler::check_value(AttrType attr_type,
     return false;
   }
 
-  const DotlibNode* top = value_list[0];
-  const DotlibNode* second = value_list[1];
+  const AstNode* top = value_list[0];
+  const AstNode* second = value_list[1];
   if ( n > 2 ) {
-    const DotlibNode* third = value_list[2];
+    const AstNode* third = value_list[2];
     FileRegion loc = third->loc();
     ostringstream buf;
     buf << attr_type << " statement has two string parameters.";
@@ -382,7 +414,7 @@ Str2GroupHandler::check_value(AttrType attr_type,
     return false;
   }
 
-  if ( dynamic_cast<const DotlibString*>(top) == nullptr ) {
+  if ( dynamic_cast<const AstString*>(top) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    top->loc(),
 		    kMsgError,
@@ -390,7 +422,7 @@ Str2GroupHandler::check_value(AttrType attr_type,
 		    "string value is expected.");
     return false;
   }
-  if ( dynamic_cast<const DotlibString*>(second) == nullptr ) {
+  if ( dynamic_cast<const AstString*>(second) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    second->loc(),
 		    kMsgError,
@@ -403,23 +435,23 @@ Str2GroupHandler::check_value(AttrType attr_type,
 }
 
 // @brief 値を作る．
-DotlibNode*
-Str2GroupHandler::gen_value(const FileRegion& loc,
-			    const vector<DotlibNode*>& value_list,
-			    const vector<DotlibAttr*>& attr_list)
+const AstNode*
+Str2GroupHandler::gen_node(const FileRegion& loc,
+			   const vector<const AstNode*>& value_list,
+			   const vector<const AstAttr*>& attr_list)
 {
   ASSERT_COND( value_list.size() == 2 );
-  auto value1 = dynamic_cast<const DotlibString*>(value_list[0]);
-  auto value2 = dynamic_cast<const DotlibString*>(value_list[1]);
-  return gen_value(loc, value1, value2, attr_list);
+  auto value1 = dynamic_cast<const AstString*>(value_list[0]);
+  auto value2 = dynamic_cast<const AstString*>(value_list[1]);
+  return gen_node(loc, value1, value2, attr_list);
 }
 
 // @brief 値を作る．
-DotlibNode*
-Str2GroupHandler::gen_value(const FileRegion& loc,
-			    const DotlibString* value1,
-			    const DotlibString* value2,
-			    const vector<DotlibAttr*>& attr_list)
+const AstNode*
+Str2GroupHandler::gen_node(const FileRegion& loc,
+			   const AstString* value1,
+			   const AstString* value2,
+			   const vector<const AstAttr*>& attr_list)
 {
 #warning "TODO: 未完成"
   return nullptr;
@@ -453,7 +485,7 @@ bool
 Str2IntGroupHandler::check_value(AttrType attr_type,
 				 const FileRegion& attr_loc,
 				 const FileRegion& value_loc,
-				 const vector<DotlibNode*>& value_list)
+				 const vector<const AstNode*>& value_list)
 {
   int n = value_list.size();
   if ( n < 3 ) {
@@ -468,11 +500,11 @@ Str2IntGroupHandler::check_value(AttrType attr_type,
     return false;
   }
 
-  const DotlibNode* top = value_list[0];
-  const DotlibNode* second = value_list[1];
-  const DotlibNode* third = value_list[2];
+  const AstNode* top = value_list[0];
+  const AstNode* second = value_list[1];
+  const AstNode* third = value_list[2];
   if ( n > 3 ) {
-    const DotlibNode* forth = value_list[4];
+    const AstNode* forth = value_list[4];
     FileRegion loc = forth->loc();
     ostringstream buf;
     buf << attr_type << " statement has two string and an integer parameters.";
@@ -483,7 +515,7 @@ Str2IntGroupHandler::check_value(AttrType attr_type,
     return false;
   }
 
-  if ( dynamic_cast<const DotlibString*>(top) == nullptr ) {
+  if ( dynamic_cast<const AstString*>(top) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    top->loc(),
 		    kMsgError,
@@ -491,7 +523,7 @@ Str2IntGroupHandler::check_value(AttrType attr_type,
 		    "string value is expected.");
     return false;
   }
-  if ( dynamic_cast<const DotlibString*>(second) == nullptr ) {
+  if ( dynamic_cast<const AstString*>(second) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    second->loc(),
 		    kMsgError,
@@ -499,7 +531,7 @@ Str2IntGroupHandler::check_value(AttrType attr_type,
 		    "string value is expected.");
     return false;
   }
-  if ( dynamic_cast<const DotlibInt*>(third) == nullptr ) {
+  if ( dynamic_cast<const AstInt*>(third) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    second->loc(),
 		    kMsgError,
@@ -512,25 +544,25 @@ Str2IntGroupHandler::check_value(AttrType attr_type,
 }
 
 // @brief 値を作る．
-DotlibNode*
-Str2IntGroupHandler::gen_value(const FileRegion& loc,
-			       const vector<DotlibNode*>& value_list,
-			       const vector<DotlibAttr*>& attr_list)
+const AstNode*
+Str2IntGroupHandler::gen_node(const FileRegion& loc,
+			      const vector<const AstNode*>& value_list,
+			      const vector<const AstAttr*>& attr_list)
 {
   ASSERT_COND( value_list.size() == 3 );
-  auto value1 = dynamic_cast<const DotlibString*>(value_list[0]);
-  auto value2 = dynamic_cast<const DotlibString*>(value_list[1]);
-  auto value3 = dynamic_cast<const DotlibInt*>(value_list[2]);
-  return gen_value(loc, value1, value2, value3, attr_list);
+  auto value1 = dynamic_cast<const AstString*>(value_list[0]);
+  auto value2 = dynamic_cast<const AstString*>(value_list[1]);
+  auto value3 = dynamic_cast<const AstInt*>(value_list[2]);
+  return gen_node(loc, value1, value2, value3, attr_list);
 }
 
 // @brief 値を作る．
-DotlibNode*
-Str2IntGroupHandler::gen_value(const FileRegion& loc,
-			       const DotlibString* value1,
-			       const DotlibString* value2,
-			       const DotlibInt* value3,
-			       const vector<DotlibAttr*>& attr_list)
+const AstNode*
+Str2IntGroupHandler::gen_node(const FileRegion& loc,
+			      const AstString* value1,
+			      const AstString* value2,
+			      const AstInt* value3,
+			      const vector<const AstAttr*>& attr_list)
 {
 #warning "TODO: 未完成"
   return nullptr;

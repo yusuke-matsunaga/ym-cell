@@ -7,14 +7,14 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 #include "TableHandler.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibLut.h"
-#include "dotlib/DotlibString.h"
-#include "dotlib/DotlibFloatVector.h"
-#include "dotlib/DotlibList.h"
-#include "dotlib/DotlibAttr.h"
+#include "AstMgr.h"
+#include "AstLut.h"
+#include "AstString.h"
+#include "AstFloatVector.h"
+#include "AstList.h"
+#include "AstAttr.h"
 #include "ym/MsgMgr.h"
 
 
@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief table group 用のハンドラを作る．
 // @param[in] parser パーサー
-DotlibHandler*
+TableHandler*
 HandlerFactory::new_table(DotlibParser& parser)
 {
   return new TableHandler(parser);
@@ -60,15 +60,15 @@ TableHandler::~TableHandler()
 }
 
 /// @brief 値を作る．
-DotlibNode*
-TableHandler::gen_value(const FileRegion& loc,
-			const DotlibString* name,
-			const vector<DotlibAttr*>& attr_list)
+const AstNode*
+TableHandler::gen_node(const FileRegion& loc,
+		       const AstString* name,
+		       const vector<const AstAttr*>& attr_list)
 {
-  const DotlibFloatVector* index_1 = nullptr;
-  const DotlibFloatVector* index_2 = nullptr;
-  const DotlibFloatVector* index_3 = nullptr;
-  const DotlibFloatVector* values = nullptr;
+  const AstFloatVector* index_1 = nullptr;
+  const AstFloatVector* index_2 = nullptr;
+  const AstFloatVector* index_3 = nullptr;
+  const AstFloatVector* values = nullptr;
   for ( auto attr: attr_list ) {
     if ( attr->attr_type() == AttrType::INDEX_1 ) {
       if ( index_1 != nullptr ) {
@@ -80,7 +80,7 @@ TableHandler::gen_value(const FileRegion& loc,
 			"'index_1' defined more than once.");
 	return nullptr;
       }
-      index_1 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
+      index_1 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
       if ( index_1 == nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -101,7 +101,7 @@ TableHandler::gen_value(const FileRegion& loc,
 			"'index_2' defined more than once.");
 	return nullptr;
       }
-      index_2 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
+      index_2 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
       if ( index_2 == nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -122,7 +122,7 @@ TableHandler::gen_value(const FileRegion& loc,
 			"'index_3' defined more than once.");
 	return nullptr;
       }
-      index_3 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
+      index_3 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
       if ( index_3 == nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -143,7 +143,7 @@ TableHandler::gen_value(const FileRegion& loc,
 			"'values' defined more than once.");
 	return nullptr;
       }
-      values = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
+      values = dynamic_cast<const AstFloatVector*>(attr->attr_value());
       if ( values == nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -155,7 +155,7 @@ TableHandler::gen_value(const FileRegion& loc,
       }
     }
   }
-  return mgr()->new_lut(loc, name, index_1, index_2, index_3, values);
+  return mgr().new_lut(loc, name, index_1, index_2, index_3, values);
 }
 
 END_NAMESPACE_YM_DOTLIB

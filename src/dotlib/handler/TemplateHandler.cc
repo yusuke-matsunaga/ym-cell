@@ -7,13 +7,13 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 #include "TemplateHandler.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibFloatVector.h"
-#include "dotlib/DotlibVarType.h"
-#include "dotlib/DotlibAttr.h"
-#include "dotlib/DotlibTemplate.h"
+#include "AstMgr.h"
+#include "AstFloatVector.h"
+#include "AstVarType.h"
+#include "AstAttr.h"
+#include "AstTemplate.h"
 #include "ym/MsgMgr.h"
 
 
@@ -61,17 +61,17 @@ TemplateHandler::~TemplateHandler()
 }
 
 // @brief 値を作る．
-DotlibNode*
+AstNode*
 TemplateHandler::gen_value(const FileRegion& loc,
-			   const DotlibString* name,
-			   const vector<DotlibAttr*>& attr_list)
+			   const AstString* name,
+			   const vector<AstAttr*>& attr_list)
 {
-  const DotlibVarType* var_1 = nullptr;
-  const DotlibVarType* var_2 = nullptr;
-  const DotlibVarType* var_3 = nullptr;
-  const DotlibFloatVector* index_1 = nullptr;
-  const DotlibFloatVector* index_2 = nullptr;
-  const DotlibFloatVector* index_3 = nullptr;
+  const AstVarType* var_1 = nullptr;
+  const AstVarType* var_2 = nullptr;
+  const AstVarType* var_3 = nullptr;
+  const AstFloatVector* index_1 = nullptr;
+  const AstFloatVector* index_2 = nullptr;
+  const AstFloatVector* index_3 = nullptr;
   for ( auto attr: attr_list ) {
     if ( attr->attr_type() == AttrType::VARIABLE_1 ) {
       if ( var_1 != nullptr ) {
@@ -83,7 +83,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 			"'variable_1' defined more than once.");
 	return nullptr;
       }
-      var_1 = dynamic_cast<const DotlibVarType*>(attr->attr_value());
+      var_1 = dynamic_cast<const AstVarType*>(attr->attr_value());
       ASSERT_COND ( var_1 != nullptr );
     }
     else if ( attr->attr_type() == AttrType::VARIABLE_2 ) {
@@ -96,7 +96,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 			"'variable_2' defined more than once.");
 	return nullptr;
       }
-      var_2 = dynamic_cast<const DotlibVarType*>(attr->attr_value());
+      var_2 = dynamic_cast<const AstVarType*>(attr->attr_value());
       ASSERT_COND ( var_2 != nullptr );
     }
     else if ( attr->attr_type() == AttrType::VARIABLE_3 ) {
@@ -109,7 +109,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 			"'variable_3' defined more than once.");
 	return nullptr;
       }
-      var_3 = dynamic_cast<const DotlibVarType*>(attr->attr_value());
+      var_3 = dynamic_cast<const AstVarType*>(attr->attr_value());
       ASSERT_COND ( var_3 != nullptr );
     }
     else if ( attr->attr_type() == AttrType::INDEX_1 ) {
@@ -122,7 +122,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 			"'index_1' defined more than once.");
 	return nullptr;
       }
-      index_1 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
+      index_1 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
       ASSERT_COND ( index_1 != nullptr );
     }
     else if ( attr->attr_type() == AttrType::INDEX_2 ) {
@@ -135,7 +135,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 			"'index_2' defined more than once.");
 	return nullptr;
       }
-      index_2 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
+      index_2 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
       ASSERT_COND ( index_2 != nullptr );
     }
     else if ( attr->attr_type() == AttrType::INDEX_3 ) {
@@ -148,7 +148,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 			"'index_3' defined more than once.");
 	return nullptr;
       }
-      index_3 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
+      index_3 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
       ASSERT_COND ( index_3 != nullptr );
     }
   }
@@ -221,8 +221,8 @@ TemplateHandler::gen_value(const FileRegion& loc,
     }
   }
 
-  return mgr()->new_template(loc, name, dimension,
-			     var_1, var_2, var_3, index_1, index_2, index_3);
+  return mgr().new_template(loc, name, dimension,
+			    var_1, var_2, var_3, index_1, index_2, index_3);
 }
 
 END_NAMESPACE_YM_DOTLIB

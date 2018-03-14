@@ -8,21 +8,20 @@
 
 
 #include "TimingHandler.h"
-#include "dotlib/HandlerFactory.h"
-#include "dotlib/DotlibAttr.h"
-#include "SimpleHandler.h"
-#include "ComplexHandler.h"
-#include "PwComplexHandler.h"
+#include "HandlerFactory.h"
+#include "TableHandler.h"
+#include "AstTiming.h"
+#include "AstAttr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief timing group 用のハンドラを作る．
 // @param[in] parent 親のハンドラ
-DotlibHandler*
+TimingHandler*
 HandlerFactory::new_timing(DotlibParser& parser)
 {
-  return new EmptyGroupHandler(parser);
+  return new TimingHandler(parser);
 }
 
 
@@ -36,14 +35,14 @@ TimingHandler::TimingHandler(DotlibParser& parser) :
   EmptyGroupHandler(parser)
 {
   // simple attributes
-  DotlibHandler* simple = new SimpleHandler(parser, false);
-  DotlibHandler* str_simple = new StrSimpleHandler(parser, false);
-  DotlibHandler* flt_simple = new FloatSimpleHandler(parser);
+  DotlibHandler* simple = HandlerFactory::new_simple(parser);
+  DotlibHandler* str_simple = HandlerFactory::new_string(parser, false);
+  DotlibHandler* flt_simple = HandlerFactory::new_float(parser);
   DotlibHandler* func_handler = HandlerFactory::new_function(parser);
   DotlibHandler* ts_handler = HandlerFactory::new_timing_sense(parser);
   DotlibHandler* tt_handler = HandlerFactory::new_timing_type(parser);
-  DotlibHandler* complex = new ComplexHandler(parser);
-  DotlibHandler* pw_complex = new PwComplexHandler(parser);
+  DotlibHandler* complex = HandlerFactory::new_complex(parser);
+  DotlibHandler* pw_complex = HandlerFactory::new_piece_wise(parser);
   DotlibHandler* table_handler = HandlerFactory::new_table(parser);
   DotlibHandler* g_group = HandlerFactory::new_group(parser);
 
@@ -134,10 +133,23 @@ TimingHandler::~TimingHandler()
 {
 }
 
+// @brief 属性値を読み込む．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @return 読み込んだ値を表す AstTiming を返す．
+//
+// エラーの場合には nullptr を返す．
+const AstTiming*
+TimingHandler::parse_timing_value(AttrType attr_type,
+				  const FileRegion& attr_loc)
+{
+  return dynamic_cast<const AstTiming*>(parse_attr_value(attr_type, attr_loc));
+}
+
 // @brief 値を作る．
-DotlibNode*
+const AstNode*
 TimingHandler::gen_value(const FileRegion& loc,
-			 const vector<DotlibAttr*>& attr_list)
+			 const vector<const AstAttr*>& attr_list)
 {
   for ( auto attr: attr_list ) {
     if ( attr->attr_type() == AttrType::RELATED_PIN ) {

@@ -7,14 +7,14 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 #include "PowerHandler.h"
 #include "ComplexHandler.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibFloatVector.h"
-#include "dotlib/DotlibList.h"
-#include "dotlib/DotlibLut.h"
-#include "dotlib/DotlibAttr.h"
+#include "AstMgr.h"
+#include "AstFloatVector.h"
+#include "AstList.h"
+#include "AstLut.h"
+#include "AstAttr.h"
 #include "ym/MsgMgr.h"
 
 
@@ -65,15 +65,15 @@ PowerHandler::~PowerHandler()
 }
 
 // @brief 値を作る．
-DotlibNode*
-PowerHandler::gen_value(const FileRegion& loc,
-			const DotlibString* name,
-			const vector<DotlibAttr*>& attr_list)
+const AstNode*
+PowerHandler::gen_node(const FileRegion& loc,
+		       const AstString* name,
+		       const vector<const AstAttr*>& attr_list)
 {
-  const DotlibFloatVector* index_1 = nullptr;
-  const DotlibFloatVector* index_2 = nullptr;
-  const DotlibFloatVector* index_3 = nullptr;
-  const DotlibFloatVector* values = nullptr;
+  const AstFloatVector* index_1 = nullptr;
+  const AstFloatVector* index_2 = nullptr;
+  const AstFloatVector* index_3 = nullptr;
+  const AstFloatVector* values = nullptr;
   for ( auto attr: attr_list ) {
     if ( attr->attr_type() == AttrType::INDEX_1 ) {
       if ( index_1 != nullptr ) {
@@ -85,7 +85,7 @@ PowerHandler::gen_value(const FileRegion& loc,
 			"'index_1' defined more than once.");
 	return nullptr;
       }
-      index_1 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
+      index_1 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
       ASSERT_COND( index_1 != nullptr );
     }
     if ( attr->attr_type() == AttrType::INDEX_2 ) {
@@ -98,7 +98,7 @@ PowerHandler::gen_value(const FileRegion& loc,
 			"'index_2' defined more than once.");
 	return nullptr;
       }
-      index_2 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
+      index_2 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
       ASSERT_COND( index_2 != nullptr );
     }
     if ( attr->attr_type() == AttrType::INDEX_3 ) {
@@ -111,7 +111,7 @@ PowerHandler::gen_value(const FileRegion& loc,
 			"'index_3' defined more than once.");
 	return nullptr;
       }
-      index_3 = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
+      index_3 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
       ASSERT_COND ( index_3 != nullptr );
     }
     if ( attr->attr_type() == AttrType::VALUES ) {
@@ -124,11 +124,11 @@ PowerHandler::gen_value(const FileRegion& loc,
 			"'values' defined more than once.");
 	return nullptr;
       }
-      values = dynamic_cast<const DotlibFloatVector*>(attr->attr_value());
+      values = dynamic_cast<const AstFloatVector*>(attr->attr_value());
       ASSERT_COND ( values != nullptr );
     }
   }
-  return mgr()->new_lut(loc, name, index_1, index_2, index_3, values);
+  return mgr().new_lut(loc, name, index_1, index_2, index_3, values);
 }
 
 END_NAMESPACE_YM_DOTLIB

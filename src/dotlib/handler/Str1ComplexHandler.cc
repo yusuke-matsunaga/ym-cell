@@ -7,13 +7,22 @@
 /// All rights reserved.
 
 
+#include "HandlerFactory.h"
 #include "Str1ComplexHandler.h"
-#include "dotlib/DotlibNode.h"
-#include "dotlib/DotlibString.h"
+#include "AstNode.h"
+#include "AstString.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
+
+// @brief ダミーの complex ハンドラを作る．
+DotlibHandler*
+HandlerFactory::new_str1_complex(DotlibParser& parser)
+{
+  return new Str1ComplexHandler(parser);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス Str1ComplexHandler
@@ -33,8 +42,8 @@ Str1ComplexHandler::~Str1ComplexHandler()
 
 // @brief 値を表すノードを作る．
 // @param[in] value_list 値のリスト
-DotlibNode*
-Str1ComplexHandler::gen_value(const vector<DotlibNode*>& value_list)
+const AstNode*
+Str1ComplexHandler::gen_value(const vector<const AstNode*>& value_list)
 {
   if ( value_list.size() != 1 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -44,9 +53,8 @@ Str1ComplexHandler::gen_value(const vector<DotlibNode*>& value_list)
 		    "Syntax error, a string expected.");
     return nullptr;
   }
-  DotlibNode* top = value_list[0];
-  DotlibString* str = dynamic_cast<DotlibString*>(top);
-  if ( str == nullptr ) {
+  const AstNode* top = value_list[0];
+  if ( dynamic_cast<const AstString*>(top) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    top->loc(),
 		    kMsgError,
@@ -55,7 +63,7 @@ Str1ComplexHandler::gen_value(const vector<DotlibNode*>& value_list)
     return nullptr;
   }
 
-  return str;
+  return top;
 }
 
 END_NAMESPACE_YM_DOTLIB

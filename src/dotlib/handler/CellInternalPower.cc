@@ -8,8 +8,8 @@
 
 
 #include "CellInternalPower.h"
-#include "dotlib/HandlerFactory.h"
-#include "dotlib/DotlibAttr.h"
+#include "HandlerFactory.h"
+#include "AstAttr.h"
 #include "SimpleHandler.h"
 #include "ValuesHandler.h"
 
@@ -52,10 +52,10 @@ CellInternalPowerHandler::~CellInternalPowerHandler()
 }
 
 // @brief 値を作る．
-DotlibNode*
-CellInternalPowerHandler::gen_value(const FileRegion& loc,
-				    const DotlibString* name,
-				    const vector<DotlibAttr*>& attr_list)
+const AstNode*
+CellInternalPowerHandler::gen_node(const FileRegion& loc,
+				   const AstString* name,
+				   const vector<const AstAttr*>& attr_list)
 {
   for ( auto attr: attr_list ) {
     if ( attr->attr_type() == AttrType::RELATED_PIN ) {

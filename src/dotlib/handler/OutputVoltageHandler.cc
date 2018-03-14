@@ -7,12 +7,12 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 #include "OutputVoltageHandler.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibExpr.h"
-#include "dotlib/DotlibAttr.h"
-#include "dotlib/DotlibOutputVoltage.h"
+#include "AstMgr.h"
+#include "AstExpr.h"
+#include "AstAttr.h"
+#include "AstOutputVoltage.h"
 #include "ym/MsgMgr.h"
 
 
@@ -54,15 +54,15 @@ OutputVoltageHandler::~OutputVoltageHandler()
 }
 
 // @brief 値を作る．
-DotlibNode*
-OutputVoltageHandler::gen_value(const FileRegion& loc,
-				const DotlibString* name,
-				const vector<DotlibAttr*>& attr_list)
+const AstNode*
+OutputVoltageHandler::gen_node(const FileRegion& loc,
+			       const AstString* name,
+			       const vector<const AstAttr*>& attr_list)
 {
-  const DotlibExpr* vol = nullptr;
-  const DotlibExpr* voh = nullptr;
-  const DotlibExpr* vomin = nullptr;
-  const DotlibExpr* vomax = nullptr;
+  const AstExpr* vol = nullptr;
+  const AstExpr* voh = nullptr;
+  const AstExpr* vomin = nullptr;
+  const AstExpr* vomax = nullptr;
   for ( auto attr: attr_list ) {
     if ( attr->attr_type() == AttrType::VOL ) {
       if ( vol != nullptr ) {
@@ -74,7 +74,7 @@ OutputVoltageHandler::gen_value(const FileRegion& loc,
 			"'vol' defined more than once.");
 	return nullptr;
       }
-      vol = dynamic_cast<const DotlibExpr*>(attr->attr_value());
+      vol = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( vol != nullptr );
     }
     else if ( attr->attr_type() == AttrType::VOH ) {
@@ -87,7 +87,7 @@ OutputVoltageHandler::gen_value(const FileRegion& loc,
 			"'voh' defined more than once.");
 	return nullptr;
       }
-      voh = dynamic_cast<const DotlibExpr*>(attr->attr_value());
+      voh = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( voh != nullptr );
     }
     else if ( attr->attr_type() == AttrType::VOMIN ) {
@@ -100,7 +100,7 @@ OutputVoltageHandler::gen_value(const FileRegion& loc,
 			"'vomin' defined more than once.");
 	return nullptr;
       }
-      vomin = dynamic_cast<const DotlibExpr*>(attr->attr_value());
+      vomin = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( vomin != nullptr );
     }
     else if ( attr->attr_type() == AttrType::VOMAX ) {
@@ -113,11 +113,11 @@ OutputVoltageHandler::gen_value(const FileRegion& loc,
 			"'vomax' defined more than once.");
 	return nullptr;
       }
-      vomax = dynamic_cast<const DotlibExpr*>(attr->attr_value());
+      vomax = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( vomax != nullptr );
     }
   }
-  return mgr()->new_output_voltage(loc, name, vol, voh, vomin, vomax);
+  return mgr().new_output_voltage(loc, name, vol, voh, vomin, vomax);
 }
 
 END_NAMESPACE_YM_DOTLIB

@@ -9,8 +9,7 @@
 /// All rights reserved.
 
 
-#include "dotlib/DotlibHandler.h"
-#include "ym/HashMap.h"
+#include "DotlibHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -41,13 +40,13 @@ public:
   /// @brief 属性値を読み込む．
   /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ値を表す DotlibNode を返す．
+  /// @return 読み込んだ値を表す AstNode を返す．
   ///
   /// エラーの場合には nullptr を返す．
   virtual
-  DotlibNode*
-  read_attr(AttrType attr_type,
-	    const FileRegion& attr_loc);
+  const AstNode*
+  parse_attr_value(AttrType attr_type,
+		   const FileRegion& attr_loc);
 
 
 public:
@@ -58,22 +57,32 @@ public:
   /// @brief ハンドラの登録を行う．
   /// @param[in] attr_type 属性
   /// @param[in] handler 対応付けるハンドラ
-  /// @note エラーが起きたら false を返す．
-  bool
+  /// @param[in] singleton 単一要素の時に true にするフラグ
+  void
   reg_handler(AttrType attr_type,
 	      DotlibHandler* handler);
-
-  /// @brief ハンドラを取り出す．
-  /// @param[in] attr_type 属性
-  /// @note なければ nullptr を返す．
-  DotlibHandler*
-  find_handler(AttrType attr_type);
 
 
 protected:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief グループ開始の処理を行う．
+  virtual
+  void
+  begin_group();
+
+  /// @brief attr_type に対応する属性を読み込む．
+  /// @param[in] attr_type 対象の属性
+  /// @param[in] attr_loc attr_type のファイル上の位置
+  /// @retval 0 処理しなかった．
+  /// @retval 1 正常に処理した．
+  /// @retval 2 処理中にエラーが起こった．
+  virtual
+  int
+  parse_attr(AttrType attr_type,
+	     const FileRegion& attr_loc);
 
   /// @brief group statement の引数のチェックを行う仮想関数
   /// @param[in] attr_type 属性
@@ -88,17 +97,24 @@ protected:
   check_value(AttrType attr_type,
 	      const FileRegion& attr_loc,
 	      const FileRegion& value_loc,
-	      const vector<DotlibNode*>& value_list);
+	      const vector<const AstNode*>& value_list);
 
   /// @brief 値を作る．
   /// @param[in] loc 全体のファイル上の位置
   /// @param[in] value_list 値のリスト
   /// @param[in] attr_list 属性のリスト
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& loc,
-	    const vector<DotlibNode*>& value_list,
-	    const vector<DotlibAttr*>& attr_list);
+  const AstNode*
+  gen_node(const FileRegion& loc,
+	   const vector<const AstNode*>& value_list,
+	   const vector<const AstAttr*>& attr_list);
+
+  /// @brief ハンドラを取り出す．
+  /// @param[in] attr_type 属性
+  ///
+  /// なければ nullptr を返す．
+  DotlibHandler*
+  find_handler(AttrType attr_type);
 
 
 private:
@@ -106,8 +122,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ハンドラの連想配列
-  HashMap<AttrType, DotlibHandler*> mHandlerMap;
+  // ハンドラのリスト
+  vector<pair<AttrType, DotlibHandler*> > mHandlerList;
+
+  // 読み込んだ属性のリスト
+  vector<const AstAttr*> mAttrList;
 
 };
 
@@ -147,17 +166,17 @@ protected:
   check_value(AttrType attr_type,
 	      const FileRegion& attr_loc,
 	      const FileRegion& value_loc,
-	      const vector<DotlibNode*>& value_list) override;
+	      const vector<const AstNode*>& value_list) override;
 
   /// @brief 値を作る．
   /// @param[in] loc 全体のファイル上の位置
   /// @param[in] value_list 値のリスト
   /// @param[in] attr_list 属性のリスト
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& loc,
-	    const vector<DotlibNode*>& value_list,
-	    const vector<DotlibAttr*>& attr_list) override;
+  const AstNode*
+  gen_node(const FileRegion& loc,
+	   const vector<const AstNode*>& value_list,
+	   const vector<const AstAttr*>& attr_list) override;
 
 
 private:
@@ -169,9 +188,9 @@ private:
   /// @param[in] loc 全体のファイル上の位置
   /// @param[in] attr_list 属性のリスト
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& loc,
-	    const vector<DotlibAttr*>& attr_list);
+  const AstNode*
+  gen_node(const FileRegion& loc,
+	   const vector<const AstAttr*>& attr_list);
 
 
 };
@@ -212,14 +231,14 @@ protected:
   check_value(AttrType attr_type,
 	      const FileRegion& attr_loc,
 	      const FileRegion& value_loc,
-	      const vector<DotlibNode*>& value_list) override;
+	      const vector<const AstNode*>& value_list) override;
 
   /// @brief 値を作る．
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& loc,
-	    const vector<DotlibNode*>& value_list,
-	    const vector<DotlibAttr*>& attr_list) override;
+  const AstNode*
+  gen_node(const FileRegion& loc,
+	   const vector<const AstNode*>& value_list,
+	   const vector<const AstAttr*>& attr_list) override;
 
 
 private:
@@ -229,10 +248,10 @@ private:
 
   /// @brief 値を作る．
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& loc,
-	    const DotlibString* value,
-	    const vector<DotlibAttr*>& attr_list);
+  const AstNode*
+  gen_node(const FileRegion& loc,
+	   const AstString* value,
+	   const vector<const AstAttr*>& attr_list);
 
 };
 
@@ -272,14 +291,14 @@ protected:
   check_value(AttrType attr_type,
 	      const FileRegion& attr_loc,
 	      const FileRegion& value_loc,
-	      const vector<DotlibNode*>& value_list) override;
+	      const vector<const AstNode*>& value_list) override;
 
   /// @brief 値を作る．
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& loc,
-	    const vector<DotlibNode*>& value_list,
-	    const vector<DotlibAttr*>& attr_list) override;
+  const AstNode*
+  gen_node(const FileRegion& loc,
+	   const vector<const AstNode*>& value_list,
+	   const vector<const AstAttr*>& attr_list) override;
 
 
 private:
@@ -289,11 +308,11 @@ private:
 
   /// @brief 値を作る．
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& loc,
-	    const DotlibString* value1,
-	    const DotlibString* value2,
-	    const vector<DotlibAttr*>& attr_list);
+  const AstNode*
+  gen_node(const FileRegion& loc,
+	   const AstString* value1,
+	   const AstString* value2,
+	   const vector<const AstAttr*>& attr_list);
 
 };
 
@@ -333,14 +352,14 @@ protected:
   check_value(AttrType attr_type,
 	      const FileRegion& attr_loc,
 	      const FileRegion& value_loc,
-	      const vector<DotlibNode*>& value_list) override;
+	      const vector<const AstNode*>& value_list) override;
 
   /// @brief 値を作る．
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& loc,
-	    const vector<DotlibNode*>& value_list,
-	    const vector<DotlibAttr*>& attr_list) override;
+  const AstNode*
+  gen_node(const FileRegion& loc,
+	   const vector<const AstNode*>& value_list,
+	   const vector<const AstAttr*>& attr_list) override;
 
 
 private:
@@ -350,12 +369,12 @@ private:
 
   /// @brief 値を作る．
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& loc,
-	    const DotlibString* value1,
-	    const DotlibString* value2,
-	    const DotlibInt* value3,
-	    const vector<DotlibAttr*>& attr_list);
+  const AstNode*
+  gen_node(const FileRegion& loc,
+	   const AstString* value1,
+	   const AstString* value2,
+	   const AstInt* value3,
+	   const vector<const AstAttr*>& attr_list);
 
 };
 

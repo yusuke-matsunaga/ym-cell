@@ -40,13 +40,13 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込む処理
-  /// @return 値を表す DotlibNode を返す．
+  /// @return 値を表す AstNode を返す．
   ///
   /// エラーが起きたら nullptr を返す．
   /// ここでは function 属性用の論理式のパースを行う．
   virtual
-  DotlibNode*
-  read_value();
+  AstNode*
+  gen_node() override;
 
 
 private:
@@ -55,19 +55,19 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief primary を読み込む．
-  DotlibExpr*
+  AstExpr*
   read_primary();
 
   /// @brief プライム付きの primary を読み込む．
-  DotlibExpr*
+  AstExpr*
   read_primary2();
 
   /// @brief product を読み込む．
-  DotlibExpr*
+  AstExpr*
   read_product();
 
   /// @brief expression を読み込む．
-  DotlibExpr*
+  AstExpr*
   read_expr(TokenType end_marker);
 
   /// @brief トークンを読み込む．

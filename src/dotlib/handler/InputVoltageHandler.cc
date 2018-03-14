@@ -7,13 +7,13 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 
 #include "InputVoltageHandler.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibExpr.h"
-#include "dotlib/DotlibAttr.h"
-#include "dotlib/DotlibInputVoltage.h"
+#include "AstMgr.h"
+#include "AstExpr.h"
+#include "AstAttr.h"
+#include "AstInputVoltage.h"
 #include "ym/MsgMgr.h"
 
 
@@ -55,15 +55,15 @@ InputVoltageHandler::~InputVoltageHandler()
 }
 
 // @brief 値を作る．
-DotlibNode*
-InputVoltageHandler::gen_value(const FileRegion& loc,
-			       const DotlibString* name,
-			       const vector<DotlibAttr*>& attr_list)
+AstNode*
+InputVoltageHandler::gen_node(const FileRegion& loc,
+			      const AstString* name,
+			      const vector<AstAttr*>& attr_list)
 {
-  const DotlibExpr* vil = nullptr;
-  const DotlibExpr* vih = nullptr;
-  const DotlibExpr* vimin = nullptr;
-  const DotlibExpr* vimax = nullptr;
+  const AstExpr* vil = nullptr;
+  const AstExpr* vih = nullptr;
+  const AstExpr* vimin = nullptr;
+  const AstExpr* vimax = nullptr;
   for ( auto attr: attr_list ) {
     if ( attr->attr_type() == AttrType::VIL ) {
       if ( vil != nullptr ) {
@@ -75,7 +75,7 @@ InputVoltageHandler::gen_value(const FileRegion& loc,
 			"'vil' defined more than once.");
 	return nullptr;
       }
-      vil = dynamic_cast<const DotlibExpr*>(attr->attr_value());
+      vil = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( vil != nullptr );
     }
     else if ( attr->attr_type() == AttrType::VIH ) {
@@ -88,7 +88,7 @@ InputVoltageHandler::gen_value(const FileRegion& loc,
 			"'vih' defined more than once.");
 	return nullptr;
       }
-      vih = dynamic_cast<const DotlibExpr*>(attr->attr_value());
+      vih = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( vih != nullptr );
     }
     else if ( attr->attr_type() == AttrType::VIMIN ) {
@@ -101,7 +101,7 @@ InputVoltageHandler::gen_value(const FileRegion& loc,
 			"'vimin' defined more than once.");
 	return nullptr;
       }
-      vimin = dynamic_cast<const DotlibExpr*>(attr->attr_value());
+      vimin = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( vimin != nullptr );
     }
     else if ( attr->attr_type() == AttrType::VIMAX ) {
@@ -114,11 +114,11 @@ InputVoltageHandler::gen_value(const FileRegion& loc,
 			"'vimax' defined more than once.");
 	return nullptr;
       }
-      vimax = dynamic_cast<const DotlibExpr*>(attr->attr_value());
+      vimax = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( vimax != nullptr );
     }
   }
-  return mgr()->new_input_voltage(loc, name, vil, vih, vimin, vimax);
+  return mgr().new_input_voltage(loc, name, vil, vih, vimin, vimax);
 }
 
 END_NAMESPACE_YM_DOTLIB

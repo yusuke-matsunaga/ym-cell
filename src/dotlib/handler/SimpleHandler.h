@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "dotlib/DotlibHandler.h"
+#include "DotlibHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -48,9 +48,9 @@ public:
   ///
   /// エラーが起きたら false を返す．
   virtual
-  DotlibNode*
-  read_attr(AttrType attr_type,
-	    const FileRegion& attr_loc);
+  AstNode*
+  parse_attr_value(AttrType attr_type,
+		   const FileRegion& attr_loc);
 
 
 protected:
@@ -59,12 +59,12 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込む処理
-  /// @return 値を表す DotlibNode を返す．
-  /// @note エラーが起きたら nullptr を返す．
-  /// @note デフォルトの実装では普通に DotlibParser::read_token() を呼ぶ．
+  /// @return 値を表す AstNode を返す．
+  ///
+  /// エラーが起きたら nullptr を返す．
   virtual
-  DotlibNode*
-  read_value();
+  AstNode*
+  gen_node();
 
 
 private:
@@ -104,10 +104,10 @@ protected:
   // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値を読み込む．
+  /// @brief AstString を作る．
   virtual
-  DotlibNode*
-  read_value() override;
+  AstNode*
+  gen_node() override;
 
 };
 
@@ -134,40 +134,10 @@ protected:
   // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値を読み込む．
+  /// @brief AstInt を作る．
   virtual
-  DotlibNode*
-  read_value() override;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class BoolSimpleHandler SimpleHandler.h "SimpleHandler.h"
-/// @brief ブール値を取る属性用のハンドラ
-//////////////////////////////////////////////////////////////////////
-class BoolSimpleHandler :
-  public SimpleHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  BoolSimpleHandler(DotlibParser& parser);
-
-  /// @brief デストラクタ
-  ~BoolSimpleHandler();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込む．
-  virtual
-  DotlibNode*
-  read_value() override;
+  AstNode*
+  gen_node() override;
 
 };
 
@@ -194,10 +164,10 @@ protected:
   // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値を読み込む．
+  /// @brief AstFloat を作る．
   virtual
-  DotlibNode*
-  read_value() override;
+  AstNode*
+  gen_node() override;
 
 };
 

@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "dotlib/DotlibHandler.h"
+#include "DotlibHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -46,9 +46,9 @@ public:
   ///
   /// エラーが起きたら nullptr を返す．
   virtual
-  DotlibNode*
-  read_attr(AttrType attr_type,
-	    const FileRegion& attr_loc);
+  const AstNode*
+  parse_attr_value(AttrType attr_type,
+		   const FileRegion& attr_loc);
 
 
 protected:
@@ -59,13 +59,11 @@ protected:
   /// @brief 値を表すノードを作る．
   /// @param[in] loc ファイル上の位置
   /// @param[in] value_list 値のリスト
-  /// @return value_list に対応した DotlibNode を返す．
-  ///
-  /// このクラスでは DotlibList を返す．
+  /// @return value_list に対応した AstNode を返す．
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& loc,
-	    const vector<DotlibNode*>& value_list);
+  const AstNode*
+  gen_node(const FileRegion& loc,
+	   const vector<const AstNode*>& value_list);
 
 
 private:

@@ -7,13 +7,13 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 #include "PinHandler.h"
-#include "SimpleHandler.h"
-#include "ComplexHandler.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibString.h"
-#include "dotlib/DotlibAttr.h"
+#include "TimingHandler.h"
+#include "AstMgr.h"
+#include "AstString.h"
+#include "AstAttr.h"
+#include "AstPin.h"
 #include "ym/MsgMgr.h"
 
 
@@ -37,12 +37,12 @@ HandlerFactory::new_pin(DotlibParser& parser)
 PinHandler::PinHandler(DotlibParser& parser) :
   GroupHandler(parser)
 {
-  DotlibHandler* simple       = new SimpleHandler(parser, false);
-  DotlibHandler* str_simple   = new StrSimpleHandler(parser, false);
-  DotlibHandler* flt_simple   = new FloatSimpleHandler(parser);
+  DotlibHandler* simple       = HandlerFactory::new_simple(parser);
+  DotlibHandler* str_simple   = HandlerFactory::new_string(parser, false);
+  DotlibHandler* flt_simple   = HandlerFactory::new_float(parser);
   DotlibHandler* func_handler = HandlerFactory::new_function(parser);
   DotlibHandler* dir_handler  = HandlerFactory::new_pin_direction(parser);
-  DotlibHandler* complex      = new ComplexHandler(parser);
+  DotlibHandler* complex      = HandlerFactory::new_complex(parser);
   DotlibHandler* g_handler    = HandlerFactory::new_group(parser);
   DotlibHandler* ip_handler   = HandlerFactory::new_internal_power(parser);
   DotlibHandler* timing_handler = HandlerFactory::new_timing(parser);
@@ -125,8 +125,9 @@ PinHandler::PinHandler(DotlibParser& parser) :
   reg_handler(AttrType::MAX_TRANS,                           g_handler);
   reg_handler(AttrType::MIN_PULSE_WIDTH,                     g_handler);
   reg_handler(AttrType::MINIMUM_PERIOD,                      g_handler);
-  reg_handler(AttrType::TIMING,                              timing_handler);
   reg_handler(AttrType::TLATCH,                              g_handler);
+
+  mTimingHandler = HandlerFactory::new_timing(parser);
 }
 
 // @brief デストラクタ
@@ -134,18 +135,44 @@ PinHandler::~PinHandler()
 {
 }
 
+// @brief グループ開始の処理を行う．
+void
+PinHandler::begin_group()
+{
+  mTimingList.clear();
+  GroupHandler::begin_group();
+}
+
+// @brief attr_type に対応する属性を読み込む．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval 0 処理しなかった．
+// @retval 1 正常に処理した．
+// @retval 2 処理中にエラーが起こった．
+int
+PinHandler::parse_attr(AttrType attr_type,
+		       const FileRegion& attr_loc)
+{
+  if ( attr_type == AttrType::TIMING ) {
+    auto timing = mTimingHandler->parse_timing_value(attr_type, attr_loc);
+    mTimingList.push_back(timing);
+    return 1;
+  }
+  return GroupHandler::parse_attr(attr_type, attr_loc);
+}
+
 // @brief 値を作る．
-DotlibNode*
-PinHandler::gen_value(const FileRegion& loc,
-		      const vector<DotlibNode*>& value_list,
-		      const vector<DotlibAttr*>& attr_list)
+const AstNode*
+PinHandler::gen_node(const FileRegion& loc,
+		     const vector<const AstNode*>& value_list,
+		     const vector<const AstAttr*>& attr_list)
 {
   // ピン名のリストを作る．
   int n = value_list.size();
-  vector<const DotlibString*> name_list(n);
+  vector<const AstString*> name_list(n);
   for ( int i = 0; i < n; ++ i ) {
-    const DotlibNode* elem = value_list[i];
-    const DotlibString* str_node = dynamic_cast<const DotlibString*>(elem);
+    const AstNode* elem = value_list[i];
+    const AstString* str_node = dynamic_cast<const AstString*>(elem);
     if ( str_node == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      elem->loc(),
@@ -158,32 +185,34 @@ PinHandler::gen_value(const FileRegion& loc,
   }
 
   // 属性を取り出す．
-  const DotlibPinDirection* direction = nullptr;
-  const DotlibFloat* capacitance = nullptr;
-  const DotlibFloat* rise_capacitance = nullptr;
-  const DotlibFloat* fall_capacitance = nullptr;
-  const DotlibFloat* max_fanout = nullptr;
-  const DotlibFloat* min_fanout = nullptr;
-  const DotlibFloat* max_capacitance = nullptr;
-  const DotlibFloat* min_capacitance = nullptr;
-  const DotlibFloat* max_transition = nullptr;
-  const DotlibFloat* min_transition = nullptr;
-  const DotlibExpr* function = nullptr;
-  const DotlibExpr* three_state = nullptr;
-  const DotlibNode* internal_node = nullptr;
-  const DotlibNode* pin_func_type = nullptr;
-  const DotlibTiming* timing_top = nullptr;
+  const AstPinDirection* direction = nullptr;
+  const AstFloat* capacitance = nullptr;
+  const AstFloat* rise_capacitance = nullptr;
+  const AstFloat* fall_capacitance = nullptr;
+  const AstFloat* max_fanout = nullptr;
+  const AstFloat* min_fanout = nullptr;
+  const AstFloat* max_capacitance = nullptr;
+  const AstFloat* min_capacitance = nullptr;
+  const AstFloat* max_transition = nullptr;
+  const AstFloat* min_transition = nullptr;
+  const AstExpr* function = nullptr;
+  const AstExpr* three_state = nullptr;
+  const AstNode* internal_node = nullptr;
+  const AstNode* pin_func_type = nullptr;
+  const AstTiming* timing_top = nullptr;
   for ( auto attr: attr_list ) {
     if ( attr->attr_type() == AttrType::DIRECTION ) {
     }
   }
 
-  return mgr()->new_pin(loc, direction, capacitance, rise_capacitance, fall_capacitance,
-			max_fanout, min_fanout, max_capacitance, min_capacitance,
-			max_transition, min_transition,
-			function, three_state,
-			internal_node, pin_func_type,
-			timing_top);
+  return mgr().new_pin(loc, name_list, direction,
+		       capacitance, rise_capacitance, fall_capacitance,
+		       max_fanout, min_fanout,
+		       max_capacitance, min_capacitance,
+		       max_transition, min_transition,
+		       function, three_state,
+		       internal_node, pin_func_type,
+		       mTimingList);
 }
 
 END_NAMESPACE_YM_DOTLIB

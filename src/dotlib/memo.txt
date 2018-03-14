@@ -1,5 +1,96 @@
 				liberty 文法覚書
 
+- 基本的な属性(attribute)として
+  * simple
+  * complex
+  * group
+  の3種類がある．
+  根本の library 属性は gropu 属性でその下に再帰的に属性を持つ．
+
+- simple 属性は
+  <属性名> : <属性値> ;
+  のシンタックスで表される．
+  属性値としては
+  * int
+  * float
+  * float vector
+  * string
+  * expr
+  がある．
+
+- complex 属性は
+  <属性名> ( <属性値1>, <属性値2>, ... ) ;
+  のシンタックスで表される．
+  属性値は simple 属性と同じ．ただし expr はない．
+  個々の属性ごとに属性値の型は決まっている．
+
+- group 属性は
+  <属性名> ( <属性値1>, <属性値2>, ... ) {
+     <属性記述1>
+     <属性記述2>
+     ...
+  }
+  のシンタックスで表される．
+  属性記述には simple, complex, group の属性が記述できる．
+
+- 多くの属性はそのグループ内において唯一のみ定義される．
+
+- 同じ属性名が複数現れるのは
+  * library.wire_load
+  * library.wire_load_selection
+  * library.wire_load_table
+  * library.lu_table_template
+  * library.power_lut_template
+  * library.operating_conditions
+  * library.cell
+  * cell.bus
+  * cell.bundle
+  * cell.pin
+  * cell.internal_power
+  * test_cell.pin
+  * bus.pin
+  * bundle.internal_power
+  * bundle.pin
+  * bundle.timing
+  * pin.internal_power
+  * pin.timing
+
+- パーサーの基本構造としては simple, complex, group の各属性用のパーサー
+  を作り，個別の属性用に継承クラスを作る．
+
+- 基本的に単一値用の汎用クラスを作り，複数値のみ継承クラスで扱う．
+
+- 属性の型は
+  * [simple] int
+  * [simple] float
+  * [simple] num ( int or float)
+  * [simple] string
+  * [simple] expr
+  * [simple] 'technology'
+  * [simple] 'delay model'
+  * [simple] 'direction'
+  * [simple] 'timing sense'
+  * [simple] 'timing type'
+  * [simple] 'variable type'
+
+  * [complex] float vector
+  * [complex] 'piece wise'
+  * [complex] 'unit'
+
+  * [group] 'bus'
+  * [group] 'bundle'
+  * [group] 'cell'
+  * [group] 'ff'
+  * [group] 'input voltage'
+  * [group] 'latch'
+  * [group] 'library'
+  * [group] 'lut'
+  * [group] 'output voltage'
+  * [group] 'pin'
+  * [group] 'state table'
+  * [group] 'template'
+  * [group] 'timing'
+
 - "ff" と ff は同じ
 
 - include_file ( filename );

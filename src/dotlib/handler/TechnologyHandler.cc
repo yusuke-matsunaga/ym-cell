@@ -6,12 +6,12 @@
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 #include "TechnologyHandler.h"
-#include "dotlib/DotlibParser.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibTechnology.h"
-#include "dotlib/TokenType.h"
+#include "DotlibParser.h"
+#include "AstMgr.h"
+#include "AstTechnology.h"
+#include "TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -41,7 +41,7 @@ TechnologyHandler::~TechnologyHandler()
 }
 
 // @brief 値を読み込む．
-DotlibNode*
+AstNode*
 TechnologyHandler::read_value()
 {
   FileRegion loc;
@@ -71,7 +71,7 @@ TechnologyHandler::read_value()
     return nullptr;
   }
 
-  return mgr()->new_technology(loc, value);
+  return mgr().new_technology(loc, value);
 }
 
 END_NAMESPACE_YM_DOTLIB

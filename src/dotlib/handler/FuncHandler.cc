@@ -8,11 +8,11 @@
 
 
 #include "FuncHandler.h"
-#include "dotlib/HandlerFactory.h"
-#include "dotlib/DotlibExpr.h"
-#include "dotlib/DotlibParser.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/TokenType.h"
+#include "HandlerFactory.h"
+#include "AstExpr.h"
+#include "DotlibParser.h"
+#include "AstMgr.h"
+#include "TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -44,9 +44,9 @@ FuncHandler::~FuncHandler()
 }
 
 // @brief 値を読み込む処理
-// @return 値を表す DotlibNode を返す．
-DotlibNode*
-FuncHandler::read_value()
+// @return 値を表す AstNode を返す．
+AstNode*
+FuncHandler::gen_node()
 {
   FileRegion loc;
   TokenType value_type = parser().read_token(loc, false);
@@ -66,7 +66,7 @@ FuncHandler::read_value()
 }
 
 // @brief primary を読み込む．
-DotlibExpr*
+AstExpr*
 FuncHandler::read_primary()
 {
   FileRegion loc;
@@ -76,7 +76,7 @@ FuncHandler::read_primary()
   }
   if ( type == TokenType::SYMBOL ) {
     ShString name(mScanner.cur_string());
-    return mgr()->new_str_expr(loc, name);
+    return mgr().new_str_expr(loc, name);
   }
   if ( type == TokenType::INT_NUM ) {
     int v = mScanner.cur_int();
@@ -88,7 +88,7 @@ FuncHandler::read_primary()
 		      "Syntax error. 0 or 1 is expected.");
       return nullptr;
     }
-    return mgr()->new_bool_expr(loc, static_cast<bool>(v));
+    return mgr().new_bool_expr(loc, static_cast<bool>(v));
   }
 
   MsgMgr::put_msg(__FILE__, __LINE__,
@@ -100,28 +100,28 @@ FuncHandler::read_primary()
 }
 
 // @brief プライム付きの primary を読み込む．
-DotlibExpr*
+AstExpr*
 FuncHandler::read_primary2()
 {
   FileRegion loc;
   TokenType type = read_token(loc);
   if ( type == TokenType::NOT ) {
-    DotlibExpr* opr = read_primary();
+    AstExpr* opr = read_primary();
     if ( opr == nullptr ) {
       return nullptr;
     }
-    return mgr()->new_not(FileRegion(loc, opr->loc()), opr);
+    return mgr().new_not(FileRegion(loc, opr->loc()), opr);
   }
   unget_token(type, loc);
 
-  DotlibExpr* node = read_primary();
+  AstExpr* node = read_primary();
   if ( node == nullptr ) {
     return nullptr;
   }
 
   type = read_token(loc);
   if ( type == TokenType::PRIME ) {
-    return mgr()->new_not(FileRegion(node->loc(), loc), node);
+    return mgr().new_not(FileRegion(node->loc(), loc), node);
   }
   unget_token(type, loc);
 
@@ -129,10 +129,10 @@ FuncHandler::read_primary2()
 }
 
 // @brief product を読み込む．
-DotlibExpr*
+AstExpr*
 FuncHandler::read_product()
 {
-  DotlibExpr* opr1 = read_primary2();
+  AstExpr* opr1 = read_primary2();
   if ( opr1 == nullptr ) {
     return nullptr;
   }
@@ -141,19 +141,19 @@ FuncHandler::read_product()
     FileRegion loc;
     TokenType type = read_token(loc);
     if ( type == TokenType::AND ) {
-      DotlibExpr* opr2 = read_primary2();
+      AstExpr* opr2 = read_primary2();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
-      opr1 = mgr()->new_and(opr1, opr2);
+      opr1 = mgr().new_and(opr1, opr2);
     }
     else if ( type == TokenType::NOT || type == TokenType::LP || type == TokenType::SYMBOL ) {
       unget_token(type, loc);
-      DotlibExpr* opr2 = read_primary2();
+      AstExpr* opr2 = read_primary2();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
-      opr1 = mgr()->new_and(opr1, opr2);
+      opr1 = mgr().new_and(opr1, opr2);
     }
     else {
       // token を戻す．
@@ -164,10 +164,10 @@ FuncHandler::read_product()
 }
 
 // @brief expression を読み込む．
-DotlibExpr*
+AstExpr*
 FuncHandler::read_expr(TokenType end_marker)
 {
-  DotlibExpr* opr1 = read_product();
+  AstExpr* opr1 = read_product();
   if ( opr1 == nullptr ) {
     return nullptr;
   }
@@ -178,15 +178,15 @@ FuncHandler::read_expr(TokenType end_marker)
       return opr1;
     }
     if ( type == TokenType::OR || type == TokenType::XOR ) {
-      DotlibExpr* opr2 = read_product();
+      AstExpr* opr2 = read_product();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
       if ( type == TokenType::XOR ) {
-	opr1 = mgr()->new_xor(opr1, opr2);
+	opr1 = mgr().new_xor(opr1, opr2);
       }
       else {
-	opr1 = mgr()->new_or(opr1, opr2);
+	opr1 = mgr().new_or(opr1, opr2);
       }
     }
     else {

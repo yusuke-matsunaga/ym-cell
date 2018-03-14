@@ -6,12 +6,12 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 #include "VarTypeHandler.h"
-#include "dotlib/DotlibParser.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibVarType.h"
-#include "dotlib/TokenType.h"
+#include "DotlibParser.h"
+#include "AstMgr.h"
+#include "AstVarType.h"
+#include "TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -41,7 +41,7 @@ VarTypeHandler::~VarTypeHandler()
 }
 
 // @brief 値を読み込む．
-DotlibNode*
+AstNode*
 VarTypeHandler::read_value()
 {
   FileRegion loc;
@@ -107,7 +107,7 @@ VarTypeHandler::read_value()
     return nullptr;
   }
 
-  return mgr()->new_var_type(loc, value);
+  return mgr().new_var_type(loc, value);
 }
 
 END_NAMESPACE_YM_DOTLIB

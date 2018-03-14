@@ -8,11 +8,11 @@
 
 
 #include "ExprHandler.h"
-#include "dotlib/HandlerFactory.h"
-#include "dotlib/DotlibParser.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibExpr.h"
-#include "dotlib/TokenType.h"
+#include "HandlerFactory.h"
+#include "DotlibParser.h"
+#include "AstMgr.h"
+#include "AstExpr.h"
+#include "TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -45,15 +45,15 @@ ExprHandler::~ExprHandler()
 }
 
 // @brief 値を読み込む処理
-// @return 値を表す DotlibNode を返す．
-DotlibNode*
-ExprHandler::read_value()
+// @return 値を表す AstNode を返す．
+AstNode*
+ExprHandler::gen_node()
 {
   return read_expr(TokenType::SEMI);
 }
 
 // @brief primary を読み込む．
-DotlibExpr*
+AstExpr*
 ExprHandler::read_primary()
 {
   FileRegion loc;
@@ -64,13 +64,13 @@ ExprHandler::read_primary()
   if ( type == TokenType::SYMBOL ) {
     const char* name =  parser().cur_string();
     if ( strcmp(name, "VDD") == 0 ) {
-      return mgr()->new_vdd_expr(loc);
+      return mgr().new_vdd_expr(loc);
     }
     else if ( strcmp(name, "VSS") == 0 ) {
-      return mgr()->new_vss_expr(loc);
+      return mgr().new_vss_expr(loc);
     }
     else if ( strcmp(name, "VCC") == 0 ) {
-      return mgr()->new_vcc_expr(loc);
+      return mgr().new_vcc_expr(loc);
     }
     else {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -84,7 +84,7 @@ ExprHandler::read_primary()
   }
   if ( type == TokenType::FLOAT_NUM || type == TokenType::INT_NUM ) {
     double val = parser().cur_float();
-    return mgr()->new_float_expr(loc, val);
+    return mgr().new_float_expr(loc, val);
   }
 
   MsgMgr::put_msg(__FILE__, __LINE__,
@@ -96,10 +96,10 @@ ExprHandler::read_primary()
 }
 
 // @brief prudct を読み込む．
-DotlibExpr*
+AstExpr*
 ExprHandler::read_product()
 {
-  DotlibExpr* opr1 = read_primary();
+  AstExpr* opr1 = read_primary();
   if ( opr1 == nullptr ) {
     return nullptr;
   }
@@ -108,15 +108,15 @@ ExprHandler::read_product()
     FileRegion loc;
     TokenType type = parser().read_token(loc);
     if ( type == TokenType::MULT || type == TokenType::DIV ) {
-      DotlibExpr* opr2 = read_primary();
+      AstExpr* opr2 = read_primary();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
       if ( type == TokenType::MULT ) {
-	opr1 = mgr()->new_mult(opr1, opr2);
+	opr1 = mgr().new_mult(opr1, opr2);
       }
       else {
-	opr1 = mgr()->new_div(opr1, opr2);
+	opr1 = mgr().new_div(opr1, opr2);
       }
     }
     else {
@@ -129,13 +129,13 @@ ExprHandler::read_product()
 }
 
 // @brief expression を読み込む．
-DotlibExpr*
+AstExpr*
 ExprHandler::read_expr(TokenType end_marker)
 {
   // ここだけ mUngetType, mUngetLoc を考慮する必要があるので
   // じかに parser().read_token() を呼んではいけない．
 
-  DotlibExpr* opr1 = read_product();
+  AstExpr* opr1 = read_product();
   if ( opr1 == nullptr ) {
     return nullptr;
   }
@@ -146,15 +146,15 @@ ExprHandler::read_expr(TokenType end_marker)
       return opr1;
     }
     if ( type == TokenType::PLUS || type == TokenType::MINUS ) {
-      DotlibExpr* opr2 = read_product();
+      AstExpr* opr2 = read_product();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
       if ( type == TokenType::PLUS ) {
-	opr1 = mgr()->new_plus(opr1, opr2);
+	opr1 = mgr().new_plus(opr1, opr2);
       }
       else {
-	opr1 = mgr()->new_minus(opr1, opr2);
+	opr1 = mgr().new_minus(opr1, opr2);
       }
     }
     else {

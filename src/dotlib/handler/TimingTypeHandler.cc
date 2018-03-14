@@ -6,12 +6,12 @@
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 #include "TimingTypeHandler.h"
-#include "dotlib/DotlibParser.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/DotlibTimingType.h"
-#include "dotlib/TokenType.h"
+#include "DotlibParser.h"
+#include "AstMgr.h"
+#include "AstTimingType.h"
+#include "TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -41,7 +41,7 @@ TimingTypeHandler::~TimingTypeHandler()
 }
 
 // @brief 値を読み込む．
-DotlibNode*
+AstNode*
 TimingTypeHandler::read_value()
 {
   FileRegion loc;
@@ -158,7 +158,7 @@ TimingTypeHandler::read_value()
     return nullptr;
   }
 
-  return mgr()->new_timing_type(loc, value);
+  return mgr().new_timing_type(loc, value);
 }
 
 END_NAMESPACE_YM_DOTLIB

@@ -40,9 +40,9 @@ public:
   /// @param[in] value_loc ファイル上の位置
   /// @param[in] value_list 値のリスト
   virtual
-  DotlibNode*
-  gen_value(const FileRegion& value_loc,
-	    const vector<DotlibNode*>& value_list) override;
+  const AstNode*
+  gen_node(const FileRegion& value_loc,
+	   const vector<const AstNode*>& value_list) override;
 
 
 private:

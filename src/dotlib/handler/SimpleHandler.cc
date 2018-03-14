@@ -6,15 +6,48 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/HandlerFactory.h"
+#include "HandlerFactory.h"
 #include "SimpleHandler.h"
-#include "dotlib/DotlibParser.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/TokenType.h"
+#include "DotlibParser.h"
+#include "TokenType.h"
+#include "AstMgr.h"
+#include "AstInt.h"
+#include "AstFloat.h"
+#include "AstString.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
+
+// @brief ダミーの simple ハンドラを作る．
+DotlibHandler*
+HandlerFactory::new_simple(DotlibParser& parser)
+{
+  return new SimpleHandler(parser, false);
+}
+
+// @brief string 用のハンドラを作る．
+DotlibHandler*
+HandlerFactory::new_string(DotlibParser& parser,
+			   bool sym_mode)
+{
+  return new StrSimpleHandler(parser, sym_mode);
+}
+
+// @brief int 用のハンドラを作る．
+DotlibHandler*
+HandlerFactory::new_int(DotlibParser& parser)
+{
+  return new IntSimpleHandler(parser);
+}
+
+// @brief float 用のハンドラを作る．
+DotlibHandler*
+HandlerFactory::new_float(DotlibParser& parser)
+{
+  return new FloatSimpleHandler(parser);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス SimpleHandler
@@ -43,15 +76,15 @@ SimpleHandler::~SimpleHandler()
 // @return 読み込んだ属性値を返す．
 //
 // エラーが起きたら false を返す．
-DotlibNode*
-SimpleHandler::read_attr(AttrType attr_type,
-			 const FileRegion& attr_loc)
+AstNode*
+SimpleHandler::parse_attr_value(AttrType attr_type,
+				const FileRegion& attr_loc)
 {
   if ( !expect(TokenType::COLON) ) {
     return nullptr;
   }
 
-  DotlibNode* value = read_value();
+  AstNode* value = gen_node();
   if ( value == nullptr ) {
     return nullptr;
   }
@@ -67,16 +100,13 @@ SimpleHandler::read_attr(AttrType attr_type,
 }
 
 // @brief 値を読み込む処理
-// @return 値を表す DotlibNode を返す．
-// @note エラーが起きたら nullptr を返す．
-// @note デフォルトの実装では普通に DotlibParser::read_token() を呼ぶ．
-DotlibNode*
-SimpleHandler::read_value()
+// @return 値を表す AstNode を返す．
+//
+// エラーが起きたら nullptr を返す．
+AstNode*
+SimpleHandler::gen_node()
 {
-  FileRegion loc;
-  TokenType value_type = parser().read_token(loc, mSymMode);
-  DotlibNode* value = new_value(loc, value_type, false);
-  return value;
+  return nullptr;
 }
 
 
@@ -99,14 +129,14 @@ StrSimpleHandler::~StrSimpleHandler()
 {
 }
 
-// @brief 値を読み込む．
-DotlibNode*
-StrSimpleHandler::read_value()
+// @brief AstString を作る．
+AstNode*
+StrSimpleHandler::gen_node()
 {
   FileRegion loc;
   TokenType value_type = parser().read_token(loc, false);
   if ( value_type == TokenType::SYMBOL ) {
-    return mgr()->new_string(loc, ShString(parser().cur_string()));
+    return mgr().new_string(loc, ShString(parser().cur_string()));
   }
 
   MsgMgr::put_msg(__FILE__, __LINE__,
@@ -134,14 +164,14 @@ IntSimpleHandler::~IntSimpleHandler()
 {
 }
 
-// @brief 値を読み込む．
-DotlibNode*
-IntSimpleHandler::read_value()
+// @brief AstInt を作る．
+AstNode*
+IntSimpleHandler::gen_node()
 {
   FileRegion loc;
   TokenType value_type = parser().read_token(loc, false);
   if ( value_type == TokenType::INT_NUM ) {
-    return mgr()->new_int(loc, parser().cur_int());
+    return mgr().new_int(loc, parser().cur_int());
   }
 
   MsgMgr::put_msg(__FILE__, __LINE__,
@@ -169,17 +199,14 @@ FloatSimpleHandler::~FloatSimpleHandler()
 {
 }
 
-// @brief 値を読み込む．
-DotlibNode*
-FloatSimpleHandler::read_value()
+// @brief AstFloat を作る．
+AstNode*
+FloatSimpleHandler::gen_node()
 {
   FileRegion loc;
   TokenType value_type = parser().read_token(loc, false);
-  if ( value_type == TokenType::FLOAT_NUM ) {
-    return mgr()->new_float(loc, parser().cur_float());
-  }
-  if ( value_type == TokenType::INT_NUM ) {
-    return mgr()->new_int(loc, parser().cur_int());
+  if ( value_type == TokenType::FLOAT_NUM || value_type == TokenType::INT_NUM ) {
+    return mgr().new_float(loc, parser().cur_float());
   }
 
   MsgMgr::put_msg(__FILE__, __LINE__,

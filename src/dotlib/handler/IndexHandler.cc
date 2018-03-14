@@ -8,9 +8,9 @@
 
 
 #include "IndexHandler.h"
-#include "dotlib/HandlerFactory.h"
-#include "dotlib/DotlibList.h"
-#include "dotlib/DotlibFloatVector.h"
+#include "HandlerFactory.h"
+#include "AstList.h"
+#include "AstFloatVector.h"
 #include "ym/MsgMgr.h"
 
 
@@ -43,9 +43,9 @@ IndexHandler::~IndexHandler()
 // @brief 値を表すノードを作る．
 // @param[in] value_loc ファイル上の位置
 // @param[in] value_list 値のリスト
-DotlibNode*
-IndexHandler::gen_value(const FileRegion& value_loc,
-			const vector<DotlibNode*>& value_list)
+const AstNode*
+IndexHandler::gen_node(const FileRegion& value_loc,
+		       const vector<const AstNode*>& value_list)
 {
   if ( value_list.size() != 1 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -56,8 +56,8 @@ IndexHandler::gen_value(const FileRegion& value_loc,
     return nullptr;
   }
 
-  DotlibNode* elem = value_list[0];
-  if ( dynamic_cast<DotlibFloatVector*>(elem) == nullptr ) {
+  const AstNode* elem = value_list[0];
+  if ( dynamic_cast<const AstFloatVector*>(elem) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    elem->loc(),
 		    kMsgError,

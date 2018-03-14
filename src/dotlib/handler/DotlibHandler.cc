@@ -7,11 +7,14 @@
 /// All rights reserved.
 
 
-#include "dotlib/DotlibHandler.h"
-#include "dotlib/DotlibParser.h"
-#include "dotlib/DotlibMgrImpl.h"
-#include "dotlib/TokenType.h"
-#include "GroupHandler.h"
+#include "DotlibHandler.h"
+#include "DotlibParser.h"
+#include "TokenType.h"
+#include "AstMgr.h"
+#include "AstInt.h"
+#include "AstFloat.h"
+#include "AstFloatVector.h"
+#include "AstString.h"
 #include "ym/MsgMgr.h"
 
 
@@ -41,7 +44,7 @@ DotlibHandler::~DotlibHandler()
 bool
 DotlibHandler::parse_complex(bool vector_mode,
 			     FileRegion& value_loc,
-			     vector<DotlibNode*>& value_list)
+			     vector<const AstNode*>& value_list)
 {
   if ( !expect(TokenType::LP) ) {
     return false;
@@ -53,7 +56,7 @@ DotlibHandler::parse_complex(bool vector_mode,
   TokenType type = parser().read_token(loc);
   if ( type != TokenType::RP ) {
     for ( ; ; ) {
-      DotlibNode* value = new_value(loc, type, vector_mode);
+      AstNode* value = new_value(loc, type, vector_mode);
       if ( value == nullptr ) {
 	return false;
       }
@@ -80,21 +83,21 @@ DotlibHandler::parse_complex(bool vector_mode,
   return true;
 }
 
-// @brief DotlibNode を生成する．
+// @brief AstNode を生成する．
 // @param[in] loc ファイル上の位置情報
 // @param[in] vector_mode ベクタモードの時 true にするフラグ
 // @param[in] type 型
-DotlibNode*
+AstNode*
 DotlibHandler::new_value(const FileRegion& loc,
 			 TokenType type,
 			 bool vector_mode)
 {
   switch ( type ) {
   case TokenType::INT_NUM:
-    return mgr()->new_int(loc, parser().cur_int());
+    return mgr().new_int(loc, parser().cur_int());
 
   case TokenType::FLOAT_NUM:
-    return mgr()->new_float(loc, parser().cur_float());
+    return mgr().new_float(loc, parser().cur_float());
 
   case TokenType::SYMBOL:
     if ( vector_mode ) {
@@ -125,10 +128,10 @@ DotlibHandler::new_value(const FileRegion& loc,
       if ( buf.size() > 0 ) {
 	value_list.push_back(strtod(buf.c_str(), nullptr));
       }
-      return mgr()->new_vector(loc, value_list);
+      return mgr().new_vector(loc, value_list);
     }
     else {
-      return mgr()->new_string(loc, ShString(parser().cur_string()));
+      return mgr().new_string(loc, ShString(parser().cur_string()));
     }
 
   default:
@@ -163,8 +166,8 @@ DotlibHandler::parser()
   return mParser;
 }
 
-// @brief DotlibMgrImpl* を得る．
-DotlibMgrImpl*
+// @brief AstMgr* を得る．
+AstMgr&
 DotlibHandler::mgr()
 {
   return mParser.mgr();

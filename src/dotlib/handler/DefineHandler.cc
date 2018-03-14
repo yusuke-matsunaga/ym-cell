@@ -8,9 +8,9 @@
 
 
 #include "DefineHandler.h"
-#include "dotlib/DotlibParser.h"
-#include "dotlib/DotlibList.h"
-#include "dotlib/DotlibString.h"
+#include "DotlibParser.h"
+#include "AstList.h"
+#include "AstString.h"
 #include "SimpleHandler.h"
 #include "GroupHandler.h"
 #include "ym/MsgMgr.h"
@@ -43,12 +43,12 @@ DefineHandler::~DefineHandler()
 // @return 読み込んだ属性値を返す．
 //
 // エラーが起きたら nullptr を返す．
-DotlibNode*
-DefineHandler::read_attr(AttrType attr_type,
-			 const FileRegion& attr_loc)
+const AstNode*
+DefineHandler::parse_attr_value(AttrType attr_type,
+				const FileRegion& attr_loc)
 {
   FileRegion value_loc;
-  vector<DotlibNode*> value_list;
+  vector<const AstNode*> value_list;
   if ( !parse_complex(false, value_loc, value_list) ) {
     return nullptr;
   }
@@ -67,7 +67,7 @@ DefineHandler::read_attr(AttrType attr_type,
 
   ASSERT_COND( value_list.size() == 3 );
 
-  const DotlibString* keyword = dynamic_cast<const DotlibString*>(value_list[0]);
+  const AstString* keyword = dynamic_cast<const AstString*>(value_list[0]);
   if ( keyword == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    keyword->loc(),
@@ -77,7 +77,7 @@ DefineHandler::read_attr(AttrType attr_type,
     return nullptr;
   }
 
-  const DotlibString* group = dynamic_cast<const DotlibString*>(value_list[1]);
+  const AstString* group = dynamic_cast<const AstString*>(value_list[1]);
   if ( group == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group->loc(),
@@ -87,7 +87,7 @@ DefineHandler::read_attr(AttrType attr_type,
     return nullptr;
   }
 
-  const DotlibString* type_token = dynamic_cast<const DotlibString*>(value_list[2]);
+  const AstString* type_token = dynamic_cast<const AstString*>(value_list[2]);
   if ( type_token == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    type_token->loc(),
@@ -97,6 +97,7 @@ DefineHandler::read_attr(AttrType attr_type,
     return nullptr;
   }
 
+#if 0
   AttrType group_attr = parser().conv_to_attr(group->value());
   DotlibHandler* handler = mParent->find_handler(group_attr);
   if ( handler == nullptr ) {
@@ -148,6 +149,8 @@ DefineHandler::read_attr(AttrType attr_type,
   // keyword->string_value() を新規の属性名として定義する．
   AttrType key_attr = parser().conv_to_attr(keyword->value());
   g_handler->reg_handler(key_attr, new_handler);
+#endif
+#warning "TODO: 未完"
 
   return nullptr;
 }
