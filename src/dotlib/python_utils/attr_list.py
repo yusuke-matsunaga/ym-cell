@@ -453,3 +453,6 @@ attr_list = [
    'wire_load',
    'x_function',
 ]
+
+def conv_to_type(attr_str) :
+    return 'AttrType::{}'.format(attr_str)
