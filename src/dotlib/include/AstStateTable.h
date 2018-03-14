@@ -1,5 +1,5 @@
-﻿#ifndef ASTSTATETABLE_H
-#define ASTSTATETABLE_H
+﻿#ifndef ASTstatetable_H
+#define ASTstatetable_H
 
 /// @file AstStateTable.h
 /// @brief AstStateTable のヘッダファイル
@@ -124,4 +124,4 @@ AstStateTable::clocked_on_also() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTSTATETABLE_H
+#endif // ASTstatetable_H

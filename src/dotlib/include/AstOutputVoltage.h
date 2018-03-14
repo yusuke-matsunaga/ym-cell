@@ -1,5 +1,5 @@
-#ifndef ASTOUTPUTVOLTAGE_H
-#define ASTOUTPUTVOLTAGE_H
+#ifndef ASTOUTPUTvolTAGE_H
+#define ASTOUTPUTvolTAGE_H
 
 /// @file AstOutputVoltage.h
 /// @brief AstOutputVoltage のヘッダファイル
@@ -152,4 +152,4 @@ AstOutputVoltage::vomax() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTOUTPUTVOLTAGE_H
+#endif // ASTOUTPUTvolTAGE_H

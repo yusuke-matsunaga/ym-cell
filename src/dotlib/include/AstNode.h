@@ -50,7 +50,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///   * cell:           AstCell
 ///   * lu_table_template: AstTemplate
 ///   * lut:          AstLut
-///   * FF:           AstFF
+///   * ff:           AstFF
 ///   * Latch:        AstLatch
 ///   * StateTable:   AstStateTable
 ///

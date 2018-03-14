@@ -48,84 +48,84 @@ PinHandler::PinHandler(DotlibParser& parser) :
   DotlibHandler* timing_handler = HandlerFactory::new_timing(parser);
 
   // simple attributes
-  reg_handler(AttrType::BIT_WIDTH,                           simple);
-  reg_handler(AttrType::CAPACITANCE,                         flt_simple);
-  reg_handler(AttrType::CLOCK,                               simple);
-  reg_handler(AttrType::CLOCK_GATE_CLOCK_PIN,                simple);
-  reg_handler(AttrType::CLOCK_GATE_ENABLE_PIN,               simple);
-  reg_handler(AttrType::CLOCK_GATE_TEST_PIN,                 simple);
-  reg_handler(AttrType::CLOCK_GATE_OBS_PIN,                  simple);
-  reg_handler(AttrType::CLOCK_GATE_OUT_PIN,                  simple);
-  reg_handler(AttrType::COMPLEMENTARY_PIN,                   simple);
-  reg_handler(AttrType::CONNECTION_CLASS,                    simple);
-  reg_handler(AttrType::DIRECTION,                           dir_handler);
-  reg_handler(AttrType::DONT_FAULT,                          simple);
-  reg_handler(AttrType::DRIVE_CURRENT,                       simple);
-  reg_handler(AttrType::DRIVER_TYPE,                         simple);
-  reg_handler(AttrType::FALL_CAPACITANCE,                    simple);
-  reg_handler(AttrType::FALL_CURRENT_SLOPE_AFTER_THRESHOLD,  simple);
-  reg_handler(AttrType::FALL_CURRENT_SLOPE_BEFORE_THRESHOLD, simple);
-  reg_handler(AttrType::FALL_TIME_AFTER_THRESHOLD,           simple);
-  reg_handler(AttrType::FALL_TIME_BEFORE_THRESHOLD,          simple);
-  reg_handler(AttrType::FANOUT_LOAD,                         flt_simple);
-  reg_handler(AttrType::FAULT_MODEL,                         simple);
-  reg_handler(AttrType::FUNCTION,                            func_handler);
-  reg_handler(AttrType::HAS_BUILTIN_PAD,                     simple);
-  reg_handler(AttrType::HYSTERESIS,                          simple);
-  reg_handler(AttrType::INPUT_MAP,                           simple);
-  reg_handler(AttrType::INPUT_SIGNAL_LEVEL,                  simple);
-  reg_handler(AttrType::INPUT_VOLTAGE,                       simple);
-  reg_handler(AttrType::INTERNAL_NODE,                       simple);
-  reg_handler(AttrType::INVERTED_OUTPUT,                     simple);
-  reg_handler(AttrType::IS_PAD,                              simple);
-  reg_handler(AttrType::MAX_CAPACITANCE,                     flt_simple);
-  reg_handler(AttrType::MAX_FANOUT,                          flt_simple);
-  reg_handler(AttrType::MAX_INPUT_NOISE_WIDTH,               simple);
-  reg_handler(AttrType::MAX_TRANSITION,                      flt_simple);
-  reg_handler(AttrType::MIN_CAPACITANCE,                     flt_simple);
-  reg_handler(AttrType::MIN_FANOUT,                          flt_simple);
-  reg_handler(AttrType::MIN_INPUT_NOISE_WIDTH,               simple);
-  reg_handler(AttrType::MIN_PERIOD,                          simple);
-  reg_handler(AttrType::MIN_PULSE_WIDTH_HIGH,                simple);
-  reg_handler(AttrType::MIN_PULSE_WIDTH_LOW,                 simple);
-  reg_handler(AttrType::MIN_TRANSITION,                      flt_simple);
-  reg_handler(AttrType::MULTICELL_PAD_PIN,                   simple);
-  reg_handler(AttrType::NEXTSTATE_TYPE,                      simple);
-  reg_handler(AttrType::OUTPUT_SIGNAL_LEVEL,                 simple);
-  reg_handler(AttrType::OUTPUT_VOLTAGE,                      flt_simple);
-  reg_handler(AttrType::PIN_FUNC_TYPE,                       simple);
-  reg_handler(AttrType::PREFER_TIED,                         simple);
-  reg_handler(AttrType::PRIMARY_OUTPUT,                      simple);
-  reg_handler(AttrType::PULLING_CURRENT,                     flt_simple);
-  reg_handler(AttrType::PULLING_RESISTANCE,                  flt_simple);
-  reg_handler(AttrType::RISE_CAPACITANCE,                    flt_simple);
-  reg_handler(AttrType::RISE_CURRENT_SLOPE_AFTER_THRESHOLD,  flt_simple);
-  reg_handler(AttrType::RISE_CURRENT_SLOPE_BEFORE_THRESHOLD, flt_simple);
-  reg_handler(AttrType::RISE_TIME_AFTER_THRESHOLD,           flt_simple);
-  reg_handler(AttrType::RISE_TIME_BEFORE_THRESHOLD,          flt_simple);
-  reg_handler(AttrType::SIGNAL_TYPE,                         simple);
-  reg_handler(AttrType::SLEW_CONTROL,                        simple);
-  reg_handler(AttrType::STATE_FUNCTION,                      simple);
-  reg_handler(AttrType::TEST_OUTPUT_ONLY,                    simple);
-  reg_handler(AttrType::THREE_STATE,                         func_handler);
-  reg_handler(AttrType::VHDL_NAME,                           str_simple);
-  reg_handler(AttrType::X_FUNCTION,                          simple);
+  reg_handler(AttrType::bit_width,                           simple);
+  reg_handler(AttrType::capacitance,                         flt_simple);
+  reg_handler(AttrType::clock,                               simple);
+  reg_handler(AttrType::clock_gate_clock_pin,                simple);
+  reg_handler(AttrType::clock_gate_enable_pin,               simple);
+  reg_handler(AttrType::clock_gate_test_pin,                 simple);
+  reg_handler(AttrType::clock_gate_obs_pin,                  simple);
+  reg_handler(AttrType::clock_gate_out_pin,                  simple);
+  reg_handler(AttrType::complementary_pin,                   simple);
+  reg_handler(AttrType::connection_class,                    simple);
+  reg_handler(AttrType::direction,                           dir_handler);
+  reg_handler(AttrType::dont_fault,                          simple);
+  reg_handler(AttrType::drive_current,                       simple);
+  reg_handler(AttrType::driver_type,                         simple);
+  reg_handler(AttrType::FALL_capacitance,                    simple);
+  reg_handler(AttrType::fall_current_slope_after_threshold,  simple);
+  reg_handler(AttrType::fall_current_slope_before_threshold, simple);
+  reg_handler(AttrType::fall_time_after_threshold,           simple);
+  reg_handler(AttrType::fall_time_before_threshold,          simple);
+  reg_handler(AttrType::fanout_load,                         flt_simple);
+  reg_handler(AttrType::fault_model,                         simple);
+  reg_handler(AttrType::function,                            func_handler);
+  reg_handler(AttrType::has_builtin_pad,                     simple);
+  reg_handler(AttrType::hysteresis,                          simple);
+  reg_handler(AttrType::input_map,                           simple);
+  reg_handler(AttrType::input_signal_level,                  simple);
+  reg_handler(AttrType::input_voltage,                       simple);
+  reg_handler(AttrType::internal_node,                       simple);
+  reg_handler(AttrType::inverted_output,                     simple);
+  reg_handler(AttrType::is_pad,                              simple);
+  reg_handler(AttrType::MAX_capacitance,                     flt_simple);
+  reg_handler(AttrType::max_fanout,                          flt_simple);
+  reg_handler(AttrType::max_input_noise_width,               simple);
+  reg_handler(AttrType::max_transITION,                      flt_simple);
+  reg_handler(AttrType::MIN_capacitance,                     flt_simple);
+  reg_handler(AttrType::min_fanout,                          flt_simple);
+  reg_handler(AttrType::min_input_noise_width,               simple);
+  reg_handler(AttrType::min_period,                          simple);
+  reg_handler(AttrType::min_pulse_width_high,                simple);
+  reg_handler(AttrType::min_pulse_width_low,                 simple);
+  reg_handler(AttrType::min_transition,                      flt_simple);
+  reg_handler(AttrType::MULTIcell_PAD_pin,                   simple);
+  reg_handler(AttrType::nextstate_type,                      simple);
+  reg_handler(AttrType::output_signal_level,                 simple);
+  reg_handler(AttrType::output_voltage,                      flt_simple);
+  reg_handler(AttrType::pin_func_type,                       simple);
+  reg_handler(AttrType::prefer_tied,                         simple);
+  reg_handler(AttrType::primary_output,                      simple);
+  reg_handler(AttrType::pulling_current,                     flt_simple);
+  reg_handler(AttrType::pulling_resistance,                  flt_simple);
+  reg_handler(AttrType::RISE_capacitance,                    flt_simple);
+  reg_handler(AttrType::rise_current_slope_after_threshold,  flt_simple);
+  reg_handler(AttrType::rise_current_slope_before_threshold, flt_simple);
+  reg_handler(AttrType::rise_time_after_threshold,           flt_simple);
+  reg_handler(AttrType::rise_time_before_threshold,          flt_simple);
+  reg_handler(AttrType::signal_type,                         simple);
+  reg_handler(AttrType::slew_control,                        simple);
+  reg_handler(AttrType::STATE_function,                      simple);
+  reg_handler(AttrType::test_output_only,                    simple);
+  reg_handler(AttrType::three_state,                         func_handler);
+  reg_handler(AttrType::vhdl_name,                           str_simple);
+  reg_handler(AttrType::X_function,                          simple);
 
   // complex attributes
-  reg_handler(AttrType::FALL_CAPACITANCE_RANGE,              complex);
-  reg_handler(AttrType::RISE_CAPACITANCE_RANGE,              complex);
+  reg_handler(AttrType::FALL_capacitance_RANGE,              complex);
+  reg_handler(AttrType::RISE_capacitance_RANGE,              complex);
 
   // group statements
-  reg_handler(AttrType::ELECTROMIGRATION,                    g_handler);
-  reg_handler(AttrType::HYPERBOLIC_NOISE_ABOVE_HIGH,         g_handler);
-  reg_handler(AttrType::HYPERBOLIC_NOISE_BELOW_LOW,          g_handler);
-  reg_handler(AttrType::HYPERBOLIC_NOISE_HIGH,               g_handler);
-  reg_handler(AttrType::HYPERBOLIC_NOISE_LOW,                g_handler);
-  reg_handler(AttrType::INTERNAL_POWER,                      ip_handler);
-  reg_handler(AttrType::MAX_TRANS,                           g_handler);
-  reg_handler(AttrType::MIN_PULSE_WIDTH,                     g_handler);
-  reg_handler(AttrType::MINIMUM_PERIOD,                      g_handler);
-  reg_handler(AttrType::TLATCH,                              g_handler);
+  reg_handler(AttrType::electromigration,                    g_handler);
+  reg_handler(AttrType::hyperbolic_noise_above_high,         g_handler);
+  reg_handler(AttrType::hyperbolic_noise_below_low,          g_handler);
+  reg_handler(AttrType::hyperbolic_noise_high,               g_handler);
+  reg_handler(AttrType::hyperbolic_noise_low,                g_handler);
+  reg_handler(AttrType::internal_power,                      ip_handler);
+  reg_handler(AttrType::max_trans,                           g_handler);
+  reg_handler(AttrType::min_pulse_width,                     g_handler);
+  reg_handler(AttrType::minimum_period,                      g_handler);
+  reg_handler(AttrType::Tlatch,                              g_handler);
 
   mTimingHandler = HandlerFactory::new_timing(parser);
 }
@@ -153,7 +153,7 @@ int
 PinHandler::parse_attr(AttrType attr_type,
 		       const FileRegion& attr_loc)
 {
-  if ( attr_type == AttrType::TIMING ) {
+  if ( attr_type == AttrType::timing ) {
     auto timing = mTimingHandler->parse_timing_value(attr_type, attr_loc);
     mTimingList.push_back(timing);
     return 1;
@@ -201,7 +201,7 @@ PinHandler::gen_node(const FileRegion& loc,
   const AstNode* pin_func_type = nullptr;
   const AstTiming* timing_top = nullptr;
   for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == AttrType::DIRECTION ) {
+    if ( attr->attr_type() == AttrType::direction ) {
     }
   }
 

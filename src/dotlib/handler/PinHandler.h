@@ -1,5 +1,5 @@
-#ifndef PINHANDLER_H
-#define PINHANDLER_H
+#ifndef pinHANDLER_H
+#define pinHANDLER_H
 
 /// @file PinHandler.h
 /// @brief PinHandler のヘッダファイル
@@ -82,4 +82,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // PINHANDLER_H
+#endif // pinHANDLER_H

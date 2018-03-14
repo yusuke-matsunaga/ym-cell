@@ -1,5 +1,5 @@
-﻿#ifndef ASTLATCH_H
-#define ASTLATCH_H
+﻿#ifndef ASTlatch_H
+#define ASTlatch_H
 
 /// @file AstLatch.h
 /// @brief AstLatch のヘッダファイル
@@ -124,4 +124,4 @@ AstLatch::enable_also() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTLATCH_H
+#endif // ASTlatch_H

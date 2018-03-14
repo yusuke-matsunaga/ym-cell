@@ -38,10 +38,10 @@ OutputVoltageHandler::OutputVoltageHandler(DotlibParser& parser) :
 {
   // simple attributes
   DotlibHandler* expr_handler = HandlerFactory::new_expr(parser);
-  reg_handler(AttrType::VOL,   expr_handler);
-  reg_handler(AttrType::VOH,   expr_handler);
-  reg_handler(AttrType::VOMIN, expr_handler);
-  reg_handler(AttrType::VOMAX, expr_handler);
+  reg_handler(AttrType::vol,   expr_handler);
+  reg_handler(AttrType::voh,   expr_handler);
+  reg_handler(AttrType::vomin, expr_handler);
+  reg_handler(AttrType::vomax, expr_handler);
 
   // complex attribute
 
@@ -64,7 +64,7 @@ OutputVoltageHandler::gen_node(const FileRegion& loc,
   const AstExpr* vomin = nullptr;
   const AstExpr* vomax = nullptr;
   for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == AttrType::VOL ) {
+    if ( attr->attr_type() == AttrType::vol ) {
       if ( vol != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -77,7 +77,7 @@ OutputVoltageHandler::gen_node(const FileRegion& loc,
       vol = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( vol != nullptr );
     }
-    else if ( attr->attr_type() == AttrType::VOH ) {
+    else if ( attr->attr_type() == AttrType::voh ) {
       if ( voh != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -90,7 +90,7 @@ OutputVoltageHandler::gen_node(const FileRegion& loc,
       voh = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( voh != nullptr );
     }
-    else if ( attr->attr_type() == AttrType::VOMIN ) {
+    else if ( attr->attr_type() == AttrType::vomin ) {
       if ( vomin != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -103,7 +103,7 @@ OutputVoltageHandler::gen_node(const FileRegion& loc,
       vomin = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( vomin != nullptr );
     }
-    else if ( attr->attr_type() == AttrType::VOMAX ) {
+    else if ( attr->attr_type() == AttrType::vomax ) {
       if ( vomax != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,

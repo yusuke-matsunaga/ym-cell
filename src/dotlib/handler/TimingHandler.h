@@ -1,5 +1,5 @@
-#ifndef TIMINGHANDLER_H
-#define TIMINGHANDLER_H
+#ifndef timingHANDLER_H
+#define timingHANDLER_H
 
 /// @file TimingHandler.h
 /// @brief TimingHandler のヘッダファイル
@@ -69,4 +69,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // TIMINGHANDLER_H
+#endif // timingHANDLER_H

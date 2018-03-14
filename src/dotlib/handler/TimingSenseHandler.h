@@ -1,5 +1,5 @@
-﻿#ifndef TIMINGSENSEHANDLER_H
-#define TIMINGSENSEHANDLER_H
+﻿#ifndef timingSENSEHANDLER_H
+#define timingSENSEHANDLER_H
 
 /// @file TimingSenseHandler.h
 /// @brief TimingSenseHandler のヘッダファイル
@@ -45,4 +45,4 @@ protected:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // TIMINGSENSEHANDLER_H
+#endif // timingSENSEHANDLER_H

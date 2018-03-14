@@ -1,5 +1,5 @@
-﻿#ifndef ASTTIMINGSENSE_H
-#define ASTTIMINGSENSE_H
+﻿#ifndef ASTtimingSENSE_H
+#define ASTtimingSENSE_H
 
 /// @file AstTimingSense.h
 /// @brief AstNode の継承クラスのヘッダファイル
@@ -79,4 +79,4 @@ AstTimingSense::value() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTTIMINGSENSE_H
+#endif // ASTtimingSENSE_H

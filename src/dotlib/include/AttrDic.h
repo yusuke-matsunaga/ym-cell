@@ -39,7 +39,7 @@ public:
   /// @param[in] str 文字列
   /// @return str に対応する AttrType の値
   ///
-  /// 対応する値がない場合は ATTR_NONE を返す．
+  /// 対応する値がない場合は ATTR_none を返す．
   AttrType
   get(const char* str) const;
 

@@ -1,5 +1,5 @@
-#ifndef TABLEHANDLER_H
-#define TABLEHANDLER_H
+#ifndef tableHANDLER_H
+#define tableHANDLER_H
 
 /// @file TableHandler.h
 /// @brief TableHandler のヘッダファイル
@@ -15,7 +15,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class TableHandler TableHandler.h "TableHandler.h"
-/// @brief LUT 用のハンドラ
+/// @brief lut 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class TableHandler :
   public Str1GroupHandler
@@ -60,4 +60,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // TABLEHANDLER_H
+#endif // tableHANDLER_H

@@ -1,5 +1,5 @@
-﻿#ifndef ASTLUT_H
-#define ASTLUT_H
+﻿#ifndef ASTlut_H
+#define ASTlut_H
 
 /// @file AstLut.h
 /// @brief AstLut のヘッダファイル
@@ -17,7 +17,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class AstLut AstLut.h "AstLut.h"
-/// @brief LUT 情報を表すクラス
+/// @brief lut 情報を表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstLut :
   public AstNode
@@ -150,4 +150,4 @@ AstLut::value_list() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTLUT_H
+#endif // ASTlut_H

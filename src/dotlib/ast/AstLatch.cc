@@ -55,17 +55,17 @@ AstLatch::set_data(const AstNode* node)
   mEnableAlso = nullptr;
 
   // data_in を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_DATA_IN, mDataIn) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_data_in, mDataIn) ) {
     return false;
   }
 
   // enable を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_ENABLE, mEnable) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_enable, mEnable) ) {
     return false;
   }
 
   // enable_also を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_ENABLE_ALSO, mEnableAlso) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_enable_also, mEnableAlso) ) {
     return false;
   }
 

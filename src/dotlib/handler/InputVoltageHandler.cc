@@ -39,10 +39,10 @@ InputVoltageHandler::InputVoltageHandler(DotlibParser& parser) :
 {
   // simple attributes
   DotlibHandler* expr_handler = HandlerFactory::new_expr(parser);
-  reg_handler(AttrType::VIL,   expr_handler);
-  reg_handler(AttrType::VIH,   expr_handler);
-  reg_handler(AttrType::VIMIN, expr_handler);
-  reg_handler(AttrType::VIMAX, expr_handler);
+  reg_handler(AttrType::vil,   expr_handler);
+  reg_handler(AttrType::vih,   expr_handler);
+  reg_handler(AttrType::vimin, expr_handler);
+  reg_handler(AttrType::vimax, expr_handler);
 
   // complex attribute
 
@@ -65,7 +65,7 @@ InputVoltageHandler::gen_node(const FileRegion& loc,
   const AstExpr* vimin = nullptr;
   const AstExpr* vimax = nullptr;
   for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == AttrType::VIL ) {
+    if ( attr->attr_type() == AttrType::vil ) {
       if ( vil != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -78,7 +78,7 @@ InputVoltageHandler::gen_node(const FileRegion& loc,
       vil = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( vil != nullptr );
     }
-    else if ( attr->attr_type() == AttrType::VIH ) {
+    else if ( attr->attr_type() == AttrType::vih ) {
       if ( vih != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -91,7 +91,7 @@ InputVoltageHandler::gen_node(const FileRegion& loc,
       vih = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( vih != nullptr );
     }
-    else if ( attr->attr_type() == AttrType::VIMIN ) {
+    else if ( attr->attr_type() == AttrType::vimin ) {
       if ( vimin != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -104,7 +104,7 @@ InputVoltageHandler::gen_node(const FileRegion& loc,
       vimin = dynamic_cast<const AstExpr*>(attr->attr_value());
       ASSERT_COND ( vimin != nullptr );
     }
-    else if ( attr->attr_type() == AttrType::VIMAX ) {
+    else if ( attr->attr_type() == AttrType::vimax ) {
       if ( vimax != nullptr ) {
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,

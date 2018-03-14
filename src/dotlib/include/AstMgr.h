@@ -118,7 +118,7 @@ public:
   /// @param[in] pin_top ピンの先頭
   /// @param[in] bus_top バスの先頭
   /// @param[in] bundle_top バンドルの先頭
-  /// @param[in] ff FFグループ
+  /// @param[in] ff ffグループ
   /// @param[in] latch ラッチグループ
   /// @param[in] statetable StateTable グループ
   AstCell*
@@ -259,7 +259,7 @@ public:
   new_str_expr(const FileRegion& loc,
 	       const ShString& str);
 
-  /// @brief LUT template を表す AstNode を生成する．
+  /// @brief lut template を表す AstNode を生成する．
   AstTemplate*
   new_template(const FileRegion& loc,
 	       const AstString* name,
@@ -271,7 +271,7 @@ public:
 	       const AstFloatVector* index_2,
 	       const AstFloatVector* index_3);
 
-  /// @brief LUT を表す AstNode を生成する．
+  /// @brief lut を表す AstNode を生成する．
   AstLut*
   new_lut(const FileRegion& loc,
 	  const AstString* name,

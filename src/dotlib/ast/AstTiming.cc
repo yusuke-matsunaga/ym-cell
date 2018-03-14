@@ -240,23 +240,23 @@ AstTiming::set_data(const AstNode* node)
   AstAttrMap attr_map(node->attr_top());
 
   // 'related_pin' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RELATED_PIN, mRelatedPin) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_RELATED_pin, mRelatedPin) ) {
     return false;
   }
 
   // 'related_bus_pins' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RELATED_BUS_PINS, mRelatedBusPins) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_RELATED_bus_pinS, mRelatedBusPins) ) {
     return false;
   }
 
   // 'related_bus_equivalent' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RELATED_BUS_EQUIVALENT, mRelatedBusEquivalent) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_RELATED_bus_EQUIVALENT, mRelatedBusEquivalent) ) {
     return false;
   }
 
   // 'timing_sense' を取り出す．
   const AstNode* ts_node = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_TIMING_SENSE, ts_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_timing_sense, ts_node) ) {
     return false;
   }
   if ( ts_node == nullptr ) {
@@ -269,7 +269,7 @@ AstTiming::set_data(const AstNode* node)
 
   // 'timing_type' を取り出す．
   const AstNode* tt_node = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_TIMING_TYPE, tt_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_timing_type, tt_node) ) {
     return false;
   }
   if ( tt_node == nullptr ) {
@@ -281,132 +281,132 @@ AstTiming::set_data(const AstNode* node)
   }
 
   // 'when' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_WHEN, mWhen) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_when, mWhen) ) {
     return false;
   }
 
   // 'when_start' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_WHEN_START, mWhenStart) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_when_start, mWhenStart) ) {
     return false;
   }
 
   // 'when_end' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_WHEN_END, mWhenEnd) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_when_end, mWhenEnd) ) {
     return false;
   }
 
   // 'rise_resistance' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RISE_RESISTANCE, mRiseResistance) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_RISE_resistance, mRiseResistance) ) {
     return false;
   }
 
   // 'fall_resistance' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_FALL_RESISTANCE, mFallResistance) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_fall_resistance, mFallResistance) ) {
     return false;
   }
 
   // 'intrinsic_rise' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_INTRINSIC_RISE, mIntrinsicRise) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_intrinsic_rise, mIntrinsicRise) ) {
     return false;
   }
 
   // 'intrinsic_fall' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_INTRINSIC_FALL, mIntrinsicFall) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_intrinsic_fall, mIntrinsicFall) ) {
     return false;
   }
 
   // 'slope_rise' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_SLOPE_RISE, mSlopeRise) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_slope_rise, mSlopeRise) ) {
     return false;
   }
 
   // 'slope_fall' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_SLOPE_FALL, mSlopeFall) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_slope_fall, mSlopeFall) ) {
     return false;
   }
 
   // 'rise_delay_intercept' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RISE_DELAY_INTERCEPT, mRiseDelayIntercept) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_rise_delay_intercept, mRiseDelayIntercept) ) {
     return false;
   }
 
   // 'fall_delay_intercept' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_FALL_DELAY_INTERCEPT, mFallDelayIntercept) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_fall_delay_intercept, mFallDelayIntercept) ) {
     return false;
   }
 
   // 'rise_pin_resistance' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RISE_PIN_RESISTANCE, mRisePinResistance) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_RISE_pin_resistance, mRisePinResistance) ) {
     return false;
   }
 
   // 'fall_pin_resistance' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_FALL_PIN_RESISTANCE, mFallPinResistance) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_fall_pin_resistance, mFallPinResistance) ) {
     return false;
   }
 
   // 'cell_degradation' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_CELL_DEGRADATION, mClibDegradation) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_cell_degradation, mClibDegradation) ) {
     return false;
   }
 
   // 'cell_rise' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_CELL_RISE, mClibRise) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_cell_rise, mClibRise) ) {
     return false;
   }
 
   // 'cell_fall' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_CELL_FALL, mClibFall) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_cell_fall, mClibFall) ) {
     return false;
   }
 
   // 'rise_constraint' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RISE_CONSTRAINT, mRiseConstraint) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_rise_constraint, mRiseConstraint) ) {
     return false;
   }
 
   // 'fall_constraint' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_FALL_CONSTRAINT, mFallConstraint) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_fall_constraint, mFallConstraint) ) {
     return false;
   }
 
   // 'rise_propagation' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RISE_PROPAGATION, mRisePropagation) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_rise_propagation, mRisePropagation) ) {
     return false;
   }
 
   // 'fall_propagation' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_FALL_PROPAGATION, mFallPropagation) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_fall_propagation, mFallPropagation) ) {
     return false;
   }
 
   // 'rise_transition' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RISE_TRANSITION, mRiseTransition) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_rise_transition, mRiseTransition) ) {
     return false;
   }
 
   // 'fall_transition' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_FALL_TRANSITION, mFallTransition) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_fall_transition, mFallTransition) ) {
     return false;
   }
 
   // 'retaining_rise' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RETAINING_RISE, mRetainingRise) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_retaining_rise, mRetainingRise) ) {
     return false;
   }
 
   // 'retaining_fall' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RETAINING_FALL, mRetainingFall) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_retaining_fall, mRetainingFall) ) {
     return false;
   }
 
   // 'retain_rise_slew' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RETAIN_RISE_SLEW, mRetainRiseSlew) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_retain_rise_slew, mRetainRiseSlew) ) {
     return false;
   }
 
   // 'retain_fall_slew' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_RETAIN_FALL_SLEW, mRetainFallSlew) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_retain_fall_slew, mRetainFallSlew) ) {
     return false;
   }
 

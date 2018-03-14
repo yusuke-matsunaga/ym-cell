@@ -13,7 +13,7 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-// @brief LUT template を表す AstNode を生成する．
+// @brief lut template を表す AstNode を生成する．
 AstTemplate*
 AstMgr::new_template(const FileRegion& loc,
 		     const AstString* name,

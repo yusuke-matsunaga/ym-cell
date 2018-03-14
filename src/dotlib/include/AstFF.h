@@ -1,5 +1,5 @@
-﻿#ifndef ASTFF_H
-#define ASTFF_H
+﻿#ifndef ASTff_H
+#define ASTff_H
 
 /// @file AstFF.h
 /// @brief AstFF のヘッダファイル
@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class AstFF AstFF.h "AstFF.h"
-/// @brief AstNode の木から取り出した FF の情報を表すクラス
+/// @brief AstNode の木から取り出した ff の情報を表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstFF :
   public AstFL
@@ -124,4 +124,4 @@ AstFF::clocked_on_also() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTFF_H
+#endif // ASTff_H

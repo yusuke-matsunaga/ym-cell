@@ -58,18 +58,18 @@ AstFL::set_data_sub(const AstNode* node,
   }
 
   // clear を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_CLEAR, mClear) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_clear, mClear) ) {
     return false;
   }
 
   // preset を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_PRESET, mPreset) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_preset, mPreset) ) {
     return false;
   }
 
   // clear_preset_var1 を取り出す．
   const AstNode* tmp_node1 = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_CLEAR_PRESET_VAR1, tmp_node1) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_clear_preset_var1, tmp_node1) ) {
     return false;
   }
   if ( tmp_node1 ) {
@@ -100,7 +100,7 @@ AstFL::set_data_sub(const AstNode* node,
 
   // clear_preset_var2 を取り出す．
   const AstNode* tmp_node2 = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_CLEAR_PRESET_VAR2, tmp_node2) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_clear_preset_var2, tmp_node2) ) {
     return false;
   }
   if ( tmp_node2 ) {

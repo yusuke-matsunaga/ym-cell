@@ -1,5 +1,5 @@
-#ifndef POWERHANDLER_H
-#define POWERHANDLER_H
+#ifndef powerHANDLER_H
+#define powerHANDLER_H
 
 /// @file PowerHandler.h
 /// @brief PowerHandler のヘッダファイル
@@ -60,4 +60,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // POWERHANDLER_H
+#endif // powerHANDLER_H

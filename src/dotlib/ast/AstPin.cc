@@ -169,7 +169,7 @@ AstPin::set_data(const AstNode* pin_node)
 
   // 'direction' の翻訳をする．
   const AstNode* direction_node;
-  if ( !attr_map.expect_singleton(ATTR_DIRECTION, pin_node->loc(), direction_node) ) {
+  if ( !attr_map.expect_singleton(ATTR_direction, pin_node->loc(), direction_node) ) {
     // 'direction' がないのはエラー
     return false;
   }
@@ -178,7 +178,7 @@ AstPin::set_data(const AstNode* pin_node)
 
   // 'capacitance' を取り出す．
   const AstNode* cap_node = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_CAPACITANCE, cap_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_capacitance, cap_node) ) {
     return false;
   }
   if ( cap_node ) {
@@ -192,10 +192,10 @@ AstPin::set_data(const AstNode* pin_node)
 
   const AstNode* rcap_node = nullptr;
   const AstNode* fcap_node = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_RISE_CAPACITANCE, rcap_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_RISE_capacitance, rcap_node) ) {
     return false;
   }
-  if ( !attr_map.expect_singleton_or_null(ATTR_FALL_CAPACITANCE, fcap_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_FALL_capacitance, fcap_node) ) {
     return false;
   }
   if ( rcap_node && fcap_node ) {
@@ -213,7 +213,7 @@ AstPin::set_data(const AstNode* pin_node)
 
   // 'max_fanout' を取り出す．
   const AstNode* max_fo_node = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_MAX_FANOUT, max_fo_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_max_fanout, max_fo_node) ) {
     return false;
   }
   if ( max_fo_node ) {
@@ -226,7 +226,7 @@ AstPin::set_data(const AstNode* pin_node)
   }
   // 'min_fanout' を取り出す．
   const AstNode* min_fo_node = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_MIN_FANOUT, min_fo_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_min_fanout, min_fo_node) ) {
     return false;
   }
   if ( min_fo_node ) {
@@ -240,7 +240,7 @@ AstPin::set_data(const AstNode* pin_node)
 
   // 'max_capacitance' を取り出す．
   const AstNode* max_cap_node = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_MAX_CAPACITANCE, max_cap_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_MAX_capacitance, max_cap_node) ) {
     return false;
   }
   if ( max_cap_node ) {
@@ -253,7 +253,7 @@ AstPin::set_data(const AstNode* pin_node)
   }
   // 'min_capacitance' を取り出す．
   const AstNode* min_cap_node = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_MIN_CAPACITANCE, min_cap_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_MIN_capacitance, min_cap_node) ) {
     return false;
   }
   if ( min_cap_node ) {
@@ -267,7 +267,7 @@ AstPin::set_data(const AstNode* pin_node)
 
   // 'max_transition' を取り出す．
   const AstNode* max_trans_node = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_MAX_TRANSITION, max_trans_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_max_transITION, max_trans_node) ) {
     return false;
   }
   if ( max_trans_node ) {
@@ -280,7 +280,7 @@ AstPin::set_data(const AstNode* pin_node)
   }
   // 'min_transition' を取り出す．
   const AstNode* min_trans_node = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_MIN_TRANSITION, min_trans_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_min_transition, min_trans_node) ) {
     return false;
   }
   if ( min_trans_node ) {
@@ -293,28 +293,28 @@ AstPin::set_data(const AstNode* pin_node)
   }
 
   // 'function' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_FUNCTION, mFunction) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_function, mFunction) ) {
     return false;
   }
 
   // 'three_state' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_THREE_STATE, mThreeState) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_three_state, mThreeState) ) {
     return false;
   }
 
   // 'internal_node' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_INTERNAL_NODE, mInternalNode) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_internal_node, mInternalNode) ) {
     return false;
   }
 
   // 'pin_func_type' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_PIN_FUNC_TYPE, mPinFuncType) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_pin_func_type, mPinFuncType) ) {
     return false;
   }
 
   // 'timing' を取り出す．
   vector<const AstNode*> timing_list;
-  attr_map.get_value(ATTR_TIMING, timing_list);
+  attr_map.get_value(ATTR_timing, timing_list);
 
 #warning "TODO: timing_list から AstTiming のリストを作る．"
 

@@ -1,5 +1,5 @@
-﻿#ifndef ASTLIBRARY_H
-#define ASTLIBRARY_H
+﻿#ifndef ASTlibrary_H
+#define ASTlibrary_H
 
 /// @file AstLibrary.h
 /// @brief AstLibrary のヘッダファイル
@@ -359,4 +359,4 @@ AstLibrary::cell_elem(int pos) const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTLIBRARY_H
+#endif // ASTlibrary_H

@@ -1,5 +1,5 @@
-#ifndef INTERNALPOWERHANDLER_H
-#define INTERNALPOWERHANDLER_H
+#ifndef INTERNALpowerHANDLER_H
+#define INTERNALpowerHANDLER_H
 
 /// @file InternalPowerHandler.h
 /// @brief InternalPowerHandler のヘッダファイル
@@ -59,4 +59,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // INTERNALPOWERHANDLER_H
+#endif // INTERNALpowerHANDLER_H

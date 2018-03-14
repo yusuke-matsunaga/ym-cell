@@ -1,5 +1,5 @@
-﻿#ifndef DEFINEHANDLER_H
-#define DEFINEHANDLER_H
+﻿#ifndef defineHANDLER_H
+#define defineHANDLER_H
 
 /// @file DefineHandler.h
 /// @brief DefineHandler のヘッダファイル
@@ -63,4 +63,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // DEFINEHANDLER_H
+#endif // defineHANDLER_H

@@ -197,7 +197,7 @@ GroupHandler::end_group(AttrType attr_type,
 {
 #if 0
   FileRegion loc(attr_loc, end_loc);
-  if ( attr_type == ATTR_LIBRARY ) {
+  if ( attr_type == ATTR_library ) {
     mgr()->set_root_node(mNode);
   }
   else {

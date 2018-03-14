@@ -1,5 +1,5 @@
-#ifndef VALUESHANDLER_H
-#define VALUESHANDLER_H
+#ifndef valueSHANDLER_H
+#define valueSHANDLER_H
 
 /// @file ValuesHandler.h
 /// @brief ValuesHandler のヘッダファイル
@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class ValuesHandler ValuesHandler.h "ValuesHandler.h"
-/// @brief LUT の values 属性用のハンドラ
+/// @brief lut の values 属性用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class ValuesHandler :
   public ComplexHandler
@@ -63,4 +63,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // VALUESHANDLER_H
+#endif // valueSHANDLER_H

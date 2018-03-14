@@ -55,17 +55,17 @@ AstFF::set_data(const AstNode* node)
   mClockedOnAlso = nullptr;
 
   // next_state を取り出す．
-  if ( !attr_map.expect_singleton(ATTR_NEXT_STATE, node->loc(), mNextState) ) {
+  if ( !attr_map.expect_singleton(ATTR_next_state, node->loc(), mNextState) ) {
     return false;
   }
 
   // clocked_on を取り出す．
-  if ( !attr_map.expect_singleton(ATTR_CLOCKED_ON, node->loc(), mClockedOn) ) {
+  if ( !attr_map.expect_singleton(ATTR_clockED_ON, node->loc(), mClockedOn) ) {
     return false;
   }
 
   // clocked_on_also を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_CLOCKED_ON_ALSO, mClockedOnAlso) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_clockED_ON_ALSO, mClockedOnAlso) ) {
     return false;
   }
 

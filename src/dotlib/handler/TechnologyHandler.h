@@ -1,5 +1,5 @@
-﻿#ifndef TECHNOLOGYHANDLER_H
-#define TECHNOLOGYHANDLER_H
+﻿#ifndef technologyHANDLER_H
+#define technologyHANDLER_H
 
 /// @file TechnologyHandler.h
 /// @brief TechnologyHandler のヘッダファイル
@@ -45,4 +45,4 @@ protected:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // TECHNOLOGYHANDLER_H
+#endif // technologyHANDLER_H

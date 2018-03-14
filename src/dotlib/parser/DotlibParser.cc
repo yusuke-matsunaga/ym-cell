@@ -69,7 +69,7 @@ DotlibParser::parse()
     goto last;
   }
 
-  root_node = dynamic_cast<const AstLibrary*>(mLibraryHandler->parse_attr_value(AttrType::LIBRARY, loc));
+  root_node = dynamic_cast<const AstLibrary*>(mLibraryHandler->parse_attr_value(AttrType::library, loc));
   if ( root_node == nullptr ) {
     error = true;
     goto last;

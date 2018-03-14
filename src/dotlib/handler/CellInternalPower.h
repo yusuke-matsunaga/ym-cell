@@ -1,5 +1,5 @@
-#ifndef CELLINTERNALPOWERHANDLER_H
-#define CELLINTERNALPOWERHANDLER_H
+#ifndef cellINTERNALpowerHANDLER_H
+#define cellINTERNALpowerHANDLER_H
 
 /// @file CellInternalPowerHandler.h
 /// @brief CellInternalPowerHandler のヘッダファイル
@@ -60,4 +60,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // CELLINTERNALPOWERHANDLER_H
+#endif // cellINTERNALpowerHANDLER_H

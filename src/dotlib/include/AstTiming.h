@@ -1,5 +1,5 @@
-﻿#ifndef ASTTIMING_H
-#define ASTTIMING_H
+﻿#ifndef ASTtiming_H
+#define ASTtiming_H
 
 /// @file AstTiming.h
 /// @brief DolibTiming のヘッダファイル
@@ -590,4 +590,4 @@ AstTiming::retain_rise_slew() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTTIMING_H
+#endif // ASTtiming_H

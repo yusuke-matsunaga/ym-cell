@@ -1,5 +1,5 @@
-﻿#ifndef DOTLIB_TOKENTYPE_H
-#define DOTLIB_TOKENTYPE_H
+﻿#ifndef DOTLIB_TOKENtype_H
+#define DOTLIB_TOKENtype_H
 
 /// @file TokenType.h
 /// @brief TokenType の定義ファイル
@@ -78,4 +78,4 @@ operator<<(ostream& s,
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // DOTLIB_TOKENTYPE_H
+#endif // DOTLIB_TOKENtype_H

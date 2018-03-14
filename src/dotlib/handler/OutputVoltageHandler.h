@@ -1,5 +1,5 @@
-#ifndef OUTPUTVOLTAGEHANDLER_H
-#define OUTPUTVOLTAGEHANDLER_H
+#ifndef OUTPUTvolTAGEHANDLER_H
+#define OUTPUTvolTAGEHANDLER_H
 
 /// @file OutputVoltageHandler.h
 /// @brief OutputVoltageHandler のヘッダファイル
@@ -60,4 +60,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // OUTPUTVOLTAGEHANDLER_H
+#endif // OUTPUTvolTAGEHANDLER_H

@@ -1,5 +1,5 @@
-#ifndef ASTINPUTVOLTAGE_H
-#define ASTINPUTVOLTAGE_H
+#ifndef ASTINPUTvolTAGE_H
+#define ASTINPUTvolTAGE_H
 
 /// @file AstInputVoltage.h
 /// @brief AstInputVoltage のヘッダファイル
@@ -152,4 +152,4 @@ AstInputVoltage::vimax() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTINPUTVOLTAGE_H
+#endif // ASTINPUTvolTAGE_H

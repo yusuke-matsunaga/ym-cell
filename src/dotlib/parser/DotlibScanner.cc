@@ -105,7 +105,7 @@ DotlibScanner::scan()
     goto ST_INIT;
 
   case '/':
-    goto ST_COMMENT1;
+    goto ST_comment1;
 
   case ':':
     return TokenType::COLON;
@@ -280,19 +280,19 @@ DotlibScanner::scan()
   mCurString.put_char(c);
   goto ST_DQ;
 
- ST_COMMENT1: // '/' を読み込んだ直後
+ ST_comment1: // '/' を読み込んだ直後
   c = peek();
   if ( c == '/' ) { // C++ スタイルのコメント
     accept();
-    goto ST_COMMENT2;
+    goto ST_comment2;
   }
   if ( c == '*' ) { // C スタイルのコメント
     accept();
-    goto ST_COMMENT3;
+    goto ST_comment3;
   }
   return TokenType::DIV;
 
- ST_COMMENT2: // 改行まで読み飛ばす．
+ ST_comment2: // 改行まで読み飛ばす．
   c = get();
   if ( c == '\n' ) {
     goto ST_INIT;
@@ -300,19 +300,19 @@ DotlibScanner::scan()
   if ( c == EOF ) {
     return TokenType::END;
   }
-  goto ST_COMMENT2;
+  goto ST_comment2;
 
- ST_COMMENT3: // "/*" を読み込んだ直後
+ ST_comment3: // "/*" を読み込んだ直後
   c = get();
   if ( c == EOF ) {
     goto ST_EOF;
   }
   if ( c == '*' ) {
-    goto ST_COMMENT4;
+    goto ST_comment4;
   }
-  goto ST_COMMENT3;
+  goto ST_comment3;
 
- ST_COMMENT4: // "/* 〜 *" まで読み込んだ直後
+ ST_comment4: // "/* 〜 *" まで読み込んだ直後
   c = get();
   if ( c == EOF ) {
     goto ST_EOF;
@@ -321,9 +321,9 @@ DotlibScanner::scan()
     goto ST_INIT;
   }
   if ( c == '*' ) {
-    goto ST_COMMENT4;
+    goto ST_comment4;
   }
-  goto ST_COMMENT3;
+  goto ST_comment3;
 
  ST_EOF:
   {

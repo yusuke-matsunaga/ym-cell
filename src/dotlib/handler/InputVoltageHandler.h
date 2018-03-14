@@ -1,5 +1,5 @@
-#ifndef INPUTVOLTAGEHANDLER_H
-#define INPUTVOLTAGEHANDLER_H
+#ifndef INPUTvolTAGEHANDLER_H
+#define INPUTvolTAGEHANDLER_H
 
 /// @file InputVoltageHandler.h
 /// @brief InputVoltageHandler のヘッダファイル
@@ -60,4 +60,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // INPUTVOLTAGEHANDLER_H
+#endif // INPUTvolTAGEHANDLER_H

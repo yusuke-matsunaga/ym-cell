@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @param[in] pin_top ピンの先頭
 // @param[in] bus_top バスの先頭
 // @param[in] bundle_top バンドルの先頭
-// @param[in] ff FFグループ
+// @param[in] ff ffグループ
 // @param[in] latch ラッチグループ
 // @param[in] statetable StateTable グループ
 AstCell*
@@ -57,7 +57,7 @@ AstMgr::new_cell(const FileRegion& loc,
 // @param[in] pin_top ピンの先頭
 // @param[in] bus_top バスの先頭
 // @param[in] bundle_top バンドルの先頭
-// @param[in] ff FFグループ
+// @param[in] ff ffグループ
 // @param[in] latch ラッチグループ
 // @param[in] statetable StateTable グループ
 AstCell::AstCell(const FileRegion& loc,
@@ -123,7 +123,7 @@ AstCell::set_data(const AstNode* node)
 
   // 面積を得る．
   const AstNode* area_node;
-  if ( !attr_map.expect_singleton(ATTR_AREA, node->loc(), area_node) ) {
+  if ( !attr_map.expect_singleton(ATTR_area, node->loc(), area_node) ) {
     return false;
   }
   if ( !area_node->expect_float(mArea) ) {
@@ -133,7 +133,7 @@ AstCell::set_data(const AstNode* node)
   // ピングループを取り出す．
   // 定義されていなくてもエラーにはならない．
   vector<const AstNode*> pin_list;
-  attr_map.get_value(ATTR_PIN, pin_list);
+  attr_map.get_value(ATTR_pin, pin_list);
   AstPin* prev_pin = nullptr;
   for ( const AstNode* pin_node: pin_list ) {
     // ピン情報の読み出し
@@ -154,16 +154,16 @@ AstCell::set_data(const AstNode* node)
   // バスグループを取り出す．
   // 定義されていなくてもエラーにはならない．
   vector<const AstNode*> bus_list;
-  attr_map.get_value(ATTR_BUS, bus_list);
+  attr_map.get_value(ATTR_bus, bus_list);
 
   // バンドルグループを取り出す．
   // 定義されていなくてもエラーにはならない．
   vector<const AstNode*> bundle_list;
-  attr_map.get_value(ATTR_BUNDLE, bundle_list);
+  attr_map.get_value(ATTR_bundle, bundle_list);
 
   // ff を取り出す．
   const AstNode* ff_node;
-  if ( !attr_map.expect_singleton_or_null(ATTR_FF, ff_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_ff, ff_node) ) {
     return false;
   }
   if ( ff_node != nullptr ) {
@@ -175,7 +175,7 @@ AstCell::set_data(const AstNode* node)
 
   // latch を取り出す．
   const AstNode* latch_node;
-  if ( !attr_map.expect_singleton_or_null(ATTR_LATCH, latch_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_latch, latch_node) ) {
     return false;
   }
   if ( latch_node != nullptr ) {
@@ -187,7 +187,7 @@ AstCell::set_data(const AstNode* node)
 
   // statetable を取り出す．
   const AstNode* state_node;
-  if ( !attr_map.expect_singleton_or_null(ATTR_STATETABLE, state_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_statetable, state_node) ) {
     return false;
   }
 

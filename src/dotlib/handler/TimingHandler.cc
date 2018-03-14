@@ -46,86 +46,86 @@ TimingHandler::TimingHandler(DotlibParser& parser) :
   DotlibHandler* table_handler = HandlerFactory::new_table(parser);
   DotlibHandler* g_group = HandlerFactory::new_group(parser);
 
-  reg_handler(AttrType::RELATED_BUS_EQUIVALENT,                      str_simple);
-  reg_handler(AttrType::RELATED_BUS_PINS,                            str_simple);
-  reg_handler(AttrType::RELATED_OUTPUT_PIN,                          str_simple);
-  reg_handler(AttrType::RELATED_PIN,                                 str_simple);
+  reg_handler(AttrType::RELATED_bus_EQUIVALENT,                      str_simple);
+  reg_handler(AttrType::RELATED_bus_pinS,                            str_simple);
+  reg_handler(AttrType::RELATED_OUTPUT_pin,                          str_simple);
+  reg_handler(AttrType::RELATED_pin,                                 str_simple);
 
-  reg_handler(AttrType::TIMING_SENSE,                                ts_handler);
-  reg_handler(AttrType::TIMING_TYPE,                                 tt_handler);
+  reg_handler(AttrType::timing_sense,                                ts_handler);
+  reg_handler(AttrType::timing_type,                                 tt_handler);
 
-  reg_handler(AttrType::EDGE_RATE_SENSITIVITY_F0,                    simple);
-  reg_handler(AttrType::EDGE_RATE_SENSITIVITY_F1,                    simple);
-  reg_handler(AttrType::EDGE_RATE_SENSITIVITY_R0,                    simple);
-  reg_handler(AttrType::EDGE_RATE_SENSITIVITY_R1,                    simple);
+  reg_handler(AttrType::edge_rate_sensitivity_f0,                    simple);
+  reg_handler(AttrType::edge_rate_sensitivity_f1,                    simple);
+  reg_handler(AttrType::edge_rate_sensitivity_r0,                    simple);
+  reg_handler(AttrType::edge_rate_sensitivity_r1,                    simple);
 
-  reg_handler(AttrType::RISE_RESISTANCE,                             flt_simple);
-  reg_handler(AttrType::FALL_RESISTANCE,                             flt_simple);
-  reg_handler(AttrType::INTRINSIC_RISE,                              flt_simple);
-  reg_handler(AttrType::INTRINSIC_FALL,                              flt_simple);
+  reg_handler(AttrType::RISE_resistance,                             flt_simple);
+  reg_handler(AttrType::fall_resistance,                             flt_simple);
+  reg_handler(AttrType::intrinsic_rise,                              flt_simple);
+  reg_handler(AttrType::intrinsic_fall,                              flt_simple);
 
-  reg_handler(AttrType::SDF_COND,                                    simple);
-  reg_handler(AttrType::SDF_COND_END,                                simple);
-  reg_handler(AttrType::SDF_COND_START,                              simple);
-  reg_handler(AttrType::SDF_EDGES,                                   simple);
+  reg_handler(AttrType::sdf_cond,                                    simple);
+  reg_handler(AttrType::sdf_cond_end,                                simple);
+  reg_handler(AttrType::sdf_cond_start,                              simple);
+  reg_handler(AttrType::sdf_edges,                                   simple);
 
-  reg_handler(AttrType::SLOPE_FALL,                                  flt_simple);
-  reg_handler(AttrType::SLOPE_RISE,                                  flt_simple);
+  reg_handler(AttrType::slope_fall,                                  flt_simple);
+  reg_handler(AttrType::slope_rise,                                  flt_simple);
 
-  reg_handler(AttrType::WHEN,                                        func_handler);
-  reg_handler(AttrType::WHEN_END,                                    func_handler);
-  reg_handler(AttrType::WHEN_START,                                  func_handler);
+  reg_handler(AttrType::when,                                        func_handler);
+  reg_handler(AttrType::when_end,                                    func_handler);
+  reg_handler(AttrType::when_start,                                  func_handler);
 
   // complex attribute
-  reg_handler(AttrType::RISE_DELAY_INTERCEPT,                        pw_complex);
-  reg_handler(AttrType::FALL_DELAY_INTERCEPT,                        pw_complex);
-  reg_handler(AttrType::RISE_PIN_RESISTANCE,                         pw_complex);
-  reg_handler(AttrType::FALL_PIN_RESISTANCE,                         pw_complex);
-  reg_handler(AttrType::ORDERS,                                      complex);
-  reg_handler(AttrType::COEFS,                                       complex);
+  reg_handler(AttrType::rise_delay_intercept,                        pw_complex);
+  reg_handler(AttrType::fall_delay_intercept,                        pw_complex);
+  reg_handler(AttrType::RISE_pin_resistance,                         pw_complex);
+  reg_handler(AttrType::fall_pin_resistance,                         pw_complex);
+  reg_handler(AttrType::orders,                                      complex);
+  reg_handler(AttrType::coefs,                                       complex);
 
   // group statements
-  reg_handler(AttrType::CELL_DEGRADATION,                            g_group);
+  reg_handler(AttrType::cell_degradation,                            g_group);
 
-  reg_handler(AttrType::CELL_RISE,                                   table_handler);
-  reg_handler(AttrType::CELL_FALL,                                   table_handler);
+  reg_handler(AttrType::cell_rise,                                   table_handler);
+  reg_handler(AttrType::cell_fall,                                   table_handler);
 
-  reg_handler(AttrType::RISE_CONSTRAINT,                             table_handler);
-  reg_handler(AttrType::FALL_CONSTRAINT,                             table_handler);
+  reg_handler(AttrType::rise_constraint,                             table_handler);
+  reg_handler(AttrType::fall_constraint,                             table_handler);
 
-  reg_handler(AttrType::RISE_PROPAGATION,                            table_handler);
-  reg_handler(AttrType::FALL_PROPAGATION,                            table_handler);
+  reg_handler(AttrType::rise_propagation,                            table_handler);
+  reg_handler(AttrType::fall_propagation,                            table_handler);
 
-  reg_handler(AttrType::RISE_TRANSITION,                             table_handler);
-  reg_handler(AttrType::FALL_TRANSITION,                             table_handler);
+  reg_handler(AttrType::rise_transition,                             table_handler);
+  reg_handler(AttrType::fall_transition,                             table_handler);
 
-  reg_handler(AttrType::NOISE_IMMUNITY_ABOVE_HIGH,                   g_group);
-  reg_handler(AttrType::NOISE_IMMUNITY_BELOW_LOW,                    g_group);
-  reg_handler(AttrType::NOISE_IMMUNITY_HIGH,                         g_group);
-  reg_handler(AttrType::NOISE_IMMUNITY_LOW,                          g_group);
+  reg_handler(AttrType::noise_immunity_above_high,                   g_group);
+  reg_handler(AttrType::noise_immunity_below_low,                    g_group);
+  reg_handler(AttrType::noise_immunity_high,                         g_group);
+  reg_handler(AttrType::noise_immunity_low,                          g_group);
 
-  reg_handler(AttrType::PROPAGATED_NOISE_HEIGHT_ABOVE_HIGH,	        g_group);
-  reg_handler(AttrType::PROPAGATED_NOISE_HEIGHT_BELOW_LOW,	        g_group);
-  reg_handler(AttrType::PROPAGATED_NOISE_HEIGHT_HIGH,	        g_group);
-  reg_handler(AttrType::PROPAGATED_NOISE_HEIGHT_LOW,		        g_group);
-  reg_handler(AttrType::PROPAGATED_NOISE_PEAK_TIME_RATIO_ABOVE_HIGH, g_group);
-  reg_handler(AttrType::PROPAGATED_NOISE_PEAK_TIME_RATIO_BELOW_LOW,  g_group);
-  reg_handler(AttrType::PROPAGATED_NOISE_PEAK_TIME_RATIO_HIGH,       g_group);
-  reg_handler(AttrType::PROPAGATED_NOISE_PEAK_TIME_RATIO_LOW,        g_group);
-  reg_handler(AttrType::PROPAGATED_NOISE_WIDTH_ABOVE_HIGH,  	        g_group);
-  reg_handler(AttrType::PROPAGATED_NOISE_WIDTH_BELOW_LOW, 	        g_group);
-  reg_handler(AttrType::PROPAGATED_NOISE_WIDTH_HIGH,		        g_group);
-  reg_handler(AttrType::PROPAGATED_NOISE_WIDTH_LOW,		        g_group);
+  reg_handler(AttrType::propagated_noise_height_above_high,	        g_group);
+  reg_handler(AttrType::propagated_noise_height_below_low,	        g_group);
+  reg_handler(AttrType::propagated_noise_height_high,	        g_group);
+  reg_handler(AttrType::propagated_noise_height_low,		        g_group);
+  reg_handler(AttrType::propagated_noise_peak_time_ratio_above_high, g_group);
+  reg_handler(AttrType::propagated_noise_peak_time_ratio_below_low,  g_group);
+  reg_handler(AttrType::propagated_noise_peak_time_ratio_high,       g_group);
+  reg_handler(AttrType::propagated_noise_peak_time_ratio_low,        g_group);
+  reg_handler(AttrType::propagated_noise_width_above_high,  	        g_group);
+  reg_handler(AttrType::propagated_noise_width_below_low, 	        g_group);
+  reg_handler(AttrType::propagated_noise_width_high,		        g_group);
+  reg_handler(AttrType::propagated_noise_width_low,		        g_group);
 
-  reg_handler(AttrType::RETAINING_RISE,		                g_group);
-  reg_handler(AttrType::RETAINING_FALL,		                g_group);
+  reg_handler(AttrType::retaining_rise,		                g_group);
+  reg_handler(AttrType::retaining_fall,		                g_group);
 
-  reg_handler(AttrType::RETAIN_FALL_SLEW,		                g_group);
-  reg_handler(AttrType::RETAIN_RISE_SLEW,		                g_group);
+  reg_handler(AttrType::retain_fall_slew,		                g_group);
+  reg_handler(AttrType::retain_rise_slew,		                g_group);
 
-  reg_handler(AttrType::STEADY_STATE_CURRENT_HIGH,		        g_group);
-  reg_handler(AttrType::STEADY_STATE_CURRENT_LOW,		        g_group);
-  reg_handler(AttrType::STEADY_STATE_CURRENT_TRISTATE,	        g_group);
+  reg_handler(AttrType::steady_state_current_high,		        g_group);
+  reg_handler(AttrType::steady_state_current_low,		        g_group);
+  reg_handler(AttrType::steady_state_current_tristate,	        g_group);
 }
 
 // @brief デストラクタ
@@ -152,7 +152,7 @@ TimingHandler::gen_value(const FileRegion& loc,
 			 const vector<const AstAttr*>& attr_list)
 {
   for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == AttrType::RELATED_PIN ) {
+    if ( attr->attr_type() == AttrType::RELATED_pin ) {
       ;
     }
   }

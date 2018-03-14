@@ -1,5 +1,5 @@
-﻿#ifndef ASTCELL_H
-#define ASTCELL_H
+﻿#ifndef ASTcell_H
+#define ASTcell_H
 
 /// @file AstCell.h
 /// @brief AstCell のヘッダファイル
@@ -34,7 +34,7 @@ protected:
   /// @param[in] pin_top ピンのリスト
   /// @param[in] bus_top バスのリスト
   /// @param[in] bundle_top バンドルのリスト
-  /// @param[in] ff FFグループ
+  /// @param[in] ff ffグループ
   /// @param[in] latch ラッチグループ
   /// @param[in] statetable StateTable グループ
   /// @param[in] alloc メモリアロケータ
@@ -275,4 +275,4 @@ AstCell::state_table() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTCELL_H
+#endif // ASTcell_H

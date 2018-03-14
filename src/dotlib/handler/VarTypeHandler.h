@@ -1,5 +1,5 @@
-﻿#ifndef VARTYPEHANDLER_H
-#define VARTYPEHANDLER_H
+﻿#ifndef VARtypeHANDLER_H
+#define VARtypeHANDLER_H
 
 /// @file VarTypeHandler.h
 /// @brief VarTypeHandler のヘッダファイル
@@ -45,4 +45,4 @@ protected:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // VARTYPEHANDLER_H
+#endif // VARtypeHANDLER_H

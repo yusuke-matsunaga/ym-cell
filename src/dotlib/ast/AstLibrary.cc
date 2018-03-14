@@ -144,7 +144,7 @@ AstLibrary::set_data(const AstNode* node)
 
   // 'technology' を取り出す．
   const AstNode* tech_node = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_TECHNOLOGY, tech_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_technology, tech_node) ) {
     return false;
   }
   if ( tech_node ) {
@@ -167,51 +167,51 @@ AstLibrary::set_data(const AstNode* node)
 
   // 'delay_model' を取り出す．
   const AstNode* dm_node = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_DELAY_MODEL, dm_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_delay_model, dm_node) ) {
     return false;
   }
   ASSERT_COND( dm_node->type() == AstNode::kDelayModel );
   mDelayModel = dm_node->delay_model();
 
   // 'bus_naming_style' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_BUS_NAMING_STYLE, mBusNamingStyle) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_bus_naming_style, mBusNamingStyle) ) {
     return false;
   }
 
   // 'comment' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_COMMENT, mComment) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_comment, mComment) ) {
     return false;
   }
 
   // 'date' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_DATE, mDate) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_date, mDate) ) {
     return false;
   }
 
   // 'revision' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_REVISION, mRevision) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_revision, mRevision) ) {
     return false;
   }
 
   // 'current_unit' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_CURRENT_UNIT, mCurrentUnit) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_current_unit, mCurrentUnit) ) {
     return false;
   }
 
   // 'leakage_power_unit' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_LEAKAGE_POWER_UNIT, mLeakagePowerUnit) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_leakage_power_unit, mLeakagePowerUnit) ) {
     return false;
   }
 
   // 'pulling_resistance_unit' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_PULLING_RESISTANCE_UNIT,
+  if ( !attr_map.expect_singleton_or_null(ATTR_pulling_resistance_unit,
 				 mPullingResistanceUnit) ) {
     return false;
   }
 
   // 'capacitive_load_unit' を取り出す．
   const AstNode* clu = nullptr;
-  if ( !attr_map.expect_singleton_or_null(ATTR_CAPACITIVE_LOAD_UNIT, clu) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_capacitive_load_unit, clu) ) {
     return false;
   }
   if ( clu ) {
@@ -253,17 +253,17 @@ AstLibrary::set_data(const AstNode* node)
   }
 
   // 'time_unit' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_TIME_UNIT, mTimeUnit) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_time_unit, mTimeUnit) ) {
     return false;
   }
 
   // 'voltage_unit' を取り出す．
-  if ( !attr_map.expect_singleton_or_null(ATTR_VOLTAGE_UNIT, mVoltageUnit) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_volTAGE_UNIT, mVoltageUnit) ) {
     return false;
   }
 
-  attr_map.get_value(ATTR_LU_TABLE_TEMPLATE, mLutTemplateList);
-  attr_map.get_value(ATTR_CELL, mCellList);
+  attr_map.get_value(ATTR_lu_table_template, mLutTemplateList);
+  attr_map.get_value(ATTR_cell, mCellList);
   return true;
 }
 #endif

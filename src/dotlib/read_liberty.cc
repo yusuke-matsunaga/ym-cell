@@ -73,7 +73,7 @@ split(const string& src_str,
   }
 }
 
-// LUT を読み込む．
+// lut を読み込む．
 ClibLut*
 gen_lut(CiCellLibrary* library,
 	const AstLut* lut_node)
@@ -641,7 +641,7 @@ set_library(const AstLibrary* dt_library,
       ASSERT_COND( itpos == nit );
     }
 
-    // FF情報の読み出し
+    // ff情報の読み出し
     const AstFF* ff_info = dt_cell->ff();
     if ( ff_info != nullptr ) {
       ShString var1 = ff_info->var1_name()->value();

@@ -13,7 +13,7 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-// @brief LUT を表す AstNode を生成する．
+// @brief lut を表す AstNode を生成する．
 AstLut*
 AstMgr::new_lut(const FileRegion& loc,
 		const AstString* name,
@@ -70,7 +70,7 @@ AstLut::set_data(const AstNode* node)
 
   // 'index_1' を取り出す．
   const AstNode* index1_node;
-  if ( !attr_map.expect_singleton_or_null(ATTR_INDEX_1, index1_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_index_1, index1_node) ) {
     return false;
   }
   if ( index1_node ) {
@@ -82,7 +82,7 @@ AstLut::set_data(const AstNode* node)
 
   // 'index_2' を取り出す．
   const AstNode* index2_node;
-  if ( !attr_map.expect_singleton_or_null(ATTR_INDEX_2, index2_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_index_2, index2_node) ) {
     return false;
   }
   if ( index2_node ) {
@@ -94,7 +94,7 @@ AstLut::set_data(const AstNode* node)
 
   // 'index_3' を取り出す．
   const AstNode* index3_node;
-  if ( !attr_map.expect_singleton_or_null(ATTR_INDEX_3, index3_node) ) {
+  if ( !attr_map.expect_singleton_or_null(ATTR_index_3, index3_node) ) {
     return false;
   }
   if ( index3_node ) {
@@ -105,7 +105,7 @@ AstLut::set_data(const AstNode* node)
   }
 
   // 'values' を取り出す．
-  if ( !attr_map.expect_singleton(ATTR_VALUES, node->loc(), mValueList) ) {
+  if ( !attr_map.expect_singleton(ATTR_valueS, node->loc(), mValueList) ) {
     return false;
   }
 

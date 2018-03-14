@@ -1,5 +1,5 @@
-﻿#ifndef PINDIRECTIONHANDLER_H
-#define PINDIRECTIONHANDLER_H
+﻿#ifndef pindirectionHANDLER_H
+#define pindirectionHANDLER_H
 
 /// @file PinDirectionHandler.h
 /// @brief PinDirectionHandler のヘッダファイル
@@ -45,4 +45,4 @@ protected:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // PINDIRECTIONHANDLER_H
+#endif // pindirectionHANDLER_H
