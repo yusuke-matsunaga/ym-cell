@@ -29,61 +29,6 @@ AstNode::~AstNode()
 {
 }
 
-#if 0
-// @brief 1つの文字列からなるリストの場合に文字列を返す．
-// @note 仮定が外れたらアボートする．
-ShString
-AstNode::get_string_from_value_list() const
-{
-  ASSERT_NOT_REACHED;
-  return ShString();
-}
-
-// @brief 2つの文字列からなるリストの内容を取り出す．
-// @param[out] str1 1つ目の文字列を格納する変数
-// @param[out] str2 2つ目の文字列を格納する変数
-// @retval true 正しく読み込めた．
-// @retval false エラーが起こった．
-// @note エラーは MsgMgr に出力する．
-bool
-AstNode::expect_string_pair(ShString& str1,
-			       ShString& str2) const
-{
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  loc(),
-		  kMsgError,
-		  "DOTLIB_PARSER",
-		  "Expected string list of size 2.");
-  return false;
-}
-
-// @brief float 値を取り出す．
-// @note 型が違ったらエラーを MsgMgr に出力する．
-bool
-AstNode::expect_float(double& value) const
-{
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  loc(),
-		  kMsgError,
-		  "DOTLIB_PARSER",
-		  "Float value is expected.");
-  return false;
-}
-
-// @brief 文字列を取り出す．
-// @note 型が違ったらエラーを MsgMgr に出力する．
-bool
-AstNode::expect_string(ShString& value) const
-{
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  loc(),
-		  kMsgError,
-		  "DOTLIB_PARSER",
-		  "String value is expected.");
-  return false;
-}
-#endif
-
 // @brief インデント数分だけ空白を出力する．
 // @param[in] s 出力先のストリーム
 // @param[in] indent インデント量

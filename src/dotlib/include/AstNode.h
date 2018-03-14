@@ -87,37 +87,6 @@ public:
        int indent = 0) const = 0;
 
 
-public:
-  //////////////////////////////////////////////////////////////////////
-  // パーズ用の便利関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 1つの文字列からなるリストの場合に文字列を返す．
-  ///
-  /// 仮定が外れたらアボートする．
-  virtual
-  ShString
-  get_string_from_value_list() const;
-
-  /// @brief 2つの文字列からなるリストの内容を取り出す．
-  /// @param[out] str1 1つ目の文字列を格納する変数
-  /// @param[out] str2 2つ目の文字列を格納する変数
-  /// @retval true 正しく読み込めた．
-  /// @retval false エラーが起こった．
-  /// @note エラーは MsgMgr に出力する．
-  virtual
-  bool
-  expect_string_pair(ShString& str1,
-		     ShString& str2) const;
-
-  /// @brief 文字列を取り出す．
-  ///
-  /// 型が違ったらエラーを MsgMgr に出力する．
-  virtual
-  bool
-  expect_string(ShString& value) const;
-
-
 protected:
   //////////////////////////////////////////////////////////////////////
   // 継承クラスから用いる便利関数

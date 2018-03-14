@@ -68,6 +68,7 @@ set (ast_SOURCES
   ast/AstFL.cc
   ast/AstFloat.cc
   ast/AstFloatVector.cc
+  ast/AstGenGroup.cc
   ast/AstInputVoltage.cc
   ast/AstInt.cc
   ast/AstLatch.cc

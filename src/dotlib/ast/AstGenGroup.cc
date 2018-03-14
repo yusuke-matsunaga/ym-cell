@@ -9,7 +9,7 @@
 
 #include "AstMgr.h"
 #include "AstGenGroup.h"
-#include "ym/Range.h"n
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -41,7 +41,7 @@ AstGenGroup::AstGenGroup(const FileRegion& loc,
   mValueNum(value_list.size()),
   mValueList(alloc.get_array<const AstNode*>(mValueNum)),
   mAttrNum(attr_list.size()),
-  mAttrTop(alloc.get_array<const AstAttr*>(mAttrNum))
+  mAttrList(alloc.get_array<const AstAttr*>(mAttrNum))
 {
   for ( auto i: Range(mValueNum) ) {
     mValueList[i] = value_list[i];

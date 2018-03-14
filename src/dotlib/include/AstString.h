@@ -46,13 +46,6 @@ public:
   ShString
   value() const;
 
-  /// @brief 文字列を取り出す．
-  ///
-  /// 型が違ったらエラーを MsgMgr に出力する．
-  virtual
-  bool
-  expect_string(ShString& value) const;
-
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量

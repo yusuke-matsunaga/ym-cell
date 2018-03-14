@@ -112,11 +112,6 @@ private:
   // パーサー
   DotlibParser& mParser;
 
-#if 0
-  // 親のハンドラ
-  GroupHandler* mParent;
-#endif
-
 };
 
 END_NAMESPACE_YM_DOTLIB
