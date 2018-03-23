@@ -64,11 +64,11 @@ split(const string& src_str,
   string tmp_str(src_str);
   for ( ; ; ) {
     string::size_type p = tmp_str.find_first_of(' ');
-    if ( p == string::npos ) {
-      str_list.push_back(tmp_str);
-      return;
-    }
     string tmp = tmp_str.substr(0, p);
+    str_list.push_back(tmp);
+    if ( p == string::npos ) {
+      break;
+    }
     tmp_str = tmp_str.substr(p + 1, string::npos);
   }
 }
