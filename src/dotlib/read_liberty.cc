@@ -86,7 +86,7 @@ gen_lut(CiCellLibrary* library,
 	<< ": No such lu_table template";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    lut_node->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return nullptr;
@@ -289,7 +289,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	    if ( rp_node != nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
 			      dl_timing->loc(),
-			      kMsgError,
+			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "cell_rise and rise_propagation are mutually exclusive.");
 	      continue;
@@ -297,7 +297,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	    if ( rt_node == nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
 			      dl_timing->loc(),
-			      kMsgError,
+			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "rise_transition is missing.");
 	      continue;
@@ -309,7 +309,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	    if ( rt_node == nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
 			      dl_timing->loc(),
-			      kMsgError,
+			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "rise_transition is missing.");
 	      continue;
@@ -320,7 +320,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	  else if ( rt_node != nullptr ) {
 	    MsgMgr::put_msg(__FILE__, __LINE__,
 			    dl_timing->loc(),
-			    kMsgError,
+			    MsgType::Error,
 			    "DOTLIB_PARSER",
 			    "Either cell_rise or rise_propagation should be present.");
 	    continue;
@@ -337,7 +337,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	    if ( fp_node != nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
 			      dl_timing->loc(),
-			      kMsgError,
+			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "cell_fall and fall_propagation are mutually exclusive.");
 	      continue;
@@ -345,7 +345,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	    if ( ft_node == nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
 			      dl_timing->loc(),
-			      kMsgError,
+			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "fall_transition is missing.");
 	      continue;
@@ -357,7 +357,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	    if ( ft_node == nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
 			      dl_timing->loc(),
-			      kMsgError,
+			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "fall_transition is missing.");
 	      continue;
@@ -368,7 +368,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	  else if ( ft_node != nullptr ) {
 	    MsgMgr::put_msg(__FILE__, __LINE__,
 			    dl_timing->loc(),
-			    kMsgError,
+			    MsgType::Error,
 			    "DOTLIB_PARSER",
 			    "Either cell_fall or fall_propagation should be present.");
 	    continue;
@@ -378,7 +378,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	    if ( fp_lut != nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
 			      dl_timing->loc(),
-			      kMsgError,
+			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "cell_rise and fall_propagation are mutually exclusive.");
 	      continue;
@@ -423,7 +423,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	    buf << pin_name << ": no such pin";
 	    MsgMgr::put_msg(__FILE__, __LINE__,
 			    dl_timing->loc(),
-			    kMsgError,
+			    MsgType::Error,
 			    "DOTLIB_PARSER",
 			    buf.str());
 	    continue;
@@ -451,7 +451,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
       else {
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			dl_timing->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"No \"related_pin\"");
       }
@@ -825,7 +825,7 @@ CiCellLibrary::read_liberty(const string& filename)
     buf << filename << ": Could not open.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    FileRegion(),
-		    kMsgFailure,
+		    MsgType::Failure,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return false;

@@ -89,7 +89,7 @@ TemplateHandler::parse(AttrType attr_type,
   if ( mVar1 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. missing 'variable_1'.");
     return nullptr;
@@ -97,7 +97,7 @@ TemplateHandler::parse(AttrType attr_type,
   if ( mIndex1 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. missing 'mIndex1'.");
     return nullptr;
@@ -108,7 +108,7 @@ TemplateHandler::parse(AttrType attr_type,
     if ( mVar3 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'variable_3' while missing 'variable_2'.");
       return nullptr;
@@ -116,7 +116,7 @@ TemplateHandler::parse(AttrType attr_type,
     if ( mIndex2 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'mIndex2' while missing 'variable_2'.");
       return nullptr;
@@ -127,7 +127,7 @@ TemplateHandler::parse(AttrType attr_type,
     if ( mIndex2 == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'variable_2' while missing 'index_2'.");
       return nullptr;
@@ -135,7 +135,7 @@ TemplateHandler::parse(AttrType attr_type,
     if ( mIndex3 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'index_3' while missing 'variable_3'.");
       return nullptr;
@@ -146,7 +146,7 @@ TemplateHandler::parse(AttrType attr_type,
     if ( mIndex3 == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'variable_3' while missing 'index_3'.");
       return nullptr;

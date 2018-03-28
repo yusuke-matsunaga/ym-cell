@@ -49,7 +49,7 @@ VarTypeHandler::read_value()
   if ( value_type != TokenType::SYMBOL ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. technology value is expected.");
     return nullptr;
@@ -101,7 +101,7 @@ VarTypeHandler::read_value()
 	<< str << " is not a valid string for variable type.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return nullptr;

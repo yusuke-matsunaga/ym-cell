@@ -49,7 +49,7 @@ TimingTypeHandler::read_value()
   if ( value_type != TokenType::SYMBOL ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. timing type value is expected.");
     return nullptr;
@@ -152,7 +152,7 @@ TimingTypeHandler::read_value()
   else {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. Illegal string for timing type.");
     return nullptr;

@@ -141,7 +141,7 @@ DotlibScanner::scan()
     // それ以外はエラーなんじゃない？
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_LEX",
 		    "syntax error");
     return TokenType::ERROR;
@@ -184,7 +184,7 @@ DotlibScanner::scan()
     buf << "digit number expected after dot";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_LEX",
 		    buf.str());
     return TokenType::ERROR;
@@ -221,7 +221,7 @@ DotlibScanner::scan()
     buf << "exponent value expected";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_LEX",
 		    buf.str());
     return TokenType::ERROR;
@@ -255,7 +255,7 @@ DotlibScanner::scan()
     buf << "unexpected newline in quoted string.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_LEX",
 		    buf.str());
     return TokenType::ERROR;
@@ -265,7 +265,7 @@ DotlibScanner::scan()
     buf << "unexpected end-of-file in quoted string.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_LEX",
 		    buf.str());
     return TokenType::ERROR;
@@ -331,7 +331,7 @@ DotlibScanner::scan()
     buf << "Unexpected end-of-file in comment block.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_LEX",
 		    buf.str());
   }

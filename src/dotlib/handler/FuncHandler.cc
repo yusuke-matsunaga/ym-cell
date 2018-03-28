@@ -53,7 +53,7 @@ FuncHandler::gen_node()
   if ( value_type != TokenType::SYMBOL ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "String value is expected.");
     return nullptr;
@@ -83,7 +83,7 @@ FuncHandler::read_primary()
     if ( v != 0 && v != 1 ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. 0 or 1 is expected.");
       return nullptr;
@@ -93,7 +93,7 @@ FuncHandler::read_primary()
 
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  loc,
-		  kMsgError,
+		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  "Syntax error. number is expected.");
   return nullptr;
@@ -192,7 +192,7 @@ FuncHandler::read_expr(TokenType end_marker)
     else {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error.");
       return nullptr;

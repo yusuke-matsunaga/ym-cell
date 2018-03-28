@@ -137,7 +137,7 @@ ExprHandler::read_primary()
     else {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. "
 		      "Only 'VDD', 'VSS', and 'VCC' are allowed.");
@@ -151,7 +151,7 @@ ExprHandler::read_primary()
 
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  loc,
-		  kMsgError,
+		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  "Syntax error. number is expected.");
   return nullptr;
@@ -222,7 +222,7 @@ ExprHandler::read_expr(TokenType end_marker)
     else {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error.");
       return nullptr;

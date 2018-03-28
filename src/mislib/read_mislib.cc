@@ -212,7 +212,7 @@ new_gate(const MislibGate* gate,
 	    << pt_pin->name()->str() << ".";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			pt_pin->loc(),
-			kMsgWarning,
+			MsgType::Warning,
 			"MISLIB_PARSER",
 			buf.str());
 	redundant = true;
@@ -236,7 +236,7 @@ new_gate(const MislibGate* gate,
 	  << "Ignored.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_pin->phase()->loc(),
-		      kMsgWarning,
+		      MsgType::Warning,
 		      "MISLIB_PARSER",
 		      buf.str());
       sense = sense_real;
@@ -301,7 +301,7 @@ CiCellLibrary::read_mislib(const string& filename)
     buf << filename << " : No such file.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    FileRegion(),
-		    kMsgFailure,
+		    MsgType::Failure,
 		    "MISLIB_PARSER",
 		    buf.str());
     return false;

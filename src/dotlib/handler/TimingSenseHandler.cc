@@ -49,7 +49,7 @@ TimingSenseHandler::read_value()
   if ( value_type != TokenType::SYMBOL ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. timing sense value is expected.");
     return nullptr;
@@ -68,7 +68,7 @@ TimingSenseHandler::read_value()
   else {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. Only 'positive_unate', 'negative_unate', or 'non_unate' are allowed here.");
     return nullptr;

@@ -85,7 +85,7 @@ GroupHandler::parse_attr_value(AttrType attr_type,
     if ( type != TokenType::SYMBOL ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "string value is expected.");
       return nullptr;
@@ -99,7 +99,7 @@ GroupHandler::parse_attr_value(AttrType attr_type,
       buf << name << ": unknown keyword.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      buf.str());
       return nullptr;
@@ -289,7 +289,7 @@ EmptyGroupHandler::parse_common(AttrType attr_type,
     buf << attr_type << " statement does not have parameters.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return false;
@@ -332,7 +332,7 @@ Str1GroupHandler::check_value(AttrType attr_type,
     buf << attr_type << " statement requires a string parameter.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return false;
@@ -345,7 +345,7 @@ Str1GroupHandler::check_value(AttrType attr_type,
     ostringstream buf;
     buf << attr_type << " statement has only one string parameter.";
     MsgMgr::put_msg(__FILE__, __LINE__, loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return false;
@@ -353,7 +353,7 @@ Str1GroupHandler::check_value(AttrType attr_type,
 
   if ( dynamic_cast<const AstString*>(top) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__, top->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "string value is expected.");
     return false;
@@ -466,7 +466,7 @@ Str2GroupHandler::parse_common(AttrType attr_type,
     buf << attr_type << " statement requires a pair of string parameters.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return false;
@@ -476,7 +476,7 @@ Str2GroupHandler::parse_common(AttrType attr_type,
     buf << attr_type << " statement has only two string parameters.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return false;
@@ -486,7 +486,7 @@ Str2GroupHandler::parse_common(AttrType attr_type,
   if ( value1 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_list[0]->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "string value is expected.");
     return false;
@@ -495,7 +495,7 @@ Str2GroupHandler::parse_common(AttrType attr_type,
   if ( value2 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_list[1]->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "string value is expected.");
     return false;
@@ -553,17 +553,17 @@ Str2IntGroupHandler::parse_common(AttrType attr_type,
 	<< " statement requires a pair of strings and an integer parameters.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return false;
   }
   if ( n > 3 ) {
     ostringstream buf;
-    buf << attr_type << " statement should have only a pair of strings and an integer parameters.";
+    buf << attr_type << " statement has two string and an integer parameters.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return false;
@@ -573,7 +573,7 @@ Str2IntGroupHandler::parse_common(AttrType attr_type,
   if ( value1== nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_list[0]->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "string value is expected.");
     return false;
@@ -583,7 +583,7 @@ Str2IntGroupHandler::parse_common(AttrType attr_type,
   if ( value2 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_list[1]->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "string value is expected.");
     return false;
@@ -593,7 +593,7 @@ Str2IntGroupHandler::parse_common(AttrType attr_type,
   if ( value3 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_list[2]->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "integer value is expected.");
     return false;

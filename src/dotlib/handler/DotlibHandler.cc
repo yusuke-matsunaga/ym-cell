@@ -70,7 +70,7 @@ DotlibHandler::parse_complex(bool vector_mode,
       if ( type1 != TokenType::COMMA ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			loc,
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"syntax error. ',' is expected.");
 	return false;
@@ -113,7 +113,7 @@ DotlibHandler::new_value(const FileRegion& loc,
 	  if ( buf.size() == 0 ) {
 	    MsgMgr::put_msg(__FILE__, __LINE__,
 			    loc,
-			    kMsgError,
+			    MsgType::Error,
 			    "DOTLIB_PARSER",
 			    "Syntax error. Null element.");
 	    return nullptr;
@@ -139,7 +139,7 @@ DotlibHandler::new_value(const FileRegion& loc,
   }
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  loc,
-		  kMsgError,
+		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  "Syntax error. int/float/string value is expected.");
   return nullptr;

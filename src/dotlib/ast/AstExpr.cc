@@ -397,7 +397,7 @@ AstStrExpr::to_expr(const HashMap<ShString, int>& pin_map) const
     buf << mValue << ": No such pin-name.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return Expr();

@@ -49,7 +49,7 @@ TechnologyHandler::read_value()
   if ( value_type != TokenType::SYMBOL ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. technology value is expected.");
     return nullptr;
@@ -65,7 +65,7 @@ TechnologyHandler::read_value()
   else {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. only 'asic' or 'fpga' are allowed.");
     return nullptr;
