@@ -38,20 +38,9 @@ HandlerFactory::new_table(DotlibParser& parser)
 TableHandler::TableHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
-  DotlibHandler* index_handler = HandlerFactory::new_index(parser);
-  DotlibHandler* values_handler = HandlerFactory::new_values(parser);
-  DotlibHandler* dummy_handler = new GroupHandler(parser);
-
-  // simple attributes
-
-  // complex attribute
-  reg_handler(AttrType::index_1, index_handler);
-  reg_handler(AttrType::index_2, index_handler);
-  reg_handler(AttrType::index_3, index_handler);
-  reg_handler(AttrType::valueS,  values_handler);
-
-  // group statements
-  reg_handler(AttrType::domain,  dummy_handler);
+  mIndexHandler = HandlerFactory::new_index(parser);
+  mValuesHandler = HandlerFactory::new_values(parser);
+  mGenGroupHandler = HandlerFactory::new_gen_group(parser);
 }
 
 // @brief デストラクタ
@@ -59,103 +48,72 @@ TableHandler::~TableHandler()
 {
 }
 
-/// @brief 値を作る．
+// @brief 属性値を読み込む．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @return 読み込んだ値を表す AstNode を返す．
+//
+// エラーの場合には nullptr を返す．
 const AstNode*
-TableHandler::gen_node(const FileRegion& loc,
-		       const AstString* name,
-		       const vector<const AstAttr*>& attr_list)
+TableHandler::parse_attr_value(AttrType attr_type,
+			       const FileRegion& attr_loc)
 {
-  const AstFloatVector* index_1 = nullptr;
-  const AstFloatVector* index_2 = nullptr;
-  const AstFloatVector* index_3 = nullptr;
-  const AstFloatVector* values = nullptr;
-  for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == AttrType::index_1 ) {
-      if ( index_1 != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'index_1' defined more than once.");
-	return nullptr;
-      }
-      index_1 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
-      if ( index_1 == nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"Syntax error, vector type expected.");
-	return nullptr;
-      }
-    }
-    if ( attr->attr_type() == AttrType::index_2 ) {
-      if ( index_2 != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'index_2' defined more than once.");
-	return nullptr;
-      }
-      index_2 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
-      if ( index_2 == nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"Syntax error, vector type expected.");
-	return nullptr;
-      }
-    }
-    if ( attr->attr_type() == AttrType::index_3 ) {
-      if ( index_3 != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'index_3' defined more than once.");
-	return nullptr;
-      }
-      index_3 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
-      if ( index_3 == nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"Syntax error, vector type expected.");
-	return nullptr;
-      }
-    }
-    if ( attr->attr_type() == AttrType::valueS ) {
-      if ( values != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'values' defined more than once.");
-	return nullptr;
-      }
-      values = dynamic_cast<const AstFloatVector*>(attr->attr_value());
-      if ( values == nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"Syntax error, list type expected.");
-	return nullptr;
-      }
-    }
+  return parse(attr_type, attr_loc);
+}
+
+// @brief パーズする．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @return 読み込んだ AstLut を返す．
+//
+// エラーの場合には nullptr を返す．
+const AstLut*
+TableHandler::parse(AttrType attr_type,
+		    const FileRegion& attr_loc)
+{
+  mIndex1 = nullptr;
+  mIndex2 = nullptr;
+  mIndex3 = nullptr;
+  mValues = nullptr;
+
+  const AstString* value;
+  FileRegion value_loc;
+  FileRegion end_loc;
+  bool r = parse_common(attr_type, attr_loc, value, value_loc, end_loc);
+  if ( !r ) {
+    return nullptr;
   }
-  return mgr().new_lut(loc, name, index_1, index_2, index_3, values);
+
+  FileRegion loc(attr_loc, end_loc);
+  return mgr().new_lut(loc, value, mIndex1, mIndex2, mIndex3, mValues);
+}
+
+// @brief attr_type に対応する属性を読み込む．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval true 正常に処理した．
+// @retval false 処理中にエラーが起こった．
+bool
+TableHandler::parse_attr(AttrType attr_type,
+			 const FileRegion& attr_loc)
+{
+  switch ( attr_type ) {
+  case AttrType::index_1:
+    return mIndexHandler->parse_and_assign(attr_type, attr_loc, mIndex1);
+
+  case AttrType::index_2:
+    return mIndexHandler->parse_and_assign(attr_type, attr_loc, mIndex2);
+
+  case AttrType::index_3:
+    return mIndexHandler->parse_and_assign(attr_type, attr_loc, mIndex3);
+
+  case AttrType::values:
+    return mValuesHandler->parse_and_assign(attr_type, attr_loc, mValues);
+
+  case AttrType::domain:
+    return mGenGroupHandler->parse(attr_type, attr_loc) != nullptr;
+  }
+  return false;
 }
 
 END_NAMESPACE_YM_DOTLIB

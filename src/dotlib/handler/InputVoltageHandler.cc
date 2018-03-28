@@ -37,16 +37,7 @@ HandlerFactory::new_input_voltage(DotlibParser& parser)
 InputVoltageHandler::InputVoltageHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
-  // simple attributes
-  DotlibHandler* expr_handler = HandlerFactory::new_expr(parser);
-  reg_handler(AttrType::vil,   expr_handler);
-  reg_handler(AttrType::vih,   expr_handler);
-  reg_handler(AttrType::vimin, expr_handler);
-  reg_handler(AttrType::vimax, expr_handler);
-
-  // complex attribute
-
-  // group statements
+  mExprHandler = HandlerFactory::new_expr(parser);
 }
 
 // @brief デストラクタ
@@ -54,71 +45,70 @@ InputVoltageHandler::~InputVoltageHandler()
 {
 }
 
-// @brief 値を作る．
-AstNode*
-InputVoltageHandler::gen_node(const FileRegion& loc,
-			      const AstString* name,
-			      const vector<AstAttr*>& attr_list)
+// @brief 属性値を読み込む．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @return 読み込んだ値を表す AstNode を返す．
+//
+// エラーの場合には nullptr を返す．
+const AstNode*
+InputVoltageHandler::parse_attr_value(AttrType attr_type,
+				      const FileRegion& attr_loc)
 {
-  const AstExpr* vil = nullptr;
-  const AstExpr* vih = nullptr;
-  const AstExpr* vimin = nullptr;
-  const AstExpr* vimax = nullptr;
-  for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == AttrType::vil ) {
-      if ( vil != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'vil' defined more than once.");
-	return nullptr;
-      }
-      vil = dynamic_cast<const AstExpr*>(attr->attr_value());
-      ASSERT_COND ( vil != nullptr );
-    }
-    else if ( attr->attr_type() == AttrType::vih ) {
-      if ( vih != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'vih' defined more than once.");
-	return nullptr;
-      }
-      vih = dynamic_cast<const AstExpr*>(attr->attr_value());
-      ASSERT_COND ( vih != nullptr );
-    }
-    else if ( attr->attr_type() == AttrType::vimin ) {
-      if ( vimin != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'vimin' defined more than once.");
-	return nullptr;
-      }
-      vimin = dynamic_cast<const AstExpr*>(attr->attr_value());
-      ASSERT_COND ( vimin != nullptr );
-    }
-    else if ( attr->attr_type() == AttrType::vimax ) {
-      if ( vimax != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'vimax' defined more than once.");
-	return nullptr;
-      }
-      vimax = dynamic_cast<const AstExpr*>(attr->attr_value());
-      ASSERT_COND ( vimax != nullptr );
-    }
+  return parse(attr_type, attr_loc);
+}
+
+// @brief パーズする．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @return 読み込んだ InputVoltage を返す．
+bool
+InputVoltageHandler::parse(AttrType attr_type,
+			   const FileRegion& attr_loc)
+{
+  mVil = nullptr;
+  mVih = nullptr;
+  mVimin = nullptr;
+  mVimax = nullptr;
+
+  const AstString* value;
+  FileRegion value_loc;
+  FileRegion end_loc;
+  bool r = parse_common(attr_type, attr_loc, value, value_loc, end_loc);
+  if ( !r ) {
+    return nullptr;
   }
-  return mgr().new_input_voltage(loc, name, vil, vih, vimin, vimax);
+
+  FileRegion loc(attr_loc, end_loc);
+  return mgr().new_input_voltage(loc, value, mVil, mVih, mVimin, mVimax);
+}
+
+// @brief attr_type に対応する属性を読み込む．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval true 正常に処理した．
+// @retval false 処理中にエラーが起こった．
+bool
+InputVoltageHandler::parse_attr(AttrType attr_type,
+				const FileRegion& attr_loc)
+{
+  switch ( attr_type ) {
+  case AttrType::vil:
+    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVil);
+
+  case AttrType::vih:
+    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVih);
+
+  case AttrType::vimin:
+    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVimin);
+
+  case AttrType::vimax:
+    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVimax);
+
+  default:
+    break;
+  }
+  return false;
 }
 
 END_NAMESPACE_YM_DOTLIB

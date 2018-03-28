@@ -17,6 +17,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 /// @class GroupHandler GroupHandler.h "GroupHandler.h"
 /// @brief group statement 用のハンドラ
+///
+/// このクラスではなにもパーズしない．
+/// 正しく処理させるためには継承クラスで対象の属性を
+/// parse_attr() で処理しなければならない．
 //////////////////////////////////////////////////////////////////////
 class GroupHandler :
   public DotlibHandler
@@ -32,35 +36,25 @@ public:
   ~GroupHandler();
 
 
-public:
+protected:
   //////////////////////////////////////////////////////////////////////
-  // DotlibHandler の仮想関数
+  // 継承クラスから用いられる GroupHandler の関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 属性値を読み込む．
+  /// @brief 共通の処理を行う．
   /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ値を表す AstNode を返す．
-  ///
-  /// エラーの場合には nullptr を返す．
-  virtual
-  const AstNode*
-  parse_attr_value(AttrType attr_type,
-		   const FileRegion& attr_loc);
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // GroupHandler の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief ハンドラの登録を行う．
-  /// @param[in] attr_type 属性
-  /// @param[in] handler 対応付けるハンドラ
-  /// @param[in] singleton 単一要素の時に true にするフラグ
-  void
-  reg_handler(AttrType attr_type,
-	      DotlibHandler* handler);
+  /// @param[out] value_list 値を表すトークンのリスト
+  /// @param[out] value_loc 値全体のファイル上の位置
+  /// @param[out] end_loc グループ末尾の '}' の位置
+  /// @retval true パーズが成功した．
+  /// @retval false パーズが失敗した．
+  bool
+  parse_common(AttrType attr_type,
+	       const FileRegion& attr_loc,
+	       vector<const AstNode*>& value_list,
+	       FileRegion& value_loc,
+	       FileRegion& end_loc);
 
 
 protected:
@@ -68,65 +62,23 @@ protected:
   // 内部で用いられる GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief グループ開始の処理を行う．
-  virtual
-  void
-  begin_group();
-
   /// @brief attr_type に対応する属性を読み込む．
   /// @param[in] attr_type 対象の属性
   /// @param[in] attr_loc attr_type のファイル上の位置
-  /// @retval 0 処理しなかった．
-  /// @retval 1 正常に処理した．
-  /// @retval 2 処理中にエラーが起こった．
-  virtual
-  int
-  parse_attr(AttrType attr_type,
-	     const FileRegion& attr_loc);
-
-  /// @brief group statement の引数のチェックを行う仮想関数
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[in] value_loc 値全体のファイル上の位置
-  /// @param[in] value_list 値を表すトークンのリスト
-  /// @note begin_group() の中で呼ばれる．
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
   ///
-  /// デフォルトの実装はなにもしないで true を返す．
+  /// このクラスでは常に false を返す．
   virtual
   bool
-  check_value(AttrType attr_type,
-	      const FileRegion& attr_loc,
-	      const FileRegion& value_loc,
-	      const vector<const AstNode*>& value_list);
-
-  /// @brief 値を作る．
-  /// @param[in] loc 全体のファイル上の位置
-  /// @param[in] value_list 値のリスト
-  /// @param[in] attr_list 属性のリスト
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const vector<const AstNode*>& value_list,
-	   const vector<const AstAttr*>& attr_list);
-
-  /// @brief ハンドラを取り出す．
-  /// @param[in] attr_type 属性
-  ///
-  /// なければ nullptr を返す．
-  DotlibHandler*
-  find_handler(AttrType attr_type);
+  parse_attr(AttrType attr_type,
+	     const FileRegion& attr_loc);
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // ハンドラのリスト
-  vector<pair<AttrType, DotlibHandler*> > mHandlerList;
-
-  // 読み込んだ属性のリスト
-  vector<const AstAttr*> mAttrList;
 
 };
 
@@ -151,47 +103,19 @@ public:
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる GroupHandler の仮想関数
+  // 内部で用いられる EmptyGroupHandler の関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief group statement の引数のチェックを行う仮想関数
+  /// @brief 共通の処理を行う．
   /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
-  /// @param[in] value_loc 値全体のファイル上の位置
-  /// @param[in] value_list 値を表すトークンのリスト
-  /// @note begin_group() の中で呼ばれる．
-  /// @note デフォルトの実装はなにもしないで true を返す．
-  virtual
+  /// @param[out] end_loc グループ末尾の '}' の位置
+  /// @retval true パーズが成功した．
+  /// @retval false パーズが失敗した．
   bool
-  check_value(AttrType attr_type,
-	      const FileRegion& attr_loc,
-	      const FileRegion& value_loc,
-	      const vector<const AstNode*>& value_list) override;
-
-  /// @brief 値を作る．
-  /// @param[in] loc 全体のファイル上の位置
-  /// @param[in] value_list 値のリスト
-  /// @param[in] attr_list 属性のリスト
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const vector<const AstNode*>& value_list,
-	   const vector<const AstAttr*>& attr_list) override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる EmptyGroupHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を作る．
-  /// @param[in] loc 全体のファイル上の位置
-  /// @param[in] attr_list 属性のリスト
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const vector<const AstAttr*>& attr_list);
-
+  parse_common(AttrType attr_type,
+	       const FileRegion& attr_loc,
+	       FileRegion& end_loc);
 
 };
 
@@ -216,42 +140,23 @@ public:
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる GroupHandler の仮想関数
+  // 内部で用いる Str1GroupHandler の関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief group statement の引数のチェックを行う仮想関数
+  /// @brief 共通の処理を行う．
   /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
-  /// @param[in] value_loc 値全体のファイル上の位置
-  /// @param[in] value_list 値を表すトークンのリスト
-  /// @note begin_group() の中で呼ばれる．
-  /// @note デフォルトの実装はなにもしないで true を返す．
-  virtual
+  /// @param[out] value 値を表すトークン
+  /// @param[out] value_loc 値のファイル上の位置
+  /// @param[out] end_loc グループ末尾の '}' の位置
+  /// @retval true パーズが成功した．
+  /// @retval false パーズが失敗した．
   bool
-  check_value(AttrType attr_type,
-	      const FileRegion& attr_loc,
-	      const FileRegion& value_loc,
-	      const vector<const AstNode*>& value_list) override;
-
-  /// @brief 値を作る．
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const vector<const AstNode*>& value_list,
-	   const vector<const AstAttr*>& attr_list) override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いる Str1GroupHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を作る．
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const AstString* value,
-	   const vector<const AstAttr*>& attr_list);
+  parse_common(AttrType attr_type,
+	       const FileRegion& attr_loc,
+	       const AstString*& value,
+	       FileRegion& value_loc,
+	       FileRegion& end_loc);
 
 };
 
@@ -276,43 +181,24 @@ public:
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる GroupHandler の仮想関数
+  // 内部で用いる Str2GroupHandler の関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief group statement の引数のチェックを行う仮想関数
+  /// @brief 共通の処理を行う．
   /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
-  /// @param[in] value_loc 値全体のファイル上の位置
-  /// @param[in] value_list 値を表すトークンのリスト
-  /// @note begin_group() の中で呼ばれる．
-  /// @note デフォルトの実装はなにもしないで true を返す．
-  virtual
+  /// @param[out] value1, value2 値を表すトークン
+  /// @param[out] value_loc 値全体のファイル上の位置
+  /// @param[out] end_loc グループ末尾の '}' の位置
+  /// @retval true パーズが成功した．
+  /// @retval false パーズが失敗した．
   bool
-  check_value(AttrType attr_type,
-	      const FileRegion& attr_loc,
-	      const FileRegion& value_loc,
-	      const vector<const AstNode*>& value_list) override;
-
-  /// @brief 値を作る．
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const vector<const AstNode*>& value_list,
-	   const vector<const AstAttr*>& attr_list) override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いる Str2GroupHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を作る．
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const AstString* value1,
-	   const AstString* value2,
-	   const vector<const AstAttr*>& attr_list);
+  parse_common(AttrType attr_type,
+	       const FileRegion& attr_loc,
+	       const AstString* value1,
+	       const AstString* value2,
+	       FileRegion& value_loc,
+	       FileRegion& end_loc);
 
 };
 
@@ -337,44 +223,25 @@ public:
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる GroupHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief group statement の引数のチェックを行う仮想関数
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[in] value_loc 値全体のファイル上の位置
-  /// @param[in] value_list 値を表すトークンのリスト
-  /// @note begin_group() の中で呼ばれる．
-  /// @note デフォルトの実装はなにもしないで true を返す．
-  virtual
-  bool
-  check_value(AttrType attr_type,
-	      const FileRegion& attr_loc,
-	      const FileRegion& value_loc,
-	      const vector<const AstNode*>& value_list) override;
-
-  /// @brief 値を作る．
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const vector<const AstNode*>& value_list,
-	   const vector<const AstAttr*>& attr_list) override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
   // 内部で用いる Str2IntGroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値を作る．
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const AstString* value1,
-	   const AstString* value2,
-	   const AstInt* value3,
-	   const vector<const AstAttr*>& attr_list);
+  /// @brief 共通の処理を行う．
+  /// @param[in] attr_type 属性
+  /// @param[in] attr_loc ファイル上の位置
+  /// @param[out] value1, value2, value3 値を表すトークン
+  /// @param[out] value_loc 値全体のファイル上の位置
+  /// @param[out] end_loc グループ末尾の '}' の位置
+  /// @retval true パーズが成功した．
+  /// @retval false パーズが失敗した．
+  bool
+  parse_common(AttrType attr_type,
+	       const FileRegion& attr_loc,
+	       const AstString* value1,
+	       const AstString* value2,
+	       const AstInt* value3,
+	       FileRegion& value_loc,
+	       FileRegion& end_loc);
 
 };
 

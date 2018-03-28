@@ -36,16 +36,7 @@ HandlerFactory::new_output_voltage(DotlibParser& parser)
 OutputVoltageHandler::OutputVoltageHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
-  // simple attributes
-  DotlibHandler* expr_handler = HandlerFactory::new_expr(parser);
-  reg_handler(AttrType::vol,   expr_handler);
-  reg_handler(AttrType::voh,   expr_handler);
-  reg_handler(AttrType::vomin, expr_handler);
-  reg_handler(AttrType::vomax, expr_handler);
-
-  // complex attribute
-
-  // group statements
+  mExprHandler = HandlerFactory::new_expr(parser);
 }
 
 // @brief デストラクタ
@@ -53,71 +44,72 @@ OutputVoltageHandler::~OutputVoltageHandler()
 {
 }
 
-// @brief 値を作る．
+// @brief 属性値を読み込む．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @return 読み込んだ値を表す AstNode を返す．
+//
+// エラーの場合には nullptr を返す．
 const AstNode*
-OutputVoltageHandler::gen_node(const FileRegion& loc,
-			       const AstString* name,
-			       const vector<const AstAttr*>& attr_list)
+OutputVoltageHandler::parse_attr_value(AttrType attr_type,
+				       const FileRegion& attr_loc)
 {
-  const AstExpr* vol = nullptr;
-  const AstExpr* voh = nullptr;
-  const AstExpr* vomin = nullptr;
-  const AstExpr* vomax = nullptr;
-  for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == AttrType::vol ) {
-      if ( vol != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'vol' defined more than once.");
-	return nullptr;
-      }
-      vol = dynamic_cast<const AstExpr*>(attr->attr_value());
-      ASSERT_COND ( vol != nullptr );
-    }
-    else if ( attr->attr_type() == AttrType::voh ) {
-      if ( voh != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'voh' defined more than once.");
-	return nullptr;
-      }
-      voh = dynamic_cast<const AstExpr*>(attr->attr_value());
-      ASSERT_COND ( voh != nullptr );
-    }
-    else if ( attr->attr_type() == AttrType::vomin ) {
-      if ( vomin != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'vomin' defined more than once.");
-	return nullptr;
-      }
-      vomin = dynamic_cast<const AstExpr*>(attr->attr_value());
-      ASSERT_COND ( vomin != nullptr );
-    }
-    else if ( attr->attr_type() == AttrType::vomax ) {
-      if ( vomax != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'vomax' defined more than once.");
-	return nullptr;
-      }
-      vomax = dynamic_cast<const AstExpr*>(attr->attr_value());
-      ASSERT_COND ( vomax != nullptr );
-    }
+  return parse(attr_type, attr_loc);
+}
+
+// @brief パーズする．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @return 読み込んだ InputVoltage を返す．
+//
+// エラーの場合には nullptr を返す．
+const AstOutputVoltage*
+OutputVoltageHandler::parse(AttrType attr_type,
+			    const FileRegion& attr_loc)
+{
+  mVol = nullptr;
+  mVoh = nullptr;
+  mVomin = nullptr;
+  mVomax = nullptr;
+
+  const AstString* value;
+  FileRegion value_loc;
+  FileRegion end_loc;
+  bool r = parse_common(attr_type, attr_loc, value, value_loc, end_loc);
+  if ( !r ) {
+    return nullptr;
   }
-  return mgr().new_output_voltage(loc, name, vol, voh, vomin, vomax);
+
+  FileRegion loc(attr_loc, end_loc);
+  return mgr().new_output_voltage(loc, value, mVil, mVih, mVimin, mVimax);
+}
+
+// @brief attr_type に対応する属性を読み込む．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval true 正常に処理した．
+// @retval false 処理中にエラーが起こった．
+bool
+OutputVoltageHandler::parse_attr(AttrType attr_type,
+				 const FileRegion& attr_loc)
+{
+  switch ( attr_type ) {
+  case AttrType::vol:
+    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVol);
+
+  case AttrType::voh:
+    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVoh);
+
+  case AttrType::vomin:
+    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVomin);
+
+  case AttrType::vomax:
+    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVomax);
+
+  default:
+    break;
+  }
+  return false;
 }
 
 END_NAMESPACE_YM_DOTLIB

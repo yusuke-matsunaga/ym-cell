@@ -33,14 +33,35 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
+  // DotlibHandler の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 属性値を読み込む．
+  /// @param[in] attr_type 属性
+  /// @param[in] attr_loc ファイル上の位置
+  /// @return 読み込んだ値を表す AstNode を返す．
+  ///
+  /// エラーの場合には nullptr を返す．
+  virtual
+  const AstNode*
+  parse_attr_value(AttrType attr_type,
+		   const FileRegion& attr_loc) override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値を作る．
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const vector<const AstAttr*>& attr_list) override;
+  /// @brief パーズする．
+  /// @param[in] attr_type 属性
+  /// @param[in] attr_loc ファイル上の位置
+  /// @return 読み込んだ InputVoltage を返す．
+  ///
+  /// エラーの場合には nullptr を返す．
+  const AstInputVoltage*
+  parse(AttrType attr_type,
+	const FileRegion& attr_loc);
 
 
 private:
@@ -48,12 +69,33 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief attr_type に対応する属性を読み込む．
+  /// @param[in] attr_type 対象の属性
+  /// @param[in] attr_loc attr_type のファイル上の位置
+  /// @retval true 正常に処理した．
+  /// @retval false 処理中にエラーが起こった．
+  virtual
+  bool
+  parse_attr(AttrType attr_type,
+	     const FileRegion& attr_loc) override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // string ハンドラ
+  StrSimpleHandler* mStringHandler;
+
+  // function ハンドラ
+  FuncHandler* mFuncHandler;
+
+  // power ハンドラ
+  PowerHandler* mPowerHandler;
+
+  // gen_group ハンドラ
+  GenGroupHandler* mGenGroup;
 
 };
 

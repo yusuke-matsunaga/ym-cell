@@ -33,6 +33,52 @@ public:
   ~ExprHandler();
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // DotlibHandler の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 属性値を読み込む．
+  /// @param[in] attr_type 属性
+  /// @param[in] attr_loc ファイル上の位置
+  /// @return 読み込んだ値を表す AstNode を返す．
+  ///
+  /// エラーの場合には nullptr を返す．
+  virtual
+  const AstNode*
+  parse_attr_value(AttrType attr_type,
+		   const FileRegion& attr_loc) override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief パーズする．
+  /// @param[in] attr_type 属性
+  /// @param[in] attr_loc ファイル上の位置
+  /// @return 読み込んだ式を表す AstExpr を返す．
+  ///
+  /// エラーの場合には nullptr を返す．
+  const AstExpr*
+  parse(AttrType attr_type,
+	const FileRegion& attr_loc);
+
+  /// @brief パーズして代入する．
+  /// @param[in] attr_type 属性
+  /// @param[in] attr_loc ファイル上の位置
+  /// @param[out] dst 代入先
+  /// @retval true 正常に処理した．
+  /// @retval false 処理中にエラーが起こった．
+  ///
+  /// dst が nullptr でない場合には二重定義エラーとなる．
+  bool
+  parse_and_assign(AttrType attr_type,
+		   const FileRegion& attr_loc,
+		   const AstExpr*& dst);
+
+
 protected:
   //////////////////////////////////////////////////////////////////////
   // SimpleHandler の仮想関数

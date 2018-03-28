@@ -37,22 +37,9 @@ HandlerFactory::new_template(DotlibParser& parser)
 TemplateHandler::TemplateHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
-  DotlibHandler* var_type = HandlerFactory::new_var_type(parser);
-  DotlibHandler* index_handler = HandlerFactory::new_index(parser);
-  DotlibHandler* g_group = HandlerFactory::new_group(parser);
-
-  // simple attributes
-  reg_handler(AttrType::variable_1, var_type);
-  reg_handler(AttrType::variable_2, var_type);
-  reg_handler(AttrType::variable_3, var_type);
-
-  // complex attribute
-  reg_handler(AttrType::index_1,    index_handler);
-  reg_handler(AttrType::index_2,    index_handler);
-  reg_handler(AttrType::index_3,    index_handler);
-
-  // group statements
-  reg_handler(AttrType::domain,     g_group);
+  mVarTypeHandler = HandlerFactory::new_var_type(parser);
+  mIndexHandler = HandlerFactory::new_index(parser);
+  mGenGroupHandler = HandlerFactory::new_group(parser);
 }
 
 // @brief デストラクタ
@@ -60,101 +47,46 @@ TemplateHandler::~TemplateHandler()
 {
 }
 
-// @brief 値を作る．
-AstNode*
-TemplateHandler::gen_value(const FileRegion& loc,
-			   const AstString* name,
-			   const vector<AstAttr*>& attr_list)
+// @brief 属性値を読み込む．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @return 読み込んだ値を表す AstNode を返す．
+//
+// エラーの場合には nullptr を返す．
+const AstNode*
+TemplateHandler::parse_attr_value(AttrType attr_type,
+				  const FileRegion& attr_loc)
 {
-  const AstVarType* var_1 = nullptr;
-  const AstVarType* var_2 = nullptr;
-  const AstVarType* var_3 = nullptr;
-  const AstFloatVector* index_1 = nullptr;
-  const AstFloatVector* index_2 = nullptr;
-  const AstFloatVector* index_3 = nullptr;
-  for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == AttrType::variable_1 ) {
-      if ( var_1 != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'variable_1' defined more than once.");
-	return nullptr;
-      }
-      var_1 = dynamic_cast<const AstVarType*>(attr->attr_value());
-      ASSERT_COND ( var_1 != nullptr );
-    }
-    else if ( attr->attr_type() == AttrType::variable_2 ) {
-      if ( var_2 != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'variable_2' defined more than once.");
-	return nullptr;
-      }
-      var_2 = dynamic_cast<const AstVarType*>(attr->attr_value());
-      ASSERT_COND ( var_2 != nullptr );
-    }
-    else if ( attr->attr_type() == AttrType::variable_3 ) {
-      if ( var_3 != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'variable_3' defined more than once.");
-	return nullptr;
-      }
-      var_3 = dynamic_cast<const AstVarType*>(attr->attr_value());
-      ASSERT_COND ( var_3 != nullptr );
-    }
-    else if ( attr->attr_type() == AttrType::index_1 ) {
-      if ( index_1 != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'index_1' defined more than once.");
-	return nullptr;
-      }
-      index_1 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
-      ASSERT_COND ( index_1 != nullptr );
-    }
-    else if ( attr->attr_type() == AttrType::index_2 ) {
-      if ( index_2 != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'index_2' defined more than once.");
-	return nullptr;
-      }
-      index_2 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
-      ASSERT_COND ( index_2 != nullptr );
-    }
-    else if ( attr->attr_type() == AttrType::index_3 ) {
-      if ( index_3 != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			kMsgError,
-			"DOTLIB_PARSER",
-			"'index_3' defined more than once.");
-	return nullptr;
-      }
-      index_3 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
-      ASSERT_COND ( index_3 != nullptr );
-    }
+  return parse(attr_type, attr_loc);
+}
+
+// @brief パーズする．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @return 読み込んだ AstTemplate を返す．
+//
+// エラーの場合には nullptr を返す．
+const AstTemplate*
+TemplateHandler::parse(AttrType attr_type,
+		       const FileRegion& attr_loc)
+{
+  mVar1 = nullptr;
+  mVar2 = nullptr;
+  mVar3 = nullptr;
+  mIndex1 = nullptr;
+  mIndex2 = nullptr;
+  mIndex3 = nullptr;
+
+  const AstString* value;
+  FileRegion value_loc;
+  FileRegion end_loc;
+  bool r = parse_common(attr_type, attr_loc, value, value_loc, end_loc);
+  if ( !r ) {
+    return nullptr;
   }
 
   int dimension = 0;
-  if ( var_1 == nullptr ) {
+  if ( mVar1 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
 		    kMsgError,
@@ -162,18 +94,18 @@ TemplateHandler::gen_value(const FileRegion& loc,
 		    "Syntax error. missing 'variable_1'.");
     return nullptr;
   }
-  if ( index_1 == nullptr ) {
+  if ( mIndex1 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
 		    kMsgError,
 		    "DOTLIB_PARSER",
-		    "Syntax error. missing 'index_1'.");
+		    "Syntax error. missing 'mIndex1'.");
     return nullptr;
   }
 
-  if ( var_2 == nullptr ) {
+  if ( mVar2 == nullptr ) {
     dimension = 1;
-    if ( var_3 != nullptr ) {
+    if ( mVar3 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
 		      kMsgError,
@@ -181,18 +113,18 @@ TemplateHandler::gen_value(const FileRegion& loc,
 		      "Syntax error. having 'variable_3' while missing 'variable_2'.");
       return nullptr;
     }
-    if ( index_2 != nullptr ) {
+    if ( mIndex2 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
 		      kMsgError,
 		      "DOTLIB_PARSER",
-		      "Syntax error. having 'index_2' while missing 'variable_2'.");
+		      "Syntax error. having 'mIndex2' while missing 'variable_2'.");
       return nullptr;
     }
   }
-  else if ( var_3 == nullptr ) {
+  else if ( mVar3 == nullptr ) {
     dimension = 2;
-    if ( index_2 == nullptr ) {
+    if ( mIndex2 == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
 		      kMsgError,
@@ -200,7 +132,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 		      "Syntax error. having 'variable_2' while missing 'index_2'.");
       return nullptr;
     }
-    if ( index_3 != nullptr ) {
+    if ( mIndex3 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
 		      kMsgError,
@@ -211,7 +143,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
   }
   else {
     dimension = 3;
-    if ( index_3 == nullptr ) {
+    if ( mIndex3 == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
 		      kMsgError,
@@ -221,8 +153,43 @@ TemplateHandler::gen_value(const FileRegion& loc,
     }
   }
 
-  return mgr().new_template(loc, name, dimension,
-			    var_1, var_2, var_3, index_1, index_2, index_3);
+  FileRegion loc(attr_loc, end_loc);
+  return mgr().new_template(loc, value, dimension,
+			    mVar1, mVar2, mVar3, mIndex1, mIndex2, mIndex3);
+}
+
+// @brief attr_type に対応する属性を読み込む．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval true 正常に処理した．
+// @retval false 処理中にエラーが起こった．
+bool
+TemplateHandler::parse_attr(AttrType attr_type,
+			    const FileRegion& attr_loc)
+{
+  switch ( attr_type ) {
+  case AttrType::variable_1:
+    return mVarTypeHandler->parse_ans_assign(attr_type, attr_loc, mVar1);
+
+  case AttrType::variable_2:
+    return mVarTypeHandler->parse_ans_assign(attr_type, attr_loc, mVar2);
+
+  case AttrType::variable_3:
+    return mVarTypeHandler->parse_ans_assign(attr_type, attr_loc, mVar3);
+
+  case AttrType::index_1:
+    return mIndexHandler->parse_and_assign(attr_type, attr_loc, mIndex1);
+
+  case AttrType::index_2:
+    return mIndexHandler->parse_and_assign(attr_type, attr_loc, mIndex2);
+
+  case AttrType::index_3:
+    return mIndexHandler->parse_and_assign(attr_type, attr_loc, mIndex3);
+
+  case AttrType::domain:
+    return mGenGroupHandler->parse(attr_type, attr_loc) != nullptr;
+  }
+  return false;
 }
 
 END_NAMESPACE_YM_DOTLIB

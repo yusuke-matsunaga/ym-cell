@@ -34,16 +34,25 @@ HandlerFactory::new_timing(DotlibParser& parser)
 TimingHandler::TimingHandler(DotlibParser& parser) :
   EmptyGroupHandler(parser)
 {
+  mStringHandler = HandlerFactory::new_string(parser, false);
+  mFloatHandler = HandlerFactory::new_float(parser);
+  mFuncHandler = HandlerFactory::new_function(parser);
+  mTimingSenseHandler = HandlerFactory::new_timing_sense(parser);
+  mTimingTypeHandler = HandlerFactory::new_timing_type(parser);
+  mPieceWiseHandler = HandlerFactory::new_piece_wise(parser);
+  mTableHandler = HandlerFactory::new_table(parser);
+  mGenGroupHandler = HandlerFactory::new_gen_group(parse);
+
   // simple attributes
   DotlibHandler* simple = HandlerFactory::new_simple(parser);
-  DotlibHandler* str_simple = HandlerFactory::new_string(parser, false);
-  DotlibHandler* flt_simple = HandlerFactory::new_float(parser);
-  DotlibHandler* func_handler = HandlerFactory::new_function(parser);
-  DotlibHandler* ts_handler = HandlerFactory::new_timing_sense(parser);
-  DotlibHandler* tt_handler = HandlerFactory::new_timing_type(parser);
+  DotlibHandler* str_simple
+  DotlibHandler* flt_simple
+  DotlibHandler* func_handler =
+  DotlibHandler* ts_handler
+  DotlibHandler* tt_handler
   DotlibHandler* complex = HandlerFactory::new_complex(parser);
-  DotlibHandler* pw_complex = HandlerFactory::new_piece_wise(parser);
-  DotlibHandler* table_handler = HandlerFactory::new_table(parser);
+  DotlibHandler* pw_complex
+  DotlibHandler* table_handler
   DotlibHandler* g_group = HandlerFactory::new_group(parser);
 
   reg_handler(AttrType::RELATED_bus_EQUIVALENT,                      str_simple);
@@ -136,29 +145,51 @@ TimingHandler::~TimingHandler()
 // @brief 属性値を読み込む．
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ値を表す AstTiming を返す．
+// @return 読み込んだ値を表す AstNode を返す．
+//
+// エラーの場合には nullptr を返す．
+const AstNode*
+TimingHandler::parse_attr_value(AttrType attr_type,
+				const FileRegion& attr_loc)
+{
+  return parse(attr_type, attr_loc);
+}
+
+// @brief パーズする．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @return 読み込んだ AstTiming を返す．
 //
 // エラーの場合には nullptr を返す．
 const AstTiming*
-TimingHandler::parse_timing_value(AttrType attr_type,
-				  const FileRegion& attr_loc)
+TimingHandler::parse(AttrType attr_type,
+		     const FileRegion& attr_loc)
 {
-  return dynamic_cast<const AstTiming*>(parse_attr_value(attr_type, attr_loc));
-}
 
-// @brief 値を作る．
-const AstNode*
-TimingHandler::gen_value(const FileRegion& loc,
-			 const vector<const AstAttr*>& attr_list)
-{
-  for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == AttrType::RELATED_pin ) {
-      ;
-    }
+  const AstString* value;
+  FileRegion value_loc;
+  FileRegion end_loc;
+  bool r = parse_common(attr_type, attr_loc, value, value_loc, end_loc);
+  if ( !r ) {
+    return nullptr;
   }
 
-#warning "TODO: 未完成"
-  return nullptr;
+  FileRegion loc(attr_loc, end_loc);
+  return mgr().new_timing(loc, value,
+			  mVil, mVih, mVimin, mVimax);
+}
+
+// @brief attr_type に対応する属性を読み込む．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval true 正常に処理した．
+// @retval false 処理中にエラーが起こった．
+bool
+TimingHandler::parse_attr(AttrType attr_type,
+			  const FileRegion& attr_loc)
+{
+  switch ( attr_type ) {
+  }
 }
 
 END_NAMESPACE_YM_DOTLIB

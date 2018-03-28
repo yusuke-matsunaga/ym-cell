@@ -44,6 +44,67 @@ ExprHandler::~ExprHandler()
 {
 }
 
+// @brief 属性値を読み込む．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @return 読み込んだ値を表す AstNode を返す．
+//
+// エラーの場合には nullptr を返す．
+const AstNode*
+ExprHandler::parse_attr_value(AttrType attr_type,
+			      const FileRegion& attr_loc)
+{
+  return parse(attr_type, attr_loc);
+}
+
+// @brief パーズする．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @return 読み込んだ式を表す AstExpr を返す．
+//
+// エラーの場合には nullptr を返す．
+const AstExpr*
+ExprHandler::parse(AttrType attr_type,
+		   const FileRegion& attr_loc)
+{
+}
+
+// @brief パーズして代入する．
+// @param[in] attr_type 属性
+// @param[in] attr_loc ファイル上の位置
+// @param[out] dst 代入先
+// @retval true 正常に処理した．
+// @retval false 処理中にエラーが起こった．
+//
+// dst が nullptr でない場合には二重定義エラーとなる．
+bool
+ExprHandler::parse_and_assign(AttrType attr_type,
+			      const FileRegion& attr_loc,
+			      const AstExpr*& dst)
+{
+  const AstExpr* expr = parse(attr_type, attr_loc);
+  if ( expr == nullptr ) {
+    return false;
+  }
+  if ( dst != nullptr ) {
+    // 二重定義エラー
+    ostringstream buf;
+    buf << attr_type << ": defined more than once."
+	<< " Previous definition is at " << dst->loc();
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    attr_loc,
+		    kMsgError,
+		    "DOTLIB_PARSER",
+		    buf.str());
+    return false;
+  }
+
+  dst = expr;
+
+  return true;
+}
+
+#if 0
 // @brief 値を読み込む処理
 // @return 値を表す AstNode を返す．
 AstNode*
@@ -51,6 +112,7 @@ ExprHandler::gen_node()
 {
   return read_expr(TokenType::SEMI);
 }
+#endif
 
 // @brief primary を読み込む．
 AstExpr*
