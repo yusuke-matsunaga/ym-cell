@@ -51,7 +51,7 @@ PwComplexHandler::gen_node(const FileRegion& value_loc,
   if ( value_list.size() != 2 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, (integer, float) pair expected.");
     return nullptr;
@@ -61,7 +61,7 @@ PwComplexHandler::gen_node(const FileRegion& value_loc,
   if ( dynamic_cast<const AstInt*>(top) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    top->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, first element should be an integer number.");
     return nullptr;
@@ -71,7 +71,7 @@ PwComplexHandler::gen_node(const FileRegion& value_loc,
   if ( dynamic_cast<const AstFloat*>(next) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    next->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, second element should be a float number.");
     return nullptr;

@@ -49,7 +49,7 @@ PinDirectionHandler::read_value()
   if ( value_type != TokenType::SYMBOL ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. direction value is expected.");
     return nullptr;
@@ -74,7 +74,7 @@ PinDirectionHandler::read_value()
 	<< " 'input', 'output', 'inout' or 'internal' are expected.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return nullptr;

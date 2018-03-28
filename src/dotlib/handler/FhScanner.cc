@@ -106,7 +106,7 @@ FhScanner::read_token(FileRegion& loc)
     // それ以外はエラー
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error");
     loc = cur_loc();

@@ -61,7 +61,7 @@ DotlibParser::parse()
   if ( type != TokenType::SYMBOL || strcmp(cur_string(), "library") != 0 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "'library' keyword is expected "
 		    "on the top of the structure");
@@ -86,7 +86,7 @@ DotlibParser::parse()
     }
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgWarning,
+		    MsgType::Warning,
 		    "DOTLIB_PARSER",
 		    "contents after library group are ignored.");
   }
@@ -138,7 +138,7 @@ DotlibParser::expect(TokenType req_type)
   buf << "syntax error. " << type_str << " is expected.";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  loc,
-		  kMsgError,
+		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  buf.str());
   return false;
@@ -159,7 +159,7 @@ DotlibParser::expect_nl()
     }
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. Semicolon is expected.");
     return false;

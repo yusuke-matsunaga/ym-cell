@@ -49,7 +49,7 @@ DelayModelHandler::read_value()
   if ( value_type != TokenType::SYMBOL ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. delay_model value is expected.");
     return nullptr;
@@ -78,7 +78,7 @@ DelayModelHandler::read_value()
 	<< "'piecewise_cmos', 'cmos2' or 'dcm' are expected.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return nullptr;

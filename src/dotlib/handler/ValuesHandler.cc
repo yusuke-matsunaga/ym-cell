@@ -53,7 +53,7 @@ ValuesHandler::gen_node(const FileRegion& loc,
   if ( n == 0 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, list of one ore more vectors expected.");
     return nullptr;
@@ -67,7 +67,7 @@ ValuesHandler::gen_node(const FileRegion& loc,
     if ( fv_node == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      elem->loc(),
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error, vector expected.");
       return nullptr;

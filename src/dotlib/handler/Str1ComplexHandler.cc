@@ -48,7 +48,7 @@ Str1ComplexHandler::gen_value(const vector<const AstNode*>& value_list)
   if ( value_list.size() != 1 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_list[0]->loc(), // TODO: 空の時に失敗する．
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, a string expected.");
     return nullptr;
@@ -57,7 +57,7 @@ Str1ComplexHandler::gen_value(const vector<const AstNode*>& value_list)
   if ( dynamic_cast<const AstString*>(top) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    top->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, a string expected.");
     return nullptr;

@@ -201,7 +201,7 @@ MislibScanner::scan()
     buf << "Syntax error: illegal input (" << mCurString << ").";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "MISLIB_PARSE",
 		    buf.str().c_str());
   }

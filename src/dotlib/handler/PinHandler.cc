@@ -176,7 +176,7 @@ PinHandler::gen_node(const FileRegion& loc,
     if ( str_node == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      elem->loc(),
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. string value expected");
       return nullptr;

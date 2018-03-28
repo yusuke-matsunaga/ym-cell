@@ -69,7 +69,7 @@ OutputVoltageHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'vol' defined more than once.");
 	return nullptr;
@@ -82,7 +82,7 @@ OutputVoltageHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'voh' defined more than once.");
 	return nullptr;
@@ -95,7 +95,7 @@ OutputVoltageHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'vomin' defined more than once.");
 	return nullptr;
@@ -108,7 +108,7 @@ OutputVoltageHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'vomax' defined more than once.");
 	return nullptr;

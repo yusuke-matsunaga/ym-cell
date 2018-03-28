@@ -50,7 +50,7 @@ IndexHandler::gen_node(const FileRegion& value_loc,
   if ( value_list.size() != 1 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, singleton expected.");
     return nullptr;
@@ -60,7 +60,7 @@ IndexHandler::gen_node(const FileRegion& value_loc,
   if ( dynamic_cast<const AstFloatVector*>(elem) == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    elem->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, vector expected.");
     return nullptr;

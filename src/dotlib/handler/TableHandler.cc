@@ -75,7 +75,7 @@ TableHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'index_1' defined more than once.");
 	return nullptr;
@@ -85,7 +85,7 @@ TableHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"Syntax error, vector type expected.");
 	return nullptr;
@@ -96,7 +96,7 @@ TableHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'index_2' defined more than once.");
 	return nullptr;
@@ -106,7 +106,7 @@ TableHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"Syntax error, vector type expected.");
 	return nullptr;
@@ -117,7 +117,7 @@ TableHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'index_3' defined more than once.");
 	return nullptr;
@@ -127,7 +127,7 @@ TableHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"Syntax error, vector type expected.");
 	return nullptr;
@@ -138,7 +138,7 @@ TableHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'values' defined more than once.");
 	return nullptr;
@@ -148,7 +148,7 @@ TableHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"Syntax error, list type expected.");
 	return nullptr;

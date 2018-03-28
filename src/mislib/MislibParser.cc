@@ -192,7 +192,7 @@ MislibParser::check_gate_list(const vector<const MislibGate*>& gate_list)
 	  << "Previous definition is " << dummy_node->name()->loc() << ".";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      gate->name()->loc(),
-		      kMsgError,
+		      MsgType::Error,
 		      "MISLIB_PARSER",
 		      buf.str());
       // このセルについては以降のチェックをスキップする．
@@ -213,7 +213,7 @@ MislibParser::check_gate_list(const vector<const MislibGate*>& gate_list)
 	    << dummy_node->name()->loc() << ".";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			ipin->name()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"MISLIB_PARSER",
 			buf.str());
       }
@@ -238,7 +238,7 @@ MislibParser::check_gate_list(const vector<const MislibGate*>& gate_list)
 	    << "Timing information will be ignored.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			node->loc(),
-			kMsgWarning,
+			MsgType::Warning,
 			"MISLIB_PARSER",
 			buf.str());
       }
@@ -253,7 +253,7 @@ MislibParser::check_gate_list(const vector<const MislibGate*>& gate_list)
 	    << "but is not defined in PIN statement.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			gate->opin_expr()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"MISLIB_PARSER",
 			buf.str());
       }
@@ -617,7 +617,7 @@ MislibParser::error(const FileRegion& loc,
 
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  loc,
-		  kMsgError,
+		  MsgType::Error,
 		  "MISLIB_PARSER",
 		  msg2);
 }

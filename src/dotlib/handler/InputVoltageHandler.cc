@@ -70,7 +70,7 @@ InputVoltageHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'vil' defined more than once.");
 	return nullptr;
@@ -83,7 +83,7 @@ InputVoltageHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'vih' defined more than once.");
 	return nullptr;
@@ -96,7 +96,7 @@ InputVoltageHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'vimin' defined more than once.");
 	return nullptr;
@@ -109,7 +109,7 @@ InputVoltageHandler::gen_node(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'vimax' defined more than once.");
 	return nullptr;

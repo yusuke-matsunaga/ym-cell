@@ -71,7 +71,7 @@ DefineHandler::parse_attr_value(AttrType attr_type,
   if ( keyword == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    keyword->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "string value is expected for 1st argument.");
     return nullptr;
@@ -81,7 +81,7 @@ DefineHandler::parse_attr_value(AttrType attr_type,
   if ( group == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "string value is expected for 2nd argument.");
     return nullptr;
@@ -91,7 +91,7 @@ DefineHandler::parse_attr_value(AttrType attr_type,
   if ( type_token == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    type_token->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "string value is expected for 3rd argument.");
     return nullptr;
@@ -105,7 +105,7 @@ DefineHandler::parse_attr_value(AttrType attr_type,
     buf << group->value() << ": Unknown attribute. ignored.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group->loc(),
-		    kMsgWarning,
+		    MsgType::Warning,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return nullptr;
@@ -117,7 +117,7 @@ DefineHandler::parse_attr_value(AttrType attr_type,
     buf << group->value() << ": is not a group statement.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group->loc(),
-		    kMsgWarning,
+		    MsgType::Warning,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return nullptr;
@@ -139,7 +139,7 @@ DefineHandler::parse_attr_value(AttrType attr_type,
     buf << "Unknown type: " << type_str << ".";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    type_token->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
     return nullptr;

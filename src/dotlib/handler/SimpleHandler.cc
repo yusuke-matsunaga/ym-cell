@@ -141,7 +141,7 @@ StrSimpleHandler::gen_node()
 
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  loc,
-		  kMsgError,
+		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  "Syntax error. string value is expected.");
   return nullptr;
@@ -176,7 +176,7 @@ IntSimpleHandler::gen_node()
 
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  loc,
-		  kMsgError,
+		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  "Syntax error. int value is expected.");
   return nullptr;
@@ -211,7 +211,7 @@ FloatSimpleHandler::gen_node()
 
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  loc,
-		  kMsgError,
+		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  "Syntax error. float value is expected.");
   return nullptr;

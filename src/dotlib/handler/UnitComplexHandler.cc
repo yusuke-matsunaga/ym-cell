@@ -54,7 +54,7 @@ UnitComplexHandler::gen_node(const FileRegion& value_loc,
   if ( value_list.size() != 2 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, (number, string) pair expected.");
     return nullptr;
@@ -65,7 +65,7 @@ UnitComplexHandler::gen_node(const FileRegion& value_loc,
   if ( num_node == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    top->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, first element should be a number.");
     return nullptr;
@@ -77,7 +77,7 @@ UnitComplexHandler::gen_node(const FileRegion& value_loc,
   if ( str_node == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    next->loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, second element should be a string.");
     return nullptr;

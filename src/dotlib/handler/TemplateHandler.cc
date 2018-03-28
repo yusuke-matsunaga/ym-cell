@@ -78,7 +78,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'variable_1' defined more than once.");
 	return nullptr;
@@ -91,7 +91,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'variable_2' defined more than once.");
 	return nullptr;
@@ -104,7 +104,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'variable_3' defined more than once.");
 	return nullptr;
@@ -117,7 +117,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'index_1' defined more than once.");
 	return nullptr;
@@ -130,7 +130,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'index_2' defined more than once.");
 	return nullptr;
@@ -143,7 +143,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
 	// エラー
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			attr->attr_value()->loc(),
-			kMsgError,
+			MsgType::Error,
 			"DOTLIB_PARSER",
 			"'index_3' defined more than once.");
 	return nullptr;
@@ -157,7 +157,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
   if ( var_1 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. missing 'variable_1'.");
     return nullptr;
@@ -165,7 +165,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
   if ( index_1 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. missing 'index_1'.");
     return nullptr;
@@ -176,7 +176,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
     if ( var_3 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'variable_3' while missing 'variable_2'.");
       return nullptr;
@@ -184,7 +184,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
     if ( index_2 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'index_2' while missing 'variable_2'.");
       return nullptr;
@@ -195,7 +195,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
     if ( index_2 == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'variable_2' while missing 'index_2'.");
       return nullptr;
@@ -203,7 +203,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
     if ( index_3 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'index_3' while missing 'variable_3'.");
       return nullptr;
@@ -214,7 +214,7 @@ TemplateHandler::gen_value(const FileRegion& loc,
     if ( index_3 == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error. having 'variable_3' while missing 'index_3'.");
       return nullptr;
