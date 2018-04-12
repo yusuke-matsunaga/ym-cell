@@ -7,12 +7,12 @@
 /// All rights reserved.
 
 
-#include "HandlerFactory.h"
+#include "dotlib/HandlerFactory.h"
 #include "OutputVoltageHandler.h"
-#include "AstMgr.h"
-#include "AstExpr.h"
-#include "AstAttr.h"
-#include "AstOutputVoltage.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstExpr.h"
+#include "dotlib/AstAttr.h"
+#include "dotlib/AstOutputVoltage.h"
 #include "ym/MsgMgr.h"
 
 

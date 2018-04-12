@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "AstMgr.h"
-#include "AstLibrary.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstLibrary.h"
 #include "ym/Range.h"
 
 

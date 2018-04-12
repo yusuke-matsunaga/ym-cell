@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "AstAttr.h"
+#include "dotlib/AstAttr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

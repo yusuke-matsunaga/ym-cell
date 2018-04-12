@@ -7,14 +7,14 @@
 /// All rights reserved.
 
 
-#include "DotlibHandler.h"
-#include "DotlibParser.h"
-#include "TokenType.h"
-#include "AstMgr.h"
-#include "AstInt.h"
-#include "AstFloat.h"
-#include "AstFloatVector.h"
-#include "AstString.h"
+#include "dotlib/DotlibHandler.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/TokenType.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstInt.h"
+#include "dotlib/AstFloat.h"
+#include "dotlib/AstFloatVector.h"
+#include "dotlib/AstString.h"
 #include "ym/MsgMgr.h"
 
 

@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "AstMgr.h"
-#include "AstTiming.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstTiming.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

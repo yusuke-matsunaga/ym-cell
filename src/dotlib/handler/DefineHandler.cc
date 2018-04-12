@@ -8,9 +8,9 @@
 
 
 #include "DefineHandler.h"
-#include "DotlibParser.h"
-#include "AstList.h"
-#include "AstString.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/AstList.h"
+#include "dotlib/AstString.h"
 #include "SimpleHandler.h"
 #include "GroupHandler.h"
 #include "ym/MsgMgr.h"

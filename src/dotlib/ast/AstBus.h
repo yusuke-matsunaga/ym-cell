@@ -9,8 +9,8 @@
 /// All rights reserved.
 
 
-#include "dotlib_nsdef.h"
-#include "DotlibBase.h"
+#include "dotlib/dotlib_nsdef.h"
+#include "dotlib/DotlibBase.h"
 #include "ym/ShString.h"
 
 

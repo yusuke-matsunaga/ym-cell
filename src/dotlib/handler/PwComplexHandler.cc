@@ -7,11 +7,11 @@
 /// All rights reserved.
 
 
-#include "HandlerFactory.h"
+#include "dotlib/HandlerFactory.h"
 #include "PwComplexHandler.h"
-#include "AstNode.h"
-#include "AstInt.h"
-#include "AstFloat.h"
+#include "dotlib/AstNode.h"
+#include "dotlib/AstInt.h"
+#include "dotlib/AstFloat.h"
 #include "ym/MsgMgr.h"
 
 

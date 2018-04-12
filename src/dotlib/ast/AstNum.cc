@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "AstNum.h"
+#include "dotlib/AstNum.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "AstLatch.h"
+#include "dotlib/AstLatch.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

@@ -8,11 +8,11 @@
 
 
 #include "FuncHandler.h"
-#include "HandlerFactory.h"
-#include "AstExpr.h"
-#include "DotlibParser.h"
-#include "AstMgr.h"
-#include "TokenType.h"
+#include "dotlib/HandlerFactory.h"
+#include "dotlib/AstExpr.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 

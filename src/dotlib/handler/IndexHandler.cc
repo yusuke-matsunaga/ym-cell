@@ -8,9 +8,9 @@
 
 
 #include "IndexHandler.h"
-#include "HandlerFactory.h"
-#include "AstList.h"
-#include "AstFloatVector.h"
+#include "dotlib/HandlerFactory.h"
+#include "dotlib/AstList.h"
+#include "dotlib/AstFloatVector.h"
 #include "ym/MsgMgr.h"
 
 

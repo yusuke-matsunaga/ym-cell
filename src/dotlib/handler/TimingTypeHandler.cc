@@ -6,12 +6,12 @@
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "HandlerFactory.h"
+#include "dotlib/HandlerFactory.h"
 #include "TimingTypeHandler.h"
-#include "DotlibParser.h"
-#include "AstMgr.h"
-#include "AstTimingType.h"
-#include "TokenType.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstTimingType.h"
+#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 

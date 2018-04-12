@@ -8,14 +8,14 @@
 
 
 #include "GroupHandler.h"
-#include "DotlibParser.h"
-#include "AstMgr.h"
-#include "AstList.h"
-#include "AstInt.h"
-#include "AstString.h"
-#include "AstAttr.h"
-#include "AstGenGroup.h"
-#include "TokenType.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstList.h"
+#include "dotlib/AstInt.h"
+#include "dotlib/AstString.h"
+#include "dotlib/AstAttr.h"
+#include "dotlib/AstGenGroup.h"
+#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 

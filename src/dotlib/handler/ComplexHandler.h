@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "DotlibHandler.h"
+#include "dotlib/DotlibHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
