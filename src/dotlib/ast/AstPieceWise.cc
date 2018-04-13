@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "AstPieceWise.h"
+#include "dotlib/AstPieceWise.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

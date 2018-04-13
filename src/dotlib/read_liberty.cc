@@ -3,11 +3,12 @@
 /// @brief read_liberty の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib_nsdef.h"
+#include "dotlib/dotlib_nsdef.h"
+
 #include "ci/CiCellLibrary.h"
 #include "ci/CiCell.h"
 #include "ci/CiTiming.h"
@@ -21,29 +22,29 @@
 #include "ym/ClibLut.h"
 #include "ym/ClibLutTemplate.h"
 
-#include "DotlibParser.h"
-#include "AstMgr.h"
-#include "AstNode.h"
-#include "AstLibrary.h"
-#include "AstCell.h"
-#include "AstFF.h"
-#include "AstLatch.h"
-#include "AstPin.h"
-#include "AstTiming.h"
-#include "AstTemplate.h"
-#include "AstLut.h"
-#include "AstExpr.h"
-#include "AstInt.h"
-#include "AstFloat.h"
-#include "AstFloatVector.h"
-#include "AstString.h"
-#include "AstUnit.h"
-#include "AstTechnology.h"
-#include "AstDelayModel.h"
-#include "AstPinDirection.h"
-#include "AstTimingSense.h"
-#include "AstTimingType.h"
-#include "AstVarType.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstNode.h"
+#include "dotlib/AstLibrary.h"
+#include "dotlib/AstCell.h"
+#include "dotlib/AstFF.h"
+#include "dotlib/AstLatch.h"
+#include "dotlib/AstPin.h"
+#include "dotlib/AstTiming.h"
+#include "dotlib/AstTemplate.h"
+#include "dotlib/AstLut.h"
+#include "dotlib/AstExpr.h"
+#include "dotlib/AstInt.h"
+#include "dotlib/AstFloat.h"
+#include "dotlib/AstFloatVector.h"
+#include "dotlib/AstString.h"
+#include "dotlib/AstUnit.h"
+#include "dotlib/AstTechnology.h"
+#include "dotlib/AstDelayModel.h"
+#include "dotlib/AstPinDirection.h"
+#include "dotlib/AstTimingSense.h"
+#include "dotlib/AstTimingType.h"
+#include "dotlib/AstVarType.h"
 
 #include "ym/FileIDO.h"
 #include "ym/Expr.h"

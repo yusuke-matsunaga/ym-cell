@@ -8,11 +8,11 @@
 
 
 #include "ExprHandler.h"
-#include "HandlerFactory.h"
-#include "DotlibParser.h"
-#include "AstMgr.h"
-#include "AstExpr.h"
-#include "TokenType.h"
+#include "dotlib/HandlerFactory.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstExpr.h"
+#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 

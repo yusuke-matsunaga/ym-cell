@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "AstFF.h"
+#include "dotlib/AstFF.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

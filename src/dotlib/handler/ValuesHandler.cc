@@ -8,10 +8,10 @@
 
 
 #include "ValuesHandler.h"
-#include "HandlerFactory.h"
-#include "AstMgr.h"
-#include "AstFloatVector.h"
-#include "AstList.h"
+#include "dotlib/HandlerFactory.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstFloatVector.h"
+#include "dotlib/AstList.h"
 #include "ym/MsgMgr.h"
 
 

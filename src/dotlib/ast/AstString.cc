@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "AstMgr.h"
-#include "AstString.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstString.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

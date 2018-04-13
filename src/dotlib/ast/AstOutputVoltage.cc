@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "AstMgr.h"
-#include "AstOutputVoltage.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstOutputVoltage.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

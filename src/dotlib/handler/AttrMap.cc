@@ -8,7 +8,7 @@
 
 
 #include "AstAttrMap.h"
-#include "AstAttr.h"
+#include "dotlib/AstAttr.h"
 #include "ym/Range.h"
 #include "ym/MsgMgr.h"
 

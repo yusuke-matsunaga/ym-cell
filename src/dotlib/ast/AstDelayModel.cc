@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "AstMgr.h"
-#include "AstDelayModel.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstDelayModel.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

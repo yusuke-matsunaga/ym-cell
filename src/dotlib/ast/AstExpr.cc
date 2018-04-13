@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "AstMgr.h"
-#include "AstExpr.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstExpr.h"
 #include "ym/MsgMgr.h"
 
 

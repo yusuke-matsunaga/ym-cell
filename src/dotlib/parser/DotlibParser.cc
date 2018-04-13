@@ -7,12 +7,12 @@
 /// All rights reserved.
 
 
-#include "DotlibParser.h"
-#include "AstMgr.h"
-#include "DotlibHandler.h"
-#include "AstLibrary.h"
-#include "HandlerFactory.h"
-#include "TokenType.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/DotlibHandler.h"
+#include "dotlib/HandlerFactory.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstLibrary.h"
+#include "dotlib/TokenType.h"
 #include "ym/FileIDO.h"
 #include "ym/MsgMgr.h"
 #include "ym/ShString.h"

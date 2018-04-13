@@ -7,13 +7,13 @@
 /// All rights reserved.
 
 
-#include "HandlerFactory.h"
+#include "dotlib/HandlerFactory.h"
 #include "PinHandler.h"
 #include "TimingHandler.h"
-#include "AstMgr.h"
-#include "AstString.h"
-#include "AstAttr.h"
-#include "AstPin.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstString.h"
+#include "dotlib/AstAttr.h"
+#include "dotlib/AstPin.h"
 #include "ym/MsgMgr.h"
 
 

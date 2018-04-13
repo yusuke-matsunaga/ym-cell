@@ -7,14 +7,14 @@
 /// All rights reserved.
 
 
-#include "HandlerFactory.h"
+#include "dotlib/HandlerFactory.h"
 #include "TableHandler.h"
-#include "AstMgr.h"
-#include "AstLut.h"
-#include "AstString.h"
-#include "AstFloatVector.h"
-#include "AstList.h"
-#include "AstAttr.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstLut.h"
+#include "dotlib/AstString.h"
+#include "dotlib/AstFloatVector.h"
+#include "dotlib/AstList.h"
+#include "dotlib/AstAttr.h"
 #include "ym/MsgMgr.h"
 
 

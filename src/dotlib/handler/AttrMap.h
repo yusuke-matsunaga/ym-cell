@@ -9,8 +9,8 @@
 /// All rights reserved.
 
 
-#include "dotlib_nsdef.h"
-#include "AttrType.h"
+#include "dotlib/dotlib_nsdef.h"
+#include "dotlib/AttrType.h"
 #include "ym/HashMap.h"
 #include "ym/FileRegion.h"
 

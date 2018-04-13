@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "DotlibScanner.h"
-#include "TokenType.h"
+#include "dotlib/DotlibScanner.h"
+#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 

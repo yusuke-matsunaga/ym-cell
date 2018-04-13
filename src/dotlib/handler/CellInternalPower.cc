@@ -8,8 +8,8 @@
 
 
 #include "CellInternalPower.h"
-#include "HandlerFactory.h"
-#include "AstAttr.h"
+#include "dotlib/HandlerFactory.h"
+#include "dotlib/AstAttr.h"
 #include "SimpleHandler.h"
 #include "ValuesHandler.h"
 

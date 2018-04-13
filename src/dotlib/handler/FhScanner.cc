@@ -8,7 +8,7 @@
 
 
 #include "FhScanner.h"
-#include "TokenType.h"
+#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 

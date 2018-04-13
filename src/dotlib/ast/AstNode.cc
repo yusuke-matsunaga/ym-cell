@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "AstNode.h"
+#include "dotlib/AstNode.h"
 #include "ym/MsgMgr.h"
 
 

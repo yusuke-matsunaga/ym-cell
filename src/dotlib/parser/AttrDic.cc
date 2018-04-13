@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "AttrDic.h"
+#include "dotlib/AttrDic.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

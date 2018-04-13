@@ -6,8 +6,8 @@
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "AstMgr.h"
-#include "AstPinDirection.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstPinDirection.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

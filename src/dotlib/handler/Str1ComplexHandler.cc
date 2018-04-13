@@ -7,10 +7,10 @@
 /// All rights reserved.
 
 
-#include "HandlerFactory.h"
+#include "dotlib/HandlerFactory.h"
 #include "Str1ComplexHandler.h"
-#include "AstNode.h"
-#include "AstString.h"
+#include "dotlib/AstNode.h"
+#include "dotlib/AstString.h"
 #include "ym/MsgMgr.h"
 
 

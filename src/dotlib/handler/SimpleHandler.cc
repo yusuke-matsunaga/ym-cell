@@ -6,14 +6,14 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "HandlerFactory.h"
+#include "dotlib/HandlerFactory.h"
 #include "SimpleHandler.h"
-#include "DotlibParser.h"
-#include "TokenType.h"
-#include "AstMgr.h"
-#include "AstInt.h"
-#include "AstFloat.h"
-#include "AstString.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/TokenType.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstInt.h"
+#include "dotlib/AstFloat.h"
+#include "dotlib/AstString.h"
 #include "ym/MsgMgr.h"
 
 

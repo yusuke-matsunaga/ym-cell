@@ -8,10 +8,10 @@
 
 
 #include "TimingHandler.h"
-#include "HandlerFactory.h"
+#include "dotlib/HandlerFactory.h"
 #include "TableHandler.h"
-#include "AstTiming.h"
-#include "AstAttr.h"
+#include "dotlib/AstTiming.h"
+#include "dotlib/AstAttr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

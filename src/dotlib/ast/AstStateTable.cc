@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "AstStateTable.h"
+#include "dotlib/AstStateTable.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
