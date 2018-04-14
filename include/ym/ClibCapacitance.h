@@ -5,7 +5,7 @@
 /// @brief ClibCapacitance のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -199,7 +199,7 @@ inline
 ClibCapacitance
 ClibCapacitance::infty()
 {
-  return ClibCapacitance(DBL_MAX);
+  return ClibCapacitance(std::numeric_limits<double>::max());
 }
 
 // @brief 値を得る．

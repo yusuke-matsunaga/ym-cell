@@ -5,7 +5,7 @@
 /// @brief ClibResistance のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -198,7 +198,7 @@ inline
 ClibResistance
 ClibResistance::infty()
 {
-  return ClibResistance(DBL_MAX);
+  return ClibResistance(std::numeric_limits<double>::max());
 }
 
 // @brief 値を得る．

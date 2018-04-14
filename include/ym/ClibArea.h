@@ -5,7 +5,7 @@
 /// @brief ClibArea のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2016, 2017 Yusuke Matsunaga (松永 裕介)
+/// Copyright (C) 2005-2011, 2014, 2016, 2017, 2018 Yusuke Matsunaga (松永 裕介)
 /// All rights reserved.
 
 
@@ -66,15 +66,15 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 代入演算子
-  const ClibArea&
+  ClibArea&
   operator=(const ClibArea& src);
 
   /// @brief 加算付き代入演算子
-  const ClibArea&
+  ClibArea&
   operator+=(const ClibArea& src);
 
   /// @brief 減算付き代入演算子
-  const ClibArea&
+  ClibArea&
   operator-=(const ClibArea& src);
 
 
@@ -198,7 +198,7 @@ inline
 ClibArea
 ClibArea::infty()
 {
-  return ClibArea(DBL_MAX);
+  return ClibArea(std::numeric_limits<double>::max());
 }
 
 // @brief 値を得る．
@@ -211,7 +211,7 @@ ClibArea::value() const
 
 // @brief 代入演算子
 inline
-const ClibArea&
+ClibArea&
 ClibArea::operator=(const ClibArea& src)
 {
   mValue = src.mValue;
@@ -220,7 +220,7 @@ ClibArea::operator=(const ClibArea& src)
 
 // @brief 加算付き代入演算子
 inline
-const ClibArea&
+ClibArea&
 ClibArea::operator+=(const ClibArea& src)
 {
   mValue += src.mValue;
@@ -229,7 +229,7 @@ ClibArea::operator+=(const ClibArea& src)
 
 // @brief 減算付き代入演算子
 inline
-const ClibArea&
+ClibArea&
 ClibArea::operator-=(const ClibArea& src)
 {
   mValue -= src.mValue;
