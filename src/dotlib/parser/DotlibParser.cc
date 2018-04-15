@@ -38,7 +38,6 @@ DotlibParser::DotlibParser(IDO& ido,
 // デストラクタ
 DotlibParser::~DotlibParser()
 {
-  delete mLibraryHandler;
 }
 
 // @brief パーズする

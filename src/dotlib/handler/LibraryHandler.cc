@@ -64,7 +64,7 @@ LibraryHandler::LibraryHandler(DotlibParser& parser) :
   reg_handler(AttrType::input_threshold_pct_fall,               simple);
   reg_handler(AttrType::input_threshold_pct_rise,               simple);
   reg_handler(AttrType::leakage_power_unit,                     symstr_simple);
-  reg_handler(AttrType::NOM_calc_mode,                          str_simple);
+  reg_handler(AttrType::nom_calc_mode,                          str_simple);
   reg_handler(AttrType::nom_process,                            flt_simple);
   reg_handler(AttrType::nom_temperature,                        flt_simple);
   reg_handler(AttrType::nom_voltage,                            flt_simple);
@@ -72,23 +72,23 @@ LibraryHandler::LibraryHandler(DotlibParser& parser) :
   reg_handler(AttrType::output_threshold_pct_rise,              simple);
   reg_handler(AttrType::piece_type,                             str_simple);
   reg_handler(AttrType::power_model,                            str_simple);
-  reg_handler(AttrType::preferred_INPUT_PAD_volTAGE,            str_simple);
-  reg_handler(AttrType::preferred_OUTPUT_PAD_volTAGE,           str_simple);
-  reg_handler(AttrType::preferred_OUTPUT_PAD_SLEW_RATE_CONTROL, str_simple);
+  reg_handler(AttrType::preferred_input_pad_voltage,            str_simple);
+  reg_handler(AttrType::preferred_output_pad_voltage,           str_simple);
+  reg_handler(AttrType::preferred_output_pad_slew_rate_control, str_simple);
   reg_handler(AttrType::pulling_resistance_unit,                symstr_simple);
   reg_handler(AttrType::revision,                               symstr_simple);
   reg_handler(AttrType::simulation,                             str_simple);
-  reg_handler(AttrType::SLEW_DERATE_FROM_library,               simple);
+  reg_handler(AttrType::slew_derate_from_library,               simple);
   reg_handler(AttrType::slew_lower_threshold_pct_fall,          simple);
   reg_handler(AttrType::slew_lower_threshold_pct_rise,          simple);
   reg_handler(AttrType::slew_upper_threshold_pct_fall,          simple);
   reg_handler(AttrType::slew_upper_threshold_pct_rise,          simple);
   reg_handler(AttrType::time_unit,                              symstr_simple);
-  reg_handler(AttrType::volTAGE_UNIT,                           symstr_simple);
+  reg_handler(AttrType::voltage_unit,                           symstr_simple);
 
   // default attributes
-  reg_handler(AttrType::DEFAULT_cell_leakage_power,             flt_simple);
-  reg_handler(AttrType::DEFAULT_connection_class,               str_simple);
+  reg_handler(AttrType::default_cell_leakage_power,             flt_simple);
+  reg_handler(AttrType::default_connection_class,               str_simple);
   reg_handler(AttrType::default_fall_delay_intercept,           flt_simple);
   reg_handler(AttrType::default_fall_pin_resistance,            flt_simple);
   reg_handler(AttrType::default_fanout_load,                    flt_simple);
@@ -99,7 +99,7 @@ LibraryHandler::LibraryHandler(DotlibParser& parser) :
   reg_handler(AttrType::default_intrinsic_fall,                 flt_simple);
   reg_handler(AttrType::default_intrinsic_rise,                 flt_simple);
   reg_handler(AttrType::default_leakage_power_density,          flt_simple);
-  reg_handler(AttrType::DEFAULT_MAX_capacitance,                flt_simple);
+  reg_handler(AttrType::DEFAULT_max_capacitance,                flt_simple);
   reg_handler(AttrType::default_max_fanout,                     flt_simple);
   reg_handler(AttrType::default_max_transition,                 flt_simple);
   reg_handler(AttrType::default_max_utilization,                flt_simple);
@@ -157,21 +157,21 @@ LibraryHandler::LibraryHandler(DotlibParser& parser) :
   reg_handler(AttrType::k_process_slope_rise,                   flt_simple);
   reg_handler(AttrType::k_process_wire_cap,                     flt_simple);
   reg_handler(AttrType::k_process_wire_res,                     flt_simple);
-  reg_handler(AttrType::K_TEMP_cell_fall,                       flt_simple);
-  reg_handler(AttrType::K_TEMP_cell_leakage_power,              flt_simple);
-  reg_handler(AttrType::K_TEMP_cell_rise,                       flt_simple);
-  reg_handler(AttrType::K_TEMP_drive_current,                   flt_simple);
+  reg_handler(AttrType::K_temp_cell_fall,                       flt_simple);
+  reg_handler(AttrType::K_temp_cell_leakage_power,              flt_simple);
+  reg_handler(AttrType::K_temp_cell_rise,                       flt_simple);
+  reg_handler(AttrType::K_temp_drive_current,                   flt_simple);
   reg_handler(AttrType::k_temp_drive_fall,                      flt_simple);
   reg_handler(AttrType::k_temp_drive_rise,                      flt_simple);
-  reg_handler(AttrType::K_TEMP_fall_delay_intercept,            flt_simple);
-  reg_handler(AttrType::K_TEMP_fall_pin_resistance,             flt_simple);
-  reg_handler(AttrType::K_TEMP_fall_propagation,                flt_simple);
-  reg_handler(AttrType::K_TEMP_fall_transition,                 flt_simple);
+  reg_handler(AttrType::K_temp_fall_delay_intercept,            flt_simple);
+  reg_handler(AttrType::K_temp_fall_pin_resistance,             flt_simple);
+  reg_handler(AttrType::K_temp_fall_propagation,                flt_simple);
+  reg_handler(AttrType::K_temp_fall_transition,                 flt_simple);
   reg_handler(AttrType::k_temp_hold_fall,                       flt_simple);
   reg_handler(AttrType::k_temp_hold_rise,                       flt_simple);
-  reg_handler(AttrType::K_TEMP_internal_power,                  flt_simple);
-  reg_handler(AttrType::K_TEMP_intrinsic_fall,                  flt_simple);
-  reg_handler(AttrType::K_TEMP_intrinsic_rise,                  flt_simple);
+  reg_handler(AttrType::K_temp_internal_power,                  flt_simple);
+  reg_handler(AttrType::K_temp_intrinsic_fall,                  flt_simple);
+  reg_handler(AttrType::K_temp_intrinsic_rise,                  flt_simple);
   reg_handler(AttrType::k_temp_min_period,                      flt_simple);
   reg_handler(AttrType::k_temp_min_pulse_width_high,            flt_simple);
   reg_handler(AttrType::k_temp_min_pulse_width_low,             flt_simple);
@@ -239,7 +239,7 @@ LibraryHandler::LibraryHandler(DotlibParser& parser) :
   reg_handler(AttrType::define_cell_area,                       complex);
   reg_handler(AttrType::define_group,                           complex);
   reg_handler(AttrType::library_features,                       str1_complex);
-  reg_handler(AttrType::PIECE_define,                           str1_complex);
+  reg_handler(AttrType::piece_define,                           str1_complex);
   reg_handler(AttrType::routing_layers,                         complex);
   reg_handler(AttrType::technology,                             str1_complex);
 
@@ -247,33 +247,33 @@ LibraryHandler::LibraryHandler(DotlibParser& parser) :
   //rise_net_delay : name ;
 
   // group statements
-  reg_handler(AttrType::cell,   		                   cell_handler);
+  reg_handler(AttrType::cell,  		                        cell_handler);
   reg_handler(AttrType::dc_current_template,                    tmpl_handler);
   reg_handler(AttrType::em_lut_template,                        tmpl_handler);
   reg_handler(AttrType::fall_transition_degradation,            group_handler);
   reg_handler(AttrType::faults_lut_template,                    tmpl_handler);
-  reg_handler(AttrType::input_voltage,		           iv_handler);
+  reg_handler(AttrType::input_voltage,		                iv_handler);
   reg_handler(AttrType::iv_lut_template,                        tmpl_handler);
   reg_handler(AttrType::lu_table_template,                      tmpl_handler);
-  reg_handler(AttrType::NOISE_lut_TEMPLATE,                     tmpl_handler);
-  reg_handler(AttrType::operating_conditions,	           oc_handler);
+  reg_handler(AttrType::noise_lut_template,                     tmpl_handler);
+  reg_handler(AttrType::operating_conditions,	                oc_handler);
   reg_handler(AttrType::output_current_template,                tmpl_handler);
-  reg_handler(AttrType::output_voltage,		           ov_handler);
+  reg_handler(AttrType::output_voltage,		                ov_handler);
   reg_handler(AttrType::part,                                   group_handler);
   reg_handler(AttrType::poly_template,                          tmpl_handler);
-  reg_handler(AttrType::power_lut_TEMPLATE,                     tmpl_handler);
+  reg_handler(AttrType::power_lut_template,                     tmpl_handler);
   reg_handler(AttrType::power_poly_template,                    tmpl_handler);
   reg_handler(AttrType::power_supply,                           group_handler);
-  reg_handler(AttrType::PROPAGATION_lut_TEMPLATE,               tmpl_handler);
+  reg_handler(AttrType::propagation_lut_template,               tmpl_handler);
   reg_handler(AttrType::rise_transition_degradation,            group_handler);
-  reg_handler(AttrType::SCALED_cell,                            group_handler);
+  reg_handler(AttrType::scaled_cell,                            group_handler);
   reg_handler(AttrType::scaling_factors,                        group_handler);
   reg_handler(AttrType::timing,                                 group_handler);
   reg_handler(AttrType::timing_range,                           group_handler);
   reg_handler(AttrType::type,                                   group_handler);
   reg_handler(AttrType::wire_load,                              wl_handler);
-  reg_handler(AttrType::wire_load_selection,		           wls_handler);
-  reg_handler(AttrType::wire_load_table,		           wlt_handler);
+  reg_handler(AttrType::wire_load_selection,		        wls_handler);
+  reg_handler(AttrType::wire_load_table,		        wlt_handler);
 }
 
 // @brief デストラクタ

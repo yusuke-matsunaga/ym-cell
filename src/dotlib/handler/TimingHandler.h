@@ -13,6 +13,14 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
+class StrSimpleHandler;
+class FloatSimpleHandler;
+class TimingSenseHandler;
+class TimingTypeHandler;
+class FuncHandler;
+class PwComplexHandler;
+class GenGroupHandler;
+
 //////////////////////////////////////////////////////////////////////
 /// @class TimingHandler TimingHandler.h "TimingHandler.h"
 /// @brief timing 属性を読み込むためのハンドラ

@@ -116,7 +116,7 @@ private:
   AstMgr& mAstMgr;
 
   // library グループを処理するハンドラ
-  DotlibHandler* mLibraryHandler;
+  std::unique_ptr<DotlibHandler> mLibraryHandler;
 
   // 直前の位置
   FileRegion mCurLoc;

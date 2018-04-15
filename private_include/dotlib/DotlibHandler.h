@@ -24,7 +24,7 @@ class DotlibHandler
 {
 public:
 
-  /// @brief 親のハンドラを持たない場合のコンストラクタ
+  /// @brief コンストラクタ
   /// @param[in] parser パーサー
   DotlibHandler(DotlibParser& parser);
 
