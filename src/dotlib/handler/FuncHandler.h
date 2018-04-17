@@ -5,7 +5,7 @@
 /// @brief FuncHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -19,6 +19,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 /// @class FuncHandler FuncHandler.h "FuncHandler.h"
 /// @brief function 属性の値をパーズする simple attribute 用のハンドラ
+///
+/// やっていることは ExprHandler と似ているが，こっちはもとのデータが
+/// 文字列なので一旦 FhScanner に設定し直している．
 //////////////////////////////////////////////////////////////////////
 class FuncHandler :
   public SimpleHandler
@@ -34,19 +37,34 @@ public:
   ~FuncHandler();
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 値をクリアする．
+  void
+  clear_value();
+
+  /// @brief 読み込んだ値を返す．
+  const AstExpr*
+  value() const;
+
+
 protected:
   //////////////////////////////////////////////////////////////////////
   // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込む処理
-  /// @return 値を表す AstNode を返す．
-  ///
-  /// エラーが起きたら nullptr を返す．
-  /// ここでは function 属性用の論理式のパースを行う．
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
   virtual
-  AstNode*
-  gen_node() override;
+  bool
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc) override;
 
 
 private:
@@ -96,6 +114,9 @@ private:
 
   // 読み戻したトークンの位置
   FileRegion mUngetLoc;
+
+  // 読み込んだ値
+  AstExpr* mValue;
 
 };
 

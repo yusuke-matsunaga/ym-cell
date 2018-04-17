@@ -24,6 +24,7 @@ HandlerFactory::new_timing_type(DotlibParser& parser)
   return new TimingTypeHandler(parser);
 }
 
+
 //////////////////////////////////////////////////////////////////////
 // クラス TimingTypeHandler
 //////////////////////////////////////////////////////////////////////
@@ -31,8 +32,9 @@ HandlerFactory::new_timing_type(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 TimingTypeHandler::TimingTypeHandler(DotlibParser& parser) :
-  SimpleHandler(parser, false)
+  SimpleHandler(parser)
 {
+  clear_value();
 }
 
 // @brief デストラクタ
@@ -40,19 +42,36 @@ TimingTypeHandler::~TimingTypeHandler()
 {
 }
 
-// @brief 値を読み込む．
-AstNode*
-TimingTypeHandler::read_value()
+// @brief 値をクリアする．
+void
+TimingTypeHandler::clear_value()
 {
-  FileRegion loc;
-  TokenType value_type = parser().read_token(loc, false);
+  mValue = nullptr;
+}
+
+// @brief 読み込んだ値を返す．
+const AstTimingType*
+TimingTypeHandler::value() const
+{
+  return mValue;
+}
+
+// @brief 値を読み込む処理
+// @param[in] value_type 型
+// @param[in] value_loc トークンの位置
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+TimingTypeHandler::read_value(TokenType value_type,
+			      const FileRegion& value_loc)
+{
   if ( value_type != TokenType::SYMBOL ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc,
+		    value_loc,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. timing type value is expected.");
-    return nullptr;
+    return false;
   }
   const char* str = parser().cur_string();
   ClibTimingType value;
@@ -151,14 +170,16 @@ TimingTypeHandler::read_value()
   }
   else {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc,
+		    value_loc,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. Illegal string for timing type.");
-    return nullptr;
+    return false;
   }
 
-  return mgr().new_timing_type(loc, value);
+  mValue = mgr().new_timing_type(value_loc, value);
+
+  return true;
 }
 
 END_NAMESPACE_YM_DOTLIB

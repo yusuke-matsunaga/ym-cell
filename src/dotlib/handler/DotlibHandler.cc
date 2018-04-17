@@ -36,6 +36,7 @@ DotlibHandler::~DotlibHandler()
 {
 }
 
+#if 0
 // @brief group attribute 用のパースを行う．
 // @return 正しく読み込めたら true を返す．
 bool
@@ -137,6 +138,7 @@ DotlibHandler::new_value(const FileRegion& loc,
 		  "Syntax error. int/float/string value is expected.");
   return nullptr;
 }
+#endif
 
 // @brief 引数の種類のトークンでなければエラーメッセージを出力する．
 bool

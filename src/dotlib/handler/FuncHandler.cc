@@ -3,7 +3,7 @@
 /// @brief FuncHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -34,8 +34,9 @@ HandlerFactory::new_function(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parent 親のハンドラ
 FuncHandler::FuncHandler(DotlibParser& parser) :
-  SimpleHandler(parser, false)
+  SimpleHandler(parser)
 {
+  clear_value();
 }
 
 // @brief デストラクタ
@@ -43,26 +44,47 @@ FuncHandler::~FuncHandler()
 {
 }
 
-// @brief 値を読み込む処理
-// @return 値を表す AstNode を返す．
-AstNode*
-FuncHandler::gen_node()
+// @brief 値をクリアする．
+void
+FuncHandler::clear_value()
 {
-  FileRegion loc;
-  TokenType value_type = parser().read_token(loc, false);
+  mValue = nullptr;
+}
+
+// @brief 読み込んだ値を返す．
+const AstExpr*
+FuncHandler::value() const
+{
+  return mValue;
+}
+
+// @brief 値を読み込む処理
+// @param[in] value_type 型
+// @param[in] value_loc トークンの位置
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+FuncHandler::read_value(TokenType value_type,
+			const FileRegion& value_loc)
+{
   if ( value_type != TokenType::SYMBOL ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc,
+		    value_loc,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "String value is expected.");
-    return nullptr;
+    return false;
   }
 
-  mScanner.init(parser().cur_string(), loc);
+  mScanner.init(parser().cur_string(), value_loc);
   mUngetType = TokenType::ERROR;
 
-  return read_expr(TokenType::END);
+  mValue = read_expr(TokenType::END);
+
+  if ( mValue == nullptr ) {
+    return false;
+  }
+  return true;
 }
 
 // @brief primary を読み込む．

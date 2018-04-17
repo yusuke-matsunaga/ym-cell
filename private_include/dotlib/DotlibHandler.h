@@ -22,6 +22,49 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///
 /// 属性ごとに読み込んだ結果を表す構文木構造が異なるので仮想クラスにする．
 /// 結果を取り出す関数は各継承クラス毎に独自のものを用意する．
+///
+/// liberty の構文は３種類に分類される．
+/// - simple attribute:
+///   <attr_name> : <value> ;
+///   の形をとる．
+///   * IntHandler
+///   * FloatHandler
+///   * StrHandler
+///   * ExprHandler
+///   * FuncHandler
+///   * DelayModelHandler
+///   * PinDirectionHandler
+///   * TechnologyHandler
+///   * TimingSenseHandler
+///   * TimingTypeHandler
+///   * VarTypeHandler
+///
+/// - complex attribute:
+///   <attr_name> : ( <value_1>, <value_2>, ... ) ;
+///   の形をとる．
+///   * PieceWiseHandler
+///   * UnitHandler
+///   * IndexHandler
+///   * ValuesHandler
+///   * DefineHandler
+///
+/// - group attribute:
+///   <attr_name> : ( <value_1>, <value_2>, ... ) {
+///        子供の属性記述
+///   }
+///   の形をとる．前半部分は complex attribute と同じである．
+///   * CellHandler
+///   * CellInternalPowerHandler
+///   * InputVoltageHandler
+///   * InternalPowerHandler
+///   * LibraryHandler
+///   * OutputVoltageHandler
+///   * PinHandler
+///   * PowerHandler
+///   * TableHandler
+///   * TemplateHandler
+///   * TimingHandler
+///
 //////////////////////////////////////////////////////////////////////
 class DotlibHandler
 {

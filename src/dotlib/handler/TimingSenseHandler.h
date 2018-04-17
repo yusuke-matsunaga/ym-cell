@@ -1,5 +1,5 @@
-﻿#ifndef timingSENSEHANDLER_H
-#define timingSENSEHANDLER_H
+﻿#ifndef TIMINGSENSEHANDLER_H
+#define TIMINGSENSEHANDLER_H
 
 /// @file TimingSenseHandler.h
 /// @brief TimingSenseHandler のヘッダファイル
@@ -31,18 +31,46 @@ public:
   ~TimingSenseHandler();
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 値をクリアする．
+  void
+  clear_value();
+
+  /// @brief 読み込んだ値を返す．
+  const AstTimingSense*
+  value() const;
+
+
 protected:
   //////////////////////////////////////////////////////////////////////
   // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値を読み込む．
+  /// @brief 値を読み込む処理
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
   virtual
-  AstNode*
-  read_value();
+  bool
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 読み込んだ値
+  AstTimingSense* mValue;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // timingSENSEHANDLER_H
+#endif // TIMINGSENSEHANDLER_H

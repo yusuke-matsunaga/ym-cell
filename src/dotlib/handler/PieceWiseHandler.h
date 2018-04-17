@@ -1,8 +1,8 @@
-﻿#ifndef PWCOMPLEXHANDLER_H
-#define PWCOMPLEXHANDLER_H
+﻿#ifndef PIECEWISEHANDLER_H
+#define PIECEWISEHANDLER_H
 
-/// @file ComplexHandler.h
-/// @brief ComplexHandler のヘッダファイル
+/// @file PieceWiseHandler.h
+/// @brief PieceWiseHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
@@ -15,21 +15,21 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class PwComplexHandler ComplexHandler.h "ComplexHandler.h"
+/// @class PieceWiseHandler PieceWiseHandler.h "PieceWiseHandler.h"
 /// @brief 折れ線近似モデル用ののcomplex attribute ハンドラ
 //////////////////////////////////////////////////////////////////////
-class PwComplexHandler :
+class PieceWiseHandler :
   public ComplexHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  PwComplexHandler(DotlibParser& parser);
+  PieceWiseHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual
-  ~PwComplexHandler();
+  ~PieceWiseHandler();
 
 
 public:
@@ -89,10 +89,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 第1パラメータ
-  AstInt* mVal1;
+  int mVal1;
 
   // 第2パラメータ
-  AstFloat* mVal2;
+  double mVal2;
 
   // 読み込んだ値
   AstPieceWise* mValue;
@@ -101,4 +101,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // PWCOMPLEXHANDLER_H
+#endif // PIECEWISEHANDLER_H

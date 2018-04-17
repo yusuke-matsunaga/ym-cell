@@ -1,5 +1,5 @@
-﻿#ifndef VARtypeHANDLER_H
-#define VARtypeHANDLER_H
+﻿#ifndef VARTYPEHANDLER_H
+#define VARTYPEHANDLER_H
 
 /// @file VarTypeHandler.h
 /// @brief VarTypeHandler のヘッダファイル
@@ -31,18 +31,46 @@ public:
   ~VarTypeHandler();
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 値をクリアする．
+  void
+  clear_value();
+
+  /// @brief 読み込んだ値を返す．
+  const AstVarType*
+  value() const;
+
+
 protected:
   //////////////////////////////////////////////////////////////////////
   // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値を読み込む．
+  /// @brief 値を読み込む処理
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
   virtual
-  AstNode*
-  read_value();
+  bool
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 読み込んだ値
+  AstVarType* mValue;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // VARtypeHANDLER_H
+#endif // VARTYPEHANDLER_H

@@ -1,8 +1,8 @@
-﻿#ifndef UNITCOMPLEXHANDLER_H
-#define UNITCOMPLEXHANDLER_H
+﻿#ifndef UNITHANDLER_H
+#define UNITHANDLER_H
 
-/// @file UnitComplexHandler.h
-/// @brief UnitComplexHandler のヘッダファイル
+/// @file UnitHandler.h
+/// @brief UnitHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
@@ -15,21 +15,21 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class UnitComplexHandler UnitComplexHandler.h "UnitComplexHandler.h"
+/// @class UnitHandler UnitHandler.h "UnitHandler.h"
 /// @brief 単位型のcomplex attribute ハンドラ
 //////////////////////////////////////////////////////////////////////
-class UnitComplexHandler :
+class UnitHandler :
   public ComplexHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  UnitComplexHandler(DotlibParser& parser);
+  UnitHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual
-  ~UnitComplexHandler();
+  ~UnitHandler();
 
 
 public:
@@ -101,4 +101,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // UNITCOMPLEXHANDLER_H
+#endif // UNITHANDLER_H

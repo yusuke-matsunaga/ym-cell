@@ -33,6 +33,7 @@ HandlerFactory::new_delay_model(DotlibParser& parser)
 DelayModelHandler::DelayModelHandler(DotlibParser& parser) :
   SimpleHandler(parser, false)
 {
+  clear_value();
 }
 
 // @brief デストラクタ
@@ -40,19 +41,36 @@ DelayModelHandler::~DelayModelHandler()
 {
 }
 
-// @brief 値を読み込む．
-AstNode*
-DelayModelHandler::read_value()
+// @brief 値をクリアする．
+void
+DelayModelHandler::clear_value()
 {
-  FileRegion loc;
-  TokenType value_type = parser().read_token(loc, false);
+  mValue = nullptr;
+}
+
+// @brief 読み込んだ値を返す．
+const AstDelayModel*
+DelayModelHandler::value() const
+{
+  return mValue;
+}
+
+// @brief 値を読み込む処理
+// @param[in] value_type 型
+// @param[in] value_loc トークンの位置
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+DelayModelHandler::read_value(TokenType value_type,
+			      const FileRegion& value_loc)
+{
   if ( value_type != TokenType::SYMBOL ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc,
+		    value_loc,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. delay_model value is expected.");
-    return nullptr;
+    return false;
   }
   const char* str = parser().cur_string();
   ClibDelayModel value;
@@ -77,14 +95,16 @@ DelayModelHandler::read_value()
 	<< " 'generic_cmos', 'table_lookup', "
 	<< "'piecewise_cmos', 'cmos2' or 'dcm' are expected.";
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc,
+		    value_loc,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
-    return nullptr;
+    return false;
   }
 
-  return mgr().new_delay_model(loc, value);
+  mValue = mgr().new_delay_model(loc, value);
+
+  return true;
 }
 
 END_NAMESPACE_YM_DOTLIB

@@ -1,6 +1,6 @@
 ﻿
-/// @file PwComplexHandler.cc
-/// @brief PwComplexHandler の実装ファイル
+/// @file UnitHandler.cc
+/// @brief UnitHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
@@ -8,51 +8,59 @@
 
 
 #include "dotlib/HandlerFactory.h"
-#include "PwComplexHandler.h"
-#include "dotlib/AstInt.h"
-#include "dotlib/AstFloat.h"
+#include "UnitHandler.h"
+#include "dotlib/AstMgr.h"
+#include "dotlib/AstUnit.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-// @brief piece wise 用のハンドラを作る．
+// @brief unit 用のハンドラを作る．
 DotlibHandler*
-HandlerFactory::new_piece_wise(DotlibParser& parser)
+HandlerFactory::new_unit(DotlibParser& parser)
 {
-  return new PwComplexHandler(parser);
+  return new UnitHandler(parser);
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス PwComplexHandler
+// クラス UnitHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-PwComplexHandler::PwComplexHandler(DotlibParser& parser) :
+UnitHandler::UnitHandler(DotlibParser& parser) :
   ComplexHandler(parser)
 {
   clear_value();
 }
 
 // @brief デストラクタ
-PwComplexHandler::~PwComplexHandler()
+UnitHandler::~UnitHandler()
 {
 }
 
 // @brief 値をクリアする．
 void
-PwComplexHandler::clear_value()
+UnitHandler::clear_value()
 {
   mValue = nullptr;
 }
 
 // @brief 読み込んだ値を返す．
-const AstPieceWise*
-PwComplexHandler::value() const
+const AstUnit*
+UnitHandler::value() const
 {
   return mValue;
+}
+
+// @brief ヘッダの開始処理
+//
+// '(' を読み込んだ時に呼ばれる．
+void
+UnitHandler::begin_header()
+{
 }
 
 // @brief 値を読み込む処理
@@ -60,35 +68,35 @@ PwComplexHandler::value() const
 // @param[in] value_loc トークンの位置
 // @param[in] count read_value() の呼ばれた回数
 bool
-PwComplexHandler::read_value(TokenType value_type,
-			     const FileRegion& value_loc,
-			     int count)
+UnitHandler::read_value(TokenType value_type,
+			       const FileRegion& value_loc,
+			       int count)
 {
   if ( count == 0 ) {
-    if ( value_type != TokenType::INT_NUM ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      value_loc,
-		      MsgType::Error,
-		      "DOTLIB_PARSER",
-		      "Syntax error, first element should be an integer number.");
-      return false;
-    }
-    else {
-      mVal1 = mgr().new_int(value_loc, parser().cur_int());
-      return true;
-    }
-  }
-  else if ( count == 1 ) {
     if ( value_type != TokenType::INT_NUM && value_type != TokenType::FLOAT_NUM ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      value_loc,
 		      MsgType::Error,
 		      "DOTLIB_PARSER",
-		      "Syntax error, second element should be a float number.");
+		      "Syntax error, first element should be a number.");
       return false;
     }
     else {
-      mVal2 = mgr().new_float(value_loc, parser().cur_float());
+      mUnitVal = parser().cur_float();
+      return true;
+    }
+  }
+  else if ( count == 1 ) {
+    if ( value_type != TokenType::SYMBOL ) {
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      value_loc,
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      "Syntax error, second element should be a string.");
+      return false;
+    }
+    else {
+      mUnitStr = ShString(parser().cur_string());
       return true;
     }
   }
@@ -97,7 +105,7 @@ PwComplexHandler::read_value(TokenType value_type,
 		    value_loc,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
-		    "Syntax error, (integer, float) pair expected.");
+		    "Syntax error, (number, string) pair expected.");
     return false;
   }
 }
@@ -110,21 +118,21 @@ PwComplexHandler::read_value(TokenType value_type,
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-PwComplexHandler::end_header(AttrType attr_type,
-			     const FileRegion& attr_loc,
-			     const FileRegion& header_loc,
-			     int count)
+UnitHandler::end_header(AttrType attr_type,
+			const FileRegion& attr_loc,
+			const FileRegion& header_loc,
+			int count)
 {
   if ( count != 2 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    header_loc,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
-		    "Syntax error, (integer, float) pair expected.");
+		    "Syntax error, (number, string) pair expected.");
     return false;
   }
   else {
-    mValue = mgr().new_piecewise(mVal1, mVal2);
+    mValue = mgr().new_unit(header_loc, unit_val, unit_str);
     return true;
   }
 }

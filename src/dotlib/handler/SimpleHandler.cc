@@ -3,7 +3,7 @@
 /// @brief SimpleHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/HandlerFactory.h"
@@ -24,21 +24,21 @@ DotlibHandler*
 HandlerFactory::new_string(DotlibParser& parser,
 			   bool sym_mode)
 {
-  return new StrSimpleHandler(parser, sym_mode);
+  return new StrHandler(parser, sym_mode);
 }
 
 // @brief int 用のハンドラを作る．
 DotlibHandler*
 HandlerFactory::new_int(DotlibParser& parser)
 {
-  return new IntSimpleHandler(parser);
+  return new IntHandler(parser);
 }
 
 // @brief float 用のハンドラを作る．
 DotlibHandler*
 HandlerFactory::new_float(DotlibParser& parser)
 {
-  return new FloatSimpleHandler(parser);
+  return new FloatHandler(parser);
 }
 
 
@@ -77,6 +77,9 @@ SimpleHandler::parse_attr_value(AttrType attr_type,
     return false;
   }
 
+  if ( !expect(TokenType::SEMI) ) {
+    return false;
+  }
   if ( !expect_nl() ) {
     return false;
   }
@@ -86,32 +89,32 @@ SimpleHandler::parse_attr_value(AttrType attr_type,
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス StrSimpleHandler
+// クラス StrHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-StrSimpleHandler::StrSimpleHandler(DotlibParser& parser) :
+StrHandler::StrHandler(DotlibParser& parser) :
   SimpleHandler(parser)
 {
   clear_value();
 }
 
 // @brief デストラクタ
-StrSimpleHandler::~StrSimpleHandler()
+StrHandler::~StrHandler()
 {
 }
 
 // @brief 値をクリアする．
 void
-StrSimpleHandler::clear_value()
+StrHandler::clear_value()
 {
   mValue = nullptr;
 }
 
 // @brief 読み込んだ値を返す．
 const AstString*
-StrSimpleHandler::value() const
+StrHandler::value() const
 {
   return mValue;
 }
@@ -120,8 +123,8 @@ StrSimpleHandler::value() const
 // @param[in] value_type 型
 // @param[in] value_loc トークンの位置
 bool
-StrSimpleHandler::read_value(TokenType value_type,
-			     const FileRegion& value_loc)
+StrHandler::read_value(TokenType value_type,
+		       const FileRegion& value_loc)
 {
   if ( value_type == TokenType::SYMBOL ) {
     mValue = mgr().new_string(value_loc, ShString(parser().cur_string()));
@@ -139,32 +142,32 @@ StrSimpleHandler::read_value(TokenType value_type,
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス IntSimpleHandler
+// クラス IntHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-IntSimpleHandler::IntSimpleHandler(DotlibParser& parser) :
+IntHandler::IntHandler(DotlibParser& parser) :
   SimpleHandler(parser, false)
 {
   clear_value();
 }
 
 // @brief デストラクタ
-IntSimpleHandler::~IntSimpleHandler()
+IntHandler::~IntHandler()
 {
 }
 
 // @brief 値をクリアする．
 void
-IntSimpleHandler::clear_value()
+IntHandler::clear_value()
 {
   mValue = nullptr;
 }
 
 // @brief 読み込んだ値を返す．
 const AstInt*
-IntSimpleHandler::value() const
+IntHandler::value() const
 {
   return mValue;
 }
@@ -173,8 +176,8 @@ IntSimpleHandler::value() const
 // @param[in] value_type 型
 // @param[in] value_loc トークンの位置
 bool
-IntSimpleHandler::read_value(TokenType value_type,
-			     const FileRegion& value_loc)
+IntHandler::read_value(TokenType value_type,
+		       const FileRegion& value_loc)
 {
   if ( value_type == TokenType::INT_NUM ) {
     mValue = mgr().new_int(value_loc, parser().cur_int());
@@ -192,32 +195,32 @@ IntSimpleHandler::read_value(TokenType value_type,
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス FloatSimpleHandler
+// クラス FloatHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-FloatSimpleHandler::FloatSimpleHandler(DotlibParser& parser) :
+FloatHandler::FloatHandler(DotlibParser& parser) :
   SimpleHandler(parser, false)
 {
   clear_value();
 }
 
 // @brief デストラクタ
-FloatSimpleHandler::~FloatSimpleHandler()
+FloatHandler::~FloatHandler()
 {
 }
 
 // @brief 値をクリアする．
 void
-FloatSimpleHandler::clear_value()
+FloatHandler::clear_value()
 {
   mValue = nullptr;
 }
 
 // @brief 読み込んだ値を返す．
 const AstFloat*
-FloatSimpleHandler::value() const
+FloatHandler::value() const
 {
   return mValue;
 }
@@ -226,8 +229,8 @@ FloatSimpleHandler::value() const
 // @param[in] value_type 型
 // @param[in] value_loc トークンの位置
 bool
-FloatSimpleHandler::read_value(TokenType value_type,
-			       const FileRegion& value_loc)
+FloatHandler::read_value(TokenType value_type,
+			 const FileRegion& value_loc)
 {
   if ( value_type == TokenType::FLOAT_NUM || value_type == TokenType::INT_NUM ) {
     mValue = mgr().new_float(value_loc, parser().cur_float());

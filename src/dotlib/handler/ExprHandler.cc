@@ -34,7 +34,7 @@ HandlerFactory::new_expr(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 ExprHandler::ExprHandler(DotlibParser& parser) :
-  SimpleHandler(parser, false),
+  SimpleHandler(parser),
   mUngetType(TokenType::ERROR)
 {
   clear_value();
@@ -68,13 +68,20 @@ bool
 ExprHandler::parse_attr_value(AttrType attr_type,
 			      const FileRegion& attr_loc)
 {
-  mValue = read_expr(TokenType::END);
+  if ( !expect(TokenType::COLON) ) {
+    return false;
+  }
+
+  mValue = read_expr(TokenType::SEMI);
   if ( mValue == nullptr ) {
     return false;
   }
-  else {
-    return true;
+
+  if ( !expect_nl() ) {
+    return false;
   }
+
+  return true;
 }
 
 #if 0

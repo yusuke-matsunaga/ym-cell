@@ -106,16 +106,15 @@ set (dotlib_SOURCES
   src/dotlib/handler/PinHandler.cc
   src/dotlib/handler/PinDirectionHandler.cc
   src/dotlib/handler/PowerHandler.cc
-  src/dotlib/handler/PwComplexHandler.cc
+  src/dotlib/handler/PieceWiseHandler.cc
   src/dotlib/handler/SimpleHandler.cc
-  src/dotlib/handler/Str1ComplexHandler.cc
   src/dotlib/handler/TableHandler.cc
   src/dotlib/handler/TechnologyHandler.cc
   src/dotlib/handler/TemplateHandler.cc
   src/dotlib/handler/TimingHandler.cc
   src/dotlib/handler/TimingSenseHandler.cc
   src/dotlib/handler/TimingTypeHandler.cc
-  src/dotlib/handler/UnitComplexHandler.cc
+  src/dotlib/handler/UnitHandler.cc
   src/dotlib/handler/ValuesHandler.cc
   src/dotlib/handler/VarTypeHandler.cc
 

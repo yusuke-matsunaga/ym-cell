@@ -69,20 +69,20 @@ protected:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class StrSimpleHandler SimpleHandler.h "SimpleHandler.h"
+/// @class StrHandler SimpleHandler.h "SimpleHandler.h"
 /// @brief 文字列を取る属性用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class StrSimpleHandler :
+class StrHandler :
   public SimpleHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  StrSimpleHandler(DotlibParser& parser);
+  StrHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~StrSimpleHandler();
+  ~StrHandler();
 
 
 public:
@@ -101,7 +101,7 @@ public:
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // DotlibHandler の仮想関数
+  // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込む処理
@@ -127,20 +127,20 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class IntSimpleHandler SimpleHandler.h "SimpleHandler.h"
+/// @class IntHandler SimpleHandler.h "SimpleHandler.h"
 /// @brief 整数値を取る属性用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class IntSimpleHandler :
+class IntHandler :
   public SimpleHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  IntSimpleHandler(DotlibParser& parser);
+  IntHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~IntSimpleHandler();
+  ~IntHandler();
 
 
 public:
@@ -159,7 +159,7 @@ public:
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // DotlibHandler の仮想関数
+  // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込む処理
@@ -185,20 +185,20 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class FloatSimpleHandler SimpleHandler.h "SimpleHandler.h"
+/// @class FloatHandler SimpleHandler.h "SimpleHandler.h"
 /// @brief 実数値を取る属性用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class FloatSimpleHandler :
+class FloatHandler :
   public SimpleHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  FloatSimpleHandler(DotlibParser& parser);
+  FloatHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~FloatSimpleHandler();
+  ~FloatHandler();
 
 
 public:
@@ -217,7 +217,7 @@ public:
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // DotlibHandler の仮想関数
+  // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込む処理

@@ -1,5 +1,5 @@
-﻿#ifndef timingtypeHANDLER_H
-#define timingtypeHANDLER_H
+﻿#ifndef TIMINGTYPEHANDLER_H
+#define TIMINGTYPEHANDLER_H
 
 /// @file TimingTypeHandler.h
 /// @brief TimingTypeHandler のヘッダファイル
@@ -31,18 +31,46 @@ public:
   ~TimingTypeHandler();
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 値をクリアする．
+  void
+  clear_value();
+
+  /// @brief 読み込んだ値を返す．
+  const AstTimingType*
+  value() const;
+
+
 protected:
   //////////////////////////////////////////////////////////////////////
   // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値を読み込む．
+  /// @brief 値を読み込む処理
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
   virtual
-  AstNode*
-  read_value();
+  bool
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 読み込んだ値
+  AstTimingType* mValue;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // timingtypeHANDLER_H
+#endif // TIMINGTYPEHANDLER_H
