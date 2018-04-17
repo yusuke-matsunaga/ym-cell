@@ -19,13 +19,6 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-// @brief ダミーの simple ハンドラを作る．
-DotlibHandler*
-HandlerFactory::new_simple(DotlibParser& parser)
-{
-  return new SimpleHandler(parser, false);
-}
-
 // @brief string 用のハンドラを作る．
 DotlibHandler*
 HandlerFactory::new_string(DotlibParser& parser,
@@ -55,13 +48,8 @@ HandlerFactory::new_float(DotlibParser& parser)
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-// @param[in] sym_mode シンボルモード
-//
-// シンボルモードの時は数字で始まっていても文字列とみなす．
-SimpleHandler::SimpleHandler(DotlibParser& parser,
-			     bool sym_mode) :
-  DotlibHandler(parser),
-  mSymMode(sym_mode)
+SimpleHandler::SimpleHandler(DotlibParser& parser) :
+  DotlibHandler(parser)
 {
 }
 
@@ -73,40 +61,27 @@ SimpleHandler::~SimpleHandler()
 // @brief 構文要素を処理する．
 // @param[in] attr_name 属性名
 // @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ属性値を返す．
-//
-// エラーが起きたら false を返す．
-AstNode*
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
 SimpleHandler::parse_attr_value(AttrType attr_type,
 				const FileRegion& attr_loc)
 {
   if ( !expect(TokenType::COLON) ) {
-    return nullptr;
+    return false;
   }
 
-  AstNode* value = gen_node();
-  if ( value == nullptr ) {
-    return nullptr;
+  FileRegion loc;
+  TokenType value_type = parser().read_token(loc, false);
+  if ( !read_value(value_type, loc) ) {
+    return false;
   }
+
   if ( !expect_nl() ) {
-    return nullptr;
+    return false;
   }
 
-  if ( debug() ) {
-    cout << attr_type << " : " << value << endl;
-  }
-
-  return value;
-}
-
-// @brief 値を読み込む処理
-// @return 値を表す AstNode を返す．
-//
-// エラーが起きたら nullptr を返す．
-AstNode*
-SimpleHandler::gen_node()
-{
-  return nullptr;
+  return true;
 }
 
 
@@ -116,12 +91,10 @@ SimpleHandler::gen_node()
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-// @param[in] sym_mode シンボルモード
-// @note シンボルモードの時は数字で始まっていても文字列とみなす．
-StrSimpleHandler::StrSimpleHandler(DotlibParser& parser,
-				   bool sym_mode) :
-  SimpleHandler(parser, sym_mode)
+StrSimpleHandler::StrSimpleHandler(DotlibParser& parser) :
+  SimpleHandler(parser)
 {
+  clear_value();
 }
 
 // @brief デストラクタ
@@ -129,22 +102,39 @@ StrSimpleHandler::~StrSimpleHandler()
 {
 }
 
-// @brief AstString を作る．
-AstNode*
-StrSimpleHandler::gen_node()
+// @brief 値をクリアする．
+void
+StrSimpleHandler::clear_value()
 {
-  FileRegion loc;
-  TokenType value_type = parser().read_token(loc, false);
-  if ( value_type == TokenType::SYMBOL ) {
-    return mgr().new_string(loc, ShString(parser().cur_string()));
-  }
+  mValue = nullptr;
+}
 
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  loc,
-		  MsgType::Error,
-		  "DOTLIB_PARSER",
-		  "Syntax error. string value is expected.");
-  return nullptr;
+// @brief 読み込んだ値を返す．
+const AstString*
+StrSimpleHandler::value() const
+{
+  return mValue;
+}
+
+// @brief 値を読み込む処理
+// @param[in] value_type 型
+// @param[in] value_loc トークンの位置
+bool
+StrSimpleHandler::read_value(TokenType value_type,
+			     const FileRegion& value_loc)
+{
+  if ( value_type == TokenType::SYMBOL ) {
+    mValue = mgr().new_string(value_loc, ShString(parser().cur_string()));
+    return true;
+  }
+  else {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    value_loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "Syntax error. string value is expected.");
+    return false;
+  }
 }
 
 
@@ -157,6 +147,7 @@ StrSimpleHandler::gen_node()
 IntSimpleHandler::IntSimpleHandler(DotlibParser& parser) :
   SimpleHandler(parser, false)
 {
+  clear_value();
 }
 
 // @brief デストラクタ
@@ -164,22 +155,39 @@ IntSimpleHandler::~IntSimpleHandler()
 {
 }
 
-// @brief AstInt を作る．
-AstNode*
-IntSimpleHandler::gen_node()
+// @brief 値をクリアする．
+void
+IntSimpleHandler::clear_value()
 {
-  FileRegion loc;
-  TokenType value_type = parser().read_token(loc, false);
-  if ( value_type == TokenType::INT_NUM ) {
-    return mgr().new_int(loc, parser().cur_int());
-  }
+  mValue = nullptr;
+}
 
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  loc,
-		  MsgType::Error,
-		  "DOTLIB_PARSER",
-		  "Syntax error. int value is expected.");
-  return nullptr;
+// @brief 読み込んだ値を返す．
+const AstInt*
+IntSimpleHandler::value() const
+{
+  return mValue;
+}
+
+// @brief 値を読み込む処理
+// @param[in] value_type 型
+// @param[in] value_loc トークンの位置
+bool
+IntSimpleHandler::read_value(TokenType value_type,
+			     const FileRegion& value_loc)
+{
+  if ( value_type == TokenType::INT_NUM ) {
+    mValue = mgr().new_int(value_loc, parser().cur_int());
+    return true;
+  }
+  else {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    value_loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "Syntax error. int value is expected.");
+    return false;
+  }
 }
 
 
@@ -192,6 +200,7 @@ IntSimpleHandler::gen_node()
 FloatSimpleHandler::FloatSimpleHandler(DotlibParser& parser) :
   SimpleHandler(parser, false)
 {
+  clear_value();
 }
 
 // @brief デストラクタ
@@ -199,22 +208,39 @@ FloatSimpleHandler::~FloatSimpleHandler()
 {
 }
 
-// @brief AstFloat を作る．
-AstNode*
-FloatSimpleHandler::gen_node()
+// @brief 値をクリアする．
+void
+FloatSimpleHandler::clear_value()
 {
-  FileRegion loc;
-  TokenType value_type = parser().read_token(loc, false);
-  if ( value_type == TokenType::FLOAT_NUM || value_type == TokenType::INT_NUM ) {
-    return mgr().new_float(loc, parser().cur_float());
-  }
+  mValue = nullptr;
+}
 
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  loc,
-		  MsgType::Error,
-		  "DOTLIB_PARSER",
-		  "Syntax error. float value is expected.");
-  return nullptr;
+// @brief 読み込んだ値を返す．
+const AstFloat*
+FloatSimpleHandler::value() const
+{
+  return mValue;
+}
+
+// @brief 値を読み込む処理
+// @param[in] value_type 型
+// @param[in] value_loc トークンの位置
+bool
+FloatSimpleHandler::read_value(TokenType value_type,
+			       const FileRegion& value_loc)
+{
+  if ( value_type == TokenType::FLOAT_NUM || value_type == TokenType::INT_NUM ) {
+    mValue = mgr().new_float(value_loc, parser().cur_float());
+    return true;
+  }
+  else {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    value_loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "Syntax error. float value is expected.");
+    return false;
+  }
 }
 
 END_NAMESPACE_YM_DOTLIB

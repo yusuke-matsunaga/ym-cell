@@ -5,12 +5,12 @@
 /// @brief ExprHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "SimpleHandler.h"
-#include "ym/FileRegion.h"
+#include "dotlib/DotlibHandler.h"
+//#include "ym/FileRegion.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief expression の値をとる simple attribute 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class ExprHandler :
-  public SimpleHandler
+  public DotlibHandler
 {
 public:
 
@@ -35,63 +35,32 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 値をクリアする．
+  void
+  clear_value();
+
+  /// @brief 読み込んだ値を返す．
+  const AstExpr*
+  value() const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
   // DotlibHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 属性値を読み込む．
   /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ値を表す AstNode を返す．
-  ///
-  /// エラーの場合には nullptr を返す．
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
   virtual
-  const AstNode*
+  bool
   parse_attr_value(AttrType attr_type,
 		   const FileRegion& attr_loc) override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief パーズする．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ式を表す AstExpr を返す．
-  ///
-  /// エラーの場合には nullptr を返す．
-  const AstExpr*
-  parse(AttrType attr_type,
-	const FileRegion& attr_loc);
-
-  /// @brief パーズして代入する．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[out] dst 代入先
-  /// @retval true 正常に処理した．
-  /// @retval false 処理中にエラーが起こった．
-  ///
-  /// dst が nullptr でない場合には二重定義エラーとなる．
-  bool
-  parse_and_assign(AttrType attr_type,
-		   const FileRegion& attr_loc,
-		   const AstExpr*& dst);
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を読み込む処理
-  /// @return 値を表す AstNode を返す．
-  ///
-  /// エラーが起きたら nullptr を返す．
-  /// ここでは expression のパースを行う．
-  virtual
-  AstNode*
-  gen_node() override;
 
 
 private:
@@ -127,6 +96,9 @@ private:
 
   // 読み戻したトークンの位置
   FileRegion mUngetLoc;
+
+  // 読み込んだ値
+  AstExpr* mValue;
 
 };
 

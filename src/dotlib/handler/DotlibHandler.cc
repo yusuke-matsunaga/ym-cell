@@ -24,7 +24,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // クラス DotlibHandler
 //////////////////////////////////////////////////////////////////////
 
-// @brief 親のハンドラを持たない場合のコンストラクタ
+// @brief コンストラクタ
 // @param[in] parser パーサー
 DotlibHandler::DotlibHandler(DotlibParser& parser) :
   mParser(parser)
@@ -37,14 +37,9 @@ DotlibHandler::~DotlibHandler()
 }
 
 // @brief group attribute 用のパースを行う．
-// @param[in] vector_mode ベクタモードの時 true にするフラグ
-// @param[out] value_list 読み込んだ値のリストを格納する変数
-// @param[out] value_loc 読み込んだ値全体のファイル上の位置
 // @return 正しく読み込めたら true を返す．
 bool
-DotlibHandler::parse_complex(bool vector_mode,
-			     FileRegion& value_loc,
-			     vector<const AstNode*>& value_list)
+DotlibHandler::parse_complex()
 {
   if ( !expect(TokenType::LP) ) {
     return false;
@@ -54,14 +49,13 @@ DotlibHandler::parse_complex(bool vector_mode,
 
   FileRegion loc;
   TokenType type = parser().read_token(loc);
+  int count = 0;
   if ( type != TokenType::RP ) {
     for ( ; ; ) {
-      AstNode* value = new_value(loc, type, vector_mode);
-      if ( value == nullptr ) {
+      ++ count;
+      if ( !read_value(type, loc, count) ) {
 	return false;
       }
-
-      value_list.push_back(value);
 
       TokenType type1 = parser().read_token(loc);
       if ( type1 == TokenType::RP ) {
@@ -78,7 +72,6 @@ DotlibHandler::parse_complex(bool vector_mode,
       type = parser().read_token(loc);
     }
   }
-  value_loc = FileRegion(first_loc, loc);
 
   return true;
 }

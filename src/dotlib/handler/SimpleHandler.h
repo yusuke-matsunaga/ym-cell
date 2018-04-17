@@ -5,7 +5,7 @@
 /// @brief SimpleHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -17,6 +17,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 /// @class SimpleHandler SimpleHandler.h "SimpleHandler.h"
 /// @brief simple attribute 用のハンドラ
+///
+/// このクラスで DotlibHandler の仮想関数である parse_attr_value()
+/// を実装している．
+/// 継承クラスで read_value() を実装する必要がある．
 //////////////////////////////////////////////////////////////////////
 class SimpleHandler :
   public DotlibHandler
@@ -25,11 +29,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  /// @param[in] sym_mode シンボルモード
-  ///
-  /// シンボルモードの時は数字で始まっていても文字列とみなす．
-  SimpleHandler(DotlibParser& parser,
-		bool sym_mode);
+  SimpleHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual
@@ -44,13 +44,12 @@ public:
   /// @brief 属性値を読み込む．
   /// @param[in] attr_name 属性名
   /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ属性値を返す．
-  ///
-  /// エラーが起きたら false を返す．
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
   virtual
-  AstNode*
+  bool
   parse_attr_value(AttrType attr_type,
-		   const FileRegion& attr_loc);
+		   const FileRegion& attr_loc) override;
 
 
 protected:
@@ -59,21 +58,12 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を読み込む処理
-  /// @return 値を表す AstNode を返す．
-  ///
-  /// エラーが起きたら nullptr を返す．
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
   virtual
-  AstNode*
-  gen_node();
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // シンボルメンバ
-  bool mSymMode;
+  bool
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc) = 0;
 
 };
 
@@ -89,25 +79,49 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  /// @param[in] sym_mode シンボルモード
-  ///
-  /// シンボルモードの時は数字で始まっていても文字列とみなす．
-  StrSimpleHandler(DotlibParser& parser,
-		   bool sym_mode);
+  StrSimpleHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   ~StrSimpleHandler();
 
 
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
+  // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief AstString を作る．
+  /// @brief 値をクリアする．
+  void
+  clear_value();
+
+  /// @brief 読み込んだ値を返す．
+  const AstString*
+  value() const;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // DotlibHandler の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 値を読み込む処理
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
   virtual
-  AstNode*
-  gen_node() override;
+  bool
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 読み込んだ値
+  AstString* mValue;
 
 };
 
@@ -129,15 +143,43 @@ public:
   ~IntSimpleHandler();
 
 
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
+  // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief AstInt を作る．
+  /// @brief 値をクリアする．
+  void
+  clear_value();
+
+  /// @brief 読み込んだ値を返す．
+  const AstInt*
+  value() const;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // DotlibHandler の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 値を読み込む処理
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
   virtual
-  AstNode*
-  gen_node() override;
+  bool
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 読み込んだ値
+  AstInt* mValue;
 
 };
 
@@ -159,15 +201,43 @@ public:
   ~FloatSimpleHandler();
 
 
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
+  // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief AstFloat を作る．
+  /// @brief 値をクリアする．
+  void
+  clear_value();
+
+  /// @brief 読み込んだ値を返す．
+  const AstFloat*
+  value() const;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // DotlibHandler の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 値を読み込む処理
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
   virtual
-  AstNode*
-  gen_node() override;
+  bool
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 読み込んだ値
+  AstFloat* mValue;
 
 };
 

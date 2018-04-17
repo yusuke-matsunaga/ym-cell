@@ -19,6 +19,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 /// @class DotlibHandler DotlibHandler.h "DotlibHandler.h"
 /// @brief liberty ファイルの各構文要素を読み込むためのクラス
+///
+/// 属性ごとに読み込んだ結果を表す構文木構造が異なるので仮想クラスにする．
+/// 結果を取り出す関数は各継承クラス毎に独自のものを用意する．
 //////////////////////////////////////////////////////////////////////
 class DotlibHandler
 {
@@ -27,6 +30,12 @@ public:
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
   DotlibHandler(DotlibParser& parser);
+
+  /// @brief コピーコンストラクタは禁止
+  DotlibHandler(const DotlibHandler& src) = delete;
+
+  /// @brief ムーブコンストラクタも禁止
+  DotlibHandler(DotlibHandler&& src) = delete;
 
   /// @brief デストラクタ
   virtual
@@ -41,11 +50,10 @@ public:
   /// @brief 属性値を読み込む．
   /// @param[in] attr_name 属性名
   /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ属性値を返す．
-  ///
-  /// エラーが起きたら nullptr を返す．
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
   virtual
-  const AstNode*
+  bool
   parse_attr_value(AttrType attr_type,
 		   const FileRegion& attr_loc) = 0;
 
@@ -70,25 +78,9 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief complex attribute 用のパースを行う．
-  /// @param[in] vector_mode ベクタモードの時 true にするフラグ
-  /// @param[out] value_loc 読み込んだ値全体のファイル上の位置
-  /// @param[out] value_list 読み込んだ値のリストを格納する変数
   /// @return 正しく読み込めたら true を返す．
   bool
-  parse_complex(bool vector_mode,
-		FileRegion& value_loc,
-		vector<const AstNode*>& value_list);
-
-  /// @brief AstNode (の派生クラス)を生成する．
-  /// @param[in] loc ファイル上の位置情報
-  /// @param[in] type 型
-  /// @param[in] vector_mode ベクタモードの時 true にするフラグ
-  ///
-  /// 残りの情報は parser() からとってくる．
-  AstNode*
-  new_value(const FileRegion& loc,
-	    TokenType type,
-	    bool vector_mode);
+  parse_complex();
 
   /// @brief 引数の種類のトークンでなければエラーメッセージを出力する．
   /// @param[in] req_type 要求するトークンの型

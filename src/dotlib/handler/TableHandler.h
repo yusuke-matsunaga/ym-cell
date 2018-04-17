@@ -1,5 +1,5 @@
-#ifndef tableHANDLER_H
-#define tableHANDLER_H
+#ifndef TABLEHANDLER_H
+#define TABLEHANDLER_H
 
 /// @file TableHandler.h
 /// @brief TableHandler のヘッダファイル
@@ -33,41 +33,27 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // DotlibHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 属性値を読み込む．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ値を表す AstNode を返す．
-  ///
-  /// エラーの場合には nullptr を返す．
-  virtual
-  const AstNode*
-  parse_attr_value(AttrType attr_type,
-		   const FileRegion& attr_loc) override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief パーズする．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ AstLut を返す．
-  ///
-  /// エラーの場合には nullptr を返す．
+  /// @brief 値をクリアする．
+  void
+  clear_value();
+
+  /// @brief 読み込んだ値を返す．
   const AstLut*
-  parse(AttrType attr_type,
-	const FileRegion& attr_loc);
+  value() const;
 
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
+  // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief グループ記述の始まり
+  virtual
+  void
+  begin_group() override;
 
   /// @brief attr_type に対応する属性を読み込む．
   /// @param[in] attr_type 対象の属性
@@ -79,35 +65,39 @@ private:
   parse_attr(AttrType attr_type,
 	     const FileRegion& attr_loc) override;
 
+  /// @brief グループ記述の終わり
+  /// @param[in] attr_type 対象の属性
+  /// @param[in] attr_loc attr_type のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  virtual
+  bool
+  end_group(AttrType attr_type,
+	    const FileRegion& attr_loc) override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // index ハンドラ
-  IndexHandler* mIndexHandler;
-
-  // values ハンドラ
-  ValuesHandler* mValuesHandler;
-
-  // gen_group ハンドラ
-  GenGroupHandler* mGenGroupHandler;
-
   // index_1
-  const AstFloatVector* mIndex1;
+  IndexHandler* mIndex1;
 
   // index_2
-  const AstFloatVector* mIndex2;
+  IndexHandler* mIndex2;
 
   // index_3
-  const AstFloatVector* mIndex3;
+  IndexHandler* mIndex3;
 
   // values
-  const AstFloatVector* mValues;
+  ValuesHandler* mValues;
+
+  // 読み込んだ値
+  AstLut* mValue;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // tableHANDLER_H
+#endif // TABLEHANDLER_H

@@ -36,7 +36,10 @@ HandlerFactory::new_input_voltage(DotlibParser& parser)
 InputVoltageHandler::InputVoltageHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
-  mExprHandler = HandlerFactory::new_expr(parser);
+  mVil   = HandlerFactory::new_expr(parser);
+  mVih   = HandlerFactory::new_expr(parser);
+  mVimin = HandlerFactory::new_expr(parser);
+  mVimax = HandlerFactory::new_expr(parser);
 }
 
 // @brief デストラクタ
@@ -44,42 +47,17 @@ InputVoltageHandler::~InputVoltageHandler()
 {
 }
 
-// @brief 属性値を読み込む．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ値を表す AstNode を返す．
-//
-// エラーの場合には nullptr を返す．
-const AstNode*
-InputVoltageHandler::parse_attr_value(AttrType attr_type,
-				      const FileRegion& attr_loc)
+// @brief 読み込んだ値を返す．
+const AstInputVoltage*
+InputVoltageHandler::value() const
 {
-  return parse(attr_type, attr_loc);
+  return mValue;
 }
 
-// @brief パーズする．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ InputVoltage を返す．
-bool
-InputVoltageHandler::parse(AttrType attr_type,
-			   const FileRegion& attr_loc)
+// @brief グループ記述の始まり
+void
+InputVoltageHandler::begin_group()
 {
-  mVil = nullptr;
-  mVih = nullptr;
-  mVimin = nullptr;
-  mVimax = nullptr;
-
-  const AstString* value;
-  FileRegion value_loc;
-  FileRegion end_loc;
-  bool r = parse_common(attr_type, attr_loc, value, value_loc, end_loc);
-  if ( !r ) {
-    return nullptr;
-  }
-
-  FileRegion loc(attr_loc, end_loc);
-  return mgr().new_input_voltage(loc, value, mVil, mVih, mVimin, mVimax);
 }
 
 // @brief attr_type に対応する属性を読み込む．
@@ -93,21 +71,32 @@ InputVoltageHandler::parse_attr(AttrType attr_type,
 {
   switch ( attr_type ) {
   case AttrType::vil:
-    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVil);
+    return mVil->parse_attr_value(attr_type, attr_loc);
 
   case AttrType::vih:
-    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVih);
+    return mVih->parse_attr_value(attr_type, attr_loc);
 
   case AttrType::vimin:
-    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVimin);
+    return mVimin->parse_attr_value(attr_type, attr_loc);
 
   case AttrType::vimax:
-    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVimax);
+    return mVimax->parse_attr_value(attr_type, attr_loc);
 
   default:
     break;
   }
   return false;
+}
+
+// @brief グループ記述の終わり
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+InputVoltageHandler::end_group(AttrType attr_type,
+			       const FileRegion& attr_loc)
+{
 }
 
 END_NAMESPACE_YM_DOTLIB

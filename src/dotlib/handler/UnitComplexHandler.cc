@@ -10,8 +10,6 @@
 #include "dotlib/HandlerFactory.h"
 #include "UnitComplexHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstNode.h"
-#include "dotlib/AstInt.h"
 #include "dotlib/AstFloat.h"
 #include "dotlib/AstString.h"
 #include "dotlib/AstUnit.h"
@@ -37,6 +35,7 @@ HandlerFactory::new_unit(DotlibParser& parser)
 UnitComplexHandler::UnitComplexHandler(DotlibParser& parser) :
   ComplexHandler(parser)
 {
+  clear_value();
 }
 
 // @brief デストラクタ
@@ -44,47 +43,100 @@ UnitComplexHandler::~UnitComplexHandler()
 {
 }
 
-// @brief 値を表すノードを作る．
-// @param[in] value_loc ファイル上の位置
-// @param[in] value_list 値のリスト
-const AstNode*
-UnitComplexHandler::gen_node(const FileRegion& value_loc,
-			     const vector<const AstNode*>& value_list)
+// @brief 値をクリアする．
+void
+UnitComplexHandler::clear_value()
 {
-  if ( value_list.size() != 2 ) {
+  mValue = nullptr;
+}
+
+// @brief 読み込んだ値を返す．
+const AstUnit*
+UnitComplexHandler::value() const
+{
+  return mValue;
+}
+
+// @brief ヘッダの開始処理
+//
+// '(' を読み込んだ時に呼ばれる．
+void
+UnitComplexHandler::begin_header()
+{
+}
+
+// @brief 値を読み込む処理
+// @param[in] value_type 型
+// @param[in] value_loc トークンの位置
+// @param[in] count read_value() の呼ばれた回数
+bool
+UnitComplexHandler::read_value(TokenType value_type,
+			       const FileRegion& value_loc,
+			       int count)
+{
+  if ( count == 0 ) {
+    if ( value_type != TokenType::INT_NUM && value_type != TokenType::FLOAT_NUM ) {
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      value_loc,
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      "Syntax error, first element should be a number.");
+      return false;
+    }
+    else {
+      mUnitVal = parser().cur_float();
+      return true;
+    }
+  }
+  else if ( count == 1 ) {
+    if ( value_type != TokenType::SYMBOL ) {
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      value_loc,
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      "Syntax error, second element should be a string.");
+      return false;
+    }
+    else {
+      mUnitStr = ShString(parser().cur_string());
+      return true;
+    }
+  }
+  else {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, (number, string) pair expected.");
-    return nullptr;
+    return false;
   }
+}
 
-  const AstNode* top = value_list[0];
-  const AstFloat* num_node = dynamic_cast<const AstFloat*>(top);
-  if ( num_node == nullptr ) {
+// @brief 読み込みが終了した時の処理を行う．
+// @param[in] attr_type 属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @param[in] header_loc '(' から ')' までのファイル上の位置
+// @param[in] count 読み込んだ要素数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+UnitComplexHandler::end_header(AttrType attr_type,
+			       const FileRegion& attr_loc,
+			       const FileRegion& header_loc,
+			       int count)
+{
+  if ( count != 2 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    top->loc(),
+		    header_loc,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
-		    "Syntax error, first element should be a number.");
-    return nullptr;
+		    "Syntax error, (number, string) pair expected.");
+    return false;
   }
-  double unit_val = num_node->value();
-
-  const AstNode* next = value_list[1];
-  const AstString* str_node = dynamic_cast<const AstString*>(next);
-  if ( str_node == nullptr ) {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    next->loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error, second element should be a string.");
-    return nullptr;
+  else {
+    mValue = mgr().new_unit(value_loc, unit_val, unit_str);
+    return true;
   }
-  ShString unit_str = str_node->value();
-
-  return mgr().new_unit(value_loc, unit_val, unit_str);
 }
 
 END_NAMESPACE_YM_DOTLIB

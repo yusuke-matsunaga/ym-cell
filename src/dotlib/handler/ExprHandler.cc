@@ -3,7 +3,7 @@
 /// @brief ExprHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -37,6 +37,7 @@ ExprHandler::ExprHandler(DotlibParser& parser) :
   SimpleHandler(parser, false),
   mUngetType(TokenType::ERROR)
 {
+  clear_value();
 }
 
 // @brief デストラクタ
@@ -44,31 +45,39 @@ ExprHandler::~ExprHandler()
 {
 }
 
+// @brief 値をクリアする．
+void
+ExprHandler::clear_value()
+{
+  mValue = nullptr;
+}
+
+// @brief 読み込んだ値を返す．
+const AstExpr*
+ExprHandler::value() const
+{
+  return mValue;
+}
+
 // @brief 属性値を読み込む．
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ値を表す AstNode を返す．
-//
-// エラーの場合には nullptr を返す．
-const AstNode*
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
 ExprHandler::parse_attr_value(AttrType attr_type,
 			      const FileRegion& attr_loc)
 {
-  return parse(attr_type, attr_loc);
+  mValue = read_expr(TokenType::END);
+  if ( mValue == nullptr ) {
+    return false;
+  }
+  else {
+    return true;
+  }
 }
 
-// @brief パーズする．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ式を表す AstExpr を返す．
-//
-// エラーの場合には nullptr を返す．
-const AstExpr*
-ExprHandler::parse(AttrType attr_type,
-		   const FileRegion& attr_loc)
-{
-}
-
+#if 0
 // @brief パーズして代入する．
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
@@ -102,15 +111,6 @@ ExprHandler::parse_and_assign(AttrType attr_type,
   dst = expr;
 
   return true;
-}
-
-#if 0
-// @brief 値を読み込む処理
-// @return 値を表す AstNode を返す．
-AstNode*
-ExprHandler::gen_node()
-{
-  return read_expr(TokenType::SEMI);
 }
 #endif
 

@@ -5,11 +5,11 @@
 /// @brief GroupHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/DotlibHandler.h"
+#include "CGHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -23,7 +23,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// parse_attr() で処理しなければならない．
 //////////////////////////////////////////////////////////////////////
 class GroupHandler :
-  public DotlibHandler
+  public CGHandler
 {
 public:
 
@@ -36,43 +36,63 @@ public:
   ~GroupHandler();
 
 
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
-  // 継承クラスから用いられる GroupHandler の関数
+  // DotlibHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 共通の処理を行う．
-  /// @param[in] attr_type 属性
+  /// @brief 属性値を読み込む．
+  /// @param[in] attr_name 属性名
   /// @param[in] attr_loc ファイル上の位置
-  /// @param[out] value_list 値を表すトークンのリスト
-  /// @param[out] value_loc 値全体のファイル上の位置
-  /// @param[out] end_loc グループ末尾の '}' の位置
-  /// @retval true パーズが成功した．
-  /// @retval false パーズが失敗した．
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  virtual
   bool
-  parse_common(AttrType attr_type,
-	       const FileRegion& attr_loc,
-	       vector<const AstNode*>& value_list,
-	       FileRegion& value_loc,
-	       FileRegion& end_loc);
+  parse_attr_value(AttrType attr_type,
+		   const FileRegion& attr_loc) override;
 
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる GroupHandler の仮想関数
+  // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief グループ記述の始まり
+  virtual
+  void
+  begin_group() = 0;
 
   /// @brief attr_type に対応する属性を読み込む．
   /// @param[in] attr_type 対象の属性
   /// @param[in] attr_loc attr_type のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// このクラスでは常に false を返す．
   virtual
   bool
   parse_attr(AttrType attr_type,
-	     const FileRegion& attr_loc);
+	     const FileRegion& attr_loc) = 0;
+
+  /// @brief グループ記述の終わり
+  /// @param[in] attr_type 対象の属性
+  /// @param[in] attr_loc attr_type のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  virtual
+  bool
+  end_group(AttrType attr_type,
+	    const FileRegion& attr_loc) = 0;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる GroupHandler の関数
+  //////////////////////////////////////////////////////////////////////
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる GroupHandler の仮想関数
+  //////////////////////////////////////////////////////////////////////
 
 
 private:
@@ -103,19 +123,39 @@ public:
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる EmptyGroupHandler の関数
+  // CGHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 共通の処理を行う．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[out] end_loc グループ末尾の '}' の位置
-  /// @retval true パーズが成功した．
-  /// @retval false パーズが失敗した．
+  /// @brief ヘッダの開始処理
+  ///
+  /// '(' を読み込んだ時に呼ばれる．
+  virtual
+  void
+  begin_header();
+
+  /// @brief 値を読み込む処理
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @param[in] count read_value() の呼ばれた回数
+  virtual
   bool
-  parse_common(AttrType attr_type,
-	       const FileRegion& attr_loc,
-	       FileRegion& end_loc);
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc,
+	     int count) override;
+
+  /// @brief 読み込みが終了した時の処理を行う．
+  /// @param[in] attr_type 属性
+  /// @param[in] attr_loc attr_type のファイル上の位置
+  /// @param[in] header_loc '(' から ')' までのファイル上の位置
+  /// @param[in] count 読み込んだ要素数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  virtual
+  bool
+  end_header(AttrType attr_type,
+	     const FileRegion& attr_loc,
+	     const FileRegion& header_loc,
+	     int count) override;
 
 };
 
@@ -140,23 +180,62 @@ public:
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いる Str1GroupHandler の関数
+  // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 共通の処理を行う．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[out] value 値を表すトークン
-  /// @param[out] value_loc 値のファイル上の位置
-  /// @param[out] end_loc グループ末尾の '}' の位置
-  /// @retval true パーズが成功した．
-  /// @retval false パーズが失敗した．
+  /// @brief ヘッダの値をクリアする．
+  void
+  clear_header();
+
+  /// @brief ヘッダの値を取り出す．
+  const AstString*
+  header_value() const;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // CGHandler の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ヘッダの開始処理
+  ///
+  /// '(' を読み込んだ時に呼ばれる．
+  virtual
+  void
+  begin_header();
+
+  /// @brief 値を読み込む処理
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @param[in] count read_value() の呼ばれた回数
+  virtual
   bool
-  parse_common(AttrType attr_type,
-	       const FileRegion& attr_loc,
-	       const AstString*& value,
-	       FileRegion& value_loc,
-	       FileRegion& end_loc);
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc,
+	     int count) override;
+
+  /// @brief 読み込みが終了した時の処理を行う．
+  /// @param[in] attr_type 属性
+  /// @param[in] attr_loc attr_type のファイル上の位置
+  /// @param[in] header_loc '(' から ')' までのファイル上の位置
+  /// @param[in] count 読み込んだ要素数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  virtual
+  bool
+  end_header(AttrType attr_type,
+	     const FileRegion& attr_loc,
+	     const FileRegion& header_loc,
+	     int count) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // ヘッダの値
+  AstString* mHeaderValue;
 
 };
 
@@ -181,24 +260,69 @@ public:
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いる Str2GroupHandler の関数
+  // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 共通の処理を行う．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[out] value1, value2 値を表すトークン
-  /// @param[out] value_loc 値全体のファイル上の位置
-  /// @param[out] end_loc グループ末尾の '}' の位置
-  /// @retval true パーズが成功した．
-  /// @retval false パーズが失敗した．
+  /// @brief ヘッダの値をクリアする．
+  void
+  clear_header();
+
+  /// @brief ヘッダの値1を取り出す．
+  const AstString*
+  header_value1() const;
+
+  /// @brief ヘッダの値2を取り出す．
+  const AstString*
+  header_value2() const;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // CHandler の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ヘッダの開始処理
+  ///
+  /// '(' を読み込んだ時に呼ばれる．
+  virtual
+  void
+  begin_header();
+
+  /// @brief 値を読み込む処理
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @param[in] count read_value() の呼ばれた回数
+  virtual
   bool
-  parse_common(AttrType attr_type,
-	       const FileRegion& attr_loc,
-	       const AstString* value1,
-	       const AstString* value2,
-	       FileRegion& value_loc,
-	       FileRegion& end_loc);
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc,
+	     int count) override;
+
+  /// @brief 読み込みが終了した時の処理を行う．
+  /// @param[in] attr_type 属性
+  /// @param[in] attr_loc attr_type のファイル上の位置
+  /// @param[in] header_loc '(' から ')' までのファイル上の位置
+  /// @param[in] count 読み込んだ要素数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  virtual
+  bool
+  end_header(AttrType attr_type,
+	     const FileRegion& attr_loc,
+	     const FileRegion& header_loc,
+	     int count) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // ヘッダの値1
+  AstStr* mHeaderValue1;
+
+  // ヘッダの値2
+  AstStr* mHeaderValue2;
 
 };
 
@@ -223,25 +347,76 @@ public:
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いる Str2IntGroupHandler の仮想関数
+  // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 共通の処理を行う．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @param[out] value1, value2, value3 値を表すトークン
-  /// @param[out] value_loc 値全体のファイル上の位置
-  /// @param[out] end_loc グループ末尾の '}' の位置
-  /// @retval true パーズが成功した．
-  /// @retval false パーズが失敗した．
+  /// @brief ヘッダの値をクリアする．
+  void
+  clear_header();
+
+  /// @brief ヘッダの値1を取り出す．
+  const AstString*
+  header_value1() const;
+
+  /// @brief ヘッダの値2を取り出す．
+  const AstString*
+  header_value2() const;
+
+  /// @brief ヘッダの値3を取り出す．
+  const AstInt*
+  header_value3() const;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // CGHandler の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ヘッダの開始処理
+  ///
+  /// '(' を読み込んだ時に呼ばれる．
+  virtual
+  void
+  begin_header();
+
+  /// @brief 値を読み込む処理
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @param[in] count read_value() の呼ばれた回数
+  virtual
   bool
-  parse_common(AttrType attr_type,
-	       const FileRegion& attr_loc,
-	       const AstString* value1,
-	       const AstString* value2,
-	       const AstInt* value3,
-	       FileRegion& value_loc,
-	       FileRegion& end_loc);
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc,
+	     int count) override;
+
+  /// @brief 読み込みが終了した時の処理を行う．
+  /// @param[in] attr_type 属性
+  /// @param[in] attr_loc attr_type のファイル上の位置
+  /// @param[in] header_loc '(' から ')' までのファイル上の位置
+  /// @param[in] count 読み込んだ要素数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  virtual
+  bool
+  end_header(AttrType attr_type,
+	     const FileRegion& attr_loc,
+	     const FileRegion& header_loc,
+	     int count) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // ヘッダの値1
+  AstStr* mHeaderValue1;
+
+  // ヘッダの値2
+  AstStr* mHeaderValue2;
+
+  // ヘッダの値3
+  AstStr* mHeaderValue3;
 
 };
 

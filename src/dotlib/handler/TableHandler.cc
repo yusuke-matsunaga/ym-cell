@@ -38,9 +38,10 @@ HandlerFactory::new_table(DotlibParser& parser)
 TableHandler::TableHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
-  mIndexHandler = HandlerFactory::new_index(parser);
+  mIndex1 = HandlerFactory::new_index(parser);
+  mIndex2 = HandlerFactory::new_index(parser);
+  mIndex3 = HandlerFactory::new_index(parser);
   mValuesHandler = HandlerFactory::new_values(parser);
-  mGenGroupHandler = HandlerFactory::new_gen_group(parser);
 }
 
 // @brief デストラクタ
@@ -48,44 +49,28 @@ TableHandler::~TableHandler()
 {
 }
 
-// @brief 属性値を読み込む．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ値を表す AstNode を返す．
-//
-// エラーの場合には nullptr を返す．
-const AstNode*
-TableHandler::parse_attr_value(AttrType attr_type,
-			       const FileRegion& attr_loc)
+// @brief 値をクリアする．
+void
+TableHandler::clear_value()
 {
-  return parse(attr_type, attr_loc);
+  mValue = nullptr;
 }
 
-// @brief パーズする．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ AstLut を返す．
-//
-// エラーの場合には nullptr を返す．
+// @brief 読み込んだ値を返す．
 const AstLut*
-TableHandler::parse(AttrType attr_type,
-		    const FileRegion& attr_loc)
+TableHandler::value() const
 {
-  mIndex1 = nullptr;
-  mIndex2 = nullptr;
-  mIndex3 = nullptr;
-  mValues = nullptr;
+  return mValue;
+}
 
-  const AstString* value;
-  FileRegion value_loc;
-  FileRegion end_loc;
-  bool r = parse_common(attr_type, attr_loc, value, value_loc, end_loc);
-  if ( !r ) {
-    return nullptr;
-  }
-
-  FileRegion loc(attr_loc, end_loc);
-  return mgr().new_lut(loc, value, mIndex1, mIndex2, mIndex3, mValues);
+// @brief グループ記述の始まり
+void
+TableHandler::begin_group()
+{
+  mIndex1->clear_value();
+  mIndex2->clear_value();
+  mIndex3->clear_value();
+  mValues->clear_value();
 }
 
 // @brief attr_type に対応する属性を読み込む．
@@ -99,20 +84,36 @@ TableHandler::parse_attr(AttrType attr_type,
 {
   switch ( attr_type ) {
   case AttrType::index_1:
-    return mIndexHandler->parse_and_assign(attr_type, attr_loc, mIndex1);
+    return mIndex1->parse_attr_value(attr_type, attr_loc);
 
   case AttrType::index_2:
-    return mIndexHandler->parse_and_assign(attr_type, attr_loc, mIndex2);
+    return mIndex2->parse_attr_value(attr_type, attr_loc);
 
   case AttrType::index_3:
-    return mIndexHandler->parse_and_assign(attr_type, attr_loc, mIndex3);
+    return mIndex3->parse_attr_value(attr_type, attr_loc);
 
   case AttrType::values:
-    return mValuesHandler->parse_and_assign(attr_type, attr_loc, mValues);
+    return mValues->parse_attr_value(attr_type, attr_loc);
 
   case AttrType::domain:
-    return mGenGroupHandler->parse(attr_type, attr_loc) != nullptr;
+#warning "TODO: 未完";
+    return false;
   }
+  return false;
+}
+
+// @brief グループ記述の終わり
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+TableHandler::end_group(AttrType attr_type,
+			const FileRegion& attr_loc)
+{
+#warning "TODO: 未完"
+  // mIndex1, mIndex2, mIndex3, mValues に値がセットされていることを確認して
+  // AstLut を作る．
   return false;
 }
 

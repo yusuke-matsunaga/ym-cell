@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "dotlib/DotlibHandler.h"
+#include "CGHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -17,17 +17,18 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 /// @class ComplexHandler ComplexHandler.h "ComplexHandler.h"
 /// @brief complex attribute 用のハンドラ
+///
+/// このクラスで DotlibHandler の仮想関数である parse_attr_value()
+/// を実装している．
 //////////////////////////////////////////////////////////////////////
 class ComplexHandler :
-  public DotlibHandler
+  public CGHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  /// @param[in] vector_mode ベクターモードで読み込むとき true にするフラグ
-  ComplexHandler(DotlibParser& parser,
-		 bool vector_mode = false);
+  ComplexHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   virtual
@@ -42,37 +43,18 @@ public:
   /// @brief 属性値を読み込む．
   /// @param[in] attr_type 属性
   /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ属性値を返す．
-  ///
-  /// エラーが起きたら nullptr を返す．
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
   virtual
-  const AstNode*
+  bool
   parse_attr_value(AttrType attr_type,
-		   const FileRegion& attr_loc);
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // ComplexHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値を表すノードを作る．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value_list 値のリスト
-  /// @return value_list に対応した AstNode を返す．
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const vector<const AstNode*>& value_list);
+		   const FileRegion& attr_loc) override;
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // parse_complex() 中でベクターモードで読み込む時 true にするフラグ
-  bool mVectorMode;
 
 };
 
