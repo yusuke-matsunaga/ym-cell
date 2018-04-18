@@ -7,22 +7,14 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
 #include "PieceWiseHandler.h"
-#include "dotlib/AstInt.h"
-#include "dotlib/AstFloat.h"
+#include "dotlib/TokenType.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/AstMgr.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief piece wise 用のハンドラを作る．
-DotlibHandler*
-HandlerFactory::new_piece_wise(DotlibParser& parser)
-{
-  return new PieceWiseHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス PieceWiseHandler
@@ -53,6 +45,14 @@ const AstPieceWise*
 PieceWiseHandler::value() const
 {
   return mValue;
+}
+
+// @brief ヘッダの開始処理
+//
+// '(' を読み込んだ時に呼ばれる．
+void
+PieceWiseHandler::begin_header()
+{
 }
 
 // @brief 値を読み込む処理
@@ -103,16 +103,12 @@ PieceWiseHandler::read_value(TokenType value_type,
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-// @param[in] attr_type 属性
-// @param[in] attr_loc attr_type のファイル上の位置
 // @param[in] header_loc '(' から ')' までのファイル上の位置
 // @param[in] count 読み込んだ要素数
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-PieceWiseHandler::end_header(AttrType attr_type,
-			     const FileRegion& attr_loc,
-			     const FileRegion& header_loc,
+PieceWiseHandler::end_header(const FileRegion& header_loc,
 			     int count)
 {
   if ( count != 2 ) {

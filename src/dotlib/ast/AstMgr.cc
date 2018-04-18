@@ -51,6 +51,11 @@ AstMgr::clear()
   mStrExprNum = 0;
   mListNum = 0;
   mListElemSize = 0;
+  mTemplateNum = 0;
+  mLutNum = 0;
+  mInputVolNum = 0;
+  mOutputVolNum = 0;
+  mPieceWiseNum = 0;
   mTechnologyNum = 0;
   mDelayModelNum = 0;
   mCellPinDirectionNum = 0;

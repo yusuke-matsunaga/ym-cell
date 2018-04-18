@@ -1,5 +1,5 @@
-#ifndef OUTPUTvolTAGEHANDLER_H
-#define OUTPUTvolTAGEHANDLER_H
+#ifndef OUTPUTVOLTAGEHANDLER_H
+#define OUTPUTVOLTAGEHANDLER_H
 
 /// @file OutputVoltageHandler.h
 /// @brief OutputVoltageHandler のヘッダファイル
@@ -9,13 +9,14 @@
 /// All rights reserved.
 
 #include "GroupHandler.h"
+#include "ExprHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class OutputVoltageHandler OutputVoltageHandler.h "OutputVoltageHandler.h"
-/// @brief input voltage 用のハンドラ
+/// @brief output voltage 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class OutputVoltageHandler :
   public Str1GroupHandler
@@ -27,25 +28,7 @@ public:
   OutputVoltageHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  virtual
   ~OutputVoltageHandler();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // DotlibHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 属性値を読み込む．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ値を表す AstNode を返す．
-  ///
-  /// エラーの場合には nullptr を返す．
-  virtual
-  const AstNode*
-  parse_attr_value(AttrType attr_type,
-		   const FileRegion& attr_loc) override;;
 
 
 public:
@@ -53,31 +36,39 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief パーズする．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ InputVoltage を返す．
-  ///
-  /// エラーの場合には nullptr を返す．
+  /// @brief 値をクリアする．
+  void
+  clear_value();
+
+  /// @brief 読み込んだ値を返す．
   const AstOutputVoltage*
-  parse(AttrType attr_type,
-	const FileRegion& attr_loc);
+  value() const;
 
 
-private:
+protected:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
+  // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief グループ記述の始まり
+  void
+  begin_group() override;
 
   /// @brief attr_type に対応する属性を読み込む．
   /// @param[in] attr_type 対象の属性
   /// @param[in] attr_loc attr_type のファイル上の位置
-  /// @retval true 正常に処理した．
-  /// @retval false 処理中にエラーが起こった．
-  virtual
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
   bool
   parse_attr(AttrType attr_type,
 	     const FileRegion& attr_loc) override;
+
+  /// @brief グループ記述の終わり
+  /// @param[in] group_loc グループ全体のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  bool
+  end_group(const FileRegion& group_loc) override;
 
 
 private:
@@ -85,24 +76,23 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 式のパーザー
-  ExprHandler* mExprHandler;
-
   // vol
-  const AstExpr* mVol;
+  ExprHandler mVol;
 
   // voh
-  const AstExpr* mVoh;
+  ExprHandler mVoh;
 
   // vomin
-  const AstExpr* mVomin;
+  ExprHandler mVomin;
 
   // vomax
-  const AstExpr* mVomax;
+  ExprHandler mVomax;
 
+  // 読み込んだ値
+  const AstOutputVoltage* mValue;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // OUTPUTvolTAGEHANDLER_H
+#endif // OUTPUTVOLTAGEHANDLER_H

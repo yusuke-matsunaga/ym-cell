@@ -28,7 +28,6 @@ public:
   ExprHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  virtual
   ~ExprHandler();
 
 
@@ -45,44 +44,11 @@ public:
   const AstExpr*
   value() const;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // DotlibHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
   /// @brief 属性値を読み込む．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
-  virtual
   bool
-  parse_attr_value(AttrType attr_type,
-		   const FileRegion& attr_loc) override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief primary を読み込む．
-  AstExpr*
-  read_primary();
-
-  /// @brief prudct を読み込む．
-  AstExpr*
-  read_product();
-
-  /// @brief expression を読み込む．
-  AstExpr*
-  read_expr(TokenType end_marker);
-
-  /// @brief トークンを読み込む．
-  /// @param[out] loc 対応するファイル上の位置情報を格納する変数
-  TokenType
-  read_token(FileRegion& loc);
+  parse_attr_value();
 
 
 private:
@@ -90,14 +56,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 読み戻したトークンの型
-  TokenType mUngetType;
-
-  // 読み戻したトークンの位置
-  FileRegion mUngetLoc;
-
   // 読み込んだ値
-  AstExpr* mValue;
+  const AstExpr* mValue;
 
 };
 

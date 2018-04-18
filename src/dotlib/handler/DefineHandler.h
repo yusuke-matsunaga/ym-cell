@@ -30,34 +30,27 @@ public:
 		GroupHandler* parent);
 
   /// @brief デストラクタ
-  virtual
   ~DefineHandler();
 
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // DotlibHandler の仮想関数
+  // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 属性値を読み込む．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ属性値を返す．
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
   ///
   /// エラーが起きたら nullptr を返す．
-  virtual
-  const AstNode*
-  parse_attr_value(AttrType attr_type,
-		   const FileRegion& attr_loc) override;
+  bool
+  parse_attr_value();
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // 親のハンドラ
-  GroupHandler* mParent;
 
 };
 

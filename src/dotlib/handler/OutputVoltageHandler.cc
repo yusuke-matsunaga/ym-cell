@@ -34,9 +34,13 @@ HandlerFactory::new_output_voltage(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 OutputVoltageHandler::OutputVoltageHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser)
+  Str1GroupHandler(parser),
+  mVol(parser),
+  mVoh(parser),
+  mVomin(parser),
+  mVomax(parser)
+
 {
-  mExprHandler = HandlerFactory::new_expr(parser);
 }
 
 // @brief デストラクタ
@@ -44,72 +48,65 @@ OutputVoltageHandler::~OutputVoltageHandler()
 {
 }
 
-// @brief 属性値を読み込む．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ値を表す AstNode を返す．
-//
-// エラーの場合には nullptr を返す．
-const AstNode*
-OutputVoltageHandler::parse_attr_value(AttrType attr_type,
-				       const FileRegion& attr_loc)
+// @brief 値をクリアする．
+void
+OutputVoltageHandler::clear_value()
 {
-  return parse(attr_type, attr_loc);
+  mValue = nullptr;
 }
 
-// @brief パーズする．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ InputVoltage を返す．
-//
-// エラーの場合には nullptr を返す．
+// @brief 読み込んだ値を返す．
 const AstOutputVoltage*
-OutputVoltageHandler::parse(AttrType attr_type,
-			    const FileRegion& attr_loc)
+OutputVoltageHandler::value() const
 {
-  mVol = nullptr;
-  mVoh = nullptr;
-  mVomin = nullptr;
-  mVomax = nullptr;
+  return mValue;
+}
 
-  const AstString* value;
-  FileRegion value_loc;
-  FileRegion end_loc;
-  bool r = parse_common(attr_type, attr_loc, value, value_loc, end_loc);
-  if ( !r ) {
-    return nullptr;
-  }
-
-  FileRegion loc(attr_loc, end_loc);
-  return mgr().new_output_voltage(loc, value, mVil, mVih, mVimin, mVimax);
+// @brief グループ記述の始まり
+void
+OutputVoltageHandler::begin_group()
+{
+  mVol.clear_value();
+  mVoh.clear_value();
+  mVomin.clear_value();
+  mVomax.clear_value();
 }
 
 // @brief attr_type に対応する属性を読み込む．
 // @param[in] attr_type 対象の属性
 // @param[in] attr_loc attr_type のファイル上の位置
-// @retval true 正常に処理した．
-// @retval false 処理中にエラーが起こった．
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
 bool
 OutputVoltageHandler::parse_attr(AttrType attr_type,
 				 const FileRegion& attr_loc)
 {
   switch ( attr_type ) {
-  case AttrType::vol:
-    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVol);
-
-  case AttrType::voh:
-    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVoh);
-
-  case AttrType::vomin:
-    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVomin);
-
-  case AttrType::vomax:
-    return mExprHandler->parse_and_assign(attr_type, attr_loc, mVomax);
-
-  default:
-    break;
+  case AttrType::vol:   return mVol.parse_attr_value();
+  case AttrType::voh:   return mVoh.parse_attr_value();
+  case AttrType::vomin: return mVomin.parse_attr_value();
+  case AttrType::vomax: return mVomax.parse_attr_value();
+  default: break;
   }
+  syntax_error(attr_type, attr_loc);
   return false;
+}
+
+// @brief グループ記述の終わり
+// @param[in] group_loc グループ全体のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+OutputVoltageHandler::end_group(const FileRegion& group_loc)
+{
+  mValue = mgr().new_output_voltage(group_loc,
+				    header_value(),
+				    mVol.value(),
+				    mVoh.value(),
+				    mVomin.value(),
+				    mVomax.value());
+
+  return true;
 }
 
 END_NAMESPACE_YM_DOTLIB

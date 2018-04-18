@@ -29,8 +29,8 @@ private:
   /// @param[in] value1
   /// @param[in] value2
   AstPieceWise(const FileRegion& loc,
-	       const AstInt* value1,
-	       const AstFloat* value2);
+	       int value1,
+	       double value2);
 
   /// @brief デストラクタ
   virtual
@@ -43,11 +43,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値１を返す．
-  const AstInt*
+  int
   value1() const;
 
   /// @brief 値２を返す．
-  const AstFloat*
+  double
   value2() const;
 
   /// @brief 内容をストリーム出力する．
@@ -71,10 +71,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値1
-  const AstInt* mValue1;
+  int mValue1;
 
   // 値2
-  const AstFloat* mValue2;
+  double mValue2;
 
 };
 
@@ -85,7 +85,7 @@ private:
 
 // @brief 値１を返す．
 inline
-const AstInt*
+int
 AstPieceWise::value1() const
 {
   return mValue1;
@@ -93,7 +93,7 @@ AstPieceWise::value1() const
 
 // @brief 値２を返す．
 inline
-const AstFloat*
+double
 AstPieceWise::value2() const
 {
   return mValue2;

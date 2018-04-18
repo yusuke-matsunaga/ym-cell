@@ -1,5 +1,5 @@
-#ifndef valueSHANDLER_H
-#define valueSHANDLER_H
+#ifndef VALUESHANDLER_H
+#define VALUESHANDLER_H
 
 /// @file ValuesHandler.h
 /// @brief ValuesHandler のヘッダファイル
@@ -28,7 +28,6 @@ public:
   ValuesHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  virtual
   ~ValuesHandler();
 
 
@@ -54,7 +53,6 @@ protected:
   /// @brief ヘッダの開始処理
   ///
   /// '(' を読み込んだ時に呼ばれる．
-  virtual
   void
   begin_header() override;
 
@@ -62,24 +60,18 @@ protected:
   /// @param[in] value_type 型
   /// @param[in] value_loc トークンの位置
   /// @param[in] count read_value() の呼ばれた回数
-  virtual
   bool
   read_value(TokenType value_type,
 	     const FileRegion& value_loc,
 	     int count) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc attr_type のファイル上の位置
   /// @param[in] header_loc '(' から ')' までのファイル上の位置
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
-  virtual
   bool
-  end_header(AttrType attr_type,
-	     const FileRegion& attr_loc,
-	     const FileRegion& header_loc,
+  end_header(const FileRegion& header_loc,
 	     int count) override;
 
 
@@ -98,10 +90,10 @@ private:
   vector<double> mValueList;
 
   // 読み込んだ値
-  AstFloatVector* mValue;
+  const AstFloatVector* mValue;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // valueSHANDLER_H
+#endif // VALUESHANDLER_H

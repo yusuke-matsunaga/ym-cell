@@ -9,6 +9,8 @@
 /// All rights reserved.
 
 #include "GroupHandler.h"
+#include "IndexHandler.h"
+#include "ValuesHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -27,7 +29,6 @@ public:
   TableHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  virtual
   ~TableHandler();
 
 
@@ -51,7 +52,6 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief グループ記述の始まり
-  virtual
   void
   begin_group() override;
 
@@ -60,7 +60,6 @@ private:
   /// @param[in] attr_loc attr_type のファイル上の位置
   /// @retval true 正常に処理した．
   /// @retval false 処理中にエラーが起こった．
-  virtual
   bool
   parse_attr(AttrType attr_type,
 	     const FileRegion& attr_loc) override;
@@ -70,10 +69,8 @@ private:
   /// @param[in] attr_loc attr_type のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
-  virtual
   bool
-  end_group(AttrType attr_type,
-	    const FileRegion& attr_loc) override;
+  end_group(const FileRegion& group_loc) override;
 
 
 private:
@@ -82,16 +79,16 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // index_1
-  IndexHandler* mIndex1;
+  IndexHandler mIndex1;
 
   // index_2
-  IndexHandler* mIndex2;
+  IndexHandler mIndex2;
 
   // index_3
-  IndexHandler* mIndex3;
+  IndexHandler mIndex3;
 
   // values
-  ValuesHandler* mValues;
+  ValuesHandler mValues;
 
   // 読み込んだ値
   AstLut* mValue;

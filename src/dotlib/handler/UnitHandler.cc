@@ -7,22 +7,15 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
 #include "UnitHandler.h"
+#include "dotlib/TokenType.h"
+#include "dotlib/DotlibParser.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstUnit.h"
+//#include "dotlib/AstUnit.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief unit 用のハンドラを作る．
-DotlibHandler*
-HandlerFactory::new_unit(DotlibParser& parser)
-{
-  return new UnitHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス UnitHandler
@@ -69,8 +62,8 @@ UnitHandler::begin_header()
 // @param[in] count read_value() の呼ばれた回数
 bool
 UnitHandler::read_value(TokenType value_type,
-			       const FileRegion& value_loc,
-			       int count)
+			const FileRegion& value_loc,
+			int count)
 {
   if ( count == 0 ) {
     if ( value_type != TokenType::INT_NUM && value_type != TokenType::FLOAT_NUM ) {
@@ -111,16 +104,12 @@ UnitHandler::read_value(TokenType value_type,
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-// @param[in] attr_type 属性
-// @param[in] attr_loc attr_type のファイル上の位置
 // @param[in] header_loc '(' から ')' までのファイル上の位置
 // @param[in] count 読み込んだ要素数
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-UnitHandler::end_header(AttrType attr_type,
-			const FileRegion& attr_loc,
-			const FileRegion& header_loc,
+UnitHandler::end_header(const FileRegion& header_loc,
 			int count)
 {
   if ( count != 2 ) {
@@ -132,7 +121,7 @@ UnitHandler::end_header(AttrType attr_type,
     return false;
   }
   else {
-    mValue = mgr().new_unit(header_loc, unit_val, unit_str);
+    mValue = mgr().new_unit(header_loc, mUnitVal, mUnitStr);
     return true;
   }
 }

@@ -63,6 +63,10 @@ public:
   bool
   expect_nl();
 
+  /// @brief expression を読み込む．
+  AstExpr*
+  read_expr(TokenType end_marker);
+
   /// @brief トークンを一つ読み込む．
   /// @param[out] loc ファイル上の位置情報を格納する変数
   /// @param[in] symbol_mode 数字も文字とみなすモード
@@ -106,6 +110,27 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
+  // read_expr() で用いられる下請け関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief primary を読み込む．
+  AstExpr*
+  read_primary();
+
+  /// @brief prudct を読み込む．
+  AstExpr*
+  read_product();
+
+  /// @brief トークンを読み込む．
+  /// @param[out] loc 対応するファイル上の位置情報を格納する変数
+  ///
+  /// read_token() との違いは mUngetToken を考慮すること．
+  TokenType
+  _read_token(FileRegion& loc);
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
@@ -114,9 +139,6 @@ private:
 
   // AstNode を管理するオブジェクト
   AstMgr& mAstMgr;
-
-  // library グループを処理するハンドラ
-  std::unique_ptr<DotlibHandler> mLibraryHandler;
 
   // 直前の位置
   FileRegion mCurLoc;
@@ -129,6 +151,12 @@ private:
 
   // 行末のセミコロンなしを許すかどうかのフラグ
   bool mAllowNoSemi;
+
+  // 読み戻したトークンの型
+  TokenType mUngetType;
+
+  // 読み戻したトークンの位置
+  FileRegion mUngetLoc;
 
 };
 

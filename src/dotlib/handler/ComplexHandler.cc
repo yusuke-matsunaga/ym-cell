@@ -29,13 +29,10 @@ ComplexHandler::~ComplexHandler()
 }
 
 // @brief 構文要素を処理する．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-ComplexHandler::parse_attr_value(AttrType attr_type,
-				 const FileRegion& attr_loc)
+ComplexHandler::parse_attr_value()
 {
   if ( !parse_header() ) {
     return false;

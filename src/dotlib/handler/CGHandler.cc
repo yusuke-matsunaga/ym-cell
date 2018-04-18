@@ -8,6 +8,9 @@
 
 
 #include "CGHandler.h"
+#include "dotlib/TokenType.h"
+#include "dotlib/DotlibParser.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -70,7 +73,7 @@ CGHandler::parse_header()
     }
   }
 
-  if ( !end_header(attr_type, attr_loc, FileRegion(first_loc, loc), count) ) {
+  if ( !end_header(FileRegion(first_loc, loc), count) ) {
     return false;
   }
 

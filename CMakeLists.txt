@@ -89,14 +89,15 @@ set (dotlib_SOURCES
   src/dotlib/parser/DotlibScanner.cc
 
   src/dotlib/handler/DotlibHandler.cc
-  src/dotlib/handler/FhScanner.cc
-  src/dotlib/handler/HandlerFactory.cc
   src/dotlib/handler/CellInternalPower.cc
+  src/dotlib/handler/CGHandler.cc
   src/dotlib/handler/ComplexHandler.cc
   src/dotlib/handler/DefineHandler.cc
   src/dotlib/handler/DelayModelHandler.cc
   src/dotlib/handler/ExprHandler.cc
   src/dotlib/handler/FuncHandler.cc
+  src/dotlib/handler/FuncParser.cc
+  src/dotlib/handler/FuncScanner.cc
   src/dotlib/handler/GroupHandler.cc
   src/dotlib/handler/LibraryHandler.cc
   src/dotlib/handler/IndexHandler.cc
@@ -108,6 +109,7 @@ set (dotlib_SOURCES
   src/dotlib/handler/PowerHandler.cc
   src/dotlib/handler/PieceWiseHandler.cc
   src/dotlib/handler/SimpleHandler.cc
+  src/dotlib/handler/StrBaseHandler.cc
   src/dotlib/handler/TableHandler.cc
   src/dotlib/handler/TechnologyHandler.cc
   src/dotlib/handler/TemplateHandler.cc
@@ -126,7 +128,6 @@ set (dotlib_SOURCES
   src/dotlib/ast/AstFL.cc
   src/dotlib/ast/AstFloat.cc
   src/dotlib/ast/AstFloatVector.cc
-  src/dotlib/ast/AstGenGroup.cc
   src/dotlib/ast/AstInputVoltage.cc
   src/dotlib/ast/AstInt.cc
   src/dotlib/ast/AstLatch.cc

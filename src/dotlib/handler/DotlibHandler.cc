@@ -10,11 +10,11 @@
 #include "dotlib/DotlibHandler.h"
 #include "dotlib/DotlibParser.h"
 #include "dotlib/TokenType.h"
-#include "dotlib/AstMgr.h"
-#include "dotlib/AstInt.h"
-#include "dotlib/AstFloat.h"
-#include "dotlib/AstFloatVector.h"
-#include "dotlib/AstString.h"
+//#include "dotlib/AstMgr.h"
+//#include "dotlib/AstInt.h"
+//#include "dotlib/AstFloat.h"
+//#include "dotlib/AstFloatVector.h"
+//#include "dotlib/AstString.h"
 #include "ym/MsgMgr.h"
 
 
@@ -36,109 +36,19 @@ DotlibHandler::~DotlibHandler()
 {
 }
 
-#if 0
-// @brief group attribute 用のパースを行う．
-// @return 正しく読み込めたら true を返す．
-bool
-DotlibHandler::parse_complex()
+// @brief パーサーを得る．
+DotlibParser&
+DotlibHandler::parser()
 {
-  if ( !expect(TokenType::LP) ) {
-    return false;
-  }
-
-  FileRegion first_loc = parser().cur_loc();
-
-  FileRegion loc;
-  TokenType type = parser().read_token(loc);
-  int count = 0;
-  if ( type != TokenType::RP ) {
-    for ( ; ; ) {
-      ++ count;
-      if ( !read_value(type, loc, count) ) {
-	return false;
-      }
-
-      TokenType type1 = parser().read_token(loc);
-      if ( type1 == TokenType::RP ) {
-	break;
-      }
-      if ( type1 != TokenType::COMMA ) {
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			loc,
-			MsgType::Error,
-			"DOTLIB_PARSER",
-			"syntax error. ',' is expected.");
-	return false;
-      }
-      type = parser().read_token(loc);
-    }
-  }
-
-  return true;
+  return mParser;
 }
 
-// @brief AstNode を生成する．
-// @param[in] loc ファイル上の位置情報
-// @param[in] vector_mode ベクタモードの時 true にするフラグ
-// @param[in] type 型
-AstNode*
-DotlibHandler::new_value(const FileRegion& loc,
-			 TokenType type,
-			 bool vector_mode)
+// @brief AstMgr* を得る．
+AstMgr&
+DotlibHandler::mgr()
 {
-  switch ( type ) {
-  case TokenType::INT_NUM:
-    return mgr().new_int(loc, parser().cur_int());
-
-  case TokenType::FLOAT_NUM:
-    return mgr().new_float(loc, parser().cur_float());
-
-  case TokenType::SYMBOL:
-    if ( vector_mode ) {
-      const char* tmp_str = parser().cur_string();
-      vector<double> value_list;
-      string buf;
-      char c = '\0';
-      for ( const char* s = tmp_str; (c = *s) ; ++ s ) {
-	if ( isspace(c) ) {
-	  continue;
-	}
-	else if ( c == ',' ) {
-	  if ( buf.size() == 0 ) {
-	    MsgMgr::put_msg(__FILE__, __LINE__,
-			    loc,
-			    MsgType::Error,
-			    "DOTLIB_PARSER",
-			    "Syntax error. Null element.");
-	    return nullptr;
-	  }
-	  value_list.push_back(strtod(buf.c_str(), nullptr));
-	  buf.clear();
-	}
-	else {
-	  buf += c;
-	}
-      }
-      if ( buf.size() > 0 ) {
-	value_list.push_back(strtod(buf.c_str(), nullptr));
-      }
-      return mgr().new_vector(loc, value_list);
-    }
-    else {
-      return mgr().new_string(loc, ShString(parser().cur_string()));
-    }
-
-  default:
-    break;
-  }
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  loc,
-		  MsgType::Error,
-		  "DOTLIB_PARSER",
-		  "Syntax error. int/float/string value is expected.");
-  return nullptr;
+  return mParser.mgr();
 }
-#endif
 
 // @brief 引数の種類のトークンでなければエラーメッセージを出力する．
 bool
@@ -154,18 +64,20 @@ DotlibHandler::expect_nl()
   return mParser.expect_nl();
 }
 
-// @brief パーサーを得る．
-DotlibParser&
-DotlibHandler::parser()
+// @brief 未対応の属性名に対するエラーメッセージを出力する．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+void
+DotlibHandler::syntax_error(AttrType attr_type,
+			    const FileRegion& attr_loc)
 {
-  return mParser;
-}
-
-// @brief AstMgr* を得る．
-AstMgr&
-DotlibHandler::mgr()
-{
-  return mParser.mgr();
+  ostringstream buf;
+  buf << "Syntax error. Unexpected keyword: " << attr_type;
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  attr_loc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  buf.str());
 }
 
 // @brief デバッグモードの時に true を返す．

@@ -7,25 +7,13 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
 #include "InputVoltageHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstExpr.h"
-#include "dotlib/AstAttr.h"
 #include "dotlib/AstInputVoltage.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief input_voltage group 用のハンドラを作る．
-// @param[in] parser パーサー
-DotlibHandler*
-HandlerFactory::new_input_voltage(DotlibParser& parser)
-{
-  return new InputVoltageHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス InputVoltageHandler
@@ -34,17 +22,24 @@ HandlerFactory::new_input_voltage(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 InputVoltageHandler::InputVoltageHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser)
+  Str1GroupHandler(parser),
+  mVil(parser),
+  mVih(parser),
+  mVimin(parser),
+  mVimax(parser)
 {
-  mVil   = HandlerFactory::new_expr(parser);
-  mVih   = HandlerFactory::new_expr(parser);
-  mVimin = HandlerFactory::new_expr(parser);
-  mVimax = HandlerFactory::new_expr(parser);
 }
 
 // @brief デストラクタ
 InputVoltageHandler::~InputVoltageHandler()
 {
+}
+
+// @brief 値をクリアする．
+void
+InputVoltageHandler::clear_value()
+{
+  mValue = nullptr;
 }
 
 // @brief 読み込んだ値を返す．
@@ -58,6 +53,10 @@ InputVoltageHandler::value() const
 void
 InputVoltageHandler::begin_group()
 {
+  mVil.clear_value();
+  mVih.clear_value();
+  mVimin.clear_value();
+  mVimax.clear_value();
 }
 
 // @brief attr_type に対応する属性を読み込む．
@@ -70,33 +69,31 @@ InputVoltageHandler::parse_attr(AttrType attr_type,
 				const FileRegion& attr_loc)
 {
   switch ( attr_type ) {
-  case AttrType::vil:
-    return mVil->parse_attr_value(attr_type, attr_loc);
-
-  case AttrType::vih:
-    return mVih->parse_attr_value(attr_type, attr_loc);
-
-  case AttrType::vimin:
-    return mVimin->parse_attr_value(attr_type, attr_loc);
-
-  case AttrType::vimax:
-    return mVimax->parse_attr_value(attr_type, attr_loc);
-
-  default:
-    break;
+  case AttrType::vil:   return mVil.parse_attr_value();
+  case AttrType::vih:   return mVih.parse_attr_value();
+  case AttrType::vimin: return mVimin.parse_attr_value();
+  case AttrType::vimax: return mVimax.parse_attr_value();
+  default: break;
   }
+  syntax_error(attr_type, attr_loc);
   return false;
 }
 
 // @brief グループ記述の終わり
-// @param[in] attr_type 対象の属性
-// @param[in] attr_loc attr_type のファイル上の位置
+// @param[in] group_loc グループ全体のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-InputVoltageHandler::end_group(AttrType attr_type,
-			       const FileRegion& attr_loc)
+InputVoltageHandler::end_group(const FileRegion& group_loc)
 {
+  mValue = mgr().new_input_voltage(group_loc,
+				   header_value(),
+				   mVil.value(),
+				   mVih.value(),
+				   mVimin.value(),
+				   mVimax.value());
+
+  return true;
 }
 
 END_NAMESPACE_YM_DOTLIB

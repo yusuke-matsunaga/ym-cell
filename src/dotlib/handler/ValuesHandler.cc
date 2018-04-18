@@ -8,21 +8,13 @@
 
 
 #include "ValuesHandler.h"
-#include "dotlib/HandlerFactory.h"
+#include "dotlib/DotlibParser.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstFloatVector.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief 'values' 用のハンドラを作る．
-DotlibHandler*
-HandlerFactory::new_values(DotlibParser& parser)
-{
-  return new ValuesHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス ValuesHandler
@@ -105,16 +97,12 @@ ValuesHandler::read_value(TokenType value_type,
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-// @param[in] attr_type 属性
-// @param[in] attr_loc attr_type のファイル上の位置
 // @param[in] header_loc '(' から ')' までのファイル上の位置
 // @param[in] count 読み込んだ要素数
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-ValuesHandler::end_header(AttrType attr_type,
-			  const FileRegion& attr_loc,
-			  const FileRegion& header_loc,
+ValuesHandler::end_header(const FileRegion& header_loc,
 			  int count)
 {
   if ( count == 0 ) {

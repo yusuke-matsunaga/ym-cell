@@ -27,7 +27,6 @@ public:
   LibraryHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  virtual
   ~LibraryHandler();
 
 
@@ -36,18 +35,35 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 読み込んだ値を返す．
+  const AstLibrary*
+  value() const;
 
-private:
+
+protected:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
+  // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値を作る．
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const AstString* name,
-	   const vector<const AstAttr*>& attr_list) override;
+  /// @brief グループ記述の始まり
+  void
+  begin_group() override;
+
+  /// @brief attr_type に対応する属性を読み込む．
+  /// @param[in] attr_type 対象の属性
+  /// @param[in] attr_loc attr_type のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  bool
+  parse_attr(AttrType attr_type,
+	     const FileRegion& attr_loc) override;
+
+  /// @brief グループ記述の終わり
+  /// @param[in] group_loc グループ全体のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  bool
+  end_group(const FileRegion& group_loc) override;
 
 
 private:
@@ -55,6 +71,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // 読み込んだ値
+  AstLibrary* mValue;
 
 };
 

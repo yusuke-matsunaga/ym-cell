@@ -10,7 +10,6 @@
 
 
 #include "dotlib_nsdef.h"
-#include "AttrType.h"
 #include "ym/FileRegion.h"
 
 
@@ -81,24 +80,7 @@ public:
   DotlibHandler(DotlibHandler&& src) = delete;
 
   /// @brief デストラクタ
-  virtual
   ~DotlibHandler();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 派生クラスが実装する仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 属性値を読み込む．
-  /// @param[in] attr_name 属性名
-  /// @param[in] attr_loc ファイル上の位置
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  virtual
-  bool
-  parse_attr_value(AttrType attr_type,
-		   const FileRegion& attr_loc) = 0;
 
 
 public:
@@ -120,11 +102,6 @@ protected:
   // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief complex attribute 用のパースを行う．
-  /// @return 正しく読み込めたら true を返す．
-  bool
-  parse_complex();
-
   /// @brief 引数の種類のトークンでなければエラーメッセージを出力する．
   /// @param[in] req_type 要求するトークンの型
   bool
@@ -133,6 +110,14 @@ protected:
   /// @brief 行末まで読み込む．
   bool
   expect_nl();
+
+  /// @brief 未対応の属性名に対するエラーメッセージを出力する．
+  /// @param[in] attr_type 対象の属性
+  /// @param[in] attr_loc attr_type のファイル上の位置
+  static
+  void
+  syntax_error(AttrType attr_type,
+	       const FileRegion& attr_loc);
 
   /// @brief デバッグモードの時に true を返す．
   bool

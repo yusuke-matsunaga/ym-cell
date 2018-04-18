@@ -28,7 +28,6 @@ public:
   Str1ComplexHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  virtual
   ~Str1ComplexHandler();
 
 
@@ -54,15 +53,13 @@ protected:
   /// @brief ヘッダの開始処理
   ///
   /// '(' を読み込んだ時に呼ばれる．
-  virtual
   void
-  begin_header();
+  begin_header() override;
 
   /// @brief 値を読み込む処理
   /// @param[in] value_type 型
   /// @param[in] value_loc トークンの位置
   /// @param[in] count read_value() の呼ばれた回数
-  virtual
   bool
   read_value(TokenType value_type,
 	     const FileRegion& value_loc,
@@ -75,7 +72,6 @@ protected:
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
-  virtual
   bool
   end_header(AttrType attr_type,
 	     const FileRegion& attr_loc,
@@ -89,7 +85,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 読み込んだ値
-  AstString* mValue;
+  const AstString* mValue;
 
 };
 

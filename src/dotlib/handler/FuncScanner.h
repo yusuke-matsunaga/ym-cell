@@ -1,8 +1,8 @@
-﻿#ifndef FHSCANNER_H
-#define FHSCANNER_H
+﻿#ifndef FUNCSCANNER_H
+#define FUNCSCANNER_H
 
-/// @file FhScanner.h
-/// @brief FhScanner のヘッダファイル
+/// @file FuncScanner.h
+/// @brief FuncScanner のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
@@ -17,33 +17,39 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class FhScanner FhScanner.h "FhScanner.h"
+/// @class FuncScanner FuncScanner.h "FuncScanner.h"
 /// @brief FuncHandler 用の字句解析器
 //////////////////////////////////////////////////////////////////////
-class FhScanner
+class FuncScanner
 {
 public:
 
   /// @brief コンストラクタ
-  FhScanner();
+  /// @param[in] str 文字列
+  /// @param[in] str のファイル上の位置
+  FuncScanner(const char* str,
+	      const FileRegion& loc);
 
   /// @brief デストラクタ
-  ~FhScanner();
+  ~FuncScanner();
 
 
 public:
-
-  /// @brief 文字列をセットする．
-  /// @param[in] str 文字列
-  /// @param[in] str のファイル上の位置
-  void
-  init(const char* str,
-       const FileRegion& loc);
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief トークンを読み込む．
   /// @param[out] loc 対応するファイル上の位置情報を格納する変数
   TokenType
   read_token(FileRegion& loc);
+
+  /// @brief 読み込んだトークンを戻す．
+  /// @param[in] type トークンの型
+  /// @param[in] loc トークンの位置
+  void
+  unget_token(TokenType type,
+	      const FileRegion& loc);
 
   /// @brief 直前の read_token() で読んだトークンの文字列を返す．
   const char*
@@ -100,8 +106,14 @@ private:
   // 最初のコラム位置
   int mFirstColumn;
 
+  // 読み戻したトークンの型
+  TokenType mUngetType;
+
+  // 読み戻したトークンの位置
+  FileRegion mUngetLoc;
+
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // FHSCANNER_H
+#endif // FUNCSCANNER_H

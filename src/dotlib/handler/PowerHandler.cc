@@ -7,28 +7,13 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
 #include "PowerHandler.h"
-#include "ComplexHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstFloatVector.h"
-#include "dotlib/AstList.h"
-#include "dotlib/AstLut.h"
-#include "dotlib/AstAttr.h"
 #include "ym/MsgMgr.h"
 
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief table group 用のハンドラを作る．
-// @param[in] parser パーサー
-DotlibHandler*
-HandlerFactory::new_power(DotlibParser& parser)
-{
-  return new PowerHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス PowerHandler
@@ -37,26 +22,12 @@ HandlerFactory::new_power(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 PowerHandler::PowerHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser)
+  Str1GroupHandler(parser),
+  mIndex1(parser),
+  mIndex2(parser),
+  mIndex3(parser),
+  mValues(parser)
 {
-  DotlibHandler* index_handler = HandlerFactory::new_index(parser);
-  DotlibHandler* values_handler = HandlerFactory::new_values(parser);
-  DotlibHandler* complex        = new ComplexHandler(parser);
-  DotlibHandler* dummy_handler = HandlerFactory::new_group(parser);
-
-  // simple attributes
-
-  // complex attribute
-  reg_handler(AttrType::index_1,          index_handler);
-  reg_handler(AttrType::index_2,          index_handler);
-  reg_handler(AttrType::index_3,          index_handler);
-  reg_handler(AttrType::valueS,           values_handler);
-
-  reg_handler(AttrType::orders,           complex);
-  reg_handler(AttrType::coefs,            complex);
-
-  // group statements
-  reg_handler(AttrType::domain,           dummy_handler);
 }
 
 // @brief デストラクタ
@@ -64,6 +35,7 @@ PowerHandler::~PowerHandler()
 {
 }
 
+#if 0
 // @brief 値を作る．
 const AstNode*
 PowerHandler::gen_node(const FileRegion& loc,
@@ -130,5 +102,6 @@ PowerHandler::gen_node(const FileRegion& loc,
   }
   return mgr().new_lut(loc, name, index_1, index_2, index_3, values);
 }
+#endif
 
 END_NAMESPACE_YM_DOTLIB

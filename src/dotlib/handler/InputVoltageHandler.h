@@ -9,6 +9,7 @@
 /// All rights reserved.
 
 #include "GroupHandler.h"
+#include "ExprHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -27,7 +28,6 @@ public:
   InputVoltageHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  virtual
   ~InputVoltageHandler();
 
 
@@ -35,6 +35,10 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 値をクリアする．
+  void
+  clear_value();
 
   /// @brief 読み込んだ値を返す．
   const AstInputVoltage*
@@ -47,7 +51,6 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief グループ記述の始まり
-  virtual
   void
   begin_group() override;
 
@@ -56,20 +59,16 @@ private:
   /// @param[in] attr_loc attr_type のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
-  virtual
   bool
   parse_attr(AttrType attr_type,
 	     const FileRegion& attr_loc) override;
 
   /// @brief グループ記述の終わり
-  /// @param[in] attr_type 対象の属性
-  /// @param[in] attr_loc attr_type のファイル上の位置
+  /// @param[in] group_loc グループ全体のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
-  virtual
   bool
-  end_group(AttrType attr_type,
-	    const FileRegion& attr_loc) override;
+  end_group(const FileRegion& group_loc) override;
 
 
 private:
@@ -78,19 +77,19 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // vil
-  ExprHandler* mVil;
+  ExprHandler mVil;
 
   // vih
-  ExprHandler* mVih;
+  ExprHandler mVih;
 
   // vimin
-  ExprHandler* mVimin;
+  ExprHandler mVimin;
 
   // vimax
-  ExprHandler* mVimax;
+  ExprHandler mVimax;
 
   // 読み込んだ値
-  AstInputVoltage* mValue;
+  const AstInputVoltage* mValue;
 
 };
 

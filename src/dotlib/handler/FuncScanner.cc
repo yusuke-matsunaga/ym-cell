@@ -1,13 +1,13 @@
 ﻿
-/// @file FhScanner.cc
-/// @brief FhScanner の実装ファイル
+/// @file FuncScanner.cc
+/// @brief FuncScanner の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "FhScanner.h"
+#include "FuncScanner.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
@@ -15,41 +15,41 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス FhScanner
+// クラス FuncScanner
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-FhScanner::FhScanner()
-{
-  mSrcString = nullptr;
-  mCurPos = 0;
-}
-
-// @brief デストラクタ
-FhScanner::~FhScanner()
-{
-}
-
-// @brief 文字列をセットする．
 // @param[in] str 文字列
 // @param[in] str のファイル上の位置
-void
-FhScanner::init(const char* str,
-		const FileRegion& loc)
+FuncScanner::FuncScanner(const char* str,
+			 const FileRegion& loc)
 {
   mSrcString = str;
   mSrcLoc = loc;
   mCurPos = 0;
+  mUngetType = TokenType::ERROR;
+}
+
+// @brief デストラクタ
+FuncScanner::~FuncScanner()
+{
 }
 
 // @brief トークンを読み込む．
 // @param[out] loc 対応するファイル上の位置情報を格納する変数
 TokenType
-FhScanner::read_token(FileRegion& loc)
+FuncScanner::read_token(FileRegion& loc)
 {
-  int c;
+  if ( mUngetType != TokenType::ERROR ) {
+    TokenType ans = mUngetType;
+    loc = mUngetLoc;
+    mUngetType = TokenType::ERROR;
+    return ans;
+  }
 
   mCurString.clear();
+
+  int c;
 
  ST_INIT: // 初期状態
   c = get();
@@ -134,23 +134,34 @@ FhScanner::read_token(FileRegion& loc)
   return TokenType::INT_NUM;
 }
 
+// @brief 読み込んだトークンを戻す．
+// @param[in] type トークンの型
+// @param[in] loc トークンの位置
+void
+FuncScanner::unget_token(TokenType type,
+			 const FileRegion& loc)
+{
+  mUngetType = type;
+  mUngetLoc = loc;
+}
+
 // @brief 直前の read_token() で読んだトークン文字列を返す．
 const char*
-FhScanner::cur_string()
+FuncScanner::cur_string()
 {
   return mCurString.c_str();
 }
 
 // @brief 直前の read_token() で読んだトークンの整数値を返す．
 int
-FhScanner::cur_int()
+FuncScanner::cur_int()
 {
   return strtol(mCurString.c_str(), nullptr, 10);
 }
 
 // @brief 一文字読み出す．
 int
-FhScanner::get()
+FuncScanner::get()
 {
 
   int c = peek();
@@ -160,28 +171,28 @@ FhScanner::get()
 
 // @brief 一文字先読みする．
 int
-FhScanner::peek()
+FuncScanner::peek()
 {
   return mSrcString[mCurPos];
 }
 
 // @brief 先読みを確定する．
 void
-FhScanner::accept()
+FuncScanner::accept()
 {
   ++ mCurPos;
 }
 
 // @brief トークンの先頭のファイル位置を設定する．
 void
-FhScanner::set_first_loc()
+FuncScanner::set_first_loc()
 {
   mFirstColumn = mCurPos;
 }
 
 // @brief 現在のファイル位置を返す．
 FileRegion
-FhScanner::cur_loc()
+FuncScanner::cur_loc()
 {
   return FileRegion(mSrcLoc.start_file_info(),
 		    mSrcLoc.start_line(), mSrcLoc.start_column() + mFirstColumn,

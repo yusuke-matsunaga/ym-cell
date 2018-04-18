@@ -308,14 +308,14 @@ public:
 		     const AstExpr* vomin,
 		     const AstExpr* vomax);
 
-  /// @brief 汎用のグループ構造を表す AstNode を生成する．
+  /// @brief piece wise パラメータを表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
-  /// @param[in] value_list 値のリスト
-  /// @param[in] attr_top 属性の先頭
-  AstGenGroup*
-  new_gen_group(const FileRegion& loc,
-		const vector<const AstNode*>& value_list,
-		const vector<const AstAttr*>& attr_list);
+  /// @param[in] val1 インデックス
+  /// @param[in] val2 値
+  AstPieceWise*
+  new_piecewise(const FileRegion& loc,
+		int val1,
+		double val2);
 
   /// @brief 単位を表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
@@ -479,6 +479,7 @@ private:
   int mLutNum;
   int mInputVolNum;
   int mOutputVolNum;
+  int mPieceWiseNum;
   int mTechnologyNum;
   int mDelayModelNum;
   int mCellPinDirectionNum;

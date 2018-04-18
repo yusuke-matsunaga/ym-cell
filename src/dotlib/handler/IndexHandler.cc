@@ -8,20 +8,12 @@
 
 
 #include "IndexHandler.h"
-#include "dotlib/HandlerFactory.h"
-#include "dotlib/AstFloatVector.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/AstMgr.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief 'index_?' 用のハンドラを作る．
-DotlibHandler*
-HandlerFactory::new_index(DotlibParser& parser)
-{
-  return new IndexHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス IndexHandler
@@ -52,6 +44,14 @@ const AstFloatVector*
 IndexHandler::value() const
 {
   return mValue;
+}
+
+// @brief ヘッダの開始処理
+//
+// '(' を読み込んだ時に呼ばれる．
+void
+IndexHandler::begin_header()
+{
 }
 
 // @brief 値を読み込む処理
@@ -101,20 +101,19 @@ IndexHandler::read_value(TokenType value_type,
   if ( buf.size() > 0 ) {
     value_list.push_back(strtod(buf.c_str(), nullptr));
   }
+
   mValue = mgr().new_vector(value_loc, value_list);
+
+  return true;
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-// @param[in] attr_type 属性
-// @param[in] attr_loc attr_type のファイル上の位置
 // @param[in] header_loc '(' から ')' までのファイル上の位置
 // @param[in] count 読み込んだ要素数
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-IndexHandler::end_header(AttrType attr_type,
-			 const FileRegion& attr_loc,
-			 const FileRegion& header_loc,
+IndexHandler::end_header(const FileRegion& header_loc,
 			 int count)
 {
   if ( count != 1 ) {

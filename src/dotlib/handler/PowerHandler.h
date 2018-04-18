@@ -9,6 +9,8 @@
 /// All rights reserved.
 
 #include "GroupHandler.h"
+#include "IndexHandler.h"
+#include "ValuesHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -27,7 +29,6 @@ public:
   PowerHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  virtual
   ~PowerHandler();
 
 
@@ -42,19 +43,29 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値を作る．
-  virtual
-  const AstNode*
-  gen_node(const FileRegion& loc,
-	   const AstString* name,
-	   const vector<const AstAttr*>& attr_list) override;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // index_1
+  IndexHandler mIndex1;
+
+  // index_2
+  IndexHandler mIndex2;
+
+  // index_3
+  IndexHandler mIndex3;
+
+  // values
+  ValuesHandler mValues;
+
+  // orders
+
+  // coefs
+
+  // domain
 
 };
 

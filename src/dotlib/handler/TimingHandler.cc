@@ -8,22 +8,11 @@
 
 
 #include "TimingHandler.h"
-#include "dotlib/HandlerFactory.h"
 #include "TableHandler.h"
 #include "dotlib/AstTiming.h"
-#include "dotlib/AstAttr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief timing group 用のハンドラを作る．
-// @param[in] parent 親のハンドラ
-TimingHandler*
-HandlerFactory::new_timing(DotlibParser& parser)
-{
-  return new TimingHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス TimingHandler
@@ -32,29 +21,34 @@ HandlerFactory::new_timing(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 TimingHandler::TimingHandler(DotlibParser& parser) :
-  EmptyGroupHandler(parser)
+  EmptyGroupHandler(parser),
+  mRelatedPinEquivalent(parser),
+  mRelatedBusPins(parser),
+  mRelatedOutputPin(parser),
+  mRelatedPin(parser),
+  mTimingSense(parser),
+  mTimingType(parser),
+  mRiseResistance(parser),
+  mFallResistance(parser),
+  mIntrinsicRise(parser),
+  mIntrinsicFall(parser),
+  mSlopeRise(parser),
+  mSlopeFall(parser),
+  mWhen(parser),
+  mWhenStart(parser),
+  mWhenEnd(parser),
+  mRiseDelayIntercept(parser),
+  mFallDelayIntercept(parser),
+  mRisePinResistance(parser),
+  mFallPinResistance(parser),
+  mCellRise(parser),
+  mCellFall(parser),
+  mRiseConstraint(parser),
+  mFallConstraint(parser),
+  mRiseTransition(parser),
+  mFallTransition(parser)
 {
-  mStringHandler = HandlerFactory::new_string(parser, false);
-  mFloatHandler = HandlerFactory::new_float(parser);
-  mFuncHandler = HandlerFactory::new_function(parser);
-  mTimingSenseHandler = HandlerFactory::new_timing_sense(parser);
-  mTimingTypeHandler = HandlerFactory::new_timing_type(parser);
-  mPieceWiseHandler = HandlerFactory::new_piece_wise(parser);
-  mTableHandler = HandlerFactory::new_table(parser);
-  mGenGroupHandler = HandlerFactory::new_gen_group(parse);
-
-  // simple attributes
-  DotlibHandler* simple = HandlerFactory::new_simple(parser);
-  DotlibHandler* str_simple
-  DotlibHandler* flt_simple
-  DotlibHandler* func_handler =
-  DotlibHandler* ts_handler
-  DotlibHandler* tt_handler
-  DotlibHandler* complex = HandlerFactory::new_complex(parser);
-  DotlibHandler* pw_complex
-  DotlibHandler* table_handler
-  DotlibHandler* g_group = HandlerFactory::new_group(parser);
-
+#if 0
   reg_handler(AttrType::RELATED_bus_EQUIVALENT,                      str_simple);
   reg_handler(AttrType::RELATED_bus_pinS,                            str_simple);
   reg_handler(AttrType::RELATED_OUTPUT_pin,                          str_simple);
@@ -135,6 +129,7 @@ TimingHandler::TimingHandler(DotlibParser& parser) :
   reg_handler(AttrType::steady_state_current_high,		        g_group);
   reg_handler(AttrType::steady_state_current_low,		        g_group);
   reg_handler(AttrType::steady_state_current_tristate,	        g_group);
+#endif
 }
 
 // @brief デストラクタ
@@ -142,54 +137,75 @@ TimingHandler::~TimingHandler()
 {
 }
 
-// @brief 属性値を読み込む．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ値を表す AstNode を返す．
-//
-// エラーの場合には nullptr を返す．
-const AstNode*
-TimingHandler::parse_attr_value(AttrType attr_type,
-				const FileRegion& attr_loc)
+// @brief 値をクリアする．
+void
+TimingHandler::clear_value()
 {
-  return parse(attr_type, attr_loc);
+  mValueList.clear();
 }
 
-// @brief パーズする．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ AstTiming を返す．
-//
-// エラーの場合には nullptr を返す．
-const AstTiming*
-TimingHandler::parse(AttrType attr_type,
-		     const FileRegion& attr_loc)
+// @brief 読み込んだ値を返す．
+const vector<const AstTiming*>&
+TimingHandler::value() const
 {
+  return mValueList;
+}
 
-  const AstString* value;
-  FileRegion value_loc;
-  FileRegion end_loc;
-  bool r = parse_common(attr_type, attr_loc, value, value_loc, end_loc);
-  if ( !r ) {
-    return nullptr;
-  }
-
-  FileRegion loc(attr_loc, end_loc);
-  return mgr().new_timing(loc, value,
-			  mVil, mVih, mVimin, mVimax);
+// @brief グループ記述の始まり
+void
+TimingHandler::begin_group()
+{
+  mRelatedPinEquivalent.clear_value();
+  mRelatedBusPins.clear_value();
+  mRelatedOutputPin.clear_value();
+  mRelatedPin.clear_value();
+  mTimingSense.clear_value();
+  mTimingType.clear_value();
+  mRiseResistance.clear_value();
+  mFallResistance.clear_value();
+  mIntrinsicRise.clear_value();
+  mIntrinsicFall.clear_value();
+  mSlopeRise.clear_value();
+  mSlopeFall.clear_value();
+  mWhen.clear_value();
+  mWhenStart.clear_value();
+  mWhenEnd.clear_value();
+  mRiseDelayIntercept.clear_value();
+  mFallDelayIntercept.clear_value();
+  mRisePinResistance.clear_value();
+  mFallPinResistance.clear_value();
+  mCellRise.clear_value();
+  mCellFall.clear_value();
+  mRiseConstraint.clear_value();
+  mFallConstraint.clear_value();
+  mRiseTransition.clear_value();
+  mFallTransition.clear_value();
 }
 
 // @brief attr_type に対応する属性を読み込む．
 // @param[in] attr_type 対象の属性
 // @param[in] attr_loc attr_type のファイル上の位置
-// @retval true 正常に処理した．
-// @retval false 処理中にエラーが起こった．
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
 bool
 TimingHandler::parse_attr(AttrType attr_type,
 			  const FileRegion& attr_loc)
 {
-  switch ( attr_type ) {
-  }
+  return false;
+}
+
+// @brief グループ記述の終わり
+// @param[in] group_loc グループ全体のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+TimingHandler::end_group(const FileRegion& group_loc)
+{
+#if 0
+  return mgr().new_timing(loc, value,
+			  mVil, mVih, mVimin, mVimax);
+#endif
+  return false;
 }
 
 END_NAMESPACE_YM_DOTLIB

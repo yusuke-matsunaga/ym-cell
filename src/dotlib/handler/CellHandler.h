@@ -1,35 +1,39 @@
-#ifndef TEMPLATEHANDLER_H
-#define TEMPLATEHANDLER_H
+#ifndef CELLHANDLER_H
+#define CELLHANDLER_H
 
-/// @file TemplateHandler.h
-/// @brief TemplateHandler のヘッダファイル
+/// @file CellHandler.h
+/// @brief CellHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "GroupHandler.h"
-#include "VarTypeHandler.h"
-#include "IndexHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class TemplateHandler TemplateHandler.h "TemplateHandler.h"
-/// @brief lut template 用のハンドラ
+/// @class CellHandler CellHandler.h "CellHandler.h"
+/// @brief cell 用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class TemplateHandler :
+class CellHandler :
   public Str1GroupHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  TemplateHandler(DotlibParser& parser);
+  CellHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~TemplateHandler();
+  ~CellHandler();
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
 
 protected:
@@ -60,29 +64,18 @@ protected:
 
 private:
   //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // variable_1
-  VarTypeHandler mVar1;
-
-  // variable_2
-  VarTypeHandler mVar2;
-
-  // variable_3
-  VarTypeHandler mVar3;
-
-  // index_1
-  IndexHandler mIndex1;
-
-  // index_2
-  IndexHandler mIndex2;
-
-  // index_3
-  IndexHandler mIndex3;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // TEMPLATEHANDLER_H
+#endif // CELLHANDLER_H

@@ -27,8 +27,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @param[in] parent 親のハンドラ
 DefineHandler::DefineHandler(DotlibParser& parser,
 			     GroupHandler* parent) :
-  ComplexHandler(parser),
-  mParent(parent)
+  ComplexHandler(parser)
 {
 }
 
@@ -38,15 +37,13 @@ DefineHandler::~DefineHandler()
 }
 
 // @brief 構文要素を処理する．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
 // @return 読み込んだ属性値を返す．
 //
 // エラーが起きたら nullptr を返す．
-const AstNode*
-DefineHandler::parse_attr_value(AttrType attr_type,
-				const FileRegion& attr_loc)
+bool
+DefineHandler::parse_attr_value()
 {
+#if 0
   FileRegion value_loc;
   vector<const AstNode*> value_list;
   if ( !parse_complex(false, value_loc, value_list) ) {
@@ -153,6 +150,8 @@ DefineHandler::parse_attr_value(AttrType attr_type,
 #warning "TODO: 未完"
 
   return nullptr;
+#endif
+  return false;
 }
 
 END_NAMESPACE_YM_DOTLIB

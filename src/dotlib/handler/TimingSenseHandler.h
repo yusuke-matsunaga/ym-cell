@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "SimpleHandler.h"
+#include "StrBaseHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief TimingSense値を取る属性用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class TimingSenseHandler :
-  public SimpleHandler
+  public StrBaseHandler
 {
 public:
 
@@ -45,20 +45,19 @@ public:
   value() const;
 
 
-protected:
+private:
   //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
+  // StrBaseHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
+  /// @brief 文字列を読み込んだ時の処理
+  /// @param[in] str 文字列
+  /// @param[in] value_loc 文字列トークンの位置
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
-  virtual
   bool
-  read_value(TokenType value_type,
-	     const FileRegion& value_loc) override;
+  read_str_value(const char* str,
+		 const FileRegion& value_loc) override;
 
 
 private:
@@ -67,7 +66,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 読み込んだ値
-  AstTimingSense* mValue;
+  const AstTimingSense* mValue;
 
 };
 

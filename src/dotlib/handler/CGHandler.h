@@ -72,17 +72,13 @@ protected:
 	     int count) = 0;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc attr_type のファイル上の位置
   /// @param[in] header_loc '(' から ')' までのファイル上の位置
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   virtual
   bool
-  end_header(AttrType attr_type,
-	     const FileRegion& attr_loc,
-	     const FileRegion& header_loc,
+  end_header(const FileRegion& header_loc,
 	     int count) = 0;
 
 

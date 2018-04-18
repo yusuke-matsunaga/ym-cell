@@ -8,22 +8,12 @@
 
 #include "dotlib/HandlerFactory.h"
 #include "PinDirectionHandler.h"
-#include "dotlib/DotlibParser.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstPinDirection.h"
-#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief 'direction' 用のハンドラを作る．
-DotlibHandler*
-HandlerFactory::new_pin_direction(DotlibParser& parser)
-{
-  return new PinDirectionHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス PinDirectionHandler
@@ -32,7 +22,7 @@ HandlerFactory::new_pin_direction(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 PinDirectionHandler::PinDirectionHandler(DotlibParser& parser) :
-  SimpleHandler(parser)
+  StrBaseHandler(parser, false)
 {
   clear_value();
 }
@@ -56,24 +46,15 @@ PinDirectionHandler::value() const
   return mValue;
 }
 
-// @brief 値を読み込む処理
-// @param[in] value_type 型
-// @param[in] value_loc トークンの位置
+// @brief 文字列を読み込んだ時の処理
+// @param[in] str 文字列
+// @param[in] value_loc 文字列トークンの位置
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-PinDirectionHandler::read_value(TokenType value_type,
-				const FileRegion& value_loc)
+PinDirectionHandler::read_str_value(const char* str,
+				    const FileRegion& value_loc)
 {
-  if ( value_type != TokenType::SYMBOL ) {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error. direction value is expected.");
-    return false;
-  }
-  const char* str = parser().cur_string();
   ClibCellPinDirection value;
   if ( strcmp(str, "input") == 0 ) {
     value = kClibCellPinInput;

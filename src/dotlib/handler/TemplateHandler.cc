@@ -7,26 +7,15 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
 #include "TemplateHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstFloatVector.h"
-#include "dotlib/AstVarType.h"
-#include "dotlib/AstAttr.h"
-#include "dotlib/AstTemplate.h"
+//#include "dotlib/AstFloatVector.h"
+//#include "dotlib/AstVarType.h"
+//#include "dotlib/AstTemplate.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief template group 用のハンドラを作る．
-// @param[in] parser パーサー
-DotlibHandler*
-HandlerFactory::new_template(DotlibParser& parser)
-{
-  return new TemplateHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス TemplateHandler
@@ -35,11 +24,14 @@ HandlerFactory::new_template(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 TemplateHandler::TemplateHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser)
+  Str1GroupHandler(parser),
+  mVar1(parser),
+  mVar2(parser),
+  mVar3(parser),
+  mIndex1(parser),
+  mIndex2(parser),
+  mIndex3(parser)
 {
-  mVarTypeHandler = HandlerFactory::new_var_type(parser);
-  mIndexHandler = HandlerFactory::new_index(parser);
-  mGenGroupHandler = HandlerFactory::new_group(parser);
 }
 
 // @brief デストラクタ
@@ -47,19 +39,35 @@ TemplateHandler::~TemplateHandler()
 {
 }
 
-// @brief 属性値を読み込む．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
-// @return 読み込んだ値を表す AstNode を返す．
-//
-// エラーの場合には nullptr を返す．
-const AstNode*
-TemplateHandler::parse_attr_value(AttrType attr_type,
-				  const FileRegion& attr_loc)
+// @brief グループ記述の始まり
+void
+TemplateHandler::begin_group()
 {
-  return parse(attr_type, attr_loc);
 }
 
+// @brief attr_type に対応する属性を読み込む．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+TemplateHandler::parse_attr(AttrType attr_type,
+			    const FileRegion& attr_loc)
+{
+  return false;
+}
+
+// @brief グループ記述の終わり
+// @param[in] group_loc グループ全体のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+TemplateHandler::end_group(const FileRegion& group_loc)
+{
+  return false;
+}
+
+#if 0
 // @brief パーズする．
 // @param[in] attr_type 属性
 // @param[in] attr_loc ファイル上の位置
@@ -191,5 +199,6 @@ TemplateHandler::parse_attr(AttrType attr_type,
   }
   return false;
 }
+#endif
 
 END_NAMESPACE_YM_DOTLIB

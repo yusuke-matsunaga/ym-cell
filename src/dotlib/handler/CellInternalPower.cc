@@ -8,24 +8,11 @@
 
 
 #include "CellInternalPower.h"
-#include "dotlib/HandlerFactory.h"
-#include "dotlib/AstAttr.h"
 #include "SimpleHandler.h"
 #include "ValuesHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief timing group 用のハンドラを作る．
-// @param[in] parent 親のハンドラ
-DotlibHandler*
-HandlerFactory::new_cell_internal_power(DotlibParser& parser)
-{
-  GroupHandler* handler = new CellInternalPowerHandler(parser);
-
-  return handler;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス CellInternalPowerHandler
@@ -36,6 +23,7 @@ HandlerFactory::new_cell_internal_power(DotlibParser& parser)
 CellInternalPowerHandler::CellInternalPowerHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
+#if 0
   // simple attributes
   DotlibHandler* simple = new SimpleHandler(parser, false);
   DotlibHandler* values_handler = new ValuesHandler(parser);
@@ -44,6 +32,7 @@ CellInternalPowerHandler::CellInternalPowerHandler(DotlibParser& parser) :
   reg_handler(AttrType::related_outputs, simple);
 
   reg_handler(AttrType::valueS,          values_handler);
+#endif
 }
 
 // @brief デストラクタ
@@ -51,18 +40,32 @@ CellInternalPowerHandler::~CellInternalPowerHandler()
 {
 }
 
-// @brief 値を作る．
-const AstNode*
-CellInternalPowerHandler::gen_node(const FileRegion& loc,
-				   const AstString* name,
-				   const vector<const AstAttr*>& attr_list)
+// @brief グループ記述の始まり
+void
+CellInternalPowerHandler::begin_group()
 {
-  for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == AttrType::RELATED_pin ) {
-    }
-  }
-#warning "TODO: 未完成"
-  return nullptr;
+}
+
+// @brief attr_type に対応する属性を読み込む．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+CellInternalPowerHandler::parse_attr(AttrType attr_type,
+				     const FileRegion& attr_loc)
+{
+  return false;
+}
+
+// @brief グループ記述の終わり
+// @param[in] group_loc グループ全体のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+CellInternalPowerHandler::end_group(const FileRegion& group_loc)
+{
+  return false;
 }
 
 END_NAMESPACE_YM_DOTLIB

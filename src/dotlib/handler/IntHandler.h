@@ -1,33 +1,34 @@
-#ifndef INDEXHANDLER_H
-#define INDEXHANDLER_H
+﻿#ifndef INTHANDLER_H
+#define INTHANDLER_H
 
-/// @file IndexHandler.h
-/// @brief IndexHandler のヘッダファイル
+/// @file IntHandler.h
+/// @brief IntHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ComplexHandler.h"
+
+#include "SimpleHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class IndexHandler IndexHandler.h "IndexHandler.h"
-/// @brief lut のインデックスベクタ用のハンドラ
+/// @class IntHandler IntHandler.h "IntHandler.h"
+/// @brief 整数値を取る属性用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class IndexHandler :
-  public ComplexHandler
+class IntHandler :
+  public SimpleHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  IndexHandler(DotlibParser& parser);
+  IntHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~IndexHandler();
+  ~IntHandler();
 
 
 public:
@@ -40,44 +41,23 @@ public:
   clear_value();
 
   /// @brief 読み込んだ値を返す．
-  const AstFloatVector*
+  const AstInt*
   value() const;
 
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // ComplexHandler の仮想関数
+  // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief ヘッダの開始処理
-  ///
-  /// '(' を読み込んだ時に呼ばれる．
-  void
-  begin_header() override;
 
   /// @brief 値を読み込む処理
   /// @param[in] value_type 型
   /// @param[in] value_loc トークンの位置
-  /// @param[in] count read_value() の呼ばれた回数
-  bool
-  read_value(TokenType value_type,
-	     const FileRegion& value_loc,
-	     int count) override;
-
-  /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] header_loc '(' から ')' までのファイル上の位置
-  /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  end_header(const FileRegion& header_loc,
-	     int count) override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
+  read_value(TokenType value_type,
+	     const FileRegion& value_loc) override;
 
 
 private:
@@ -86,10 +66,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 読み込んだ値
-  const AstFloatVector* mValue;
+  const AstInt* mValue;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // INDEXHANDLER_H
+#endif // INTHANDLER_H

@@ -9,17 +9,15 @@
 /// All rights reserved.
 
 #include "GroupHandler.h"
+#include "FloatHandler.h"
+#include "FuncHandler.h"
+#include "PieceWiseHandler.h"
+#include "TableHandler.h"
+#include "TimingSenseHandler.h"
+#include "TimingTypeHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-class StrSimpleHandler;
-class FloatSimpleHandler;
-class TimingSenseHandler;
-class TimingTypeHandler;
-class FuncHandler;
-class PwComplexHandler;
-class GenGroupHandler;
 
 //////////////////////////////////////////////////////////////////////
 /// @class TimingHandler TimingHandler.h "TimingHandler.h"
@@ -35,25 +33,7 @@ public:
   TimingHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  virtual
   ~TimingHandler();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // DotlibHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 属性値を読み込む．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ値を表す AstNode を返す．
-  ///
-  /// エラーの場合には nullptr を返す．
-  virtual
-  const AstNode*
-  parse_attr_value(AttrType attr_type,
-		   const FileRegion& attr_loc) override;
 
 
 public:
@@ -61,31 +41,39 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief パーズする．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc ファイル上の位置
-  /// @return 読み込んだ AstTiming を返す．
-  ///
-  /// エラーの場合には nullptr を返す．
-  const AstTiming*
-  parse(AttrType attr_type,
-	const FileRegion& attr_loc);
+  /// @brief 値をクリアする．
+  void
+  clear_value();
+
+  /// @brief 読み込んだ値を返す．
+  const vector<const AstTiming*>&
+  value() const;
 
 
-private:
+protected:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
+  // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief グループ記述の始まり
+  void
+  begin_group() override;
 
   /// @brief attr_type に対応する属性を読み込む．
   /// @param[in] attr_type 対象の属性
   /// @param[in] attr_loc attr_type のファイル上の位置
-  /// @retval true 正常に処理した．
-  /// @retval false 処理中にエラーが起こった．
-  virtual
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
   bool
   parse_attr(AttrType attr_type,
 	     const FileRegion& attr_loc) override;
+
+  /// @brief グループ記述の終わり
+  /// @param[in] group_loc グループ全体のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  bool
+  end_group(const FileRegion& group_loc) override;
 
 
 private:
@@ -93,90 +81,66 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // string ハンドラ
-  StrSimpleHandler* mStringHandler;
-
-  // float ハンドラ
-  FloatSimpleHandler* mFloatHandler;
-
-  // function ハンドラ
-  FuncHandler* mFuncHandler;
-
-  // timing sense ハンドラ
-  TimingSenseHandler* mTimingSenseHandler;
-
-  // timing type ハンドラ
-  TimingTypeHandler* mTimingTypeHandler;
-
-  // piece wise ハンドラ
-  PwComplexHandler* mPieceWiseHandler;
-
-  // table ハンドラ
-  TableHandler* mTableHandler;
-
-  // gen_group ハンドラ
-  GenGroupHandler* mGenGroupHandler;
-
   // related_pin_equivalent
-  const AstString* mRelatedPinEquivalent;
+  StrHandler mRelatedPinEquivalent;
 
   // related_bus_pins
-  const AstString* mRelatedBusPins;
+  StrHandler mRelatedBusPins;
 
   // related_output_pin
-  const AstString* mRelatedOutputPin;
+  StrHandler mRelatedOutputPin;
 
   // related_pin
-  const AstString* mRelatedPin;
+  StrHandler mRelatedPin;
 
   // timing_sense
-  const AstTimingSense* mTimingSense;
+  TimingSenseHandler mTimingSense;
 
   // timing_type
-  const AstTimingType* mTimingType;
+  TimingTypeHandler mTimingType;
 
   // edge_rate_sensitivity_f0
 
   // rise_resistance
-  const AstFloat* mRiseResistance;
+  FloatHandler mRiseResistance;
 
   // fall_resistance
-  const AstFloat* mFallResistance;
+  FloatHandler mFallResistance;
 
   // intrinsic_rise
-  const AstFloat* mIntrinsicRise;
+  FloatHandler mIntrinsicRise;
 
   // intrinsic_fall
-  const AstFloat* mIntrinsicFall;
+  FloatHandler mIntrinsicFall;
 
   // sdf_cond
 
   // slope_rise
-  const AstFloat* mSlopeRise;
+  FloatHandler mSlopeRise;
 
   // slope_fall
-  const AstFloat* mSlopeFall;
+  FloatHandler mSlopeFall;
 
   // when
-  const AstExpr* mWhen;
+  FuncHandler mWhen;
 
   // when_start
-  const AstExpr* mWhenStart;
+  FuncHandler mWhenStart;
 
   // when_end
-  const AstExpr* mWhenEnd;
+  FuncHandler mWhenEnd;
 
   // rise_delay_intercept
-  const AstPieceWise* mRiseDelayIntercept;
+  PieceWiseHandler mRiseDelayIntercept;
 
   // fall_delay_intercept
-  const AstPieceWise* mFallDelayIntercept;
+  PieceWiseHandler mFallDelayIntercept;
 
   // rise_pin_resistance
-  const AstPieceWise* mRisePinResistance;
+  PieceWiseHandler mRisePinResistance;
 
   // fall_pin_resistance
-  const AstPieceWise* mFallPinResistance;
+  PieceWiseHandler mFallPinResistance;
 
   // orders
 
@@ -185,22 +149,22 @@ private:
   // cell_degradation
 
   // cell_rise
-  const AstLut* mCellRise;
+  TableHandler mCellRise;
 
   // cell_fall
-  const AstLut* mCellFall;
+  TableHandler mCellFall;
 
   // rise_constraint
-  const AstLut* mRiseConstraint;
+  TableHandler mRiseConstraint;
 
   // fall_constraint
-  const AstLut* mFallConstraint;
+  TableHandler mFallConstraint;
 
   // rise_transition
-  const AstLut* mRiseTransition;
+  TableHandler mRiseTransition;
 
   // fall_transition
-  const AstLut* mFallTransition;
+  TableHandler mFallTransition;
 
   // noise_immunity_above_high
 
@@ -243,6 +207,9 @@ private:
   // steady_state_current_low
 
   // steady_state_current_tristate
+
+  // 読み込んだ値のリスト
+  vector<const AstTiming*> mValueList;
 
 };
 

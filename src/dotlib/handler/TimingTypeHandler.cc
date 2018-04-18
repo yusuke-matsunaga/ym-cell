@@ -6,24 +6,13 @@
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/HandlerFactory.h"
 #include "TimingTypeHandler.h"
-#include "dotlib/DotlibParser.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstTimingType.h"
-#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief 'timing type' 用のハンドラを作る．
-DotlibHandler*
-HandlerFactory::new_timing_type(DotlibParser& parser)
-{
-  return new TimingTypeHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス TimingTypeHandler
@@ -32,7 +21,7 @@ HandlerFactory::new_timing_type(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 TimingTypeHandler::TimingTypeHandler(DotlibParser& parser) :
-  SimpleHandler(parser)
+  StrBaseHandler(parser, false)
 {
   clear_value();
 }
@@ -56,24 +45,15 @@ TimingTypeHandler::value() const
   return mValue;
 }
 
-// @brief 値を読み込む処理
-// @param[in] value_type 型
-// @param[in] value_loc トークンの位置
+// @brief 文字列を読み込んだ時の処理
+// @param[in] str 文字列
+// @param[in] value_loc 文字列トークンの位置
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-TimingTypeHandler::read_value(TokenType value_type,
-			      const FileRegion& value_loc)
+TimingTypeHandler::read_str_value(const char* str,
+				  const FileRegion& value_loc)
 {
-  if ( value_type != TokenType::SYMBOL ) {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error. timing type value is expected.");
-    return false;
-  }
-  const char* str = parser().cur_string();
   ClibTimingType value;
   if ( strcmp(str, "combinational") == 0 ) {
     value = kClibTimingCombinational;

@@ -7,26 +7,15 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
 #include "PinHandler.h"
 #include "TimingHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstString.h"
-#include "dotlib/AstAttr.h"
-#include "dotlib/AstPin.h"
+//#include "dotlib/AstString.h"
+//#include "dotlib/AstAttr.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief pin group 用のハンドラを作る．
-// @param[in] parent 親のハンドラ
-DotlibHandler*
-HandlerFactory::new_pin(DotlibParser& parser)
-{
-  return new PinHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス PinHandler
@@ -35,8 +24,9 @@ HandlerFactory::new_pin(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 PinHandler::PinHandler(DotlibParser& parser) :
-  GroupHandler(parser)
+  Str1GroupHandler(parser)
 {
+#if 0
   DotlibHandler* simple       = HandlerFactory::new_simple(parser);
   DotlibHandler* str_simple   = HandlerFactory::new_string(parser, false);
   DotlibHandler* flt_simple   = HandlerFactory::new_float(parser);
@@ -128,6 +118,7 @@ PinHandler::PinHandler(DotlibParser& parser) :
   reg_handler(AttrType::Tlatch,                              g_handler);
 
   mTimingHandler = HandlerFactory::new_timing(parser);
+#endif
 }
 
 // @brief デストラクタ
@@ -135,6 +126,49 @@ PinHandler::~PinHandler()
 {
 }
 
+// @brief 値をクリアする．
+void
+PinHandler::clear_value()
+{
+  mValue = nullptr;
+}
+
+// @brief 読み込んだ値を返す．
+const AstPin*
+PinHandler::value() const
+{
+  return mValue;
+}
+
+// @brief グループ記述の始まり
+void
+PinHandler::begin_group()
+{
+}
+
+// @brief attr_type に対応する属性を読み込む．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+PinHandler::parse_attr(AttrType attr_type,
+		       const FileRegion& attr_loc)
+{
+  return false;
+}
+
+// @brief グループ記述の終わり
+// @param[in] group_loc グループ全体のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+PinHandler::end_group(const FileRegion& group_loc)
+{
+  return false;
+}
+
+#if 0
 // @brief グループ開始の処理を行う．
 void
 PinHandler::begin_group()
@@ -214,5 +248,6 @@ PinHandler::gen_node(const FileRegion& loc,
 		       internal_node, pin_func_type,
 		       mTimingList);
 }
+#endif
 
 END_NAMESPACE_YM_DOTLIB

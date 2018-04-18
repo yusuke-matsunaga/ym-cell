@@ -13,8 +13,6 @@
 #include "dotlib/AstLut.h"
 #include "dotlib/AstString.h"
 #include "dotlib/AstFloatVector.h"
-#include "dotlib/AstList.h"
-#include "dotlib/AstAttr.h"
 #include "ym/MsgMgr.h"
 
 
@@ -36,12 +34,12 @@ HandlerFactory::new_table(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 TableHandler::TableHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser)
+  Str1GroupHandler(parser),
+  mIndex1(parser),
+  mIndex2(parser),
+  mIndex3(parser),
+  mValues(parser)
 {
-  mIndex1 = HandlerFactory::new_index(parser);
-  mIndex2 = HandlerFactory::new_index(parser);
-  mIndex3 = HandlerFactory::new_index(parser);
-  mValuesHandler = HandlerFactory::new_values(parser);
 }
 
 // @brief デストラクタ
@@ -67,10 +65,10 @@ TableHandler::value() const
 void
 TableHandler::begin_group()
 {
-  mIndex1->clear_value();
-  mIndex2->clear_value();
-  mIndex3->clear_value();
-  mValues->clear_value();
+  mIndex1.clear_value();
+  mIndex2.clear_value();
+  mIndex3.clear_value();
+  mValues.clear_value();
 }
 
 // @brief attr_type に対応する属性を読み込む．
@@ -83,33 +81,26 @@ TableHandler::parse_attr(AttrType attr_type,
 			 const FileRegion& attr_loc)
 {
   switch ( attr_type ) {
-  case AttrType::index_1:
-    return mIndex1->parse_attr_value(attr_type, attr_loc);
-
-  case AttrType::index_2:
-    return mIndex2->parse_attr_value(attr_type, attr_loc);
-
-  case AttrType::index_3:
-    return mIndex3->parse_attr_value(attr_type, attr_loc);
-
-  case AttrType::values:
-    return mValues->parse_attr_value(attr_type, attr_loc);
-
+  case AttrType::index_1: return mIndex1.parse_attr_value();
+  case AttrType::index_2: return mIndex2.parse_attr_value();
+  case AttrType::index_3: return mIndex3.parse_attr_value();
+  case AttrType::values:  return mValues.parse_attr_value();
   case AttrType::domain:
 #warning "TODO: 未完";
-    return false;
+    break;
+  default:
+    break;
   }
+  syntax_error(attr_type, attr_loc);
   return false;
 }
 
 // @brief グループ記述の終わり
-// @param[in] attr_type 対象の属性
-// @param[in] attr_loc attr_type のファイル上の位置
+// @param[in] group_loc グループ全体のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-TableHandler::end_group(AttrType attr_type,
-			const FileRegion& attr_loc)
+TableHandler::end_group(const FileRegion& group_loc)
 {
 #warning "TODO: 未完"
   // mIndex1, mIndex2, mIndex3, mValues に値がセットされていることを確認して

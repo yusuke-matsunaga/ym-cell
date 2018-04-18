@@ -12,8 +12,6 @@
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstInt.h"
 #include "dotlib/AstString.h"
-#include "dotlib/AstAttr.h"
-#include "dotlib/AstGenGroup.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
@@ -37,13 +35,10 @@ GroupHandler::~GroupHandler()
 }
 
 // @brief 構文要素を処理する．
-// @param[in] attr_type 属性
-// @param[in] attr_loc ファイル上の位置
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-GroupHandler::parse_attr_value(AttrType attr_type,
-			       const FileRegion& attr_loc)
+GroupHandler::parse_attr_value()
 {
   if ( !parse_header() ) {
     return false;
@@ -73,7 +68,7 @@ GroupHandler::parse_attr_value(AttrType attr_type,
 		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "string value is expected.");
-      return nullptr;
+      return false;
     }
     const char* name = parser().cur_string();
     AttrType name_type = parser().conv_to_attr(name);
@@ -82,7 +77,7 @@ GroupHandler::parse_attr_value(AttrType attr_type,
       buf << name << ": syntax error.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      buf.str());
       return false;
@@ -93,7 +88,7 @@ GroupHandler::parse_attr_value(AttrType attr_type,
     }
   }
 
-  if ( !end_group(attr_type, FileRegion(first_loc, loc)) ) {
+  if ( !end_group(FileRegion(first_loc, last_loc)) ) {
     return false;
   }
 
@@ -147,16 +142,12 @@ EmptyGroupHandler::read_value(TokenType value_type,
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-// @param[in] attr_type 属性
-// @param[in] attr_loc attr_type のファイル上の位置
 // @param[in] header_loc '(' から ')' までのファイル上の位置
 // @param[in] count 読み込んだ要素数
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-EmptyGroupHandler::end_header(AttrType attr_type,
-			      const FileRegion& attr_loc,
-			      const FileRegion& header_loc,
+EmptyGroupHandler::end_header(const FileRegion& header_loc,
 			      int count)
 {
   if ( count > 0 ) {
@@ -235,16 +226,12 @@ Str1GroupHandler::read_value(TokenType value_type,
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-// @param[in] attr_type 属性
-// @param[in] attr_loc attr_type のファイル上の位置
 // @param[in] header_loc '(' から ')' までのファイル上の位置
 // @param[in] count 読み込んだ要素数
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-Str1GroupHandler::end_header(AttrType attr_type,
-			     const FileRegion& attr_loc,
-			     const FileRegion& header_loc,
+Str1GroupHandler::end_header(const FileRegion& header_loc,
 			     int count)
 {
   if ( count != 1 ) {
@@ -355,16 +342,12 @@ Str2GroupHandler::read_value(TokenType value_type,
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-// @param[in] attr_type 属性
-// @param[in] attr_loc attr_type のファイル上の位置
 // @param[in] header_loc '(' から ')' までのファイル上の位置
 // @param[in] count 読み込んだ要素数
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-Str2GroupHandler::end_header(AttrType attr_type,
-			     const FileRegion& attr_loc,
-			     const FileRegion& header_loc,
+Str2GroupHandler::end_header(const FileRegion& header_loc,
 			     int count)
 {
   if ( count != 2 ) {
@@ -425,6 +408,14 @@ const AstInt*
 Str2IntGroupHandler::header_value3() const
 {
   return mHeaderValue3;
+}
+
+// @brief ヘッダの開始処理
+//
+// '(' を読み込んだ時に呼ばれる．
+void
+Str2IntGroupHandler::begin_header()
+{
 }
 
 // @brief 値を読み込む処理
@@ -489,21 +480,15 @@ Str2IntGroupHandler::read_value(TokenType value_type,
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-// @param[in] attr_type 属性
-// @param[in] attr_loc attr_type のファイル上の位置
 // @param[in] header_loc '(' から ')' までのファイル上の位置
 // @param[in] count 読み込んだ要素数
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-Str2IntGroupHandler::end_header(AttrType attr_type,
-				const FileRegion& attr_loc,
-				const FileRegion& header_loc,
+Str2IntGroupHandler::end_header(const FileRegion& header_loc,
 				int count)
 {
   if ( count != 2 ) {
-    ostringstream buf;
-    buf << attr_type << " statement has two string and an integer parameters.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    header_loc,
 		    MsgType::Error,
