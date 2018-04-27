@@ -490,7 +490,7 @@ CiLut3D::value(const vector<double>& val_array) const
   int idx3_a = search(val3, mIndexArray[2]);
   int idx3_b = idx3_a + 1;
   double z0 = mIndexArray[2][idx3_a];
-  double z1 = mIndexArray[3][idx3_b];
+  double z1 = mIndexArray[2][idx3_b];
 
   // 単純な線形補間
   double wx  = mIndexWidthArray[0][idx1_a];
