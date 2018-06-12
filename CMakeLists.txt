@@ -89,6 +89,7 @@ set (dotlib_SOURCES
   src/dotlib/parser/DotlibScanner.cc
 
   src/dotlib/handler/DotlibHandler.cc
+  src/dotlib/handler/CellHandler.cc
   src/dotlib/handler/CellInternalPower.cc
   src/dotlib/handler/CGHandler.cc
   src/dotlib/handler/ComplexHandler.cc
