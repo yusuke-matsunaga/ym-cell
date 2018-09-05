@@ -41,8 +41,6 @@ enum class AstExprType {
 class AstExpr :
   public AstNode
 {
-  friend class AstMgr;
-
 public:
 
   using Type = AstExprType;
