@@ -90,50 +90,47 @@ set (dotlib_SOURCES
 
   src/dotlib/handler/DotlibHandler.cc
 
-  # SimpleHandler
-  src/dotlib/handler/IntHandler.cc
-  src/dotlib/handler/FloatHandler.cc
-  src/dotlib/handler/StrBaseHandler.cc
-  src/dotlib/handler/BoolHandler.cc
-  src/dotlib/handler/DelayModelHandler.cc
-  src/dotlib/handler/PinDirectionHandler.cc
-  src/dotlib/handler/StringHandler.cc
-  src/dotlib/handler/TechnologyHandler.cc
-  src/dotlib/handler/TimingSenseHandler.cc
-  src/dotlib/handler/TimingTypeHandler.cc
-  src/dotlib/handler/VarTypeHandler.cc
-  src/dotlib/handler/ExprHandler.cc
-  src/dotlib/handler/FuncParser.cc
-  src/dotlib/handler/FuncScanner.cc
-  src/dotlib/handler/FuncHandler.cc
+  src/dotlib/handler/simple/IntHandler.cc
+  src/dotlib/handler/simple/FloatHandler.cc
+  src/dotlib/handler/simple/StrBaseHandler.cc
+  src/dotlib/handler/simple/BoolHandler.cc
+  src/dotlib/handler/simple/DelayModelHandler.cc
+  src/dotlib/handler/simple/PinDirectionHandler.cc
+  src/dotlib/handler/simple/StringHandler.cc
+  src/dotlib/handler/simple/TechnologyHandler.cc
+  src/dotlib/handler/simple/TimingSenseHandler.cc
+  src/dotlib/handler/simple/TimingTypeHandler.cc
+  src/dotlib/handler/simple/VarTypeHandler.cc
+  src/dotlib/handler/simple/ExprHandler.cc
+  src/dotlib/handler/simple/FuncParser.cc
+  src/dotlib/handler/simple/FuncScanner.cc
+  src/dotlib/handler/simple/FuncHandler.cc
 
-  # ComplexHandler
-  src/dotlib/handler/IndexHandler.cc
-  src/dotlib/handler/PieceWiseHandler.cc
-  src/dotlib/handler/UnitHandler.cc
-  src/dotlib/handler/ValuesHandler.cc
+  src/dotlib/handler/complex/IndexHandler.cc
+  src/dotlib/handler/complex/PieceWiseHandler.cc
+  src/dotlib/handler/complex/UnitHandler.cc
+  src/dotlib/handler/complex/ValuesHandler.cc
 
-  # GroupHandler
-  src/dotlib/handler/EmptyGroupHandler.cc
-  src/dotlib/handler/Str1GroupHandler.cc
-  src/dotlib/handler/Str2GroupHandler.cc
-  src/dotlib/handler/Str2IntGroupHandler.cc
+  src/dotlib/handler/group/EmptyGroupHandler.cc
+  src/dotlib/handler/group/Str1GroupHandler.cc
+  src/dotlib/handler/group/Str2GroupHandler.cc
+  src/dotlib/handler/group/Str2IntGroupHandler.cc
 
   # EmptyGroupHandler
-  src/dotlib/handler/InternalPowerHandler.cc
-  src/dotlib/handler/TimingHandler.cc
+  src/dotlib/handler/group/InternalPowerHandler.cc
+  src/dotlib/handler/group/TimingHandler.cc
 
   # Str1GroupHandler
-  src/dotlib/handler/CellHandler.cc
+  src/dotlib/handler/group/CellHandler.cc
   #src/dotlib/handler/CellInternalPower.cc
-  src/dotlib/handler/InputVoltageHandler.cc
-  src/dotlib/handler/IoVoltageHandler.cc
-  src/dotlib/handler/LibraryHandler.cc
-  src/dotlib/handler/OutputVoltageHandler.cc
-  src/dotlib/handler/PinHandler.cc
-  src/dotlib/handler/PowerHandler.cc
-  src/dotlib/handler/TableHandler.cc
-  src/dotlib/handler/TemplateHandler.cc
+  src/dotlib/handler/group/InputVoltageHandler.cc
+  src/dotlib/handler/group/IoVoltageHandler.cc
+  src/dotlib/handler/group/LibraryHandler.cc
+  src/dotlib/handler/group/OutputVoltageHandler.cc
+  src/dotlib/handler/group/PinHandler.cc
+  src/dotlib/handler/group/PowerHandler.cc
+  src/dotlib/handler/group/TableHandler.cc
+  src/dotlib/handler/group/TemplateHandler.cc
 
   # Str2GroupHandler
 
