@@ -8,7 +8,6 @@
 
 #include "dotlib/HandlerFactory.h"
 #include "InternalPowerHandler.h"
-#include "SimpleHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -74,8 +73,8 @@ InternalPowerHandler::begin_group()
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-InternalPowerHandler::parse_attr(AttrType attr_type,
-				 const FileRegion& attr_loc)
+InternalPowerHandler::read_group_attr(AttrType attr_type,
+				      const FileRegion& attr_loc)
 {
   return false;
 }

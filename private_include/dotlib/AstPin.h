@@ -23,9 +23,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class AstPin :
   public AstNode
 {
-  friend class AstMgr;
-
-protected:
+public:
 
   /// @brief コンストラクタ
   /// @param[in] loc 位置情報
@@ -66,7 +64,6 @@ protected:
 	 Alloc& alloc);
 
   /// @brief デストラクタ
-  virtual
   ~AstPin();
 
 
@@ -152,10 +149,9 @@ public:
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
-  virtual
   void
   dump(ostream& s,
-       int indent = 0) const;
+       int indent = 0) const override;
 
 
 private:

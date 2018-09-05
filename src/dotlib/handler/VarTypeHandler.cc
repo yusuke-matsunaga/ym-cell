@@ -20,9 +20,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 VarTypeHandler::VarTypeHandler(DotlibParser& parser) :
-  StrBaseHandler(parser, false)
+  StrBaseHandler(parser)
 {
-  clear_value();
 }
 
 // @brief デストラクタ
@@ -30,18 +29,19 @@ VarTypeHandler::~VarTypeHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-VarTypeHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @brief var_type の記述をパースする．
+//
+// エラーが起きた場合には nullptr が返される．
 const AstVarType*
-VarTypeHandler::value() const
+VarTypeHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_simple_attribute();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief 文字列を読み込んだ時の処理
@@ -94,6 +94,7 @@ VarTypeHandler::read_str_value(const char* str,
     value = kClibVarRelatedPinTransition;
   }
   else {
+    mValue = nullptr;
     ostringstream buf;
     buf << "Syntax error. "
 	<< str << " is not a valid string for variable type.";

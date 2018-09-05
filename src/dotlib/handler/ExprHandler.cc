@@ -24,7 +24,6 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ExprHandler::ExprHandler(DotlibParser& parser) :
   DotlibHandler(parser)
 {
-  clear_value();
 }
 
 // @brief デストラクタ
@@ -32,40 +31,24 @@ ExprHandler::~ExprHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-ExprHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @brief int 値の記述をパースする．
+//
+// エラーが起きた場合には nullptr が返される．
 const AstExpr*
-ExprHandler::value() const
+ExprHandler::parse_value()
 {
-  return mValue;
-}
-
-// @brief 属性値を読み込む．
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-ExprHandler::parse_attr_value()
-{
-  if ( !expect(TokenType::COLON) ) {
-    return false;
+  if ( !parser().expect(TokenType::COLON) ) {
+    return nullptr;
   }
 
-  mValue = parser().read_expr(TokenType::SEMI);
-  if ( mValue == nullptr ) {
-    return false;
+  AstExpr* value = parser().read_expr(TokenType::SEMI);
+  if ( value != nullptr ) {
+    if ( parser().expect_nl() ) {
+      return value;
+    }
   }
 
-  if ( !expect_nl() ) {
-    return false;
-  }
-
-  return true;
+  return nullptr;
 }
 
 END_NAMESPACE_YM_DOTLIB

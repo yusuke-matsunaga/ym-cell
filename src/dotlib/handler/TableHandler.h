@@ -8,9 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "GroupHandler.h"
-#include "IndexHandler.h"
-#include "ValuesHandler.h"
+#include "Str1GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -37,13 +35,10 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値をクリアする．
-  void
-  clear_value();
-
-  /// @brief 読み込んだ値を返す．
+  /// @breif timing group statement の記述をパースする．
+  /// @return 読み込んだ値を返す．
   const AstLut*
-  value() const;
+  parse_value();
 
 
 private:
@@ -61,8 +56,8 @@ private:
   /// @retval true 正常に処理した．
   /// @retval false 処理中にエラーが起こった．
   bool
-  parse_attr(AttrType attr_type,
-	     const FileRegion& attr_loc) override;
+  read_group_attr(AttrType attr_type,
+		  const FileRegion& attr_loc) override;
 
   /// @brief グループ記述の終わり
   /// @param[in] attr_type 対象の属性
@@ -79,19 +74,19 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // index_1
-  IndexHandler mIndex1;
+  const AstFloatVector* mIndex1;
 
   // index_2
-  IndexHandler mIndex2;
+  const AstFloatVector* mIndex2;
 
   // index_3
-  IndexHandler mIndex3;
+  const AstFloatVector* mIndex3;
 
   // values
-  ValuesHandler mValues;
+  const AstFloatVector* mValues;
 
   // 読み込んだ値
-  AstLut* mValue;
+  const AstLut* mValue;
 
 };
 

@@ -36,13 +36,11 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値をクリアする．
-  void
-  clear_value();
-
-  /// @brief 読み込んだ値を返す．
+  /// @brief pin_direction の記述をパースする．
+  ///
+  /// エラーが起きた場合には nullptr が返される．
   const AstPinDirection*
-  value() const;
+  parse_value();
 
 
 private:

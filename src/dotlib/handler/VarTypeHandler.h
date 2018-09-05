@@ -36,13 +36,11 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値をクリアする．
-  void
-  clear_value();
-
-  /// @brief 読み込んだ値を返す．
+  /// @brief var_type の記述をパースする．
+  ///
+  /// エラーが起きた場合には nullptr が返される．
   const AstVarType*
-  value() const;
+  parse_value();
 
 
 private:

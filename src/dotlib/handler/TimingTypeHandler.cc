@@ -8,7 +8,6 @@
 
 #include "TimingTypeHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstTimingType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -21,9 +20,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 TimingTypeHandler::TimingTypeHandler(DotlibParser& parser) :
-  StrBaseHandler(parser, false)
+  StrBaseHandler(parser)
 {
-  clear_value();
 }
 
 // @brief デストラクタ
@@ -31,18 +29,19 @@ TimingTypeHandler::~TimingTypeHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-TimingTypeHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @brief int 値の記述をパースする．
+//
+// エラーが起きた場合には nullptr が返される．
 const AstTimingType*
-TimingTypeHandler::value() const
+TimingTypeHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_simple_attribute();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief 文字列を読み込んだ時の処理
@@ -149,6 +148,7 @@ TimingTypeHandler::read_str_value(const char* str,
     value = kClibTimingNochangeLowLow;
   }
   else {
+    mValue = nullptr;
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,

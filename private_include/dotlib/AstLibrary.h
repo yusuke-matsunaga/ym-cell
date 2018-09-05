@@ -23,9 +23,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class AstLibrary :
   public AstNode
 {
-  friend class AstMgr;
-
-private:
+public:
 
   /// @brief コンストラクタ
   /// @param[in] loc ファイル上の位置
@@ -64,7 +62,6 @@ private:
 	     Alloc& alloc);
 
   /// @brief デストラクタ
-  virtual
   ~AstLibrary();
 
 
@@ -146,10 +143,9 @@ public:
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
-  virtual
   void
   dump(ostream& s,
-       int indent = 0) const;
+       int indent = 0) const override;
 
 
 private:

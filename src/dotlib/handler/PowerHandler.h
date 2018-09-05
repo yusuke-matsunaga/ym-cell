@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "GroupHandler.h"
+#include "Str1GroupHandler.h"
 #include "IndexHandler.h"
 #include "ValuesHandler.h"
 

@@ -21,7 +21,6 @@ BEGIN_NAMESPACE_YM_DOTLIB
 LibraryHandler::LibraryHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
-  mValue = nullptr;
 }
 
 // @brief デストラクタ
@@ -29,17 +28,25 @@ LibraryHandler::~LibraryHandler()
 {
 }
 
-// @brief 読み込んだ値を返す．
+// @breif library group statement の記述をパースする．
+// @return 読み込んだ値を返す．
 const AstLibrary*
-LibraryHandler::value() const
+LibraryHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_group_statement();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief グループ記述の始まり
 void
 LibraryHandler::begin_group()
 {
+  mValue = nullptr;
 }
 
 // @brief attr_type に対応する属性を読み込む．
@@ -48,8 +55,8 @@ LibraryHandler::begin_group()
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-LibraryHandler::parse_attr(AttrType attr_type,
-			   const FileRegion& attr_loc)
+LibraryHandler::read_group_attr(AttrType attr_type,
+				const FileRegion& attr_loc)
 {
   return false;
 }

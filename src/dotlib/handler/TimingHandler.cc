@@ -8,8 +8,13 @@
 
 
 #include "TimingHandler.h"
+#include "FloatHandler.h"
+#include "FuncHandler.h"
+#include "PieceWiseHandler.h"
 #include "TableHandler.h"
-#include "dotlib/AstTiming.h"
+#include "StringHandler.h"
+#include "TimingSenseHandler.h"
+#include "TimingTypeHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -21,32 +26,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 TimingHandler::TimingHandler(DotlibParser& parser) :
-  EmptyGroupHandler(parser),
-  mRelatedPinEquivalent(parser),
-  mRelatedBusPins(parser),
-  mRelatedOutputPin(parser),
-  mRelatedPin(parser),
-  mTimingSense(parser),
-  mTimingType(parser),
-  mRiseResistance(parser),
-  mFallResistance(parser),
-  mIntrinsicRise(parser),
-  mIntrinsicFall(parser),
-  mSlopeRise(parser),
-  mSlopeFall(parser),
-  mWhen(parser),
-  mWhenStart(parser),
-  mWhenEnd(parser),
-  mRiseDelayIntercept(parser),
-  mFallDelayIntercept(parser),
-  mRisePinResistance(parser),
-  mFallPinResistance(parser),
-  mCellRise(parser),
-  mCellFall(parser),
-  mRiseConstraint(parser),
-  mFallConstraint(parser),
-  mRiseTransition(parser),
-  mFallTransition(parser)
+  EmptyGroupHandler(parser)
 {
 #if 0
   reg_handler(AttrType::RELATED_bus_EQUIVALENT,                      str_simple);
@@ -137,49 +117,50 @@ TimingHandler::~TimingHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-TimingHandler::clear_value()
+// @breif timing group statement の記述をパースする．
+// @return 読み込んだ値を返す．
+const AstTiming*
+TimingHandler::parse_value()
 {
-  mValueList.clear();
-}
-
-// @brief 読み込んだ値を返す．
-const vector<const AstTiming*>&
-TimingHandler::value() const
-{
-  return mValueList;
+  bool stat = parse_group_statement();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief グループ記述の始まり
 void
 TimingHandler::begin_group()
 {
-  mRelatedPinEquivalent.clear_value();
-  mRelatedBusPins.clear_value();
-  mRelatedOutputPin.clear_value();
-  mRelatedPin.clear_value();
-  mTimingSense.clear_value();
-  mTimingType.clear_value();
-  mRiseResistance.clear_value();
-  mFallResistance.clear_value();
-  mIntrinsicRise.clear_value();
-  mIntrinsicFall.clear_value();
-  mSlopeRise.clear_value();
-  mSlopeFall.clear_value();
-  mWhen.clear_value();
-  mWhenStart.clear_value();
-  mWhenEnd.clear_value();
-  mRiseDelayIntercept.clear_value();
-  mFallDelayIntercept.clear_value();
-  mRisePinResistance.clear_value();
-  mFallPinResistance.clear_value();
-  mCellRise.clear_value();
-  mCellFall.clear_value();
-  mRiseConstraint.clear_value();
-  mFallConstraint.clear_value();
-  mRiseTransition.clear_value();
-  mFallTransition.clear_value();
+  mRelatedPinEquivalent = nullptr;
+  mRelatedBusPins = nullptr;
+  mRelatedOutputPin = nullptr;
+  mRelatedPin = nullptr;
+  mTimingSense = nullptr;
+  mTimingType = nullptr;
+  mRiseResistance = nullptr;
+  mFallResistance = nullptr;
+  mIntrinsicRise = nullptr;
+  mIntrinsicFall = nullptr;
+  mSlopeRise = nullptr;
+  mSlopeFall = nullptr;
+  mWhen = nullptr;
+  mWhenStart = nullptr;
+  mWhenEnd = nullptr;
+  mRiseDelayIntercept = nullptr;
+  mFallDelayIntercept = nullptr;
+  mRisePinResistance = nullptr;
+  mFallPinResistance = nullptr;
+  mCellRise = nullptr;
+  mCellFall = nullptr;
+  mRiseConstraint = nullptr;
+  mFallConstraint = nullptr;
+  mRiseTransition = nullptr;
+  mFallTransition = nullptr;
+  mValue = nullptr;
 }
 
 // @brief attr_type に対応する属性を読み込む．
@@ -188,8 +169,8 @@ TimingHandler::begin_group()
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-TimingHandler::parse_attr(AttrType attr_type,
-			  const FileRegion& attr_loc)
+TimingHandler::read_group_attr(AttrType attr_type,
+			       const FileRegion& attr_loc)
 {
   return false;
 }
@@ -202,8 +183,8 @@ bool
 TimingHandler::end_group(const FileRegion& group_loc)
 {
 #if 0
-  return mgr().new_timing(loc, value,
-			  mVil, mVih, mVimin, mVimax);
+  mValue = mgr().new_timing(loc, value,
+			    mVil, mVih, mVimin, mVimax);
 #endif
   return false;
 }

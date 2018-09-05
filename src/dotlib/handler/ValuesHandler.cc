@@ -10,7 +10,6 @@
 #include "ValuesHandler.h"
 #include "dotlib/DotlibParser.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstFloatVector.h"
 #include "ym/MsgMgr.h"
 
 
@@ -21,7 +20,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parser パーサー
+/// @param[in] parser パーサー
 ValuesHandler::ValuesHandler(DotlibParser& parser) :
   ComplexHandler(parser)
 {
@@ -32,18 +31,19 @@ ValuesHandler::~ValuesHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-ValuesHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @brief values attribute の記述をパースする．
+//
+// エラーが起きた場合には nullptr が返される．
 const AstFloatVector*
-ValuesHandler::value() const
+ValuesHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_complex_attribute();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief ヘッダの開始処理
@@ -53,20 +53,21 @@ void
 ValuesHandler::begin_header()
 {
   mValueList.clear();
+  mValue = nullptr;
 }
 
-// @brief 値を読み込む処理
+// @brief ヘッダの値を読み込む処理
 // @param[in] value_type 型
 // @param[in] value_loc トークンの位置
 // @param[in] count read_value() の呼ばれた回数
 bool
-ValuesHandler::read_value(TokenType value_type,
-			  const FileRegion& value_loc,
-			  int count)
+ValuesHandler::read_header_value(TokenType value_type,
+				 const FileRegion& value_loc,
+				 int count)
 {
 #warning "value_type を無視している．"
 
-  const char* tmp_str = parser().cur_string();
+  const char* tmp_str = cur_string();
   string buf;
   char c = '\0';
   for ( const char* s = tmp_str; (c = *s) ; ++ s ) {

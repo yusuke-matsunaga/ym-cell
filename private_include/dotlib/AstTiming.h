@@ -22,9 +22,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class AstTiming :
   public AstNode
 {
-  friend class AstMgr;
-
-private:
+public:
 
   /// @brief コンストラクタ
   /// @param[in] loc 位置情報
@@ -93,7 +91,6 @@ private:
 	    const AstFloat* retain_fall_slew);
 
   /// @brief デストラクタ
-  virtual
   ~AstTiming();
 
 
@@ -229,10 +226,9 @@ public:
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
-  virtual
   void
   dump(ostream& s,
-       int indent = 0) const;
+       int indent = 0) const override;
 
 
 private:

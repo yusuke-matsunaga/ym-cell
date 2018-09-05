@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "SimpleHandler.h"
+#include "dotlib/SimpleHandler.h"
 #include "ym/FileRegion.h"
 
 
@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief function 属性の値をパーズする simple attribute 用のハンドラ
 ///
 /// やっていることは ExprHandler と似ているが，こっちはもとのデータが
-/// 文字列なので一旦 FhScanner に設定し直している．
+/// 文字列なので一旦 FuncScanner に設定し直している．
 //////////////////////////////////////////////////////////////////////
 class FuncHandler :
   public SimpleHandler
@@ -40,13 +40,11 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値をクリアする．
-  void
-  clear_value();
-
-  /// @brief 読み込んだ値を返す．
+  /// @brief int 値の記述をパースする．
+  ///
+  /// エラーが起きた場合には nullptr が返される．
   const AstExpr*
-  value() const;
+  parse_value();
 
 
 protected:

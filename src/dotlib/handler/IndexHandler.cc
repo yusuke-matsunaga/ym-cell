@@ -24,7 +24,6 @@ BEGIN_NAMESPACE_YM_DOTLIB
 IndexHandler::IndexHandler(DotlibParser& parser) :
   ComplexHandler(parser)
 {
-  clear_value();
 }
 
 // @brief デストラクタ
@@ -32,18 +31,19 @@ IndexHandler::~IndexHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-IndexHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @brief index attribute の記述をパースする．
+//
+// エラーが起きた場合には nullptr が返される．
 const AstFloatVector*
-IndexHandler::value() const
+IndexHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_complex_attribute();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief ヘッダの開始処理
@@ -52,16 +52,17 @@ IndexHandler::value() const
 void
 IndexHandler::begin_header()
 {
+  mValue = nullptr;
 }
 
-// @brief 値を読み込む処理
+// @brief ヘッダの値を読み込む処理
 // @param[in] value_type 型
 // @param[in] value_loc トークンの位置
 // @param[in] count read_value() の呼ばれた回数
 bool
-IndexHandler::read_value(TokenType value_type,
-			 const FileRegion& value_loc,
-			 int count)
+IndexHandler::read_header_value(TokenType value_type,
+				const FileRegion& value_loc,
+				int count)
 {
 #warning "value_type を無視していいの？"
 
@@ -74,7 +75,7 @@ IndexHandler::read_value(TokenType value_type,
     return false;
   }
 
-  const char* tmp_str = parser().cur_string();
+  const char* tmp_str = cur_string();
   vector<double> value_list;
   string buf;
   char c = '\0';

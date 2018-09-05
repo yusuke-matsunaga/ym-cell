@@ -6,10 +6,8 @@
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/HandlerFactory.h"
 #include "DelayModelHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstDelayModel.h"
 #include "ym/MsgMgr.h"
 
 
@@ -22,9 +20,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 DelayModelHandler::DelayModelHandler(DotlibParser& parser) :
-  StrBaseHandler(parser, false)
+  StrBaseHandler(parser)
 {
-  clear_value();
 }
 
 // @brief デストラクタ
@@ -32,18 +29,19 @@ DelayModelHandler::~DelayModelHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-DelayModelHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @brief int 値の記述をパースする．
+//
+// エラーが起きた場合には nullptr が返される．
 const AstDelayModel*
-DelayModelHandler::value() const
+DelayModelHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_simple_attribute();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief 文字列を読み込んだ時の処理
@@ -72,6 +70,7 @@ DelayModelHandler::read_str_value(const char* str,
     value = kClibDelayDcm;
   }
   else {
+    mValue = nullptr;
     ostringstream buf;
     buf << str << ": Illegal value for 'delay_model'."
 	<< " 'generic_cmos', 'table_lookup', "

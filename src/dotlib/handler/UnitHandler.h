@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "ComplexHandler.h"
+#include "dotlib/ComplexHandler.h"
 #include "ym/ShString.h"
 
 
@@ -37,13 +37,11 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値をクリアする．
-  void
-  clear_value();
-
-  /// @brief 読み込んだ値を返す．
+  /// @brief unit attribute の記述をパースする．
+  ///
+  /// エラーが起きた場合には nullptr が返される．
   const AstUnit*
-  value() const;
+  parse_value();
 
 
 protected:
@@ -57,14 +55,14 @@ protected:
   void
   begin_header() override;
 
-  /// @brief 値を読み込む処理
+  /// @brief ヘッダの値を読み込む処理
   /// @param[in] value_type 型
   /// @param[in] value_loc トークンの位置
   /// @param[in] count read_value() の呼ばれた回数
   bool
-  read_value(TokenType value_type,
-	     const FileRegion& value_loc,
-	     int count) override;
+  read_header_value(TokenType value_type,
+		    const FileRegion& value_loc,
+		    int count) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
   /// @param[in] header_loc '(' から ')' までのファイル上の位置

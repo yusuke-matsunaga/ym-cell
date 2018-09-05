@@ -7,25 +7,14 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
 #include "TableHandler.h"
+#include "IndexHandler.h"
+#include "ValuesHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstLut.h"
-#include "dotlib/AstString.h"
-#include "dotlib/AstFloatVector.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief table group 用のハンドラを作る．
-// @param[in] parser パーサー
-TableHandler*
-HandlerFactory::new_table(DotlibParser& parser)
-{
-  return new TableHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス TableHandler
@@ -34,11 +23,7 @@ HandlerFactory::new_table(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 TableHandler::TableHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser),
-  mIndex1(parser),
-  mIndex2(parser),
-  mIndex3(parser),
-  mValues(parser)
+  Str1GroupHandler(parser)
 {
 }
 
@@ -47,28 +32,29 @@ TableHandler::~TableHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-TableHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @breif timing group statement の記述をパースする．
+// @return 読み込んだ値を返す．
 const AstLut*
-TableHandler::value() const
+TableHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_group_statement();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief グループ記述の始まり
 void
 TableHandler::begin_group()
 {
-  mIndex1.clear_value();
-  mIndex2.clear_value();
-  mIndex3.clear_value();
-  mValues.clear_value();
+  mIndex1 = nullptr;
+  mIndex2 = nullptr;
+  mIndex3 = nullptr;
+  mValues = nullptr;
+  mValue = nullptr;
 }
 
 // @brief attr_type に対応する属性を読み込む．
@@ -77,9 +63,10 @@ TableHandler::begin_group()
 // @retval true 正常に処理した．
 // @retval false 処理中にエラーが起こった．
 bool
-TableHandler::parse_attr(AttrType attr_type,
-			 const FileRegion& attr_loc)
+TableHandler::read_group_attr(AttrType attr_type,
+			      const FileRegion& attr_loc)
 {
+#if 0
   switch ( attr_type ) {
   case AttrType::index_1: return mIndex1.parse_attr_value();
   case AttrType::index_2: return mIndex2.parse_attr_value();
@@ -93,6 +80,7 @@ TableHandler::parse_attr(AttrType attr_type,
   }
   syntax_error(attr_type, attr_loc);
   return false;
+#endif
 }
 
 // @brief グループ記述の終わり

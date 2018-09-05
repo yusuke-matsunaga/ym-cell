@@ -9,7 +9,6 @@
 
 #include "InputVoltageHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstInputVoltage.h"
 #include "ym/MsgMgr.h"
 
 
@@ -22,11 +21,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 InputVoltageHandler::InputVoltageHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser),
-  mVil(parser),
-  mVih(parser),
-  mVimin(parser),
-  mVimax(parser)
+  IoVoltageHandler(parser)
 {
 }
 
@@ -35,28 +30,30 @@ InputVoltageHandler::~InputVoltageHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-InputVoltageHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @breif input_voltage group statement の記述をパースする．
+// @return 読み込んだ値を返す．
 const AstInputVoltage*
-InputVoltageHandler::value() const
+InputVoltageHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_group_statement();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief グループ記述の始まり
 void
 InputVoltageHandler::begin_group()
 {
-  mVil.clear_value();
-  mVih.clear_value();
-  mVimin.clear_value();
-  mVimax.clear_value();
+  mVil = nullptr;
+  mVih = nullptr;
+  mVimin = nullptr;
+  mVimax = nullptr;
+
+  mValue = nullptr;
 }
 
 // @brief attr_type に対応する属性を読み込む．
@@ -65,14 +62,14 @@ InputVoltageHandler::begin_group()
 // @retval true 正常に処理した．
 // @retval false 処理中にエラーが起こった．
 bool
-InputVoltageHandler::parse_attr(AttrType attr_type,
-				const FileRegion& attr_loc)
+InputVoltageHandler::read_group_attr(AttrType attr_type,
+				     const FileRegion& attr_loc)
 {
   switch ( attr_type ) {
-  case AttrType::vil:   return mVil.parse_attr_value();
-  case AttrType::vih:   return mVih.parse_attr_value();
-  case AttrType::vimin: return mVimin.parse_attr_value();
-  case AttrType::vimax: return mVimax.parse_attr_value();
+  case AttrType::vil:   return parse_expr(mVil, attr_type, attr_loc);
+  case AttrType::vih:   return parse_expr(mVih, attr_type, attr_loc);
+  case AttrType::vimin: return parse_expr(mVimin, attr_type, attr_loc);
+  case AttrType::vimax: return parse_expr(mVimax, attr_type, attr_loc);
   default: break;
   }
   syntax_error(attr_type, attr_loc);
@@ -86,14 +83,19 @@ InputVoltageHandler::parse_attr(AttrType attr_type,
 bool
 InputVoltageHandler::end_group(const FileRegion& group_loc)
 {
-  mValue = mgr().new_input_voltage(group_loc,
-				   header_value(),
-				   mVil.value(),
-				   mVih.value(),
-				   mVimin.value(),
-				   mVimax.value());
+  if ( !check_attr(mVil, AttrType::vil, group_loc) ||
+       !check_attr(mVih, AttrType::vih, group_loc) ||
+       !check_attr(mVimin, AttrType::vimin, group_loc) ||
+       !check_attr(mVimax, AttrType::vimax, group_loc) ) {
+    return false;
+  }
+  else {
+    mValue = mgr().new_input_voltage(group_loc,
+				     header_value(),
+				     mVil, mVih, mVimin, mVimax);
 
-  return true;
+    return true;
+  }
 }
 
 END_NAMESPACE_YM_DOTLIB

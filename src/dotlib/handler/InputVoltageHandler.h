@@ -8,18 +8,17 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "GroupHandler.h"
-#include "ExprHandler.h"
+#include "IoVoltageHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class InputVoltageHandler InputVoltageHandler.h "InputVoltageHandler.h"
-/// @brief input voltage 用のハンドラ
+/// @brief input_voltage 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class InputVoltageHandler :
-  public Str1GroupHandler
+  public IoVoltageHandler
 {
 public:
 
@@ -36,18 +35,15 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値をクリアする．
-  void
-  clear_value();
-
-  /// @brief 読み込んだ値を返す．
+  /// @breif input_voltage group statement の記述をパースする．
+  /// @return 読み込んだ値を返す．
   const AstInputVoltage*
-  value() const;
+  parse_value();
 
 
-private:
+public:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
+  // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief グループ記述の始まり
@@ -60,8 +56,8 @@ private:
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   bool
-  parse_attr(AttrType attr_type,
-	     const FileRegion& attr_loc) override;
+  read_group_attr(AttrType attr_type,
+		  const FileRegion& attr_loc) override;
 
   /// @brief グループ記述の終わり
   /// @param[in] group_loc グループ全体のファイル上の位置
@@ -77,16 +73,16 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // vil
-  ExprHandler mVil;
+  const AstExpr* mVil;
 
   // vih
-  ExprHandler mVih;
+  const AstExpr* mVih;
 
   // vimin
-  ExprHandler mVimin;
+  const AstExpr* mVimin;
 
   // vimax
-  ExprHandler mVimax;
+  const AstExpr* mVimax;
 
   // 読み込んだ値
   const AstInputVoltage* mValue;

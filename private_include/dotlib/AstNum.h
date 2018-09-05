@@ -30,7 +30,6 @@ protected:
   AstNum(const FileRegion& loc);
 
   /// @brief デストラクタ
-  virtual
   ~AstNum();
 
 

@@ -8,13 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "GroupHandler.h"
-#include "FloatHandler.h"
-#include "FuncHandler.h"
-#include "PieceWiseHandler.h"
-#include "TableHandler.h"
-#include "TimingSenseHandler.h"
-#include "TimingTypeHandler.h"
+#include "EmptyGroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -41,13 +35,10 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値をクリアする．
-  void
-  clear_value();
-
-  /// @brief 読み込んだ値を返す．
-  const vector<const AstTiming*>&
-  value() const;
+  /// @breif timing group statement の記述をパースする．
+  /// @return 読み込んだ値を返す．
+  const AstTiming*
+  parse_value();
 
 
 protected:
@@ -65,8 +56,8 @@ protected:
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   bool
-  parse_attr(AttrType attr_type,
-	     const FileRegion& attr_loc) override;
+  read_group_attr(AttrType attr_type,
+		  const FileRegion& attr_loc) override;
 
   /// @brief グループ記述の終わり
   /// @param[in] group_loc グループ全体のファイル上の位置
@@ -82,65 +73,65 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // related_pin_equivalent
-  StrHandler mRelatedPinEquivalent;
+  const AstString* mRelatedPinEquivalent;
 
   // related_bus_pins
-  StrHandler mRelatedBusPins;
+  const AstString* mRelatedBusPins;
 
   // related_output_pin
-  StrHandler mRelatedOutputPin;
+  const AstString* mRelatedOutputPin;
 
   // related_pin
-  StrHandler mRelatedPin;
+  const AstString* mRelatedPin;
 
   // timing_sense
-  TimingSenseHandler mTimingSense;
+  const AstTimingSense* mTimingSense;
 
   // timing_type
-  TimingTypeHandler mTimingType;
+  const AstTimingType* mTimingType;
 
   // edge_rate_sensitivity_f0
 
   // rise_resistance
-  FloatHandler mRiseResistance;
+  const AstFloat* mRiseResistance;
 
   // fall_resistance
-  FloatHandler mFallResistance;
+  const AstFloat* mFallResistance;
 
   // intrinsic_rise
-  FloatHandler mIntrinsicRise;
+  const AstFloat* mIntrinsicRise;
 
   // intrinsic_fall
-  FloatHandler mIntrinsicFall;
+  const AstFloat* mIntrinsicFall;
 
   // sdf_cond
 
   // slope_rise
-  FloatHandler mSlopeRise;
+  const AstFloat* mSlopeRise;
 
   // slope_fall
-  FloatHandler mSlopeFall;
+  const AstFloat* mSlopeFall;
 
   // when
-  FuncHandler mWhen;
+  const AstExpr* mWhen;
 
   // when_start
-  FuncHandler mWhenStart;
+  const AstExpr* mWhenStart;
 
   // when_end
-  FuncHandler mWhenEnd;
+  const AstExpr* mWhenEnd;
 
   // rise_delay_intercept
-  PieceWiseHandler mRiseDelayIntercept;
+  const AstPieceWise* mRiseDelayIntercept;
 
   // fall_delay_intercept
-  PieceWiseHandler mFallDelayIntercept;
+  const AstPieceWise* mFallDelayIntercept;
 
   // rise_pin_resistance
-  PieceWiseHandler mRisePinResistance;
+  const AstPieceWise* mRisePinResistance;
 
   // fall_pin_resistance
-  PieceWiseHandler mFallPinResistance;
+  const AstPieceWise* mFallPinResistance;
 
   // orders
 
@@ -149,22 +140,22 @@ private:
   // cell_degradation
 
   // cell_rise
-  TableHandler mCellRise;
+  const AstLut* mCellRise;
 
   // cell_fall
-  TableHandler mCellFall;
+  const AstLut* mCellFall;
 
   // rise_constraint
-  TableHandler mRiseConstraint;
+  const AstLut* mRiseConstraint;
 
   // fall_constraint
-  TableHandler mFallConstraint;
+  const AstLut* mFallConstraint;
 
   // rise_transition
-  TableHandler mRiseTransition;
+  const AstLut* mRiseTransition;
 
   // fall_transition
-  TableHandler mFallTransition;
+  const AstLut* mFallTransition;
 
   // noise_immunity_above_high
 
@@ -208,8 +199,8 @@ private:
 
   // steady_state_current_tristate
 
-  // 読み込んだ値のリスト
-  vector<const AstTiming*> mValueList;
+  // 読み込んだ値
+  const AstTiming* mValue;
 
 };
 

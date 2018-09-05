@@ -17,6 +17,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 /// @class ExprHandler ExprHandler.h "ExprHandler.h"
 /// @brief expression の値をとる simple attribute 用のハンドラ
+///
+/// 見かけは SimpleHandler に似ているが，値が複数のトークンから構成される
+/// ため別のクラスを用いる．
 //////////////////////////////////////////////////////////////////////
 class ExprHandler :
   public DotlibHandler
@@ -36,19 +39,11 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値をクリアする．
-  void
-  clear_value();
-
-  /// @brief 読み込んだ値を返す．
+  /// @brief int 値の記述をパースする．
+  ///
+  /// エラーが起きた場合には nullptr が返される．
   const AstExpr*
-  value() const;
-
-  /// @brief 属性値を読み込む．
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_attr_value();
+  parse_value();
 
 
 private:

@@ -10,6 +10,7 @@
 
 
 #include "dotlib_nsdef.h"
+#include "dotlib/DotlibParser.h"
 #include "ym/FileRegion.h"
 
 
@@ -64,6 +65,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///   * TemplateHandler
 ///   * TimingHandler
 ///
+/// それぞれ，SimpleHandler, ComplexHandler, GroupHandler (の継承クラス)
+/// の parse_attr_value() というメンバ関数が実際のパース処理を行う．
+///
+/// このクラスの実際の役割は DotlibParser& を持つこと．
 //////////////////////////////////////////////////////////////////////
 class DotlibHandler
 {
@@ -80,23 +85,62 @@ public:
   DotlibHandler(DotlibHandler&& src) = delete;
 
   /// @brief デストラクタ
+  virtual
   ~DotlibHandler();
 
 
-public:
+protected:
   //////////////////////////////////////////////////////////////////////
-  // 他のクラスが用いる関数
+  // 継承のクラスが用いる便利関数
+  // DotlibParser の同名の関数を呼び出す．
   //////////////////////////////////////////////////////////////////////
 
   /// @brief パーサーを得る．
   DotlibParser&
   parser();
 
+  /// @brief 直前の read_token() に対応する文字列を返す．
+  const char*
+  cur_string();
+
+  /// @brief 直前の read_token() に対応する整数値を返す．
+  ///
+  /// 型が INT_NUM でなかったときの値は不定
+  int
+  cur_int();
+
+  /// @brief 直前の read_token() に対応する実数値を返す．
+  ///
+  /// 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
+  double
+  cur_float();
+
+  /// @brief 直前の read_token() に対応する位置を返す．
+  FileRegion
+  cur_loc();
+
+  /// @brief 文字列を属性値に変換する．
+  AttrType
+  conv_to_attr(const char* str);
+
   /// @brief AstMgr を得る．
   AstMgr&
   mgr();
 
+  /// @brief デバッグモードの時 true を返す．
+  bool
+  debug();
 
+  /// @brief 未対応の属性名に対するエラーメッセージを出力する．
+  /// @param[in] attr_type 対象の属性
+  /// @param[in] attr_loc attr_type のファイル上の位置
+  static
+  void
+  syntax_error(AttrType attr_type,
+	       const FileRegion& attr_loc);
+
+
+#if 0
 protected:
   //////////////////////////////////////////////////////////////////////
   // 継承クラスから用いられる関数
@@ -110,18 +154,7 @@ protected:
   /// @brief 行末まで読み込む．
   bool
   expect_nl();
-
-  /// @brief 未対応の属性名に対するエラーメッセージを出力する．
-  /// @param[in] attr_type 対象の属性
-  /// @param[in] attr_loc attr_type のファイル上の位置
-  static
-  void
-  syntax_error(AttrType attr_type,
-	       const FileRegion& attr_loc);
-
-  /// @brief デバッグモードの時に true を返す．
-  bool
-  debug();
+#endif
 
 
 private:
@@ -133,6 +166,79 @@ private:
   DotlibParser& mParser;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief パーサーを得る．
+inline
+DotlibParser&
+DotlibHandler::parser()
+{
+  return mParser;
+}
+
+// @brief 直前の read_token() に対応する文字列を返す．
+inline
+const char*
+DotlibHandler::cur_string()
+{
+  return parser().cur_string();
+}
+
+// @brief 直前の read_token() に対応する整数値を返す．
+//
+// 型が INT_NUM でなかったときの値は不定
+inline
+int
+DotlibHandler::cur_int()
+{
+  return parser().cur_int();
+}
+
+// @brief 直前の read_token() に対応する実数値を返す．
+//
+// 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
+inline
+double
+DotlibHandler::cur_float()
+{
+  return parser().cur_float();
+}
+
+// @brief 直前の read_token() に対応する位置を返す．
+inline
+FileRegion
+DotlibHandler::cur_loc()
+{
+  return parser().cur_loc();
+}
+
+// @brief 文字列を属性値に変換する．
+inline
+AttrType
+DotlibHandler::conv_to_attr(const char* str)
+{
+  return parser().conv_to_attr(str);
+}
+
+// @brief AstMgr を得る．
+inline
+AstMgr&
+DotlibHandler::mgr()
+{
+  return parser().mgr();
+}
+
+// @brief デバッグモードの時 true を返す．
+inline
+bool
+DotlibHandler::debug()
+{
+  return parser().debug();
+}
 
 END_NAMESPACE_YM_DOTLIB
 

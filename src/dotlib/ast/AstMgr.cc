@@ -43,6 +43,7 @@ AstMgr::clear()
   mStrNum = 0;
   mVectNum = 0;
   mVectElemSize = 0;
+  mBoolNum = 0;
   mOprNum = 0;
   mNotNum = 0;
   mBoolExprNum = 0;

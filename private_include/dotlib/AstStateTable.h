@@ -21,8 +21,6 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class AstStateTable :
   public AstFL
 {
-  friend class AstMgr;
-
 public:
 
   /// @brief コンストラクタ
@@ -47,7 +45,6 @@ public:
 		const AstExpr* clocked_on_also);
 
   /// @brief デストラクタ
-  virtual
   ~AstStateTable();
 
 
@@ -71,10 +68,9 @@ public:
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
-  virtual
   void
   dump(ostream& s,
-       int indent = 0) const;
+       int indent = 0) const override;
 
 
 private:

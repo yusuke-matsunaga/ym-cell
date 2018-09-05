@@ -8,8 +8,9 @@
 
 
 #include "dotlib/DotlibParser.h"
-#include "dotlib/DotlibHandler.h"
-#include "dotlib/HandlerFactory.h"
+#include "dotlib/SimpleHandler.h"
+#include "dotlib/ComplexHandler.h"
+#include "dotlib/GroupHandler.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstLibrary.h"
 #include "dotlib/TokenType.h"
@@ -48,8 +49,8 @@ const AstLibrary*
 DotlibParser::parse()
 {
   // goto 文を使う関係で変数はここで宣言しておかなければならない．
-  LibraryHandler library(*this);
-  bool error = false;
+  LibraryHandler handler(*this);
+  const AstLibrary* library = nullptr;
   TokenType type;
   FileRegion loc;
 
@@ -64,17 +65,16 @@ DotlibParser::parse()
 		    "DOTLIB_PARSER",
 		    "'library' keyword is expected "
 		    "on the top of the structure");
-    error = true;
     goto last;
   }
 
-  if ( !library.parse_attr_value() ) {
-    error = true;
+  library = handler.parse_value();
+  if ( library == nullptr ) {
     goto last;
   }
 
   if ( !expect_nl() ) {
-    error = true;
+    library = nullptr;
     goto last;
   }
   for ( ; ; ) {
@@ -90,11 +90,162 @@ DotlibParser::parse()
   }
 
  last:
-  if ( error ) {
-    return nullptr;
+
+  return library;
+}
+
+// @brief Simple Attribute を読み込む．
+// @param[in] handler ハンドラ
+// @retval true 正しく読み込めた．
+// @retval false エラーが起こった．
+bool
+DotlibParser::parse_simple_attribute(SimpleHandler& handler)
+{
+  if ( !expect(TokenType::COLON) ) {
+    return false;
   }
 
-  return library.value();
+  FileRegion value_loc;
+  TokenType value_type = read_token(value_loc, handler.symbol_mode());
+  if ( !handler.read_value(value_type, value_loc) ) {
+    return false;
+  }
+
+  if ( !expect_nl() ) {
+    return false;
+  }
+
+  return true;
+}
+
+// @brief Complex Attribute を読み込む．
+// @param[in] handler ハンドラ(ComplexHandler の継承クラス)
+// @retval true 正しく読み込めた．
+// @retval false エラーが起こった．
+bool
+DotlibParser::parse_complex_attribute(ComplexHandler& handler)
+{
+  if ( !parse_cg_header(handler) ) {
+    return false;
+  }
+
+  return expect_nl();
+}
+
+// @brief Group Statement を読み込む．
+// @param[in] handler ハンドラ(GroupHandler の継承クラス)
+// @retval true 正しく読み込めた．
+// @retval false エラーが起こった．
+bool
+DotlibParser::parse_group_statement(GroupHandler& handler)
+{
+  if ( !parse_cg_header(handler) ) {
+    return false;
+  }
+
+  // グループ本体の始まり
+  if ( !expect(TokenType::LCB) ) {
+    return false;
+  }
+
+  // 仮想関数の呼び出し
+  handler.begin_group();
+
+  FileRegion first_loc = cur_loc();
+  for ( ; ; ) {
+    FileRegion loc;
+    TokenType type = read_token(loc);
+    if ( type == TokenType::NL ) {
+      // 改行は読み飛ばす．
+      continue;
+    }
+    if ( type == TokenType::RCB ) {
+      // グループ本体の終わり．
+      FileRegion last_loc = loc;
+      if ( !handler.end_group(FileRegion(first_loc, last_loc)) ) {
+	return false;
+      }
+
+      if ( !expect(TokenType::NL) ) {
+	return false;
+      }
+
+      return true;
+    }
+    if ( type != TokenType::SYMBOL ) {
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      loc,
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      "string value is expected.");
+      return false;
+    }
+    // 一般のトークンの処理
+    const char* name = cur_string();
+    AttrType name_type = conv_to_attr(name);
+    if ( name_type == AttrType::none ) {
+      ostringstream buf;
+      buf << name << ": syntax error.";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      loc,
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      buf.str());
+      return false;
+    }
+    bool r = handler.read_group_attr(name_type, loc);
+    if ( !r ) {
+      return false;
+    }
+  }
+}
+
+// @brief Complex Attribute, GroupStatement のヘッダを読み込む．
+// @param[in] handler ハンドラ(CGHandler の継承クラス)
+// @retval true 正しく読み込めた．
+// @retval false エラーが起こった．
+bool
+DotlibParser::parse_cg_header(CGHandler& handler)
+{
+  if ( !expect(TokenType::LP) ) {
+    return false;
+  }
+
+  handler.begin_header();
+
+  FileRegion first_loc = cur_loc();
+
+  FileRegion loc;
+  TokenType type = read_token(loc);
+  int count = 0;
+  if ( type != TokenType::RP ) {
+    for ( ; ; ) {
+      if ( !handler.read_header_value(type, loc, count) ) {
+	return false;
+      }
+      ++ count;
+
+      TokenType type1 = read_token(loc);
+      if ( type1 == TokenType::RP ) {
+	break;
+      }
+      if ( type1 != TokenType::COMMA ) {
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			loc,
+			MsgType::Error,
+			"DOTLIB_PARSER",
+			"syntax error. ',' is expected.");
+	return false;
+      }
+      type = read_token(loc);
+    }
+  }
+
+  if ( !handler.end_header(FileRegion(first_loc, loc), count) ) {
+    return false;
+  }
+
+  return true;
 }
 
 // @brief 引数の種類のトークンでなければエラーメッセージを出力する．

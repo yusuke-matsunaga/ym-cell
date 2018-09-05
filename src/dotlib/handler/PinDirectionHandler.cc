@@ -6,10 +6,8 @@
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/HandlerFactory.h"
 #include "PinDirectionHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstPinDirection.h"
 #include "ym/MsgMgr.h"
 
 
@@ -22,9 +20,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 PinDirectionHandler::PinDirectionHandler(DotlibParser& parser) :
-  StrBaseHandler(parser, false)
+  StrBaseHandler(parser)
 {
-  clear_value();
 }
 
 // @brief デストラクタ
@@ -32,18 +29,19 @@ PinDirectionHandler::~PinDirectionHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-PinDirectionHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @brief pin_direction の記述をパースする．
+//
+// エラーが起きた場合には nullptr が返される．
 const AstPinDirection*
-PinDirectionHandler::value() const
+PinDirectionHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_simple_attribute();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief 文字列を読み込んだ時の処理
@@ -69,6 +67,7 @@ PinDirectionHandler::read_str_value(const char* str,
     value = kClibCellPinInternal;
   }
   else {
+    mValue = nullptr;
     ostringstream buf;
     buf << value << ": Illegal value for 'direction'."
 	<< " 'input', 'output', 'inout' or 'internal' are expected.";

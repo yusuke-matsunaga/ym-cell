@@ -7,25 +7,12 @@
 /// All rights reserved.
 
 
-#include "dotlib/HandlerFactory.h"
 #include "OutputVoltageHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstExpr.h"
-#include "dotlib/AstAttr.h"
-#include "dotlib/AstOutputVoltage.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief output_voltage group 用のハンドラを作る．
-// @param[in] parser パーサー
-DotlibHandler*
-HandlerFactory::new_output_voltage(DotlibParser& parser)
-{
-  return new OutputVoltageHandler(parser);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス OutputVoltageHandler
@@ -34,12 +21,7 @@ HandlerFactory::new_output_voltage(DotlibParser& parser)
 // @brief コンストラクタ
 // @param[in] parser パーサー
 OutputVoltageHandler::OutputVoltageHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser),
-  mVol(parser),
-  mVoh(parser),
-  mVomin(parser),
-  mVomax(parser)
-
+  IoVoltageHandler(parser)
 {
 }
 
@@ -48,28 +30,30 @@ OutputVoltageHandler::~OutputVoltageHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-OutputVoltageHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @breif input_voltage group statement の記述をパースする．
+// @return 読み込んだ値を返す．
 const AstOutputVoltage*
-OutputVoltageHandler::value() const
+OutputVoltageHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_group_statement();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief グループ記述の始まり
 void
 OutputVoltageHandler::begin_group()
 {
-  mVol.clear_value();
-  mVoh.clear_value();
-  mVomin.clear_value();
-  mVomax.clear_value();
+  mVol = nullptr;
+  mVoh = nullptr;
+  mVomin = nullptr;
+  mVomax = nullptr;
+
+  mValue = nullptr;
 }
 
 // @brief attr_type に対応する属性を読み込む．
@@ -78,14 +62,14 @@ OutputVoltageHandler::begin_group()
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-OutputVoltageHandler::parse_attr(AttrType attr_type,
-				 const FileRegion& attr_loc)
+OutputVoltageHandler::read_group_attr(AttrType attr_type,
+				      const FileRegion& attr_loc)
 {
   switch ( attr_type ) {
-  case AttrType::vol:   return mVol.parse_attr_value();
-  case AttrType::voh:   return mVoh.parse_attr_value();
-  case AttrType::vomin: return mVomin.parse_attr_value();
-  case AttrType::vomax: return mVomax.parse_attr_value();
+  case AttrType::vol:   return parse_expr(mVol, attr_type, attr_loc);
+  case AttrType::voh:   return parse_expr(mVoh, attr_type, attr_loc);
+  case AttrType::vomin: return parse_expr(mVomin, attr_type, attr_loc);
+  case AttrType::vomax: return parse_expr(mVomax, attr_type, attr_loc);
   default: break;
   }
   syntax_error(attr_type, attr_loc);
@@ -99,14 +83,18 @@ OutputVoltageHandler::parse_attr(AttrType attr_type,
 bool
 OutputVoltageHandler::end_group(const FileRegion& group_loc)
 {
-  mValue = mgr().new_output_voltage(group_loc,
-				    header_value(),
-				    mVol.value(),
-				    mVoh.value(),
-				    mVomin.value(),
-				    mVomax.value());
-
-  return true;
+  if ( !check_attr(mVol, AttrType::vol, group_loc) ||
+       !check_attr(mVoh, AttrType::voh, group_loc) ||
+       !check_attr(mVomin, AttrType::vomin, group_loc) ||
+       !check_attr(mVomax, AttrType::vomax, group_loc) ) {
+    return false;
+  }
+  else {
+    mValue = mgr().new_output_voltage(group_loc,
+				      header_value(),
+				      mVol, mVoh, mVomin, mVomax);
+    return true;
+  }
 }
 
 END_NAMESPACE_YM_DOTLIB

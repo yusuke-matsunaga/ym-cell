@@ -20,9 +20,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 TimingSenseHandler::TimingSenseHandler(DotlibParser& parser) :
-  StrBaseHandler(parser, false)
+  StrBaseHandler(parser)
 {
-  clear_value();
 }
 
 // @brief デストラクタ
@@ -30,18 +29,19 @@ TimingSenseHandler::~TimingSenseHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-TimingSenseHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @brief timing_sense の記述をパースする．
+//
+/// エラーが起きた場合には nullptr が返される．
 const AstTimingSense*
-TimingSenseHandler::value() const
+TimingSenseHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_simple_attribute();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief 文字列を読み込んだ時の処理
@@ -64,6 +64,7 @@ TimingSenseHandler::read_str_value(const char* str,
     value = kClibNonUnate;
   }
   else {
+    mValue = nullptr;
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,

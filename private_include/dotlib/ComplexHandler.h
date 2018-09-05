@@ -18,14 +18,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class ComplexHandler ComplexHandler.h "ComplexHandler.h"
 /// @brief complex attribute 用のハンドラ
 ///
-/// このクラスで DotlibHandler の仮想関数である parse_attr_value()
-/// を実装している．
-/// 具体的には
-/// '(' <value>, <value>, <value>, ... ')' ';'
-/// の形を仮定してパーズを行う．
-/// '(' を読んだ直後に begin_header() を呼び出し，
-/// 個々の <value> を読む度に read_value() を呼び出す．
-/// 最後の ')' を読んだ直後に end_header() を呼び出す．
+/// 実は CGHandler をそのまま継承している．
+/// どちらかというと alias 的な継承
 ///
 /// 継承クラスは以下の通り
 ///  * DefineHandler
@@ -40,7 +34,7 @@ class ComplexHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
+  /// @param parser パーサー
   ComplexHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
@@ -52,11 +46,17 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 属性値を読み込む．
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる便利関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief Complex Attribute を読み込む．
+  /// @retval true 正しく読み込めた．
+  /// @retval false エラーが起こった．
   bool
-  parse_attr_value();
+  parse_complex_attribute();
 
 
 private:

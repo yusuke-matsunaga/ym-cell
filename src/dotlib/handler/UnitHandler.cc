@@ -11,7 +11,6 @@
 #include "dotlib/TokenType.h"
 #include "dotlib/DotlibParser.h"
 #include "dotlib/AstMgr.h"
-//#include "dotlib/AstUnit.h"
 #include "ym/MsgMgr.h"
 
 
@@ -26,7 +25,6 @@ BEGIN_NAMESPACE_YM_DOTLIB
 UnitHandler::UnitHandler(DotlibParser& parser) :
   ComplexHandler(parser)
 {
-  clear_value();
 }
 
 // @brief デストラクタ
@@ -34,18 +32,19 @@ UnitHandler::~UnitHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-UnitHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @brief unit attribute の記述をパースする．
+//
+// エラーが起きた場合には nullptr が返される．
 const AstUnit*
-UnitHandler::value() const
+UnitHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_complex_attribute();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief ヘッダの開始処理
@@ -54,18 +53,20 @@ UnitHandler::value() const
 void
 UnitHandler::begin_header()
 {
+  mValue = nullptr;
 }
 
-// @brief 値を読み込む処理
+// @brief ヘッダの値を読み込む処理
 // @param[in] value_type 型
 // @param[in] value_loc トークンの位置
 // @param[in] count read_value() の呼ばれた回数
 bool
-UnitHandler::read_value(TokenType value_type,
-			const FileRegion& value_loc,
-			int count)
+UnitHandler::read_header_value(TokenType value_type,
+			       const FileRegion& value_loc,
+			       int count)
 {
-  if ( count == 0 ) {
+  switch ( count ) {
+  case 0:
     if ( value_type != TokenType::INT_NUM && value_type != TokenType::FLOAT_NUM ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      value_loc,
@@ -75,11 +76,12 @@ UnitHandler::read_value(TokenType value_type,
       return false;
     }
     else {
-      mUnitVal = parser().cur_float();
+      mUnitVal = cur_float();
       return true;
     }
-  }
-  else if ( count == 1 ) {
+    break;
+
+  case 1:
     if ( value_type != TokenType::SYMBOL ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      value_loc,
@@ -89,11 +91,12 @@ UnitHandler::read_value(TokenType value_type,
       return false;
     }
     else {
-      mUnitStr = ShString(parser().cur_string());
+      mUnitStr = ShString(cur_string());
       return true;
     }
-  }
-  else {
+    break;
+
+  default:
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,

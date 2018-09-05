@@ -52,6 +52,45 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
+  // SimpleHandler から用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief Simple Attribute を読み込む．
+  /// @param[in] handler ハンドラ (SimpleHandler の継承クラス)
+  /// @retval true 正しく読み込めた．
+  /// @retval false エラーが起こった．
+  bool
+  parse_simple_attribute(SimpleHandler& handler);
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // ComplexHandler から用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief Complex Attribute を読み込む．
+  /// @param[in] handler ハンドラ(ComplexHandler の継承クラス)
+  /// @retval true 正しく読み込めた．
+  /// @retval false エラーが起こった．
+  bool
+  parse_complex_attribute(ComplexHandler& handler);
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // GroupHandler から用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief Group Statement を読み込む．
+  /// @param[in] handler ハンドラ(GroupHandler の継承クラス)
+  /// @retval true 正しく読み込めた．
+  /// @retval false エラーが起こった．
+  bool
+  parse_group_statement(GroupHandler& handler);
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
   // DotlibHandler から用いられる関数
   //////////////////////////////////////////////////////////////////////
 
@@ -106,6 +145,19 @@ public:
   /// @brief デバッグモードの時 true を返す．
   bool
   debug();
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // parse_complex_attribute(), parse_group_statement() の下請け関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief Complex Attribute, GroupStatement のヘッダを読み込む．
+  /// @param[in] handler ハンドラ(CGHandler の継承クラス)
+  /// @retval true 正しく読み込めた．
+  /// @retval false エラーが起こった．
+  bool
+  parse_cg_header(CGHandler& handler);
 
 
 private:

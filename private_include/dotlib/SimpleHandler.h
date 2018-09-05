@@ -10,6 +10,8 @@
 
 
 #include "dotlib/DotlibHandler.h"
+#include "dotlib/DotlibParser.h"
+#include "dotlib/TokenType.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -18,11 +20,12 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class SimpleHandler SimpleHandler.h "SimpleHandler.h"
 /// @brief simple attribute 用のハンドラ
 ///
-/// このクラスで DotlibHandler の仮想関数である parse_attr_value()
-/// を実装している．
 /// 具体的には
 ///  ':' <value> ';'
 /// の形を仮定してパーズを行う．
+/// 実際の処理は純粋仮想関数 read_value() が行うので継承クラスで実装する
+/// 必要がある．
+///
 /// <value> の部分が一つのトークンでないとエラーになるので
 /// ExprHandler は SimpleHandler の継承クラスではない．
 ///
@@ -45,31 +48,23 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  /// @param[in] sym_mode シンボルモード
-  SimpleHandler(DotlibParser& parser,
-		bool sym_mode);
+  SimpleHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  virtual
   ~SimpleHandler();
 
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 属性値を読み込む．
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_attr_value();
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
   // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief シンボルモードの値を返す．
+  ///
+  /// デフォルト実装では false を返す．
+  virtual
+  bool
+  symbol_mode();
 
   /// @brief 値を読み込む処理
   /// @param[in] value_type 型
@@ -80,13 +75,22 @@ protected:
 	     const FileRegion& value_loc) = 0;
 
 
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる便利関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief Simple Attribute を読み込む．
+  /// @retval true 正しく読み込めた．
+  /// @retval false エラーが起こった．
+  bool
+  parse_simple_attribute();
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // シンボルモード
-  bool mSymMode;
 
 };
 

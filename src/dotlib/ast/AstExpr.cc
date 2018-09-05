@@ -22,7 +22,7 @@ AstMgr::new_plus(const AstExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::kPlus, opr1, opr2);
+  return new (p) AstOpr(AstExprType::Plus, opr1, opr2);
 }
 
 // @brief - 演算子を表す AstExpr を生成する．
@@ -33,7 +33,7 @@ AstMgr::new_minus(const AstExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::kMinus, opr1, opr2);
+  return new (p) AstOpr(AstExprType::Minus, opr1, opr2);
 }
 
 // @brief * 演算子を表す AstExpr を生成する．
@@ -44,7 +44,7 @@ AstMgr::new_mult(const AstExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::kMult, opr1, opr2);
+  return new (p) AstOpr(AstExprType::Mult, opr1, opr2);
 }
 
 // @brief / 演算子を表す AstExpr を生成する．
@@ -55,7 +55,7 @@ AstMgr::new_div(const AstExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::kDiv, opr1, opr2);
+  return new (p) AstOpr(AstExprType::Div, opr1, opr2);
 }
 
 // @brief NOT 演算子を表す AstExpr を生成する．
@@ -78,7 +78,7 @@ AstMgr::new_and(const AstExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::kAnd, opr1, opr2);
+  return new (p) AstOpr(AstExprType::And, opr1, opr2);
 }
 
 // @brief OR 演算子を表す AstExpr を生成する．
@@ -89,7 +89,7 @@ AstMgr::new_or(const AstExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::kOr, opr1, opr2);
+  return new (p) AstOpr(AstExprType::Or, opr1, opr2);
 }
 
 // @brief XOR 演算子を表す AstExpr を生成する．
@@ -100,7 +100,7 @@ AstMgr::new_xor(const AstExpr* opr1,
 {
   ++ mOprNum;
   void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::kXor, opr1, opr2);
+  return new (p) AstOpr(AstExprType::Xor, opr1, opr2);
 }
 
 // @brief ブール値(0 or 1)を表す AstExpr を生成する．
@@ -134,7 +134,7 @@ AstMgr::new_vdd_expr(const FileRegion& loc)
 {
   ++ mSymbolExprNum;
   void* p = mAlloc.get_memory(sizeof(AstSymbolExpr));
-  return new (p) AstSymbolExpr(loc, AstExprType::kVDD);
+  return new (p) AstSymbolExpr(loc, AstExprType::VDD);
 }
 
 // @brief VSSを表す AstExpr を生成する．
@@ -144,7 +144,7 @@ AstMgr::new_vss_expr(const FileRegion& loc)
 {
   ++ mSymbolExprNum;
   void* p = mAlloc.get_memory(sizeof(AstSymbolExpr));
-  return new (p) AstSymbolExpr(loc, AstExprType::kVSS);
+  return new (p) AstSymbolExpr(loc, AstExprType::VSS);
 }
 
 // @brief VCCを表す AstExpr を生成する．
@@ -154,7 +154,7 @@ AstMgr::new_vcc_expr(const FileRegion& loc)
 {
   ++ mSymbolExprNum;
   void* p = mAlloc.get_memory(sizeof(AstSymbolExpr));
-  return new (p) AstSymbolExpr(loc, AstExprType::kVCC);
+  return new (p) AstSymbolExpr(loc, AstExprType::VCC);
 }
 
 // @brief 文字列を表す AstExpr を生成する．
@@ -184,7 +184,7 @@ AstExpr::~AstExpr()
 {
 }
 
-// @brief 二項演算子型(kPlus, kMinus, kMult, kDiv)の時に true を返す．
+// @brief 二項演算子型(Plus, Minus, Mult, Div)の時に true を返す．
 bool
 AstExpr::is_opr() const
 {
@@ -193,7 +193,7 @@ AstExpr::is_opr() const
 
 // @brief ブール値を返す．
 //
-// kBool の時のみ意味を持つ．
+// Bool の時のみ意味を持つ．
 bool
 AstExpr::bool_value() const
 {
@@ -202,9 +202,20 @@ AstExpr::bool_value() const
   return false;
 }
 
+// @brief 浮動小数点値を返す．
+//
+// Float の時のみ意味を持つ．
+double
+AstExpr::float_value() const
+{
+  ASSERT_NOT_REACHED;
+
+  return 0.0;
+}
+
 // @brief 文字列シンボルを返す．
 //
-// kStr の時のみ意味を持つ．
+// Str の時のみ意味を持つ．
 ShString
 AstExpr::string_value() const
 {
@@ -215,7 +226,7 @@ AstExpr::string_value() const
 
 // @brief 第一オペランドを返す．
 //
-// kNot, kPlus, kMinus, kMult, kDiv の時のみ意味を持つ．
+// Not, Plus, Minus, Mult, Div の時のみ意味を持つ．
 const AstExpr*
 AstExpr::opr1() const
 {
@@ -226,7 +237,7 @@ AstExpr::opr1() const
 
 // @brief 第二オペランドを返す．
 //
-// kPlus, kMinus, kMult, kDiv の時のみ意味を持つ．
+// Plus, Minus, Mult, Div の時のみ意味を持つ．
 const AstExpr*
 AstExpr::opr2() const
 {
@@ -259,12 +270,12 @@ AstBoolExpr::~AstBoolExpr()
 AstExprType
 AstBoolExpr::type() const
 {
-  return Type::kBool;
+  return Type::Bool;
 }
 
 // @brief ブール値を返す．
 //
-// kBool の時のみ意味を持つ．
+// Bool の時のみ意味を持つ．
 bool
 AstBoolExpr::bool_value() const
 {
@@ -318,12 +329,12 @@ AstFloatExpr::~AstFloatExpr()
 AstExprType
 AstFloatExpr::type() const
 {
-  return Type::kFloat;
+  return Type::Float;
 }
 
 // @brief 浮動小数点値を返す．
 //
-// kFloat の時のみ意味を持つ．
+// Float の時のみ意味を持つ．
 double
 AstFloatExpr::float_value() const
 {
@@ -373,12 +384,12 @@ AstStrExpr::~AstStrExpr()
 AstExprType
 AstStrExpr::type() const
 {
-  return Type::kStr;
+  return Type::Str;
 }
 
 // @brief 文字列値を返す．
 //
-// kStr の時のみ意味を持つ．
+// Str の時のみ意味を持つ．
 ShString
 AstStrExpr::string_value() const
 {
@@ -421,7 +432,7 @@ AstStrExpr::dump(ostream& s,
 
 // @brief コンストラクタ
 // @param[in] loc ファイル上の位置
-// @param[in] type シンボルの種類(kVDD, kVSS, kVCC)
+// @param[in] type シンボルの種類(VDD, VSS, VCC)
 AstSymbolExpr::AstSymbolExpr(const FileRegion& loc,
 			     Type type) :
   AstExpr(loc),
@@ -485,7 +496,7 @@ AstNot::~AstNot()
 AstExprType
 AstNot::type() const
 {
-  return Type::kNot;
+  return Type::Not;
 }
 
 // @brief 第一オペランドを返す．
@@ -549,18 +560,11 @@ AstOpr::type() const
   return mType;
 }
 
-// @brief 演算子型(kPlus, kMinsu, kMult, kDiv)の時に true を返す．
+// @brief 演算子型(Plus, Minsu, Mult, Div)の時に true を返す．
 bool
 AstOpr::is_opr() const
 {
   return true;
-}
-
-// @brief 式全体のファイル上の位置を返す．
-FileRegion
-AstOpr::loc() const
-{
-  return FileRegion(mOpr1->loc(), mOpr2->loc());
 }
 
 // @brief 第一オペランドを返す．
@@ -588,9 +592,9 @@ AstOpr::to_expr(const HashMap<ShString, int>& pin_map) const
   Expr expr1 = opr1()->to_expr(pin_map);
   Expr expr2 = opr2()->to_expr(pin_map);
   switch ( type() ) {
-  case Type::kAnd: return expr1 & expr2;
-  case Type::kOr:  return expr1 | expr2;
-  case Type::kXor: return expr1 ^ expr2;
+  case Type::And: return expr1 & expr2;
+  case Type::Or:  return expr1 | expr2;
+  case Type::Xor: return expr1 ^ expr2;
   default: break;
   }
   ASSERT_NOT_REACHED;
@@ -608,13 +612,13 @@ AstOpr::dump(ostream& s,
   s << "( ";
   opr1()->dump(s, 0);
   switch ( type() ) {
-  case Type::kPlus:  s << " + "; break;
-  case Type::kMinus: s << " - "; break;
-  case Type::kMult:  s << " * "; break;
-  case Type::kDiv:   s << " / "; break;
-  case Type::kAnd:   s << " & "; break;
-  case Type::kOr:    s << " | "; break;
-  case Type::kXor:   s << " ^ "; break;
+  case Type::Plus:  s << " + "; break;
+  case Type::Minus: s << " - "; break;
+  case Type::Mult:  s << " * "; break;
+  case Type::Div:   s << " / "; break;
+  case Type::And:   s << " & "; break;
+  case Type::Or:    s << " | "; break;
+  case Type::Xor:   s << " ^ "; break;
   default:           ASSERT_NOT_REACHED; break;
   }
   opr2()->dump(s, 0);

@@ -21,11 +21,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のハンドラ
+// @param[in] parser パーサー
 FuncHandler::FuncHandler(DotlibParser& parser) :
-  SimpleHandler(parser, false)
+  SimpleHandler(parser)
 {
-  clear_value();
 }
 
 // @brief デストラクタ
@@ -33,18 +32,19 @@ FuncHandler::~FuncHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-FuncHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @brief int 値の記述をパースする．
+//
+// エラーが起きた場合には nullptr が返される．
 const AstExpr*
-FuncHandler::value() const
+FuncHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_simple_attribute();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief 値を読み込む処理
@@ -57,6 +57,7 @@ FuncHandler::read_value(TokenType value_type,
 			const FileRegion& value_loc)
 {
   if ( value_type != TokenType::SYMBOL ) {
+    mValue = nullptr;
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,
@@ -65,7 +66,7 @@ FuncHandler::read_value(TokenType value_type,
     return false;
   }
 
-  FuncParser read(parser().cur_string(), value_loc, mgr());
+  FuncParser read(cur_string(), value_loc, mgr());
 
   mValue = read();
 

@@ -8,7 +8,6 @@
 
 #include "TechnologyHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstTechnology.h"
 #include "ym/MsgMgr.h"
 
 
@@ -21,9 +20,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 TechnologyHandler::TechnologyHandler(DotlibParser& parser) :
-  StrBaseHandler(parser, false)
+  StrBaseHandler(parser)
 {
-  clear_value();
 }
 
 // @brief デストラクタ
@@ -31,18 +29,19 @@ TechnologyHandler::~TechnologyHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-TechnologyHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @brief int 値の記述をパースする．
+//
+// エラーが起きた場合には nullptr が返される．
 const AstTechnology*
-TechnologyHandler::value() const
+TechnologyHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_simple_attribute();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief 文字列を読み込んだ時の処理
@@ -62,6 +61,7 @@ TechnologyHandler::read_str_value(const char* str,
     value = kClibTechFpga;
   }
   else {
+    mValue = nullptr;
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,

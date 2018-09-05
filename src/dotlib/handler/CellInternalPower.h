@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "GroupHandler.h"
+#include "Str1GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -35,13 +35,10 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値をクリアする．
-  void
-  clear_value();
-
-  /// @brief 読み込んだ値を返す．
-  AstNode*
-  value() const;
+  /// @breif cell group statement の記述をパースする．
+  /// @return 読み込んだ値を返す．
+  const AstCell*
+  parse_value();
 
 
 protected:
@@ -59,8 +56,8 @@ protected:
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   bool
-  parse_attr(AttrType attr_type,
-	     const FileRegion& attr_loc) override;
+  read_group_attr(AttrType attr_type,
+		  const FileRegion& attr_loc) override;
 
   /// @brief グループ記述の終わり
   /// @param[in] group_loc グループ全体のファイル上の位置

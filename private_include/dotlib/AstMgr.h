@@ -47,6 +47,13 @@ public:
   const AstLibrary*
   library_node() const;
 
+  /// @brief ブール値を表す AstNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  /// @param[in] value 値
+  AstBool*
+  new_bool(const FileRegion& loc,
+	   bool value);
+
   /// @brief 整数値を表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
   /// @param[in] value 値
@@ -467,6 +474,7 @@ private:
   int mStrNum;
   int mVectNum;
   int mVectElemSize;
+  int mBoolNum;
   int mOprNum;
   int mNotNum;
   int mBoolExprNum;

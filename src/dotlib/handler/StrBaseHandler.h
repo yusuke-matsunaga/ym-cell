@@ -9,14 +9,28 @@
 /// All rights reserved.
 
 
-#include "SimpleHandler.h"
+#include "dotlib/SimpleHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class StrBaseHandler SimpleHandler.h "SimpleHandler.h"
+/// @class StrBaseHandler StrBaseHandler.h "StrBaseHandler.h"
 /// @brief 文字列を取る属性用のハンドラの基底クラス
+///
+/// SimpleHandler の仮想関数 read_value() は実装しているが，
+/// そのなかで純粋仮想関数 read_str_value() を呼んでいる．
+/// この関数は継承クラスで実装する必要がある．
+///
+/// 継承クラスは以下の通り
+/// * BoolHandler
+/// * DelayModelHandler
+/// * PinDirectionHandler
+/// * StringHandler
+/// * TechnologyHandler
+/// * TimingSenseHandler
+/// * TimingTypeHandler
+/// * VarTypeHandler
 //////////////////////////////////////////////////////////////////////
 class StrBaseHandler :
   public SimpleHandler
@@ -25,15 +39,13 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  /// @param[in] sym_mode シンボルモード
-  StrBaseHandler(DotlibParser& parser,
-		 bool sym_mode);
+  StrBaseHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
   ~StrBaseHandler();
 
 
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
   // SimpleHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
@@ -62,63 +74,6 @@ private:
   bool
   read_str_value(const char* str,
 		 const FileRegion& value_loc) = 0;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class StrHandler SimpleHandler.h "SimpleHandler.h"
-/// @brief 文字列を取る属性用のハンドラ
-//////////////////////////////////////////////////////////////////////
-class StrHandler :
-  public StrBaseHandler
-{
-public:
-
-  /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  StrHandler(DotlibParser& parser);
-
-  /// @brief デストラクタ
-  ~StrHandler();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 値をクリアする．
-  void
-  clear_value();
-
-  /// @brief 読み込んだ値を返す．
-  const AstString*
-  value() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // StrBaseHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 文字列を読み込んだ時の処理
-  /// @param[in] str 文字列
-  /// @param[in] value_loc 文字列トークンの位置
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  read_str_value(const char* str,
-		 const FileRegion& value_loc) override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 読み込んだ値
-  const AstString* mValue;
 
 };
 

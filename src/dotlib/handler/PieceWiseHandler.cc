@@ -25,7 +25,6 @@ BEGIN_NAMESPACE_YM_DOTLIB
 PieceWiseHandler::PieceWiseHandler(DotlibParser& parser) :
   ComplexHandler(parser)
 {
-  clear_value();
 }
 
 // @brief デストラクタ
@@ -33,18 +32,19 @@ PieceWiseHandler::~PieceWiseHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-PieceWiseHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @brief piece_wise attribute の記述をパースする．
+//
+// エラーが起きた場合には nullptr が返される．
 const AstPieceWise*
-PieceWiseHandler::value() const
+PieceWiseHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_complex_attribute();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief ヘッダの開始処理
@@ -53,18 +53,20 @@ PieceWiseHandler::value() const
 void
 PieceWiseHandler::begin_header()
 {
+  mValue = nullptr;
 }
 
-// @brief 値を読み込む処理
+// @brief ヘッダの値を読み込む処理
 // @param[in] value_type 型
 // @param[in] value_loc トークンの位置
 // @param[in] count read_value() の呼ばれた回数
 bool
-PieceWiseHandler::read_value(TokenType value_type,
-			     const FileRegion& value_loc,
-			     int count)
+PieceWiseHandler::read_header_value(TokenType value_type,
+				    const FileRegion& value_loc,
+				    int count)
 {
-  if ( count == 0 ) {
+  switch ( count ) {
+  case 0:
     if ( value_type != TokenType::INT_NUM ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      value_loc,
@@ -74,11 +76,12 @@ PieceWiseHandler::read_value(TokenType value_type,
       return false;
     }
     else {
-      mVal1 = parser().cur_int();
+      mVal1 = cur_int();
       return true;
     }
-  }
-  else if ( count == 1 ) {
+    break;
+
+  case 1:
     if ( value_type != TokenType::INT_NUM && value_type != TokenType::FLOAT_NUM ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      value_loc,
@@ -88,11 +91,12 @@ PieceWiseHandler::read_value(TokenType value_type,
       return false;
     }
     else {
-      mVal2 = parser().cur_float();
+      mVal2 = cur_float();
       return true;
     }
-  }
-  else {
+    break;
+
+  default:
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,
@@ -112,6 +116,7 @@ PieceWiseHandler::end_header(const FileRegion& header_loc,
 			     int count)
 {
   if ( count != 2 ) {
+    mValue = nullptr;
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    header_loc,
 		    MsgType::Error,

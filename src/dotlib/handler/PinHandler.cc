@@ -8,10 +8,13 @@
 
 
 #include "PinHandler.h"
+#include "FloatHandler.h"
+#include "FuncHandler.h"
+#include "InputVoltageHandler.h"
+#include "OutputVoltageHandler.h"
+#include "PinDirectionHandler.h"
 #include "TimingHandler.h"
 #include "dotlib/AstMgr.h"
-//#include "dotlib/AstString.h"
-//#include "dotlib/AstAttr.h"
 #include "ym/MsgMgr.h"
 
 
@@ -126,24 +129,53 @@ PinHandler::~PinHandler()
 {
 }
 
-// @brief 値をクリアする．
-void
-PinHandler::clear_value()
-{
-  mValue = nullptr;
-}
-
-// @brief 読み込んだ値を返す．
+// @breif pin group statement の記述をパースする．
+// @return 読み込んだ値を返す．
 const AstPin*
-PinHandler::value() const
+PinHandler::parse_value()
 {
-  return mValue;
+  bool stat = parse_group_statement();
+  if ( stat ) {
+    return mValue;
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief グループ記述の始まり
 void
 PinHandler::begin_group()
 {
+  mCapacitance = nullptr;
+  mDirection = nullptr;
+  mFallCapacitance = nullptr;
+  mFallCurrentSlopeAfterThreshold = nullptr;
+  mFallCurrentSlopeBeforeThreshold = nullptr;
+  mFallTimeAfterThreshold = nullptr;
+  mFallTimeBeforeThreshold = nullptr;
+  mFanoutLoad = nullptr;
+  mFunction = nullptr;
+  mInputVoltage = nullptr;
+  mMaxCapacitance = nullptr;
+  mMaxFanout = nullptr;
+  mMaxTransition = nullptr;
+  mMinCapacitance = nullptr;
+  mMinFanout = nullptr;
+  mMinTransition = nullptr;
+  mOutputVoltage = nullptr;
+  mPullingCurrent = nullptr;
+  mPullingResistance = nullptr;
+  mRiseCapacitance = nullptr;
+  mRiseCurrentSlopeAfterThreshold = nullptr;
+  mRiseCurrentSlopeBeforeThreshold = nullptr;
+  mRiseTimeAfterThreshold = nullptr;
+  mRiseTimeBeforeThreshold = nullptr;
+  mThreeState = nullptr;
+  mVhdlName = nullptr;
+  mTimingList.clear();
+
+  mValue = nullptr;
 }
 
 // @brief attr_type に対応する属性を読み込む．
@@ -152,8 +184,8 @@ PinHandler::begin_group()
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-PinHandler::parse_attr(AttrType attr_type,
-		       const FileRegion& attr_loc)
+PinHandler::read_group_attr(AttrType attr_type,
+			    const FileRegion& attr_loc)
 {
   return false;
 }
@@ -173,7 +205,6 @@ PinHandler::end_group(const FileRegion& group_loc)
 void
 PinHandler::begin_group()
 {
-  mTimingList.clear();
   GroupHandler::begin_group();
 }
 

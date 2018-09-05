@@ -8,9 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "GroupHandler.h"
-#include "VarTypeHandler.h"
-#include "IndexHandler.h"
+#include "Str1GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -32,7 +30,18 @@ public:
   ~TemplateHandler();
 
 
-protected:
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @breif lut_template group statement の記述をパースする．
+  /// @return 読み込んだ値を返す．
+  const AstTemplate*
+  parse_value();
+
+
+public:
   //////////////////////////////////////////////////////////////////////
   // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
@@ -47,8 +56,8 @@ protected:
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   bool
-  parse_attr(AttrType attr_type,
-	     const FileRegion& attr_loc) override;
+  read_group_attr(AttrType attr_type,
+		  const FileRegion& attr_loc) override;
 
   /// @brief グループ記述の終わり
   /// @param[in] group_loc グループ全体のファイル上の位置
@@ -60,26 +69,47 @@ protected:
 
 private:
   //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief VarType に共通の処理を行う．
+  bool
+  parse_vartype(const AstVarType*& dst,
+		AttrType attr_type,
+		const FileRegion& attr_loc);
+
+  /// @brief Index に共通の処理を行う．
+  bool
+  parse_index(const AstFloatVector*& dst,
+	      AttrType attr_type,
+	      const FileRegion& attr_loc);
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
   // variable_1
-  VarTypeHandler mVar1;
+  const AstVarType* mVar1;
 
   // variable_2
-  VarTypeHandler mVar2;
+  const AstVarType* mVar2;
 
   // variable_3
-  VarTypeHandler mVar3;
+  const AstVarType* mVar3;
 
   // index_1
-  IndexHandler mIndex1;
+  const AstFloatVector* mIndex1;
 
   // index_2
-  IndexHandler mIndex2;
+  const AstFloatVector* mIndex2;
 
   // index_3
-  IndexHandler mIndex3;
+  const AstFloatVector* mIndex3;
+
+  // 読み込んだ値
+  const AstTemplate* mValue;
 
 };
 

@@ -22,8 +22,6 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class AstFL :
   public AstNode
 {
-  friend class AstMgr;
-
 protected:
 
   /// @brief コンストラクタ
@@ -42,7 +40,6 @@ protected:
 	int clear_preset_var2);
 
   /// @brief デストラクタ
-  virtual
   ~AstFL();
 
 

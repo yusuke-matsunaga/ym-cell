@@ -8,13 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "GroupHandler.h"
-#include "FloatHandler.h"
-#include "FuncHandler.h"
-#include "InputVoltageHandler.h"
-#include "OutputVoltageHandler.h"
-#include "PinDirectionHandler.h"
-#include "TimingHandler.h"
+#include "Str1GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -41,13 +35,10 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値をクリアする．
-  void
-  clear_value();
-
-  /// @brief 読み込んだ値を返す．
+  /// @breif pin group statement の記述をパースする．
+  /// @return 読み込んだ値を返す．
   const AstPin*
-  value() const;
+  parse_value();
 
 
 protected:
@@ -60,13 +51,14 @@ protected:
   begin_group() override;
 
   /// @brief attr_type に対応する属性を読み込む．
+  /// @param[in] parser パーサー
   /// @param[in] attr_type 対象の属性
   /// @param[in] attr_loc attr_type のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   bool
-  parse_attr(AttrType attr_type,
-	     const FileRegion& attr_loc) override;
+  read_group_attr(AttrType attr_type,
+		  const FileRegion& attr_loc) override;
 
   /// @brief グループ記述の終わり
   /// @param[in] group_loc グループ全体のファイル上の位置
@@ -87,91 +79,90 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-#if 0
   // capacitance
-  FloatHandler mCapacitance;
+  const AstFloat* mCapacitance;
 
   // direction
-  PinDirectionHandler mDirection;
+  const AstPinDirection* mDirection;
 
   // fall_capacitance
-  FloatHandler mFallCapacitance;
+  const AstFloat* mFallCapacitance;
 
   // fall_current_slope_after_threshold
-  FloatHandler mFallCurrentSlopeAfterThreshold;
+  const AstFloat* mFallCurrentSlopeAfterThreshold;
 
   // fall_current_slope_before_threshold
-  FloatHandler mFallCurrentSlopeBeforeThreshold;
+  const AstFloat* mFallCurrentSlopeBeforeThreshold;
 
   // fall_time_after_threshold
-  FloatHandler mFallTimeAfterThreshold;
+  const AstFloat* mFallTimeAfterThreshold;
 
   // fall_time_before_threshold
-  FloatHandler mFallTimeBeforeThreshold;
+  const AstFloat* mFallTimeBeforeThreshold;
 
   // fanout_load
-  FloatHandler mFanoutLoad;
+  const AstFloat* mFanoutLoad;
 
   // function
-  FuncHandler mFunction;
+  const AstExpr* mFunction;
 
   // input_voltage
-  InputVoltageHandler mInputVoltage;
+  const AstInputVoltage* mInputVoltage;
 
   // max_capacitance
-  FloatHandler mMaxCapacitance;
+  const AstFloat* mMaxCapacitance;
 
   // max_fanout
-  FloatHandler mMaxFanout;
+  const AstFloat* mMaxFanout;
 
   // max_transition
-  FloatHandler mMaxTransition;
+  const AstFloat* mMaxTransition;
 
   // min_capacitance
-  FloatHandler mMinCapacitance;
+  const AstFloat* mMinCapacitance;
 
   // min_fanout
-  FloatHandler mMinFanout;
+  const AstFloat* mMinFanout;
 
   // min_transition
-  FloatHandler mMinTransition;
+  const AstFloat* mMinTransition;
 
   // output_voltage
-  OutputVoltageHandler mOutputVoltage;
+  const AstOutputVoltage* mOutputVoltage;
 
   // pulling_current
-  FloatHandler mPullingCurrent;
+  const AstFloat* mPullingCurrent;
 
   // pulling_resistance
-  FloatHandler mPullingResistance;
+  const AstFloat* mPullingResistance;
 
   // rise_capacitance
-  FloatHandler mRiseCapacitance;
+  const AstFloat* mRiseCapacitance;
 
   // rise_current_slope_after_threshold
-  FloatHandler mRiseCurrentSlopeAfterThreshold;
+  const AstFloat* mRiseCurrentSlopeAfterThreshold;
 
   // rise_current_slope_before_threshold
-  FloatHandler mRiseCurrentSlopeBeforeThreshold;
+  const AstFloat* mRiseCurrentSlopeBeforeThreshold;
 
   // rise_time_after_threshold
-  FloatHandler mRiseTimeAfterThreshold;
+  const AstFloat* mRiseTimeAfterThreshold;
 
   // rise_time_before_threshold
-  FloatHandler mRiseTimeBeforeThreshold;
+  const AstFloat* mRiseTimeBeforeThreshold;
 
   // three_state
-  FuncHandler mThreeState;
+  const AstExpr* mThreeState;
 
   // vdhl_name
-  StrHandler mVdhlName;
+  const AstString* mVhdlName;
 
   // timing
-  TimingHandler mTiming;
-#endif
+  vector<const AstTiming*> mTimingList;
 
   // 読み込んだ値
   const AstPin* mValue;
+
 };
 
 END_NAMESPACE_YM_DOTLIB

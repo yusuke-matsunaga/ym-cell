@@ -17,20 +17,20 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 /// @brief 型を表す列挙型
 enum class AstExprType {
-  kBool,
-  kFloat,
-  kStr,
-  kVDD,
-  kVSS,
-  kVCC,
-  kNot,
-  kPlus,
-  kMinus,
-  kMult,
-  kDiv,
-  kAnd,
-  kOr,
-  kXor,
+  Bool,
+  Float,
+  Str,
+  VDD,
+  VSS,
+  VCC,
+  Not,
+  Plus,
+  Minus,
+  Mult,
+  Div,
+  And,
+  Or,
+  Xor,
 };
 
 
@@ -47,14 +47,13 @@ public:
 
   using Type = AstExprType;
 
-protected:
+public:
 
   /// @brief コンストラクタ
   /// @param[in] loc 位置情報
   AstExpr(const FileRegion& loc);
 
   /// @brief デストラクタ
-  virtual
   ~AstExpr();
 
 
@@ -68,35 +67,42 @@ public:
   Type
   type() const = 0;
 
-  /// @brief 二項演算子型(kPlus, kMinus, kMult, kDiv, kAnd, kOr, kXor)の時に true を返す．
+  /// @brief 二項演算子型(Plus, Minus, Mult, Div, And, Or, Xor)の時に true を返す．
   virtual
   bool
   is_opr() const;
 
   /// @brief ブール値を返す．
   ///
-  /// kBool の時のみ意味を持つ．
+  /// Bool の時のみ意味を持つ．
   virtual
   bool
   bool_value() const;
 
+  /// @brief 浮動小数点値を返す．
+  ///
+  /// Float の時のみ意味を持つ．
+  virtual
+  double
+  float_value() const;
+
   /// @brief 文字列シンボルを返す．
   ///
-  /// kStr の時のみ意味を持つ．
+  /// Str の時のみ意味を持つ．
   virtual
   ShString
   string_value() const;
 
   /// @brief 第一オペランドを返す．
   ///
-  /// kNot, kPlus, kMinus, kMult, kDiv, kAnd, kOr, kXor の時のみ意味を持つ．
+  /// Not, Plus, Minus, Mult, Div, And, Or, Xor の時のみ意味を持つ．
   virtual
   const AstExpr*
   opr1() const;
 
   /// @brief 第二オペランドを返す．
   ///
-  /// kPlus, kMinus, kMult, kDiv, kAnd, kOr, kXor の時のみ意味を持つ．
+  /// Plus, Minus, Mult, Div, And, Or, Xor の時のみ意味を持つ．
   virtual
   const AstExpr*
   opr2() const;
@@ -129,7 +135,6 @@ protected:
 	      bool val);
 
   /// @brief デストラクタ
-  virtual
   ~AstBoolExpr();
 
 
@@ -139,31 +144,27 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  virtual
   Type
-  type() const;
+  type() const override;
 
   /// @brief ブール値を返す．
   ///
-  /// kBool の時のみ意味を持つ．
-  virtual
+  /// Bool の時のみ意味を持つ．
   bool
-  bool_value() const;
+  bool_value() const override;
 
   /// @brief Expr を作る．
   /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
-  virtual
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const;
+  to_expr(const HashMap<ShString, int>& pin_map) const override;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
-  virtual
   void
   dump(ostream& s,
-       int indent = 0) const;
+       int indent = 0) const override;
 
 
 private:
@@ -201,7 +202,6 @@ protected:
 	       double val);
 
   /// @brief デストラクタ
-  virtual
   ~AstFloatExpr();
 
 
@@ -211,31 +211,27 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  virtual
   Type
-  type() const;
+  type() const override;
 
   /// @brief 浮動小数点値を返す．
   ///
-  /// kFloat の時のみ意味を持つ．
-  virtual
+  /// Float の時のみ意味を持つ．
   double
-  float_value() const;
+  float_value() const override;
 
   /// @brief Expr を作る．
   /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
-  virtual
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const;
+  to_expr(const HashMap<ShString, int>& pin_map) const override;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
-  virtual
   void
   dump(ostream& s,
-       int indent = 0) const;
+       int indent = 0) const override;
 
 
 private:
@@ -273,7 +269,6 @@ protected:
 	     const ShString& val);
 
   /// @brief デストラクタ
-  virtual
   ~AstStrExpr();
 
 
@@ -283,31 +278,27 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  virtual
   Type
-  type() const;
+  type() const override;
 
   /// @brief 文字列値を返す．
   ///
-  /// kStr の時のみ意味を持つ．
-  virtual
+  /// Str の時のみ意味を持つ．
   ShString
-  string_value() const;
+  string_value() const override;
 
   /// @brief Expr を作る．
   /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
-  virtual
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const;
+  to_expr(const HashMap<ShString, int>& pin_map) const override;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
-  virtual
   void
   dump(ostream& s,
-       int indent = 0) const;
+       int indent = 0) const override;
 
 
 private:
@@ -339,12 +330,11 @@ protected:
 
   /// @brief コンストラクタ
   /// @param[in] loc ファイル上の位置
-  /// @param[in] type シンボルの種類(kVDD, kVSS, kVCC)
+  /// @param[in] type シンボルの種類(VDD, VSS, VCC)
   AstSymbolExpr(const FileRegion& loc,
 		Type type);
 
   /// @brief デストラクタ
-  virtual
   ~AstSymbolExpr();
 
 
@@ -354,24 +344,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  virtual
   Type
-  type() const;
+  type() const override;
 
   /// @brief Expr を作る．
   /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
-  virtual
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const;
+  to_expr(const HashMap<ShString, int>& pin_map) const override;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
-  virtual
   void
   dump(ostream& s,
-       int indent = 0) const;
+       int indent = 0) const override;
 
 
 private:
@@ -409,8 +396,7 @@ private:
 	 const AstExpr* opr);
 
   /// @brief デストラクタ
-  virtual
-  ~AstNot();
+   ~AstNot();
 
 
 public:
@@ -419,30 +405,26 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を得る．
-  virtual
   Type
-  type() const;
+  type() const override;
 
   /// @brief 第一オペランドを返す．
   /// @note type() が演算子の型の時のみ意味を持つ．
-  virtual
   const AstExpr*
-  opr1() const;
+  opr1() const override;
 
   /// @brief Expr を作る．
   /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
-  virtual
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const;
+  to_expr(const HashMap<ShString, int>& pin_map) const override;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
-  virtual
   void
   dump(ostream& s,
-       int indent = 0) const;
+       int indent = 0) const override;
 
 
 private:
@@ -475,7 +457,6 @@ private:
 	 const AstExpr* opr2);
 
   /// @brief デストラクタ
-  virtual
   ~AstOpr();
 
 
@@ -485,46 +466,35 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を得る．
-  virtual
   Type
-  type() const;
+  type() const override;
 
-  /// @brief 演算子型(kPlus, kMinsu, kMult, kDiv, kAnd, kOr, kXor)の時に true を返す．
-  virtual
+  /// @brief 演算子型(Plus, Minsu, Mult, Div, And, Or, Xor)の時に true を返す．
   bool
-  is_opr() const;
-
-  /// @brief ファイル上の位置を返す．
-  virtual
-  FileRegion
-  loc() const;
+  is_opr() const override;
 
   /// @brief 第一オペランドを返す．
   /// @note type() が演算子の型の時のみ意味を持つ．
-  virtual
   const AstExpr*
-  opr1() const;
+  opr1() const override;
 
   /// @brief 第二オペランドを返す．
   /// @note type() が演算子の型の時のみ意味を持つ．
-  virtual
   const AstExpr*
-  opr2() const;
+  opr2() const override;
 
   /// @brief Expr を作る．
   /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
-  virtual
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const;
+  to_expr(const HashMap<ShString, int>& pin_map) const override;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
-  virtual
   void
   dump(ostream& s,
-       int indent = 0) const;
+       int indent = 0) const override;
 
 
 private:
