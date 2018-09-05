@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "IoVoltageHandler.h"
+#include "Str1GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief output voltage 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class OutputVoltageHandler :
-  public IoVoltageHandler
+  public Str1GroupHandler
 {
 public:
 

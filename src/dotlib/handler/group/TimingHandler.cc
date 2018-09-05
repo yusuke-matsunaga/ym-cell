@@ -135,31 +135,75 @@ TimingHandler::parse_value()
 void
 TimingHandler::begin_group()
 {
-  mRelatedPinEquivalent = nullptr;
+  mClockGatingFlag = nullptr;
+  mDefaultTiming = nullptr;
+  mFallResistance = nullptr;
+  mFpgaArcCondition = nullptr;
+  mFpgaDomainStyle = nullptr;
+  mInterdependenceId = nullptr;
+  mIntrinsicFall = nullptr;
+  mIntrinsicRise = nullptr;
+  mRelatedBusEquivalent = nullptr;
   mRelatedBusPins = nullptr;
   mRelatedOutputPin = nullptr;
   mRelatedPin = nullptr;
+  mRiseResistance = nullptr;
+  // mSdfCond
+  // mSdfCondEnd
+  // mSdfCondStart
+  // mSdfEdges
+  mSlopeFall = nullptr;
+  mSlopeRise = nullptr;
+  mSteadyStateResistanceAboveHigh = nullptr;
+  mSteadyStateResistanceBelowLow = nullptr;
+  mSteadyStateResistanceHigh = nullptr;
+  mSteadyStateResistanceLow = nullptr;
+  mTiedOff = nullptr;
   mTimingSense = nullptr;
   mTimingType = nullptr;
-  mRiseResistance = nullptr;
-  mFallResistance = nullptr;
-  mIntrinsicRise = nullptr;
-  mIntrinsicFall = nullptr;
-  mSlopeRise = nullptr;
-  mSlopeFall = nullptr;
   mWhen = nullptr;
-  mWhenStart = nullptr;
   mWhenEnd = nullptr;
-  mRiseDelayIntercept = nullptr;
+  mWhenStart = nullptr;
+
   mFallDelayIntercept = nullptr;
-  mRisePinResistance = nullptr;
   mFallPinResistance = nullptr;
-  mCellRise = nullptr;
+
+  // mMode
+
+  mRiseDelayIntercept = nullptr;
+  mRisePinResistance = nullptr;
+
+  // mCellDegradation
+
   mCellFall = nullptr;
-  mRiseConstraint = nullptr;
+  mCellRise = nullptr;
   mFallConstraint = nullptr;
-  mRiseTransition = nullptr;
   mFallTransition = nullptr;
+  mRiseConstraint = nullptr;
+  mRiseTransition = nullptr;
+
+  // mNoiseImmunityAbove
+  // mNoiseImmunityBelowLow
+  // mNoiseImmunityHigh
+  // mNoiseImmunityLow
+  // mPropagatedNoiseHeightAboveHigh
+  // mPropagatedNoiseHeightBelowLow
+  // mPropagatedNoiseHeightHigh
+  // mPropagatedNoiseHeightLow
+  // mPropagatedNoisePeakTimeRatioAboveHigh
+  // mPropagatedNoisePeakTimeRatioBelowLow
+  // mPropagatedNoisePeakTimeRatioHigh
+  // mPropagatedNoisePeakTimeRatioLow
+  // mPropagatedNoiseWidthHigh
+  // mPropagatedNoiseWidthLow
+  // mRetainingRise
+  // mRetainingFall
+  // mRetainRiseSlew
+  // mRetainFallSlew
+  // mSteadyStateCurrentHigh
+  // mSteadyStateCurrentLow
+  // mSteadyStateCurrentTristate
+
   mValue = nullptr;
 }
 

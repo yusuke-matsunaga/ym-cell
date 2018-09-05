@@ -9,6 +9,7 @@
 
 #include "dotlib/InputVoltageHandler.h"
 #include "dotlib/AstMgr.h"
+#include "dotlib/AstExpr.h"
 #include "ym/MsgMgr.h"
 
 
@@ -21,7 +22,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 InputVoltageHandler::InputVoltageHandler(DotlibParser& parser) :
-  IoVoltageHandler(parser)
+  Str1GroupHandler(parser)
 {
 }
 

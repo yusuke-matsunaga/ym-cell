@@ -54,6 +54,7 @@ TableHandler::begin_group()
   mIndex2 = nullptr;
   mIndex3 = nullptr;
   mValues = nullptr;
+
   mValue = nullptr;
 }
 
@@ -66,12 +67,11 @@ bool
 TableHandler::read_group_attr(AttrType attr_type,
 			      const FileRegion& attr_loc)
 {
-#if 0
   switch ( attr_type ) {
-  case AttrType::index_1: return mIndex1.parse_attr_value();
-  case AttrType::index_2: return mIndex2.parse_attr_value();
-  case AttrType::index_3: return mIndex3.parse_attr_value();
-  case AttrType::values:  return mValues.parse_attr_value();
+  case AttrType::index_1: return parse_index(mIndex1, attr_type, attr_loc);
+  case AttrType::index_2: return parse_index(mIndex2, attr_type, attr_loc);
+  case AttrType::index_3: return parse_index(mIndex3, attr_type, attr_loc);
+  case AttrType::values:  return parse_values(mValues, attr_type, attr_loc);
   case AttrType::domain:
 #warning "TODO: 未完";
     break;
@@ -80,7 +80,6 @@ TableHandler::read_group_attr(AttrType attr_type,
   }
   syntax_error(attr_type, attr_loc);
   return false;
-#endif
 }
 
 // @brief グループ記述の終わり
@@ -90,10 +89,19 @@ TableHandler::read_group_attr(AttrType attr_type,
 bool
 TableHandler::end_group(const FileRegion& group_loc)
 {
-#warning "TODO: 未完"
-  // mIndex1, mIndex2, mIndex3, mValues に値がセットされていることを確認して
-  // AstLut を作る．
-  return false;
+  if ( mValues == nullptr ) {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    group_loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "values is missing.");
+    return false;
+  }
+  else {
+    mValue = mgr().new_lut(group_loc, header_value(),
+			   mIndex1, mIndex2, mIndex3, mValues);
+    return true;
+  }
 }
 
 END_NAMESPACE_YM_DOTLIB

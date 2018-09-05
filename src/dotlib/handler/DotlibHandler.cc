@@ -10,8 +10,6 @@
 #include "dotlib/DotlibHandler.h"
 #include "dotlib/SimpleHandler.h"
 #include "dotlib/CGHandler.h"
-#include "dotlib/ComplexHandler.h"
-#include "dotlib/GroupHandler.h"
 #include "ym/MsgMgr.h"
 
 
@@ -68,41 +66,6 @@ DotlibHandler::expect_nl()
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス SimpleHandler
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] parser パーサー
-SimpleHandler::SimpleHandler(DotlibParser& parser) :
-  DotlibHandler(parser)
-{
-}
-
-// @brief デストラクタ
-SimpleHandler::~SimpleHandler()
-{
-}
-
-// @brief シンボルモードの値を返す．
-//
-// デフォルト実装では false を返す．
-bool
-SimpleHandler::symbol_mode()
-{
-  return false;
-}
-
-// @brief Simple Attribute を読み込む．
-// @retval true 正しく読み込めた．
-// @retval false エラーが起こった．
-bool
-SimpleHandler::parse_simple_attribute()
-{
-  return parser().parse_simple_attribute(*this);
-}
-
-
-//////////////////////////////////////////////////////////////////////
 // クラス CGHandler
 //////////////////////////////////////////////////////////////////////
 
@@ -116,57 +79,6 @@ CGHandler::CGHandler(DotlibParser& parser) :
 // @brief デストラクタ
 CGHandler::~CGHandler()
 {
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス ComplexHandler
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-ComplexHandler::ComplexHandler(DotlibParser& parser) :
-  CGHandler(parser)
-{
-}
-
-// @brief デストラクタ
-ComplexHandler::~ComplexHandler()
-{
-}
-
-// @brief Complex Attribute を読み込む．
-// @retval true 正しく読み込めた．
-// @retval false エラーが起こった．
-bool
-ComplexHandler::parse_complex_attribute()
-{
-  return parser().parse_complex_attribute(*this);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス GroupHandler
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] parser パーサー
-GroupHandler::GroupHandler(DotlibParser& parser) :
-  CGHandler(parser)
-{
-}
-
-// @brief デストラクタ
-GroupHandler::~GroupHandler()
-{
-}
-
-// @brief Group Statement を読み込む．
-// @retval true 正しく読み込めた．
-// @retval false エラーが起こった．
-bool
-GroupHandler::parse_group_statement()
-{
-  return parser().parse_group_statement(*this);
 }
 
 

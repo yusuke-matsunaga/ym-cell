@@ -90,6 +90,7 @@ set (dotlib_SOURCES
 
   src/dotlib/handler/DotlibHandler.cc
 
+  src/dotlib/handler/simple/SimpleHandler.cc
   src/dotlib/handler/simple/IntHandler.cc
   src/dotlib/handler/simple/FloatHandler.cc
   src/dotlib/handler/simple/StrBaseHandler.cc
@@ -106,11 +107,13 @@ set (dotlib_SOURCES
   src/dotlib/handler/simple/FuncScanner.cc
   src/dotlib/handler/simple/FuncHandler.cc
 
+  src/dotlib/handler/complex/ComplexHandler.cc
   src/dotlib/handler/complex/IndexHandler.cc
   src/dotlib/handler/complex/PieceWiseHandler.cc
   src/dotlib/handler/complex/UnitHandler.cc
   src/dotlib/handler/complex/ValuesHandler.cc
 
+  src/dotlib/handler/group/GroupHandler.cc
   src/dotlib/handler/group/EmptyGroupHandler.cc
   src/dotlib/handler/group/Str1GroupHandler.cc
   src/dotlib/handler/group/Str2GroupHandler.cc
@@ -124,7 +127,6 @@ set (dotlib_SOURCES
   src/dotlib/handler/group/CellHandler.cc
   #src/dotlib/handler/CellInternalPower.cc
   src/dotlib/handler/group/InputVoltageHandler.cc
-  src/dotlib/handler/group/IoVoltageHandler.cc
   src/dotlib/handler/group/LibraryHandler.cc
   src/dotlib/handler/group/OutputVoltageHandler.cc
   src/dotlib/handler/group/PinHandler.cc
