@@ -54,27 +54,33 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief グループ記述の始まり
+  ///
+  /// デフォルトの実装ではなにもしない．
   virtual
   void
-  begin_group() = 0;
+  begin_group();
 
   /// @brief attr_type に対応する属性を読み込む．
   /// @param[in] attr_type 対象の属性
   /// @param[in] attr_loc attr_type のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// デフォルトの実装ではなにもしないで true を返す．
   virtual
   bool
   read_group_attr(AttrType attr_type,
-		  const FileRegion& attr_loc) = 0;
+		  const FileRegion& attr_loc);
 
   /// @brief グループ記述の終わり
   /// @param[in] group_loc グループ全体のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// デフォルトの実装ではなにもしないで true を返す．
   virtual
   bool
-  end_group(const FileRegion& group_loc) = 0;
+  end_group(const FileRegion& group_loc);
 
 
 protected:
@@ -191,6 +197,80 @@ protected:
   parse_values(const AstFloatVector*& dst,
 	       AttrType attr_type,
 	       const FileRegion& attr_loc);
+
+  /// @brief Str1Complex タイプの complex attribute を読み込む．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] group_loc グループ記述全体の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_str1complex(const AstString*& dst,
+		    AttrType attr_type,
+		    const FileRegion& attr_loc);
+
+  /// @brief Str2Complex タイプの complex attribute を読み込む．
+  /// @param[in] dst1, dst2 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] group_loc グループ記述全体の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_str2complex(const AstString*& dst1,
+		    const AstString*& dst2,
+		    AttrType attr_type,
+		    const FileRegion& attr_loc);
+
+  /// @brief Float2Complex タイプの complex attribute を読み込む．
+  /// @param[in] dst1, dst2 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] group_loc グループ記述全体の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_float2complex(const AstFloat*& dst1,
+		      const AstFloat*& dst2,
+		      AttrType attr_type,
+		      const FileRegion& attr_loc);
+
+  /// @brief Str1Group タイプの group statement を読み込む．
+  /// @param[in] attr_type 属性の型
+  /// @param[in] group_loc グループ記述全体の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// ここでは全ての属性を読み飛ばす．
+  bool
+  parse_str1group(AttrType attr_type,
+		  const FileRegion& attr_loc);
+
+  /// @brief Str2Group タイプの group statement を読み込む．
+  /// @param[in] attr_type 属性の型
+  /// @param[in] group_loc グループ記述全体の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// ここでは全ての属性を読み飛ばす．
+  bool
+  parse_str2group(AttrType attr_type,
+		  const FileRegion& attr_loc);
+
+  /// @brief Str2IntGroup タイプの group statement を読み込む．
+  /// @param[in] attr_type 属性の型
+  /// @param[in] group_loc グループ記述全体の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// ここでは全ての属性を読み飛ばす．
+  bool
+  parse_str2intgroup(AttrType attr_type,
+		     const FileRegion& attr_loc);
 
   /// @brief 属性がセットされているかチェックする．
   /// @param[in] val 値を持つノード

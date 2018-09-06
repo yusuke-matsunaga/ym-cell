@@ -108,6 +108,9 @@ set (dotlib_SOURCES
   src/dotlib/handler/simple/FuncHandler.cc
 
   src/dotlib/handler/complex/ComplexHandler.cc
+  src/dotlib/handler/complex/Str1ComplexHandler.cc
+  src/dotlib/handler/complex/Str2ComplexHandler.cc
+  src/dotlib/handler/complex/Float2ComplexHandler.cc
   src/dotlib/handler/complex/IndexHandler.cc
   src/dotlib/handler/complex/PieceWiseHandler.cc
   src/dotlib/handler/complex/UnitHandler.cc

@@ -1,34 +1,34 @@
-﻿#ifndef STR1COMPLEXHANDLER_H
-#define STR1COMPLEXHANDLER_H
+﻿#ifndef STR2COMPLEXHANDLER_H
+#define STR2COMPLEXHANDLER_H
 
-/// @file Str1ComplexHandler.h
-/// @brief Str1ComplexHandler のヘッダファイル
+/// @file Str2ComplexHandler.h
+/// @brief Str2ComplexHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ComplexHandler.h"
+#include "dotlib/ComplexHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class Str1Str1ComplexHandler Str1ComplexHandler.h "Str1ComplexHandler.h"
+/// @class Str2Str2ComplexHandler Str2ComplexHandler.h "Str2ComplexHandler.h"
 /// @brief 1つの文字列型をとる complex attribute ハンドラ
 //////////////////////////////////////////////////////////////////////
-class Str1ComplexHandler :
+class Str2ComplexHandler :
   public ComplexHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  Str1ComplexHandler(DotlibParser& parser);
+  Str2ComplexHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~Str1ComplexHandler();
+  ~Str2ComplexHandler();
 
 
 public:
@@ -36,13 +36,13 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 値をクリアする．
-  void
-  clear_value();
-
-  /// @brief 読み込んだ値を返す．
-  const AstString*
-  value() const;
+  /// @brief 1つの文字列型を取る complex attribute の記述をパースする．
+  /// @param[in] dst1, dst2 結果を格納する変数
+  /// @retval true 正しくパースした．
+  /// @retval false エラーが怒った．
+  bool
+  parse_value(const AstString*& dst1,
+	      const AstString*& dst2);
 
 
 protected:
@@ -61,21 +61,17 @@ protected:
   /// @param[in] value_loc トークンの位置
   /// @param[in] count read_value() の呼ばれた回数
   bool
-  read_value(TokenType value_type,
-	     const FileRegion& value_loc,
-	     int count) override;
+  read_header_value(TokenType value_type,
+		    const FileRegion& value_loc,
+		    int count) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] attr_type 属性
-  /// @param[in] attr_loc attr_type のファイル上の位置
   /// @param[in] header_loc '(' から ')' までのファイル上の位置
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  end_header(AttrType attr_type,
-	     const FileRegion& attr_loc,
-	     const FileRegion& header_loc,
+  end_header(const FileRegion& header_loc,
 	     int count) override;
 
 
@@ -85,10 +81,11 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 読み込んだ値
-  const AstString* mValue;
+  const AstString* mValue1;
+  const AstString* mValue2;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // STR1COMPLEXHANDLER_H
+#endif // STR2COMPLEXHANDLER_H

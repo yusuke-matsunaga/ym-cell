@@ -8,6 +8,9 @@
 
 
 #include "dotlib/GroupHandler.h"
+#include "dotlib/Str1GroupHandler.h"
+#include "dotlib/Str2GroupHandler.h"
+#include "dotlib/Str2IntGroupHandler.h"
 #include "dotlib/BoolHandler.h"
 #include "dotlib/IntHandler.h"
 #include "dotlib/FloatHandler.h"
@@ -16,6 +19,9 @@
 #include "dotlib/FuncHandler.h"
 #include "dotlib/IndexHandler.h"
 #include "dotlib/ValuesHandler.h"
+#include "dotlib/Str1ComplexHandler.h"
+#include "dotlib/Str2ComplexHandler.h"
+#include "dotlib/Float2ComplexHandler.h"
 #include "dotlib/AstBool.h"
 #include "dotlib/AstInt.h"
 #include "dotlib/AstFloat.h"
@@ -41,6 +47,40 @@ GroupHandler::GroupHandler(DotlibParser& parser) :
 // @brief デストラクタ
 GroupHandler::~GroupHandler()
 {
+}
+
+// @brief グループ記述の始まり
+//
+// デフォルトの実装ではなにもしない．
+void
+GroupHandler::begin_group()
+{
+}
+
+// @brief attr_type に対応する属性を読み込む．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// デフォルトの実装ではなにもしないで true を返す．
+bool
+GroupHandler::read_group_attr(AttrType attr_type,
+			      const FileRegion& attr_loc)
+{
+  return true;
+}
+
+// @brief グループ記述の終わり
+// @param[in] group_loc グループ全体のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// デフォルトの実装ではなにもしないで true を返す．
+bool
+GroupHandler::end_group(const FileRegion& group_loc)
+{
+  return true;
 }
 
 // @brief Group Statement を読み込む．
@@ -248,6 +288,124 @@ GroupHandler::parse_values(const AstFloatVector*& dst,
     dst = handler.parse_value();
     return dst != nullptr;
   }
+}
+
+// @brief Str1Complex タイプの complex attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+GroupHandler::parse_str1complex(const AstString*& dst,
+				AttrType attr_type,
+				const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    Str1ComplexHandler handler(parser());
+    dst = handler.parse_value();
+    return dst != nullptr;
+  }
+}
+
+// @brief Str2Complex タイプの complex attribute を読み込む．
+// @param[in] dst1, dst2 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] group_loc グループ記述全体の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+GroupHandler::parse_str2complex(const AstString*& dst1,
+				const AstString*& dst2,
+				AttrType attr_type,
+				const FileRegion& attr_loc)
+{
+  if ( dst1 != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst1);
+    return false;
+  }
+  else {
+    Str2ComplexHandler handler(parser());
+    return handler.parse_value(dst1, dst2);
+  }
+}
+
+// @brief Float2Complex タイプの complex attribute を読み込む．
+// @param[in] dst1, dst2 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] group_loc グループ記述全体の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+GroupHandler::parse_float2complex(const AstFloat*& dst1,
+				  const AstFloat*& dst2,
+				  AttrType attr_type,
+				  const FileRegion& attr_loc)
+{
+  if ( dst1 != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst1);
+    return false;
+  }
+  else {
+    Float2ComplexHandler handler(parser());
+    return handler.parse_value(dst1, dst2);
+  }
+}
+
+// @brief Str1Group タイプの group statement を読み込む．
+// @param[in] attr_type 属性の型
+// @param[in] group_loc グループ記述全体の位置
+//
+// ここでは全ての属性を読み飛ばし，true を返す．
+bool
+GroupHandler::parse_str1group(AttrType attr_type,
+			      const FileRegion& attr_loc)
+{
+  Str1GroupHandler handler(parser());
+  return handler.parse_group_statement();
+}
+
+// @brief Str2Group タイプの group statement を読み込む．
+// @param[in] attr_type 属性の型
+// @param[in] group_loc グループ記述全体の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// ここでは全ての属性を読み飛ばす．
+bool
+GroupHandler::parse_str2group(AttrType attr_type,
+			      const FileRegion& attr_loc)
+{
+  Str2GroupHandler handler(parser());
+  return handler.parse_group_statement();
+}
+
+// @brief Str2IntGroup タイプの group statement を読み込む．
+// @param[in] attr_type 属性の型
+// @param[in] group_loc グループ記述全体の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// ここでは全ての属性を読み飛ばす．
+bool
+GroupHandler::parse_str2intgroup(AttrType attr_type,
+				 const FileRegion& attr_loc)
+{
+  Str2IntGroupHandler handler(parser());
+  return handler.parse_group_statement();
 }
 
 // @brief 属性がセットされているかチェックする．
