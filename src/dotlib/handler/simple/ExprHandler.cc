@@ -31,24 +31,26 @@ ExprHandler::~ExprHandler()
 {
 }
 
-// @brief int 値の記述をパースする．
-//
-// エラーが起きた場合には nullptr が返される．
-const AstExpr*
-ExprHandler::parse_value()
+// @brief 式の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+ExprHandler::parse_value(const AstExpr*& dst)
 {
   if ( !parser().expect(TokenType::COLON) ) {
-    return nullptr;
+    return false;
   }
 
   AstExpr* value = parser().read_expr(TokenType::SEMI);
   if ( value != nullptr ) {
     if ( parser().expect_nl() ) {
-      return value;
+      dst = value;
+      return true;
     }
   }
 
-  return nullptr;
+  return false;
 }
 
 END_NAMESPACE_YM_DOTLIB

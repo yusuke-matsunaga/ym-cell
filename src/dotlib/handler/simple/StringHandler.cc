@@ -28,19 +28,18 @@ StringHandler::~StringHandler()
 {
 }
 
-// @brief int 値の記述をパースする．
-//
-// エラーが起きた場合には nullptr が返される．
-const AstString*
-StringHandler::parse_value()
+// @brief 文字列値の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+StringHandler::parse_value(const AstString*& dst)
 {
   bool stat = parse_simple_attribute();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief シンボルモードの値を返す．

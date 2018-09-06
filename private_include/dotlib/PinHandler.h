@@ -8,14 +8,14 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "Str1GroupHandler.h"
+#include "dotlib/Str1GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class PinHandler PinHandler.h "PinHandler.h"
-/// @brief pin 用のハンドラ
+/// @brief 'pin' Group Statement 用のハンドラ
 ///
 /// 参考文献 : Library Compiler Reference Manual, Section 3
 ///           "pin Group Description and Syntax"
@@ -158,10 +158,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @breif pin group statement の記述をパースする．
-  /// @return 読み込んだ値を返す．
-  const AstPin*
-  parse_value();
+  /// @breif 'pin' Group Statement の記述をパースする．
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstPin*& dst);
 
 
 protected:

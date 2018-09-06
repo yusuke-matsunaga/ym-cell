@@ -276,7 +276,8 @@ public:
 	       const AstVarType* var_3,
 	       const AstFloatVector* index_1,
 	       const AstFloatVector* index_2,
-	       const AstFloatVector* index_3);
+	       const AstFloatVector* index_3,
+	       const AstDomain* domain);
 
   /// @brief lut を表す AstNode を生成する．
   AstLut*
@@ -285,7 +286,8 @@ public:
 	  const AstFloatVector* index_1,
 	  const AstFloatVector* index_2,
 	  const AstFloatVector* index_3,
-	  const AstFloatVector* value_list);
+	  const AstFloatVector* value_list,
+	  const AstDomain* domain);
 
   /// @brief input voltage を表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
@@ -353,6 +355,25 @@ public:
   AstPinDirection*
   new_pin_direction(const FileRegion& loc,
 		    ClibCellPinDirection value);
+
+  /// @brief domain を表す AstNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  /// @param[in] name 名前
+  /// @param[in] calc_mode calc_mode 属性
+  /// @param[in] coefs coefs 属性
+  /// @param[in] orders orders 属性
+  /// @param[in] var1_range variable_1_range 属性
+  /// @param[in] var2_range variable_2_range 属性
+  /// @param[in] var3_range variable_3_range 属性
+  AstDomain*
+  new_domain(const FileRegion& loc,
+	     const AstString* name,
+	     const AstString* calc_mode,
+	     const AstString* coefs,
+	     const AstString* orders,
+	     const AstVariableRange* var1_range,
+	     const AstVariableRange* var2_range,
+	     const AstVariableRange* var3_range);
 
   /// @brief timing を表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
@@ -442,6 +463,12 @@ public:
   new_var_type(const FileRegion& loc,
 	       ClibVarType value);
 
+  /// @brief variable_n_range を表す AstNode を生成する．
+  /// @param[in] value1, value2 値
+  AstVariableRange*
+  new_variable_range(const AstFloat* value1,
+		     const AstFloat* value2);
+
   /// @brief AstAttr を生成する．
   /// @param[in] loc ファイル上の位置
   /// @param[in] attr_type 属性
@@ -478,6 +505,7 @@ private:
   int mOprNum;
   int mNotNum;
   int mBoolExprNum;
+  int mDomainNum;
   int mFloatExprNum;
   int mSymbolExprNum;
   int mStrExprNum;
@@ -494,6 +522,7 @@ private:
   int mTimingSenseNum;
   int mTimingTypeNum;
   int mVarTypeNum;
+  int mVarRangeNum;
   int mAttrNum;
 };
 

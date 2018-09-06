@@ -32,18 +32,18 @@ TemplateHandler::~TemplateHandler()
 {
 }
 
-// @breif lut_template group statement の記述をパースする．
-// @return 読み込んだ値を返す．
-const AstTemplate*
-TemplateHandler::parse_value()
+// @breif 'lut_template' Group Statement の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+TemplateHandler::parse_value(const AstTemplate*& dst)
 {
   bool stat = parse_group_statement();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief グループ記述の始まり
@@ -76,12 +76,7 @@ TemplateHandler::read_group_attr(AttrType attr_type,
   case AttrType::index_1:    return parse_index(mIndex1, attr_type, attr_loc);
   case AttrType::index_2:    return parse_index(mIndex2, attr_type, attr_loc);
   case AttrType::index_3:    return parse_index(mIndex3, attr_type, attr_loc);
-  case AttrType::domain:
-    {
-      // 未完
-    }
-    //return mGenGroupHandler->parse(attr_type, attr_loc) != nullptr;
-    return false;
+  case AttrType::domain:     return parse_domain(mDomain, attr_type, attr_loc);
   default:
     break;
   }
@@ -103,15 +98,12 @@ TemplateHandler::parse_vartype(const AstVarType*& dst,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
+    return false;
   }
   else {
     VarTypeHandler handler(parser());
-    dst = handler.parse_value();
-    if ( dst != nullptr ) {
-      return true;
-    }
+    return handler.parse_value(dst);
   }
-  return false;
 }
 
 // @brief Index に共通の処理を行う．
@@ -128,15 +120,12 @@ TemplateHandler::parse_index(const AstFloatVector*& dst,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
+    return false;
   }
   else {
     IndexHandler handler(parser());
-    dst = handler.parse_value();
-    if ( dst != nullptr ) {
-      return true;
-    }
+    return handler.parse_value(dst);
   }
-  return false;
 }
 
 // @brief グループ記述の終わり
@@ -215,7 +204,7 @@ TemplateHandler::end_group(const FileRegion& group_loc)
   }
 
   mValue = mgr().new_template(group_loc, header_value(), dimension,
-			      mVar1, mVar2, mVar3, mIndex1, mIndex2, mIndex3);
+			      mVar1, mVar2, mVar3, mIndex1, mIndex2, mIndex3, mDomain);
 
   return true;
 }

@@ -32,18 +32,17 @@ Str1ComplexHandler::~Str1ComplexHandler()
 }
 
 // @brief 1つの文字列型を取る complex attribute の記述をパースする．
-//
-// エラーが起きた場合には nullptr が返される．
-const AstString*
-Str1ComplexHandler::parse_value()
+// @param[in] dst 結果を格納する変数
+// @retval true 正しくパースした．
+// @retval false エラーが怒った．
+bool
+Str1ComplexHandler::parse_value(const AstString*& dst)
 {
   bool stat = parse_complex_attribute();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief ヘッダの開始処理

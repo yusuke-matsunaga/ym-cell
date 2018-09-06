@@ -79,11 +79,11 @@ ClibLut*
 gen_lut(CiCellLibrary* library,
 	const AstLut* lut_node)
 {
-  const char* name = lut_node->template_name()->value();
+  const char* name = lut_node->name()->value();
   const ClibLutTemplate* templ = library->lu_table_template(name);
   if ( templ == nullptr ) {
     ostringstream buf;
-    buf << lut_node->template_name()
+    buf << lut_node->name()
 	<< ": No such lu_table template";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    lut_node->loc(),

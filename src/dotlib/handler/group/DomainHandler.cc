@@ -8,9 +8,9 @@
 
 
 #include "dotlib/DomainHandler.h"
-#include "dotlib/IndexHandler.h"
-#include "dotlib/ValuesHandler.h"
+#include "dotlib/VariableRangeHandler.h"
 #include "dotlib/AstMgr.h"
+#include "dotlib/AstVariableRange.h"
 #include "ym/MsgMgr.h"
 
 
@@ -32,12 +32,18 @@ DomainHandler::~DomainHandler()
 {
 }
 
-// @breif timing group statement の記述をパースする．
-// @return 読み込んだ値を返す．
+// @breif 'domain' Group Statement の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
 bool
-DomainHandler::parse_value()
+DomainHandler::parse_value(const AstDomain*& dst)
 {
-  return parse_group_statement();
+  bool stat = parse_group_statement();
+  if ( stat ) {
+    dst = mValue;
+  }
+  return stat;
 }
 
 // @brief グループ記述の始まり
@@ -59,12 +65,9 @@ DomainHandler::read_group_attr(AttrType attr_type,
   case AttrType::calc_mode: return parse_string(mCalcMode, attr_type, attr_loc);
   case AttrType::coefs: return parse_str1complex(mCoefs, attr_type, attr_loc);
   case AttrType::orders: return parse_str1complex(mOrders, attr_type, attr_loc);
-  case AttrType::variable_1_range: return parse_float2complex(mVar1range[0], var1range[1],
-							      attr_type, attr_loc);
-  case AttrType::variable_2_range: return parse_float2complex(mVar1range[0], var1range[1],
-							      attr_type, attr_loc);
-  case AttrType::variable_3_range: return parse_float2complex(mVar1range[0], var1range[1],
-							      attr_type, attr_loc);
+  case AttrType::variable_1_range: return parse_vrange(mVar1Range, attr_type, attr_loc);
+  case AttrType::variable_2_range: return parse_vrange(mVar2Range, attr_type, attr_loc);
+  case AttrType::variable_3_range: return parse_vrange(mVar3Range, attr_type, attr_loc);
 
   default:
     break;
@@ -80,18 +83,51 @@ DomainHandler::read_group_attr(AttrType attr_type,
 bool
 DomainHandler::end_group(const FileRegion& group_loc)
 {
-  if ( mValues == nullptr ) {
+  if ( mCoefs == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group_loc,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
-		    "values is missing.");
+		    "'coefs' is missing.");
+    return false;
+  }
+  else if ( mOrders == nullptr ) {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    group_loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "'orders' is missing.");
     return false;
   }
   else {
-    mValue = mgr().new_lut(group_loc, header_value(),
-			   mIndex1, mIndex2, mIndex3, mValues);
+    mValue = mgr().new_domain(group_loc, header_value(),
+			      mCalcMode, mCoefs, mOrders,
+			      mVar1Range, mVar2Range, mVar3Range);
     return true;
+  }
+}
+
+// @brief 'variable_n_range' Complex Attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DomainHandler::parse_vrange(const AstVariableRange*& dst,
+			    AttrType attr_type,
+			    const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    VariableRangeHandler handler(parser());
+    return handler.parse_value(dst);
   }
 }
 

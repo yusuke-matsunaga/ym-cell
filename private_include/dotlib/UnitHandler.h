@@ -17,7 +17,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class UnitHandler UnitHandler.h "UnitHandler.h"
-/// @brief 単位型のcomplex attribute ハンドラ
+/// @brief 単位型の Complex Attribute ハンドラ
 //////////////////////////////////////////////////////////////////////
 class UnitHandler :
   public ComplexHandler
@@ -37,11 +37,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief unit attribute の記述をパースする．
-  ///
-  /// エラーが起きた場合には nullptr が返される．
-  const AstUnit*
-  parse_value();
+  /// @brief 単位型の Complex Attribute の記述をパースする．
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstUnit*& dst);
 
 
 protected:

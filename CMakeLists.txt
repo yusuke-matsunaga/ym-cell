@@ -115,6 +115,7 @@ set (dotlib_SOURCES
   src/dotlib/handler/complex/PieceWiseHandler.cc
   src/dotlib/handler/complex/UnitHandler.cc
   src/dotlib/handler/complex/ValuesHandler.cc
+  src/dotlib/handler/complex/VariableRangeHandler.cc
 
   src/dotlib/handler/group/GroupHandler.cc
   src/dotlib/handler/group/EmptyGroupHandler.cc
@@ -129,6 +130,7 @@ set (dotlib_SOURCES
   # Str1GroupHandler
   src/dotlib/handler/group/CellHandler.cc
   #src/dotlib/handler/CellInternalPower.cc
+  src/dotlib/handler/group/DomainHandler.cc
   src/dotlib/handler/group/InputVoltageHandler.cc
   src/dotlib/handler/group/LibraryHandler.cc
   src/dotlib/handler/group/OutputVoltageHandler.cc
@@ -146,6 +148,7 @@ set (dotlib_SOURCES
   src/dotlib/ast/AstBool.cc
   src/dotlib/ast/AstCell.cc
   src/dotlib/ast/AstDelayModel.cc
+  src/dotlib/ast/AstDomain.cc
   src/dotlib/ast/AstExpr.cc
   src/dotlib/ast/AstFF.cc
   src/dotlib/ast/AstFL.cc
@@ -170,6 +173,7 @@ set (dotlib_SOURCES
   src/dotlib/ast/AstTimingType.cc
   src/dotlib/ast/AstTechnology.cc
   src/dotlib/ast/AstUnit.cc
+  src/dotlib/ast/AstVariableRange.cc
   src/dotlib/ast/AstVarType.cc
   )
 

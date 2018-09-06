@@ -37,10 +37,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 1つの文字列型を取る complex attribute の記述をパースする．
-  ///
-  /// エラーが起きた場合には nullptr が返される．
-  const AstString*
-  parse_value();
+  /// @param[in] dst 結果を格納する変数
+  /// @retval true 正しくパースした．
+  /// @retval false エラーが怒った．
+  bool
+  parse_value(const AstString*& dst);
 
 
 protected:

@@ -32,19 +32,18 @@ PieceWiseHandler::~PieceWiseHandler()
 {
 }
 
-// @brief piece_wise attribute の記述をパースする．
-//
-// エラーが起きた場合には nullptr が返される．
-const AstPieceWise*
-PieceWiseHandler::parse_value()
+// @brief 'piece_wise' Complex Attribute の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+PieceWiseHandler::parse_value(const AstPieceWise*& dst)
 {
   bool stat = parse_complex_attribute();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief ヘッダの開始処理

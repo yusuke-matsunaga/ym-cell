@@ -30,18 +30,17 @@ VarTypeHandler::~VarTypeHandler()
 }
 
 // @brief var_type の記述をパースする．
-//
-// エラーが起きた場合には nullptr が返される．
-const AstVarType*
-VarTypeHandler::parse_value()
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+VarTypeHandler::parse_value(const AstVarType*& dst)
 {
   bool stat = parse_simple_attribute();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief 文字列を読み込んだ時の処理

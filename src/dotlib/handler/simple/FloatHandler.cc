@@ -32,19 +32,17 @@ FloatHandler::~FloatHandler()
 }
 
 // @brief float 値の記述をパースする．
-// @return 読み込んだ値を返す．
-//
-// エラーの場合には nullptr を返す．
-const AstFloat*
-FloatHandler::parse_value()
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+FloatHandler::parse_value(const AstFloat*& dst)
 {
   bool stat = parse_simple_attribute();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief 値を読み込む処理

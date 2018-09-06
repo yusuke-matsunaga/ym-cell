@@ -45,6 +45,7 @@ class AstBundle;
 class AstCell;
 class AstCellType;
 class AstDelayModel;
+class AstDomain;
 class AstDynamicCurrent;
 class AstExpr;
 class AstFloat;
@@ -79,6 +80,7 @@ class AstTimingSense;
 class AstTimingType;
 class AstType;
 class AstUnit;
+class AstVariableRange;
 class AstVarType;
 
 

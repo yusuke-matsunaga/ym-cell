@@ -30,6 +30,7 @@ public:
   /// @param[in] dimension 次元数
   /// @param[in] var_1, var_2, var_3 変数のタイプ
   /// @param[in] index_1, index_2, index_3 インデックスのベクタ
+  /// @param[in] domain 'domain'
   AstTemplate(const FileRegion& loc,
 	      const AstString* name,
 	      int dimension,
@@ -38,7 +39,8 @@ public:
 	      const AstVarType* var_3,
 	      const AstFloatVector* index_1,
 	      const AstFloatVector* index_2,
-	      const AstFloatVector* index_3);
+	      const AstFloatVector* index_3,
+	      const AstDomain* domain);
 
   /// @brief デストラクタ
   ~AstTemplate();
@@ -81,6 +83,12 @@ public:
   const AstFloatVector*
   index_3() const;
 
+  /// @brief 'domain' のノードを返す．
+  ///
+  /// 未定義なら nullptr を返す．
+  const AstDomain*
+  domain() const;
+
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量
@@ -117,6 +125,9 @@ private:
 
   // index_3
   const AstFloatVector* mIndex3;
+
+  // domain
+  const AstDomain* mDomain;
 
 };
 
@@ -187,6 +198,16 @@ const AstFloatVector*
 AstTemplate::index_3() const
 {
   return mIndex3;
+}
+
+// @brief 'domain' のノードを返す．
+//
+// 未定義なら nullptr を返す．
+inline
+const AstDomain*
+AstTemplate::domain() const
+{
+  return mDomain;
 }
 
 END_NAMESPACE_YM_DOTLIB

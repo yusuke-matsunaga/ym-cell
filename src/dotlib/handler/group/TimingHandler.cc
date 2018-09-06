@@ -117,18 +117,18 @@ TimingHandler::~TimingHandler()
 {
 }
 
-// @breif timing group statement の記述をパースする．
-// @return 読み込んだ値を返す．
-const AstTiming*
-TimingHandler::parse_value()
+// @breif 'timing' Group Statement の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+TimingHandler::parse_value(const AstTiming*& dst)
 {
   bool stat = parse_group_statement();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief グループ記述の始まり

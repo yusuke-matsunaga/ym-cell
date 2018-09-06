@@ -22,12 +22,14 @@
 #include "dotlib/Str1ComplexHandler.h"
 #include "dotlib/Str2ComplexHandler.h"
 #include "dotlib/Float2ComplexHandler.h"
+#include "dotlib/DomainHandler.h"
 #include "dotlib/AstBool.h"
 #include "dotlib/AstInt.h"
 #include "dotlib/AstFloat.h"
 #include "dotlib/AstString.h"
 #include "dotlib/AstExpr.h"
 #include "dotlib/AstFloatVector.h"
+#include "dotlib/AstDomain.h"
 #include "ym/MsgMgr.h"
 
 
@@ -47,40 +49,6 @@ GroupHandler::GroupHandler(DotlibParser& parser) :
 // @brief デストラクタ
 GroupHandler::~GroupHandler()
 {
-}
-
-// @brief グループ記述の始まり
-//
-// デフォルトの実装ではなにもしない．
-void
-GroupHandler::begin_group()
-{
-}
-
-// @brief attr_type に対応する属性を読み込む．
-// @param[in] attr_type 対象の属性
-// @param[in] attr_loc attr_type のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-//
-// デフォルトの実装ではなにもしないで true を返す．
-bool
-GroupHandler::read_group_attr(AttrType attr_type,
-			      const FileRegion& attr_loc)
-{
-  return true;
-}
-
-// @brief グループ記述の終わり
-// @param[in] group_loc グループ全体のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-//
-// デフォルトの実装ではなにもしないで true を返す．
-bool
-GroupHandler::end_group(const FileRegion& group_loc)
-{
-  return true;
 }
 
 // @brief Group Statement を読み込む．
@@ -112,8 +80,7 @@ GroupHandler::parse_bool(const AstBool*& dst,
   }
   else {
     BoolHandler handler(parser());
-    dst = handler.parse_value();
-    return dst != nullptr;
+    return handler.parse_value(dst);
   }
 }
 
@@ -137,8 +104,7 @@ GroupHandler::parse_int(const AstInt*& dst,
   }
   else {
     IntHandler handler(parser());
-    dst = handler.parse_value();
-    return dst != nullptr;
+    return handler.parse_value(dst);
   }
 }
 
@@ -162,8 +128,7 @@ GroupHandler::parse_float(const AstFloat*& dst,
   }
   else {
     FloatHandler handler(parser());
-    dst = handler.parse_value();
-    return dst != nullptr;
+    return handler.parse_value(dst);
   }
 }
 
@@ -187,8 +152,7 @@ GroupHandler::parse_string(const AstString*& dst,
   }
   else {
     StringHandler handler(parser());
-    dst = handler.parse_value();
-    return dst != nullptr;
+    return handler.parse_value(dst);
   }
 }
 
@@ -211,8 +175,7 @@ GroupHandler::parse_expr(const AstExpr*& dst,
   }
   else {
     ExprHandler handler(parser());
-    dst = handler.parse_value();
-    return dst != nullptr;
+    return handler.parse_value(dst);
   }
 }
 
@@ -235,8 +198,7 @@ GroupHandler::parse_function(const AstExpr*& dst,
   }
   else {
     FuncHandler handler(parser());
-    dst = handler.parse_value();
-    return dst != nullptr;
+    return handler.parse_value(dst);
   }
 }
 
@@ -260,8 +222,7 @@ GroupHandler::parse_index(const AstFloatVector*& dst,
   }
   else {
     IndexHandler handler(parser());
-    dst = handler.parse_value();
-    return dst != nullptr;
+    return handler.parse_value(dst);
   }
 }
 
@@ -285,8 +246,7 @@ GroupHandler::parse_values(const AstFloatVector*& dst,
   }
   else {
     IndexHandler handler(parser());
-    dst = handler.parse_value();
-    return dst != nullptr;
+    return handler.parse_value(dst);
   }
 }
 
@@ -310,8 +270,7 @@ GroupHandler::parse_str1complex(const AstString*& dst,
   }
   else {
     Str1ComplexHandler handler(parser());
-    dst = handler.parse_value();
-    return dst != nullptr;
+    return handler.parse_value(dst);
   }
 }
 
@@ -365,47 +324,28 @@ GroupHandler::parse_float2complex(const AstFloat*& dst1,
   }
 }
 
-// @brief Str1Group タイプの group statement を読み込む．
+// @brief 'domain' Group Statement のパースを行う．
+// @param[in] dst 結果を格納する変数
 // @param[in] attr_type 属性の型
-// @param[in] group_loc グループ記述全体の位置
-//
-// ここでは全ての属性を読み飛ばし，true を返す．
-bool
-GroupHandler::parse_str1group(AttrType attr_type,
-			      const FileRegion& attr_loc)
-{
-  Str1GroupHandler handler(parser());
-  return handler.parse_group_statement();
-}
-
-// @brief Str2Group タイプの group statement を読み込む．
-// @param[in] attr_type 属性の型
-// @param[in] group_loc グループ記述全体の位置
+// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 //
-// ここでは全ての属性を読み飛ばす．
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
 bool
-GroupHandler::parse_str2group(AttrType attr_type,
-			      const FileRegion& attr_loc)
+GroupHandler::parse_domain(const AstDomain*& dst,
+			   AttrType attr_type,
+			   const FileRegion& attr_loc)
 {
-  Str2GroupHandler handler(parser());
-  return handler.parse_group_statement();
-}
-
-// @brief Str2IntGroup タイプの group statement を読み込む．
-// @param[in] attr_type 属性の型
-// @param[in] group_loc グループ記述全体の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-//
-// ここでは全ての属性を読み飛ばす．
-bool
-GroupHandler::parse_str2intgroup(AttrType attr_type,
-				 const FileRegion& attr_loc)
-{
-  Str2IntGroupHandler handler(parser());
-  return handler.parse_group_statement();
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    DomainHandler handler(parser());
+    return handler.parse_value(dst);
+  }
 }
 
 // @brief 属性がセットされているかチェックする．

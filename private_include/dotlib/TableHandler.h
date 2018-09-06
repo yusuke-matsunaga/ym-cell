@@ -8,14 +8,14 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "Str1GroupHandler.h"
+#include "dotlib/Str1GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class TableHandler TableHandler.h "TableHandler.h"
-/// @brief lut 用のハンドラ
+/// @brief look-up table 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class TableHandler :
   public Str1GroupHandler
@@ -35,10 +35,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @breif timing group statement の記述をパースする．
-  /// @return 読み込んだ値を返す．
-  const AstLut*
-  parse_value();
+  /// @breif look-up table の記述をパースする．
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstLut*& dst);
 
 
 public:
@@ -90,6 +92,9 @@ private:
 
   // values
   const AstFloatVector* mValues;
+
+  // domain
+  const AstDomain* mDomain;
 
   // 読み込んだ値
   const AstLut* mValue;

@@ -10,6 +10,7 @@
 #include "dotlib/IndexHandler.h"
 #include "dotlib/DotlibParser.h"
 #include "dotlib/AstMgr.h"
+#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -31,19 +32,18 @@ IndexHandler::~IndexHandler()
 {
 }
 
-// @brief index attribute の記述をパースする．
-//
-// エラーが起きた場合には nullptr が返される．
-const AstFloatVector*
-IndexHandler::parse_value()
+// @brief 'index' Complex Attribute の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+IndexHandler::parse_value(const AstFloatVector*& dst)
 {
   bool stat = parse_complex_attribute();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief ヘッダの開始処理
@@ -64,7 +64,14 @@ IndexHandler::read_header_value(TokenType value_type,
 				const FileRegion& value_loc,
 				int count)
 {
-#warning "value_type を無視していいの？"
+  if ( value_type != TokenType::SYMBOL ) {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    value_loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "Syntax error.");
+    return false;
+  }
 
   if ( count != 0 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,

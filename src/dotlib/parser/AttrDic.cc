@@ -454,6 +454,9 @@ AttrDic::AttrDic()
   mDic.add("variable_1", AttrType::variable_1);
   mDic.add("variable_2", AttrType::variable_2);
   mDic.add("variable_3", AttrType::variable_3);
+  mDic.add("variable_1_range", AttrType::variable_1_range);
+  mDic.add("variable_2_range", AttrType::variable_2_range);
+  mDic.add("variable_3_range", AttrType::variable_3_range);
   mDic.add("vhdl_name", AttrType::vhdl_name);
   mDic.add("vih", AttrType::vih);
   mDic.add("vil", AttrType::vil);
@@ -936,6 +939,9 @@ operator<<(ostream& s,
   case AttrType::variable_1: s << "variable_1"; break;
   case AttrType::variable_2: s << "variable_2"; break;
   case AttrType::variable_3: s << "variable_3"; break;
+  case AttrType::variable_1_range: s << "variable_1_range"; break;
+  case AttrType::variable_2_range: s << "variable_2_range"; break;
+  case AttrType::variable_3_range: s << "variable_3_range"; break;
   case AttrType::vhdl_name: s << "vhdl_name"; break;
   case AttrType::vih: s << "vih"; break;
   case AttrType::vil: s << "vil"; break;

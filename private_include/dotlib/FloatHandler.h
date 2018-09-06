@@ -37,11 +37,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief float 値の記述をパースする．
-  /// @return 読み込んだ値を返す．
-  ///
-  /// エラーの場合には nullptr を返す．
-  const AstFloat*
-  parse_value();
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstFloat*& dst);
 
 
 protected:

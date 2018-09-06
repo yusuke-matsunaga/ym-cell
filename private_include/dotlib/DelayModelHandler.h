@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class DelayModelHandler DelayModelHandler.h "DelayModelHandler.h"
-/// @brief DelayModel値を取る属性用のハンドラ
+/// @brief 'delay_model' Simple Attribute 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class DelayModelHandler :
   public StrBaseHandler
@@ -36,11 +36,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief int 値の記述をパースする．
-  ///
-  /// エラーが起きた場合には nullptr が返される．
-  const AstDelayModel*
-  parse_value();
+  /// @brief delay_model の記述をパースする．
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstDelayModel*& dst);
 
 
 private:

@@ -30,18 +30,18 @@ CellHandler::~CellHandler()
 {
 }
 
-// @breif cell group statement の記述をパースする．
-// @return 読み込んだ値を返す．
-const AstCell*
-CellHandler::parse_value()
+// @breif 'cell' Group Statement の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+CellHandler::parse_value(const AstCell*& dst)
 {
   bool stat = parse_group_statement();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief グループ記述の始まり
@@ -113,15 +113,12 @@ bool
 CellHandler::read_group_attr(AttrType attr_type,
 			     const FileRegion& attr_loc)
 {
-  if ( attr_type == AttrType::area ) {
-    FloatHandler handler(parser());
-    mArea = handler.parse_value();
+  switch ( attr_type ) {
+  case AttrType::area: return parse_float(mArea, attr_type, attr_loc);
+  default:
+    break;
   }
-#if 0
-  else if ( attr_type == AttrType:: ) {
-  }
-#endif
-
+  syntax_error(attr_type, attr_loc);
   return false;
 }
 

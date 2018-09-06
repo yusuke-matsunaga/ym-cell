@@ -32,18 +32,18 @@ TableHandler::~TableHandler()
 {
 }
 
-// @breif timing group statement の記述をパースする．
-// @return 読み込んだ値を返す．
-const AstLut*
-TableHandler::parse_value()
+// @breif look-up table Group Statement の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+TableHandler::parse_value(const AstLut*& dst)
 {
   bool stat = parse_group_statement();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief グループ記述の始まり
@@ -68,11 +68,11 @@ TableHandler::read_group_attr(AttrType attr_type,
 			      const FileRegion& attr_loc)
 {
   switch ( attr_type ) {
-  case AttrType::index_1: return parse_index(mIndex1, attr_type, attr_loc);
-  case AttrType::index_2: return parse_index(mIndex2, attr_type, attr_loc);
-  case AttrType::index_3: return parse_index(mIndex3, attr_type, attr_loc);
+  case AttrType::index_1: return parse_index(mIndex1,  attr_type, attr_loc);
+  case AttrType::index_2: return parse_index(mIndex2,  attr_type, attr_loc);
+  case AttrType::index_3: return parse_index(mIndex3,  attr_type, attr_loc);
   case AttrType::values:  return parse_values(mValues, attr_type, attr_loc);
-  case AttrType::domain:  return parse_str1group(attr_type, attr_loc);
+  case AttrType::domain:  return parse_domain(mDomain, attr_type, attr_loc);
   default:
     break;
   }
@@ -97,7 +97,7 @@ TableHandler::end_group(const FileRegion& group_loc)
   }
   else {
     mValue = mgr().new_lut(group_loc, header_value(),
-			   mIndex1, mIndex2, mIndex3, mValues);
+			   mIndex1, mIndex2, mIndex3, mValues, mDomain);
     return true;
   }
 }

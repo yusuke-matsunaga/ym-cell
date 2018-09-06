@@ -24,6 +24,7 @@ class IntHandler :
 public:
 
   /// @brief コンストラクタ
+  /// @param[in] parser パーサー
   IntHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
@@ -36,10 +37,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief int 値の記述をパースする．
-  ///
-  /// エラーが起きた場合には nullptr が返される．
-  const AstInt*
-  parse_value();
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstInt*& dst);
 
 
 protected:

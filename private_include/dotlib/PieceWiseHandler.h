@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class PieceWiseHandler PieceWiseHandler.h "PieceWiseHandler.h"
-/// @brief 折れ線近似モデル用ののcomplex attribute ハンドラ
+/// @brief 折れ線近似モデル用の Complex Attribute ハンドラ
 //////////////////////////////////////////////////////////////////////
 class PieceWiseHandler :
   public ComplexHandler
@@ -37,10 +37,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief piece_wise attribute の記述をパースする．
-  ///
-  /// エラーが起きた場合には nullptr が返される．
-  const AstPieceWise*
-  parse_value();
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstPieceWise*& dst);
 
 
 protected:

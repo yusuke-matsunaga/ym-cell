@@ -8,14 +8,15 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "Str1GroupHandler.h"
+#include "dotlib/Str1GroupHandler.h"
+#include "ym/HashMap.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class InputVoltageHandler InputVoltageHandler.h "InputVoltageHandler.h"
-/// @brief input_voltage 用のハンドラ
+/// @brief 'input_voltage' Group Statement 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class InputVoltageHandler :
   public Str1GroupHandler
@@ -35,10 +36,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @breif input_voltage group statement の記述をパースする．
-  /// @return 読み込んだ値を返す．
-  const AstInputVoltage*
-  parse_value();
+  /// @breif 'input_voltage' group statement の記述をパースする．
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstInputVoltage*& dst);
 
 
 public:
@@ -71,6 +74,11 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  using ParseFunc = bool (*)(GroupHandler&, AttrType, const FileRegion&);
+
+  // 各属性をパースするための辞書
+  HashMap<AttrType, ParseFunc> mFuncHash;
 
   // vil
   const AstExpr* mVil;

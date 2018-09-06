@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "StrBaseHandler.h"
+#include "dotlib/StrBaseHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -37,10 +37,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief var_type の記述をパースする．
-  ///
-  /// エラーが起きた場合には nullptr が返される．
-  const AstVarType*
-  parse_value();
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstVarType*& dst);
 
 
 private:

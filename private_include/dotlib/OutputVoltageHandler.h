@@ -8,14 +8,14 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "Str1GroupHandler.h"
+#include "dotlib/Str1GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class OutputVoltageHandler OutputVoltageHandler.h "OutputVoltageHandler.h"
-/// @brief output voltage 用のハンドラ
+/// @brief 'output_voltage' Group Statement 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class OutputVoltageHandler :
   public Str1GroupHandler
@@ -35,10 +35,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @breif input_voltage group statement の記述をパースする．
-  /// @return 読み込んだ値を返す．
-  const AstOutputVoltage*
-  parse_value();
+  /// @breif 'onput_voltage' Group Statement の記述をパースする．
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstOutputVoltage*& dst);
 
 
 protected:

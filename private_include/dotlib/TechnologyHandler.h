@@ -9,14 +9,14 @@
 /// All rights reserved.
 
 
-#include "StrBaseHandler.h"
+#include "dotlib/StrBaseHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class TechnologyHandler TechnologyHandler.h "TechnologyHandler.h"
-/// @brief Technology値を取る属性用のハンドラ
+/// @brief 'technology' Simple Attribute 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class TechnologyHandler :
   public StrBaseHandler
@@ -37,10 +37,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief technology の記述をパースする．
-  ///
-  /// エラーが起きた場合には nullptr が返される．
-  const AstTechnology*
-  parse_value();
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstTechnology*& dst);
 
 
 private:

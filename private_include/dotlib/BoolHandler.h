@@ -37,10 +37,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ブール値の記述をパースする．
-  ///
-  /// エラーが起きた場合には nullptr が返される．
-  const AstBool*
-  parse_value();
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstBool*& dst);
 
 
 private:

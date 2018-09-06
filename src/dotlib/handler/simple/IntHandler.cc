@@ -32,18 +32,17 @@ IntHandler::~IntHandler()
 }
 
 // @brief int 値の記述をパースする．
-//
-// エラーが起きた場合には nullptr が返される．
-const AstInt*
-IntHandler::parse_value()
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+IntHandler::parse_value(const AstInt*& dst)
 {
   bool stat = parse_simple_attribute();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief 値を読み込む処理

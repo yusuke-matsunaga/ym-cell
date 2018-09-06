@@ -8,14 +8,14 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "Str1GroupHandler.h"
+#include "dotlib/Str1GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class LibraryHandler LibraryHandler.h "LibraryHandler.h"
-/// @brief library 用のハンドラ
+/// @brief 'library' Group Statement 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class LibraryHandler :
   public Str1GroupHandler
@@ -35,10 +35,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @breif library group statement の記述をパースする．
-  /// @return 読み込んだ値を返す．
-  const AstLibrary*
-  parse_value();
+  /// @breif 'library' Group Statement の記述をパースする．
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstLibrary*& dst);
 
 
 protected:

@@ -29,12 +29,14 @@ public:
   /// @param[in] name 名前
   /// @param[in] index_1, index_2, index_3 インデックスのベクタ
   /// @param[in] value_list 値のリスト
+  /// @param[in] domain 'domain'
   AstLut(const FileRegion& loc,
 	 const AstString* name,
 	 const AstFloatVector* index_1,
 	 const AstFloatVector* index_2,
 	 const AstFloatVector* index_3,
-	 const AstFloatVector* value_list);
+	 const AstFloatVector* value_list,
+	 const AstDomain* domain);
 
   /// @brief デストラクタ
   ~AstLut();
@@ -47,7 +49,7 @@ public:
 
   /// @brief テンプレート名を返す．
   const AstString*
-  template_name() const;
+  name() const;
 
   /// @brief 'index_1' のノードを返す．
   ///
@@ -70,6 +72,12 @@ public:
   /// @brief 値のリストを返す．
   const AstFloatVector*
   value_list() const;
+
+  /// @brief 'domain' のノードを返す．
+  ///
+  /// 未定義なら nullptr を返す．
+  const AstDomain*
+  domain() const;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -99,6 +107,9 @@ private:
   // 値のリスト
   const AstFloatVector* mValueList;
 
+  // domain
+  const AstDomain* mDomain;
+
 };
 
 
@@ -109,7 +120,7 @@ private:
 // @brief テンプレート名を返す．
 inline
 const AstString*
-AstLut::template_name() const
+AstLut::name() const
 {
   return mName;
 }
@@ -144,6 +155,16 @@ const AstFloatVector*
 AstLut::value_list() const
 {
   return mValueList;
+}
+
+// @brief 'domain' のノードを返す．
+//
+// 未定義なら nullptr を返す．
+inline
+const AstDomain*
+AstLut::domain() const
+{
+  return mDomain;
 }
 
 END_NAMESPACE_YM_DOTLIB

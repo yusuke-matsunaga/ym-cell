@@ -47,6 +47,7 @@ AstMgr::clear()
   mOprNum = 0;
   mNotNum = 0;
   mBoolExprNum = 0;
+  mDomainNum = 0;
   mFloatExprNum = 0;
   mSymbolExprNum = 0;
   mStrExprNum = 0;
@@ -63,6 +64,7 @@ AstMgr::clear()
   mTimingSenseNum = 0;
   mTimingTypeNum = 0;
   mVarTypeNum = 0;
+  mVarRangeNum = 0;
   mAttrNum = 0;
 }
 

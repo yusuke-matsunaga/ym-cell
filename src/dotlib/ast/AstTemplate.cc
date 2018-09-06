@@ -23,13 +23,14 @@ AstMgr::new_template(const FileRegion& loc,
 		     const AstVarType* var_3,
 		     const AstFloatVector* index_1,
 		     const AstFloatVector* index_2,
-		     const AstFloatVector* index_3)
+		     const AstFloatVector* index_3,
+		     const AstDomain* domain)
 {
   ++ mTemplateNum;
   void* p = mAlloc.get_memory(sizeof(AstTemplate));
   return new (p) AstTemplate(loc, name, dimension,
 			     var_1, var_2, var_3,
-			     index_1, index_2, index_3);
+			     index_1, index_2, index_3, domain);
 }
 
 
@@ -43,6 +44,7 @@ AstMgr::new_template(const FileRegion& loc,
 // @param[in] dimension 次元数
 // @param[in] var_1, var_2, var_3 変数のタイプ
 // @param[in] index_1, index_2, index_3 インデックスのベクタ
+// @param[in] domain 'domain'
 AstTemplate::AstTemplate(const FileRegion& loc,
 			 const AstString* name,
 			 int dimension,
@@ -51,7 +53,8 @@ AstTemplate::AstTemplate(const FileRegion& loc,
 			 const AstVarType* var_3,
 			 const AstFloatVector* index_1,
 			 const AstFloatVector* index_2,
-			 const AstFloatVector* index_3) :
+			 const AstFloatVector* index_3,
+			 const AstDomain* domain) :
   AstNode(loc),
   mName(name),
   mDimension(dimension),
@@ -60,7 +63,8 @@ AstTemplate::AstTemplate(const FileRegion& loc,
   mVar3(var_3),
   mIndex1(index_1),
   mIndex2(index_2),
-  mIndex3(index_3)
+  mIndex3(index_3),
+  mDomain(domain)
 {
 }
 

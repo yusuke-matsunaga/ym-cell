@@ -8,14 +8,14 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "EmptyGroupHandler.h"
+#include "dotlib/EmptyGroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class TimingHandler TimingHandler.h "TimingHandler.h"
-/// @brief timing Group Statement を読み込むためのハンドラ
+/// @brief 'timing' Group Statement を読み込むためのハンドラ
 ///
 /// 参考文献 : Library Compiler Reference Manual, Section 3
 ///           "pin Group Description and Syntax"
@@ -114,10 +114,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @breif timing group statement の記述をパースする．
-  /// @return 読み込んだ値を返す．
-  const AstTiming*
-  parse_value();
+  /// @breif 'timing' Group Statement の記述をパースする．
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstTiming*& dst);
 
 
 protected:

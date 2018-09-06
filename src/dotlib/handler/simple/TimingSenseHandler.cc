@@ -29,19 +29,18 @@ TimingSenseHandler::~TimingSenseHandler()
 {
 }
 
-// @brief timing_sense の記述をパースする．
-//
-/// エラーが起きた場合には nullptr が返される．
-const AstTimingSense*
-TimingSenseHandler::parse_value()
+// @brief 'timing_sense' Simple Attribute の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+TimingSenseHandler::parse_value(const AstTimingSense*& dst)
 {
   bool stat = parse_simple_attribute();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief 文字列を読み込んだ時の処理

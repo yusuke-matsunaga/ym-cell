@@ -31,18 +31,18 @@ InputVoltageHandler::~InputVoltageHandler()
 {
 }
 
-// @breif input_voltage group statement の記述をパースする．
-// @return 読み込んだ値を返す．
-const AstInputVoltage*
-InputVoltageHandler::parse_value()
+// @breif 'input_voltage' Group Statement の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+InputVoltageHandler::parse_value(const AstInputVoltage*& dst)
 {
   bool stat = parse_group_statement();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief グループ記述の始まり
@@ -84,8 +84,8 @@ InputVoltageHandler::read_group_attr(AttrType attr_type,
 bool
 InputVoltageHandler::end_group(const FileRegion& group_loc)
 {
-  if ( !check_attr(mVil, AttrType::vil, group_loc) ||
-       !check_attr(mVih, AttrType::vih, group_loc) ||
+  if ( !check_attr(mVil,   AttrType::vil, group_loc) ||
+       !check_attr(mVih,   AttrType::vih, group_loc) ||
        !check_attr(mVimin, AttrType::vimin, group_loc) ||
        !check_attr(mVimax, AttrType::vimax, group_loc) ) {
     return false;

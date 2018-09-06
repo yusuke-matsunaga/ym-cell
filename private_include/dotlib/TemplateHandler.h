@@ -8,14 +8,14 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "Str1GroupHandler.h"
+#include "dotlib/Str1GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class TemplateHandler TemplateHandler.h "TemplateHandler.h"
-/// @brief lut template 用のハンドラ
+/// @brief 'lut_template' Group Statement 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class TemplateHandler :
   public Str1GroupHandler
@@ -35,10 +35,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @breif lut_template group statement の記述をパースする．
-  /// @return 読み込んだ値を返す．
-  const AstTemplate*
-  parse_value();
+  /// @breif 'lut_template' Group Statement の記述をパースする．
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstTemplate*& dst);
 
 
 public:
@@ -107,6 +109,9 @@ private:
 
   // index_3
   const AstFloatVector* mIndex3;
+
+  // domain
+  const AstDomain* mDomain;
 
   // 読み込んだ値
   const AstTemplate* mValue;

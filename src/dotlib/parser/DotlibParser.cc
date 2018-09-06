@@ -52,6 +52,7 @@ DotlibParser::parse()
   const AstLibrary* library = nullptr;
   TokenType type;
   FileRegion loc;
+  bool stat = false;
 
   // 空行を読み飛ばす．
   for ( type = read_token(loc); type == TokenType::NL; type = read_token(loc) ) { }
@@ -67,8 +68,8 @@ DotlibParser::parse()
     goto last;
   }
 
-  library = handler.parse_value();
-  if ( library == nullptr ) {
+  stat = handler.parse_value(library);
+  if ( !stat ) {
     goto last;
   }
 

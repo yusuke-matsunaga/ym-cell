@@ -15,7 +15,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class IndexHandler IndexHandler.h "IndexHandler.h"
-/// @brief lut のインデックスベクタ用のハンドラ
+/// @brief 'index_n' Complex Attribute 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class IndexHandler :
   public ComplexHandler
@@ -35,11 +35,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief index attribute の記述をパースする．
-  ///
-  /// エラーが起きた場合には nullptr が返される．
-  const AstFloatVector*
-  parse_value();
+  /// @brief 'index_n' Complex Attribute の記述をパースする．
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstFloatVector*& dst);
 
 
 protected:

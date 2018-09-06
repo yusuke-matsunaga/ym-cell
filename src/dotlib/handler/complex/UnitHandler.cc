@@ -32,19 +32,18 @@ UnitHandler::~UnitHandler()
 {
 }
 
-// @brief unit attribute の記述をパースする．
-//
-// エラーが起きた場合には nullptr が返される．
-const AstUnit*
-UnitHandler::parse_value()
+// @brief 単位型の属性の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+UnitHandler::parse_value(const AstUnit*& dst)
 {
   bool stat = parse_complex_attribute();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief ヘッダの開始処理

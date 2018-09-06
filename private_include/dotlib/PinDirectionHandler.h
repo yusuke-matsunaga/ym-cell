@@ -9,14 +9,14 @@
 /// All rights reserved.
 
 
-#include "StrBaseHandler.h"
+#include "dotlib/StrBaseHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class PinDirectionHandler PinDirectionHandler.h "PinDirectionHandler.h"
-/// @brief PinDirection値を取る属性用のハンドラ
+/// @brief 'pin_direction' Simple Attribute 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class PinDirectionHandler :
   public StrBaseHandler
@@ -37,10 +37,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief pin_direction の記述をパースする．
-  ///
-  /// エラーが起きた場合には nullptr が返される．
-  const AstPinDirection*
-  parse_value();
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstPinDirection*& dst);
 
 
 private:

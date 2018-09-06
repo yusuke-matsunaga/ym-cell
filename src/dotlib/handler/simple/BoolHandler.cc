@@ -30,18 +30,17 @@ BoolHandler::~BoolHandler()
 }
 
 // @brief ブール値の記述をパースする．
-//
-// エラーが起きた場合には nullptr が返される．
-const AstBool*
-BoolHandler::parse_value()
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+BoolHandler::parse_value(const AstBool*& dst)
 {
   bool stat = parse_simple_attribute();
   if ( stat ) {
-    return mValue;
+    dst = mValue;
   }
-  else {
-    return nullptr;
-  }
+  return stat;
 }
 
 // @brief 文字列を読み込んだ時の処理
@@ -53,12 +52,12 @@ bool
 BoolHandler::read_str_value(const char* str,
 			    const FileRegion& value_loc)
 {
-  bool value;
+  bool bval;
   if ( strcmp(str, "true") == 0 ) {
-    value = true;
+    bval = true;
   }
   else if ( strcmp(str, "false") == 0 ) {
-    value = false;
+    bval = false;
   }
   else {
     mValue = nullptr;
@@ -70,7 +69,7 @@ BoolHandler::read_str_value(const char* str,
     return false;
   }
 
-  mValue = mgr().new_bool(value_loc, value);
+  mValue = mgr().new_bool(value_loc, bval);
 
   return true;
 }

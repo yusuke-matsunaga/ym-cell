@@ -8,14 +8,14 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "Str1GroupHandler.h"
+#include "dotlib/Str1GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class CellHandler CellHandler.h "CellHandler.h"
-/// @brief cell 用のハンドラ
+/// @brief 'cell' Group Statement 用のハンドラ
 ///
 /// 参考文献 : Library Compiler Reference Manual, Section 2
 ///           "cell and model Group Description and Syntax"
@@ -97,9 +97,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @breif cell group statement の記述をパースする．
-  /// @return 読み込んだ値を返す．
-  const AstCell*
-  parse_value();
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstCell*& dst);
 
 
 protected:
