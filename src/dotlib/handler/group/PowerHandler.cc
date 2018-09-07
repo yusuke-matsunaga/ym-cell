@@ -22,17 +22,54 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 PowerHandler::PowerHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser),
-  mIndex1(parser),
-  mIndex2(parser),
-  mIndex3(parser),
-  mValues(parser)
+  Str1GroupHandler(parser)
 {
 }
 
 // @brief デストラクタ
 PowerHandler::~PowerHandler()
 {
+}
+
+// @breif 'power' Group Statement の記述をパースする．
+// @param[in] dst 読み込んだ値を格納する変数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+PowerHandler::parse_value(const AstLut*& dst)
+{
+  bool stat = parse_group_statement();
+  if ( stat ) {
+    dst = mValue;
+  }
+  return stat;
+}
+
+// @brief グループ記述の始まり
+void
+PowerHandler::begin_group()
+{
+  mIndex1 = nullptr;
+  mIndex2 = nullptr;
+  mIndex3 = nullptr;
+  mValues = nullptr;
+  mCoefs = nullptr;
+  mOrders = nullptr;
+  mDomain = nullptr;
+
+  mValue = nullptr;
+}
+
+// @brief グループ記述の終わり
+// @param[in] group_loc グループ全体のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+PowerHandler::end_group(const FileRegion& group_loc)
+{
+  // 下の gen_node() のコードを参考にチェックを行い．
+  // AstLut を作って mValue にセットする．
+  return false;
 }
 
 #if 0

@@ -8,11 +8,6 @@
 
 
 #include "dotlib/CellHandler.h"
-#include "dotlib/BoolHandler.h"
-#include "dotlib/ExprHandler.h"
-#include "dotlib/FloatHandler.h"
-#include "dotlib/PinHandler.h"
-#include "dotlib/StringHandler.h"
 #include "dotlib/AstMgr.h"
 
 
@@ -31,15 +26,15 @@ CellHandler::~CellHandler()
 }
 
 // @breif 'cell' Group Statement の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
+// @param[in] dst_list 読み込んだ値を格納する変数
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-CellHandler::parse_value(const AstCell*& dst)
+CellHandler::parse_value(vector<const AstCell*>& dst_list)
 {
   bool stat = parse_group_statement();
   if ( stat ) {
-    dst = mValue;
+    dst_list.push_back(mValue);
   }
   return stat;
 }
@@ -102,24 +97,6 @@ CellHandler::begin_group()
   mTypeList.clear();
 
   mValue = nullptr;
-}
-
-// @brief attr_type に対応する属性を読み込む．
-// @param[in] attr_type 対象の属性
-// @param[in] attr_loc attr_type のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-bool
-CellHandler::read_group_attr(AttrType attr_type,
-			     const FileRegion& attr_loc)
-{
-  switch ( attr_type ) {
-  case AttrType::area: return parse_float(mArea, attr_type, attr_loc);
-  default:
-    break;
-  }
-  syntax_error(attr_type, attr_loc);
-  return false;
 }
 
 // @brief グループ記述の終わり

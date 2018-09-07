@@ -1,5 +1,5 @@
-#ifndef powerHANDLER_H
-#define powerHANDLER_H
+#ifndef POWERHANDLER_H
+#define POWERHANDLER_H
 
 /// @file PowerHandler.h
 /// @brief PowerHandler のヘッダファイル
@@ -9,8 +9,6 @@
 /// All rights reserved.
 
 #include "Str1GroupHandler.h"
-#include "IndexHandler.h"
-#include "ValuesHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -37,6 +35,30 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
+  /// @breif 'power' Group Statement の記述をパースする．
+  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  parse_value(const AstLut*& dst);
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // GroupHandler の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief グループ記述の始まり
+  void
+  begin_group() override;
+
+  /// @brief グループ記述の終わり
+  /// @param[in] group_loc グループ全体のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  bool
+  end_group(const FileRegion& group_loc) override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -50,25 +72,31 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // index_1
-  IndexHandler mIndex1;
+  const AstFloatVector* mIndex1;
 
   // index_2
-  IndexHandler mIndex2;
+  const AstFloatVector* mIndex2;
 
   // index_3
-  IndexHandler mIndex3;
+  const AstFloatVector* mIndex3;
 
   // values
-  ValuesHandler mValues;
-
-  // orders
+  const AstFloatVector* mValues;
 
   // coefs
+  const AstString* mCoefs;
+
+  // orders
+  const AstString* mOrders;
 
   // domain
+  const AstDomain* mDomain;
+
+  // 読み込んだ値
+  const AstLut* mValue;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // powerHANDLER_H
+#endif // POWERHANDLER_H

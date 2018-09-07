@@ -31,22 +31,6 @@ DotlibHandler::~DotlibHandler()
 {
 }
 
-// @brief 未対応の属性名に対するエラーメッセージを出力する．
-// @param[in] attr_type 対象の属性
-// @param[in] attr_loc attr_type のファイル上の位置
-void
-DotlibHandler::syntax_error(AttrType attr_type,
-			    const FileRegion& attr_loc)
-{
-  ostringstream buf;
-  buf << "Syntax error. Unexpected keyword: " << attr_type;
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  attr_loc,
-		  MsgType::Error,
-		  "DOTLIB_PARSER",
-		  buf.str());
-}
-
 #if 0
 // @brief 引数の種類のトークンでなければエラーメッセージを出力する．
 bool
@@ -79,43 +63,6 @@ CGHandler::CGHandler(DotlibParser& parser) :
 // @brief デストラクタ
 CGHandler::~CGHandler()
 {
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// TokenType に関する関数
-//////////////////////////////////////////////////////////////////////
-
-// @brief TokenType 内容をストリームに出力する．
-ostream&
-operator<<(ostream& s,
-	   TokenType type)
-{
-  const char* type_str = nullptr;
-  switch ( type ) {
-  case TokenType::COLON:      type_str = "':'"; break;
-  case TokenType::SEMI:       type_str = "';'"; break;
-  case TokenType::COMMA:      type_str = "','"; break;
-  case TokenType::PLUS:       type_str = "'+'"; break;
-  case TokenType::MINUS:      type_str = "'-'"; break;
-  case TokenType::MULT:       type_str = "'*'"; break;
-  case TokenType::DIV:        type_str = "'/'"; break;
-  case TokenType::LP:         type_str = "'('"; break;
-  case TokenType::RP:         type_str = "')'"; break;
-  case TokenType::LCB:        type_str = "'{'"; break;
-  case TokenType::RCB:        type_str = "'}'"; break;
-  case TokenType::INT_NUM:    type_str = "INT"; break;
-  case TokenType::FLOAT_NUM:  type_str = "FLOAT"; break;
-  case TokenType::SYMBOL:     type_str = "SYMBOL"; break;
-  case TokenType::EXPRESSION: type_str = "EXPRESSION"; break;
-  case TokenType::NL:         type_str = "new-line"; break;
-  case TokenType::ERROR :     type_str = "error"; break;
-  case TokenType::END:        type_str = "end-of-file"; break;
-  default:
-    ASSERT_NOT_REACHED;
-  }
-  s << type_str;
-  return s;
 }
 
 END_NAMESPACE_YM_DOTLIB

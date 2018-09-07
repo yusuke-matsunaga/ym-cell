@@ -33,15 +33,15 @@ TemplateHandler::~TemplateHandler()
 }
 
 // @breif 'lut_template' Group Statement の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
+// @param[in] dst_list 読み込んだ値を格納するリスト
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-TemplateHandler::parse_value(const AstTemplate*& dst)
+TemplateHandler::parse_value(vector<const AstTemplate*>& dst_list)
 {
   bool stat = parse_group_statement();
   if ( stat ) {
-    dst = mValue;
+    dst_list.push_back(mValue);
   }
   return stat;
 }
@@ -60,6 +60,7 @@ TemplateHandler::begin_group()
   mValue = nullptr;
 }
 
+#if 0
 // @brief attr_type に対応する属性を読み込む．
 // @param[in] attr_type 対象の属性
 // @param[in] attr_loc attr_type のファイル上の位置
@@ -83,50 +84,7 @@ TemplateHandler::read_group_attr(AttrType attr_type,
   syntax_error(attr_type, attr_loc);
   return false;
 }
-
-// @brief VarType に共通の処理を行う．
-bool
-TemplateHandler::parse_vartype(const AstVarType*& dst,
-			       AttrType attr_type,
-			       const FileRegion& attr_loc)
-{
-  if ( dst != nullptr ) {
-    ostringstream buf;
-    buf << attr_type << " appear more than once.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    attr_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    buf.str());
-    return false;
-  }
-  else {
-    VarTypeHandler handler(parser());
-    return handler.parse_value(dst);
-  }
-}
-
-// @brief Index に共通の処理を行う．
-bool
-TemplateHandler::parse_index(const AstFloatVector*& dst,
-			     AttrType attr_type,
-			     const FileRegion& attr_loc)
-{
-  if ( dst != nullptr ) {
-    ostringstream buf;
-    buf << attr_type << " appear more than once.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    attr_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    buf.str());
-    return false;
-  }
-  else {
-    IndexHandler handler(parser());
-    return handler.parse_value(dst);
-  }
-}
+#endif
 
 // @brief グループ記述の終わり
 // @param[in] group_loc グループ全体のファイル上の位置

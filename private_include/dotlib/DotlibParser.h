@@ -88,6 +88,398 @@ public:
   bool
   parse_group_statement(GroupHandler& handler);
 
+  /// @brief ブール値 のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_bool(const AstBool*& dst,
+	     AttrType attr_type,
+	     const FileRegion& attr_loc);
+
+  /// @brief 整数値 のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_int(const AstInt*& dst,
+	    AttrType attr_type,
+	    const FileRegion& attr_loc);
+
+  /// @brief float 値のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_float(const AstFloat*& dst,
+	      AttrType attr_type,
+	      const FileRegion& attr_loc);
+
+  /// @brief 文字列値のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_string(const AstString*& dst,
+	       AttrType attr_type,
+	       const FileRegion& attr_loc);
+
+  /// @brief 'delay_model' Simple Attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_delay_model(const AstDelayModel*& dst,
+		    AttrType attr_type,
+		    const FileRegion& attr_loc);
+
+  /// @brief 'direction' Simple Attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_direction(const AstPinDirection*& dst,
+		  AttrType attr_type,
+		  const FileRegion& attr_loc);
+
+  /// @brief 'Technology' Simple Attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_technology(const AstTechnology*& dst,
+		   AttrType attr_type,
+		   const FileRegion& attr_loc);
+
+  /// @brief 'timing_sense' Simple Attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_timing_sense(const AstTimingSense*& dst,
+		     AttrType attr_type,
+		     const FileRegion& attr_loc);
+
+  /// @brief 'timing_type' Simple Attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_timing_type(const AstTimingType*& dst,
+		    AttrType attr_type,
+		    const FileRegion& attr_loc);
+
+  /// @brief 'var_type' Simple Attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_vartype(const AstVarType*& dst,
+		AttrType attr_type,
+		const FileRegion& attr_loc);
+
+  /// @brief 式のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_expr(const AstExpr*& dst,
+	     AttrType attr_type,
+	     const FileRegion& attr_loc);
+
+  /// @brief 論理関数のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_function(const AstExpr*& dst,
+		 AttrType attr_type,
+		 const FileRegion& attr_loc);
+
+  /// @brief index attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_index(const AstFloatVector*& dst,
+	      AttrType attr_type,
+	      const FileRegion& attr_loc);
+
+  /// @brief piecewise attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_piecewise(const AstPieceWise*& dst,
+		  AttrType attr_type,
+		  const FileRegion& attr_loc);
+
+  /// @brief 単位型 attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_unit(const AstUnit*& dst,
+	     AttrType attr_type,
+	     const FileRegion& attr_loc);
+
+  /// @brief values attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_values(const AstFloatVector*& dst,
+	       AttrType attr_type,
+	       const FileRegion& attr_loc);
+
+  /// @brief variable_n_range attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_variable_range(const AstVariableRange*& dst,
+		       AttrType attr_type,
+		       const FileRegion& attr_loc);
+
+  /// @brief Str1Complex タイプの complex attribute を読み込む．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] group_loc グループ記述全体の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_str1complex(const AstString*& dst,
+		    AttrType attr_type,
+		    const FileRegion& attr_loc);
+
+  /// @brief Str2Complex タイプの complex attribute を読み込む．
+  /// @param[in] dst1, dst2 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] group_loc グループ記述全体の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_str2complex(const AstString*& dst1,
+		    const AstString*& dst2,
+		    AttrType attr_type,
+		    const FileRegion& attr_loc);
+
+  /// @brief Float2Complex タイプの complex attribute を読み込む．
+  /// @param[in] dst1, dst2 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] group_loc グループ記述全体の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_float2complex(const AstFloat*& dst1,
+		      const AstFloat*& dst2,
+		      AttrType attr_type,
+		      const FileRegion& attr_loc);
+
+  /// @brief 'cell' Group Statement のパースを行う．
+  /// @param[in] dst_list 結果を格納するリスト
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// この属性は重複チェックは行わない．
+  bool
+  parse_cell(vector<const AstCell*>& dst_list,
+	     AttrType attr_type,
+	     const FileRegion& attr_loc);
+
+  /// @brief 'domain' Group Statement のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_domain(const AstDomain*& dst,
+	       AttrType attr_type,
+	       const FileRegion& attr_loc);
+
+  /// @brief 'input_voltage' Group Statement のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_input_voltage(const AstInputVoltage*& dst,
+		      AttrType attr_type,
+		      const FileRegion& attr_loc);
+
+  /// @brief 'Library' Group Statement のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_library(const AstLibrary*& dst,
+		AttrType attr_type,
+		const FileRegion& attr_loc);
+
+  /// @brief 'OutputVoltage' Group Statement のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_output_voltage(const AstOutputVoltage*& dst,
+		       AttrType attr_type,
+		       const FileRegion& attr_loc);
+
+  /// @brief 'pin' Group Statement のパースを行う．
+  /// @param[in] dst_list 結果を格納するリスト
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// この属性は重複チェックは行わない．
+  bool
+  parse_pin(vector<const AstPin*>& dst_list,
+	    AttrType attr_type,
+	    const FileRegion& attr_loc);
+
+  /// @brief 'power' Group Statement のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_power(const AstLut*& dst,
+	      AttrType attr_type,
+	      const FileRegion& attr_loc);
+
+  /// @brief 'table' Group Statement のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_table(const AstLut*& dst,
+	      AttrType attr_type,
+	      const FileRegion& attr_loc);
+
+  /// @brief 'lut_template' Group Statement のパースを行う．
+  /// @param[in] dst_list 結果を格納するリスト
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// この属性は重複チェックは行わない．
+  bool
+  parse_template(vector<const AstTemplate*>& dst_list,
+		 AttrType attr_type,
+		 const FileRegion& attr_loc);
+
+  /// @brief 'timing' Group Statement のパースを行う．
+  /// @param[in] dst_list 結果を格納するリスト
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// この属性は重複チェックは行わない．
+  bool
+  parse_timing(vector<const AstTiming*>& dst_list,
+	       AttrType attr_type,
+	       const FileRegion& attr_loc);
+
 
 public:
   //////////////////////////////////////////////////////////////////////

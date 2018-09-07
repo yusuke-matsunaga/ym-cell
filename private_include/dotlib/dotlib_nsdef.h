@@ -10,6 +10,7 @@
 
 
 #include "ym/clib.h"
+#include "ym/FileRegion.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -86,6 +87,27 @@ class AstVarType;
 
 enum class TokenType;
 enum class AttrType;
+
+
+//////////////////////////////////////////////////////////////////////
+// エラー出力用の便利関数
+//////////////////////////////////////////////////////////////////////
+
+// @brief 未対応の属性名に対するエラーメッセージを出力する．
+// @param[in] attr_type 対象の属性
+// @param[in] attr_loc attr_type のファイル上の位置
+void
+syntax_error(AttrType attr_type,
+	     const FileRegion& attr_loc);
+
+/// @brief 同じ属性が重複して定義されている時のエラーを出力する．
+/// @param[in] attr_type 属性の型
+/// @param[in] attr_loc 属性のファイル上の位置
+/// @param[in] prev_node 以前に定義されたノード
+void
+duplicate_error(AttrType attr_type,
+		const FileRegion& attr_loc,
+		const AstNode* prev_node);
 
 END_NAMESPACE_YM_DOTLIB
 

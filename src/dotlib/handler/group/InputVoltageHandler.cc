@@ -24,6 +24,35 @@ BEGIN_NAMESPACE_YM_DOTLIB
 InputVoltageHandler::InputVoltageHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
+  // パース関数の登録
+  reg_func(AttrType::vil,
+	   [=](DotlibParser& parser,
+	       AttrType attr_type,
+	       const FileRegion& attr_loc) -> bool
+	   {
+	     return parser.parse_expr(mVil, attr_type, attr_loc);
+	   });
+  reg_func(AttrType::vih,
+	   [=](DotlibParser& parser,
+	       AttrType attr_type,
+	       const FileRegion& attr_loc) -> bool
+	   {
+	     return parser.parse_expr(mVih, attr_type, attr_loc);
+	   });
+  reg_func(AttrType::vimin,
+	   [=](DotlibParser& parser,
+	       AttrType attr_type,
+	       const FileRegion& attr_loc) -> bool
+	   {
+	     return parser.parse_expr(mVimin, attr_type, attr_loc);
+	   });
+  reg_func(AttrType::vimax,
+	   [=](DotlibParser& parser,
+	       AttrType attr_type,
+	       const FileRegion& attr_loc) -> bool
+	   {
+	     return parser.parse_expr(mVimax, attr_type, attr_loc);
+	   });
 }
 
 // @brief デストラクタ
@@ -55,26 +84,6 @@ InputVoltageHandler::begin_group()
   mVimax = nullptr;
 
   mValue = nullptr;
-}
-
-// @brief attr_type に対応する属性を読み込む．
-// @param[in] attr_type 対象の属性
-// @param[in] attr_loc attr_type のファイル上の位置
-// @retval true 正常に処理した．
-// @retval false 処理中にエラーが起こった．
-bool
-InputVoltageHandler::read_group_attr(AttrType attr_type,
-				     const FileRegion& attr_loc)
-{
-  switch ( attr_type ) {
-  case AttrType::vil:   return parse_expr(mVil, attr_type, attr_loc);
-  case AttrType::vih:   return parse_expr(mVih, attr_type, attr_loc);
-  case AttrType::vimin: return parse_expr(mVimin, attr_type, attr_loc);
-  case AttrType::vimax: return parse_expr(mVimax, attr_type, attr_loc);
-  default: break;
-  }
-  syntax_error(attr_type, attr_loc);
-  return false;
 }
 
 // @brief グループ記述の終わり

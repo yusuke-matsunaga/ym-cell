@@ -131,14 +131,6 @@ protected:
   bool
   debug();
 
-  /// @brief 未対応の属性名に対するエラーメッセージを出力する．
-  /// @param[in] attr_type 対象の属性
-  /// @param[in] attr_loc attr_type のファイル上の位置
-  static
-  void
-  syntax_error(AttrType attr_type,
-	       const FileRegion& attr_loc);
-
 
 #if 0
 protected:

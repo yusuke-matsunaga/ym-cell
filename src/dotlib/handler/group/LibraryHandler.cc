@@ -49,18 +49,6 @@ LibraryHandler::begin_group()
   mValue = nullptr;
 }
 
-// @brief attr_type に対応する属性を読み込む．
-// @param[in] attr_type 対象の属性
-// @param[in] attr_loc attr_type のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-bool
-LibraryHandler::read_group_attr(AttrType attr_type,
-				const FileRegion& attr_loc)
-{
-  return false;
-}
-
 // @brief グループ記述の終わり
 // @param[in] group_loc グループ全体のファイル上の位置
 // @retval true 正常にパーズした．

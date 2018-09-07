@@ -130,15 +130,15 @@ PinHandler::~PinHandler()
 }
 
 // @breif 'pin' Group Statement の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
+// @param[in] dst_list 読み込んだ値を格納するリスト
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-PinHandler::parse_value(const AstPin*& dst)
+PinHandler::parse_value(vector<const AstPin*>& dst_list)
 {
   bool stat = parse_group_statement();
   if ( stat ) {
-    dst = mValue;
+    dst_list.push_back(mValue);
   }
   return stat;
 }
@@ -176,18 +176,6 @@ PinHandler::begin_group()
   mTimingList.clear();
 
   mValue = nullptr;
-}
-
-// @brief attr_type に対応する属性を読み込む．
-// @param[in] attr_type 対象の属性
-// @param[in] attr_loc attr_type のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-bool
-PinHandler::read_group_attr(AttrType attr_type,
-			    const FileRegion& attr_loc)
-{
-  return false;
 }
 
 // @brief グループ記述の終わり

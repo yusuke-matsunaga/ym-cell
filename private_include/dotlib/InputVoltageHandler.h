@@ -53,15 +53,6 @@ public:
   void
   begin_group() override;
 
-  /// @brief attr_type に対応する属性を読み込む．
-  /// @param[in] attr_type 対象の属性
-  /// @param[in] attr_loc attr_type のファイル上の位置
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  bool
-  read_group_attr(AttrType attr_type,
-		  const FileRegion& attr_loc) override;
-
   /// @brief グループ記述の終わり
   /// @param[in] group_loc グループ全体のファイル上の位置
   /// @retval true 正常にパーズした．
@@ -74,11 +65,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  using ParseFunc = bool (*)(GroupHandler&, AttrType, const FileRegion&);
-
-  // 各属性をパースするための辞書
-  HashMap<AttrType, ParseFunc> mFuncHash;
 
   // vil
   const AstExpr* mVil;

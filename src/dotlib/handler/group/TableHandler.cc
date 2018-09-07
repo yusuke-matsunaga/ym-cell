@@ -58,6 +58,7 @@ TableHandler::begin_group()
   mValue = nullptr;
 }
 
+#if 0
 // @brief attr_type に対応する属性を読み込む．
 // @param[in] attr_type 対象の属性
 // @param[in] attr_loc attr_type のファイル上の位置
@@ -79,6 +80,7 @@ TableHandler::read_group_attr(AttrType attr_type,
   syntax_error(attr_type, attr_loc);
   return false;
 }
+#endif
 
 // @brief グループ記述の終わり
 // @param[in] group_loc グループ全体のファイル上の位置

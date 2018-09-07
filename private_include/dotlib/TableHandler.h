@@ -52,15 +52,6 @@ public:
   void
   begin_group() override;
 
-  /// @brief attr_type に対応する属性を読み込む．
-  /// @param[in] attr_type 対象の属性
-  /// @param[in] attr_loc attr_type のファイル上の位置
-  /// @retval true 正常に処理した．
-  /// @retval false 処理中にエラーが起こった．
-  bool
-  read_group_attr(AttrType attr_type,
-		  const FileRegion& attr_loc) override;
-
   /// @brief グループ記述の終わり
   /// @param[in] attr_type 対象の属性
   /// @param[in] attr_loc attr_type のファイル上の位置

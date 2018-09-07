@@ -159,11 +159,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @breif 'pin' Group Statement の記述をパースする．
-  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @param[in] dst_list 読み込んだ値を格納する変数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  parse_value(const AstPin*& dst);
+  parse_value(vector<const AstPin*>& dst_list);
 
 
 protected:
@@ -174,16 +174,6 @@ protected:
   /// @brief グループ記述の始まり
   void
   begin_group() override;
-
-  /// @brief attr_type に対応する属性を読み込む．
-  /// @param[in] parser パーサー
-  /// @param[in] attr_type 対象の属性
-  /// @param[in] attr_loc attr_type のファイル上の位置
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  bool
-  read_group_attr(AttrType attr_type,
-		  const FileRegion& attr_loc) override;
 
   /// @brief グループ記述の終わり
   /// @param[in] group_loc グループ全体のファイル上の位置
