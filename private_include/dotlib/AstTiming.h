@@ -1,5 +1,5 @@
-﻿#ifndef ASTtiming_H
-#define ASTtiming_H
+﻿#ifndef ASTTIMING_H
+#define ASTTIMING_H
 
 /// @file AstTiming.h
 /// @brief DolibTiming のヘッダファイル
@@ -25,39 +25,8 @@ class AstTiming :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc 位置情報
-  /// @param[in] related_pin
-  /// @param[in] related_bus_pins
-  /// @param[in] related_bus_equivalent
-  /// @param[in] timing_sense
-  /// @param[in] timing_type
-  /// @param[in] when
-  /// @param[in] when_start
-  /// @param[in] when_end
-  /// @param[in] rise_resistance
-  /// @param[in] fall_resistance
-  /// @param[in] intrinsic_rise
-  /// @param[in] intrinsic_fall
-  /// @param[in] slope_rise
-  /// @param[in] slope_fall
-  /// @param[in] rise_delay_intercept
-  /// @param[in] fall_delay_intercept
-  /// @param[in] rise_pin_resistance
-  /// @param[in] fall_pin_resistance
-  /// @param[in] cell_degradation
-  /// @param[in] cell_rise
-  /// @param[in] cell_fall
-  /// @param[in] rise_constraint
-  /// @param[in] fall_constraint
-  /// @param[in] rise_propagation
-  /// @param[in] fall_propagation
-  /// @param[in] rise_transition
-  /// @param[in] fall_transition
-  /// @param[in] retaing_rise
-  /// @param[in] retaing_fall
-  /// @param[in] retain_rise_slew
-  /// @param[in] retainfall_slew
   AstTiming(const FileRegion& loc,
+	    const AstString* name,
 	    const AstString* related_pin,
 	    const AstString* related_bus_pins,
 	    const AstString* related_bus_equivalent,
@@ -72,23 +41,25 @@ public:
 	    const AstFloat* intrinsic_fall,
 	    const AstFloat* slope_rise,
 	    const AstFloat* slope_fall,
-	    const AstPieceWise* rise_delay_intercept,
-	    const AstPieceWise* fall_delay_intercept,
-	    const AstPieceWise* rise_pin_resistance,
-	    const AstPieceWise* fall_pin_resistance,
-	    const AstFloat* cell_degradation,
+	    const vector<const AstPieceWise*>& rise_delay_intercept,
+	    const vector<const AstPieceWise*>& fall_delay_intercept,
+	    const vector<const AstPieceWise*>& rise_pin_resistance,
+	    const vector<const AstPieceWise*>& fall_pin_resistance,
+	    const AstCellDegradation* cell_degradation,
 	    const AstLut* cell_rise,
 	    const AstLut* cell_fall,
+	    const AstCCS* compact_ccs_rise,
+	    const AstCCS* compact_ccs_fall,
 	    const AstLut* rise_constraint,
 	    const AstLut* fall_constraint,
 	    const AstLut* rise_propagation,
 	    const AstLut* fall_propagation,
 	    const AstLut* rise_transition,
 	    const AstLut* fall_transition,
-	    const AstFloat* retaining_rise,
-	    const AstFloat* retaining_fall,
-	    const AstFloat* retain_rise_slew,
-	    const AstFloat* retain_fall_slew);
+	    const AstLut* retaining_rise,
+	    const AstLut* retaining_fall,
+	    const AstLut* retain_rise_slew,
+	    const AstLut* retain_fall_slew);
 
   /// @brief デストラクタ
   ~AstTiming();
@@ -98,6 +69,10 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 名前を返す．
+  const AstString*
+  name() const;
 
   /// @brief "related_pin" を返す．
   const AstString*
@@ -156,23 +131,23 @@ public:
   slope_fall() const;
 
   /// @brief "rise_delay_intercept" を返す．
-  const AstPieceWise*
+  const vector<const AstPieceWise*>&
   rise_delay_intercept() const;
 
   /// @brief "fall_delay_intercept" を返す．
-  const AstPieceWise*
+  const vector<const AstPieceWise*>&
   fall_delay_intercept() const;
 
   /// @brief "rise_pin_resistance" を返す．
-  const AstPieceWise*
+  const vector<const AstPieceWise*>&
   rise_pin_resistance() const;
 
   /// @brief "fall_pin_resistance" を返す．
-  const AstPieceWise*
+  const vector<const AstPieceWise*>&
   fall_pin_resistance() const;
 
   /// @brief "cell_degradation" を返す．
-  const AstFloat*
+  const AstCellDegradation*
   cell_degradation() const;
 
   /// @brief "cell_rise" を返す．
@@ -182,6 +157,14 @@ public:
   /// @brief "cell_fall" を返す．
   const AstLut*
   cell_fall() const;
+
+  /// @brief "compact_ccs_rise" を返す．
+  const AstCCS*
+  compact_ccs_rise() const;
+
+  /// @brief "compact_ccs_rise" を返す．
+  const AstCCS*
+  compact_ccs_fall() const;
 
   /// @brief "rise_constraint" を返す．
   const AstLut*
@@ -208,19 +191,19 @@ public:
   fall_transition() const;
 
   /// @brief "retaining_rise" を返す．
-  const AstFloat*
+  const AstLut*
   retaining_rise() const;
 
   /// @brief "retaining_fall" を返す．
-  const AstFloat*
+  const AstLut*
   retaining_fall() const;
 
   /// @brief "retain_rise_slew" を返す．
-  const AstFloat*
+  const AstLut*
   retain_rise_slew() const;
 
   /// @brief "retain_fall_slew" を返す．
-  const AstFloat*
+  const AstLut*
   retain_fall_slew() const;
 
   /// @brief 内容をストリーム出力する．
@@ -235,6 +218,9 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // 名前
+  const AstString* mName;
 
   // related_pin
   const AstString* mRelatedPin;
@@ -279,25 +265,31 @@ private:
   const AstFloat* mSlopeFall;
 
   // rise_delay_intercept
-  const AstPieceWise* mRiseDelayIntercept;
+  vector<const AstPieceWise*> mRiseDelayIntercept;
 
   // fall_delay_intercept
-  const AstPieceWise* mFallDelayIntercept;
+  vector<const AstPieceWise*> mFallDelayIntercept;
 
   // rise_pin_resistance
-  const AstPieceWise* mRisePinResistance;
+  vector<const AstPieceWise*> mRisePinResistance;
 
   // fall_pin_resistance
-  const AstPieceWise* mFallPinResistance;
+  vector<const AstPieceWise*> mFallPinResistance;
 
   // cell_degradation
-  const AstFloat* mCellDegradation;
+  const AstCellDegradation* mCellDegradation;
 
   // cell_rise
   const AstLut* mCellRise;
 
   // cell_fall
   const AstLut* mCellFall;
+
+  // compact_ccs_rise
+  const AstCCS* mCompactCCSRise;
+
+  // compact_ccs_fall
+  const AstCCS* mCompactCCSFall;
 
   // rise_constraint
   const AstLut* mRiseConstraint;
@@ -318,16 +310,16 @@ private:
   const AstLut* mFallTransition;
 
   // retaining_rise
-  const AstFloat* mRetainingRise;
+  const AstLut* mRetainingRise;
 
   // retaining_fall
-  const AstFloat* mRetainingFall;
+  const AstLut* mRetainingFall;
 
   // retain_rise_slew
-  const AstFloat* mRetainRiseSlew;
+  const AstLut* mRetainRiseSlew;
 
   // retain_fall_slew
-  const AstFloat* mRetainFallSlew;
+  const AstLut* mRetainFallSlew;
 
 };
 
@@ -450,7 +442,7 @@ AstTiming::slope_rise() const
 
 // @brief "fall_delay_intercept" を返す．
 inline
-const AstPieceWise*
+const vector<const AstPieceWise*>&
 AstTiming::fall_delay_intercept() const
 {
   return mFallDelayIntercept;
@@ -458,7 +450,7 @@ AstTiming::fall_delay_intercept() const
 
 // @brief "rise_delay_intercept" を返す．
 inline
-const AstPieceWise*
+const vector<const AstPieceWise*>&
 AstTiming::rise_delay_intercept() const
 {
   return mRiseDelayIntercept;
@@ -466,7 +458,7 @@ AstTiming::rise_delay_intercept() const
 
 // @brief "fall_pin_resistance" を返す．
 inline
-const AstPieceWise*
+const vector<const AstPieceWise*>&
 AstTiming::fall_pin_resistance() const
 {
   return mFallPinResistance;
@@ -474,7 +466,7 @@ AstTiming::fall_pin_resistance() const
 
 // @brief "rise_pin_resistance" を返す．
 inline
-const AstPieceWise*
+const vector<const AstPieceWise*>&
 AstTiming::rise_pin_resistance() const
 {
   return mRisePinResistance;
@@ -482,7 +474,7 @@ AstTiming::rise_pin_resistance() const
 
 // @brief "cell_degradation" を返す．
 inline
-const AstFloat*
+const AstCellDegradation*
 AstTiming::cell_degradation() const
 {
   return mCellDegradation;
@@ -554,7 +546,7 @@ AstTiming::rise_transition() const
 
 // @brief "retaining_fall" を返す．
 inline
-const AstFloat*
+const AstLut*
 AstTiming::retaining_fall() const
 {
   return mRetainingFall;
@@ -562,7 +554,7 @@ AstTiming::retaining_fall() const
 
 // @brief "retaining_rise" を返す．
 inline
-const AstFloat*
+const AstLut*
 AstTiming::retaining_rise() const
 {
   return mRetainingRise;
@@ -570,7 +562,7 @@ AstTiming::retaining_rise() const
 
 // @brief "retain_fall_slew" を返す．
 inline
-const AstFloat*
+const AstLut*
 AstTiming::retain_fall_slew() const
 {
   return mRetainFallSlew;
@@ -578,7 +570,7 @@ AstTiming::retain_fall_slew() const
 
 // @brief "retain_rise_slew" を返す．
 inline
-const AstFloat*
+const AstLut*
 AstTiming::retain_rise_slew() const
 {
   return mRetainRiseSlew;
@@ -586,4 +578,4 @@ AstTiming::retain_rise_slew() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTtiming_H
+#endif // ASTTIMING_H

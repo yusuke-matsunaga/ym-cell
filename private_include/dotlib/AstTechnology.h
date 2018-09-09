@@ -1,5 +1,5 @@
-﻿#ifndef ASTtechnology_H
-#define ASTtechnology_H
+﻿#ifndef ASTTECHNOLOGY_H
+#define ASTTECHNOLOGY_H
 
 /// @file AstTechnology.h
 /// @brief AstTechnology のヘッダファイル
@@ -75,4 +75,4 @@ AstTechnology::value() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTtechnology_H
+#endif // ASTTECHNOLOGY_H

@@ -21,6 +21,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///           "cell and model Group Description and Syntax"
 /// * ヘッダの文字列はセル名を表す．
 /// * セルグループ内部の属性は以下の通り(原文中の凡例が統一されていない)
+/// * さらに冒頭のサマリ中に現れない属性もある．
 /// * Simple Attributes
 ///   - area : float ;
 ///   - auxiliary_pad_cell : true | false ;
@@ -39,7 +40,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///   - geometry_print : string ;
 ///   - handle_negative_constraint : true | false ;
 ///   - interface_timing : true | false ;
-///   - io_type : name_id ;
+///   - io_type : name_(id) ;
 ///   - is_clock_gating_cell : true | false ;
 ///   - map_only : true | false ;
 ///   - pad_cell : true | false ;
@@ -145,6 +146,7 @@ private:
   const AstString* mBusNamingStyle;
 
   // cell_footprint
+  const AstString* mCellFootprint;
 
   // cell_leakage_power
   const AstFloat* mCellLeakagePower;
@@ -156,19 +158,25 @@ private:
   const AstExpr* mContentionCondition;
 
   // dont_fault
-  const AstBool* mDontFault;
+  // none | sa0 | sa1 | as01
+  const AstString* mDontFault;
 
   // dont_touch
   const AstBool* mDontTouch;
 
-  // driver_type
+  // driver_type ( "4" もあり )
+  // alphanumeric string identifier, enclosed in quotation marks
   const AstString* mDriverType;
 
   // em_temp_degradation_factor
   const AstFloat* mEmTempDegradation;
 
   // fpga_domain_style
+  // rising_edge_clock_cell | falling_edge_clock_cell
   const AstString* mFpgaDomainStyle;
+
+  // fpga_isd
+  const AstString* mFpgaIsd;
 
   // geometry_print
   const AstString* mGeometryPrint;
@@ -180,10 +188,18 @@ private:
   const AstBool* mInterfaceTiming;
 
   // io_type
+  // alphanumeric string identifier, enclosed in quotation marks
   const AstString* mIoType;
 
   // is_clock_gating_cell
   const AstBool* mIsClockGating;
+
+  // is_level_shifter
+  const AstBool* mIsLevelShifter;
+
+  // level_shifter_type
+  // LH | HL | HL_LH
+  const AstString* mLevelShifterType;
 
   // map_only
   const AstBool* mMapOnly;
@@ -191,8 +207,16 @@ private:
   // pad_cell
   const AstBool* mPadCell;
 
+  // pad_type
+  // clock
+  const AstString* mPadType;
+
   // power_cell_type
+  // stdcell | macro
   const AstCellType* mPowerCellType;
+
+  // power_gating_cell_name
+  const AstString* mPowerGatingCellName;
 
   // preferred
   const AstBool* mPreferred;
@@ -200,11 +224,20 @@ private:
   // scaling_factors
   const AstString* mScalingFactors;
 
+  // sensitization_master
+  const AstString* mSensitizationMaster;
+
   // single_bit_degenerate
   const AstString* mSingleBitDegenerate;
 
   // slew_type
   const AstString* mSlewType;
+
+  // switch_cell_type
+  const AstString* mSwitchCellType;
+
+  // threshold_voltage_group
+  const AstString* mThreholdVoltageGroup;
 
   // timing_model_type
   const AstString* mTimingModelType;
@@ -215,11 +248,20 @@ private:
   // vhdl_name
   const AstString* mVhdlName;
 
+  // input_voltage_range
+  const AstFloat* mInputVoltageRange[2];
+
+  // output_voltage_range
+  const AstFloat* mOutputVoltageRange[2];
+
   // pin_equal
-  const AstString* mPinEqual;
+  const AstStringVector* mPinEqual;
+
+  // pin_name_map
+  const AstStringVector* mPinNameMap;
 
   // pin_opposite
-  const AstString* mPinOpposite[2];
+  const AstStringVector* mPinOpposite[2];
 
   // rail_connection
   const AstString* mRailConnection[2];
@@ -241,7 +283,7 @@ private:
   const AstFF* mFF;
 
   // ff_bank
-  const AstFFBank* mFFBank;
+  const AstFF* mFFBank;
 
   // functional_yield_metric
   const AstFYM* mFunctionalYieldMetric;
@@ -256,7 +298,7 @@ private:
   const AstLatch* mLatch;
 
   // latch_bank
-  const AstLatchBank* mLatchBank;
+  const AstLatch* mLatchBank;
 
   // leakage_current
   vector<const AstLeakageCurrent*> mLeakageCurrentList;

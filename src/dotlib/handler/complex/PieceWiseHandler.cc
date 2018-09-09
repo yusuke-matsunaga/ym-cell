@@ -33,15 +33,15 @@ PieceWiseHandler::~PieceWiseHandler()
 }
 
 // @brief 'piece_wise' Complex Attribute の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
+// @param[in] dst_list 読み込んだ値を格納するリスト
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-PieceWiseHandler::parse_value(const AstPieceWise*& dst)
+PieceWiseHandler::parse_value(vector<const AstPieceWise*>& dst_list)
 {
   bool stat = parse_complex_attribute();
   if ( stat ) {
-    dst = mValue;
+    dst_list.push_back(mValue);
   }
   return stat;
 }

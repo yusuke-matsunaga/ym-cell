@@ -1,5 +1,5 @@
-﻿#ifndef ASTstatetable_H
-#define ASTstatetable_H
+﻿#ifndef ASTSTATETABLE_H
+#define ASTSTATETABLE_H
 
 /// @file AstStateTable.h
 /// @brief AstStateTable のヘッダファイル
@@ -38,8 +38,8 @@ public:
 		const AstString* var2,
 		const AstExpr* clear,
 		const AstExpr* preset,
-		int clear_preset_var1,
-		int clear_preset_var2,
+		const AstCPType* clear_preset_var1,
+		const AstCPType* clear_preset_var2,
 		const AstExpr* next_state,
 		const AstExpr* clocked_on,
 		const AstExpr* clocked_on_also);
@@ -120,4 +120,4 @@ AstStateTable::clocked_on_also() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTstatetable_H
+#endif // ASTSTATETABLE_H

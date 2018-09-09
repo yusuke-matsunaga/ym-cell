@@ -17,12 +17,12 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @param[in] loc ファイル上の位置
 // @param[in] value_list 値のリスト
 AstFloatVector*
-AstMgr::new_vector(const FileRegion& loc,
-		   const vector<double>& value_list)
+AstMgr::new_float_vector(const FileRegion& loc,
+			 const vector<double>& value_list)
 {
   int n = value_list.size();
-  ++ mVectNum;
-  mVectElemSize += (n - 1);
+  ++ mFloatVectNum;
+  mFloatVectElemSize += (n - 1);
   void* p = mAlloc.get_memory(sizeof(AstFloatVector) + (n - 1) * sizeof(double));
   return new (p) AstFloatVector(loc, value_list);
 }

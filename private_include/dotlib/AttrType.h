@@ -1,5 +1,5 @@
-﻿#ifndef ATTRtype_H
-#define ATTRtype_H
+﻿#ifndef ATTRTYPE_H
+#define ATTRTYPE_H
 
 /// @file AttrType.h
 /// @brief 属性を表す列挙型
@@ -42,6 +42,7 @@ enum class AttrType {
   clock_gate_test_pin,
   clock_gate_obs_pin,
   clock_gate_out_pin,
+  clock_gating_flag,
   clock_gating_integrated_cell,
   clock,
   clocked_on_also,
@@ -81,6 +82,7 @@ enum class AttrType {
   default_rise_pin_resistance,
   default_slope_fall,
   default_slope_rise,
+  default_timing,
   default_wire_load_area,
   default_wire_load_capacitance,
   default_wire_load_mode,
@@ -134,6 +136,7 @@ enum class AttrType {
   faults_lut_template,
   ff_bank,
   ff,
+  fpga_arc_condition,
   fpga_domain_style,
   fpga_technology,
   function,
@@ -156,6 +159,7 @@ enum class AttrType {
   input_threshold_pct_fall,
   input_threshold_pct_rise,
   input_voltage,
+  interdependence_id,
   interface_timing,
   internal_node,
   internal_power,
@@ -319,6 +323,8 @@ enum class AttrType {
   nom_voltage,
   operating_conditions,
   orders,
+  output_current_fall,
+  output_current_rise,
   output_current_template,
   output_signal_level,
   output_threshold_pct_fall,
@@ -424,9 +430,13 @@ enum class AttrType {
   slope,
   state_function,
   statetable,
+  steady_state_current_above_high,
+  steady_state_current_below_low,
   steady_state_current_high,
   steady_state_current_low,
   steady_state_current_tristate,
+  steady_state_resistance_above_high,
+  steady_state_resistance_below_low,
   switching_interval,
   switching_together_group,
   table,
@@ -435,6 +445,7 @@ enum class AttrType {
   test_cell,
   test_output_only,
   three_state,
+  tied_off,
   time_unit,
   timing_model_type,
   timing_range,
@@ -498,4 +509,4 @@ HashFunc<nsClib::nsDotlib::AttrType>
 
 END_NAMESPACE_YM
 
-#endif // ATTRtype_H
+#endif // ATTRTYPE_H

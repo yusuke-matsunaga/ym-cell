@@ -1,5 +1,5 @@
-﻿#ifndef ASTpindirection_H
-#define ASTpindirection_H
+﻿#ifndef ASTPINDIRECTION_H
+#define ASTPINDIRECTION_H
 
 /// @file AstPinDirection.h
 /// @brief AstNode の継承クラスのヘッダファイル
@@ -75,4 +75,4 @@ AstPinDirection::value() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTpindirection_H
+#endif // ASTPINDIRECTION_H

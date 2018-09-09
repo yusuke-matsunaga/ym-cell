@@ -39,10 +39,14 @@ AstMgr::clear()
   mLibraryNode = nullptr;
 
   mIntNum = 0;
+  mIntVectNum = 0;
+  mIntVectElemSize = 0;
   mFloatNum = 0;
+  mFloatVectNum = 0;
+  mFloatVectElemSize = 0;
   mStrNum = 0;
-  mVectNum = 0;
-  mVectElemSize = 0;
+  mStrVectNum = 0;
+  mStrVectElemSize = 0;
   mBoolNum = 0;
   mOprNum = 0;
   mNotNum = 0;

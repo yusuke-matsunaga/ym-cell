@@ -28,6 +28,8 @@
 #include "dotlib/PieceWiseHandler.h"
 #include "dotlib/UnitHandler.h"
 #include "dotlib/ValuesHandler.h"
+#include "dotlib/CoefsHandler.h"
+#include "dotlib/OrdersHandler.h"
 #include "dotlib/VariableRangeHandler.h"
 #include "dotlib/Str1ComplexHandler.h"
 #include "dotlib/Str2ComplexHandler.h"
@@ -40,7 +42,6 @@
 #include "dotlib/LibraryHandler.h"
 #include "dotlib/OutputVoltageHandler.h"
 #include "dotlib/PinHandler.h"
-#include "dotlib/PowerHandler.h"
 #include "dotlib/TableHandler.h"
 #include "dotlib/TemplateHandler.h"
 #include "dotlib/TimingHandler.h"
@@ -48,8 +49,11 @@
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstBool.h"
 #include "dotlib/AstInt.h"
+#include "dotlib/AstIntVector.h"
 #include "dotlib/AstFloat.h"
+#include "dotlib/AstFloatVector.h"
 #include "dotlib/AstString.h"
+#include "dotlib/AstStringVector.h"
 #include "dotlib/AstDelayModel.h"
 #include "dotlib/AstPinDirection.h"
 #include "dotlib/AstTechnology.h"
@@ -106,7 +110,6 @@ const AstLibrary*
 DotlibParser::parse()
 {
   // goto 文を使う関係で変数はここで宣言しておかなければならない．
-  LibraryHandler handler(*this);
   const AstLibrary* library = nullptr;
   TokenType type;
   FileRegion loc;
@@ -126,7 +129,7 @@ DotlibParser::parse()
     goto last;
   }
 
-  stat = handler.parse_value(library);
+  stat = parse_library(library, AttrType::library, loc);
   if ( !stat ) {
     goto last;
   }
@@ -619,27 +622,20 @@ DotlibParser::parse_index(const AstFloatVector*& dst,
 }
 
 // @brief piecewise attribute のパースを行う．
-// @param[in] dst 結果を格納する変数
+// @param[in] dst_list 結果を格納するリスト
 // @param[in] attr_type 属性の型
 // @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 //
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+// この属性は重複チェックは行わない．
 bool
-DotlibParser::parse_piecewise(const AstPieceWise*& dst,
+DotlibParser::parse_piecewise(vector<const AstPieceWise*>& dst_list,
 			      AttrType attr_type,
 			      const FileRegion& attr_loc)
 {
-  if ( dst != nullptr ) {
-    // 重複していた．
-    duplicate_error(attr_type, attr_loc, dst);
-    return false;
-  }
-  else {
-    static PieceWiseHandler handler(*this);
-    return handler.parse_value(dst);
-  }
+  static PieceWiseHandler handler(*this);
+  return handler.parse_value(dst_list);
 }
 
 // @brief 単位型 attribute のパースを行う．
@@ -686,6 +682,54 @@ DotlibParser::parse_values(const AstFloatVector*& dst,
   }
   else {
     static ValuesHandler handler(*this);
+    return handler.parse_value(dst);
+  }
+}
+
+// @brief coefs attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DotlibParser::parse_coefs(const AstFloatVector*& dst,
+			  AttrType attr_type,
+			  const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    static CoefsHandler handler(*this);
+    return handler.parse_value(dst);
+  }
+}
+
+// @brief orders attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DotlibParser::parse_orders(const AstIntVector*& dst,
+			   AttrType attr_type,
+			   const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    static OrdersHandler handler(*this);
     return handler.parse_value(dst);
   }
 }
@@ -916,30 +960,6 @@ DotlibParser::parse_pin(vector<const AstPin*>& dst_list,
 {
   static PinHandler handler(*this);
   return handler.parse_value(dst_list);
-}
-
-// @brief 'power' Group Statement のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-bool
-DotlibParser::parse_power(const AstLut*& dst,
-			  AttrType attr_type,
-			  const FileRegion& attr_loc)
-{
-  if ( dst != nullptr ) {
-    // 重複していた．
-    duplicate_error(attr_type, attr_loc, dst);
-    return false;
-  }
-  else {
-    static PowerHandler handler(*this);
-    return handler.parse_value(dst);
-  }
 }
 
 // @brief 'table' Group Statement のパースを行う．

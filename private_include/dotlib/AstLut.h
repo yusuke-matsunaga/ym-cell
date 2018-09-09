@@ -1,5 +1,5 @@
-﻿#ifndef ASTlut_H
-#define ASTlut_H
+﻿#ifndef ASTLUT_H
+#define ASTLUT_H
 
 /// @file AstLut.h
 /// @brief AstLut のヘッダファイル
@@ -29,6 +29,9 @@ public:
   /// @param[in] name 名前
   /// @param[in] index_1, index_2, index_3 インデックスのベクタ
   /// @param[in] value_list 値のリスト
+  /// @param[in] coefs 'coefs' 属性
+  /// @param[in] orders 'orders' 属性
+  /// @param[in] variable_1_range, variable_2_range, variable_3_range 'variable_n_range' 属性
   /// @param[in] domain 'domain'
   AstLut(const FileRegion& loc,
 	 const AstString* name,
@@ -36,6 +39,11 @@ public:
 	 const AstFloatVector* index_2,
 	 const AstFloatVector* index_3,
 	 const AstFloatVector* value_list,
+	 const AstFloatVector* coefs,
+	 const AstIntVector* orders,
+	 const AstVariableRange* variable_1_range,
+	 const AstVariableRange* variable_2_range,
+	 const AstVariableRange* variable_3_range,
 	 const AstDomain* domain);
 
   /// @brief デストラクタ
@@ -73,6 +81,26 @@ public:
   const AstFloatVector*
   value_list() const;
 
+  /// @brief 'coefs' のノードを返す．
+  const AstFloatVector*
+  coefs() const;
+
+  /// @brief 'orders' のノードを返す．
+  const AstIntVector*
+  orders() const;
+
+  /// @brief 'variable_1_range' のノードを返す．
+  const AstVariableRange*
+  variable_1_range() const;
+
+  /// @brief 'variable_2_range' のノードを返す．
+  const AstVariableRange*
+  variable_2_range() const;
+
+  /// @brief 'variable_3_range' のノードを返す．
+  const AstVariableRange*
+  variable_3_range() const;
+
   /// @brief 'domain' のノードを返す．
   ///
   /// 未定義なら nullptr を返す．
@@ -106,6 +134,21 @@ private:
 
   // 値のリスト
   const AstFloatVector* mValueList;
+
+  // coefs
+  const AstFloatVector* mCoefs;
+
+  // orders
+  const AstIntVector* mOrders;
+
+  // variable_1_range
+  const AstVariableRange* mVar1Range;
+
+  // variable_2_range
+  const AstVariableRange* mVar2Range;
+
+  // variable_3_range
+  const AstVariableRange* mVar3Range;
 
   // domain
   const AstDomain* mDomain;
@@ -157,6 +200,46 @@ AstLut::value_list() const
   return mValueList;
 }
 
+// @brief 'coefs' のノードを返す．
+inline
+const AstFloatVector*
+AstLut::coefs() const
+{
+  return mCoefs;
+}
+
+// @brief 'orders' のノードを返す．
+inline
+const AstIntVector*
+AstLut::orders() const
+{
+  return mOrders;
+}
+
+// @brief 'variable_1_range' のノードを返す．
+inline
+const AstVariableRange*
+AstLut::variable_1_range() const
+{
+  return mVar1Range;
+}
+
+// @brief 'variable_2_range' のノードを返す．
+inline
+const AstVariableRange*
+AstLut::variable_2_range() const
+{
+  return mVar2Range;
+}
+
+// @brief 'variable_3_range' のノードを返す．
+inline
+const AstVariableRange*
+AstLut::variable_3_range() const
+{
+  return mVar3Range;
+}
+
 // @brief 'domain' のノードを返す．
 //
 // 未定義なら nullptr を返す．
@@ -169,4 +252,4 @@ AstLut::domain() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTlut_H
+#endif // ASTLUT_H

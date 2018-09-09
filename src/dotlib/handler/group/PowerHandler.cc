@@ -11,7 +11,7 @@
 #include "dotlib/AstMgr.h"
 #include "ym/MsgMgr.h"
 
-
+#error "Don't compile me"
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
@@ -24,6 +24,28 @@ BEGIN_NAMESPACE_YM_DOTLIB
 PowerHandler::PowerHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
+  // パース関数の登録
+  reg_func(AttrType::index_1,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_index(mIndex1, attr_type, attr_loc); });
+  reg_func(AttrType::index_2,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_index(mIndex2, attr_type, attr_loc); });
+  reg_func(AttrType::index_3,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_index(mIndex3, attr_type, attr_loc); });
+  reg_func(AttrType::values,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_values(mValues, attr_type, attr_loc); });
+  reg_func(AttrType::coefs,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_str1complex(mCoefs, attr_type, attr_loc); });
+  reg_func(AttrType::orders,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_str1complex(mOrders, attr_type, attr_loc); });
+  reg_func(AttrType::domain,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_domain(mDomain, attr_type, attr_loc); });
 }
 
 // @brief デストラクタ
@@ -67,78 +89,20 @@ PowerHandler::begin_group()
 bool
 PowerHandler::end_group(const FileRegion& group_loc)
 {
-  // 下の gen_node() のコードを参考にチェックを行い．
-  // AstLut を作って mValue にセットする．
-  return false;
-}
-
-#if 0
-// @brief 値を作る．
-const AstNode*
-PowerHandler::gen_node(const FileRegion& loc,
-		       const AstString* name,
-		       const vector<const AstAttr*>& attr_list)
-{
-  const AstFloatVector* index_1 = nullptr;
-  const AstFloatVector* index_2 = nullptr;
-  const AstFloatVector* index_3 = nullptr;
-  const AstFloatVector* values = nullptr;
-  for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == AttrType::index_1 ) {
-      if ( index_1 != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			MsgType::Error,
-			"DOTLIB_PARSER",
-			"'index_1' defined more than once.");
-	return nullptr;
-      }
-      index_1 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
-      ASSERT_COND( index_1 != nullptr );
-    }
-    if ( attr->attr_type() == AttrType::index_2 ) {
-      if ( index_2 != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			MsgType::Error,
-			"DOTLIB_PARSER",
-			"'index_2' defined more than once.");
-	return nullptr;
-      }
-      index_2 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
-      ASSERT_COND( index_2 != nullptr );
-    }
-    if ( attr->attr_type() == AttrType::index_3 ) {
-      if ( index_3 != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			MsgType::Error,
-			"DOTLIB_PARSER",
-			"'index_3' defined more than once.");
-	return nullptr;
-      }
-      index_3 = dynamic_cast<const AstFloatVector*>(attr->attr_value());
-      ASSERT_COND ( index_3 != nullptr );
-    }
-    if ( attr->attr_type() == AttrType::valueS ) {
-      if ( values != nullptr ) {
-	// エラー
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr->attr_value()->loc(),
-			MsgType::Error,
-			"DOTLIB_PARSER",
-			"'values' defined more than once.");
-	return nullptr;
-      }
-      values = dynamic_cast<const AstFloatVector*>(attr->attr_value());
-      ASSERT_COND ( values != nullptr );
-    }
+  if ( mValues == nullptr ) {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    group_loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "'values' is missing.");
+    return false;
   }
-  return mgr().new_lut(loc, name, index_1, index_2, index_3, values);
+  else {
+    mValue = mgr().new_lut(group_loc, header_value(), mIndex1, mIndex2, mIndex3, mValues,
+			   mCoefs, mOrders,
+			   mDomain);
+    return true;
+  }
 }
-#endif
 
 END_NAMESPACE_YM_DOTLIB

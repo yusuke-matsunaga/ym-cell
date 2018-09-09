@@ -8,9 +8,30 @@
 
 
 #include "dotlib/AstLatch.h"
+#include "dotlib/AstMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
+
+// @brief latch を表す AstNode を生成する．
+AstLatch*
+AstMgr::new_latch(const FileRegion& loc,
+		  const AstString* var1,
+		  const AstString* var2,
+		  const AstExpr* clear,
+		  const AstExpr* preset,
+		  const AstCPType* clear_preset_var1,
+		  const AstCPType* clear_preset_var2,
+		  const AstExpr* enable_on,
+		  const AstExpr* enable_on_also,
+		  const AstExpr* data_in)
+{
+  ++ mLatchNum;
+  void* p = mAlloc.get_memory(sizeof(AstLatch));
+  return new (p) AstLatch(loc, var1, var2, clear, preset, clear_preset_var1, clear_preset_var2,
+			  enable_on, enable_on_also, data_in);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス AstLatch
@@ -22,15 +43,15 @@ AstLatch::AstLatch(const FileRegion& loc,
 		   const AstString* var2,
 		   const AstExpr* clear,
 		   const AstExpr* preset,
-		   int clear_preset_var1,
-		   int clear_preset_var2,
-		   const AstExpr* data_in,
+		   const AstCPType* clear_preset_var1,
+		   const AstCPType* clear_preset_var2,
 		   const AstExpr* enable,
-		   const AstExpr* enable_also) :
+		   const AstExpr* enable_also,
+		   const AstExpr* data_in) :
   AstFL(loc, var1, var2, clear, preset, clear_preset_var1, clear_preset_var2),
-  mDataIn(data_in),
   mEnable(enable),
-  mEnableAlso(enable_also)
+  mEnableAlso(enable_also),
+  mDataIn(data_in)
 {
 }
 
@@ -78,7 +99,7 @@ AstLatch::set_data(const AstNode* node)
 // @param[in] indent インデント量
 void
 AstLatch::dump(ostream& s,
-		  int indent) const
+	       int indent) const
 {
 #warning "TODO: 未完成"
 }

@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "AstNum.h"
+#include "AstNode.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

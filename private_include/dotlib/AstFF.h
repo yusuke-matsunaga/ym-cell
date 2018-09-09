@@ -1,5 +1,5 @@
-﻿#ifndef ASTff_H
-#define ASTff_H
+﻿#ifndef ASTFF_H
+#define ASTFF_H
 
 /// @file AstFF.h
 /// @brief AstFF のヘッダファイル
@@ -30,19 +30,19 @@ public:
   /// @param[in] preset プリセット条件
   /// @param[in] clear_preset_var1 'clear_preset_var1'
   /// @param[in] clear_preset_var2 'clear_preset_var2'
-  /// @param[in] next_state 次状態遷移条件
   /// @param[in] clocked_on クロック条件
   /// @param[in] clocked_on_also 追加クロック条件
+  /// @param[in] next_state 次状態遷移条件
   AstFF(const FileRegion& loc,
 	const AstString* var1,
 	const AstString* var2,
 	const AstExpr* clear,
 	const AstExpr* preset,
-	int clear_preset_var1,
-	int clear_preset_var2,
-	const AstExpr* next_state,
+	const AstCPType* clear_preset_var1,
+	const AstCPType* clear_preset_var2,
 	const AstExpr* clocked_on,
-	const AstExpr* clocked_on_also);
+	const AstExpr* clocked_on_also,
+	const AstExpr* next_state);
 
   /// @brief デストラクタ
   ~AstFF();
@@ -53,10 +53,6 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief "next_state" を返す．
-  const AstExpr*
-  next_state() const;
-
   /// @brief "clocked_on" を返す．
   const AstExpr*
   clocked_on() const;
@@ -64,6 +60,10 @@ public:
   /// @brief "clocked_on_also" を返す．
   const AstExpr*
   clocked_on_also() const;
+
+  /// @brief "next_state" を返す．
+  const AstExpr*
+  next_state() const;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -78,14 +78,14 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // next_state
-  const AstExpr* mNextState;
-
   // clocked_on
   const AstExpr* mClockedOn;
 
   // clocked_on_also
   const AstExpr* mClockedOnAlso;
+
+  // next_state
+  const AstExpr* mNextState;
 
 };
 
@@ -93,14 +93,6 @@ private:
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
-
-// @brief "next_state" を返す．
-inline
-const AstExpr*
-AstFF::next_state() const
-{
-  return mNextState;
-}
 
 // @brief "clocked_on" を返す．
 inline
@@ -118,6 +110,14 @@ AstFF::clocked_on_also() const
   return mClockedOnAlso;
 }
 
+// @brief "next_state" を返す．
+inline
+const AstExpr*
+AstFF::next_state() const
+{
+  return mNextState;
+}
+
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTff_H
+#endif // ASTFF_H

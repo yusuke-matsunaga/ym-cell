@@ -1,5 +1,5 @@
-﻿#ifndef ASTVARtype_H
-#define ASTVARtype_H
+﻿#ifndef ASTVARTYPE_H
+#define ASTVARTYPE_H
 
 /// @file AstVarType.h
 /// @brief AstVarType の継承クラスのヘッダファイル
@@ -75,4 +75,4 @@ AstVarType::value() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTVARtype_H
+#endif // ASTVARTYPE_H

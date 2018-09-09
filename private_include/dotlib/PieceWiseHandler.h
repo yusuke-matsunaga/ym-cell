@@ -37,11 +37,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief piece_wise attribute の記述をパースする．
-  /// @param[in] dst 読み込んだ値を格納する変数
+  /// @param[in] dst_list 読み込んだ値を格納するリスト
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  parse_value(const AstPieceWise*& dst);
+  parse_value(vector<const AstPieceWise*>& dst_list);
 
 
 protected:

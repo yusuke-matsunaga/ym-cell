@@ -1,5 +1,5 @@
-﻿#ifndef ASTtimingtype_H
-#define ASTtimingtype_H
+﻿#ifndef ASTTIMINGTYPE_H
+#define ASTTIMINGTYPE_H
 
 /// @file AstTimingType.h
 /// @brief AstTimingType の継承クラスのヘッダファイル
@@ -75,4 +75,4 @@ AstTimingType::value() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTtimingtype_H
+#endif // ASTTIMINGTYPE_H

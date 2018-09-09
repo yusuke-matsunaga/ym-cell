@@ -36,8 +36,8 @@ public:
   AstDomain(const FileRegion& loc,
 	    const AstString* name,
 	    const AstString* calc_mode,
-	    const AstString* coefs,
-	    const AstString* orders,
+	    const AstFloatVector* coefs,
+	    const AstIntVector* orders,
 	    const AstVariableRange* var1_range,
 	    const AstVariableRange* var2_range,
 	    const AstVariableRange* var3_range);
@@ -61,11 +61,11 @@ public:
   calc_mode() const;
 
   /// @brief coefs 属性を返す．
-  const AstString*
+  const AstFloatVector*
   coefs() const;
 
   /// @brief orders 属性を返す．
-  const AstString*
+  const AstIntVector*
   orders() const;
 
   /// @brief variable_1_range 属性を返す．
@@ -106,10 +106,10 @@ private:
   const AstString* mCalcMode;
 
   // coefs 属性
-  const AstString* mCoefs;
+  const AstFloatVector* mCoefs;
 
   // orders 属性
-  const AstString* mOrders;
+  const AstIntVector* mOrders;
 
   // variable_1_range 属性
   const AstVariableRange* mVar1Range;
@@ -145,7 +145,7 @@ AstDomain::calc_mode() const
 
 // @brief coefs 属性を返す．
 inline
-const AstString*
+const AstFloatVector*
 AstDomain::coefs() const
 {
   return mCoefs;
@@ -153,7 +153,7 @@ AstDomain::coefs() const
 
 // @brief orders 属性を返す．
 inline
-const AstString*
+const AstIntVector*
 AstDomain::orders() const
 {
   return mOrders;

@@ -1,5 +1,5 @@
-﻿#ifndef ASTcell_H
-#define ASTcell_H
+﻿#ifndef ASTCELL_H
+#define ASTCELL_H
 
 /// @file AstCell.h
 /// @brief AstCell のヘッダファイル
@@ -271,4 +271,4 @@ AstCell::state_table() const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTcell_H
+#endif // ASTCELL_H

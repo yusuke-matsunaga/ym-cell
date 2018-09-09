@@ -1,5 +1,5 @@
-﻿#ifndef ASTlatch_H
-#define ASTlatch_H
+﻿#ifndef ASTLATCH_H
+#define ASTLATCH_H
 
 /// @file AstLatch.h
 /// @brief AstLatch のヘッダファイル
@@ -38,8 +38,8 @@ public:
 	   const AstString* var2,
 	   const AstExpr* clear,
 	   const AstExpr* preset,
-	   int clear_preset_var1,
-	   int clear_preset_var2,
+	   const AstCPType* clear_preset_var1,
+	   const AstCPType* clear_preset_var2,
 	   const AstExpr* data_in,
 	   const AstExpr* enable,
 	   const AstExpr* enable_also);
@@ -53,10 +53,6 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief "data_in" を返す．
-  const AstExpr*
-  data_in() const;
-
   /// @brief "enable" を返す．
   const AstExpr*
   enable() const;
@@ -64,6 +60,10 @@ public:
   /// @brief "enable_also" を返す．
   const AstExpr*
   enable_also() const;
+
+  /// @brief "data_in" を返す．
+  const AstExpr*
+  data_in() const;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -78,14 +78,14 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // data_in
-  const AstExpr* mDataIn;
-
   // enable
   const AstExpr* mEnable;
 
   // enable_also
   const AstExpr* mEnableAlso;
+
+  // data_in
+  const AstExpr* mDataIn;
 
 };
 
@@ -93,14 +93,6 @@ private:
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
-
-// @brief "data_in" を返す．
-inline
-const AstExpr*
-AstLatch::data_in() const
-{
-  return mDataIn;
-}
 
 // @brief "enable" を返す．
 inline
@@ -118,6 +110,14 @@ AstLatch::enable_also() const
   return mEnableAlso;
 }
 
+// @brief "data_in" を返す．
+inline
+const AstExpr*
+AstLatch::data_in() const
+{
+  return mDataIn;
+}
+
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTlatch_H
+#endif // ASTLATCH_H

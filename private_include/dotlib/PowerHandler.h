@@ -10,6 +10,7 @@
 
 #include "Str1GroupHandler.h"
 
+#error "Dont't include me"
 
 BEGIN_NAMESPACE_YM_DOTLIB
 

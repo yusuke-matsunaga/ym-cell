@@ -700,8 +700,8 @@ set_library(const AstLibrary* dt_library,
       Expr clocked_on_also = gen_expr(ff_info->clocked_on_also(), pin_map, dummy);
       Expr clear = gen_expr(ff_info->clear(), pin_map, dummy);
       Expr preset = gen_expr(ff_info->preset(), pin_map, dummy);
-      int v1 = ff_info->clear_preset_var1();
-      int v2 = ff_info->clear_preset_var2();
+      AstCPType::Type v1 = ff_info->clear_preset_var1()->value();
+      AstCPType::Type v2 = ff_info->clear_preset_var2()->value();
       cell = library->new_ff_cell(cell_name, area,
 				  input_list,
 				  output_list,
@@ -722,8 +722,8 @@ set_library(const AstLibrary* dt_library,
       Expr enable_also = gen_expr(latch_info->enable_also(), pin_map, dummy);
       Expr clear = gen_expr(latch_info->clear(), pin_map, dummy);
       Expr preset = gen_expr(latch_info->preset(), pin_map, dummy);
-      int v1 = latch_info->clear_preset_var1();
-      int v2 = latch_info->clear_preset_var2();
+      AstCPType::Type v1 = latch_info->clear_preset_var1()->value();
+      AstCPType::Type v2 = latch_info->clear_preset_var2()->value();
       cell = library->new_latch_cell(cell_name, area,
 				     input_list,
 				     output_list,

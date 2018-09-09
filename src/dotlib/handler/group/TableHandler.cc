@@ -8,8 +8,6 @@
 
 
 #include "dotlib/TableHandler.h"
-#include "dotlib/IndexHandler.h"
-#include "dotlib/ValuesHandler.h"
 #include "dotlib/AstMgr.h"
 #include "ym/MsgMgr.h"
 
@@ -25,6 +23,37 @@ BEGIN_NAMESPACE_YM_DOTLIB
 TableHandler::TableHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
+  // パース関数の登録
+  reg_func(AttrType::index_1,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_index(mIndex1, attr_type, attr_loc); });
+  reg_func(AttrType::index_2,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_index(mIndex2, attr_type, attr_loc); });
+  reg_func(AttrType::index_3,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_index(mIndex3, attr_type, attr_loc); });
+  reg_func(AttrType::values,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_values(mValues, attr_type, attr_loc); });
+  reg_func(AttrType::coefs,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_coefs(mCoefs, attr_type, attr_loc); });
+  reg_func(AttrType::orders,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_orders(mOrders, attr_type, attr_loc); });
+  reg_func(AttrType::variable_1_range,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_variable_range(mVar1Range, attr_type, attr_loc); });
+  reg_func(AttrType::variable_2_range,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_variable_range(mVar2Range, attr_type, attr_loc); });
+  reg_func(AttrType::variable_3_range,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_variable_range(mVar3Range, attr_type, attr_loc); });
+  reg_func(AttrType::domain,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_domain(mDomain, attr_type, attr_loc); });
 }
 
 // @brief デストラクタ
@@ -58,30 +87,6 @@ TableHandler::begin_group()
   mValue = nullptr;
 }
 
-#if 0
-// @brief attr_type に対応する属性を読み込む．
-// @param[in] attr_type 対象の属性
-// @param[in] attr_loc attr_type のファイル上の位置
-// @retval true 正常に処理した．
-// @retval false 処理中にエラーが起こった．
-bool
-TableHandler::read_group_attr(AttrType attr_type,
-			      const FileRegion& attr_loc)
-{
-  switch ( attr_type ) {
-  case AttrType::index_1: return parse_index(mIndex1,  attr_type, attr_loc);
-  case AttrType::index_2: return parse_index(mIndex2,  attr_type, attr_loc);
-  case AttrType::index_3: return parse_index(mIndex3,  attr_type, attr_loc);
-  case AttrType::values:  return parse_values(mValues, attr_type, attr_loc);
-  case AttrType::domain:  return parse_domain(mDomain, attr_type, attr_loc);
-  default:
-    break;
-  }
-  syntax_error(attr_type, attr_loc);
-  return false;
-}
-#endif
-
 // @brief グループ記述の終わり
 // @param[in] group_loc グループ全体のファイル上の位置
 // @retval true 正常にパーズした．
@@ -94,12 +99,14 @@ TableHandler::end_group(const FileRegion& group_loc)
 		    group_loc,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
-		    "values is missing.");
+		    "'values' is missing.");
     return false;
   }
   else {
     mValue = mgr().new_lut(group_loc, header_value(),
-			   mIndex1, mIndex2, mIndex3, mValues, mDomain);
+			   mIndex1, mIndex2, mIndex3, mValues,
+			   mCoefs, mOrders,
+			   mVar1Range, mVar2Range, mVar3Range, mDomain);
     return true;
   }
 }

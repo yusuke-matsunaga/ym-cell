@@ -68,20 +68,6 @@ private:
   // 内部で使われる下請け関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 'variable_n_range' Complex Attribute のパースを行う．
-  /// @param[in] dst 結果を格納する変数
-  /// @param[in] attr_type 属性の型
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_vrange(const AstVariableRange*& dst,
-	       AttrType attr_type,
-	       const FileRegion& attr_loc);
-
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -92,10 +78,10 @@ private:
   const AstString* mCalcMode;
 
   // coefs
-  const AstString* mCoefs;
+  const AstFloatVector* mCoefs;
 
   // orders
-  const AstString* mOrders;
+  const AstIntVector* mOrders;
 
   // variable_1_range
   const AstVariableRange* mVar1Range;

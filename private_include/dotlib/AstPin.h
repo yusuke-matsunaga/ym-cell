@@ -1,5 +1,5 @@
-﻿#ifndef ASTpin_H
-#define ASTpin_H
+﻿#ifndef ASTPIN_H
+#define ASTPIN_H
 
 /// @file AstPin.h
 /// @brief AstPin のヘッダファイル
@@ -372,4 +372,4 @@ AstPin::timing_elem(int pos) const
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTpin_H
+#endif // ASTPIN_H

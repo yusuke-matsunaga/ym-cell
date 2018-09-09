@@ -110,7 +110,7 @@ IndexHandler::read_header_value(TokenType value_type,
     value_list.push_back(strtod(buf.c_str(), nullptr));
   }
 
-  mValue = mgr().new_vector(value_loc, value_list);
+  mValue = mgr().new_float_vector(value_loc, value_list);
 
   return true;
 }

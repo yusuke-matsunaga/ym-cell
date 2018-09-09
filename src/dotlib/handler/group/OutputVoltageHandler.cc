@@ -26,33 +26,17 @@ OutputVoltageHandler::OutputVoltageHandler(DotlibParser& parser) :
 {
   // パース関数の登録
   reg_func(AttrType::vol,
-	   [=](DotlibParser& parser,
-	       AttrType attr_type,
-	       const FileRegion& attr_loc) -> bool
-	   {
-	     return parser.parse_expr(mVol, attr_type, attr_loc);
-	   });
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_expr(mVol, attr_type, attr_loc); });
   reg_func(AttrType::voh,
-	   [=](DotlibParser& parser,
-	       AttrType attr_type,
-	       const FileRegion& attr_loc) -> bool
-	   {
-	     return parser.parse_expr(mVoh, attr_type, attr_loc);
-	   });
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_expr(mVoh, attr_type, attr_loc); });
   reg_func(AttrType::vomin,
-	   [=](DotlibParser& parser,
-	       AttrType attr_type,
-	       const FileRegion& attr_loc) -> bool
-	   {
-	     return parser.parse_expr(mVomin, attr_type, attr_loc);
-	   });
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_expr(mVomin, attr_type, attr_loc); });
   reg_func(AttrType::vomax,
-	   [=](DotlibParser& parser,
-	       AttrType attr_type,
-	       const FileRegion& attr_loc) -> bool
-	   {
-	     return parser.parse_expr(mVomax, attr_type, attr_loc);
-	   });
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_expr(mVomax, attr_type, attr_loc); });
 }
 
 // @brief デストラクタ

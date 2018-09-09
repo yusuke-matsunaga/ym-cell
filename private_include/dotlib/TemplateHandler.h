@@ -65,18 +65,6 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief VarType に共通の処理を行う．
-  bool
-  parse_vartype(const AstVarType*& dst,
-		AttrType attr_type,
-		const FileRegion& attr_loc);
-
-  /// @brief Index に共通の処理を行う．
-  bool
-  parse_index(const AstFloatVector*& dst,
-	      AttrType attr_type,
-	      const FileRegion& attr_loc);
-
 
 private:
   //////////////////////////////////////////////////////////////////////

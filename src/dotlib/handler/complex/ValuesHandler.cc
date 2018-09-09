@@ -122,7 +122,7 @@ ValuesHandler::end_header(const FileRegion& header_loc,
     return false;
   }
   else {
-    mValue = mgr().new_vector(header_loc, mValueList);
+    mValue = mgr().new_float_vector(header_loc, mValueList);
     return true;
   }
 }

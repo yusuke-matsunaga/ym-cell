@@ -258,15 +258,15 @@ public:
 	      const FileRegion& attr_loc);
 
   /// @brief piecewise attribute のパースを行う．
-  /// @param[in] dst 結果を格納する変数
+  /// @param[in] dst_list 結果を格納するリスト
   /// @param[in] attr_type 属性の型
   /// @param[in] attr_loc 属性のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  /// この属性は重複チェックは行わない．
   bool
-  parse_piecewise(const AstPieceWise*& dst,
+  parse_piecewise(vector<const AstPieceWise*>& dst_list,
 		  AttrType attr_type,
 		  const FileRegion& attr_loc);
 
@@ -295,6 +295,32 @@ public:
   parse_values(const AstFloatVector*& dst,
 	       AttrType attr_type,
 	       const FileRegion& attr_loc);
+
+  /// @brief coefs attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_coefs(const AstFloatVector*& dst,
+	      AttrType attr_type,
+	      const FileRegion& attr_loc);
+
+  /// @brief orders attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_orders(const AstIntVector*& dst,
+	       AttrType attr_type,
+	      const FileRegion& attr_loc);
 
   /// @brief variable_n_range attribute のパースを行う．
   /// @param[in] dst 結果を格納する変数
@@ -427,19 +453,6 @@ public:
   parse_pin(vector<const AstPin*>& dst_list,
 	    AttrType attr_type,
 	    const FileRegion& attr_loc);
-
-  /// @brief 'power' Group Statement のパースを行う．
-  /// @param[in] dst 結果を格納する変数
-  /// @param[in] attr_type 属性の型
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_power(const AstLut*& dst,
-	      AttrType attr_type,
-	      const FileRegion& attr_loc);
 
   /// @brief 'table' Group Statement のパースを行う．
   /// @param[in] dst 結果を格納する変数

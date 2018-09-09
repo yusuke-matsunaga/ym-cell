@@ -23,8 +23,8 @@ AstFL::AstFL(const FileRegion& loc,
 	     const AstString* var2,
 	     const AstExpr* clear,
 	     const AstExpr* preset,
-	     int clear_preset_var1,
-	     int clear_preset_var2) :
+	     const AstCPType* clear_preset_var1,
+	     const AstCPType* clear_preset_var2) :
   AstNode(loc),
   mVar1(var1),
   mVar2(var2),

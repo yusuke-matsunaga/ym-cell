@@ -44,6 +44,7 @@ GroupHandler::read_group_attr(AttrType attr_type,
   }
   else {
     syntax_error(attr_type, attr_loc);
+    return false;
   }
 }
 

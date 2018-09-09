@@ -1,5 +1,5 @@
 
-/// @file TableHandler.cc
+/// @file DomainHandler.cc
 /// @brief DomainHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
@@ -8,9 +8,7 @@
 
 
 #include "dotlib/DomainHandler.h"
-#include "dotlib/VariableRangeHandler.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstVariableRange.h"
 #include "ym/MsgMgr.h"
 
 
@@ -106,30 +104,6 @@ DomainHandler::end_group(const FileRegion& group_loc)
 			      mCalcMode, mCoefs, mOrders,
 			      mVar1Range, mVar2Range, mVar3Range);
     return true;
-  }
-}
-
-// @brief 'variable_n_range' Complex Attribute のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-bool
-DomainHandler::parse_vrange(const AstVariableRange*& dst,
-			    AttrType attr_type,
-			    const FileRegion& attr_loc)
-{
-  if ( dst != nullptr ) {
-    // 重複していた．
-    duplicate_error(attr_type, attr_loc, dst);
-    return false;
-  }
-  else {
-    VariableRangeHandler handler(parser());
-    return handler.parse_value(dst);
   }
 }
 

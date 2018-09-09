@@ -84,6 +84,21 @@ private:
   // values
   const AstFloatVector* mValues;
 
+  // coefs
+  const AstFloatVector* mCoefs;
+
+  // orders
+  const AstIntVector* mOrders;
+
+  // variable_1_range
+  const AstVariableRange* mVar1Range;
+
+  // variable_2_range
+  const AstVariableRange* mVar2Range;
+
+  // variable_3_range
+  const AstVariableRange* mVar3Range;
+
   // domain
   const AstDomain* mDomain;
 

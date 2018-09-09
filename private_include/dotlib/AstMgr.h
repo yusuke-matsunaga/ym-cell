@@ -9,8 +9,9 @@
 /// All rights reserved.
 
 
-#include "dotlib_nsdef.h"
-#include "AttrType.h"
+#include "dotlib/dotlib_nsdef.h"
+#include "dotlib/AttrType.h"
+#include "dotlib/AstCPType.h"
 #include "ym/ShString.h"
 #include "ym/FileRegion.h"
 #include "ym/SimpleAlloc.h"
@@ -61,12 +62,26 @@ public:
   new_int(const FileRegion& loc,
 	  int value);
 
+  /// @brief 整数値のベクタを表す AstNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  /// @param[in] value 値
+  AstIntVector*
+  new_int_vector(const FileRegion& loc,
+		 const vector<int>& value);
+
   /// @brief 実数値を表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
   /// @param[in] value 値
   AstFloat*
   new_float(const FileRegion& loc,
 	    double value);
+
+  /// @brief 実数値のベクタを表す AstNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  /// @param[in] value_list 値のリスト
+  AstFloatVector*
+  new_float_vector(const FileRegion& loc,
+		   const vector<double>& value_list);
 
   /// @brief 文字列シンボルを表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
@@ -75,12 +90,12 @@ public:
   new_string(const FileRegion& loc,
 	     ShString value);
 
-  /// @brief ベクタを表す AstNode を生成する．
+  /// @brief 文字列のベクタを表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
-  /// @param[in] value_list 値のリスト
-  AstFloatVector*
-  new_vector(const FileRegion& loc,
-	     const vector<double>& value_list);
+  /// @param[in] value 値
+  AstStringVector*
+  new_string_vector(const FileRegion& loc,
+		    const vector<ShString>& value);
 
   /// @brief ライブラリを表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
@@ -176,6 +191,72 @@ public:
 	  const AstNode* internal_node,
 	  const AstNode* pin_func_type,
 	  const vector<const AstTiming*>& timing_list);
+
+  /// @brief cell_degradation を表す AstNode を生成する．
+  AstCellDegradation*
+  new_cell_degradation(const FileRegion& loc,
+		       const AstString* name,
+		       const AstString* calc_mode,
+		       const AstFloatVector* index_1,
+		       const AstFloatVector* values,
+		       const AstFloatVector* coefs,
+		       const AstIntVector* orders,
+		       const AstVariableRange* variable_1_range,
+		       const AstDomain* domain);
+
+  /// @brief ff を表す AstNode を生成する．
+  AstFF*
+  new_ff(const FileRegion& loc,
+	 const AstString* var1,
+	 const AstString* var2,
+	 const AstExpr* clear,
+	 const AstExpr* preset,
+	 const AstCPType* clear_preset_var1,
+	 const AstCPType* clear_preset_var2,
+	 const AstExpr* clocked_on,
+	 const AstExpr* clocked_on_also,
+	 const AstExpr* next_state);
+
+  /// @brief ff を表す AstNode を生成する．
+  AstFFBank*
+  new_ff_bank(const FileRegion& loc,
+	      const AstString* var1,
+	      const AstString* var2,
+	      const AstInt* bits,
+	      const AstExpr* clear,
+	      const AstExpr* preset,
+	      const AstCPType* clear_preset_var1,
+	      const AstCPType* clear_preset_var2,
+	      const AstExpr* clocked_on,
+	      const AstExpr* clocked_on_also,
+	      const AstExpr* next_state);
+
+  /// @brief latch を表す AstNode を生成する．
+  AstLatch*
+  new_latch(const FileRegion& loc,
+	    const AstString* var1,
+	    const AstString* var2,
+	    const AstExpr* clear,
+	    const AstExpr* preset,
+	    const AstCPType* clear_preset_var1,
+	    const AstCPType* clear_preset_var2,
+	    const AstExpr* enable_on,
+	    const AstExpr* enable_on_also,
+	    const AstExpr* data_in);
+
+  /// @brief latch を表す AstNode を生成する．
+  AstLatchBank*
+  new_latch_bank(const FileRegion& loc,
+		 const AstString* var1,
+		 const AstString* var2,
+		 const AstInt* bits,
+		 const AstExpr* clear,
+		 const AstExpr* preset,
+		 const AstCPType* clear_preset_var1,
+		 const AstCPType* clear_preset_var2,
+		 const AstExpr* enable_on,
+		 const AstExpr* enable_on_also,
+		 const AstExpr* data_in);
 
 
 public:
@@ -287,6 +368,11 @@ public:
 	  const AstFloatVector* index_2,
 	  const AstFloatVector* index_3,
 	  const AstFloatVector* value_list,
+	  const AstFloatVector* coefs,
+	  const AstIntVector* orders,
+	  const AstVariableRange* variable_1_range,
+	  const AstVariableRange* variable_2_range,
+	  const AstVariableRange* variable_3_range,
 	  const AstDomain* domain);
 
   /// @brief input voltage を表す AstNode を生成する．
@@ -369,14 +455,15 @@ public:
   new_domain(const FileRegion& loc,
 	     const AstString* name,
 	     const AstString* calc_mode,
-	     const AstString* coefs,
-	     const AstString* orders,
+	     const AstFloatVector* coefs,
+	     const AstIntVector* orders,
 	     const AstVariableRange* var1_range,
 	     const AstVariableRange* var2_range,
 	     const AstVariableRange* var3_range);
 
   /// @brief timing を表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
+  /// @param[in] name
   /// @param[in] related_pin
   /// @param[in] related_bus_pins
   /// @param[in] related_bus_equivalent
@@ -410,6 +497,7 @@ public:
   /// @param[in] retainfall_slew
   AstTiming*
   new_timing(const FileRegion& loc,
+	     const AstString* name,
 	     const AstString* related_pin,
 	     const AstString* related_bus_pins,
 	     const AstString* related_bus_equivalent,
@@ -424,23 +512,30 @@ public:
 	     const AstFloat* intrinsic_fall,
 	     const AstFloat* slope_rise,
 	     const AstFloat* slope_fall,
-	     const AstPieceWise* rise_delay_intercept,
-	     const AstPieceWise* fall_delay_intercept,
-	     const AstPieceWise* rise_pin_resistance,
-	     const AstPieceWise* fall_pin_resistance,
-	     const AstFloat* cell_degradation,
+	     const vector<const AstPieceWise*>& rise_delay_intercept,
+	     const vector<const AstPieceWise*>& fall_delay_intercept,
+	     const vector<const AstPieceWise*>& rise_pin_resistance,
+	     const vector<const AstPieceWise*>& fall_pin_resistance,
+	     const AstCellDegradation* cell_degradation,
 	     const AstLut* cell_rise,
 	     const AstLut* cell_fall,
+	     const AstCCS* compact_ccs_rise,
+	     const AstCCS* compact_ccs_fall,
 	     const AstLut* rise_constraint,
 	     const AstLut* fall_constraint,
 	     const AstLut* rise_propagation,
 	     const AstLut* fall_propagation,
 	     const AstLut* rise_transition,
 	     const AstLut* fall_transition,
-	     const AstFloat* retaining_rise,
-	     const AstFloat* retaining_fall,
-	     const AstFloat* retain_rise_slew,
-	     const AstFloat* retain_fall_slew);
+	     const AstLut* retaining_rise,
+	     const AstLut* retaining_fall,
+	     const AstLut* retain_rise_slew,
+	     const AstLut* retain_fall_slew);
+
+  /// @brief clear_preset_var の値を表す AstNode を生成する．
+  AstCPType*
+  new_cptype(const FileRegion& loc,
+	     AstCPType::Type value);
 
   /// @brief timing_sense を表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
@@ -497,10 +592,14 @@ private:
 
   // 個々の要素の使用数
   int mIntNum;
+  int mIntVectNum;
+  int mIntVectElemSize;
   int mFloatNum;
+  int mFloatVectNum;
+  int mFloatVectElemSize;
   int mStrNum;
-  int mVectNum;
-  int mVectElemSize;
+  int mStrVectNum;
+  int mStrVectElemSize;
   int mBoolNum;
   int mOprNum;
   int mNotNum;
@@ -523,6 +622,10 @@ private:
   int mTimingTypeNum;
   int mVarTypeNum;
   int mVarRangeNum;
+  int mFFNum;
+  int mFFBankNum;
+  int mLatchNum;
+  int mLatchBankNum;
   int mAttrNum;
 };
 

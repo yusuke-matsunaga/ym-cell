@@ -21,11 +21,18 @@ AstMgr::new_lut(const FileRegion& loc,
 		const AstFloatVector* index_2,
 		const AstFloatVector* index_3,
 		const AstFloatVector* value_list,
+		const AstFloatVector* coefs,
+		const AstIntVector* orders,
+		const AstVariableRange* variable_1_range,
+		const AstVariableRange* variable_2_range,
+		const AstVariableRange* variable_3_range,
 		const AstDomain* domain)
 {
   ++ mLutNum;
   void* p = mAlloc.get_memory(sizeof(AstLut));
-  return new (p) AstLut(loc, name, index_1, index_2, index_3, value_list, domain);
+  return new (p) AstLut(loc, name, index_1, index_2, index_3, value_list,
+			coefs, orders, variable_1_range, variable_2_range, variable_3_range,
+			domain);
 }
 
 
@@ -44,6 +51,11 @@ AstLut::AstLut(const FileRegion& loc,
 	       const AstFloatVector* index_2,
 	       const AstFloatVector* index_3,
 	       const AstFloatVector* value_list,
+	       const AstFloatVector* coefs,
+	       const AstIntVector* orders,
+	       const AstVariableRange* variable_1_range,
+	       const AstVariableRange* variable_2_range,
+	       const AstVariableRange* variable_3_range,
 	       const AstDomain* domain) :
   AstNode(loc),
   mName(name),
@@ -51,6 +63,11 @@ AstLut::AstLut(const FileRegion& loc,
   mIndex2(index_2),
   mIndex3(index_3),
   mValueList(value_list),
+  mCoefs(coefs),
+  mOrders(orders),
+  mVar1Range(variable_1_range),
+  mVar2Range(variable_2_range),
+  mVar3Range(variable_3_range),
   mDomain(domain)
 {
 }

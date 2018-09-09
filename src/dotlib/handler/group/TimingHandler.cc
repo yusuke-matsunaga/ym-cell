@@ -8,6 +8,7 @@
 
 
 #include "dotlib/TimingHandler.h"
+#if 0
 #include "dotlib/FloatHandler.h"
 #include "dotlib/FuncHandler.h"
 #include "dotlib/PieceWiseHandler.h"
@@ -15,6 +16,10 @@
 #include "dotlib/StringHandler.h"
 #include "dotlib/TimingSenseHandler.h"
 #include "dotlib/TimingTypeHandler.h"
+#endif
+#include "dotlib/AstMgr.h"
+#include "dotlib/TokenType.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -26,90 +31,160 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 TimingHandler::TimingHandler(DotlibParser& parser) :
-  EmptyGroupHandler(parser)
+  GroupHandler(parser)
 {
-#if 0
-  reg_handler(AttrType::RELATED_bus_EQUIVALENT,                      str_simple);
-  reg_handler(AttrType::RELATED_bus_pinS,                            str_simple);
-  reg_handler(AttrType::RELATED_OUTPUT_pin,                          str_simple);
-  reg_handler(AttrType::RELATED_pin,                                 str_simple);
+  // パース関数の登録
+  reg_func(AttrType::clock_gating_flag,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mClockGatingFlag, attr_type, attr_loc); });
+  reg_func(AttrType::default_timing,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mDefaultTiming, attr_type, attr_loc); });
+  reg_func(AttrType::fall_resistance,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mFallResistance, attr_type, attr_loc); });
+  reg_func(AttrType::fpga_arc_condition,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_function(mFpgaArcCondition, attr_type, attr_loc); });
+  reg_func(AttrType::fpga_domain_style,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mFpgaDomainStyle, attr_type, attr_loc); });
+  reg_func(AttrType::interdependence_id,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_int(mInterdependenceId, attr_type, attr_loc); });
+  reg_func(AttrType::intrinsic_fall,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mIntrinsicFall, attr_type, attr_loc); });
+  reg_func(AttrType::intrinsic_rise,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mIntrinsicRise, attr_type, attr_loc); });
+  reg_func(AttrType::related_bus_equivalent,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mRelatedBusEquivalent, attr_type, attr_loc); });
+  reg_func(AttrType::related_bus_pins,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mRelatedBusPins, attr_type, attr_loc); });
+  reg_func(AttrType::related_output_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mRelatedOutputPin, attr_type, attr_loc); });
+  reg_func(AttrType::related_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mRelatedPin, attr_type, attr_loc); });
+  reg_func(AttrType::rise_resistance,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mRiseResistance, attr_type, attr_loc); });
+  // sdf_cond
+  // sdf_cond_end
+  // sdf_cond_start
+  // sdf_edges
+  reg_func(AttrType::slope_fall,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mSlopeFall, attr_type, attr_loc); });
+  reg_func(AttrType::slope_rise,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mSlopeRise, attr_type, attr_loc); });
+  reg_func(AttrType::steady_state_resistance_above_high,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mSteadyStateResistanceAboveHigh, attr_type, attr_loc); });
+  reg_func(AttrType::steady_state_resistance_below_low,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mSteadyStateResistanceBelowLow, attr_type, attr_loc); });
+  reg_func(AttrType::tied_off,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mTiedOff, attr_type, attr_loc); });
+  reg_func(AttrType::timing_sense,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_timing_sense(mTimingSense, attr_type, attr_loc); });
+  reg_func(AttrType::timing_type,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_timing_type(mTimingType, attr_type, attr_loc); });
+  reg_func(AttrType::when,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_function(mWhen, attr_type, attr_loc); });
+  reg_func(AttrType::when_end,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_function(mWhenEnd, attr_type, attr_loc); });
+  reg_func(AttrType::when_start,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_function(mWhenStart, attr_type, attr_loc); });
 
-  reg_handler(AttrType::timing_sense,                                ts_handler);
-  reg_handler(AttrType::timing_type,                                 tt_handler);
+  reg_func(AttrType::fall_delay_intercept,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_piecewise(mFallDelayIntercept, attr_type, attr_loc); });
+  reg_func(AttrType::fall_pin_resistance,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_piecewise(mFallPinResistance, attr_type, attr_loc); });
+  reg_func(AttrType::rise_delay_intercept,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_piecewise(mRiseDelayIntercept, attr_type, attr_loc); });
+  reg_func(AttrType::rise_pin_resistance,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_piecewise(mRisePinResistance, attr_type, attr_loc); });
 
-  reg_handler(AttrType::edge_rate_sensitivity_f0,                    simple);
-  reg_handler(AttrType::edge_rate_sensitivity_f1,                    simple);
-  reg_handler(AttrType::edge_rate_sensitivity_r0,                    simple);
-  reg_handler(AttrType::edge_rate_sensitivity_r1,                    simple);
+  // cell_degradation
 
-  reg_handler(AttrType::RISE_resistance,                             flt_simple);
-  reg_handler(AttrType::fall_resistance,                             flt_simple);
-  reg_handler(AttrType::intrinsic_rise,                              flt_simple);
-  reg_handler(AttrType::intrinsic_fall,                              flt_simple);
+  reg_func(AttrType::cell_fall,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_table(mCellFall, attr_type, attr_loc); });
+  reg_func(AttrType::cell_rise,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_table(mCellRise, attr_type, attr_loc); });
+  reg_func(AttrType::fall_constraint,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_table(mFallConstraint, attr_type, attr_loc); });
+  reg_func(AttrType::fall_propagation,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_table(mFallPropagation, attr_type, attr_loc); });
+  reg_func(AttrType::fall_transition,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_table(mFallTransition, attr_type, attr_loc); });
 
-  reg_handler(AttrType::sdf_cond,                                    simple);
-  reg_handler(AttrType::sdf_cond_end,                                simple);
-  reg_handler(AttrType::sdf_cond_start,                              simple);
-  reg_handler(AttrType::sdf_edges,                                   simple);
+  // noise_immunity_above_high
+  // noise_immunity_below_low
+  // noise_immunity_high
+  // noise_immunity_low
 
-  reg_handler(AttrType::slope_fall,                                  flt_simple);
-  reg_handler(AttrType::slope_rise,                                  flt_simple);
+  reg_func(AttrType::output_current_fall,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_table(mOutputCurrentFall, attr_type, attr_loc); });
+  reg_func(AttrType::output_current_rise,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_table(mOutputCurrentRise, attr_type, attr_loc); });
 
-  reg_handler(AttrType::when,                                        func_handler);
-  reg_handler(AttrType::when_end,                                    func_handler);
-  reg_handler(AttrType::when_start,                                  func_handler);
+  // propagated_noise_height_above_high
+  // propagated_noise_height_below_low
+  // propagated_noise_height_high
+  // propagated_noise_height_low
+  // propagated_noise_peak_time_ratio_above_high
+  // propagated_noise_peak_time_ratio_below_low
+  // propagated_noise_peak_time_ratio_high
+  // propagated_noise_peak_time_ratio_low
+  // propagated_noise_width_above_high
+  // propagated_noise_width_below_low
+  // propagated_noise_width_high
+  // propagated_noise_width_low
+  // receiver_capacitance1_fall
+  // receiver_capacitance1_rise
+  // receiver_capacitance2_fall
+  // receiver_capacitance2_rise
+  // retaining_fall
+  // retaining_rise
+  // retain_fall_slew
+  // retain_rise_slew
 
-  // complex attribute
-  reg_handler(AttrType::rise_delay_intercept,                        pw_complex);
-  reg_handler(AttrType::fall_delay_intercept,                        pw_complex);
-  reg_handler(AttrType::RISE_pin_resistance,                         pw_complex);
-  reg_handler(AttrType::fall_pin_resistance,                         pw_complex);
-  reg_handler(AttrType::orders,                                      complex);
-  reg_handler(AttrType::coefs,                                       complex);
+  reg_func(AttrType::rise_constraint,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_table(mRiseConstraint, attr_type, attr_loc); });
+  reg_func(AttrType::rise_propagation,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_table(mRisePropagation, attr_type, attr_loc); });
+  reg_func(AttrType::rise_transition,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_table(mRiseTransition, attr_type, attr_loc); });
 
-  // group statements
-  reg_handler(AttrType::cell_degradation,                            g_group);
-
-  reg_handler(AttrType::cell_rise,                                   table_handler);
-  reg_handler(AttrType::cell_fall,                                   table_handler);
-
-  reg_handler(AttrType::rise_constraint,                             table_handler);
-  reg_handler(AttrType::fall_constraint,                             table_handler);
-
-  reg_handler(AttrType::rise_propagation,                            table_handler);
-  reg_handler(AttrType::fall_propagation,                            table_handler);
-
-  reg_handler(AttrType::rise_transition,                             table_handler);
-  reg_handler(AttrType::fall_transition,                             table_handler);
-
-  reg_handler(AttrType::noise_immunity_above_high,                   g_group);
-  reg_handler(AttrType::noise_immunity_below_low,                    g_group);
-  reg_handler(AttrType::noise_immunity_high,                         g_group);
-  reg_handler(AttrType::noise_immunity_low,                          g_group);
-
-  reg_handler(AttrType::propagated_noise_height_above_high,	        g_group);
-  reg_handler(AttrType::propagated_noise_height_below_low,	        g_group);
-  reg_handler(AttrType::propagated_noise_height_high,	        g_group);
-  reg_handler(AttrType::propagated_noise_height_low,		        g_group);
-  reg_handler(AttrType::propagated_noise_peak_time_ratio_above_high, g_group);
-  reg_handler(AttrType::propagated_noise_peak_time_ratio_below_low,  g_group);
-  reg_handler(AttrType::propagated_noise_peak_time_ratio_high,       g_group);
-  reg_handler(AttrType::propagated_noise_peak_time_ratio_low,        g_group);
-  reg_handler(AttrType::propagated_noise_width_above_high,  	        g_group);
-  reg_handler(AttrType::propagated_noise_width_below_low, 	        g_group);
-  reg_handler(AttrType::propagated_noise_width_high,		        g_group);
-  reg_handler(AttrType::propagated_noise_width_low,		        g_group);
-
-  reg_handler(AttrType::retaining_rise,		                g_group);
-  reg_handler(AttrType::retaining_fall,		                g_group);
-
-  reg_handler(AttrType::retain_fall_slew,		                g_group);
-  reg_handler(AttrType::retain_rise_slew,		                g_group);
-
-  reg_handler(AttrType::steady_state_current_high,		        g_group);
-  reg_handler(AttrType::steady_state_current_low,		        g_group);
-  reg_handler(AttrType::steady_state_current_tristate,	        g_group);
-#endif
+  // steady_state_current_high
+  // steady_state_current_low
+  // steady_state_current_tristate
 }
 
 // @brief デストラクタ
@@ -129,6 +204,52 @@ TimingHandler::parse_value(vector<const AstTiming*>& dst_list)
     dst_list.push_back(mValue);
   }
   return stat;
+}
+
+// @brief ヘッダの開始処理
+//
+// '(' を読み込んだ時に呼ばれる．
+void
+TimingHandler::begin_header()
+{
+  mName = nullptr;
+}
+
+// @brief ヘッダの値を読み込む処理
+// @param[in] value_type 型
+// @param[in] value_loc トークンの位置
+// @param[in] count read_value() の呼ばれた回数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+TimingHandler::read_header_value(TokenType value_type,
+				 const FileRegion& value_loc,
+				 int count)
+{
+  if ( count != 0 || value_type != TokenType::SYMBOL ) {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    value_loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "string value is expected.");
+    return false;
+  }
+  else {
+    mName = mgr().new_string(value_loc, ShString(cur_string()));
+    return true;
+  }
+}
+
+// @brief 読み込みが終了した時の処理を行う．
+// @param[in] header_loc '(' から ')' までのファイル上の位置
+// @param[in] count 読み込んだ要素数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+TimingHandler::end_header(const FileRegion& header_loc,
+			  int count)
+{
+  return true;
 }
 
 // @brief グループ記述の始まり
@@ -165,18 +286,20 @@ TimingHandler::begin_group()
   mWhenEnd = nullptr;
   mWhenStart = nullptr;
 
-  mFallDelayIntercept = nullptr;
-  mFallPinResistance = nullptr;
+  mFallDelayIntercept.clear();
+  mFallPinResistance.clear();
 
-  // mMode
+  mModeName = nullptr;
+  mModeValue = nullptr;
 
-  mRiseDelayIntercept = nullptr;
-  mRisePinResistance = nullptr;
+  mRiseDelayIntercept.clear();
+  mRisePinResistance.clear();
 
-  // mCellDegradation
-
+  mCellDegradation = nullptr;
   mCellFall = nullptr;
   mCellRise = nullptr;
+  mCompactCCSFall = nullptr;
+  mCompactCCSRise = nullptr;
   mFallConstraint = nullptr;
   mFallTransition = nullptr;
   mRiseConstraint = nullptr;
@@ -196,10 +319,12 @@ TimingHandler::begin_group()
   // mPropagatedNoisePeakTimeRatioLow
   // mPropagatedNoiseWidthHigh
   // mPropagatedNoiseWidthLow
-  // mRetainingRise
-  // mRetainingFall
-  // mRetainRiseSlew
-  // mRetainFallSlew
+
+  mRetainingRise = nullptr;
+  mRetainingFall = nullptr;
+  mRetainRiseSlew = nullptr;
+  mRetainFallSlew = nullptr;
+
   // mSteadyStateCurrentHigh
   // mSteadyStateCurrentLow
   // mSteadyStateCurrentTristate
@@ -214,11 +339,42 @@ TimingHandler::begin_group()
 bool
 TimingHandler::end_group(const FileRegion& group_loc)
 {
-#if 0
-  mValue = mgr().new_timing(loc, value,
-			    mVil, mVih, mVimin, mVimax);
-#endif
-  return false;
+  mValue = mgr().new_timing(group_loc,
+			    mName,
+			    mRelatedPin,
+			    mRelatedBusPins,
+			    mRelatedBusEquivalent,
+			    mTimingSense,
+			    mTimingType,
+			    mWhen,
+			    mWhenStart,
+			    mWhenEnd,
+			    mRiseResistance,
+			    mFallResistance,
+			    mIntrinsicRise,
+			    mIntrinsicFall,
+			    mSlopeRise,
+			    mSlopeFall,
+			    mRiseDelayIntercept,
+			    mFallDelayIntercept,
+			    mRisePinResistance,
+			    mFallPinResistance,
+			    mCellDegradation,
+			    mCellRise,
+			    mCellFall,
+			    mCompactCCSRise,
+			    mCompactCCSFall,
+			    mRiseConstraint,
+			    mFallConstraint,
+			    mRisePropagation,
+			    mFallPropagation,
+			    mRiseTransition,
+			    mFallTransition,
+			    mRetainingRise,
+			    mRetainingFall,
+			    mRetainRiseSlew,
+			    mRetainFallSlew);
+  return true;
 }
 
 END_NAMESPACE_YM_DOTLIB
