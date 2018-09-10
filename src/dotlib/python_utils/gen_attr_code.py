@@ -7,6 +7,9 @@
 ### Copyright (C) 2018 Yusuke Matsunaga
 ### All rights reserved.n
 
+### Usage: gen_attr_code.py --header > AttrType.h
+###        gen_attr_code.py --source > AttrDic.cc
+
 import sys
 import argparse
 import os.path
