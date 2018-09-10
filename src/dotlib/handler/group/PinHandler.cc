@@ -320,6 +320,62 @@ PinHandler::parse_value(vector<const AstPin*>& dst_list)
   return stat;
 }
 
+// @brief ヘッダの開始処理
+//
+// '(' を読み込んだ時に呼ばれる．
+void
+PinHandler::begin_header()
+{
+  mNameList.clear();
+}
+
+// @brief ヘッダの値を読み込む処理
+// @param[in] value_type 型
+// @param[in] value_loc トークンの位置
+// @param[in] count read_value() の呼ばれた回数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+PinHandler::read_header_value(TokenType value_type,
+			      const FileRegion& value_loc,
+			      int count)
+{
+  if ( value_type != TokenType::SYMBOL ) {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    value_loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "Syntax error, a string is expected.");
+    return false;
+  }
+  else {
+    mNameList.push_back(mgr().new_string(value_loc, ShString(cur_string())));
+    return true;
+  }
+}
+
+// @brief 読み込みが終了した時の処理を行う．
+// @param[in] header_loc '(' から ')' までのファイル上の位置
+// @param[in] count 読み込んだ要素数
+// @retval true 正しく読み込んだ．
+// @retval false エラーが起きた．
+bool
+PinHandler::end_header(const FileRegion& header_loc,
+		       int count)
+{
+  if ( mNameList.empty() ) {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    value_loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "Syntax error, one or more strings area expected.");
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
 // @brief グループ記述の始まり
 void
 PinHandler::begin_group()
@@ -423,64 +479,15 @@ PinHandler::begin_group()
 bool
 PinHandler::end_group(const FileRegion& group_loc)
 {
-  return false;
+  mValue = mgr().new_pin(group_loc, mNameList, mDirection,
+			 mCapacitance, mRiseCapacitfance, mFallCapacitance,
+			 mMaxFanout, mMinFanout,
+			 mMaxCapacitance, mMinCapacitance,
+			 mMaxTransition, mMinTransition,
+			 mFunction, mThree_state,
+			 mInternalNode, mPinFuncType,
+			 mTimingList);
+  return true;
 }
-
-#if 0
-
-// @brief 値を作る．
-const AstNode*
-PinHandler::gen_node(const FileRegion& loc,
-		     const vector<const AstNode*>& value_list,
-		     const vector<const AstAttr*>& attr_list)
-{
-  // ピン名のリストを作る．
-  int n = value_list.size();
-  vector<const AstString*> name_list(n);
-  for ( int i = 0; i < n; ++ i ) {
-    const AstNode* elem = value_list[i];
-    const AstString* str_node = dynamic_cast<const AstString*>(elem);
-    if ( str_node == nullptr ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      elem->loc(),
-		      MsgType::Error,
-		      "DOTLIB_PARSER",
-		      "Syntax error. string value expected");
-      return nullptr;
-    }
-    name_list[i] = str_node;
-  }
-
-  // 属性を取り出す．
-  const AstPinDirection* direction = nullptr;
-  const AstFloat* capacitance = nullptr;
-  const AstFloat* rise_capacitance = nullptr;
-  const AstFloat* fall_capacitance = nullptr;
-  const AstFloat* max_fanout = nullptr;
-  const AstFloat* min_fanout = nullptr;
-  const AstFloat* max_capacitance = nullptr;
-  const AstFloat* min_capacitance = nullptr;
-  const AstFloat* max_transition = nullptr;
-  const AstFloat* min_transition = nullptr;
-  const AstExpr* function = nullptr;
-  const AstExpr* three_state = nullptr;
-  const AstNode* internal_node = nullptr;
-  const AstNode* pin_func_type = nullptr;
-  const AstTiming* timing_top = nullptr;
-  for ( auto attr: attr_list ) {
-    if ( attr->attr_type() == AttrType::direction ) {
-    }
-  }
-
-  return mgr().new_pin(loc, name_list, direction,
-		       capacitance, rise_capacitance, fall_capacitance,
-		       max_fanout, min_fanout,
-		       max_capacitance, min_capacitance,
-		       max_transition, min_transition,
-		       function, three_state,
-		       internal_node, pin_func_type,
-		       mTimingList);
-}
-#endif
 
 END_NAMESPACE_YM_DOTLIB

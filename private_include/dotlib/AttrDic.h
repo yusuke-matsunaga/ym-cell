@@ -60,6 +60,35 @@ private:
 
 };
 
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief デストラクタ
+inline
+AttrDic::~AttrDic()
+{
+}
+
+// @brief 文字列を属性値に変換する．
+// @param[in] str 文字列
+// @return str に対応する AttrType の値
+//
+// 対応する値がない場合は AttrType::none を返す．
+inline
+AttrType
+AttrDic::get(const char* str) const
+{
+  if ( mDic.check(str) ) {
+    return mDic[str];
+  }
+  else {
+    return AttrType::none;
+  }
+}
+
+
 END_NAMESPACE_YM_DOTLIB
 
 #endif // ATTRDIC_H

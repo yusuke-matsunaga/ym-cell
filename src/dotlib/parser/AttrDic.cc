@@ -1,4 +1,4 @@
-
+﻿
 /// @file AttrDic.cc
 /// @brief AttrDic の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
@@ -19,37 +19,37 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 AttrDic::AttrDic()
 {
-  // gen_attr_dic.py で作成
   mDic.add("none", AttrType::none);
   mDic.add("area", AttrType::area);
   mDic.add("auxiliary_pad_cell", AttrType::auxiliary_pad_cell);
   mDic.add("base_name", AttrType::base_name);
   mDic.add("bit_width", AttrType::bit_width);
   mDic.add("bundle", AttrType::bundle);
+  mDic.add("bus", AttrType::bus);
   mDic.add("bus_naming_style", AttrType::bus_naming_style);
   mDic.add("bus_type", AttrType::bus_type);
-  mDic.add("bus", AttrType::bus);
   mDic.add("calc_mode", AttrType::calc_mode);
   mDic.add("capacitance", AttrType::capacitance);
   mDic.add("capacitive_load_unit", AttrType::capacitive_load_unit);
+  mDic.add("cell", AttrType::cell);
   mDic.add("cell_degradation", AttrType::cell_degradation);
   mDic.add("cell_fall", AttrType::cell_fall);
   mDic.add("cell_footprint", AttrType::cell_footprint);
   mDic.add("cell_leakage_power", AttrType::cell_leakage_power);
   mDic.add("cell_rise", AttrType::cell_rise);
-  mDic.add("cell", AttrType::cell);
+  mDic.add("clear", AttrType::clear);
   mDic.add("clear_preset_var1", AttrType::clear_preset_var1);
   mDic.add("clear_preset_var2", AttrType::clear_preset_var2);
-  mDic.add("clear", AttrType::clear);
+  mDic.add("clock", AttrType::clock);
   mDic.add("clock_gate_clock_pin", AttrType::clock_gate_clock_pin);
   mDic.add("clock_gate_enable_pin", AttrType::clock_gate_enable_pin);
   mDic.add("clock_gate_test_pin", AttrType::clock_gate_test_pin);
   mDic.add("clock_gate_obs_pin", AttrType::clock_gate_obs_pin);
   mDic.add("clock_gate_out_pin", AttrType::clock_gate_out_pin);
+  mDic.add("clock_gating_flag", AttrType::clock_gating_flag);
   mDic.add("clock_gating_integrated_cell", AttrType::clock_gating_integrated_cell);
-  mDic.add("clock", AttrType::clock);
-  mDic.add("clocked_on_also", AttrType::clocked_on_also);
   mDic.add("clocked_on", AttrType::clocked_on);
+  mDic.add("clocked_on_also", AttrType::clocked_on_also);
   mDic.add("coefs", AttrType::coefs);
   mDic.add("comment", AttrType::comment);
   mDic.add("complementary_pin", AttrType::complementary_pin);
@@ -85,6 +85,7 @@ AttrDic::AttrDic()
   mDic.add("default_rise_pin_resistance", AttrType::default_rise_pin_resistance);
   mDic.add("default_slope_fall", AttrType::default_slope_fall);
   mDic.add("default_slope_rise", AttrType::default_slope_rise);
+  mDic.add("default_timing", AttrType::default_timing);
   mDic.add("default_wire_load_area", AttrType::default_wire_load_area);
   mDic.add("default_wire_load_capacitance", AttrType::default_wire_load_capacitance);
   mDic.add("default_wire_load_mode", AttrType::default_wire_load_mode);
@@ -136,8 +137,9 @@ AttrDic::AttrDic()
   mDic.add("fanout_resistance", AttrType::fanout_resistance);
   mDic.add("fault_model", AttrType::fault_model);
   mDic.add("faults_lut_template", AttrType::faults_lut_template);
-  mDic.add("ff_bank", AttrType::ff_bank);
   mDic.add("ff", AttrType::ff);
+  mDic.add("ff_bank", AttrType::ff_bank);
+  mDic.add("fpga_arc_condition", AttrType::fpga_arc_condition);
   mDic.add("fpga_domain_style", AttrType::fpga_domain_style);
   mDic.add("fpga_technology", AttrType::fpga_technology);
   mDic.add("function", AttrType::function);
@@ -160,6 +162,7 @@ AttrDic::AttrDic()
   mDic.add("input_threshold_pct_fall", AttrType::input_threshold_pct_fall);
   mDic.add("input_threshold_pct_rise", AttrType::input_threshold_pct_rise);
   mDic.add("input_voltage", AttrType::input_voltage);
+  mDic.add("interdependence_id", AttrType::interdependence_id);
   mDic.add("interface_timing", AttrType::interface_timing);
   mDic.add("internal_node", AttrType::internal_node);
   mDic.add("internal_power", AttrType::internal_power);
@@ -171,6 +174,7 @@ AttrDic::AttrDic()
   mDic.add("is_clock_gating_cell", AttrType::is_clock_gating_cell);
   mDic.add("is_filler_cell", AttrType::is_filler_cell);
   mDic.add("is_pad", AttrType::is_pad);
+  mDic.add("isolation_cell_enable_pin", AttrType::isolation_cell_enable_pin);
   mDic.add("iv_lut_template", AttrType::iv_lut_template);
   mDic.add("k_process_cell_fall", AttrType::k_process_cell_fall);
   mDic.add("k_process_cell_leakage_power", AttrType::k_process_cell_leakage_power);
@@ -283,16 +287,18 @@ AttrDic::AttrDic()
   mDic.add("k_volt_slope_rise", AttrType::k_volt_slope_rise);
   mDic.add("k_volt_wire_cap", AttrType::k_volt_wire_cap);
   mDic.add("k_volt_wire_res", AttrType::k_volt_wire_res);
-  mDic.add("latch_bank", AttrType::latch_bank);
   mDic.add("latch", AttrType::latch);
+  mDic.add("latch_bank", AttrType::latch_bank);
   mDic.add("leakage_current", AttrType::leakage_current);
   mDic.add("leakage_power_unit", AttrType::leakage_power_unit);
   mDic.add("leakage_power", AttrType::leakage_power);
+  mDic.add("level_shifter_enable_pin", AttrType::level_shifter_enable_pin);
   mDic.add("library_features", AttrType::library_features);
   mDic.add("library", AttrType::library);
   mDic.add("lu_table_template", AttrType::lu_table_template);
   mDic.add("lut", AttrType::lut);
   mDic.add("map_only", AttrType::map_only);
+  mDic.add("map_to_logic", AttrType::map_to_logic);
   mDic.add("max_capacitance", AttrType::max_capacitance);
   mDic.add("max_fanout", AttrType::max_fanout);
   mDic.add("max_input_noise_width", AttrType::max_input_noise_width);
@@ -323,6 +329,8 @@ AttrDic::AttrDic()
   mDic.add("nom_voltage", AttrType::nom_voltage);
   mDic.add("operating_conditions", AttrType::operating_conditions);
   mDic.add("orders", AttrType::orders);
+  mDic.add("output_current_fall", AttrType::output_current_fall);
+  mDic.add("output_current_rise", AttrType::output_current_rise);
   mDic.add("output_current_template", AttrType::output_current_template);
   mDic.add("output_signal_level", AttrType::output_signal_level);
   mDic.add("output_threshold_pct_fall", AttrType::output_threshold_pct_fall);
@@ -336,13 +344,16 @@ AttrDic::AttrDic()
   mDic.add("parameter4", AttrType::parameter4);
   mDic.add("parameter5", AttrType::parameter5);
   mDic.add("part", AttrType::part);
+  mDic.add("pg_function", AttrType::pg_function);
   mDic.add("piece_define", AttrType::piece_define);
   mDic.add("piece_type", AttrType::piece_type);
+  mDic.add("pin", AttrType::pin);
   mDic.add("pin_func_type", AttrType::pin_func_type);
   mDic.add("pin_opposite", AttrType::pin_opposite);
-  mDic.add("pin", AttrType::pin);
   mDic.add("poly_template", AttrType::poly_template);
+  mDic.add("power", AttrType::power);
   mDic.add("power_cell_type", AttrType::power_cell_type);
+  mDic.add("power_down_function", AttrType::power_down_function);
   mDic.add("power_level", AttrType::power_level);
   mDic.add("power_lut_template", AttrType::power_lut_template);
   mDic.add("power_poly_template", AttrType::power_poly_template);
@@ -350,7 +361,6 @@ AttrDic::AttrDic()
   mDic.add("power_rail", AttrType::power_rail);
   mDic.add("power_supply_namestring", AttrType::power_supply_namestring);
   mDic.add("power_supply", AttrType::power_supply);
-  mDic.add("power", AttrType::power);
   mDic.add("prefer_tied", AttrType::prefer_tied);
   mDic.add("preferred", AttrType::preferred);
   mDic.add("preferred_input_pad_voltage", AttrType::preferred_input_pad_voltage);
@@ -375,14 +385,17 @@ AttrDic::AttrDic()
   mDic.add("pulling_current", AttrType::pulling_current);
   mDic.add("pulling_resistance_unit", AttrType::pulling_resistance_unit);
   mDic.add("pulling_resistance", AttrType::pulling_resistance);
+  mDic.add("pulse_clock", AttrType::pulse_clock);
   mDic.add("rail_connection", AttrType::rail_connection);
   mDic.add("related_bus_equivalent", AttrType::related_bus_equivalent);
   mDic.add("related_bus_pins", AttrType::related_bus_pins);
+  mDic.add("related_ground_pin", AttrType::related_ground_pin);
   mDic.add("related_inputs", AttrType::related_inputs);
   mDic.add("related_output_pin", AttrType::related_output_pin);
   mDic.add("related_outputs", AttrType::related_outputs);
   mDic.add("related_pg_pin", AttrType::related_pg_pin);
   mDic.add("related_pin", AttrType::related_pin);
+  mDic.add("related_power_pin", AttrType::related_power_pin);
   mDic.add("resistance", AttrType::resistance);
   mDic.add("resource_usage", AttrType::resource_usage);
   mDic.add("retain_fall_slew", AttrType::retain_fall_slew);
@@ -409,9 +422,9 @@ AttrDic::AttrDic()
   mDic.add("routing_track", AttrType::routing_track);
   mDic.add("scaled_cell", AttrType::scaled_cell);
   mDic.add("scaling_factors", AttrType::scaling_factors);
+  mDic.add("sdf_cond", AttrType::sdf_cond);
   mDic.add("sdf_cond_end", AttrType::sdf_cond_end);
   mDic.add("sdf_cond_start", AttrType::sdf_cond_start);
-  mDic.add("sdf_cond", AttrType::sdf_cond);
   mDic.add("sdf_edges", AttrType::sdf_edges);
   mDic.add("signal_type", AttrType::signal_type);
   mDic.add("simulation", AttrType::simulation);
@@ -423,14 +436,21 @@ AttrDic::AttrDic()
   mDic.add("slew_type", AttrType::slew_type);
   mDic.add("slew_upper_threshold_pct_fall", AttrType::slew_upper_threshold_pct_fall);
   mDic.add("slew_upper_threshold_pct_rise", AttrType::slew_upper_threshold_pct_rise);
+  mDic.add("slope", AttrType::slope);
   mDic.add("slope_fall", AttrType::slope_fall);
   mDic.add("slope_rise", AttrType::slope_rise);
-  mDic.add("slope", AttrType::slope);
   mDic.add("state_function", AttrType::state_function);
   mDic.add("statetable", AttrType::statetable);
+  mDic.add("std_cell_main_rail", AttrType::std_cell_main_rail);
+  mDic.add("steady_state_current_above_high", AttrType::steady_state_current_above_high);
+  mDic.add("steady_state_current_below_low", AttrType::steady_state_current_below_low);
   mDic.add("steady_state_current_high", AttrType::steady_state_current_high);
   mDic.add("steady_state_current_low", AttrType::steady_state_current_low);
   mDic.add("steady_state_current_tristate", AttrType::steady_state_current_tristate);
+  mDic.add("steady_state_resistance_above_high", AttrType::steady_state_resistance_above_high);
+  mDic.add("steady_state_resistance_below_low", AttrType::steady_state_resistance_below_low);
+  mDic.add("switch_function", AttrType::switch_function);
+  mDic.add("switch_pin", AttrType::switch_pin);
   mDic.add("switching_interval", AttrType::switching_interval);
   mDic.add("switching_together_group", AttrType::switching_together_group);
   mDic.add("table", AttrType::table);
@@ -439,6 +459,7 @@ AttrDic::AttrDic()
   mDic.add("test_cell", AttrType::test_cell);
   mDic.add("test_output_only", AttrType::test_output_only);
   mDic.add("three_state", AttrType::three_state);
+  mDic.add("tied_off", AttrType::tied_off);
   mDic.add("time_unit", AttrType::time_unit);
   mDic.add("timing_model_type", AttrType::timing_model_type);
   mDic.add("timing_range", AttrType::timing_range);
@@ -452,10 +473,10 @@ AttrDic::AttrDic()
   mDic.add("value", AttrType::value);
   mDic.add("values", AttrType::values);
   mDic.add("variable_1", AttrType::variable_1);
-  mDic.add("variable_2", AttrType::variable_2);
-  mDic.add("variable_3", AttrType::variable_3);
   mDic.add("variable_1_range", AttrType::variable_1_range);
+  mDic.add("variable_2", AttrType::variable_2);
   mDic.add("variable_2_range", AttrType::variable_2_range);
+  mDic.add("variable_3", AttrType::variable_3);
   mDic.add("variable_3_range", AttrType::variable_3_range);
   mDic.add("vhdl_name", AttrType::vhdl_name);
   mDic.add("vih", AttrType::vih);
@@ -478,27 +499,6 @@ AttrDic::AttrDic()
   mDic.add("x_function", AttrType::x_function);
 }
 
-// @brief デストラクタ
-AttrDic::~AttrDic()
-{
-}
-
-// @brief 文字列を属性値に変換する．
-// @param[in] str 文字列
-// @return str に対応する AttrType の値
-//
-// 対応する値がない場合は AttrType::none を返す．
-AttrType
-AttrDic::get(const char* str) const
-{
-  if ( mDic.check(str) ) {
-    return mDic[str];
-  }
-  else {
-    return AttrType::none;
-  }
-}
-
 // @brief AttrType の内容をストリームに出力する．
 ostream&
 operator<<(ostream& s,
@@ -511,30 +511,31 @@ operator<<(ostream& s,
   case AttrType::base_name: s << "base_name"; break;
   case AttrType::bit_width: s << "bit_width"; break;
   case AttrType::bundle: s << "bundle"; break;
+  case AttrType::bus: s << "bus"; break;
   case AttrType::bus_naming_style: s << "bus_naming_style"; break;
   case AttrType::bus_type: s << "bus_type"; break;
-  case AttrType::bus: s << "bus"; break;
   case AttrType::calc_mode: s << "calc_mode"; break;
   case AttrType::capacitance: s << "capacitance"; break;
   case AttrType::capacitive_load_unit: s << "capacitive_load_unit"; break;
+  case AttrType::cell: s << "cell"; break;
   case AttrType::cell_degradation: s << "cell_degradation"; break;
   case AttrType::cell_fall: s << "cell_fall"; break;
   case AttrType::cell_footprint: s << "cell_footprint"; break;
   case AttrType::cell_leakage_power: s << "cell_leakage_power"; break;
   case AttrType::cell_rise: s << "cell_rise"; break;
-  case AttrType::cell: s << "cell"; break;
+  case AttrType::clear: s << "clear"; break;
   case AttrType::clear_preset_var1: s << "clear_preset_var1"; break;
   case AttrType::clear_preset_var2: s << "clear_preset_var2"; break;
-  case AttrType::clear: s << "clear"; break;
+  case AttrType::clock: s << "clock"; break;
   case AttrType::clock_gate_clock_pin: s << "clock_gate_clock_pin"; break;
   case AttrType::clock_gate_enable_pin: s << "clock_gate_enable_pin"; break;
   case AttrType::clock_gate_test_pin: s << "clock_gate_test_pin"; break;
   case AttrType::clock_gate_obs_pin: s << "clock_gate_obs_pin"; break;
   case AttrType::clock_gate_out_pin: s << "clock_gate_out_pin"; break;
+  case AttrType::clock_gating_flag: s << "clock_gating_flag"; break;
   case AttrType::clock_gating_integrated_cell: s << "clock_gating_integrated_cell"; break;
-  case AttrType::clock: s << "clock"; break;
-  case AttrType::clocked_on_also: s << "clocked_on_also"; break;
   case AttrType::clocked_on: s << "clocked_on"; break;
+  case AttrType::clocked_on_also: s << "clocked_on_also"; break;
   case AttrType::coefs: s << "coefs"; break;
   case AttrType::comment: s << "comment"; break;
   case AttrType::complementary_pin: s << "complementary_pin"; break;
@@ -570,6 +571,7 @@ operator<<(ostream& s,
   case AttrType::default_rise_pin_resistance: s << "default_rise_pin_resistance"; break;
   case AttrType::default_slope_fall: s << "default_slope_fall"; break;
   case AttrType::default_slope_rise: s << "default_slope_rise"; break;
+  case AttrType::default_timing: s << "default_timing"; break;
   case AttrType::default_wire_load_area: s << "default_wire_load_area"; break;
   case AttrType::default_wire_load_capacitance: s << "default_wire_load_capacitance"; break;
   case AttrType::default_wire_load_mode: s << "default_wire_load_mode"; break;
@@ -621,8 +623,9 @@ operator<<(ostream& s,
   case AttrType::fanout_resistance: s << "fanout_resistance"; break;
   case AttrType::fault_model: s << "fault_model"; break;
   case AttrType::faults_lut_template: s << "faults_lut_template"; break;
-  case AttrType::ff_bank: s << "ff_bank"; break;
   case AttrType::ff: s << "ff"; break;
+  case AttrType::ff_bank: s << "ff_bank"; break;
+  case AttrType::fpga_arc_condition: s << "fpga_arc_condition"; break;
   case AttrType::fpga_domain_style: s << "fpga_domain_style"; break;
   case AttrType::fpga_technology: s << "fpga_technology"; break;
   case AttrType::function: s << "function"; break;
@@ -645,6 +648,7 @@ operator<<(ostream& s,
   case AttrType::input_threshold_pct_fall: s << "input_threshold_pct_fall"; break;
   case AttrType::input_threshold_pct_rise: s << "input_threshold_pct_rise"; break;
   case AttrType::input_voltage: s << "input_voltage"; break;
+  case AttrType::interdependence_id: s << "interdependence_id"; break;
   case AttrType::interface_timing: s << "interface_timing"; break;
   case AttrType::internal_node: s << "internal_node"; break;
   case AttrType::internal_power: s << "internal_power"; break;
@@ -656,6 +660,7 @@ operator<<(ostream& s,
   case AttrType::is_clock_gating_cell: s << "is_clock_gating_cell"; break;
   case AttrType::is_filler_cell: s << "is_filler_cell"; break;
   case AttrType::is_pad: s << "is_pad"; break;
+  case AttrType::isolation_cell_enable_pin: s << "isolation_cell_enable_pin"; break;
   case AttrType::iv_lut_template: s << "iv_lut_template"; break;
   case AttrType::k_process_cell_fall: s << "k_process_cell_fall"; break;
   case AttrType::k_process_cell_leakage_power: s << "k_process_cell_leakage_power"; break;
@@ -768,16 +773,18 @@ operator<<(ostream& s,
   case AttrType::k_volt_slope_rise: s << "k_volt_slope_rise"; break;
   case AttrType::k_volt_wire_cap: s << "k_volt_wire_cap"; break;
   case AttrType::k_volt_wire_res: s << "k_volt_wire_res"; break;
-  case AttrType::latch_bank: s << "latch_bank"; break;
   case AttrType::latch: s << "latch"; break;
+  case AttrType::latch_bank: s << "latch_bank"; break;
   case AttrType::leakage_current: s << "leakage_current"; break;
   case AttrType::leakage_power_unit: s << "leakage_power_unit"; break;
   case AttrType::leakage_power: s << "leakage_power"; break;
+  case AttrType::level_shifter_enable_pin: s << "level_shifter_enable_pin"; break;
   case AttrType::library_features: s << "library_features"; break;
   case AttrType::library: s << "library"; break;
   case AttrType::lu_table_template: s << "lu_table_template"; break;
   case AttrType::lut: s << "lut"; break;
   case AttrType::map_only: s << "map_only"; break;
+  case AttrType::map_to_logic: s << "map_to_logic"; break;
   case AttrType::max_capacitance: s << "max_capacitance"; break;
   case AttrType::max_fanout: s << "max_fanout"; break;
   case AttrType::max_input_noise_width: s << "max_input_noise_width"; break;
@@ -808,6 +815,8 @@ operator<<(ostream& s,
   case AttrType::nom_voltage: s << "nom_voltage"; break;
   case AttrType::operating_conditions: s << "operating_conditions"; break;
   case AttrType::orders: s << "orders"; break;
+  case AttrType::output_current_fall: s << "output_current_fall"; break;
+  case AttrType::output_current_rise: s << "output_current_rise"; break;
   case AttrType::output_current_template: s << "output_current_template"; break;
   case AttrType::output_signal_level: s << "output_signal_level"; break;
   case AttrType::output_threshold_pct_fall: s << "output_threshold_pct_fall"; break;
@@ -821,13 +830,16 @@ operator<<(ostream& s,
   case AttrType::parameter4: s << "parameter4"; break;
   case AttrType::parameter5: s << "parameter5"; break;
   case AttrType::part: s << "part"; break;
+  case AttrType::pg_function: s << "pg_function"; break;
   case AttrType::piece_define: s << "piece_define"; break;
   case AttrType::piece_type: s << "piece_type"; break;
+  case AttrType::pin: s << "pin"; break;
   case AttrType::pin_func_type: s << "pin_func_type"; break;
   case AttrType::pin_opposite: s << "pin_opposite"; break;
-  case AttrType::pin: s << "pin"; break;
   case AttrType::poly_template: s << "poly_template"; break;
+  case AttrType::power: s << "power"; break;
   case AttrType::power_cell_type: s << "power_cell_type"; break;
+  case AttrType::power_down_function: s << "power_down_function"; break;
   case AttrType::power_level: s << "power_level"; break;
   case AttrType::power_lut_template: s << "power_lut_template"; break;
   case AttrType::power_poly_template: s << "power_poly_template"; break;
@@ -835,7 +847,6 @@ operator<<(ostream& s,
   case AttrType::power_rail: s << "power_rail"; break;
   case AttrType::power_supply_namestring: s << "power_supply_namestring"; break;
   case AttrType::power_supply: s << "power_supply"; break;
-  case AttrType::power: s << "power"; break;
   case AttrType::prefer_tied: s << "prefer_tied"; break;
   case AttrType::preferred: s << "preferred"; break;
   case AttrType::preferred_input_pad_voltage: s << "preferred_input_pad_voltage"; break;
@@ -860,14 +871,17 @@ operator<<(ostream& s,
   case AttrType::pulling_current: s << "pulling_current"; break;
   case AttrType::pulling_resistance_unit: s << "pulling_resistance_unit"; break;
   case AttrType::pulling_resistance: s << "pulling_resistance"; break;
+  case AttrType::pulse_clock: s << "pulse_clock"; break;
   case AttrType::rail_connection: s << "rail_connection"; break;
   case AttrType::related_bus_equivalent: s << "related_bus_equivalent"; break;
   case AttrType::related_bus_pins: s << "related_bus_pins"; break;
+  case AttrType::related_ground_pin: s << "related_ground_pin"; break;
   case AttrType::related_inputs: s << "related_inputs"; break;
   case AttrType::related_output_pin: s << "related_output_pin"; break;
   case AttrType::related_outputs: s << "related_outputs"; break;
   case AttrType::related_pg_pin: s << "related_pg_pin"; break;
   case AttrType::related_pin: s << "related_pin"; break;
+  case AttrType::related_power_pin: s << "related_power_pin"; break;
   case AttrType::resistance: s << "resistance"; break;
   case AttrType::resource_usage: s << "resource_usage"; break;
   case AttrType::retain_fall_slew: s << "retain_fall_slew"; break;
@@ -894,9 +908,9 @@ operator<<(ostream& s,
   case AttrType::routing_track: s << "routing_track"; break;
   case AttrType::scaled_cell: s << "scaled_cell"; break;
   case AttrType::scaling_factors: s << "scaling_factors"; break;
+  case AttrType::sdf_cond: s << "sdf_cond"; break;
   case AttrType::sdf_cond_end: s << "sdf_cond_end"; break;
   case AttrType::sdf_cond_start: s << "sdf_cond_start"; break;
-  case AttrType::sdf_cond: s << "sdf_cond"; break;
   case AttrType::sdf_edges: s << "sdf_edges"; break;
   case AttrType::signal_type: s << "signal_type"; break;
   case AttrType::simulation: s << "simulation"; break;
@@ -908,14 +922,21 @@ operator<<(ostream& s,
   case AttrType::slew_type: s << "slew_type"; break;
   case AttrType::slew_upper_threshold_pct_fall: s << "slew_upper_threshold_pct_fall"; break;
   case AttrType::slew_upper_threshold_pct_rise: s << "slew_upper_threshold_pct_rise"; break;
+  case AttrType::slope: s << "slope"; break;
   case AttrType::slope_fall: s << "slope_fall"; break;
   case AttrType::slope_rise: s << "slope_rise"; break;
-  case AttrType::slope: s << "slope"; break;
   case AttrType::state_function: s << "state_function"; break;
   case AttrType::statetable: s << "statetable"; break;
+  case AttrType::std_cell_main_rail: s << "std_cell_main_rail"; break;
+  case AttrType::steady_state_current_above_high: s << "steady_state_current_above_high"; break;
+  case AttrType::steady_state_current_below_low: s << "steady_state_current_below_low"; break;
   case AttrType::steady_state_current_high: s << "steady_state_current_high"; break;
   case AttrType::steady_state_current_low: s << "steady_state_current_low"; break;
   case AttrType::steady_state_current_tristate: s << "steady_state_current_tristate"; break;
+  case AttrType::steady_state_resistance_above_high: s << "steady_state_resistance_above_high"; break;
+  case AttrType::steady_state_resistance_below_low: s << "steady_state_resistance_below_low"; break;
+  case AttrType::switch_function: s << "switch_function"; break;
+  case AttrType::switch_pin: s << "switch_pin"; break;
   case AttrType::switching_interval: s << "switching_interval"; break;
   case AttrType::switching_together_group: s << "switching_together_group"; break;
   case AttrType::table: s << "table"; break;
@@ -924,6 +945,7 @@ operator<<(ostream& s,
   case AttrType::test_cell: s << "test_cell"; break;
   case AttrType::test_output_only: s << "test_output_only"; break;
   case AttrType::three_state: s << "three_state"; break;
+  case AttrType::tied_off: s << "tied_off"; break;
   case AttrType::time_unit: s << "time_unit"; break;
   case AttrType::timing_model_type: s << "timing_model_type"; break;
   case AttrType::timing_range: s << "timing_range"; break;
@@ -937,10 +959,10 @@ operator<<(ostream& s,
   case AttrType::value: s << "value"; break;
   case AttrType::values: s << "values"; break;
   case AttrType::variable_1: s << "variable_1"; break;
-  case AttrType::variable_2: s << "variable_2"; break;
-  case AttrType::variable_3: s << "variable_3"; break;
   case AttrType::variable_1_range: s << "variable_1_range"; break;
+  case AttrType::variable_2: s << "variable_2"; break;
   case AttrType::variable_2_range: s << "variable_2_range"; break;
+  case AttrType::variable_3: s << "variable_3"; break;
   case AttrType::variable_3_range: s << "variable_3_range"; break;
   case AttrType::vhdl_name: s << "vhdl_name"; break;
   case AttrType::vih: s << "vih"; break;
