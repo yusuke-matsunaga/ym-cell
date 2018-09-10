@@ -269,10 +269,10 @@ TimingHandler::begin_group()
   mRelatedOutputPin = nullptr;
   mRelatedPin = nullptr;
   mRiseResistance = nullptr;
-  // mSdfCond
-  // mSdfCondEnd
-  // mSdfCondStart
-  // mSdfEdges
+  mSdfCond = nullptr;
+  mSdfCondEnd = nullptr;
+  mSdfCondStart = nullptr;
+  mSdfEdges = nullptr;
   mSlopeFall = nullptr;
   mSlopeRise = nullptr;
   mSteadyStateResistanceAboveHigh = nullptr;

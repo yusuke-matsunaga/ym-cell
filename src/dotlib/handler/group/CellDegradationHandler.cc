@@ -23,6 +23,28 @@ BEGIN_NAMESPACE_YM_DOTLIB
 CellDegradationHandler::CellDegradationHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
+  // パース関数の登録
+  reg_func(AttrType::calc_mode,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mCalcMode, attr_type, attr_loc); });
+  reg_func(AttrType::index_1,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_index(mIndex1, attr_type, attr_loc); });
+  reg_func(AttrType::values,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_values(mValues, attr_type, attr_loc); });
+  reg_func(AttrType::coefs,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_coefs(mCoefs, attr_type, attr_loc); });
+  reg_func(AttrType::orders,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_orders(mOrders, attr_type, attr_loc); });
+  reg_func(AttrType::variable_1_range,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_variable_range(mVar1Range, attr_type, attr_loc); });
+  reg_func(AttrType::domain,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_domain(mDomain, attr_type, attr_loc); });
 }
 
 // @brief デストラクタ
@@ -48,33 +70,16 @@ CellDegradationHandler::parse_value(const AstCellDegradation*& dst)
 void
 CellDegradationHandler::begin_group()
 {
-}
+  mCalcMode = nullptr;
+  mIndex1 = nullptr;
+  mValues = nullptr;
+  mVar1Range = nullptr;
+  mCoefs = nullptr;
+  mOrders = nullptr;
+  mDomain = nullptr;
 
-#if 0
-// @brief attr_type に対応する属性を読み込む．
-// @param[in] attr_type 対象の属性
-// @param[in] attr_loc attr_type のファイル上の位置
-// @retval true 正常に処理した．
-// @retval false 処理中にエラーが起こった．
-bool
-CellDegradationHandler::read_group_attr(AttrType attr_type,
-			      const FileRegion& attr_loc)
-{
-  switch ( attr_type ) {
-  case AttrType::calc_mode:        return parse_string(mCalcMode, attr_type, attr_loc);
-  case AttrType::coefs:            return parse_str1complex(mCoefs, attr_type, attr_loc);
-  case AttrType::orders:           return parse_str1complex(mOrders, attr_type, attr_loc);
-  case AttrType::variable_1_range: return parse_vrange(mVar1Range, attr_type, attr_loc);
-  case AttrType::variable_2_range: return parse_vrange(mVar2Range, attr_type, attr_loc);
-  case AttrType::variable_3_range: return parse_vrange(mVar3Range, attr_type, attr_loc);
-
-  default:
-    break;
-  }
-  syntax_error(attr_type, attr_loc);
-  return false;
+  mValue = nullptr;
 }
-#endif
 
 // @brief グループ記述の終わり
 // @param[in] group_loc グループ全体のファイル上の位置
@@ -83,7 +88,15 @@ CellDegradationHandler::read_group_attr(AttrType attr_type,
 bool
 CellDegradationHandler::end_group(const FileRegion& group_loc)
 {
-  if ( mCoefs == nullptr ) {
+  if ( mValues == nullptr ) {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    group_loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "'values' is missing.");
+    return false;
+  }
+  else if ( mCoefs == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group_loc,
 		    MsgType::Error,

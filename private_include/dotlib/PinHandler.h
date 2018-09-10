@@ -222,7 +222,7 @@ private:
   const AstBool* mClockGateObsPin;
 
   // clock_gate_out_pin
-  const AstBool* mClockGateOutpin;
+  const AstBool* mClockGateOutPin;
 
   // complementary_pin
   const AstString* mComplementaryPin;

@@ -231,13 +231,13 @@ private:
   const AstString* mSdfCond;
 
   // sdf_cond_end
-  const AstString* SdfCondEnd;
+  const AstString* mSdfCondEnd;
 
   // sdf_cond_start
   const AstString* mSdfCondStart;
 
   // sdf_edges (noedge, start_edge, end_edge, both_edges)
-  const AstString* mSdfEdgeType;
+  const AstString* mSdfEdges;
 
   // sensitization_master
   const AstString* mSensitizationMaster;

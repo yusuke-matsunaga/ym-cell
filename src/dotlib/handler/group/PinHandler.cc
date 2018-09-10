@@ -29,99 +29,276 @@ BEGIN_NAMESPACE_YM_DOTLIB
 PinHandler::PinHandler(DotlibParser& parser) :
   Str1GroupHandler(parser)
 {
-#if 0
-  DotlibHandler* simple       = HandlerFactory::new_simple(parser);
-  DotlibHandler* str_simple   = HandlerFactory::new_string(parser, false);
-  DotlibHandler* flt_simple   = HandlerFactory::new_float(parser);
-  DotlibHandler* func_handler = HandlerFactory::new_function(parser);
-  DotlibHandler* dir_handler  = HandlerFactory::new_pin_direction(parser);
-  DotlibHandler* complex      = HandlerFactory::new_complex(parser);
-  DotlibHandler* g_handler    = HandlerFactory::new_group(parser);
-  DotlibHandler* ip_handler   = HandlerFactory::new_internal_power(parser);
-  DotlibHandler* timing_handler = HandlerFactory::new_timing(parser);
+  // パース関数の登録
+  reg_func(AttrType::bit_width,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_int(mBitWidth, attr_type, attr_loc); });
+  reg_func(AttrType::capacitance,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mCapacitance, attr_type, attr_loc); });
+  reg_func(AttrType::clock,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mClock, attr_type, attr_loc); });
+  reg_func(AttrType::clock_gate_clock_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mClockGateClockPin, attr_type, attr_loc); });
+  reg_func(AttrType::clock_gate_enable_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mClockGateEnablePin, attr_type, attr_loc); });
+  reg_func(AttrType::clock_gate_test_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mClockGateTestPin, attr_type, attr_loc); });
+  reg_func(AttrType::clock_gate_obs_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mClockGateObsPin, attr_type, attr_loc); });
+  reg_func(AttrType::clock_gate_out_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mClockGateOutPin, attr_type, attr_loc); });
+  reg_func(AttrType::complementary_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mComplementaryPin, attr_type, attr_loc); });
+  reg_func(AttrType::connection_class,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mConnectionClass, attr_type, attr_loc); });
+  reg_func(AttrType::direction,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_direction(mDirection, attr_type, attr_loc); });
+  reg_func(AttrType::dont_fault,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mDontFault, attr_type, attr_loc); });
+  reg_func(AttrType::drive_current,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mDriveCurrent, attr_type, attr_loc); });
+  reg_func(AttrType::driver_type,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mDriverType, attr_type, attr_loc); });
+  reg_func(AttrType::fall_capacitance,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mFallCapacitance, attr_type, attr_loc); });
+  reg_func(AttrType::fall_current_slope_after_threshold,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mFallCurrentSlopeAfterThreshold, attr_type, attr_loc); });
+  reg_func(AttrType::fall_current_slope_before_threshold,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mFallCurrentSlopeBeforeThreshold, attr_type, attr_loc); });
+  reg_func(AttrType::fall_time_after_threshold,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mFallTimeAfterThreshold, attr_type, attr_loc); });
+  reg_func(AttrType::fall_time_before_threshold,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mFallTimeBeforeThreshold, attr_type, attr_loc); });
+  reg_func(AttrType::fanout_load,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mFanoutLoad, attr_type, attr_loc); });
+  reg_func(AttrType::fault_model,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mFaultModel, attr_type, attr_loc); });
+  reg_func(AttrType::function,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_function(mFunction, attr_type, attr_loc); });
+  reg_func(AttrType::has_builtin_pad,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mHasBuiltinPad, attr_type, attr_loc); });
+  reg_func(AttrType::hysteresis,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mHysteresis, attr_type, attr_loc); });
+  reg_func(AttrType::input_map,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mInputMap, attr_type, attr_loc); });
+  reg_func(AttrType::input_signal_level,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mInputSignalLevel, attr_type, attr_loc); });
+  reg_func(AttrType::input_threshold_pct_fall,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mInputThresholdPctFall, attr_type, attr_loc); });
+  reg_func(AttrType::input_threshold_pct_rise,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mInputThresholdPctRise, attr_type, attr_loc); });
+  reg_func(AttrType::input_voltage,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mInputVoltage, attr_type, attr_loc); });
+  reg_func(AttrType::internal_node,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mInternalNode, attr_type, attr_loc); });
+  reg_func(AttrType::inverted_output,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mInvertedOutput, attr_type, attr_loc); });
+  reg_func(AttrType::is_pad,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mIsPad, attr_type, attr_loc); });
+  reg_func(AttrType::isolation_cell_enable_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mIsolationCellEnablePin, attr_type, attr_loc); });
+  reg_func(AttrType::level_shifter_enable_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mLevelShifterEnablePin, attr_type, attr_loc); });
+  reg_func(AttrType::map_to_logic,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mMapToLogic, attr_type, attr_loc); });
+  reg_func(AttrType::max_capacitance,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mMaxCapacitance, attr_type, attr_loc); });
+  reg_func(AttrType::max_fanout,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mMaxFanout, attr_type, attr_loc); });
+  reg_func(AttrType::max_input_noise_width,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mMaxInputNoiseWidth, attr_type, attr_loc); });
+  reg_func(AttrType::max_transition,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mMaxTransition, attr_type, attr_loc); });
+  reg_func(AttrType::min_capacitance,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mMinCapacitance, attr_type, attr_loc); });
+  reg_func(AttrType::min_fanout,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mMinFanout, attr_type, attr_loc); });
+  reg_func(AttrType::min_input_noise_width,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mMinInputNoiseWidth, attr_type, attr_loc); });
+  reg_func(AttrType::min_period,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mMinPeriod, attr_type, attr_loc); });
+  reg_func(AttrType::min_pulse_width_high,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mMinPulseWidthHigh, attr_type, attr_loc); });
+  reg_func(AttrType::min_transition,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mMinTransition, attr_type, attr_loc); });
+  reg_func(AttrType::multicell_pad_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mMulticellPadPin, attr_type, attr_loc); });
+  reg_func(AttrType::nextstate_type,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mNextstateType, attr_type, attr_loc); });
+  reg_func(AttrType::output_signal_level,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mOutputSignalLevel, attr_type, attr_loc); });
+  reg_func(AttrType::output_voltage,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mOutputVoltage, attr_type, attr_loc); });
+  reg_func(AttrType::pg_function,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_expr(mPgFunction, attr_type, attr_loc); });
+  reg_func(AttrType::pin_func_type,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mPinFuncType, attr_type, attr_loc); });
+  reg_func(AttrType::power_down_function,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_expr(mPowerDownFunction, attr_type, attr_loc); });
+  reg_func(AttrType::prefer_tied,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mPreferTied, attr_type, attr_loc); });
+  reg_func(AttrType::primary_output,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mPrimaryOutput, attr_type, attr_loc); });
+  reg_func(AttrType::pulling_current,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mPullingCurrent, attr_type, attr_loc); });
+  reg_func(AttrType::pulling_resistance,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mPullingResistance, attr_type, attr_loc); });
+  reg_func(AttrType::pulse_clock,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mPulseClock, attr_type, attr_loc); });
+  reg_func(AttrType::related_ground_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mRelatedGroundPin, attr_type, attr_loc); });
+  reg_func(AttrType::related_power_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mRelatedPowerPin, attr_type, attr_loc); });
+  reg_func(AttrType::rise_capacitance,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mRiseCapacitance, attr_type, attr_loc); });
+  reg_func(AttrType::rise_current_slope_after_threshold,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mRiseCurrentSlopeAfterThreshold, attr_type, attr_loc); });
+  reg_func(AttrType::rise_current_slope_before_threshold,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mRiseCurrentSlopeBeforeThreshold, attr_type, attr_loc); });
+  reg_func(AttrType::rise_time_after_threshold,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mRiseTimeAfterThreshold, attr_type, attr_loc); });
+  reg_func(AttrType::rise_time_before_threshold,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mRiseTimeBeforeThreshold, attr_type, attr_loc); });
+  reg_func(AttrType::signal_type,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mSignalType, attr_type, attr_loc); });
+  reg_func(AttrType::slew_control,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mSlewControl, attr_type, attr_loc); });
+  reg_func(AttrType::slew_lower_threshold_pct_fall,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mSlewLowerThresholdPctFall, attr_type, attr_loc); });
+  reg_func(AttrType::slew_lower_threshold_pct_rise,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mSlewLowerThresholdPctRise, attr_type, attr_loc); });
+  reg_func(AttrType::slew_upper_threshold_pct_fall,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mSlewUpperThresholdPctFall, attr_type, attr_loc); });
+  reg_func(AttrType::slew_upper_threshold_pct_rise,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float(mSlewUpperThresholdPctRise, attr_type, attr_loc); });
+  reg_func(AttrType::state_function,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_expr(mStateFunction, attr_type, attr_loc); });
+  reg_func(AttrType::std_cell_main_rail,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mStdCellMainRail, attr_type, attr_loc); });
+  reg_func(AttrType::switch_function,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_expr(mSwitchFunction, attr_type, attr_loc); });
+  reg_func(AttrType::switch_pin,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mSwitchPin, attr_type, attr_loc); });
+  reg_func(AttrType::test_output_only,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_bool(mTestOutputOnly, attr_type, attr_loc); });
+  reg_func(AttrType::three_state,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_expr(mThreeState, attr_type, attr_loc); });
+  reg_func(AttrType::vhdl_name,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_string(mVhdlName, attr_type, attr_loc); });
+  reg_func(AttrType::x_function,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_expr(mXFunction, attr_type, attr_loc); });
 
-  // simple attributes
-  reg_handler(AttrType::bit_width,                           simple);
-  reg_handler(AttrType::capacitance,                         flt_simple);
-  reg_handler(AttrType::clock,                               simple);
-  reg_handler(AttrType::clock_gate_clock_pin,                simple);
-  reg_handler(AttrType::clock_gate_enable_pin,               simple);
-  reg_handler(AttrType::clock_gate_test_pin,                 simple);
-  reg_handler(AttrType::clock_gate_obs_pin,                  simple);
-  reg_handler(AttrType::clock_gate_out_pin,                  simple);
-  reg_handler(AttrType::complementary_pin,                   simple);
-  reg_handler(AttrType::connection_class,                    simple);
-  reg_handler(AttrType::direction,                           dir_handler);
-  reg_handler(AttrType::dont_fault,                          simple);
-  reg_handler(AttrType::drive_current,                       simple);
-  reg_handler(AttrType::driver_type,                         simple);
-  reg_handler(AttrType::FALL_capacitance,                    simple);
-  reg_handler(AttrType::fall_current_slope_after_threshold,  simple);
-  reg_handler(AttrType::fall_current_slope_before_threshold, simple);
-  reg_handler(AttrType::fall_time_after_threshold,           simple);
-  reg_handler(AttrType::fall_time_before_threshold,          simple);
-  reg_handler(AttrType::fanout_load,                         flt_simple);
-  reg_handler(AttrType::fault_model,                         simple);
-  reg_handler(AttrType::function,                            func_handler);
-  reg_handler(AttrType::has_builtin_pad,                     simple);
-  reg_handler(AttrType::hysteresis,                          simple);
-  reg_handler(AttrType::input_map,                           simple);
-  reg_handler(AttrType::input_signal_level,                  simple);
-  reg_handler(AttrType::input_voltage,                       simple);
-  reg_handler(AttrType::internal_node,                       simple);
-  reg_handler(AttrType::inverted_output,                     simple);
-  reg_handler(AttrType::is_pad,                              simple);
-  reg_handler(AttrType::MAX_capacitance,                     flt_simple);
-  reg_handler(AttrType::max_fanout,                          flt_simple);
-  reg_handler(AttrType::max_input_noise_width,               simple);
-  reg_handler(AttrType::max_transITION,                      flt_simple);
-  reg_handler(AttrType::MIN_capacitance,                     flt_simple);
-  reg_handler(AttrType::min_fanout,                          flt_simple);
-  reg_handler(AttrType::min_input_noise_width,               simple);
-  reg_handler(AttrType::min_period,                          simple);
-  reg_handler(AttrType::min_pulse_width_high,                simple);
-  reg_handler(AttrType::min_pulse_width_low,                 simple);
-  reg_handler(AttrType::min_transition,                      flt_simple);
-  reg_handler(AttrType::MULTIcell_PAD_pin,                   simple);
-  reg_handler(AttrType::nextstate_type,                      simple);
-  reg_handler(AttrType::output_signal_level,                 simple);
-  reg_handler(AttrType::output_voltage,                      flt_simple);
-  reg_handler(AttrType::pin_func_type,                       simple);
-  reg_handler(AttrType::prefer_tied,                         simple);
-  reg_handler(AttrType::primary_output,                      simple);
-  reg_handler(AttrType::pulling_current,                     flt_simple);
-  reg_handler(AttrType::pulling_resistance,                  flt_simple);
-  reg_handler(AttrType::RISE_capacitance,                    flt_simple);
-  reg_handler(AttrType::rise_current_slope_after_threshold,  flt_simple);
-  reg_handler(AttrType::rise_current_slope_before_threshold, flt_simple);
-  reg_handler(AttrType::rise_time_after_threshold,           flt_simple);
-  reg_handler(AttrType::rise_time_before_threshold,          flt_simple);
-  reg_handler(AttrType::signal_type,                         simple);
-  reg_handler(AttrType::slew_control,                        simple);
-  reg_handler(AttrType::STATE_function,                      simple);
-  reg_handler(AttrType::test_output_only,                    simple);
-  reg_handler(AttrType::three_state,                         func_handler);
-  reg_handler(AttrType::vhdl_name,                           str_simple);
-  reg_handler(AttrType::X_function,                          simple);
+  reg_func(AttrType::fall_capacitance_range,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float2complex(mFallCapacitanceRange[0], mFallCapacitanceRange[1],
+					       attr_type, attr_loc); });
+  reg_func(AttrType::rise_capacitance_range,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_float2complex(mRiseCapacitanceRange[0], mRiseCapacitanceRange[1],
+					       attr_type, attr_loc); });
 
-  // complex attributes
-  reg_handler(AttrType::FALL_capacitance_RANGE,              complex);
-  reg_handler(AttrType::RISE_capacitance_RANGE,              complex);
+  // power_gating_pin (string, int)
 
-  // group statements
-  reg_handler(AttrType::electromigration,                    g_handler);
-  reg_handler(AttrType::hyperbolic_noise_above_high,         g_handler);
-  reg_handler(AttrType::hyperbolic_noise_below_low,          g_handler);
-  reg_handler(AttrType::hyperbolic_noise_high,               g_handler);
-  reg_handler(AttrType::hyperbolic_noise_low,                g_handler);
-  reg_handler(AttrType::internal_power,                      ip_handler);
-  reg_handler(AttrType::max_trans,                           g_handler);
-  reg_handler(AttrType::min_pulse_width,                     g_handler);
-  reg_handler(AttrType::minimum_period,                      g_handler);
-  reg_handler(AttrType::Tlatch,                              g_handler);
+  // electromigration
 
-  mTimingHandler = HandlerFactory::new_timing(parser);
-#endif
+  // hyperbolic_noise_above_high
+
+  // hyperbolic_noise_below_low
+
+  // hyperbolic_noise_high
+
+  // hyperbolic_noise_low
+
+  // internal_power
+
+  // max_trans
+
+  // min_pulse_width
+
+  // minimum_period
+
+  // tlatch
+
+  reg_func(AttrType::timing,
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   { return parser.parse_timing(mTimingList, attr_type, attr_loc); });
 }
 
 // @brief デストラクタ
@@ -147,32 +324,93 @@ PinHandler::parse_value(vector<const AstPin*>& dst_list)
 void
 PinHandler::begin_group()
 {
+  mBitWidth = nullptr;
   mCapacitance = nullptr;
+  mClock = nullptr;
+  mClockGateClockPin = nullptr;
+  mClockGateEnablePin = nullptr;
+  mClockGateTestPin = nullptr;
+  mClockGateObsPin = nullptr;
+  mClockGateOutPin = nullptr;
+  mComplementaryPin = nullptr;
+  mConnectionClass = nullptr;
   mDirection = nullptr;
+  mDontFault = nullptr;
+  mDriveCurrent = nullptr;
+  mDriverType = nullptr;
   mFallCapacitance = nullptr;
   mFallCurrentSlopeAfterThreshold = nullptr;
   mFallCurrentSlopeBeforeThreshold = nullptr;
   mFallTimeAfterThreshold = nullptr;
   mFallTimeBeforeThreshold = nullptr;
   mFanoutLoad = nullptr;
+  mFaultModel = nullptr;
   mFunction = nullptr;
+  mHasBuiltinPad = nullptr;
+  mHysteresis = nullptr;
+  mInputMap = nullptr;
+  mInputSignalLevel = nullptr;
+  mInputThresholdPctFall = nullptr;
+  mInputThresholdPctRise = nullptr;
   mInputVoltage = nullptr;
+  mInternalNode = nullptr;
+  mInvertedOutput = nullptr;
+  mIsPad = nullptr;
+  mIsolationCellEnablePin = nullptr;
+  mLevelShifterEnablePin = nullptr;
+  mMapToLogic = nullptr;
   mMaxCapacitance = nullptr;
   mMaxFanout = nullptr;
+  mMaxInputNoiseWidth = nullptr;
   mMaxTransition = nullptr;
   mMinCapacitance = nullptr;
   mMinFanout = nullptr;
+  mMinInputNoiseWidth = nullptr;
+  mMinPeriod = nullptr;
+  mMinPulseWidthHigh = nullptr;
+  mMinPulseWidthLow = nullptr;
   mMinTransition = nullptr;
+  mMulticellPadPin = nullptr;
+  mNextstateType = nullptr;
+  mOutputSignalLevel = nullptr;
   mOutputVoltage = nullptr;
+  mPgFunction = nullptr;
+  mPinFuncType = nullptr;
+  mPowerDownFunction = nullptr;
+  mPreferTied = nullptr;
+  mPrimaryOutput = nullptr;
   mPullingCurrent = nullptr;
   mPullingResistance = nullptr;
+  mPulseClock = nullptr;
+  mRelatedGroundPin = nullptr;
+  mRelatedPowerPin = nullptr;
   mRiseCapacitance = nullptr;
   mRiseCurrentSlopeAfterThreshold = nullptr;
   mRiseCurrentSlopeBeforeThreshold = nullptr;
   mRiseTimeAfterThreshold = nullptr;
   mRiseTimeBeforeThreshold = nullptr;
+  mSignalType = nullptr;
+  mSlewControl = nullptr;
+  mSlewLowerThresholdPctFall = nullptr;
+  mSlewLowerThresholdPctRise = nullptr;
+  mSlewUpperThresholdPctFall = nullptr;
+  mSlewUpperThresholdPctRise = nullptr;
+  mStateFunction = nullptr;
+  mStdCellMainRail = nullptr;
+  mSwitchFunction = nullptr;
+  mSwitchPin = nullptr;
+  mTestOutputOnly = nullptr;
   mThreeState = nullptr;
   mVhdlName = nullptr;
+  mXFunction = nullptr;
+
+  mFallCapacitanceRange[0] = nullptr;
+  mFallCapacitanceRange[1] = nullptr;
+  mRiseCapacitanceRange[0] = nullptr;
+  mRiseCapacitanceRange[1] = nullptr;
+  mPowerGatingPinString = nullptr;
+  mPowerGatingPinInt = nullptr;
+
   mTimingList.clear();
 
   mValue = nullptr;
@@ -189,30 +427,6 @@ PinHandler::end_group(const FileRegion& group_loc)
 }
 
 #if 0
-// @brief グループ開始の処理を行う．
-void
-PinHandler::begin_group()
-{
-  GroupHandler::begin_group();
-}
-
-// @brief attr_type に対応する属性を読み込む．
-// @param[in] attr_type 対象の属性
-// @param[in] attr_loc attr_type のファイル上の位置
-// @retval 0 処理しなかった．
-// @retval 1 正常に処理した．
-// @retval 2 処理中にエラーが起こった．
-int
-PinHandler::parse_attr(AttrType attr_type,
-		       const FileRegion& attr_loc)
-{
-  if ( attr_type == AttrType::timing ) {
-    auto timing = mTimingHandler->parse_timing_value(attr_type, attr_loc);
-    mTimingList.push_back(timing);
-    return 1;
-  }
-  return GroupHandler::parse_attr(attr_type, attr_loc);
-}
 
 // @brief 値を作る．
 const AstNode*

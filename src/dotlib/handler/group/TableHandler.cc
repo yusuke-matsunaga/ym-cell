@@ -83,6 +83,12 @@ TableHandler::begin_group()
   mIndex2 = nullptr;
   mIndex3 = nullptr;
   mValues = nullptr;
+  mCoefs = nullptr;
+  mOrders = nullptr;
+  mVar1Range = nullptr;
+  mVar2Range = nullptr;
+  mVar3Range = nullptr;
+  mDomain = nullptr;
 
   mValue = nullptr;
 }
