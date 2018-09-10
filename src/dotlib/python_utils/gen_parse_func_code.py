@@ -11,6 +11,31 @@ import sys
 import argparse
 import os.path
 
+# 各属性に対する AstNode のクラス
+class_dict = {
+    'int' : 'Int',
+    'float' : 'Float',
+    'string' : 'String',
+    'bool' : 'Bool',
+    'direction' : 'PinDirection',
+    'technology' : 'Technology',
+    'timing_sense' : 'TimingSense',
+    'timing_type' : ' TimingType',
+    'expr' : 'Expr',
+    'function' : 'Expr',
+
+    'coefs' : 'FloatVector',
+    'orders' : 'IntVector',
+    'variable_range' : 'VariableRange',
+    'float2complex' : 'Float2',
+    'pg_pin' : 'PgPin',
+    'dc_current' : 'DcCurrent',
+    'electromigration' : 'Electromigration',
+    'timing' : 'Timing',
+    'tlatch' : 'Tlatch',
+    '???' : '???',
+    }
+
 attr_list = [
     ( 'bit_width', 'int', 'mBitWidth' ),
     ( 'capacitance', 'float', 'mCapacitance' ),
@@ -119,8 +144,10 @@ def gen_reg_func(fout, attr ) :
         is_list = True
     str = """  reg_func(AttrType::{},
            [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-           {{ return parser.parse_{}({}, attr_type, attr_loc); }} );""".format(attr_name, parse_func, member)
-    print(str, file = fout)
+           {{ return parser.parse_{}({}, attr_type, attr_loc); }} );
+""".format(attr_name, parse_func, member)
+    fout.write(str);
+
 
 def gen_clear(fout, attr ) :
     attr_name, parse_func, member = attr
@@ -128,11 +155,25 @@ def gen_clear(fout, attr ) :
     if attr_name == 'timing' :
         is_list = True
     if is_list :
-        str = "  {}.clear();".format(member)
+        str = "  {}.clear();\n".format(member)
     else :
-        str = "  {} = nullptr;".format(member)
-    print(str, file = fout)
+        str = "  {} = nullptr;\n".format(member)
+    fout.write(str)
 
+
+def gen_member(fout, attr) :
+    attr_name, parse_func, member = attr
+
+    class_name = class_dict[parse_func]
+    is_list = False
+    if attr_name == 'timing' :
+        is_list = True
+
+    if is_list :
+        str = "  vector<Ast{}*> {};\n".format(class_name, member)
+    else :
+        str = "  const Ast{}* {};\n".format(class_name, member)
+    fout.write(str)
 
 if __name__ == '__main__' :
 
@@ -145,14 +186,22 @@ if __name__ == '__main__' :
     mode_group.add_argument('--clear',
                             action = 'store_true',
                             help = 'generate clear code')
+    mode_group.add_argument('--header',
+                            action = 'store_true',
+                            help = 'generate clear code')
 
     args = parser.parse_args()
     if not args :
         exit(1)
 
+    fout = sys.stdout
+
     if args.init :
         for attr in attr_list :
-            gen_reg_func(sys.stdout, attr)
+            gen_reg_func(fout, attr)
     elif args.clear :
         for attr in attr_list :
-            gen_clear(sys.stdout, attr)
+            gen_clear(fout, attr)
+    elif args.header :
+        for attr in attr_list :
+            gen_member(fout, attr)
