@@ -11,31 +11,12 @@ import sys
 import argparse
 import os.path
 
-# 各属性に対する AstNode のクラス
-class_dict = {
-    'int' : 'Int',
-    'float' : 'Float',
-    'string' : 'String',
-    'bool' : 'Bool',
-    'direction' : 'PinDirection',
-    'technology' : 'Technology',
-    'timing_sense' : 'TimingSense',
-    'timing_type' : ' TimingType',
-    'expr' : 'Expr',
-    'function' : 'Expr',
+from gen_handler_code import gen_reg_func, gen_clear, gen_member
+from gen_handler_code import gen_accessor_decl, gen_accessor_def
 
-    'coefs' : 'FloatVector',
-    'orders' : 'IntVector',
-    'variable_range' : 'VariableRange',
-    'float2complex' : 'Float2',
-    'pg_pin' : 'PgPin',
-    'dc_current' : 'DcCurrent',
-    'electromigration' : 'Electromigration',
-    'timing' : 'Timing',
-    'tlatch' : 'Tlatch',
-    '???' : '???',
-    }
 
+# PinHandler 用のデータ
+# ( 属性名, 属性の型, メンバ変数名 ) のリスト
 attr_list = [
     ( 'bit_width', 'int', 'mBitWidth' ),
     ( 'capacitance', 'float', 'mCapacitance' ),
@@ -135,46 +116,6 @@ attr_list = [
     ]
 
 
-
-### @brief 'reg_func' 用のコードを生成する．
-def gen_reg_func(fout, attr ) :
-    attr_name, parse_func, member = attr
-    is_list = False
-    if attr_name == 'timing' :
-        is_list = True
-    str = """  reg_func(AttrType::{},
-           [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-           {{ return parser.parse_{}({}, attr_type, attr_loc); }} );
-""".format(attr_name, parse_func, member)
-    fout.write(str);
-
-
-def gen_clear(fout, attr ) :
-    attr_name, parse_func, member = attr
-    is_list = False
-    if attr_name == 'timing' :
-        is_list = True
-    if is_list :
-        str = "  {}.clear();\n".format(member)
-    else :
-        str = "  {} = nullptr;\n".format(member)
-    fout.write(str)
-
-
-def gen_member(fout, attr) :
-    attr_name, parse_func, member = attr
-
-    class_name = class_dict[parse_func]
-    is_list = False
-    if attr_name == 'timing' :
-        is_list = True
-
-    if is_list :
-        str = "  vector<Ast{}*> {};\n".format(class_name, member)
-    else :
-        str = "  const Ast{}* {};\n".format(class_name, member)
-    fout.write(str)
-
 if __name__ == '__main__' :
 
     parser = argparse.ArgumentParser()
@@ -189,12 +130,19 @@ if __name__ == '__main__' :
     mode_group.add_argument('--header',
                             action = 'store_true',
                             help = 'generate clear code')
+    mode_group.add_argument('--accessor-decl',
+                            action = 'store_true',
+                            help = 'generate accessor declaration code')
+    mode_group.add_argument('--accessor-def',
+                            action = 'store_true',
+                            help = 'generate accessor definition code')
 
     args = parser.parse_args()
     if not args :
         exit(1)
 
     fout = sys.stdout
+    parent_class = 'AstPin'
 
     if args.init :
         for attr in attr_list :
@@ -205,3 +153,9 @@ if __name__ == '__main__' :
     elif args.header :
         for attr in attr_list :
             gen_member(fout, attr)
+    elif args.accessor_decl :
+        for attr in attr_list :
+            gen_accessor_decl(fout, attr)
+    elif args.accessor_def :
+        for attr in attr_list :
+            gen_accessor_def(fout, parent_class, attr)
