@@ -1,37 +1,52 @@
 				liberty 文法覚書
 
-- 基本的な属性(attribute)として
-  * simple
-  * complex
-  * group
+- 基本的な構文として
+  * simple attribute
+  * complex attribute
+  * group statement
   の3種類がある．
-  根本の library 属性は gropu 属性でその下に再帰的に属性を持つ．
+  根本は library group statement でその下に再帰的に属性を持つ．
 
-- simple 属性は
+
+- simple attribute は
   <属性名> : <属性値> ;
   のシンタックスで表される．
   属性値としては
   * int
+  * bool
   * float
-  * float vector
   * string
   * expr
   がある．
 
-- complex 属性は
+  ただし，string 型の中には direction や technology の様に予め定められ
+  た文字列しか受け付けないものもある．
+  また，論理式は見かけは simple attribute だが，属性値の部分に空白を含
+  むためパーサー的には別に扱う．
+  ややこしいのは文字列中に式を書いた function 記述という型もある．
+  こちらは一旦文字列としてパースしてから式に変換する．
+
+
+- complex attribute は
   <属性名> ( <属性値1>, <属性値2>, ... ) ;
   のシンタックスで表される．
-  属性値は simple 属性と同じ．ただし expr はない．
+  属性値は simple attribute と同じ．ただし expr はない．
   個々の属性ごとに属性値の型は決まっている．
 
-- group 属性は
+  こちらもめんどくさいのは見かけは一つの文字列だが，中が空白で区切られ
+  た数値の場合がある(lookup table の values 属性等)．
+  そのため特別なハンドラを用意する．
+
+
+- group statement は
   <属性名> ( <属性値1>, <属性値2>, ... ) {
      <属性記述1>
      <属性記述2>
      ...
   }
   のシンタックスで表される．
-  属性記述には simple, complex, group の属性が記述できる．
+  最初の行は行末の '{' 以外は complex attribute と同様である．
+  属性記述には simple attribute, complex attribute, group statement が記述できる．
 
 - 多くの属性はそのグループ内において唯一のみ定義される．
 
@@ -55,41 +70,61 @@
   * pin.internal_power
   * pin.timing
 
-- パーサーの基本構造としては simple, complex, group の各属性用のパーサー
-  を作り，個別の属性用に継承クラスを作る．
+- パーサーの基本構造としては simple attribute, complex attribute,
+  group statement の各属性用のパース関数を作る．
+  そのなかで個々の属性に応じた処理を行うため DotlibHandler
+  というクラスを用いる．
+  この DotlibHandler を継承したクラスが実際のパース処理を行う．
 
-- 基本的に単一値用の汎用クラスを作り，複数値のみ継承クラスで扱う．
 
-- 属性の型は
-  * [simple] int
-  * [simple] float
-  * [simple] num ( int or float)
-  * [simple] string
-  * [simple] expr
-  * [simple] 'technology'
-  * [simple] 'delay model'
-  * [simple] 'direction'
-  * [simple] 'timing sense'
-  * [simple] 'timing type'
-  * [simple] 'variable type'
+- simple attribute の型は
+  * int                  -> Int
+  * bool                 -> Bool
+  * float                -> Float
+  * string               -> String
+  * expr                 -> Expr
+  * function             -> Expr
+  * 'clear_preset_var_n' -> CPType
+  * 'delay_model'        -> DelayModel
+  * 'direction'          -> PinDirection
+  * 'technology'         -> Technology
+  * 'timing_sense'       -> TimingSense
+  * 'timing_type'        -> TimingType
+  * 'variable_type'      -> VarType
 
-  * [complex] float vector
-  * [complex] 'piece wise'
-  * [complex] 'unit'
 
-  * [group] 'bus'
-  * [group] 'bundle'
-  * [group] 'cell'
-  * [group] 'ff'
-  * [group] 'input voltage'
-  * [group] 'latch'
-  * [group] 'library'
-  * [group] 'lut'
-  * [group] 'output voltage'
-  * [group] 'pin'
-  * [group] 'state table'
-  * [group] 'template'
-  * [group] 'timing'
+- complex attribute の型は
+  * 'coefs'              -> FloatVector
+  * (float, float)       -> Float, Float
+  * 'index_n'            -> FloatVector
+  * 'orders'             -> IntVector
+  * 'piece wise'         -> PieceWise
+  * 'unit'               -> Unit
+  * 'values'             -> FloatVector
+  * 'variable_n_range'   -> VariableRange
+
+
+- group statement の型は
+  * 'bus'                -> Bus
+  * 'bundle'             -> Bundle
+  * 'cell'               -> Cell
+  * 'cell_degradation'   -> CellDegradation
+  * 'domain'             -> Domain
+  * 'ff'                 -> FF
+  * 'ff_bank'            -> FFBank
+  * 'input_voltage'      -> InputVoltage
+  * 'latch'              -> Latch
+  * 'latch_bank'         -> LatchBank
+  * 'library'            -> Library
+  * 'lu_table'           -> Lut
+  * 'output_voltage'     -> OutputVoltage
+  * 'pin'                -> Pin
+  * 'statetable'         -> Statetable
+  * 'template'           -> Template
+  * 'timing'             -> Timing
+
+
+- 以下，整理されていないおぼえ書き
 
 - "ff" と ff は同じ
 
