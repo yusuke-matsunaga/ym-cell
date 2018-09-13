@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-### @file gen_reg_func.py
+### @file gen_handler_func.py
 ### @brief GroupHandler のパース関数登録用のコードを生成するスクリプト
 ### @author Yusuke Matsunaga (松永 裕介)
 ###
@@ -40,36 +40,53 @@ class_dict = {
     '???' : '???',
     }
 
-# BOMコードを出力する．
+
+### @brief BOMコードを出力する．
+### @param[in] fout 出力先のファイルオブジェクト
 def write_BOM(fout) :
     fout.write('\ufeff')
 
+
 ### @brief 属性の型からクラス名に変換する．
+### @param[in] attr_type 属性の型(class_dict の値)
+### @return AstNode の派生クラス名を返す．
 def type_to_class(attr_type) :
     return "Ast{}".format(class_dict[attr_type])
 
+### @brief 属性の型からハンドラクラス名に変換する．
+### @param[in] attr_type 属性の型(class_dict の値)
+### @return ハンドラのクラス名を返す．
 def type_to_handler(attr_type) :
     return "{}Handler".format(class_dict[attr_type])
 
+### @brief 属性の型からビルダークラス名に変換する．
+### @param[in] attr_type 属性の型(class_dict の値)
+### @return ビルダーのクラス名を返す．
 def type_to_builder(attr_type) :
     return "Tmp{}".format(class_dict[attr_type])
 
 
 ### @brief クラス名からインターロック用のマクロ名を作る．
+### @param[in] class_name クラス名
 def class_to_macro(class_name) :
     return "{}_H".format(class_name.upper())
 
 
 ### @brief 属性の型からパース関数名に変換する．
+### @param[in] attr_type 属性の型(class_dict の値)
 def type_to_function(attr_type) :
     return 'parse_{}'.format(attr_type)
 
 
 ### @brief 属性名からリスト型かどうか判別する．
+### @param[in] attr_type 属性の型(class_dict の値)
+### @retval True リスト型だった．
+### @retval False 単一のオブジェクト型だった．
 def is_list_type(attr_name) :
     if attr_name == 'timing' :
         return True
-    return False
+    else :
+        return False
 
 
 ### @brief AstXXX.h を生成する．
@@ -77,6 +94,7 @@ def is_list_type(attr_name) :
 ### @param[in] class_def クラスの情報を持つオブジェクト
 def gen_ast_header(fout, class_def) :
     class_name = type_to_class(class_def.data_type)
+    builder_name = type_to_builder(class_def.data_type)
     desc = class_def.desc
     attr_list = class_def.attr_list
     macro_name = class_to_macro(class_name)
@@ -100,8 +118,10 @@ def gen_ast_header(fout, class_def) :
     fout.write('\n')
     fout.write('BEGIN_NAMESPACE_YM_DOTLIB\n')
     fout.write('\n')
+    fout.write('class {};\n'.format(builder_name))
+    fout.write('\n')
     fout.write('//////////////////////////////////////////////////////////////////////\n')
-    fout.write('/// @class {} {}.h "dotlib/{}.h"\n'.format(class_name, class_name, class_name))
+    fout.write('/// @class {0} {0}.h "dotlib/{0}.h"\n'.format(class_name))
     fout.write('/// @brief {} の情報を表す AstNode の派生クラス\n'.format(desc))
     fout.write('//////////////////////////////////////////////////////////////////////\n')
     fout.write('class {} :\n'.format(class_name))
@@ -110,14 +130,17 @@ def gen_ast_header(fout, class_def) :
     fout.write('public:\n')
     fout.write('\n')
     fout.write('  /// @brief コンストラクタ\n')
-    fout.write('  {}(const FileRegion& loc,\n'.format(class_name))
-    cspc = ' ' * len('  {}('.format(class_name))
-    fout.write('{}{}& builder,\n'.format(cspc, builder_class))
+    head_str = '  {}'.format(class_name)
+    fout.write('{}(const FileRegion& loc,\n'.format(head_str))
+    cspc = ' ' * len(head_str)
+    fout.write('{} {}& builder,\n'.format(cspc, builder_name))
+    """
     class_def.gen_constructor_arguments(fout, cspc)
     for attr_name, attr_type, member, req in attr_list :
         attr_class = type_to_class(attr_type)
         fout.write('{}const {}* {},\n'.format(cspc, attr_class, attr_name))
-    fout.write('{}Alloc& alloc);\n'.format(cspc))
+    """
+    fout.write('{} Alloc& alloc);\n'.format(cspc))
     fout.write('\n')
     fout.write('  /// @brief デストラクタ\n')
     fout.write('  ~{}()\n'.format(class_name))
@@ -217,6 +240,7 @@ def gen_ast_header(fout, class_def) :
 ### @param[in] class_def クラスの情報を持つオブジェクト
 def gen_ast_source(fout, class_def) :
     class_name = type_to_class(class_def.data_type)
+    builder_name = type_to_builder(class_def.data_type)
     desc = class_def.desc
     attr_list = class_def.attr_list
 
@@ -232,6 +256,7 @@ def gen_ast_source(fout, class_def) :
     fout.write('\n')
     fout.write('#include "dotlib/AstMgr.h"\n')
     fout.write('#include "dotlib/{}.h"\n'.format(class_name))
+    fout.write('#include "dotlib/{}.h"\n'.format(builder_name))
     fout.write('#include "ym/Range.h"\n')
     fout.write('\n')
     fout.write('\n')
@@ -239,34 +264,13 @@ def gen_ast_source(fout, class_def) :
     fout.write('\n')
     fout.write('// @brief {} を表す AstNode の派生クラス ({}) を生成する．\n'.format(desc, class_name))
     fout.write('const {}*\n'.format(class_name))
-    fout.write('AstMgr::new_{}(const FileRegion& loc,\n'.format(class_def.data_type))
-    cspc = ' ' * (len('AstMgr::new_{}('.format(class_def.data_type)))
-    class_def.gen_constructor_arguments(fout, cspc)
-    first = True
-    for attr_name, attr_type, member, req in attr_list :
-        if first :
-            first = False
-        else :
-            fout.write(',\n')
-        attr_class = type_to_class(attr_type)
-        if is_list_type(attr_type) :
-            fout.write('{}const vector<const {}*>& {}_list'.format(cspc, attr_class, attr_name))
-        else :
-            fout.write('{}const {}* {}'.format(cspc, attr_class, attr_name))
-    fout.write(')\n')
+    head_str = 'AstMgr::new_{}'.format(class_def.data_type)
+    fout.write('{}(const FileRegion& loc,\n'.format(head_str))
+    cspc = ' ' * len(head_str)
+    fout.write('{} const {}& builder)\n'.format(cspc, builder_name))
     fout.write('{\n')
     fout.write('  void* p = mAlloc.get_memory(sizeof({}));\n'.format(class_name))
-    fout.write('  return new (p) {}(loc,\n'.format(class_name))
-    cspc = ' ' * (len('  return new (p) {}('.format(class_name)))
-    class_def.gen_constructor_arguments2(fout, cspc)
-    for attr_name, attr_type, member, req in attr_list :
-        attr_class = type_to_class(attr_type)
-        if is_list_type(attr_type) :
-            fmt_str = '{}{}_list,\n'
-        else :
-            fmt_str = '{}{},\n'
-        fout.write(fmt_str.format(cspc, member))
-    fout.write('{}mAlloc);\n'.format(cspc))
+    fout.write('  return new (p) {}(loc, builder, mAlloc);\n'.format(class_name))
     fout.write('}\n')
     fout.write('\n')
     fout.write('\n')
@@ -275,17 +279,11 @@ def gen_ast_source(fout, class_def) :
     fout.write('//////////////////////////////////////////////////////////////////////\n')
     fout.write('\n')
     fout.write('// @brief コンストラクタ\n')
-    fout.write('{0}::{0}(const FileRegion& loc,\n'.format(class_name))
-    cspc = ' ' * len('{0}::{0}('.format(class_name))
-    fout.write('{}const {}& builder,\n'.format(cspc, builder_class))
-    class_def.gen_constructor_arguments(fout, cspc)
-    for attr_name, attr_type, member, req in attr_list :
-        attr_class = type_to_class(attr_type)
-        if is_list_type(attr_type) :
-            fout.write('{}const vector<const {}*>& {},\n'.format(cspc, attr_class, attr_name))
-        else :
-            fout.write('{}const {}* {},\n'.format(cspc, attr_class, attr_name))
-    fout.write('{}Alloc& alloc) :\n'.format(cspc))
+    head_str = '{0}::{0}'.format(class_name)
+    cspc = ' ' * len(head_str)
+    fout.write('{}(const FileRegion& loc,\n'.format(head_str))
+    fout.write('{} const {}& builder,\n'.format(cspc, builder_name))
+    fout.write('{} Alloc& alloc) :\n'.format(cspc))
     fout.write('  AstNode(loc),\n')
     class_def.gen_member_init(fout)
     first = True
@@ -296,17 +294,17 @@ def gen_ast_source(fout, class_def) :
             fout.write(',\n')
         attr_class = type_to_class(attr_type)
         if is_list_type(attr_type) :
-            fout.write('  {}Num({}_list.size()),\n'.format(member, attr_name))
+            fout.write('  {}Num(builder.{}.size()),\n'.format(member, attr_name))
             fout.write('  {}List(alloc.get_array<const {}*>({}Num))'.format(member, attr_class, member))
         else :
-            fout.write('  {}({})'.format(member, attr_name))
+            fout.write('  {}(builder.{})'.format(member, attr_name))
     fout.write('\n')
     fout.write('{\n')
     class_def.gen_member_init2(fout)
     for attr_name, attr_type, member, req in attr_list :
         if is_list_type(attr_type) :
             fout.write('  for ( auto i: Range({}Num) ) {{\n'.format(member))
-            fout.write('    {}List[i] = {}_list[i];\n'.format(member, attr_name))
+            fout.write('    {}List[i] = builder.{}[i];\n'.format(member, attr_name))
             fout.write('  }\n')
     fout.write('}\n')
     fout.write('\n')
@@ -422,7 +420,7 @@ def gen_handler_header(fout, class_def) :
     fout.write('  // データメンバ\n')
     fout.write('  //////////////////////////////////////////////////////////////////////\n')
     fout.write('\n')
-    fout.write('  {} mBuilder;\n'.format(builder_name)
+    fout.write('  {} mBuilder;\n'.format(builder_name))
     fout.write('\n')
     fout.write('  // 読み込んだ値\n')
     fout.write('  const {}* mValue;\n'.format(class_name))
@@ -469,11 +467,7 @@ def gen_handler_source(fout, class_def) :
         attr_func = type_to_function(attr_type)
         fout.write('  reg_func(AttrType::{},\n'.format(attr_name))
         fout.write('           [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool\n')
-        if is_list_type(attr_type) :
-            fmt_str = '           {{ return parser.{}(mBuilder.{}, attr_type, attr_loc); }} );\n'
-        else :
-            fmt_str = '           {{ return parser.{}(mBuilder.{}, attr_type, attr_loc); }} );\n'
-        fout.write(fmt_str.format(attr_func, member))
+        fout.write('           {{ return parser.{}(mBuilder.{}, attr_type, attr_loc); }} );\n'.format(attr_func, member))
     fout.write('}\n')
     fout.write('\n')
     fout.write('// @brief デストラクタ\n')
@@ -511,12 +505,7 @@ def gen_handler_source(fout, class_def) :
     fout.write('{}::begin_group()\n'.format(handler_name))
     fout.write('{\n')
     fout.write('  mBuilder.clear();\n')
-    for attr_name, attr_type, member, req in attr_list :
-        if is_list_type(attr_name) :
-            fmt_str = '  {}.clear();\n'
-        else :
-            fmt_str = '  {} = nullptr;\n'
-        fout.write(fmt_str.format(member))
+    class_def.gen_handler_begin_group_code(fout)
     fout.write('\n')
     fout.write('  mValue = nullptr;\n')
     fout.write('}\n')
@@ -531,33 +520,10 @@ def gen_handler_source(fout, class_def) :
     fout.write('  if ( !mBuilder.check_sanity() ) {\n')
     fout.write('    return false;\n')
     fout.write('  }\n')
-    class_def.gen_handler_end_group_code(fout)
-    for attr_name, attr_type, member, req in attr_list :
-        if req :
-            if is_list_type(attr_name) :
-                fout.write('  if ( {}.empty() ) {{\n'.format(member))
-            else :
-                fout.write('  if ( {} == nullptr ) {{\n'.format(member))
-            fout.write('    MsgMgr::put_msg(__FILE__, __LINE__,\n')
-            fout.write('                    group_loc,\n')
-            fout.write('                    MsgType::Error,\n')
-            fout.write('                    "DOTLIB_PARSER",\n')
-            fout.write('                    "{} is missing.");\n'.format(attr_name))
-            fout.write('    return false;\n')
-            fout.write('  }\n')
-    fout.write('\n')
-    fout.write('  mValue = mgr().new_{}(group_loc, mBuilder);\n'.format(class_def.data_type))
-    cspc = ' ' * (len('  mValue = mgr().new_{}('.format(class_def.data_type)))
-    class_def.gen_handler_arguments(cspc, fout)
-    first = True
-    for attr_name, attr_type, member, req in attr_list :
-        if first :
-            first = False
-        else :
-            fout.write(',\n')
-        fout.write('{}{}'.format(cspc, member))
-    fout.write(');\n')
-    fout.write('  return true;\n')
+    fout.write('  else {\n')
+    fout.write('    mValue = mgr().new_{}(group_loc, mBuilder);\n'.format(class_def.data_type))
+    fout.write('    return true;\n')
+    fout.write('  }\n')
     fout.write('}\n')
     fout.write('\n')
     fout.write('END_NAMESPACE_YM_DOTLIB\n')
@@ -610,7 +576,38 @@ def gen_builder_header(fout, class_def) :
     fout.write('\n')
     fout.write('  /// @brief 内容をクリアする．\n')
     fout.write('  void\n')
-    fout.write('  clear();\n')
+    fout.write('  clear()\n')
+    fout.write('  {\n')
+    for attr_name, attr_type, member, req in attr_list :
+        if is_list_type(attr_name) :
+            fmt_str = '    {}.clear();\n'
+        else :
+            fmt_str = '    {} = nullptr;\n'
+        fout.write(fmt_str.format(member))
+    fout.write('  }\n')
+    fout.write('\n')
+    fout.write('  /// @brief 設定内容が適切かチェックする．\n')
+    fout.write('  bool\n')
+    fout.write('  check_sanity()\n')
+    fout.write('  {\n')
+    class_def.gen_builder_check_code(fout)
+    for attr_name, attr_type, member, req in attr_list :
+        if not req :
+            continue
+        if is_list_type(attr_name) :
+            fmt_str = '    if ( {}.empty() ) {{\n'
+        else :
+            fmt_str = '    if ( {} == nullptr ) {{\n'
+        fout.write(fmt_str.format(member))
+        fout.write('      MsgMgr::put_msg(__FILE__, __LINE__,\n')
+        fout.write('                      group_loc,\n')
+        fout.write('                      MsgType::Error,\n')
+        fout.write('                      "DOTLIB_PARSER",\n')
+        fout.write('                      "{} is missing.");\n'.format(attr_name))
+        fout.write('      return false;\n')
+        fout.write('    }\n')
+    fout.write('  }\n')
+    fout.write('\n')
     fout.write('\n')
     fout.write('public:\n')
     fout.write('  //////////////////////////////////////////////////////////////////////\n')

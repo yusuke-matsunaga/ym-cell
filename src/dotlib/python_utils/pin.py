@@ -13,6 +13,7 @@ import os.path
 
 from gen_handler_code import gen_ast_header, gen_ast_source
 from gen_handler_code import gen_handler_header, gen_handler_source
+from gen_handler_code import gen_builder_header
 from gen_handler_code import type_to_class
 
 class PinClassDef :
@@ -142,13 +143,13 @@ class PinClassDef :
 
     ### @brief メンバの初期化文を生成する．
     def gen_member_init(self, fout) :
-        fout.write('  mNameNum(name_list.size()),\n')
+        fout.write('  mNameNum(builder.name_list().size()),\n')
         fout.write('  mNameList(alloc.get_array<const AstString*>(mNameNum)),\n')
 
     ### @brief メンバの初期化文を生成する．
     def gen_member_init2(self, fout) :
         fout.write('  for ( auto i: Range(mNameNum) ) {\n')
-        fout.write('    mNameList[i] = name_list[i];\n')
+        fout.write('    mNameList[i] = builder.name_list()[i];\n')
         fout.write('  }\n')
 
     ### @brief メンバ定義を生成する．
@@ -285,12 +286,24 @@ PinHandler::end_header(const FileRegion& header_loc,
         fout.write(str)
 
     ### @brief ハンドラの end_group() 中のヘッダ引数を生成する．
+    def gen_handler_begin_group_code(self, fout) :
+        pass
+
+    ### @brief ハンドラの end_group() 中のヘッダ引数を生成する．
     def gen_handler_end_group_code(self, fout) :
         pass
 
     ### @brief ハンドラの end_group() 中のヘッダ引数を生成する．
     def gen_handler_arguments(self, cspc, fout) :
         fout.write('{}mNameList,\n'.format(cspc))
+
+    ### @brief ビルダーの check_sanity() 用のコードを生成する．
+    def gen_builder_check_code(self, fout) :
+        pass
+
+    ### @brief ビルダーのメンバ変数定義を生成する．
+    def gen_builder_member(self, fout) :
+        fout.write('  vector<const AstString*> mNameList;\n')
 
 
 if __name__ == '__main__' :
@@ -310,6 +323,9 @@ if __name__ == '__main__' :
     mode_group.add_argument('--handler_source',
                             action = 'store_true',
                             help = 'generate PinHandler.cc')
+    mode_group.add_argument('--builder_header',
+                            action = 'store_true',
+                            help = 'generate TmpPin.h')
 
     args = parser.parse_args()
     if not args :
@@ -326,3 +342,5 @@ if __name__ == '__main__' :
         gen_handler_header(fout, class_def)
     elif args.handler_source :
         gen_handler_source(fout, class_def)
+    elif args.builder_header :
+        gen_builder_header(fout, class_def)
