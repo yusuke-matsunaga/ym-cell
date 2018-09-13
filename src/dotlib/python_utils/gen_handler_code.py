@@ -51,6 +51,9 @@ def type_to_class(attr_type) :
 def type_to_handler(attr_type) :
     return "{}Handler".format(class_dict[attr_type])
 
+def type_to_builder(attr_type) :
+    return "Tmp{}".format(class_dict[attr_type])
+
 
 ### @brief クラス名からインターロック用のマクロ名を作る．
 def class_to_macro(class_name) :
@@ -109,6 +112,7 @@ def gen_ast_header(fout, class_def) :
     fout.write('  /// @brief コンストラクタ\n')
     fout.write('  {}(const FileRegion& loc,\n'.format(class_name))
     cspc = ' ' * len('  {}('.format(class_name))
+    fout.write('{}{}& builder,\n'.format(cspc, builder_class))
     class_def.gen_constructor_arguments(fout, cspc)
     for attr_name, attr_type, member, req in attr_list :
         attr_class = type_to_class(attr_type)
@@ -273,6 +277,7 @@ def gen_ast_source(fout, class_def) :
     fout.write('// @brief コンストラクタ\n')
     fout.write('{0}::{0}(const FileRegion& loc,\n'.format(class_name))
     cspc = ' ' * len('{0}::{0}('.format(class_name))
+    fout.write('{}const {}& builder,\n'.format(cspc, builder_class))
     class_def.gen_constructor_arguments(fout, cspc)
     for attr_name, attr_type, member, req in attr_list :
         attr_class = type_to_class(attr_type)
@@ -330,6 +335,7 @@ def gen_ast_source(fout, class_def) :
 def gen_handler_header(fout, class_def) :
     class_name = type_to_class(class_def.data_type)
     handler_name = type_to_handler(class_def.data_type)
+    builder_name = type_to_builder(class_def.data_type)
     desc = class_def.desc
     attr_list = class_def.attr_list
     macro_name = class_to_macro(handler_name)
@@ -346,6 +352,7 @@ def gen_handler_header(fout, class_def) :
     fout.write('/// All rights reserved.\n')
     fout.write('\n')
     fout.write('#include "dotlib/{}.h"\n'.format(class_def.parent_class))
+    fout.write('#include "dotlib/{}.h"\n'.format(builder_name))
     fout.write('\n')
     fout.write('\n')
     fout.write('BEGIN_NAMESPACE_YM_DOTLIB\n')
@@ -415,13 +422,7 @@ def gen_handler_header(fout, class_def) :
     fout.write('  // データメンバ\n')
     fout.write('  //////////////////////////////////////////////////////////////////////\n')
     fout.write('\n')
-    class_def.gen_handler_member(fout);
-    for attr_name, attr_type, member, req in attr_list :
-        attr_class = type_to_class(attr_type)
-        if is_list_type(attr_type) :
-            fout.write('  vector<const {}*> {}List;\n'.format(attr_class, member))
-        else :
-            fout.write('  const {}* {};\n'.format(attr_class, member))
+    fout.write('  {} mBuilder;\n'.format(builder_name)
     fout.write('\n')
     fout.write('  // 読み込んだ値\n')
     fout.write('  const {}* mValue;\n'.format(class_name))
@@ -469,9 +470,9 @@ def gen_handler_source(fout, class_def) :
         fout.write('  reg_func(AttrType::{},\n'.format(attr_name))
         fout.write('           [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool\n')
         if is_list_type(attr_type) :
-            fmt_str = '           {{ return parser.{}({}List, attr_type, attr_loc); }} );\n'
+            fmt_str = '           {{ return parser.{}(mBuilder.{}, attr_type, attr_loc); }} );\n'
         else :
-            fmt_str = '           {{ return parser.{}({}, attr_type, attr_loc); }} );\n'
+            fmt_str = '           {{ return parser.{}(mBuilder.{}, attr_type, attr_loc); }} );\n'
         fout.write(fmt_str.format(attr_func, member))
     fout.write('}\n')
     fout.write('\n')
@@ -489,9 +490,10 @@ def gen_handler_source(fout, class_def) :
     fout.write('// @retval false エラーが起きた．\n')
     fout.write('bool\n')
     if is_list_type(class_def.data_type) :
-        fout.write('{}::parse_value(vector<const {}*>& dst_list)\n'.format(handler_name, class_name))
+        fmt_str = '{}::parse_value(vector<const {}*>& dst_list)\n'
     else :
-        fout.write('{}::parse_value(const {}*& dst)\n'.format(handler_name, class_name))
+        fmt_str = '{}::parse_value(const {}*& dst)\n'
+    fout.write(fmt_str.format(handler_name, class_name))
     fout.write('{\n')
     fout.write('  bool stat = parse_group_statement();\n')
     fout.write('  if ( stat ) {\n')
@@ -508,6 +510,7 @@ def gen_handler_source(fout, class_def) :
     fout.write('void\n')
     fout.write('{}::begin_group()\n'.format(handler_name))
     fout.write('{\n')
+    fout.write('  mBuilder.clear();\n')
     for attr_name, attr_type, member, req in attr_list :
         if is_list_type(attr_name) :
             fmt_str = '  {}.clear();\n'
@@ -525,6 +528,9 @@ def gen_handler_source(fout, class_def) :
     fout.write('bool\n')
     fout.write('{}::end_group(const FileRegion& group_loc)\n'.format(handler_name))
     fout.write('{\n')
+    fout.write('  if ( !mBuilder.check_sanity() ) {\n')
+    fout.write('    return false;\n')
+    fout.write('  }\n')
     class_def.gen_handler_end_group_code(fout)
     for attr_name, attr_type, member, req in attr_list :
         if req :
@@ -540,7 +546,7 @@ def gen_handler_source(fout, class_def) :
             fout.write('    return false;\n')
             fout.write('  }\n')
     fout.write('\n')
-    fout.write('  mValue = mgr().new_{}(group_loc,\n'.format(class_def.data_type))
+    fout.write('  mValue = mgr().new_{}(group_loc, mBuilder);\n'.format(class_def.data_type))
     cspc = ' ' * (len('  mValue = mgr().new_{}('.format(class_def.data_type)))
     class_def.gen_handler_arguments(cspc, fout)
     first = True
@@ -555,3 +561,72 @@ def gen_handler_source(fout, class_def) :
     fout.write('}\n')
     fout.write('\n')
     fout.write('END_NAMESPACE_YM_DOTLIB\n')
+
+
+### @brief TmpXXXr.h を生成する．
+### @param[in] fout 出力先のファイルオブジェクト
+### @param[in] class_def クラスの情報を持つオブジェクト
+def gen_builder_header(fout, class_def) :
+    class_name = type_to_class(class_def.data_type)
+    builder_name = type_to_builder(class_def.data_type)
+    desc = class_def.desc
+    attr_list = class_def.attr_list
+    macro_name = class_to_macro(builder_name)
+
+    write_BOM(fout)
+    fout.write('#ifndef {}\n'.format(macro_name))
+    fout.write('#define {}\n'.format(macro_name))
+    fout.write('\n')
+    fout.write('/// @file {}.h\n'.format(builder_name))
+    fout.write('/// @brief {} のヘッダファイル\n'.format(builder_name))
+    fout.write('/// @author Yusuke Matsunaga (松永 裕介)\n')
+    fout.write('///\n')
+    fout.write('/// Copyright (C) 2018 Yusuke Matsunaga\n')
+    fout.write('/// All rights reserved.\n')
+    fout.write('\n')
+    fout.write('#include "dotlib_nsdef.h"\n')
+    fout.write('\n')
+    fout.write('\n')
+    fout.write('BEGIN_NAMESPACE_YM_DOTLIB\n')
+    fout.write('\n')
+    fout.write('//////////////////////////////////////////////////////////////////////\n')
+    fout.write('/// @class {0} {0}.h "dotlib/{0}.h"\n'.format(builder_name))
+    fout.write('/// @brief \'{}\' Group Statement 用のビルダークラス\n'.format(class_def.data_type))
+    fout.write('//////////////////////////////////////////////////////////////////////\n')
+    fout.write('class {}\n'.format(builder_name))
+    fout.write('{\n')
+    fout.write('public:\n')
+    fout.write('\n')
+    fout.write('  /// @brief コンストラクタ\n')
+    fout.write('  {}() {{ }};\n'.format(builder_name))
+    fout.write('\n')
+    fout.write('  /// @brief デストラクタ\n')
+    fout.write('  ~{}() {{ }};\n'.format(builder_name))
+    fout.write('\n')
+    fout.write('public:\n')
+    fout.write('  //////////////////////////////////////////////////////////////////////\n')
+    fout.write('  // データメンバ\n')
+    fout.write('  //////////////////////////////////////////////////////////////////////\n')
+    fout.write('\n')
+    fout.write('  /// @brief 内容をクリアする．\n')
+    fout.write('  void\n')
+    fout.write('  clear();\n')
+    fout.write('\n')
+    fout.write('public:\n')
+    fout.write('  //////////////////////////////////////////////////////////////////////\n')
+    fout.write('  // データメンバ\n')
+    fout.write('  //////////////////////////////////////////////////////////////////////\n')
+    fout.write('\n')
+    class_def.gen_builder_member(fout);
+    for attr_name, attr_type, member, req in attr_list :
+        attr_class = type_to_class(attr_type)
+        if is_list_type(attr_type) :
+            fmt_str = '  vector<const {}*> {};\n'
+        else :
+            fmt_str = '  const {}* {};\n'
+        fout.write(fmt_str.format(attr_class, member))
+    fout.write('};\n')
+    fout.write('\n')
+    fout.write('END_NAMESPACE_YM_DOTBLIB\n')
+    fout.write('\n')
+    fout.write('#endif // {}\n'.format(macro_name))

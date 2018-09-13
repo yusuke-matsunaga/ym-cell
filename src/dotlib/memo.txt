@@ -76,52 +76,74 @@
   というクラスを用いる．
   この DotlibHandler を継承したクラスが実際のパース処理を行う．
 
+- パースした構文木を表すために AstNode というクラスを用意する．
+  実際には AstNode の派生クラスの木構造で構文木を表す．
 
-- simple attribute の型は
-  * int                  -> Int
-  * bool                 -> Bool
-  * float                -> Float
-  * string               -> String
-  * expr                 -> Expr
-  * function             -> Expr
-  * 'clear_preset_var_n' -> CPType
-  * 'delay_model'        -> DelayModel
-  * 'direction'          -> PinDirection
-  * 'technology'         -> Technology
-  * 'timing_sense'       -> TimingSense
-  * 'timing_type'        -> TimingType
-  * 'variable_type'      -> VarType
-
-
-- complex attribute の型は
-  * 'coefs'              -> FloatVector
-  * (float, float)       -> Float, Float
-  * 'index_n'            -> FloatVector
-  * 'orders'             -> IntVector
-  * 'piece wise'         -> PieceWise
-  * 'unit'               -> Unit
-  * 'values'             -> FloatVector
-  * 'variable_n_range'   -> VariableRange
+- simple attribute とそれに対応する AstNode の派生クラス
+  * int                  -> AstInt
+  * bool                 -> AstBool
+  * float                -> AstFloat
+  * string               -> AstString
+  * expr                 -> AstExpr
+  * function             -> AstExpr
+  * 'clear_preset_var_n' -> AstCPType
+  * 'delay_model'        -> AstDelayModel
+  * 'direction'          -> AstPinDirection
+  * 'technology'         -> AstTechnology
+  * 'timing_sense'       -> AstTimingSense
+  * 'timing_type'        -> AstTimingType
+  * 'variable_type'      -> AstVarType
 
 
-- group statement の型は
-  * 'bus'                -> Bus
-  * 'bundle'             -> Bundle
-  * 'cell'               -> Cell
-  * 'cell_degradation'   -> CellDegradation
-  * 'domain'             -> Domain
-  * 'ff'                 -> FF
-  * 'ff_bank'            -> FFBank
-  * 'input_voltage'      -> InputVoltage
-  * 'latch'              -> Latch
-  * 'latch_bank'         -> LatchBank
-  * 'library'            -> Library
-  * 'lu_table'           -> Lut
-  * 'output_voltage'     -> OutputVoltage
-  * 'pin'                -> Pin
-  * 'statetable'         -> Statetable
-  * 'template'           -> Template
-  * 'timing'             -> Timing
+- complex attribute とそれに対応する AstNode の派生クラス
+  * 'coefs'              -> AstFloatVector
+  * (float, float)       -> (AstFloat, AstFloat)
+  * 'index_n'            -> AstFloatVector
+  * 'orders'             -> AstIntVector
+  * 'piece wise'         -> AstPieceWise
+  * 'unit'               -> AstUnit
+  * 'values'             -> AstFloatVector
+  * 'variable_n_range'   -> AstVariableRange
+
+
+- group statement とそれに対応する AstNode の派生クラス
+  * 'bus'                -> AstBus
+  * 'bundle'             -> AstBundle
+  * 'cell'               -> AstCell
+  * 'cell_degradation'   -> AstCellDegradation
+  * 'domain'             -> AstDomain
+  * 'ff'                 -> AstFF
+  * 'ff_bank'            -> AstFFBank
+  * 'input_voltage'      -> AstInputVoltage
+  * 'latch'              -> AstLatch
+  * 'latch_bank'         -> AstLatchBank
+  * 'library'            -> AstLibrary
+  * 'lu_table'           -> AstLut
+  * 'output_voltage'     -> AstOutputVoltage
+  * 'pin'                -> AstPin
+  * 'statetable'         -> AstStatetable
+  * 'template'           -> AstTemplate
+  * 'timing'             -> AstTiming
+
+
+- AstXXX はコンストラクタで値を設定したらあとは const にしたいので，ビ
+  ルダークラスを用意する．AstXXX を読み込む XXXHandler は一旦そのビル
+  ダークラスのメンバに値を設定し，そのビルダークラスを AstXXX のコンス
+  トラクタに渡す．
+  このような二度手間にしている理由は２つ．
+  * 可変長のリストをビルダクラス中では vector<> で保持しておいて
+    AstXXX のコンストラクタでは固定長の配列として確保する．
+  * パース途中でエラーが起こった場合に AstXXX のオブジェクトを確保
+    しない．ビルダークラスのオブジェクトは自動変数として確保しておくの
+    でエラー時には自動的に削除される．
+
+- AstXXX, XXXHandler, ビルダークラスと関連した情報を持つのでもととなる
+  データからこれらのクラスのヘッダファイルとソースファイルを自動生成す
+  る Python スクリプトを用意する．
+  一旦，ファイルを作ってしまえば仕様変更がない限り再度生成する必要はな
+  いので，生成後のファイルに手直しをすることも可能．
+
+- ビルダークラスの名前は TmpXXX とする．
 
 
 - 以下，整理されていないおぼえ書き
