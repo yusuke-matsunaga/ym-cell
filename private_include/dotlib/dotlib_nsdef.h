@@ -34,9 +34,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class DotlibParser;
 class DotlibHandler;
 class SimpleHandler;
-class ComplexHandler;
+class HeaderHandler;
 class GroupHandler;
-class CGHandler;
 
 class AstMgr;
 class AstAttr;

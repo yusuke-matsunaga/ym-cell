@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "dotlib/ComplexHandler.h"
+#include "dotlib/HeaderHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// 内容はひとつの文字列だが中はコンマで区切られた float のリストとなっている．
 //////////////////////////////////////////////////////////////////////
 class CoefsHandler :
-  public ComplexHandler
+  public HeaderHandler
 {
 public:
 
@@ -48,7 +48,7 @@ public:
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // ComplexHandler の仮想関数
+  // HeaderHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダの開始処理

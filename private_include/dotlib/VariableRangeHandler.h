@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "Float2ComplexHandler.h"
+#include "Float2HeaderHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief variable_n_range complex attributes を読み込むためのクラス
 //////////////////////////////////////////////////////////////////////
 class VariableRangeHandler :
-  public Float2ComplexHandler
+  public Float2HeaderHandler
 {
 public:
 

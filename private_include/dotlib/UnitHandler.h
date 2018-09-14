@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "dotlib/ComplexHandler.h"
+#include "dotlib/HeaderHandler.h"
 #include "ym/ShString.h"
 
 
@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief 単位型の Complex Attribute ハンドラ
 //////////////////////////////////////////////////////////////////////
 class UnitHandler :
-  public ComplexHandler
+  public HeaderHandler
 {
 public:
 

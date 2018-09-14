@@ -1,43 +1,39 @@
-﻿#ifndef EMPTYGROUPHANDLER_H
-#define EMPTYGROUPHANDLER_H
+﻿#ifndef EMPTYHEADERHANDLER_H
+#define EMPTYHEADERHANDLER_H
 
-/// @file EmptyGroupHandler.h
-/// @brief EmptyGroupHandler のヘッダファイル
+/// @file EmptyHeaderHandler.h
+/// @brief EmptyHeaderHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/GroupHandler.h"
+#include "dotlib/HeaderHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class EmptyGroupHandler GroupHandler.h "GroupHadler.h"
-/// @brief 値をとらないグループ用のハンドラ
-///
-/// 継承クラスは以下の通り
-///   * InternalPowerHandler
-///   * TimingHandler
+/// @class EmptyHeaderHandler HeaderHandler.h "HeaderHadler.h"
+/// @brief 値をとらないヘッダ用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class EmptyGroupHandler :
-  public GroupHandler
+class EmptyHeaderHandler :
+  public HeaderHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  EmptyGroupHandler(DotlibParser& parser);
+  EmptyHeaderHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~EmptyGroupHandler();
+  ~EmptyHeaderHandler();
 
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // CGHandler の仮想関数
+  // HeaderHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダの開始処理
@@ -68,4 +64,4 @@ public:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // EMPTYGROUPHANDLER_H
+#endif // EMPTYHEADERHANDLER_H

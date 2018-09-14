@@ -1,34 +1,34 @@
-﻿#ifndef FLOAT2COMPLEXHANDLER_H
-#define FLOAT2COMPLEXHANDLER_H
+﻿#ifndef STR1HEADERHANDLER_H
+#define STR1HEADERHANDLER_H
 
-/// @file Float2ComplexHandler.h
-/// @brief Float2ComplexHandler のヘッダファイル
+/// @file Str1HeaderHandler.h
+/// @brief Str1HeaderHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/ComplexHandler.h"
+#include "dotlib/HeaderHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class Float2Float2ComplexHandler Float2ComplexHandler.h "Float2ComplexHandler.h"
-/// @brief 2つの float 型をとる complex attribute ハンドラ
+/// @class Str1Str1HeaderHandler Str1HeaderHandler.h "Str1HeaderHandler.h"
+/// @brief 1つの文字列型をとる complex attribute ハンドラ
 //////////////////////////////////////////////////////////////////////
-class Float2ComplexHandler :
-  public ComplexHandler
+class Str1HeaderHandler :
+  public HeaderHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  Float2ComplexHandler(DotlibParser& parser);
+  Str1HeaderHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~Float2ComplexHandler();
+  ~Str1HeaderHandler();
 
 
 public:
@@ -36,13 +36,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 2つの float 型を取る complex attribute の記述をパースする．
-  /// @param[in] dst1, dst2 結果を格納する変数
+  /// @brief 1つの文字列型を取る complex attribute の記述をパースする．
+  /// @param[in] dst 結果を格納する変数
   /// @retval true 正しくパースした．
   /// @retval false エラーが怒った．
   bool
-  parse_value(const AstFloat*& dst1,
-	      const AstFloat*& dst2);
+  parse_value(const AstString*& dst);
 
 
 protected:
@@ -81,11 +80,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 読み込んだ値
-  const AstFloat* mValue1;
-  const AstFloat* mValue2;
+  const AstString* mValue;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // FLOAT2COMPLEXHANDLER_H
+#endif // STR1HEADERHANDLER_H

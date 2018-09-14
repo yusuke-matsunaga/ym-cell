@@ -1,13 +1,13 @@
 ﻿
-/// @file Str1ComplexHandler.cc
-/// @brief Str1ComplexHandler の実装ファイル
+/// @file Str1HeaderHandler.cc
+/// @brief Str1HeaderHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/Str1ComplexHandler.h"
+#include "dotlib/Str1HeaderHandler.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
@@ -16,18 +16,18 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス Str1ComplexHandler
+// クラス Str1HeaderHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-Str1ComplexHandler::Str1ComplexHandler(DotlibParser& parser) :
-  ComplexHandler(parser)
+Str1HeaderHandler::Str1HeaderHandler(DotlibParser& parser) :
+  HeaderHandler(parser)
 {
 }
 
 // @brief デストラクタ
-Str1ComplexHandler::~Str1ComplexHandler()
+Str1HeaderHandler::~Str1HeaderHandler()
 {
 }
 
@@ -36,7 +36,7 @@ Str1ComplexHandler::~Str1ComplexHandler()
 // @retval true 正しくパースした．
 // @retval false エラーが怒った．
 bool
-Str1ComplexHandler::parse_value(const AstString*& dst)
+Str1HeaderHandler::parse_value(const AstString*& dst)
 {
   bool stat = parse_complex_attribute();
   if ( stat ) {
@@ -49,7 +49,7 @@ Str1ComplexHandler::parse_value(const AstString*& dst)
 //
 // '(' を読み込んだ時に呼ばれる．
 void
-Str1ComplexHandler::begin_header()
+Str1HeaderHandler::begin_header()
 {
   mValue = nullptr;
 }
@@ -59,9 +59,9 @@ Str1ComplexHandler::begin_header()
 // @param[in] value_loc トークンの位置
 // @param[in] count read_value() の呼ばれた回数
 bool
-Str1ComplexHandler::read_header_value(TokenType value_type,
-				      const FileRegion& value_loc,
-				      int count)
+Str1HeaderHandler::read_header_value(TokenType value_type,
+				     const FileRegion& value_loc,
+				     int count)
 {
   switch ( count ) {
   case 0:
@@ -89,8 +89,8 @@ Str1ComplexHandler::read_header_value(TokenType value_type,
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-Str1ComplexHandler::end_header(const FileRegion& header_loc,
-			       int count)
+Str1HeaderHandler::end_header(const FileRegion& header_loc,
+			      int count)
 {
   if ( count != 1 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,

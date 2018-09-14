@@ -1,13 +1,13 @@
 ﻿
-/// @file Float2ComplexHandler.cc
-/// @brief Float2ComplexHandler の実装ファイル
+/// @file Float2HeaderHandler.cc
+/// @brief Float2HeaderHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/Float2ComplexHandler.h"
+#include "dotlib/Float2HeaderHandler.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
@@ -16,18 +16,18 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス Float2ComplexHandler
+// クラス Float2HeaderHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-Float2ComplexHandler::Float2ComplexHandler(DotlibParser& parser) :
-  ComplexHandler(parser)
+Float2HeaderHandler::Float2HeaderHandler(DotlibParser& parser) :
+  HeaderHandler(parser)
 {
 }
 
 // @brief デストラクタ
-Float2ComplexHandler::~Float2ComplexHandler()
+Float2HeaderHandler::~Float2HeaderHandler()
 {
 }
 
@@ -37,8 +37,8 @@ Float2ComplexHandler::~Float2ComplexHandler()
 // @retval false エラーが怒った．
 //
 bool
-Float2ComplexHandler::parse_value(const AstFloat*& dst1,
-				  const AstFloat*& dst2)
+Float2HeaderHandler::parse_value(const AstFloat*& dst1,
+				 const AstFloat*& dst2)
 {
   bool stat = parse_complex_attribute();
   if ( stat ) {
@@ -52,7 +52,7 @@ Float2ComplexHandler::parse_value(const AstFloat*& dst1,
 //
 // '(' を読み込んだ時に呼ばれる．
 void
-Float2ComplexHandler::begin_header()
+Float2HeaderHandler::begin_header()
 {
   mValue1 = nullptr;
   mValue2 = nullptr;
@@ -63,7 +63,7 @@ Float2ComplexHandler::begin_header()
 // @param[in] value_loc トークンの位置
 // @param[in] count read_value() の呼ばれた回数
 bool
-Float2ComplexHandler::read_header_value(TokenType value_type,
+Float2HeaderHandler::read_header_value(TokenType value_type,
 					const FileRegion& value_loc,
 					int count)
 {
@@ -108,8 +108,8 @@ Float2ComplexHandler::read_header_value(TokenType value_type,
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-Float2ComplexHandler::end_header(const FileRegion& header_loc,
-				 int count)
+Float2HeaderHandler::end_header(const FileRegion& header_loc,
+				int count)
 {
   if ( count != 2 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,

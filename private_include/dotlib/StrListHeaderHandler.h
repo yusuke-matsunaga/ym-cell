@@ -1,34 +1,34 @@
-﻿#ifndef STR1COMPLEXHANDLER_H
-#define STR1COMPLEXHANDLER_H
+#ifndef STRLISTHEADERHANDLER_H
+#define STRLISTHEADERHANDLER_H
 
-/// @file Str1ComplexHandler.h
-/// @brief Str1ComplexHandler のヘッダファイル
+/// @file StrListHeaderHandler.h
+/// @brief StrListHeaderHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/ComplexHandler.h"
+#include "dotlib/HeaderHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class Str1Str1ComplexHandler Str1ComplexHandler.h "Str1ComplexHandler.h"
-/// @brief 1つの文字列型をとる complex attribute ハンドラ
+/// @class StrListHeaderHandler StrListHeaderHandler.h "dotlib/StrListHeaderHandler.h"
+/// @brief 文字列型のリストをとる complex attribute ハンドラ
 //////////////////////////////////////////////////////////////////////
-class Str1ComplexHandler :
-  public ComplexHandler
+class StrListCompleHandler :
+  public HeaderHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  Str1ComplexHandler(DotlibParser& parser);
+  StrListCompleHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~Str1ComplexHandler();
+  ~StrListCompleHandler();
 
 
 public:
@@ -36,17 +36,17 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 1つの文字列型を取る complex attribute の記述をパースする．
-  /// @param[in] dst 結果を格納する変数
+  /// @brief 文字列型のリストを取る complex attribute の記述をパースする．
+  /// @param[in] dst_list 結果を格納するリスト
   /// @retval true 正しくパースした．
   /// @retval false エラーが怒った．
   bool
   parse_value(const AstString*& dst);
 
 
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
-  // CGHandler の仮想関数
+  // HeaderHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダの開始処理
@@ -86,4 +86,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // STR1COMPLEXHANDLER_H
+#endif // STRLISTHEADERHANDLER_H

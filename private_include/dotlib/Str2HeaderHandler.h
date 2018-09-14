@@ -1,52 +1,48 @@
-﻿#ifndef STR2INTGROUPHANDLER_H
-#define STR2INTGROUPHANDLER_H
+﻿#ifndef STR2HEADERHANDLER_H
+#define STR2HEADERHANDLER_H
 
-/// @file Str2IntGroupHandler.h
-/// @brief Str2IntGroupHandler のヘッダファイル
+/// @file Str2HeaderHandler.h
+/// @brief Str2HeaderHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/GroupHandler.h"
+#include "dotlib/HeaderHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class Str2IntGroupHandler GroupHandler.h "GroupHadler.h"
-/// @brief 2つの文字列型と1つの整数型をとるグループ用のハンドラ
+/// @class Str2Str2HeaderHandler Str2HeaderHandler.h "Str2HeaderHandler.h"
+/// @brief 1つの文字列型をとる complex attribute ハンドラ
 //////////////////////////////////////////////////////////////////////
-class Str2IntGroupHandler :
-  public GroupHandler
+class Str2HeaderHandler :
+  public HeaderHandler
 {
 public:
 
-  /// @brief 親を持つハンドラ用のコンストラクタ
+  /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  Str2IntGroupHandler(DotlibParser& parser);
+  Str2HeaderHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~Str2IntGroupHandler();
+  ~Str2HeaderHandler();
 
 
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
-  // 継承クラスから用いられる関数
+  // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ヘッダの値1を取り出す．
-  const AstString*
-  header_value1() const;
-
-  /// @brief ヘッダの値2を取り出す．
-  const AstString*
-  header_value2() const;
-
-  /// @brief ヘッダの値3を取り出す．
-  const AstInt*
-  header_value3() const;
+  /// @brief 1つの文字列型を取る complex attribute の記述をパースする．
+  /// @param[in] dst1, dst2 結果を格納する変数
+  /// @retval true 正しくパースした．
+  /// @retval false エラーが怒った．
+  bool
+  parse_value(const AstString*& dst1,
+	      const AstString*& dst2);
 
 
 protected:
@@ -60,7 +56,7 @@ protected:
   void
   begin_header() override;
 
-  /// @brief ヘッダの値を読み込む処理
+  /// @brief 値を読み込む処理
   /// @param[in] value_type 型
   /// @param[in] value_loc トークンの位置
   /// @param[in] count read_value() の呼ばれた回数
@@ -84,17 +80,12 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ヘッダの値1
-  AstString* mHeaderValue1;
-
-  // ヘッダの値2
-  AstString* mHeaderValue2;
-
-  // ヘッダの値3
-  AstInt* mHeaderValue3;
+  // 読み込んだ値
+  const AstString* mValue1;
+  const AstString* mValue2;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // STR2INTGROUPHANDLER_H
+#endif // STR2HEADERHANDLER_H

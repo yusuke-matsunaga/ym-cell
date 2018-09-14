@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "CGHandler.h"
+#include "dotlib/DotlibHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -24,20 +24,14 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// '}'
 ///
 /// の形式のパースを行う．
-/// このうちのヘッダ部分は CGHandler::parse_header() が行っている．
+/// このうちのヘッダ部分は HeaderHandler が行う．
 /// 本体の部分は先頭の '{' を読んだ時点で仮想関数 begin_group() が呼び出されれ，
 /// 個々の属性を読んだ時点で仮想関数 parse_attr() が呼び出される．
 /// 最後の '}' を読んだ時点で仮想関数 end_group() が呼び出される．
 /// 各継承クラスはこれらの仮想関数を実装する必要がある．
-///
-/// ヘッダの形式でいくつかの継承クラスを持つ．
-/// * EmptyGroupHandler
-/// * Str1GroupHandler
-/// * Str2GroupHandler
-/// * Str2IntGroupHandler
 //////////////////////////////////////////////////////////////////////
 class GroupHandler :
-  public CGHandler
+  public DotlibHandler
 {
 
   // パース関数の型定義

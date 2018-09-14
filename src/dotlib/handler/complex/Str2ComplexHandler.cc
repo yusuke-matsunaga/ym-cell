@@ -1,13 +1,13 @@
 ﻿
-/// @file Str2ComplexHandler.cc
-/// @brief Str2ComplexHandler の実装ファイル
+/// @file Str2HeaderHandler.cc
+/// @brief Str2HeaderHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/Str2ComplexHandler.h"
+#include "dotlib/Str2HeaderHandler.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
@@ -16,18 +16,18 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス Str2ComplexHandler
+// クラス Str2HeaderHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-Str2ComplexHandler::Str2ComplexHandler(DotlibParser& parser) :
-  ComplexHandler(parser)
+Str2HeaderHandler::Str2HeaderHandler(DotlibParser& parser) :
+  HeaderHandler(parser)
 {
 }
 
 // @brief デストラクタ
-Str2ComplexHandler::~Str2ComplexHandler()
+Str2HeaderHandler::~Str2HeaderHandler()
 {
 }
 
@@ -36,8 +36,8 @@ Str2ComplexHandler::~Str2ComplexHandler()
 // @retval true 正しくパースした．
 // @retval false エラーが怒った．
 bool
-Str2ComplexHandler::parse_value(const AstString*& dst1,
-				const AstString*& dst2)
+Str2HeaderHandler::parse_value(const AstString*& dst1,
+			       const AstString*& dst2)
 {
   bool stat = parse_complex_attribute();
   if ( stat ) {
@@ -51,7 +51,7 @@ Str2ComplexHandler::parse_value(const AstString*& dst1,
 //
 // '(' を読み込んだ時に呼ばれる．
 void
-Str2ComplexHandler::begin_header()
+Str2HeaderHandler::begin_header()
 {
   mValue1 = nullptr;
   mValue2 = nullptr;
@@ -62,9 +62,9 @@ Str2ComplexHandler::begin_header()
 // @param[in] value_loc トークンの位置
 // @param[in] count read_value() の呼ばれた回数
 bool
-Str2ComplexHandler::read_header_value(TokenType value_type,
-				      const FileRegion& value_loc,
-				      int count)
+Str2HeaderHandler::read_header_value(TokenType value_type,
+				     const FileRegion& value_loc,
+				     int count)
 {
   switch ( count ) {
   case 0:
@@ -115,8 +115,8 @@ Str2ComplexHandler::read_header_value(TokenType value_type,
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-Str2ComplexHandler::end_header(const FileRegion& header_loc,
-			       int count)
+Str2HeaderHandler::end_header(const FileRegion& header_loc,
+			      int count)
 {
   if ( count != 2 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,

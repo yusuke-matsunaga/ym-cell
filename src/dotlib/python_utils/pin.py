@@ -7,14 +7,7 @@
 ### Copyright (C) 2018 Yusuke Matsunaga
 ### All rights reserved.
 
-import sys
-import argparse
-import os.path
-
-from gen_handler_code import gen_ast_header, gen_ast_source
-from gen_handler_code import gen_handler_header, gen_handler_source
-from gen_handler_code import gen_builder_header
-from gen_handler_code import type_to_class
+from gen_handler_code import type_to_ast
 
 class PinClassDef :
 
@@ -163,12 +156,12 @@ class PinClassDef :
 
     ### @brief アクセッサー関数のインライン定義を生成する．
     def gen_accessor_impl(self, fout) :
-        class_name = type_to_class(self.data_type)
+        ast_name = type_to_ast(self.data_type)
         fout.write('\n')
         fout.write('// @brief 名前のリストの要素数を返す．\n')
         fout.write('inline\n')
         fout.write('int\n')
-        fout.write('{}::name_num() const\n'.format(class_name))
+        fout.write('{}::name_num() const\n'.format(ast_name))
         fout.write('{\n')
         fout.write('  return mNameNum;\n')
         fout.write('}\n')
@@ -177,7 +170,7 @@ class PinClassDef :
         fout.write('// @param[in] pos 位置番号 ( 0 <= pos < name_num() )\n')
         fout.write('inline\n')
         fout.write('const AstString*\n')
-        fout.write('{}::name(int pos) const\n'.format(class_name))
+        fout.write('{}::name(int pos) const\n'.format(ast_name))
         fout.write('{\n')
         fout.write('  ASSERT_COND( pos >= 0 && pos < name_num() );\n')
         fout.write('\n')
@@ -304,43 +297,3 @@ PinHandler::end_header(const FileRegion& header_loc,
     ### @brief ビルダーのメンバ変数定義を生成する．
     def gen_builder_member(self, fout) :
         fout.write('  vector<const AstString*> mNameList;\n')
-
-
-if __name__ == '__main__' :
-
-    parser = argparse.ArgumentParser()
-
-    mode_group = parser.add_mutually_exclusive_group()
-    mode_group.add_argument('--ast_header',
-                            action = 'store_true',
-                            help = 'generate AstPin.h')
-    mode_group.add_argument('--ast_source',
-                            action = 'store_true',
-                            help = 'generate AstPin.cc')
-    mode_group.add_argument('--handler_header',
-                            action = 'store_true',
-                            help = 'generate PinHandler.h')
-    mode_group.add_argument('--handler_source',
-                            action = 'store_true',
-                            help = 'generate PinHandler.cc')
-    mode_group.add_argument('--builder_header',
-                            action = 'store_true',
-                            help = 'generate TmpPin.h')
-
-    args = parser.parse_args()
-    if not args :
-        exit(1)
-
-    fout = sys.stdout
-    class_def = PinClassDef()
-
-    if args.ast_header :
-        gen_ast_header(fout, class_def)
-    elif args.ast_source :
-        gen_ast_source(fout, class_def)
-    elif args.handler_header :
-        gen_handler_header(fout, class_def)
-    elif args.handler_source :
-        gen_handler_source(fout, class_def)
-    elif args.builder_header :
-        gen_builder_header(fout, class_def)

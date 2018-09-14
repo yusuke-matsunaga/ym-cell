@@ -1,85 +1,78 @@
-﻿#ifndef CGHANDLER_H
-#define CGHANDLER_H
+﻿#ifndef FLOAT2HEADERHANDLER_H
+#define FLOAT2HEADERHANDLER_H
 
-/// @file CGHandler.h
-/// @brief CGHandler のヘッダファイル
+/// @file Float2HeaderHandler.h
+/// @brief Float2HeaderHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/DotlibHandler.h"
+#include "dotlib/HeaderHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class CGHandler CGHandler.h "CGHandler.h"
-/// @brief complex attribute/group attribute 用のハンドラ
-///
-/// ヘッダ部分が
-/// '(' <value>, <value>, <value>, ... ')'
-/// の形を仮定してパーズを行う．
-/// '(' を読んだ直後に begin_header() を呼び出し，
-/// 個々の <value> を読む度に read_value() を呼び出す．
-/// 最後の ')' を読んだ直後に end_header() を呼び出す．
-/// 継承クラスで begin_header(), read_value(), end_header()
-/// を実装する必要がある．
-/// ここではヘッダと呼んでいるが complex attribute の場合はそれが
-/// 本体となる．
-///
-/// このクラスは実体を持たない純粋仮想基底クラスである．
-/// 継承クラスは以下の通り
-/// * ComplexHandler
-/// * GroupHandler
+/// @class Float2Float2HeaderHandler Float2HeaderHandler.h "Float2HeaderHandler.h"
+/// @brief 2つの float 型をとる complex attribute ハンドラ
 //////////////////////////////////////////////////////////////////////
-class CGHandler :
-  public DotlibHandler
+class Float2HeaderHandler :
+  public HeaderHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  CGHandler(DotlibParser& parser);
+  Float2HeaderHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~CGHandler();
+  ~Float2HeaderHandler();
 
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // CGHandler の仮想関数
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 2つの float 型を取る complex attribute の記述をパースする．
+  /// @param[in] dst1, dst2 結果を格納する変数
+  /// @retval true 正しくパースした．
+  /// @retval false エラーが怒った．
+  bool
+  parse_value(const AstFloat*& dst1,
+	      const AstFloat*& dst2);
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // HeaderHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダの開始処理
   ///
   /// '(' を読み込んだ時に呼ばれる．
-  virtual
   void
-  begin_header() = 0;
+  begin_header() override;
 
-  /// @brief ヘッダの値を読み込む処理
+  /// @brief 値を読み込む処理
   /// @param[in] value_type 型
   /// @param[in] value_loc トークンの位置
   /// @param[in] count read_value() の呼ばれた回数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  virtual
   bool
   read_header_value(TokenType value_type,
 		    const FileRegion& value_loc,
-		    int count) = 0;
+		    int count) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
   /// @param[in] header_loc '(' から ')' までのファイル上の位置
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
-  virtual
   bool
   end_header(const FileRegion& header_loc,
-	     int count) = 0;
+	     int count) override;
 
 
 private:
@@ -87,8 +80,12 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // 読み込んだ値
+  const AstFloat* mValue1;
+  const AstFloat* mValue2;
+
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // CGHANDLER_H
+#endif // FLOAT2HEADERHANDLER_H

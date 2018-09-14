@@ -1,53 +1,57 @@
-﻿#ifndef STR2COMPLEXHANDLER_H
-#define STR2COMPLEXHANDLER_H
+﻿#ifndef STR2INTHEADERHANDLER_H
+#define STR2INTHeADERHANDLER_H
 
-/// @file Str2ComplexHandler.h
-/// @brief Str2ComplexHandler のヘッダファイル
+/// @file Str2IntHeaderHandler.h
+/// @brief Str2IntHeaderHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/ComplexHandler.h"
+#include "dotlib/HeaderHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class Str2Str2ComplexHandler Str2ComplexHandler.h "Str2ComplexHandler.h"
-/// @brief 1つの文字列型をとる complex attribute ハンドラ
+/// @class Str2IntHeaderHandler HeaderHandler.h "dotlib/HeaderHadler.h"
+/// @brief 2つの文字列型と1つの整数型をとるグループ用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class Str2ComplexHandler :
-  public ComplexHandler
+class Str2IntHeaderHandler :
+  public HeaderHandler
 {
 public:
 
-  /// @brief コンストラクタ
+  /// @brief 親を持つハンドラ用のコンストラクタ
   /// @param[in] parser パーサー
-  Str2ComplexHandler(DotlibParser& parser);
+  Str2IntHeaderHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~Str2ComplexHandler();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 1つの文字列型を取る complex attribute の記述をパースする．
-  /// @param[in] dst1, dst2 結果を格納する変数
-  /// @retval true 正しくパースした．
-  /// @retval false エラーが怒った．
-  bool
-  parse_value(const AstString*& dst1,
-	      const AstString*& dst2);
+  ~Str2IntHeaderHandler();
 
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // CGHandler の仮想関数
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ヘッダの値1を取り出す．
+  const AstString*
+  header_value1() const;
+
+  /// @brief ヘッダの値2を取り出す．
+  const AstString*
+  header_value2() const;
+
+  /// @brief ヘッダの値3を取り出す．
+  const AstInt*
+  header_value3() const;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // HeaderHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダの開始処理
@@ -56,7 +60,7 @@ protected:
   void
   begin_header() override;
 
-  /// @brief 値を読み込む処理
+  /// @brief ヘッダの値を読み込む処理
   /// @param[in] value_type 型
   /// @param[in] value_loc トークンの位置
   /// @param[in] count read_value() の呼ばれた回数
@@ -80,12 +84,17 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 読み込んだ値
-  const AstString* mValue1;
-  const AstString* mValue2;
+  // ヘッダの値1
+  AstString* mHeaderValue1;
+
+  // ヘッダの値2
+  AstString* mHeaderValue2;
+
+  // ヘッダの値3
+  AstInt* mHeaderValue3;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // STR2COMPLEXHANDLER_H
+#endif // STR2INTHEADERHANDLER_H

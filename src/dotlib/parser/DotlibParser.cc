@@ -180,13 +180,13 @@ DotlibParser::parse_simple_attribute(SimpleHandler& handler)
 }
 
 // @brief Complex Attribute を読み込む．
-// @param[in] handler ハンドラ(ComplexHandler の継承クラス)
+// @param[in] handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
 // @retval true 正しく読み込めた．
 // @retval false エラーが起こった．
 bool
-DotlibParser::parse_complex_attribute(ComplexHandler& handler)
+DotlibParser::parse_complex_attribute(HeaderHandler& handler)
 {
-  if ( !parse_cg_header(handler) ) {
+  if ( !parse_header(handler) ) {
     return false;
   }
 
@@ -194,13 +194,15 @@ DotlibParser::parse_complex_attribute(ComplexHandler& handler)
 }
 
 // @brief Group Statement を読み込む．
-// @param[in] handler ハンドラ(GroupHandler の継承クラス)
+// @param[in] header_handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
+// @param[in] group_handler グループ読み込みハンドラ (GroupHandler の継承クラス)
 // @retval true 正しく読み込めた．
 // @retval false エラーが起こった．
 bool
-DotlibParser::parse_group_statement(GroupHandler& handler)
+DotlibParser::parse_group_statement(HeaderHandler& header_handler,
+				    GroupHandler& group_handler)
 {
-  if ( !parse_cg_header(handler) ) {
+  if ( !parse_header(header_handler) ) {
     return false;
   }
 
@@ -210,7 +212,7 @@ DotlibParser::parse_group_statement(GroupHandler& handler)
   }
 
   // 仮想関数の呼び出し
-  handler.begin_group();
+  group_handler.begin_group();
 
   FileRegion first_loc = cur_loc();
   for ( ; ; ) {
@@ -223,7 +225,7 @@ DotlibParser::parse_group_statement(GroupHandler& handler)
     if ( type == TokenType::RCB ) {
       // グループ本体の終わり．
       FileRegion last_loc = loc;
-      if ( !handler.end_group(FileRegion(first_loc, last_loc)) ) {
+      if ( !group_handler.end_group(FileRegion(first_loc, last_loc)) ) {
 	return false;
       }
 
@@ -254,7 +256,7 @@ DotlibParser::parse_group_statement(GroupHandler& handler)
 		      buf.str());
       return false;
     }
-    bool r = handler.read_group_attr(name_type, loc);
+    bool r = group_handler.read_group_attr(name_type, loc);
     if ( !r ) {
       return false;
     }
@@ -266,7 +268,7 @@ DotlibParser::parse_group_statement(GroupHandler& handler)
 // @retval true 正しく読み込めた．
 // @retval false エラーが起こった．
 bool
-DotlibParser::parse_cg_header(CGHandler& handler)
+DotlibParser::parse_header(HeaderHandler& handler)
 {
   if ( !expect(TokenType::LP) ) {
     return false;

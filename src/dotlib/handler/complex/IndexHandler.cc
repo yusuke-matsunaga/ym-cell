@@ -23,7 +23,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 IndexHandler::IndexHandler(DotlibParser& parser) :
-  ComplexHandler(parser)
+  HeaderHandler(parser)
 {
 }
 

@@ -69,11 +69,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief Complex Attribute を読み込む．
-  /// @param[in] handler ハンドラ(ComplexHandler の継承クラス)
+  /// @param[in] handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
   /// @retval true 正しく読み込めた．
   /// @retval false エラーが起こった．
   bool
-  parse_complex_attribute(ComplexHandler& handler);
+  parse_complex_attribute(HeaderHandler& handler);
 
 
 public:
@@ -82,11 +82,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief Group Statement を読み込む．
-  /// @param[in] handler ハンドラ(GroupHandler の継承クラス)
+  /// @param[in] header_handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
+  /// @param[in] group_handler グループ読み込みハンドラ (GroupHandler の継承クラス)
   /// @retval true 正しく読み込めた．
   /// @retval false エラーが起こった．
   bool
-  parse_group_statement(GroupHandler& handler);
+  parse_group_statement(HeaderHandler& header_handler,
+			GroupHandler& group_handler);
 
   /// @brief ブール値 のパースを行う．
   /// @param[in] dst 結果を格納する変数
@@ -558,11 +560,11 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief Complex Attribute, GroupStatement のヘッダを読み込む．
-  /// @param[in] handler ハンドラ(CGHandler の継承クラス)
+  /// @param[in] handler ハンドラ(HeaderHandler の継承クラス)
   /// @retval true 正しく読み込めた．
   /// @retval false エラーが起こった．
   bool
-  parse_cg_header(CGHandler& handler);
+  parse_header(HeaderHandler& handler);
 
 
 private:
