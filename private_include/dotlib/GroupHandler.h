@@ -50,6 +50,16 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 読み込んだグループ定義のファイル上の位置を返す．
+  const FileRegion&
+  group_loc() const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
   // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
@@ -69,12 +79,11 @@ public:
 		  const FileRegion& attr_loc);
 
   /// @brief グループ記述の終わり
-  /// @param[in] group_loc グループ全体のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   virtual
   bool
-  end_group(const FileRegion& group_loc) = 0;
+  end_group() = 0;
 
 
 protected:
@@ -111,7 +120,23 @@ private:
   // 各属性用のパース関数を登録する辞書
   HashMap<AttrType, ParseFunc> mFuncDict;
 
+  // 読み込んだグループ定義のファイル位置
+  FileRegion mGroupLoc;
+
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 読み込んだグループ定義のファイル上の位置を返す．
+inline
+const FileRegion&
+GroupHandler::group_loc() const
+{
+  return mGroupLoc;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

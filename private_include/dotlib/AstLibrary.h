@@ -26,39 +26,11 @@ class AstLibrary :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] name
-  /// @param[in] technology
-  /// @param[in] delay_model
-  /// @param[in] bus_naming_style
-  /// @param[in] comment
-  /// @param[in] date
-  /// @param[in] revision
-  /// @param[in] capacitive_load_unit
-  /// @param[in] current_unit
-  /// @param[in] leakage_power_unit
-  /// @param[in] pulling_resistance_unit
-  /// @param[in] time_unit
-  /// @param[in] voltage_unit
-  /// @param[in] lut_template_list
-  /// @param[in] cell_list
-  /// @param[in] alloc
-  AstLibrary(const FileRegion& loc,
-	     const AstString* name,
-	     const AstTechnology* technology,
-	     const AstDelayModel* delay_model,
-	     const AstString* bus_naming_style,
-	     const AstString* comment,
-	     const AstString* date,
-	     const AstString* revision,
-	     const AstUnit* capacitive_load_unit,
-	     const AstString* current_unit,
-	     const AstString* leakage_power_unit,
-	     const AstString* pulling_resistance_unit,
-	     const AstString* time_unit,
-	     const AstString* voltage_unit,
-	     const vector<const AstTemplate*>& lut_template_list,
-	     const vector<const AstCell*>& cell_list,
+  /// @param[in] header ヘッダを読み込んだハンドラ
+  /// @param[in] group グループ本体を読み込んだハンドラ
+  /// @param[in] alloc メモリアロケータ
+  AstLibrary(const Str1HeaderHandler header,
+	     const LibraryHandler& group,
 	     Alloc& alloc);
 
   /// @brief デストラクタ

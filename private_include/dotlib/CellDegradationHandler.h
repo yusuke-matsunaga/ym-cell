@@ -66,11 +66,10 @@ public:
   begin_group() override;
 
   /// @brief グループ記述の終わり
-  /// @param[in] group_loc グループ全体のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   bool
-  end_group(const FileRegion& group_loc) override;
+  end_group() override;
 
 
 private:
@@ -105,9 +104,6 @@ private:
 
   // domain
   const AstDomain* mDomain;
-
-  // 読み込んだ値
-  const AstCellDegradation* mValue;
 
 };
 

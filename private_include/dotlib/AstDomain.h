@@ -25,22 +25,10 @@ class AstDomain :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] name 名前
-  /// @param[in] calc_mode calc_mode 属性
-  /// @param[in] coefs coefs 属性
-  /// @param[in] orders orders 属性
-  /// @param[in] var1_range variable_1_range 属性
-  /// @param[in] var2_range variable_2_range 属性
-  /// @param[in] var3_range variable_3_range 属性
-  AstDomain(const FileRegion& loc,
-	    const AstString* name,
-	    const AstString* calc_mode,
-	    const AstFloatVector* coefs,
-	    const AstIntVector* orders,
-	    const AstVariableRange* var1_range,
-	    const AstVariableRange* var2_range,
-	    const AstVariableRange* var3_range);
+  /// @param[in] header ヘッダを読み込んだハンドラ
+  /// @param[in] group グループ本体を読み込んだハンドラ
+  AstDomain(const Str1HeaderHandler& header,
+	    const DomainHandler& group);
 
 
   /// @brief デストラクタ

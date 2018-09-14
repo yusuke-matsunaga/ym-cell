@@ -14,54 +14,29 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief domain を表す AstNode を生成する．
-// @param[in] loc ファイル上の位置
-// @param[in] name 名前
-// @param[in] calc_mode calc_mode 属性
-// @param[in] coefs coefs 属性
-// @param[in] orders orders 属性
-// @param[in] var1_range variable_1_range 属性
-// @param[in] var2_range variable_2_range 属性
-// @param[in] var3_range variable_3_range 属性
-// @param[in] value1, value2 値
+// @param[in] header ヘッダを読み込んだハンドラ
+// @param[in] group グループ本体を読み込んだハンドラ
 AstDomain*
-AstMgr::new_domain(const FileRegion& loc,
-		   const AstString* name,
-		   const AstString* calc_mode,
-		   const AstFloatVector* coefs,
-		   const AstIntVector* orders,
-		   const AstVariableRange* var1_range,
-		   const AstVariableRange* var2_range,
-		   const AstVariableRange* var3_range)
+AstMgr::new_domain(const Str1HeaderHandler& header,
+		   const DomainHandler& group)
 {
   ++ mDomainNum;
   void* p = mAlloc.get_memory(sizeof(AstDomain));
-  return new (p) AstDomain(loc, name, calc_mode, coefs, orders,
-			   var1_range, var2_range, var3_range);
+  return new (p) AstDomain(header, group);
 }
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス AstDomain
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc ファイル上の位置
-// @param[in] name 名前
-// @param[in] calc_mode calc_mode 属性
-// @param[in] coefs coefs 属性
-// @param[in] orders orders 属性
-// @param[in] var1_range variable_1_range 属性
-// @param[in] var2_range variable_2_range 属性
-// @param[in] var3_range variable_3_range 属性
-AstDomain::AstDomain(const FileRegion& loc,
-		     const AstString* name,
-		     const AstString* calc_mode,
-		     const AstFloatVector* coefs,
-		     const AstIntVector* orders,
-		     const AstVariableRange* var1_range,
-		     const AstVariableRange* var2_range,
-		     const AstVariableRange* var3_range) :
-  AstNode(loc),
-  mName(name),
+// @param[in] header ヘッダを読み込んだハンドラ
+// @param[in] group グループ本体を読み込んだハンドラ
+AstDomain::AstDomain(const Str1HeaderHandler& header,
+		     const DomainHandler& group) :
+  AstNode(FileRegion(header.header_loc(), group.group_loc())),
+  mName(header.value()),
   mCalcMode(calc_mode),
   mCoefs(coefs),
   mOrders(orders),

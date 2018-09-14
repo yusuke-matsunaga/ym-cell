@@ -108,6 +108,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class TimingHandler :
   public GroupHandler
 {
+  friend class AstTiming;
+
 public:
 
   /// @brief コンストラクタ
@@ -120,19 +122,6 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @breif 'timing' Group Statement の記述をパースする．
-  /// @param[in] dst_list 読み込んだ値を格納する変数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_value(vector<const AstTiming*>& dst_list);
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
   // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
@@ -141,20 +130,16 @@ public:
   begin_group() override;
 
   /// @brief グループ記述の終わり
-  /// @param[in] group_loc グループ全体のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   bool
-  end_group(const FileRegion& group_loc) override;
+  end_group() override;
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // 名前(オプショナル)
-  const AstString* mName;
 
   // clock_gating_flag
   const AstBool* mClockGatingFlag;
@@ -367,9 +352,6 @@ private:
   // steady_state_current_low
 
   // steady_state_current_tristate
-
-  // 読み込んだ値
-  const AstTiming* mValue;
 
 };
 

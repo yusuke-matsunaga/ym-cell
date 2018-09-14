@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 TableHandler::TableHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser)
+  GroupHandler(parser)
 {
   // パース関数の登録
   reg_func(AttrType::index_1,
@@ -61,20 +61,6 @@ TableHandler::~TableHandler()
 {
 }
 
-// @breif look-up table Group Statement の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-TableHandler::parse_value(const AstLut*& dst)
-{
-  bool stat = parse_group_statement();
-  if ( stat ) {
-    dst = mValue;
-  }
-  return stat;
-}
-
 // @brief グループ記述の始まり
 void
 TableHandler::begin_group()
@@ -89,30 +75,23 @@ TableHandler::begin_group()
   mVar2Range = nullptr;
   mVar3Range = nullptr;
   mDomain = nullptr;
-
-  mValue = nullptr;
 }
 
 // @brief グループ記述の終わり
-// @param[in] group_loc グループ全体のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-TableHandler::end_group(const FileRegion& group_loc)
+TableHandler::end_group()
 {
   if ( mValues == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    group_loc,
+		    group_loc(),
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "'values' is missing.");
     return false;
   }
   else {
-    mValue = mgr().new_lut(group_loc, header_value(),
-			   mIndex1, mIndex2, mIndex3, mValues,
-			   mCoefs, mOrders,
-			   mVar1Range, mVar2Range, mVar3Range, mDomain);
     return true;
   }
 }

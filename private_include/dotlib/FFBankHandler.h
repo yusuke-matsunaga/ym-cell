@@ -48,15 +48,8 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @breif ff_bank Group Statement の記述をパースする．
-  /// @param[in] dst 読み込んだ値を格納する変数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_value(const AstFFBank*& dst);
 
-
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
   // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
@@ -66,11 +59,10 @@ protected:
   begin_group() override;
 
   /// @brief グループ記述の終わり
-  /// @param[in] group_loc グループ全体のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   bool
-  end_group(const FileRegion& group_loc) override;
+  end_group() override;
 
 
 private:
@@ -104,9 +96,6 @@ private:
 
   // next_state
   const AstExpr* mNextState;
-
-  // 読み込んだ値
-  const AstFFBank* mValue;
 
 };
 

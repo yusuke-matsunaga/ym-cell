@@ -52,43 +52,8 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // SimpleHandler から用いられる関数
+  // simple attribute を読み込む関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief Simple Attribute を読み込む．
-  /// @param[in] handler ハンドラ (SimpleHandler の継承クラス)
-  /// @retval true 正しく読み込めた．
-  /// @retval false エラーが起こった．
-  bool
-  parse_simple_attribute(SimpleHandler& handler);
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ComplexHandler から用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief Complex Attribute を読み込む．
-  /// @param[in] handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
-  /// @retval true 正しく読み込めた．
-  /// @retval false エラーが起こった．
-  bool
-  parse_complex_attribute(HeaderHandler& handler);
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // GroupHandler から用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief Group Statement を読み込む．
-  /// @param[in] header_handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
-  /// @param[in] group_handler グループ読み込みハンドラ (GroupHandler の継承クラス)
-  /// @retval true 正しく読み込めた．
-  /// @retval false エラーが起こった．
-  bool
-  parse_group_statement(HeaderHandler& header_handler,
-			GroupHandler& group_handler);
 
   /// @brief ブール値 のパースを行う．
   /// @param[in] dst 結果を格納する変数
@@ -246,6 +211,12 @@ public:
 		 AttrType attr_type,
 		 const FileRegion& attr_loc);
 
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // complex attribute を読み込む関数
+  //////////////////////////////////////////////////////////////////////
+
   /// @brief index attribute のパースを行う．
   /// @param[in] dst 結果を格納する変数
   /// @param[in] attr_type 属性の型
@@ -337,46 +308,11 @@ public:
 		       AttrType attr_type,
 		       const FileRegion& attr_loc);
 
-  /// @brief Str1Complex タイプの complex attribute を読み込む．
-  /// @param[in] dst 結果を格納する変数
-  /// @param[in] attr_type 属性の型
-  /// @param[in] group_loc グループ記述全体の位置
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_str1complex(const AstString*& dst,
-		    AttrType attr_type,
-		    const FileRegion& attr_loc);
 
-  /// @brief Str2Complex タイプの complex attribute を読み込む．
-  /// @param[in] dst1, dst2 結果を格納する変数
-  /// @param[in] attr_type 属性の型
-  /// @param[in] group_loc グループ記述全体の位置
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_str2complex(const AstString*& dst1,
-		    const AstString*& dst2,
-		    AttrType attr_type,
-		    const FileRegion& attr_loc);
-
-  /// @brief Float2Complex タイプの complex attribute を読み込む．
-  /// @param[in] dst1, dst2 結果を格納する変数
-  /// @param[in] attr_type 属性の型
-  /// @param[in] group_loc グループ記述全体の位置
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_float2complex(const AstFloat*& dst1,
-		      const AstFloat*& dst2,
-		      AttrType attr_type,
-		      const FileRegion& attr_loc);
+public:
+  //////////////////////////////////////////////////////////////////////
+  // group statement を読み込む関数
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 'cell' Group Statement のパースを行う．
   /// @param[in] dst_list 結果を格納するリスト
@@ -404,6 +340,32 @@ public:
 	       AttrType attr_type,
 	       const FileRegion& attr_loc);
 
+  /// @brief 'ff' Group Statement のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_ff(const AstFF* dst,
+	   AttrType attr_type,
+	   const FileRegion& attr_loc);
+
+  /// @brief 'ff_bank' Group Statement のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_ff_bank(const AstFFBank* dst,
+		AttrType attr_type,
+		const FileRegion& attr_loc);
+
   /// @brief 'input_voltage' Group Statement のパースを行う．
   /// @param[in] dst 結果を格納する変数
   /// @param[in] attr_type 属性の型
@@ -416,6 +378,32 @@ public:
   parse_input_voltage(const AstInputVoltage*& dst,
 		      AttrType attr_type,
 		      const FileRegion& attr_loc);
+
+  /// @brief 'latch' Group Statement のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_latch(const AstLatch* dst,
+	      AttrType attr_type,
+	      const FileRegion& attr_loc);
+
+  /// @brief 'latch_bank' Group Statement のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_latch_bank(const AstLatch* dst,
+		   AttrType attr_type,
+		   const FileRegion& attr_loc);
 
   /// @brief 'Library' Group Statement のパースを行う．
   /// @param[in] dst 結果を格納する変数
@@ -556,8 +544,31 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // parse_complex_attribute(), parse_group_statement() の下請け関数
+  // 内部で用いられる下請け関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief Simple Attribute を読み込む．
+  /// @param[in] handler ハンドラ (SimpleHandler の継承クラス)
+  /// @retval true 正しく読み込めた．
+  /// @retval false エラーが起こった．
+  bool
+  parse_simple_attribute(SimpleHandler& handler);
+
+  /// @brief Complex Attribute を読み込む．
+  /// @param[in] handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
+  /// @retval true 正しく読み込めた．
+  /// @retval false エラーが起こった．
+  bool
+  parse_complex_attribute(HeaderHandler& handler);
+
+  /// @brief Group Statement を読み込む．
+  /// @param[in] header_handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
+  /// @param[in] group_handler グループ読み込みハンドラ (GroupHandler の継承クラス)
+  /// @retval true 正しく読み込めた．
+  /// @retval false エラーが起こった．
+  bool
+  parse_group_statement(HeaderHandler& header_handler,
+			GroupHandler& group_handler);
 
   /// @brief Complex Attribute, GroupStatement のヘッダを読み込む．
   /// @param[in] handler ハンドラ(HeaderHandler の継承クラス)

@@ -109,9 +109,6 @@ DomainHandler::end_group(const FileRegion& group_loc)
     return false;
   }
   else {
-    mValue = mgr().new_domain(group_loc, header_value(),
-			      mCalcMode, mCoefs, mOrders,
-			      mVar1Range, mVar2Range, mVar3Range);
     return true;
   }
 }

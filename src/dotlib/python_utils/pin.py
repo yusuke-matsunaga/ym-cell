@@ -14,7 +14,9 @@ class PinClassDef :
     def __init__(self) :
         self.data_type = 'pin'
         self.desc = 'ピン'
-        self.parent_class = 'GroupHandler'
+        self.ast_class = 'AstPin'
+        self.header_class = 'StrListHeaderHandler'
+        self.group_class = 'PinHandler'
         self.attr_list = [
             # ( 属性名, 属性の型, メンバ変数名 ) のリスト
             ( 'bit_width', 'int', 'mBitWidth', False ),
@@ -114,14 +116,6 @@ class PinClassDef :
             ( 'tlatch', 'tlatch', 'mTlatch', False )
             ]
 
-    ### @brief コンストラクタの引数の記述を生成する．
-    def gen_constructor_arguments(self, fout, cspc) :
-        fout.write('{}const vector<const AstString*>& name_list,\n'.format(cspc))
-
-    ### @brief コンストラクタの引数の記述を生成する．
-    def gen_constructor_arguments2(self, fout, cspc) :
-        fout.write('{}name_list,\n'.format(cspc))
-
     ### @brief アクセッサー関数の宣言を生成する．
     def gen_accessor_decl(self, fout) :
         fout.write('\n')
@@ -136,14 +130,31 @@ class PinClassDef :
 
     ### @brief メンバの初期化文を生成する．
     def gen_member_init(self, fout) :
-        fout.write('  mNameNum(builder.name_list().size()),\n')
+        fout.write('  mNameNum(header.name_list().size()),\n')
         fout.write('  mNameList(alloc.get_array<const AstString*>(mNameNum)),\n')
 
-    ### @brief メンバの初期化文を生成する．
-    def gen_member_init2(self, fout) :
-        fout.write('  for ( auto i: Range(mNameNum) ) {\n')
-        fout.write('    mNameList[i] = builder.name_list()[i];\n')
-        fout.write('  }\n')
+    ### @brief アクセッサー関数のインライン定義を生成する．
+    def gen_accessor_impl(self, fout) :
+        class_name = self.ast_class
+        fout.write('\n')
+        fout.write('// @brief 名前のリストの要素数を返す．\n')
+        fout.write('inline\n')
+        fout.write('int\n')
+        fout.write('{}::name_num() const\n'.format(class_name))
+        fout.write('{\n')
+        fout.write('  return mNameNum;\n')
+        fout.write('}\n')
+        fout.write('\n')
+        fout.write('// @brief 名前のリストの要素を返す．\n')
+        fout.write('// @param[in] pos 位置番号 ( 0 <= pos < name_num() )\n')
+        fout.write('inline\n')
+        fout.write('const AstString*\n')
+        fout.write('{}::name(int pos) const\n'.format(class_name))
+        fout.write('{\n')
+        fout.write('  ASSERT_COND( pos >= 0 && pos < name_num() );\n')
+        fout.write('\n')
+        fout.write('  return mNameList[pos];\n')
+        fout.write('}\n')
 
     ### @brief メンバ定義を生成する．
     def gen_member_def(self, fout) :
@@ -154,146 +165,8 @@ class PinClassDef :
         fout.write('  // ピン名のリスト\n')
         fout.write('  const AstString** mNameList;\n')
 
-    ### @brief アクセッサー関数のインライン定義を生成する．
-    def gen_accessor_impl(self, fout) :
-        ast_name = type_to_ast(self.data_type)
-        fout.write('\n')
-        fout.write('// @brief 名前のリストの要素数を返す．\n')
-        fout.write('inline\n')
-        fout.write('int\n')
-        fout.write('{}::name_num() const\n'.format(ast_name))
-        fout.write('{\n')
-        fout.write('  return mNameNum;\n')
-        fout.write('}\n')
-        fout.write('\n')
-        fout.write('// @brief 名前のリストの要素を返す．\n')
-        fout.write('// @param[in] pos 位置番号 ( 0 <= pos < name_num() )\n')
-        fout.write('inline\n')
-        fout.write('const AstString*\n')
-        fout.write('{}::name(int pos) const\n'.format(ast_name))
-        fout.write('{\n')
-        fout.write('  ASSERT_COND( pos >= 0 && pos < name_num() );\n')
-        fout.write('\n')
-        fout.write('  return mNameList[pos];\n')
-        fout.write('}\n')
-
-    ### @brief ハンドラの関数宣言を生成する．
-    def gen_handler_func_decl(self, fout) :
-        fout.write('public:\n')
-        fout.write('  //////////////////////////////////////////////////////////////////////\n')
-        fout.write('  // CGHandler の仮想関数\n')
-        fout.write('  //////////////////////////////////////////////////////////////////////\n')
-        fout.write('\n')
-        fout.write('  /// @brief ヘッダの開始処理\n')
-        fout.write('  ///\n')
-        fout.write('  /// \'(\' を読み込んだ時に呼ばれる．\n')
-        fout.write('   void\n')
-        fout.write('  begin_header() override;\n')
-        fout.write('\n')
-        fout.write('  /// @brief ヘッダの値を読み込む処理\n')
-        fout.write('  /// @param[in] value_type 型\n')
-        fout.write('  /// @param[in] value_loc トークンの位置\n')
-        fout.write('  /// @param[in] count read_value() の呼ばれた回数\n')
-        fout.write('  /// @retval true 正しく読み込んだ．\n')
-        fout.write('  /// @retval false エラーが起きた．\n')
-        fout.write('  bool\n')
-        fout.write('  read_header_value(TokenType value_type,\n')
-        fout.write('		    const FileRegion& value_loc,\n')
-        fout.write('		    int count) override;\n')
-        fout.write('\n')
-        fout.write('  /// @brief 読み込みが終了した時の処理を行う．\n')
-        fout.write('  /// @param[in] header_loc \'(\' から \')\' までのファイル上の位置\n')
-        fout.write('  /// @param[in] count 読み込んだ要素数\n')
-        fout.write('  /// @retval true 正しく読み込んだ．\n')
-        fout.write('  /// @retval false エラーが起きた．\n')
-        fout.write('  bool\n')
-        fout.write('  end_header(const FileRegion& header_loc,\n')
-        fout.write('	     int count) override;\n')
-        fout.write('\n')
-        fout.write('\n')
-
-    ### @brief ハンドラのメンバ変数定義を生成する．
-    def gen_handler_member(self, fout) :
-        fout.write('  vector<const AstString*> mNameList;\n')
-
-    ### @brief ハンドラの関数定義を生成する．
-    def gen_handler_func_impl(self, fout) :
-        str = """
-// @brief ヘッダの開始処理
-//
-// '(' を読み込んだ時に呼ばれる．
-void
-PinHandler::begin_header()
-{
-  mNameList.clear();
-}
-
-// @brief ヘッダの値を読み込む処理
-// @param[in] value_type 型
-// @param[in] value_loc トークンの位置
-// @param[in] count read_value() の呼ばれた回数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-PinHandler::read_header_value(TokenType value_type,
-			      const FileRegion& value_loc,
-			      int count)
-{
-  if ( value_type != TokenType::SYMBOL ) {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error, a string is expected.");
-    return false;
-  }
-  else {
-    mNameList.push_back(mgr().new_string(value_loc, ShString(cur_string())));
-    return true;
-  }
-}
-
-// @brief 読み込みが終了した時の処理を行う．
-// @param[in] header_loc '(' から ')' までのファイル上の位置
-// @param[in] count 読み込んだ要素数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-PinHandler::end_header(const FileRegion& header_loc,
-		       int count)
-{
-  if ( mNameList.empty() ) {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error, one or more strings area expected.");
-    return false;
-  }
-  else {
-    return true;
-  }
-}
-
-"""
-        fout.write(str)
-
-    ### @brief ハンドラの end_group() 中のヘッダ引数を生成する．
-    def gen_handler_begin_group_code(self, fout) :
-        pass
-
-    ### @brief ハンドラの end_group() 中のヘッダ引数を生成する．
-    def gen_handler_end_group_code(self, fout) :
-        pass
-
-    ### @brief ハンドラの end_group() 中のヘッダ引数を生成する．
-    def gen_handler_arguments(self, cspc, fout) :
-        fout.write('{}mNameList,\n'.format(cspc))
-
-    ### @brief ビルダーの check_sanity() 用のコードを生成する．
-    def gen_builder_check_code(self, fout) :
-        pass
-
-    ### @brief ビルダーのメンバ変数定義を生成する．
-    def gen_builder_member(self, fout) :
-        fout.write('  vector<const AstString*> mNameList;\n')
+    ### @brief メンバの初期化文を生成する．
+    def gen_member_init2(self, fout) :
+        fout.write('  for ( auto i: Range(mNameNum) ) {\n')
+        fout.write('    mNameList[i] = header.name_list()[i];\n')
+        fout.write('  }\n')

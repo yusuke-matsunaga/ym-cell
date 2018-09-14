@@ -49,5 +49,3 @@ if __name__ == '__main__' :
         gen_handler_header(fout, class_def)
     elif args.handler_source :
         gen_handler_source(fout, class_def)
-    elif args.builder_header :
-        gen_builder_header(fout, class_def)

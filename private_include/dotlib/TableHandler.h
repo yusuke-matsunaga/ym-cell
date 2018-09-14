@@ -32,19 +32,6 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @breif look-up table の記述をパースする．
-  /// @param[in] dst 読み込んだ値を格納する変数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_value(const AstLut*& dst);
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
   // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
@@ -53,12 +40,10 @@ public:
   begin_group() override;
 
   /// @brief グループ記述の終わり
-  /// @param[in] attr_type 対象の属性
-  /// @param[in] attr_loc attr_type のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   bool
-  end_group(const FileRegion& group_loc) override;
+  end_group() override;
 
 
 private:
@@ -101,9 +86,6 @@ private:
 
   // domain
   const AstDomain* mDomain;
-
-  // 読み込んだ値
-  const AstLut* mValue;
 
 };
 
