@@ -7,10 +7,10 @@
 /// All rights reserved.
 
 #include "dotlib/IntHandler.h"
-#include "dotlib/DotlibParser.h"
-#include "dotlib/TokenType.h"
-#include "dotlib/AstMgr.h"
-#include "ym/MsgMgr.h"
+//#include "dotlib/DotlibParser.h"
+//#include "dotlib/TokenType.h"
+//#include "dotlib/AstMgr.h"
+//#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -52,19 +52,8 @@ bool
 IntHandler::read_value(TokenType value_type,
 		       const FileRegion& value_loc)
 {
-  if ( value_type == TokenType::INT_NUM ) {
-    mValue = mgr().new_int(value_loc, cur_int());
-    return true;
-  }
-  else {
-    mValue = nullptr;
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error. int value is expected.");
-    return false;
-  }
+  mValue = new_int(value_type, value_loc);
+  return mValue != nullptr;
 }
 
 END_NAMESPACE_YM_DOTLIB

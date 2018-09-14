@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/Str1GroupHandler.h"
+#include "dotlib/GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief 'lut_template' Group Statement 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class TemplateHandler :
-  public Str1GroupHandler
+  public GroupHandler
 {
 public:
 

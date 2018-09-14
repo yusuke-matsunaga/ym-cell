@@ -8,8 +8,8 @@
 
 
 #include "dotlib/Str1HeaderHandler.h"
-#include "dotlib/AstMgr.h"
-#include "dotlib/TokenType.h"
+//#include "dotlib/AstMgr.h"
+//#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -29,20 +29,6 @@ Str1HeaderHandler::Str1HeaderHandler(DotlibParser& parser) :
 // @brief デストラクタ
 Str1HeaderHandler::~Str1HeaderHandler()
 {
-}
-
-// @brief 1つの文字列型を取る complex attribute の記述をパースする．
-// @param[in] dst 結果を格納する変数
-// @retval true 正しくパースした．
-// @retval false エラーが怒った．
-bool
-Str1HeaderHandler::parse_value(const AstString*& dst)
-{
-  bool stat = parse_complex_attribute();
-  if ( stat ) {
-    dst = mValue;
-  }
-  return stat;
 }
 
 // @brief ヘッダの開始処理
@@ -65,36 +51,29 @@ Str1HeaderHandler::read_header_value(TokenType value_type,
 {
   switch ( count ) {
   case 0:
-    if ( value_type == TokenType::SYMBOL ) {
-      mValue = mgr().new_string(value_loc, ShString(cur_string()));
-      return true;
-    }
-    break;
+    mValue = new_string(value_type, value_loc);
+    return mValue != nullptr;
 
   default:
-    break;
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    value_loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "Syntax error, a string expected.");
+    return false;
   }
-
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  value_loc,
-		  MsgType::Error,
-		  "DOTLIB_PARSER",
-		  "Syntax error, a string expected.");
-  return false;
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-// @param[in] header_loc '(' から ')' までのファイル上の位置
 // @param[in] count 読み込んだ要素数
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-Str1HeaderHandler::end_header(const FileRegion& header_loc,
-			      int count)
+Str1HeaderHandler::end_header(int count)
 {
   if ( count != 1 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    header_loc,
+		    header_loc(),
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, a string expected.");

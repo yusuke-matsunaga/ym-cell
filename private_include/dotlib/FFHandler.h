@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/Str2GroupHandler.h"
+#include "dotlib/GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -30,7 +30,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///   - preset : "Boolean expression" ;
 //////////////////////////////////////////////////////////////////////
 class FFHandler :
-  public Str2GroupHandler
+  public GroupHandler
 {
 public:
 

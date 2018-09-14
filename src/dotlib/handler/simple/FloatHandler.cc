@@ -7,10 +7,10 @@
 /// All rights reserved.
 
 #include "dotlib/FloatHandler.h"
-#include "dotlib/DotlibParser.h"
-#include "dotlib/TokenType.h"
-#include "dotlib/AstMgr.h"
-#include "ym/MsgMgr.h"
+//#include "dotlib/DotlibParser.h"
+//#include "dotlib/TokenType.h"
+//#include "dotlib/AstMgr.h"
+//#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -52,19 +52,8 @@ bool
 FloatHandler::read_value(TokenType value_type,
 			 const FileRegion& value_loc)
 {
-  if ( value_type == TokenType::FLOAT_NUM || value_type == TokenType::INT_NUM ) {
-    mValue = mgr().new_float(value_loc, cur_float());
-    return true;
-  }
-  else {
-    mValue = nullptr;
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error. float value is expected.");
-    return false;
-  }
+  mValue = new_float(value_type, value_loc);
+  return mValue != nullptr;
 }
 
 END_NAMESPACE_YM_DOTLIB

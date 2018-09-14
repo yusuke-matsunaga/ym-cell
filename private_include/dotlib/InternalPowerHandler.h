@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "EmptyGroupHandler.h"
+#include "GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -33,7 +33,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// '}'
 //////////////////////////////////////////////////////////////////////
 class InternalPowerHandler :
-  public EmptyGroupHandler
+  public GroupHandler
 {
 public:
 

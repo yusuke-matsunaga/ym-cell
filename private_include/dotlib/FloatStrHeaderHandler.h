@@ -1,53 +1,54 @@
-﻿#ifndef STR2GROUPHANDLER_H
-#define STR2GROUPHANDLER_H
+﻿#ifndef FLOATSTRHEADERHANDLER_H
+#define FLOATSTRHEADERHANDLER_H
 
-/// @file Str2GroupHandler.h
-/// @brief Str2GroupHandler のヘッダファイル
+/// @file FloatStrHeaderHandler.h
+/// @brief FloatStrHeaderHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/GroupHandler.h"
+#include "dotlib/HeaderHandler.h"
+#include "ym/ShString.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class Str2GroupHandler GroupHandler.h "GroupHadler.h"
-/// @brief 2つの文字列型をとるグループ用のハンドラ
+/// @class FloatStrHeaderHandler FloatStrHeaderHandler.h "FloatStrHeaderHandler.h"
+/// @brief ( float, string ) の形式のヘッダ用ハンドラ
 //////////////////////////////////////////////////////////////////////
-class Str2GroupHandler :
-  public GroupHandler
+class FloatStrHeaderHandler :
+  public HeaderHandler
 {
 public:
 
-  /// @brief 親を持つハンドラ用のコンストラクタ
+  /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  Str2GroupHandler(DotlibParser& parser);
+  FloatStrHeaderHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~Str2GroupHandler();
+  ~FloatStrHeaderHandler();
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 1番目の要素を返す．
+  const AstFloat*
+  value1() const;
+
+  /// @brief 2番目の要素を返す．
+  const AstString*
+  value2() const;
 
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // 継承クラスから用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief ヘッダの値1を取り出す．
-  const AstString*
-  header_value1() const;
-
-  /// @brief ヘッダの値2を取り出す．
-  const AstString*
-  header_value2() const;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // CHandler の仮想関数
+  // HeaderHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダの開始処理
@@ -66,13 +67,11 @@ public:
 		    int count) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] header_loc '(' から ')' までのファイル上の位置
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  end_header(const FileRegion& header_loc,
-	     int count) override;
+  end_header(int count) override;
 
 
 private:
@@ -80,14 +79,35 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ヘッダの値1
-  AstString* mHeaderValue1;
+  // 1番目の要素
+  const AstFloat* mValue1;
 
-  // ヘッダの値2
-  AstString* mHeaderValue2;
+  // 2番目の要素
+  const AstString* mValue2;
 
 };
 
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 1番目の要素を返す．
+inline
+const AstFloat*
+FloatStrHeaderHandler::value1() const
+{
+  return mValue1;
+}
+
+// @brief 2番目の要素を返す．
+inline
+const AstString*
+FloatStrHeaderHandler::value2() const
+{
+  return mValue2;
+}
+
 END_NAMESPACE_YM_DOTLIB
 
-#endif // STR2GROUPHANDLER_H
+#endif // FLOATSTRHEADERHANDLER_H

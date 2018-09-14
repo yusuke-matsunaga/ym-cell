@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 GroupHandler::GroupHandler(DotlibParser& parser) :
-  CGHandler(parser)
+  DotlibHandler(parser)
 {
 }
 
@@ -46,15 +46,6 @@ GroupHandler::read_group_attr(AttrType attr_type,
     syntax_error(attr_type, attr_loc);
     return false;
   }
-}
-
-// @brief Group Statement を読み込む．
-// @retval true 正しく読み込めた．
-// @retval false エラーが起こった．
-bool
-GroupHandler::parse_group_statement()
-{
-  return parser().parse_group_statement(*this);
 }
 
 // @brief 属性がセットされているかチェックする．

@@ -15,8 +15,8 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class Float2Float2HeaderHandler Float2HeaderHandler.h "Float2HeaderHandler.h"
-/// @brief 2つの float 型をとる complex attribute ハンドラ
+/// @class Float2HeaderHandler Float2HeaderHandler.h "Float2HeaderHandler.h"
+/// @brief ( float, float ) の形式のヘッダ用ハンドラ
 //////////////////////////////////////////////////////////////////////
 class Float2HeaderHandler :
   public HeaderHandler
@@ -36,13 +36,13 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 2つの float 型を取る complex attribute の記述をパースする．
-  /// @param[in] dst1, dst2 結果を格納する変数
-  /// @retval true 正しくパースした．
-  /// @retval false エラーが怒った．
-  bool
-  parse_value(const AstFloat*& dst1,
-	      const AstFloat*& dst2);
+  /// @brief 1番目の値を返す．
+  const AstFloat*
+  value1() const;
+
+  /// @brief 2番目の値を返す．
+  const AstFloat*
+  value2() const;
 
 
 protected:
@@ -66,13 +66,11 @@ protected:
 		    int count) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] header_loc '(' から ')' までのファイル上の位置
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  end_header(const FileRegion& header_loc,
-	     int count) override;
+  end_header(int count) override;
 
 
 private:
@@ -80,11 +78,34 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 読み込んだ値
+  // 1番目の値
   const AstFloat* mValue1;
+
+  // 2番目の値
   const AstFloat* mValue2;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 1番目の値を返す．
+inline
+const AstFloat*
+Float2HeaderHandler::value1() const
+{
+  return mValue1;
+}
+
+// @brief 2番目の値を返す．
+inline
+const AstFloat*
+Float2HeaderHandler::value2() const
+{
+  return mValue2;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

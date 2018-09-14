@@ -17,6 +17,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 /// @class EmptyHeaderHandler HeaderHandler.h "HeaderHadler.h"
 /// @brief 値をとらないヘッダ用のハンドラ
+///
+/// 当然，何の値も返せない．
+/// ただ単にシンタックスチェックをしている．
 //////////////////////////////////////////////////////////////////////
 class EmptyHeaderHandler :
   public HeaderHandler
@@ -52,13 +55,11 @@ public:
 		    int count) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] header_loc '(' から ')' までのファイル上の位置
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  end_header(const FileRegion& header_loc,
-	     int count) override;
+  end_header(int count) override;
 
 };
 

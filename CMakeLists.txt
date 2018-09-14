@@ -108,27 +108,22 @@ set (dotlib_SOURCES
   src/dotlib/handler/simple/FuncScanner.cc
   src/dotlib/handler/simple/FuncHandler.cc
 
-  src/dotlib/handler/complex/ComplexHandler.cc
-  src/dotlib/handler/complex/Str1ComplexHandler.cc
-  src/dotlib/handler/complex/Str2ComplexHandler.cc
-  src/dotlib/handler/complex/Float2ComplexHandler.cc
-  src/dotlib/handler/complex/IndexHandler.cc
-  src/dotlib/handler/complex/PieceWiseHandler.cc
-  src/dotlib/handler/complex/UnitHandler.cc
-  src/dotlib/handler/complex/ValuesHandler.cc
-  src/dotlib/handler/complex/CoefsHandler.cc
-  src/dotlib/handler/complex/OrdersHandler.cc
-  src/dotlib/handler/complex/VariableRangeHandler.cc
+  src/dotlib/handler/header/EmptyHeaderHandler.cc
+  src/dotlib/handler/header/Float2HeaderHandler.cc
+  src/dotlib/handler/header/FloatStrHeaderHandler.cc
+  src/dotlib/handler/header/FloatVectorHeaderHandler.cc
+  src/dotlib/handler/header/FloatVectorListHeaderHandler.cc
+  src/dotlib/handler/header/IntFloatHeaderHandler.cc
+  src/dotlib/handler/header/Str1HeaderHandler.cc
+  src/dotlib/handler/header/Str2HeaderHandler.cc
+  src/dotlib/handler/header/Str2IntHeaderHandler.cc
+  src/dotlib/handler/header/StrListHeaderHandler.cc
 
   src/dotlib/handler/group/GroupHandler.cc
 
-  # EmptyGroupHandler
-  src/dotlib/handler/group/EmptyGroupHandler.cc
   src/dotlib/handler/group/InternalPowerHandler.cc
   src/dotlib/handler/group/TimingHandler.cc
 
-  # Str1GroupHandler
-  src/dotlib/handler/group/Str1GroupHandler.cc
   src/dotlib/handler/group/CellHandler.cc
   src/dotlib/handler/group/CellDegradationHandler.cc
   #src/dotlib/handler/CellInternalPower.cc
@@ -140,13 +135,10 @@ set (dotlib_SOURCES
   src/dotlib/handler/group/TableHandler.cc
   src/dotlib/handler/group/TemplateHandler.cc
 
-  # Str2GroupHandler
-  src/dotlib/handler/group/Str2GroupHandler.cc
   src/dotlib/handler/group/FFHandler.cc
   src/dotlib/handler/group/LatchHandler.cc
 
   # Str2IntGroupHandler
-  src/dotlib/handler/group/Str2IntGroupHandler.cc
   src/dotlib/handler/group/FFBankHandler.cc
   src/dotlib/handler/group/LatchBankHandler.cc
 

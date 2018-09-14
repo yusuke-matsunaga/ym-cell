@@ -9,7 +9,6 @@
 /// All rights reserved.
 
 #include "dotlib/GroupHandler.h"
-#include "dotlib/StrListHeaderHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -188,9 +187,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // ヘッダ用のハンドラ
-  StrListHeaderHandler mHeaderHandler;
 
   // bit_width
   const AstInt* mBitWidth;

@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/Str2IntGroupHandler.h"
+#include "dotlib/GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -31,7 +31,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///   - preset : "Boolean expression" ;
 //////////////////////////////////////////////////////////////////////
 class LatchBankHandler :
-  public Str2IntGroupHandler
+  public GroupHandler
 {
 public:
 

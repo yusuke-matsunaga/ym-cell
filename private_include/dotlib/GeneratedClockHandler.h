@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/Str1GroupHandler.h"
+#include "dotlib/GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -32,7 +32,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///   - shifts ( shift1, shift2, shift3 ) ; // shift1 は float ?
 //////////////////////////////////////////////////////////////////////
 class GeneratedClockHandler :
-  public Str1GroupHandler
+  public GroupHandler
 {
 public:
 

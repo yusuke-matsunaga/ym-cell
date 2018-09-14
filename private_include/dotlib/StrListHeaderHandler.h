@@ -16,19 +16,19 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class StrListHeaderHandler StrListHeaderHandler.h "dotlib/StrListHeaderHandler.h"
-/// @brief 文字列型のリストをとる complex attribute ハンドラ
+/// @brief ( string, string, ... ) の形式のヘッダ用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class StrListCompleHandler :
+class StrListHeaderHandler :
   public HeaderHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  StrListCompleHandler(DotlibParser& parser);
+  StrListHeaderHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~StrListCompleHandler();
+  ~StrListHeaderHandler();
 
 
 public:
@@ -36,12 +36,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 文字列型のリストを取る complex attribute の記述をパースする．
-  /// @param[in] dst_list 結果を格納するリスト
-  /// @retval true 正しくパースした．
-  /// @retval false エラーが怒った．
-  bool
-  parse_value(const AstString*& dst);
+  /// @brief 読み込んだ値を返す．
+  ///
+  /// といってもこれはこのクラス内のオブジェクトへの参照なので
+  /// 永続的に保持するならコピーする必要がある．
+  const vector<const AstString*>&
+  value() const;
 
 
 public:
@@ -65,13 +65,11 @@ public:
 		    int count) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] header_loc '(' から ')' までのファイル上の位置
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  end_header(const FileRegion& header_loc,
-	     int count) override;
+  end_header(int count) override;
 
 
 private:
@@ -80,9 +78,22 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 読み込んだ値
-  const AstString* mValue;
+  vector<const AstString*> mValue;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 読み込んだ値を返す．
+inline
+const vector<const AstString*>&
+StrListHeaderHandler::value() const
+{
+  return mValue;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

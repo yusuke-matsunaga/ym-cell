@@ -85,7 +85,6 @@ public:
   DotlibHandler(DotlibHandler&& src) = delete;
 
   /// @brief デストラクタ
-  virtual
   ~DotlibHandler();
 
 
@@ -98,6 +97,59 @@ protected:
   /// @brief パーサーを得る．
   DotlibParser&
   parser();
+
+  /// @brief 直前に読んだトークンから AstInt を生成する．
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  ///
+  /// 形が異なっていたらエラーメッセージを出力して nullptr を返す．
+  const AstInt*
+  new_int(TokenType value_type,
+	  const FileRegion& value_loc);
+
+  /// @brief 直前に読んだトークンから AstFloat を生成する．
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  ///
+  /// 形が異なっていたらエラーメッセージを出力して nullpgr を返す．
+  const AstFloat*
+  new_float(TokenType value_type,
+	    const FileRegion& value_loc);
+
+  /// @brief 直前に読んだトークンから AstString を生成する．
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  ///
+  /// 形が異なっていたらエラーメッセージを出力して nullpgr を返す．
+  const AstString*
+  new_string(TokenType value_type,
+	     const FileRegion& value_loc);
+
+  /// @brief 直前に読んだトークンから int のリストを生成する．
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @param[int] dst_list 値を格納するリスト
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起こった．
+  ///
+  /// dst_list は初期化せず，末尾に追加する．
+  bool
+  read_int_vector(TokenType value_type,
+		  const FileRegion& value_loc,
+		  vector<int>& dst_list);
+
+  /// @brief 直前に読んだトークンから float のリストを生成する．
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  /// @param[int] dst_list 値を格納するリスト
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起こった．
+  ///
+  /// dst_list は初期化せず，末尾に追加する．
+  bool
+  read_float_vector(TokenType value_type,
+		    const FileRegion& value_loc,
+		    vector<double>& dst_list);
 
   /// @brief 直前の read_token() に対応する文字列を返す．
   const char*
@@ -130,23 +182,6 @@ protected:
   /// @brief デバッグモードの時 true を返す．
   bool
   debug();
-
-
-#if 0
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // 継承クラスから用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 引数の種類のトークンでなければエラーメッセージを出力する．
-  /// @param[in] req_type 要求するトークンの型
-  bool
-  expect(TokenType req_type);
-
-  /// @brief 行末まで読み込む．
-  bool
-  expect_nl();
-#endif
 
 
 private:

@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 InternalPowerHandler::InternalPowerHandler(DotlibParser& parser) :
-  EmptyGroupHandler(parser)
+  GroupHandler(parser)
 {
 #if 0
   DotlibHandler* simple = new SimpleHandler(parser, false);

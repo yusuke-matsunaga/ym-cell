@@ -192,20 +192,6 @@ TimingHandler::~TimingHandler()
 {
 }
 
-// @breif 'timing' Group Statement の記述をパースする．
-// @param[in] dst_list 読み込んだ値を格納するリスト
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-TimingHandler::parse_value(vector<const AstTiming*>& dst_list)
-{
-  bool stat = parse_group_statement();
-  if ( stat ) {
-    dst_list.push_back(mValue);
-  }
-  return stat;
-}
-
 // @brief ヘッダの開始処理
 //
 // '(' を読み込んだ時に呼ばれる．

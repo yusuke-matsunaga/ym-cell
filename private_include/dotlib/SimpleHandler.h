@@ -51,6 +51,7 @@ public:
   SimpleHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
+  virtual
   ~SimpleHandler();
 
 

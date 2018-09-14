@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/EmptyGroupHandler.h"
+#include "dotlib/GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -26,7 +26,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///   - pg_current ( <pg_pin_name> ) { ... }
 //////////////////////////////////////////////////////////////////////
 class LeakageCurrent :
-  public EmptyGroupHandler
+  public GroupHandler
 {
 public:
 

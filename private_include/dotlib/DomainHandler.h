@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/Str1GroupHandler.h"
+#include "dotlib/GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// 現時点ではこのクラスは syntactical にパースするだけ．
 //////////////////////////////////////////////////////////////////////
 class DomainHandler :
-  public Str1GroupHandler
+  public GroupHandler
 {
 public:
 

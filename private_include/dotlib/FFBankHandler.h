@@ -1,14 +1,14 @@
 #ifndef FFBANKHANDLER_H
 #define FFBANKHANDLER_H
 
-/// @file FFHandler.h
-/// @brief FFHandler のヘッダファイル
+/// @file FFBankHandler.h
+/// @brief FFBankHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/Str2IntGroupHandler.h"
+#include "dotlib/GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -31,7 +31,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///   - preset : "Boolean expression" ;
 //////////////////////////////////////////////////////////////////////
 class FFBankHandler :
-  public Str2IntGroupHandler
+  public GroupHandler
 {
 public:
 

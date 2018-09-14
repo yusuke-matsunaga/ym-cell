@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "Str1GroupHandler.h"
+#include "GroupHandler.h"
 
 #error "Dont't include me"
 
@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief power table 用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class PowerHandler :
-  public Str1GroupHandler
+  public GroupHandler
 {
 public:
 

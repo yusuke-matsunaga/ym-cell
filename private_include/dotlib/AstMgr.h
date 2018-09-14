@@ -409,8 +409,8 @@ public:
   /// @param[in] val2 値
   AstPieceWise*
   new_piecewise(const FileRegion& loc,
-		int val1,
-		double val2);
+		const AstInt* val1,
+		const AstFloat* val2);
 
   /// @brief 単位を表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
@@ -418,8 +418,8 @@ public:
   /// @param[in] unit_str 単位を表す文字列
   AstUnit*
   new_unit(const FileRegion& loc,
-	   double unit_val,
-	   const ShString& unit_str);
+	   const AstFloat* unit_val,
+	   const AstString* unit_str);
 
   /// @brief technology を表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置

@@ -1,5 +1,5 @@
 ﻿#ifndef STR2INTHEADERHANDLER_H
-#define STR2INTHeADERHANDLER_H
+#define STR2INTHEADERHANDLER_H
 
 /// @file Str2IntHeaderHandler.h
 /// @brief Str2IntHeaderHandler のヘッダファイル
@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class Str2IntHeaderHandler HeaderHandler.h "dotlib/HeaderHadler.h"
-/// @brief 2つの文字列型と1つの整数型をとるグループ用のハンドラ
+/// @brief ( string, string, integer ) の形式のヘッダ用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class Str2IntHeaderHandler :
   public HeaderHandler
@@ -31,22 +31,22 @@ public:
   ~Str2IntHeaderHandler();
 
 
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
-  // 継承クラスから用いられる関数
+  // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ヘッダの値1を取り出す．
+  /// @brief 1番目の値を取り出す．
   const AstString*
-  header_value1() const;
+  value1() const;
 
-  /// @brief ヘッダの値2を取り出す．
+  /// @brief 2番目の値を取り出す．
   const AstString*
-  header_value2() const;
+  value2() const;
 
-  /// @brief ヘッダの値3を取り出す．
+  /// @brief 3番目の値を取り出す．
   const AstInt*
-  header_value3() const;
+  value3() const;
 
 
 protected:
@@ -70,13 +70,11 @@ protected:
 		    int count) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] header_loc '(' から ')' までのファイル上の位置
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  end_header(const FileRegion& header_loc,
-	     int count) override;
+  end_header(int count) override;
 
 
 private:
@@ -85,15 +83,44 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ヘッダの値1
-  AstString* mHeaderValue1;
+  const AstString* mValue1;
 
   // ヘッダの値2
-  AstString* mHeaderValue2;
+  const AstString* mValue2;
 
   // ヘッダの値3
-  AstInt* mHeaderValue3;
+  const AstInt* mValue3;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 1番目の値を取り出す．
+inline
+const AstString*
+Str2IntHeaderHandler::value1() const
+{
+  return mValue1;
+}
+
+// @brief 2番目の値を取り出す．
+inline
+const AstString*
+Str2IntHeaderHandler::value2() const
+{
+  return mValue2;
+}
+
+// @brief 3番目の値を取り出す．
+inline
+const AstInt*
+Str2IntHeaderHandler::value3() const
+{
+  return mValue3;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

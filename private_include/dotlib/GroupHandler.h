@@ -44,6 +44,7 @@ public:
   GroupHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
+  virtual
   ~GroupHandler();
 
 
@@ -80,12 +81,6 @@ protected:
   //////////////////////////////////////////////////////////////////////
   // 便利関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief Group Statement を読み込む．
-  /// @retval true 正しく読み込めた．
-  /// @retval false エラーが起こった．
-  bool
-  parse_group_statement();
 
   /// @brief 属性がセットされているかチェックする．
   /// @param[in] val 値を持つノード

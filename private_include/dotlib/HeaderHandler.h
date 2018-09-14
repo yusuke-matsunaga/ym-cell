@@ -32,6 +32,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// このクラスは実体を持たない純粋仮想基底クラスである．
 /// 継承クラスは以下の通り
 /// * EmptyHeaderHandler
+/// * FloatHeaderHandler
+/// * FloatStrHeaderHandler
+/// * FloatVectorHeaderHandler
+/// * FloatVectorListHeaderHandler
 /// * Str1HeaderHandler
 /// * Str2HeaderHandler
 /// * Str2IntHeaderHandler
@@ -40,6 +44,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class HeaderHandler :
   public DotlibHandler
 {
+  friend class DotlibParser;
+
 public:
 
   /// @brief コンストラクタ
@@ -47,7 +53,20 @@ public:
   HeaderHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
+  virtual
   ~HeaderHandler();
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ヘッダ部分 ( '(' から ')' までの部分のファイル位置を返す．)
+  ///
+  /// 下記の 'end_header()' の呼び出し時には確定している．
+  const FileRegion&
+  header_loc() const;
 
 
 public:
@@ -75,14 +94,12 @@ public:
 		    int count) = 0;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] header_loc '(' から ')' までのファイル上の位置
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   virtual
   bool
-  end_header(const FileRegion& header_loc,
-	     int count) = 0;
+  end_header(int count) = 0;
 
 
 private:
@@ -90,7 +107,22 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // ヘッダ部分の位置
+  FileRegion mHeaderLoc;
+
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief ヘッダ部分 ( '(' から ')' までの部分のファイル位置を返す．)
+const FileRegion&
+HeaderHandler::header_loc() const
+{
+  return mHeaderLoc;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

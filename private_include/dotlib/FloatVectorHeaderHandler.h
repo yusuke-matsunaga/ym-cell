@@ -1,13 +1,12 @@
-﻿#ifndef STR1HEADERHANDLER_H
-#define STR1HEADERHANDLER_H
+#ifndef FLOATVECTORHEADERHANDLER_H
+#define FLOATVECTORHEADERHANDLER_H
 
-/// @file Str1HeaderHandler.h
-/// @brief Str1HeaderHandler のヘッダファイル
+/// @file FloatVectorHeaderHandler.h
+/// @brief FloatVectorHeaderHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/HeaderHandler.h"
 
@@ -15,20 +14,22 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class Str1Str1HeaderHandler Str1HeaderHandler.h "Str1HeaderHandler.h"
-/// @brief ( string ) の形式のヘッダ用のハンドラ
+/// @class FloatVectorHeaderHandler FloatVectorHeaderHandler.h "FloatVectorHeaderHandler.h"
+/// @brief "float, float, ..." の形のヘッダ用のハンドラ
+///
+/// つまり全体は文字列だが，内容がコンマで区切られた浮動小数点数
 //////////////////////////////////////////////////////////////////////
-class Str1HeaderHandler :
+class FloatVectorHeaderHandler :
   public HeaderHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  Str1HeaderHandler(DotlibParser& parser);
+  FloatVectorHeaderHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~Str1HeaderHandler();
+  ~FloatVectorHeaderHandler();
 
 
 public:
@@ -37,13 +38,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 読み込んだ値を返す．
-  const AstString*
+  const AstFloatVector*
   value() const;
 
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // CGHandler の仮想関数
+  // HeaderHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダの開始処理
@@ -52,7 +53,7 @@ protected:
   void
   begin_header() override;
 
-  /// @brief 値を読み込む処理
+  /// @brief ヘッダの値を読み込む処理
   /// @param[in] value_type 型
   /// @param[in] value_loc トークンの位置
   /// @param[in] count read_value() の呼ばれた回数
@@ -71,11 +72,17 @@ protected:
 
 private:
   //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
   // 読み込んだ値
-  const AstString* mValue;
+  const AstFloatVector* mValue;
 
 };
 
@@ -86,12 +93,12 @@ private:
 
 // @brief 読み込んだ値を返す．
 inline
-const AstString*
-Str1HeaderHandler::value() const
+const AstFloatVector*
+FloatVectorHeaderHandler::value() const
 {
   return mValue;
 }
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // STR1HEADERHANDLER_H
+#endif // FLOATVECTORHEADERHANDLER_H

@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/EmptyGroupHandler.h"
+#include "dotlib/GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -33,7 +33,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// * Group Statements
 ///   - switching_group
 //////////////////////////////////////////////////////////////////////
-class DynamicCurrentHandler
+class DynamicCurrentHandler :
+  public GroupHandler
 {
 public:
 

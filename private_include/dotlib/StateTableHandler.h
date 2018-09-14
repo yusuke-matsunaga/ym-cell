@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/Str2GroupHandler.h"
+#include "dotlib/GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -23,7 +23,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// * Simple Attributes
 ///   - table: string ; // テーブル記述
 //////////////////////////////////////////////////////////////////////
-class StateTableHandler
+class StateTableHandler :
+  public GroupHandler
 {
 public:
 
