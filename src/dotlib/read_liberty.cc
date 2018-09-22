@@ -41,7 +41,7 @@
 #include "dotlib/AstUnit.h"
 #include "dotlib/AstTechnology.h"
 #include "dotlib/AstDelayModel.h"
-#include "dotlib/AstPinDirection.h"
+#include "dotlib/AstDirection.h"
 #include "dotlib/AstTimingSense.h"
 #include "dotlib/AstTimingType.h"
 #include "dotlib/AstVarType.h"
@@ -159,7 +159,7 @@ gen_pin(const vector<const AstPin*>& pin_list,
 {
   for ( auto pin_info: pin_list ) {
     switch ( pin_info->direction()->value() ) {
-    case kClibCellPinInput:
+    case ClibDirection::Input:
       // 入力ピンの生成
       {
 	ClibCapacitance cap(pin_info->capacitance()->value());
@@ -173,7 +173,7 @@ gen_pin(const vector<const AstPin*>& pin_list,
       }
       break;
 
-    case kClibCellPinOutput:
+    case ClibDirection::Output:
       // 出力の生成
       {
 	bool has_logic;
@@ -200,7 +200,7 @@ gen_pin(const vector<const AstPin*>& pin_list,
       }
       break;
 
-    case kClibCellPinInout:
+    case ClibDirection::Inout:
       // 入出力ピンの生成
       {
 	bool has_logic;
@@ -231,7 +231,7 @@ gen_pin(const vector<const AstPin*>& pin_list,
       }
       break;
 
-    case kClibCellPinInternal:
+    case ClibDirection::Internal:
       // 内部ピンの生成
       for ( auto i: Range(pin_info->name_num()) ) {
 	ShString name = pin_info->name(i)->value();
@@ -262,7 +262,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
       Expr cond = gen_expr(dl_timing->when(), pin_map, dummy);
       CiTiming* timing = nullptr;
       switch ( library->delay_model() ) {
-      case kClibDelayGenericCmos:
+      case ClibDelayModel::GenericCmos:
 	{
 	  ClibTime intrinsic_rise(dl_timing->intrinsic_rise()->value());
 	  ClibTime intrinsic_fall(dl_timing->intrinsic_fall()->value());
@@ -277,7 +277,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	}
 	break;
 
-      case kClibDelayTableLookup:
+      case ClibDelayModel::TableLookup:
 	{
 	  const AstLut* cr_node = dl_timing->cell_rise();
 	  const AstLut* rt_node = dl_timing->rise_transition();
@@ -396,15 +396,15 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	}
 	break;
 
-      case kClibDelayPiecewiseCmos:
+      case ClibDelayModel::PiecewiseCmos:
 	// 未実装
 	break;
 
-      case kClibDelayCmos2:
+      case ClibDelayModel::Cmos2:
 	// 未実装
 	break;
 
-      case kClibDelayDcm:
+      case ClibDelayModel::Dcm:
 	// 未実装
 	break;
       }
@@ -430,15 +430,15 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	    continue;
 	  }
 	  switch ( timing_sense ) {
-	  case kClibPosiUnate:
+	  case ClibTimingSense::PosiUnate:
 	    timing_list_array[id * 2 + 0].push_back(timing);
 	    break;
 
-	  case kClibNegaUnate:
+	  case ClibTimingSense::NegaUnate:
 	    timing_list_array[id * 2 + 1].push_back(timing);
 	    break;
 
-	  case kClibNonUnate:
+	  case ClibTimingSense::NonUnate:
 	    timing_list_array[id * 2 + 0].push_back(timing);
 	    timing_list_array[id * 2 + 1].push_back(timing);
 	    break;
@@ -526,8 +526,8 @@ set_library(const AstLibrary* dt_library,
 
   // 'capacitive_load_unit' の設定
   if ( dt_library->capacitive_load_unit() ) {
-    double u = dt_library->capacitive_load_unit()->unit_val();
-    string ustr = dt_library->capacitive_load_unit()->unit_str();
+    double u = dt_library->capacitive_load_unit()->unit_val()->value();
+    ShString ustr = dt_library->capacitive_load_unit()->unit_str()->value();
     library->set_capacitive_load_unit(u, ustr);
   }
 
@@ -600,10 +600,10 @@ set_library(const AstLibrary* dt_library,
       auto pin_info = dt_cell->pin_elem(i);
       int nn = pin_info->name_num();
       switch ( pin_info->direction()->value() ) {
-      case kClibCellPinInput:    ni += nn; break;
-      case kClibCellPinOutput:   no += nn; break;
-      case kClibCellPinInout:    nio += nn; break;
-      case kClibCellPinInternal: nit += nn; break;
+      case ClibDirection::Input:    ni += nn; break;
+      case ClibDirection::Output:   no += nn; break;
+      case ClibDirection::Inout:    nio += nn; break;
+      case ClibDirection::Internal: nit += nn; break;
       default: ASSERT_NOT_REACHED; break;
       }
     }
@@ -619,15 +619,15 @@ set_library(const AstLibrary* dt_library,
       for ( auto i: Range(dt_cell->pin_num()) ) {
 	auto pin_info = dt_cell->pin_elem(i);
 	switch ( pin_info->direction()->value() ) {
-	case kClibCellPinInput:
-	case kClibCellPinInout:
+	case ClibDirection::Input:
+	case ClibDirection::Inout:
 	  for ( auto j: Range(pin_info->name_num()) ) {
 	    pin_map.add(pin_info->name(j)->value(), ipos);
 	    ++ ipos;
 	  }
 	  break;
 
-	case kClibCellPinInternal:
+	case ClibDirection::Internal:
 	  for ( auto j: Range(pin_info->name_num()) ) {
 	    pin_map.add(pin_info->name(j)->value(), itpos + ni2);
 	    ++ itpos;
@@ -774,13 +774,13 @@ set_library(const AstLibrary* dt_library,
 	if ( !timing_list_p.empty() ) {
 	  CiTiming* timing = timing_list_p[0];
 	  bool depend = true;
-	  if ( timing->type() == kClibTimingCombinational ) {
+	  if ( timing->type() == ClibTimingType::Combinational ) {
 	    if ( opin->has_function() && !(~n_func && p_func) ) {
 	      depend = false;
 	    }
 	  }
 	  if ( depend ) {
-	    library->set_timing(cell, iid, oid, kClibPosiUnate, timing_list_p);
+	    library->set_timing(cell, iid, oid, ClibTimingSense::PosiUnate, timing_list_p);
 	  }
 	}
 
@@ -788,13 +788,13 @@ set_library(const AstLibrary* dt_library,
 	if ( !timing_list_n.empty() ) {
 	  CiTiming* timing = timing_list_n[0];
 	  bool depend = true;
-	  if ( timing->type() == kClibTimingCombinational ) {
+	  if ( timing->type() == ClibTimingType::Combinational ) {
 	    if ( opin->has_function() && !(~p_func && n_func) ) {
 	      depend = false;
 	    }
 	  }
 	  if ( depend ) {
-	    library->set_timing(cell, iid, oid, kClibNegaUnate, timing_list_n);
+	    library->set_timing(cell, iid, oid, ClibTimingSense::NegaUnate, timing_list_n);
 	  }
 	}
       }

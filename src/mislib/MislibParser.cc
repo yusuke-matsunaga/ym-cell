@@ -38,24 +38,24 @@ get_ipin_names(const MislibExpr* expr_node,
   ShString name;
 
   switch ( expr_node->type() ) {
-  case MislibExpr::kConst0:
-  case MislibExpr::kConst1:
+  case MislibExpr::Const0:
+  case MislibExpr::Const1:
     // 定数は無視
     return;
 
-  case MislibExpr::kVarName:
+  case MislibExpr::VarName:
     if ( !ipin_set.check(expr_node->varname()) ) {
       ipin_set.add(expr_node->varname());
     }
     break;
 
-  case MislibExpr::kNot:
+  case MislibExpr::Not:
     get_ipin_names(expr_node->child1(), ipin_set);
     break;
 
-  case MislibExpr::kAnd:
-  case MislibExpr::kOr:
-  case MislibExpr::kXor:
+  case MislibExpr::And:
+  case MislibExpr::Or:
+  case MislibExpr::Xor:
     get_ipin_names(expr_node->child1(), ipin_set);
     get_ipin_names(expr_node->child2(), ipin_set);
     break;

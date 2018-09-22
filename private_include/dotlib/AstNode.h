@@ -23,10 +23,13 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///
 /// ノードの種類は以下の通り
 /// - 数値型
-///   * 整数型:       AstInt
-///   * 浮動小数点型: AstFloat
-/// - ベクタ型:       AstFloatVector
-/// - 文字列型:       AstString
+///   * 整数型:            AstInt
+///   * 浮動小数点型:      AstFloat
+/// - 文字列型:            AstString
+/// - ベクタ型
+///   * 整数型:            AstIntVector
+///   * 浮動小数点型:      AstFloatVector
+///   * 文字列型:          AstStringVector
 /// - 属性値型
 ///   * ClibTechnology:
 ///   * ClibDelayModel:
@@ -34,25 +37,27 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///   * ClibTimingSense:
 ///   * ClibTimingType:
 ///   * ClibVarType:
-/// - 式型:           AstExpr
-///   * NOT演算:      AstNot
-///   * 2項演算:      AstOpr
-///   * ブール定数:   AstBoolExpr
-///   * 実数定数:     AstFloatExpr
-///   * シンボル定数: AstVDD, AstVSS, AstVcc
+/// - 式型:                AstExpr
+///   * NOT演算:           AstNot
+///   * 2項演算:           AstOpr
+///   * ブール定数:        AstBoolExpr
+///   * 実数定数:          AstFloatExpr
+///   * シンボル定数:      AstVDD, AstVSS, AstVcc
 /// - 複合型
-///   * 単位          AstUnit
-///   * 折れ線        AstPw
-///   * input_voltage: AstInputVoltage
-///   * output_voltage: AstOutputVoltage
-///   * timing:         AstTiming
-///   * pin:            AstPin
-///   * cell:           AstCell
+///   * 単位               AstUnit
+///   * 折れ線             AstPieceWise
+///   * input_voltage:     AstInputVoltage
+///   * output_voltage:    AstOutputVoltage
+///   * timing:            AstTiming
+///   * pin:               AstPin
+///   * cell:              AstCell
 ///   * lu_table_template: AstTemplate
-///   * lut:          AstLut
-///   * ff:           AstFF
-///   * Latch:        AstLatch
-///   * StateTable:   AstStateTable
+///   * lut:               AstLut
+///   * ff:                AstFF
+///   * ff_bank:           AstFF
+///   * Latch:             AstLatch
+///   * Latch_bank:        AstLatch
+///   * StateTable:        AstStateTable
 ///
 /// 共通の仮想関数は dump() のみ．
 //////////////////////////////////////////////////////////////////////

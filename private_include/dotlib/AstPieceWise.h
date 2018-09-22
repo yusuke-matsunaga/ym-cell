@@ -27,8 +27,8 @@ public:
   /// @param[in] value1
   /// @param[in] value2
   AstPieceWise(const FileRegion& loc,
-	       int value1,
-	       double value2);
+	       const AstInt* value1,
+	       const AstFloat* value2);
 
   /// @brief デストラクタ
   ~AstPieceWise();
@@ -40,11 +40,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値１を返す．
-  int
+  const AstInt*
   value1() const;
 
   /// @brief 値２を返す．
-  double
+  const AstFloat*
   value2() const;
 
   /// @brief 内容をストリーム出力する．
@@ -67,10 +67,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値1
-  int mValue1;
+  const AstInt* mValue1;
 
   // 値2
-  double mValue2;
+  const AstFloat* mValue2;
 
 };
 

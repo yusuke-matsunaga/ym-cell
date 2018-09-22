@@ -67,7 +67,7 @@ MislibAnd::~MislibAnd()
 MislibExpr::Type
 MislibAnd::type() const
 {
-  return kAnd;
+  return And;
 }
 
 // @brief 対応する論理式を生成する．
@@ -119,7 +119,7 @@ MislibOr::~MislibOr()
 MislibExpr::Type
 MislibOr::type() const
 {
-  return kOr;
+  return Or;
 }
 
 // @brief 対応する論理式を生成する．
@@ -171,7 +171,7 @@ MislibXor::~MislibXor()
 MislibExpr::Type
 MislibXor::type() const
 {
-  return kXor;
+  return Xor;
 }
 
 // @brief 対応する論理式を生成する．

@@ -31,7 +31,7 @@ MislibConst0::~MislibConst0()
 MislibExpr::Type
 MislibConst0::type() const
 {
-  return kConst0;
+  return Const0;
 }
 
 // @brief 対応する論理式を生成する．
@@ -72,7 +72,7 @@ MislibConst1::~MislibConst1()
 MislibExpr::Type
 MislibConst1::type() const
 {
-  return kConst1;
+  return Const1;
 }
 
 // @brief 対応する論理式を生成する．

@@ -129,7 +129,7 @@ public:
   ///
   /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
   bool
-  parse_direction(const AstPinDirection*& dst,
+  parse_direction(const AstDirection*& dst,
 		  AttrType attr_type,
 		  const FileRegion& attr_loc);
 

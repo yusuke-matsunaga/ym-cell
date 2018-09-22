@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief + 演算子を表す AstExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-AstExpr*
+const AstExpr*
 AstMgr::new_plus(const AstExpr* opr1,
 		 const AstExpr* opr2)
 {
@@ -27,7 +27,7 @@ AstMgr::new_plus(const AstExpr* opr1,
 
 // @brief - 演算子を表す AstExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-AstExpr*
+const AstExpr*
 AstMgr::new_minus(const AstExpr* opr1,
 		  const AstExpr* opr2)
 {
@@ -38,7 +38,7 @@ AstMgr::new_minus(const AstExpr* opr1,
 
 // @brief * 演算子を表す AstExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-AstExpr*
+const AstExpr*
 AstMgr::new_mult(const AstExpr* opr1,
 		 const AstExpr* opr2)
 {
@@ -49,7 +49,7 @@ AstMgr::new_mult(const AstExpr* opr1,
 
 // @brief / 演算子を表す AstExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-AstExpr*
+const AstExpr*
 AstMgr::new_div(const AstExpr* opr1,
 		const AstExpr* opr2)
 {
@@ -61,7 +61,7 @@ AstMgr::new_div(const AstExpr* opr1,
 // @brief NOT 演算子を表す AstExpr を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] opr オペランド
-AstExpr*
+const AstExpr*
 AstMgr::new_not(const FileRegion& loc,
 		const AstExpr* opr)
 {
@@ -72,7 +72,7 @@ AstMgr::new_not(const FileRegion& loc,
 
 // @brief AND 演算子を表す AstExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-AstExpr*
+const AstExpr*
 AstMgr::new_and(const AstExpr* opr1,
 		const AstExpr* opr2)
 {
@@ -83,7 +83,7 @@ AstMgr::new_and(const AstExpr* opr1,
 
 // @brief OR 演算子を表す AstExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-AstExpr*
+const AstExpr*
 AstMgr::new_or(const AstExpr* opr1,
 	       const AstExpr* opr2)
 {
@@ -94,7 +94,7 @@ AstMgr::new_or(const AstExpr* opr1,
 
 // @brief XOR 演算子を表す AstExpr を生成する．
 // @param[in] opr1, opr2 オペランド
-AstExpr*
+const AstExpr*
 AstMgr::new_xor(const AstExpr* opr1,
 		const AstExpr* opr2)
 {
@@ -106,7 +106,7 @@ AstMgr::new_xor(const AstExpr* opr1,
 // @brief ブール値(0 or 1)を表す AstExpr を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] val 値
-AstExpr*
+const AstExpr*
 AstMgr::new_bool_expr(const FileRegion& loc,
 		      bool val)
 {
@@ -118,7 +118,7 @@ AstMgr::new_bool_expr(const FileRegion& loc,
 // @brief 実数値を表す AstExpr を生成する．
 // @param[in] loc ファイル乗の位置
 // @param[in] val 値
-AstExpr*
+const AstExpr*
 AstMgr::new_float_expr(const FileRegion& loc,
 		       double val)
 {
@@ -129,7 +129,7 @@ AstMgr::new_float_expr(const FileRegion& loc,
 
 // @brief VDDを表す AstExpr を生成する．
 // @param[in] loc ファイル上の位置
-AstExpr*
+const AstExpr*
 AstMgr::new_vdd_expr(const FileRegion& loc)
 {
   ++ mSymbolExprNum;
@@ -139,7 +139,7 @@ AstMgr::new_vdd_expr(const FileRegion& loc)
 
 // @brief VSSを表す AstExpr を生成する．
 // @param[in] loc ファイル上の位置
-AstExpr*
+const AstExpr*
 AstMgr::new_vss_expr(const FileRegion& loc)
 {
   ++ mSymbolExprNum;
@@ -149,7 +149,7 @@ AstMgr::new_vss_expr(const FileRegion& loc)
 
 // @brief VCCを表す AstExpr を生成する．
 // @param[in] loc ファイル上の位置
-AstExpr*
+const AstExpr*
 AstMgr::new_vcc_expr(const FileRegion& loc)
 {
   ++ mSymbolExprNum;
@@ -158,7 +158,7 @@ AstMgr::new_vcc_expr(const FileRegion& loc)
 }
 
 // @brief 文字列を表す AstExpr を生成する．
-AstExpr*
+const AstExpr*
 AstMgr::new_str_expr(const FileRegion& loc,
 		     const ShString& str)
 {

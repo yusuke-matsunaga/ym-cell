@@ -17,10 +17,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @param[in] loc ファイル上の位置
 // @param[in] unit_val 数値
 // @param[in] unit_str 単位を表す文字列
-AstUnit*
+const AstUnit*
 AstMgr::new_unit(const FileRegion& loc,
-		 double unit_val,
-		 const ShString& unit_str)
+		 const AstFloat* unit_val,
+		 const AstString* unit_str)
 {
   void* p = mAlloc.get_memory(sizeof(AstUnit));
   return new (p) AstUnit(loc, unit_val, unit_str);
@@ -36,8 +36,8 @@ AstMgr::new_unit(const FileRegion& loc,
 // @param[in] unit_val 数値
 // @param[in] unit_str 単位を表す文字列
 AstUnit::AstUnit(const FileRegion& loc,
-		 double unit_val,
-		 const ShString& unit_str) :
+		 const AstFloat* unit_val,
+		 const AstString* unit_str) :
   AstNode(loc),
   mVal(unit_val),
   mStr(unit_str)
@@ -56,7 +56,7 @@ void
 AstUnit::dump(ostream& s,
 	      int indent) const
 {
-#warning "TODO: 未完成"
+  s << unit_val()->value() << unit_str()->value();
 }
 
 END_NAMESPACE_YM_DOTLIB

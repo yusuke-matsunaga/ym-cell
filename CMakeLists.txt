@@ -144,37 +144,35 @@ set (dotlib_SOURCES
 
   #src/dotlib/handler/DefineHandler.cc
 
-  src/dotlib/ast/AstAttr.cc
   src/dotlib/ast/AstBool.cc
-  src/dotlib/ast/AstCell.cc
-  src/dotlib/ast/AstCellDegradation.cc
+  #src/dotlib/ast/AstCell.cc
+  #src/dotlib/ast/AstCellDegradation.cc
   src/dotlib/ast/AstCPType.cc
   src/dotlib/ast/AstDelayModel.cc
-  src/dotlib/ast/AstDomain.cc
+  src/dotlib/ast/AstDirection.cc
+  #src/dotlib/ast/AstDomain.cc
   src/dotlib/ast/AstExpr.cc
-  src/dotlib/ast/AstFF.cc
-  src/dotlib/ast/AstFFBank.cc
-  src/dotlib/ast/AstFL.cc
+  #src/dotlib/ast/AstFF.cc
+  #src/dotlib/ast/AstFFBank.cc
   src/dotlib/ast/AstFloat.cc
   src/dotlib/ast/AstFloatVector.cc
-  src/dotlib/ast/AstInputVoltage.cc
+  #src/dotlib/ast/AstInputVoltage.cc
   src/dotlib/ast/AstInt.cc
   src/dotlib/ast/AstIntVector.cc
-  src/dotlib/ast/AstLatch.cc
-  src/dotlib/ast/AstLatchBank.cc
-  src/dotlib/ast/AstLibrary.cc
-  src/dotlib/ast/AstLut.cc
+  #src/dotlib/ast/AstLatch.cc
+  #src/dotlib/ast/AstLatchBank.cc
+  #src/dotlib/ast/AstLibrary.cc
+  #src/dotlib/ast/AstLut.cc
   src/dotlib/ast/AstMgr.cc
   src/dotlib/ast/AstNode.cc
-  src/dotlib/ast/AstOutputVoltage.cc
+  #src/dotlib/ast/AstOutputVoltage.cc
   src/dotlib/ast/AstPieceWise.cc
-  src/dotlib/ast/AstPin.cc
-  src/dotlib/ast/AstPinDirection.cc
-  src/dotlib/ast/AstStateTable.cc
+  #src/dotlib/ast/AstPin.cc
+  #src/dotlib/ast/AstStateTable.cc
   src/dotlib/ast/AstString.cc
   src/dotlib/ast/AstStringVector.cc
-  src/dotlib/ast/AstTemplate.cc
-  src/dotlib/ast/AstTiming.cc
+  #src/dotlib/ast/AstTemplate.cc
+  #src/dotlib/ast/AstTiming.cc
   src/dotlib/ast/AstTimingSense.cc
   src/dotlib/ast/AstTimingType.cc
   src/dotlib/ast/AstTechnology.cc

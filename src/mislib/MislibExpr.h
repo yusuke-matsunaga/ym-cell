@@ -29,19 +29,19 @@ public:
   /// @brief ノードの種類
   enum Type {
     /// @brief 変数名
-    kVarName,
+    VarName,
     /// @brief 定数0
-    kConst0,
+    Const0,
     /// @brief 定数1
-    kConst1,
+    Const1,
     /// @brief NOT論理式
-    kNot,
+    Not,
     /// @brief AND論理式
-    kAnd,
+    And,
     /// @brief OR論理式
-    kOr,
+    Or,
     /// @brief XOR論理式
-    kXor,
+    Xor,
   };
 
 protected:

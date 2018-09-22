@@ -16,10 +16,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @param[in] loc ファイル上の位置
 // @param[in] val1 インデックス
 // @param[in] val2 値
-AstPieceWise*
+const AstPieceWise*
 AstMgr::new_piecewise(const FileRegion& loc,
-		      int val1,
-		      double val2)
+		      const AstInt* val1,
+		      const AstFloat* val2)
 {
   ++ mPieceWiseNum;
   void* p = mAlloc.get_memory(sizeof(AstPieceWise));
@@ -36,8 +36,8 @@ AstMgr::new_piecewise(const FileRegion& loc,
 // @param[in] value1
 // @param[in] value2
 AstPieceWise::AstPieceWise(const FileRegion& loc,
-			   int value1,
-			   double value2) :
+			   const AstInt* value1,
+			   const AstFloat* value2) :
   AstNode(loc),
   mValue1(value1),
   mValue2(value2)

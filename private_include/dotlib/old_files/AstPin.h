@@ -46,7 +46,7 @@ public:
   /// @param[in] alloc メモリアロケータ
   AstPin(const FileRegion& loc,
 	 const vector<const AstString*>& name_list,
-	 const AstPinDirection* pin_direction,
+	 const AstDirection* pin_direction,
 	 const AstFloat* capacitance,
 	 const AstFloat* rise_capacitance,
 	 const AstFloat* fall_capacitance,
@@ -82,7 +82,7 @@ public:
   name(int pos) const;
 
   /// @brief "direction" を返す．
-  const AstPinDirection*
+  const AstDirection*
   direction() const;
 
   /// @brief "capacitance" を返す．
@@ -166,7 +166,7 @@ private:
   const AstString** mNameList;
 
   // "direction"
-  const AstPinDirection* mPinDirection;
+  const AstDirection* mDirection;
 
   // "capacitance"
   const AstFloat* mCapacitance;
@@ -241,10 +241,10 @@ AstPin::name(int pos) const
 
 // @brief "direction" を返す．
 inline
-const AstPinDirection*
+const AstDirection*
 AstPin::direction() const
 {
-  return mPinDirection;
+  return mDirection;
 }
 
 // @brief "capacitance" を返す．

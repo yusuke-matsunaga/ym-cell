@@ -48,7 +48,7 @@ MislibNoninv::~MislibNoninv()
 MislibPhase::Type
 MislibNoninv::type() const
 {
-  return kNoninv;
+  return Noninv;
 }
 
 // 内容を出力する．
@@ -81,7 +81,7 @@ MislibInv::~MislibInv()
 MislibPhase::Type
 MislibInv::type() const
 {
-  return kInv;
+  return Inv;
 }
 
 // 内容を出力する．
@@ -114,7 +114,7 @@ MislibUnknown::~MislibUnknown()
 MislibPhase::Type
 MislibUnknown::type() const
 {
-  return kUnknown;
+  return Unknown;
 }
 
 // 内容を出力する．

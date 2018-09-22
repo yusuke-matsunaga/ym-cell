@@ -162,7 +162,7 @@ ClibCellLibrary::technology() const
     return mImpl->technology();
   }
   // デフォルトは CMOS
-  return kClibTechCmos;
+  return ClibTechnology::cmos;
 }
 
 // @brief 遅延モデルの取得
@@ -180,7 +180,7 @@ ClibCellLibrary::delay_model() const
     return mImpl->delay_model();
   }
   // デフォルト値
-  return kClibDelayGenericCmos;
+  return ClibDelayModel::GenericCmos;
 }
 
 // @brief バス命名規則の取得
@@ -568,7 +568,7 @@ ClibCellLibrary::pg_node_type(int id) const
     return mImpl->pg_node_type(id);
   }
   // デフォルト値
-  return kClibPatInput;
+  return ClibPatType::Input;
 }
 
 // @brief ノードが入力ノードの時に入力番号を返す．

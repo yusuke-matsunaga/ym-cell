@@ -114,128 +114,140 @@ using nsClib::ClibPatGraph;
 //////////////////////////////////////////////////////////////////////
 /// @brief テクノロジを表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum ClibTechnology {
-  kClibTechCmos,
-  kClibTechFpga
-};
+enum class ClibTechnology
+  {
+   cmos,
+   fpga
+  };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief 遅延モデルを表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum ClibDelayModel {
-  kClibDelayGenericCmos,
-  kClibDelayTableLookup,
-  kClibDelayPiecewiseCmos,
-  kClibDelayCmos2,
-  kClibDelayDcm
-};
+enum class ClibDelayModel
+  {
+   GenericCmos,
+   TableLookup,
+   PiecewiseCmos,
+   Cmos2,
+   Dcm
+  };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief ピンの方向を表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum ClibCellPinDirection {
-  kClibCellPinInput,
-  kClibCellPinOutput,
-  kClibCellPinInout,
-  kClibCellPinInternal
-};
+enum class ClibDirection
+  {
+   Input,
+   Output,
+   Inout,
+   Internal
+  };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief タイミングの条件を表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum ClibTimingSense {
-  kClibPosiUnate = 1,
-  kClibNegaUnate = 2,
-  kClibNonUnate  = 3
-};
+enum class ClibTimingSense
+  {
+   PosiUnate = 1,
+   NegaUnate = 2,
+   NonUnate  = 3
+  };
 
 
 /////////////////////////////////////////////////////////////////////
 /// @brief タイミング情報の型を表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum ClibTimingType {
-  kClibTimingCombinational          = 0,
-  kClibTimingCombinationalRise      = 1,
-  kClibTimingCombinationalFall      = 2,
+enum class ClibTimingType
+  {
+   Combinational          = 0,
+   CombinationalRise      = 1,
+   CombinationalFall      = 2,
 
-  kClibTimingThreeStateEnable       = 3,
-  kClibTimingThreeStateDisable      = 4,
-  kClibTimingThreeStateEnableRise   = 5,
-  kClibTimingThreeStateEnableFall   = 6,
-  kClibTimingThreeStateDisableRise  = 7,
-  kClibTimingThreeStateDisableFall  = 8,
+   ThreeStateEnable       = 3,
+   ThreeStateDisable      = 4,
+   ThreeStateEnableRise   = 5,
+   ThreeStateEnableFall   = 6,
+   ThreeStateDisableRise  = 7,
+   ThreeStateDisableFall  = 8,
 
-  kClibTimingRisingEdge             = 9,
-  kClibTimingFallingEdge            = 10,
+   RisingEdge             = 9,
+   FallingEdge            = 10,
 
-  kClibTimingPreset                 = 11,
-  kClibTimingClear                  = 12,
+   Preset                 = 11,
+   Clear                  = 12,
 
-  kClibTimingHoldRising             = 13,
-  kClibTimingHoldFalling            = 14,
+   HoldRising             = 13,
+   HoldFalling            = 14,
 
-  kClibTimingSetupRising            = 15,
-  kClibTimingSetupFalling           = 16,
+   SetupRising            = 15,
+   SetupFalling           = 16,
 
-  kClibTimingRecoveryRising         = 17,
-  kClibTimingRecoveryFalling        = 18,
+   RecoveryRising         = 17,
+   RecoveryFalling        = 18,
 
-  kClibTimingSkewRising             = 19,
-  kClibTimingSkewFalling            = 20,
+   SkewRising             = 19,
+   SkewFalling            = 20,
 
-  kClibTimingRemovalRising          = 21,
-  kClibTimingRemovalFalling         = 22,
+   RemovalRising          = 21,
+   RemovalFalling         = 22,
 
-  kClibTimingNonSeqSetupRising      = 23,
-  kClibTimingNonSeqSetupFalling     = 24,
-  kClibTimingNonSeqHoldRising       = 25,
-  kClibTimingNonSeqHoldFalling      = 26,
+   NonSeqSetupRising      = 23,
+   NonSeqSetupFalling     = 24,
+   NonSeqHoldRising       = 25,
+   NonSeqHoldFalling      = 26,
 
-  kClibTimingNochangeHighHigh       = 27,
-  kClibTimingNochangeHighLow        = 28,
-  kClibTimingNochangeLowHigh        = 29,
-  kClibTimingNochangeLowLow         = 30
-};
+   NochangeHighHigh       = 27,
+   NochangeHighLow        = 28,
+   NochangeLowHigh        = 29,
+   NochangeLowLow         = 30
+  };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief ルックアップテーブルの変数の型
 //////////////////////////////////////////////////////////////////////
-enum ClibVarType {
-  kClibVarInputNetTransition,
+enum class ClibVarType
+  {
+   InputNetTransition,
 
-  kClibVarTotalOutputNetCapacitance,
-  kClibVarOutputNetLength,
-  kClibVarOutputNetWireCap,
-  kClibVarOutputNetPinCap,
+   TotalOutputNetCapacitance,
+   OutputNetLength,
+   OutputNetWireCap,
+   OutputNetPinCap,
 
-  kClibVarEqualOrOppositeOutputNetCapacitance,
-  kClibVarInputTransitionTime,
+   EqualOrOppositeOutputNetCapacitance,
+   InputTransitionTime,
 
-  kClibVarRelatedOutTotalOutputNetCapacitance,
-  kClibVarRelatedOutOutputNetLength,
-  kClibVarRelatedOutOutputNetWireCap,
-  kClibVarRelatedOutOutputNetPinCap,
+   RelatedOutTotalOutputNetCapacitance,
+   RelatedOutOutputNetLength,
+   RelatedOutOutputNetWireCap,
+   RelatedOutOutputNetPinCap,
 
-  kClibVarConstrainedPinTransition,
+   ConstrainedPinTransition,
 
-  kClibVarRelatedPinTransition,
+   RelatedPinTransition,
 
-  kClibVarNone
-};
+   None
+  };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief パタングラフのノードの型
 //////////////////////////////////////////////////////////////////////
-enum ClibPatType {
-  kClibPatInput = 0,
-  kClibPatAnd   = 2,
-  kClibPatXor   = 3
-};
+enum class ClibPatType
+  {
+   Input = 0,
+   And   = 2,
+   Xor   = 3
+  };
+
+
+//////////////////////////////////////////////////////////////////////
+// ストリーム出力演算子
+//////////////////////////////////////////////////////////////////////
 
 /// @brief ストリーム出力演算子
 /// @param[in] s 出力先のストリーム
@@ -252,7 +264,6 @@ operator<<(ostream& s,
 ostream&
 operator<<(ostream& s,
 	   ClibTimingSense timing_sense);
-
 
 /// @brief ストリーム出力演算子
 /// @param[in] s 出力先のストリーム

@@ -242,7 +242,7 @@ public:
 
   /// @brief 方向を返す．
   virtual
-  ClibCellPinDirection
+  ClibDirection
   direction() const;
 
   /// @brief 入力ピンの時に true を返す．
@@ -497,7 +497,7 @@ public:
 
   /// @brief 方向を返す．
   virtual
-  ClibCellPinDirection
+  ClibDirection
   direction() const;
 
   /// @brief 出力ピンの時に true を返す．
@@ -573,7 +573,7 @@ public:
 
   /// @brief 方向を返す．
   virtual
-  ClibCellPinDirection
+  ClibDirection
   direction() const;
 
   /// @brief 入出力ピンの時に true を返す．
@@ -669,7 +669,7 @@ public:
 
   /// @brief 方向を返す．
   virtual
-  ClibCellPinDirection
+  ClibDirection
   direction() const;
 
   /// @brief 内部ピンの時に true を返す．

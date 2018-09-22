@@ -15,7 +15,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief var_type を表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
-AstVarType*
+const AstVarType*
 AstMgr::new_var_type(const FileRegion& loc,
 		     ClibVarType value)
 {
@@ -51,22 +51,24 @@ void
 AstVarType::dump(ostream& s,
 		 int indent) const
 {
+  const char* tmp = "---";
   switch ( mValue ) {
-  case kClibVarInputNetTransition:                  dump_string(s, "input net transition"); break;
-  case kClibVarInputTransitionTime:                 dump_string(s, "input transition time"); break;
-  case kClibVarTotalOutputNetCapacitance:           dump_string(s, "output net capacitance"); break;
-  case kClibVarEqualOrOppositeOutputNetCapacitance: dump_string(s, "equal or opposite output net capacitance"); break;
-  case kClibVarOutputNetLength:                     dump_string(s, "output net length"); break;
-  case kClibVarOutputNetWireCap:                    dump_string(s, "output net wire cap"); break;
-  case kClibVarOutputNetPinCap:                     dump_string(s, "output net pin cap"); break;
-  case kClibVarRelatedOutTotalOutputNetCapacitance: dump_string(s, "related out total output net capacitance"); break;
-  case kClibVarRelatedOutOutputNetLength:           dump_string(s, "related out output net length"); break;
-  case kClibVarRelatedOutOutputNetWireCap:          dump_string(s, "related out output net wire cap"); break;
-  case kClibVarRelatedOutOutputNetPinCap:           dump_string(s, "related out output net pin cap"); break;
-  case kClibVarConstrainedPinTransition:            dump_string(s, "constrained pin transition"); break;
-  case kClibVarRelatedPinTransition:                dump_string(s, "related pin transition"); break;
-  case kClibVarNone:                                dump_string(s, "none"); break;
+  case ClibVarType::InputNetTransition:                  tmp = "input net transition"; break;
+  case ClibVarType::InputTransitionTime:                 tmp = "input transition time"; break;
+  case ClibVarType::TotalOutputNetCapacitance:           tmp = "output net capacitance"; break;
+  case ClibVarType::EqualOrOppositeOutputNetCapacitance: tmp = "equal or opposite output net capacitance"; break;
+  case ClibVarType::OutputNetLength:                     tmp = "output net length"; break;
+  case ClibVarType::OutputNetWireCap:                    tmp = "output net wire cap"; break;
+  case ClibVarType::OutputNetPinCap:                     tmp = "output net pin cap"; break;
+  case ClibVarType::RelatedOutTotalOutputNetCapacitance: tmp = "related out total output net capacitance"; break;
+  case ClibVarType::RelatedOutOutputNetLength:           tmp = "related out output net length"; break;
+  case ClibVarType::RelatedOutOutputNetWireCap:          tmp = "related out output net wire cap"; break;
+  case ClibVarType::RelatedOutOutputNetPinCap:           tmp = "related out output net pin cap"; break;
+  case ClibVarType::ConstrainedPinTransition:            tmp = "constrained pin transition"; break;
+  case ClibVarType::RelatedPinTransition:                tmp = "related pin transition"; break;
+  case ClibVarType::None:                                tmp = "none"; break;
   }
+  dump_string(s, tmp);
 }
 
 END_NAMESPACE_YM_DOTLIB

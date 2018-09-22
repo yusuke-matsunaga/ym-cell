@@ -205,7 +205,7 @@ private:
   const AstString* mConnectionClass;
 
   // direction
-  const AstPinDirection* mDirection;
+  const AstDirection* mDirection;
 
   // dont_faut
   const AstString* mDontFault;

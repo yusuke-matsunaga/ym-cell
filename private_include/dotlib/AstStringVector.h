@@ -38,9 +38,19 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 文字列のリストを返す．
-  const vector<ShString>&
-  value() const;
+  /// @brief ベクタの要素数を返す．
+  int
+  size() const;
+
+  /// @brief ベクタの要素を返す．
+  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
+  ShString
+  value(int pos) const;
+
+  /// @brief ベクタを取り出す．
+  /// @param[out] vector ベクタを格納する変数
+  void
+  get_vector(vector<ShString>& vector) const;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -55,8 +65,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 値
-  vector<ShString> mValue;
+  // 要素数
+  int mNum;
+
+  // ベクタの本体
+  ShString mBody[1];
 
 };
 
@@ -65,12 +78,23 @@ private:
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// @brief 文字列のリストを返す．
+// @brief ベクタの要素数を返す．
 inline
-const vector<ShString>&
-AstStringVector::value() const
+int
+AstStringVector::size() const
 {
-  return mValue;
+  return mNum;
+}
+
+// @brief ベクタの要素を返す．
+// @param[in] pos 位置番号 ( 0 <= pos < size() )
+inline
+ShString
+AstStringVector::value(int pos) const
+{
+  ASSERT_COND( pos >= 0 && pos < size() );
+
+  return mBody[pos];
 }
 
 END_NAMESPACE_YM_DOTLIB

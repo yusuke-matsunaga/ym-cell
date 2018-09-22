@@ -39,8 +39,8 @@ CiCellLibrary::CiCellLibrary() :
   mAlloc(4096),
   mPatMgr(mAlloc)
 {
-  mTechnology = kClibTechCmos;
-  mDelayModel = kClibDelayGenericCmos;
+  mTechnology = ClibTechnology::cmos;
+  mDelayModel = ClibDelayModel::GenericCmos;
 }
 
 // @brief デストラクタ
@@ -82,11 +82,11 @@ CiCellLibrary::technology() const
 
 // @brief 遅延モデルの取得
 // 返り値は
-// - kClibDelayGenericCmos
-// - kClibDelayTableLookup
-// - kClibDelayPiecewiseCmos
-// - kClibDelayCmos2
-// - kClibDelayDcm
+// - ClibDelayModel::GenericCmos
+// - ClibDelayModel::TableLookup
+// - ClibDelayModel::PiecewiseCmos
+// - ClibDelayModel::Cmos2
+// - ClibDelayModel::Dcm
 // のいずれか
 ClibDelayModel
 CiCellLibrary::delay_model() const
@@ -1190,8 +1190,8 @@ CiCellLibrary::set_timing(CiCell* cell,
 {
   int base = (opin_id * cell->input_num2() + ipin_id) * 2;
   switch ( timing_sense ) {
-  case kClibPosiUnate: base += 0; break;
-  case kClibNegaUnate: base += 1; break;
+  case ClibTimingSense::PosiUnate: base += 0; break;
+  case ClibTimingSense::NegaUnate: base += 1; break;
   default: ASSERT_NOT_REACHED;
   }
   cell->mTimingMap[base].init(timing_list, mAlloc);

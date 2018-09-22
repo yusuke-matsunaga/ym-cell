@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief 整数値を表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
-AstInt*
+const AstInt*
 AstMgr::new_int(const FileRegion& loc,
 		int value)
 {

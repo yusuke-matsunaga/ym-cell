@@ -15,7 +15,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief timing_sense を表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
-AstTimingSense*
+const AstTimingSense*
 AstMgr::new_timing_sense(const FileRegion& loc,
 			 ClibTimingSense value)
 {
@@ -51,11 +51,13 @@ void
 AstTimingSense::dump(ostream& s,
 		     int indent) const
 {
+  const char* tmp = "---";
   switch ( mValue ) {
-  case kClibPosiUnate: dump_string(s, "positive unate"); break;
-  case kClibNegaUnate: dump_string(s, "negative unate"); break;
-  case kClibNonUnate:  dump_string(s, "non unate");      break;
+  case ClibTimingSense::PosiUnate: tmp = "positive unate"; break;
+  case ClibTimingSense::NegaUnate: tmp = "negative unate"; break;
+  case ClibTimingSense::NonUnate:  tmp = "non unate";      break;
   }
+  dump_string(s, tmp);
 }
 
 END_NAMESPACE_YM_DOTLIB

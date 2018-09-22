@@ -1,8 +1,8 @@
-﻿#ifndef PINDIRECTIONHANDLER_H
-#define PINDIRECTIONHANDLER_H
+﻿#ifndef DIRECTIONHANDLER_H
+#define DIRECTIONHANDLER_H
 
-/// @file PinDirectionHandler.h
-/// @brief PinDirectionHandler のヘッダファイル
+/// @file DirectionHandler.h
+/// @brief DirectionHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
@@ -15,20 +15,20 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class PinDirectionHandler PinDirectionHandler.h "PinDirectionHandler.h"
-/// @brief 'pin_direction' Simple Attribute 用のハンドラ
+/// @class DirectionHandler DirectionHandler.h "dotlib/DirectionHandler.h"
+/// @brief 'direction' Simple Attribute 用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class PinDirectionHandler :
+class DirectionHandler :
   public StrBaseHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  PinDirectionHandler(DotlibParser& parser);
+  DirectionHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~PinDirectionHandler();
+  ~DirectionHandler();
 
 
 public:
@@ -41,7 +41,7 @@ public:
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  parse_value(const AstPinDirection*& dst);
+  parse_value(const AstDirection*& dst);
 
 
 private:
@@ -65,10 +65,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 読み込んだ値
-  const AstPinDirection* mValue;
+  const AstDirection* mValue;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // PINDIRECTIONHANDLER_H
+#endif // DIRECTIONHANDLER_H

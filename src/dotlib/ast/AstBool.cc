@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief ブール値を表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
-AstBool*
+const AstBool*
 AstMgr::new_bool(const FileRegion& loc,
 		 bool value)
 {
@@ -52,12 +52,8 @@ void
 AstBool::dump(ostream& s,
 	      int indent) const
 {
-  if ( value() ) {
-    s << "true";
-  }
-  else {
-    s << "false";
-  }
+  const char* tmp = value() ? "true" : "false";
+  dump_string(s, tmp);
 }
 
 END_NAMESPACE_YM_DOTLIB

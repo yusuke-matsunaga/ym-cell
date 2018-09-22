@@ -75,16 +75,16 @@ CiPatMgr::copy(const LcPatMgr& src)
     LcPatNode* src_node = src.node(i);
     int v = 0U;
     if ( src_node->is_input() ) {
-      v = kClibPatInput | (src_node->input_id() << 2);
+      v = static_cast<int>(ClibPatType::Input) | (src_node->input_id() << 2);
     }
     else if ( src_node->is_and() ) {
-      v = kClibPatAnd;
+      v = static_cast<int>(ClibPatType::And);
     }
     else if ( src_node->is_xor() ) {
-      v = kClibPatXor;
+      v = static_cast<int>(ClibPatType::Xor);
     }
     mNodeTypeArray[i] = v;
-    for (int j = 0; j < 2; ++ j) {
+    for ( auto j: { 0, 1 } ) {
       int v = 0U;
       if ( !src_node->is_input() ) {
 	v = src_node->fanin(j)->id() * 2;

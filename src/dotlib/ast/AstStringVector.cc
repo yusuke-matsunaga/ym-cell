@@ -16,13 +16,14 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief 定数シンボルを表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
-AstStringVector*
+const AstStringVector*
 AstMgr::new_string_vector(const FileRegion& loc,
 			  const vector<ShString>& value)
 {
+  int n = value.size();
   ++ mStrVectNum;
-  mStrVectElemSize += value.size();
-  void* p = mAlloc.get_memory(sizeof(AstStringVector));
+  mStrVectElemSize += n;
+  void* p = mAlloc.get_memory(sizeof(AstStringVector) + (n - 1) * sizeof(ShString));
   return new (p) AstStringVector(loc, value);
 }
 
@@ -37,13 +38,28 @@ AstMgr::new_string_vector(const FileRegion& loc,
 AstStringVector::AstStringVector(const FileRegion& loc,
 				 const vector<ShString>& value) :
   AstNode(loc),
-  mValue(value)
+  mNum(value.size())
 {
+  for ( auto i: Range(mNum) ) {
+    mBody[i] = value[i];
+  }
 }
 
 // @brief デストラクタ
 AstStringVector::~AstStringVector()
 {
+}
+
+// @brief ベクタを取り出す．
+// @param[out] vector ベクタを格納する変数
+void
+AstStringVector::get_vector(vector<ShString>& vector) const
+{
+  vector.clear();
+  vector.resize(mNum);
+  for ( auto i: Range(mNum) ) {
+    vector[i] = value(i);
+  }
 }
 
 // @brief 内容をストリーム出力する．
@@ -54,10 +70,10 @@ AstStringVector::dump(ostream& s,
 		      int indent) const
 {
   const char* comma = "";
-  for ( auto str: value() ) {
+  for ( auto i: Range(mNum) ) {
     s << comma;
     comma = ", ";
-    dump_string(s, str);
+    dump_string(s, mBody[i]);
   }
 }
 

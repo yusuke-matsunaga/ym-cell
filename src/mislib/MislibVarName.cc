@@ -33,7 +33,7 @@ MislibVarName::~MislibVarName()
 MislibExpr::Type
 MislibVarName::type() const
 {
-  return kVarName;
+  return VarName;
 }
 
 // @brief 対応する論理式を生成する．

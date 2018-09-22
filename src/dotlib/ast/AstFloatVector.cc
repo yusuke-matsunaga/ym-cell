@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief ベクタを表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value_list 値のリスト
-AstFloatVector*
+const AstFloatVector*
 AstMgr::new_float_vector(const FileRegion& loc,
 			 const vector<double>& value_list)
 {

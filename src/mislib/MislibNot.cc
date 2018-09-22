@@ -33,7 +33,7 @@ MislibNot::~MislibNot()
 MislibExpr::Type
 MislibNot::type() const
 {
-  return kNot;
+  return Not;
 }
 
 // 1番目の子供を取り出す．

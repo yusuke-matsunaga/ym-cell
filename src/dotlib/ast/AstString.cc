@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief 定数シンボルを表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
-AstString*
+const AstString*
 AstMgr::new_string(const FileRegion& loc,
 		   ShString value)
 {

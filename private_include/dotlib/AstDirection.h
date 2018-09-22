@@ -1,8 +1,8 @@
-﻿#ifndef ASTPINDIRECTION_H
-#define ASTPINDIRECTION_H
+﻿#ifndef ASTDIRECTION_H
+#define ASTDIRECTION_H
 
-/// @file AstPinDirection.h
-/// @brief AstNode の継承クラスのヘッダファイル
+/// @file AstDirection.h
+/// @brief ピンの方向を表す AstNode の継承クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
@@ -15,10 +15,10 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class AstCellPinDirection AstPinDirection.h "AstPinDirection.h"
-/// @brief cell pin directionを表すクラス
+/// @class AstCellPinDirection AstDirection.h "dotlib/AstDirection.h"
+/// @brief 'direction' を表すクラス
 //////////////////////////////////////////////////////////////////////
-class AstPinDirection :
+class AstDirection :
   public AstNode
 {
 public:
@@ -26,11 +26,11 @@ public:
   /// @brief コンストラクタ
   /// @param[in] loc ファイル上の位置
   /// @param[in] value 値
-  AstPinDirection(const FileRegion& loc,
-		  ClibCellPinDirection value);
+  AstDirection(const FileRegion& loc,
+	       ClibDirection value);
 
   /// @brief デストラクタ
-  ~AstPinDirection();
+  ~AstDirection();
 
 
 public:
@@ -39,7 +39,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief CellPinDirection を返す．
-  ClibCellPinDirection
+  ClibDirection
   value() const;
 
   /// @brief 内容をストリーム出力する．
@@ -56,7 +56,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値
-  ClibCellPinDirection mValue;
+  ClibDirection mValue;
 
 };
 
@@ -67,12 +67,12 @@ private:
 
 // @brief CellPinDirection を返す．
 inline
-ClibCellPinDirection
-AstPinDirection::value() const
+ClibDirection
+AstDirection::value() const
 {
   return mValue;
 }
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTPINDIRECTION_H
+#endif // ASTDIRECTION_H

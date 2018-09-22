@@ -47,7 +47,7 @@ public:
 
   /// @brief 方向を返す．
   virtual
-  ClibCellPinDirection
+  ClibDirection
   direction() const = 0;
 
   /// @brief 入力ピンの時に true を返す．

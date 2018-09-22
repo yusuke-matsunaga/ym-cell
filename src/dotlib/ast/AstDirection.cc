@@ -1,13 +1,13 @@
 ﻿
-/// @file AstPinDirection.cc
-/// @brief AstPinDirection の実装ファイル
+/// @file AstDirection.cc
+/// @brief AstDirection の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/AstMgr.h"
-#include "dotlib/AstPinDirection.h"
+#include "dotlib/AstDirection.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -15,32 +15,32 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief cell_pin_direction を表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
-AstPinDirection*
+const AstDirection*
 AstMgr::new_pin_direction(const FileRegion& loc,
-			  ClibCellPinDirection value)
+			  ClibDirection value)
 {
   ++ mCellPinDirectionNum;
-  void* p = mAlloc.get_memory(sizeof(AstPinDirection));
-  return new (p) AstPinDirection(loc, value);
+  void* p = mAlloc.get_memory(sizeof(AstDirection));
+  return new (p) AstDirection(loc, value);
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス AstPinDirection
+// クラス AstDirection
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
-AstPinDirection::AstPinDirection(const FileRegion& loc,
-				 ClibCellPinDirection value) :
+AstDirection::AstDirection(const FileRegion& loc,
+			   ClibDirection value) :
   AstNode(loc),
   mValue(value)
 {
 }
 
 // @brief デストラクタ
-AstPinDirection::~AstPinDirection()
+AstDirection::~AstDirection()
 {
 }
 
@@ -48,15 +48,17 @@ AstPinDirection::~AstPinDirection()
 // @param[in] s 出力先のストリーム
 // @param[in] indent インデント量
 void
-AstPinDirection::dump(ostream& s,
-		      int indent) const
+AstDirection::dump(ostream& s,
+		   int indent) const
 {
+  const char* tmp = "---";
   switch ( mValue ) {
-  case kClibCellPinInput:    dump_string(s, "input");    break;
-  case kClibCellPinOutput:   dump_string(s, "output");   break;
-  case kClibCellPinInout:    dump_string(s, "inout");    break;
-  case kClibCellPinInternal: dump_string(s, "internal"); break;
+  case ClibDirection::Input:    tmp = "input";    break;
+  case ClibDirection::Output:   tmp = "output";   break;
+  case ClibDirection::Inout:    tmp = "inout";    break;
+  case ClibDirection::Internal: tmp = "internal"; break;
   }
+  dump_string(s, tmp);
 }
 
 END_NAMESPACE_YM_DOTLIB

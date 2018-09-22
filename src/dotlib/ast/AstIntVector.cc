@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief 整数値を表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
-AstIntVector*
+const AstIntVector*
 AstMgr::new_int_vector(const FileRegion& loc,
 		       const vector<int>& value)
 {
@@ -44,6 +44,18 @@ AstIntVector::AstIntVector(const FileRegion& loc,
 // @brief デストラクタ
 AstIntVector::~AstIntVector()
 {
+}
+
+// @brief ベクタを取り出す．
+// @param[out] vector ベクタを格納する変数
+void
+AstIntVector::get_vector(vector<int>& vector) const
+{
+  vector.clear();
+  vector.resize(mNum);
+  for ( auto i: Range(mNum) ) {
+    vector[i] = value(i);
+  }
 }
 
 // @brief 内容をストリーム出力する．

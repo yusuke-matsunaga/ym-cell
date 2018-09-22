@@ -43,7 +43,7 @@ public:
   size() const;
 
   /// @brief ベクタの要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < vector_size() )
+  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   double
   value(int pos) const;
 

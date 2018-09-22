@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief technology を表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
-AstTechnology*
+const AstTechnology*
 AstMgr::new_technology(const FileRegion& loc,
 		       ClibTechnology value)
 {
@@ -52,10 +52,13 @@ void
 AstTechnology::dump(ostream& s,
 		    int indent) const
 {
+  const char* tmp = "---";
   switch ( mValue ) {
-  case kClibTechCmos: dump_string(s, "cmos"); break;
-  case kClibTechFpga: dump_string(s, "fpga"); break;
+  case ClibTechnology::cmos: tmp = "cmos"; break;
+  case ClibTechnology::fpga: tmp = "fpga"; break;
+  default: break;
   }
+  dump_string(s, tmp);
 }
 
 END_NAMESPACE_YM_DOTLIB

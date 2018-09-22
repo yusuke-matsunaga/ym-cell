@@ -1,12 +1,12 @@
 ﻿
-/// @file PinDirectionHandler.cc
-/// @brief PinDirectionHandler の実装ファイル
+/// @file DirectionHandler.cc
+/// @brief DirectionHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/PinDirectionHandler.h"
+#include "dotlib/DirectionHandler.h"
 #include "dotlib/AstMgr.h"
 #include "ym/MsgMgr.h"
 
@@ -14,18 +14,18 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス PinDirectionHandler
+// クラス DirectionHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-PinDirectionHandler::PinDirectionHandler(DotlibParser& parser) :
+DirectionHandler::DirectionHandler(DotlibParser& parser) :
   StrBaseHandler(parser)
 {
 }
 
 // @brief デストラクタ
-PinDirectionHandler::~PinDirectionHandler()
+DirectionHandler::~DirectionHandler()
 {
 }
 
@@ -34,7 +34,7 @@ PinDirectionHandler::~PinDirectionHandler()
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-PinDirectionHandler::parse_value(const AstPinDirection*& dst)
+DirectionHandler::parse_value(const AstDirection*& dst)
 {
   bool stat = parse_simple_attribute();
   if ( stat ) {
@@ -49,21 +49,21 @@ PinDirectionHandler::parse_value(const AstPinDirection*& dst)
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-PinDirectionHandler::read_str_value(const char* str,
-				    const FileRegion& value_loc)
+DirectionHandler::read_str_value(const char* str,
+				 const FileRegion& value_loc)
 {
-  ClibCellPinDirection value;
+  ClibCellDirection value;
   if ( strcmp(str, "input") == 0 ) {
-    value = kClibCellPinInput;
+    value = ClibDirection::Input;
   }
   else if ( strcmp(str, "output") == 0 ) {
-    value = kClibCellPinOutput;
+    value = ClibDirection::Output;
   }
   else if ( strcmp(str, "inout") == 0 ) {
-    value = kClibCellPinInout;
+    value = ClibDirection::Inout;
   }
   else if ( strcmp(str, "internal") == 0 ) {
-    value = kClibCellPinInternal;
+    value = ClibDirection::Internal;
   }
   else {
     mValue = nullptr;

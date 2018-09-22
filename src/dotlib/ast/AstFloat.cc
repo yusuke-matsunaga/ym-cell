@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief 実数値を表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
-AstFloat*
+const AstFloat*
 AstMgr::new_float(const FileRegion& loc,
 		  double value)
 {

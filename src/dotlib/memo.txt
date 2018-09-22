@@ -1,4 +1,4 @@
-				liberty 文法覚書
+v				liberty 文法覚書
 
 - 基本的な構文として
   * simple attribute
@@ -153,10 +153,29 @@
 - include_file ( filename );
   結構，制限があるし，今はあまり使われていないみたい．
 
+- bus_naming_style が省略された場合のデフォルト値は
+  "Bus%sPin%d"
+
 - current_unit は
   1uA, 10uA, 100uA, 1mA, 10mA, 100mA, 1A
   のいずれか．
   用例をみると "" つきとそうでないものがある．
+
+- delay_model が省略された場合のデフォルト値は generic_cmos
+  可能な値は generic_cmos, table_lookup, piecewise_cmos, dcm, polynomial
+
+- fpga_domain_style は domain group 中の calc_mode で参照される．
+
+- in_place_swap_mode は match_footprint か no_swapping
+
+- {input|output}_threshold_pct_{rise|fall} の値は 0.0 から 100.0 の間の値
+
+- piece_type は piece_length, piece_wire_cap, piece_pin_cap,
+  piece_total_cap
+
+- power_model は table_lookup, polynomical．デフォルトは table_lookup
+
+- preferred_output_pad_slew_rate_control は high, medium, low, none
 
 - power_unit は
   1mW, 100uW, 10uW, 1uW, 100nW, 10nW, 1nW, 100pW, 10pW, 1pW
@@ -172,17 +191,131 @@
   1.01a というのもあるので [0-9a-zA-Z.]* でいいのでは？
   もしくは非空白印字可能文字は全部含めてしまってもいいかも．
 
+- slew_derate_from_library の値は 0.0 から 1.0 の間
+
+- slew_{upper|lower}_threshold_pct_{rise|fall} の値は 0.0 から 100.0 の間
+
 - time_unit は
   1ps, 10ps, 100ps, 1ns
-  のいずれか．
+  のいずれか．デフォルトは 1ns
   用例をみるかぎり "" なしもあるみたい．
 
 - voltage_unit は
-  1mV, 10mV, 100mV, 1V
+  1mV, 10mV, 100mV, 1V．デフォルトは 1V
   用例をみるかぎり "" なしもあるみたい．
 
 - capacitive_unit は
   ff か pf
+
+- default_wire_load_mode は top | segmented | enclosed
+
+- define_cell_area (area_name, resource_type)
+  resource_type は pad_slots, pad_input_driver_sites,
+  pad_output_driver_sites, pad_driver_sites
+
+- library_features の値は report_delay_calculation,
+  report_power_calculation, report_noise_calculation,
+  report_user_data, allow_update_attribute
+  デフォルトは none (そんな値ないじゃん)．
+  これ complex attribute なのでもしかしたら
+  これらの値が複数来ることがあるような気がする．
+
+- technology の値は cmos か fpga．デフォルトは cmos
+
+- base_curves Group statement
+  base_curves ( name ) {
+    base_curve_type ( ccs_timing_half_curve ); // これのみ
+    curve_x ( "float, float, ..." );
+    curve_y ( id, "float, float, ..." );
+  }
+
+  * base_curve_type complex attribute は文字列を引数にとるが，
+    現在は ccs_timing_half_curve のみが適正な値
+
+  * curve_x complex attribute は浮動小数点数のリストの文字列を引数にと
+    る．
+  * curve_y complex attribute はID番号(integer)と浮動小数点数のリスト
+    の文字列を引数にとる．
+
+  * これら3つの属性は必須，and 唯一
+
+- compact_lut_template Group statement
+  compact_lut_template ( name ) {
+    base_curves_group : string ;
+    variable_1 : string ;
+    variable_2 : string ;
+    variable_3 : string ;
+    index_1 ( "float, float, ..." ) ;
+    index_2 ( "float, float, ..." ) ;
+    index_3 ( "string, string, ..." ) ;
+  }
+
+  * variable_1 と variable_2 の値は
+    input_net_transition | total_output_net_capacitance
+
+  * variable_3 の値は curve_parameters のみ
+
+  * index_3 の文字列は init_current, peak_current, peak_voltage,
+    peak_time, left_id, right_id
+
+- dc_current_template Group statement
+  dc_current_template ( name ) {
+    variable_1 : string ;
+    variable_2 : string ;
+    variable_3 : string ;
+    index_1 ( "float, float, ..." ) ;
+    index_2 ( "float, float, ..." ) ;
+    index_3 ( "float, float, ..." ) ;
+  }
+
+  * variable_1, variable_2, variable_3 の値は
+    2次元の場合は variable_1 が input_voltage，
+    variable_2 が output_voltage
+    3次元の場合は variable_1 が input_net_transition，
+    variable_2 が output_net_transition，
+    variable_3 が time
+
+- em_lut_template Group statement
+  em_lut_template ( name ) {
+    variable_1 : string ;
+    variable_2 : string ;
+    index_1 : ( "float, float, ..." ) ;
+    index_2 : ( "float, float, ..." ) ;
+  }
+
+  * variable_1, variable2 の値は input_transition_time か
+    total_output_net_capacitance
+
+- {rise|fall}_net_delay Group statement
+  fall_net_delay ( name ) {
+  index_1 ( "float, float, ..." ) ;
+  index_2 ( "float, float, ..." ) ;
+  values ( "float, float, ...", "float, float, ...", ... ) ;
+  }
+
+  * 通常の table group
+
+- {rise|fall}_transition_degradation Group statement
+  * 通常の table group
+
+- fault_lut_template Group statement
+  fault_lut_template ( name ) {
+    variable_1 : string ;
+    variable_2 : string ;
+    index_1 ( "string, string, ..." ) ;
+    index_2 ( "float, float, ..." ) ;
+  }
+
+  * variable_1 は fab_name
+  * variable_2 は time_range
+
+- input_voltage Group statement
+  input_voltage ( name ) {
+  vil : v_expr ;
+  vih : v_expr ;
+  vimin : v_expr ;
+  vimax : v_expr ;
+  }
 
 - input_voltage や output_voltage に出てくる expression は
   以下みたいな感じ？
@@ -197,3 +330,418 @@
 	     | expression '-' expression
 	     | expression '*' expression
 	     | expression '/' expression
+
+- fpga_isd Group statement
+  fpga_isd ( name ) {
+    drive : string ; // といいつつ Example では drive : 24 ; になってる．
+    io_type : string ;
+    slew : FAST | SLOW ;
+  }
+
+- iv_lut_template Group statement
+  iv_lut_template ( name ) {
+    variable_1 : iv_output_voltage ; // これ一択
+    index_1 ( "float, float, ..." ) ;
+  }
+
+- lu_table_template Group statement
+  lu_table_template ( name ) {
+    variable_1 : string ;
+    variable_2 : string ;
+    variable_3 : string ;
+    variable_4 : string ;
+    index_1 ( "float, float, ..." ) ;
+    index_2 ( "float, float, ..." ) ;
+    index_3 ( "float, float, ..." ) ;
+    index_4 ( "float, float, ..." ) ;
+    domain ( name ) { ... }
+  }
+
+  * In Composite Current Source (CCS) Noise Tables
+    * ccsn_first_stage, ccsn_last_stage グループ内の以下のグループで使われる．
+
+    * dc_current group
+
+      variable_1 : input_voltage ;
+      variable_2 : output_votage ;
+
+    * output_current_rise group and output_current_fall group
+
+      variable_1 : input_net_transition ;
+      variable_2 : total_output_net_capacitance ;
+      variable_3 : time ;
+
+    * propagated_noise_low group and propagate_noise_high group
+
+      variable_1 : input_noise_height ;
+      variable_2 : input_noise_width ;
+      variable_3 : total_output_net_capacitance ;
+      variable_4 : time ;
+
+  * In Timing Delay Tables
+
+    variable_n に使える値は以下の通り
+
+    input_net_transition
+    total_output_net_capacitance
+    output_net_length
+    output_net_wire_cap
+    output_net_pin_cap
+    related_out_total_output_net_capacitance
+    related_out_output_net_length
+    related_out_output_net_wire_cap
+    related_out_output_net_pin_cap
+
+  * In Constraint Tables
+
+    variable_n に使える値は以下の通り
+
+    constrained_pin_transition
+    related_pin_transition
+    related_out_total_output_net_capacitance
+    related_out_output_net_length
+    related_out_output_net_wire_cap
+    related_out_output_net_pin_cap
+
+  * In Wire Delay Tables
+
+    variable_n に使える値は以下の通り
+
+    fanout_number
+    fanout_pin_capacitance
+    driver_slew
+
+  * In Net Delay Tables
+
+    variable_{1,2} に使える値は以下の通り
+
+    output_transition
+    rc_product
+
+  * In Degradation Tables
+
+    transition time degradation table の variable_{1,2} に使える値は以下の通り
+
+    output_pin_transition
+    connect_delay
+
+    cell degradation table の variable_1 に使える値は以下の通り
+
+    input_net_transition
+
+- domain Group statement
+  domain ( name ) {
+    calc_mode : string ;
+    variable_1 : string ;
+    variable_2 : string ;
+    variable_3 : string ;
+    index_1 ( "float, float, ..." ) ;
+    index_2 ( "float, float, ..." ) ;
+    index_3 ( "float, float, ..." ) ;
+  }
+  domain Group は複数あり得る．
+
+- maxcap_lut_template Group statement
+
+  variable_1 : frequency ;
+  vairable_2 : input_transition_time ;
+
+- maxtrans_lut_template Group statement
+
+  variable_1 : frequency ;
+  variable_2 : input_transition_time ;
+  variable_3 : total_output_net_capacitance ;
+
+- noise_lut_template Group statement
+
+  variable_1, variable_2 に使える値は
+  input_noise_width と total_output_net_capacitance
+
+- operationg_conditions Group statement
+  operating_conditions ( name ) {
+    calc_mode : string ;
+    parameteri : float ; // i = 1..5
+    process : float ; // 0.0 - 100.0
+    temperature : float ;
+    tree_type : string ; // best_case_tree, balanced_tree, worst_case_treen
+    voltage : float ;
+    power_rail ( string, float ) ; // one or more
+  }
+
+- output_current_template Group statement
+
+  variable_1 と variable_2 に使える値は
+  input_net_transition, total_output_net_capacitance
+  variable_3 に使える値は time
+
+- output_voltage Group statement
+  output_voltage ( name ) {
+    vol: v_expr ;
+    voh: v_expr ;
+    vomin: v_expr ;
+    vomax: v_expr ;
+  }
+
+- part Group statement
+  part ( name ) {
+    default_step_level : string ;
+    fpga_isd : string ;
+    num_blockrams : integer ;
+    num_cols : integer ;
+    num_ffs : integer ;
+    num_luts : integer ;
+    num_rows : integer ;
+    pin_count : 94 ;
+    max_count ( string, integer ) ; // 複数あり
+    valid_speed_grade ( string, string, ... ) ;
+    valid_step_levels ( string, string, ... ) ;
+    speed_grade () { }
+  }
+
+- speed_grade Group statement
+  speed_grade ( name ) {
+    fpga_isd : string ;
+    step_level ( string ) ;
+  }
+
+- pg_current_template Group statement
+
+  variable_{1,2,3,4} に使える値は
+  input_net_transition
+  total_output_net_capacitance
+  time
+
+  最後は必ず time でなければならない．
+  input_net_transition は 0 か 1
+  total_output_net_capacitance は 0 - 2
+
+  index_n はオプション
+
+- poly_template Group statement
+  poly_template ( name ) {
+    variables ( string, string, ... ) ;
+    variable_{1,2,3,4}_range ( float, float ) ;
+    mapping ( string, string ) ;
+    oders ( integer, integer, ... ) ;
+    domain ( name ) { ... }
+  }
+
+  * noise immunity template の場合，variables で使える値は
+    input_noise_width
+    total_output_net_capacitance
+    voltage
+    voltagei // i = 1 .. 5?
+    temperature
+    parametern // n ??
+
+  * noise propagation template の場合，variables で使える値は
+    input_hoise_height
+    input_noise_width
+    input_noise_tiem_to_peak
+    total_output_net_capacitance
+    voltage, voltagei, temperature
+    parametern
+
+  * steady state group の場合，
+    iv_output_voltage
+    voltage
+    voltagei
+    temperature
+    parametern
+
+  * timing group の場合，以下の4セットとなる．
+    - Set 1
+      input_net_transition
+      constrained_pin_transition
+
+    - Set 2
+      total_output_net_capacitance
+      output_net_length, output_net_wire_cap
+      output_net_pin_cap
+      related_pin_transition
+
+    - Set 3
+      related_out_total_output_net_capaitance
+      related_out_output_net_length
+      related_out_output_net_wire_cap
+      related_out_output_net_pin_cap
+
+    - Set 4
+      temperature, voltage
+      voltagei
+
+    マニュアル中の ',' と '|' の使い分けの意味がわからん．
+
+- poly_template 中の domain Group statement
+  domain ( name ) {
+    calc_mode : string ;
+    variables ( string, string, ... ) ;
+    variable_{1,2,3,4}_range ( float, float ) ;
+    mapping ( string, string ) ;
+    orders ( integer, integer, ... ) ;
+  }
+
+- power_lut_template Group statement
+  通常の template と同じ．
+
+  * variable_1 : input_transition_time
+                 total_output_net_capacitance
+		 equal_or_opposite_output_net_capacitance
+
+  * variable_2 : input_transition_time
+                 total_output_net_capacitance
+		 equal_or_opposite_output_net_capacitance
+
+  * variable_3 : input_transition_time
+                 total_output_net_capacitance
+		 equal_or_opposite_output_net_capacitance
+
+- power_poly_template Group statement
+  * 通常の poly_template と同じ
+
+  * variables に使える値は
+    equal_or_opposite_output_net_capacitance
+    input_net_transition
+    total_output_net_capacitance
+    output_net_length
+    temperature
+    voltage
+    voltagei
+    parameteri
+
+- power_supply Group statement
+  power_supply ( name ) {
+    default_power_rail : string ;
+    power_rail ( string, float ) ;
+  }
+
+  * power_rail complex attribute は複数あり得る．
+
+- propagation_lut_template Group statement
+
+  * 通常の template と同じ
+
+  * variable に使える値は以下の通り
+    input_noise_width
+    input_noise_height
+    total_output_net_capacitance
+
+- scaled_cell Group statement
+
+  sclaed_cell ( existing_cell, operating_conditions_group ) {
+    area : float ;
+    auxiliary_pad_cell : true | false ;
+    bus_naming_style : "string" ;
+    cell_footprint : string ;
+    cell_leakage_power : float ;
+    clock_gating_integrated_cell : string ;
+    contential_condition : "Boolean expression" ;
+    dont_fault : sa0 | sa1 | sa01 ;
+    dont_touch : true | false ;
+    dont_use : true | false ;
+    geometry_print : string ;
+    handle_negative_constraint : true | false ;
+    is_clock_gating_cell : true | false ;
+    map_only : true | false ;
+    pad_cell : true | false ;
+    pad_type : clock ;
+    preferred : true | false ;
+    scaling_factors : string ;
+    use_for_size_only : true | false ;
+    vhdl_name : "string" ;
+    pin_equal ( "string, string, ..." ) ;
+    pin_opposite ( "string, string, ...", "string, string, ..." ) ;
+    rail_connection ( string, string ) ;
+    bundle ( ) { ... }
+    bus ( ) { ... }
+    ff ( ) { ... }
+    ff_bank ( ) { ... }
+    generated_clock ( ) { ... }
+    latch ( ) { ... }
+    latch_bank ( ) { ... }
+    leakage_power ( ) { ... }
+    lut ( ) { ... }
+    mode_definition ( ) { ... }
+    pin ( ) { ... }
+    routing_track ( ) { ... }
+    statetable ( ) { ... }
+    test_cell ( ) { ... }
+    type ( ) { ... }
+  }
+
+- sensitization Group statement
+
+  sensitization ( name ) {
+    pin_names ( string, string, ... ) ;
+    vector ( integer, string ) ;
+  }
+
+- scaling_factors Group statement
+
+  scaling_factors ( name ) {
+
+  }
+
+  詳細は "Building Environments" chapter in the Library Compiler User
+  Guide: Modeling Timing, Signal Integrity, and Power in Technology Libraries.
+
+- timing_range Group statement
+
+  timing_range ( name ) {
+    faster_factor : float ;
+    slower_factor : float ;
+  }
+
+- type Group statement
+
+  type ( name ) {
+    base_type : array ; // 'array' 一択
+    bit_from : integer ;
+    bit_to : integer ;
+    bit_width : integer ;
+    data_type : bit ; // 'bit' 一択
+    downto : true | false ;
+  }
+
+- user_parameters Group statement
+
+  user_parameters () {
+    parameteri : float ; // i = 1..?
+  }
+
+- wire_load Group statement
+
+  wire_load ( name ) {
+    area : float ;
+    capacitance : float ;
+    resistance : float ;
+    slope : float ;
+    fanout_length ( integer, float, float, float, integer ) ;
+  }
+
+  fanout_length の各パラメータは
+  fanout : ファンアウト数 (ドライバを除いたピン数)
+  length : ネット長
+  average_capacitance, standard_deviation, number_of_nets :
+           Sysnopsys Floorplan Manager User Guide を見ろ
+
+- wire_load_selection Group statement
+
+  wire_load_selection ( name ) {
+    wire_load_from_area ( float, float, string ) ;xs
+  }
+
+  詳細は "Library Deveopment Procedure" and "Defining I/O Pads"
+  chapters in the Library Compiler User Guide: Methodology and
+  Modeling Functionality in Technology Libraries and the "Building
+  Environments" chapter in the Library Compiler User Guide: Modeling
+  Timing, Signal Integrity, and Power in Technology Libraries.
+
+- wire_load_table Group statement
+
+  wire_load_table ( name ) {
+    fanout_area ( integer, float ) ;
+    fanout_capacitance ( integer, float ) ;
+    fanout_length ( integer, float ) ;
+    fanout_resistance ( integer, float ) ;
+  }

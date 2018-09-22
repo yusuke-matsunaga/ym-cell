@@ -42,6 +42,11 @@ public:
   const vector<int>&
   value() const;
 
+  /// @brief ベクタを取り出す．
+  /// @param[out] vector ベクタを格納する変数
+  void
+  get_vector(vector<int>& vector) const;
+
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
   /// @param[in] indent インデント量

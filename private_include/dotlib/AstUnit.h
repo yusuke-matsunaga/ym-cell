@@ -27,8 +27,8 @@ public:
   /// @param[in] unit_val 数値
   /// @param[in] unit_str 単位を表す文字列
   AstUnit(const FileRegion& loc,
-	  double unit_val,
-	  const ShString& unit_str);
+	  const AstFloat* unit_val,
+	  const AstString* unit_str);
 
   /// @brief デストラクタ
   ~AstUnit();
@@ -40,11 +40,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 単位を表す数値を返す．
-  double
+  const AstFloat*
   unit_val() const;
 
   /// @brief 単位を表す文字列を返す．
-  ShString
+  const AstString*
   unit_str() const;
 
   /// @brief 内容をストリーム出力する．
@@ -67,10 +67,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 単位を表す数値
-  double mVal;
+  const AstFloat* mVal;
 
   // 単位を表す文字列
-  ShString mStr;
+  const AstString* mStr;
 
 };
 
@@ -81,7 +81,7 @@ private:
 
 // @brief 単位を表す数値を返す．
 inline
-double
+const AstFloat*
 AstUnit::unit_val() const
 {
   return mVal;
@@ -89,7 +89,7 @@ AstUnit::unit_val() const
 
 // @brief 単位を表す文字列を返す．
 inline
-ShString
+const AstString*
 AstUnit::unit_str() const
 {
   return mStr;

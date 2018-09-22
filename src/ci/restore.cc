@@ -457,11 +457,11 @@ CiCellLibrary::restore_cell(IDO& s,
       for ( int opos = 0; opos < no + nio; ++ opos ) {
 	vector<CiTiming*> timing_list1;
 	restore_tid_list(s, timing_list, timing_list1);
-	set_timing(cell, ipos, opos, kClibPosiUnate, timing_list1);
+	set_timing(cell, ipos, opos, ClibTimingSense::PosiUnate, timing_list1);
 
 	vector<CiTiming*> timing_list2;
 	restore_tid_list(s, timing_list, timing_list2);
-	set_timing(cell, ipos, opos, kClibNegaUnate, timing_list2);
+	set_timing(cell, ipos, opos, ClibTimingSense::NegaUnate, timing_list2);
       }
     }
   }
@@ -762,7 +762,7 @@ CiPatMgr::restore(IDO& bis)
     bis >> mNodeTypeArray[i]
 	>> mEdgeArray[i * 2]
 	>> mEdgeArray[i * 2 + 1];
-    if ( node_type(i) == kClibPatInput ) {
+    if ( node_type(i) == ClibPatType::Input ) {
       ASSERT_COND( input_id(i) == i );
     }
   }

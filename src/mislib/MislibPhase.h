@@ -26,9 +26,9 @@ public:
 
   /// @breif 極性の種類
   enum Type {
-    kNoninv,
-    kInv,
-    kUnknown,
+    Noninv,
+    Inv,
+    Unknown,
   };
 
 

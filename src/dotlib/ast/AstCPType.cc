@@ -14,7 +14,7 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief clear_preset_var の値を表す AstNode を生成する．
-AstCPType*
+const AstCPType*
 AstMgr::new_cptype(const FileRegion& loc,
 		   AstCPType::Type value)
 {
@@ -49,7 +49,15 @@ void
 AstCPType::dump(ostream& s,
 		int indent) const
 {
-  // 未完
+  const char* tmp = nullptr;
+  switch ( value() ) {
+  case kL: tmp = "L"; break;
+  case kH: tmp = "H"; break;
+  case kN: tmp = "N"; break;
+  case kT: tmp = "T"; break;
+  case kX: tmp = "X"; break;
+  }
+  dump_string(s, tmp);
 }
 
 END_NAMESPACE_YM_DOTLIB

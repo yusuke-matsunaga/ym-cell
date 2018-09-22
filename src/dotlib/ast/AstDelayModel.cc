@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief delay model を表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
-AstDelayModel*
+const AstDelayModel*
 AstMgr::new_delay_model(const FileRegion& loc,
 			ClibDelayModel value)
 {
@@ -52,13 +52,15 @@ void
 AstDelayModel::dump(ostream& s,
 		    int indent) const
 {
+  const char* tmp = "---";
   switch ( mValue ) {
-  case kClibDelayGenericCmos:   dump_string(s, "generic cmos"); break;
-  case kClibDelayTableLookup:   dump_string(s, "table lookup"); break;
-  case kClibDelayPiecewiseCmos: dump_string(s, "piesewise cmos"); break;
-  case kClibDelayCmos2:         dump_string(s, "cmos2"); break;
-  case kClibDelayDcm:           dump_string(s, "dcm"); break;
+  case ClibDelayModel::GenericCmos:   tmp = "generic cmos"; break;
+  case ClibDelayModel::TableLookup:   tmp = "table lookup"; break;
+  case ClibDelayModel::PiecewiseCmos: tmp = "piesewise cmos"; break;
+  case ClibDelayModel::Cmos2:         tmp = "cmos2"; break;
+  case ClibDelayModel::Dcm:           tmp = "dcm"; break;
   }
+  dump_string(s, tmp);
 }
 
 END_NAMESPACE_YM_DOTLIB

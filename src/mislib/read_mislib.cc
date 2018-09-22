@@ -48,11 +48,11 @@ dfs(const MislibExpr* expr,
     NameMap& name_map)
 {
   switch ( expr->type() ) {
-  case MislibExpr::kConst0:
-  case MislibExpr::kConst1:
+  case MislibExpr::Const0:
+  case MislibExpr::Const1:
     return;
 
-  case MislibExpr::kVarName:
+  case MislibExpr::VarName:
     {
       ShString name = expr->varname();
       if ( !name_map.check(name) ) {
@@ -63,13 +63,13 @@ dfs(const MislibExpr* expr,
     }
     break;
 
-  case MislibExpr::kNot:
+  case MislibExpr::Not:
     dfs(expr->child1(), name_list, name_map);
     break;
 
-  case MislibExpr::kAnd:
-  case MislibExpr::kOr:
-  case MislibExpr::kXor:
+  case MislibExpr::And:
+  case MislibExpr::Or:
+  case MislibExpr::Xor:
     dfs(expr->child1(), name_list, name_map);
     dfs(expr->child2(), name_list, name_map);
     break;
@@ -149,7 +149,7 @@ new_gate(const MislibGate* gate,
       ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
       ClibTime f_i(pt_pin->fall_block_delay()->num());
       ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
-      CiTiming* timing = library->new_timing_generic(kClibTimingCombinational,
+      CiTiming* timing = library->new_timing_generic(ClibTimingType::Combinational,
 						     Expr::const_one(),
 						     r_i, f_i,
 						     ClibTime(0.0), ClibTime(0.0),
@@ -164,7 +164,7 @@ new_gate(const MislibGate* gate,
     ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
     ClibTime f_i(pt_pin->fall_block_delay()->num());
     ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
-    CiTiming* timing = library->new_timing_generic(kClibTimingCombinational,
+    CiTiming* timing = library->new_timing_generic(ClibTimingType::Combinational,
 						   Expr::const_one(),
 						   r_i, f_i,
 						   ClibTime(0.0), ClibTime(0.0),
@@ -190,19 +190,19 @@ new_gate(const MislibGate* gate,
     const MislibPin* pt_pin = ipin_array[i];
     TvFunc p_func = tv_function.cofactor(var, false);
     TvFunc n_func = tv_function.cofactor(var, true);
-    ClibTimingSense sense_real = kClibNonUnate;
+    ClibTimingSense sense_real = ClibTimingSense::NonUnate;
     bool redundant = false;
     if ( ~p_func && n_func ) {
       if ( ~n_func && p_func ) {
-	sense_real = kClibNonUnate;
+	sense_real = ClibTimingSense::NonUnate;
       }
       else {
-	sense_real = kClibNegaUnate;
+	sense_real = ClibTimingSense::NegaUnate;
       }
     }
     else {
       if ( ~n_func && p_func ) {
-	sense_real = kClibPosiUnate;
+	sense_real = ClibTimingSense::PosiUnate;
       }
       else {
 	// つまり p_func == n_func ということ．
@@ -223,11 +223,11 @@ new_gate(const MislibGate* gate,
       continue;
     }
 
-    ClibTimingSense sense = kClibNonUnate;
+    ClibTimingSense sense = ClibTimingSense::NonUnate;
     switch ( pt_pin->phase()->type() ) {
-    case MislibPhase::kNoninv:  sense = kClibPosiUnate; break;
-    case MislibPhase::kInv:     sense = kClibNegaUnate; break;
-    case MislibPhase::kUnknown: sense = kClibNonUnate; break;
+    case MislibPhase::Noninv:  sense = ClibTimingSense::PosiUnate; break;
+    case MislibPhase::Inv:     sense = ClibTimingSense::NegaUnate; break;
+    case MislibPhase::Unknown: sense = ClibTimingSense::NonUnate; break;
     default: ASSERT_NOT_REACHED; break;
     }
     if ( sense != sense_real ) {
@@ -241,10 +241,10 @@ new_gate(const MislibGate* gate,
 		      buf.str());
       sense = sense_real;
     }
-    if ( sense == kClibNonUnate ) {
-      library->set_timing(cell, i, 0, kClibPosiUnate,
+    if ( sense == ClibTimingSense::NonUnate ) {
+      library->set_timing(cell, i, 0, ClibTimingSense::PosiUnate,
 			  vector<CiTiming*>(1, timing_list[i]));
-      library->set_timing(cell, i, 0, kClibNegaUnate,
+      library->set_timing(cell, i, 0, ClibTimingSense::NegaUnate,
 			  vector<CiTiming*>(1, timing_list[i]));
     }
     else {
