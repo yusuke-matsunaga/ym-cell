@@ -8,8 +8,6 @@
 
 
 #include "dotlib/Str2HeaderHandler.h"
-//#include "dotlib/AstMgr.h"
-//#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -81,7 +79,7 @@ Str2HeaderHandler::end_header(int count)
 		    header_loc(),
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
-		    "Syntax error, a pair of strings expected.");
+		    "Syntax error, ( string, string )-type parameter expected.");
     return false;
   }
   else {

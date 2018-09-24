@@ -97,7 +97,7 @@ set (dotlib_SOURCES
   src/dotlib/handler/simple/BoolHandler.cc
   src/dotlib/handler/simple/CPTypeHandler.cc
   src/dotlib/handler/simple/DelayModelHandler.cc
-  src/dotlib/handler/simple/PinDirectionHandler.cc
+  src/dotlib/handler/simple/DirectionHandler.cc
   src/dotlib/handler/simple/StringHandler.cc
   src/dotlib/handler/simple/TechnologyHandler.cc
   src/dotlib/handler/simple/TimingSenseHandler.cc
@@ -114,6 +114,7 @@ set (dotlib_SOURCES
   src/dotlib/handler/header/FloatVectorHeaderHandler.cc
   src/dotlib/handler/header/FloatVectorListHeaderHandler.cc
   src/dotlib/handler/header/IntFloatHeaderHandler.cc
+  src/dotlib/handler/header/IntFloatVectorHeaderHandler.cc
   src/dotlib/handler/header/Str1HeaderHandler.cc
   src/dotlib/handler/header/Str2HeaderHandler.cc
   src/dotlib/handler/header/Str2IntHeaderHandler.cc

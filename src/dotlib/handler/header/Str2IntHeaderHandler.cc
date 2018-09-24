@@ -8,9 +8,6 @@
 
 
 #include "dotlib/Str2IntHeaderHandler.h"
-//#include "dotlib/DotlibParser.h"
-//#include "dotlib/AstMgr.h"
-//#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -63,6 +60,7 @@ Str2IntHeaderHandler::read_header_value(TokenType value_type,
 
   case 2:
     mValue3 = new_int(value_type, value_loc);
+    return mValue3 != nullptr;
 
   default:
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -81,12 +79,12 @@ Str2IntHeaderHandler::read_header_value(TokenType value_type,
 bool
 Str2IntHeaderHandler::end_header(int count)
 {
-  if ( count != 2 ) {
+  if ( count != 3 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    header_loc(),
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
-		    "(str, str, int)-type parameters are expected.");
+		    "( string, string, int )-type parameters are expected.");
     return false;
   }
   else {

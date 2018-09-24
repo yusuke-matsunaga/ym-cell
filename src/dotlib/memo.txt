@@ -19,12 +19,14 @@ v				liberty 文法覚書
   * expr
   がある．
 
-  ただし，string 型の中には direction や technology の様に予め定められ
+  ただし，string 型の中には direction や timing_sense の様に予め定められ
   た文字列しか受け付けないものもある．
   また，論理式は見かけは simple attribute だが，属性値の部分に空白を含
   むためパーサー的には別に扱う．
   ややこしいのは文字列中に式を書いた function 記述という型もある．
   こちらは一旦文字列としてパースしてから式に変換する．
+  前者は ExprHandler，後者は FuncHandler で表す．
+  論理式は FuncHandler で扱う．
 
 
 - complex attribute は
@@ -48,27 +50,24 @@ v				liberty 文法覚書
   最初の行は行末の '{' 以外は complex attribute と同様である．
   属性記述には simple attribute, complex attribute, group statement が記述できる．
 
-- 多くの属性はそのグループ内において唯一のみ定義される．
+- complex attribute と group statement のヘッダ部分は以下の種類がある．
 
-- 同じ属性名が複数現れるのは
-  * library.wire_load
-  * library.wire_load_selection
-  * library.wire_load_table
-  * library.lu_table_template
-  * library.power_lut_template
-  * library.operating_conditions
-  * library.cell
-  * cell.bus
-  * cell.bundle
-  * cell.pin
-  * cell.internal_power
-  * test_cell.pin
-  * bus.pin
-  * bundle.internal_power
-  * bundle.pin
-  * bundle.timing
-  * pin.internal_power
-  * pin.timing
+  * EmptyHeaderHandler           : ( )
+  * Float2HeaderHandler          : ( float, float )
+  * FloatStrHeaderHandler        : ( float, string )
+  * FloatVectorHeaderHandler     : ( "float, float, ..." )
+  * FloatVectorListHeaderHandler : ( "float, float, ...", "float, flot, ...", ... )
+  * IntFloatHeaderHandler        : ( integer, float )
+  * IntFloatVectorHeaderHandler  : ( integer, "float, float, ..." )
+  * IntVectorHeaderHandler       : ( "integer, integer, ..." )
+  * Str1HeaderHandler            : ( string )
+  * Str2HeaderHandler            : ( string, string )
+  * Str2IntHeaderHandler         : ( string, string, integer )
+  * StrListHeaderHandler         : ( string, string, ... )
+
+
+- 属性には，必須/オプショナルなものと，唯一/複数のものがある．
+
 
 - パーサーの基本構造としては simple attribute, complex attribute,
   group statement の各属性用のパース関数を作る．
@@ -219,6 +218,10 @@ v				liberty 文法覚書
   デフォルトは none (そんな値ないじゃん)．
   これ complex attribute なのでもしかしたら
   これらの値が複数来ることがあるような気がする．
+
+- routing_layers は routability information の前に定義されなければなら
+  ない．
+  この属性は唯一
 
 - technology の値は cmos か fpga．デフォルトは cmos
 

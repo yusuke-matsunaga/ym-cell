@@ -8,9 +8,7 @@
 
 
 #include "dotlib/FloatVectorListHeaderHandler.h"
-#include "dotlib/DotlibParser.h"
 #include "dotlib/AstMgr.h"
-#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 

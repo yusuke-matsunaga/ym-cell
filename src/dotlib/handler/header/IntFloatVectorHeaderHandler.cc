@@ -1,31 +1,31 @@
 
-/// @file IntVectorHeaderHandler.cc
-/// @brief IntVectorHeaderHandler の実装ファイル
+/// @file IntFloatVectorHeaderHandler.cc
+/// @brief IntFloatVectorHeaderHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/IntVectorHeaderHandler.h"
+#include "dotlib/IntFloatVectorHeaderHandler.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス IntVectorHeaderHandler
+// クラス IntFloatVectorHeaderHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-IntVectorHeaderHandler::IntVectorHeaderHandler(DotlibParser& parser) :
+IntFloatVectorHeaderHandler::IntFloatVectorHeaderHandler(DotlibParser& parser) :
   HeaderHandler(parser)
 {
 }
 
 // @brief デストラクタ
-IntVectorHeaderHandler::~IntVectorHeaderHandler()
+IntFloatVectorHeaderHandler::~IntFloatVectorHeaderHandler()
 {
 }
 
@@ -33,9 +33,10 @@ IntVectorHeaderHandler::~IntVectorHeaderHandler()
 //
 // '(' を読み込んだ時に呼ばれる．
 void
-IntVectorHeaderHandler::begin_header()
+IntFloatVectorHeaderHandler::begin_header()
 {
-  mValue = nullptr;
+  mValue1 = nullptr;
+  mValue2 = nullptr;
 }
 
 // @brief ヘッダの値を読み込む処理
@@ -43,14 +44,18 @@ IntVectorHeaderHandler::begin_header()
 // @param[in] value_loc トークンの位置
 // @param[in] count read_value() の呼ばれた回数
 bool
-IntVectorHeaderHandler::read_header_value(TokenType value_type,
-					  const FileRegion& value_loc,
-					  int count)
+IntFloatVectorHeaderHandler::read_header_value(TokenType value_type,
+					       const FileRegion& value_loc,
+					       int count)
 {
   switch ( count ) {
   case 0:
-    mValue = new_int_vector(value_type, value_loc);
-    return mValue != nullptr;
+    mValue1 = new_int(value_type, value_loc);
+    return mValue1 != nullptr;
+
+  case 1:
+    mValue2 = new_float_vector(value_type, value_loc);
+    return mValue2 != nullptr;
 
   default:
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -67,14 +72,14 @@ IntVectorHeaderHandler::read_header_value(TokenType value_type,
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-IntVectorHeaderHandler::end_header(int count)
+IntFloatVectorHeaderHandler::end_header(int count)
 {
-  if ( count != 1 ) {
+  if ( count != 2 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    header_loc(),
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
-		    "Syntax error, singleton expected.");
+		    "Syntax error, ( integer, \"float, float, ...\" ) type expected.");
     return false;
   }
   else {

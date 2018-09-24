@@ -8,9 +8,6 @@
 
 
 #include "dotlib/FloatVectorHeaderHandler.h"
-//#include "dotlib/DotlibParser.h"
-#include "dotlib/AstMgr.h"
-//#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -52,7 +49,7 @@ FloatVectorHeaderHandler::read_header_value(TokenType value_type,
 {
   switch ( count ) {
   case 0:
-    // 実際の処理は最後でする．
+    mValue = new_float_vector(value_type, value_loc);
     break;
 
   default:
@@ -63,13 +60,6 @@ FloatVectorHeaderHandler::read_header_value(TokenType value_type,
 		    "Syntax error, singleton expected.");
     return false;
   }
-
-  vector<double> value_list;
-  bool stat = read_float_vector(value_type, value_loc, value_list);
-  if ( stat ) {
-    mValue = mgr().new_float_vector(value_loc, value_list);
-  }
-  return stat;
 }
 
 // @brief 読み込みが終了した時の処理を行う．

@@ -8,8 +8,6 @@
 
 
 #include "dotlib/Float2HeaderHandler.h"
-//#include "dotlib/AstMgr.h"
-//#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 

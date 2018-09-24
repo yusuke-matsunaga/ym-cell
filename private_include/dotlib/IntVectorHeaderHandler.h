@@ -14,7 +14,7 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class IntVectorHeaderHandler IntVectorHeaderHandler.h "IntVectorHeaderHandler.h"
+/// @class IntVectorHeaderHandler IntVectorHeaderHandler.h "dotlib/IntVectorHeaderHandler.h"
 /// @brief "float, float, ..." の形のヘッダ用のハンドラ
 ///
 /// つまり全体は文字列だが，内容がコンマで区切られた浮動小数点数

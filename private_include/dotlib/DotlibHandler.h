@@ -125,18 +125,19 @@ protected:
   new_string(TokenType value_type,
 	     const FileRegion& value_loc);
 
-  /// @brief 直前に読んだトークンから int のリストを生成する．
+  /// @brief 直前に読んだトークンから AstIntVector を生成する．
   /// @param[in] value_type 型
   /// @param[in] value_loc トークンの位置
-  /// @param[int] dst_list 値を格納するリスト
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起こった．
-  ///
-  /// dst_list は初期化せず，末尾に追加する．
-  bool
-  read_int_vector(TokenType value_type,
-		  const FileRegion& value_loc,
-		  vector<int>& dst_list);
+  const AstIntVector*
+  new_int_vector(TokenType value_type,
+		 const FileRegion& value_loc);
+
+  /// @brief 直前に読んだトークンから AstFloatVector を生成する．
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  const AstFloatVector*
+  new_float_vector(TokenType value_type,
+		   const FileRegion& value_loc);
 
   /// @brief 直前に読んだトークンから float のリストを生成する．
   /// @param[in] value_type 型

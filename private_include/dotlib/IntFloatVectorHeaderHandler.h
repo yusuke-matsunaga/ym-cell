@@ -1,13 +1,12 @@
-﻿#ifndef STR1HEADERHANDLER_H
-#define STR1HEADERHANDLER_H
+#ifndef INTFLOATVECTORHEADERHANDLER_H
+#define INTFLOATVECTORHEADERHANDLER_H
 
-/// @file Str1HeaderHandler.h
-/// @brief Str1HeaderHandler のヘッダファイル
+/// @file IntFloatVectorHeaderHandler.h
+/// @brief IntFloatVectorHeaderHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/HeaderHandler.h"
 
@@ -15,20 +14,20 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class Str1Str1HeaderHandler Str1HeaderHandler.h "dotlib/Str1HeaderHandler.h"
-/// @brief ( string ) の形式のヘッダ用のハンドラ
+/// @class IntFloatVectorHeaderHandler IntFloatVectorHeaderHandler.h "dotlib/IntFloatVectorHeaderHandler.h"
+/// @brief ( integer, "float, float, ..." ) の形のヘッダ用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class Str1HeaderHandler :
+class IntFloatVectorHeaderHandler :
   public HeaderHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  Str1HeaderHandler(DotlibParser& parser);
+  IntFloatVectorHeaderHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~Str1HeaderHandler();
+  ~IntFloatVectorHeaderHandler();
 
 
 public:
@@ -36,14 +35,18 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 読み込んだ値を返す．
-  const AstString*
-  value() const;
+  /// @brief 読み込んだ1番目の値を返す．
+  const AstInt*
+  value1() const;
+
+  /// @brief 読み込んだ2番目の値を返す．
+  const AstFloatVector*
+  value2() const;
 
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // CGHandler の仮想関数
+  // HeaderHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダの開始処理
@@ -52,7 +55,7 @@ protected:
   void
   begin_header() override;
 
-  /// @brief 値を読み込む処理
+  /// @brief ヘッダの値を読み込む処理
   /// @param[in] value_type 型
   /// @param[in] value_loc トークンの位置
   /// @param[in] count read_value() の呼ばれた回数
@@ -71,11 +74,20 @@ protected:
 
 private:
   //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 読み込んだ値
-  const AstString* mValue;
+  // 1番目の値
+  const AstInt* mValue1;
+
+  // 2番目の値
+  const AstFloatVector* mValue2;
 
 };
 
@@ -84,14 +96,22 @@ private:
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// @brief 読み込んだ値を返す．
+// @brief 読み込んだ1番目の値を返す．
 inline
-const AstString*
-Str1HeaderHandler::value() const
+const AstInt*
+IntFloatVectorHeaderHandler::value1() const
 {
-  return mValue;
+  return mValue1;
+}
+
+// @brief 読み込んだ2番目の値を返す．
+inline
+const AstFloatVector*
+IntFloatVectorHeaderHandler::value2() const
+{
+  return mValue2;
 }
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // STR1HEADERHANDLER_H
+#endif // INTFLOATVECTORHEADERHANDLER_H

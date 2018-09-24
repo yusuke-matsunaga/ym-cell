@@ -32,10 +32,13 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// このクラスは実体を持たない純粋仮想基底クラスである．
 /// 継承クラスは以下の通り
 /// * EmptyHeaderHandler
-/// * FloatHeaderHandler
+/// * Float2HeaderHandler
 /// * FloatStrHeaderHandler
 /// * FloatVectorHeaderHandler
 /// * FloatVectorListHeaderHandler
+/// * IntFloatHeaderHandler
+/// * IntFloatVectorHeaderHandler
+/// * IntVectorHeaderHandler
 /// * Str1HeaderHandler
 /// * Str2HeaderHandler
 /// * Str2IntHeaderHandler

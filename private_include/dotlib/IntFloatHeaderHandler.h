@@ -10,13 +10,12 @@
 
 
 #include "dotlib/HeaderHandler.h"
-#include "ym/ShString.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class IntFloatHeaderHandler IntFloatHeaderHandler.h "IntFloatHeaderHandler.h"
+/// @class IntFloatHeaderHandler IntFloatHeaderHandler.h "dotlib/IntFloatHeaderHandler.h"
 /// @brief ( integer, float ) の形式のヘッダ用ハンドラ
 //////////////////////////////////////////////////////////////////////
 class IntFloatHeaderHandler :
