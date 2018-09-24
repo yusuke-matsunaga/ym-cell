@@ -1,8 +1,8 @@
-#ifndef ASTVARIABLERANGE_H
-#define ASTVARIABLERANGE_H
+#ifndef ASTSTRFLOAT_H
+#define ASTSTRFLOAT_H
 
-/// @file AstVariableRange.h
-/// @brief AstVariableRange のヘッダファイル
+/// @file AstStrFloat.h
+/// @brief AstStrFloat のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
@@ -16,21 +16,21 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class AstVariableRange AstVariableRange.h "AstVariableRange.h"
-/// @brief domain group 内の vairable_n_range 属性を表すクラス
+/// @class AstStrFloat AstStrFloat.h "dotlib/AstStrFloat.h"
+/// @brief string, float のペアを表す AstNode の派生クラス
 //////////////////////////////////////////////////////////////////////
-class AstVariableRange :
+class AstStrFloat :
   public AstNode
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] val1, val2 値
-  AstVariableRange(const AstFloat* val1,
-		   const AstFloat* val2);
+  AstStrFloat(const AstString* val1,
+	      const AstFloat* val2);
 
   /// @brief デストラクタ
-  ~AstVariableRange();
+  ~AstStrFloat();
 
 
 public:
@@ -39,7 +39,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値1を得る．
-  const AstFloat*
+  const AstString*
   val1() const;
 
   /// @brief 値2を得る．
@@ -66,7 +66,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値1
-  const AstFloat* mVal1;
+  const AstString* mVal1;
 
   // 値2
   const AstFloat* mVal2;
@@ -79,8 +79,8 @@ private:
 
 // @brief 値1を得る．
 inline
-const AstFloat*
-AstVariableRange::val1() const
+const AstString*
+AstStrFloat::val1() const
 {
   return mVal1;
 }
@@ -88,11 +88,11 @@ AstVariableRange::val1() const
 // @brief 値2を得る．
 inline
 const AstFloat*
-AstVariableRange::val2() const
+AstStrFloat::val2() const
 {
   return mVal2;
 }
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTVARIABLERANGE_H
+#endif // ASTSTRFLOAT_H

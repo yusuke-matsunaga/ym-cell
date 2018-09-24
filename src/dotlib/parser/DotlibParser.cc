@@ -46,32 +46,34 @@
 
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstBool.h"
-#include "dotlib/AstInt.h"
-#include "dotlib/AstIntVector.h"
-#include "dotlib/AstFloat.h"
-#include "dotlib/AstFloatVector.h"
-#include "dotlib/AstString.h"
-#include "dotlib/AstStringVector.h"
+#include "dotlib/AstCell.h"
 #include "dotlib/AstDelayModel.h"
 #include "dotlib/AstDirection.h"
+#include "dotlib/AstDomain.h"
+#include "dotlib/AstExpr.h"
+#include "dotlib/AstFloat.h"
+#include "dotlib/AstFloat2.h"
+#include "dotlib/AstFloatStr.h"
+#include "dotlib/AstFloatVector.h"
+#include "dotlib/AstInputVoltage.h"
+#include "dotlib/AstInt.h"
+#include "dotlib/AstIntFloat.h"
+#include "dotlib/AstIntVector.h"
+#include "dotlib/AstLibrary.h"
+#include "dotlib/AstLut.h"
+#include "dotlib/AstPin.h"
+#include "dotlib/AstOutputVoltage.h"
+#include "dotlib/AstStr2.h"
+#include "dotlib/AstStr3.h"
+#include "dotlib/AstStrFloat.h"
+#include "dotlib/AstString.h"
+#include "dotlib/AstStrList.h"
 #include "dotlib/AstTechnology.h"
+#include "dotlib/AstTemplate.h"
+#include "dotlib/AstTiming.h"
 #include "dotlib/AstTimingSense.h"
 #include "dotlib/AstTimingType.h"
 #include "dotlib/AstVarType.h"
-#include "dotlib/AstExpr.h"
-#include "dotlib/AstFloatVector.h"
-#include "dotlib/AstPieceWise.h"
-#include "dotlib/AstUnit.h"
-#include "dotlib/AstVariableRange.h"
-#include "dotlib/AstCell.h"
-#include "dotlib/AstDomain.h"
-#include "dotlib/AstInputVoltage.h"
-#include "dotlib/AstLibrary.h"
-#include "dotlib/AstLut.h"
-#include "dotlib/AstOutputVoltage.h"
-#include "dotlib/AstPin.h"
-#include "dotlib/AstTemplate.h"
-#include "dotlib/AstTiming.h"
 
 #include "dotlib/TokenType.h"
 #include "ym/FileIDO.h"
@@ -297,30 +299,6 @@ DotlibParser::parse_direction(const AstPinDirection*& dst,
   }
 }
 
-// @brief 'Technology' Simple Attribute のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-bool
-DotlibParser::parse_technology(const AstTechnology*& dst,
-			       AttrType attr_type,
-			       const FileRegion& attr_loc)
-{
-  if ( dst != nullptr ) {
-    // 重複していた．
-    duplicate_error(attr_type, attr_loc, dst);
-    return false;
-  }
-  else {
-    TechnologyHandler handler(*this);
-    return handler.parse_value(dst);
-  }
-}
-
 // @brief 'timing_sense' Simple Attribute のパースを行う．
 // @param[in] dst 結果を格納する変数
 // @param[in] attr_type 属性の型
@@ -453,6 +431,119 @@ DotlibParser::parse_function(const AstExpr*& dst,
   }
 }
 
+// @brief coefs attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DotlibParser::parse_coefs(const AstFloatVector*& dst,
+			  AttrType attr_type,
+			  const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    FloatVectorHeaderHandler handler(*this);
+    bool stat = parse_complex_attribute(handler);
+    if ( stat ) {
+      dst = mgr().new_float_vector(handler);
+    }
+    return stat;
+  }
+}
+
+// @brief 'default_part' Complex attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DotlibParser::parse_default_part(const AstStr2*& dst,
+				 AttrType attr_type,
+				 const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    Str2HeaderHandler handler(*this);
+    bool stat = parse_complex_attribute(handler);
+    if ( stat ) {
+      dst = mgr().new_str2(handler);
+    }
+    return stat;
+  }
+}
+
+// @brief 'define' Complex attribute のパースを行う．
+// @param[in] dst_list 結果を格納するリスト
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+DotlibParser::parse_define(vector<const AstStr3*>& dst_list,
+			   AttrType attr_type,
+			   const FileRegion& attr_loc)
+{
+  Str3HeaderHandler handler(*this);
+  bool stat = parse_complex_attribute(handler);
+  if ( stat ) {
+    dst_list.push_back(mgr().new_str3(handler));
+  }
+  return stat;
+}
+
+// @brief 'define_cell_area' Complex attribute のパースを行う．
+// @param[in] dst_list 結果を格納するリスト
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+DotlibParser::parse_define_cell_area(vector<const AstStr2*>& dst_list,
+				     AttrType attr_type,
+				     const FileRegion& attr_loc)
+{
+  Str2HeaderHandler handler(*this);
+  bool stat = parse_complex_attribute(handler);
+  if ( stat ) {
+    dst_list.push_back(mgr().new_str2(handler));
+  }
+  return stat;
+}
+
+// @brief 'define_group' Complex attribute のパースを行う．
+// @param[in] dst_list 結果を格納するリスト
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+bool
+DotlibParser::parse_define_group(vector<const AstStr2*>& dst_list,
+				 AttrType attr_type,
+				 const FileRegion& attr_loc)
+{
+  Str2HeaderHandler handler(*this);
+  bool stat = parse_complex_attribute(handler);
+  if ( stat ) {
+    dst_list.push_back(mgr().new_str2(handler));
+  }
+  return stat;
+}
+
 // @brief 'index' complex attribute のパースを行う．
 // @param[in] dst 結果を格納する変数
 // @param[in] attr_type 属性の型
@@ -481,29 +572,7 @@ DotlibParser::parse_index(const AstFloatVector*& dst,
   }
 }
 
-// @brief piecewise attribute のパースを行う．
-// @param[in] dst_list 結果を格納するリスト
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-//
-// この属性は重複チェックは行わない．
-bool
-DotlibParser::parse_piecewise(vector<const AstPieceWise*>& dst_list,
-			      AttrType attr_type,
-			      const FileRegion& attr_loc)
-{
-  IntFloatHeaderHandler handler(*this);
-  bool stat = parse_complex_attribute(handler);
-  if ( stat ) {
-    const AstPieceWise* pw = mgr().new_piecewise(handler);
-    dst_list.push_back(pw);
-  }
-  return stat;
-}
-
-// @brief 単位型 attribute のパースを行う．
+// @brief 'library_features' Complex attribute のパースを行う．
 // @param[in] dst 結果を格納する変数
 // @param[in] attr_type 属性の型
 // @param[in] attr_loc 属性のファイル上の位置
@@ -512,9 +581,9 @@ DotlibParser::parse_piecewise(vector<const AstPieceWise*>& dst_list,
 //
 // すでに設定済みの属性に重複して設定しようとするとエラーになる．
 bool
-DotlibParser::parse_unit(const AstUnit*& dst,
-			 AttrType attr_type,
-			 const FileRegion& attr_loc)
+DotlibParser::parse_library_features(const AstString*& dst,
+				     AttrType attr_type,
+				     const FileRegion& attr_loc)
 {
   if ( dst != nullptr ) {
     // 重複していた．
@@ -522,66 +591,10 @@ DotlibParser::parse_unit(const AstUnit*& dst,
     return false;
   }
   else {
-    FloatStrHeaderHandler handler(*this);
+    Str1HeaderHandler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
-      dst = mgr().new_unit(handler);
-    }
-    return stat;
-  }
-}
-
-// @brief 'values' complex attribute のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-bool
-DotlibParser::parse_values(const AstFloatVector*& dst,
-			   AttrType attr_type,
-			   const FileRegion& attr_loc)
-{
-  if ( dst != nullptr ) {
-    // 重複していた．
-    duplicate_error(attr_type, attr_loc, dst);
-    return false;
-  }
-  else {
-    FloatVectorListHeaderHandler handler(*this);
-    bool stat = parse_complex_attribute(handler);
-    if ( stat ) {
-      dst = mgr().new_float_vector(handler);
-    }
-    return stat;
-  }
-}
-
-// @brief coefs attribute のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-bool
-DotlibParser::parse_coefs(const AstFloatVector*& dst,
-			  AttrType attr_type,
-			  const FileRegion& attr_loc)
-{
-  if ( dst != nullptr ) {
-    // 重複していた．
-    duplicate_error(attr_type, attr_loc, dst);
-    return false;
-  }
-  else {
-    FloatVectorHeaderHandler handler(*this);
-    bool stat = parse_complex_attribute(handler);
-    if ( stat ) {
-      dst = mgr().new_float_vector(handler);
+      dst = mgr().new_string(handler.val1());
     }
     return stat;
   }
@@ -615,6 +628,168 @@ DotlibParser::parse_orders(const AstIntVector*& dst,
   }
 }
 
+// @brief 'piece_define' Complex attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DotlibParser::parse_piece_define(const AstFloatVector*& dst,
+				 AttrType attr_type,
+				 const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    FloatVectorHeaderHandler handler(*this);
+    bool stat = parse_complex_attribute(handler);
+    if ( stat ) {
+      dst = mgr().new_float_vector(handler);
+    }
+    return stat;
+  }
+}
+
+// @brief piecewise attribute のパースを行う．
+// @param[in] dst_list 結果を格納するリスト
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// この属性は重複チェックは行わない．
+bool
+DotlibParser::parse_piecewise(vector<const AstIntFloat*>& dst_list,
+			      AttrType attr_type,
+			      const FileRegion& attr_loc)
+{
+  IntFloatHeaderHandler handler(*this);
+  bool stat = parse_complex_attribute(handler);
+  if ( stat ) {
+    dst_list.push_back(mgr().new_int_float(handler));
+  }
+  return stat;
+}
+
+// @brief 'routing_layers' Complex attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DotlibParser::parse_routing_layers(const AstStringVector*& dst,
+				   AttrType attr_type,
+				   const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    StrListHeaderHandler handler(*this);
+    bool stat = parse_complex_attribute(handler);
+    if ( stat ) {
+      dst = mgr().new_string_vector(handler);
+    }
+    return stat;
+  }
+}
+
+// @brief 'technology' Complex Attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DotlibParser::parse_technology(const AstTechnology*& dst,
+			       AttrType attr_type,
+			       const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    Str1HeaderHandler handler(*this);
+    bool stat = parse_complex_attribute(handler);
+    if ( stat ) {
+      // handler.val1() から dst に値を設定する．
+      if ( handler
+    }
+    return stat;
+  }
+}
+
+// @brief 単位型 attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DotlibParser::parse_unit(const AstFloatStr*& dst,
+			 AttrType attr_type,
+			 const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    FloatStrHeaderHandler handler(*this);
+    bool stat = parse_complex_attribute(handler);
+    if ( stat ) {
+      dst = mgr().new_float_str(handler);
+    }
+    return stat;
+  }
+}
+
+// @brief 'values' complex attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DotlibParser::parse_values(const AstFloatVector*& dst,
+			   AttrType attr_type,
+			   const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    FloatVectorListHeaderHandler handler(*this);
+    bool stat = parse_complex_attribute(handler);
+    if ( stat ) {
+      dst = mgr().new_float_vector(handler);
+    }
+    return stat;
+  }
+}
+
 // @brief variable_n_range attribute のパースを行う．
 // @param[in] dst 結果を格納する変数
 // @param[in] attr_type 属性の型
@@ -624,7 +799,7 @@ DotlibParser::parse_orders(const AstIntVector*& dst,
 //
 // すでに設定済みの属性に重複して設定しようとするとエラーになる．
 bool
-DotlibParser::parse_variable_range(const AstVariableRange*& dst,
+DotlibParser::parse_variable_range(const AstFloat2*& dst,
 				   AttrType attr_type,
 				   const FileRegion& attr_loc)
 {
@@ -637,10 +812,31 @@ DotlibParser::parse_variable_range(const AstVariableRange*& dst,
     Float2HeaderHandler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
-      dst = mgr().new_variable_range(handler);
+      dst = mgr().new_float2(handler);
     }
     return stat;
   }
+}
+
+// @brief 'voltage_map' Complex attribute のパースを行う．
+// @param[in] dst_list 結果を格納するリスト
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// この属性は重複チェックは行わない．
+bool
+DotlibParser::parse_voltage_map(vector<const AstStrFloat*>& dst_list,
+				AttrType attr_type,
+				const FileRegion& attr_loc)
+{
+  StrFloatHeaderHandler handler(*this);
+  bool stat = parse_complex_attribute(handler);
+  if ( stat ) {
+    dst_list.push_back(mgr().new_str_float(handler));
+  }
+  return stat;
 }
 
 // @brief 'cell' Group Statement のパースを行う．

@@ -27,6 +27,7 @@ class IntFloatHeaderHandler;
 class Str1HeaderHandler;
 class Str2HeaderHandler;
 class Str2IntHeaderHandler;
+class Str3HeaderHandler;
 class StrListHeaderHandler;
 
 class LibraryHandler;
@@ -278,29 +279,45 @@ public:
   // complex attribute の値を表す AstNode を作る関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief piece wise パラメータを表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] val1 インデックス
-  /// @param[in] val2 値
-  const AstPieceWise*
-  new_piecewise(const FileRegion& loc,
-		const AstInt* val1,
-		const AstFloat* val2);
+  /// @brief ( float, float ) 型の AstNode を生成する．
+  /// @param[in] handler ハンドラ
+  const AstFloat2*
+  new_float2(const Float2HeaderHandler& handler);
 
-  /// @brief 単位を表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] unit_val 数値
-  /// @param[in] unit_str 単位を表す文字列
-  const AstUnit*
-  new_unit(const FileRegion& loc,
-	   const AstFloat* unit_val,
-	   const AstString* unit_str);
+  /// @brief ( float, string ) 型の AstNode を生成する．
+  /// @param[in] handler ハンドラ
+  const AstFloatStr*
+  new_float_str(const FloatStrHeaderHandler& handler);
 
-  /// @brief variable_n_range を表す AstNode を生成する．
-  /// @param[in] value1, value2 値
-  const AstVariableRange*
-  new_variable_range(const AstFloat* value1,
-		     const AstFloat* value2);
+  /// @brief float のベクタ型の AstNode を生成する．
+  /// @param[in] handler ハンドラ
+  const AstFloatVector*
+  new_float_vector(const FloatVectorHeaderHandler& handler);
+
+  /// @brief float のベクタ型の AstNode を生成する．
+  /// @param[in] handler ハンドラ
+  const AstFloatVector*
+  new_float_vector(const FloatVectorListHeaderHandler& handler);
+
+  /// @brief ( integer, float ) 型の AstNode を生成する．
+  /// @param[in] handler ハンドラ
+  const AstIntFloat*
+  new_int_float(const IntFloatHeaderHandler& handler);
+
+  /// @brief ( string, float ) 型の AstNode を生成する．
+  /// @param[in] handler ハンドラ
+  const AstStrFloat*
+  new_str_float(const StrFloatHeaderHandler& handler);
+
+  /// @brief ( string, string ) 型の AstNode を生成する．
+  /// @param[in] handler ハンドラ
+  const AstStr2*
+  new_str2(const Str2HeaderHandler& handler);
+
+  /// @brief ( string, string, string ) 型の AstNode を生成する．
+  /// @param[in] handler ハンドラ
+  const AstStr3*
+  new_str3(const Str3HeaderHandler& handler);
 
 
 public:

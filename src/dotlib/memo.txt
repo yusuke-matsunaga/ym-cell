@@ -78,6 +78,16 @@ v				liberty 文法覚書
 - パースした構文木を表すために AstNode というクラスを用意する．
   実際には AstNode の派生クラスの木構造で構文木を表す．
 
+- 例えば xxx という型をパースする DotlibParser のメンバ関数は
+
+  bool
+  DotlibParser::parse_xxx(const AstXxx*& dst,
+  			  AttrType attr_type,
+			  const FileRegion& attr_loc);
+
+  というインターフェイスを持つ．
+  dst にパース結果が入る．
+
 - simple attribute とそれに対応する AstNode の派生クラス
   * int                  -> AstInt
   * bool                 -> AstBool
@@ -125,32 +135,34 @@ v				liberty 文法覚書
   * 'timing'             -> AstTiming
 
 
-- AstXXX はコンストラクタで値を設定したらあとは const にしたいので，ビ
-  ルダークラスを用意する．AstXXX を読み込む XXXHandler は一旦そのビル
-  ダークラスのメンバに値を設定し，そのビルダークラスを AstXXX のコンス
-  トラクタに渡す．
-  このような二度手間にしている理由は２つ．
+- AstXXX はコンストラクタで値を設定したらあとは const にしたいので，
+  AstXXX を読み込む XXXHandler に一旦必要な値を保持しておいて
+  XXXHandler を AstXXX のコンストラクタに渡す．いわゆるビルダークラス
+  パターン.
+  このような二度手間にしている理由は3nつ．
   * 可変長のリストをビルダクラス中では vector<> で保持しておいて
     AstXXX のコンストラクタでは固定長の配列として確保する．
   * パース途中でエラーが起こった場合に AstXXX のオブジェクトを確保
     しない．ビルダークラスのオブジェクトは自動変数として確保しておくの
     でエラー時には自動的に削除される．
+  * AstXXX のコンストラクタのパラメータが簡潔になる．
 
-- AstXXX, XXXHandler, ビルダークラスと関連した情報を持つのでもととなる
-  データからこれらのクラスのヘッダファイルとソースファイルを自動生成す
-  る Python スクリプトを用意する．
+- AstXXX, XXXHandler と関連した情報を持つのでもととなるデータからこれ
+  らのクラスのヘッダファイルとソースファイルを自動生成する
+  Python スクリプトを用意する．
   一旦，ファイルを作ってしまえば仕様変更がない限り再度生成する必要はな
   いので，生成後のファイルに手直しをすることも可能．
-
-- ビルダークラスの名前は TmpXXX とする．
 
 
 - 以下，整理されていないおぼえ書き
 
-- "ff" と ff は同じ
+- "ff" と ff は同じ．というか文字列が予想される場合には " はあってもな
+  くても同じ結果になる．異なるのは間に空白を含む場合．これは " がなけ
+  ればならない．
 
 - include_file ( filename );
   結構，制限があるし，今はあまり使われていないみたい．
+  ここでは無視する．
 
 - bus_naming_style が省略された場合のデフォルト値は
   "Bus%sPin%d"
@@ -203,14 +215,26 @@ v				liberty 文法覚書
   1mV, 10mV, 100mV, 1V．デフォルトは 1V
   用例をみるかぎり "" なしもあるみたい．
 
-- capacitive_unit は
-  ff か pf
-
 - default_wire_load_mode は top | segmented | enclosed
 
-- define_cell_area (area_name, resource_type)
+- capacitive_load_unit ( value_(float), unit_(enum) ) ;
+  value は任意の float．
+  unit は ff か pf
+
+- default_part ( default_part_name_(string), speed_grade_(string) ) ;
+
+- define ( "attribute_name", "group_name", "attribute_type" ) ;
+  attribute_name : 属性名
+  group_name : この属性が属するグループ名
+  attribute_type : Boolean, string, integer, float のいずれか
+
+- define_cell_area (area_name, resource_type) ;
   resource_type は pad_slots, pad_input_driver_sites,
   pad_output_driver_sites, pad_driver_sites
+
+- define_group ( group_(id), parent_name_(id) ) ;
+  group : グループ名
+  parent_name : 親のグループ名
 
 - library_features の値は report_delay_calculation,
   report_power_calculation, report_noise_calculation,
@@ -224,6 +248,10 @@ v				liberty 文法覚書
   この属性は唯一
 
 - technology の値は cmos か fpga．デフォルトは cmos
+
+- voltage_map ( voltage_name_(id), voltage_value_(float) ) ;
+  string と float の組．
+  複数ありうる．
 
 - base_curves Group statement
   base_curves ( name ) {
