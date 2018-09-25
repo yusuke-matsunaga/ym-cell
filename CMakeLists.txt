@@ -82,7 +82,7 @@ set (mislib_SOURCES
   )
 
 set (dotlib_SOURCES
-  src/dotlib/read_liberty.cc
+  #  src/dotlib/read_liberty.cc
 
   src/dotlib/parser/AttrDic.cc
   src/dotlib/parser/DotlibParser.cc
@@ -99,49 +99,55 @@ set (dotlib_SOURCES
   src/dotlib/handler/simple/DelayModelHandler.cc
   src/dotlib/handler/simple/DirectionHandler.cc
   src/dotlib/handler/simple/StringHandler.cc
-  src/dotlib/handler/simple/TechnologyHandler.cc
   src/dotlib/handler/simple/TimingSenseHandler.cc
   src/dotlib/handler/simple/TimingTypeHandler.cc
   src/dotlib/handler/simple/VarTypeHandler.cc
-  src/dotlib/handler/simple/ExprHandler.cc
   src/dotlib/handler/simple/FuncParser.cc
   src/dotlib/handler/simple/FuncScanner.cc
   src/dotlib/handler/simple/FuncHandler.cc
 
-  src/dotlib/handler/header/EmptyHeaderHandler.cc
-  src/dotlib/handler/header/Float2HeaderHandler.cc
-  src/dotlib/handler/header/FloatStrHeaderHandler.cc
-  src/dotlib/handler/header/FloatVectorHeaderHandler.cc
-  src/dotlib/handler/header/FloatVectorListHeaderHandler.cc
-  src/dotlib/handler/header/IntFloatHeaderHandler.cc
-  src/dotlib/handler/header/IntFloatVectorHeaderHandler.cc
-  src/dotlib/handler/header/Str1HeaderHandler.cc
-  src/dotlib/handler/header/Str2HeaderHandler.cc
-  src/dotlib/handler/header/Str2IntHeaderHandler.cc
-  src/dotlib/handler/header/StrListHeaderHandler.cc
+  src/dotlib/handler/header/Elem1Handler.cc
+  src/dotlib/handler/header/Elem2Handler.cc
+  src/dotlib/handler/header/Elem3Handler.cc
+  src/dotlib/handler/header/EmptyHandler.cc
+  src/dotlib/handler/header/Elem2Handler.cc
+  src/dotlib/handler/header/Float2Handler.cc
+  src/dotlib/handler/header/FloatStrHandler.cc
+  src/dotlib/handler/header/FloatVectorHandler.cc
+  src/dotlib/handler/header/FloatVectorListHandler.cc
+  src/dotlib/handler/header/HeaderHandler.cc
+  src/dotlib/handler/header/IntFloatHandler.cc
+  src/dotlib/handler/header/IntFloatVectorHandler.cc
+  src/dotlib/handler/header/IntVectorHandler.cc
+  src/dotlib/handler/header/Str1Handler.cc
+  src/dotlib/handler/header/Str2Handler.cc
+  src/dotlib/handler/header/Str2IntHandler.cc
+  src/dotlib/handler/header/Str3Handler.cc
+  src/dotlib/handler/header/StrFloatHandler.cc
+  src/dotlib/handler/header/StrListHandler.cc
 
   src/dotlib/handler/group/GroupHandler.cc
 
-  src/dotlib/handler/group/InternalPowerHandler.cc
-  src/dotlib/handler/group/TimingHandler.cc
+  #src/dotlib/handler/group/InternalPowerHandler.cc
+  #src/dotlib/handler/group/TimingHandler.cc
 
-  src/dotlib/handler/group/CellHandler.cc
-  src/dotlib/handler/group/CellDegradationHandler.cc
+  #src/dotlib/handler/group/CellHandler.cc
+  #src/dotlib/handler/group/CellDegradationHandler.cc
   #src/dotlib/handler/CellInternalPower.cc
-  src/dotlib/handler/group/DomainHandler.cc
-  src/dotlib/handler/group/InputVoltageHandler.cc
-  src/dotlib/handler/group/LibraryHandler.cc
-  src/dotlib/handler/group/OutputVoltageHandler.cc
-  src/dotlib/handler/group/PinHandler.cc
-  src/dotlib/handler/group/TableHandler.cc
-  src/dotlib/handler/group/TemplateHandler.cc
+  #src/dotlib/handler/group/DomainHandler.cc
+  #src/dotlib/handler/group/InputVoltageHandler.cc
+  #src/dotlib/handler/group/LibraryHandler.cc
+  #src/dotlib/handler/group/OutputVoltageHandler.cc
+  #src/dotlib/handler/group/PinHandler.cc
+  #src/dotlib/handler/group/TableHandler.cc
+  #src/dotlib/handler/group/TemplateHandler.cc
 
-  src/dotlib/handler/group/FFHandler.cc
-  src/dotlib/handler/group/LatchHandler.cc
+  #src/dotlib/handler/group/FFHandler.cc
+  #src/dotlib/handler/group/LatchHandler.cc
 
   # Str2IntGroupHandler
-  src/dotlib/handler/group/FFBankHandler.cc
-  src/dotlib/handler/group/LatchBankHandler.cc
+  #src/dotlib/handler/group/FFBankHandler.cc
+  #src/dotlib/handler/group/LatchBankHandler.cc
 
   #src/dotlib/handler/DefineHandler.cc
 
@@ -156,9 +162,12 @@ set (dotlib_SOURCES
   #src/dotlib/ast/AstFF.cc
   #src/dotlib/ast/AstFFBank.cc
   src/dotlib/ast/AstFloat.cc
+  src/dotlib/ast/AstFloat2.cc
+  src/dotlib/ast/AstFloatStr.cc
   src/dotlib/ast/AstFloatVector.cc
   #src/dotlib/ast/AstInputVoltage.cc
   src/dotlib/ast/AstInt.cc
+  src/dotlib/ast/AstIntFloat.cc
   src/dotlib/ast/AstIntVector.cc
   #src/dotlib/ast/AstLatch.cc
   #src/dotlib/ast/AstLatchBank.cc
@@ -167,18 +176,18 @@ set (dotlib_SOURCES
   src/dotlib/ast/AstMgr.cc
   src/dotlib/ast/AstNode.cc
   #src/dotlib/ast/AstOutputVoltage.cc
-  src/dotlib/ast/AstPieceWise.cc
   #src/dotlib/ast/AstPin.cc
   #src/dotlib/ast/AstStateTable.cc
+  src/dotlib/ast/AstStr2.cc
+  src/dotlib/ast/AstStr3.cc
+  src/dotlib/ast/AstStrFloat.cc
   src/dotlib/ast/AstString.cc
-  src/dotlib/ast/AstStringVector.cc
+  src/dotlib/ast/AstStrList.cc
   #src/dotlib/ast/AstTemplate.cc
   #src/dotlib/ast/AstTiming.cc
   src/dotlib/ast/AstTimingSense.cc
   src/dotlib/ast/AstTimingType.cc
   src/dotlib/ast/AstTechnology.cc
-  src/dotlib/ast/AstUnit.cc
-  src/dotlib/ast/AstVariableRange.cc
   src/dotlib/ast/AstVarType.cc
   )
 

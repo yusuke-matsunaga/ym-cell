@@ -29,20 +29,6 @@ TimingSenseHandler::~TimingSenseHandler()
 {
 }
 
-// @brief 'timing_sense' Simple Attribute の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-TimingSenseHandler::parse_value(const AstTimingSense*& dst)
-{
-  bool stat = parse_simple_attribute();
-  if ( stat ) {
-    dst = mValue;
-  }
-  return stat;
-}
-
 // @brief 文字列を読み込んだ時の処理
 // @param[in] str 文字列
 // @param[in] value_loc 文字列トークンの位置
@@ -54,13 +40,13 @@ TimingSenseHandler::read_str_value(const char* str,
 {
   ClibTimingSense value;
   if ( strcmp(str, "positive_unate") == 0 ) {
-    value = kClibPosiUnate;
+    value = ClibTimingSense::PosiUnate;
   }
   else if ( strcmp(str, "negative_unate") == 0 ) {
-    value = kClibNegaUnate;
+    value = ClibTimingSense::NegaUnate;
   }
   else if ( strcmp(str, "non_unate") == 0 ) {
-    value = kClibNonUnate;
+    value = ClibTimingSense::NonUnate;
   }
   else {
     mValue = nullptr;

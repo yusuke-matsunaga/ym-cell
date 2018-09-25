@@ -36,12 +36,9 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief int 値の記述をパースする．
-  /// @param[in] dst 読み込んだ値を格納する変数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_value(const AstInt*& dst);
+  /// @brief 読み込んだ値を返す．
+  const AstInt*
+  value() const;
 
 
 protected:
@@ -68,6 +65,19 @@ private:
   const AstInt* mValue;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 読み込んだ値を返す．
+inline
+const AstInt*
+IntHandler::value() const
+{
+  return mValue;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

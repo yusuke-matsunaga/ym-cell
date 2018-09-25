@@ -37,13 +37,4 @@ SimpleHandler::symbol_mode()
   return false;
 }
 
-// @brief Simple Attribute を読み込む．
-// @retval true 正しく読み込めた．
-// @retval false エラーが起こった．
-bool
-SimpleHandler::parse_simple_attribute()
-{
-  return parser().parse_simple_attribute(*this);
-}
-
 END_NAMESPACE_YM_DOTLIB

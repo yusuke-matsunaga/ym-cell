@@ -9,11 +9,12 @@
 
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstFloatVector.h"
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-// @brief ベクタを表す AstNode を生成する．
+// @brief float のベクタ型の AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value_list 値のリスト
 const AstFloatVector*
@@ -40,7 +41,7 @@ AstFloatVector::AstFloatVector(const FileRegion& loc,
   AstNode(loc),
   mNum(value_list.size())
 {
-  for ( int i = 0; i < mNum; ++ i ) {
+  for ( auto i: Range(mNum) ) {
     mBody[i] = value_list[i];
   }
 }
@@ -57,7 +58,7 @@ AstFloatVector::get_vector(vector<double>& vector) const
 {
   vector.clear();
   vector.resize(mNum);
-  for ( int i = 0; i < mNum; ++ i ) {
+  for ( auto i: Range(mNum) ) {
     vector[i] = mBody[i];
   }
 }
@@ -71,7 +72,7 @@ AstFloatVector::dump(ostream& s,
 {
   const char* comma = "";
   s << "(";
-  for ( int i = 0; i < mNum; ++ i ) {
+  for ( auto i: Range(mNum) ) {
     s << comma << mBody[i];
     comma = ", ";
   }

@@ -36,12 +36,9 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief var_type の記述をパースする．
-  /// @param[in] dst 読み込んだ値を格納する変数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_value(const AstVarType*& dst);
+  /// @brief 読み込んだ値を得る．
+  const AstVarType*
+  value() const;
 
 
 private:
@@ -65,9 +62,22 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 読み込んだ値
-  AstVarType* mValue;
+  const AstVarType* mValue;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 読み込んだ値を得る．
+inline
+const AstVarType*
+VarTypeHandler::value() const
+{
+  return mValue;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

@@ -25,9 +25,8 @@ class AstFloatStr :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] val1, val2 値
-  AstFloatStr(const AstFloat* val1,
-	      const AstString* val2);
+  /// @param[in] handler ハンドラ
+  AstFloatStr(const FloatStrHandler& handler);
 
   /// @brief デストラクタ
   ~AstFloatStr();
@@ -40,11 +39,11 @@ public:
 
   /// @brief 値1を得る．
   const AstFloat*
-  val1() const;
+  value1() const;
 
   /// @brief 値2を得る．
   const AstString*
-  val2() const;
+  value2() const;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -80,7 +79,7 @@ private:
 // @brief 値1を得る．
 inline
 const AstFloat*
-AstFloatStr::val1() const
+AstFloatStr::value1() const
 {
   return mVal1;
 }
@@ -88,7 +87,7 @@ AstFloatStr::val1() const
 // @brief 値2を得る．
 inline
 const AstString*
-AstFloatStr::val2() const
+AstFloatStr::value2() const
 {
   return mVal2;
 }

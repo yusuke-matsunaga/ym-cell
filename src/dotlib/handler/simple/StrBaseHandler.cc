@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 #include "dotlib/StrBaseHandler.h"
-#include "dotlib/DotlibParser.h"
+//#include "dotlib/DotlibParser.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 

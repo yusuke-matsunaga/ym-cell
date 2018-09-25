@@ -36,12 +36,9 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief timing_type 値の記述をパースする．
-  /// @param[in] dst 読み込んだ値を格納する変数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_value(const AstTimingType*& dst);
+  /// @brief 読み込んだ値を得る．
+  const AstTimingType*
+  value() const;
 
 
 private:
@@ -68,6 +65,19 @@ private:
   const AstTimingType* mValue;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 読み込んだ値を得る．
+inline
+const AstTimingType*
+TimingTypeHandler::value() const
+{
+  return mValue;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

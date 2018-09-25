@@ -42,7 +42,7 @@ ExprHandler::parse_value(const AstExpr*& dst)
     return false;
   }
 
-  AstExpr* value = parser().read_expr(TokenType::SEMI);
+  const AstExpr* value = parser().read_expr(TokenType::SEMI);
   if ( value != nullptr ) {
     if ( parser().expect_nl() ) {
       dst = value;

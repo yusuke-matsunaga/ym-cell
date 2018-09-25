@@ -40,12 +40,9 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief function 値の記述をパースする．
-  /// @param[in] dst 読み込んだ値を格納する変数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_value(const AstExpr*& dst);
+  /// @brief 読み込んだ値を得る．
+  const AstExpr*
+  value() const;
 
 
 protected:
@@ -72,6 +69,19 @@ private:
   const AstExpr* mValue;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 読み込んだ値を得る．
+inline
+const AstExpr*
+FuncHandler::value() const
+{
+  return mValue;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

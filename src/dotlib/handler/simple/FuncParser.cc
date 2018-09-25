@@ -45,7 +45,7 @@ FuncParser::operator()()
 }
 
 // @brief primary を読み込む．
-AstExpr*
+const AstExpr*
 FuncParser::read_primary()
 {
   FileRegion loc;
@@ -79,13 +79,13 @@ FuncParser::read_primary()
 }
 
 // @brief プライム付きの primary を読み込む．
-AstExpr*
+const AstExpr*
 FuncParser::read_primary2()
 {
   FileRegion loc;
   TokenType type = mScanner.read_token(loc);
   if ( type == TokenType::NOT ) {
-    AstExpr* opr = read_primary();
+    const AstExpr* opr = read_primary();
     if ( opr == nullptr ) {
       return nullptr;
     }
@@ -93,7 +93,7 @@ FuncParser::read_primary2()
   }
   mScanner.unget_token(type, loc);
 
-  AstExpr* node = read_primary();
+  const AstExpr* node = read_primary();
   if ( node == nullptr ) {
     return nullptr;
   }
@@ -108,10 +108,10 @@ FuncParser::read_primary2()
 }
 
 // @brief product を読み込む．
-AstExpr*
+const AstExpr*
 FuncParser::read_product()
 {
-  AstExpr* opr1 = read_primary2();
+  const AstExpr* opr1 = read_primary2();
   if ( opr1 == nullptr ) {
     return nullptr;
   }
@@ -120,7 +120,7 @@ FuncParser::read_product()
     FileRegion loc;
     TokenType type = mScanner.read_token(loc);
     if ( type == TokenType::AND ) {
-      AstExpr* opr2 = read_primary2();
+      const AstExpr* opr2 = read_primary2();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
@@ -128,7 +128,7 @@ FuncParser::read_product()
     }
     else if ( type == TokenType::NOT || type == TokenType::LP || type == TokenType::SYMBOL ) {
       mScanner.unget_token(type, loc);
-      AstExpr* opr2 = read_primary2();
+      const AstExpr* opr2 = read_primary2();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
@@ -143,10 +143,10 @@ FuncParser::read_product()
 }
 
 // @brief expression を読み込む．
-AstExpr*
+const AstExpr*
 FuncParser::read_expr(TokenType end_marker)
 {
-  AstExpr* opr1 = read_product();
+  const AstExpr* opr1 = read_product();
   if ( opr1 == nullptr ) {
     return nullptr;
   }
@@ -157,7 +157,7 @@ FuncParser::read_expr(TokenType end_marker)
       return opr1;
     }
     if ( type == TokenType::OR || type == TokenType::XOR ) {
-      AstExpr* opr2 = read_product();
+      const AstExpr* opr2 = read_product();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }

@@ -36,12 +36,9 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief timing_sense の記述をパースする．
-  /// @param[in] dst 読み込んだ値を格納する変数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_value(const AstTimingSense*& dst);
+  /// @brief 読み込んだ値を得る．
+  const AstTimingSense*
+  value() const;
 
 
 private:
@@ -68,6 +65,19 @@ private:
   const AstTimingSense* mValue;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 読み込んだ値を得る．
+inline
+const AstTimingSense*
+TimingSenseHandler::value() const
+{
+  return mValue;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

@@ -324,7 +324,7 @@ public:
   ///
   /// この属性は重複チェックは行わない．
   bool
-  parse_piecewise(vector<const AstPieceWise*>& dst_list,
+  parse_piecewise(vector<const AstIntFloat*>& dst_list,
 		  AttrType attr_type,
 		  const FileRegion& attr_loc);
 
@@ -337,7 +337,7 @@ public:
   ///
   /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
   bool
-  parse_routing_layers(const AstStringVector*& dst,
+  parse_routing_layers(const AstStrList*& dst,
 		       AttrType attr_type,
 		       const FileRegion& attr_loc);
 
@@ -817,7 +817,7 @@ public:
   expect_nl();
 
   /// @brief expression を読み込む．
-  AstExpr*
+  const AstExpr*
   read_expr(TokenType end_marker);
 
   /// @brief トークンを一つ読み込む．
@@ -903,11 +903,11 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief primary を読み込む．
-  AstExpr*
+  const AstExpr*
   read_primary();
 
   /// @brief prudct を読み込む．
-  AstExpr*
+  const AstExpr*
   read_product();
 
   /// @brief トークンを読み込む．

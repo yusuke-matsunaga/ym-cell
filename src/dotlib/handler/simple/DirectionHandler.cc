@@ -29,20 +29,6 @@ DirectionHandler::~DirectionHandler()
 {
 }
 
-// @brief 'pin_direction' Simple Attribute の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-DirectionHandler::parse_value(const AstDirection*& dst)
-{
-  bool stat = parse_simple_attribute();
-  if ( stat ) {
-    dst = mValue;
-  }
-  return stat;
-}
-
 // @brief 文字列を読み込んだ時の処理
 // @param[in] str 文字列
 // @param[in] value_loc 文字列トークンの位置
@@ -52,7 +38,7 @@ bool
 DirectionHandler::read_str_value(const char* str,
 				 const FileRegion& value_loc)
 {
-  ClibCellDirection value;
+  ClibDirection value;
   if ( strcmp(str, "input") == 0 ) {
     value = ClibDirection::Input;
   }
@@ -68,7 +54,7 @@ DirectionHandler::read_str_value(const char* str,
   else {
     mValue = nullptr;
     ostringstream buf;
-    buf << value << ": Illegal value for 'direction'."
+    buf << str << ": Illegal value for 'direction'."
 	<< " 'input', 'output', 'inout' or 'internal' are expected.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
@@ -78,7 +64,7 @@ DirectionHandler::read_str_value(const char* str,
     return false;
   }
 
-  mValue = mgr().new_pin_direction(value_loc, value);
+  mValue = mgr().new_direction(value_loc, value);
 
   return true;
 }

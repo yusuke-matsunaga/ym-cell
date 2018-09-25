@@ -29,20 +29,6 @@ BoolHandler::~BoolHandler()
 {
 }
 
-// @brief ブール値の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-BoolHandler::parse_value(const AstBool*& dst)
-{
-  bool stat = parse_simple_attribute();
-  if ( stat ) {
-    dst = mValue;
-  }
-  return stat;
-}
-
 // @brief 文字列を読み込んだ時の処理
 // @param[in] str 文字列
 // @param[in] value_loc 文字列トークンの位置

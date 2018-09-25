@@ -1,0 +1,93 @@
+#ifndef INTVECTORHANDLER_H
+#define INTVECTORHANDLER_H
+
+/// @file IntVectorHandler.h
+/// @brief IntVectorHandler のヘッダファイル
+/// @author Yusuke Matsunaga (松永 裕介)
+///
+/// Copyright (C) 2018 Yusuke Matsunaga
+/// All rights reserved.
+
+#include "dotlib/Elem1Handler.h"
+
+
+BEGIN_NAMESPACE_YM_DOTLIB
+
+//////////////////////////////////////////////////////////////////////
+/// @class IntVectorHandler IntVectorHandler.h "dotlib/IntVectorHandler.h"
+/// @brief "float, float, ..." の形のヘッダ用のハンドラ
+///
+/// つまり全体は文字列だが，内容がコンマで区切られた浮動小数点数
+//////////////////////////////////////////////////////////////////////
+class IntVectorHandler :
+  public Elem1Handler
+{
+public:
+
+  /// @brief コンストラクタ
+  /// @param[in] parser パーサー
+  IntVectorHandler(DotlibParser& parser);
+
+  /// @brief デストラクタ
+  ~IntVectorHandler();
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 読み込んだ値を返す．
+  const AstIntVector*
+  value() const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // Elem1Handler の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief begin_header() 内で呼ばれる初期化関数
+  void
+  initialize() override;
+
+  /// @brief ヘッダの値を読み込む処理
+  /// @param[in] value_type 型
+  /// @param[in] value_loc トークンの位置
+  bool
+  read_header_value1(TokenType value_type,
+		     const FileRegion& value_loc) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 読み込んだ値
+  const AstIntVector* mValue;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 読み込んだ値を返す．
+inline
+const AstIntVector*
+IntVectorHandler::value() const
+{
+  return mValue;
+}
+
+END_NAMESPACE_YM_DOTLIB
+
+#endif // INTVECTORHANDLER_H

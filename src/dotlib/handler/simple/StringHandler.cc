@@ -28,20 +28,6 @@ StringHandler::~StringHandler()
 {
 }
 
-// @brief 文字列値の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-StringHandler::parse_value(const AstString*& dst)
-{
-  bool stat = parse_simple_attribute();
-  if ( stat ) {
-    dst = mValue;
-  }
-  return stat;
-}
-
 // @brief シンボルモードの値を返す．
 bool
 StringHandler::symbol_mode()

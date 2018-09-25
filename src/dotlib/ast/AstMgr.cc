@@ -64,7 +64,7 @@ AstMgr::clear()
   mPieceWiseNum = 0;
   mTechnologyNum = 0;
   mDelayModelNum = 0;
-  mCellPinDirectionNum = 0;
+  mDirectionNum = 0;
   mTimingSenseNum = 0;
   mTimingTypeNum = 0;
   mVarTypeNum = 0;
@@ -79,6 +79,7 @@ AstMgr::library_node() const
   return mLibraryNode;
 }
 
+#if 0
 // @brief AstAttr を生成する．
 AstAttr*
 AstMgr::new_attr(const FileRegion& loc,
@@ -89,6 +90,7 @@ AstMgr::new_attr(const FileRegion& loc,
   void* p = mAlloc.get_memory(sizeof(AstAttr));
   return new (p) AstAttr(loc, attr_type, value);
 }
+#endif
 
 // @brief 使用メモリ量の一覧を出力する．
 // @param[in] s 出力先のストリーム

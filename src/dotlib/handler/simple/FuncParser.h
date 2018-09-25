@@ -54,19 +54,19 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief primary を読み込む．
-  AstExpr*
+  const AstExpr*
   read_primary();
 
   /// @brief プライム付きの primary を読み込む．
-  AstExpr*
+  const AstExpr*
   read_primary2();
 
   /// @brief product を読み込む．
-  AstExpr*
+  const AstExpr*
   read_product();
 
   /// @brief expression を読み込む．
-  AstExpr*
+  const AstExpr*
   read_expr(TokenType end_marker);
 
   /// @brief トークンを読み込む．

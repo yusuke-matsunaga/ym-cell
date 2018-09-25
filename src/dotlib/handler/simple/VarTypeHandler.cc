@@ -29,20 +29,6 @@ VarTypeHandler::~VarTypeHandler()
 {
 }
 
-// @brief var_type の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-VarTypeHandler::parse_value(const AstVarType*& dst)
-{
-  bool stat = parse_simple_attribute();
-  if ( stat ) {
-    dst = mValue;
-  }
-  return stat;
-}
-
 // @brief 文字列を読み込んだ時の処理
 // @param[in] str 文字列
 // @param[in] value_loc 文字列トークンの位置
@@ -54,43 +40,43 @@ VarTypeHandler::read_str_value(const char* str,
 {
   ClibVarType value;
   if ( strcmp(str, "input_net_transition") == 0 ) {
-    value = kClibVarInputNetTransition;
+    value = ClibVarType::InputNetTransition;
   }
   else if ( strcmp(str, "total_output_net_capacitance") == 0 ) {
-    value = kClibVarTotalOutputNetCapacitance;
+    value = ClibVarType::TotalOutputNetCapacitance;
   }
   else if ( strcmp(str, "equal_or_opposite_output_net_capacitance") == 0 ) {
-    value = kClibVarEqualOrOppositeOutputNetCapacitance;
+    value = ClibVarType::EqualOrOppositeOutputNetCapacitance;
   }
   else if ( strcmp(str, "input_transition_time") == 0 ) {
-    value = kClibVarInputTransitionTime;
+    value = ClibVarType::InputTransitionTime;
   }
   else if ( strcmp(str, "output_net_length") == 0 ) {
-    value = kClibVarOutputNetLength;
+    value = ClibVarType::OutputNetLength;
   }
   else if ( strcmp(str, "output_net_wire_cap") == 0 ) {
-    value = kClibVarOutputNetWireCap;
+    value = ClibVarType::OutputNetWireCap;
   }
   else if ( strcmp(str, "output_net_pin_cap") == 0 ) {
-    value = kClibVarOutputNetPinCap;
+    value = ClibVarType::OutputNetPinCap;
   }
   else if ( strcmp(str, "related_out_total_output_net_capacitance") == 0 ) {
-    value = kClibVarRelatedOutTotalOutputNetCapacitance;
+    value = ClibVarType::RelatedOutTotalOutputNetCapacitance;
   }
   else if ( strcmp(str, "related_out_output_net_length") == 0 ) {
-    value = kClibVarRelatedOutOutputNetLength;
+    value = ClibVarType::RelatedOutOutputNetLength;
   }
   else if ( strcmp(str, "related_out_output_net_wire_cap") == 0 ) {
-    value = kClibVarRelatedOutOutputNetWireCap;
+    value = ClibVarType::RelatedOutOutputNetWireCap;
   }
   else if ( strcmp(str, "related_out_output_net_pin_cap") == 0 ) {
-    value = kClibVarRelatedOutOutputNetPinCap;
+    value = ClibVarType::RelatedOutOutputNetPinCap;
   }
   else if ( strcmp(str, "constrained_pin_transition") == 0 ) {
-    value = kClibVarConstrainedPinTransition;
+    value = ClibVarType::ConstrainedPinTransition;
   }
   else if ( strcmp(str, "related_pin_transition") == 0 ) {
-    value = kClibVarRelatedPinTransition;
+    value = ClibVarType::RelatedPinTransition;
   }
   else {
     mValue = nullptr;

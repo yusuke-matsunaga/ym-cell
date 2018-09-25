@@ -9,20 +9,22 @@
 
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstIntVector.h"
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-// @brief 整数値を表す AstNode を生成する．
+// @brief 整数値のベクタを表す AstNode を生成する．
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
 const AstIntVector*
 AstMgr::new_int_vector(const FileRegion& loc,
 		       const vector<int>& value)
 {
+  int n = value.size();
   ++ mIntVectNum;
-  mIntVectElemSize += value.size();
-  void* p = mAlloc.get_memory(sizeof(AstIntVector));
+  mIntVectElemSize += n;
+  void* p = mAlloc.get_memory(sizeof(AstIntVector) + sizeof(int*) * (n - 1));
   return new (p) AstIntVector(loc, value);
 }
 
@@ -37,8 +39,11 @@ AstMgr::new_int_vector(const FileRegion& loc,
 AstIntVector::AstIntVector(const FileRegion& loc,
 			   const vector<int>& value) :
   AstNode(loc),
-  mValue(value)
+  mNum(value.size())
 {
+  for ( auto i: Range(mNum) ) {
+    mBody[i] = value[i];
+  }
 }
 
 // @brief デストラクタ
@@ -66,8 +71,8 @@ AstIntVector::dump(ostream& s,
 		   int indent) const
 {
   const char* comma = "";
-  for ( auto val: value() ) {
-    s << comma << val;
+  for ( auto i: Range(mNum) ) {
+    s << comma << mBody[i];
     comma = ", ";
   }
 }

@@ -7,10 +7,7 @@
 /// All rights reserved.
 
 #include "dotlib/IntHandler.h"
-//#include "dotlib/DotlibParser.h"
-//#include "dotlib/TokenType.h"
-//#include "dotlib/AstMgr.h"
-//#include "ym/MsgMgr.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -29,20 +26,6 @@ IntHandler::IntHandler(DotlibParser& parser) :
 // @brief デストラクタ
 IntHandler::~IntHandler()
 {
-}
-
-// @brief int 値の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-IntHandler::parse_value(const AstInt*& dst)
-{
-  bool stat = parse_simple_attribute();
-  if ( stat ) {
-    dst = mValue;
-  }
-  return stat;
 }
 
 // @brief 値を読み込む処理

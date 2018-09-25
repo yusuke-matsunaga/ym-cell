@@ -38,9 +38,14 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 整数値を返す．
-  const vector<int>&
-  value() const;
+  /// @brief 要素数を返す．
+  int
+  size() const;
+
+  /// @brief 要素を返す．
+  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
+  int
+  value(int pos) const;
 
   /// @brief ベクタを取り出す．
   /// @param[out] vector ベクタを格納する変数
@@ -60,8 +65,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 値
-  vector<int> mValue;
+  // 要素数
+  int mNum;
+
+  // 本体の配列
+  int mBody[1];
 
 };
 
@@ -70,12 +78,23 @@ private:
 // インライン関数
 //////////////////////////////////////////////////////////////////////
 
-// @brief 整数値を返す．
+// @brief 要素数を返す．
 inline
-const vector<int>&
-AstIntVector::value() const
+int
+AstIntVector::size() const
 {
-  return mValue;
+  return mNum;
+}
+
+// @brief 要素を返す．
+// @param[in] pos 位置番号 ( 0 <= pos < size() )
+inline
+int
+AstIntVector::value(int pos) const
+{
+  ASSERT_COND( pos >= 0 && pos < size() );
+
+  return mBody[pos];
 }
 
 END_NAMESPACE_YM_DOTLIB

@@ -121,6 +121,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 // @brief ヘッダ部分 ( '(' から ')' までの部分のファイル位置を返す．)
+inline
 const FileRegion&
 HeaderHandler::header_loc() const
 {

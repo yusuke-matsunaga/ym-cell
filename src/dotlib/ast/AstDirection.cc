@@ -16,10 +16,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @param[in] loc ファイル上の位置
 // @param[in] value 値
 const AstDirection*
-AstMgr::new_pin_direction(const FileRegion& loc,
-			  ClibDirection value)
+AstMgr::new_direction(const FileRegion& loc,
+		      ClibDirection value)
 {
-  ++ mCellPinDirectionNum;
+  ++ mDirectionNum;
   void* p = mAlloc.get_memory(sizeof(AstDirection));
   return new (p) AstDirection(loc, value);
 }

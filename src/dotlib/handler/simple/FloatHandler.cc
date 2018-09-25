@@ -7,10 +7,7 @@
 /// All rights reserved.
 
 #include "dotlib/FloatHandler.h"
-//#include "dotlib/DotlibParser.h"
-//#include "dotlib/TokenType.h"
-//#include "dotlib/AstMgr.h"
-//#include "ym/MsgMgr.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -29,20 +26,6 @@ FloatHandler::FloatHandler(DotlibParser& parser) :
 // @brief デストラクタ
 FloatHandler::~FloatHandler()
 {
-}
-
-// @brief float 値の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-FloatHandler::parse_value(const AstFloat*& dst)
-{
-  bool stat = parse_simple_attribute();
-  if ( stat ) {
-    dst = mValue;
-  }
-  return stat;
 }
 
 // @brief 値を読み込む処理

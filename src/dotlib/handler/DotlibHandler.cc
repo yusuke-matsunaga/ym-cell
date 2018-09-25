@@ -155,7 +155,7 @@ DotlibHandler::new_float_vector(TokenType value_type,
   vector<double> dst_list;
   bool stat = read_float_vector(value_type, value_loc, dst_list);
   if ( stat ) {
-    return mgr().new_float_vector(value_type, value_loc, dst_list);
+    return mgr().new_float_vector(value_loc, dst_list);
   }
   else {
     return nullptr;

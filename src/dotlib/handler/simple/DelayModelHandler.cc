@@ -29,20 +29,6 @@ DelayModelHandler::~DelayModelHandler()
 {
 }
 
-// @brief 'delay_model' Simple Attribute 値の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-DelayModelHandler::parse_value(const AstDelayModel*& dst)
-{
-  bool stat = parse_simple_attribute();
-  if ( stat ) {
-    dst = mValue;
-  }
-  return stat;
-}
-
 // @brief 文字列を読み込んだ時の処理
 // @param[in] str 文字列
 // @param[in] value_loc 文字列トークンの位置
@@ -54,19 +40,19 @@ DelayModelHandler::read_str_value(const char* str,
 {
   ClibDelayModel value;
   if ( strcmp(str, "generic_cmos") == 0 ) {
-    value = kClibDelayGenericCmos;
+    value = ClibDelayModel::GenericCmos;
   }
   else if ( strcmp(str, "table_lookup") == 0 ) {
-    value = kClibDelayTableLookup;
+    value = ClibDelayModel::TableLookup;
   }
   else if ( strcmp(str, "piecewise_cmos") == 0 ) {
-    value = kClibDelayPiecewiseCmos;
+    value = ClibDelayModel::PiecewiseCmos;
   }
   else if ( strcmp(str, "cmos2") == 0 ) {
-    value = kClibDelayCmos2;
+    value = ClibDelayModel::Cmos2;
   }
   else if ( strcmp(str, "dcm") == 0 ) {
-    value = kClibDelayDcm;
+    value = ClibDelayModel::Dcm;
   }
   else {
     mValue = nullptr;

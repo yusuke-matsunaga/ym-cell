@@ -37,6 +37,8 @@ class GroupHandler :
   // パース関数の型定義
   using ParseFunc = std::function<bool(DotlibParser&, AttrType, const FileRegion&)>;
 
+  friend class DotlibParser;
+
 public:
 
   /// @brief コンストラクタ

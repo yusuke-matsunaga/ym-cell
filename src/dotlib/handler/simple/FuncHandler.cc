@@ -32,20 +32,6 @@ FuncHandler::~FuncHandler()
 {
 }
 
-// @brief function の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-FuncHandler::parse_value(const AstExpr*& dst)
-{
-  bool stat = parse_simple_attribute();
-  if ( stat ) {
-    dst = mValue;
-  }
-  return stat;
-}
-
 // @brief 値を読み込む処理
 // @param[in] value_type 型
 // @param[in] value_loc トークンの位置

@@ -19,16 +19,18 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-class EmptyHeaderHandler;
-class Float2HeaderHandler;
-class FloatVectorHeaderHandler;
-class FloatVectorListHeaderHandler;
-class IntFloatHeaderHandler;
-class Str1HeaderHandler;
-class Str2HeaderHandler;
-class Str2IntHeaderHandler;
-class Str3HeaderHandler;
-class StrListHeaderHandler;
+class EmptyHandler;
+class Float2Handler;
+class FloatStrHandler;
+class FloatVectorHandler;
+class IntFloatHandler;
+class IntVectorHandler;
+class Str1Handler;
+class Str2Handler;
+class Str2IntHandler;
+class Str3Handler;
+class StrFloatHandler;
+class StrListHandler;
 
 class LibraryHandler;
 class CellHandler;
@@ -196,13 +198,6 @@ public:
   new_int(const FileRegion& loc,
 	  int value);
 
-  /// @brief 整数値のベクタを表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
-  const AstIntVector*
-  new_int_vector(const FileRegion& loc,
-		 const vector<int>& value);
-
   /// @brief 実数値を表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
   /// @param[in] value 値
@@ -210,26 +205,12 @@ public:
   new_float(const FileRegion& loc,
 	    double value);
 
-  /// @brief 実数値のベクタを表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value_list 値のリスト
-  const AstFloatVector*
-  new_float_vector(const FileRegion& loc,
-		   const vector<double>& value_list);
-
   /// @brief 文字列シンボルを表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
   /// @param[in] value 値
   const AstString*
   new_string(const FileRegion& loc,
 	     ShString value);
-
-  /// @brief 文字列のベクタを表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
-  const AstStringVector*
-  new_string_vector(const FileRegion& loc,
-		    const vector<ShString>& value);
 
   /// @brief technology を表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
@@ -282,42 +263,51 @@ public:
   /// @brief ( float, float ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
   const AstFloat2*
-  new_float2(const Float2HeaderHandler& handler);
+  new_float2(const Float2Handler& handler);
 
   /// @brief ( float, string ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
   const AstFloatStr*
-  new_float_str(const FloatStrHeaderHandler& handler);
+  new_float_str(const FloatStrHandler& handler);
 
   /// @brief float のベクタ型の AstNode を生成する．
-  /// @param[in] handler ハンドラ
+  /// @param[in] loc ファイル上の位置
+  /// @param[in] value 値(double のベクタ)
   const AstFloatVector*
-  new_float_vector(const FloatVectorHeaderHandler& handler);
-
-  /// @brief float のベクタ型の AstNode を生成する．
-  /// @param[in] handler ハンドラ
-  const AstFloatVector*
-  new_float_vector(const FloatVectorListHeaderHandler& handler);
+  new_float_vector(const FileRegion& loc,
+		   const vector<double>& value);
 
   /// @brief ( integer, float ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
   const AstIntFloat*
-  new_int_float(const IntFloatHeaderHandler& handler);
+  new_int_float(const IntFloatHandler& handler);
+
+  /// @brief 整数値のベクタを表す AstNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  /// @param[in] value_list 値のリスト
+  const AstIntVector*
+  new_int_vector(const FileRegion& loc,
+		 const vector<int>& value_list);
 
   /// @brief ( string, float ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
   const AstStrFloat*
-  new_str_float(const StrFloatHeaderHandler& handler);
+  new_str_float(const StrFloatHandler& handler);
+
+  /// @brief ( string, string, ... ) 型の AstNode を生成する．
+  /// @param[in] handler ハンドラ
+  const AstStrList*
+  new_str_list(const StrListHandler& handler);
 
   /// @brief ( string, string ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
   const AstStr2*
-  new_str2(const Str2HeaderHandler& handler);
+  new_str2(const Str2Handler& handler);
 
   /// @brief ( string, string, string ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
   const AstStr3*
-  new_str3(const Str3HeaderHandler& handler);
+  new_str3(const Str3Handler& handler);
 
 
 public:
@@ -329,21 +319,21 @@ public:
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstLibrary*
-  new_library(const Str1HeaderHandler& header,
+  new_library(const Str1Handler& header,
 	      const LibraryHandler& group);
 
   /// @brief セルを表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstCell*
-  new_cell(const Str1HeaderHandler& header,
+  new_cell(const Str1Handler& header,
 	   const CellHandler& group);
 
   /// @brief ピンを表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstPin*
-  new_pin(const StrListHeaderHandler& header,
+  new_pin(const StrListHandler& header,
 	  const PinHandler& group);
 
   /// @brief cell_degradation を表す AstNode を生成する．
@@ -364,70 +354,70 @@ public:
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstFF*
-  new_ff(const Str2HeaderHandler& header,
+  new_ff(const Str2Handler& header,
 	 const FFHandler& group);
 
   /// @brief ff_bank を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstFFBank*
-  new_ff_bank(const Str2IntHeaderHandler& header,
+  new_ff_bank(const Str2IntHandler& header,
 	      const FFHandler& group);
 
   /// @brief latch を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstLatch*
-  new_latch(const Str2HeaderHandler& header,
+  new_latch(const Str2Handler& header,
 	    const LatchHandler& group);
 
   /// @brief latch_bank を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstLatchBank*
-  new_latch_bank(const Str2IntHeaderHandler& header,
+  new_latch_bank(const Str2IntHandler& header,
 		 const LatchHandler& group);
 
   /// @brief lut template を表す AstNode を生成する．
   /// @param[in] header ヘッダのハンドラ
   /// @param[in] group グループ本体のハンドラ
   const AstTemplate*
-  new_template(const Str1HeaderHandler& header,
+  new_template(const Str1Handler& header,
 	       const TemplateHandler& group);
 
   /// @brief lut を表す AstNode を生成する．
   /// @param[in] header ヘッダのハンドラ
   /// @param[in] group グループ本体のハンドラ
   const AstLut*
-  new_lut(const Str1HeaderHandler& header,
+  new_lut(const Str1Handler& header,
 	  const TableHandler& group);
 
   /// @brief input voltage を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstInputVoltage*
-  new_input_voltage(const HeaderHandler& header,
+  new_input_voltage(const Str1Handler& header,
 		    const InputVoltageHandler& group);
 
   /// @brief output voltage を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstOutputVoltage*
-  new_output_voltage(const HeaderHandler& header,
+  new_output_voltage(const Str1Handler& header,
 		     const OutputVoltageHandler& group);
 
   /// @brief domain を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstDomain*
-  new_domain(const Str1HeaderHandler& header,
+  new_domain(const Str1Handler& header,
 	     const DomainHandler& group);
 
   /// @brief timing を表す AstNode を生成する．
   /// @param[in] header ヘッダのハンドラ
   /// @param[in] group グループ本体のハンドラ
   const AstTiming*
-  new_timing(const StrListHeaderHandler& header,
+  new_timing(const StrListHandler& header,
 	     const TimingHandler& group);
 
   /// @brief 使用メモリ量の一覧を出力する．
@@ -448,21 +438,29 @@ private:
   AstLibrary* mLibraryNode;
 
   // 個々の要素の使用数
-  int mIntNum;
-  int mIntVectNum;
-  int mIntVectElemSize;
+  int mBoolNum;
+  int mBoolExprNum;
+  int mDelayModelNum;
+  int mDirectionNum;
   int mFloatNum;
+  int mFloat2Num;
+  int mFloatExprNum;
+  int mFloatStrNum;
   int mFloatVectNum;
   int mFloatVectElemSize;
+  int mIntNum;
+  int mIntFloatNum;
+  int mIntVectNum;
+  int mIntVectElemSize;
   int mStrNum;
+  int mStr2Num;
+  int mStr3Num;
+  int mStrFloatNum;
   int mStrVectNum;
   int mStrVectElemSize;
-  int mBoolNum;
   int mOprNum;
   int mNotNum;
-  int mBoolExprNum;
   int mDomainNum;
-  int mFloatExprNum;
   int mSymbolExprNum;
   int mStrExprNum;
   int mListNum;
@@ -473,8 +471,6 @@ private:
   int mOutputVolNum;
   int mPieceWiseNum;
   int mTechnologyNum;
-  int mDelayModelNum;
-  int mCellPinDirectionNum;
   int mTimingSenseNum;
   int mTimingTypeNum;
   int mVarTypeNum;

@@ -25,9 +25,8 @@ class AstStr2 :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] val1, val2 値
-  AstStr2(const AstString* val1,
-	  const AstString* val2);
+  /// @param[in] handler ハンドラ
+  AstStr2(const Str2Handler& handler);
 
   /// @brief デストラクタ
   ~AstStr2();
@@ -40,11 +39,11 @@ public:
 
   /// @brief 値1を得る．
   const AstString*
-  val1() const;
+  value1() const;
 
   /// @brief 値2を得る．
   const AstString*
-  val2() const;
+  value2() const;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -80,7 +79,7 @@ private:
 // @brief 値1を得る．
 inline
 const AstString*
-AstStr2::val1() const
+AstStr2::value1() const
 {
   return mVal1;
 }
@@ -88,7 +87,7 @@ AstStr2::val1() const
 // @brief 値2を得る．
 inline
 const AstString*
-AstStr2::val2() const
+AstStr2::value2() const
 {
   return mVal2;
 }

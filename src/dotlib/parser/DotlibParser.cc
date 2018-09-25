@@ -16,61 +16,62 @@
 #include "dotlib/StringHandler.h"
 #include "dotlib/DelayModelHandler.h"
 #include "dotlib/DirectionHandler.h"
-#include "dotlib/TechnologyHandler.h"
 #include "dotlib/TimingSenseHandler.h"
 #include "dotlib/TimingTypeHandler.h"
 #include "dotlib/VarTypeHandler.h"
 #include "dotlib/FuncHandler.h"
 
-#include "dotlib/Float2HeaderHandler.h"
-#include "dotlib/FloatStrHeaderHandler.h"
-#include "dotlib/FloatVectorHeaderHandler.h"
-#include "dotlib/FloatVectorListHeaderHandler.h"
-#include "dotlib/IntFloatHeaderHandler.h"
-#include "dotlib/IntVectorHeaderHandler.h"
-#include "dotlib/Str1HeaderHandler.h"
-#include "dotlib/Str2HeaderHandler.h"
-#include "dotlib/Str2IntHeaderHandler.h"
-#include "dotlib/StrListHeaderHandler.h"
+#include "dotlib/Float2Handler.h"
+#include "dotlib/FloatStrHandler.h"
+#include "dotlib/FloatVectorHandler.h"
+#include "dotlib/FloatVectorListHandler.h"
+#include "dotlib/IntFloatHandler.h"
+#include "dotlib/IntVectorHandler.h"
+#include "dotlib/Str1Handler.h"
+#include "dotlib/Str2Handler.h"
+#include "dotlib/Str2IntHandler.h"
+#include "dotlib/Str3Handler.h"
+#include "dotlib/StrFloatHandler.h"
+#include "dotlib/StrListHandler.h"
 
 #include "dotlib/GroupHandler.h"
-#include "dotlib/CellHandler.h"
-#include "dotlib/DomainHandler.h"
-#include "dotlib/InputVoltageHandler.h"
-#include "dotlib/LibraryHandler.h"
-#include "dotlib/OutputVoltageHandler.h"
-#include "dotlib/PinHandler.h"
-#include "dotlib/TableHandler.h"
-#include "dotlib/TemplateHandler.h"
-#include "dotlib/TimingHandler.h"
+//#include "dotlib/CellHandler.h"
+//#include "dotlib/DomainHandler.h"
+//#include "dotlib/InputVoltageHandler.h"
+//#include "dotlib/LibraryHandler.h"
+//#include "dotlib/OutputVoltageHandler.h"
+//#include "dotlib/PinHandler.h"
+//#include "dotlib/TableHandler.h"
+//#include "dotlib/TemplateHandler.h"
+//#include "dotlib/TimingHandler.h"
 
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstBool.h"
-#include "dotlib/AstCell.h"
+//#include "dotlib/AstCell.h"
 #include "dotlib/AstDelayModel.h"
 #include "dotlib/AstDirection.h"
-#include "dotlib/AstDomain.h"
+//#include "dotlib/AstDomain.h"
 #include "dotlib/AstExpr.h"
 #include "dotlib/AstFloat.h"
 #include "dotlib/AstFloat2.h"
 #include "dotlib/AstFloatStr.h"
 #include "dotlib/AstFloatVector.h"
-#include "dotlib/AstInputVoltage.h"
+//#include "dotlib/AstInputVoltage.h"
 #include "dotlib/AstInt.h"
 #include "dotlib/AstIntFloat.h"
 #include "dotlib/AstIntVector.h"
-#include "dotlib/AstLibrary.h"
-#include "dotlib/AstLut.h"
-#include "dotlib/AstPin.h"
-#include "dotlib/AstOutputVoltage.h"
+//#include "dotlib/AstLibrary.h"
+//#include "dotlib/AstLut.h"
+//#include "dotlib/AstPin.h"
+//#include "dotlib/AstOutputVoltage.h"
 #include "dotlib/AstStr2.h"
 #include "dotlib/AstStr3.h"
 #include "dotlib/AstStrFloat.h"
 #include "dotlib/AstString.h"
 #include "dotlib/AstStrList.h"
 #include "dotlib/AstTechnology.h"
-#include "dotlib/AstTemplate.h"
-#include "dotlib/AstTiming.h"
+//#include "dotlib/AstTemplate.h"
+//#include "dotlib/AstTiming.h"
 #include "dotlib/AstTimingSense.h"
 #include "dotlib/AstTimingType.h"
 #include "dotlib/AstVarType.h"
@@ -175,7 +176,11 @@ DotlibParser::parse_bool(const AstBool*& dst,
   }
   else {
     BoolHandler handler(*this);
-    return handler.parse_value(dst);
+    bool stat = parse_simple_attribute(handler);
+    if ( stat ) {
+      dst = handler.value();
+    }
+    return stat;
   }
 }
 
@@ -199,7 +204,11 @@ DotlibParser::parse_int(const AstInt*& dst,
   }
   else {
     IntHandler handler(*this);
-    return handler.parse_value(dst);
+    bool stat = parse_simple_attribute(handler);
+    if ( stat ) {
+      dst = handler.value();
+    }
+    return stat;
   }
 }
 
@@ -223,7 +232,11 @@ DotlibParser::parse_float(const AstFloat*& dst,
   }
   else {
     FloatHandler handler(*this);
-    return handler.parse_value(dst);
+    bool stat = parse_simple_attribute(handler);
+    if ( stat ) {
+      dst = handler.value();
+    }
+    return stat;
   }
 }
 
@@ -247,7 +260,11 @@ DotlibParser::parse_string(const AstString*& dst,
   }
   else {
     StringHandler handler(*this);
-    return handler.parse_value(dst);
+    bool stat = parse_simple_attribute(handler);
+    if ( stat ) {
+      dst = handler.value();
+    }
+    return stat;
   }
 }
 
@@ -271,7 +288,11 @@ DotlibParser::parse_delay_model(const AstDelayModel*& dst,
   }
   else {
     DelayModelHandler handler(*this);
-    return handler.parse_value(dst);
+    bool stat = parse_simple_attribute(handler);
+    if ( stat ) {
+      dst = handler.value();
+    }
+    return stat;
   }
 }
 
@@ -284,7 +305,7 @@ DotlibParser::parse_delay_model(const AstDelayModel*& dst,
 //
 // すでに設定済みの属性に重複して設定しようとするとエラーになる．
 bool
-DotlibParser::parse_direction(const AstPinDirection*& dst,
+DotlibParser::parse_direction(const AstDirection*& dst,
 			      AttrType attr_type,
 			      const FileRegion& attr_loc)
 {
@@ -294,8 +315,12 @@ DotlibParser::parse_direction(const AstPinDirection*& dst,
     return false;
   }
   else {
-    PinDirectionHandler handler(*this);
-    return handler.parse_value(dst);
+    DirectionHandler handler(*this);
+    bool stat = parse_simple_attribute(handler);
+    if ( stat ) {
+      dst = handler.value();
+    }
+    return stat;
   }
 }
 
@@ -319,7 +344,11 @@ DotlibParser::parse_timing_sense(const AstTimingSense*& dst,
   }
   else {
     TimingSenseHandler handler(*this);
-    return handler.parse_value(dst);
+    bool stat = parse_simple_attribute(handler);
+    if ( stat ) {
+      dst = handler.value();
+    }
+    return stat;
   }
 }
 
@@ -343,7 +372,11 @@ DotlibParser::parse_timing_type(const AstTimingType*& dst,
   }
   else {
     TimingTypeHandler handler(*this);
-    return handler.parse_value(dst);
+    bool stat = parse_simple_attribute(handler);
+    if ( stat ) {
+      dst = handler.value();
+    }
+    return stat;
   }
 }
 
@@ -367,7 +400,11 @@ DotlibParser::parse_vartype(const AstVarType*& dst,
   }
   else {
     VarTypeHandler handler(*this);
-    return handler.parse_value(dst);
+    bool stat = parse_simple_attribute(handler);
+    if ( stat ) {
+      dst = handler.value();
+    }
+    return stat;
   }
 }
 
@@ -427,7 +464,11 @@ DotlibParser::parse_function(const AstExpr*& dst,
   }
   else {
     FuncHandler handler(*this);
-    return handler.parse_value(dst);
+    bool stat = parse_simple_attribute(handler);
+    if ( stat ) {
+      dst = handler.value();
+    }
+    return stat;
   }
 }
 
@@ -450,10 +491,10 @@ DotlibParser::parse_coefs(const AstFloatVector*& dst,
     return false;
   }
   else {
-    FloatVectorHeaderHandler handler(*this);
+    FloatVectorHandler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
-      dst = mgr().new_float_vector(handler);
+      dst = mgr().new_float_vector(handler.header_loc(), handler.value_list());
     }
     return stat;
   }
@@ -478,7 +519,7 @@ DotlibParser::parse_default_part(const AstStr2*& dst,
     return false;
   }
   else {
-    Str2HeaderHandler handler(*this);
+    Str2Handler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
       dst = mgr().new_str2(handler);
@@ -498,7 +539,7 @@ DotlibParser::parse_define(vector<const AstStr3*>& dst_list,
 			   AttrType attr_type,
 			   const FileRegion& attr_loc)
 {
-  Str3HeaderHandler handler(*this);
+  Str3Handler handler(*this);
   bool stat = parse_complex_attribute(handler);
   if ( stat ) {
     dst_list.push_back(mgr().new_str3(handler));
@@ -517,7 +558,7 @@ DotlibParser::parse_define_cell_area(vector<const AstStr2*>& dst_list,
 				     AttrType attr_type,
 				     const FileRegion& attr_loc)
 {
-  Str2HeaderHandler handler(*this);
+  Str2Handler handler(*this);
   bool stat = parse_complex_attribute(handler);
   if ( stat ) {
     dst_list.push_back(mgr().new_str2(handler));
@@ -536,7 +577,7 @@ DotlibParser::parse_define_group(vector<const AstStr2*>& dst_list,
 				 AttrType attr_type,
 				 const FileRegion& attr_loc)
 {
-  Str2HeaderHandler handler(*this);
+  Str2Handler handler(*this);
   bool stat = parse_complex_attribute(handler);
   if ( stat ) {
     dst_list.push_back(mgr().new_str2(handler));
@@ -563,10 +604,10 @@ DotlibParser::parse_index(const AstFloatVector*& dst,
     return false;
   }
   else {
-    FloatVectorHeaderHandler handler(*this);
+    FloatVectorHandler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
-      dst = mgr().new_float_vector(handler);
+      dst = mgr().new_float_vector(handler.header_loc(), handler.value_list());
     }
     return stat;
   }
@@ -591,10 +632,10 @@ DotlibParser::parse_library_features(const AstString*& dst,
     return false;
   }
   else {
-    Str1HeaderHandler handler(*this);
+    Str1Handler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
-      dst = mgr().new_string(handler.val1());
+      dst = handler.value();
     }
     return stat;
   }
@@ -619,10 +660,10 @@ DotlibParser::parse_orders(const AstIntVector*& dst,
     return false;
   }
   else {
-    IntVectorHeaderHandler handler(*this);
+    IntVectorHandler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
-      dst = mgr().new_int_vector(handler);
+      dst = handler.value();
     }
     return stat;
   }
@@ -647,10 +688,10 @@ DotlibParser::parse_piece_define(const AstFloatVector*& dst,
     return false;
   }
   else {
-    FloatVectorHeaderHandler handler(*this);
+    FloatVectorHandler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
-      dst = mgr().new_float_vector(handler);
+      dst = mgr().new_float_vector(handler.header_loc(), handler.value_list());
     }
     return stat;
   }
@@ -669,7 +710,7 @@ DotlibParser::parse_piecewise(vector<const AstIntFloat*>& dst_list,
 			      AttrType attr_type,
 			      const FileRegion& attr_loc)
 {
-  IntFloatHeaderHandler handler(*this);
+  IntFloatHandler handler(*this);
   bool stat = parse_complex_attribute(handler);
   if ( stat ) {
     dst_list.push_back(mgr().new_int_float(handler));
@@ -686,7 +727,7 @@ DotlibParser::parse_piecewise(vector<const AstIntFloat*>& dst_list,
 //
 // すでに設定済みの属性に重複して設定しようとするとエラーになる．
 bool
-DotlibParser::parse_routing_layers(const AstStringVector*& dst,
+DotlibParser::parse_routing_layers(const AstStrList*& dst,
 				   AttrType attr_type,
 				   const FileRegion& attr_loc)
 {
@@ -696,10 +737,10 @@ DotlibParser::parse_routing_layers(const AstStringVector*& dst,
     return false;
   }
   else {
-    StrListHeaderHandler handler(*this);
+    StrListHandler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
-      dst = mgr().new_string_vector(handler);
+      dst = mgr().new_str_list(handler);
     }
     return stat;
   }
@@ -724,11 +765,29 @@ DotlibParser::parse_technology(const AstTechnology*& dst,
     return false;
   }
   else {
-    Str1HeaderHandler handler(*this);
+    Str1Handler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
-      // handler.val1() から dst に値を設定する．
-      if ( handler
+      // handler.value() から dst に値を設定する．
+      ShString str = handler.value()->value();
+      ClibTechnology tech = ClibTechnology::cmos;
+      if ( strcmp(str, "cmos") == 0 ) {
+	tech = ClibTechnology::cmos;
+      }
+      else if ( strcmp(str, "fpga") == 0 ) {
+	tech = ClibTechnology::fpga;
+      }
+      else {
+	ostringstream buf;
+	buf << "Syntax error. Unexpected value: " << str << ".";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			attr_loc,
+			MsgType::Error,
+			"DOTLIB_PARSER",
+			buf.str());
+	return false;
+      }
+      dst = mgr().new_technology(handler.header_loc(), tech);
     }
     return stat;
   }
@@ -753,7 +812,7 @@ DotlibParser::parse_unit(const AstFloatStr*& dst,
     return false;
   }
   else {
-    FloatStrHeaderHandler handler(*this);
+    FloatStrHandler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
       dst = mgr().new_float_str(handler);
@@ -781,10 +840,10 @@ DotlibParser::parse_values(const AstFloatVector*& dst,
     return false;
   }
   else {
-    FloatVectorListHeaderHandler handler(*this);
+    FloatVectorListHandler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
-      dst = mgr().new_float_vector(handler);
+      dst = mgr().new_float_vector(handler.header_loc(), handler.value_list());
     }
     return stat;
   }
@@ -809,7 +868,7 @@ DotlibParser::parse_variable_range(const AstFloat2*& dst,
     return false;
   }
   else {
-    Float2HeaderHandler handler(*this);
+    Float2Handler handler(*this);
     bool stat = parse_complex_attribute(handler);
     if ( stat ) {
       dst = mgr().new_float2(handler);
@@ -831,7 +890,7 @@ DotlibParser::parse_voltage_map(vector<const AstStrFloat*>& dst_list,
 				AttrType attr_type,
 				const FileRegion& attr_loc)
 {
-  StrFloatHeaderHandler handler(*this);
+  StrFloatHandler handler(*this);
   bool stat = parse_complex_attribute(handler);
   if ( stat ) {
     dst_list.push_back(mgr().new_str_float(handler));
@@ -839,6 +898,7 @@ DotlibParser::parse_voltage_map(vector<const AstStrFloat*>& dst_list,
   return stat;
 }
 
+#if 0
 // @brief 'cell' Group Statement のパースを行う．
 // @param[in] dst 結果を格納する変数
 // @param[in] attr_type 属性の型
@@ -852,7 +912,7 @@ DotlibParser::parse_cell(vector<const AstCell*>& dst_list,
 			 AttrType attr_type,
 			 const FileRegion& attr_loc)
 {
-  Str1HeaderHandler header_handler(*this);
+  Str1Handler header_handler(*this);
   static CellHandler group_handler(*this);
   bool stat = parse_group_statement(header_handler, group_handler);
   if ( stat ) {
@@ -881,7 +941,7 @@ DotlibParser::parse_domain(const AstDomain*& dst,
     return false;
   }
   else {
-    Str1HeaderHandler header_handler(*this);
+    Str1Handler header_handler(*this);
     static DomainHandler group_handler(*this);
     bool stat = parse_group_statement(header_handler, group_handler);
     if ( stat ) {
@@ -910,7 +970,7 @@ DotlibParser::parse_ff(const AstFF* dst,
     return false;
   }
   else {
-    Str2HeaderHandler header_handler(*this);
+    Str2Handler header_handler(*this);
     static FFHandler group_handler(*this);
     bool stat = parse_group_statement(header_handler, group_handler);
     if ( stat ) {
@@ -939,7 +999,7 @@ DotlibParser::parse_ff_bank(const AstFFBank* dst,
     return false;
   }
   else {
-    Str2IntHeaderHandler header_handler(*this);
+    Str2IntHandler header_handler(*this);
     static FFHandler group_handler(*this);
     bool stat = parse_group_statement(header_handler, group_handler);
     if ( stat ) {
@@ -992,7 +1052,7 @@ DotlibParser::parse_latch(const AstLatch* dst,
     return false;
   }
   else {
-    Str2HeaderHandler header_handler(*this);
+    Str2Handler header_handler(*this);
     static LatchHandler group_handler(*this);
     bool stat = parse_group_statement(header_handler, group_handler);
     if ( stat ) {
@@ -1021,7 +1081,7 @@ DotlibParser::parse_latch_bank(const AstLatchBank* dst,
     return false;
   }
   else {
-    Str2IntHeaderHandler header_handler(*this);
+    Str2IntHandler header_handler(*this);
     static LatchHandler group_handler(*this);
     bool stat = parse_group_statement(header_handler, group_handler);
     if ( stat ) {
@@ -1050,7 +1110,7 @@ DotlibParser::parse_library(const AstLibrary*& dst,
     return false;
   }
   else {
-    Str1HeaderHandler header_handler(*this);
+    Str1Handler header_handler(*this);
     static LibraryHandler group_handler(*this);
     bool stat = parse_group_statement(header_handler, group_handler);
     if ( stat ) {
@@ -1097,7 +1157,7 @@ DotlibParser::parse_pin(vector<const AstPin*>& dst_list,
 			AttrType attr_type,
 			const FileRegion& attr_loc)
 {
-  StrListHeaderHandler header_handler(*this);
+  StrListHandler header_handler(*this);
   static PinHandler group_handler(*this);
   bool stat = parse_group_statement(header_handler, group_handler);
   if ( stat ) {
@@ -1126,7 +1186,7 @@ DotlibParser::parse_table(const AstLut*& dst,
     return false;
   }
   else {
-    Str1HeaderHandler header_handler(*this);
+    Str1Handler header_handler(*this);
     static TableHandler group_handler(*this);nnnnn
     bool stat = parse_group_statement(header_handler, group_handler);
     if ( stat ) {
@@ -1149,7 +1209,7 @@ DotlibParser::parse_template(vector<const AstTemplate*>& dst_list,
 			     AttrType attr_type,
 			     const FileRegion& attr_loc)
 {
-  Str1HeaderHandler header_handler(*this);
+  Str1Handler header_handler(*this);
   static TemplateHandler handler(*this);
   bool stat = parse_group_statement(header_handler, group_handler);
   if ( stat ) {
@@ -1172,7 +1232,7 @@ DotlibParser::parse_timing(vector<const AstTiming*>& dst_list,
 			   AttrType attr_type,
 			   const FileRegion& attr_loc)
 {
-  StrListHeaderHandler header_handler(*this);
+  StrListHandler header_handler(*this);
   static TimingHandler group_handler(*this);
   bool stat = parse_group_statement(header_handler, group_handler);
   if ( stat ) {
@@ -1181,6 +1241,7 @@ DotlibParser::parse_timing(vector<const AstTiming*>& dst_list,
   }
   return stat;
 }
+#endif
 
 // @brief Simple Attribute を読み込む．
 // @param[in] handler ハンドラ
@@ -1251,8 +1312,8 @@ DotlibParser::parse_group_statement(HeaderHandler& header_handler,
     }
     if ( type == TokenType::RCB ) {
       // グループ本体の終わり．
-      FileRegion last_loc = loc;
-      if ( !group_handler.end_group(FileRegion(first_loc, last_loc)) ) {
+      group_handler.mGroupLoc = FileRegion(first_loc, loc);
+      if ( !group_handler.end_group() ) {
 	return false;
       }
 
@@ -1437,7 +1498,7 @@ DotlibParser::debug()
 }
 
 // @brief primary を読み込む．
-AstExpr*
+const AstExpr*
 DotlibParser::read_primary()
 {
   FileRegion loc;
@@ -1480,10 +1541,10 @@ DotlibParser::read_primary()
 }
 
 // @brief prudct を読み込む．
-AstExpr*
+const AstExpr*
 DotlibParser::read_product()
 {
-  AstExpr* opr1 = read_primary();
+  const AstExpr* opr1 = read_primary();
   if ( opr1 == nullptr ) {
     return nullptr;
   }
@@ -1492,7 +1553,7 @@ DotlibParser::read_product()
     FileRegion loc;
     TokenType type = read_token(loc);
     if ( type == TokenType::MULT || type == TokenType::DIV ) {
-      AstExpr* opr2 = read_primary();
+      const AstExpr* opr2 = read_primary();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
@@ -1513,13 +1574,13 @@ DotlibParser::read_product()
 }
 
 // @brief expression を読み込む．
-AstExpr*
+const AstExpr*
 DotlibParser::read_expr(TokenType end_marker)
 {
   // ここだけ mUngetType, mUngetLoc を考慮する必要があるので
   // じかに read_token() を呼んではいけない．
 
-  AstExpr* opr1 = read_product();
+  const AstExpr* opr1 = read_product();
   if ( opr1 == nullptr ) {
     return nullptr;
   }
@@ -1530,7 +1591,7 @@ DotlibParser::read_expr(TokenType end_marker)
       return opr1;
     }
     if ( type == TokenType::PLUS || type == TokenType::MINUS ) {
-      AstExpr* opr2 = read_product();
+      const AstExpr* opr2 = read_product();
       if ( opr2 == nullptr ) {
 	return nullptr;
       }
