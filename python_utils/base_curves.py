@@ -18,7 +18,7 @@ class BaseCurvesClassDef(Str1GroupClassDef) :
         self.group_class = 'BaseCurvesHandler'
         self.attr_list = [
             # ( 属性名, 属性の型, メンバ変数名 ) のリスト
-            ( 'base_curve_type', 'str1header', 'mBaseCurveType', True, False ),
-            ( 'curve_x', 'float_vector', 'mCurveX', True, False ),
-            ( 'curve_y', 'int_float_vector', 'mCurveY', True, False ),
+            ( 'base_curve_type', 'base_curve_type', 'mBaseCurveType', True, False ),
+            ( 'curve_x', 'curve_x', 'mCurveX', True, False ),
+            ( 'curve_y', 'curve_y', 'mCurveY', True, False ),
             ]

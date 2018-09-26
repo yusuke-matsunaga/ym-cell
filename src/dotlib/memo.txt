@@ -557,6 +557,11 @@ v				liberty 文法覚書
     domain ( name ) { ... }
   }
 
+  * mapping ( value_(enum), power_rail_name_(id) )
+    value_(enum) は voltage と voltage1 のみ，
+    power_rail_name は power_rail の名前
+    mapping は 2つ以上は定義できない (voltage と voltage1 の2つ)
+
   * noise immunity template の場合，variables で使える値は
     input_noise_width
     total_output_net_capacitance

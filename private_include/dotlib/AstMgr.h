@@ -24,8 +24,11 @@ class FloatFloatHandler;
 class FloatStrHandler;
 class FloatVectorHandler;
 class IntFloatHandler;
+class IntFloatVectorHandler;
 class IntVectorHandler;
 class StrHandler;
+class StrFloatHandler;
+class StrIntHandler;
 class StrStrHandler;
 class StrStrIntHandler;
 class StrStrStrHandler;
@@ -289,10 +292,20 @@ public:
   const AstIntFloat*
   new_int_float(const IntFloatHandler& handler);
 
+  /// @brief ( integer, float_vector ) 型の AstNode を生成する．
+  /// @param[in] handler ハンドラ
+  const AstIntFloatVector*
+  new_int_float_vector(const IntFloatVectorHandler& handler);
+
   /// @brief ( string, float ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
   const AstStrFloat*
   new_str_float(const StrFloatHandler& handler);
+
+  /// @brief ( string, int ) 型の AstNode を生成する．
+  /// @param[in] handler ハンドラ
+  const AstStrInt*
+  new_str_int(const StrIntHandler& handler);
 
   /// @brief ( string, string, ... ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
@@ -450,12 +463,14 @@ private:
   int mFloatVectElemSize;
   int mIntNum;
   int mIntFloatNum;
+  int mIntFloatVectorNum;
   int mIntVectNum;
   int mIntVectElemSize;
   int mStrNum;
   int mStr2Num;
   int mStr3Num;
   int mStrFloatNum;
+  int mStrIntNum;
   int mStrVectNum;
   int mStrVectElemSize;
   int mOprNum;

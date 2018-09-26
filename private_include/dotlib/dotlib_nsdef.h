@@ -33,12 +33,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // クラス名の前方宣言
 class DotlibParser;
 class DotlibHandler;
-class SimpleHandler;
 class HeaderHandler;
 class GroupHandler;
 
 class AstMgr;
-//class AstAttr;
 class AstBaseCurves;
 class AstBool;
 class AstBus;
@@ -67,6 +65,7 @@ class AstGeneratedClock;
 class AstInputVoltage;
 class AstInt;
 class AstIntFloat;
+class AstIntFloatVector;
 class AstIntVector;
 class AstIntrinsicParasitic;
 class AstLatch;
@@ -91,6 +90,7 @@ class AstStateTable;
 class AstStr2;
 class AstStr3;
 class AstStrFloat;
+class AstStrInt;
 class AstString;
 class AstStrList;
 class AstTechnology;

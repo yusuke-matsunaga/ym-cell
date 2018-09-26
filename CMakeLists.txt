@@ -106,6 +106,7 @@ set (dotlib_SOURCES
   src/dotlib/handler/header/IntFloatVectorHandler.cc
   src/dotlib/handler/header/IntVectorHandler.cc
   src/dotlib/handler/header/StrHandler.cc
+  src/dotlib/handler/header/StrIntHandler.cc
   src/dotlib/handler/header/StrStrHandler.cc
   src/dotlib/handler/header/StrStrIntHandler.cc
   src/dotlib/handler/header/StrStrStrHandler.cc
@@ -127,54 +128,54 @@ set (dotlib_SOURCES
   #src/dotlib/handler/group/PinHandler.cc
   #src/dotlib/handler/group/TableHandler.cc
   #src/dotlib/handler/group/TemplateHandler.cc
-
   #src/dotlib/handler/group/FFHandler.cc
   #src/dotlib/handler/group/LatchHandler.cc
-
-  # Str2IntGroupHandler
   #src/dotlib/handler/group/FFBankHandler.cc
   #src/dotlib/handler/group/LatchBankHandler.cc
 
   #src/dotlib/handler/DefineHandler.cc
 
   src/dotlib/ast/AstBool.cc
-  #src/dotlib/ast/AstCell.cc
-  #src/dotlib/ast/AstCellDegradation.cc
   src/dotlib/ast/AstCPType.cc
   src/dotlib/ast/AstDelayModel.cc
   src/dotlib/ast/AstDirection.cc
-  #src/dotlib/ast/AstDomain.cc
   src/dotlib/ast/AstExpr.cc
-  #src/dotlib/ast/AstFF.cc
-  #src/dotlib/ast/AstFFBank.cc
   src/dotlib/ast/AstFloat.cc
   src/dotlib/ast/AstFloat2.cc
   src/dotlib/ast/AstFloatStr.cc
   src/dotlib/ast/AstFloatVector.cc
-  #src/dotlib/ast/AstInputVoltage.cc
   src/dotlib/ast/AstInt.cc
   src/dotlib/ast/AstIntFloat.cc
+  src/dotlib/ast/AstIntFloatVector.cc
   src/dotlib/ast/AstIntVector.cc
-  #src/dotlib/ast/AstLatch.cc
-  #src/dotlib/ast/AstLatchBank.cc
-  #src/dotlib/ast/AstLibrary.cc
-  #src/dotlib/ast/AstLut.cc
   src/dotlib/ast/AstMgr.cc
   src/dotlib/ast/AstNode.cc
-  #src/dotlib/ast/AstOutputVoltage.cc
-  #src/dotlib/ast/AstPin.cc
-  #src/dotlib/ast/AstStateTable.cc
   src/dotlib/ast/AstStr2.cc
   src/dotlib/ast/AstStr3.cc
   src/dotlib/ast/AstStrFloat.cc
+  src/dotlib/ast/AstStrInt.cc
   src/dotlib/ast/AstString.cc
   src/dotlib/ast/AstStrList.cc
-  #src/dotlib/ast/AstTemplate.cc
-  #src/dotlib/ast/AstTiming.cc
   src/dotlib/ast/AstTimingSense.cc
   src/dotlib/ast/AstTimingType.cc
   src/dotlib/ast/AstTechnology.cc
   src/dotlib/ast/AstVarType.cc
+
+  #src/dotlib/ast/AstCell.cc
+  #src/dotlib/ast/AstCellDegradation.cc
+  #src/dotlib/ast/AstDomain.cc
+  #src/dotlib/ast/AstFF.cc
+  #src/dotlib/ast/AstFFBank.cc
+  #src/dotlib/ast/AstInputVoltage.cc
+  #src/dotlib/ast/AstLatch.cc
+  #src/dotlib/ast/AstLatchBank.cc
+  #src/dotlib/ast/AstLibrary.cc
+  #src/dotlib/ast/AstLut.cc
+  #src/dotlib/ast/AstOutputVoltage.cc
+  #src/dotlib/ast/AstPin.cc
+  #src/dotlib/ast/AstStateTable.cc
+  #src/dotlib/ast/AstTemplate.cc
+  #src/dotlib/ast/AstTiming.cc
   )
 
 
