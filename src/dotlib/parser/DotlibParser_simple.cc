@@ -12,6 +12,7 @@
 #include "dotlib/AstBool.h"
 #include "dotlib/AstDelayModel.h"
 #include "dotlib/AstDirection.h"
+#include "dotlib/AstExpr.h"
 #include "dotlib/AstFloat.h"
 #include "dotlib/AstFloatVector.h"
 #include "dotlib/AstInt.h"
@@ -21,8 +22,11 @@
 #include "dotlib/AstTimingSense.h"
 #include "dotlib/AstTimingType.h"
 #include "dotlib/AstVarType.h"
+#include "dotlib/TokenType.h"
 
 #include "ym/MsgMgr.h"
+
+#include "FuncParser.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -259,6 +263,38 @@ DotlibParser::parse_direction(const AstDirection*& dst,
 
       dst = mgr().new_direction(value_loc, value);
     }
+    return stat;
+  }
+}
+
+// @brief 論理関数のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DotlibParser::parse_function(const AstExpr*& dst,
+			     AttrType attr_type,
+			     const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    const char* tmp_str;
+    FileRegion value_loc;
+    bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
+				       { return parser.read_raw_string(tmp_str, value_loc); });
+    if ( stat ) {
+      FuncParser read(tmp_str, value_loc, mgr());
+      stat = read(dst);
+    }
+
     return stat;
   }
 }
@@ -530,6 +566,42 @@ DotlibParser::parse_vartype(const AstVarType*& dst,
     }
 
     return stat;
+  }
+}
+
+// @brief 式のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DotlibParser::parse_expr(const AstExpr*& dst,
+			 AttrType attr_type,
+			 const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    // ちょっと例外的に DotlibParse 自ら処理する．
+    if ( !expect(TokenType::COLON) ) {
+      return false;
+    }
+
+    const AstExpr* value = read_expr(TokenType::SEMI);
+    if ( value != nullptr ) {
+      if ( expect_nl() ) {
+	dst = value;
+	return true;
+      }
+    }
+
+    return false;
   }
 }
 

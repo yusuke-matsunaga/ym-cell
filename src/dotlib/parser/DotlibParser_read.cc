@@ -219,4 +219,116 @@ DotlibParser::read_float_vector(FileRegion& value_loc,
   return true;
 }
 
+// @brief primary を読み込む．
+const AstExpr*
+DotlibParser::read_primary()
+{
+  FileRegion loc;
+  TokenType type = read_token(loc);
+  if ( type == TokenType::LP ) {
+    return read_expr(TokenType::RP);
+  }
+  if ( type == TokenType::SYMBOL ) {
+    const char* name =  cur_string();
+    if ( strcmp(name, "VDD") == 0 ) {
+      return mgr().new_vdd_expr(loc);
+    }
+    else if ( strcmp(name, "VSS") == 0 ) {
+      return mgr().new_vss_expr(loc);
+    }
+    else if ( strcmp(name, "VCC") == 0 ) {
+      return mgr().new_vcc_expr(loc);
+    }
+    else {
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      loc,
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      "Syntax error. "
+		      "Only 'VDD', 'VSS', and 'VCC' are allowed.");
+      return nullptr;
+    }
+  }
+  if ( type == TokenType::FLOAT_NUM || type == TokenType::INT_NUM ) {
+    double val = cur_float();
+    return mgr().new_float_expr(loc, val);
+  }
+
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  loc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  "Syntax error. number is expected.");
+  return nullptr;
+}
+
+// @brief prudct を読み込む．
+const AstExpr*
+DotlibParser::read_product()
+{
+  const AstExpr* opr1 = read_primary();
+  if ( opr1 == nullptr ) {
+    return nullptr;
+  }
+
+  for ( ; ; ) {
+    FileRegion loc;
+    TokenType type = read_token(loc);
+    if ( type == TokenType::MULT || type == TokenType::DIV ) {
+      const AstExpr* opr2 = read_primary();
+      if ( opr2 == nullptr ) {
+	return nullptr;
+      }
+      if ( type == TokenType::MULT ) {
+	opr1 = mgr().new_mult(opr1, opr2);
+      }
+      else {
+	opr1 = mgr().new_div(opr1, opr2);
+      }
+    }
+    else {
+      // token を戻す．
+      unget_token(type, loc);
+      return opr1;
+    }
+  }
+}
+
+// @brief expression を読み込む．
+const AstExpr*
+DotlibParser::read_expr(TokenType end_marker)
+{
+  const AstExpr* opr1 = read_product();
+  if ( opr1 == nullptr ) {
+    return nullptr;
+  }
+  for ( ; ; ) {
+    FileRegion loc;
+    TokenType type = read_token(loc);
+    if ( type == end_marker ) {
+      return opr1;
+    }
+    if ( type == TokenType::PLUS || type == TokenType::MINUS ) {
+      const AstExpr* opr2 = read_product();
+      if ( opr2 == nullptr ) {
+	return nullptr;
+      }
+      if ( type == TokenType::PLUS ) {
+	opr1 = mgr().new_plus(opr1, opr2);
+      }
+      else {
+	opr1 = mgr().new_minus(opr1, opr2);
+      }
+    }
+    else {
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      loc,
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      "Syntax error.");
+      return nullptr;
+    }
+  }
+}
+
 END_NAMESPACE_YM_DOTLIB

@@ -86,8 +86,6 @@ set (dotlib_SOURCES
 
   src/dotlib/parser/AttrDic.cc
   src/dotlib/parser/DotlibParser.cc
-  src/dotlib/parser/DotlibParser_expr.cc
-  src/dotlib/parser/DotlibParser_func.cc
   src/dotlib/parser/DotlibParser_read.cc
   src/dotlib/parser/DotlibParser_simple.cc
   src/dotlib/parser/DotlibParser_complex.cc
