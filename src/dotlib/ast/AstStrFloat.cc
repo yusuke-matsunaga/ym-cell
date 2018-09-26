@@ -34,7 +34,7 @@ AstMgr::new_str_float(const StrFloatHandler& handler)
 // @brief コンストラクタ
 // @param[in] handler ハンドラ
 AstStrFloat::AstStrFloat(const StrFloatHandler& handler) :
-  AstNode(handler.header_loc()),
+  AstNode(FileRegion(handler.first_loc(), handler.last_loc())),
   mVal1(handler.value1()),
   mVal2(handler.value2())
 {

@@ -1,8 +1,8 @@
-#ifndef ELEM3HANDLER_H
-#define ELEM3HANDLER_H
+#ifndef ELEMHANDLER_H
+#define ELEMHANDLER_H
 
-/// @file Elem3Handler.h
-/// @brief Elem3Handler のヘッダファイル
+/// @file ElemHandler.h
+/// @brief ElemHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
@@ -15,20 +15,22 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class Elem3Handler Elem3Handler.h "Elem3Handler.h"
-/// @brief 3つの要素を持つ形式のヘッダ用ハンドラ
+/// @class ElemHandler ElemHandler.h "ElemHandler.h"
+/// @brief 固定形式のヘッダ用ハンドラ
 //////////////////////////////////////////////////////////////////////
-class Elem3Handler :
+class ElemHandler :
   public HeaderHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  Elem3Handler(DotlibParser& parser);
+  /// @param[in] num ヘッダ内の要素数
+  ElemHandler(DotlibParser& parser,
+	      int num);
 
   /// @brief デストラクタ
-  ~Elem3Handler();
+  ~ElemHandler();
 
 
 public:
@@ -37,7 +39,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
 
-public:
+private:
   //////////////////////////////////////////////////////////////////////
   // HeaderHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
@@ -46,28 +48,24 @@ public:
   ///
   /// '(' を読み込んだ時に呼ばれる．
   void
-  begin_header() override;
+  _begin_header() override;
 
   /// @brief ヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
   /// @param[in] count read_value() の呼ばれた回数
   bool
-  read_header_value(TokenType value_type,
-		    const FileRegion& value_loc,
-		    int count) override;
+  _read_header_value(int count) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  end_header(int count) override;
+  _end_header(int count) override;
 
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // Elem3Handler の仮想関数
+  // ElemHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief begin_header() 内で呼ばれる初期化関数
@@ -75,30 +73,16 @@ private:
   void
   initialize() = 0;
 
-  /// @brief 1つめのヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
+  /// @brief read_header_value() 内で呼ばれる関数
+  /// @param[in] count read_value() の呼ばれた回数
   virtual
   bool
-  read_header_value1(TokenType value_type,
-		     const FileRegion& value_loc) = 0;
+  read_value(int count) = 0;
 
-  /// @brief 2つめのヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
+  /// @brief end_header() 内で呼ばれる終了処理関数
   virtual
-  bool
-  read_header_value2(TokenType value_type,
-		     const FileRegion& value_loc) = 0;
-
-  /// @brief 3つめのヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
-  virtual
-  bool
-  read_header_value3(TokenType value_type,
-		     const FileRegion& value_loc) = 0;
-
+  void
+  finalize() = 0;
 
 
 private:
@@ -112,8 +96,16 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // 予想される要素数
+  int mNum;
+
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ELEM3HANDLER_H
+#endif // ELEM1HANDLER_H

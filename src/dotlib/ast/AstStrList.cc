@@ -37,7 +37,7 @@ AstMgr::new_str_list(const StrListHandler& handler)
 // @brief コンストラクタ
 // @param[in] handler ハンドラ
 AstStrList::AstStrList(const StrListHandler& handler) :
-  AstNode(handler.header_loc()),
+  AstNode(FileRegion(handler.first_loc(), handler.last_loc())),
   mNum(handler.value().size())
 {
   for ( auto i: Range(mNum) ) {

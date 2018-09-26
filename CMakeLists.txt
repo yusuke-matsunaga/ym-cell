@@ -86,32 +86,20 @@ set (dotlib_SOURCES
 
   src/dotlib/parser/AttrDic.cc
   src/dotlib/parser/DotlibParser.cc
+  src/dotlib/parser/DotlibParser_expr.cc
+  src/dotlib/parser/DotlibParser_func.cc
+  src/dotlib/parser/DotlibParser_read.cc
+  src/dotlib/parser/DotlibParser_simple.cc
+  src/dotlib/parser/DotlibParser_complex.cc
+  src/dotlib/parser/DotlibParser_group.cc
   src/dotlib/parser/DotlibScanner.cc
+  src/dotlib/parser/FuncParser.cc
+  src/dotlib/parser/FuncScanner.cc
 
   src/dotlib/handler/DotlibHandler.cc
-
-  src/dotlib/handler/simple/SimpleHandler.cc
-  src/dotlib/handler/simple/IntHandler.cc
-  src/dotlib/handler/simple/FloatHandler.cc
-  src/dotlib/handler/simple/StrBaseHandler.cc
-  src/dotlib/handler/simple/BoolHandler.cc
-  src/dotlib/handler/simple/CPTypeHandler.cc
-  src/dotlib/handler/simple/DelayModelHandler.cc
-  src/dotlib/handler/simple/DirectionHandler.cc
-  src/dotlib/handler/simple/StringHandler.cc
-  src/dotlib/handler/simple/TimingSenseHandler.cc
-  src/dotlib/handler/simple/TimingTypeHandler.cc
-  src/dotlib/handler/simple/VarTypeHandler.cc
-  src/dotlib/handler/simple/FuncParser.cc
-  src/dotlib/handler/simple/FuncScanner.cc
-  src/dotlib/handler/simple/FuncHandler.cc
-
-  src/dotlib/handler/header/Elem1Handler.cc
-  src/dotlib/handler/header/Elem2Handler.cc
-  src/dotlib/handler/header/Elem3Handler.cc
+  src/dotlib/handler/header/ElemHandler.cc
   src/dotlib/handler/header/EmptyHandler.cc
-  src/dotlib/handler/header/Elem2Handler.cc
-  src/dotlib/handler/header/Float2Handler.cc
+  src/dotlib/handler/header/FloatFloatHandler.cc
   src/dotlib/handler/header/FloatStrHandler.cc
   src/dotlib/handler/header/FloatVectorHandler.cc
   src/dotlib/handler/header/FloatVectorListHandler.cc
@@ -119,10 +107,10 @@ set (dotlib_SOURCES
   src/dotlib/handler/header/IntFloatHandler.cc
   src/dotlib/handler/header/IntFloatVectorHandler.cc
   src/dotlib/handler/header/IntVectorHandler.cc
-  src/dotlib/handler/header/Str1Handler.cc
-  src/dotlib/handler/header/Str2Handler.cc
-  src/dotlib/handler/header/Str2IntHandler.cc
-  src/dotlib/handler/header/Str3Handler.cc
+  src/dotlib/handler/header/StrHandler.cc
+  src/dotlib/handler/header/StrStrHandler.cc
+  src/dotlib/handler/header/StrStrIntHandler.cc
+  src/dotlib/handler/header/StrStrStrHandler.cc
   src/dotlib/handler/header/StrFloatHandler.cc
   src/dotlib/handler/header/StrListHandler.cc
 

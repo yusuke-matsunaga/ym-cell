@@ -34,21 +34,18 @@ FloatVectorListHandler::~FloatVectorListHandler()
 //
 // '(' を読み込んだ時に呼ばれる．
 void
-FloatVectorListHandler::begin_header()
+FloatVectorListHandler::_begin_header()
 {
   mValueList.clear();
 }
 
 // @brief ヘッダの値を読み込む処理
-// @param[in] value_type 型
-// @param[in] value_loc トークンの位置
 // @param[in] count read_value() の呼ばれた回数
 bool
-FloatVectorListHandler::read_header_value(TokenType value_type,
-					  const FileRegion& value_loc,
-					  int count)
+FloatVectorListHandler::_read_header_value(int count)
 {
-  return read_float_vector(value_type, value_loc, mValueList);
+  FileRegion loc;
+  return parser().read_float_vector(loc, mValueList);
 }
 
 // @brief 読み込みが終了した時の処理を行う．
@@ -56,11 +53,11 @@ FloatVectorListHandler::read_header_value(TokenType value_type,
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-FloatVectorListHandler::end_header(int count)
+FloatVectorListHandler::_end_header(int count)
 {
   if ( count == 0 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    header_loc(),
+		    FileRegion(first_loc(), last_loc()),
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error, list of one ore more vectors expected.");

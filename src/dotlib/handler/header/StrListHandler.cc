@@ -33,28 +33,22 @@ StrListHandler::~StrListHandler()
 //
 // '(' を読み込んだ時に呼ばれる．
 void
-StrListHandler::begin_header()
+StrListHandler::_begin_header()
 {
   mValue.clear();
 }
 
 // @brief 値を読み込む処理
-// @param[in] value_type 型
-// @param[in] value_loc トークンの位置
 // @param[in] count read_value() の呼ばれた回数
 bool
-StrListHandler::read_header_value(TokenType value_type,
-					const FileRegion& value_loc,
-					int count)
+StrListHandler::_read_header_value(int count)
 {
-  const AstString* str = new_string(value_type, value_loc);
-  if ( str != nullptr ) {
+  const AstString* str;
+  bool stat = parser().read_string(str);
+  if ( stat ) {
     mValue.push_back(str);
-    return true;
   }
-  else {
-    return false;
-  }
+  return stat;
 }
 
 // @brief 読み込みが終了した時の処理を行う．
@@ -62,7 +56,7 @@ StrListHandler::read_header_value(TokenType value_type,
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-StrListHandler::end_header(int count)
+StrListHandler::_end_header(int count)
 {
   return true;
 }

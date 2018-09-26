@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "dotlib/Elem2Handler.h"
+#include "dotlib/ElemHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief ( string, float ) の形式のヘッダ用ハンドラ
 //////////////////////////////////////////////////////////////////////
 class StrFloatHandler :
-  public Elem2Handler
+  public ElemHandler
 {
 public:
 
@@ -47,26 +47,21 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // Elem2Handler の仮想関数
+  // ElemHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief begin_header() 内で呼ばれる初期化関数
   void
   initialize() override;
 
-  /// @brief 1つめのヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
+  /// @brief ヘッダの値を読み込む処理
+  /// @param[in] count read_value() の呼ばれた回数
   bool
-  read_header_value1(TokenType value_type,
-		     const FileRegion& value_loc) override;
+  read_value(int count) override;
 
-  /// @brief 2つめのヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
-  bool
-  read_header_value2(TokenType value_type,
-		     const FileRegion& value_loc) override;
+  /// @brief end_header() 内で呼ばれる終了処理関数
+  void
+  finalize() override;
 
 
 private:

@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "dotlib/HeaderHandler.h"
+#include "dotlib/ElemHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// ただ単にシンタックスチェックをしている．
 //////////////////////////////////////////////////////////////////////
 class EmptyHandler :
-  public HeaderHandler
+  public ElemHandler
 {
 public:
 
@@ -34,32 +34,23 @@ public:
   ~EmptyHandler();
 
 
-public:
+private:
   //////////////////////////////////////////////////////////////////////
-  // HeaderHandler の仮想関数
+  // ElemHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ヘッダの開始処理
-  ///
-  /// '(' を読み込んだ時に呼ばれる．
+  /// @brief begin_header() 内で呼ばれる初期化関数
   void
-  begin_header() override;
+  initialize() override;
 
   /// @brief ヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
   /// @param[in] count read_value() の呼ばれた回数
   bool
-  read_header_value(TokenType value_type,
-		    const FileRegion& value_loc,
-		    int count) override;
+  read_value(int count) override;
 
-  /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] count 読み込んだ要素数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  end_header(int count) override;
+  /// @brief end_header() 内で呼ばれる終了処理関数
+  void
+  finalize() override;
 
 };
 

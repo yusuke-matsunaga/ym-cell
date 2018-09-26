@@ -26,7 +26,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] handler ハンドラ
-  AstFloat2(const Float2Handler& handler);
+  AstFloat2(const FloatFloatHandler& handler);
 
   /// @brief デストラクタ
   ~AstFloat2();

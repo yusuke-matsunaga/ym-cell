@@ -1,34 +1,34 @@
-﻿#ifndef STR3HANDLER_H
-#define STR3HANDLER_H
+﻿#ifndef STRSTRSTRHANDLER_H
+#define STRSTRSTRHANDLER_H
 
-/// @file Str3Handler.h
-/// @brief Str3Handler のヘッダファイル
+/// @file StrStrStrHandler.h
+/// @brief StrStrStrHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/Elem3Handler.h"
+#include "dotlib/ElemHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class Str3Str3Handler Str3Handler.h "dotlib/Str3Handler.h"
+/// @class StrStrStrStrStrStrHandler StrStrStrHandler.h "dotlib/StrStrStrHandler.h"
 /// @brief ( string, string, string ) の形式のヘッダ用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class Str3Handler :
-  public Elem3Handler
+class StrStrStrHandler :
+  public ElemHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  Str3Handler(DotlibParser& parser);
+  StrStrStrHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~Str3Handler();
+  ~StrStrStrHandler();
 
 
 public:
@@ -51,37 +51,21 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // Elem3Handler の仮想関数
+  // ElemHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief begin_header() 内で呼ばれる初期化関数
-  virtual
   void
   initialize() override;
 
-  /// @brief 1つめのヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
-  virtual
+  /// @brief ヘッダの値を読み込む処理
+  /// @param[in] count read_value() の呼ばれた回数
   bool
-  read_header_value1(TokenType value_type,
-		     const FileRegion& value_loc) override;
+  read_value(int count) override;
 
-  /// @brief 2つめのヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
-  virtual
-  bool
-  read_header_value2(TokenType value_type,
-		     const FileRegion& value_loc) override;
-
-  /// @brief 3つめのヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
-  virtual
-  bool
-  read_header_value3(TokenType value_type,
-		     const FileRegion& value_loc) override;
+  /// @brief end_header() 内で呼ばれる終了処理関数
+  void
+  finalize() override;
 
 
 private:
@@ -89,14 +73,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 1番目の値
-  const AstString* mValue1;
-
-  // 2番目の値
-  const AstString* mValue2;
-
-  // 3番目の値
-  const AstString* mValue3;
+  // 値
+  const AstString* mValue[3];
 
 };
 
@@ -108,27 +86,27 @@ private:
 // @brief 1番目の値を返す．
 inline
 const AstString*
-Str3Handler::value1() const
+StrStrStrHandler::value1() const
 {
-  return mValue1;
+  return mValue[0];
 }
 
 // @brief 2番目の値を返す．
 inline
 const AstString*
-Str3Handler::value2() const
+StrStrStrHandler::value2() const
 {
-  return mValue2;
+  return mValue[1];
 }
 
 // @brief 3番目の値を返す．
 inline
 const AstString*
-Str3Handler::value3() const
+StrStrStrHandler::value3() const
 {
-  return mValue2;
+  return mValue[2];
 }
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // STR3HANDLER_H
+#endif // STRSTRSTRHANDLER_H

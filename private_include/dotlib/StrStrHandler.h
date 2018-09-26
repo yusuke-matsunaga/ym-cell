@@ -1,34 +1,34 @@
-﻿#ifndef FLOAT2HANDLER_H
-#define FLOAT2HANDLER_H
+﻿#ifndef STRSTRHANDLER_H
+#define STRSTRHANDLER_H
 
-/// @file Float2Handler.h
-/// @brief Float2Handler のヘッダファイル
+/// @file StrStrHandler.h
+/// @brief StrStrHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/Elem2Handler.h"
+#include "dotlib/ElemHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class Float2Handler Float2Handler.h "dotlib/Float2Handler.h"
-/// @brief ( float, float ) の形式のヘッダ用ハンドラ
+/// @class StrStrStrStrHandler StrStrHandler.h "dotlib/StrStrHandler.h"
+/// @brief ( string, string ) の形式のヘッダ用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class Float2Handler :
-  public Elem2Handler
+class StrStrHandler :
+  public ElemHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  Float2Handler(DotlibParser& parser);
+  StrStrHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~Float2Handler();
+  ~StrStrHandler();
 
 
 public:
@@ -37,36 +37,31 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 1番目の値を返す．
-  const AstFloat*
+  const AstString*
   value1() const;
 
   /// @brief 2番目の値を返す．
-  const AstFloat*
+  const AstString*
   value2() const;
 
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // Elem2Handler の仮想関数
+  // ElemHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief begin_header() 内で呼ばれる初期化関数
   void
   initialize() override;
 
-  /// @brief 1つめのヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
+  /// @brief ヘッダの値を読み込む処理
+  /// @param[in] count read_value() の呼ばれた回数
   bool
-  read_header_value1(TokenType value_type,
-		     const FileRegion& value_loc) override;
+  read_value(int count) override;
 
-  /// @brief 2つめのヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
-  bool
-  read_header_value2(TokenType value_type,
-		     const FileRegion& value_loc) override;
+  /// @brief end_header() 内で呼ばれる終了処理関数
+  void
+  finalize() override;
 
 
 private:
@@ -74,11 +69,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 1番目の値
-  const AstFloat* mValue1;
-
-  // 2番目の値
-  const AstFloat* mValue2;
+  // 値
+  const AstString* mValue[2];
 
 };
 
@@ -89,20 +81,20 @@ private:
 
 // @brief 1番目の値を返す．
 inline
-const AstFloat*
-Float2Handler::value1() const
+const AstString*
+StrStrHandler::value1() const
 {
-  return mValue1;
+  return mValue[0];
 }
 
 // @brief 2番目の値を返す．
 inline
-const AstFloat*
-Float2Handler::value2() const
+const AstString*
+StrStrHandler::value2() const
 {
-  return mValue2;
+  return mValue[1];
 }
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // FLOAT2HANDLER_H
+#endif // STRSTRHANDLER_H

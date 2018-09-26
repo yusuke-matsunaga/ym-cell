@@ -1,31 +1,34 @@
 ﻿
-/// @file Elem2Handler.cc
-/// @brief Elem2Handler の実装ファイル
+/// @file ElemHandler.cc
+/// @brief ElemHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/Elem2Handler.h"
+#include "dotlib/ElemHandler.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス Elem2Handler
+// クラス ElemHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-Elem2Handler::Elem2Handler(DotlibParser& parser) :
-  HeaderHandler(parser)
+// @param[in] num ヘッダ内の要素数
+ElemHandler::ElemHandler(DotlibParser& parser,
+			 int num) :
+  HeaderHandler(parser),
+  mNum(num)
 {
 }
 
 // @brief デストラクタ
-Elem2Handler::~Elem2Handler()
+ElemHandler::~ElemHandler()
 {
 }
 
@@ -33,33 +36,20 @@ Elem2Handler::~Elem2Handler()
 //
 // '(' を読み込んだ時に呼ばれる．
 void
-Elem2Handler::begin_header()
+ElemHandler::_begin_header()
 {
   initialize();
 }
 
 // @brief 値を読み込む処理
-// @param[in] value_type 型
-// @param[in] value_loc トークンの位置
 // @param[in] count read_value() の呼ばれた回数
 bool
-Elem2Handler::read_header_value(TokenType value_type,
-				const FileRegion& value_loc,
-				int count)
+ElemHandler::_read_header_value(int count)
 {
-  switch ( count ) {
-  case 0:
-    return read_header_value1(value_type, value_loc);
-
-  case 1:
-    return read_header_value2(value_type, value_loc);
-
-  default:
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error.");
+  if ( count >= 0 && count < mNum ) {
+    return read_value(count);
+  }
+  else {
     return false;
   }
 }
@@ -69,17 +59,18 @@ Elem2Handler::read_header_value(TokenType value_type,
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起きた．
 bool
-Elem2Handler::end_header(int count)
+ElemHandler::_end_header(int count)
 {
-  if ( count != 2 ) {
+  if ( count != mNum ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    header_loc(),
+		    FileRegion(first_loc(), last_loc()),
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error.");
     return false;
   }
   else {
+    finalize();
     return true;
   }
 }

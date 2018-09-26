@@ -10,7 +10,7 @@
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstStr2.h"
 #include "dotlib/AstString.h"
-#include "dotlib/Str2Handler.h"
+#include "dotlib/StrStrHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief ( float, float ) 型の AstNode を生成する．
 // @param[in] handler ハンドラ
 const AstStr2*
-AstMgr::new_str2(const Str2Handler& handler)
+AstMgr::new_str2(const StrStrHandler& handler)
 {
   ++ mStr2Num;
   void* p = mAlloc.get_memory(sizeof(AstStr2));
@@ -32,8 +32,8 @@ AstMgr::new_str2(const Str2Handler& handler)
 
 // @brief コンストラクタ
 // @param[in] handler ハンドラ
-AstStr2::AstStr2(const Str2Handler& handler) :
-  AstNode(handler.header_loc()),
+AstStr2::AstStr2(const StrStrHandler& handler) :
+  AstNode(FileRegion(handler.first_loc(), handler.last_loc())),
   mVal1(handler.value1()),
   mVal2(handler.value2())
 {

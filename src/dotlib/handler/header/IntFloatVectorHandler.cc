@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 IntFloatVectorHandler::IntFloatVectorHandler(DotlibParser& parser) :
-  Elem2Handler(parser)
+  ElemHandler(parser, 2)
 {
 }
 
@@ -37,26 +37,23 @@ IntFloatVectorHandler::initialize()
   mValue2 = nullptr;
 }
 
-// @brief 1つめのヘッダの値を読み込む処理
-// @param[in] value_type 型
-// @param[in] value_loc トークンの位置
+// @brief ヘッダの値を読み込む処理
+// @param[in] count read_value() の呼ばれた回数
 bool
-IntFloatVectorHandler::read_header_value1(TokenType value_type,
-					  const FileRegion& value_loc)
+IntFloatVectorHandler::read_value(int count)
 {
-  mValue1 = new_int(value_type, value_loc);
-  return mValue1 != nullptr;
+  if ( count == 0 ) {
+    return parser().read_int(mValue1);
+  }
+  else {
+    return parser().read_float_vector(mValue2);
+  }
 }
 
-// @brief 2つめのヘッダの値を読み込む処理
-// @param[in] value_type 型
-// @param[in] value_loc トークンの位置
-bool
-IntFloatVectorHandler::read_header_value2(TokenType value_type,
-					  const FileRegion& value_loc)
+// @brief end_header() 内で呼ばれる終了処理関数
+void
+IntFloatVectorHandler::finalize()
 {
-  mValue2 = new_float_vector(value_type, value_loc);
-  return mValue2 != nullptr;
 }
 
 END_NAMESPACE_YM_DOTLIB

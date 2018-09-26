@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 FloatVectorHandler::FloatVectorHandler(DotlibParser& parser) :
-  Elem1Handler(parser)
+  ElemHandler(parser, 1)
 {
 }
 
@@ -37,13 +37,18 @@ FloatVectorHandler::initialize()
 }
 
 // @brief ヘッダの値を読み込む処理
-// @param[in] value_type 型
-// @param[in] value_loc トークンの位置
+// @param[in] count read_value() の呼ばれた回数
 bool
-FloatVectorHandler::read_header_value1(TokenType value_type,
-				       const FileRegion& value_loc)
+FloatVectorHandler::read_value(int count)
 {
-  return read_float_vector(value_type, value_loc, mValueList);
+  FileRegion loc;
+  return parser().read_float_vector(loc, mValueList);
+}
+
+// @brief end_header() 内で呼ばれる終了処理関数
+void
+FloatVectorHandler::finalize()
+{
 }
 
 END_NAMESPACE_YM_DOTLIB

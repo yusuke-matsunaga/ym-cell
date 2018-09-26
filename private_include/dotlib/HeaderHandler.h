@@ -47,7 +47,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class HeaderHandler :
   public DotlibHandler
 {
-  friend class DotlibParser;
+  //friend class DotlibParser;
 
 public:
 
@@ -65,44 +65,74 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ヘッダ部分 ( '(' から ')' までの部分のファイル位置を返す．)
-  ///
-  /// 下記の 'end_header()' の呼び出し時には確定している．
+  /// @brief '(' のファイル上の位置を返す．
   const FileRegion&
-  header_loc() const;
+  first_loc() const;
+
+  /// @brief ')' のファイル上の位置を返す．
+  const FileRegion&
+  last_loc() const;
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // DotlibParser から用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ヘッダの開始処理
+  /// @param[in] loc '(' のファイル上の位置
+  ///
+  /// '(' を読み込んだ時に呼ばれる．
+  void
+  begin_header(const FileRegion& loc);
+
+  /// @brief ヘッダの値を読み込む処理
+  /// @param[in] count read_header_value() の呼ばれた回数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  bool
+  read_header_value(int count);
+
+  /// @brief 読み込みが終了した時の処理を行う．
+  /// @param[in] loc ')' のファイル上の位置
+  /// @param[in] count 読み込んだ要素数
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起きた．
+  ///
+  /// ')' を読み込んだ直後に呼ばれる．
+  bool
+  end_header(const FileRegion& loc,
+	     int count);
+
+
+private:
   //////////////////////////////////////////////////////////////////////
   // HeaderHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダの開始処理
-  ///
   /// '(' を読み込んだ時に呼ばれる．
   virtual
   void
-  begin_header() = 0;
+  _begin_header() = 0;
 
   /// @brief ヘッダの値を読み込む処理
-  /// @param[in] value_type 型
-  /// @param[in] value_loc トークンの位置
-  /// @param[in] count read_value() の呼ばれた回数
+  /// @param[in] count read_header_value() の呼ばれた回数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   virtual
   bool
-  read_header_value(TokenType value_type,
-		    const FileRegion& value_loc,
-		    int count) = 0;
+  _read_header_value(int count) = 0;
 
   /// @brief 読み込みが終了した時の処理を行う．
   /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
+  ///
+  /// ')' を読み込んだ直後に呼ばれる．
   virtual
   bool
-  end_header(int count) = 0;
+  _end_header(int count) = 0;
 
 
 private:
@@ -110,8 +140,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ヘッダ部分の位置
-  FileRegion mHeaderLoc;
+  // '(' のファイル上の位置
+  FileRegion mFirstLoc;
+
+  // ')' のファイル上の位置
+  FileRegion mLastLoc;
 
 };
 
@@ -120,12 +153,20 @@ private:
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// @brief ヘッダ部分 ( '(' から ')' までの部分のファイル位置を返す．)
+// @brief '(' のファイル上の位置を返す．
 inline
 const FileRegion&
-HeaderHandler::header_loc() const
+HeaderHandler::first_loc() const
 {
-  return mHeaderLoc;
+  return mFirstLoc;
+}
+
+// @brief ')' のファイル上の位置を返す．
+inline
+const FileRegion&
+HeaderHandler::last_loc() const
+{
+  return mLastLoc;
 }
 
 END_NAMESPACE_YM_DOTLIB

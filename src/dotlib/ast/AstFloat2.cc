@@ -10,7 +10,7 @@
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstFloat2.h"
 #include "dotlib/AstFloat.h"
-#include "dotlib/Float2Handler.h"
+#include "dotlib/FloatFloatHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief ( float, float ) 型の AstNode を生成する．
 // @param[in] handler ハンドラ
 const AstFloat2*
-AstMgr::new_float2(const Float2Handler& handler)
+AstMgr::new_float2(const FloatFloatHandler& handler)
 {
   ++ mFloat2Num;
   void* p = mAlloc.get_memory(sizeof(AstFloat2));
@@ -32,8 +32,8 @@ AstMgr::new_float2(const Float2Handler& handler)
 
 // @brief コンストラクタ
 // @param[in] handler ハンドラ
-AstFloat2::AstFloat2(const Float2Handler& handler) :
-  AstNode(handler.header_loc()),
+AstFloat2::AstFloat2(const FloatFloatHandler& handler) :
+  AstNode(FileRegion(handler.first_loc(), handler.last_loc())),
   mVal1(handler.value1()),
   mVal2(handler.value2())
 {

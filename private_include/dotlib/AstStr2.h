@@ -26,7 +26,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] handler ハンドラ
-  AstStr2(const Str2Handler& handler);
+  AstStr2(const StrStrHandler& handler);
 
   /// @brief デストラクタ
   ~AstStr2();

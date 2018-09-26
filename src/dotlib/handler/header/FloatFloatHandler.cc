@@ -1,52 +1,55 @@
-
-/// @file IntVectorHandler.cc
-/// @brief IntVectorHandler の実装ファイル
+﻿
+/// @file FloatFloatHandler.cc
+/// @brief FloatFloatHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/IntVectorHandler.h"
+#include "dotlib/FloatFloatHandler.h"
 #include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス IntVectorHandler
+// クラス FloatFloatHandler
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-IntVectorHandler::IntVectorHandler(DotlibParser& parser) :
-  ElemHandler(parser, 1)
+FloatFloatHandler::FloatFloatHandler(DotlibParser& parser) :
+  ElemHandler(parser, 2)
 {
 }
 
 // @brief デストラクタ
-IntVectorHandler::~IntVectorHandler()
+FloatFloatHandler::~FloatFloatHandler()
 {
 }
 
 // @brief begin_header() 内で呼ばれる初期化関数
 void
-IntVectorHandler::initialize()
+FloatFloatHandler::initialize()
 {
-  mValue = nullptr;
+  mValue[0] = nullptr;
+  mValue[1] = nullptr;
 }
 
 // @brief ヘッダの値を読み込む処理
 // @param[in] count read_value() の呼ばれた回数
 bool
-IntVectorHandler::read_value(int count)
+FloatFloatHandler::read_value(int count)
 {
-  return parser().read_int_vector(mValue);
+  ASSERT_COND( count == 0 || count == 1 );
+
+  return parser().read_float(mValue[count]);
 }
 
 // @brief end_header() 内で呼ばれる終了処理関数
 void
-IntVectorHandler::finalize()
+FloatFloatHandler::finalize()
 {
 }
 

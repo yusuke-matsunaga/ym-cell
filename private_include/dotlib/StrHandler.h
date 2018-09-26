@@ -1,34 +1,34 @@
-﻿#ifndef STRINGHANDLER_H
-#define STRINGHANDLER_H
+﻿#ifndef STRHANDLER_H
+#define STRHANDLER_H
 
-/// @file StringHandler.h
-/// @brief StringHandler のヘッダファイル
+/// @file StrHandler.h
+/// @brief StrHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "dotlib/StrBaseHandler.h"
+#include "dotlib/ElemHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class StringHandler StringHandler.h "StringHandler.h"
-/// @brief 文字列を取る属性用のハンドラ
+/// @class StrStrHandler StrHandler.h "dotlib/StrHandler.h"
+/// @brief ( string ) の形式のヘッダ用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class StringHandler :
-  public StrBaseHandler
+class StrHandler :
+  public ElemHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  StringHandler(DotlibParser& parser);
+  StrHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~StringHandler();
+  ~StrHandler();
 
 
 public:
@@ -36,34 +36,28 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 読み込んだ値を得る．
+  /// @brief 読み込んだ値を返す．
   const AstString*
   value() const;
 
 
-public:
-  //////////////////////////////////////////////////////////////////////
-  // SimpleHandler の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief シンボルモードの値を返す．
-  bool
-  symbol_mode() override;
-
-
 private:
   //////////////////////////////////////////////////////////////////////
-  // StrBaseHandler の仮想関数
+  // ElemHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 文字列を読み込んだ時の処理
-  /// @param[in] str 文字列
-  /// @param[in] value_loc 文字列トークンの位置
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
+  /// @brief begin_header() 内で呼ばれる初期化関数
+  void
+  initialize() override;
+
+  /// @brief ヘッダの値を読み込む処理
+  /// @param[in] count read_value() の呼ばれた回数
   bool
-  read_str_value(const char* str,
-		 const FileRegion& value_loc) override;
+  read_value(int count) override;
+
+  /// @brief end_header() 内で呼ばれる終了処理関数
+  void
+  finalize() override;
 
 
 private:
@@ -81,14 +75,14 @@ private:
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// @brief 読み込んだ値を得る．
+// @brief 読み込んだ値を返す．
 inline
 const AstString*
-StringHandler::value() const
+StrHandler::value() const
 {
   return mValue;
 }
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // STRINGHANDLER_H
+#endif // STRHANDLER_H

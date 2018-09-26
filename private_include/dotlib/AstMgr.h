@@ -20,15 +20,15 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 class EmptyHandler;
-class Float2Handler;
+class FloatFloatHandler;
 class FloatStrHandler;
 class FloatVectorHandler;
 class IntFloatHandler;
 class IntVectorHandler;
-class Str1Handler;
-class Str2Handler;
-class Str2IntHandler;
-class Str3Handler;
+class StrHandler;
+class StrStrHandler;
+class StrStrIntHandler;
+class StrStrStrHandler;
 class StrFloatHandler;
 class StrListHandler;
 
@@ -205,6 +205,20 @@ public:
   new_float(const FileRegion& loc,
 	    double value);
 
+  /// @brief float のベクタ型の AstNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  /// @param[in] value 値(double のベクタ)
+  const AstFloatVector*
+  new_float_vector(const FileRegion& loc,
+		   const vector<double>& value);
+
+  /// @brief 整数値のベクタを表す AstNode を生成する．
+  /// @param[in] loc ファイル上の位置
+  /// @param[in] value_list 値のリスト
+  const AstIntVector*
+  new_int_vector(const FileRegion& loc,
+		 const vector<int>& value_list);
+
   /// @brief 文字列シンボルを表す AstNode を生成する．
   /// @param[in] loc ファイル上の位置
   /// @param[in] value 値
@@ -263,31 +277,17 @@ public:
   /// @brief ( float, float ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
   const AstFloat2*
-  new_float2(const Float2Handler& handler);
+  new_float2(const FloatFloatHandler& handler);
 
   /// @brief ( float, string ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
   const AstFloatStr*
   new_float_str(const FloatStrHandler& handler);
 
-  /// @brief float のベクタ型の AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値(double のベクタ)
-  const AstFloatVector*
-  new_float_vector(const FileRegion& loc,
-		   const vector<double>& value);
-
   /// @brief ( integer, float ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
   const AstIntFloat*
   new_int_float(const IntFloatHandler& handler);
-
-  /// @brief 整数値のベクタを表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value_list 値のリスト
-  const AstIntVector*
-  new_int_vector(const FileRegion& loc,
-		 const vector<int>& value_list);
 
   /// @brief ( string, float ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
@@ -302,12 +302,12 @@ public:
   /// @brief ( string, string ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
   const AstStr2*
-  new_str2(const Str2Handler& handler);
+  new_str2(const StrStrHandler& handler);
 
   /// @brief ( string, string, string ) 型の AstNode を生成する．
   /// @param[in] handler ハンドラ
   const AstStr3*
-  new_str3(const Str3Handler& handler);
+  new_str3(const StrStrStrHandler& handler);
 
 
 public:
@@ -319,14 +319,14 @@ public:
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstLibrary*
-  new_library(const Str1Handler& header,
+  new_library(const StrHandler& header,
 	      const LibraryHandler& group);
 
   /// @brief セルを表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstCell*
-  new_cell(const Str1Handler& header,
+  new_cell(const StrHandler& header,
 	   const CellHandler& group);
 
   /// @brief ピンを表す AstNode を生成する．
@@ -354,63 +354,63 @@ public:
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstFF*
-  new_ff(const Str2Handler& header,
+  new_ff(const StrStrHandler& header,
 	 const FFHandler& group);
 
   /// @brief ff_bank を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstFFBank*
-  new_ff_bank(const Str2IntHandler& header,
+  new_ff_bank(const StrStrIntHandler& header,
 	      const FFHandler& group);
 
   /// @brief latch を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstLatch*
-  new_latch(const Str2Handler& header,
+  new_latch(const StrStrHandler& header,
 	    const LatchHandler& group);
 
   /// @brief latch_bank を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstLatchBank*
-  new_latch_bank(const Str2IntHandler& header,
+  new_latch_bank(const StrStrIntHandler& header,
 		 const LatchHandler& group);
 
   /// @brief lut template を表す AstNode を生成する．
   /// @param[in] header ヘッダのハンドラ
   /// @param[in] group グループ本体のハンドラ
   const AstTemplate*
-  new_template(const Str1Handler& header,
+  new_template(const StrHandler& header,
 	       const TemplateHandler& group);
 
   /// @brief lut を表す AstNode を生成する．
   /// @param[in] header ヘッダのハンドラ
   /// @param[in] group グループ本体のハンドラ
   const AstLut*
-  new_lut(const Str1Handler& header,
+  new_lut(const StrHandler& header,
 	  const TableHandler& group);
 
   /// @brief input voltage を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstInputVoltage*
-  new_input_voltage(const Str1Handler& header,
+  new_input_voltage(const StrHandler& header,
 		    const InputVoltageHandler& group);
 
   /// @brief output voltage を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstOutputVoltage*
-  new_output_voltage(const Str1Handler& header,
+  new_output_voltage(const StrHandler& header,
 		     const OutputVoltageHandler& group);
 
   /// @brief domain を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstDomain*
-  new_domain(const Str1Handler& header,
+  new_domain(const StrHandler& header,
 	     const DomainHandler& group);
 
   /// @brief timing を表す AstNode を生成する．

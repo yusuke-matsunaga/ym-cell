@@ -808,6 +808,60 @@ public:
   // DotlibHandler から用いられる関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 直前に読んだトークンから AstInt を生成する．
+  /// @param[out] dst 結果を格納する変数
+  /// @retval true 読み込みが成功した．
+  /// @retval false 読み込みが失敗した．
+  bool
+  read_int(const AstInt*& dst);
+
+  /// @brief 直前に読んだトークンから AstFloat を生成する．
+  /// @param[out] dst 結果を格納する変数
+  /// @retval true 読み込みが成功した．
+  /// @retval false 読み込みが失敗した．
+  bool
+  read_float(const AstFloat*& dst);
+
+  /// @brief 直前に読んだトークンから文字列を取り出す．
+  /// @param[out] dst 結果を格納する変数
+  /// @param[out] value_loc トークンのファイル上の位置
+  /// @retval true 読み込みが成功した．
+  /// @retval false 読み込みが失敗した．
+  bool
+  read_raw_string(const char*& dst,
+		  FileRegion& value_loc);
+
+  /// @brief 直前に読んだトークンから AstString を生成する．
+  /// @param[out] dst 結果を格納する変数
+  /// @retval true 読み込みが成功した．
+  /// @retval false 読み込みが失敗した．
+  bool
+  read_string(const AstString*& dst);
+
+  /// @brief 直前に読んだトークンから AstIntVector を生成する．
+  /// @param[out] dst 結果を格納する変数
+  /// @retval true 読み込みが成功した．
+  /// @retval false 読み込みが失敗した．
+  bool
+  read_int_vector(const AstIntVector*& dst);
+
+  /// @brief 直前に読んだトークンから AstFloatVector を生成する．
+  /// @param[out] dst 結果を格納する変数
+  /// @retval true 読み込みが成功した．
+  /// @retval false 読み込みが失敗した．
+  bool
+  read_float_vector(const AstFloatVector*& dst);
+
+  /// @brief 直前に読んだトークンから float のリストを生成する．
+  /// @param[int] dst_list 値を格納するリスト
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起こった．
+  ///
+  /// dst_list は初期化せず，末尾に追加する．
+  bool
+  read_float_vector(FileRegion& loc,
+		    vector<double>& dst_list);
+
   /// @brief 引数の種類のトークンでなければエラーメッセージを出力する．
   bool
   expect(TokenType type);
@@ -827,6 +881,13 @@ public:
   TokenType
   read_token(FileRegion& loc,
 	     bool symbol_mode = false);
+
+  /// @brief トークンを戻す．
+  /// @param[in] token_type トークンの種類
+  /// @param[in] token_loc トークンの場所
+  void
+  unget_token(TokenType token_type,
+	      const FileRegion& token_loc);
 
   /// @brief 直前の read_token() に対応する文字列を返す．
   const char*
@@ -866,12 +927,14 @@ private:
   // 内部で用いられる下請け関数
   //////////////////////////////////////////////////////////////////////
 
+  using ParseFunc = std::function<bool(DotlibParser&)>;
+
   /// @brief Simple Attribute を読み込む．
-  /// @param[in] handler ハンドラ (SimpleHandler の継承クラス)
+  /// @param[in] parse_func パース関数
   /// @retval true 正しく読み込めた．
   /// @retval false エラーが起こった．
   bool
-  parse_simple_attribute(SimpleHandler& handler);
+  parse_simple_attribute(ParseFunc parse_func);
 
   /// @brief Complex Attribute を読み込む．
   /// @param[in] handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
@@ -910,13 +973,6 @@ private:
   const AstExpr*
   read_product();
 
-  /// @brief トークンを読み込む．
-  /// @param[out] loc 対応するファイル上の位置情報を格納する変数
-  ///
-  /// read_token() との違いは mUngetToken を考慮すること．
-  TokenType
-  _read_token(FileRegion& loc);
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -954,18 +1010,12 @@ private:
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// @brief トークンを一つ読み込む．
-// @param[out] loc ファイル上の位置情報を格納する変数
-// @param[in] symbol_mode 数字も文字とみなすモード
-// @return トークンの型を返す．
+// @brief 直前の read_token() に対応する位置を返す．
 inline
-TokenType
-DotlibParser::read_token(FileRegion& loc,
-			 bool symbol_mode)
+FileRegion
+DotlibParser::cur_loc() const
 {
-  auto ans = mScanner.read_token(loc, symbol_mode);
-  mCurLoc = loc;
-  return ans;
+  return mCurLoc;
 }
 
 // @brief 直前の read_token() に対応する文字列を返す．

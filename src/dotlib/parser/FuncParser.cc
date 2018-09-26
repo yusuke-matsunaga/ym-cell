@@ -38,10 +38,12 @@ FuncParser::~FuncParser()
 }
 
 // @brief 論理式を読み込む．
-const AstExpr*
-FuncParser::operator()()
+bool
+FuncParser::operator()(const AstExpr*& dst)
 {
-  return read_expr(TokenType::END);
+  dst = read_expr(TokenType::END);
+
+  return dst != nullptr;
 }
 
 // @brief primary を読み込む．

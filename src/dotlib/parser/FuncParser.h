@@ -44,8 +44,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 論理式を読み込む．
-  const AstExpr*
-  operator()();
+  bool
+  operator()(const AstExpr*& dst);
 
 
 private:
