@@ -47,45 +47,6 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-// @brief 'base_curve_type' Complex attribute のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-bool
-DotlibParser::parse_base_curve_type(const AstString*& dst,
-				    AttrType attr_type,
-				    const FileRegion& attr_loc)
-{
-  if ( dst != nullptr ) {
-    // 重複していた．
-    duplicate_error(attr_type, attr_loc, dst);
-    return false;
-  }
-  else {
-    StrHandler handler(*this);
-    bool stat = parse_complex_attribute(handler);
-    if ( stat ) {
-      ShString str = handler.value()->value();
-      if ( strcmp(str, "ccs_timing_half_curve") != 0 ) {
-	ostringstream buf;
-	buf << "Syntax error. Unexpected value: " << str << ".";
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			attr_loc,
-			MsgType::Error,
-			"DOTLIB_PARSER",
-			buf.str());
-	return false;
-      }
-      dst = handler.value();
-    }
-    return stat;
-  }
-}
-
 // @brief 'define' Complex attribute のパースを行う．
 // @param[in] dst_list 結果を格納するリスト
 // @param[in] attr_type 属性の型
@@ -134,6 +95,34 @@ DotlibParser::parse_float_float(const AstFloat2*& dst,
   }
 }
 
+// @brief ( float, string ) 型の Complex attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+bool
+DotlibParser::parse_float_string(const AstFloatStr*& dst,
+				 AttrType attr_type,
+				 const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    FloatStrHandler handler(*this);
+    bool stat = parse_complex_attribute(handler);
+    if ( stat ) {
+      dst = mgr().new_float_str(handler);
+    }
+    return stat;
+  }
+}
+
 // @brief ( "float, float, ... " ) の形式の Complex attribute のパースを行う．
 // @param[in] dst 結果を格納する変数
 // @param[in] attr_type 属性の型
@@ -162,6 +151,35 @@ DotlibParser::parse_float_vector(const AstFloatVector*& dst,
     if ( stat ) {
       FileRegion loc(handler.first_loc(), handler.last_loc());
       dst = mgr().new_float_vector(loc, handler.value_list());
+    }
+    return stat;
+  }
+}
+
+// @brief ( integer, float ) の形式の Complex attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+// - 'curve_y'
+bool
+DotlibParser::parse_int_float(const AstIntFloat*& dst,
+			      AttrType attr_type,
+			      const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    IntFloatHandler handler(*this);
+    bool stat = parse_complex_attribute(handler);
+    if ( stat ) {
+      dst = mgr().new_int_float(handler);
     }
     return stat;
   }
@@ -225,34 +243,6 @@ DotlibParser::parse_int_vector(const AstIntVector*& dst,
   }
 }
 
-// @brief 'library_features' Complex attribute のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-bool
-DotlibParser::parse_library_features(const AstString*& dst,
-				     AttrType attr_type,
-				     const FileRegion& attr_loc)
-{
-  if ( dst != nullptr ) {
-    // 重複していた．
-    duplicate_error(attr_type, attr_loc, dst);
-    return false;
-  }
-  else {
-    StrHandler handler(*this);
-    bool stat = parse_complex_attribute(handler);
-    if ( stat ) {
-      dst = handler.value();
-    }
-    return stat;
-  }
-}
-
 // @brief ( integer, float ) 型の Complex attribute のパースを行う．
 // @param[in] dst_list 結果を格納するリスト
 // @param[in] attr_type 属性の型
@@ -272,6 +262,35 @@ DotlibParser::parse_int_float(vector<const AstIntFloat*>& dst_list,
     dst_list.push_back(mgr().new_int_float(handler));
   }
   return stat;
+}
+
+// @brief ( string ) Complex attribute のパースを行う．
+// @param[in] dst 結果を格納する変数
+// @param[in] attr_type 属性の型
+// @param[in] attr_loc 属性のファイル上の位置
+// @retval true 正常にパーズした．
+// @retval false パーズ中にエラーが起こった．
+//
+// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+// - 'library_features'
+bool
+DotlibParser::parse_string_complex(const AstString*& dst,
+				   AttrType attr_type,
+				   const FileRegion& attr_loc)
+{
+  if ( dst != nullptr ) {
+    // 重複していた．
+    duplicate_error(attr_type, attr_loc, dst);
+    return false;
+  }
+  else {
+    StrHandler handler(*this);
+    bool stat = parse_complex_attribute(handler);
+    if ( stat ) {
+      dst = handler.value();
+    }
+    return stat;
+  }
 }
 
 // @brief ( string, float ) の形式の Complex attribute のパースを行う．
@@ -437,34 +456,6 @@ DotlibParser::parse_technology(const AstTechnology*& dst,
       }
       FileRegion loc(handler.first_loc(), handler.last_loc());
       dst = mgr().new_technology(loc, tech);
-    }
-    return stat;
-  }
-}
-
-// @brief 単位型 attribute のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-bool
-DotlibParser::parse_unit(const AstFloatStr*& dst,
-			 AttrType attr_type,
-			 const FileRegion& attr_loc)
-{
-  if ( dst != nullptr ) {
-    // 重複していた．
-    duplicate_error(attr_type, attr_loc, dst);
-    return false;
-  }
-  else {
-    FloatStrHandler handler(*this);
-    bool stat = parse_complex_attribute(handler);
-    if ( stat ) {
-      dst = mgr().new_float_str(handler);
     }
     return stat;
   }

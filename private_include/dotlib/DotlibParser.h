@@ -204,19 +204,6 @@ public:
   // complex attribute を読み込む関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 'base_curve_type' Complex attribute のパースを行う．
-  /// @param[in] dst 結果を格納する変数
-  /// @param[in] attr_type 属性の型
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_base_curve_type(const AstString*& dst,
-			AttrType attr_type,
-			const FileRegion& attr_loc);
-
   /// @brief 'define' Complex attribute のパースを行う．
   /// @param[in] dst_list 結果を格納するリスト
   /// @param[in] attr_type 属性の型
@@ -242,6 +229,20 @@ public:
 		    AttrType attr_type,
 		    const FileRegion& attr_loc);
 
+  /// @brief ( float, string ) 型の Complex attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  /// - 'capacitive_load_unit'
+  bool
+  parse_float_string(const AstFloatStr*& dst,
+		     AttrType attr_type,
+		     const FileRegion& attr_loc);
+
   /// @brief ( "float, float, ... " ) の形式の Complex attribute のパースを行う．
   /// @param[in] dst 結果を格納する変数
   /// @param[in] attr_type 属性の型
@@ -258,6 +259,23 @@ public:
   parse_float_vector(const AstFloatVector*& dst,
 		     AttrType attr_type,
 		     const FileRegion& attr_loc);
+
+  /// @brief ( integer, float ) の形式の Complex attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  /// - 'fanout_length'
+  /// - 'fanout_area'
+  /// - 'fanout_capacitance'
+  /// - 'fanout_resistance'
+  bool
+  parse_int_float(const AstIntFloat*& dst,
+		  AttrType attr_type,
+		  const FileRegion& attr_loc);
 
   /// @brief ( integer, "float, float, ... " ) の形式の Complex attribute のパースを行う．
   /// @param[in] dst 結果を格納する変数
@@ -287,19 +305,6 @@ public:
 		   AttrType attr_type,
 		   const FileRegion& attr_loc);
 
-  /// @brief 'library_features' Complex attribute のパースを行う．
-  /// @param[in] dst 結果を格納する変数
-  /// @param[in] attr_type 属性の型
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_library_features(const AstString*& dst,
-			 AttrType attr_type,
-			 const FileRegion& attr_loc);
-
   /// @brief ( integer, float ) 型の Complex attribute のパースを行う．
   /// @param[in] dst_list 結果を格納するリスト
   /// @param[in] attr_type 属性の型
@@ -312,6 +317,21 @@ public:
   parse_int_float(vector<const AstIntFloat*>& dst_list,
 		  AttrType attr_type,
 		  const FileRegion& attr_loc);
+
+  /// @brief ( string ) 型の Complex attribute のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  /// - 'base_curve_type'
+  /// - 'library_features'
+  bool
+  parse_string_complex(const AstString*& dst,
+		       AttrType attr_type,
+		       const FileRegion& attr_loc);
 
   /// @brief ( string, float ) の形式の Complex attribute のパースを行う．
   /// @param[in] dst_list 結果を格納するリスト
@@ -399,19 +419,6 @@ public:
   parse_technology(const AstTechnology*& dst,
 		   AttrType attr_type,
 		   const FileRegion& attr_loc);
-
-  /// @brief 'capacitive_load_unit' Complex attribute のパースを行う．
-  /// @param[in] dst 結果を格納する変数
-  /// @param[in] attr_type 属性の型
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_unit(const AstFloatStr*& dst,
-	     AttrType attr_type,
-	     const FileRegion& attr_loc);
 
   /// @brief 'values' Complex attribute のパースを行う．
   /// @param[in] dst 結果を格納する変数

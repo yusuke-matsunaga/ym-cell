@@ -708,8 +708,8 @@ v				liberty 文法覚書
 - sensitization Group statement
 
   sensitization ( name ) {
-    pin_names ( string, string, ... ) ;
-    vector ( integer, string ) ;
+    pin_names ( string, string, ... ) ; // 多分唯一
+    vector ( integer, string ) ; // 複数
   }
 
 - scaling_factors Group statement
@@ -760,11 +760,12 @@ v				liberty 文法覚書
   length : ネット長
   average_capacitance, standard_deviation, number_of_nets :
            Sysnopsys Floorplan Manager User Guide を見ろ
+  Example では最初の2つのパラメータしか定義していない．
 
 - wire_load_selection Group statement
 
   wire_load_selection ( name ) {
-    wire_load_from_area ( float, float, string ) ;xs
+    wire_load_from_area ( float, float, string ) ;
   }
 
   詳細は "Library Deveopment Procedure" and "Defining I/O Pads"
@@ -781,3 +782,950 @@ v				liberty 文法覚書
     fanout_length ( integer, float ) ;
     fanout_resistance ( integer, float ) ;
   }
+
+- cell Group statement
+
+  cell ( name ) {
+    area : float ;
+    auxiliary_pad_cell : true | false ;
+    base_name : cell_base_name_(string) ;
+    bus_naming_style : "string" ;
+    cell_footprint : footprint_type_(string) ;
+    cell_leakage_power : float ;
+    clock_gating_integrated_cell : string_value ;
+    contention_condition : "Boolean expression" ;
+    dont_fault : sa0 | sa1 | sa01 ; // string
+    dont_touch : true | false ;
+    dont_use : true | false ;
+    driver_type : name_(id) ;
+    edif_name : name_(id) ;
+    em_temp_degradation_factor : value_(float) ;
+    fpga_cell_type : value_(enum) ; // rising_edge_clock_cell | falling_edge_clock_cell
+    fpga_domain_style : name_(id) ;
+    geometry_print : string ;
+    handle_negative_constraint : true | false ;
+    interface_timing : true | false ;
+    io_type : name_(id) ;
+    is_clock_gating_cell : true | false ;
+    is_isolation_cell : true | false ; // マニュアルには Boolean expression と書いてある．
+    is_level_shifter : true | false ;
+    level_shifter_type : string ; // LH | HL | HL_LH (default)
+    map_only : true | false ;
+    pad_cell : true | false ;
+    pad_type : clock ; // clock のみが有効
+    power_cell_type : string ; // stdcell | macro
+    power_gating_cell : string ;
+    preferred : true | false ;
+    scaling_factors : group_name ;
+    sensitization_master : string ;
+    single_bit_denegerate : string ;
+    slew_type : name_(id) ;
+    switch_cell_type : string ; // 例では coarse_grain
+    threshold_voltage_group : string ;
+    timing_model_type : "string" ; // abstracted | extracted | qtm
+    use_for_size_only : true | false ;
+    vhdl_name : "string" ;
+
+    input_voltage_range ( float, float ) ;
+    output_voltage_range ( float, float ) ;
+    pin_equal ( "name_list_(string)" ) ; // 多分，複数あり
+    pin_name_map ( string, string, ... ) ; // 多分，複数あり
+    pin_opposite ( "name_list1_(string)", "name_list2_(string)" ) ; // 多分，複数あり
+    rail_connection ( connection_name_(string), power_supply_name_(string) ) ; // 複数あり
+    resource_usage ( resource_name_(id), number_of_resources_(id) ) ; // 複数あり
+
+    bundle ( name_(string) ) { } // 複数あり
+    bus ( name_(string) ) { } // 複数あり
+    dynamic_current () { }
+    ff ( variable1_(string), variable2_(string) ) { }
+    ff_bank ( variable1_(string), variable2_(string), bits_(integer) ) { }
+    functional_yield_metric () { }
+    generated_clock ( name ) { } // 複数あり
+    intrinsic_parasitic () { }
+    latch ( variable1_(string), variable2_(string) ) { }
+    latch_banck ( variable1_(string), variable2_(string), bits_(integer) ) { }
+    leakage_current () { } // たぶん複数あり
+    leakage_power () { } // たぶん複数あり
+    lut ( name_(string) ) { }
+    mode_definition () { } // たぶん複数あり
+    pg_pin ( string ) { } // たぶん複数あり
+    pin ( name_(string) | name_list_(string) ) { } // 複数あり
+    routing_track ( routing_layer_name_(string) ) { } // たぶん複数あり
+    statetable ( "input_node_names", "internal_node_names" ) { }
+    test_cell () { }
+    type ( name_(string) ) { } // 複数あり
+  }
+
+- bundle Group statement
+
+  bundle ( string ) {
+    members ( string, string, ... ) ; // 例では string のリストに見える．
+    // pin Group の simple attributes
+    pin ( string ) { }
+  }
+
+- bus Group statement
+
+  bus ( string ) {
+    bus_type : string ; // library の type グループ名
+    pin ( string [, string, ... ] ) {
+    }
+  }
+
+  bus 内のピン名は A[0:3] とか A[4] という記述がある．
+
+- dynamic_current Group statement
+
+  dynamic_current () {
+    when : "Boolean expression" ;
+    related_inputs : string ; // required, (unique?)
+    related_outputs : string ; // optional, (unique?)
+    typical_capacitances ( "float, float, ..." ) ; // 要素数はrelated_outputs のピン数と同じ
+    switching_group () { } // たぶん，複数あり
+  }
+
+  related_inputs, related_outputs は文字列だが "" 内の空白で区切られた複数のピン名のリストを表す．
+
+- switching_group Group statement
+
+  switching_group () {
+    input_switching_condition ( string, string, ... ) ; // rise | fall
+    output_switching_condition ( string, string, ... ) ; // rise | fall
+    min_input_switching_count : integer ;
+    max_input_switching_count : integer ;
+    pg_current () { }
+  }
+
+  input_switching_condition, output_switching_condition は simple
+  attribute と書いてあるがどう見ても complex attribute．
+  多分，ピン数分の rise|fall が並ぶものと思われる．
+
+- pg_current Group statement
+
+  pg_current () {
+    vector () { } // 複数あり
+  }
+
+- vector Group statement
+
+  vector () {
+    index_1 ( "float, float, ..." ) ; // なぜかマニュアルには <float> と謎表記
+    index_2 ( "float, float, ..." ) ; // なぜかマニュアルには <float> と謎表記
+    index_3 ( "float, float, ..." ) ;
+    index_4 ( "float, float, ..." ) ;
+    index_output : string ; // <output_pin_name>
+    reference_time : float ; // <float>
+    values ( "float, float, ..." ) ;
+  }
+
+  この辺のマニュアル書いてる人は simple attribute と complex attribute
+  を混同してる．
+  values に至っては values : ( "0.002, 0.009, .." ) ;
+  などとわけのわからない記述例を載せている．
+
+- ff Group statement
+
+  ff ( string, string ) {
+    clear : "Boolean expression" ;
+    clear_preset_var1 : L | H | N | T | X ;
+    clear_preset_var2 : L | H | N | T | X ;
+    clocked_on : "Boolean expression" ;
+    clocked_on_also : "Boolean expression" ;
+    next_state : "Boolean expression" ;
+    preset : "Boolean expression" ;
+  }
+
+- ff_bank Group statement
+
+  ff_bank ( string, string, integer ) {
+    clear : "Boolean expression" ;
+    clear_preset_var1 : L | H | N | T | X ;
+    clear_preset_var2 : L | H | N | T | X ;
+    clocked_on : "Boolean expression" ;
+    clocked_on_also : "Boolean expression" ;
+    next_state : "Boolean expression" ;
+    preset : "Boolean expression" ;
+  }
+
+  中身は ff group と同じ
+
+- fpga_condition Group statement
+
+  fpga_condition ( string ) {
+    fpga_condition_value ( string ) { } // たぶん，複数あり
+  }
+
+- fpga_condition_value Group statement
+
+  fpga_condition_value ( string ) {
+    fpg_arc_condition : true | false ;
+  }
+
+  果てしなく馬鹿で無駄な構文
+  fpga_condition_value を complex attribute にすればよいのでは？
+
+- functional_yield_metric Group statement
+
+  functional_yield_metric () {
+    average_number_of_faults ( string ) { }
+  }
+
+- average_number_of_faults Group statement
+
+  average_number_of_faults ( string ) { // faults_lut_template 名
+    values ( 例のやつ ) ;
+  }
+
+- generated_clock Group statement
+
+  generated_clock ( string ) {
+    clock_pin : string ; // 空白で区切られたピン名のリスト
+    master_pin : string ;
+    divided_by : integer ;
+    multipled_by : integer ;
+    invert : true | false ;
+    duty_cycle : float ;
+    edges ( integer, integer, integer ) ; // 常に 3
+    shifts ( float, float, float ) ; // 常に 3
+  }
+
+- intrinsic_parasitic Group statement
+
+  intrinsic_parasitic ( string ) {
+    when : "Boolean expression" ;
+    intrinsic_capacitance ( string ) {
+      related_output : string ; // マニュアルには related_outputs の記述もあり．
+      value : float ;
+    } // 複数あり
+    intrinsic_resistance ( string ) {
+      value : float ;
+    } // 複数あり
+    total_capacitance ( string ) {
+      value : float ;
+    }
+  }
+
+  これ ３つとも complex attribute で出来るじゃん．
+
+- latch Group statement
+
+  latch ( string, string ) {
+    clear : "Boolean expression" ;
+    clear_preset_var1 : L | H | N | T | X ;
+    clear_preset_var2 : L | H | N | T | X ;
+    data_in : "Boolean expression" ;
+    enable : "Boolean expression" ;
+    enable_also : "Boolean expression" ;
+    preset : "Boolean expression" ;
+  }
+
+- latch_bank Group statement
+
+  latch_bank ( string, string, integer ) {
+    clear : "Boolean expression" ;
+    clear_preset_var1 : L | H | N | T | X ;
+    clear_preset_var2 : L | H | N | T | X ;
+    data_in : "Boolean expression" ;
+    enable : "Boolean expression" ;
+    enable_also : "Boolean expression" ;
+    preset : "Boolean expression" ;
+  }
+
+  中身は latch と同じ
+
+- leakage_current Group statement
+
+  leakage_current () {
+    when : "Boolean expression" ;
+    value : float ; // pg_current の代わり
+    pg_current ( string) { // たぶん複数あり
+      value : float ;
+    }
+    gate_leakage ( string ) {
+      input_low_value : float ;
+      input_high_value : float ;
+    }
+  }
+
+- leakage_power Group statement
+
+  leakage_power () {
+    power_level : string ;
+    related_pg_pin : string ;
+    when : "Boolean expression" ;
+    value : float ;
+  }
+
+- lut Group statement
+
+  lut ( string ) {
+    input_pins : string ; // 空白で区切られたピンのリスト
+  }
+
+- mode_definition Group statement
+
+  mode_definition ( string ) {
+    mode_value ( string ) { // 複数あり
+      when : "Boolean expression" ;
+      sdf_cond : string ;
+    }
+  }
+
+- pg_pin Group statement
+
+  pg_pin ( string ) {
+    voltage_name : string ;
+    pg_type : string ; // primary_power | primary_ground |
+                       // backup_power | backup_ground |
+		       // internal_power | internal_ground
+  }
+
+- routing_track Group statement
+
+  routing_track ( string ) {
+    tracks : integer ;
+    total_track_area : float ;
+    short ? complex attribute だが一切の記述なし
+    /* for model group only */ とだけ書かれている．
+  }
+
+- statetable Group statement
+
+  statetable ( string, string ) {
+    table : string ;
+  }
+
+  ヘッダの2つの文字列はそれぞれ
+  input_node_names, internal_node_names
+  を表す．例では複数のピン名を空白なしで連結しているように見える．
+
+  table は 2つの ':' で区切られた複数行からなる文字列で一行が
+  " input_node_values : current_internal_values : next_internal_values "
+  を表す．
+
+  センスのない構文．複雑なことを全部文字列の中に押し込めて構文としてな
+  んにもしていない．
+
+- test_cell Group statement
+
+  test_cell () {
+    ff ( string, string ) { }
+    ff_bank ( string, string, integer ) { }
+    latch ( string, string ) { }
+    latch_bank ( string, string, integer ) { }
+    pin ( string, .. ) { }
+    statetable ( string, string ) { }
+  }
+
+  test_cell 内の pin Group では
+
+  signal_type simple attribute を持つ場合がある．
+
+  signal_type : test_scan_in | test_scan_in_inverted |
+                test_scan_out | test_scan_out_inverted |
+		test_scan_enable | test_scan_enable_inverted |
+		test_scan_clock | test_scan_clock_a |
+                test_scan_clock_b | test_clock ;
+
+  こちらも test_cell 内の pin group で使用可能な simple attribute
+  test_output_only : true | false ;
+
+- type Group statement
+
+  type ( string ) {
+    base_type : string ; // array
+    bit_from : integer ;
+    bit_to : integer ;
+    bit_width : integer ;
+    data_type : string ; // bit
+    downto : true | false ;
+  }
+
+- model Group statement
+
+  model ( string ) {
+  }
+
+  cell Group と同一の属性を持つ．
+  model Group 固有の属性は以下の通り
+
+  cell_name : string ;
+  short ( "name_list_(string)" ) ;
+
+  凡例では上のように書いてあるが，実際の例では
+  short ( b, y ) ;
+  なので short ( string, string, ... ) ; が正しいと思われる．
+
+- pin Group statement
+
+  pin ( string, string, ... ) {
+    bit_width : integer ;
+    capacitance : float ;
+    clock : true | false ;
+    clock_gate_clock_pin : true | false ;
+    clock_gate_enable_pin : true | false ;
+    clock_gate_test_pin : true | false ;
+    clock_gate_obs_pin : true | false ;
+    clock_gate_out_pin : true | false ;
+    complementary_pin : string ;
+    connection_class : string ;
+    direction : input | output | inout | internal ;
+    dont_fault : sa0 | sa1 | sa01 ;
+    drive_current : float ;
+    driver_type : pull_up | pull_down | open_drain | open_source |
+                  bus_hold | resistive | resistive_0 | resistive_1 ;
+    fall_capacitance : float ;
+    fall_current_slope_after_threshold : float ;
+    fall_current_slope_before_threshold : float ;
+    fall_time_after_threshold : float ;
+    fall_time_before_threshold : float ;
+    fanout_load : float ;
+    fault_model "two-value string" ; //[01x][01x]
+    function : "Boolean expression" ;
+    has_builtin_pad : true | false ;
+    hysteresis : true | false ;
+    input_map : name_(id) ; 空白で区切られた入力ピン名のリスト
+    input_signal_level : name_(id) ;
+    input_threshold_pct_fall : float ;
+    input_threshold_pct_rise : float ;
+    input_voltage : name_(id) ;
+    internal_node : pin_name_(id) ;
+    inverted_output : true | false ;
+    is_pad : true | false ;
+    isolation_cell_enable_pin : true | false ;
+    level_shifter_enable_pin : true | false ;
+    map_to_logic : 1 | 0 ; // なんでこれが Boolean expression なの？
+    max_capacitance : float ;
+    max_fanout : float ;
+    max_input_noise_width : float ;
+    max_transition : float ;
+    min_capacitance : float ;
+    min_fanout : float ;
+    min_input_noise_width : float ;
+    min_period : float ;
+    min_pulse_width_high : float ;
+    min_pulse_width_low : float ;
+    min_transition : float ;
+    multicell_pad_pin : true | false ;
+    nextstate_type : data | preset | clear | load | scan_in | scan_enable ;
+    output_signal_level : name_(id) ;
+    output_voltage : name_(id) ;
+    pg_function : "<function_string>" ; ?? たぶん "Boolean expression"
+    pin_func_type : clock_enable | active_high | active_low |
+                     active_rising | active_falling ;
+    power_down_function : "<function string>" ; たぶん "Boolean expression"
+    prefer_tied : "0" | "1" ;
+    primary_output : true | false ;
+    pulling_current : float ; // マニュアルには正確な記述なし．
+    pulling_resistance : float ;
+    pulse_clock : rise_triggered_high_pulse |
+                  rise_triggered_low_pulse |
+                  fall_triggered_high_pulse |
+                  fall_triggered_low_pulse ;
+    related_ground_pin : pg_pin_name_(id) ;
+    related_power_pin : pg_pin_name_(id) ;
+    rise_capacitance : float ;
+    rise_current_slope_after_threshold : float ;
+    rise_current_slope_before_threshold : float ;
+    rise_time_after_threshold : float ;
+    rise_time_before_threshold : float ;
+    signal_type : test_scan_in | test_scan_in_inverted |
+                  test_scan_out | test_scan_out_inverted |
+                  test_scan_enable | test_scan_enable_inverted |
+                  test_scan_clock | test_scan_clock_a |
+                  test_scan_clock_b | test_clock ;
+    slew_control : low | medium | high | none ;
+    slew_lower_threshold_pct_fall : float ;
+    slew_lower_threshold_pct_rise : float ;
+    slew_upper_threshold_pct_fall : float ;
+    slew_upper_threshold_pct_rise : falot ;
+    state_function : "Boolean expression" ;
+    std_cell_main_rail : true | false ;
+    switch_function : function_string ; // "Boolean expression" のこと？
+    switch_pin : true | false ;
+    test_output_only : true | false ;
+    three_state : "Boolean expression" ;
+    vhdl_name : "name_(string)" ;
+    x_function : "Boolean expression" ;
+
+    fall_capacitance_range : (value_1_(float), value_2_(float)) ;
+    power_gating_pin : (value_1_(enum), value2_(Boolean)) ;
+                         たぶん value_1 は string, value2 は integer
+    rise_capacitance_range : (value_1_(float), value_2(float)) ;
+
+    ccsn_first_stage () { ... }
+    ccsn_last_stage () { ... }
+    dc_current () { ... }
+    electromigration () { ... }
+    hyperbolic_noise_above_high () { ... }
+    hyperbolic_noise_below_low () { ... }
+    hyperbolic_noise_high () { ... }
+    hyperbolic_noise_low () { ... }
+    input_signal_swing () { ... }
+    internal_power() { ... }
+    max_capacitance () { ... }
+    max_transition () { ... }
+    min_pulse_width () { ... }
+    minimum_period () { ... }
+    output_signal_swing () { ... }
+    pin_capacitance () { ... }
+    timing () { ... }
+    tlatch () { ... }
+  }
+
+- ccsn_{first|last}_stage Group statement
+
+  ccsn_first_sgate () {
+    is_needed : true | false ;
+    is_inverting : true | false ;
+    miller_cap_rise : float ;
+    miller_cap_fall : float ;
+    stage_type : string ; // pull_up | pull_down
+    when : "Boolean expression" ;
+
+    dc_current ( string ) {
+      index_1 ( "float, float, ... " ) ;
+      index_2 ( "float, float, ... " ) ;
+      values ( 例のやつ ) ;
+    }
+
+    output_voltage_{rise|fall} () {
+      vector ( string ) {
+        index_1 ( float ) ; // ?
+	index_2 ( float ) ; // ?
+	index_3 ( "float, float, ... " ) ;
+	values ( 例のやつ ) ;
+      }
+    }
+
+    propagated_noise_{low|high} () {
+      vector ( string ) {
+        index_1 ( float ) ; // ?
+	index_2 ( float ) ; // ?
+	index_3 ( float ) ; // ?
+	index_4 ( "float, float, ... " ) ;
+	values ( 例のやつ ) ;
+      }
+    }
+  }
+
+- electromigration Group statement
+
+  electromigration () {
+    related_pin : string ; // 空白で区切られたピン名のリスト
+    related_bus_pins : string ; // 空白で区切られたピン名のリスト
+    when : "Boolen expression" ;
+    index_1 ( "float, float, ... " ) ; // optional
+    index_2 ( "float, float, ... " ) ; // optional
+    values ( 例のやつ ) ;
+    em_max_toggle_rate ( string ) {
+      // lcrm1_3 に記述なし
+    }
+  }
+
+- hyperbolic_noise_{above_high|below_low|high|low} Group statement
+
+  hyperbolic_noise_above_high () {
+    area_coefficient : float ;
+    height_coefficient : float ;
+    width_coefficient : float ;
+  }
+
+- internal_power Group statement
+
+  internal_power () {
+    equal_or_opposite_output : string ; // 空白で区切られたピン名のリスト
+    falling_together_group : string ;  // 空白で区切られたピン名のリスト
+    power_level : string ;
+    related_pin : string ;  // 空白で区切られたピン名のリスト
+    rising_together_group : string ;  // 空白で区切られたピン名のリスト
+    switching_interval : float ;
+    switching_together_group : string ;  // 空白で区切られたピン名のリスト
+    when : "Boolean expression" ;
+    domain ( string ) { }
+    fall_power ( string ) { }
+    power ( string ) { }
+    rise_power ( string ) { }
+  }
+
+  power, fall_power, rise_power グループは table グループ
+
+- {max|min}_capacitance Group statement (lcrm中では max_cap ?)
+
+  max_capacitance ( string ) { // template 名
+    // table attributes
+  }
+
+- {max|min}_transition Group statement
+
+  max_transition ( string ) { // template 名
+    // table attributes
+  }
+
+- min_pulse_width Group statement
+
+  min_pulse_width () {
+    constraint_high : float ;
+    constraint_low : float ;
+    when : "Boolean expression" ;
+    sdf_cond : string ; "SDFの書式のブール式"
+  }
+
+- minimum_period Group statement
+
+  minimum_period () {
+    constraint : float ;
+    when : "Boolean expression" ;
+    sdf_cond : string ;
+  }
+
+- pin_capacitance Group statement
+
+  pin_capacitance () {
+    capacitance () { }
+    rise_capacitance () { }
+    fall_capacitance () { }
+    rise_capacitance_range() { } // optional, unique
+    fall_capacitance_range() { } // optional, uniquen
+  }
+
+  capacitance, rise_capacitance, fall_capacitance は table グループ
+  例では orders, coefs を用いている．
+
+- {rise|fall}_capacitance_range Group statement
+
+  rise_capacitance_range () {
+    lower ( string ) { } // required, unique
+    upper ( string ) { } // required, unique
+  }
+
+  lower, upper は poly template table グループ
+
+    variable_n_range
+    orders
+    coefs
+    domain
+
+- receiver_capacitance Group statement
+
+  receiver_capacitance () {
+    receiver_capacitance1_fall() { }
+    receiver_capacitance1_rise() { }
+    receiver_capacitance2_fall() { }
+    receiver_capacitance2_rise() { }
+  }
+
+  4つのグループは lu_tamplate_name を引数にとり
+  values 属性を持つ．
+
+- tlatch Group statment
+
+  tlatch ( string ) {
+    edge_type : string ; // rising | falling
+    tdisable : TRUE | FALSE ; // true | false じゃないの？
+  }
+
+
+- timing Group statement
+
+  timing ( string ) { // string は optional
+    clock_gating_flag : true | false ;
+    default_timing : true | false ;
+    fall_resistance : float ;
+    fpga_arc_condition : "Boolean expression" ;
+    fpga_domain_style : string ;
+    interdependence_id : integer ;
+    intrinsic_fall : float ;
+    intrinsic_rise : float ;
+    related_bus_equivalent : "name1 [name2 name3 ...]" ;
+    related_bus_pins : "name1 [name2 name3 ...]" ;
+    related_output_pin : string ;
+    related_pin : "name1 [name2 name3 ..]" ;
+    rise_resistance : float ;
+    sdf_conf : "SDF expression" ;
+    sdf_cond_end : "SDF expression" ;
+    sdf_cond_start : "SDF expression" ;
+    sdf_edges : SDF edge type ; // noedge | start_edge | end_edge | both_edge
+    slope_fall : float ;
+    slope_rise : float ;
+    steady_state_resistance_above_high : float ;
+    steady_state_resistance_below_low : float ;
+    steady_state_resistance_high : float ;
+    steady_state_resistance_low : float ;
+    tied_off : true | false ;
+    timing_sense : positive_unate | negative_unate | non_unate ;
+    timing_type : <timing type> ;
+    wave_fall_sampling_index : integer ;
+    wave_rise_sampling_index : integer ;
+    when : "Boolean expression" ;
+    when_end : "Boolean expression" ;
+    when_start : "Boolean expression" ;
+
+    fall_delay_intercept ( integer, float ) ; // 複数あり
+    fall_pin_resistance ( integer, float ) ;  // 複数あり
+    mode ( string, string ) ;
+    pin_name_map ( string, string, ... ) ;
+    rise_delay_intercept ( integer, float ) ; // 複数あり
+    rise_pin_resistance ( integer, float ) ; // 複数あり
+    wave_fall ( integer, integer, ... ) ;
+    wave_rise ( integer, integer, ... ) ;
+    wave_fall_time_interval ( float, float, ... ) ;
+    wave_rise_time_interval ( float, float, ... ) ;
+
+    cell_degradation () { ... }
+    cell_fall () { ... }
+    cell_rise () { ... }
+    fall_constraint () { ... }
+    fall_propagation () { ... }
+    fall_transition () { ... }
+    noise_immunity_above_high () { ... }
+    noise_immunity_below_low () { ... }
+    noise_immunity_high () { ... }
+    noise_immunity_low () { ... }
+    output_current_fall () { ... }
+    output_current_rise () { ... }
+    propagated_noise_height_above_high () { ... }
+    propagated_noise_height_below_low() { ... }
+    propagated_noise_height_high() { ... }
+    propagated_noise_height_low() { ... }
+    propagated_noise_peak_time_ratio_above_high() { ... }
+    propagated_noise_peak_time_ratio_below_low() { ... }
+    propagated_noise_peak_time_ratio_high() { ... }
+    propagated_noise_peak_time_ratio_low() { ... }
+    propagated_noise_width_above_high() { ... }
+    propagated_noise_width_below_low() { ... }
+    propagated_noise_width_high() { ... }
+    propagated_noise_width_low() { ... }
+    receiver_capacitance1_fall() { ... }
+    receiver_capacitance1_rise() { ... }
+    receiver_capacitance2_fall() { ... }
+    receiver_capacitance2_rise() { ... }
+    retaining_fall () { ... }
+    retaining_rise () { ... }
+    retain_fall_slew () { ... }
+    retain_rise_slew () { ... }
+    rise_constraint () { ... }
+    rise_propagation () { ... }
+    rise_transition () { ... }
+    steady_state_current_high () { ... }
+    steady_state_current_low () { ... }
+    steady_state_current_tristate () { ... }
+  }
+
+- cell_degradation Group statement
+
+  cell_degradation ( string ) {
+    index_1 ( "float, float, ... " ) ;
+    values ( ... ) ;
+    coefs ( ) ;
+    orders ( ) ;
+    variable_n_range ( ) ;
+    domain () { }
+  }
+
+  普通の table グループ
+
+- cell_{fall|rise} Group statement
+
+  cell_fall ( string ) {
+    index_1 ( ... ) ;
+    index_2 ( ... ) ;
+    index_3 ( ... ) ;
+    values ( ... ) ;
+    domain () { }
+  }
+
+  普通の table グループ
+
+- compact_ccs_{fall|rise} Group statement
+
+  compact_ccs_fall (string ) {
+    vase_curves_group : string ;
+    values ( ... ) ;
+  }
+
+- {fall|rise}_constraint Group statement
+
+  fall_constraint (string) {
+    index_1 ( ... ) ;
+    index_2 ( ... ) ;
+    index_3 ( ... ) ;
+    values ( ... ) ;
+    domain () { }
+  }
+
+  普通の table グループ
+
+- {fall|rise}_propagation Group satement
+
+  fall_propagation (string) {
+    index_1 ( ... ) ;
+    index_2 ( ... ) ;
+    index_3 ( ... ) ;
+    values ( ... ) ;
+    domain () { }
+  }
+
+  普通の table グループ
+
+- {fall|rise}_transition Group statement
+
+  fall_transition (string) {
+    index_1 ( ... ) ;
+    index_2 ( ... ) ;
+    index_3 ( ... ) ;
+    intermediate_values ( ... ) ;
+    values ( ... ) ;
+    domain () { }
+  }
+
+  普通の table グループに intermediate_values 属性が追加されている．
+
+- noise_immunity_{above_high|below_low|high|low} Group statement
+
+  noise_immunity_above_high (string) {
+    coefs ( ... ) ;
+    orders ( ... ) ;
+    values ( ... ) ;
+    domain () { }
+  }
+
+  普通の table グループ
+
+- output_current_{fall|rise} Group statement
+
+  output_current_fall (string) {
+    vector () {
+      reference_time : float ;
+      index_1 ( ... ) ;
+      index_2 ( ... ) ;
+      index_3 ( ... ) ;
+      values ( ... ) ;
+    }
+  }
+
+  vector グループは普通の table グループに reference_time 属性が追加さ
+  れたもの
+
+- propagated_noise_height_{above_high|below_low|high|low} Group statement
+
+  propagated_noise_height_above_high ( string ) {
+    coefs ( ... ) ;
+    orders ( ... ) ;
+    values ( ... ) ;
+    domain ( ) { }
+  }
+
+  普通の table グループ
+
+- propagated_noise_peak_time_ratio_{above_high|以下略} Group statement
+
+  propagated_noise_peak_time_ratio_above_high ( string ) {
+    coefs ( ... ) ;
+    orders ( ... ) ;
+    values ( ... ) ;
+    domain () { }
+  }
+
+  propagated_noise_height_above_high と同様
+
+- propagated_noise_width_{above_high|以下略} Group statement
+
+  propagated_noise_width_above_high ( string ) {
+    ...
+  }
+
+  propagated_noise_height_above_high と同様
+
+- receiver_capacitance{1|2}_{fall|rise} Group statement
+
+  receiver_capacitance1_fall ( string ) { // lcrm1-3 の例ではパラメータがない
+    values ( ... ) ;
+  }
+
+- retaining_{fall|rise} Group statement
+
+  retaining_fall ( string ) {
+    index_1 ( ... ) ;
+    index_2 ( ... ) ;
+    index_3 ( ... ) ;
+    values ( ... ) ;
+    domain () { }
+  }
+
+  普通の table グループ
+
+- retain_{fall|rise}_slew Group statement
+
+  retain_fall_slew (string) {
+    values ( ... ) ;
+  }
+
+  retain_fall_slew (string) {
+    orders ( ... ) ;
+    coefs ( ... ) ;
+    variable_n_range ( float, float ) ;
+  }
+
+  説明と例では明示されていないが普通の table グループ？
+
+- steady_state_current_{high|low} Group statement
+
+  steady_state_current_high ( string ) {
+    coefs ( ... ) ;
+    orders ( ... ) ;
+    values ( ... ) ;
+    domain () { }
+  }
+
+  普通の table グループ
+
+- steady_state_current_tristate Group statement
+
+  steady_state_current_tristate ( string ) {
+    index_1 ( ... ) ;
+    index_2 ( ... ) ;
+    index_3 ( ... ) ;
+    intermediate_values ( ... ) ;
+    values ( ... ) ;
+    coers ( ... ) ;
+    orders ( ... ) ;
+    domain () { }
+  }
+
+  普通の table グループに intermediate_values 属性を加えたもの
+
+- pin_based_variation Group statement
+
+  pin_based_variation () {
+    va_parameters ( string, string, ... ) ;
+    nominal_va_values ( float, float, ... ) ;
+    va_compact_ccs_rise () { }
+    va_compact_ccs_fall () { }
+    va_receiver_capacitance1_fall () { }
+    va_receiver_capacitance1_rise () { }
+    va_receiver_capacitance2_fall () { }
+    va_receiver_capacitance2_rise () { }
+  }
+
+  たぶん timing_based_variation と同じ
+
+- timing_based_variation Group statement
+
+  timing_based_variation () {
+    va_parameters ( string, string, ... ) ;
+    nominal_va_values ( float, float, ... ) ;
+    va_compact_ccs_rise( string ) {
+      va_values ( float, float, ... ) ;
+      values ( "float, ...", "float, ... ", ... );
+    }
+    va_compact_ccs_fall ( ) { }
+    va_receiver_capacitance1_fall () { }
+    va_receiver_capacitance1_rise () { }
+    va_receiver_capacitance2_fall () { }
+    va_receiver_capacitance2_rise () { }
+    va_rise_constraint () { }
+    va_fall_constraint () { }
+  }
+
+  va_{fall|rise}_constraint は va_compact_ccs_rise と同じ
