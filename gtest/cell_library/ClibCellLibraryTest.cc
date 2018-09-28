@@ -11,7 +11,7 @@
 #include "ym/ClibCellLibrary.h"
 #include "ym/FileIDO.h"
 #include "ym/FileODO.h"
-#include "ym/MsgHandler.h"
+#include "ym/StreamMsgHandler.h"
 #include "ym/MsgMgr.h"
 
 
@@ -37,7 +37,8 @@ TEST(ClibCellLibraryTest, read_mislib)
 TEST(ClibCellLibraryTest, read_liberty)
 {
   try {
-    MsgMgr::reg_handler(new StreamMsgHandler(&cout));
+    StreamMsgHandler handler(&cout);
+    MsgMgr::attach_handler(&handler);
     string filename = string(DATA_DIR) + string("/HIT018.typ.snp");
     ClibCellLibrary library;
     bool stat = library.read_liberty(filename);
