@@ -82,7 +82,7 @@ set (mislib_SOURCES
   )
 
 set (dotlib_SOURCES
-  #  src/dotlib/read_liberty.cc
+  src/dotlib/read_liberty.cc
 
   src/dotlib/parser/AttrDic.cc
   src/dotlib/parser/DotlibParser.cc

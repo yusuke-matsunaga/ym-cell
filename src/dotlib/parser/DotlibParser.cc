@@ -62,7 +62,8 @@ DotlibParser::parse()
     goto last;
   }
 
-  stat = parse_library(library, AttrType::library, loc);
+  //stat = parse_library(library, AttrType::library, loc);
+  stat = false;
   if ( !stat ) {
     goto last;
   }

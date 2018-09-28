@@ -57,6 +57,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 BEGIN_NONAMESPACE
 
+#if 0
 // 文字列を空白で区切る
 void
 split(const string& src_str,
@@ -803,6 +804,7 @@ set_library(const AstLibrary* dt_library,
 
   library->set_cell_list(cell_list);
 }
+#endif
 
 END_NONAMESPACE
 
@@ -839,7 +841,7 @@ CiCellLibrary::read_liberty(const string& filename)
     return false;
   }
 
-  set_library(dt_library, this);
+  //set_library(dt_library, this);
 
   return true;
 }
