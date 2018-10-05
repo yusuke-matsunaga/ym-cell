@@ -97,19 +97,19 @@ public:
 
   /// @brief テクノロジの取得
   /// 返り値は
-  /// - kTechCmos
-  /// - kTechFpga
+  /// - Cmos
+  /// - Fpga
   /// のどちらか
   ClibTechnology
   technology() const;
 
   /// @brief 遅延モデルの取得
   /// 返り値は
-  /// - kClibDelayGenericCmos
-  /// - kClibDelayTableLookup
-  /// - kClibDelayPiecewiseCmos
-  /// - kClibDelayCmos2
-  /// - kClibDelayDcm
+  /// - GenericCmos
+  /// - TableLookup
+  /// - PiecewiseCmos
+  /// - Cmos2
+  /// - Dcm
   /// のいずれか
   ClibDelayModel
   delay_model() const;
