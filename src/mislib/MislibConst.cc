@@ -39,7 +39,7 @@ MislibConst0::type() const
 Expr
 MislibConst0::to_expr(const HashMap<ShString, int>& name_map) const
 {
-  return Expr::const_zero();
+  return Expr::zero();
 }
 
 // 内容を出力する．
@@ -80,7 +80,7 @@ MislibConst1::type() const
 Expr
 MislibConst1::to_expr(const HashMap<ShString, int>& name_map) const
 {
-  return Expr::const_one();
+  return Expr::one();
 }
 
 // 内容を出力する．

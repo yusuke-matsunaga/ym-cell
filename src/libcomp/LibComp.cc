@@ -248,11 +248,11 @@ void
 LibComp::_logic_init()
 {
   { // 定数0グループの登録
-    LcGroup* func0 = _find_group(Expr::const_zero());
+    LcGroup* func0 = _find_group(Expr::zero());
     mLogicGroup[0] = func0->id();
   }
   { // 定数1グループの登録
-    LcGroup* func1 = _find_group(Expr::const_one());
+    LcGroup* func1 = _find_group(Expr::one());
     mLogicGroup[1] = func1->id();
   }
   { // バッファグループの登録

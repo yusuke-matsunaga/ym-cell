@@ -34,7 +34,7 @@ TEST(LcSignatureTest, constr)
 // 定数０のシグネチャ
 TEST(LcSignatureTest, const0)
 {
-  Expr expr = Expr::const_zero();
+  Expr expr = Expr::zero();
   LcSignature sig(expr);
 
   EXPECT_EQ( LcSignature::kLogicType, sig.type() );
@@ -50,7 +50,7 @@ TEST(LcSignatureTest, const0)
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::const_zero(0), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::zero(0), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 }
 

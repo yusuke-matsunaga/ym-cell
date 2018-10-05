@@ -118,7 +118,7 @@ CiCellPin::has_function() const
 Expr
 CiCellPin::function() const
 {
-  return Expr::const_zero();
+  return Expr::zero();
 }
 
 // @brief three_state 属性を持っているときに true を返す．
@@ -132,7 +132,7 @@ CiCellPin::has_three_state() const
 Expr
 CiCellPin::three_state() const
 {
-  return Expr::const_zero();
+  return Expr::zero();
 }
 
 // @brief 最大ファンアウト容量を返す．

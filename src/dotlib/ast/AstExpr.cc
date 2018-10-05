@@ -289,10 +289,10 @@ Expr
 AstBoolExpr::to_expr(const HashMap<ShString, int>& pin_map) const
 {
   if ( mValue ) {
-    return Expr::const_zero();
+    return Expr::zero();
   }
   else {
-    return Expr::const_one();
+    return Expr::one();
   }
 }
 

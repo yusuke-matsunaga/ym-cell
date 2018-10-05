@@ -168,14 +168,14 @@ LcPatMgr::check_equivalent(const Expr& expr1,
     return false;
   }
 
-  if ( expr1.is_posiliteral() ) {
-    if ( expr2.is_posiliteral() && expr1.varid() == expr2.varid() ) {
+  if ( expr1.is_posi_literal() ) {
+    if ( expr2.is_posi_literal() && expr1.varid() == expr2.varid() ) {
       return true;
     }
     return false;
   }
-  if ( expr1.is_negaliteral() ) {
-    if ( expr2.is_negaliteral() && expr1.varid() == expr2.varid() ) {
+  if ( expr1.is_nega_literal() ) {
+    if ( expr2.is_nega_literal() && expr1.varid() == expr2.varid() ) {
       return true;
     }
     return false;
@@ -286,7 +286,7 @@ LcPatMgr::pg_sub(const Expr& expr,
 {
   if ( expr.is_literal() ) {
     LcPatNode* node = make_input(expr.varid());
-    bool inv = expr.is_negaliteral();
+    bool inv = expr.is_nega_literal();
     pg_list.push_back(LcPatHandle(node, inv));
   }
   else {
