@@ -4,7 +4,7 @@
 # ===================================================================
 include_directories(
   ${GTEST_INCLUDE_DIR}
-  ../src/libcomp
+  ${PROJECT_SOURCE_DIR}/ym-cell/c++-src/libcomp
   )
 
 

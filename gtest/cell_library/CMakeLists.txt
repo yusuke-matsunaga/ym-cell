@@ -30,5 +30,5 @@ ym_add_gtest ( ClibCellLibraryTest
   )
 
 target_compile_definitions ( ClibCellLibraryTest
-  PRIVATE "-DDATA_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/data\""
+  PRIVATE "-DDATA_DIR=\"${PROJECT_SOURCE_DIR}/ym-cell/testdata\""
   )
