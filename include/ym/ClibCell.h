@@ -192,7 +192,7 @@ public:
   /// @brief 条件に合致するタイミング情報のリストを返す．
   /// @param[in] ipos 開始ピン番号 ( 0 <= ipos < input_num2() )
   /// @param[in] opos 終了ピン番号 ( 0 <= opos < output_num2() )
-  /// @param[in] timing_sense タイミング情報の摘要条件
+  /// @param[in] sense タイミング情報の摘要条件
   virtual
   const ClibTimingList&
   timing_list(int ipos,
