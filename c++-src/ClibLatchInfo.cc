@@ -15,6 +15,7 @@ BEGIN_NAMESPACE_YM_CLIB
 BEGIN_NONAMESPACE
 
 const int OUTPUT1 = 0;
+const int OUTPUT2 = 1;
 const int INPUT   = 2;
 const int ENABLE  = 3;
 const int CLEAR   = 4;
@@ -65,6 +66,7 @@ ClibLatchInfo::ClibLatchInfo() :
 //  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
 //  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
 //  - pos_array[4] : 肯定出力のピン番号       (3bit)
+//  - pos_array[5] : 肯定出力のピン番号       (3bit) | 有無 (1bit)
 ClibLatchInfo::ClibLatchInfo(int pos_array[]) :
   mBits(0U)
 {
@@ -73,6 +75,7 @@ ClibLatchInfo::ClibLatchInfo(int pos_array[]) :
   mBits |= encode(pos_array[2], CLEAR);
   mBits |= encode(pos_array[3], PRESET);
   mBits |= encode(pos_array[4], OUTPUT1);
+  mBits |= encode(pos_array[5], OUTPUT2);
 }
 
 // @brief デストラクタ
@@ -108,6 +111,13 @@ int
 ClibLatchInfo::preset_sense() const
 {
   return get_sense(mBits, PRESET);
+}
+
+// @brief 反転出力を持つタイプの時に true を返す．
+bool
+ClibLatchInfo::has_xq() const
+{
+  return get_sense(mBits, OUTPUT2) != 0;
 }
 
 // @brief データ入力を持つとき true を返す．
@@ -173,6 +183,13 @@ int
 ClibLatchInfo::q_pos() const
 {
   return get_pos(mBits, OUTPUT1);
+}
+
+// @brief 否定出力のピン番号を返す．
+int
+ClibLatchInfo::xq_pos() const
+{
+  return get_pos(mBits, OUTPUT2);
 }
 
 // @brief バイナリダンプを行う．

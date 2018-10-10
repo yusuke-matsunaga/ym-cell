@@ -37,6 +37,7 @@ public:
   ///  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
   ///  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
   ///  - pos_array[4] : 肯定出力のピン番号       (3bit)
+  ///  - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか(1bit)
   ClibLatchInfo(int pos_array[]);
 
   /// @brief デストラクタ
@@ -85,6 +86,10 @@ public:
   bool
   has_preset() const;
 
+  /// @brief 反転出力を持つタイプの時に true を返す．
+  bool
+  has_xq() const;
+
   /// @brief データ入力のピン番号を返す．
   int
   data_pos() const;
@@ -106,6 +111,10 @@ public:
   /// @brief 肯定出力のピン番号を返す．
   int
   q_pos() const;
+
+  /// @brief 否定出力のピン番号を返す．
+  int
+  xq_pos() const;
 
 
 public:
