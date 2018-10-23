@@ -4,6 +4,7 @@
 # ===================================================================
 include_directories(
   ${GTEST_INCLUDE_DIR}
+  ${PROJECT_SOURCE_DIR}/ym-cell/c++-src/libcomp
   )
 
 
@@ -22,13 +23,9 @@ include_directories(
 #  テスト用のターゲットの設定
 # ===================================================================
 
-ym_add_gtest ( ClibCellLibraryTest
-  ClibCellLibraryTest.cc
-  $<TARGET_OBJECTS:ym_base_ad>
-  $<TARGET_OBJECTS:ym_logic_ad>
+ym_add_gtest ( cell_LcSignature_test
+  LcSignatureTest.cc
   $<TARGET_OBJECTS:ym_cell_ad>
-  )
-
-target_compile_definitions ( ClibCellLibraryTest
-  PRIVATE "-DDATA_DIR=\"${PROJECT_SOURCE_DIR}/ym-cell/testdata\""
+  $<TARGET_OBJECTS:ym_logic_ad>
+  $<TARGET_OBJECTS:ym_base_ad>
   )
