@@ -87,7 +87,7 @@ public:
   /// @brief 枝のファンアウト先のノード番号を返す．
   /// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
   int
-  edge_to(ymint id) const;
+  edge_to(int id) const;
 
   /// @brief 枝のファンアウト先の入力位置( 0 or 1 ) を返す．
   /// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
@@ -239,7 +239,7 @@ CiPatMgr::edge_from(int id) const
 // @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
 inline
 int
-CiPatMgr::edge_to(ymint id) const
+CiPatMgr::edge_to(int id) const
 {
   return (id / 2);
 }
