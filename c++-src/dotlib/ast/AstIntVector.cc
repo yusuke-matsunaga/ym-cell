@@ -41,7 +41,7 @@ AstIntVector::AstIntVector(const FileRegion& loc,
   AstNode(loc),
   mNum(value.size())
 {
-  for ( auto i: Range(mNum) ) {
+  for ( auto i: Range<>(mNum) ) {
     mBody[i] = value[i];
   }
 }
@@ -58,7 +58,7 @@ AstIntVector::get_vector(vector<int>& vector) const
 {
   vector.clear();
   vector.resize(mNum);
-  for ( auto i: Range(mNum) ) {
+  for ( auto i: Range<>(mNum) ) {
     vector[i] = value(i);
   }
 }
@@ -71,7 +71,7 @@ AstIntVector::dump(ostream& s,
 		   int indent) const
 {
   const char* comma = "";
-  for ( auto i: Range(mNum) ) {
+  for ( auto i: Range<>(mNum) ) {
     s << comma << mBody[i];
     comma = ", ";
   }

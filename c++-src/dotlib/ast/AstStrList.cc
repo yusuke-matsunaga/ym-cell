@@ -40,7 +40,7 @@ AstStrList::AstStrList(const StrListHandler& handler) :
   AstNode(FileRegion(handler.first_loc(), handler.last_loc())),
   mNum(handler.value().size())
 {
-  for ( auto i: Range(mNum) ) {
+  for ( auto i: Range<>(mNum) ) {
     mBody[i] = handler.value()[i];
   }
 }
@@ -57,7 +57,7 @@ AstStrList::get_vector(vector<const AstString*>& vector) const
 {
   vector.clear();
   vector.resize(mNum);
-  for ( auto i: Range(mNum) ) {
+  for ( auto i: Range<>(mNum) ) {
     vector[i] = value(i);
   }
 }
@@ -70,7 +70,7 @@ AstStrList::dump(ostream& s,
 		 int indent) const
 {
   const char* comma = "";
-  for ( auto i: Range(mNum) ) {
+  for ( auto i: Range<>(mNum) ) {
     s << comma;
     comma = ", ";
     dump_string(s, mBody[i]->value());

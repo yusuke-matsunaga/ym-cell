@@ -201,7 +201,7 @@ LcPatMgr::check_equivalent(const Expr& expr1,
 
   for ( PermGen pg(n, n); !pg.is_end(); ++ pg ) {
     bool match = true;
-    for ( int i: Range(n) ) {
+    for ( int i: Range<>(n) ) {
       if ( !check_equivalent(expr1.child(i), expr2.child(pg(i))) ) {
 	match = false;
 	break;

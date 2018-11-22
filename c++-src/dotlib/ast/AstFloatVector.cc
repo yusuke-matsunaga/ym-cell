@@ -41,7 +41,7 @@ AstFloatVector::AstFloatVector(const FileRegion& loc,
   AstNode(loc),
   mNum(value_list.size())
 {
-  for ( auto i: Range(mNum) ) {
+  for ( auto i: Range<>(mNum) ) {
     mBody[i] = value_list[i];
   }
 }
@@ -58,7 +58,7 @@ AstFloatVector::get_vector(vector<double>& vector) const
 {
   vector.clear();
   vector.resize(mNum);
-  for ( auto i: Range(mNum) ) {
+  for ( auto i: Range<>(mNum) ) {
     vector[i] = mBody[i];
   }
 }
@@ -72,7 +72,7 @@ AstFloatVector::dump(ostream& s,
 {
   const char* comma = "";
   s << "(";
-  for ( auto i: Range(mNum) ) {
+  for ( auto i: Range<>(mNum) ) {
     s << comma << mBody[i];
     comma = ", ";
   }
