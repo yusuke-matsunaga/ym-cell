@@ -10,8 +10,8 @@
 
 
 #include "ym/ClibBundle.h"
+#include "ym/ClibObjList.h"
 #include "ym/ShString.h"
-#include "ci/CiCellPinList.h"
 #include "ym/Alloc.h"
 
 
@@ -41,20 +41,17 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前の取得
-  virtual
   string
-  name() const;
+  name() const override;
 
   /// @brief ピン数の取得
-  virtual
   int
-  pin_num() const;
+  pin_num() const override;
 
   /// @brief ピンの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
-  virtual
-  const ClibCellPin*
-  pin(int pos) const;
+  const ClibCellPin&
+  pin(int pos) const override;
 
 
 public:
@@ -65,7 +62,7 @@ public:
   /// @brief 内容を初期化する．
   void
   init(const ShString& name,
-       const vector<CiCellPin*>& pin_list,
+       const vector<ClibCellPin*>& pin_list,
        Alloc& alloc);
 
 
@@ -78,7 +75,7 @@ private:
   ShString mName;
 
   // ピンのリスト
-  CiCellPinList mPinList;
+  ClibCellPinList mPinList;
 
 };
 

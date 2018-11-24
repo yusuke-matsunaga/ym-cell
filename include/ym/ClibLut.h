@@ -36,7 +36,7 @@ public:
 
   /// @brief テンプレートの取得
   virtual
-  const ClibLutTemplate*
+  const ClibLutTemplate&
   lut_template() const = 0;
 
   /// @brief テンプレート名の取得

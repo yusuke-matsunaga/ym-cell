@@ -30,7 +30,6 @@ protected:
   CiLut(const ClibLutTemplate* lut_template);
 
   /// @brief デストラクタ
-  virtual
   ~CiLut();
 
 
@@ -40,26 +39,22 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief テンプレートの取得
-  virtual
-  const ClibLutTemplate*
-  lut_template() const;
+  const ClibLutTemplate&
+  lut_template() const override;
 
   /// @brief テンプレート名の取得
-  virtual
   const char*
-  template_name() const;
+  template_name() const override;
 
   /// @brief 変数型の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
-  virtual
   ClibVarType
-  variable_type(int var) const;
+  variable_type(int var) const override;
 
   /// @brief インデックス数の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
-  virtual
   int
-  index_num(int var) const;
+  index_num(int var) const override;
 
 
 public:
@@ -69,9 +64,8 @@ public:
 
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
-  virtual
   void
-  dump(ODO& s) const;
+  dump(ODO& s) const override;
 
 
 protected:
@@ -114,7 +108,6 @@ private:
 	  const vector<double>& index_array = vector<double>());
 
   /// @brief デストラクタ
-  virtual
   ~CiLut1D();
 
 
@@ -124,37 +117,32 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 次元数の取得
-  virtual
   int
-  dimension() const;
+  dimension() const override;
 
   /// @brief インデックス数の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
-  virtual
   int
-  index_num(int var) const;
+  index_num(int var) const override;
 
   /// @brief インデックス値の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
-  virtual
   double
   index(int var,
-	int pos) const;
+	int pos) const override;
 
   /// @brief 格子点の値の取得
   /// @param[in] pos_array 格子点座標
   /// @note pos_array のサイズは dimension() と同じ
-  virtual
   double
-  grid_value(const vector<int>& pos_array) const;
+  grid_value(const vector<int>& pos_array) const override;
 
   /// @brief 値の取得
   /// @param[in] val_array 入力の値の配列
   /// @note val_array のサイズは dimension() と同じ
-  virtual
   double
-  value(const vector<double>& val_array) const;
+  value(const vector<double>& val_array) const override;
 
 
 private:
@@ -192,7 +180,6 @@ private:
 	  const vector<double>& index_array2 = vector<double>());
 
   /// @brief デストラクタ
-  virtual
   ~CiLut2D();
 
 
@@ -202,37 +189,32 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 次元数の取得
-  virtual
   int
-  dimension() const;
+  dimension() const override;
 
   /// @brief インデックス数の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
-  virtual
   int
-  index_num(int var) const;
+  index_num(int var) const override;
 
   /// @brief インデックス値の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
-  virtual
   double
   index(int var,
-	int pos) const;
+	int pos) const override;
 
   /// @brief 格子点の値の取得
   /// @param[in] pos_array 格子点座標
   /// @note pos_array のサイズは dimension() と同じ
-  virtual
   double
-  grid_value(const vector<int>& pos_array) const;
+  grid_value(const vector<int>& pos_array) const override;
 
   /// @brief 値の取得
   /// @param[in] val_array 入力の値の配列
   /// @note val_array のサイズは dimension() と同じ
-  virtual
   double
-  value(const vector<double>& val_array) const;
+  value(const vector<double>& val_array) const override;
 
 
 private:
@@ -297,37 +279,32 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 次元数の取得
-  virtual
   int
-  dimension() const;
+  dimension() const override;
 
   /// @brief インデックス数の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
-  virtual
   int
-  index_num(int var) const;
+  index_num(int var) const override;
 
   /// @brief インデックス値の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
-  virtual
   double
   index(int var,
-	int pos) const;
+	int pos) const override;
 
   /// @brief 格子点の値の取得
   /// @param[in] pos_array 格子点座標
   /// @note pos_array のサイズは dimension() と同じ
-  virtual
   double
-  grid_value(const vector<int>& pos_array) const;
+  grid_value(const vector<int>& pos_array) const override;
 
   /// @brief 値の取得
   /// @param[in] val_array 入力の値の配列
   /// @note val_array のサイズは dimension() と同じ
-  virtual
   double
-  value(const vector<double>& val_array) const;
+  value(const vector<double>& val_array) const override;
 
 
 private:

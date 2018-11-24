@@ -39,7 +39,7 @@ public:
 
   /// @brief バスの型の取得
   virtual
-  const ClibBusType*
+  const ClibBusType&
   bus_type() const = 0;
 
   /// @brief ピン数の取得
@@ -50,7 +50,7 @@ public:
   /// @brief ピンの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
   virtual
-  const ClibCellPin*
+  const ClibCellPin&
   pin(int pos) const = 0;
 
 };

@@ -36,10 +36,10 @@ CiBus::name() const
 }
 
 // @brief バスの型の取得
-const ClibBusType*
+const ClibBusType&
 CiBus::bus_type() const
 {
-  return mBusType;
+  return *mBusType;
 }
 
 // @brief ピン数の取得
@@ -51,7 +51,7 @@ CiBus::pin_num() const
 
 // @brief ピンの取得
 // @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
-const ClibCellPin*
+const ClibCellPin&
 CiBus::pin(int pos) const
 {
   return mPinList[pos];
@@ -61,7 +61,7 @@ CiBus::pin(int pos) const
 void
 CiBus::init(const ShString& name,
 	    const ClibBusType* bus_type,
-	    const vector<CiCellPin*>& pin_list,
+	    const vector<ClibCellPin*>& pin_list,
 	    Alloc& alloc)
 {
   mName = name;

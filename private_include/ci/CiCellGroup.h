@@ -10,12 +10,12 @@
 
 
 #include "ym/ClibCellGroup.h"
+#include "ym/ClibObjList.h"
 #include "ym/NpnMapM.h"
 #include "ym/Alloc.h"
 #include "ym/IDO.h"
 #include "ym/ODO.h"
 
-#include "ci/CiCellList.h"
 
 BEGIN_NAMESPACE_YM_CLIB
 
@@ -49,8 +49,10 @@ public:
 	      const vector<CiCell*>& cell_list,
 	      Alloc& alloc);
 
+  /// @brief エラーオブジェクト用のコンストラクタ
+  CiCellGroup();
+
   /// @brief デストラクタ
-  virtual
   ~CiCellGroup();
 
 
@@ -61,9 +63,8 @@ public:
 
   /// @brief ID番号を返す．
   /// @note ClibCellLibrary::group(id) で返されるオブジェクトの id() は id となる．
-  virtual
   int
-  id() const;
+  id() const override;
 
 
 public:
@@ -72,14 +73,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 代表クラスを返す．
-  virtual
-  const ClibCellClass*
-  rep_class() const;
+  const ClibCellClass&
+  rep_class() const override;
 
   /// @brief 代表クラスに対する変換マップを返す．
-  virtual
   const NpnMapM&
-  map() const;
+  map() const override;
 
 
 public:
@@ -90,106 +89,90 @@ public:
   /// @brief FFセルの場合のピン情報を返す．
   /// @note FFセル以外の場合には返り値は不定
   ClibFFInfo
-  ff_info() const;
+  ff_info() const override;
 
   /// @brief ラッチセルの場合のピン情報を返す．
   /// @note ラッチセル以外の場合には返り値は不定
   ClibLatchInfo
-  latch_info() const;
+  latch_info() const override;
 
   /// @brief 反転出力を持つ時 true を返す．
-  virtual
   bool
-  has_xq() const;
+  has_xq() const override;
 
   /// @brief データ入力を持つとき true を返す．
-  virtual
   bool
-  has_data() const;
+  has_data() const override;
 
   /// @brief データ入力のピン番号を返す．
-  virtual
   int
-  data_pos() const;
+  data_pos() const override;
 
   /// @brief クロック入力のタイプを返す．
   /// @retval 0 該当しない
   /// @retval 1 positive edge
   /// @retval 2 negative edge
-  virtual
   int
-  clock_sense() const;
+  clock_sense() const override;
 
   /// @brief クロック入力のピン番号を返す．
-  virtual
   int
-  clock_pos() const;
+  clock_pos() const override;
 
   /// @brief イネーブル入力を持つとき true を返す．
-  virtual
   bool
-  has_enable() const;
+  has_enable() const override;
 
   /// @brief イネーブル入力のタイプを返す．
   /// @retval 0 なし
   /// @retval 1 positive edge
   /// @retval 2 negative edge
-  virtual
   int
-  enable_sense() const;
+  enable_sense() const override;
 
   /// @brief イネーブル入力のピン番号を返す．
-  virtual
   int
-  enable_pos() const;
+  enable_pos() const override;
 
   /// @brief クリア入力を持つタイプの時に true を返す．
-  virtual
   bool
-  has_clear() const;
+  has_clear() const override;
 
   /// @brief クリア入力のタイプを返す．
   /// @retval 0 なし
   /// @retval 1 High sensitive
   /// @retval 2 Low sensitive
-  virtual
   int
-  clear_sense() const;
+  clear_sense() const override;
 
   /// @brief クリア入力のピン番号を返す．
   /// @note クリア入力がない場合の値は不定
-  virtual
   int
-  clear_pos() const;
+  clear_pos() const override;
 
   /// @brief プリセット入力を持つタイプの時に true を返す．
-  virtual
   bool
-  has_preset() const;
+  has_preset() const override;
 
   /// @brief プリセット入力のタイプを返す．
   /// @retval 0 なし
   /// @retval 1 High sensitive
   /// @retval 2 Low sensitive
-  virtual
   int
-  preset_sense() const;
+  preset_sense() const override;
 
   /// @brief プリセット入力のピン番号を返す．
   /// @note プリセット入力がない場合の値は不定
-  virtual
   int
-  preset_pos() const;
+  preset_pos() const override;
 
   /// @brief 肯定出力のピン番号を返す．
-  virtual
   int
-  q_pos() const;
+  q_pos() const override;
 
   /// @brief 否定出力のピン番号を返す．
-  virtual
   int
-  xq_pos() const;
+  xq_pos() const override;
 
 
 public:
@@ -198,9 +181,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief セルのリストを返す．
-  virtual
   const ClibCellList&
-  cell_list() const;
+  cell_list() const override;
 
 
 public:
@@ -261,7 +243,7 @@ public:
   /// @brief バイナリダンプを行う．
   /// @param[in] bos 出力先のストリーム
   void
-  dump(ODO& bos) const;
+  dump(ODO& bos) const override;
 
 
 private:
@@ -288,7 +270,7 @@ private:
   int mPinInfo;
 
   // セルのリスト
-  CiCellList mCellList;
+  ClibCellList mCellList;
 
 };
 

@@ -21,6 +21,7 @@
 #include "ci/CiLut.h"
 #include "ci/CiPatMgr.h"
 #include "ci/CiPatGraph.h"
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -114,25 +115,39 @@ CiCellLibrary::restore(IDO& s)
   // セルグループ情報の読み込み
   vector<CiCellGroup*> group_list;
   restore_cell_group(s, cell_list, group_list);
-  mGroupList.init(group_list, mAlloc);
+  {
+    int n = group_list.size();
+    vector<ClibCellGroup*> _group_list(n);
+    for ( int i: Range(n) ) {
+      _group_list[i] = group_list[i];
+    }
+    mGroupList.init(_group_list, mAlloc);
+  }
 
   // セルクラス情報の読み込み
   vector<CiCellClass*> class_list;
   restore_cell_class(s, group_list, class_list);
-  mClassList.init(class_list, mAlloc);
+  {
+    int n = class_list.size();
+    vector<ClibCellClass*> _class_list(n);
+    for ( int i: Range(n) ) {
+      _class_list[i] = class_list[i];
+    }
+    mClassList.init(_class_list, mAlloc);
+  }
 
   // 組み込み型の設定
-  for ( int i = 0; i < 4; ++ i ) {
+  for ( int i: { 0, 1, 2, 3 } ) {
     int group_id;
     s >> group_id;
     mLogicGroup[i] = group_list[group_id];
   }
-  for ( int i = 0; i < 4; ++ i ) {
+  for ( int i: { 0, 1, 2, 3 } ) {
     int class_id;
     s >> class_id;
     mFFClass[i] = class_list[class_id];
   }
-  for ( int i = 0; i < 4; ++ i ) {
+  for ( int i: { 0, 1, 2, 3 } ) {
     int class_id;
     s >> class_id;
     mLatchClass[i] = class_list[class_id];
@@ -154,7 +169,7 @@ restore_1dim(IDO& s,
   ymuint8 n;
   s >> n;
   index_array.resize(n);
-  for ( int i = 0; i < n; ++ i ) {
+  for ( int i: Range(n) ) {
     s >> index_array[i];
   }
   return var_type;
@@ -169,7 +184,7 @@ CiCellLibrary::restore_lut_template(IDO& s)
   int lut_num;
   s >> lut_num;
   vector<CiLutTemplate*> template_list(lut_num);
-  for ( int id = 0; id < lut_num; ++ id ) {
+  for ( int id: Range(lut_num) ) {
     string name;
     ymuint8 d;
     s >> name
@@ -222,7 +237,7 @@ restore_tid_list(IDO& s,
   int n;
   s >> n;
   timing_list.resize(n);
-  for ( int i = 0; i < n; ++ i ) {
+  for ( int i: Range(n) ) {
     int tid;
     s >> tid;
     timing_list[i] = global_timing_list[tid];
@@ -239,7 +254,7 @@ CiCellLibrary::restore_cell(IDO& s,
   int nc;
   s >> nc;
   cell_list.resize(nc);
-  for ( int cell_id = 0; cell_id < nc; ++ cell_id ) {
+  for ( int cell_id: Range(nc) ) {
     ymuint8 type;
     string name;
     ClibArea area;
@@ -253,7 +268,7 @@ CiCellLibrary::restore_cell(IDO& s,
     int ni;
     s >> ni;
     vector<CiInputPin*> input_list(ni);
-    for ( int i = 0; i < ni; ++ i ) {
+    for ( int i: Range(ni) ) {
       string name;
       ClibCapacitance cap;
       ClibCapacitance r_cap;
@@ -269,7 +284,7 @@ CiCellLibrary::restore_cell(IDO& s,
     int no;
     s >> no;
     vector<CiOutputPin*> output_list(no);
-    for ( int i = 0; i < no; ++ i ) {
+    for ( int i: Range(no) ) {
       string name;
       bool has_logic;
       Expr logic_expr;
@@ -301,7 +316,7 @@ CiCellLibrary::restore_cell(IDO& s,
     int nio;
     s >> nio;
     vector<CiInoutPin*> inout_list(nio);
-    for ( int i = 0; i < nio; ++ i ) {
+    for ( int i: Range(nio) ) {
       string name;
       bool has_logic;
       Expr logic_expr;
@@ -340,7 +355,7 @@ CiCellLibrary::restore_cell(IDO& s,
     int nit;
     s >> nit;
     vector<CiInternalPin*> internal_list(nit);
-    for ( int i = 0; i < nit; ++ i ) {
+    for ( int i: Range(nit) ) {
       string name;
       s >> name;
       internal_list[i] = new_cell_internal(ShString(name));
@@ -453,8 +468,8 @@ CiCellLibrary::restore_cell(IDO& s,
     cell_list[cell_id] = cell;
 
     // 個別の条件ごとのタイミング情報の設定
-    for ( int ipos = 0; ipos < ni + nio; ++ ipos ) {
-      for ( int opos = 0; opos < no + nio; ++ opos ) {
+    for ( int ipos: Range(ni + nio) ) {
+      for ( int opos: Range(no + nio) ) {
 	vector<CiTiming*> timing_list1;
 	restore_tid_list(s, timing_list, timing_list1);
 	set_timing(cell, ipos, opos, ClibTimingSense::PosiUnate, timing_list1);
@@ -476,7 +491,7 @@ CiCellLibrary::restore_cell_group(IDO& s,
   int ng;
   s >> ng;
   group_list.resize(ng);
-  for ( int g = 0; g < ng; ++ g ) {
+  for ( int g: Range(ng) ) {
     NpnMapM npnmap;
     int pininfo;
     int cell_num;
@@ -484,7 +499,7 @@ CiCellLibrary::restore_cell_group(IDO& s,
       >> pininfo
       >> cell_num;
     vector<CiCell*> cell_list(cell_num);
-    for ( int i = 0; i < cell_num; ++ i ) {
+    for ( int i: Range(cell_num) ) {
       int cell_id;
       s >> cell_id;
       cell_list[i] = global_cell_list[cell_id];
@@ -502,18 +517,18 @@ CiCellLibrary::restore_cell_class(IDO& s,
   int nc;
   s >> nc;
   class_list.resize(nc);
-  for ( int c = 0; c < nc; ++ c ) {
+  for ( int c: Range(nc) ) {
     int idmap_num;
     s >> idmap_num;
     vector<NpnMapM> idmap_list(idmap_num);
-    for ( int i = 0; i < idmap_num; ++ i ) {
+    for ( int i: Range(idmap_num) ) {
       s >> idmap_list[i];
     }
 
     int group_num;
     s >> group_num;
     vector<CiCellGroup*> group_list(group_num);
-    for ( int i = 0; i < group_num; ++ i ) {
+    for ( int i: Range(group_num) ) {
       int group_id;
       s >> group_id;
       group_list[i] = global_group_list[group_id];
@@ -531,7 +546,7 @@ CiCellLibrary::restore_timing(IDO& s,
   s >> nt;
   timing_list.clear();
   timing_list.reserve(nt);
-  for ( int tid = 0; tid < nt; ++ tid ) {
+  for ( int tid: Range(nt) ) {
     ymuint8 ttype;
     ymuint8 tmp;
     Expr cond;
@@ -631,8 +646,10 @@ CiCellLibrary::restore_lut(IDO& s)
     return nullptr;
   }
 
-  const ClibLutTemplate* templ = lu_table_template(template_name);
-  ASSERT_COND( templ != nullptr );
+  int templ_id = lu_table_template_id(template_name);
+  ASSERT_COND( templ_id != -1 );
+
+  const ClibLutTemplate* templ = &mLutTemplateList[templ_id];
 
   int d = templ->dimension();
   switch ( d ) {
@@ -641,14 +658,14 @@ CiCellLibrary::restore_lut(IDO& s)
       ymuint8 n;
       s >> n;
       vector<double> index_array(n);
-      for ( int i = 0; i < n; ++ i ) {
+      for ( int i: Range(n) ) {
 	double val;
 	s >> val;
 	index_array[i] = val;
       }
 
       vector<double> value_array(n);
-      for ( int i = 0; i < n; ++ i ) {
+      for ( int i: Range(n) ) {
 	double val;
 	s >> val;
 	value_array[i] = val;
@@ -663,7 +680,7 @@ CiCellLibrary::restore_lut(IDO& s)
       ymuint8 n1;
       s >> n1;
       vector<double> index_array1(n1);
-      for ( int i = 0; i < n1; ++ i ) {
+      for ( int i: Range(n1) ) {
 	double val;
 	s >> val;
 	index_array1[i] = val;
@@ -672,7 +689,7 @@ CiCellLibrary::restore_lut(IDO& s)
       ymuint8 n2;
       s >> n2;
       vector<double> index_array2(n2);
-      for ( int i = 0; i < n2; ++ i ) {
+      for ( int i: Range(n2) ) {
 	double val;
 	s >> val;
 	index_array2[i] = val;
@@ -680,7 +697,7 @@ CiCellLibrary::restore_lut(IDO& s)
 
       int n = n1 * n2;
       vector<double> value_array(n);
-      for ( int i = 0; i < n; ++ i ) {
+      for ( int i: Range(n) ) {
 	double val;
 	s >> val;
 	value_array[i] = val;
@@ -696,7 +713,7 @@ CiCellLibrary::restore_lut(IDO& s)
       ymuint8 n1;
       s >> n1;
       vector<double> index_array1(n1);
-      for ( int i = 0; i < n1; ++ i ) {
+      for ( int i: Range(n1) ) {
 	double val;
 	s >> val;
 	index_array1[i] = val;
@@ -705,7 +722,7 @@ CiCellLibrary::restore_lut(IDO& s)
       ymuint8 n2;
       s	>> n2;
       vector<double> index_array2(n2);
-      for ( int i = 0; i < n2; ++ i ) {
+      for ( int i: Range(n2) ) {
 	double val;
 	s >> val;
 	index_array2[i] = val;
@@ -714,7 +731,7 @@ CiCellLibrary::restore_lut(IDO& s)
       ymuint8 n3;
       s >> n3;
       vector<double> index_array3(n3);
-      for ( int i = 0; i < n3; ++ i ) {
+      for ( int i: Range(n3) ) {
 	double val;
 	s >> val;
 	index_array3[i] = val;
@@ -722,7 +739,7 @@ CiCellLibrary::restore_lut(IDO& s)
 
       int n = n1 * n2 * n3;
       vector<double> value_array(n);
-      for ( int i = 0; i < n; ++ i ) {
+      for ( int i: Range(n) ) {
 	double val;
 	s >> val;
 	value_array[i] = val;
@@ -758,7 +775,7 @@ CiPatMgr::restore(IDO& bis)
   int nn;
   bis >> nn;
   set_node_num(nn);
-  for ( int i = 0; i < mNodeNum; ++ i ) {
+  for ( int i: Range(mNodeNum) ) {
     bis >> mNodeTypeArray[i]
 	>> mEdgeArray[i * 2]
 	>> mEdgeArray[i * 2 + 1];
@@ -771,7 +788,7 @@ CiPatMgr::restore(IDO& bis)
   int np;
   bis >> np;
   set_pat_num(np);
-  for ( int id = 0; id < mPatNum; ++ id ) {
+  for ( int id: Range(mPatNum) ) {
     mPatArray[id].restore(bis, mAlloc);
   }
 
@@ -793,7 +810,7 @@ CiPatGraph::restore(IDO& bis,
       >> mInputNum
       >> mEdgeNum;
   alloc_array(alloc);
-  for ( int i = 0; i < mEdgeNum; ++ i ) {
+  for ( int i: Range(mEdgeNum) ) {
     bis >> mEdgeList[i];
   }
 }

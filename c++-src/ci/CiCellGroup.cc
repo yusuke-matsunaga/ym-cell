@@ -72,12 +72,23 @@ CiCellGroup::CiCellGroup(int id,
   mId(id),
   mRepClass(nullptr),
   mMap(map),
-  mPinInfo(pininfo),
-  mCellList(cell_list, alloc)
+  mPinInfo(pininfo)
 {
+  int n = cell_list.size();
+  vector<ClibCell*> _cell_list;
+  _cell_list.reserve(n);
   for ( auto cell: cell_list ) {
     cell->set_group(this);
+    _cell_list.push_back(cell);
   }
+  mCellList.init(_cell_list, alloc);
+}
+
+// @brief エラーオブジェクト用のコンストラクタ
+CiCellGroup::CiCellGroup() :
+  mId(-1),
+  mRepClass(nullptr)
+{
 }
 
 // @brief デストラクタ
@@ -94,10 +105,10 @@ CiCellGroup::id() const
 }
 
 // @brief 代表クラスを返す．
-const ClibCellClass*
+const ClibCellClass&
 CiCellGroup::rep_class() const
 {
-  return mRepClass;
+  return *mRepClass;
 }
 
 // @brief 代表クラスに対する変換マップを返す．

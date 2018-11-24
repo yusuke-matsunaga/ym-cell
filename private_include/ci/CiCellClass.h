@@ -10,16 +10,16 @@
 
 
 #include "ym/ClibCellClass.h"
+#include "ym/ClibObjList.h"
 #include "ym/Alloc.h"
 #include "ym/IDO.h"
 #include "ym/ODO.h"
-
-#include "CiCellGroupList.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 class CiCellLibrary;
+class CiCellGroup;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiCellClass CiCellClass.h "CiCellClass.h"
@@ -42,8 +42,10 @@ public:
 	      const vector<CiCellGroup*>& group_list,
 	      Alloc& alloc);
 
+  /// @brief エラーオブジェクト用のコンストラクタ
+  CiCellClass();
+
   /// @brief デストラクタ
-  virtual
   ~CiCellClass();
 
 
@@ -54,21 +56,18 @@ public:
 
   /// @brief ID番号を返す．
   /// @note ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
-  virtual
   int
-  id() const;
+  id() const override;
 
   /// @brief 同位体変換の個数を得る．
   /// @note 恒等変換は含まない．
-  virtual
   int
-  idmap_num() const;
+  idmap_num() const override;
 
   /// @brief 同位体変換を得る．
   /// @param[in] pos 位置番号 ( 0 <= pos < idmap_num() )
-  virtual
   const NpnMapM&
-  idmap(int pos) const;
+  idmap(int pos) const override;
 
 
 public:
@@ -77,9 +76,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief セルグループのリストを返す．
-  virtual
   const ClibCellGroupList&
-  group_list() const;
+  group_list() const override;
 
 
 public:
@@ -90,7 +88,7 @@ public:
   /// @brief バイナリダンプを行う．
   /// @param[in] bos 出力先のストリーム
   void
-  dump(ODO& bos) const;
+  dump(ODO& bos) const override;
 
 
 private:
@@ -108,7 +106,7 @@ private:
   NpnMapM* mIdmapList;
 
   // セルグループのリスト
-  CiCellGroupList mGroupList;
+  ClibCellGroupList mGroupList;
 
 };
 

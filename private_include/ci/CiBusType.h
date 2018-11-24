@@ -35,7 +35,6 @@ private:
 	    int bit_to);
 
   /// @brief デストラクタ
-  virtual
   ~CiBusType();
 
 
@@ -45,40 +44,33 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前の取得
-  virtual
   string
-  name() const;
+  name() const override;
 
   /// @brief base_type の取得
-  virtual
   BaseType
-  base_type() const;
+  base_type() const override;
 
   /// @brief data_type の取得
-  virtual
   DataType
-  data_type() const;
+  data_type() const override;
 
   /// @brief ビット幅の取得
-  virtual
   int
-  bit_width() const;
+  bit_width() const override;
 
   /// @brief 開始ビットの取得
-  virtual
   int
-  bit_from() const;
+  bit_from() const override;
 
   /// @brief 終了ビットの取得
-  virtual
   int
-  bit_to() const;
+  bit_to() const override;
 
   /// @brief 向きの取得
   /// @note true の時，降順を表す．
-  virtual
   bool
-  downto() const;
+  downto() const override;
 
 
 private:

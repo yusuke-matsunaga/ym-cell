@@ -35,28 +35,20 @@ set (ci_SOURCES
   c++-src/ci/CiBus.cc
   c++-src/ci/CiBusType.cc
   c++-src/ci/CiCell.cc
-  c++-src/ci/CiCellList.cc
-  c++-src/ci/CiCellHash.cc
   c++-src/ci/CiCellClass.cc
-  c++-src/ci/CiCellClassList.cc
   c++-src/ci/CiCellGroup.cc
-  c++-src/ci/CiCellGroupList.cc
   c++-src/ci/CiCellLibrary.cc
   c++-src/ci/CiCellPin.cc
-  c++-src/ci/CiCellPinList.cc
   c++-src/ci/CiCellPinHash.cc
   c++-src/ci/CiFFCell.cc
   c++-src/ci/CiFsmCell.cc
   c++-src/ci/CiLatchCell.cc
   c++-src/ci/CiLogicCell.cc
   c++-src/ci/CiLut.cc
-  c++-src/ci/CiLutHash.cc
   c++-src/ci/CiLutTemplate.cc
-  c++-src/ci/CiLutTemplateList.cc
   c++-src/ci/CiPatGraph.cc
   c++-src/ci/CiPatMgr.cc
   c++-src/ci/CiTiming.cc
-  c++-src/ci/CiTimingList.cc
   c++-src/ci/dump.cc
   c++-src/ci/restore.cc
   )

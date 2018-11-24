@@ -9,6 +9,7 @@
 
 #include "ci/CiLut.h"
 #include "ci/CiLutTemplate.h"
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -29,17 +30,17 @@ CiLut::~CiLut()
 }
 
 // @brief テンプレートの取得
-const ClibLutTemplate*
+const ClibLutTemplate&
 CiLut::lut_template() const
 {
-  return mTemplate;
+  return *mTemplate;
 }
 
 // @brief テンプレート名の取得
 const char*
 CiLut::template_name() const
 {
-  return lut_template()->name();
+  return lut_template().name();
 }
 
 // @brief 変数型の取得
@@ -47,7 +48,7 @@ CiLut::template_name() const
 ClibVarType
 CiLut::variable_type(int var) const
 {
-  return lut_template()->variable_type(var);
+  return lut_template().variable_type(var);
 }
 
 // @brief インデックス数の取得
@@ -55,7 +56,7 @@ CiLut::variable_type(int var) const
 int
 CiLut::index_num(int var) const
 {
-  return lut_template()->index_num(var);
+  return lut_template().index_num(var);
 }
 
 // @brief val に対応する区間を求める．
@@ -74,7 +75,7 @@ CiLut::search(double val,
     return n - 2;
   }
   // 単純な線形探索を行う．
-  for (int i = 0; i < n - 1; ++ i) {
+  for ( int i: Range(n - 1) ) {
     if ( val < index_array[i + 1] ) {
       return i;
     }
@@ -98,26 +99,26 @@ CiLut1D::CiLut1D(const ClibLutTemplate* lut_template,
   if ( index_array.empty() ) {
     n = lut_template->index_num(0);
     mIndexArray.resize(n);
-    for (int i = 0; i < n; ++ i) {
+    for ( int i: Range(n) ) {
       mIndexArray[i] = lut_template->index(0, i);
     }
   }
   else {
     n = index_array.size();
     mIndexArray.resize(n);
-    for (int i = 0; i < n; ++ i) {
+    for ( int i: Range(n) ) {
       mIndexArray[i] = index_array[i];
     }
   }
   ASSERT_COND( n != 0 );
   mIndexWidthArray.resize(n - 1);
-  for (int i = 0; i < n - 1; ++ i) {
+  for ( int i: Range(n - 1) ) {
     mIndexWidthArray[i] = mIndexArray[i + 1] - mIndexArray[i];
   }
 
   ASSERT_COND( value_array.size() == n );
   mValueArray.resize(n);
-  for (int i = 0; i < n; ++ i) {
+  for ( int i: Range(n) ) {
     mValueArray[i] = value_array[i];
   }
 }
@@ -205,20 +206,20 @@ CiLut2D::CiLut2D(const ClibLutTemplate* lut_template,
   if ( index_array1.empty() ) {
     n1 = lut_template->index_num(0);
     mIndexArray[0].resize(n1);
-    for (int i = 0; i < n1; ++ i) {
+    for ( int i: Range(n1) ) {
       mIndexArray[0][i] = lut_template->index(0, i);
     }
   }
   else {
     n1 = index_array1.size();
     mIndexArray[0].resize(n1);
-    for (int i = 0; i < n1; ++ i) {
+    for ( int i: Range(n1) ) {
       mIndexArray[0][i] = index_array1[i];
     }
   }
   ASSERT_COND( n1 != 0 );
   mIndexWidthArray[0].resize(n1 - 1);
-  for (int i = 0; i < n1 - 1; ++ i) {
+  for ( int i: Range(n1 - 1) ) {
     mIndexWidthArray[0][i] = mIndexArray[0][i + 1] - mIndexArray[0][i];
   }
 
@@ -226,27 +227,27 @@ CiLut2D::CiLut2D(const ClibLutTemplate* lut_template,
   if ( index_array2.empty() ) {
     n2 = lut_template->index_num(1);
     mIndexArray[1].resize(n2);
-    for (int i = 0; i < n2; ++ i) {
+    for ( int i: Range(n2) ) {
       mIndexArray[1][i] = lut_template->index(1, i);
     }
   }
   else {
     n2 = index_array2.size();
     mIndexArray[1].resize(n2);
-    for (int i = 0; i < n2; ++ i) {
+    for ( int i: Range(n2) ) {
       mIndexArray[1][i] = index_array2[i];
     }
   }
   ASSERT_COND( n2 != 0 );
   mIndexWidthArray[1].resize(n2 - 1);
-  for (int i = 0; i < n2 - 1; ++ i) {
+  for ( int i: Range(n2 - 1) ) {
     mIndexWidthArray[1][i] = mIndexArray[1][i + 1] - mIndexArray[1][i];
   }
 
   int n = n1 * n2;
   ASSERT_COND( value_array.size() == n );
   mValueArray.resize(n);
-  for (int i = 0; i < n; ++ i) {
+  for ( int i: Range(n) ) {
     mValueArray[i] = value_array[i];
   }
 }
@@ -351,20 +352,20 @@ CiLut3D::CiLut3D(const ClibLutTemplate* lut_template,
   if ( index_array1.empty() ) {
     n1 = lut_template->index_num(0);
     mIndexArray[0].resize(n1);
-    for (int i = 0; i < n1; ++ i) {
+    for ( int i: Range(n1) ) {
       mIndexArray[0][i] = lut_template->index(0, i);
     }
   }
   else {
     n1 = index_array1.size();
     mIndexArray[0].resize(n1);
-    for (int i = 0; i < n1; ++ i) {
+    for ( int i: Range(n1) ) {
       mIndexArray[0][i] = index_array1[i];
     }
   }
   ASSERT_COND( n1 != 0 );
   mIndexWidthArray[0].resize(n1 - 1);
-  for (int i = 0; i < n1 - 1; ++ i) {
+  for ( int i: Range(n1 - 1) ) {
     mIndexWidthArray[0][i] = mIndexArray[0][i + 1] - mIndexArray[0][i];
   }
 
@@ -372,20 +373,20 @@ CiLut3D::CiLut3D(const ClibLutTemplate* lut_template,
   if ( index_array2.empty() ) {
     n2 = lut_template->index_num(1);
     mIndexArray[1].resize(n2);
-    for (int i = 0; i < n2; ++ i) {
+    for ( int i: Range(n2) ) {
       mIndexArray[1][i] = lut_template->index(1, i);
     }
   }
   else {
     n2 = index_array2.size();
     mIndexArray[1].resize(n2);
-    for (int i = 0; i < n2; ++ i) {
+    for ( int i: Range(n2) ) {
       mIndexArray[1][i] = index_array2[i];
     }
   }
   ASSERT_COND( n2 != 0 );
   mIndexWidthArray[1].resize(n2 - 1);
-  for (int i = 0; i < n2 - 1; ++ i) {
+  for ( int i: Range(n2 - 1) ) {
     mIndexWidthArray[1][i] = mIndexArray[1][i + 1] - mIndexArray[1][i];
   }
 
@@ -393,27 +394,27 @@ CiLut3D::CiLut3D(const ClibLutTemplate* lut_template,
   if ( index_array3.empty() ) {
     n3 = lut_template->index_num(2);
     mIndexArray[2].resize(n3);
-    for (int i = 0; i < n3; ++ i) {
+    for ( int i: Range(n3) ) {
       mIndexArray[2][i] = lut_template->index(2, i);
     }
   }
   else {
     n3 = index_array3.size();
     mIndexArray[2].resize(n3);
-    for (int i = 0; i < n3; ++ i) {
+    for ( int i: Range(n3) ) {
       mIndexArray[2][i] = index_array3[i];
     }
   }
   ASSERT_COND( n3 != 0 );
   mIndexWidthArray[2].resize(n3 - 1);
-  for (int i = 0; i < n3 - 1; ++ i) {
+  for ( int i: Range(n3 - 1) ) {
     mIndexWidthArray[2][i] = mIndexArray[2][i + 1] - mIndexArray[2][i];
   }
 
   int n = n1 * n2 * n3;
   ASSERT_COND( value_array.size() == n );
   mValueArray.resize(n);
-  for (int i = 0; i < n; ++ i) {
+  for ( int i: Range(n) ) {
     mValueArray[i] = value_array[i];
   }
 }

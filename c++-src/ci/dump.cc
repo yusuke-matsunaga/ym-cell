@@ -21,6 +21,7 @@
 #include "ci/CiLut.h"
 #include "ci/CiPatMgr.h"
 #include "ci/CiPatGraph.h"
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -29,10 +30,10 @@ BEGIN_NONAMESPACE
 
 void
 dump_lut(ODO& s,
-	 const ClibLut* lut)
+	 const ClibLut& lut)
 {
-  if ( lut ) {
-    lut->dump(s);
+  if ( lut.dimension() > 0 ) {
+    lut.dump(s);
   }
   else {
     s.write_str(string());
@@ -94,37 +95,37 @@ CiCellLibrary::dump(ODO& s) const
 
   // 遅延テーブルのテンプレート
   s << lu_table_template_list().num();
-  for ( auto temp: lu_table_template_list() ) {
-    temp->dump(s);
+  for ( auto& temp: lu_table_template_list() ) {
+    temp.dump(s);
   }
 
   // セル数
   s << cell_list().num();
-  for ( auto cell: cell_list() ) {
+  for ( auto& cell: cell_list() ) {
     // セルの内容をダンプ
-    cell->dump(s);
+    cell.dump(s);
   }
 
   // セルグループ情報のダンプ
   s << group_list().num();
-  for ( auto group: group_list() ) {
-    group->dump(s);
+  for ( auto& group: group_list() ) {
+    group.dump(s);
   }
 
   // セルクラス情報のダンプ
   s << npn_class_list().num();
-  for ( auto cclass: npn_class_list() ) {
-    cclass->dump(s);
+  for ( auto& cclass: npn_class_list() ) {
+    cclass.dump(s);
   }
 
   // 組み込み型の情報のダンプ
-  for ( int i = 0; i < 4; ++ i ) {
+  for ( int i: { 0, 1, 2, 3 } ) {
     s << mLogicGroup[i]->id();
   }
-  for ( int i = 0; i < 4; ++ i ) {
+  for ( int i: { 0, 1, 2, 3 } ) {
     s << mFFClass[i]->id();
   }
-  for ( int i = 0; i < 4; ++ i ) {
+  for ( int i: { 0, 1, 2, 3 } ) {
     s << mLatchClass[i]->id();
   }
 
@@ -170,26 +171,26 @@ CiCell::dump(ODO& s) const
 
   // 入力ピンのダンプ
   s << input_num();
-  for ( int i = 0; i < input_num(); ++ i ) {
-    input(i)->dump(s);
+  for ( int i: Range(input_num()) ) {
+    input(i).dump(s);
   }
 
   // 出力ピンのダンプ
   s << output_num();
-  for ( int i = 0; i <  output_num(); ++ i ) {
-    output(i)->dump(s);
+  for ( int i: Range(output_num()) ) {
+    output(i).dump(s);
   }
 
   // 入出力ピンのダンプ
   s << inout_num();
-  for ( int i = 0; i < inout_num(); ++ i ) {
-    inout(i)->dump(s);
+  for ( int i: Range(inout_num()) ) {
+    inout(i).dump(s);
   }
 
   // 内部ピンのダンプ
   s << internal_num();
-  for ( int i = 0; i < internal_num(); ++ i ) {
-    internal(i)->dump(s);
+  for ( int i: Range(internal_num()) ) {
+    internal(i).dump(s);
   }
 
   // バスのダンプ
@@ -202,8 +203,8 @@ CiCell::dump(ODO& s) const
 
   // タイミング情報のダンプ
   s << timing_list().num();
-  for ( auto timing: timing_list() ) {
-    timing->dump(s);
+  for ( auto& timing: timing_list() ) {
+    timing.dump(s);
   }
 
   // セルの付加的な情報のダンプ
@@ -227,17 +228,17 @@ CiCell::dump(ODO& s) const
   }
 
   // 個別の条件ごとのタイミング情報のダンプ
-  for ( int ipos = 0; ipos < input_num2(); ++ ipos ) {
-    for ( int opos = 0; opos < output_num2(); ++ opos ) {
+  for ( int ipos: Range(input_num2()) ) {
+    for ( int opos: Range(output_num2()) ) {
       const ClibTimingList& timing_list1 = this->timing_list(ipos, opos, ClibTimingSense::PosiUnate);
       s << timing_list1.num();
-      for ( auto timing: timing_list1 ) {
-	s << timing->id();
+      for ( auto& timing: timing_list1 ) {
+	s << timing.id();
       }
       const ClibTimingList& timing_list2 = this->timing_list(ipos, opos, ClibTimingSense::NegaUnate);
       s << timing_list2.num();
-      for ( auto timing: timing_list2 ) {
-	s << timing->id();
+      for ( auto& timing: timing_list2 ) {
+	s << timing.id();
       }
     }
   }
@@ -439,22 +440,22 @@ CiLut::dump(ODO& s) const
 {
   s << template_name();
   int d = dimension();
-  for ( int i = 0; i < d; ++ i ) {
+  for ( int i: Range(d) ) {
     ymuint8 n = index_num(i);
     s << n;
-    for ( int j = 0; j < n; ++ j ) {
+    for ( int j: Range(n) ) {
       s << index(i, j);
     }
   }
 
   vector<int> pos_array(d);
   int n = 1;
-  for ( int i = 0; i < d; ++ i ) {
+  for ( int i: Range(d) ) {
     n *= index_num(i);
   }
-  for ( int v = 0; v < n; ++ v ) {
+  for ( int v: Range(n) ) {
     int v0 = v;
-    for ( int j = 0; j < d; ++ j ) {
+    for ( int j: Range(d) ) {
       int var = d - j - 1;
       pos_array[var] = v0 % index_num(var);
       v0 /= index_num(var);
@@ -477,11 +478,11 @@ CiLutTemplate::dump(ODO& s) const
   ymuint8 d = dimension();
   s << name()
     << d;
-  for ( int i = 0; i < d; ++ i ) {
+  for ( int i: Range(d) ) {
     s << static_cast<ymuint8>(variable_type(i));
     ymuint8 n = index_num(i);
     s << n;
-    for ( int j = 0; j < n; ++ j ) {
+    for ( int j: Range(n) ) {
       s << index(i, j);
     }
   }
@@ -500,8 +501,8 @@ CiCellGroup::dump(ODO& bos) const
   bos << mMap
       << mPinInfo
       << mCellList.num();
-  for ( auto cell: mCellList ) {
-    bos << cell->id();
+  for ( auto& cell: mCellList ) {
+    bos << cell.id();
   }
 }
 
@@ -517,14 +518,14 @@ CiCellClass::dump(ODO& bos) const
 {
   // 同位体変換情報のダンプ
   bos << mIdmapNum;
-  for ( int i = 0; i < mIdmapNum; ++ i ) {
+  for ( int i: Range(mIdmapNum) ) {
     bos << mIdmapList[i];
   }
 
   // グループ情報のダンプ
   bos << mGroupList.num();
-  for ( auto group: mGroupList ) {
-    bos << group->id();
+  for ( auto& group: mGroupList ) {
+    bos << group.id();
   }
 }
 
@@ -540,7 +541,7 @@ CiPatMgr::dump(ODO& bos) const
 {
   // パタングラフのノード情報のダンプ
   bos << mNodeNum;
-  for ( int i = 0; i < mNodeNum; ++ i ) {
+  for ( int i: Range(mNodeNum) ) {
     bos << mNodeTypeArray[i]
 	<< mEdgeArray[i * 2 + 0]
 	<< mEdgeArray[i * 2 + 1];
@@ -548,7 +549,7 @@ CiPatMgr::dump(ODO& bos) const
 
   // パタングラフの情報のダンプ
   bos << mPatNum;
-  for ( int i = 0; i < mPatNum; ++ i ) {
+  for ( int i: Range(mPatNum) ) {
     mPatArray[i].dump(bos);
   }
 }
@@ -566,7 +567,7 @@ CiPatGraph::dump(ODO& bos) const
   bos << mRepId
       << mInputNum
       << mEdgeNum;
-  for ( int i = 0; i < mEdgeNum; ++ i ) {
+  for ( int i: Range(mEdgeNum) ) {
     bos << mEdgeList[i];
   }
 }

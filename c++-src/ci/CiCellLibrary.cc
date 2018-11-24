@@ -19,10 +19,14 @@
 #include "ci/CiTiming.h"
 #include "ci/CiLutTemplate.h"
 #include "ci/CiLut.h"
+#include "ci/CiBusType.h"
+#include "ci/CiPatGraph.h"
 
 #include "lc/LibComp.h"
 #include "lc/LcClass.h"
 #include "lc/LcGroup.h"
+
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -180,39 +184,55 @@ CiCellLibrary::lu_table_template_list() const
   return mLutTemplateList;
 }
 
-// @brief ルックアップテーブルのテンプレートの取得
-// @param[in] name テンプレート名
-// @note なければ nullptr を返す．
-const ClibLutTemplate*
-CiCellLibrary::lu_table_template(const char* name) const
+// @brief 遅延テーブルのテンプレート数の取得
+int
+CiCellLibrary::lu_table_template_num() const
 {
-  return lu_table_template(ShString(name));
+  return mLutTemplateList.num();
 }
 
-// @brief ルックアップテーブルのテンプレートの取得
-// @param[in] name テンプレート名
-//
-// なければ nullptr を返す．
-const ClibLutTemplate*
-CiCellLibrary::lu_table_template(const string& name) const
+// @brief 遅延テーブルのテンプレート番号の取得
+// @param[in] table_id テンプレート番号 ( 0 <= table_id < lu_table_template_num() )
+const ClibLutTemplate&
+CiCellLibrary::lu_table_template(int table_id) const
 {
-  return lu_table_template(ShString(name));
+  return mLutTemplateList[table_id];
 }
 
-// @brief ルックアップテーブルのテンプレートの取得
+// @brief ルックアップテーブルのテンプレート番号の取得
 // @param[in] name テンプレート名
 //
-// なければ nullptr を返す．
-const ClibLutTemplate*
-CiCellLibrary::lu_table_template(const ShString& name) const
+// なければ -1 を返す．
+int
+CiCellLibrary::lu_table_template_id(const char* name) const
 {
-  return mLutHash.get(name);
+  return lu_table_template_id(ShString(name));
+}
+
+// @brief ルックアップテーブルのテンプレート番号の取得
+// @param[in] name テンプレート名
+//
+// なければ -1 を返す．
+int
+CiCellLibrary::lu_table_template_id(const string& name) const
+{
+  return lu_table_template_id(ShString(name));
+}
+
+// @brief ルックアップテーブルのテンプレート番号の取得
+// @param[in] name テンプレート名
+//
+// なければ -1 を返す．
+int
+CiCellLibrary::lu_table_template_id(const ShString& name) const
+{
+  return mLutHash.get(name, -1);
 }
 
 // @brief バスタイプの取得
 // @param[in] name バスタイプ名
 // @note なければ nullptr を返す．
-const ClibBusType*
+const ClibBusType&
 CiCellLibrary::bus_type(const char* name) const
 {
   return bus_type(ShString(name));
@@ -222,7 +242,7 @@ CiCellLibrary::bus_type(const char* name) const
 /// @param[in] name バスタイプ名
 ///
 /// なければ nullptr を返す．
-const ClibBusType*
+const ClibBusType&
 CiCellLibrary::bus_type(const string& name) const
 {
   return bus_type(ShString(name));
@@ -232,11 +252,11 @@ CiCellLibrary::bus_type(const string& name) const
 // @param[in] name バスタイプ名
 //
 // なければ nullptr を返す．
-const ClibBusType*
+const ClibBusType&
 CiCellLibrary::bus_type(const ShString& name) const
 {
-  // 未完
-  return nullptr;
+#warning "TODO: 未完"
+  return error_bus_type();
 }
 
 // @brief セルのリストの取得
@@ -246,25 +266,25 @@ CiCellLibrary::cell_list() const
   return mCellList;
 }
 
-// @brief 名前からのセルの取得
-const ClibCell*
-CiCellLibrary::cell(const char* name) const
+// @brief 名前からのセル番号の取得
+int
+CiCellLibrary::cell_id(const char* name) const
 {
-  return cell(ShString(name));
+  return cell_id(ShString(name));
 }
 
-// @brief 名前からのセルの取得
-const ClibCell*
-CiCellLibrary::cell(const string& name) const
+// @brief 名前からのセル番号の取得
+int
+CiCellLibrary::cell_id(const string& name) const
 {
-  return cell(ShString(name));
+  return cell_id(ShString(name));
 }
 
-// @brief 名前からのセルの取得
-const ClibCell*
-CiCellLibrary::cell(const ShString& name) const
+// @brief 名前からのセル番号の取得
+int
+CiCellLibrary::cell_id(const ShString& name) const
 {
-  return mCellHash.get(name);
+  return mCellHash.get(name, -1);
 }
 
 // @brief セルグループのリストを返す．
@@ -282,42 +302,42 @@ CiCellLibrary::npn_class_list() const
 }
 
 // @brief 定数0セルのグループを返す．
-const ClibCellGroup*
+const ClibCellGroup&
 CiCellLibrary::const0_func() const
 {
   // 決め打ち
-  return mLogicGroup[0];
+  return *mLogicGroup[0];
 }
 
 // @brief 定数1セルのグループを返す．
-const ClibCellGroup*
+const ClibCellGroup&
 CiCellLibrary::const1_func() const
 {
   // 決め打ち
-  return mLogicGroup[1];
+  return *mLogicGroup[1];
 }
 
 // @brief バッファセルのグループを返す．
-const ClibCellGroup*
+const ClibCellGroup&
 CiCellLibrary::buf_func() const
 {
   // 決め打ち
-  return mLogicGroup[2];
+  return *mLogicGroup[2];
 }
 
 // @brief インバータセルのグループを返す．
-const ClibCellGroup*
+const ClibCellGroup&
 CiCellLibrary::inv_func() const
 {
   // 決め打ち
-  return mLogicGroup[3];
+  return *mLogicGroup[3];
 }
 
 // @brief 単純な型のFFクラスを返す．
 // @param[in] has_clear クリア端子を持つとき true にする．
 // @param[in] has_preset プリセット端子を持つとき true にする．
 // @note 該当するセルがないときでも空のセルクラスが返される．
-const ClibCellClass*
+const ClibCellClass&
 CiCellLibrary::simple_ff_class(bool has_clear,
 			       bool has_preset) const
 {
@@ -328,14 +348,14 @@ CiCellLibrary::simple_ff_class(bool has_clear,
   if ( has_preset ) {
     pos += 2;
   }
-  return mFFClass[pos];
+  return *mFFClass[pos];
 }
 
 // @brief 単純な型のラッチクラスを返す．
 // @param[in] has_clear クリア端子を持つとき true にする．
 // @param[in] has_preset プリセット端子を持つとき true にする．
 // @note 該当するセルがないときでも空のセルクラスが返される．
-const ClibCellClass*
+const ClibCellClass&
 CiCellLibrary::simple_latch_class(bool has_clear,
 				  bool has_preset) const
 {
@@ -346,7 +366,7 @@ CiCellLibrary::simple_latch_class(bool has_clear,
   if ( has_preset ) {
     pos += 2;
   }
-  return mLatchClass[pos];
+  return *mLatchClass[pos];
 }
 
 // @brief 総パタン数を返す．
@@ -583,10 +603,14 @@ CiCellLibrary::set_attr(const string& attr_name,
 void
 CiCellLibrary::set_lu_table_template_list(const vector<CiLutTemplate*>& template_list)
 {
-  mLutTemplateList.init(template_list, mAlloc);
-  for ( auto tmpl: template_list ) {
-    mLutHash.add(tmpl);
+  int n = template_list.size();
+  vector<ClibLutTemplate*> _template_list(n);
+  for ( int i: Range(n) ) {
+    CiLutTemplate* tmpl = template_list[i];
+    _template_list[i] = tmpl;
+    mLutHash.add(tmpl->_name(), i);
   }
+  mLutTemplateList.init(_template_list, mAlloc);
 }
 
 // @brief 1次元の LUT のテンプレートを作る．
@@ -658,18 +682,16 @@ void
 CiCellLibrary::set_cell_list(const vector<CiCell*>& cell_list,
 			     bool do_compile)
 {
-  mCellList.init(cell_list, mAlloc);
-
-  // セルに id を設定する．
-  for ( int id = 0; id < cell_list.size(); ++ id ) {
-    cell_list[id]->mId = id;
+  int n = cell_list.size();
+  vector<ClibCell*> _cell_list(n);
+  for ( int id: Range(n) ) {
+    CiCell* cell = cell_list[id];
+    // セルに id を設定する．
+    cell->mId = id;
+    _cell_list[id] = cell;
+    // 名前をキーにしたハッシュに登録する．
+    mCellHash.add(cell->mName, id);
   }
-
-  // 名前をキーにしたハッシュに登録する．
-  for ( auto cell: cell_list ) {
-    mCellHash.add(cell);
-  }
-
 
   if ( do_compile ) {
     compile(cell_list);
@@ -1194,7 +1216,12 @@ CiCellLibrary::set_timing(CiCell* cell,
   case ClibTimingSense::NegaUnate: base += 1; break;
   default: ASSERT_NOT_REACHED;
   }
-  cell->mTimingMap[base].init(timing_list, mAlloc);
+  int n = timing_list.size();
+  vector<ClibTiming*> _timing_list(n);
+  for ( int i: Range(n) ) {
+    _timing_list[i] = timing_list[i];
+  }
+  cell->mTimingMap[base].init(_timing_list, mAlloc);
 }
 
 // @brief 1次元の LUT を作る．
@@ -1247,6 +1274,69 @@ CiCellLibrary::new_lut3(const ClibLutTemplate* lut_template,
   return lut;
 }
 
+// @brief デフォルトの BusType を返す．
+const ClibBusType&
+CiCellLibrary::error_bus_type()
+{
+  static CiBusType bus_type(ShString(), -1, -1);
+
+  return bus_type;
+}
+
+// @brief デフォルトの LutTemplate を返す．
+const ClibLutTemplate&
+CiCellLibrary::error_lut_template()
+{
+  static CiLutTemplateBad lut_template;
+
+  return lut_template;
+}
+
+// @brief デフォルトの Lut を返す．
+const ClibLut&
+CiCellLibrary::error_lut()
+{
+  static CiLut1D lut(&error_lut_template(), vector<double>());
+
+  return lut;
+}
+
+// @brief デフォルトの Cell を返す．
+const ClibCell&
+CiCellLibrary::error_cell()
+{
+  static CiCell cell;
+
+  return cell;
+}
+
+// @brief デフォルトの CellGroup を返す．
+const ClibCellGroup&
+CiCellLibrary::error_cell_group()
+{
+  static CiCellGroup cell_group;
+
+  return cell_group;
+}
+
+// @brief デフォルトの CellClass を返す．
+const ClibCellClass&
+CiCellLibrary::error_cell_class()
+{
+  static CiCellClass cell_class;
+
+  return cell_class;
+}
+
+// @brief デフォルトの PatGraph を返す．
+const ClibPatGraph&
+CiCellLibrary::error_patgraph()
+{
+  static CiPatGraph pat_graph;
+
+  return pat_graph;
+}
+
 // @brief セルのグループ分けを行う．
 //
 // 論理セルのパタングラフも作成する．
@@ -1260,29 +1350,32 @@ CiCellLibrary::compile(const vector<CiCell*>& cell_list)
   // LcGroup から CiCellGroup を作る．
   int ng = libcomp.group_num();
   vector<CiCellGroup*> group_list(ng);
-  for ( int g = 0; g < ng; ++ g ) {
+  vector<ClibCellGroup*> _group_list(ng);
+  for ( int g: Range(ng) ) {
     const LcGroup* src_group = libcomp.group(g);
     const vector<CiCell*>& cell_list = src_group->cell_list();
-    group_list[g] = new_cell_group(g, src_group->map(), 0U, cell_list);
+    CiCellGroup* group = new_cell_group(g, src_group->map(), 0U, cell_list);
+    group_list[g] = group;
+    _group_list[g] = group;
   }
-  mGroupList.init(group_list, mAlloc);
+  mGroupList.init(_group_list, mAlloc);
 
   // LcClass から CiCellClass を作る．
   int nc = libcomp.npn_class_num();
-  vector<CiCellClass*> class_list(nc);
-  for ( int c = 0; c < nc; ++ c ) {
+  vector<ClibCellClass*> class_list(nc);
+  for ( int c: Range(nc) ) {
     const LcClass* src_class = libcomp.npn_class(c);
     const vector<LcGroup*>& src_group_list = src_class->group_list();
     int n = src_group_list.size();
     vector<CiCellGroup*> dst_group_list(n);
-    for ( int i = 0; i < n; ++ i ) {
+    for ( int i: Range(n) ) {
       dst_group_list[i] = group_list[src_group_list[i]->id()];
     }
     class_list[c] = new_cell_class(c, src_class->idmap_list(), dst_group_list);
   }
   mClassList.init(class_list, mAlloc);
 
-  for ( int i = 0; i < 4; ++ i ) {
+  for ( int i: { 0, 1, 2, 3 } ) {
     mLogicGroup[i] = group_list[libcomp.logic_group(i)];
   }
 
@@ -1290,35 +1383,35 @@ CiCellLibrary::compile(const vector<CiCell*>& cell_list)
   //  0: Q のみ
   //  1: XQ のみ
   //  2: Q/XQ 両方
-  for (int i = 0; i < 3; ++ i) {
+  for ( int i: { 0, 1, 2 } ) {
     bool has_q = (i == 0 || i == 2);
     bool has_xq = (i == 1 || i == 2);
 
     // j の値
     //  0: クリアなし
     //  1: クリアあり
-    for (int j = 0; j < 2; ++ j) {
+    for ( int j: { 0, 1 } ) {
       bool has_clear = (j == 1);
 
       // k の値
       //  0: プリセットなし
       //  1: プリセットあり
-      for (int k = 0; k < 2; ++ k) {
+      for ( int k: { 0, 1 } ) {
 	bool has_preset = (k == 1);
 
 	int cid = libcomp.ff_class(has_q, has_xq, has_clear, has_preset);
-	CiCellClass* cclass = class_list[cid];
+	ClibCellClass* cclass = class_list[cid];
 	mFFClass[i * 4 + j * 2 + k] = cclass;
 
-	for ( auto group: cclass->group_list() ) {
+	for ( auto& group: cclass->group_list() ) {
 	  // ちょっと面倒な手順を踏む．
-	  int gid = group->id();
+	  int gid = group.id();
 	  CiCellGroup* cgroup = group_list[gid];
 	  NpnMapM map = cgroup->map();
 	  int pos_array[6] = { 0, 0, 0, 0, 0, 0 };
 	  int ni = map.input_num() - 2;
 	  ASSERT_COND( ni <= 4 );
-	  for (int i = 0; i < ni; ++ i) {
+	  for ( int i: Range(ni) ) {
 	    NpnVmap imap = map.imap(VarId(i));
 	    if ( !imap.is_invalid() ) {
 	      int pos = imap.var().val();
@@ -1339,35 +1432,35 @@ CiCellLibrary::compile(const vector<CiCell*>& cell_list)
   //  0: Q のみ
   //  1: XQ のみ
   //  2: Q/XQ 両方
-  for (int i = 0; i < 3; ++ i) {
+  for ( int i: { 0, 1, 2 } ) {
     bool has_q = (i == 0 || i == 2);
     bool has_xq = (i == 1 || i == 2);
 
     // j の値
     //  0: クリアなし
     //  1: クリアあり
-    for (int j = 0; j < 2; ++ j) {
+    for ( int j: { 0, 1 } ) {
       bool has_clear = (j == 1);
 
       // k の値
       //  0: プリセットなし
       //  1: プリセットあり
-      for (int k = 0; k < 2; ++ k) {
+      for ( int k: { 0, 1 } ) {
 	bool has_preset = (k == 1);
 
 	int cid = libcomp.latch_class(has_q, has_xq, has_clear, has_preset);
-	CiCellClass* cclass = class_list[cid];
+	ClibCellClass* cclass = class_list[cid];
 	mLatchClass[i * 4 + j * 2 + k] = cclass;
 
-	for ( auto group: cclass->group_list() ) {
+	for ( auto& group: cclass->group_list() ) {
 	  // ちょっと面倒な手順を踏む．
-	  int gid = group->id();
+	  int gid = group.id();
 	  CiCellGroup* cgroup = group_list[gid];
 	  NpnMapM map = cgroup->map();
 	  int pos_array[5] = { 0, 0, 0, 0, 0 };
 	  int ni = map.input_num() - 2;
 	  ASSERT_COND( ni <= 4 );
-	  for (int i = 0; i < ni; ++ i) {
+	  for ( int i: Range(ni) ) {
 	    NpnVmap imap = map.imap(VarId(i));
 	    if ( !imap.is_invalid() ) {
 	      int pos = imap.var().val();
@@ -1426,7 +1519,7 @@ CiCellLibrary::reg_pin(CiCellPin* pin)
 // @brief ピン名からピンを取り出す．
 // @param[in] cell セル
 // @param[in] name ピン名
-CiCellPin*
+const CiCellPin*
 CiCellLibrary::get_pin(const CiCell* cell,
 		       ShString name)
 {

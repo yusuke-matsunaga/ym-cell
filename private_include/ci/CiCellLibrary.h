@@ -16,17 +16,14 @@
 #include "ym/ClibResistance.h"
 #include "ym/ClibTiming.h"
 #include "ym/ClibCellPin.h"
+#include "ym/ClibObjList.h"
 #include "ym/SimpleAlloc.h"
 #include "ym/ShString.h"
 #include "ym/Expr.h"
 #include "CiLutHash.h"
-#include "CiCellList.h"
 #include "CiCellHash.h"
 #include "CiCellPin.h"
 #include "CiCellPinHash.h"
-#include "CiCellGroupList.h"
-#include "CiCellClassList.h"
-#include "CiLutTemplateList.h"
 #include "CiPatMgr.h"
 
 
@@ -149,46 +146,55 @@ public:
   const ClibLutTemplateList&
   lu_table_template_list() const;
 
-  /// @brief ルックアップテーブルのテンプレートの取得
-  /// @param[in] name テンプレート名
-  ///
-  /// なければ nullptr を返す．
-  const ClibLutTemplate*
-  lu_table_template(const char* name) const;
+  /// @brief 遅延テーブルのテンプレート数の取得
+  int
+  lu_table_template_num() const;
 
-  /// @brief ルックアップテーブルのテンプレートの取得
-  /// @param[in] name テンプレート名
-  ///
-  /// なければ nullptr を返す．
-  const ClibLutTemplate*
-  lu_table_template(const string& name) const;
+  /// @brief 遅延テーブルのテンプレート番号の取得
+  /// @param[in] table_id テンプレート番号 ( 0 <= table_id < lu_table_template_num() )
+  const ClibLutTemplate&
+  lu_table_template(int table_id) const;
 
-  /// @brief ルックアップテーブルのテンプレートの取得
+  /// @brief ルックアップテーブルのテンプレート番号の取得
   /// @param[in] name テンプレート名
   ///
-  /// なければ nullptr を返す．
-  const ClibLutTemplate*
-  lu_table_template(const ShString& name) const;
+  /// なければ -1 を返す．
+  int
+  lu_table_template_id(const char* name) const;
+
+  /// @brief ルックアップテーブルのテンプレート番号の取得
+  /// @param[in] name テンプレート名
+  ///
+  /// なければ -1 を返す．
+  int
+  lu_table_template_id(const string& name) const;
+
+  /// @brief ルックアップテーブルのテンプレート番号の取得
+  /// @param[in] name テンプレート名
+  ///
+  /// なければ -1 を返す．
+  int
+  lu_table_template_id(const ShString& name) const;
 
   /// @brief バスタイプの取得
   /// @param[in] name バスタイプ名
   ///
   /// なければ nullptr を返す．
-  const ClibBusType*
+  const ClibBusType&
   bus_type(const char* name) const;
 
   /// @brief バスタイプの取得
   /// @param[in] name バスタイプ名
   ///
   /// なければ nullptr を返す．
-  const ClibBusType*
+  const ClibBusType&
   bus_type(const string& name) const;
 
   /// @brief バスタイプの取得
   /// @param[in] name バスタイプ名
   ///
   /// なければ nullptr を返す．
-  const ClibBusType*
+  const ClibBusType&
   bus_type(const ShString& name) const;
 
 
@@ -201,17 +207,17 @@ public:
   const ClibCellList&
   cell_list() const;
 
-  /// @brief 名前からのセルの取得
-  const ClibCell*
-  cell(const char* name) const;
+  /// @brief 名前からのセル番号の取得
+  int
+  cell_id(const char* name) const;
 
-  /// @brief 名前からのセルの取得
-  const ClibCell*
-  cell(const string& name) const;
+  /// @brief 名前からのセル番号の取得
+  int
+  cell_id(const string& name) const;
 
-  /// @brief 名前からのセルの取得
-  const ClibCell*
-  cell(const ShString& name) const;
+  /// @brief 名前からのセル番号の取得
+  int
+  cell_id(const ShString& name) const;
 
   /// @brief セルグループのリストを返す．
   const ClibCellGroupList&
@@ -228,19 +234,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 定数0セルのグループを返す．
-  const ClibCellGroup*
+  const ClibCellGroup&
   const0_func() const;
 
   /// @brief 定数1セルのグループを返す．
-  const ClibCellGroup*
+  const ClibCellGroup&
   const1_func() const;
 
   /// @brief バッファセルのグループを返す．
-  const ClibCellGroup*
+  const ClibCellGroup&
   buf_func() const;
 
   /// @brief インバータセルのグループを返す．
-  const ClibCellGroup*
+  const ClibCellGroup&
   inv_func() const;
 
 
@@ -253,7 +259,7 @@ public:
   /// @param[in] has_clear クリア端子を持つとき true にする．
   /// @param[in] has_preset プリセット端子を持つとき true にする．
   /// @note 該当するセルがないときでも空のセルクラスが返される．
-  const ClibCellClass*
+  const ClibCellClass&
   simple_ff_class(bool has_clear,
 		  bool has_preset) const;
 
@@ -267,7 +273,7 @@ public:
   /// @param[in] has_clear クリア端子を持つとき true にする．
   /// @param[in] has_preset プリセット端子を持つとき true にする．
   /// @note 該当するセルがないときでも空のセルクラスが返される．
-  const ClibCellClass*
+  const ClibCellClass&
   simple_latch_class(bool has_clear,
 		     bool has_preset) const;
 
@@ -733,6 +739,47 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
+  // デフォルト(エラーフォールバック)のオブジェクト
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief デフォルトの BusType を返す．
+  static
+  const ClibBusType&
+  error_bus_type();
+
+  /// @brief デフォルトの LutTemplate を返す．
+  static
+  const ClibLutTemplate&
+  error_lut_template();
+
+  /// @brief デフォルトの Lut を返す．
+  static
+  const ClibLut&
+  error_lut();
+
+  /// @brief デフォルトの Cell を返す．
+  static
+  const ClibCell&
+  error_cell();
+
+  /// @brief デフォルトの CellGroup を返す．
+  static
+  const ClibCellGroup&
+  error_cell_group();
+
+  /// @brief デフォルトの CellClass を返す．
+  static
+  const ClibCellClass&
+  error_cell_class();
+
+  /// @brief デフォルトの PatGraph を返す．
+  static
+  const ClibPatGraph&
+  error_patgraph();
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
   // 参照回数に関する関数
   //////////////////////////////////////////////////////////////////////
 
@@ -823,7 +870,7 @@ public:
   /// @brief ピン名からピンを取り出す．
   /// @param[in] cell セル
   /// @param[in] name ピン名
-  CiCellPin*
+  const CiCellPin*
   get_pin(const CiCell* cell,
 	  ShString name);
 
@@ -882,25 +929,25 @@ private:
   ClibDelayModel mDelayModel;
 
   // 遅延テンプレートのリスト
-  CiLutTemplateList mLutTemplateList;
+  ClibLutTemplateList mLutTemplateList;
 
-  // 名前をキーにした遅延テンプレートのハッシュ表
-  CiLutHash mLutHash;
+  // 名前をキーにした遅延テンプレート番号のハッシュ表
+  HashMap<ShString, int> mLutHash;
 
   // セルのリスト
-  CiCellList mCellList;
+  ClibCellList mCellList;
 
-  // 名前をキーにしたセルのハッシュ表
-  CiCellHash mCellHash;
+  // 名前をキーにしたセル番号のハッシュ表
+  HashMap<ShString, int> mCellHash;
 
-  // ピン名をキーにしたピンのハッシュ表
+  // ピン名をキーにしたピン番号のハッシュ表
   CiCellPinHash mPinHash;
 
   // セルグループのリスト
-  CiCellGroupList mGroupList;
+  ClibCellGroupList mGroupList;
 
   // NPN同値クラスのリスト
-  CiCellClassList mClassList;
+  ClibCellClassList mClassList;
 
   // 論理セルグループの情報
   // 0: 定数0

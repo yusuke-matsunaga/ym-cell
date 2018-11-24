@@ -10,13 +10,12 @@
 
 
 #include "ym/ClibCell.h"
+#include "ym/ClibObjList.h"
 #include "ym/Expr.h"
 #include "ym/ShString.h"
 #include "ym/Alloc.h"
 #include "ym/ODO.h"
 
-#include "ci/CiCellPinList.h"
-#include "ci/CiTimingList.h"
 
 BEGIN_NAMESPACE_YM_CLIB
 
@@ -66,8 +65,10 @@ protected:
 	 const vector<CiTiming*>& timing_list,
 	 Alloc& alloc);
 
+  /// @brief エラーオブジェクト用のコンストラクタ
+  CiCell();
+
   /// @brief デストラクタ
-  virtual
   ~CiCell();
 
 
@@ -78,19 +79,16 @@ public:
 
   /// @brief ID番号の取得
   /// @note ここで返される番号は ClibCellLibrary::cell() の引数に対応する．
-  virtual
   int
-  id() const;
+  id() const override;
 
   /// @brief 名前の取得
-  virtual
   string
-  name() const;
+  name() const override;
 
   /// @brief 面積の取得
-  virtual
   ClibArea
-  area() const;
+  area() const override;
 
 
 public:
@@ -99,123 +97,116 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ピン数の取得
-  virtual
   int
-  pin_num() const;
+  pin_num() const override;
 
   /// @brief ピンのリストの取得
-  virtual
   const ClibCellPinList&
-  pin_list() const;
+  pin_list() const override;
 
-  /// @brief 名前からピンの取得
-  /// @param[in] name ピン名
-  /// @return name という名前をピンを返す．
-  /// @note なければ nullptr を返す．
-  virtual
-  const ClibCellPin*
-  pin(const char* name) const;
+  /// @brief ピンの取得
+  /// @param[in] pin_id ピン番号 ( 0 <= pin_id < pin_num() )
+  /// @return ピン情報を返す．
+  const ClibCellPin&
+  pin(int pin_id) const override;
 
-  /// @brief 名前からピンの取得
+  /// @brief 名前からピン番号の取得
   /// @param[in] name ピン名
-  /// @return name という名前をピンを返す．
-  /// @note なければ nullptr を返す．
-  virtual
-  const ClibCellPin*
-  pin(const string& name) const;
+  /// @return name という名前のピン番号を返す．
+  ///
+  /// なければ -1 を返す．
+  int
+  pin_id(const char* name) const override;
+
+  /// @brief 名前からピン番号の取得
+  /// @param[in] name ピン名
+  /// @return name という名前のピン番号を返す．
+  ///
+  /// なければ -1 を返す．
+  int
+  pin_id(const string& name) const override;
 
   /// @brief 入力ピン数の取得
-  virtual
   int
-  input_num() const;
+  input_num() const override;
 
   /// @brief 出力ピン数の取得
-  virtual
   int
-  output_num() const;
+  output_num() const override;
 
   /// @brief 入出力ピン数の取得
-  virtual
   int
-  inout_num() const;
+  inout_num() const override;
 
   /// @brief 内部ピン数の取得
-  virtual
   int
-  internal_num() const;
+  internal_num() const override;
 
   /// @brief 入力ピン+入出力ピン数の取得
   /// @note input_num() + inout_num() に等しい．
-  virtual
   int
-  input_num2() const;
+  input_num2() const override;
 
   /// @brief 入力ピンの取得
   /// @param[in] id 入力番号 ( 0 <= id < input_num2() )
   /// @note id >= input_num() の場合には入出力ピンが返される．
-  virtual
-  const ClibCellPin*
-  input(int id) const;
+  const ClibCellPin&
+  input(int id) const override;
 
   /// @brief 出力ピン+入出力ピン数の取得
   /// @note output_num() + inout_num() に等しい．
-  virtual
   int
-  output_num2() const;
+  output_num2() const override;
 
   /// @brief 出力ピンの取得
   /// @param[in] id 出力番号 ( 0 <= id < output_num2() )
   /// @note id >= output_num() の場合には入出力ピンが返される．
-  virtual
-  const ClibCellPin*
-  output(int id) const;
+  const ClibCellPin&
+  output(int id) const override;
 
   /// @brief 入出力ピンの取得
   /// @param[in] id 番号 ( 0 <= id < inout_num() )
-  virtual
-  const ClibCellPin*
-  inout(int id) const;
+  const ClibCellPin&
+  inout(int id) const override;
 
   /// @brief 内部ピンの取得
   /// @param[in] id 内部ピン番号 ( 0 <= id < internal_num() )
-  virtual
-  const ClibCellPin*
-  internal(int id) const;
+  const ClibCellPin&
+  internal(int id) const override;
 
   /// @brief バス数の取得
-  virtual
   int
-  bus_num() const;
+  bus_num() const override;
 
   /// @brief バスの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < bus_num() )
-  virtual
-  const ClibBus*
-  bus(int pos) const;
+  const ClibBus&
+  bus(int pos) const override;
 
-  /// @brief 名前からバスの取得
+  /// @brief 名前からバス番号の取得
   /// @param[in] name バス名
-  /// @return name という名前のバスを返す．
-  /// @note なければ nullptr を返す．
-  virtual
-  const ClibBus*
-  bus(const string& name) const;
+  /// @return name という名前のバス番号を返す．
+  ///
+  /// なければ -1 を返す．
+  int
+  bus_id(const string& name) const override;
 
   /// @brief バンドル数の取得
-  virtual
   int
-  bundle_num() const;
+  bundle_num() const override;
 
   /// @brief バンドルの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < bundle_num() )
-  virtual
-  const ClibBundle*
-  bundle(int pos) const;
+  const ClibBundle&
+  bundle(int pos) const override;
 
-  /// @brief 名前からバンドルの取得
-  virtual
-  const ClibBundle*
-  bundle(const string& name) const;
+  /// @brief 名前からバンドル番号の取得
+  /// @param[in] name バンドル名
+  /// @return name という名前のバンドル番号を返す．
+  ///
+  /// なければ -1 を返す．
+  int
+  bundle_id(const string& name) const override;
 
 
 public:
@@ -224,19 +215,17 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief タイミング情報のリストを返す．
-  virtual
   const ClibTimingList&
-  timing_list() const;
+  timing_list() const override;
 
   /// @brief 条件に合致するタイミング情報のリストを返す．
   /// @param[in] ipos 開始ピン番号 ( 0 <= ipos < input_num2() )
   /// @param[in] opos 終了ピン番号 ( 0 <= opos < output_num2() )
   /// @param[in] timing_sense タイミング情報の摘要条件
-  virtual
   const ClibTimingList&
   timing_list(int ipos,
 	      int opos,
-	      ClibTimingSense sense) const;
+	      ClibTimingSense sense) const override;
 
 
 public:
@@ -245,145 +234,121 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 属している ClibCellGroup を返す．
-  virtual
-  const ClibCellGroup*
-  cell_group() const;
+  const ClibCellGroup&
+  cell_group() const override;
 
   /// @brief 組み合わせ論理セルの時に true を返す．
-  virtual
   bool
-  is_logic() const;
+  is_logic() const override;
 
   /// @brief FFセルの時に true を返す．
-  virtual
   bool
-  is_ff() const;
+  is_ff() const override;
 
   /// @brief ラッチセルの時に true を返す．
-  virtual
   bool
-  is_latch() const;
+  is_latch() const override;
 
   /// @brief 順序セル(非FF/非ラッチ)の場合に true を返す．
-  virtual
   bool
-  is_fsm() const;
+  is_fsm() const override;
 
   /// @brief 出力の論理式を持っている時に true を返す．
   /// @param[in] pin_id 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  virtual
   bool
-  has_logic(int pin_id) const;
+  has_logic(int pin_id) const override;
 
   /// @brief 全ての出力が論理式を持っているときに true を返す．
-  virtual
   bool
-  has_logic() const;
+  has_logic() const override;
 
   /// @brief 論理セルの場合に出力の論理式を返す．
   /// @param[in] pin_id 出力ピン番号 ( 0 <= pin_id < output_num2() )
   /// @note 論理式中の変数番号は入力ピン番号に対応する．
-  virtual
   Expr
-  logic_expr(int pin_id) const;
+  logic_expr(int pin_id) const override;
 
   /// @brief 出力がトライステート条件を持っている時に true を返す．
   /// @param[in] pin_id 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  virtual
   bool
-  has_tristate(int pin_id) const;
+  has_tristate(int pin_id) const override;
 
   /// @brief トライステートセルの場合にトライステート条件式を返す．
   /// @param[in] pin_id 出力ピン番号 ( 0 <= pin_id < output_num2() )
   /// @note 論理式中の変数番号は入力ピン番号に対応する．
   /// @note 通常の論理セルの場合には定数0を返す．
-  virtual
   Expr
-  tristate_expr(int pin_id) const;
+  tristate_expr(int pin_id) const override;
 
   /// @brief FFセルの場合にFFのピン情報を得る．
-  virtual
   ClibFFInfo
-  ff_info() const;
+  ff_info() const override;
 
   /// @brief FFセルの場合に次状態関数を表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  next_state_expr() const;
+  next_state_expr() const override;
 
   /// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  clock_expr() const;
+  clock_expr() const override;
 
   /// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  clock2_expr() const;
+  clock2_expr() const override;
 
   /// @brief ラッチセルの場合にFFのピン情報を得る．
-  virtual
   ClibLatchInfo
-  latch_info() const;
+  latch_info() const override;
 
   /// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  data_in_expr() const;
+  data_in_expr() const override;
 
   /// @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  enable_expr() const;
+  enable_expr() const override;
 
   /// @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  enable2_expr() const;
+  enable2_expr() const override;
 
   /// @brief FFセル/ラッチセルの場合にクリア端子を持っていたら true を返す．
-  virtual
   bool
-  has_clear() const;
+  has_clear() const override;
 
   /// @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
   /// @note クリア端子がない場合の返り値は不定
-  virtual
   Expr
-  clear_expr() const;
+  clear_expr() const override;
 
   /// @brief FFセル/ラッチセルの場合にプリセット端子を持っていたら true を返す．
-  virtual
   bool
-  has_preset() const;
+  has_preset() const override;
 
   /// @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
   /// @note プリセット端子がない場合の返り値は不定
-  virtual
   Expr
-  preset_expr() const;
+  preset_expr() const override;
 
   /// @brief clear_preset_var1 の取得
   /// @retval 0 "L"
   /// @retval 1 "H"
   /// @note FFセルとラッチセルの時に意味を持つ．
-  virtual
   int
-  clear_preset_var1() const;
+  clear_preset_var1() const override;
 
   /// @brief clear_preset_var2 の取得
   /// @retval 0 "L"
   /// @retval 1 "H"
   /// @note FFセルとラッチセルの時に意味を持つ．
-  virtual
   int
-  clear_preset_var2() const;
+  clear_preset_var2() const override;
 
 
 public:
@@ -393,9 +358,8 @@ public:
 
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
-  virtual
   void
-  dump(ODO& s) const;
+  dump(ODO& s) const override;
 
 
 public:
@@ -422,9 +386,6 @@ private:
   // セルライブラリ
   CiCellLibrary* mLibrary;
 
-  // ハッシュ表のためのリンク
-  CiCell* mLink;
-
   // ID番号
   int mId;
 
@@ -435,7 +396,7 @@ private:
   ClibArea mArea;
 
   // ピンのリスト
-  CiCellPinList mPinList;
+  ClibCellPinList mPinList;
 
   // 入力ピン数
   int mInputNum;
@@ -447,13 +408,13 @@ private:
   int mInOutNum;
 
   // 入力ピン+入出力ピンのリスト
-  CiCellPinList mInputList;
+  ClibCellPinList mInputList;
 
   // 出力ピン+入出力ピンのリスト
-  CiCellPinList mOutputList;
+  ClibCellPinList mOutputList;
 
   // 内部ピンのリスト
-  CiCellPinList mInternalList;
+  ClibCellPinList mInternalList;
 
   // バス数
   int mBusNum;
@@ -468,14 +429,14 @@ private:
   CiBundle* mBundleArray;
 
   // 全体のタイミング情報のリスト
-  CiTimingList mTimingList;
+  ClibTimingList mTimingList;
 
   // 条件ごとのタイミング情報のリストの配列
   // サイズは(入力数＋入出力数) x (出力数+入出力数)  x 2
-  CiTimingList* mTimingMap;
+  ClibTimingList* mTimingMap;
 
   // セルグループ
-  const ClibCellGroup* mClibCellGroup;
+  const ClibCellGroup* mCellGroup;
 
 };
 

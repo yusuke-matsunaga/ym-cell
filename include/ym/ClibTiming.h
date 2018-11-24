@@ -129,32 +129,32 @@ public:
 
   /// @brief 立ち上がり遷移遅延テーブルの取得
   virtual
-  const ClibLut*
+  const ClibLut&
   rise_transition() const = 0;
 
   /// @brief 立ち下がり遷移遅延テーブルの取得
   virtual
-  const ClibLut*
+  const ClibLut&
   fall_transition() const = 0;
 
   /// @brief 立ち上がり伝搬遅延テーブルの取得
   virtual
-  const ClibLut*
+  const ClibLut&
   rise_propagation() const = 0;
 
   /// @brief 立ち下がり伝搬遅延テーブルの取得
   virtual
-  const ClibLut*
+  const ClibLut&
   fall_propagation() const = 0;
 
   /// @brief 立ち上がりセル遅延テーブルの取得
   virtual
-  const ClibLut*
+  const ClibLut&
   cell_rise() const = 0;
 
   /// @brief 立ち下がりセル遅延テーブルの取得
   virtual
-  const ClibLut*
+  const ClibLut&
   cell_fall() const = 0;
 
 

@@ -20,7 +20,6 @@ BEGIN_NAMESPACE_YM_CLIB
 CiLutTemplate::CiLutTemplate(ShString name) :
   mName(name)
 {
-  mLink = nullptr;
 }
 
 // @brief デストラクタ
@@ -33,6 +32,55 @@ const char*
 CiLutTemplate::name() const
 {
   return mName;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLutTemplateBad
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+CiLutTemplateBad::CiLutTemplateBad() :
+  CiLutTemplate(ShString())
+{
+}
+
+// @brief デストラクタ
+CiLutTemplateBad::~CiLutTemplateBad()
+{
+}
+
+// @brief 次元数の取得
+int
+CiLutTemplateBad::dimension() const
+{
+  return 0;
+}
+
+// @brief 変数型の取得
+// @param[in] var 変数番号 ( 0 <= var < dimension() )
+ClibVarType
+CiLutTemplateBad::variable_type(int var) const
+{
+  return ClibVarType::None;
+}
+
+// @brief インデックス数の取得
+// @param[in] var 変数番号 ( 0 <= var < dimension() )
+int
+CiLutTemplateBad::index_num(int var) const
+{
+  return 0;
+}
+
+// @brief デフォルトインデックス値の取得
+// @param[in] var 変数番号 ( 0 <= var < dimension() )
+// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
+double
+CiLutTemplateBad::index(int var,
+			int pos) const
+{
+  return 0.0;
 }
 
 

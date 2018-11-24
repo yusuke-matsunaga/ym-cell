@@ -166,18 +166,27 @@ public:
   const ClibLutTemplateList&
   lu_table_template_list() const;
 
-  /// @brief 遅延テーブルのテンプレートの取得
+  /// @brief 遅延テーブルのテンプレート数の取得
+  int
+  lu_table_template_num() const;
+
+  /// @brief 遅延テーブルのテンプレート番号の取得
+  /// @param[in] table_id テンプレート番号 ( 0 <= table_id < lu_table_template_num() )
+  const ClibLutTemplate&
+  lu_table_template(int table_id) const;
+
+  /// @brief 遅延テーブルのテンプレート番号の取得
   /// @param[in] name テンプレート名
   ///
-  /// なければ nullptr を返す．
-  const ClibLutTemplate*
-  lu_table_template(const char* name) const;
+  /// なければ -1 を返す．
+  int
+  lu_table_template_id(const char* name) const;
 
   /// @brief バスタイプの取得
   /// @param[in] name バスタイプ名
   ///
   /// なければ nullptr を返す．
-  const ClibBusType*
+  const ClibBusType&
   bus_type(const char* name) const;
 
 
@@ -194,13 +203,27 @@ public:
   int
   cell_num() const;
 
-  /// @brief 名前からのセルの取得
-  const ClibCell*
-  cell(const char* name) const;
+  /// @brief セル情報の取得
+  /// @param[in] cell_id セル番号 ( 0 <= cell_id < cell_num() )
+  /// @return 該当するセル情報を返す．
+  const ClibCell&
+  cell(int cell_id) const;
 
-  /// @brief 名前からのセルの取得
-  const ClibCell*
-  cell(const string& name) const;
+  /// @brief 名前からのセル番号の取得
+  /// @param[in] name セル名
+  /// @return セル番号を返す．
+  ///
+  /// なければ -1 を返す．
+  int
+  cell_id(const char* name) const;
+
+  /// @brief 名前からのセル番号の取得
+  /// @param[in] name セル名
+  /// @return セル番号を返す．
+  ///
+  /// なければ -1 を返す．
+  int
+  cell_id(const string& name) const;
 
   /// @brief セルグループのリストを返す．
   const ClibCellGroupList&
@@ -217,19 +240,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 定数0セルのグループを返す．
-  const ClibCellGroup*
+  const ClibCellGroup&
   const0_func() const;
 
   /// @brief 定数1セルのグループを返す．
-  const ClibCellGroup*
+  const ClibCellGroup&
   const1_func() const;
 
   /// @brief バッファセルのグループを返す．
-  const ClibCellGroup*
+  const ClibCellGroup&
   buf_func() const;
 
   /// @brief インバータセルのグループを返す．
-  const ClibCellGroup*
+  const ClibCellGroup&
   inv_func() const;
 
 
@@ -243,7 +266,7 @@ public:
   /// @param[in] has_preset プリセット端子を持つとき true にする．
   ///
   /// 該当するセルがないときでも空のセルクラスが返される．
-  const ClibCellClass*
+  const ClibCellClass&
   simple_ff_class(bool has_clear,
 		  bool has_preset) const;
 
@@ -258,7 +281,7 @@ public:
   /// @param[in] has_preset プリセット端子を持つとき true にする．
   ///
   /// 該当するセルがないときでも空のセルクラスが返される．
-  const ClibCellClass*
+  const ClibCellClass&
   simple_latch_class(bool has_clear,
 		     bool has_preset) const;
 

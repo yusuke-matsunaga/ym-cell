@@ -69,21 +69,30 @@ public:
   const ClibCellPinList&
   pin_list() const = 0;
 
-  /// @brief 名前からピンの取得
-  /// @param[in] name ピン名
-  /// @return name という名前をピンを返す．
-  /// @note なければ nullptr を返す．
+  /// @brief ピンの取得
+  /// @param[in] pin_id ピン番号 ( 0 <= pin_id < pin_num() )
+  /// @return ピン情報を返す．
   virtual
-  const ClibCellPin*
-  pin(const string& name) const = 0;
+  const ClibCellPin&
+  pin(int pin_id) const = 0;
 
-  /// @brief 名前からピンの取得
+  /// @brief 名前からピン番号の取得
   /// @param[in] name ピン名
-  /// @return name という名前をピンを返す．
-  /// @note なければ nullptr を返す．
+  /// @return name という名前のピン番号を返す．
+  ///
+  /// なければ -1 を返す．
   virtual
-  const ClibCellPin*
-  pin(const char* name) const = 0;
+  int
+  pin_id(const string& name) const = 0;
+
+  /// @brief 名前からピン番号の取得
+  /// @param[in] name ピン名
+  /// @return name という名前のピン番号を返す．
+  ///
+  /// なければ -1 を返す．
+  virtual
+  int
+  pin_id(const char* name) const = 0;
 
   /// @brief 入力ピン数の取得
   virtual
@@ -115,7 +124,7 @@ public:
   /// @param[in] id 番号 ( 0 <= id < input_num2() )
   /// @note id >= input_num() の場合には入出力ピンが返される．
   virtual
-  const ClibCellPin*
+  const ClibCellPin&
   input(int id) const = 0;
 
   /// @brief 出力ピン+入出力ピン数の取得
@@ -128,19 +137,19 @@ public:
   /// @param[in] id 出力番号 ( 0 <= id < output_num2() )
   /// @note id >= output_num() の場合には入出力ピンが返される．
   virtual
-  const ClibCellPin*
+  const ClibCellPin&
   output(int id) const = 0;
 
   /// @brief 入出力ピンの取得
   /// @param[in] id 番号 ( 0 <= id < inout_num() )
   virtual
-  const ClibCellPin*
+  const ClibCellPin&
   inout(int id) const = 0;
 
   /// @brief 内部ピンの取得
   /// @param[in] id 内部ピン番号 ( 0 <= id < internal_num() )
   virtual
-  const ClibCellPin*
+  const ClibCellPin&
   internal(int id) const = 0;
 
   /// @brief バス数の取得
@@ -151,16 +160,17 @@ public:
   /// @brief バスの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < bus_num() )
   virtual
-  const ClibBus*
+  const ClibBus&
   bus(int pos) const = 0;
 
-  /// @brief 名前からバスの取得
+  /// @brief 名前からバス番号の取得
   /// @param[in] name バス名
-  /// @return name という名前のバスを返す．
-  /// @note なければ nullptr を返す．
+  /// @return name という名前のバス番号を返す．
+  ///
+  /// なければ -1 を返す．
   virtual
-  const ClibBus*
-  bus(const string& name) const = 0;
+  int
+  bus_id(const string& name) const = 0;
 
   /// @brief バンドル数の取得
   virtual
@@ -170,13 +180,17 @@ public:
   /// @brief バンドルの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < bundle_num() )
   virtual
-  const ClibBundle*
+  const ClibBundle&
   bundle(int pos) const = 0;
 
-  /// @brief 名前からバンドルの取得
+  /// @brief 名前からバンドル番号の取得
+  /// @param[in] name バンドル名
+  /// @return name という名前のバンドル番号を返す．
+  ///
+  /// なければ -1 を返す．
   virtual
-  const ClibBundle*
-  bundle(const string& name) const = 0;
+  int
+  bundle_id(const string& name) const = 0;
 
 
 public:
@@ -207,7 +221,7 @@ public:
 
   /// @brief 属している ClibCellGroup を返す．
   virtual
-  const ClibCellGroup*
+  const ClibCellGroup&
   cell_group() const = 0;
 
   /// @brief 組み合わせ論理セルの時に true を返す．

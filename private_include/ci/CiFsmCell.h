@@ -50,7 +50,6 @@ private:
 	    Alloc& alloc);
 
   /// @brief デストラクタ
-  virtual
   ~CiFsmCell();
 
 
@@ -60,9 +59,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 順序セル(非FF/非ラッチ)の場合に true を返す．
-  virtual
   bool
-  is_fsm() const;
+  is_fsm() const override;
 
 };
 

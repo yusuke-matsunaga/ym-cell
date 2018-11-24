@@ -47,7 +47,6 @@ private:
 	      Alloc& alloc);
 
   /// @brief デストラクタ
-  virtual
   ~CiLogicCell();
 
 
@@ -57,9 +56,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 組み合わせ論理セルの時に true を返す．
-  virtual
   bool
-  is_logic() const;
+  is_logic() const override;
 
 };
 

@@ -54,7 +54,6 @@ protected:
 	   Alloc& alloc);
 
   /// @brief デストラクタ
-  virtual
   ~CiFFCell();
 
 
@@ -64,27 +63,23 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief FFセルの時に true を返す．
-  virtual
   bool
-  is_ff() const;
+  is_ff() const override;
 
   /// @brief FFセルの場合に次状態関数を表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  next_state_expr() const;
+  next_state_expr() const override;
 
   /// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  clock_expr() const;
+  clock_expr() const override;
 
   /// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  clock2_expr() const;
+  clock2_expr() const override;
 
 
 private:
@@ -146,7 +141,6 @@ protected:
 	    Alloc& alloc);
 
   /// @brief デストラクタ
-  virtual
   ~CiFFRCell();
 
 
@@ -156,15 +150,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief FFセル/ラッチセルの場合にクリア端子を持っていたら true を返す．
-  virtual
   bool
-  has_clear() const;
+  has_clear() const override;
 
   /// @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
   /// @note クリア端子がない場合の返り値は不定
-  virtual
   Expr
-  clear_expr() const;
+  clear_expr() const override;
 
 
 private:
@@ -222,7 +214,6 @@ protected:
 	    Alloc& alloc);
 
   /// @brief デストラクタ
-  virtual
   ~CiFFSCell();
 
 
@@ -232,15 +223,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief FFセル/ラッチセルの場合にプリセット端子を持っていたら true を返す．
-  virtual
   bool
-  has_preset() const;
+  has_preset() const override;
 
   /// @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
   /// @note プリセット端子がない場合の返り値は不定
-  virtual
   Expr
-  preset_expr() const;
+  preset_expr() const override;
 
 
 private:
@@ -302,7 +291,6 @@ protected:
 	     Alloc& alloc);
 
   /// @brief デストラクタ
-  virtual
   ~CiFFSRCell();
 
 
@@ -312,31 +300,27 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief FFセル/ラッチセルの場合にプリセット端子を持っていたら true を返す．
-  virtual
   bool
-  has_preset() const;
+  has_preset() const override;
 
   /// @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
   /// @note プリセット端子がない場合の返り値は不定
-  virtual
   Expr
-  preset_expr() const;
+  preset_expr() const override;
 
   /// @brief clear_preset_var1 の取得
   /// @retval 0 "L"
   /// @retval 1 "H"
   /// @note FFセルとラッチセルの時に意味を持つ．
-  virtual
   int
-  clear_preset_var1() const;
+  clear_preset_var1() const override;
 
   /// @brief clear_preset_var2 の取得
   /// @retval 0 "L"
   /// @retval 1 "H"
   /// @note FFセルとラッチセルの時に意味を持つ．
-  virtual
   int
-  clear_preset_var2() const;
+  clear_preset_var2() const override;
 
 
 private:

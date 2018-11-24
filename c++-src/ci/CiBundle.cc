@@ -43,7 +43,7 @@ CiBundle::pin_num() const
 
 // @brief ピンの取得
 // @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
-const ClibCellPin*
+const ClibCellPin&
 CiBundle::pin(int pos) const
 {
   return mPinList[pos];
@@ -52,7 +52,7 @@ CiBundle::pin(int pos) const
 // @brief 内容を初期化する．
 void
 CiBundle::init(const ShString& name,
-	       const vector<CiCellPin*>& pin_list,
+	       const vector<ClibCellPin*>& pin_list,
 	       Alloc& alloc)
 {
   mName = name;

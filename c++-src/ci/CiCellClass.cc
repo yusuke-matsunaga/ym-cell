@@ -11,6 +11,7 @@
 #include "ci/CiCellGroup.h"
 #include "ym/ClibCellLibrary.h"
 #include "ym/NpnMapM.h"
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -30,16 +31,28 @@ CiCellClass::CiCellClass(int id,
 			 Alloc& alloc) :
   mId(id),
   mIdmapNum(idmap_list.size()),
-  mIdmapList(alloc.get_array<NpnMapM>(mIdmapNum)),
-  mGroupList(group_list, alloc)
+  mIdmapList(alloc.get_array<NpnMapM>(mIdmapNum))
 {
-  for ( int i = 0; i < mIdmapNum; ++ i ) {
+  for ( int i: Range(mIdmapNum) ) {
     mIdmapList[i] = idmap_list[i];
   }
 
+  int ng = group_list.size();
+  vector<ClibCellGroup*> _group_list;
+  _group_list.reserve(ng);
   for ( auto group: group_list ) {
     group->set_class(this);
+    _group_list.push_back(group);
   }
+  mGroupList.init(_group_list, alloc);
+}
+
+// @brief エラーオブジェクト用のコンストラクタ
+CiCellClass::CiCellClass() :
+  mId(-1),
+  mIdmapNum(0),
+  mIdmapList(nullptr)
+{
 }
 
 // @brief デストラクタ

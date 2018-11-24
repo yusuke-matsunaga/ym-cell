@@ -9,24 +9,20 @@
 
 #include "ym/ClibCellLibrary.h"
 #include "ym/ClibCell.h"
-#include "ym/ClibCellList.h"
 #include "ym/ClibLut.h"
 #include "ym/ClibLutTemplate.h"
-#include "ym/ClibLutTemplateList.h"
 #include "ym/ClibCellPin.h"
-#include "ym/ClibCellPinList.h"
 #include "ym/ClibTiming.h"
-#include "ym/ClibTimingList.h"
 #include "ym/ClibCellClass.h"
-#include "ym/ClibCellClassList.h"
 #include "ym/ClibCellGroup.h"
-#include "ym/ClibCellGroupList.h"
 #include "ym/ClibPatGraph.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibTime.h"
+#include "ym/ClibObjList.h"
 
 #include "ym/Expr.h"
 #include "ym/NpnMapM.h"
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -197,20 +193,24 @@ BEGIN_NONAMESPACE
 void
 display_lut(ostream& s,
 	    const char* label,
-	    const ClibLut* lut)
+	    const ClibLut& lut)
 {
-  s << "    " << label << endl;
-  int d = lut->dimension();
-  for ( int i = 0; i < d; ++ i ) {
-    s << "      Variable_" << (i + 1) << " = " << lut->variable_type(i) << endl;
+  int d = lut.dimension();
+  if ( d == 0 ) {
+    return;
   }
-  for ( int i = 0; i < d; ++ i ) {
+
+  s << "    " << label << endl;
+  for ( int i: Range(d) ) {
+    s << "      Variable_" << (i + 1) << " = " << lut.variable_type(i) << endl;
+  }
+  for ( int i: Range(d) ) {
     s << "      Index_" << (i + 1) << "    = ";
-    int n = lut->index_num(i);
+    int n = lut.index_num(i);
     const char* comma = "";
     s << "(";
-    for ( int j = 0; j < n; ++ j ) {
-      s << comma << lut->index(i, j);
+    for ( int j: Range(n) ) {
+      s << comma << lut.index(i, j);
       comma = ", ";
     }
     s << ")" << endl;
@@ -218,28 +218,28 @@ display_lut(ostream& s,
 
   if ( d == 1) {
     s << "      Values = (";
-    int n1 = lut->index_num(0);
+    int n1 = lut.index_num(0);
     vector<int> pos_array(1);
     const char* comma = "";
-    for ( int i1 = 0; i1 < n1; ++ i1 ) {
+    for ( int i1: Range(n1) ) {
       pos_array[0] = i1;
-      s << comma << lut->grid_value(pos_array);
+      s << comma << lut.grid_value(pos_array);
       comma = ", ";
     }
     s << ")" << endl;
   }
   else if ( d == 2 ) {
     s << "      Values = (" << endl;
-    int n1 = lut->index_num(0);
-    int n2 = lut->index_num(1);
+    int n1 = lut.index_num(0);
+    int n2 = lut.index_num(1);
     vector<int> pos_array(2);
-    for ( int i1 = 0; i1 < n1; ++ i1 ) {
+    for ( int i1: Range(n1) ) {
       s << "                (";
       pos_array[0] = i1;
       const char* comma = "";
-      for ( int i2 = 0; i2 < n2; ++ i2 ) {
+      for ( int i2: Range(n2) ) {
 	pos_array[1] = i2;
-	s << comma << lut->grid_value(pos_array);
+	s << comma << lut.grid_value(pos_array);
 	comma = ", ";
       }
       s << ")" << endl;
@@ -248,21 +248,21 @@ display_lut(ostream& s,
   }
   else if ( d == 3 ) {
     s << "      Values = (" << endl;
-    int n1 = lut->index_num(0);
-    int n2 = lut->index_num(1);
-    int n3 = lut->index_num(2);
+    int n1 = lut.index_num(0);
+    int n2 = lut.index_num(1);
+    int n3 = lut.index_num(2);
     vector<int> pos_array(3);
-    for ( int i1 = 0; i1 < n1; ++ i1 ) {
+    for ( int i1: Range(n1) ) {
       s << "                (";
       pos_array[0] = i1;
       const char* comma2 = "";
-      for ( int i2 = 0; i2 < n2; ++ i2 ) {
+      for ( int i2: Range(n2) ) {
 	pos_array[1] = i2;
 	s << comma2 << "(";
 	const char* comma3 = "";
-	for ( int i3 = 0; i3 < n3; ++ i3 ) {
+	for ( int i3: Range(n3) ) {
 	  pos_array[2] = i3;
-	  s << comma3 << lut->grid_value(pos_array);
+	  s << comma3 << lut.grid_value(pos_array);
 	  comma3 = ", ";
 	}
 	s << ")";
@@ -277,17 +277,17 @@ display_lut(ostream& s,
 // タイミング情報を出力する．
 void
 display_timing(ostream& s,
-	       const ClibCell* cell,
+	       const ClibCell& cell,
 	       int ipos,
 	       int opos,
 	       ClibTimingSense sense,
 	       ClibDelayModel delay_model)
 {
-  for ( auto timing : cell->timing_list(ipos, opos, sense) ) {
+  for ( auto& timing : cell.timing_list(ipos, opos, sense) ) {
     s << "  Timing:" << endl
-      << "    Type             = " << timing->type() << endl
-      << "    Input Pin        = " << cell->input(ipos)->name() << endl
-      << "    Output Pin       = " << cell->output(opos)->name() << endl
+      << "    Type             = " << timing.type() << endl
+      << "    Input Pin        = " << cell.input(ipos).name() << endl
+      << "    Output Pin       = " << cell.output(opos).name() << endl
       << "    Sense            = ";
     if ( sense == ClibTimingSense::PosiUnate ) {
       s << "positive unate";
@@ -299,37 +299,25 @@ display_timing(ostream& s,
       ASSERT_NOT_REACHED;
     }
     s << endl;
-    if ( !timing->timing_cond().is_one() ) {
-      s << "    When             = " << timing->timing_cond() << endl;
+    if ( !timing.timing_cond().is_one() ) {
+      s << "    When             = " << timing.timing_cond() << endl;
     }
     switch ( delay_model ) {
     case ClibDelayModel::GenericCmos:
-      s << "    Rise Intrinsic   = " << timing->intrinsic_rise() << endl
-	<< "    Rise Resistance  = " << timing->rise_resistance() << endl
-	<< "    Fall Intrinsic   = " << timing->intrinsic_fall() << endl
-	<< "    Fall Resistance  = " << timing->fall_resistance() << endl;
+      s << "    Rise Intrinsic   = " << timing.intrinsic_rise() << endl
+	<< "    Rise Resistance  = " << timing.rise_resistance() << endl
+	<< "    Fall Intrinsic   = " << timing.intrinsic_fall() << endl
+	<< "    Fall Resistance  = " << timing.fall_resistance() << endl;
       break;
 
     case ClibDelayModel::TableLookup:
-      if ( timing->cell_rise() ) {
-	display_lut(s, "Clib Rise", timing->cell_rise());
-      }
-      if ( timing->rise_transition() ) {
-	display_lut(s, "Rise Transition", timing->rise_transition());
-      }
-      if ( timing->rise_propagation() ) {
-	display_lut(s, "Rise Propagation", timing->rise_propagation());
-      }
+      display_lut(s, "Clib Rise", timing.cell_rise());
+      display_lut(s, "Rise Transition", timing.rise_transition());
+      display_lut(s, "Rise Propagation", timing.rise_propagation());
 
-      if ( timing->cell_fall() ) {
-	display_lut(s, "Clib Fall", timing->cell_fall());
-      }
-      if ( timing->fall_transition() ) {
-	display_lut(s, "Fall Transition", timing->fall_transition());
-      }
-      if ( timing->fall_propagation() ) {
-	display_lut(s, "Fall Propagation", timing->fall_propagation());
-      }
+      display_lut(s, "Clib Fall", timing.cell_fall());
+      display_lut(s, "Fall Transition", timing.fall_transition());
+      display_lut(s, "Fall Propagation", timing.fall_propagation());
       break;
 
     case ClibDelayModel::PiecewiseCmos:
@@ -348,22 +336,22 @@ display_timing(ostream& s,
 void
 display_class(ostream& s,
 	      const char* title,
-	      const ClibCellClass* cclass)
+	      const ClibCellClass& cclass)
 {
   s << title << endl;
-  int n = cclass->idmap_num();
+  int n = cclass.idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
-    for ( int i = 0; i < n; ++ i ) {
-      s << cclass->idmap(i) << endl;
+    for ( int i: Range(n) ) {
+      s << cclass.idmap(i) << endl;
     }
     s << endl;
   }
-  for ( auto group: cclass->group_list() ) {
-    s << "  Group: Map = " << group->map() << endl
+  for ( auto& group: cclass.group_list() ) {
+    s << "  Group: Map = " << group.map() << endl
       << "         Clib = ";
-    for ( auto cell: group->cell_list() ) {
-      s << " " << cell->name();
+    for ( auto& cell: group.cell_list() ) {
+      s << " " << cell.name();
     }
     s << endl;
   }
@@ -389,29 +377,29 @@ display_pos(ostream& s,
 void
 display_ff_class(ostream& s,
 		 const char* title,
-		 const ClibCellClass* cclass)
+		 const ClibCellClass& cclass)
 {
   s << title << endl;
-  int n = cclass->idmap_num();
+  int n = cclass.idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
-    for ( int i = 0; i < n; ++ i ) {
-      s << cclass->idmap(i) << endl;
+    for ( int i: Range(n) ) {
+      s << cclass.idmap(i) << endl;
     }
     s << endl;
   }
-  for ( auto group: cclass->group_list() ) {
+  for ( auto& group: cclass.group_list() ) {
     s << "  Group:";
-    s << " data-pin = " << group->data_pos();
-    display_pos(s, "clock-pin", group->clock_pos(), group->clock_sense());
-    display_pos(s, "clear-pin", group->clear_pos(), group->clear_sense());
-    display_pos(s, "preset-pin", group->preset_pos(), group->preset_sense());
-    s << " q-pin = " << group->q_pos()
-      << " xq-pin = " << group->xq_pos()
+    s << " data-pin = " << group.data_pos();
+    display_pos(s, "clock-pin", group.clock_pos(), group.clock_sense());
+    display_pos(s, "clear-pin", group.clear_pos(), group.clear_sense());
+    display_pos(s, "preset-pin", group.preset_pos(), group.preset_sense());
+    s << " q-pin = " << group.q_pos()
+      << " xq-pin = " << group.xq_pos()
       << endl;
     s << "         Clib = ";
-    for ( auto cell: group->cell_list() ) {
-      s << " " << cell->name();
+    for ( auto& cell: group.cell_list() ) {
+      s << " " << cell.name();
     }
     s << endl;
   }
@@ -422,28 +410,28 @@ display_ff_class(ostream& s,
 void
 display_latch_class(ostream& s,
 		    const char* title,
-		    const ClibCellClass* cclass)
+		    const ClibCellClass& cclass)
 {
   s << title << endl;
-  int n = cclass->idmap_num();
+  int n = cclass.idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
-    for ( int i = 0; i < n; ++ i ) {
-      s << cclass->idmap(i) << endl;
+    for ( int i: Range(n) ) {
+      s << cclass.idmap(i) << endl;
     }
     s << endl;
   }
-  for ( auto group: cclass->group_list() ) {
+  for ( auto& group: cclass.group_list() ) {
     s << "  Group:";
-    display_pos(s, "data-pin",  group->data_pos(), group->has_data() ? 1 : 0);
-    display_pos(s, "enable-pin", group->enable_pos(), group->enable_sense());
-    display_pos(s, "clear-pin", group->clear_pos(), group->clear_sense());
-    display_pos(s, "preset-pin", group->preset_pos(), group->preset_sense());
-    s << " q-pin = " << group->q_pos()
+    display_pos(s, "data-pin",  group.data_pos(), group.has_data() ? 1 : 0);
+    display_pos(s, "enable-pin", group.enable_pos(), group.enable_sense());
+    display_pos(s, "clear-pin", group.clear_pos(), group.clear_sense());
+    display_pos(s, "preset-pin", group.preset_pos(), group.preset_sense());
+    s << " q-pin = " << group.q_pos()
       << endl;
     s << "         Clib = ";
-    for ( auto cell: group->cell_list() ) {
-      s << " " << cell->name();
+    for ( auto& cell: group.cell_list() ) {
+      s << " " << cell.name();
     }
     s << endl;
   }
@@ -454,12 +442,12 @@ display_latch_class(ostream& s,
 void
 display_group(ostream& s,
 	      const char* title,
-	      const ClibCellGroup* group)
+	      const ClibCellGroup& group)
 {
   s << title << endl
     << "  Clib =";
-  for ( auto cell: group->cell_list() ) {
-    s << " " << cell->name();
+  for ( auto& cell: group.cell_list() ) {
+    s << " " << cell.name();
   }
   s << endl
     << endl;
@@ -467,14 +455,14 @@ display_group(ostream& s,
 
 void
 display_index(ostream& s,
-	      const ClibLutTemplate* templ,
+	      const ClibLutTemplate& templ,
 	      int var)
 {
-  int n = templ->index_num(var);
+  int n = templ.index_num(var);
   s << "(";
   const char* comma = "";
-  for ( int i = 0; i < n; ++ i ) {
-    s << comma << templ->index(var, i);
+  for ( int i: Range(n) ) {
+    s << comma << templ.index(var, i);
     comma = ", ";
   }
   s << ")";
@@ -536,13 +524,13 @@ display_library(ostream& s,
   s << endl;
 
   // lu_table_template
-  for ( auto templ: library.lu_table_template_list() ) {
-    s << "  lu_table_template(" << templ->name() << ")" << endl;
-    int d = templ->dimension();
-    for ( int j = 0; j < d; ++ j ) {
-      s << "    variable_" << (j + 1) << ": " << templ->variable_type(j) << endl;
+  for ( auto& templ: library.lu_table_template_list() ) {
+    s << "  lu_table_template(" << templ.name() << ")" << endl;
+    int d = templ.dimension();
+    for ( int j: Range(d) ) {
+      s << "    variable_" << (j + 1) << ": " << templ.variable_type(j) << endl;
     }
-    for ( int j = 0; j < d; ++ j ) {
+    for ( int j: Range(d) ) {
       s << "    index_" << (j + 1) << "   : ";
       display_index(s, templ, j);
       s << endl;
@@ -553,19 +541,19 @@ display_library(ostream& s,
   s << endl;
 
   // セル
-  for ( auto cell: library.cell_list() ) {
+  for ( auto& cell: library.cell_list() ) {
     // セル名とセルの種類を出力
-    s << "Clib#" << cell->id() << " (" << cell->name() << ") : ";
-    if ( cell->is_logic() ) {
+    s << "Clib#" << cell.id() << " (" << cell.name() << ") : ";
+    if ( cell.is_logic() ) {
       s << "Combinational Logic";
     }
-    else if ( cell->is_ff() ) {
+    else if ( cell.is_ff() ) {
       s << "Flip-Flop";
     }
-    else if ( cell->is_latch() ) {
+    else if ( cell.is_latch() ) {
       s << "Latch";
     }
-    else if ( cell->is_fsm() ) {
+    else if ( cell.is_fsm() ) {
       s << "FSM";
     }
     else {
@@ -574,104 +562,104 @@ display_library(ostream& s,
     s << endl;
 
     // 面積
-    s << "  area = " << cell->area() << endl;
+    s << "  area = " << cell.area() << endl;
 
-    if ( cell->is_ff() ) {
+    if ( cell.is_ff() ) {
       // FF の情報
-      s << "  Next State         = " << cell->next_state_expr() << endl
-	<< "  Clock              = " << cell->clock_expr() << endl;
-      if ( !cell->clock2_expr().is_zero() ) {
-	s << "  Clock2             = " << cell->clock2_expr() << endl;
+      s << "  Next State         = " << cell.next_state_expr() << endl
+	<< "  Clock              = " << cell.clock_expr() << endl;
+      if ( !cell.clock2_expr().is_zero() ) {
+	s << "  Clock2             = " << cell.clock2_expr() << endl;
       }
-      if ( cell->has_clear() ) {
-	s << "  Clear              = " << cell->clear_expr() << endl;
+      if ( cell.has_clear() ) {
+	s << "  Clear              = " << cell.clear_expr() << endl;
       }
-      if ( cell->has_preset() ) {
-	s << "  Preset             = " << cell->preset_expr() << endl;
+      if ( cell.has_preset() ) {
+	s << "  Preset             = " << cell.preset_expr() << endl;
       }
-      if ( cell->has_clear() && cell->has_preset() ) {
-	s << "  Clear Preset Var1  = " << cell->clear_preset_var1() << endl
-	  << "  Clear Preset Var2  = " << cell->clear_preset_var2() << endl;
+      if ( cell.has_clear() && cell.has_preset() ) {
+	s << "  Clear Preset Var1  = " << cell.clear_preset_var1() << endl
+	  << "  Clear Preset Var2  = " << cell.clear_preset_var2() << endl;
       }
     }
-    if ( cell->is_latch() ) {
+    if ( cell.is_latch() ) {
       // ラッチの情報
-      s << "  Data In            = " << cell->data_in_expr() << endl
-	<< "  Enable             = " << cell->enable_expr() << endl;
-      if ( !cell->enable2_expr().is_zero() ) {
-	s << "  Enable2            = " << cell->enable2_expr() << endl;
+      s << "  Data In            = " << cell.data_in_expr() << endl
+	<< "  Enable             = " << cell.enable_expr() << endl;
+      if ( !cell.enable2_expr().is_zero() ) {
+	s << "  Enable2            = " << cell.enable2_expr() << endl;
       }
-      if ( cell->has_clear() ) {
-	s << "  Clear              = " << cell->clear_expr() << endl;
+      if ( cell.has_clear() ) {
+	s << "  Clear              = " << cell.clear_expr() << endl;
       }
-      if ( cell->has_preset() ) {
-	s << "  Preset             = " << cell->preset_expr() << endl;
+      if ( cell.has_preset() ) {
+	s << "  Preset             = " << cell.preset_expr() << endl;
       }
-      if ( cell->has_clear() && cell->has_preset() ) {
-	s << "  Clear Preset Var1  = " << cell->clear_preset_var1() << endl
-	  << "  Clear Preset Var2  = " << cell->clear_preset_var2() << endl;
+      if ( cell.has_clear() && cell.has_preset() ) {
+	s << "  Clear Preset Var1  = " << cell.clear_preset_var1() << endl
+	  << "  Clear Preset Var2  = " << cell.clear_preset_var2() << endl;
       }
     }
 
     // ピンの情報
-    for ( auto pin: cell->pin_list() ) {
-      s << "  Pin#" << pin->pin_id() << "[ " << pin->name() << " ]: ";
-      if ( pin->is_input() ) {
+    for ( auto& pin: cell.pin_list() ) {
+      s << "  Pin#" << pin.pin_id() << "[ " << pin.name() << " ]: ";
+      if ( pin.is_input() ) {
 	// 入力ピン
-	s << "Input#" << pin->input_id() << endl
-	  << "    Capacitance      = " << pin->capacitance() << endl
-	  << "    Rise Capacitance = " << pin->rise_capacitance() << endl
-	  << "    Fall Capacitance = " << pin->fall_capacitance() << endl;
+	s << "Input#" << pin.input_id() << endl
+	  << "    Capacitance      = " << pin.capacitance() << endl
+	  << "    Rise Capacitance = " << pin.rise_capacitance() << endl
+	  << "    Fall Capacitance = " << pin.fall_capacitance() << endl;
       }
-      else if ( pin->is_output() ) {
+      else if ( pin.is_output() ) {
 	// 出力ピン
-	int opos = pin->output_id();
+	int opos = pin.output_id();
 	s << "Output# " << opos << endl;
-	if ( cell->has_logic(opos) ) {
-	  s << "    Logic            = " << cell->logic_expr(opos) << endl;
-	  if ( cell->has_tristate(opos) ) {
-	    s << "    Tristate         = " << cell->tristate_expr(opos) << endl;
+	if ( cell.has_logic(opos) ) {
+	  s << "    Logic            = " << cell.logic_expr(opos) << endl;
+	  if ( cell.has_tristate(opos) ) {
+	    s << "    Tristate         = " << cell.tristate_expr(opos) << endl;
 	  }
 	}
-	s << "    Max Fanout       = " << pin->max_fanout() << endl
-	  << "    Min Fanout       = " << pin->min_fanout() << endl
-	  << "    Max Capacitance  = " << pin->max_capacitance() << endl
-	  << "    Min Capacitance  = " << pin->min_capacitance() << endl
-	  << "    Max Transition   = " << pin->max_transition() << endl
-	  << "    Min Transition   = " << pin->min_transition() << endl;
+	s << "    Max Fanout       = " << pin.max_fanout() << endl
+	  << "    Min Fanout       = " << pin.min_fanout() << endl
+	  << "    Max Capacitance  = " << pin.max_capacitance() << endl
+	  << "    Min Capacitance  = " << pin.min_capacitance() << endl
+	  << "    Max Transition   = " << pin.max_transition() << endl
+	  << "    Min Transition   = " << pin.min_transition() << endl;
       }
-      else if ( pin->is_inout() ) {
+      else if ( pin.is_inout() ) {
 	// 入出力ピン
-	int opos = pin->output_id();
-	s << "Inout#(" << pin->input_id() << ", " << opos << ")" << endl;
-	if ( cell->has_logic(opos) ) {
-	  s << "    Logic            = " << cell->logic_expr(opos) << endl;
-	  if ( cell->has_tristate(opos) ) {
-	    s << "    Tristate         = " << cell->tristate_expr(opos) << endl;
+	int opos = pin.output_id();
+	s << "Inout#(" << pin.input_id() << ", " << opos << ")" << endl;
+	if ( cell.has_logic(opos) ) {
+	  s << "    Logic            = " << cell.logic_expr(opos) << endl;
+	  if ( cell.has_tristate(opos) ) {
+	    s << "    Tristate         = " << cell.tristate_expr(opos) << endl;
 	  }
 	}
-	s << "    Capacitance      = " << pin->capacitance() << endl
-	  << "    Rise Capacitance = " << pin->rise_capacitance() << endl
-	  << "    Fall Capacitance = " << pin->fall_capacitance() << endl
-	  << "    Max Fanout       = " << pin->max_fanout() << endl
-	  << "    Min Fanout       = " << pin->min_fanout() << endl
-	  << "    Max Capacitance  = " << pin->max_capacitance() << endl
-	  << "    Min Capacitance  = " << pin->min_capacitance() << endl
-	  << "    Max Transition   = " << pin->max_transition() << endl
-	  << "    Min Transition   = " << pin->min_transition() << endl;
+	s << "    Capacitance      = " << pin.capacitance() << endl
+	  << "    Rise Capacitance = " << pin.rise_capacitance() << endl
+	  << "    Fall Capacitance = " << pin.fall_capacitance() << endl
+	  << "    Max Fanout       = " << pin.max_fanout() << endl
+	  << "    Min Fanout       = " << pin.min_fanout() << endl
+	  << "    Max Capacitance  = " << pin.max_capacitance() << endl
+	  << "    Min Capacitance  = " << pin.min_capacitance() << endl
+	  << "    Max Transition   = " << pin.max_transition() << endl
+	  << "    Min Transition   = " << pin.min_transition() << endl;
       }
-      else if ( pin->is_internal() ) {
+      else if ( pin.is_internal() ) {
 	// 内部ピン
-	int itpos = pin->internal_id();
+	int itpos = pin.internal_id();
 	s << "Internal#(" << itpos << ")" << endl;
       }
     }
 
     // タイミング情報
-    int ni2 = cell->input_num2();
-    int no2 = cell->output_num2();
-    for ( int ipos = 0; ipos < ni2; ++ ipos ) {
-      for ( int opos = 0; opos < no2; ++ opos ) {
+    int ni2 = cell.input_num2();
+    int no2 = cell.output_num2();
+    for ( int ipos: Range(ni2) ) {
+      for ( int opos: Range(no2) ) {
 	display_timing(s, cell, ipos, opos, ClibTimingSense::PosiUnate, delay_model);
 	display_timing(s, cell, ipos, opos, ClibTimingSense::NegaUnate, delay_model);
       }
@@ -682,7 +670,7 @@ display_library(ostream& s,
   // セルグループの情報
   s << "Clib Group" << endl;
   int i = 0;
-  for ( auto cclass: library.npn_class_list() ) {
+  for ( auto& cclass: library.npn_class_list() ) {
     ostringstream buf;
     buf << "Class#" << i; ++ i;
     display_class(s, buf.str().c_str(), cclass);
@@ -709,7 +697,7 @@ display_library(ostream& s,
 
   // ノードの種類の出力
   int nn = library.pg_node_num();
-  for ( int i = 0; i < nn; ++ i ) {
+  for ( int i: Range(nn) ) {
     s << "Node#" << i << ": ";
     switch ( library.pg_node_type(i) ) {
     case ClibPatType::Input: s << "INPUT#" << library.pg_input_id(i) ; break;
@@ -723,7 +711,7 @@ display_library(ostream& s,
 
   // 枝の情報の出力
   int ne = library.pg_edge_num();
-  for ( int i = 0; i < ne; ++ i ) {
+  for ( int i: Range(ne) ) {
     s << "Edge#" << i << ": " << library.pg_edge_from(i)
       << " -> " << library.pg_edge_to(i)
       << "(" << library.pg_edge_pos(i) << ")";
@@ -736,7 +724,7 @@ display_library(ostream& s,
 
   // パタングラフの情報の出力
   int np = library.pg_pat_num();
-  for ( int i = 0; i < np; ++ i ) {
+  for ( int i: Range(np) ) {
     const ClibPatGraph& pat = library.pg_pat(i);
     s << "Pat#" << i << ": "
       << "Rep#" << pat.rep_id() << ": ";
@@ -745,7 +733,7 @@ display_library(ostream& s,
     }
     s << "(" << pat.input_num() << "), ";
     int n = pat.edge_num();
-    for ( int i = 0; i < n; ++ i ) {
+    for ( int i: Range(n) ) {
       s << " " << pat.edge(i);
     }
     s << endl;

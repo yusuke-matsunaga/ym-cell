@@ -37,7 +37,6 @@ protected:
   CiCellPin(const ShString& name);
 
   /// @brief デストラクタ
-  virtual
   ~CiCellPin();
 
 
@@ -47,34 +46,28 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ピン番号を返す．
-  virtual
   int
-  pin_id() const;
+  pin_id() const override;
 
   /// @brief ピン名を返す．
-  virtual
   string
-  name() const;
+  name() const override;
 
   /// @brief 入力ピンの時に true を返す．
-  virtual
   bool
-  is_input() const;
+  is_input() const override;
 
   /// @brief 出力ピンの時に true を返す．
-  virtual
   bool
-  is_output() const;
+  is_output() const override;
 
   /// @brief 入出力ピンの時に true を返す．
-  virtual
   bool
-  is_inout() const;
+  is_inout() const override;
 
   /// @brief 内部ピンの時に true を返す．
-  virtual
   bool
-  is_internal() const;
+  is_internal() const override;
 
 
 public:
@@ -84,24 +77,20 @@ public:
 
   /// @brief 入力ピン番号を返す．
   /// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-  virtual
   int
-  input_id() const;
+  input_id() const override;
 
   /// @brief 負荷容量を返す．
-  virtual
   ClibCapacitance
-  capacitance() const;
+  capacitance() const override;
 
   /// @brief 立ち上がり時の負荷容量を返す．
-  virtual
   ClibCapacitance
-  rise_capacitance() const;
+  rise_capacitance() const override;
 
   /// @brief 立ち下がり時の負荷容量を返す．
-  virtual
   ClibCapacitance
-  fall_capacitance() const;
+  fall_capacitance() const override;
 
 
 public:
@@ -111,59 +100,48 @@ public:
 
   /// @brief 出力ピン番号を返す．
   /// @note 出力ピンもしくは入出力ピンの時のみ意味を持つ．
-  virtual
   int
-  output_id() const;
+  output_id() const override;
 
   /// @brief 論理式を持っているときに true を返す．
-  virtual
   bool
-  has_function() const;
+  has_function() const override;
 
   /// @brief 機能を表す論理式を返す．
-  virtual
   Expr
-  function() const;
+  function() const override;
 
   /// @brief three_state 属性を持っているときに true を返す．
-  virtual
   bool
-  has_three_state() const;
+  has_three_state() const override;
 
   /// @brief three_state 論理式を返す．
-  virtual
   Expr
-  three_state() const;
+  three_state() const override;
 
   /// @brief 最大ファンアウト容量を返す．
-  virtual
   ClibCapacitance
-  max_fanout() const;
+  max_fanout() const override;
 
   /// @brief 最小ファンアウト容量を返す．
-  virtual
   ClibCapacitance
-  min_fanout() const;
+  min_fanout() const override;
 
   /// @brief 最大負荷容量を返す．
-  virtual
   ClibCapacitance
-  max_capacitance() const;
+  max_capacitance() const override;
 
   /// @brief 最小負荷容量を返す．
-  virtual
   ClibCapacitance
-  min_capacitance() const;
+  min_capacitance() const override;
 
   /// @brief 最大遷移時間を返す．
-  virtual
   ClibTime
-  max_transition() const;
+  max_transition() const override;
 
   /// @brief 最小遷移時間を返す．
-  virtual
   ClibTime
-  min_transition() const;
+  min_transition() const override;
 
 
 public:
@@ -173,9 +151,8 @@ public:
 
   /// @brief 内部ピン番号を返す．
   /// @note 内部ピンの時のみ意味を持つ．
-  virtual
   int
-  internal_id() const;
+  internal_id() const override;
 
 
 protected:
@@ -231,7 +208,6 @@ private:
 	     ClibCapacitance fall_capacitance);
 
   /// @brief デストラクタ
-  virtual
   ~CiInputPin();
 
 
@@ -241,14 +217,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 方向を返す．
-  virtual
   ClibDirection
-  direction() const;
+  direction() const override;
 
   /// @brief 入力ピンの時に true を返す．
-  virtual
   bool
-  is_input() const;
+  is_input() const override;
 
 
 public:
@@ -258,24 +232,20 @@ public:
 
   /// @brief 入力ピン番号を返す．
   /// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-  virtual
   int
-  input_id() const;
+  input_id() const override;
 
   /// @brief 負荷容量を返す．
-  virtual
   ClibCapacitance
-  capacitance() const;
+  capacitance() const override;
 
   /// @brief 立ち上がり時の負荷容量を返す．
-  virtual
   ClibCapacitance
-  rise_capacitance() const;
+  rise_capacitance() const override;
 
   /// @brief 立ち下がり時の負荷容量を返す．
-  virtual
   ClibCapacitance
-  fall_capacitance() const;
+  fall_capacitance() const override;
 
 
 public:
@@ -285,9 +255,8 @@ public:
 
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
-  virtual
   void
-  dump(ODO& s) const;
+  dump(ODO& s) const override;
 
 
 private:
@@ -344,7 +313,6 @@ protected:
 		  ClibTime min_transition);
 
   /// @brief デストラクタ
-  virtual
   ~CiOutputPinBase();
 
 
@@ -355,59 +323,48 @@ public:
 
   /// @brief 出力ピン番号を返す．
   /// @note 出力ピンもしくは入出力ピンの時のみ意味を持つ．
-  virtual
   int
-  output_id() const;
+  output_id() const override;
 
   /// @brief 論理式を持っているときに true を返す．
-  virtual
   bool
-  has_function() const;
+  has_function() const override;
 
   /// @brief 機能を表す論理式を返す．
-  virtual
   Expr
-  function() const;
+  function() const override;
 
   /// @brief three_state 属性を持っているときに true を返す．
-  virtual
   bool
-  has_three_state() const;
+  has_three_state() const override;
 
   /// @brief three_state 論理式を返す．
-  virtual
   Expr
-  three_state() const;
+  three_state() const override;
 
   /// @brief 最大ファンアウト容量を返す．
-  virtual
   ClibCapacitance
-  max_fanout() const;
+  max_fanout() const override;
 
   /// @brief 最小ファンアウト容量を返す．
-  virtual
   ClibCapacitance
-  min_fanout() const;
+  min_fanout() const override;
 
   /// @brief 最大負荷容量を返す．
-  virtual
   ClibCapacitance
-  max_capacitance() const;
+  max_capacitance() const override;
 
   /// @brief 最小負荷容量を返す．
-  virtual
   ClibCapacitance
-  min_capacitance() const;
+  min_capacitance() const override;
 
   /// @brief 最大遷移時間を返す．
-  virtual
   ClibTime
-  max_transition() const;
+  max_transition() const override;
 
   /// @brief 最小遷移時間を返す．
-  virtual
   ClibTime
-  min_transition() const;
+  min_transition() const override;
 
 
 private:
@@ -486,7 +443,6 @@ private:
 	      ClibTime min_transition);
 
   /// @brief デストラクタ
-  virtual
   ~CiOutputPin();
 
 
@@ -496,14 +452,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 方向を返す．
-  virtual
   ClibDirection
-  direction() const;
+  direction() const override;
 
   /// @brief 出力ピンの時に true を返す．
-  virtual
   bool
-  is_output() const;
+  is_output() const override;
 
 
 public:
@@ -513,9 +467,8 @@ public:
 
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
-  virtual
   void
-  dump(ODO& s) const;
+  dump(ODO& s) const override;
 
 };
 
@@ -562,7 +515,6 @@ private:
 	     ClibTime min_transition);
 
   /// @brief デストラクタ
-  virtual
   ~CiInoutPin();
 
 
@@ -572,14 +524,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 方向を返す．
-  virtual
   ClibDirection
-  direction() const;
+  direction() const override;
 
   /// @brief 入出力ピンの時に true を返す．
-  virtual
   bool
-  is_inout() const;
+  is_inout() const override;
 
 
 public:
@@ -589,24 +539,20 @@ public:
 
   /// @brief 入力ピン番号を返す．
   /// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-  virtual
   int
-  input_id() const;
+  input_id() const override;
 
   /// @brief 負荷容量を返す．
-  virtual
   ClibCapacitance
-  capacitance() const;
+  capacitance() const override;
 
   /// @brief 立ち上がり時の負荷容量を返す．
-  virtual
   ClibCapacitance
-  rise_capacitance() const;
+  rise_capacitance() const override;
 
   /// @brief 立ち下がり時の負荷容量を返す．
-  virtual
   ClibCapacitance
-  fall_capacitance() const;
+  fall_capacitance() const override;
 
 
 public:
@@ -616,9 +562,8 @@ public:
 
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
-  virtual
   void
-  dump(ODO& s) const;
+  dump(ODO& s) const override;
 
 
 private:
@@ -658,7 +603,6 @@ private:
   CiInternalPin(const ShString& name);
 
   /// @brief デストラクタ
-  virtual
   ~CiInternalPin();
 
 
@@ -668,14 +612,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 方向を返す．
-  virtual
   ClibDirection
-  direction() const;
+  direction() const override;
 
   /// @brief 内部ピンの時に true を返す．
-  virtual
   bool
-  is_internal() const;
+  is_internal() const override;
 
 
 public:
@@ -685,9 +627,8 @@ public:
 
   /// @brief 内部ピン番号を返す．
   /// @note 内部ピンの時のみ意味を持つ．
-  virtual
   int
-  internal_id() const;
+  internal_id() const override;
 
 
 public:
@@ -697,9 +638,8 @@ public:
 
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
-  virtual
   void
-  dump(ODO& s) const;
+  dump(ODO& s) const override;
 
 
 private:

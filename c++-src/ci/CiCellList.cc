@@ -57,12 +57,12 @@ CiCellList::num() const
 
 // @brief 要素を返す．
 // @param[in] pos 位置番号 ( 0 <= pos < num() )
-const ClibCell*
+const ClibCell&
 CiCellList::operator[](int pos) const
 {
   ASSERT_COND( pos >= 0 && pos < num() );
 
-  return mArray[pos];
+  return *mArray[pos];
 }
 
 // @brief 先頭の反復子を返す．

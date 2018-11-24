@@ -45,7 +45,7 @@ public:
   /// @brief ピンの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
   virtual
-  const ClibCellPin*
+  const ClibCellPin&
   pin(int pos) const = 0;
 
 };

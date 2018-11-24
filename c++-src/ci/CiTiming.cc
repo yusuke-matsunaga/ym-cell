@@ -8,6 +8,7 @@
 
 
 #include "ci/CiTiming.h"
+#include "ci/CiCellLibrary.h"
 #include "ym/ClibLut.h"
 
 
@@ -126,45 +127,45 @@ CiTiming::fall_delay_intercept() const
 }
 
 // @brief 立ち上がり遷移遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTiming::rise_transition() const
 {
-  return nullptr;
+  return CiCellLibrary::error_lut();
 }
 
 // @brief 立ち下がり遷移遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTiming::fall_transition() const
 {
-  return nullptr;
+  return CiCellLibrary::error_lut();
 }
 
 // @brief 立ち上がり伝搬遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTiming::rise_propagation() const
 {
-  return nullptr;
+  return CiCellLibrary::error_lut();
 }
 
 // @brief 立ち下がり伝搬遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTiming::fall_propagation() const
 {
-  return nullptr;
+  return CiCellLibrary::error_lut();
 }
 
 // @brief 立ち上がりセル遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTiming::cell_rise() const
 {
-  return nullptr;
+  return CiCellLibrary::error_lut();
 }
 
 // @brief 立ち下がりセル遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTiming::cell_fall() const
 {
-  return nullptr;
+  return CiCellLibrary::error_lut();
 }
 
 
@@ -371,31 +372,31 @@ CiTimingLut1::~CiTimingLut1()
 }
 
 // @brief 立ち上がりセル遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTimingLut1::cell_rise() const
 {
-  return mClibRise;
+  return *mClibRise;
 }
 
 // @brief 立ち下がりセル遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTimingLut1::cell_fall() const
 {
-  return mClibFall;
+  return *mClibFall;
 }
 
 // @brief 立ち上がり遷移遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTimingLut1::rise_transition() const
 {
-  return mRiseTransition;
+  return *mRiseTransition;
 }
 
 // @brief 立ち下がり遷移遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTimingLut1::fall_transition() const
 {
-  return mFallTransition;
+  return *mFallTransition;
 }
 
 
@@ -430,31 +431,31 @@ CiTimingLut2::~CiTimingLut2()
 }
 
 // @brief 立ち上がり遷移遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTimingLut2::rise_transition() const
 {
-  return mRiseTransition;
+  return *mRiseTransition;
 }
 
 // @brief 立ち下がり遷移遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTimingLut2::fall_transition() const
 {
-  return mFallTransition;
+  return *mFallTransition;
 }
 
 // @brief 立ち上がり伝搬遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTimingLut2::rise_propagation() const
 {
-  return mRisePropagation;
+  return *mRisePropagation;
 }
 
 // @brief 立ち下がり伝搬遅延テーブルの取得
-const ClibLut*
+const ClibLut&
 CiTimingLut2::fall_propagation() const
 {
-  return mFallPropagation;
+  return *mFallPropagation;
 }
 
 END_NAMESPACE_YM_CLIB

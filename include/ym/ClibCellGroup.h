@@ -49,7 +49,7 @@ public:
 
   /// @brief 代表クラスを返す．
   virtual
-  const ClibCellClass*
+  const ClibCellClass&
   rep_class() const = 0;
 
   /// @brief 代表クラスに対する変換マップを返す．

@@ -30,7 +30,6 @@ public:
   CiPatGraph();
 
   /// @brief デストラクタ
-  virtual
   ~CiPatGraph();
 
 
@@ -40,35 +39,29 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 代表関数番号を返す．
-  virtual
   int
-  rep_id() const;
+  rep_id() const override;
 
   /// @brief 根のノード番号を返す．
-  virtual
   int
-  root_id() const;
+  root_id() const override;
 
   /// @brief 根の反転属性を返す．
-  virtual
   bool
-  root_inv() const;
+  root_inv() const override;
 
   /// @brief 入力数を返す．
-  virtual
   int
-  input_num() const;
+  input_num() const override;
 
   /// @brief 枝数を返す．
-  virtual
   int
-  edge_num() const;
+  edge_num() const override;
 
   /// @brief 枝(の番号)を返す．
   /// @param[in] pos 位置 ( 0 <= pos < edge_num() )
-  virtual
   int
-  edge(int pos) const;
+  edge(int pos) const override;
 
 
 public:

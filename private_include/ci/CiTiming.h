@@ -45,20 +45,17 @@ public:
 
   /// @brief ID番号の取得
   /// @note timing = cell->timing(id); の時，timing->id() = id となる．
-  virtual
   int
-  id() const;
+  id() const override;
 
   /// @brief 型の取得
-  virtual
   ClibTimingType
-  type() const;
+  type() const override;
 
   /// @brief タイミング条件式の取得
   /// @note ない場合には定数1の式が返される．
-  virtual
   Expr
-  timing_cond() const;
+  timing_cond() const override;
 
 
 public:
@@ -67,24 +64,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり固有遅延の取得
-  virtual
   ClibTime
-  intrinsic_rise() const;
+  intrinsic_rise() const override;
 
   /// @brief 立ち下がり固有遅延の取得
-  virtual
   ClibTime
-  intrinsic_fall() const;
+  intrinsic_fall() const override;
 
   /// @brief 立ち上がりスロープ遅延の取得
-  virtual
   ClibTime
-  slope_rise() const;
+  slope_rise() const override;
 
   /// @brief 立ち下がりスロープ遅延の取得
-  virtual
   ClibTime
-  slope_fall() const;
+  slope_fall() const override;
 
 
 public:
@@ -93,14 +86,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延の取得
-  virtual
   ClibResistance
-  rise_resistance() const;
+  rise_resistance() const override;
 
   /// @brief 立ち下がり遷移遅延の取得
-  virtual
   ClibResistance
-  fall_resistance() const;
+  fall_resistance() const override;
 
 
 public:
@@ -109,24 +100,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延の取得
-  virtual
   ClibResistance
-  rise_pin_resistance() const;
+  rise_pin_resistance() const override;
 
   /// @brief 立ち下がり遷移遅延の取得
-  virtual
   ClibResistance
-  fall_pin_resistance() const;
+  fall_pin_resistance() const override;
 
   /// @brief 立ち上がり？？？
-  virtual
   ClibTime
-  rise_delay_intercept() const;
+  rise_delay_intercept() const override;
 
   /// @brief 立ち下がり？？？
-  virtual
   ClibTime
-  fall_delay_intercept() const;
+  fall_delay_intercept() const override;
 
 
 public:
@@ -135,34 +122,28 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延テーブルの取得
-  virtual
-  const ClibLut*
-  rise_transition() const;
+  const ClibLut&
+  rise_transition() const override;
 
   /// @brief 立ち下がり遷移遅延テーブルの取得
-  virtual
-  const ClibLut*
-  fall_transition() const;
+  const ClibLut&
+  fall_transition() const override;
 
   /// @brief 立ち上がり伝搬遅延テーブルの取得
-  virtual
-  const ClibLut*
-  rise_propagation() const;
+  const ClibLut&
+  rise_propagation() const override;
 
   /// @brief 立ち下がり伝搬遅延テーブルの取得
-  virtual
-  const ClibLut*
-  fall_propagation() const;
+  const ClibLut&
+  fall_propagation() const override;
 
   /// @brief 立ち上がりセル遅延テーブルの取得
-  virtual
-  const ClibLut*
-  cell_rise() const;
+  const ClibLut&
+  cell_rise() const override;
 
   /// @brief 立ち下がりセル遅延テーブルの取得
-  virtual
-  const ClibLut*
-  cell_fall() const;
+  const ClibLut&
+  cell_fall() const override;
 
 
 protected:
@@ -219,7 +200,6 @@ protected:
 	     ClibTime slope_fall);
 
   /// @brief デストラクタ
-  virtual
   ~CiTimingGP();
 
 
@@ -229,24 +209,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり固有遅延の取得
-  virtual
   ClibTime
-  intrinsic_rise() const;
+  intrinsic_rise() const override;
 
   /// @brief 立ち下がり固有遅延の取得
-  virtual
   ClibTime
-  intrinsic_fall() const;
+  intrinsic_fall() const override;
 
   /// @brief 立ち上がりスロープ遅延の取得
-  virtual
   ClibTime
-  slope_rise() const;
+  slope_rise() const override;
 
   /// @brief 立ち下がりスロープ遅延の取得
-  virtual
   ClibTime
-  slope_fall() const;
+  slope_fall() const override;
 
 
 private:
@@ -299,7 +275,6 @@ private:
 		  ClibResistance fall_resistance);
 
   /// @brief デストラクタ
-  virtual
   ~CiTimingGeneric();
 
 
@@ -309,14 +284,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延の取得
-  virtual
   ClibResistance
-  rise_resistance() const;
+  rise_resistance() const override;
 
   /// @brief 立ち下がり遷移遅延の取得
-  virtual
   ClibResistance
-  fall_resistance() const;
+  fall_resistance() const override;
 
 
 public:
@@ -326,9 +299,8 @@ public:
 
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
-  virtual
   void
-  dump(ODO& s) const;
+  dump(ODO& s) const override;
 
 
 private:
@@ -373,7 +345,6 @@ private:
 		    ClibResistance fall_pin_resistance);
 
   /// @brief デストラクタ
-  virtual
   ~CiTimingPiecewise();
 
 
@@ -383,24 +354,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延の取得
-  virtual
   ClibResistance
-  rise_pin_resistance() const;
+  rise_pin_resistance() const override;
 
   /// @brief 立ち下がり遷移遅延の取得
-  virtual
   ClibResistance
-  fall_pin_resistance() const;
+  fall_pin_resistance() const override;
 
   /// @brief 立ち上がり？？？
-  virtual
   ClibTime
-  rise_delay_intercept() const;
+  rise_delay_intercept() const override;
 
   /// @brief 立ち下がり？？？
-  virtual
   ClibTime
-  fall_delay_intercept() const;
+  fall_delay_intercept() const override;
 
 
 public:
@@ -410,9 +377,8 @@ public:
 
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
-  virtual
   void
-  dump(ODO& s) const;
+  dump(ODO& s) const override;
 
 
 private:
@@ -454,7 +420,6 @@ private:
 
 
   /// @brief デストラクタ
-  virtual
   ~CiTimingLut1();
 
 
@@ -464,24 +429,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がりセル遅延テーブルの取得
-  virtual
-  const ClibLut*
-  cell_rise() const;
+  const ClibLut&
+  cell_rise() const override;
 
   /// @brief 立ち下がりセル遅延テーブルの取得
-  virtual
-  const ClibLut*
-  cell_fall() const;
+  const ClibLut&
+  cell_fall() const override;
 
   /// @brief 立ち上がり遷移遅延テーブルの取得
-  virtual
-  const ClibLut*
-  rise_transition() const;
+  const ClibLut&
+  rise_transition() const override;
 
   /// @brief 立ち下がり遷移遅延テーブルの取得
-  virtual
-  const ClibLut*
-  fall_transition() const;
+  const ClibLut&
+  fall_transition() const override;
 
 
 public:
@@ -491,9 +452,8 @@ public:
 
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
-  virtual
   void
-  dump(ODO& s) const;
+  dump(ODO& s) const override;
 
 
 private:
@@ -543,7 +503,6 @@ private:
 
 
   /// @brief デストラクタ
-  virtual
   ~CiTimingLut2();
 
 
@@ -553,24 +512,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延テーブルの取得
-  virtual
-  const ClibLut*
-  rise_transition() const;
+  const ClibLut&
+  rise_transition() const override;
 
   /// @brief 立ち下がり遷移遅延テーブルの取得
-  virtual
-  const ClibLut*
-  fall_transition() const;
+  const ClibLut&
+  fall_transition() const override;
 
   /// @brief 立ち上がり伝搬遅延テーブルの取得
-  virtual
-  const ClibLut*
-  rise_propagation() const;
+  const ClibLut&
+  rise_propagation() const override;
 
   /// @brief 立ち下がり伝搬遅延テーブルの取得
-  virtual
-  const ClibLut*
-  fall_propagation() const;
+  const ClibLut&
+  fall_propagation() const override;
 
 
 public:
@@ -580,9 +535,8 @@ public:
 
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
-  virtual
   void
-  dump(ODO& s) const;
+  dump(ODO& s) const override;
 
 
 private:

@@ -49,16 +49,12 @@ class ClibResistance;
 
 class ClibCellLibrary;
 class ClibCell;
-class ClibCellList;
 class ClibCellPin;
-class ClibCellPinList;
 class ClibBusType;
 class ClibBus;
 class ClibBundle;
 class ClibTiming;
-class ClibTimingList;
 class ClibLutTemplate;
-class ClibLutTemplateList;
 class ClibLut;
 
 class ClibReader;
@@ -69,13 +65,20 @@ class ClibDumper;
 class ClibRestorer;
 
 class ClibCellGroup;
-class ClibCellGroupList;
 class ClibCellClass;
-class ClibCellClassList;
 class ClibFFInfo;
 class ClibLatchInfo;
 class ClibPatGraph;
-class ClibPat2Graph;
+
+template<class T>
+class ClibObjList;
+
+using ClibCellList = ClibObjList<ClibCell>;
+using ClibCellPinList = ClibObjList<ClibCellPin>;
+using ClibCellGroupList = ClibObjList<ClibCellGroup>;
+using ClibCellClassList = ClibObjList<ClibCellClass>;
+using ClibTimingList = ClibObjList<ClibTiming>;
+using ClibLutTemplateList = ClibObjList<ClibLutTemplate>;
 
 END_NAMESPACE_YM_CLIB
 
