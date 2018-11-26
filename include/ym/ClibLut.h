@@ -39,10 +39,10 @@ public:
   const ClibLutTemplate&
   lut_template() const = 0;
 
-  /// @brief テンプレート名の取得
+  /// @brief テンプレート番号の取得
   virtual
-  const char*
-  template_name() const = 0;
+  int
+  template_id() const = 0;
 
   /// @brief 次元数の取得
   virtual

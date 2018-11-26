@@ -25,7 +25,7 @@ END_NONAMESPACE
 //
 // 空の状態で初期化される．
 ClibCellLibrary::ClibCellLibrary() :
-  mImpl(nullptr)
+  mImpl{nullptr}
 {
 }
 
@@ -34,7 +34,7 @@ ClibCellLibrary::ClibCellLibrary() :
 //
 // '浅い'コピーを行う．
 ClibCellLibrary::ClibCellLibrary(const ClibCellLibrary& src) :
-  mImpl(nullptr)
+  mImpl{nullptr}
 {
   change_impl(src.mImpl);
 }

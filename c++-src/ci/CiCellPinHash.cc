@@ -64,19 +64,20 @@ CiCellPinHash::add(CiCellPin* pin)
 // @brief ピンを取り出す．
 // @param[in] cell セル
 // @param[in] name 名前
-// @return cell の name というピンを返す．
-// @note なければ nullptr を返す．
-CiCellPin*
+// @return cell の name というピンのピン番号を返す．
+//
+// なければ -1 を返す．
+int
 CiCellPinHash::get(const CiCell* cell,
 		   ShString name) const
 {
   SizeType pos = hash_func(cell, name) % mSize;
   for ( CiCellPin* pin = mTable[pos]; pin; pin = pin->mLink ) {
     if ( pin->mCell == cell && pin->mName == name ) {
-      return pin;
+      return pin->mId;
     }
   }
-  return nullptr;
+  return -1;
 }
 
 // @brief テーブルの領域を確保する．

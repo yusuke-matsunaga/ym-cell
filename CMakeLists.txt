@@ -35,6 +35,7 @@ set (ci_SOURCES
   c++-src/ci/CiBus.cc
   c++-src/ci/CiBusType.cc
   c++-src/ci/CiCell.cc
+  c++-src/ci/CiCellHash.cc
   c++-src/ci/CiCellClass.cc
   c++-src/ci/CiCellGroup.cc
   c++-src/ci/CiCellLibrary.cc

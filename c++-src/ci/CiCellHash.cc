@@ -43,8 +43,8 @@ CiCellHash::add(CiCell* cell)
     int old_size = mSize;
     CiCell** old_table = mTable;
     alloc_table(old_size << 1);
-    for (int i = 0; i < old_size; ++ i) {
-      for (CiCell* cell = old_table[i]; cell; ) {
+    for ( int i = 0; i < old_size; ++ i ) {
+      for ( CiCell* cell = old_table[i]; cell; ) {
 	CiCell* tmp = cell;
 	cell = tmp->mLink;
 	int pos = tmp->mName.hash() % mSize;
@@ -61,20 +61,21 @@ CiCellHash::add(CiCell* cell)
   ++ mNum;
 }
 
-// @brief セルを取り出す．
+// @brief セル番号を取り出す．
 // @param[in] name 名前
-// @return name という名前のセルを返す．
-// @note なければ nullptr を返す．
-CiCell*
+// @return name という名前のセルのセル番号を返す．
+//
+// なければ -1 を返す．
+int
 CiCellHash::get(ShString name) const
 {
   int pos = name.hash() % mSize;
-  for (CiCell* cell = mTable[pos]; cell; cell = cell->mLink) {
+  for ( CiCell* cell = mTable[pos]; cell; cell = cell->mLink ) {
     if ( cell->mName == name ) {
-      return cell;
+      return cell->mId;
     }
   }
-  return nullptr;
+  return -1;
 }
 
 // @brief テーブルの領域を確保する．
@@ -85,7 +86,7 @@ CiCellHash::alloc_table(int req_size)
   mSize = req_size;
   mLimit = static_cast<int>(mSize * 1.8);
   mTable = new CiCell*[mSize];
-  for (int i = 0; i < mSize; ++ i) {
+  for ( int i = 0; i < mSize; ++ i ) {
     mTable[i] = nullptr;
   }
 }

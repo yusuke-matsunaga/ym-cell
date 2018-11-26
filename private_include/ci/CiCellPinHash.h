@@ -43,9 +43,10 @@ public:
   /// @brief ピンを取り出す．
   /// @param[in] cell セル
   /// @param[in] name 名前
-  /// @return cell の name というピンを返す．
-  /// @note なければ nullptr を返す．
-  CiCellPin*
+  /// @return cell の name というピンのピン番号を返す．
+  ///
+  /// なければ -1 を返す．
+  int
   get(const CiCell* cell,
       ShString name) const;
 

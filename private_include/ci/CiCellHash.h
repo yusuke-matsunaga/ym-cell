@@ -39,11 +39,12 @@ public:
   void
   add(CiCell* cell);
 
-  /// @brief セルを取り出す．
+  /// @brief セル番号を取り出す．
   /// @param[in] name 名前
-  /// @return name という名前のセルを返す．
-  /// @note なければ nullptr を返す．
-  CiCell*
+  /// @return name という名前のセルのセル番号を返す．
+  ///
+  /// なければ -1 を返す．
+  int
   get(ShString name) const;
 
 

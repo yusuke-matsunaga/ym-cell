@@ -85,33 +85,34 @@ CiCell::CiCell(CiCellLibrary* library,
     CiInputPin* pin = input_list[i];
 
     pin->mCell = this;
-    mLibrary->reg_pin(pin);
 
     _pin_list.push_back(pin);
     _input_list.push_back(pin);
 
     pin->mId = pin_id; ++ pin_id;
     pin->mInputId = i;
+
+    mLibrary->reg_pin(pin);
   }
 
   for ( int i: Range(mOutputNum) ) {
     CiOutputPin* pin = output_list[i];
 
     pin->mCell = this;
-    mLibrary->reg_pin(pin);
 
     _pin_list.push_back(pin);
     _output_list.push_back(pin);
 
     pin->mId = pin_id; ++ pin_id;
     pin->mOutputId = i;
+
+    mLibrary->reg_pin(pin);
   }
 
   for ( int i: Range(mInOutNum) ) {
     CiInoutPin* pin = inout_list[i];
 
     pin->mCell = this;
-    mLibrary->reg_pin(pin);
 
     _pin_list.push_back(pin);
     _input_list.push_back(pin);
@@ -121,19 +122,22 @@ CiCell::CiCell(CiCellLibrary* library,
     pin->mId = pin_id; ++ pin_id;
     pin->mInputId = i + mInputNum;
     pin->mOutputId = i + mOutputNum;
+
+    mLibrary->reg_pin(pin);
   }
 
   for ( int i: Range(internal_list.size()) ) {
     CiInternalPin* pin = internal_list[i];
 
     pin->mCell = this;
-    mLibrary->reg_pin(pin);
 
     _pin_list.push_back(pin);
     _internal_list.push_back(pin);
 
     pin->mId = pin_id; ++ pin_id;
     pin->mInternalId = i;
+
+    mLibrary->reg_pin(pin);
   }
 
   mPinList.init(_pin_list, alloc);
@@ -226,13 +230,7 @@ CiCell::pin(int pin_id) const
 int
 CiCell::pin_id(const string& name) const
 {
-  const CiCellPin* pin = mLibrary->get_pin(this, ShString(name));
-  if ( pin != nullptr ) {
-    return pin->pin_id();
-  }
-  else {
-    return -1;
-  }
+  return pin_id(ShString(name));
 }
 
 // @brief 名前からピン番号の取得
@@ -243,13 +241,18 @@ CiCell::pin_id(const string& name) const
 int
 CiCell::pin_id(const char* name) const
 {
-  const CiCellPin* pin = mLibrary->get_pin(this, ShString(name));
-  if ( pin != nullptr ) {
-    return pin->pin_id();
-  }
-  else {
-    return -1;
-  }
+  return pin_id(ShString(name));
+}
+
+// @brief 名前からピン番号の取得
+// @param[in] name ピン名
+// @return name という名前のピン番号を返す．
+//
+// なければ -1 を返す．
+int
+CiCell::pin_id(const ShString& name) const
+{
+  return mLibrary->get_pin_id(this, name);
 }
 
 // @brief 入力ピン数の取得

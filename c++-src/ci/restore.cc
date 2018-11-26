@@ -640,18 +640,15 @@ CiCellLibrary::restore_timing(IDO& s,
 ClibLut*
 CiCellLibrary::restore_lut(IDO& s)
 {
-  string template_name;
-  s >> template_name;
-  if ( template_name == string() ) {
+  int templ_id;
+  s >> templ_id;
+  if ( templ_id == -1 ) {
     return nullptr;
   }
 
-  int templ_id = lu_table_template_id(template_name);
-  ASSERT_COND( templ_id != -1 );
+  const ClibLutTemplate& templ = mLutTemplateList[templ_id];
 
-  const ClibLutTemplate* templ = &mLutTemplateList[templ_id];
-
-  int d = templ->dimension();
+  int d = templ.dimension();
   switch ( d ) {
   case 1:
     {
@@ -670,7 +667,7 @@ CiCellLibrary::restore_lut(IDO& s)
 	s >> val;
 	value_array[i] = val;
       }
-      return new_lut1(templ,
+      return new_lut1(&templ,
 		      value_array,
 		      index_array);
     }
@@ -702,7 +699,7 @@ CiCellLibrary::restore_lut(IDO& s)
 	s >> val;
 	value_array[i] = val;
       }
-      return new_lut2(templ,
+      return new_lut2(&templ,
 		      value_array,
 		      index_array1,
 		      index_array2);
@@ -745,7 +742,7 @@ CiCellLibrary::restore_lut(IDO& s)
 	value_array[i] = val;
       }
 
-      return new_lut3(templ,
+      return new_lut3(&templ,
 		      value_array,
 		      index_array1,
 		      index_array2,

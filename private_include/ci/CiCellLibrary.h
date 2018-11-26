@@ -155,6 +155,7 @@ public:
   const ClibLutTemplate&
   lu_table_template(int table_id) const;
 
+#if 0
   /// @brief ルックアップテーブルのテンプレート番号の取得
   /// @param[in] name テンプレート名
   ///
@@ -175,6 +176,7 @@ public:
   /// なければ -1 を返す．
   int
   lu_table_template_id(const ShString& name) const;
+#endif
 
   /// @brief バスタイプの取得
   /// @param[in] name バスタイプ名
@@ -867,12 +869,14 @@ public:
   void
   reg_pin(CiCellPin* pin);
 
-  /// @brief ピン名からピンを取り出す．
+  /// @brief ピン名からピン番号を取り出す．
   /// @param[in] cell セル
   /// @param[in] name ピン名
-  const CiCellPin*
-  get_pin(const CiCell* cell,
-	  ShString name);
+  ///
+  /// 見つからない場合は -1 を返す．
+  int
+  get_pin_id(const CiCell* cell,
+	     ShString name);
 
 
 private:
@@ -931,14 +935,16 @@ private:
   // 遅延テンプレートのリスト
   ClibLutTemplateList mLutTemplateList;
 
+#if 0
   // 名前をキーにした遅延テンプレート番号のハッシュ表
   HashMap<ShString, int> mLutHash;
+#endif
 
   // セルのリスト
   ClibCellList mCellList;
 
-  // 名前をキーにしたセル番号のハッシュ表
-  HashMap<ShString, int> mCellHash;
+  // 名前をキーにしたセルのハッシュ表
+  CiCellHash mCellHash;
 
   // ピン名をキーにしたピン番号のハッシュ表
   CiCellPinHash mPinHash;

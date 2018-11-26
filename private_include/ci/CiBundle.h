@@ -5,7 +5,7 @@
 /// @brief CiBundle のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -54,7 +54,7 @@ public:
   pin(int pos) const override;
 
 
-public:
+private:
   //////////////////////////////////////////////////////////////////////
   // 設定用の関数
   //////////////////////////////////////////////////////////////////////

@@ -20,6 +20,10 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @defgroup ClibCellGroup
 /// @class ClibArea ClibArea.h "ym/ClibArea.h"
 /// @brief 面積を表すクラス
+///
+/// 内容的には double そのものだが他の単位との演算が
+/// 行えないようになっている．
+/// ClibArea 同士の演算も加減算のみ定義されている．
 //////////////////////////////////////////////////////////////////////
 class ClibArea
 {
@@ -29,6 +33,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 空のコンストラクタ
+  ///
+  /// 内容は不定
   ClibArea();
 
   /// @brief double からの変換コンストラクタ

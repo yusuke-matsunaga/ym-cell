@@ -22,8 +22,8 @@ const int CLEAR   = 4;
 const int PRESET  = 5;
 
 inline
-ymuint
-encode(ymuint val,
+ymuint32
+encode(ymuint32 val,
        int idx)
 {
   return val << (5 * idx);
@@ -31,7 +31,7 @@ encode(ymuint val,
 
 inline
 int
-get_sense(ymuint bits,
+get_sense(ymuint32 bits,
 	  int idx)
 {
   return (bits >> (5 * idx + 3)) & 3U;
@@ -39,7 +39,7 @@ get_sense(ymuint bits,
 
 inline
 int
-get_pos(ymuint bits,
+get_pos(ymuint32 bits,
 	int idx)
 {
   return (bits >> (5 * idx)) & 7U;

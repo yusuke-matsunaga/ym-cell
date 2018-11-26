@@ -36,11 +36,11 @@ CiLut::lut_template() const
   return *mTemplate;
 }
 
-// @brief テンプレート名の取得
-const char*
-CiLut::template_name() const
+// @brief テンプレート番号の取得
+int
+CiLut::template_id() const
 {
-  return lut_template().name();
+  return lut_template().id();
 }
 
 // @brief 変数型の取得

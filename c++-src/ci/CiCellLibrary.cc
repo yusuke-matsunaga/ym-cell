@@ -199,6 +199,7 @@ CiCellLibrary::lu_table_template(int table_id) const
   return mLutTemplateList[table_id];
 }
 
+#if 0
 // @brief ルックアップテーブルのテンプレート番号の取得
 // @param[in] name テンプレート名
 //
@@ -228,6 +229,7 @@ CiCellLibrary::lu_table_template_id(const ShString& name) const
 {
   return mLutHash.get(name, -1);
 }
+#endif
 
 // @brief バスタイプの取得
 // @param[in] name バスタイプ名
@@ -284,7 +286,7 @@ CiCellLibrary::cell_id(const string& name) const
 int
 CiCellLibrary::cell_id(const ShString& name) const
 {
-  return mCellHash.get(name, -1);
+  return mCellHash.get(name);
 }
 
 // @brief セルグループのリストを返す．
@@ -607,8 +609,9 @@ CiCellLibrary::set_lu_table_template_list(const vector<CiLutTemplate*>& template
   vector<ClibLutTemplate*> _template_list(n);
   for ( int i: Range(n) ) {
     CiLutTemplate* tmpl = template_list[i];
+    tmpl->mId = i;
     _template_list[i] = tmpl;
-    mLutHash.add(tmpl->_name(), i);
+    //mLutHash.add(tmpl->_name(), i);
   }
   mLutTemplateList.init(_template_list, mAlloc);
 }
@@ -690,8 +693,9 @@ CiCellLibrary::set_cell_list(const vector<CiCell*>& cell_list,
     cell->mId = id;
     _cell_list[id] = cell;
     // 名前をキーにしたハッシュに登録する．
-    mCellHash.add(cell->mName, id);
+    mCellHash.add(cell);
   }
+  mCellList.init(_cell_list, mAlloc);
 
   if ( do_compile ) {
     compile(cell_list);
@@ -1516,11 +1520,11 @@ CiCellLibrary::reg_pin(CiCellPin* pin)
   mPinHash.add(pin);
 }
 
-// @brief ピン名からピンを取り出す．
+// @brief ピン名からピン番号を取り出す．
 // @param[in] cell セル
 // @param[in] name ピン名
-const CiCellPin*
-CiCellLibrary::get_pin(const CiCell* cell,
+int
+CiCellLibrary::get_pin_id(const CiCell* cell,
 		       ShString name)
 {
   return mPinHash.get(cell, name);

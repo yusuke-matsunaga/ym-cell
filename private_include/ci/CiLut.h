@@ -42,9 +42,9 @@ public:
   const ClibLutTemplate&
   lut_template() const override;
 
-  /// @brief テンプレート名の取得
-  const char*
-  template_name() const override;
+  /// @brief テンプレート番号の取得
+  int
+  template_id() const override;
 
   /// @brief 変数型の取得
   /// @param[in] var 変数番号 ( 0 <= var < dimension() )

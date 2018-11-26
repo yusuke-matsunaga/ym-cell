@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] name 名前
 // @param[in] bit_from 開始位置
 // @param[in] bit_to 終了位置
-CiBusType::CiBusType(ShString name,
+CiBusType::CiBusType(const ShString& name,
 		     int bit_from,
 		     int bit_to) :
   mName(name),

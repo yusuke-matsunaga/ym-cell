@@ -27,6 +27,13 @@ CiLutTemplate::~CiLutTemplate()
 {
 }
 
+// @brief ID番号の取得
+int
+CiLutTemplate::id() const
+{
+  return mId;
+}
+
 // @brief 名前の取得
 const char*
 CiLutTemplate::name() const

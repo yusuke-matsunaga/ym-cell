@@ -438,7 +438,7 @@ CiTimingLut2::dump(ODO& s) const
 void
 CiLut::dump(ODO& s) const
 {
-  s << template_name();
+  s << template_id();
   int d = dimension();
   for ( int i: Range(d) ) {
     ymuint8 n = index_num(i);

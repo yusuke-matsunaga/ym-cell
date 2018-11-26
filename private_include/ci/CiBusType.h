@@ -5,7 +5,7 @@
 /// @brief CiBusType のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -30,7 +30,7 @@ private:
   /// @param[in] name 名前
   /// @param[in] bit_from 開始位置
   /// @param[in] bit_to 終了位置
-  CiBusType(ShString name,
+  CiBusType(const ShString& name,
 	    int bit_from,
 	    int bit_to);
 
