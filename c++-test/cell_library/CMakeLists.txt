@@ -24,9 +24,9 @@ include_directories(
 
 ym_add_gtest ( cell_ClibCellLibrary_test
   ClibCellLibraryTest.cc
-  $<TARGET_OBJECTS:ym_base_ad>
-  $<TARGET_OBJECTS:ym_logic_ad>
-  $<TARGET_OBJECTS:ym_cell_ad>
+  $<TARGET_OBJECTS:ym_base_obj_ad>
+  $<TARGET_OBJECTS:ym_logic_obj_ad>
+  $<TARGET_OBJECTS:ym_cell_obj_ad>
   DEFINITIONS
   "-DDATA_DIR=\"${PROJECT_SOURCE_DIR}/ym-cell/testdata\""
   )
