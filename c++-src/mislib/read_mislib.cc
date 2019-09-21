@@ -36,7 +36,7 @@ BEGIN_NAMESPACE_YM_MISLIB
 
 BEGIN_NONAMESPACE
 
-typedef HashMap<ShString, int> NameMap;
+typedef unordered_map<ShString, int> NameMap;
 
 // 論理式を表すパース木をスキャンして端子名のリストを作る．
 // param[in] node パース木の根のノード
@@ -55,9 +55,9 @@ dfs(const MislibExpr* expr,
   case MislibExpr::VarName:
     {
       ShString name = expr->varname();
-      if ( !name_map.check(name) ) {
+      if ( name_map.count(name) == 0 ) {
 	// 登録する．
-	name_map.add(name, name_list.size());
+	name_map[name] = name_list.size();
 	name_list.push_back(name);
       }
     }
@@ -100,8 +100,8 @@ new_gate(const MislibGate* gate,
       // ipin_list の順に入力ピンを作る．
       for ( auto pin = ipin_top; pin != nullptr; pin = pin->next() ) {
 	ShString name = pin->name()->str();
-	ASSERT_COND( !ipin_name_map.check(name) );
-	ipin_name_map.add(name, ipin_array.size());
+	ASSERT_COND( ipin_name_map.count(name) == 0 );
+	ipin_name_map[name] = ipin_array.size();
 	ipin_array.push_back(pin);
 	ipin_name_list.push_back(name);
       }

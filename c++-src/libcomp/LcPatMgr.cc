@@ -223,8 +223,8 @@ LcPatMgr::check_equivalent(LcPatHandle handle1,
     return false;
   }
 
-  HashMap<int, int> map1;
-  HashMap<int, int> map2;
+  unordered_map<int, int> map1;
+  unordered_map<int, int> map2;
 
   return ceq_sub(handle1.node(), handle2.node(), map1, map2);
 }
@@ -233,25 +233,29 @@ LcPatMgr::check_equivalent(LcPatHandle handle1,
 bool
 LcPatMgr::ceq_sub(LcPatNode* node1,
 		  LcPatNode* node2,
-		  HashMap<int, int>& map1,
-		  HashMap<int, int>& map2)
+		  unordered_map<int, int>& map1,
+		  unordered_map<int, int>& map2)
 {
   if ( node1->is_input() && node2->is_input() ) {
     int id1 = node1->input_id();
     int id2 = node2->input_id();
-    int id1_reg;
-    int id2_reg;
-    if ( !map1.find(id1, id2_reg) ) {
-      map1.add(id1, id2);
+    if ( map1.count(id1) == 0 ) {
+      map1[id1] = id2;
     }
-    else if ( id2_reg != id2 ) {
-      return false;
+    else {
+      int id2_reg = map1[id1];
+      if ( id2_reg != id2 ) {
+	return false;
+      }
     }
-    if ( !map2.find(id2, id1_reg) ) {
-      map2.add(id2, id1);
+    if ( map2.count(id2) == 0 ) {
+      map2[id2] = id1;
     }
-    else if ( id1_reg != id1 ) {
-      return false;
+    else {
+      int id1_reg = map2[id1];
+      if ( id1_reg != id1 ) {
+	return false;
+      }
     }
     return true;
   }

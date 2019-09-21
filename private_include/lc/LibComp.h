@@ -193,14 +193,14 @@ private:
   vector<LcGroup*> mGroupList;
 
   // シグネチャ文字列をキーとしてグループ番号を保持するハッシュ表
-  HashMap<string, int> mGroupMap;
+  unordered_map<string, int> mGroupMap;
 
   // NPN同値クラスのリスト
   // この配列上の位置とクラス番号は一致している．
   vector<LcClass*> mClassList;
 
   // 代表シグネチャの文字列をキーとしてクラス番号を保持するハッシュ表
-  HashMap<string, int> mClassMap;
+  unordered_map<string, int> mClassMap;
 
   // 定義済みの論理グループ
   int mLogicGroup[4];

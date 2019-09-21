@@ -110,7 +110,7 @@ public:
   /// @return 対応する式(Expr)を返す．
   virtual
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const = 0;
+  to_expr(const unordered_map<ShString, int>& pin_map) const = 0;
 
 };
 
@@ -155,7 +155,7 @@ public:
   /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const override;
+  to_expr(const unordered_map<ShString, int>& pin_map) const override;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -222,7 +222,7 @@ public:
   /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const override;
+  to_expr(const unordered_map<ShString, int>& pin_map) const override;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -289,7 +289,7 @@ public:
   /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const override;
+  to_expr(const unordered_map<ShString, int>& pin_map) const override;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -349,7 +349,7 @@ public:
   /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const override;
+  to_expr(const unordered_map<ShString, int>& pin_map) const override;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -415,7 +415,7 @@ public:
   /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const override;
+  to_expr(const unordered_map<ShString, int>& pin_map) const override;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -485,7 +485,7 @@ public:
   /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const HashMap<ShString, int>& pin_map) const override;
+  to_expr(const unordered_map<ShString, int>& pin_map) const override;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム

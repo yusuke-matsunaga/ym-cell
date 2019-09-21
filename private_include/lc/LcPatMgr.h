@@ -11,7 +11,6 @@
 
 #include "lc/libcomp_nsdef.h"
 #include "ym/logic.h"
-#include "ym/HashMap.h"
 #include "ym/UnitAlloc.h"
 #include "ym/VarId.h"
 
@@ -115,8 +114,8 @@ private:
   bool
   ceq_sub(LcPatNode* node1,
 	  LcPatNode* node2,
-	  HashMap<int, int>& map1,
-	  HashMap<int, int>& map2);
+	  unordered_map<int, int>& map1,
+	  unordered_map<int, int>& map2);
 
   /// @brief パタングラフを生成する再帰関数
   /// @param[in] expr 元になる論理式

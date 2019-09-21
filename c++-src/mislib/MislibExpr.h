@@ -69,7 +69,7 @@ public:
   /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
   virtual
   Expr
-  to_expr(const HashMap<ShString, int>& name_map) const = 0;
+  to_expr(const unordered_map<ShString, int>& name_map) const = 0;
 
   /// @brief 内容を出力する．
   /// デバッグ用

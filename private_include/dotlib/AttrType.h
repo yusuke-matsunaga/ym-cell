@@ -10,7 +10,7 @@
 
 
 #include "dotlib_nsdef.h"
-#include "ym/HashFunc.h"
+
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
@@ -503,21 +503,21 @@ operator<<(ostream& s,
 
 END_NAMESPACE_YM_DOTLIB
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_STD
 
 //////////////////////////////////////////////////////////////////////
 // HashFunc<> の特殊化
 //////////////////////////////////////////////////////////////////////
 template<>
 struct
-HashFunc<nsClib::nsDotlib::AttrType>
+hash<YM_NAMESPACE::nsClib::nsDotlib::AttrType>
 {
   SizeType
-  operator()(nsClib::nsDotlib::AttrType key) const {
+  operator()(YM_NAMESPACE::nsClib::nsDotlib::AttrType key) const {
     return static_cast<SizeType>(key);
   }
 };
 
-END_NAMESPACE_YM
+END_NAMESPACE_STD
 
 #endif // ATTRTYPE_H

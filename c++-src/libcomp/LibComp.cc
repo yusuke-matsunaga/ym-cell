@@ -16,7 +16,6 @@
 #include "ci/CiCell.h"
 #include "ym/Expr.h"
 #include "ym/NpnMap.h"
-#include "ym/HashSet.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
@@ -31,13 +30,13 @@ xform_expr(const Expr& expr,
   int ni = map.input_num();
   int no = map.output_num();
   ASSERT_COND( no == 1 );
-  HashMap<VarId, Expr> vlm;
+  unordered_map<VarId, Expr> vlm;
   for ( int i = 0; i < ni; ++ i ) {
     VarId src_var(i);
     NpnVmap imap = map.imap(src_var);
     VarId dst_var = imap.var();
     Expr expr = Expr::literal(dst_var, imap.inv());
-    vlm.add(src_var, expr);
+    vlm[src_var] = expr;
   }
   Expr cexpr = expr.compose(vlm);
   if ( map.omap(VarId(0)).inv() ) {
@@ -414,30 +413,30 @@ LcGroup*
 LibComp::_find_group(const LcSignature& sig)
 {
   string sig_str = sig.str();
-  int fgid;
-  if ( mGroupMap.find(sig_str, fgid) ) {
+  if ( mGroupMap.count(sig_str) > 0 ) {
+    int fgid = mGroupMap[sig_str];
     // 既に登録されていた．
     return mGroupList[fgid];
   }
 
   // なかったので新たに作る．
   LcGroup* fgroup = _new_group();
-  mGroupMap.add(sig_str, fgroup->id());
+  mGroupMap[sig_str] = fgroup->id();
 
   // 代表関数を求める．
   NpnMapM xmap = _cannonical_map(sig);
   LcSignature rep_sig(sig, xmap);
   string rep_sig_str = rep_sig.str();
   LcClass* fclass = nullptr;
-  int fcid;
-  if ( mClassMap.find(rep_sig_str, fcid) ) {
+  if ( mClassMap.count(rep_sig_str) > 0 ) {
+    int fcid = mClassMap[rep_sig_str];
     // 登録されていた．
     fclass = mClassList[fcid];
   }
   else {
     // まだ登録されていない．
     fclass = _new_class(rep_sig);
-    mClassMap.add(rep_sig_str, fclass->id());
+    mClassMap[rep_sig_str] = fclass->id();
   }
 
   // グループを追加する．

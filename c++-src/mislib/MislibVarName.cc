@@ -39,11 +39,12 @@ MislibVarName::type() const
 // @brief 対応する論理式を生成する．
 // @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
 Expr
-MislibVarName::to_expr(const HashMap<ShString, int>& name_map) const
+MislibVarName::to_expr(const unordered_map<ShString, int>& name_map) const
 {
-  int id;
-  bool found = name_map.find(varname(), id);
-  ASSERT_COND( found );
+  int c = name_map.count(varname());
+  ASSERT_COND( c > 0 );
+
+  int id = name_map.at(varname());
   VarId var(id);
   return Expr::posi_literal(var);
 }

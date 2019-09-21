@@ -32,7 +32,6 @@ protected:
 	    const MislibExpr* child2);
 
   /// @brief デストラクタ
-  virtual
   ~MislibBop();
 
 
@@ -42,14 +41,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 1番目の子供を取り出す．
-  virtual
   const MislibExpr*
-  child1() const;
+  child1() const override;
 
   /// @brief 2番目の子供を取り出す．
-  virtual
   const MislibExpr*
-  child2() const;
+  child2() const override;
 
 
 private:
@@ -86,7 +83,6 @@ private:
 	    const MislibExpr* child2);
 
   /// @brief デストラクタ
-  virtual
   ~MislibAnd();
 
 
@@ -96,21 +92,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 種類を取り出す．
-  virtual
   Type
-  type() const;
+  type() const override;
 
   /// @brief 対応する論理式を生成する．
   /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
-  virtual
   Expr
-  to_expr(const HashMap<ShString, int>& name_map) const;
+  to_expr(const unordered_map<ShString, int>& name_map) const override;
 
   /// @brief 内容を出力する．
   /// デバッグ用
-  virtual
   void
-  dump(ostream& s) const;
+  dump(ostream& s) const override;
 
 };
 
@@ -135,7 +128,6 @@ private:
 	   const MislibExpr* child2);
 
   /// @brief デストラクタ
-  virtual
   ~MislibOr();
 
 
@@ -145,21 +137,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 種類を取り出す．
-  virtual
   Type
-  type() const;
+  type() const override;
 
   /// @brief 対応する論理式を生成する．
   /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
-  virtual
   Expr
-  to_expr(const HashMap<ShString, int>& name_map) const;
+  to_expr(const unordered_map<ShString, int>& name_map) const override;
 
   /// @brief 内容を出力する．
   /// デバッグ用
-  virtual
   void
-  dump(ostream& s) const;
+  dump(ostream& s) const override;
 
 };
 
@@ -184,7 +173,6 @@ private:
 	    const MislibExpr* child2);
 
   /// @brief デストラクタ
-  virtual
   ~MislibXor();
 
 
@@ -194,21 +182,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 種類を取り出す．
-  virtual
   Type
-  type() const;
+  type() const override;
 
   /// @brief 対応する論理式を生成する．
   /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
-  virtual
   Expr
-  to_expr(const HashMap<ShString, int>& name_map) const;
+  to_expr(const unordered_map<ShString, int>& name_map) const override;
 
   /// @brief 内容を出力する．
   /// デバッグ用
-  virtual
   void
-  dump(ostream& s) const;
+  dump(ostream& s) const override;
 
 };
 

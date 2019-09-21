@@ -38,8 +38,8 @@ bool
 GroupHandler::read_group_attr(AttrType attr_type,
 			      const FileRegion& attr_loc)
 {
-  ParseFunc func;
-  if ( mFuncDict.find(attr_type, func) ) {
+  if ( mFuncDict.count(attr_type) > 0 ) {
+    auto func = mFuncDict.at(attr_type);
     return func(parser(), attr_type, attr_loc);
   }
   else {
@@ -83,7 +83,7 @@ void
 GroupHandler::reg_func(AttrType attr_type,
 		       ParseFunc func)
 {
-  mFuncDict.add(attr_type, func);
+  mFuncDict[attr_type] = func;
 }
 
 END_NAMESPACE_YM_DOTLIB

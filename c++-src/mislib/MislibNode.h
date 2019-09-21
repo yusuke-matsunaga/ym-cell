@@ -25,6 +25,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] loc 位置情報
+  explicit
   MislibNode(const FileRegion& loc);
 
   /// @brief デストラクタ

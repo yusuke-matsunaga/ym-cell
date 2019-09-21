@@ -10,7 +10,6 @@
 
 
 #include "AttrType.h"
-#include "ym/HashMap.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -56,7 +55,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 辞書
-  HashMap<string, AttrType> mDic;
+  unordered_map<string, AttrType> mDic;
 
 };
 
@@ -80,8 +79,8 @@ inline
 AttrType
 AttrDic::get(const char* str) const
 {
-  if ( mDic.check(str) ) {
-    return mDic[str];
+  if ( mDic.count(str) > 0 ) {
+    return mDic.at(str);
   }
   else {
     return AttrType::none;

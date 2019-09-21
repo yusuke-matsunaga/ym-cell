@@ -32,7 +32,6 @@ private:
 	    const MislibExpr* child1);
 
   /// @brief デストラクタ
-  virtual
   ~MislibNot();
 
 
@@ -42,26 +41,22 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 種類を取り出す．
-  virtual
   Type
-  type() const;
+  type() const override;
 
   /// @brief 対応する論理式を生成する．
   /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
-  virtual
   Expr
-  to_expr(const HashMap<ShString, int>& name_map) const;
+  to_expr(const unordered_map<ShString, int>& name_map) const override;
 
   /// @brief 内容を出力する．
   /// デバッグ用
-  virtual
   void
-  dump(ostream& s) const;
+  dump(ostream& s) const override;
 
   /// @brief 1番目の子供を取り出す．
-  virtual
   const MislibExpr*
-  child1() const;
+  child1() const override;
 
 
 private:

@@ -286,7 +286,7 @@ AstBoolExpr::bool_value() const
 // @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
 // @return 対応する式(Expr)を返す．
 Expr
-AstBoolExpr::to_expr(const HashMap<ShString, int>& pin_map) const
+AstBoolExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
 {
   if ( mValue ) {
     return Expr::zero();
@@ -345,7 +345,7 @@ AstFloatExpr::float_value() const
 // @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
 // @return 対応する式(Expr)を返す．
 Expr
-AstFloatExpr::to_expr(const HashMap<ShString, int>& pin_map) const
+AstFloatExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
 {
   ASSERT_NOT_REACHED;
   return Expr();
@@ -400,10 +400,9 @@ AstStrExpr::string_value() const
 // @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
 // @return 対応する式(Expr)を返す．
 Expr
-AstStrExpr::to_expr(const HashMap<ShString, int>& pin_map) const
+AstStrExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
 {
-  int id;
-  if ( !pin_map.find(mValue, id) ) {
+  if ( pin_map.count(mValue) == 0 ) {
     ostringstream buf;
     buf << mValue << ": No such pin-name.";
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -413,6 +412,8 @@ AstStrExpr::to_expr(const HashMap<ShString, int>& pin_map) const
 		    buf.str());
     return Expr();
   }
+
+  int id = pin_map.at(mValue);
   return Expr::posi_literal(VarId(id));
 }
 
@@ -456,7 +457,7 @@ AstSymbolExpr::type() const
 // @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
 // @return 対応する式(Expr)を返す．
 Expr
-AstSymbolExpr::to_expr(const HashMap<ShString, int>& pin_map) const
+AstSymbolExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
 {
   ASSERT_NOT_REACHED;
   return Expr();
@@ -511,7 +512,7 @@ AstNot::opr1() const
 // @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
 // @return 対応する式(Expr)を返す．
 Expr
-AstNot::to_expr(const HashMap<ShString, int>& pin_map) const
+AstNot::to_expr(const unordered_map<ShString, int>& pin_map) const
 {
   Expr expr1 = opr1()->to_expr(pin_map);
   return ~expr1;
@@ -587,7 +588,7 @@ AstOpr::opr2() const
 // @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
 // @return 対応する式(Expr)を返す．
 Expr
-AstOpr::to_expr(const HashMap<ShString, int>& pin_map) const
+AstOpr::to_expr(const unordered_map<ShString, int>& pin_map) const
 {
   Expr expr1 = opr1()->to_expr(pin_map);
   Expr expr2 = opr2()->to_expr(pin_map);

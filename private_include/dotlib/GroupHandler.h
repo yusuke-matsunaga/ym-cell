@@ -120,7 +120,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 各属性用のパース関数を登録する辞書
-  HashMap<AttrType, ParseFunc> mFuncDict;
+  unordered_map<AttrType, ParseFunc> mFuncDict;
 
   // 読み込んだグループ定義のファイル位置
   FileRegion mGroupLoc;

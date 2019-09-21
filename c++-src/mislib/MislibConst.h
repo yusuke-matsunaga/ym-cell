@@ -27,10 +27,10 @@ private:
 
   /// @brief コンストラクタ
   /// @param[in] loc 位置情報
+  explicit
   MislibConst0(const FileRegion& loc);
 
   /// @brief デストラクタ
-  virtual
   ~MislibConst0();
 
 
@@ -40,21 +40,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 種類を取り出す．
-  virtual
   Type
-  type() const;
+  type() const override;
 
   /// @brief 対応する論理式を生成する．
   /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
-  virtual
   Expr
-  to_expr(const HashMap<ShString, int>& name_map) const;
+  to_expr(const unordered_map<ShString, int>& name_map) const override;
 
   /// @brief 内容を出力する．
   /// デバッグ用
-  virtual
   void
-  dump(ostream& s) const;
+  dump(ostream& s) const override;
 
 };
 
@@ -72,10 +69,10 @@ private:
 
   /// @brief コンストラクタ
   /// @param[in] loc 位置情報
+  explicit
   MislibConst1(const FileRegion& loc);
 
   /// @brief デストラクタ
-  virtual
   ~MislibConst1();
 
 
@@ -85,21 +82,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 種類を取り出す．
-  virtual
   Type
-  type() const;
+  type() const override;
 
   /// @brief 対応する論理式を生成する．
   /// @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
-  virtual
   Expr
-  to_expr(const HashMap<ShString, int>& name_map) const;
+  to_expr(const unordered_map<ShString, int>& name_map) const override;
 
   /// @brief 内容を出力する．
   /// デバッグ用
-  virtual
   void
-  dump(ostream& s) const;
+  dump(ostream& s) const override;
 
 };
 

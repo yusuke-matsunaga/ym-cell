@@ -37,7 +37,7 @@ MislibConst0::type() const
 // @brief 対応する論理式を生成する．
 // @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
 Expr
-MislibConst0::to_expr(const HashMap<ShString, int>& name_map) const
+MislibConst0::to_expr(const unordered_map<ShString, int>& name_map) const
 {
   return Expr::zero();
 }
@@ -78,7 +78,7 @@ MislibConst1::type() const
 // @brief 対応する論理式を生成する．
 // @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
 Expr
-MislibConst1::to_expr(const HashMap<ShString, int>& name_map) const
+MislibConst1::to_expr(const unordered_map<ShString, int>& name_map) const
 {
   return Expr::one();
 }

@@ -135,7 +135,7 @@ gen_lut(CiCellLibrary* library,
 // 論理式を生成する．
 Expr
 gen_expr(const AstExpr* expr_node,
-	 const HashMap<ShString, int>& pin_map,
+	 const unordered_map<ShString, int>& pin_map,
 	 bool& has_expr)
 {
   if ( expr_node ) {
@@ -151,7 +151,7 @@ gen_expr(const AstExpr* expr_node,
 // ピンを生成する．
 void
 gen_pin(const vector<const AstPin*>& pin_list,
-	const HashMap<ShString, int>& pin_map,
+	const unordered_map<ShString, int>& pin_map,
 	CiCellLibrary* library,
 	vector<CiInputPin*>& input_list,
 	vector<CiOutputPin*>& output_list,
@@ -249,7 +249,7 @@ gen_pin(const vector<const AstPin*>& pin_list,
 
 void
 gen_timing_list(const vector<const AstPin*> pin_list,
-		const HashMap<ShString, int>& pin_map,
+		const unordered_map<ShString, int>& pin_map,
 		CiCellLibrary* library,
 		vector<CiTiming*>& timing_list,
 		vector<vector<CiTiming*> >& timing_list_array)
@@ -613,7 +613,7 @@ set_library(const AstLibrary* dt_library,
     int no2 = no + nio;
 
     // ピン名とピン番号の対応づけを行う．
-    HashMap<ShString, int> pin_map;
+    unordered_map<ShString, int> pin_map;
     {
       int ipos = 0;
       int itpos = 0;

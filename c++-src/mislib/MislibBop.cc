@@ -73,7 +73,7 @@ MislibAnd::type() const
 // @brief 対応する論理式を生成する．
 // @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
 Expr
-MislibAnd::to_expr(const HashMap<ShString, int>& name_map) const
+MislibAnd::to_expr(const unordered_map<ShString, int>& name_map) const
 {
   return child1()->to_expr(name_map) & child2()->to_expr(name_map);
 }
@@ -125,7 +125,7 @@ MislibOr::type() const
 // @brief 対応する論理式を生成する．
 // @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
 Expr
-MislibOr::to_expr(const HashMap<ShString, int>& name_map) const
+MislibOr::to_expr(const unordered_map<ShString, int>& name_map) const
 {
   return child1()->to_expr(name_map) | child2()->to_expr(name_map);
 }
@@ -177,7 +177,7 @@ MislibXor::type() const
 // @brief 対応する論理式を生成する．
 // @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
 Expr
-MislibXor::to_expr(const HashMap<ShString, int>& name_map) const
+MislibXor::to_expr(const unordered_map<ShString, int>& name_map) const
 {
   return child1()->to_expr(name_map) ^ child2()->to_expr(name_map);
 }

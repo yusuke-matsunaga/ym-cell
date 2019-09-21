@@ -14,8 +14,6 @@
 #include "MislibExpr.h"
 #include "MislibGate.h"
 #include "MislibPin.h"
-#include "ym/HashMap.h"
-#include "ym/HashSet.h"
 #include "ym/MsgMgr.h"
 
 
@@ -33,7 +31,7 @@ BEGIN_NONAMESPACE
 // 論理式中に現れる名前を ipin_set に積む．
 void
 get_ipin_names(const MislibExpr* expr_node,
-	       HashSet<ShString>& ipin_set)
+	       unordered_set<ShString>& ipin_set)
 {
   ShString name;
 
@@ -44,8 +42,8 @@ get_ipin_names(const MislibExpr* expr_node,
     return;
 
   case MislibExpr::VarName:
-    if ( !ipin_set.check(expr_node->varname()) ) {
-      ipin_set.add(expr_node->varname());
+    if ( ipin_set.count(expr_node->varname()) == 0 ) {
+      ipin_set.insert(expr_node->varname());
     }
     break;
 
@@ -182,14 +180,14 @@ MislibParser::check_gate_list(const vector<const MislibGate*>& gate_list)
   // 重複したセル名がないかチェック
   // また，セル内のピン名が重複していないか，出力ピンの論理式に現れるピン名
   // と入力ピンに齟齬がないかもチェックする．
-  HashMap<ShString, const MislibGate*> cell_map;
+  unordered_map<ShString, const MislibGate*> cell_map;
   for ( auto gate: gate_list ) {
     ShString name = gate->name()->str();
-    const MislibGate* dummy_node;
-    if ( cell_map.find(name, dummy_node) ) {
+    if ( cell_map.count(name) > 0 ) {
+      auto node = cell_map[name];
       ostringstream buf;
       buf << "Clib name, " << name << " is defined more than once. "
-	  << "Previous definition is " << dummy_node->name()->loc() << ".";
+	  << "Previous definition is " << node->name()->loc() << ".";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      gate->name()->loc(),
 		      MsgType::Error,
@@ -199,18 +197,18 @@ MislibParser::check_gate_list(const vector<const MislibGate*>& gate_list)
       continue;
     }
     // 情報を登録する．
-    cell_map.add(name, gate);
+    cell_map[name] = gate;
 
     // 入力ピン名のチェック
-    HashMap<ShString, const MislibPin*> ipin_map;
+    unordered_map<ShString, const MislibPin*> ipin_map;
     for ( auto ipin = gate->ipin_top(); ipin != nullptr; ipin = ipin->next() ) {
       ShString name = ipin->name()->str();
-      const MislibPin* dummy_node;
-      if ( ipin_map.find(name, dummy_node) ) {
+      if ( ipin_map.count(name) > 0 ) {
+	auto node = ipin_map[name];
 	ostringstream buf;
 	buf << "Pin name, " << name << " is defined more than once. "
 	    << "Previous definition is "
-	    << dummy_node->name()->loc() << ".";
+	    << node->name()->loc() << ".";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			ipin->name()->loc(),
 			MsgType::Error,
@@ -218,20 +216,19 @@ MislibParser::check_gate_list(const vector<const MislibGate*>& gate_list)
 			buf.str());
       }
       else {
-	ipin_map.add(name, ipin);
+	ipin_map[name] = ipin;
       }
     }
+
     // 論理式に現れる名前の集合を求める．
-    HashSet<ShString> ipin_set;
+    unordered_set<ShString> ipin_set;
     get_ipin_names(gate->opin_expr(), ipin_set);
-    for ( HashMapIterator<ShString, const MislibPin*> p = ipin_map.begin();
-	  p != ipin_map.end(); ++ p ) {
-      ShString name = p.key();
-      if ( !ipin_set.check(name) ) {
+    for ( const auto p: ipin_map ) {
+      ShString name = p.first;
+      if ( ipin_set.count(name) == 0 ) {
 	// ピン定義に現れる名前が論理式中に現れない．
 	// エラーではないが，このピンのタイミング情報は意味をもたない．
-	const MislibPin* node;
-	ipin_map.find(name, node);
+	auto node = ipin_map[name];
 	ostringstream buf;
 	buf << "Input pin, " << name
 	    << " does not appear in the logic expression. "
@@ -244,8 +241,7 @@ MislibParser::check_gate_list(const vector<const MislibGate*>& gate_list)
       }
     }
     for ( auto name: ipin_set ) {
-      const MislibPin* dummy;
-      if ( !ipin_map.find(name, dummy) ) {
+      if ( ipin_map.count(name) == 0 ) {
 	// 論理式中に現れる名前の入力ピンが存在しない．
 	// これはエラー
 	ostringstream buf;
