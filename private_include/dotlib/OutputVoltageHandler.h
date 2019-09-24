@@ -1,8 +1,8 @@
-#ifndef INPUTVOLTAGEHANDLER_H
-#define INPUTVOLTAGEHANDLER_H
+#ifndef OUTPUTVOLTAGEHANDLER_H
+#define OUTPUTVOLTAGEHANDLER_H
 
-/// @file InputVoltageHandler.h
-/// @brief InputVoltageHandler のヘッダファイル
+/// @file OutputVoltageHandler.h
+/// @brief OutputVoltageHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
@@ -14,20 +14,20 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class InputVoltageHandler InputVoltageHandler.h "InputVoltageHandler.h"
-/// @brief 'input_voltage' Group Statement 用のハンドラ
+/// @class OutputVoltageHandler OutputVoltageHandler.h "OutputVoltageHandler.h"
+/// @brief 'output_voltage' Group Statement 用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class InputVoltageHandler :
+class OutputVoltageHandler :
   public GroupHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  InputVoltageHandler(DotlibParser& parser);
+  OutputVoltageHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~InputVoltageHandler();
+  ~OutputVoltageHandler();
 
 
 public:
@@ -35,15 +35,8 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @breif 'input_voltage' group statement の記述をパースする．
-  /// @param[in] dst 読み込んだ値を格納する変数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_value(const AstInputVoltage*& dst);
 
-
-public:
+protected:
   //////////////////////////////////////////////////////////////////////
   // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
@@ -53,11 +46,10 @@ public:
   begin_group() override;
 
   /// @brief グループ記述の終わり
-  /// @param[in] group_loc グループ全体のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   bool
-  end_group(const FileRegion& group_loc) override;
+  end_group() override;
 
 
 private:
@@ -65,23 +57,20 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // vil
-  const AstExpr* mVil;
+  // vol
+  const AstExpr* mVol;
 
-  // vih
-  const AstExpr* mVih;
+  // voh
+  const AstExpr* mVoh;
 
-  // vimin
-  const AstExpr* mVimin;
+  // vomin
+  const AstExpr* mVomin;
 
-  // vimax
-  const AstExpr* mVimax;
-
-  // 読み込んだ値
-  const AstInputVoltage* mValue;
+  // vomax
+  const AstExpr* mVomax;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // INPUTVOLTAGEHANDLER_H
+#endif // OUTPUTVOLTAGEHANDLER_H

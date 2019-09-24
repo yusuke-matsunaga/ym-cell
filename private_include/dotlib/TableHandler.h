@@ -76,13 +76,13 @@ private:
   const AstIntVector* mOrders;
 
   // variable_1_range
-  const AstVariableRange* mVar1Range;
+  const AstFloat2* mVar1Range;
 
   // variable_2_range
-  const AstVariableRange* mVar2Range;
+  const AstFloat2* mVar2Range;
 
   // variable_3_range
-  const AstVariableRange* mVar3Range;
+  const AstFloat2* mVar3Range;
 
   // domain
   const AstDomain* mDomain;

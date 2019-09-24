@@ -29,7 +29,7 @@ public:
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   /// @param[in] alloc メモリアロケータ
-  AstLibrary(const Str1HeaderHandler header,
+  AstLibrary(const StrHandler header,
 	     const LibraryHandler& group,
 	     Alloc& alloc);
 

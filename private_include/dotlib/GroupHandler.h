@@ -46,7 +46,6 @@ public:
   GroupHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  virtual
   ~GroupHandler();
 
 

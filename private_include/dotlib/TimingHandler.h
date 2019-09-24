@@ -238,23 +238,23 @@ private:
   const AstExpr* mWhenStart;
 
   // fall_delay_intercept
-  vector<const AstPieceWise*> mFallDelayIntercept;
+  vector<const AstIntFloat*> mFallDelayIntercept;
 
   // fall_pin_resistance
-  vector<const AstPieceWise*> mFallPinResistance;
+  vector<const AstIntFloat*> mFallPinResistance;
 
   // mode
   const AstString* mModeName;
   const AstString* mModeValue;
 
   // pin_name_map
-  const AstStringVector* mPinNameMap;
+  const AstStrList* mPinNameMap;
 
   // rise_delay_intercept
-  vector<const AstPieceWise*> mRiseDelayIntercept;
+  vector<const AstIntFloat*> mRiseDelayIntercept;
 
   // rise_pin_resistance
-  vector<const AstPieceWise*> mRisePinResistance;
+  vector<const AstIntFloat*> mRisePinResistance;
 
   // wave_fall
   const AstIntVector* mWaveFall;

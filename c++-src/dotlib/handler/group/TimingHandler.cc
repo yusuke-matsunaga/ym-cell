@@ -110,16 +110,16 @@ TimingHandler::TimingHandler(DotlibParser& parser) :
 
   reg_func(AttrType::fall_delay_intercept,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_piecewise(mFallDelayIntercept, attr_type, attr_loc); });
+	   { return parser.parse_int_float(mFallDelayIntercept, attr_type, attr_loc); });
   reg_func(AttrType::fall_pin_resistance,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_piecewise(mFallPinResistance, attr_type, attr_loc); });
+	   { return parser.parse_int_float(mFallPinResistance, attr_type, attr_loc); });
   reg_func(AttrType::rise_delay_intercept,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_piecewise(mRiseDelayIntercept, attr_type, attr_loc); });
+	   { return parser.parse_int_float(mRiseDelayIntercept, attr_type, attr_loc); });
   reg_func(AttrType::rise_pin_resistance,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_piecewise(mRisePinResistance, attr_type, attr_loc); });
+	   { return parser.parse_int_float(mRisePinResistance, attr_type, attr_loc); });
 
   // cell_degradation
 
@@ -190,52 +190,6 @@ TimingHandler::TimingHandler(DotlibParser& parser) :
 // @brief デストラクタ
 TimingHandler::~TimingHandler()
 {
-}
-
-// @brief ヘッダの開始処理
-//
-// '(' を読み込んだ時に呼ばれる．
-void
-TimingHandler::begin_header()
-{
-  mName = nullptr;
-}
-
-// @brief ヘッダの値を読み込む処理
-// @param[in] value_type 型
-// @param[in] value_loc トークンの位置
-// @param[in] count read_value() の呼ばれた回数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-TimingHandler::read_header_value(TokenType value_type,
-				 const FileRegion& value_loc,
-				 int count)
-{
-  if ( count != 0 || value_type != TokenType::SYMBOL ) {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "string value is expected.");
-    return false;
-  }
-  else {
-    mName = mgr().new_string(value_loc, ShString(cur_string()));
-    return true;
-  }
-}
-
-// @brief 読み込みが終了した時の処理を行う．
-// @param[in] header_loc '(' から ')' までのファイル上の位置
-// @param[in] count 読み込んだ要素数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-TimingHandler::end_header(const FileRegion& header_loc,
-			  int count)
-{
-  return true;
 }
 
 // @brief グループ記述の始まり
@@ -314,17 +268,15 @@ TimingHandler::begin_group()
   // mSteadyStateCurrentHigh
   // mSteadyStateCurrentLow
   // mSteadyStateCurrentTristate
-
-  mValue = nullptr;
 }
 
 // @brief グループ記述の終わり
-// @param[in] group_loc グループ全体のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-TimingHandler::end_group(const FileRegion& group_loc)
+TimingHandler::end_group()
 {
+#if 0
   mValue = mgr().new_timing(group_loc,
 			    mName,
 			    mRelatedPin,
@@ -360,6 +312,7 @@ TimingHandler::end_group(const FileRegion& group_loc)
 			    mRetainingFall,
 			    mRetainRiseSlew,
 			    mRetainFallSlew);
+#endif
   return true;
 }
 

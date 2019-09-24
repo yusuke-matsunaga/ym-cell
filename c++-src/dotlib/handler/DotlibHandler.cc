@@ -16,16 +16,4 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // クラス DotlibHandler
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-// @param[in] parser パーサー
-DotlibHandler::DotlibHandler(DotlibParser& parser) :
-  mParser(parser)
-{
-}
-
-// @brief デストラクタ
-DotlibHandler::~DotlibHandler()
-{
-}
-
 END_NAMESPACE_YM_DOTLIB

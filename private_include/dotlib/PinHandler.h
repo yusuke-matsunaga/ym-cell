@@ -9,6 +9,7 @@
 /// All rights reserved.
 
 #include "dotlib/GroupHandler.h"
+#include "dotlib/StrListHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -153,6 +154,16 @@ public:
   ~PinHandler();
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief パースした値を返す．
+  const AstPin*
+  value() const;
+
+
 protected:
   //////////////////////////////////////////////////////////////////////
   // GroupHandler の仮想関数
@@ -173,6 +184,9 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // ヘッダ用のハンドラ
+  StrListHandler mHeaderHandler;
 
   // bit_width
   const AstInt* mBitWidth;
@@ -412,14 +426,14 @@ private:
   const AstExpr* mXFunction;
 
   // fall_capacitance_range
-  const AstFloat* mFallCapacitanceRange[2];
+  const AstFloat2* mFallCapacitanceRange;
 
   // power_gating_pin
   const AstString* mPowerGatingPinString;
   const AstInt* mPowerGatingPinInt;
 
   // rise_capacitance_range
-  const AstFloat* mRiseCapacitanceRange[2];
+  const AstFloat2* mRiseCapacitanceRange;
 
   // electromigration
   // ???
@@ -463,7 +477,23 @@ private:
   // tlatch
   // ???
 
+  // 結果の構文木
+  const AstPin* mValue;
+
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief パースした値を返す．
+inline
+const AstPin*
+PinHandler::value() const
+{
+  return mValue;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

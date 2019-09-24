@@ -112,26 +112,23 @@ set (dotlib_SOURCES
   c++-src/dotlib/handler/header/StrFloatHandler.cc
   c++-src/dotlib/handler/header/StrListHandler.cc
 
+  c++-src/dotlib/handler/group/CellHandler.cc
+  c++-src/dotlib/handler/group/DomainHandler.cc
+  c++-src/dotlib/handler/group/FFHandler.cc
   c++-src/dotlib/handler/group/GroupHandler.cc
+  c++-src/dotlib/handler/group/InputVoltageHandler.cc
+  c++-src/dotlib/handler/group/LatchHandler.cc
+  c++-src/dotlib/handler/group/LibraryHandler.cc
+  c++-src/dotlib/handler/group/OutputVoltageHandler.cc
+  c++-src/dotlib/handler/group/PinHandler.cc
+  c++-src/dotlib/handler/group/TableHandler.cc
+  c++-src/dotlib/handler/group/TemplateHandler.cc
+  c++-src/dotlib/handler/group/TimingHandler.cc
 
   #c++-src/dotlib/handler/group/InternalPowerHandler.cc
-  #c++-src/dotlib/handler/group/TimingHandler.cc
 
-  #c++-src/dotlib/handler/group/CellHandler.cc
   #c++-src/dotlib/handler/group/CellDegradationHandler.cc
   #c++-src/dotlib/handler/CellInternalPower.cc
-  #c++-src/dotlib/handler/group/DomainHandler.cc
-  #c++-src/dotlib/handler/group/InputVoltageHandler.cc
-  #c++-src/dotlib/handler/group/LibraryHandler.cc
-  #c++-src/dotlib/handler/group/OutputVoltageHandler.cc
-  #c++-src/dotlib/handler/group/PinHandler.cc
-  #c++-src/dotlib/handler/group/TableHandler.cc
-  #c++-src/dotlib/handler/group/TemplateHandler.cc
-  #c++-src/dotlib/handler/group/FFHandler.cc
-  #c++-src/dotlib/handler/group/LatchHandler.cc
-  #c++-src/dotlib/handler/group/FFBankHandler.cc
-  #c++-src/dotlib/handler/group/LatchBankHandler.cc
-
   #c++-src/dotlib/handler/DefineHandler.cc
 
   c++-src/dotlib/ast/AstBool.cc

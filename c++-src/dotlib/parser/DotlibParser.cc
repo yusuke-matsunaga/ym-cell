@@ -9,8 +9,28 @@
 
 #include "dotlib/DotlibParser.h"
 #include "dotlib/HeaderHandler.h"
+#include "dotlib/GroupHandler.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/TokenType.h"
+
+#include "dotlib/StrHandler.h"
+#include "dotlib/StrIntHandler.h"
+#include "dotlib/StrListHandler.h"
+#include "dotlib/StrStrHandler.h"
+#include "dotlib/StrStrIntHandler.h"
+
+#include "dotlib/CellHandler.h"
+#include "dotlib/DomainHandler.h"
+#include "dotlib/FFHandler.h"
+#include "dotlib/InputVoltageHandler.h"
+#include "dotlib/LatchHandler.h"
+#include "dotlib/LibraryHandler.h"
+#include "dotlib/OutputVoltageHandler.h"
+#include "dotlib/PinHandler.h"
+#include "dotlib/TableHandler.h"
+#include "dotlib/TemplateHandler.h"
+#include "dotlib/TimingHandler.h"
+
 #include "ym/MsgMgr.h"
 
 
@@ -62,8 +82,7 @@ DotlibParser::parse()
     goto last;
   }
 
-  //stat = parse_library(library, AttrType::library, loc);
-  stat = false;
+  stat = parse_library(library, AttrType::library, loc);
   if ( !stat ) {
     goto last;
   }
@@ -121,6 +140,76 @@ DotlibParser::parse_complex_attribute(HeaderHandler& handler)
   }
 
   return expect_nl();
+}
+
+// @brief Group Statement を読み込む．
+// @param[in] header_handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
+// @param[in] group_handler グループ読み込みハンドラ (GroupHandler の継承クラス)
+// @retval true 正しく読み込めた．
+// @retval false エラーが起こった．
+bool
+DotlibParser::parse_group_statement(HeaderHandler& header_handler,
+				    GroupHandler& group_handler)
+{
+  if ( !parse_header(header_handler) ) {
+    return false;
+  }
+
+  // グループ本体の始まり
+  if ( !expect(TokenType::LCB) ) {
+    return false;
+  }
+
+  // 仮想関数の呼び出し
+  group_handler.begin_group();
+
+  FileRegion first_loc = cur_loc();
+  for ( ; ; ) {
+    FileRegion loc;
+    TokenType type = read_token(loc);
+    if ( type == TokenType::NL ) {
+      // 改行は読み飛ばす．
+      continue;
+    }
+    if ( type == TokenType::RCB ) {
+      // グループ本体の終わり．
+      group_handler.mGroupLoc = FileRegion(first_loc, loc);
+      if ( !group_handler.end_group() ) {
+	return false;
+      }
+
+      if ( !expect(TokenType::NL) ) {
+	return false;
+      }
+
+      return true;
+    }
+    if ( type != TokenType::SYMBOL ) {
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      loc,
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      "string value is expected.");
+      return false;
+    }
+    // 一般のトークンの処理
+    const char* name = cur_string();
+    AttrType name_type = conv_to_attr(name);
+    if ( name_type == AttrType::none ) {
+      ostringstream buf;
+      buf << name << ": syntax error.";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      loc,
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      buf.str());
+      return false;
+    }
+    bool r = group_handler.read_group_attr(name_type, loc);
+    if ( !r ) {
+      return false;
+    }
+  }
 }
 
 // @brief Complex Attribute, GroupStatement のヘッダを読み込む．
@@ -192,7 +281,7 @@ DotlibParser::expect(TokenType req_type)
   case TokenType::AND:        type_str = "'&'"; break;
   case TokenType::OR:         type_str = "'|'"; break;
   case TokenType::XOR:        type_str = "'^'"; break;
-  case TokenType::PRIME:      type_str = "'"; break;
+  case TokenType::PRIME:      type_str = "'";   break;
   case TokenType::LP:         type_str = "'('"; break;
   case TokenType::RP:         type_str = "')'"; break;
   case TokenType::LCB:        type_str = "'{'"; break;
@@ -204,13 +293,16 @@ DotlibParser::expect(TokenType req_type)
   case TokenType::NL:         type_str = "new-line"; break;
   default:                    ASSERT_NOT_REACHED;
   }
-  ostringstream buf;
-  buf << "syntax error. " << type_str << " is expected.";
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  loc,
-		  MsgType::Error,
-		  "DOTLIB_PARSER",
-		  buf.str());
+
+  {
+    ostringstream buf;
+    buf << "syntax error. " << type_str << " is expected.";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    loc,
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    buf.str());
+  }
   return false;
 }
 

@@ -8,12 +8,6 @@
 
 
 #include "dotlib/PinHandler.h"
-#include "dotlib/FloatHandler.h"
-#include "dotlib/FuncHandler.h"
-#include "dotlib/InputVoltageHandler.h"
-#include "dotlib/OutputVoltageHandler.h"
-#include "dotlib/PinDirectionHandler.h"
-#include "dotlib/TimingHandler.h"
 #include "dotlib/AstMgr.h"
 #include "ym/MsgMgr.h"
 
@@ -27,7 +21,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 PinHandler::PinHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser)
+  GroupHandler(parser),
+  mHeaderHandler(parser)
 {
   // パース関数の登録
   reg_func(AttrType::bit_width,
@@ -267,12 +262,10 @@ PinHandler::PinHandler(DotlibParser& parser) :
 
   reg_func(AttrType::fall_capacitance_range,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_float2complex(mFallCapacitanceRange[0], mFallCapacitanceRange[1],
-					       attr_type, attr_loc); });
+	   { return parser.parse_float_float(mFallCapacitanceRange, attr_type, attr_loc); });
   reg_func(AttrType::rise_capacitance_range,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_float2complex(mRiseCapacitanceRange[0], mRiseCapacitanceRange[1],
-					       attr_type, attr_loc); });
+	   { return parser.parse_float_float(mRiseCapacitanceRange, attr_type, attr_loc); });
 
   // power_gating_pin (string, int)
 
@@ -304,76 +297,6 @@ PinHandler::PinHandler(DotlibParser& parser) :
 // @brief デストラクタ
 PinHandler::~PinHandler()
 {
-}
-
-// @breif 'pin' Group Statement の記述をパースする．
-// @param[in] dst_list 読み込んだ値を格納するリスト
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-PinHandler::parse_value(vector<const AstPin*>& dst_list)
-{
-  bool stat = parse_group_statement();
-  if ( stat ) {
-    dst_list.push_back(mValue);
-  }
-  return stat;
-}
-
-// @brief ヘッダの開始処理
-//
-// '(' を読み込んだ時に呼ばれる．
-void
-PinHandler::begin_header()
-{
-  mNameList.clear();
-}
-
-// @brief ヘッダの値を読み込む処理
-// @param[in] value_type 型
-// @param[in] value_loc トークンの位置
-// @param[in] count read_value() の呼ばれた回数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-PinHandler::read_header_value(TokenType value_type,
-			      const FileRegion& value_loc,
-			      int count)
-{
-  if ( value_type != TokenType::SYMBOL ) {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error, a string is expected.");
-    return false;
-  }
-  else {
-    mNameList.push_back(mgr().new_string(value_loc, ShString(cur_string())));
-    return true;
-  }
-}
-
-// @brief 読み込みが終了した時の処理を行う．
-// @param[in] header_loc '(' から ')' までのファイル上の位置
-// @param[in] count 読み込んだ要素数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-PinHandler::end_header(const FileRegion& header_loc,
-		       int count)
-{
-  if ( mNameList.empty() ) {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error, one or more strings area expected.");
-    return false;
-  }
-  else {
-    return true;
-  }
 }
 
 // @brief グループ記述の始まり
@@ -460,10 +383,8 @@ PinHandler::begin_group()
   mVhdlName = nullptr;
   mXFunction = nullptr;
 
-  mFallCapacitanceRange[0] = nullptr;
-  mFallCapacitanceRange[1] = nullptr;
-  mRiseCapacitanceRange[0] = nullptr;
-  mRiseCapacitanceRange[1] = nullptr;
+  mFallCapacitanceRange = nullptr;
+  mRiseCapacitanceRange = nullptr;
   mPowerGatingPinString = nullptr;
   mPowerGatingPinInt = nullptr;
 
@@ -473,20 +394,13 @@ PinHandler::begin_group()
 }
 
 // @brief グループ記述の終わり
-// @param[in] group_loc グループ全体のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-PinHandler::end_group(const FileRegion& group_loc)
+PinHandler::end_group()
 {
-  mValue = mgr().new_pin(group_loc, mNameList, mDirection,
-			 mCapacitance, mRiseCapacitfance, mFallCapacitance,
-			 mMaxFanout, mMinFanout,
-			 mMaxCapacitance, mMinCapacitance,
-			 mMaxTransition, mMinTransition,
-			 mFunction, mThree_state,
-			 mInternalNode, mPinFuncType,
-			 mTimingList);
+  // 必要な属性がちゃんと定義されているかチェック
+#warning "TODO:必要な属性がちゃんと定義されているかチェック"
   return true;
 }
 

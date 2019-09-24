@@ -37,10 +37,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 読み込んだ値を返す．
-  ///
-  /// といってもこれはこのクラス内のオブジェクトへの参照なので
-  /// 永続的に保持するならコピーする必要がある．
-  const vector<const AstString*>&
+  vector<const AstString*>
   value() const;
 
 
@@ -85,7 +82,7 @@ private:
 
 // @brief 読み込んだ値を返す．
 inline
-const vector<const AstString*>&
+vector<const AstString*>
 StrListHandler::value() const
 {
   return mValue;

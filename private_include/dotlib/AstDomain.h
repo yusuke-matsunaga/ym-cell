@@ -27,7 +27,7 @@ public:
   /// @brief コンストラクタ
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
-  AstDomain(const Str1HeaderHandler& header,
+  AstDomain(const StrHandler& header,
 	    const DomainHandler& group);
 
 

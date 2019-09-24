@@ -8,7 +8,6 @@
 
 
 #include "dotlib/DomainHandler.h"
-#include "dotlib/AstMgr.h"
 #include "ym/MsgMgr.h"
 
 
@@ -21,7 +20,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 DomainHandler::DomainHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser)
+  GroupHandler(parser)
 {
   // パース関数の登録
   reg_func(AttrType::calc_mode,
@@ -29,19 +28,19 @@ DomainHandler::DomainHandler(DotlibParser& parser) :
 	   { return parser.parse_string(mCalcMode, attr_type, attr_loc); });
   reg_func(AttrType::coefs,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_coefs(mCoefs, attr_type, attr_loc); });
+	   { return parser.parse_float_vector(mCoefs, attr_type, attr_loc); });
   reg_func(AttrType::orders,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_orders(mOrders, attr_type, attr_loc); });
+	   { return parser.parse_int_vector(mOrders, attr_type, attr_loc); });
   reg_func(AttrType::variable_1_range,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_variable_range(mVar1Range, attr_type, attr_loc); });
+	   { return parser.parse_float_float(mVar1Range, attr_type, attr_loc); });
   reg_func(AttrType::variable_2_range,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_variable_range(mVar2Range, attr_type, attr_loc); });
+	   { return parser.parse_float_float(mVar2Range, attr_type, attr_loc); });
   reg_func(AttrType::variable_3_range,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_variable_range(mVar3Range, attr_type, attr_loc); });
+	   { return parser.parse_float_float(mVar3Range, attr_type, attr_loc); });
 }
 
 // @brief デストラクタ
@@ -49,6 +48,7 @@ DomainHandler::~DomainHandler()
 {
 }
 
+#if 0
 // @breif 'domain' Group Statement の記述をパースする．
 // @param[in] dst 読み込んだ値を格納する変数
 // @retval true 正しく読み込んだ．
@@ -62,6 +62,7 @@ DomainHandler::parse_value(const AstDomain*& dst)
   }
   return stat;
 }
+#endif
 
 // @brief グループ記述の始まり
 void
@@ -73,20 +74,17 @@ DomainHandler::begin_group()
   mVar1Range = nullptr;
   mVar2Range = nullptr;
   mVar3Range = nullptr;
-
-  mValue = nullptr;
 }
 
 // @brief グループ記述の終わり
-// @param[in] group_loc グループ全体のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-DomainHandler::end_group(const FileRegion& group_loc)
+DomainHandler::end_group()
 {
   if ( mCalcMode == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    group_loc,
+		    group_loc(),
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "'calc_mode' is missing.");
@@ -94,7 +92,7 @@ DomainHandler::end_group(const FileRegion& group_loc)
   }
   else if ( mCoefs == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    group_loc,
+		    group_loc(),
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "'coefs' is missing.");
@@ -102,7 +100,7 @@ DomainHandler::end_group(const FileRegion& group_loc)
   }
   else if ( mOrders == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    group_loc,
+		    group_loc(),
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "'orders' is missing.");

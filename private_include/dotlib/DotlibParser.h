@@ -13,6 +13,7 @@
 #include "AttrType.h"
 #include "AttrDic.h"
 #include "DotlibScanner.h"
+
 #include "ym/FileRegion.h"
 
 
@@ -578,7 +579,7 @@ public:
   ///
   /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
   bool
-  parse_latch_bank(const AstLatch* dst,
+  parse_latch_bank(const AstLatchBank* dst,
 		   AttrType attr_type,
 		   const FileRegion& attr_loc);
 
@@ -646,6 +647,19 @@ public:
   parse_pin(vector<const AstPin*>& dst_list,
 	    AttrType attr_type,
 	    const FileRegion& attr_loc);
+
+  /// @brief 'table' Group Statement のパースを行う．
+  /// @param[in] dst 結果を格納する変数
+  /// @param[in] attr_type 属性の型
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @retval true 正常にパーズした．
+  /// @retval false パーズ中にエラーが起こった．
+  ///
+  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
+  bool
+  parse_table(const AstLut*& dst,
+	      AttrType attr_type,
+	      const FileRegion& attr_loc);
 
   /// @brief 'poly_template' Group Statement のパースを行う．
   /// @param[in] dst_list 結果を格納するリスト
@@ -918,23 +932,23 @@ public:
 
   /// @brief 直前の read_token() に対応する文字列を返す．
   const char*
-  cur_string() const;
+  cur_string();
 
   /// @brief 直前の read_token() に対応する整数値を返す．
   ///
   /// 型が INT_NUM でなかったときの値は不定
   int
-  cur_int() const;
+  cur_int();
 
   /// @brief 直前の read_token() に対応する実数値を返す．
   ///
   /// 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
   double
-  cur_float() const;
+  cur_float();
 
   /// @brief 直前の read_token() に対応する位置を返す．
   FileRegion
-  cur_loc() const;
+  cur_loc();
 
   /// @brief 文字列を属性値に変換する．
   AttrType
@@ -1030,6 +1044,26 @@ private:
   // 読み戻したトークンの位置
   FileRegion mUngetLoc;
 
+  // ヘッダ用のハンドラ
+  unique_ptr<StrHandler> mStrHeader;
+  unique_ptr<StrIntHandler> mStrIntHeader;
+  unique_ptr<StrListHandler> mStrListHeader;
+  unique_ptr<StrStrHandler> mStrStrHeader;
+  unique_ptr<StrStrIntHandler> mStrStrIntHeader;
+
+  // グループ本体用のハンドラ
+  unique_ptr<CellHandler> mCellGroup;
+  unique_ptr<DomainHandler> mDomainGroup;
+  unique_ptr<FFHandler> mFFGroup;
+  unique_ptr<InputVoltageHandler> mInputVoltageGroup;
+  unique_ptr<LatchHandler> mLatchGroup;
+  unique_ptr<LibraryHandler> mLibraryGroup;
+  unique_ptr<OutputVoltageHandler> mOutputVoltageGroup;
+  unique_ptr<PinHandler> mPinGroup;
+  unique_ptr<TableHandler> mTableGroup;
+  unique_ptr<TemplateHandler> mTemplateGroup;
+  unique_ptr<TimingHandler> mTimingGroup;
+
 };
 
 
@@ -1040,7 +1074,7 @@ private:
 // @brief 直前の read_token() に対応する位置を返す．
 inline
 FileRegion
-DotlibParser::cur_loc() const
+DotlibParser::cur_loc()
 {
   return mCurLoc;
 }
@@ -1048,7 +1082,7 @@ DotlibParser::cur_loc() const
 // @brief 直前の read_token() に対応する文字列を返す．
 inline
 const char*
-DotlibParser::cur_string() const
+DotlibParser::cur_string()
 {
   return mScanner.cur_string();
 }
@@ -1057,7 +1091,7 @@ DotlibParser::cur_string() const
 // @note 型が INT_NUM でなかったときの値は不定
 inline
 int
-DotlibParser::cur_int() const
+DotlibParser::cur_int()
 {
   return mScanner.cur_int();
 }
@@ -1066,7 +1100,7 @@ DotlibParser::cur_int() const
 // @note 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
 inline
 double
-DotlibParser::cur_float() const
+DotlibParser::cur_float()
 {
   return mScanner.cur_float();
 }

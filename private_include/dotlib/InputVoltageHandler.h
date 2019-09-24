@@ -1,8 +1,8 @@
-#ifndef DOMAINHANDLER_H
-#define DOMAINHANDLER_H
+#ifndef INPUTVOLTAGEHANDLER_H
+#define INPUTVOLTAGEHANDLER_H
 
-/// @file DomainHandler.h
-/// @brief DomainHandler のヘッダファイル
+/// @file InputVoltageHandler.h
+/// @brief InputVoltageHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
@@ -14,22 +14,26 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class DomainHandler DomainHandler.h "DomainHandler.h"
-/// @brief 'domain' Group Statement 用のハンドラ
-///
-/// 現時点ではこのクラスは syntactical にパースするだけ．
+/// @class InputVoltageHandler InputVoltageHandler.h "InputVoltageHandler.h"
+/// @brief 'input_voltage' Group Statement 用のハンドラ
 //////////////////////////////////////////////////////////////////////
-class DomainHandler :
+class InputVoltageHandler :
   public GroupHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  DomainHandler(DotlibParser& parser);
+  InputVoltageHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~DomainHandler();
+  ~InputVoltageHandler();
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
 
 public:
@@ -50,35 +54,23 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // 内部で使われる下請け関数
-  //////////////////////////////////////////////////////////////////////
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // calc_mode
-  const AstString* mCalcMode;
+  // vil
+  const AstExpr* mVil;
 
-  // coefs
-  const AstFloatVector* mCoefs;
+  // vih
+  const AstExpr* mVih;
 
-  // orders
-  const AstIntVector* mOrders;
+  // vimin
+  const AstExpr* mVimin;
 
-  // variable_1_range
-  const AstVariableRange* mVar1Range;
-
-  // variable_2_range
-  const AstVariableRange* mVar2Range;
-
-  // variable_3_range
-  const AstVariableRange* mVar3Range;
+  // vimax
+  const AstExpr* mVimax;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // DOMAINHANDLER_H
+#endif // INPUTVOLTAGEHANDLER_H

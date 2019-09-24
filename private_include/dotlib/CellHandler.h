@@ -241,13 +241,13 @@ private:
   const AstFloat* mOutputVoltageRange[2];
 
   // pin_equal
-  const AstStringVector* mPinEqual;
+  const AstStrList* mPinEqual;
 
   // pin_name_map
-  const AstStringVector* mPinNameMap;
+  const AstStrList* mPinNameMap;
 
   // pin_opposite
-  const AstStringVector* mPinOpposite[2];
+  const AstStrList* mPinOpposite[2];
 
   // rail_connection
   const AstString* mRailConnection[2];

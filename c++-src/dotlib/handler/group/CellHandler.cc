@@ -8,7 +8,6 @@
 
 
 #include "dotlib/CellHandler.h"
-#include "dotlib/AstMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -16,7 +15,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 CellHandler::CellHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser)
+  GroupHandler(parser)
 {
 }
 
@@ -25,6 +24,7 @@ CellHandler::~CellHandler()
 {
 }
 
+#if 0
 // @breif 'cell' Group Statement の記述をパースする．
 // @param[in] dst_list 読み込んだ値を格納する変数
 // @retval true 正しく読み込んだ．
@@ -38,6 +38,7 @@ CellHandler::parse_value(vector<const AstCell*>& dst_list)
   }
   return stat;
 }
+#endif
 
 // @brief グループ記述の始まり
 void
@@ -95,16 +96,13 @@ CellHandler::begin_group()
   mStateTable = nullptr;
   mTestCell = nullptr;
   mTypeList.clear();
-
-  mValue = nullptr;
 }
 
 // @brief グループ記述の終わり
-// @param[in] group_loc グループ全体のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-CellHandler::end_group(const FileRegion& group_loc)
+CellHandler::end_group()
 {
   return false;
 }

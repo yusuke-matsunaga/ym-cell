@@ -8,7 +8,6 @@
 
 
 #include "dotlib/LatchHandler.h"
-#include "dotlib/AstMgr.h"
 #include "ym/MsgMgr.h"
 
 
@@ -21,7 +20,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 LatchHandler::LatchHandler(DotlibParser& parser) :
-  Str2GroupHandler(parser)
+  GroupHandler(parser)
 {
 }
 
@@ -30,6 +29,7 @@ LatchHandler::~LatchHandler()
 {
 }
 
+#if 0
 // @breif ff Group Statement の記述をパースする．
 // @param[in] dst 読み込んだ値を格納する変数
 // @retval true 正しく読み込んだ．
@@ -43,6 +43,7 @@ LatchHandler::parse_value(const AstLatch*& dst)
   }
   return stat;
 }
+#endif
 
 // @brief グループ記述の始まり
 void
@@ -55,21 +56,21 @@ LatchHandler::begin_group()
   mEnableOn = nullptr;
   mEnableOnAlso = nullptr;
   mDataIn = nullptr;
-
-  mValue = nullptr;
 }
 
 // @brief グループ記述の終わり
-// @param[in] group_loc グループ全体のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-LatchHandler::end_group(const FileRegion& group_loc)
+LatchHandler::end_group()
 {
   // エラーチェック
+#if 0
   mValue = mgr().new_latch(group_loc, header_value1(), header_value2(),
 			   mClear, mPreset, mClearPresetVar1, mClearPresetVar2,
 			   mEnableOn, mEnableOnAlso, mDataIn);
+#endif
+
   return true;
 }
 

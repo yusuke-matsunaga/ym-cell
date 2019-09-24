@@ -7,7 +7,6 @@
 /// All rights reserved.
 
 #include "dotlib/LibraryHandler.h"
-//#include "DefineHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -19,7 +18,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 LibraryHandler::LibraryHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser)
+  GroupHandler(parser)
 {
 }
 
@@ -28,6 +27,7 @@ LibraryHandler::~LibraryHandler()
 {
 }
 
+#if 0
 // @breif 'library' Group Statement の記述をパースする．
 // @param[in] dst 読み込んだ値を格納する変数
 // @retval true 正しく読み込んだ．
@@ -41,20 +41,19 @@ LibraryHandler::parse_value(const AstLibrary*& dst)
   }
   return stat;
 }
+#endif
 
 // @brief グループ記述の始まり
 void
 LibraryHandler::begin_group()
 {
-  mValue = nullptr;
 }
 
 // @brief グループ記述の終わり
-// @param[in] group_loc グループ全体のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-LibraryHandler::end_group(const FileRegion& group_loc)
+LibraryHandler::end_group()
 {
   return false;
 }

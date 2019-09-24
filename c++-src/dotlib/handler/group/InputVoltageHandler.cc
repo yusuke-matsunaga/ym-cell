@@ -8,7 +8,6 @@
 
 
 #include "dotlib/InputVoltageHandler.h"
-#include "dotlib/AstMgr.h"
 #include "dotlib/AstExpr.h"
 #include "ym/MsgMgr.h"
 
@@ -22,7 +21,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 InputVoltageHandler::InputVoltageHandler(DotlibParser& parser) :
-  Str1GroupHandler(parser)
+  GroupHandler(parser)
 {
   // パース関数の登録
   reg_func(AttrType::vil,
@@ -44,6 +43,7 @@ InputVoltageHandler::~InputVoltageHandler()
 {
 }
 
+#if 0
 // @breif 'input_voltage' Group Statement の記述をパースする．
 // @param[in] dst 読み込んだ値を格納する変数
 // @retval true 正しく読み込んだ．
@@ -57,6 +57,7 @@ InputVoltageHandler::parse_value(const AstInputVoltage*& dst)
   }
   return stat;
 }
+#endif
 
 // @brief グループ記述の始まり
 void
@@ -66,28 +67,26 @@ InputVoltageHandler::begin_group()
   mVih = nullptr;
   mVimin = nullptr;
   mVimax = nullptr;
-
-  mValue = nullptr;
 }
 
 // @brief グループ記述の終わり
-// @param[in] group_loc グループ全体のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 bool
-InputVoltageHandler::end_group(const FileRegion& group_loc)
+InputVoltageHandler::end_group()
 {
-  if ( !check_attr(mVil,   AttrType::vil, group_loc) ||
-       !check_attr(mVih,   AttrType::vih, group_loc) ||
-       !check_attr(mVimin, AttrType::vimin, group_loc) ||
-       !check_attr(mVimax, AttrType::vimax, group_loc) ) {
+  if ( !check_attr(mVil,   AttrType::vil, group_loc()) ||
+       !check_attr(mVih,   AttrType::vih, group_loc()) ||
+       !check_attr(mVimin, AttrType::vimin, group_loc()) ||
+       !check_attr(mVimax, AttrType::vimax, group_loc()) ) {
     return false;
   }
   else {
+#if 0
     mValue = mgr().new_input_voltage(group_loc,
 				     header_value(),
 				     mVil, mVih, mVimin, mVimax);
-
+#endif
     return true;
   }
 }

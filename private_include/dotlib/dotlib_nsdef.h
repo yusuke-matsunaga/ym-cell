@@ -36,6 +36,24 @@ class DotlibHandler;
 class HeaderHandler;
 class GroupHandler;
 
+class StrHandler;
+class StrIntHandler;
+class StrListHandler;
+class StrStrHandler;
+class StrStrIntHandler;
+
+class CellHandler;
+class DomainHandler;
+class FFHandler;
+class InputVoltageHandler;
+class LatchHandler;
+class LibraryHandler;
+class OutputVoltageHandler;
+class PinHandler;
+class TableHandler;
+class TemplateHandler;
+class TimingHandler;
+
 class AstMgr;
 class AstBaseCurves;
 class AstBool;

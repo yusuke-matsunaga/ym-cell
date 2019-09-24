@@ -153,6 +153,12 @@ v				liberty 文法覚書
   一旦，ファイルを作ってしまえば仕様変更がない限り再度生成する必要はな
   いので，生成後のファイルに手直しをすることも可能．
 
+- Group のパースの流れ
+  DotlibParser::parse_xxx() 中で適切な HeaderHandler と GroupHandler
+  を用いて DotlibParser::parse_group_statement(header_handler, group_handler)
+  を呼び出す．
+  結果が true なら AstMgr::new_XXX(header_handler, group_handler) で
+  新しい構文木を生成する．
 
 - 以下，整理されていないおぼえ書き
 

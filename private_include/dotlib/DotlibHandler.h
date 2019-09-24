@@ -146,6 +146,20 @@ private:
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
+// @brief コンストラクタ
+// @param[in] parser パーサー
+inline
+DotlibHandler::DotlibHandler(DotlibParser& parser) :
+  mParser(parser)
+{
+}
+
+// @brief デストラクタ
+inline
+DotlibHandler::~DotlibHandler()
+{
+}
+
 // @brief パーサーを得る．
 inline
 DotlibParser&

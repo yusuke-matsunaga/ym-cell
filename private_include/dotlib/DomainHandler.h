@@ -1,8 +1,8 @@
-#ifndef LIBRARIRYHANDLER_H
-#define LIBRARIRYHANDLER_H
+#ifndef DOMAINHANDLER_H
+#define DOMAINHANDLER_H
 
-/// @file LibraryHandler.h
-/// @brief LibraryHandler のヘッダファイル
+/// @file DomainHandler.h
+/// @brief DomainHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
@@ -14,36 +14,25 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class LibraryHandler LibraryHandler.h "LibraryHandler.h"
-/// @brief 'library' Group Statement 用のハンドラ
+/// @class DomainHandler DomainHandler.h "DomainHandler.h"
+/// @brief 'domain' Group Statement 用のハンドラ
+///
+/// 現時点ではこのクラスは syntactical にパースするだけ．
 //////////////////////////////////////////////////////////////////////
-class LibraryHandler :
+class DomainHandler :
   public GroupHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  LibraryHandler(DotlibParser& parser);
+  DomainHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~LibraryHandler();
+  ~DomainHandler();
 
 
 public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @breif 'library' Group Statement の記述をパースする．
-  /// @param[in] dst 読み込んだ値を格納する変数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_value(const AstLibrary*& dst);
-
-
-protected:
   //////////////////////////////////////////////////////////////////////
   // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
@@ -53,11 +42,16 @@ protected:
   begin_group() override;
 
   /// @brief グループ記述の終わり
-  /// @param[in] group_loc グループ全体のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   bool
-  end_group(const FileRegion& group_loc) override;
+  end_group() override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で使われる下請け関数
+  //////////////////////////////////////////////////////////////////////
 
 
 private:
@@ -65,11 +59,26 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 読み込んだ値
-  AstLibrary* mValue;
+  // calc_mode
+  const AstString* mCalcMode;
+
+  // coefs
+  const AstFloatVector* mCoefs;
+
+  // orders
+  const AstIntVector* mOrders;
+
+  // variable_1_range
+  const AstFloat2* mVar1Range;
+
+  // variable_2_range
+  const AstFloat2* mVar2Range;
+
+  // variable_3_range
+  const AstFloat2* mVar3Range;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // LIBRARIRYHANDLER_H
+#endif // DOMAINHANDLER_H
