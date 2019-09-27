@@ -25,26 +25,12 @@ class AstLut :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] name 名前
-  /// @param[in] index_1, index_2, index_3 インデックスのベクタ
-  /// @param[in] value_list 値のリスト
-  /// @param[in] coefs 'coefs' 属性
-  /// @param[in] orders 'orders' 属性
-  /// @param[in] variable_1_range, variable_2_range, variable_3_range 'variable_n_range' 属性
-  /// @param[in] domain 'domain'
-  AstLut(const FileRegion& loc,
-	 const AstString* name,
-	 const AstFloatVector* index_1,
-	 const AstFloatVector* index_2,
-	 const AstFloatVector* index_3,
-	 const AstFloatVector* value_list,
-	 const AstFloatVector* coefs,
-	 const AstIntVector* orders,
-	 const AstVariableRange* variable_1_range,
-	 const AstVariableRange* variable_2_range,
-	 const AstVariableRange* variable_3_range,
-	 const AstDomain* domain);
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @param[in] header ヘッダのハンドラ
+  /// @param[in] group グループ本体のハンドラ
+  AstLut(const FileRegion& attr_loc,
+	 const StrHandler& header,
+	 const TableHandler& group);
 
   /// @brief デストラクタ
   ~AstLut();
@@ -90,15 +76,15 @@ public:
   orders() const;
 
   /// @brief 'variable_1_range' のノードを返す．
-  const AstVariableRange*
+  const AstFloat2*
   variable_1_range() const;
 
   /// @brief 'variable_2_range' のノードを返す．
-  const AstVariableRange*
+  const AstFloat2*
   variable_2_range() const;
 
   /// @brief 'variable_3_range' のノードを返す．
-  const AstVariableRange*
+  const AstFloat2*
   variable_3_range() const;
 
   /// @brief 'domain' のノードを返す．
@@ -142,13 +128,13 @@ private:
   const AstIntVector* mOrders;
 
   // variable_1_range
-  const AstVariableRange* mVar1Range;
+  const AstFloat2* mVar1Range;
 
   // variable_2_range
-  const AstVariableRange* mVar2Range;
+  const AstFloat2* mVar2Range;
 
   // variable_3_range
-  const AstVariableRange* mVar3Range;
+  const AstFloat2* mVar3Range;
 
   // domain
   const AstDomain* mDomain;
@@ -218,7 +204,7 @@ AstLut::orders() const
 
 // @brief 'variable_1_range' のノードを返す．
 inline
-const AstVariableRange*
+const AstFloat2*
 AstLut::variable_1_range() const
 {
   return mVar1Range;
@@ -226,7 +212,7 @@ AstLut::variable_1_range() const
 
 // @brief 'variable_2_range' のノードを返す．
 inline
-const AstVariableRange*
+const AstFloat2*
 AstLut::variable_2_range() const
 {
   return mVar2Range;
@@ -234,7 +220,7 @@ AstLut::variable_2_range() const
 
 // @brief 'variable_3_range' のノードを返す．
 inline
-const AstVariableRange*
+const AstFloat2*
 AstLut::variable_3_range() const
 {
   return mVar3Range;

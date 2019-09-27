@@ -1,45 +1,45 @@
-#ifndef LATCHHANDLER_H
-#define LATCHHANDLER_H
+#ifndef FLHANDLER_H
+#define FLHANDLER_H
 
-/// @file LatchHandler.h
-/// @brief LatchHandler のヘッダファイル
+/// @file FLHandler.h
+/// @brief FLHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/FLHandler.h"
+#include "dotlib/GroupHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class LatchHandler LatchHandler.h "LatchHandler.h"
-/// @brief 'latch' Group Statement 用のハンドラ
+/// @class FLHandler FLHandler.h "FLHandler.h"
+/// @brief 'FF'/Latch Group Statement 用のハンドラ
 ///
 /// 参考文献 : Library Compiler Reference Manual, Section 2
 ///           "cell and model Group Description and Syntax"
-/// * ヘッダの2つの文字列は状態を表す変数(肯定, 否定)を表す．
+/// * ヘッダの２つの文字列は状態を表す変数(肯定, 否定)を表す．
 /// * Simple Attributes
 ///   - clear : "Boolean expression" ;
 ///   - clear_preset_var1 : L | H | N | T | X ;
 ///   - clear_preset_var2 : L | H | N | T | X ;
-///   - data_in : "Boolean expression" ;
-///   - enable_on : "Boolean expression" ;
-///   - enable_on_also : "Boolean expression" ;
+///   - clocked_on : "Boolean expression" ;
+///   - clocked_on_also : "Boolean expression" ;
+///   - next_state : "Boolean expression" ;
 ///   - preset : "Boolean expression" ;
 //////////////////////////////////////////////////////////////////////
-class LatchHandler :
-  public FLHandler
+class FLHandler :
+  public GroupHandler
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] parser パーサー
-  LatchHandler(DotlibParser& parser);
+  FLHandler(DotlibParser& parser);
 
   /// @brief デストラクタ
-  ~LatchHandler();
+  ~FLHandler();
 
 
 public:
@@ -47,20 +47,24 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief enable_on を返す．
+  /// @brief clear を返す．
   const AstExpr*
-  enable_on() const;
+  clear() const;
 
-  /// @brief enable_on_also を返す．
+  /// @brief preset を返す．
   const AstExpr*
-  enable_on_also() const;
+  preset() const;
 
-  /// @brief data_in を返す．
-  const AstExpr*
-  data_in() const;
+  /// @brief clear_preset_var1 を返す．
+  const AstCPType*
+  clear_preset_var1() const;
+
+  /// @brief clear_preset_var2 を返す．
+  const AstCPType*
+  clear_preset_var2() const;
 
 
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
   // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
@@ -87,14 +91,17 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // enable_on
-  const AstExpr* mEnableOn;
+  // clear
+  const AstExpr* mClear;
 
-  // enable_on_also
-  const AstExpr* mEnableOnAlso;
+  // preset
+  const AstExpr* mPreset;
 
-  // data_in
-  const AstExpr* mDataIn;
+  // clear_preset_var1
+  const AstCPType* mClearPresetVar1;
+
+  // clear_preset_var2
+  const AstCPType* mClearPresetVar2;
 
 };
 
@@ -103,30 +110,38 @@ private:
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// @brief enable_on を返す．
+// @brief clear を返す．
 inline
 const AstExpr*
-LatchHandler::enable_on() const
+FLHandler::clear() const
 {
-  return mEnableOn;
+  return mClear;
 }
 
-// @brief enable_on_also を返す．
+// @brief preset を返す．
 inline
 const AstExpr*
-LatchHandler::enable_on_also() const
+FLHandler::preset() const
 {
-  return mEnableOnAlso;
+  return mPreset;
 }
 
-// @brief data_in を返す．
+// @brief clear_preset_var1 を返す．
 inline
-const AstExpr*
-LatchHandler::data_in() const
+const AstCPType*
+FLHandler::clear_preset_var1() const
 {
-  return mDataIn;
+  return mClearPresetVar1;
+}
+
+// @brief clear_preset_var2 を返す．
+inline
+const AstCPType*
+FLHandler::clear_preset_var2() const
+{
+  return mClearPresetVar2;
 }
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // LATCHHANDLER_H
+#endif // FFHANDLER_H

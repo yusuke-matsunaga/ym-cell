@@ -8,7 +8,7 @@
 /// Copyright (C) 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/GroupHandler.h"
+#include "dotlib/FLHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -30,7 +30,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///   - preset : "Boolean expression" ;
 //////////////////////////////////////////////////////////////////////
 class FFHandler :
-  public GroupHandler
+  public FLHandler
 {
 public:
 
@@ -46,6 +46,18 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief clocked_on を返す．
+  const AstExpr*
+  clocked_on() const;
+
+  /// @brief clocked_on_also を返す．
+  const AstExpr*
+  clocked_on_also() const;
+
+  /// @brief next_state を返す．
+  const AstExpr*
+  next_state() const;
 
 
 public:
@@ -75,18 +87,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // clear
-  const AstExpr* mClear;
-
-  // preset
-  const AstExpr* mPreset;
-
-  // clear_preset_var1
-  const AstCPType* mClearPresetVar1;
-
-  // clear_preset_var2
-  const AstCPType* mClearPresetVar2;
-
   // clocked_on
   const AstExpr* mClockedOn;
 
@@ -97,6 +97,35 @@ private:
   const AstExpr* mNextState;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief clocked_on を返す．
+inline
+const AstExpr*
+FFHandler::clocked_on() const
+{
+  return mClockedOn;
+}
+
+// @brief clocked_on_also を返す．
+inline
+const AstExpr*
+FFHandler::clocked_on_also() const
+{
+  return mClockedOnAlso;
+}
+
+// @brief next_state を返す．
+inline
+const AstExpr*
+FFHandler::next_state() const
+{
+  return mNextState;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

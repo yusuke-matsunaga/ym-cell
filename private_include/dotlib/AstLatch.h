@@ -24,25 +24,20 @@ class AstLatch :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc 位置情報
-  /// @param[in] var1, var2 変数名
-  /// @param[in] clear クリア条件
-  /// @param[in] preset プリセット条件
-  /// @param[in] clear_preset_var1 'clear_preset_var1'
-  /// @param[in] clear_preset_var2 'clear_preset_var2'
-  /// @param[in] data_in データ入力式
-  /// @param[in] enable イネーブル条件式
-  /// @param[in] enable_also 追加イネーブル条件式
-  AstLatch(const FileRegion& loc,
-	   const AstString* var1,
-	   const AstString* var2,
-	   const AstExpr* clear,
-	   const AstExpr* preset,
-	   const AstCPType* clear_preset_var1,
-	   const AstCPType* clear_preset_var2,
-	   const AstExpr* data_in,
-	   const AstExpr* enable,
-	   const AstExpr* enable_also);
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @param[in] header ヘッダを読み込んだハンドラ
+  /// @param[in] group グループ本体を読み込んだハンドラ
+  AstLatch(const FileRegion& attr_loc,
+	   const StrStrHandler& header,
+	   const LatchHandler& group);
+
+  /// @brief コンストラクタ
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @param[in] header ヘッダを読み込んだハンドラ
+  /// @param[in] group グループ本体を読み込んだハンドラ
+  AstLatch(const FileRegion& attr_loc,
+	   const StrStrIntHandler& header,
+	   const LatchHandler& group);
 
   /// @brief デストラクタ
   ~AstLatch();

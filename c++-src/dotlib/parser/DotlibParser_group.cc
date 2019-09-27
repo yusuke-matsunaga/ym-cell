@@ -72,6 +72,76 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
+// @brief Group Statement を読み込む．
+// @param[in] header_handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
+// @param[in] group_handler グループ読み込みハンドラ (GroupHandler の継承クラス)
+// @retval true 正しく読み込めた．
+// @retval false エラーが起こった．
+bool
+DotlibParser::parse_group_statement(HeaderHandler& header_handler,
+				    GroupHandler& group_handler)
+{
+  if ( !parse_header(header_handler) ) {
+    return false;
+  }
+
+  // グループ本体の始まり
+  if ( !expect(TokenType::LCB) ) {
+    return false;
+  }
+
+  // 仮想関数の呼び出し
+  group_handler.begin_group();
+
+  FileRegion first_loc = cur_loc();
+  for ( ; ; ) {
+    FileRegion loc;
+    TokenType type = read_token(loc);
+    if ( type == TokenType::NL ) {
+      // 改行は読み飛ばす．
+      continue;
+    }
+    if ( type == TokenType::RCB ) {
+      // グループ本体の終わり．
+      group_handler.mGroupLoc = FileRegion(first_loc, loc);
+      if ( !group_handler.end_group() ) {
+	return false;
+      }
+
+      if ( !expect(TokenType::NL) ) {
+	return false;
+      }
+
+      return true;
+    }
+    if ( type != TokenType::SYMBOL ) {
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      loc,
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      "string value is expected.");
+      return false;
+    }
+    // 一般のトークンの処理
+    const char* name = cur_string();
+    AttrType name_type = conv_to_attr(name);
+    if ( name_type == AttrType::none ) {
+      ostringstream buf;
+      buf << name << ": syntax error.";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      loc,
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      buf.str());
+      return false;
+    }
+    bool r = group_handler.read_group_attr(name_type, loc);
+    if ( !r ) {
+      return false;
+    }
+  }
+}
+
 // @brief 'cell' Group Statement のパースを行う．
 // @param[in] dst 結果を格納する変数
 // @param[in] attr_type 属性の型
@@ -87,7 +157,7 @@ DotlibParser::parse_cell(vector<const AstCell*>& dst_list,
 {
   bool stat = parse_group_statement(*mStrHeader, *mCellGroup);
   if ( stat ) {
-    auto value = mgr().new_cell(*mStrHeader, *mCellGroup);
+    auto value = mgr().new_cell(attr_loc, *mStrHeader, *mCellGroup);
     dst_list.push_back(value);
   }
   return stat;
@@ -114,7 +184,7 @@ DotlibParser::parse_domain(const AstDomain*& dst,
   else {
     bool stat = parse_group_statement(*mStrHeader, *mDomainGroup);
     if ( stat ) {
-      dst = mgr().new_domain(*mStrHeader, *mDomainGroup);
+      dst = mgr().new_domain(attr_loc, *mStrHeader, *mDomainGroup);
     }
     return stat;
   }
@@ -141,7 +211,7 @@ DotlibParser::parse_ff(const AstFF* dst,
   else {
     bool stat = parse_group_statement(*mStrStrHeader, *mFFGroup);
     if ( stat ) {
-      dst = mgr().new_ff(*mStrStrHeader, *mFFGroup);
+      dst = mgr().new_ff(attr_loc, *mStrStrHeader, *mFFGroup);
     }
     return stat;
   }
@@ -168,7 +238,7 @@ DotlibParser::parse_ff_bank(const AstFFBank* dst,
   else {
     bool stat = parse_group_statement(*mStrStrIntHeader, *mFFGroup);
     if ( stat ) {
-      dst = mgr().new_ff_bank(*mStrStrIntHeader, *mFFGroup);
+      dst = mgr().new_ff_bank(attr_loc, *mStrStrIntHeader, *mFFGroup);
     }
     return stat;
   }
@@ -189,7 +259,7 @@ DotlibParser::parse_input_voltage(vector<const AstInputVoltage*>& dst_list,
 {
   bool stat = parse_group_statement(*mStrHeader, *mInputVoltageGroup);
   if ( stat ) {
-    auto val = mgr().new_input_voltage(*mStrHeader, *mInputVoltageGroup);
+    auto val = mgr().new_input_voltage(attr_loc, *mStrHeader, *mInputVoltageGroup);
     dst_list.push_back(val);
   }
   return stat;
@@ -216,7 +286,7 @@ DotlibParser::parse_latch(const AstLatch* dst,
   else {
     bool stat = parse_group_statement(*mStrStrHeader, *mLatchGroup);
     if ( stat ) {
-      dst = mgr().new_latch(*mStrStrHeader, *mLatchGroup);
+      dst = mgr().new_latch(attr_loc, *mStrStrHeader, *mLatchGroup);
     }
     return stat;
   }
@@ -243,7 +313,7 @@ DotlibParser::parse_latch_bank(const AstLatchBank* dst,
   else {
     bool stat = parse_group_statement(*mStrStrIntHeader, *mLatchGroup);
     if ( stat ) {
-      dst = mgr().new_latch_bank(*mStrStrIntHeader, *mLatchGroup);
+      dst = mgr().new_latch_bank(attr_loc, *mStrStrIntHeader, *mLatchGroup);
     }
     return stat;
   }
@@ -270,7 +340,7 @@ DotlibParser::parse_library(const AstLibrary*& dst,
   else {
     bool stat = parse_group_statement(*mStrHeader, *mLibraryGroup);
     if ( stat ) {
-      dst = mgr().new_library(*mStrHeader, *mLibraryGroup);
+      dst = mgr().new_library(attr_loc, *mStrHeader, *mLibraryGroup);
     }
     return stat;
   }
@@ -291,7 +361,7 @@ DotlibParser::parse_output_voltage(vector<const AstOutputVoltage*>& dst_list,
 {
   bool stat = parse_group_statement(*mStrHeader, *mOutputVoltageGroup);
   if ( stat ) {
-    auto val = mgr().new_output_voltage(*mStrHeader, *mOutputVoltageGroup);
+    auto val = mgr().new_output_voltage(attr_loc, *mStrHeader, *mOutputVoltageGroup);
     dst_list.push_back(val);
   }
   return stat;
@@ -312,7 +382,7 @@ DotlibParser::parse_pin(vector<const AstPin*>& dst_list,
 {
   bool stat = parse_group_statement(*mStrListHeader, *mPinGroup);
   if ( stat ) {
-    auto pin = mgr().new_pin(*mStrListHeader, *mPinGroup);
+    auto pin = mgr().new_pin(attr_loc, *mStrListHeader, *mPinGroup);
     dst_list.push_back(pin);
   }
   return stat;
@@ -339,7 +409,7 @@ DotlibParser::parse_table(const AstLut*& dst,
   else {
     bool stat = parse_group_statement(*mStrHeader, *mTableGroup);
     if ( stat ) {
-      dst = mgr().new_lut(*mStrHeader, *mTableGroup);
+      dst = mgr().new_lut(attr_loc, *mStrHeader, *mTableGroup);
     }
     return stat;
   }
@@ -360,7 +430,7 @@ DotlibParser::parse_template(vector<const AstTemplate*>& dst_list,
 {
   bool stat = parse_group_statement(*mStrHeader, *mTemplateGroup);
   if ( stat ) {
-    const AstTemplate* value = mgr().new_template(*mStrHeader, *mTemplateGroup);
+    const AstTemplate* value = mgr().new_template(attr_loc, *mStrHeader, *mTemplateGroup);
     dst_list.push_back(value);
   }
   return stat;
@@ -383,7 +453,7 @@ DotlibParser::parse_timing(vector<const AstTiming*>& dst_list,
   TimingHandler group_handler(*this);
   bool stat = parse_group_statement(*mStrListHeader, *mTimingGroup);
   if ( stat ) {
-    const AstTiming* value = mgr().new_timing(*mStrListHeader, *mTimingGroup);
+    const AstTiming* value = mgr().new_timing(attr_loc, *mStrListHeader, *mTimingGroup);
     dst_list.push_back(value);
   }
   return stat;

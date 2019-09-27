@@ -35,6 +35,22 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief vil の値を返す．
+  const AstExpr*
+  vil() const;
+
+  /// @brief vih の値を返す．
+  const AstExpr*
+  vih() const;
+
+  /// @brief vimin の値を返す．
+  const AstExpr*
+  vimin() const;
+
+  /// @brief vimax の値を返す．
+  const AstExpr*
+  vimax() const;
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -70,6 +86,43 @@ private:
   const AstExpr* mVimax;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief vil の値を返す．
+inline
+const AstExpr*
+InputVoltageHandler::vil() const
+{
+  return mVil;
+}
+
+// @brief vih の値を返す．
+inline
+const AstExpr*
+InputVoltageHandler::vih() const
+{
+  return mVih;
+}
+
+// @brief vimin の値を返す．
+inline
+const AstExpr*
+InputVoltageHandler::vimin() const
+{
+  return mVimin;
+}
+
+// @brief vimax の値を返す．
+inline
+const AstExpr*
+InputVoltageHandler::vimax() const
+{
+  return mVimax;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

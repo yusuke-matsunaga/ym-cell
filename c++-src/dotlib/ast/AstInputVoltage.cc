@@ -10,26 +10,24 @@
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstInputVoltage.h"
 
+#include "dotlib/StrHandler.h"
+#include "dotlib/InputVoltageHandler.h"
+
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief input voltage を表す AstNode を生成する．
-// @param[in] loc ファイル上の位置
-// @param[in] vil 'vil'
-// @param[in] vih 'vih'
-// @param[in] vimin 'vimin'
-// @param[in] vimax 'vimax'
-AstInputVoltage*
-AstMgr::new_input_voltage(const FileRegion& loc,
-			  const AstString* name,
-			  const AstExpr* vil,
-			  const AstExpr* vih,
-			  const AstExpr* vimin,
-			  const AstExpr* vimax)
+// @param[in] attr_loc 属性のファイル上の位置
+// @param[in] header ヘッダを読み込んだハンドラ
+// @param[in] group グループ本体を読み込んだハンドラ
+const AstInputVoltage*
+AstMgr::new_input_voltage(const FileRegion& attr_loc,
+			  const StrHandler& header,
+			  const InputVoltageHandler& group)
 {
   ++ mInputVolNum;
   void* p = mAlloc.get_memory(sizeof(AstInputVoltage));
-  return new (p) AstInputVoltage(loc, name, vil, vih, vimin, vimax);
+  return new (p) AstInputVoltage(attr_loc, header, group);
 }
 
 
@@ -38,24 +36,18 @@ AstMgr::new_input_voltage(const FileRegion& loc,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc ファイル上の位置
-// @param[in] name 名前
-// @param[in] vil 'vil'
-// @param[in] vih 'vih'
-// @param[in] vimin 'vimin'
-// @param[in] vimax 'vimax'
-AstInputVoltage::AstInputVoltage(const FileRegion& loc,
-				 const AstString* name,
-				 const AstExpr* vil,
-				 const AstExpr* vih,
-				 const AstExpr* vimin,
-				 const AstExpr* vimax) :
-  AstNode(loc),
-  mName(name),
-  mVil(vil),
-  mVih(vih),
-  mViMin(vimin),
-  mViMax(vimax)
+// @param[in] attr_loc 属性のファイル上の位置
+// @param[in] header ヘッダを読み込んだハンドラ
+// @param[in] group グループ本体を読み込んだハンドラ
+AstInputVoltage::AstInputVoltage(const FileRegion& attr_loc,
+				 const StrHandler& header,
+				 const InputVoltageHandler& group) :
+  AstNode(FileRegion(attr_loc, group.group_loc())),
+  mName{header.value()},
+  mVil{group.vil()},
+  mVih{group.vih()},
+  mViMin{group.vimin()},
+  mViMax{group.vimax()}
 {
 }
 

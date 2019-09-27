@@ -36,11 +36,11 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 1番目の値を取り出す．
+  /// @brief 1番目の値を返す．
   const AstString*
   value1() const;
 
-  /// @brief 2番目の値を取り出す．
+  /// @brief 2番目の値を返す．
   const AstString*
   value2() const;
 
@@ -73,7 +73,7 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ヘッダの値1, 2
+  // 値
   const AstString* mValue[2];
 
   // ヘッダの値3
@@ -86,7 +86,7 @@ private:
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// @brief 1番目の値を取り出す．
+// @brief 1番目の値を返す．
 inline
 const AstString*
 StrStrIntHandler::value1() const
@@ -94,7 +94,7 @@ StrStrIntHandler::value1() const
   return mValue[0];
 }
 
-// @brief 2番目の値を取り出す．
+// @brief 2番目の値を返す．
 inline
 const AstString*
 StrStrIntHandler::value2() const

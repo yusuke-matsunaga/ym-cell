@@ -26,42 +26,12 @@ class AstPin :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc 位置情報
-  /// @param[in] name_list ピン名のリスト
-  /// @param[in] pin_direction 方向
-  /// @param[in] capacitance 容量
-  /// @param[in] rise_capacitance 立ち上がり容量
-  /// @param[in] fall_capacitance 立ち下がり容量
-  /// @param[in] max_fanout 最大ファンアウト
-  /// @param[in] min_fanout 最小ファンアウト
-  /// @param[in] max_capacitance 最大容量
-  /// @param[in] min_capacitance 最小容量
-  /// @param[in] max_transition 最大遷移時間
-  /// @param[in] min_transition 最小遷移時間
-  /// @param[in] function 関数
-  /// @param[in] three_state スリーステート条件
-  /// @param[in] internal_node 対応する内部ノード
-  /// @param[in] pin_func_type 'pin_func_type'
-  /// @param[in] timing_list タイミングのリスト
-  /// @param[in] alloc メモリアロケータ
-  AstPin(const FileRegion& loc,
-	 const vector<const AstString*>& name_list,
-	 const AstDirection* pin_direction,
-	 const AstFloat* capacitance,
-	 const AstFloat* rise_capacitance,
-	 const AstFloat* fall_capacitance,
-	 const AstFloat* max_fanout,
-	 const AstFloat* min_fanout,
-	 const AstFloat* max_capacitance,
-	 const AstFloat* min_capacitance,
-	 const AstFloat* max_transition,
-	 const AstFloat* min_transition,
-	 const AstExpr* function,
-	 const AstExpr* three_state,
-	 const AstNode* internal_node,
-	 const AstNode* pin_func_type,
-	 const vector<const AstTiming*>& timing_list,
-	 Alloc& alloc);
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @param[in] header ヘッダを読み込んだハンドラ
+  /// @param[in] group グループ本体を読み込んだハンドラ
+  AstPin(const FileRegion& attr_loc,
+	 const StrListHandler& header,
+	 const PinHandler& group);
 
   /// @brief デストラクタ
   ~AstPin();

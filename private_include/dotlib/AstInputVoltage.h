@@ -23,18 +23,12 @@ class AstInputVoltage :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] name 名前
-  /// @param[in] vil 'vil'
-  /// @param[in] vih 'vih'
-  /// @param[in] vimin 'vimin'
-  /// @param[in] vimax 'vimax'
-  AstInputVoltage(const FileRegion& loc,
-		  const AstString* name,
-		  const AstExpr* vil,
-		  const AstExpr* vih,
-		  const AstExpr* vimin,
-		  const AstExpr* vimax);
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @param[in] header ヘッダを読み込んだハンドラ
+  /// @param[in] group グループ本体を読み込んだハンドラ
+  AstInputVoltage(const FileRegion& attr_loc,
+		  const StrHandler& header,
+		  const InputVoltageHandler& group);
 
   /// @brief デストラクタ
   ~AstInputVoltage();

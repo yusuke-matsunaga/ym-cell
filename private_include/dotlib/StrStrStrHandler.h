@@ -15,7 +15,7 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class StrStrStrStrStrStrHandler StrStrStrHandler.h "dotlib/StrStrStrHandler.h"
+/// @class StrStrStrSHandler StrStrStrHandler.h "dotlib/StrStrStrHandler.h"
 /// @brief ( string, string, string ) の形式のヘッダ用のハンドラ
 //////////////////////////////////////////////////////////////////////
 class StrStrStrHandler :

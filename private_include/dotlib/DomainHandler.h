@@ -34,6 +34,36 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief calc_mode を返す．
+  const AstString*
+  calc_mode() const;
+
+  /// @brief coefs を返す．
+  const AstFloatVector*
+  coefs() const;
+
+  /// @brief orders を返す．
+  const AstIntVector*
+  orders() const;
+
+  /// @brief variable_1_range を返す．
+  const AstFloat2*
+  variable_1_range() const;
+
+  /// @brief variable_2_range を返す．
+  const AstFloat2*
+  variable_2_range() const;
+
+  /// @brief variable_3_range を返す．
+  const AstFloat2*
+  variable_3_range() const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
   // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
@@ -78,6 +108,59 @@ private:
   const AstFloat2* mVar3Range;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief calc_mode を返す．
+inline
+const AstString*
+DomainHandler::calc_mode() const
+{
+  return mCalcMode;
+}
+
+// @brief coefs を返す．
+inline
+const AstFloatVector*
+DomainHandler::coefs() const
+{
+  return mCoefs;
+}
+
+// @brief orders を返す．
+inline
+const AstIntVector*
+DomainHandler::orders() const
+{
+  return mOrders;
+}
+
+// @brief variable_1_range を返す．
+inline
+const AstFloat2*
+DomainHandler::variable_1_range() const
+{
+  return mVar1Range;
+}
+
+// @brief variable_2_range を返す．
+inline
+const AstFloat2*
+DomainHandler::variable_2_range() const
+{
+  return mVar2Range;
+}
+
+// @brief variable_3_range を返す．
+inline
+const AstFloat2*
+DomainHandler::variable_3_range() const
+{
+  return mVar3Range;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

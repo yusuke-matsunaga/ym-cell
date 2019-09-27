@@ -32,6 +32,52 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
+  // インライン関数の定義
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief index_1 を返す．
+  const AstFloatVector*
+  index_1() const;
+
+  /// @brief index_2 を返す．
+  const AstFloatVector*
+  index_2() const;
+
+  /// @brief index_3 を返す．
+  const AstFloatVector*
+  index_3() const;
+
+  /// @brief values を返す．
+  const AstFloatVector*
+  values() const;
+
+  /// @brief coefs を返す．
+  const AstFloatVector*
+  coefs() const;
+
+  /// @brief orders を返す．
+  const AstIntVector*
+  orders() const;
+
+  /// @brief variable_1_range を返す．
+  const AstFloat2*
+  variable_1_range() const;
+
+  /// @brief variable_2_range を返す．
+  const AstFloat2*
+  variable_2_range() const;
+
+  /// @brief variable_3_range を返す．
+  const AstFloat2*
+  variable_3_range() const;
+
+  /// @brief domain を返す．
+  const AstDomain*
+  domain() const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
   // GroupHandler の仮想関数
   //////////////////////////////////////////////////////////////////////
 
@@ -88,6 +134,91 @@ private:
   const AstDomain* mDomain;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief index_1 を返す．
+inline
+const AstFloatVector*
+TableHandler::index_1() const
+{
+  return mIndex1;
+}
+
+// @brief index_2 を返す．
+inline
+const AstFloatVector*
+TableHandler::index_2() const
+{
+  return mIndex2;
+}
+
+// @brief index_3 を返す．
+inline
+const AstFloatVector*
+TableHandler::index_3() const
+{
+  return mIndex3;
+}
+
+// @brief values を返す．
+inline
+const AstFloatVector*
+TableHandler::values() const
+{
+  return mValues;
+}
+
+// @brief coefs を返す．
+inline
+const AstFloatVector*
+TableHandler::coefs() const
+{
+  return mCoefs;
+}
+
+// @brief orders を返す．
+inline
+const AstIntVector*
+TableHandler::orders() const
+{
+  return mOrders;
+}
+
+// @brief variable_1_range を返す．
+inline
+const AstFloat2*
+TableHandler::variable_1_range() const
+{
+  return mVar1Range;
+}
+
+// @brief variable_2_range を返す．
+inline
+const AstFloat2*
+TableHandler::variable_2_range() const
+{
+  return mVar2Range;
+}
+
+// @brief variable_3_range を返す．
+inline
+const AstFloat2*
+TableHandler::variable_3_range() const
+{
+  return mVar3Range;
+}
+
+// @brief domain を返す．
+inline
+const AstDomain*
+TableHandler::domain() const
+{
+  return mDomain;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

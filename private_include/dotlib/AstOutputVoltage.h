@@ -23,18 +23,12 @@ class AstOutputVoltage :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] name 名前
-  /// @param[in] vol 'vol'
-  /// @param[in] voh 'voh'
-  /// @param[in] vomin 'vomin'
-  /// @param[in] vomax 'vomax'
-  AstOutputVoltage(const FileRegion& loc,
-		   const AstString* name,
-		   const AstExpr* vol,
-		   const AstExpr* voh,
-		   const AstExpr* vomin,
-		   const AstExpr* vomax);
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @param[in] header ヘッダを読み込んだハンドラ
+  /// @param[in] group グループ本体を読み込んだハンドラ
+  AstOutputVoltage(const FileRegion& attr_loc,
+		   const StrHandler& header,
+		   const OutputVoltageHandler& group);
 
   /// @brief デストラクタ
   ~AstOutputVoltage();

@@ -9,7 +9,7 @@
 
 #include "dotlib/DotlibParser.h"
 #include "dotlib/HeaderHandler.h"
-#include "dotlib/GroupHandler.h"
+//#include "dotlib/GroupHandler.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/TokenType.h"
 
@@ -140,76 +140,6 @@ DotlibParser::parse_complex_attribute(HeaderHandler& handler)
   }
 
   return expect_nl();
-}
-
-// @brief Group Statement を読み込む．
-// @param[in] header_handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
-// @param[in] group_handler グループ読み込みハンドラ (GroupHandler の継承クラス)
-// @retval true 正しく読み込めた．
-// @retval false エラーが起こった．
-bool
-DotlibParser::parse_group_statement(HeaderHandler& header_handler,
-				    GroupHandler& group_handler)
-{
-  if ( !parse_header(header_handler) ) {
-    return false;
-  }
-
-  // グループ本体の始まり
-  if ( !expect(TokenType::LCB) ) {
-    return false;
-  }
-
-  // 仮想関数の呼び出し
-  group_handler.begin_group();
-
-  FileRegion first_loc = cur_loc();
-  for ( ; ; ) {
-    FileRegion loc;
-    TokenType type = read_token(loc);
-    if ( type == TokenType::NL ) {
-      // 改行は読み飛ばす．
-      continue;
-    }
-    if ( type == TokenType::RCB ) {
-      // グループ本体の終わり．
-      group_handler.mGroupLoc = FileRegion(first_loc, loc);
-      if ( !group_handler.end_group() ) {
-	return false;
-      }
-
-      if ( !expect(TokenType::NL) ) {
-	return false;
-      }
-
-      return true;
-    }
-    if ( type != TokenType::SYMBOL ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      loc,
-		      MsgType::Error,
-		      "DOTLIB_PARSER",
-		      "string value is expected.");
-      return false;
-    }
-    // 一般のトークンの処理
-    const char* name = cur_string();
-    AttrType name_type = conv_to_attr(name);
-    if ( name_type == AttrType::none ) {
-      ostringstream buf;
-      buf << name << ": syntax error.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      loc,
-		      MsgType::Error,
-		      "DOTLIB_PARSER",
-		      buf.str());
-      return false;
-    }
-    bool r = group_handler.read_group_attr(name_type, loc);
-    if ( !r ) {
-      return false;
-    }
-  }
 }
 
 // @brief Complex Attribute, GroupStatement のヘッダを読み込む．

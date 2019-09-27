@@ -43,22 +43,6 @@ InputVoltageHandler::~InputVoltageHandler()
 {
 }
 
-#if 0
-// @breif 'input_voltage' Group Statement の記述をパースする．
-// @param[in] dst 読み込んだ値を格納する変数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-bool
-InputVoltageHandler::parse_value(const AstInputVoltage*& dst)
-{
-  bool stat = parse_group_statement();
-  if ( stat ) {
-    dst = mValue;
-  }
-  return stat;
-}
-#endif
-
 // @brief グループ記述の始まり
 void
 InputVoltageHandler::begin_group()
@@ -75,18 +59,13 @@ InputVoltageHandler::begin_group()
 bool
 InputVoltageHandler::end_group()
 {
-  if ( !check_attr(mVil,   AttrType::vil, group_loc()) ||
-       !check_attr(mVih,   AttrType::vih, group_loc()) ||
+  if ( !check_attr(mVil,   AttrType::vil,   group_loc()) ||
+       !check_attr(mVih,   AttrType::vih,   group_loc()) ||
        !check_attr(mVimin, AttrType::vimin, group_loc()) ||
        !check_attr(mVimax, AttrType::vimax, group_loc()) ) {
     return false;
   }
   else {
-#if 0
-    mValue = mgr().new_input_voltage(group_loc,
-				     header_value(),
-				     mVil, mVih, mVimin, mVimax);
-#endif
     return true;
   }
 }

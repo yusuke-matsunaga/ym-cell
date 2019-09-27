@@ -5,7 +5,7 @@
 /// @brief AstMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -18,34 +18,6 @@
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-class EmptyHandler;
-class FloatFloatHandler;
-class FloatStrHandler;
-class FloatVectorHandler;
-class IntFloatHandler;
-class IntFloatVectorHandler;
-class IntVectorHandler;
-class StrHandler;
-class StrFloatHandler;
-class StrIntHandler;
-class StrStrHandler;
-class StrStrIntHandler;
-class StrStrStrHandler;
-class StrFloatHandler;
-class StrListHandler;
-
-class LibraryHandler;
-class CellHandler;
-class DomainHandler;
-class FFHandler;
-class InputVoltageHandler;
-class LatchHandler;
-class OutputVoltageHandler;
-class PinHandler;
-class TemplateHandler;
-class TableHandler;
-class TimingHandler;
 
 //////////////////////////////////////////////////////////////////////
 /// @class AstMgr AstMgr.h "AstMgr.h"
@@ -329,24 +301,30 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ライブラリを表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstLibrary*
-  new_library(const StrHandler& header,
+  new_library(const FileRegion& attr_loc,
+	      const StrHandler& header,
 	      const LibraryHandler& group);
 
   /// @brief セルを表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstCell*
-  new_cell(const StrHandler& header,
+  new_cell(const FileRegion& attr_loc,
+	   const StrHandler& header,
 	   const CellHandler& group);
 
   /// @brief ピンを表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstPin*
-  new_pin(const StrListHandler& header,
+  new_pin(const FileRegion& attr_loc,
+	  const StrListHandler& header,
 	  const PinHandler& group);
 
   /// @brief cell_degradation を表す AstNode を生成する．
@@ -364,73 +342,93 @@ public:
 		       const AstDomain* domain);
 
   /// @brief ff を表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstFF*
-  new_ff(const StrStrHandler& header,
+  new_ff(const FileRegion& attr_loc,
+	 const StrStrHandler& header,
 	 const FFHandler& group);
 
   /// @brief ff_bank を表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstFFBank*
-  new_ff_bank(const StrStrIntHandler& header,
+  new_ff_bank(const FileRegion& attr_loc,
+	      const StrStrIntHandler& header,
 	      const FFHandler& group);
 
   /// @brief latch を表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstLatch*
-  new_latch(const StrStrHandler& header,
+  new_latch(const FileRegion& attr_loc,
+	    const StrStrHandler& header,
 	    const LatchHandler& group);
 
   /// @brief latch_bank を表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstLatchBank*
-  new_latch_bank(const StrStrIntHandler& header,
+  new_latch_bank(const FileRegion& attr_loc,
+		 const StrStrIntHandler& header,
 		 const LatchHandler& group);
 
   /// @brief lut template を表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダのハンドラ
   /// @param[in] group グループ本体のハンドラ
   const AstTemplate*
-  new_template(const StrHandler& header,
+  new_template(const FileRegion& attr_loc,
+	       const StrHandler& header,
 	       const TemplateHandler& group);
 
   /// @brief lut を表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダのハンドラ
   /// @param[in] group グループ本体のハンドラ
   const AstLut*
-  new_lut(const StrHandler& header,
+  new_lut(const FileRegion& attr_loc,
+	  const StrHandler& header,
 	  const TableHandler& group);
 
   /// @brief input voltage を表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstInputVoltage*
-  new_input_voltage(const StrHandler& header,
+  new_input_voltage(const FileRegion& attr_loc,
+		    const StrHandler& header,
 		    const InputVoltageHandler& group);
 
   /// @brief output voltage を表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstOutputVoltage*
-  new_output_voltage(const StrHandler& header,
+  new_output_voltage(const FileRegion& attr_loc,
+		     const StrHandler& header,
 		     const OutputVoltageHandler& group);
 
   /// @brief domain を表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   const AstDomain*
-  new_domain(const StrHandler& header,
+  new_domain(const FileRegion& attr_loc,
+	     const StrHandler& header,
 	     const DomainHandler& group);
 
   /// @brief timing を表す AstNode を生成する．
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダのハンドラ
   /// @param[in] group グループ本体のハンドラ
   const AstTiming*
-  new_timing(const StrListHandler& header,
+  new_timing(const FileRegion& attr_loc,
+	     const StrListHandler& header,
 	     const TimingHandler& group);
 
   /// @brief 使用メモリ量の一覧を出力する．
@@ -451,50 +449,51 @@ private:
   AstLibrary* mLibraryNode;
 
   // 個々の要素の使用数
-  int mBoolNum;
-  int mBoolExprNum;
-  int mDelayModelNum;
-  int mDirectionNum;
-  int mFloatNum;
-  int mFloat2Num;
-  int mFloatExprNum;
-  int mFloatStrNum;
-  int mFloatVectNum;
-  int mFloatVectElemSize;
-  int mIntNum;
-  int mIntFloatNum;
-  int mIntFloatVectorNum;
-  int mIntVectNum;
-  int mIntVectElemSize;
-  int mStrNum;
-  int mStr2Num;
-  int mStr3Num;
-  int mStrFloatNum;
-  int mStrIntNum;
-  int mStrVectNum;
-  int mStrVectElemSize;
-  int mOprNum;
-  int mNotNum;
-  int mDomainNum;
-  int mSymbolExprNum;
-  int mStrExprNum;
-  int mListNum;
-  int mListElemSize;
-  int mTemplateNum;
-  int mLutNum;
-  int mInputVolNum;
-  int mOutputVolNum;
-  int mPieceWiseNum;
-  int mTechnologyNum;
-  int mTimingSenseNum;
-  int mTimingTypeNum;
-  int mVarTypeNum;
-  int mVarRangeNum;
-  int mFFNum;
-  int mFFBankNum;
-  int mLatchNum;
-  int mLatchBankNum;
-  int mAttrNum;
+  SizeType mBoolNum;
+  SizeType mBoolExprNum;
+  SizeType mDelayModelNum;
+  SizeType mDirectionNum;
+  SizeType mFloatNum;
+  SizeType mFloat2Num;
+  SizeType mFloatExprNum;
+  SizeType mFloatStrNum;
+  SizeType mFloatVectNum;
+  SizeType mFloatVectElemSize;
+  SizeType mIntNum;
+  SizeType mIntFloatNum;
+  SizeType mIntFloatVectorNum;
+  SizeType mIntVectNum;
+  SizeType mIntVectElemSize;
+  SizeType mStrNum;
+  SizeType mStr2Num;
+  SizeType mStr3Num;
+  SizeType mStrFloatNum;
+  SizeType mStrIntNum;
+  SizeType mStrVectNum;
+  SizeType mStrVectElemSize;
+  SizeType mOprNum;
+  SizeType mNotNum;
+  SizeType mDomainNum;
+  SizeType mSymbolExprNum;
+  SizeType mStrExprNum;
+  SizeType mListNum;
+  SizeType mListElemSize;
+  SizeType mTemplateNum;
+  SizeType mLutNum;
+  SizeType mInputVolNum;
+  SizeType mOutputVolNum;
+  SizeType mPieceWiseNum;
+  SizeType mTechnologyNum;
+  SizeType mTimingSenseNum;
+  SizeType mTimingTypeNum;
+  SizeType mVarTypeNum;
+  SizeType mVarRangeNum;
+  SizeType mFFNum;
+  SizeType mFFBankNum;
+  SizeType mLatchNum;
+  SizeType mLatchBankNum;
+  SizeType mAttrNum;
+
 };
 
 END_NAMESPACE_YM_DOTLIB

@@ -47,8 +47,6 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class HeaderHandler :
   public DotlibHandler
 {
-  //friend class DotlibParser;
-
 public:
 
   /// @brief コンストラクタ

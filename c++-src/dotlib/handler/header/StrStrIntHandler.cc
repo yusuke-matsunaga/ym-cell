@@ -34,8 +34,6 @@ StrStrIntHandler::~StrStrIntHandler()
 void
 StrStrIntHandler::initialize()
 {
-  mValue[0] = nullptr;
-  mValue[1] = nullptr;
   mValue3 = nullptr;
 }
 

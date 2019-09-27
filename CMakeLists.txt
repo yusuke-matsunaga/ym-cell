@@ -135,23 +135,34 @@ set (dotlib_SOURCES
   c++-src/dotlib/ast/AstCPType.cc
   c++-src/dotlib/ast/AstDelayModel.cc
   c++-src/dotlib/ast/AstDirection.cc
+  c++-src/dotlib/ast/AstDomain.cc
   c++-src/dotlib/ast/AstExpr.cc
+  c++-src/dotlib/ast/AstFF.cc
+  c++-src/dotlib/ast/AstFFBank.cc
   c++-src/dotlib/ast/AstFloat.cc
   c++-src/dotlib/ast/AstFloat2.cc
   c++-src/dotlib/ast/AstFloatStr.cc
   c++-src/dotlib/ast/AstFloatVector.cc
+  c++-src/dotlib/ast/AstInputVoltage.cc
   c++-src/dotlib/ast/AstInt.cc
   c++-src/dotlib/ast/AstIntFloat.cc
   c++-src/dotlib/ast/AstIntFloatVector.cc
   c++-src/dotlib/ast/AstIntVector.cc
+  c++-src/dotlib/ast/AstLatch.cc
+  c++-src/dotlib/ast/AstLatchBank.cc
+  c++-src/dotlib/ast/AstLut.cc
   c++-src/dotlib/ast/AstMgr.cc
   c++-src/dotlib/ast/AstNode.cc
+  c++-src/dotlib/ast/AstOutputVoltage.cc
+  c++-src/dotlib/ast/AstPin.cc
   c++-src/dotlib/ast/AstStr2.cc
   c++-src/dotlib/ast/AstStr3.cc
   c++-src/dotlib/ast/AstStrFloat.cc
   c++-src/dotlib/ast/AstStrInt.cc
   c++-src/dotlib/ast/AstString.cc
   c++-src/dotlib/ast/AstStrList.cc
+  c++-src/dotlib/ast/AstTemplate.cc
+  c++-src/dotlib/ast/AstTiming.cc
   c++-src/dotlib/ast/AstTimingSense.cc
   c++-src/dotlib/ast/AstTimingType.cc
   c++-src/dotlib/ast/AstTechnology.cc
@@ -159,19 +170,8 @@ set (dotlib_SOURCES
 
   #c++-src/dotlib/ast/AstCell.cc
   #c++-src/dotlib/ast/AstCellDegradation.cc
-  #c++-src/dotlib/ast/AstDomain.cc
-  #c++-src/dotlib/ast/AstFF.cc
-  #c++-src/dotlib/ast/AstFFBank.cc
-  #c++-src/dotlib/ast/AstInputVoltage.cc
-  #c++-src/dotlib/ast/AstLatch.cc
-  #c++-src/dotlib/ast/AstLatchBank.cc
   #c++-src/dotlib/ast/AstLibrary.cc
-  #c++-src/dotlib/ast/AstLut.cc
-  #c++-src/dotlib/ast/AstOutputVoltage.cc
-  #c++-src/dotlib/ast/AstPin.cc
   #c++-src/dotlib/ast/AstStateTable.cc
-  #c++-src/dotlib/ast/AstTemplate.cc
-  #c++-src/dotlib/ast/AstTiming.cc
   )
 
 

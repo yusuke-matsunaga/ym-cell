@@ -10,19 +10,24 @@
 #include "dotlib/AstDomain.h"
 #include "dotlib/AstMgr.h"
 
+#include "dotlib/StrHandler.h"
+#include "dotlib/DomainHandler.h"
+
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief domain を表す AstNode を生成する．
+// @param[in] attr_loc 属性のファイル上の位置
 // @param[in] header ヘッダを読み込んだハンドラ
 // @param[in] group グループ本体を読み込んだハンドラ
-AstDomain*
-AstMgr::new_domain(const Str1HeaderHandler& header,
+const AstDomain*
+AstMgr::new_domain(const FileRegion& attr_loc,
+		   const StrHandler& header,
 		   const DomainHandler& group)
 {
   ++ mDomainNum;
   void* p = mAlloc.get_memory(sizeof(AstDomain));
-  return new (p) AstDomain(header, group);
+  return new (p) AstDomain(attr_loc, header, group);
 }
 
 
@@ -31,18 +36,20 @@ AstMgr::new_domain(const Str1HeaderHandler& header,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
+// @param[in] attr_loc 属性のファイル上の位置
 // @param[in] header ヘッダを読み込んだハンドラ
 // @param[in] group グループ本体を読み込んだハンドラ
-AstDomain::AstDomain(const Str1HeaderHandler& header,
+AstDomain::AstDomain(const FileRegion& attr_loc,
+		     const StrHandler& header,
 		     const DomainHandler& group) :
-  AstNode(FileRegion(header.header_loc(), group.group_loc())),
-  mName(header.value()),
-  mCalcMode(calc_mode),
-  mCoefs(coefs),
-  mOrders(orders),
-  mVar1Range(var1_range),
-  mVar2Range(var2_range),
-  mVar3Range(var3_range)
+  AstNode{FileRegion{attr_loc, group.group_loc()}},
+  mName{header.value()},
+  mCalcMode{group.calc_mode()},
+  mCoefs{group.coefs()},
+  mOrders{group.orders()},
+  mVar1Range{group.variable_1_range()},
+  mVar2Range{group.variable_2_range()},
+  mVar3Range{group.variable_3_range()}
 {
 }
 

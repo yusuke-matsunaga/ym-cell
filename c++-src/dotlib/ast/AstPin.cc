@@ -15,51 +15,17 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief ピンを表す AstNode を生成する．
-// @param[in] loc ファイル上の位置
-// @param[in] name_list ピン名のリスト
-// @param[in] pin_direction 方向
-// @param[in] capacitance 容量
-// @param[in] rise_capacitance 立ち上がり容量
-// @param[in] fall_capacitance 立ち下がり容量
-// @param[in] max_fanout 最大ファンアウト
-// @param[in] min_fanout 最小ファンアウト
-// @param[in] max_capacitance 最大容量
-// @param[in] min_capacitance 最小容量
-// @param[in] max_transition 最大遷移時間
-// @param[in] min_transition 最小遷移時間
-// @param[in] function 関数
-// @param[in] three_state スリーステート条件
-// @param[in] internal_node 対応する内部ノード
-// @param[in] pin_func_type 'pin_func_type'
-// @param[in] timing_top タイミングの先頭
-AstPin*
-AstMgr::new_pin(const FileRegion& loc,
-		const vector<const AstString*>& name_list,
-		const AstPinDirection* pin_direction,
-		const AstFloat* capacitance,
-		const AstFloat* rise_capacitance,
-		const AstFloat* fall_capacitance,
-		const AstFloat* max_fanout,
-		const AstFloat* min_fanout,
-		const AstFloat* max_capacitance,
-		const AstFloat* min_capacitance,
-		const AstFloat* max_transition,
-		const AstFloat* min_transition,
-		const AstExpr* function,
-		const AstExpr* three_state,
-		const AstNode* internal_node,
-		const AstNode* pin_func_type,
-		const vector<const AstTiming*>& timing_list)
+// @param[in] attr_loc 属性のファイル上の位置
+// @param[in] header ヘッダを読み込んだハンドラ
+// @param[in] group グループ本体を読み込んだハンドラ
+const AstPin*
+AstMgr::new_pin(const FileRegion& attr_loc,
+		const StrListHandler& header,
+		const PinHandler& group)
 {
+  ++ mPinNum;
   void* p = mAlloc.get_memory(sizeof(AstPin));
-  return new (p) AstPin(loc, name_list, pin_direction,
-			capacitance, rise_capacitance, fall_capacitance,
-			max_fanout, min_fanout,
-			max_capacitance, min_capacitance,
-			max_transition, min_transition,
-			function, three_state,
-			internal_node, pin_func_type, timing_list,
-			mAlloc);
+  return new (p) AstPin(attr_loc, header, group);
 }
 
 
@@ -68,46 +34,18 @@ AstMgr::new_pin(const FileRegion& loc,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc 位置情報
-// @param[in] name_list ピン名のリスト
-// @param[in] pin_direction 方向
-// @param[in] capacitance 容量
-// @param[in] rise_capacitance 立ち上がり容量
-// @param[in] fall_capacitance 立ち下がり容量
-// @param[in] max_fanout 最大ファンアウト
-// @param[in] min_fanout 最小ファンアウト
-// @param[in] max_capacitance 最大容量
-// @param[in] min_capacitance 最小容量
-// @param[in] max_transition 最大遷移時間
-// @param[in] min_transition 最小遷移時間
-// @param[in] function 関数
-// @param[in] three_state スリーステート条件
-// @param[in] internal_node 対応する内部ノード
-// @param[in] pin_func_type 'pin_func_type'
-// @param[in] timing_top タイミングの先頭
-AstPin::AstPin(const FileRegion& loc,
-	       const vector<const AstString*>& name_list,
-	       const AstPinDirection* pin_direction,
-	       const AstFloat* capacitance,
-	       const AstFloat* rise_capacitance,
-	       const AstFloat* fall_capacitance,
-	       const AstFloat* max_fanout,
-	       const AstFloat* min_fanout,
-	       const AstFloat* max_capacitance,
-	       const AstFloat* min_capacitance,
-	       const AstFloat* max_transition,
-	       const AstFloat* min_transition,
-	       const AstExpr* function,
-	       const AstExpr* three_state,
-	       const AstNode* internal_node,
-	       const AstNode* pin_func_type,
-	       const vector<const AstTiming*>& timing_list,
+// @param[in] attr_loc 属性のファイル上の位置
+// @param[in] header ヘッダを読み込んだハンドラ
+// @param[in] group グループ本体を読み込んだハンドラ
+AstPin::AstPin(const FileRegion& attr_loc,
+	       const StrListHandler& header,
+	       const PinHandler& group,
 	       Alloc& alloc) :
-  AstNode(loc),
+  AstNode{FileRegion(attr_loc, group.group_loc())},
   mNameNum(name_list.size()),
   mNameList(alloc.get_array<const AstString*>(mNameNum)),
-  mPinDirection(pin_direction),
-  mCapacitance(capacitance),
+  mPinDirection{group.pin_direction()},
+  mCapacitance{group.capacitance()},
   mRiseCapacitance(rise_capacitance),
   mFallCapacitance(fall_capacitance),
   mMaxFanout(max_fanout),

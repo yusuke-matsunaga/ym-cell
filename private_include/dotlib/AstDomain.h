@@ -25,9 +25,11 @@ class AstDomain :
 public:
 
   /// @brief コンストラクタ
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
-  AstDomain(const StrHandler& header,
+  AstDomain(const FileRegion& attr_loc,
+	    const StrHandler& header,
 	    const DomainHandler& group);
 
 
@@ -57,15 +59,15 @@ public:
   orders() const;
 
   /// @brief variable_1_range 属性を返す．
-  const AstVariableRange*
+  const AstFloat2*
   variable_1_range() const;
 
   /// @brief variable_2_range 属性を返す．
-  const AstVariableRange*
+  const AstFloat2*
   variable_2_range() const;
 
   /// @brief variable_3_range 属性を返す．
-  const AstVariableRange*
+  const AstFloat2*
   variable_3_range() const;
 
   /// @brief 内容をストリーム出力する．
@@ -100,13 +102,13 @@ private:
   const AstIntVector* mOrders;
 
   // variable_1_range 属性
-  const AstVariableRange* mVar1Range;
+  const AstFloat2* mVar1Range;
 
   // variable_2_range 属性
-  const AstVariableRange* mVar2Range;
+  const AstFloat2* mVar2Range;
 
   // variable_3_range 属性
-  const AstVariableRange* mVar3Range;
+  const AstFloat2* mVar3Range;
 
 };
 
@@ -149,7 +151,7 @@ AstDomain::orders() const
 
 // @brief variable_1_range 属性を返す．
 inline
-const AstVariableRange*
+const AstFloat2*
 AstDomain::variable_1_range() const
 {
   return mVar1Range;
@@ -157,7 +159,7 @@ AstDomain::variable_1_range() const
 
 // @brief variable_2_range 属性を返す．
 inline
-const AstVariableRange*
+const AstFloat2*
 AstDomain::variable_2_range() const
 {
   return mVar2Range;
@@ -165,7 +167,7 @@ AstDomain::variable_2_range() const
 
 // @brief variable_3_range 属性を返す．
 inline
-const AstVariableRange*
+const AstFloat2*
 AstDomain::variable_3_range() const
 {
   return mVar3Range;

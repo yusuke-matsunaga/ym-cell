@@ -36,15 +36,24 @@ class DotlibHandler;
 class HeaderHandler;
 class GroupHandler;
 
+class FloatFloatHandler;
+class FloatStrHandler;
+class FloatVectorHandler;
+class IntFloatHandler;
+class IntFloatVectorHandler;
+class IntVectorHandler;
+class StrFloatHandler;
 class StrHandler;
 class StrIntHandler;
 class StrListHandler;
 class StrStrHandler;
 class StrStrIntHandler;
+class StrStrStrHandler;
 
 class CellHandler;
 class DomainHandler;
 class FFHandler;
+class FLHandler;
 class InputVoltageHandler;
 class LatchHandler;
 class LibraryHandler;
