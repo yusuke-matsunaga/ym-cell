@@ -11,6 +11,7 @@
 
 #include "dotlib_nsdef.h"
 #include "AstNode.h"
+#include "AstArray.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -25,27 +26,13 @@ class AstCell :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] bus_naming_style 'bus_naming_style' の値
-  /// @param[in] pin_top ピンのリスト
-  /// @param[in] bus_top バスのリスト
-  /// @param[in] bundle_top バンドルのリスト
-  /// @param[in] ff ffグループ
-  /// @param[in] latch ラッチグループ
-  /// @param[in] statetable StateTable グループ
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @param[in] header ヘッダを読み込んだハンドラ
+  /// @param[in] group グループ本体を読み込んだハンドラ
   /// @param[in] alloc メモリアロケータ
-  AstCell(const FileRegion& loc,
-	  const AstString* name,
-	  const AstFloat* area,
-	  const AstString* bus_naming_style,
-	  const vector<const AstPin*>& pin_list,
-	  const vector<const AstBus*>& bus_list,
-	  const vector<const AstBundle*>& bundle_list,
-	  const AstFF* ff,
-	  const AstLatch* latch,
-	  const AstStateTable* statetable,
+  AstCell(const FileRegion& attr_loc,
+	  const StrHandler& header,
+	  const CellHandler& group,
 	  Alloc& alloc);
 
   /// @brief デストラクタ
@@ -69,32 +56,17 @@ public:
   const AstString*
   bus_nameing_style() const;
 
-  /// @brief ピングループのリストの要素数を返す．
-  int
-  pin_num() const;
+  /// @brief ピングループのリストを返す．
+  AstArray<const AstPin*>
+  pin_list() const;
 
-  /// @brief ピングループのリストの要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
-  const AstPin*
-  pin_elem(int pos) const;
+  /// @brief バスグループのリストを返す．
+  AstArray<const AstBus*>
+  bus_list() const;
 
-  /// @brief バスグループのリストの要素数を返す．
-  int
-  bus_num() const;
-
-  /// @brief バスグループのリストの要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < bus_num() )
-  const AstBus*
-  bus_elem(int pos) const;
-
-  /// @brief バンドルグループのリストの要素数を返す．
-  int
-  bundle_num() const;
-
-  /// @brief バンドルグループのリストの要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < bundle_num() )
-  const AstBundle*
-  bundle_elem(int pos) const;
+  /// @brief バンドルグループのリストを返す．
+  AstArray<const AstBundle*>
+  bundle_list() const;
 
   /// @brief ff グループを返す．
   const AstFF*
@@ -130,23 +102,14 @@ private:
   // "bus_naming_style"
   const AstString* mBusNamingStyle;
 
-  // ピングループリストの要素数
-  int mPinNum;
-
   // ピングループのリスト
-  const AstPin** mPinList;
-
-  // バスグループのリストの要素数
-  int mBusNum;
+  AstArray<const AstPin*> mPinList;
 
   // バスグループのリスト
-  const AstBus** mBusList;
-
-  // バンドルグループのリストの要素数
-  int mBundleNum;
+  AstArray<const AstBus*> mBusList;
 
   // バンドルグループのリスト
-  const AstBundle** mBundleList;
+  AstArray<const AstBundle*> mBundleList;
 
   // ff グループ
   const AstFF* mFF;
@@ -188,61 +151,28 @@ AstCell::bus_nameing_style() const
   return mBusNamingStyle;
 }
 
-// @brief ピングループのリストの要素数を返す．
+// @brief ピングループのリストを返す．
 inline
-int
-AstCell::pin_num() const
+AstArray<const AstPin*>
+AstCell::pin_list() const
 {
-  return mPinNum;
-}
-
-// @brief ピングループのリストの要素を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
-inline
-const AstPin*
-AstCell::pin_elem(int pos) const
-{
-  ASSERT_COND( pos >= 0 && pos < pin_num() );
-
-  return mPinList[pos];
-}
-
-// @brief バスグループのリストの要素数を返す．
-inline
-int
-AstCell::bus_num() const
-{
-  return mBusNum;
+  return mPinList;
 }
 
 // @brief バスグループのリストの要素を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < bus_num() )
 inline
-const AstBus*
-AstCell::bus_elem(int pos) const
+AstArray<const AstBus*>
+AstCell::bus_list() const
 {
-  ASSERT_COND( pos >= 0 && pos < bus_num() );
-
-  return mBusList[pos];
-}
-
-// @brief バンドルグループのリストの要素数を返す．
-inline
-int
-AstCell::bundle_num() const
-{
-  return mBundleNum;
+  return mBusList;
 }
 
 // @brief バンドルグループのリストの要素を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < bundle_num() )
 inline
-const AstBundle*
-AstCell::bundle_elem(int pos) const
+AstArray<const AstBundle*>
+AstCell::bundle_list() const
 {
-  ASSERT_COND( pos >= 0 && pos < bundle_num() );
-
-  return mBundleList[pos];
+  return mBundleList;
 }
 
 // @brief ff グループを返す．

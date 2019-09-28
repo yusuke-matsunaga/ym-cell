@@ -9,39 +9,23 @@
 
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstCell.h"
-#include "ym/Range.h"
+#include "dotlib/StrHandler.h"
+#include "dotlib/CellHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief セルを表す AstNode を生成する．
-// @param[in] loc ファイル上の位置
-// @param[in] name 名前
-// @param[in] area 面積
-// @param[in] bus_naming_style 'bus_naming_style' の値
-// @param[in] pin_top ピンの先頭
-// @param[in] bus_top バスの先頭
-// @param[in] bundle_top バンドルの先頭
-// @param[in] ff ffグループ
-// @param[in] latch ラッチグループ
-// @param[in] statetable StateTable グループ
-AstCell*
-AstMgr::new_cell(const FileRegion& loc,
-		 const AstString* name,
-		 const AstFloat* area,
-		 const AstString* bus_naming_style,
-		 const vector<const AstPin*>& pin_list,
-		 const vector<const AstBus*>& bus_list,
-		 const vector<const AstBundle*>& bundle_list,
-		 const AstFF* ff,
-		 const AstLatch* latch,
-		 const AstStateTable* statetable)
+// @param[in] attr_loc 属性のファイル上の位置
+// @param[in] header ヘッダを読み込んだハンドラ
+// @param[in] group グループ本体を読み込んだハンドラ
+const AstCell*
+AstMgr::new_cell(const FileRegion& attr_loc,
+		 const StrHandler& header,
+		 const CellHandler& group)
 {
   void* p = mAlloc.get_memory(sizeof(AstCell));
-  return new (p) AstCell(loc,name, area, bus_naming_style,
-			 pin_list, bus_list, bundle_list,
-			 ff, latch, statetable,
-			 mAlloc);
+  return new (p) AstCell(attr_loc, header, group, mAlloc);
 }
 
 
@@ -50,50 +34,25 @@ AstMgr::new_cell(const FileRegion& loc,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc ファイル上の位置
-// @param[in] name 名前
-// @param[in] area 面積
-// @param[in] bus_naming_style 'bus_naming_style' の値
-// @param[in] pin_top ピンの先頭
-// @param[in] bus_top バスの先頭
-// @param[in] bundle_top バンドルの先頭
-// @param[in] ff ffグループ
-// @param[in] latch ラッチグループ
-// @param[in] statetable StateTable グループ
-AstCell::AstCell(const FileRegion& loc,
-		 const AstString* name,
-		 const AstFloat* area,
-		 const AstString* bus_naming_style,
-		 const vector<const AstPin*>& pin_list,
-		 const vector<const AstBus*>& bus_list,
-		 const vector<const AstBundle*>& bundle_list,
-		 const AstFF* ff,
-		 const AstLatch* latch,
-		 const AstStateTable* statetable,
+// @param[in] attr_loc 属性のファイル上の位置
+// @param[in] header ヘッダを読み込んだハンドラ
+// @param[in] group グループ本体を読み込んだハンドラ
+// @param[in] alloc メモリアロケータ
+AstCell::AstCell(const FileRegion& attr_loc,
+		 const StrHandler& header,
+		 const CellHandler& group,
 		 Alloc& alloc) :
-  AstNode(loc),
-  mName(name),
-  mArea(area),
-  mBusNamingStyle(bus_naming_style),
-  mPinNum(pin_list.size()),
-  mPinList(alloc.get_array<const AstPin*>(mPinNum)),
-  mBusNum(bus_list.size()),
-  mBusList(alloc.get_array<const AstBus*>(mBusNum)),
-  mBundleNum(bundle_list.size()),
-  mBundleList(alloc.get_array<const AstBundle*>(mBundleNum)),
-  mFF(ff),
-  mLatch(latch),
-  mStateTable(statetable)
+  AstNode(FileRegion{attr_loc, group.group_loc()}),
+  mName{header.value()},
+  mArea{group.mArea},
+  mBusNamingStyle{group.mBusNamingStyle},
+  mPinList{group.mPinList, alloc},
+  mBusList{group.mBusList, alloc},
+  mBundleList{group.mBundleList, alloc},
+  mFF{group.mFF},
+  mLatch{group.mLatch},
+  mStateTable{group.mStateTable}
 {
-  for ( auto i: Range(mPinNum) ) {
-    mPinList[i] = pin_list[i];
-  }
-  for ( auto i: Range(mBusNum) ) {
-    mBusList[i] = bus_list[i];
-  }
-  for ( auto i: Range(mBundleNum) ) {
-    mBundleList[i] = bundle_list[i];
-  }
 }
 
 // @brief デストラクタ

@@ -449,8 +449,6 @@ DotlibParser::parse_timing(vector<const AstTiming*>& dst_list,
 			   AttrType attr_type,
 			   const FileRegion& attr_loc)
 {
-  StrListHandler header_handler(*this);
-  TimingHandler group_handler(*this);
   bool stat = parse_group_statement(*mStrListHeader, *mTimingGroup);
   if ( stat ) {
     const AstTiming* value = mgr().new_timing(attr_loc, *mStrListHeader, *mTimingGroup);

@@ -11,6 +11,7 @@
 
 #include "dotlib_nsdef.h"
 #include "AstNode.h"
+#include "AstArray.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -25,41 +26,14 @@ class AstTiming :
 public:
 
   /// @brief コンストラクタ
-  AstTiming(const FileRegion& loc,
-	    const AstString* name,
-	    const AstString* related_pin,
-	    const AstString* related_bus_pins,
-	    const AstString* related_bus_equivalent,
-	    const AstTimingSense* timing_sense,
-	    const AstTimingType* timing_type,
-	    const AstExpr* when,
-	    const AstExpr* when_start,
-	    const AstExpr* when_end,
-	    const AstFloat* rise_resistance,
-	    const AstFloat* fall_resistance,
-	    const AstFloat* intrinsic_rise,
-	    const AstFloat* intrinsic_fall,
-	    const AstFloat* slope_rise,
-	    const AstFloat* slope_fall,
-	    const vector<const AstPieceWise*>& rise_delay_intercept,
-	    const vector<const AstPieceWise*>& fall_delay_intercept,
-	    const vector<const AstPieceWise*>& rise_pin_resistance,
-	    const vector<const AstPieceWise*>& fall_pin_resistance,
-	    const AstCellDegradation* cell_degradation,
-	    const AstLut* cell_rise,
-	    const AstLut* cell_fall,
-	    const AstCCS* compact_ccs_rise,
-	    const AstCCS* compact_ccs_fall,
-	    const AstLut* rise_constraint,
-	    const AstLut* fall_constraint,
-	    const AstLut* rise_propagation,
-	    const AstLut* fall_propagation,
-	    const AstLut* rise_transition,
-	    const AstLut* fall_transition,
-	    const AstLut* retaining_rise,
-	    const AstLut* retaining_fall,
-	    const AstLut* retain_rise_slew,
-	    const AstLut* retain_fall_slew);
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @param[in] header ヘッダのハンドラ
+  /// @param[in] group グループ本体のハンドラ
+  /// @param[in] alloc メモリアロケータ
+  AstTiming(const FileRegion& attr_loc,
+	    const StrListHandler& header,
+	    const TimingHandler& group,
+	    Alloc& alloc);
 
   /// @brief デストラクタ
   ~AstTiming();
@@ -131,19 +105,19 @@ public:
   slope_fall() const;
 
   /// @brief "rise_delay_intercept" を返す．
-  const vector<const AstPieceWise*>&
+  AstArray<const AstIntFloat*>
   rise_delay_intercept() const;
 
   /// @brief "fall_delay_intercept" を返す．
-  const vector<const AstPieceWise*>&
+  AstArray<const AstIntFloat*>
   fall_delay_intercept() const;
 
   /// @brief "rise_pin_resistance" を返す．
-  const vector<const AstPieceWise*>&
+  AstArray<const AstIntFloat*>
   rise_pin_resistance() const;
 
   /// @brief "fall_pin_resistance" を返す．
-  const vector<const AstPieceWise*>&
+  AstArray<const AstIntFloat*>
   fall_pin_resistance() const;
 
   /// @brief "cell_degradation" を返す．
@@ -265,16 +239,16 @@ private:
   const AstFloat* mSlopeFall;
 
   // rise_delay_intercept
-  vector<const AstPieceWise*> mRiseDelayIntercept;
+  AstArray<const AstIntFloat*> mRiseDelayIntercept;
 
   // fall_delay_intercept
-  vector<const AstPieceWise*> mFallDelayIntercept;
+  AstArray<const AstIntFloat*> mFallDelayIntercept;
 
   // rise_pin_resistance
-  vector<const AstPieceWise*> mRisePinResistance;
+  AstArray<const AstIntFloat*> mRisePinResistance;
 
   // fall_pin_resistance
-  vector<const AstPieceWise*> mFallPinResistance;
+  AstArray<const AstIntFloat*> mFallPinResistance;
 
   // cell_degradation
   const AstCellDegradation* mCellDegradation;
@@ -442,7 +416,7 @@ AstTiming::slope_rise() const
 
 // @brief "fall_delay_intercept" を返す．
 inline
-const vector<const AstPieceWise*>&
+AstArray<const AstIntFloat*>
 AstTiming::fall_delay_intercept() const
 {
   return mFallDelayIntercept;
@@ -450,7 +424,7 @@ AstTiming::fall_delay_intercept() const
 
 // @brief "rise_delay_intercept" を返す．
 inline
-const vector<const AstPieceWise*>&
+AstArray<const AstIntFloat*>
 AstTiming::rise_delay_intercept() const
 {
   return mRiseDelayIntercept;
@@ -458,7 +432,7 @@ AstTiming::rise_delay_intercept() const
 
 // @brief "fall_pin_resistance" を返す．
 inline
-const vector<const AstPieceWise*>&
+AstArray<const AstIntFloat*>
 AstTiming::fall_pin_resistance() const
 {
   return mFallPinResistance;
@@ -466,7 +440,7 @@ AstTiming::fall_pin_resistance() const
 
 // @brief "rise_pin_resistance" を返す．
 inline
-const vector<const AstPieceWise*>&
+AstArray<const AstIntFloat*>
 AstTiming::rise_pin_resistance() const
 {
   return mRisePinResistance;

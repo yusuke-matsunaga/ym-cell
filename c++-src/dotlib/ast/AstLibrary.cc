@@ -9,54 +9,23 @@
 
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstLibrary.h"
-#include "ym/Range.h"
+#include "dotlib/StrHandler.h"
+#include "dotlib/LibraryHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief ライブラリを表す AstNode を生成する．
-// @param[in] loc ファイル上の位置
-// @param[in] name
-// @param[in] technology
-// @param[in] delay_model
-// @param[in] bus_naming_style
-// @param[in] comment
-// @param[in] date
-// @param[in] revision
-// @param[in] capacitive_load_unit
-// @param[in] current_unit
-// @param[in] leakage_power_unit
-// @param[in] pulling_resistance_unit
-// @param[in] time_unit
-// @param[in] voltage_unit
-// @param[in] lut_template_list
-// @param[in] cell_list
-AstLibrary*
-AstMgr::new_library(const FileRegion& loc,
-		    const AstString* name,
-		    const AstTechnology* technology,
-		    const AstDelayModel* delay_model,
-		    const AstString* bus_naming_style,
-		    const AstString* comment,
-		    const AstString* date,
-		    const AstString* revision,
-		    const AstUnit* capacitive_load_unit,
-		    const AstString* current_unit,
-		    const AstString* leakage_power_unit,
-		    const AstString* pulling_resistance_unit,
-		    const AstString* time_unit,
-		    const AstString* voltage_unit,
-		    const vector<const AstTemplate*>& lut_template_list,
-		    const vector<const AstCell*>& cell_list)
+// @param[in] attr_loc 属性のファイル上の位置
+// @param[in] header ヘッダを読み込んだハンドラ
+// @param[in] group グループ本体を読み込んだハンドラ
+const AstLibrary*
+AstMgr::new_library(const FileRegion& attr_loc,
+		    const StrHandler& header,
+		    const LibraryHandler& group)
 {
   void* p = mAlloc.get_memory(sizeof(AstLibrary));
-  return new (p) AstLibrary(loc, name, technology, delay_model, bus_naming_style,
-			    comment, date, revision,
-			    capacitive_load_unit, current_unit,
-			    leakage_power_unit, pulling_resistance_unit,
-			    time_unit, voltage_unit,
-			    lut_template_list, cell_list,
-			    mAlloc);
+  return new (p) AstLibrary(attr_loc, header, group, mAlloc);
 }
 
 
@@ -64,50 +33,31 @@ AstMgr::new_library(const FileRegion& loc,
 // クラス AstLibrary
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-// @param[in] loc ファイル上の位置
-AstLibrary::AstLibrary(const FileRegion& loc,
-		       const AstString* name,
-		       const AstTechnology* technology,
-		       const AstDelayModel* delay_model,
-		       const AstString* bus_naming_style,
-		       const AstString* comment,
-		       const AstString* date,
-		       const AstString* revision,
-		       const AstUnit* capacitive_load_unit,
-		       const AstString* current_unit,
-		       const AstString* leakage_power_unit,
-		       const AstString* pulling_resistance_unit,
-		       const AstString* time_unit,
-		       const AstString* voltage_unit,
-		       const vector<const AstTemplate*>& lut_template_list,
-		       const vector<const AstCell*>& cell_list,
+// @param[in] attr_loc 属性のファイル上の位置
+// @param[in] header ヘッダを読み込んだハンドラ
+// @param[in] group グループ本体を読み込んだハンドラ
+// @param[in] alloc メモリアロケータ
+AstLibrary::AstLibrary(const FileRegion& attr_loc,
+		       const StrHandler& header,
+		       const LibraryHandler& group,
 		       Alloc& alloc) :
-  AstNode(loc),
-  mName(name),
-  mTechnology(technology),
-  mDelayModel(delay_model),
-  mBusNamingStyle(bus_naming_style),
-  mComment(comment),
-  mDate(date),
-  mRevision(revision),
-  mCapacitiveLoadUnit(capacitive_load_unit),
-  mCurrentUnit(current_unit),
-  mLeakagePowerUnit(leakage_power_unit),
-  mPullingResistanceUnit(pulling_resistance_unit),
-  mTimeUnit(time_unit),
-  mVoltageUnit(voltage_unit),
-  mLutTemplateNum(lut_template_list.size()),
-  mLutTemplateList(alloc.get_array<const AstTemplate*>(mLutTemplateNum)),
-  mCellNum(cell_list.size()),
-  mCellList(alloc.get_array<const AstCell*>(mCellNum))
+  AstNode(FileRegion{attr_loc, group.group_loc()}),
+  mName{header.value()},
+  mTechnology{group.mTechnology},
+  mDelayModel{group.mDelayModel},
+  mBusNamingStyle{group.mBusNamingStyle},
+  mComment{group.mComment},
+  mDate{group.mDate},
+  mRevision{group.mRevision},
+  mCapacitiveLoadUnit{group.mCapacitiveLoadUnit},
+  mCurrentUnit{group.mCurrentUnit},
+  mLeakagePowerUnit{group.mLeakagePowerUnit},
+  mPullingResistanceUnit{group.mPullingResistanceUnit},
+  mTimeUnit{group.mTimeUnit},
+  mVoltageUnit{group.mVoltageUnit},
+  mLutTemplateList{group.mLutTemplateList, alloc},
+  mCellList{group.mCellList, alloc}
 {
-  for ( auto i: Range(mLutTemplateNum) ) {
-    mLutTemplateList[i] = lut_template_list[i];
-  }
-  for ( auto i: Range(mCellNum) ) {
-    mCellList[i] = cell_list[i];
-  }
 }
 
 // @brief デストラクタ

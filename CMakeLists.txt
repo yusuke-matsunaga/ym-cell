@@ -115,6 +115,7 @@ set (dotlib_SOURCES
   c++-src/dotlib/handler/group/CellHandler.cc
   c++-src/dotlib/handler/group/DomainHandler.cc
   c++-src/dotlib/handler/group/FFHandler.cc
+  c++-src/dotlib/handler/group/FLHandler.cc
   c++-src/dotlib/handler/group/GroupHandler.cc
   c++-src/dotlib/handler/group/InputVoltageHandler.cc
   c++-src/dotlib/handler/group/LatchHandler.cc
@@ -132,6 +133,7 @@ set (dotlib_SOURCES
   #c++-src/dotlib/handler/DefineHandler.cc
 
   c++-src/dotlib/ast/AstBool.cc
+  c++-src/dotlib/ast/AstCell.cc
   c++-src/dotlib/ast/AstCPType.cc
   c++-src/dotlib/ast/AstDelayModel.cc
   c++-src/dotlib/ast/AstDirection.cc
@@ -139,6 +141,7 @@ set (dotlib_SOURCES
   c++-src/dotlib/ast/AstExpr.cc
   c++-src/dotlib/ast/AstFF.cc
   c++-src/dotlib/ast/AstFFBank.cc
+  c++-src/dotlib/ast/AstFL.cc
   c++-src/dotlib/ast/AstFloat.cc
   c++-src/dotlib/ast/AstFloat2.cc
   c++-src/dotlib/ast/AstFloatStr.cc
@@ -150,6 +153,7 @@ set (dotlib_SOURCES
   c++-src/dotlib/ast/AstIntVector.cc
   c++-src/dotlib/ast/AstLatch.cc
   c++-src/dotlib/ast/AstLatchBank.cc
+  c++-src/dotlib/ast/AstLibrary.cc
   c++-src/dotlib/ast/AstLut.cc
   c++-src/dotlib/ast/AstMgr.cc
   c++-src/dotlib/ast/AstNode.cc

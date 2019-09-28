@@ -20,6 +20,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class TemplateHandler :
   public GroupHandler
 {
+  friend class AstTemplate;
+
 public:
 
   /// @brief コンストラクタ
@@ -56,6 +58,9 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // 次元
+  int mDimension;
 
   // variable_1
   const AstVarType* mVar1;

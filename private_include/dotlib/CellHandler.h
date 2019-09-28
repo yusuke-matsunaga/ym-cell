@@ -82,6 +82,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class CellHandler :
   public GroupHandler
 {
+  friend class AstCell;
+
 public:
 
   /// @brief コンストラクタ

@@ -9,6 +9,9 @@
 
 #include "dotlib/AstFL.h"
 #include "dotlib/AstMgr.h"
+#include "dotlib/StrStrHandler.h"
+#include "dotlib/StrStrIntHandler.h"
+#include "dotlib/FLHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -27,10 +30,10 @@ AstFL::AstFL(const FileRegion& attr_loc,
   AstNode{FileRegion{attr_loc, group.group_loc()}},
   mVar1{header.value1()},
   mVar2{header.value2()},
-  mClear{group.clear()},
-  mPreset{group.preset()},
-  mClearPresetVar1{group.clear_preset_var1()},
-  mClearPresetVar2{group.clear_preset_var2()}
+  mClear{group.mClear},
+  mPreset{group.mPreset},
+  mClearPresetVar1{group.mClearPresetVar1},
+  mClearPresetVar2{group.mClearPresetVar2}
 {
 }
 
@@ -40,30 +43,20 @@ AstFL::AstFL(const FileRegion& attr_loc,
 // @param[in] group グループ本体を読み込んだハンドラ
 AstFL::AstFL(const FileRegion& attr_loc,
 	     const StrStrIntHandler& header,
-	     const FFHandler& group) :
+	     const FLHandler& group) :
   AstNode{FileRegion{attr_loc, group.group_loc()}},
   mVar1{header.value1()},
   mVar2{header.value2()},
-  mClear{group.clear()},
-  mPreset{group.preset()},
-  mClearPresetVar1{group.clear_preset_var1()},
-  mClearPresetVar2{group.clear_preset_var2()}
+  mClear{group.mClear},
+  mPreset{group.mPreset},
+  mClearPresetVar1{group.mClearPresetVar1},
+  mClearPresetVar2{group.mClearPresetVar2}
 {
 }
 
 // @brief デストラクタ
 AstFL::~AstFL()
 {
-}
-
-// @brief 内容をストリーム出力する．
-// @param[in] s 出力先のストリーム
-// @param[in] indent インデント量
-void
-AstFL::dump(ostream& s,
-	    int indent) const
-{
-#warning "TODO: 未完成"
 }
 
 END_NAMESPACE_YM_DOTLIB

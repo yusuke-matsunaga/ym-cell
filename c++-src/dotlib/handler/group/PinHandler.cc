@@ -21,8 +21,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] parser パーサー
 PinHandler::PinHandler(DotlibParser& parser) :
-  GroupHandler(parser),
-  mHeaderHandler(parser)
+  GroupHandler(parser)
 {
   // パース関数の登録
   reg_func(AttrType::bit_width,
@@ -389,8 +388,6 @@ PinHandler::begin_group()
   mPowerGatingPinInt = nullptr;
 
   mTimingList.clear();
-
-  mValue = nullptr;
 }
 
 // @brief グループ記述の終わり

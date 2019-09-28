@@ -9,6 +9,8 @@
 
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstPin.h"
+#include "dotlib/StrListHandler.h"
+#include "dotlib/PinHandler.h"
 #include "ym/Range.h"
 
 
@@ -25,7 +27,7 @@ AstMgr::new_pin(const FileRegion& attr_loc,
 {
   ++ mPinNum;
   void* p = mAlloc.get_memory(sizeof(AstPin));
-  return new (p) AstPin(attr_loc, header, group);
+  return new (p) AstPin(attr_loc, header, group, mAlloc);
 }
 
 
@@ -37,35 +39,28 @@ AstMgr::new_pin(const FileRegion& attr_loc,
 // @param[in] attr_loc 属性のファイル上の位置
 // @param[in] header ヘッダを読み込んだハンドラ
 // @param[in] group グループ本体を読み込んだハンドラ
+// @param[in] alloc アロケータ
 AstPin::AstPin(const FileRegion& attr_loc,
 	       const StrListHandler& header,
 	       const PinHandler& group,
 	       Alloc& alloc) :
   AstNode{FileRegion(attr_loc, group.group_loc())},
-  mNameNum(name_list.size()),
-  mNameList(alloc.get_array<const AstString*>(mNameNum)),
-  mPinDirection{group.pin_direction()},
-  mCapacitance{group.capacitance()},
-  mRiseCapacitance(rise_capacitance),
-  mFallCapacitance(fall_capacitance),
-  mMaxFanout(max_fanout),
-  mMinFanout(min_fanout),
-  mMaxCapacitance(max_capacitance),
-  mMinCapacitance(min_capacitance),
-  mMaxTransition(max_transition),
-  mMinTransition(min_transition),
-  mFunction(function),
-  mThreeState(three_state),
-  mPinFuncType(pin_func_type),
-  mTimingNum(timing_list.size()),
-  mTimingList(alloc.get_array<const AstTiming*>(mTimingNum))
+  mNameList{header.value(), alloc},
+  mDirection{group.mDirection},
+  mCapacitance{group.mCapacitance},
+  mRiseCapacitance{group.mRiseCapacitance},
+  mFallCapacitance{group.mFallCapacitance},
+  mMaxFanout{group.mMaxFanout},
+  mMinFanout{group.mMinFanout},
+  mMaxCapacitance{group.mMaxCapacitance},
+  mMinCapacitance{group.mMinCapacitance},
+  mMaxTransition{group.mMaxTransition},
+  mMinTransition{group.mMinTransition},
+  mFunction{group.mFunction},
+  mThreeState{group.mThreeState},
+  mPinFuncType{group.mPinFuncType},
+  mTimingList{group.mTimingList, alloc}
 {
-  for ( auto i: Range(mNameNum) ) {
-    mNameList[i] = name_list[i];
-  }
-  for ( auto i: Range(mTimingNum) ) {
-    mTimingList[i] = timing_list[i];
-  }
 }
 
 // @brief デストラクタ

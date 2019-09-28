@@ -68,11 +68,11 @@ public:
   preset() const;
 
   /// @brief "clear_preset_var1" を返す．
-  int
+  const AstCPType*
   clear_preset_var1() const;
 
   /// @brief "clear_preset_var2" を返す．
-  int
+  const AstCPType*
   clear_preset_var2() const;
 
 
@@ -94,10 +94,10 @@ private:
   const AstExpr* mPreset;
 
   // clear_preset_var1
-  int mClearPresetVar1;
+  const AstCPType* mClearPresetVar1;
 
   // clear_preset_var2
-  int mClearPresetVar2;
+  const AstCPType* mClearPresetVar2;
 
 };
 
@@ -140,7 +140,7 @@ AstFL::preset() const
 
 // @brief "clear_preset_var1" を返す．
 inline
-int
+const AstCPType*
 AstFL::clear_preset_var1() const
 {
   return mClearPresetVar1;
@@ -148,7 +148,7 @@ AstFL::clear_preset_var1() const
 
 // @brief "clear_preset_var2" を返す．
 inline
-int
+const AstCPType*
 AstFL::clear_preset_var2() const
 {
   return mClearPresetVar2;

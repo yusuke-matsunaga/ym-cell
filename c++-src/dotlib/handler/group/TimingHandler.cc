@@ -8,16 +8,6 @@
 
 
 #include "dotlib/TimingHandler.h"
-#if 0
-#include "dotlib/FloatHandler.h"
-#include "dotlib/FuncHandler.h"
-#include "dotlib/PieceWiseHandler.h"
-#include "dotlib/TableHandler.h"
-#include "dotlib/StringHandler.h"
-#include "dotlib/TimingSenseHandler.h"
-#include "dotlib/TimingTypeHandler.h"
-#endif
-#include "dotlib/AstMgr.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 

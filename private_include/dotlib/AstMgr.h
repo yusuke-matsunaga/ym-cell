@@ -492,6 +492,7 @@ private:
   SizeType mFFBankNum;
   SizeType mLatchNum;
   SizeType mLatchBankNum;
+  SizeType mPinNum;
   SizeType mAttrNum;
 
 };

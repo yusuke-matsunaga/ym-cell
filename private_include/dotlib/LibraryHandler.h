@@ -20,6 +20,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class LibraryHandler :
   public GroupHandler
 {
+  friend class AstLibrary;
+
 public:
 
   /// @brief コンストラクタ
@@ -34,13 +36,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
-
-  /// @breif 'library' Group Statement の記述をパースする．
-  /// @param[in] dst 読み込んだ値を格納する変数
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起きた．
-  bool
-  parse_value(const AstLibrary*& dst);
 
 
 protected:
@@ -64,6 +59,47 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // "technology"
+  const AstTechnology* mTechnology;
+
+  // "delay_model"
+  const AstDelayModel* mDelayModel;
+
+  // "bus_naming_style"
+  const AstString* mBusNamingStyle;
+
+  // "comment"
+  const AstString* mComment;
+
+  // "date"
+  const AstString* mDate;
+
+  // "revision"
+  const AstString* mRevision;
+
+  // "capacitive_load_unit"
+  const AstFloatStr* mCapacitiveLoadUnit;
+
+  // "current_unit"
+  const AstString* mCurrentUnit;
+
+  // "leakage_power_unit"
+  const AstString* mLeakagePowerUnit;
+
+  // "pulling_resistance_unit"
+  const AstString* mPullingResistanceUnit;
+
+  // "time_unit"
+  const AstString* mTimeUnit;
+
+  // "voltage_unit"
+  const AstString* mVoltageUnit;
+
+  // lu_table_template のリスト
+  vector<const AstTemplate*> mLutTemplateList;
+
+  // セルのリスト
+  vector<const AstCell*> mCellList;
 
 };
 

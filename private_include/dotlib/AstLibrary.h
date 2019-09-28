@@ -11,6 +11,7 @@
 
 #include "dotlib_nsdef.h"
 #include "AstNode.h"
+#include "AstArray.h"
 #include "ym/Alloc.h"
 
 
@@ -26,10 +27,12 @@ class AstLibrary :
 public:
 
   /// @brief コンストラクタ
+  /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
   /// @param[in] alloc メモリアロケータ
-  AstLibrary(const StrHandler header,
+  AstLibrary(const FileRegion& attr_loc,
+	     const StrHandler& header,
 	     const LibraryHandler& group,
 	     Alloc& alloc);
 
@@ -94,23 +97,14 @@ public:
   const AstString*
   voltage_unit() const;
 
-  /// @brief "lu_table_template" のリストの要素数を返す．
-  int
-  lut_template_num() const;
-
-  /// @brief "lu_table_template" のリストの要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < lut_template_num() )
-  const AstTemplate*
-  lut_template_elem(int pos) const;
-
-  /// @brief セルのリストの要素数を返す．
-  int
-  cell_num() const;
+  /// @brief "lu_table_template" のリストを返す．
+  AstArray<const AstTemplate*>
+  lut_template_list() const;
 
   /// @brief セルのリストの要素を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < cell_num() )
-  const AstCell*
-  cell_elem(int pos) const;
+  AstArray<const AstCell*>
+  cell_list() const;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -147,7 +141,7 @@ private:
   const AstString* mRevision;
 
   // "capacitive_load_unit"
-  const AstUnit* mCapacitiveLoadUnit;
+  const AstFloatStr* mCapacitiveLoadUnit;
 
   // "current_unit"
   const AstString* mCurrentUnit;
@@ -164,17 +158,11 @@ private:
   // "voltage_unit"
   const AstString* mVoltageUnit;
 
-  // lu_table_template のリストの要素数
-  int mLutTemplateNum;
-
   // lu_table_template のリスト
-  const AstTemplate** mLutTemplateList;
-
-  // セルのリストの要素数
-  int mCellNum;
+  AstArray<const AstTemplate*> mLutTemplateList;
 
   // セルのリスト
-  const AstCell** mCellList;
+  AstArray<const AstCell*> mCellList;
 
 };
 
@@ -287,42 +275,20 @@ AstLibrary::voltage_unit() const
   return mVoltageUnit;
 }
 
-// @brief "lu_table_template" のリストの要素数を返す．
+// @brief "lu_table_template" のリストを返す．
 inline
-int
-AstLibrary::lut_template_num() const
+AstArray<const AstTemplate*>
+AstLibrary::lut_template_list() const
 {
-  return mLutTemplateNum;
+  return mLutTemplateList;
 }
 
-// @brief "lu_table_template" のリストの要素を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < lut_template_num() )
+// @brief セルのリストを返す．
 inline
-const AstTemplate*
-AstLibrary::lut_template_elem(int pos) const
+AstArray<const AstCell*>
+AstLibrary::cell_list() const
 {
-  ASSERT_COND( pos >= 0 && pos < lut_template_num() );
-
-  return mLutTemplateList[pos];
-}
-
-// @brief セルのリストの要素数を返す．
-inline
-int
-AstLibrary::cell_num() const
-{
-  return mCellNum;
-}
-
-// @brief セルのリストの要素を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < cell_num() )
-inline
-const AstCell*
-AstLibrary::cell_elem(int pos) const
-{
-  ASSERT_COND( pos >= 0 && pos < cell_num() );
-
-  return mCellList[pos];
+  return mCellList;
 }
 
 END_NAMESPACE_YM_DOTLIB

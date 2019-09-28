@@ -8,9 +8,6 @@
 
 
 #include "dotlib/TemplateHandler.h"
-//#include "dotlib/VarTypeHandler.h"
-//#include "dotlib/IndexHandler.h"
-//#include "dotlib/AstMgr.h"
 #include "ym/MsgMgr.h"
 
 
@@ -74,6 +71,7 @@ TemplateHandler::parse_value(vector<const AstTemplate*>& dst_list)
 void
 TemplateHandler::begin_group()
 {
+  mDimension = 0;
   mVar1 = nullptr;
   mVar2 = nullptr;
   mVar3 = nullptr;
@@ -89,7 +87,6 @@ TemplateHandler::begin_group()
 bool
 TemplateHandler::end_group()
 {
-  int dimension = 0;
   if ( mVar1 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group_loc(),
@@ -108,7 +105,7 @@ TemplateHandler::end_group()
   }
 
   if ( mVar2 == nullptr ) {
-    dimension = 1;
+    mDimension = 1;
     if ( mVar3 != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      group_loc(),
@@ -127,7 +124,7 @@ TemplateHandler::end_group()
     }
   }
   else if ( mVar3 == nullptr ) {
-    dimension = 2;
+    mDimension = 2;
     if ( mIndex2 == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      group_loc(),
@@ -146,7 +143,7 @@ TemplateHandler::end_group()
     }
   }
   else {
-    dimension = 3;
+    mDimension = 3;
     if ( mIndex3 == nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      group_loc(),
@@ -156,11 +153,6 @@ TemplateHandler::end_group()
       return false;
     }
   }
-
-#if 0
-  mValue = mgr().new_template(group_loc(), header_value(), dimension,
-			      mVar1, mVar2, mVar3, mIndex1, mIndex2, mIndex3, mDomain);
-#endif
 
   return true;
 }

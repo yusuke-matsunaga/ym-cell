@@ -26,21 +26,12 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] loc ファイル上の位置
-  /// @param[in] name 名前
-  /// @param[in] dimension 次元数
-  /// @param[in] var_1, var_2, var_3 変数のタイプ
-  /// @param[in] index_1, index_2, index_3 インデックスのベクタ
-  /// @param[in] domain 'domain'
-  AstTemplate(const FileRegion& loc,
-	      const AstString* name,
-	      int dimension,
-	      const AstVarType* var_1,
-	      const AstVarType* var_2,
-	      const AstVarType* var_3,
-	      const AstFloatVector* index_1,
-	      const AstFloatVector* index_2,
-	      const AstFloatVector* index_3,
-	      const AstDomain* domain);
+  /// @param[in] attr_loc 属性のファイル上の位置
+  /// @param[in] header ヘッダのハンドラ
+  /// @param[in] group グループ本体のハンドラ
+  AstTemplate(const FileRegion& attr_loc,
+	      const StrHandler& header,
+	      const TemplateHandler& group);
 
   /// @brief デストラクタ
   ~AstTemplate();

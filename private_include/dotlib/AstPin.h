@@ -11,6 +11,7 @@
 
 #include "dotlib_nsdef.h"
 #include "AstNode.h"
+#include "AstArray.h"
 #include "ym/Alloc.h"
 
 
@@ -29,9 +30,11 @@ public:
   /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
+  /// @param[in] alloc アロケータ
   AstPin(const FileRegion& attr_loc,
 	 const StrListHandler& header,
-	 const PinHandler& group);
+	 const PinHandler& group,
+	 Alloc& alloc);
 
   /// @brief デストラクタ
   ~AstPin();
@@ -42,14 +45,9 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 名前のリストの要素数を返す．
-  int
-  name_num() const;
-
-  /// @brief 名前を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < name_num() )
-  const AstString*
-  name(int pos) const;
+  /// @brief 名前のリストを返す．
+  AstArray<const AstString*>
+  name_list() const;
 
   /// @brief "direction" を返す．
   const AstDirection*
@@ -100,21 +98,16 @@ public:
   three_state() const;
 
   /// @brief "internal_node" を返す．
-  const AstNode*
+  const AstString*
   internal_node() const;
 
   /// @brief "pin_func_type" を返す．
-  const AstNode*
+  const AstString*
   pin_func_type() const;
 
-  /// @brief 'timing' グループのリストの要素数を返す．
-  int
-  timing_num() const;
-
-  /// @brief "timing" グループのリストの要素を得る．
-  /// @param[in] pos 位置番号 ( 0 <= pos < timing_num() )
-  const AstTiming*
-  timing_elem(int pos) const;
+  /// @brief 'timing' グループのリストを返す．
+  AstArray<const AstTiming*>
+  timing_list() const;
 
   /// @brief 内容をストリーム出力する．
   /// @param[in] s 出力先のストリーム
@@ -129,11 +122,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ピン名のリストの要素数
-  int mNameNum;
-
   // ピン名のリスト
-  const AstString** mNameList;
+  AstArray<const AstString*> mNameList;
 
   // "direction"
   const AstDirection* mDirection;
@@ -172,16 +162,13 @@ private:
   const AstExpr* mThreeState;
 
   // "internal_node"
-  const AstNode* mInternalNode;
+  const AstString* mInternalNode;
 
   // "pin_func_type"
-  const AstNode* mPinFuncType;
-
-  // 'timing' リストの要素数
-  int mTimingNum;
+  const AstString* mPinFuncType;
 
   // "timing"リスト
-  const AstTiming** mTimingList;
+  AstArray<const AstTiming*> mTimingList;
 
 };
 
@@ -190,23 +177,12 @@ private:
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// @brief 名前のリストの要素数を返す．
+// @brief 名前のリストを返す．
 inline
-int
-AstPin::name_num() const
+AstArray<const AstString*>
+AstPin::name_list() const
 {
-  return mNameNum;
-}
-
-// @brief 名前を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < num() )
-inline
-const AstString*
-AstPin::name(int pos) const
-{
-  ASSERT_COND( pos >= 0 && pos < name_num() );
-
-  return mNameList[pos];
+  return mNameList;
 }
 
 // @brief "direction" を返す．
@@ -307,7 +283,7 @@ AstPin::three_state() const
 
 // @brief "internal_node" を返す．
 inline
-const AstNode*
+const AstString*
 AstPin::internal_node() const
 {
   return mInternalNode;
@@ -315,29 +291,18 @@ AstPin::internal_node() const
 
 // @brief "pin_func_type" を返す．
 inline
-const AstNode*
+const AstString*
 AstPin::pin_func_type() const
 {
   return mPinFuncType;
 }
 
-// @brief 'timing' グループのリストの要素数を返す．
+// @brief 'timing' グループのリストを返す．
 inline
-int
-AstPin::timing_num() const
+AstArray<const AstTiming*>
+AstPin::timing_list() const
 {
-  return mTimingNum;
-}
-
-// @brief "timing" グループのリストの要素を得る．
-// @param[in] pos 位置番号 ( 0 <= pos < timing_num() )
-inline
-const AstTiming*
-AstPin::timing_elem(int pos) const
-{
-  ASSERT_COND( pos >= 0 && pos < timing_num() );
-
-  return mTimingList[pos];
+  return mTimingList;
 }
 
 END_NAMESPACE_YM_DOTLIB

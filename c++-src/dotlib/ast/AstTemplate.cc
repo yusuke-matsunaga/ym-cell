@@ -9,28 +9,24 @@
 
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstTemplate.h"
+#include "dotlib/StrHandler.h"
+#include "dotlib/TemplateHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief lut template を表す AstNode を生成する．
-AstTemplate*
-AstMgr::new_template(const FileRegion& loc,
-		     const AstString* name,
-		     int dimension,
-		     const AstVarType* var_1,
-		     const AstVarType* var_2,
-		     const AstVarType* var_3,
-		     const AstFloatVector* index_1,
-		     const AstFloatVector* index_2,
-		     const AstFloatVector* index_3,
-		     const AstDomain* domain)
+// @param[in] attr_loc 属性のファイル上の位置
+// @param[in] header ヘッダのハンドラ
+// @param[in] group グループ本体のハンドラ
+const AstTemplate*
+AstMgr::new_template(const FileRegion& attr_loc,
+		     const StrHandler& header,
+		     const TemplateHandler& group)
 {
   ++ mTemplateNum;
   void* p = mAlloc.get_memory(sizeof(AstTemplate));
-  return new (p) AstTemplate(loc, name, dimension,
-			     var_1, var_2, var_3,
-			     index_1, index_2, index_3, domain);
+  return new (p) AstTemplate(attr_loc, header, group);
 }
 
 
@@ -39,32 +35,22 @@ AstMgr::new_template(const FileRegion& loc,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc ファイル上の位置
-// @param[in] name 名前
-// @param[in] dimension 次元数
-// @param[in] var_1, var_2, var_3 変数のタイプ
-// @param[in] index_1, index_2, index_3 インデックスのベクタ
-// @param[in] domain 'domain'
-AstTemplate::AstTemplate(const FileRegion& loc,
-			 const AstString* name,
-			 int dimension,
-			 const AstVarType* var_1,
-			 const AstVarType* var_2,
-			 const AstVarType* var_3,
-			 const AstFloatVector* index_1,
-			 const AstFloatVector* index_2,
-			 const AstFloatVector* index_3,
-			 const AstDomain* domain) :
-  AstNode(loc),
-  mName(name),
-  mDimension(dimension),
-  mVar1(var_1),
-  mVar2(var_2),
-  mVar3(var_3),
-  mIndex1(index_1),
-  mIndex2(index_2),
-  mIndex3(index_3),
-  mDomain(domain)
+// @param[in] attr_loc 属性のファイル上の位置
+// @param[in] header ヘッダのハンドラ
+// @param[in] group グループ本体のハンドラ
+AstTemplate::AstTemplate(const FileRegion& attr_loc,
+			 const StrHandler& header,
+			 const TemplateHandler& group) :
+  AstNode(FileRegion{attr_loc, group.group_loc()}),
+  mName{header.value()},
+  mDimension{group.mDimension},
+  mVar1{group.mVar1},
+  mVar2{group.mVar2},
+  mVar3{group.mVar3},
+  mIndex1{group.mIndex1},
+  mIndex2{group.mIndex2},
+  mIndex3{group.mIndex3},
+  mDomain{group.mDomain}
 {
 }
 

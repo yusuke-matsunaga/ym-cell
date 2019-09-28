@@ -32,6 +32,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class FLHandler :
   public GroupHandler
 {
+  friend class AstFL;
+
 public:
 
   /// @brief コンストラクタ
@@ -46,22 +48,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief clear を返す．
-  const AstExpr*
-  clear() const;
-
-  /// @brief preset を返す．
-  const AstExpr*
-  preset() const;
-
-  /// @brief clear_preset_var1 を返す．
-  const AstCPType*
-  clear_preset_var1() const;
-
-  /// @brief clear_preset_var2 を返す．
-  const AstCPType*
-  clear_preset_var2() const;
 
 
 public:
@@ -109,38 +95,6 @@ private:
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
-
-// @brief clear を返す．
-inline
-const AstExpr*
-FLHandler::clear() const
-{
-  return mClear;
-}
-
-// @brief preset を返す．
-inline
-const AstExpr*
-FLHandler::preset() const
-{
-  return mPreset;
-}
-
-// @brief clear_preset_var1 を返す．
-inline
-const AstCPType*
-FLHandler::clear_preset_var1() const
-{
-  return mClearPresetVar1;
-}
-
-// @brief clear_preset_var2 を返す．
-inline
-const AstCPType*
-FLHandler::clear_preset_var2() const
-{
-  return mClearPresetVar2;
-}
 
 END_NAMESPACE_YM_DOTLIB
 
