@@ -60,9 +60,9 @@ LibraryHandler::LibraryHandler(DotlibParser& parser) :
   reg_func(AttrType::lu_table_template,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_template(mLutTemplateList, attr_type, attr_loc); });
-  reg_func(AttrType::cell
+  reg_func(AttrType::cell,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_template(mCellList, attr_type, attr_loc); });
+	   { return parser.parse_cell(mCellList, attr_type, attr_loc); });
 
 }
 

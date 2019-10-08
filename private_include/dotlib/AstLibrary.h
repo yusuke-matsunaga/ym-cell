@@ -74,7 +74,7 @@ public:
   revision() const;
 
   /// @brief "capacitive_load_unit" を返す．
-  const AstUnit*
+  const AstFloatStr*
   capacitive_load_unit() const;
 
   /// @brief "current_unit" を返す．
@@ -229,7 +229,7 @@ AstLibrary::revision() const
 
 // @brief "capacitive_load_unit"->top() を返す．
 inline
-const AstUnit*
+const AstFloatStr*
 AstLibrary::capacitive_load_unit() const
 {
   return mCapacitiveLoadUnit;
