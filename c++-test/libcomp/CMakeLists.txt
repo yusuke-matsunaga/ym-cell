@@ -25,7 +25,7 @@ include_directories(
 
 ym_add_gtest ( cell_LcSignature_test
   LcSignatureTest.cc
-  $<TARGET_OBJECTS:ym_cell_obj_ad>
-  $<TARGET_OBJECTS:ym_logic_obj_ad>
-  $<TARGET_OBJECTS:ym_base_obj_ad>
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_base_obj_d>
   )
