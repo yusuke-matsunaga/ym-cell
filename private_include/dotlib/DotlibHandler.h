@@ -85,7 +85,7 @@ public:
   DotlibHandler(DotlibHandler&& src) = delete;
 
   /// @brief デストラクタ
-  ~DotlibHandler();
+  ~DotlibHandler() = default;
 
 
 protected:
@@ -150,13 +150,7 @@ private:
 // @param[in] parser パーサー
 inline
 DotlibHandler::DotlibHandler(DotlibParser& parser) :
-  mParser(parser)
-{
-}
-
-// @brief デストラクタ
-inline
-DotlibHandler::~DotlibHandler()
+  mParser{parser}
 {
 }
 

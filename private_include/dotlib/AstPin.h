@@ -10,7 +10,7 @@
 
 
 #include "dotlib_nsdef.h"
-#include "AstNode.h"
+#include "AstNameListNode.h"
 #include "AstArray.h"
 #include "ym/Alloc.h"
 
@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief AstNode の木から取り出したピンの情報を表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstPin :
-  public AstNode
+  public AstNameListNode
 {
 public:
 
@@ -44,10 +44,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 名前のリストを返す．
-  AstArray<const AstString*>
-  name_list() const;
 
   /// @brief "direction" を返す．
   const AstDirection*
@@ -122,9 +118,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ピン名のリスト
-  AstArray<const AstString*> mNameList;
-
   // "direction"
   const AstDirection* mDirection;
 
@@ -176,14 +169,6 @@ private:
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
-
-// @brief 名前のリストを返す．
-inline
-AstArray<const AstString*>
-AstPin::name_list() const
-{
-  return mNameList;
-}
 
 // @brief "direction" を返す．
 inline

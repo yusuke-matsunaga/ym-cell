@@ -1,4 +1,4 @@
-v				liberty 文法覚書
+				liberty 文法覚書
 
 - 基本的な構文として
   * simple attribute
@@ -11,22 +11,32 @@ v				liberty 文法覚書
 - simple attribute は
   <属性名> : <属性値> ;
   のシンタックスで表される．
-  属性値としては
-  * int
-  * bool
-  * float
-  * string
-  * expr
+  属性値とそれを表すクラスは以下の通り．
+  * int                  -> AstInt
+  * bool		 -> AstBool
+  * 'clear_preset_var_n' -> AstCPType
+  * 'delay_model'        -> AstDelayModel
+  * 'direction'		 -> AstPinDirection
+  * expr                 -> AstExpr
+  * float		 -> AstFloat
+  * function             -> AstExpr
+  * string		 -> AstString
+  * 'technology'         -> AstTechnology
+  * 'timing_sense'	 -> AstTimingSense
+  * 'timing_type'	 -> AstTimingType
+  * 'variable_type'	 -> AstVarType
   がある．
 
-  ただし，string 型の中には direction や timing_sense の様に予め定められ
-  た文字列しか受け付けないものもある．
+  このなかの delay_model, direction, timing_sense, timing_type,
+  var_type は string 型の特定な文字列のみを受け付ける．
   また，論理式は見かけは simple attribute だが，属性値の部分に空白を含
   むためパーサー的には別に扱う．
   ややこしいのは文字列中に式を書いた function 記述という型もある．
   こちらは一旦文字列としてパースしてから式に変換する．
   前者は ExprHandler，後者は FuncHandler で表す．
   論理式は FuncHandler で扱う．
+
+  実装ファイルは DotlibParser_simple.cc にある．
 
 
 - complex attribute は
@@ -39,6 +49,9 @@ v				liberty 文法覚書
   た数値の場合がある(lookup table の values 属性等)．
   そのため特別なハンドラを用意する．
 
+  後述の group statement のヘッダと complex attribute は全く同じ形式な
+  ので同一のハンドラ(HeaderHandler)で読み込む．
+
 
 - group statement は
   <属性名> ( <属性値1>, <属性値2>, ... ) {
@@ -50,20 +63,22 @@ v				liberty 文法覚書
   最初の行は行末の '{' 以外は complex attribute と同様である．
   属性記述には simple attribute, complex attribute, group statement が記述できる．
 
+
 - complex attribute と group statement のヘッダ部分は以下の種類がある．
 
-  * EmptyHeaderHandler           : ( )
-  * Float2HeaderHandler          : ( float, float )
-  * FloatStrHeaderHandler        : ( float, string )
-  * FloatVectorHeaderHandler     : ( "float, float, ..." )
-  * FloatVectorListHeaderHandler : ( "float, float, ...", "float, flot, ...", ... )
-  * IntFloatHeaderHandler        : ( integer, float )
-  * IntFloatVectorHeaderHandler  : ( integer, "float, float, ..." )
-  * IntVectorHeaderHandler       : ( "integer, integer, ..." )
-  * Str1HeaderHandler            : ( string )
-  * Str2HeaderHandler            : ( string, string )
-  * Str2IntHeaderHandler         : ( string, string, integer )
-  * StrListHeaderHandler         : ( string, string, ... )
+  * EmptyHandler           : ( )
+  * FloatFloatHandler      : ( float, float )
+  * FloatStrHandler        : ( float, string )
+  * FloatVectorHandler     : ( "float, float, ..." )
+  * FloatVectorListHandler : ( "float, float, ...", "float, flot, ...", ... )
+  * IntFloatHandler        : ( integer, float )
+  * IntFloatVectorHandler  : ( integer, "float, float, ..." )
+  * IntVectorHandler       : ( "integer, integer, ..." )
+  * StrHandler             : ( string )
+  * StrIntHandler          : ( string, integer )
+  * StrListHandler         : ( string, string, ... )
+  * StrStrHandler          : ( string, string )
+  * StrStrIntHandler       : ( string, string, integer )
 
 
 - 属性には，必須/オプショナルなものと，唯一/複数のものがある．
@@ -87,21 +102,15 @@ v				liberty 文法覚書
 
   というインターフェイスを持つ．
   dst にパース結果が入る．
+  もしも同一の属性をもつ要素を複数持つ場合には，
 
-- simple attribute とそれに対応する AstNode の派生クラス
-  * int                  -> AstInt
-  * bool                 -> AstBool
-  * float                -> AstFloat
-  * string               -> AstString
-  * expr                 -> AstExpr
-  * function             -> AstExpr
-  * 'clear_preset_var_n' -> AstCPType
-  * 'delay_model'        -> AstDelayModel
-  * 'direction'          -> AstPinDirection
-  * 'technology'         -> AstTechnology
-  * 'timing_sense'       -> AstTimingSense
-  * 'timing_type'        -> AstTimingType
-  * 'variable_type'      -> AstVarType
+  bool
+  DotlibParser::parse_xxx(vector<const AstXxx*>& dst_list,
+  			  AttrType attr_type,
+			  const FileRegion& attr_loc);
+
+  というインターフェイスを持つ．
+  dst_list にパース結果が追加される．
 
 
 - complex attribute とそれに対応する AstNode の派生クラス
@@ -110,7 +119,7 @@ v				liberty 文法覚書
   * 'index_n'            -> AstFloatVector
   * 'orders'             -> AstIntVector
   * 'piece wise'         -> AstPieceWise
-  * 'unit'               -> AstUnit
+  * 'unit'               -> (AstString, AstFloat)
   * 'values'             -> AstFloatVector
   * 'variable_n_range'   -> AstVariableRange
 
@@ -139,7 +148,7 @@ v				liberty 文法覚書
   AstXXX を読み込む XXXHandler に一旦必要な値を保持しておいて
   XXXHandler を AstXXX のコンストラクタに渡す．いわゆるビルダークラス
   パターン.
-  このような二度手間にしている理由は3nつ．
+  このような二度手間にしている理由は3つ．
   * 可変長のリストをビルダクラス中では vector<> で保持しておいて
     AstXXX のコンストラクタでは固定長の配列として確保する．
   * パース途中でエラーが起こった場合に AstXXX のオブジェクトを確保
@@ -147,11 +156,13 @@ v				liberty 文法覚書
     でエラー時には自動的に削除される．
   * AstXXX のコンストラクタのパラメータが簡潔になる．
 
+
 - AstXXX, XXXHandler と関連した情報を持つのでもととなるデータからこれ
   らのクラスのヘッダファイルとソースファイルを自動生成する
   Python スクリプトを用意する．
   一旦，ファイルを作ってしまえば仕様変更がない限り再度生成する必要はな
   いので，生成後のファイルに手直しをすることも可能．
+
 
 - Group のパースの流れ
   DotlibParser::parse_xxx() 中で適切な HeaderHandler と GroupHandler
@@ -160,7 +171,9 @@ v				liberty 文法覚書
   結果が true なら AstMgr::new_XXX(header_handler, group_handler) で
   新しい構文木を生成する．
 
+
 - 以下，整理されていないおぼえ書き
+
 
 - "ff" と ff は同じ．というか文字列が予想される場合には " はあってもな
   くても同じ結果になる．異なるのは間に空白を含む場合．これは " がなけ

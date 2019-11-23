@@ -10,7 +10,7 @@
 
 
 #include "dotlib_nsdef.h"
-#include "AstNode.h"
+#include "AstNameNode.h"
 #include "AstArray.h"
 
 
@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief セルの情報を表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstCell :
-  public AstNode
+  public AstNameNode
 {
 public:
 
@@ -43,10 +43,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 名前を返す．
-  const AstString*
-  name() const;
 
   /// @brief 面積を返す．
   const AstFloat*
@@ -93,9 +89,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // セル名
-  const AstString* mName;
-
   // 面積
   const AstFloat* mArea;
 
@@ -126,14 +119,6 @@ private:
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
-
-// @brief 名前を返す．
-inline
-const AstString*
-AstCell::name() const
-{
-  return mName;
-}
 
 // @brief 面積を返す．
 inline

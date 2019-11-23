@@ -12,6 +12,7 @@
 #include "ci/CiCellLibrary.h"
 #include "ci/CiCell.h"
 #include "ci/CiTiming.h"
+#include "ci/CiLutTemplate.h"
 
 #include "ym/ClibCellPin.h"
 #include "ym/ClibTiming.h"
@@ -25,20 +26,20 @@
 #include "dotlib/DotlibParser.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstNode.h"
-//#include "dotlib/AstLibrary.h"
-//#include "dotlib/AstCell.h"
-//#include "dotlib/AstFF.h"
-//#include "dotlib/AstLatch.h"
-//#include "dotlib/AstPin.h"
-//#include "dotlib/AstTiming.h"
-//#include "dotlib/AstTemplate.h"
-//#include "dotlib/AstLut.h"
+#include "dotlib/AstLibrary.h"
+#include "dotlib/AstCell.h"
+#include "dotlib/AstFF.h"
+#include "dotlib/AstLatch.h"
+#include "dotlib/AstPin.h"
+#include "dotlib/AstTiming.h"
+#include "dotlib/AstTemplate.h"
+#include "dotlib/AstLut.h"
 #include "dotlib/AstExpr.h"
 #include "dotlib/AstInt.h"
 #include "dotlib/AstFloat.h"
+#include "dotlib/AstFloatStr.h"
 #include "dotlib/AstFloatVector.h"
 #include "dotlib/AstString.h"
-//#include "dotlib/AstUnit.h"
 #include "dotlib/AstTechnology.h"
 #include "dotlib/AstDelayModel.h"
 #include "dotlib/AstDirection.h"
@@ -57,17 +58,16 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 BEGIN_NONAMESPACE
 
-#if 0
 // 文字列を空白で区切る
 void
 split(const string& src_str,
-      vector<string>& str_list)
+      vector<ShString>& str_list)
 {
-  string tmp_str(src_str);
+  string tmp_str{src_str};
   for ( ; ; ) {
     string::size_type p = tmp_str.find_first_of(' ');
     string tmp = tmp_str.substr(0, p);
-    str_list.push_back(tmp);
+    str_list.push_back(ShString(tmp));
     if ( p == string::npos ) {
       break;
     }
@@ -78,11 +78,11 @@ split(const string& src_str,
 // lut を読み込む．
 ClibLut*
 gen_lut(CiCellLibrary* library,
-	const AstLut* lut_node)
+	const AstLut* lut_node,
+	const unordered_map<ShString, const ClibLutTemplate*>& template_dict)
 {
-  const char* name = lut_node->name()->value();
-  const ClibLutTemplate* templ = library->lu_table_template(name);
-  if ( templ == nullptr ) {
+  ShString name = lut_node->name()->value();
+  if ( template_dict.count(name) == 0 ) {
     ostringstream buf;
     buf << lut_node->name()
 	<< ": No such lu_table template";
@@ -94,6 +94,7 @@ gen_lut(CiCellLibrary* library,
     return nullptr;
   }
 
+  auto templ = template_dict.at(name);
   int d = templ->dimension();
 
   vector<double> index1_array;
@@ -144,7 +145,7 @@ gen_expr(const AstExpr* expr_node,
   }
   else {
     has_expr = false;
-    return Expr::const_zero();
+    return Expr::zero();
   }
 }
 
@@ -163,12 +164,11 @@ gen_pin(const vector<const AstPin*>& pin_list,
     case ClibDirection::Input:
       // 入力ピンの生成
       {
-	ClibCapacitance cap(pin_info->capacitance()->value());
-	ClibCapacitance rise_cap(pin_info->rise_capacitance()->value());
-	ClibCapacitance fall_cap(pin_info->fall_capacitance()->value());
-	for ( auto i: Range(pin_info->name_num()) ) {
-	  ShString name = pin_info->name(i)->value();
-	  CiInputPin* pin = library->new_cell_input(name, cap, rise_cap, fall_cap);
+	ClibCapacitance cap{pin_info->capacitance()->value()};
+	ClibCapacitance rise_cap{pin_info->rise_capacitance()->value()};
+	ClibCapacitance fall_cap{pin_info->fall_capacitance()->value()};
+	for ( auto name: pin_info->name_list() ) {
+	  CiInputPin* pin = library->new_cell_input(name->value(), cap, rise_cap, fall_cap);
 	  input_list.push_back(pin);
 	}
       }
@@ -181,15 +181,14 @@ gen_pin(const vector<const AstPin*>& pin_list,
 	Expr logic_expr = gen_expr(pin_info->function(), pin_map, has_logic);
 	bool dummy;
 	Expr tristate_expr = gen_expr(pin_info->three_state(), pin_map, dummy);
-	ClibCapacitance max_fanout(pin_info->max_fanout()->value());
-	ClibCapacitance min_fanout (pin_info->min_fanout()->value());
-	ClibCapacitance max_capacitance(pin_info->max_capacitance()->value());
-	ClibCapacitance min_capacitance(pin_info->min_capacitance()->value());
-	ClibTime max_transition(pin_info->max_transition()->value());
-	ClibTime min_transition(pin_info->min_transition()->value());
-	for ( auto i: Range(pin_info->name_num()) ) {
-	  ShString name = pin_info->name(i)->value();
-	  CiOutputPin* pin = library->new_cell_output(name,
+	ClibCapacitance max_fanout{pin_info->max_fanout()->value()};
+	ClibCapacitance min_fanout{pin_info->min_fanout()->value()};
+	ClibCapacitance max_capacitance{pin_info->max_capacitance()->value()};
+	ClibCapacitance min_capacitance{pin_info->min_capacitance()->value()};
+	ClibTime max_transition{pin_info->max_transition()->value()};
+	ClibTime min_transition{pin_info->min_transition()->value()};
+	for ( auto name: pin_info->name_list() ) {
+	  CiOutputPin* pin = library->new_cell_output(name->value(),
 						      has_logic,
 						      logic_expr,
 						      tristate_expr,
@@ -208,18 +207,17 @@ gen_pin(const vector<const AstPin*>& pin_list,
 	Expr logic_expr = gen_expr(pin_info->function(), pin_map, has_logic);
 	bool dummy;
 	Expr tristate_expr = gen_expr(pin_info->three_state(), pin_map, dummy);
-	ClibCapacitance cap(pin_info->capacitance()->value());
-	ClibCapacitance rise_cap(pin_info->rise_capacitance()->value());
-	ClibCapacitance fall_cap(pin_info->fall_capacitance()->value());
-	ClibCapacitance max_fanout(pin_info->max_fanout()->value());
-	ClibCapacitance min_fanout(pin_info->min_fanout()->value());
-	ClibCapacitance max_capacitance(pin_info->max_capacitance()->value());
-	ClibCapacitance min_capacitance(pin_info->min_capacitance()->value());
-	ClibTime max_transition(pin_info->max_transition()->value());
-	ClibTime min_transition(pin_info->min_transition()->value());
-	for ( auto i: Range(pin_info->name_num()) ) {
-	  ShString name = pin_info->name(i)->value();
-	  CiInoutPin* pin = library->new_cell_inout(name,
+	ClibCapacitance cap{pin_info->capacitance()->value()};
+	ClibCapacitance rise_cap{pin_info->rise_capacitance()->value()};
+	ClibCapacitance fall_cap{pin_info->fall_capacitance()->value()};
+	ClibCapacitance max_fanout{pin_info->max_fanout()->value()};
+	ClibCapacitance min_fanout{pin_info->min_fanout()->value()};
+	ClibCapacitance max_capacitance{pin_info->max_capacitance()->value()};
+	ClibCapacitance min_capacitance{pin_info->min_capacitance()->value()};
+	ClibTime max_transition{pin_info->max_transition()->value()};
+	ClibTime min_transition{pin_info->min_transition()->value()};
+	for ( auto name: pin_info->name_list() ) {
+	  CiInoutPin* pin = library->new_cell_inout(name->value(),
 						    has_logic,
 						    logic_expr,
 						    tristate_expr,
@@ -234,9 +232,8 @@ gen_pin(const vector<const AstPin*>& pin_list,
 
     case ClibDirection::Internal:
       // 内部ピンの生成
-      for ( auto i: Range(pin_info->name_num()) ) {
-	ShString name = pin_info->name(i)->value();
-	CiInternalPin* pin = library->new_cell_internal(name);
+      for ( auto name: pin_info->name_list() ) {
+	CiInternalPin* pin = library->new_cell_internal(name->value());
 	internal_list.push_back(pin);
       }
       break;
@@ -250,27 +247,26 @@ gen_pin(const vector<const AstPin*>& pin_list,
 void
 gen_timing_list(const vector<const AstPin*> pin_list,
 		const unordered_map<ShString, int>& pin_map,
+		const unordered_map<ShString, const ClibLutTemplate*>& template_dict,
 		CiCellLibrary* library,
 		vector<CiTiming*>& timing_list,
 		vector<vector<CiTiming*> >& timing_list_array)
 {
   for ( auto pin_info: pin_list ) {
-    vector<const AstTiming*> dt_timing_list;
-    for ( auto i: Range(pin_info->timing_num()) ) {
-      auto dl_timing = pin_info->timing_elem(i);
-      ClibTimingType timing_type = dl_timing->timing_type()->value();
+    for ( auto ast_timing: pin_info->timing_list() ) {
+      ClibTimingType timing_type = ast_timing->timing_type()->value();
       bool dummy;
-      Expr cond = gen_expr(dl_timing->when(), pin_map, dummy);
+      Expr cond = gen_expr(ast_timing->when(), pin_map, dummy);
       CiTiming* timing = nullptr;
       switch ( library->delay_model() ) {
       case ClibDelayModel::GenericCmos:
 	{
-	  ClibTime intrinsic_rise(dl_timing->intrinsic_rise()->value());
-	  ClibTime intrinsic_fall(dl_timing->intrinsic_fall()->value());
-	  ClibTime slope_rise(dl_timing->slope_rise()->value());
-	  ClibTime slope_fall(dl_timing->slope_fall()->value());
-	  ClibResistance rise_res(dl_timing->rise_resistance()->value());
-	  ClibResistance fall_res(dl_timing->fall_resistance()->value());
+	  ClibTime intrinsic_rise{ast_timing->intrinsic_rise()->value()};
+	  ClibTime intrinsic_fall{ast_timing->intrinsic_fall()->value()};
+	  ClibTime slope_rise{ast_timing->slope_rise()->value()};
+	  ClibTime slope_fall{ast_timing->slope_fall()->value()};
+	  ClibResistance rise_res{ast_timing->rise_resistance()->value()};
+	  ClibResistance fall_res{ast_timing->fall_resistance()->value()};
 	  timing = library->new_timing_generic(timing_type, cond,
 					       intrinsic_rise, intrinsic_fall,
 					       slope_rise, slope_fall,
@@ -280,9 +276,9 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 
       case ClibDelayModel::TableLookup:
 	{
-	  const AstLut* cr_node = dl_timing->cell_rise();
-	  const AstLut* rt_node = dl_timing->rise_transition();
-	  const AstLut* rp_node = dl_timing->rise_propagation();
+	  const AstLut* cr_node = ast_timing->cell_rise();
+	  const AstLut* rt_node = ast_timing->rise_transition();
+	  const AstLut* rp_node = ast_timing->rise_propagation();
 
 	  ClibLut* cr_lut = nullptr;
 	  ClibLut* rt_lut = nullptr;
@@ -290,7 +286,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	  if ( cr_node != nullptr ) {
 	    if ( rp_node != nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dl_timing->loc(),
+			      ast_timing->loc(),
 			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "cell_rise and rise_propagation are mutually exclusive.");
@@ -298,39 +294,39 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	    }
 	    if ( rt_node == nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dl_timing->loc(),
+			      ast_timing->loc(),
 			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "rise_transition is missing.");
 	      continue;
 	    }
-	    cr_lut = gen_lut(library, cr_node);
-	    rt_lut = gen_lut(library, rt_node);
+	    cr_lut = gen_lut(library, cr_node, template_dict);
+	    rt_lut = gen_lut(library, rt_node, template_dict);
 	  }
 	  else if ( rp_node != nullptr ) {
 	    if ( rt_node == nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dl_timing->loc(),
+			      ast_timing->loc(),
 			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "rise_transition is missing.");
 	      continue;
 	    }
-	    rt_lut = gen_lut(library, rt_node);
-	    rp_lut = gen_lut(library, rp_node);
+	    rt_lut = gen_lut(library, rt_node, template_dict);
+	    rp_lut = gen_lut(library, rp_node, template_dict);
 	  }
 	  else if ( rt_node != nullptr ) {
 	    MsgMgr::put_msg(__FILE__, __LINE__,
-			    dl_timing->loc(),
+			    ast_timing->loc(),
 			    MsgType::Error,
 			    "DOTLIB_PARSER",
 			    "Either cell_rise or rise_propagation should be present.");
 	    continue;
 	  }
 
-	  const AstLut* cf_node = dl_timing->cell_fall();
-	  const AstLut* ft_node = dl_timing->fall_transition();
-	  const AstLut* fp_node = dl_timing->fall_propagation();
+	  const AstLut* cf_node = ast_timing->cell_fall();
+	  const AstLut* ft_node = ast_timing->fall_transition();
+	  const AstLut* fp_node = ast_timing->fall_propagation();
 
 	  ClibLut* cf_lut = nullptr;
 	  ClibLut* ft_lut = nullptr;
@@ -338,7 +334,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	  if ( cf_node != nullptr ) {
 	    if ( fp_node != nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dl_timing->loc(),
+			      ast_timing->loc(),
 			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "cell_fall and fall_propagation are mutually exclusive.");
@@ -346,30 +342,30 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	    }
 	    if ( ft_node == nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dl_timing->loc(),
+			      ast_timing->loc(),
 			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "fall_transition is missing.");
 	      continue;
 	    }
-	    cf_lut = gen_lut(library, cf_node);
-	    ft_lut = gen_lut(library, ft_node);
+	    cf_lut = gen_lut(library, cf_node, template_dict);
+	    ft_lut = gen_lut(library, ft_node, template_dict);
 	  }
 	  else if ( fp_node != nullptr ) {
 	    if ( ft_node == nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dl_timing->loc(),
+			      ast_timing->loc(),
 			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "fall_transition is missing.");
 	      continue;
 	    }
-	    ft_lut = gen_lut(library, ft_node);
-	    fp_lut = gen_lut(library, fp_node);
+	    ft_lut = gen_lut(library, ft_node, template_dict);
+	    fp_lut = gen_lut(library, fp_node, template_dict);
 	  }
 	  else if ( ft_node != nullptr ) {
 	    MsgMgr::put_msg(__FILE__, __LINE__,
-			    dl_timing->loc(),
+			    ast_timing->loc(),
 			    MsgType::Error,
 			    "DOTLIB_PARSER",
 			    "Either cell_fall or fall_propagation should be present.");
@@ -379,7 +375,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	  if ( cr_lut != nullptr || cf_lut != nullptr ) {
 	    if ( fp_lut != nullptr ) {
 	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      dl_timing->loc(),
+			      ast_timing->loc(),
 			      MsgType::Error,
 			      "DOTLIB_PARSER",
 			      "cell_rise and fall_propagation are mutually exclusive.");
@@ -411,25 +407,25 @@ gen_timing_list(const vector<const AstPin*> pin_list,
       }
       timing_list.push_back(timing);
 
-      ClibTimingSense timing_sense = dl_timing->timing_sense()->value();
+      ClibTimingSense timing_sense = ast_timing->timing_sense()->value();
 
       // タイミング情報の設定
-      if ( dl_timing->related_pin() ) {
-	ShString tmp_str = dl_timing->related_pin()->value();
-	vector<string> pin_name_list;
+      if ( ast_timing->related_pin() ) {
+	ShString tmp_str{ast_timing->related_pin()->value()};
+	vector<ShString> pin_name_list;
 	split(tmp_str, pin_name_list);
 	for ( auto pin_name: pin_name_list ) {
-	  int id;
-	  if ( !pin_map.find(ShString(pin_name), id) ) {
+	  if ( pin_map.count(pin_name) == 0 ) {
 	    ostringstream buf;
 	    buf << pin_name << ": no such pin";
 	    MsgMgr::put_msg(__FILE__, __LINE__,
-			    dl_timing->loc(),
+			    ast_timing->loc(),
 			    MsgType::Error,
 			    "DOTLIB_PARSER",
 			    buf.str());
 	    continue;
 	  }
+	  int id = pin_map.at(pin_name);
 	  switch ( timing_sense ) {
 	  case ClibTimingSense::PosiUnate:
 	    timing_list_array[id * 2 + 0].push_back(timing);
@@ -452,7 +448,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
       }
       else {
 	MsgMgr::put_msg(__FILE__, __LINE__,
-			dl_timing->loc(),
+			ast_timing->loc(),
 			MsgType::Error,
 			"DOTLIB_PARSER",
 			"No \"related_pin\"");
@@ -465,131 +461,128 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 // @param[in] library_info ライブラリの情報を持つオブジェクト
 // @param[in] library設定対象のライブラリ
 void
-set_library(const AstLibrary* dt_library,
+set_library(const AstLibrary* ast_library,
 	    CiCellLibrary* library)
 {
   // 'name' の設定
-  library->set_name(dt_library->name()->value());
+  library->set_name(ast_library->name()->value());
 
   // 'technology' の設定
-  library->set_technology(dt_library->technology()->value());
+  library->set_technology(ast_library->technology()->value());
 
   // 'delay_model' の設定
-  library->set_delay_model(dt_library->delay_model()->value());
+  library->set_delay_model(ast_library->delay_model()->value());
 
   // 'bus_naming_style' の設定
-  if ( dt_library->bus_naming_style() ) {
-    ShString value = dt_library->bus_naming_style()->value();
+  if ( ast_library->bus_naming_style() ) {
+    ShString value = ast_library->bus_naming_style()->value();
     library->set_attr("bus_naming_style", value);
   }
 
   // 'comment' の設定
-  if ( dt_library->comment() ) {
-    ShString value = dt_library->comment()->value();
+  if ( ast_library->comment() ) {
+    ShString value = ast_library->comment()->value();
     library->set_attr("comment", value);
   }
 
   // 'date' の設定
-  if ( dt_library->date() ) {
-    ShString value = dt_library->date()->value();
+  if ( ast_library->date() ) {
+    ShString value = ast_library->date()->value();
     library->set_attr("date", value);
   }
 
   // 'revision' の設定
-  if ( dt_library->revision() ) {
-    ShString value = dt_library->revision()->value();
+  if ( ast_library->revision() ) {
+    ShString value = ast_library->revision()->value();
     library->set_attr("revision", value);
   }
 
   // 'time_unit' の設定
-  if ( dt_library->time_unit() ) {
-    ShString value = dt_library->time_unit()->value();
+  if ( ast_library->time_unit() ) {
+    ShString value = ast_library->time_unit()->value();
     library->set_attr("time_unit", value);
   }
 
   // 'voltage_unit' の設定
-  if ( dt_library->voltage_unit() ) {
-    ShString value = dt_library->voltage_unit()->value();
+  if ( ast_library->voltage_unit() ) {
+    ShString value = ast_library->voltage_unit()->value();
     library->set_attr("voltage_unit", value);
   }
 
   // 'current_unit' の設定
-  if ( dt_library->current_unit() ) {
-    ShString value = dt_library->current_unit()->value();
+  if ( ast_library->current_unit() ) {
+    ShString value = ast_library->current_unit()->value();
     library->set_attr("current_unit", value);
   }
 
   // 'pulling_resistance_unit' の設定
-  if ( dt_library->pulling_resistance_unit() ) {
-    ShString value = dt_library->pulling_resistance_unit()->value();
+  if ( ast_library->pulling_resistance_unit() ) {
+    ShString value = ast_library->pulling_resistance_unit()->value();
     library->set_attr("pulling_resistance_unit", value);
   }
 
   // 'capacitive_load_unit' の設定
-  if ( dt_library->capacitive_load_unit() ) {
-    double u = dt_library->capacitive_load_unit()->unit_val()->value();
-    ShString ustr = dt_library->capacitive_load_unit()->unit_str()->value();
+  if ( ast_library->capacitive_load_unit() ) {
+    double u = ast_library->capacitive_load_unit()->value1()->value();
+    ShString ustr = ast_library->capacitive_load_unit()->value2()->value();
     library->set_capacitive_load_unit(u, ustr);
   }
 
   // 'leakage_power_unit' の設定
-  if ( dt_library->leakage_power_unit() ) {
-    ShString value = dt_library->leakage_power_unit()->value();
+  if ( ast_library->leakage_power_unit() ) {
+    ShString value = ast_library->leakage_power_unit()->value();
     library->set_attr("leakage_power_unit", value);
   }
 
   // 'lu_table_template' の設定
   vector<CiLutTemplate*> template_list;
-  template_list.reserve(dt_library->lut_template_num());
-  for ( auto i: Range(dt_library->lut_template_num()) ) {
-    auto dt_template =  dt_library->lut_template_elem(i);
+  unordered_map<ShString, const ClibLutTemplate*> template_dict;
+  for ( auto ast_template: ast_library->lut_template_list() ) {
     CiLutTemplate* tmpl = nullptr;
+    ShString name = ast_template->name()->value();
     vector<double> index_1;
     vector<double> index_2;
     vector<double> index_3;
-    int d = dt_template->dimension();
+    int d = ast_template->dimension();
     switch ( d ) {
     case 1:
-      dt_template->index_1()->get_vector(index_1);
-      tmpl = library->new_lut_template1(dt_template->name()->value(),
-					dt_template->variable_1()->value(), index_1);
+      ast_template->index_1()->get_vector(index_1);
+      tmpl = library->new_lut_template1(name,
+					ast_template->variable_1()->value(), index_1);
       break;
 
     case 2:
-      dt_template->index_1()->get_vector(index_1);
-      dt_template->index_2()->get_vector(index_2);
-      tmpl = library->new_lut_template2(dt_template->name()->value(),
-					dt_template->variable_1()->value(), index_1,
-					dt_template->variable_2()->value(), index_2);
+      ast_template->index_1()->get_vector(index_1);
+      ast_template->index_2()->get_vector(index_2);
+      tmpl = library->new_lut_template2(name,
+					ast_template->variable_1()->value(), index_1,
+					ast_template->variable_2()->value(), index_2);
       break;
 
     case 3:
-      dt_template->index_1()->get_vector(index_1);
-      dt_template->index_2()->get_vector(index_2);
-      dt_template->index_3()->get_vector(index_3);
-      tmpl = library->new_lut_template3(dt_template->name()->value(),
-					dt_template->variable_1()->value(), index_1,
-					dt_template->variable_2()->value(), index_2,
-					dt_template->variable_3()->value(), index_3);
+      ast_template->index_1()->get_vector(index_1);
+      ast_template->index_2()->get_vector(index_2);
+      ast_template->index_3()->get_vector(index_3);
+      tmpl = library->new_lut_template3(name,
+					ast_template->variable_1()->value(), index_1,
+					ast_template->variable_2()->value(), index_2,
+					ast_template->variable_3()->value(), index_3);
       break;
 
     default:
       ASSERT_NOT_REACHED;
     }
     template_list.push_back(tmpl);
+    template_dict[name] = tmpl;
   }
   library->set_lu_table_template_list(template_list);
 
   // セルの内容の設定
-  //const vector<const AstCell*>& dt_cell_list = dt_library->cell_list();
-#warning "TODO: 未完成"
-  vector<const AstCell*> dt_cell_list;
-  int nc = dt_cell_list.size();
   vector<CiCell*> cell_list;
-  cell_list.reserve(nc);
-  for ( const AstCell* dt_cell: dt_cell_list ) {
-    ShString cell_name = dt_cell->name()->value();
-    ClibArea area(dt_cell->area()->value());
+  cell_list.reserve(ast_library->cell_list().size());
+  for ( const AstCell* ast_cell: ast_library->cell_list() ) {
+    ShString cell_name = ast_cell->name()->value();
+    ClibArea area(ast_cell->area()->value());
 
     // 各タイプの個数のカウント
     int ni = 0;
@@ -597,9 +590,8 @@ set_library(const AstLibrary* dt_library,
     int nio = 0;
     int nit = 0;
     vector<const AstPin*> dt_pin_list;
-    for ( auto i: Range(dt_cell->pin_num()) ) {
-      auto pin_info = dt_cell->pin_elem(i);
-      int nn = pin_info->name_num();
+    for ( auto pin_info: ast_cell->pin_list() ) {
+      int nn = pin_info->name_list().size();
       switch ( pin_info->direction()->value() ) {
       case ClibDirection::Input:    ni += nn; break;
       case ClibDirection::Output:   no += nn; break;
@@ -617,20 +609,19 @@ set_library(const AstLibrary* dt_library,
     {
       int ipos = 0;
       int itpos = 0;
-      for ( auto i: Range(dt_cell->pin_num()) ) {
-	auto pin_info = dt_cell->pin_elem(i);
+      for ( auto pin_info: ast_cell->pin_list() ) {
 	switch ( pin_info->direction()->value() ) {
 	case ClibDirection::Input:
 	case ClibDirection::Inout:
-	  for ( auto j: Range(pin_info->name_num()) ) {
-	    pin_map.add(pin_info->name(j)->value(), ipos);
+	  for ( auto name: pin_info->name_list() ) {
+	    pin_map[name->value()] = ipos;
 	    ++ ipos;
 	  }
 	  break;
 
 	case ClibDirection::Internal:
-	  for ( auto j: Range(pin_info->name_num()) ) {
-	    pin_map.add(pin_info->name(j)->value(), itpos + ni2);
+	  for ( auto name: pin_info->name_list() ) {
+	  pin_map[name->value()] = itpos + ni2;
 	    ++ itpos;
 	  }
 	  break;
@@ -644,27 +635,27 @@ set_library(const AstLibrary* dt_library,
     }
 
     // ff情報の読み出し
-    const AstFF* ff_info = dt_cell->ff();
+    const AstFF* ff_info = ast_cell->ff();
     if ( ff_info != nullptr ) {
       ShString var1 = ff_info->var1_name()->value();
       ShString var2 = ff_info->var2_name()->value();
       // pin_map に登録しておく
-      pin_map.add(var1, ni2 + 0);
-      pin_map.add(var2, ni2 + 1);
+      pin_map[var1] = ni2 + 0;
+      pin_map[var2] = ni2 + 1;
     }
 
     // ラッチ情報の読み出し
-    const AstLatch* latch_info = dt_cell->latch();
+    const AstLatch* latch_info = ast_cell->latch();
     if ( latch_info != nullptr) {
       ShString var1 = latch_info->var1_name()->value();
       ShString var2 = latch_info->var2_name()->value();
       // pin_map に登録しておく
-      pin_map.add(var1, ni2 + 0);
-      pin_map.add(var2, ni2 + 1);
+      pin_map[var1] = ni2 + 0;
+      pin_map[var2] = ni2 + 1;
     }
 
     // 遷移表情報の読み出し
-    const AstStateTable* statetable_info = dt_cell->state_table();
+    const AstStateTable* statetable_info = ast_cell->state_table();
 
     vector<CiInputPin*> input_list;
     vector<CiOutputPin*> output_list;
@@ -687,10 +678,9 @@ set_library(const AstLibrary* dt_library,
 
     // タイミング情報の生成
     vector<CiTiming*> timing_list;
-    vector<vector<CiTiming*> > timing_list_array(ni2 * 2);
-    gen_timing_list(dt_pin_list, pin_map, library,
-		    timing_list,
-		    timing_list_array);
+    vector<vector<CiTiming*>> timing_list_array(ni2 * 2);
+    gen_timing_list(dt_pin_list, pin_map, template_dict,
+		    library, timing_list, timing_list_array);
 
     // セルの生成
     CiCell* cell = nullptr;
@@ -760,11 +750,10 @@ set_library(const AstLibrary* dt_library,
 
     // 個別の条件ごとのタイミング情報の設定
     for ( int oid = 0; oid < no2; ++ oid ) {
-      const ClibCellPin* opin = cell->output(oid);
-      ASSERT_COND( opin != nullptr );
+      auto& opin = cell->output(oid);
       TvFunc tv_function;
-      if ( opin->has_function() ) {
-	Expr expr = opin->function();
+      if ( opin.has_function() ) {
+	Expr expr = opin.function();
 	tv_function = expr.make_tv(ni2);
       }
       for ( int iid = 0; iid < ni2; ++ iid ) {
@@ -776,7 +765,7 @@ set_library(const AstLibrary* dt_library,
 	  CiTiming* timing = timing_list_p[0];
 	  bool depend = true;
 	  if ( timing->type() == ClibTimingType::Combinational ) {
-	    if ( opin->has_function() && !(~n_func && p_func) ) {
+	    if ( opin.has_function() && !(~n_func && p_func) ) {
 	      depend = false;
 	    }
 	  }
@@ -790,7 +779,7 @@ set_library(const AstLibrary* dt_library,
 	  CiTiming* timing = timing_list_n[0];
 	  bool depend = true;
 	  if ( timing->type() == ClibTimingType::Combinational ) {
-	    if ( opin->has_function() && !(~p_func && n_func) ) {
+	    if ( opin.has_function() && !(~p_func && n_func) ) {
 	      depend = false;
 	    }
 	  }
@@ -804,7 +793,6 @@ set_library(const AstLibrary* dt_library,
 
   library->set_cell_list(cell_list);
 }
-#endif
 
 END_NONAMESPACE
 
@@ -836,12 +824,12 @@ CiCellLibrary::read_liberty(const string& filename)
 
   AstMgr mgr;
   DotlibParser parser(ido, mgr, false);
-  const AstLibrary* dt_library = parser.parse();
-  if ( dt_library == nullptr ) {
+  const AstLibrary* ast_library = parser.parse();
+  if ( ast_library == nullptr ) {
     return false;
   }
 
-  //set_library(dt_library, this);
+  set_library(ast_library, this);
 
   return true;
 }

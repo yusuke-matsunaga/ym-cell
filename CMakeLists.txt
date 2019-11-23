@@ -93,7 +93,6 @@ set (dotlib_SOURCES
   c++-src/dotlib/parser/FuncParser.cc
   c++-src/dotlib/parser/FuncScanner.cc
 
-  c++-src/dotlib/handler/DotlibHandler.cc
   c++-src/dotlib/handler/header/ElemHandler.cc
   c++-src/dotlib/handler/header/EmptyHandler.cc
   c++-src/dotlib/handler/header/FloatFloatHandler.cc
@@ -156,6 +155,8 @@ set (dotlib_SOURCES
   c++-src/dotlib/ast/AstLibrary.cc
   c++-src/dotlib/ast/AstLut.cc
   c++-src/dotlib/ast/AstMgr.cc
+  c++-src/dotlib/ast/AstNameListNode.cc
+  c++-src/dotlib/ast/AstNameNode.cc
   c++-src/dotlib/ast/AstNode.cc
   c++-src/dotlib/ast/AstOutputVoltage.cc
   c++-src/dotlib/ast/AstPin.cc

@@ -10,7 +10,7 @@
 
 
 #include "dotlib_nsdef.h"
-#include "AstNode.h"
+#include "AstNameNode.h"
 #include "AstArray.h"
 #include "ym/Alloc.h"
 
@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief AstNode の木から取り出したライブラリの情報を表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstLibrary :
-  public AstNode
+  public AstNameNode
 {
 public:
 
@@ -44,10 +44,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 名前を返す．
-  const AstString*
-  name() const;
 
   /// @brief "technology" を返す．
   const AstTechnology*
@@ -119,9 +115,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ライブラリ名
-  const AstString* mName;
-
   // "technology"
   const AstTechnology* mTechnology;
 
@@ -170,14 +163,6 @@ private:
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
-
-// @brief 名前を返す．
-inline
-const AstString*
-AstLibrary::name() const
-{
-  return mName;
-}
 
 // @brief "technology" を返す．
 inline

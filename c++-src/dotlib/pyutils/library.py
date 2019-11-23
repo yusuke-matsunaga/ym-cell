@@ -7,12 +7,13 @@
 ### Copyright (C) 2018 Yusuke Matsunaga
 ### All rights reserved.
 
-from str1group.py import Str1GroupClassDef
+from strgroup import StrGroupClassDef
 
 
-class LibraryClassDef(Str1GroupClassDef) :
+class LibraryClassDef(StrGroupClassDef) :
 
     def __init__(self) :
+        super().__init__()
         self.data_type = 'library'
         self.desc = 'ライブラリ'
         self.ast_class = 'AstLibrary'
@@ -26,7 +27,7 @@ class LibraryClassDef(Str1GroupClassDef) :
             ( 'current_unit', 'string', 'mCurrentUnit', False, False ),
             ( 'date', 'string', 'mDate', False, False ),
             ( 'default_fpga_isd', 'string', 'mDefaultFpgaIsd', False, False ),
-            ( 'default_threshold_voltage_group', 'string', 'mDefaultThresholdVoltageGroup', False ),
+            ( 'default_threshold_voltage_group', 'string', 'mDefaultThresholdVoltageGroup', False, False ),
             ( 'delay_model', 'delay_model', 'mDelayModel', False, False ),
             ( 'em_temp_degradation_factor', 'float', 'mEmTempDegradationFactor', False, False ),
             ( 'fpga_domain_style', 'string', 'mFpgaDomainStyle', False, False ),
@@ -207,26 +208,26 @@ class LibraryClassDef(Str1GroupClassDef) :
 
             # complex attributes
             ( 'capacitve_load_unit', 'unit', 'mCapacitiveLoadUnit', False, False ),
-            ( 'default_part', 'default_part', 'mDefaultPart', False, False ),
+            ( 'default_part', 'str2complex', 'mDefaultPart', False, False ),
             ( 'define', 'define', 'mDefine', False, True ),
             ( 'define_cell_area', 'define_cell_area', 'mDefineCellArea',  False, True ),
-            ( 'defin_group', 'define_group', 'mDefineGroup', False, True ),
+            ( 'define_group', 'define_group', 'mDefineGroup', False, True ),
             ( 'library_features', 'library_features', 'mLibraryFeatures', False, False ),
-            ( 'piece_define', 'piece_define', 'mPieceDefine', False, False ),
+            #( 'piece_define', 'piece_define', 'mPieceDefine', False, False ),
             ( 'routing_layers', 'routing_layers', 'mRoutingLayers', False, False ),
             ( 'technology', 'technology', 'mTechnology', False, False ),
             ( 'voltage_map', 'voltage_map', 'mVoltageMap', False, True ),
 
             # group statements
             ( 'base_curves', 'base_curves', 'mBaseCurves', False, True ),
-            ( 'compact_lut_template', 'clut_template', 'mCompactLutTemplate', False, True ),
+            ( 'compact_lut_template', 'template', 'mCompactLutTemplate', False, True ),
             ( 'dc_current_template', 'template', 'mDcCurrentTemplate', False, True ),
             ( 'em_lut_template', 'template', 'mEmLutTemplate', False, True ),
-            ( 'fall_net_delay', 'table', 'mFallNetDelay', False, True ),
-            ( 'rise_net_delay', 'table', 'mRiseNetDelay', False, True ),l
-            ( 'fall_transition_degradation', 'table', 'mFallTransitionDegradation', False, True ),
-            ( 'rise_transition_degradation', 'table', 'mRiseTransitionDegradation', False, True ),
-            ( 'fault_lut_template', 'flut_template', 'mFaultLutTemplate', False, True ),
+            ( 'fall_net_delay', 'lut', 'mFallNetDelay', False, True ),
+            ( 'rise_net_delay', 'lut', 'mRiseNetDelay', False, True ),
+            ( 'fall_transition_degradation', 'lut', 'mFallTransitionDegradation', False, True ),
+            ( 'rise_transition_degradation', 'lut', 'mRiseTransitionDegradation', False, True ),
+            ( 'fault_lut_template', 'template', 'mFaultLutTemplate', False, True ),
             ( 'input_voltage', 'input_voltage', 'mInputVoltage', False, True ),
             ( 'fpga_isd', 'fpga_isd', 'mFpgaIsd', False, True ),
             ( 'iv_lut_template', 'template', 'mIvLutTempate', False, True ),
@@ -239,13 +240,13 @@ class LibraryClassDef(Str1GroupClassDef) :
             ( 'output_voltage', 'output_voltage', 'mOutputVoltage', False, True ),
             ( 'part', 'part', 'mPart', False, True ),
             ( 'pg_current_template', 'template', 'mPgCurrentTemplate', False, True ),
-            ( 'poly_template', 'poly_template', 'mPolyTemplate', False, True ),
+            ( 'poly_template', 'template', 'mPolyTemplate', False, True ),
             ( 'power_lut_template', 'template', 'mPowerLutTemplate', False, True ),
-            ( 'power_poly_template', 'poly_template', 'mPowerPolyTemplate', False, True ),
+            ( 'power_poly_template', 'template', 'mPowerPolyTemplate', False, True ),
             ( 'power_supply', 'power_supply', 'mPowerSupply', False, True ),
-            ( 'propagation_lut_template', 'template', False, True ),
+            ( 'propagation_lut_template', 'template', 'mPropagationLutTemplate', False, True ),
             ( 'scaled_cell', 'scaled_cell', 'mScaledCell', False, True ),
-            ( 'scaling_factors', 'scaling_factors', 'mScalingFactors', False, True ),
+            #( 'scaling_factors', 'scaling_factors', 'mScalingFactors', False, True ),
             ( 'sensitization', 'sensitization', 'mSensitization', False, True ),
             ( 'timing', 'timing', 'mTiming', False, True ),
             ( 'timing_range', 'timing_range', 'mTimingRange', False, True ),
@@ -255,3 +256,10 @@ class LibraryClassDef(Str1GroupClassDef) :
             ( 'wire_load_selection', 'wire_load_selection', 'mWireLoadSelection', False, True ),
             ( 'wire_loat_table', 'wire_load_table', 'mWireLoadTable', False, True ),
             ]
+
+
+if __name__ == '__main__' :
+    import gen_handler_code
+
+    class_def = LibraryClassDef()
+    gen_handler_code.main(class_def)
