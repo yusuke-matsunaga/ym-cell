@@ -11,7 +11,6 @@
 
 #include "lc/libcomp_nsdef.h"
 #include "ym/logic.h"
-#include "ym/UnitAlloc.h"
 #include "ym/VarId.h"
 
 
@@ -221,9 +220,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // LcPatNode のメモリ確保用アロケータ
-  UnitAlloc mAlloc;
 
   // 入力ノードを収める配列
   vector<LcPatNode*> mInputList;

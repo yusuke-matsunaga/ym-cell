@@ -38,7 +38,6 @@ protected:
   /// @param[in] next_state "next_state" 関数の式
   /// @param[in] clocked_on "clocked_on" 関数の式
   /// @param[in] clocked_on_also "clocked_on_also" 関数の式
-  /// @param[in] alloc メモリアロケータ
   CiFFCell(CiCellLibrary* library,
 	   const ShString& name,
 	   ClibArea area,
@@ -50,8 +49,7 @@ protected:
 	   const vector<CiTiming*>& timing_list,
 	   const Expr& next_state,
 	   const Expr& clocked_on,
-	   const Expr& clocked_on_also,
-	   Alloc& alloc);
+	   const Expr& clocked_on_also);
 
   /// @brief デストラクタ
   ~CiFFCell();
@@ -124,7 +122,6 @@ protected:
   /// @param[in] clocked_on "clocked_on" 関数の式
   /// @param[in] clocked_on_also "clocked_on_also" 関数の式
   /// @param[in] clear "clear" 関数の式
-  /// @param[in] alloc メモリアロケータ
   CiFFRCell(CiCellLibrary* library,
 	    const ShString& name,
 	    ClibArea area,
@@ -137,8 +134,7 @@ protected:
 	    const Expr& next_state,
 	    const Expr& clocked_on,
 	    const Expr& clocked_on_also,
-	    const Expr& clear,
-	    Alloc& alloc);
+	    const Expr& clear);
 
   /// @brief デストラクタ
   ~CiFFRCell();
@@ -210,8 +206,7 @@ protected:
 	    const Expr& next_state,
 	    const Expr& clocked_on,
 	    const Expr& clocked_on_also,
-	    const Expr& preset,
-	    Alloc& alloc);
+	    const Expr& preset);
 
   /// @brief デストラクタ
   ~CiFFSCell();
@@ -271,7 +266,6 @@ protected:
   /// @param[in] preset "preset" 関数の式
   /// @param[in] clear_preset_var1 clear と preset が同時にオンになったときの値1
   /// @param[in] clear_preset_var2 clear と preset が同時にオンになったときの値2
-  /// @param[in] alloc メモリアロケータ
   CiFFSRCell(CiCellLibrary* library,
 	     const ShString& name,
 	     ClibArea area,
@@ -287,8 +281,7 @@ protected:
 	     const Expr& clear,
 	     const Expr& preset,
 	     int clear_preset_var1,
-	     int clear_preset_var2,
-	     Alloc& alloc);
+	     int clear_preset_var2);
 
   /// @brief デストラクタ
   ~CiFFSRCell();

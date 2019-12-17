@@ -13,8 +13,6 @@
 #include "ym/ClibObjList.h"
 #include "ym/Expr.h"
 #include "ym/ShString.h"
-#include "ym/Alloc.h"
-#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -37,7 +35,6 @@ class CiCell :
   public ClibCell
 {
   friend class CiCellLibrary;
-  friend class CiCellHash;
 
 protected:
 
@@ -62,8 +59,7 @@ protected:
 	 const vector<CiInternalPin*>& internal_list,
 	 const vector<CiBus*>& bus_list,
 	 const vector<CiBundle*>& bundle_list,
-	 const vector<CiTiming*>& timing_list,
-	 Alloc& alloc);
+	 const vector<CiTiming*>& timing_list);
 
   /// @brief エラーオブジェクト用のコンストラクタ
   CiCell();
@@ -359,7 +355,7 @@ public:
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
   void
-  dump(ODO& s) const override;
+  dump(ostream& s) const override;
 
 
 public:
@@ -445,9 +441,6 @@ private:
 
   // セルグループ
   const ClibCellGroup* mCellGroup;
-
-  // ハッシュ表のリンクポインタ
-  CiCell* mLink;
 
 };
 

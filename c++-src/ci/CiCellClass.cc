@@ -24,14 +24,12 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] id 番号
 // @param[in] idmap_list 同位体変換リスト
 // @param[in] group_list グループのリスト
-// @param[in] alloc メモリアロケータ
 CiCellClass::CiCellClass(int id,
 			 const vector<NpnMapM>& idmap_list,
-			 const vector<CiCellGroup*>& group_list,
-			 Alloc& alloc) :
-  mId(id),
+			 const vector<CiCellGroup*>& group_list) :
+  mId{id},
   mIdmapNum(idmap_list.size()),
-  mIdmapList(alloc.get_array<NpnMapM>(mIdmapNum))
+  mIdmapList{new NpnMapM[mIdmapNum]}
 {
   for ( int i: Range(mIdmapNum) ) {
     mIdmapList[i] = idmap_list[i];
@@ -44,21 +42,21 @@ CiCellClass::CiCellClass(int id,
     group->set_class(this);
     _group_list.push_back(group);
   }
-  mGroupList.init(_group_list, alloc);
+  mGroupList.init(_group_list);
 }
 
 // @brief エラーオブジェクト用のコンストラクタ
 CiCellClass::CiCellClass() :
-  mId(-1),
-  mIdmapNum(0),
-  mIdmapList(nullptr)
+  mId{-1},
+  mIdmapNum{0},
+  mIdmapList{nullptr}
 {
 }
 
 // @brief デストラクタ
 CiCellClass::~CiCellClass()
 {
-  // mIdmapList, mGroupList は ClibMgr が管理している．
+  delete [] mIdmapList;
 }
 
 // @brief ID番号を返す．

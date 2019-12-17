@@ -12,7 +12,6 @@
 #include "ym/ClibBundle.h"
 #include "ym/ClibObjList.h"
 #include "ym/ShString.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -29,10 +28,10 @@ class CiBundle :
 private:
 
   /// @brief コンストラクタ
-  CiBundle();
+  CiBundle() = default;
 
   /// @brief デストラクタ
-  ~CiBundle();
+  ~CiBundle() = default;
 
 
 public:
@@ -62,8 +61,7 @@ private:
   /// @brief 内容を初期化する．
   void
   init(const ShString& name,
-       const vector<ClibCellPin*>& pin_list,
-       Alloc& alloc);
+       const vector<ClibCellPin*>& pin_list);
 
 
 private:

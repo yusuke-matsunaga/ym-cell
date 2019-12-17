@@ -31,7 +31,7 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 void
-CiCellLibrary::restore(IDO& s)
+CiCellLibrary::restore(istream s)
 {
   string name;
   s >> name;
@@ -160,7 +160,7 @@ CiCellLibrary::restore(IDO& s)
 BEGIN_NONAMESPACE
 
 ClibVarType
-restore_1dim(IDO& s,
+restore_1dim(istream s,
 	     vector<double>& index_array)
 {
   ymuint8 tmp;
@@ -179,7 +179,7 @@ END_NONAMESPACE
 
 // @brief LUT テンプレートを読み込む．
 void
-CiCellLibrary::restore_lut_template(IDO& s)
+CiCellLibrary::restore_lut_template(istream s)
 {
   int lut_num;
   s >> lut_num;
@@ -230,7 +230,7 @@ CiCellLibrary::restore_lut_template(IDO& s)
 BEGIN_NONAMESPACE
 
 void
-restore_tid_list(IDO& s,
+restore_tid_list(istream s,
 		 const vector<CiTiming*>& global_timing_list,
 		 vector<CiTiming*>& timing_list)
 {
@@ -248,7 +248,7 @@ END_NONAMESPACE
 
 // @brief セルを読み込む．
 void
-CiCellLibrary::restore_cell(IDO& s,
+CiCellLibrary::restore_cell(istream s,
 			    vector<CiCell*>& cell_list)
 {
   int nc;
@@ -484,7 +484,7 @@ CiCellLibrary::restore_cell(IDO& s,
 
 // @brief セルグループを読み込む．
 void
-CiCellLibrary::restore_cell_group(IDO& s,
+CiCellLibrary::restore_cell_group(istream s,
 				  const vector<CiCell*>& global_cell_list,
 				  vector<CiCellGroup*>& group_list)
 {
@@ -510,7 +510,7 @@ CiCellLibrary::restore_cell_group(IDO& s,
 
 // @brief セルクラスを読み込む．
 void
-CiCellLibrary::restore_cell_class(IDO& s,
+CiCellLibrary::restore_cell_class(istream s,
 				  const vector<CiCellGroup*>& global_group_list,
 				  vector<CiCellClass*>& class_list)
 {
@@ -539,7 +539,7 @@ CiCellLibrary::restore_cell_class(IDO& s,
 
 // @brief タイミング情報を読み込む．
 void
-CiCellLibrary::restore_timing(IDO& s,
+CiCellLibrary::restore_timing(istream s,
 			      vector<CiTiming*>& timing_list)
 {
   int nt;
@@ -638,7 +638,7 @@ CiCellLibrary::restore_timing(IDO& s,
 
 // @brief LUT を読み込む．
 ClibLut*
-CiCellLibrary::restore_lut(IDO& s)
+CiCellLibrary::restore_lut(istream s)
 {
   int templ_id;
   s >> templ_id;
@@ -766,7 +766,7 @@ CiCellLibrary::restore_lut(IDO& s)
 // @retval true 読み込みが成功した．
 // @retval false 読み込みが失敗した．
 bool
-CiPatMgr::restore(IDO& bis)
+CiPatMgr::restore(istream bis)
 {
   // ノードと枝の情報を読み込む．
   int nn;
@@ -800,7 +800,7 @@ CiPatMgr::restore(IDO& bis)
 // @brief バイナリファイルを読み込む．
 // @param[in] bis 入力元のストリーム
 void
-CiPatGraph::restore(IDO& bis,
+CiPatGraph::restore(istream bis,
 		    Alloc& alloc)
 {
   bis >> mRepId

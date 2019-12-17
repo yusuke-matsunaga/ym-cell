@@ -37,11 +37,6 @@ CiBusType::CiBusType(const ShString& name,
   }
 }
 
-// @brief デストラクタ
-CiBusType::~CiBusType()
-{
-}
-
 // @brief 名前の取得
 string
 CiBusType::name() const

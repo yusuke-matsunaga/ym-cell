@@ -155,7 +155,7 @@ protected:
   /// @param[in] s 出力先のストリーム
   /// @param[in] type_id 型の ID
   void
-  dump_common(ODO& s,
+  dump_common(ostream& s,
 	      ymuint8 type_id) const;
 
 
@@ -300,7 +300,7 @@ public:
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
   void
-  dump(ODO& s) const override;
+  dump(ostream& s) const override;
 
 
 private:
@@ -378,7 +378,7 @@ public:
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
   void
-  dump(ODO& s) const override;
+  dump(ostream& s) const override;
 
 
 private:
@@ -453,7 +453,7 @@ public:
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
   void
-  dump(ODO& s) const override;
+  dump(ostream& s) const override;
 
 
 private:
@@ -536,7 +536,7 @@ public:
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
   void
-  dump(ODO& s) const override;
+  dump(ostream& s) const override;
 
 
 private:

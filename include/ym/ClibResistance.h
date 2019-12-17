@@ -10,8 +10,6 @@
 
 
 #include "ym/clib.h"
-#include "ym/IDO.h"
-#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -151,22 +149,6 @@ operator>=(const ClibResistance& left,
 ostream&
 operator<<(ostream& s,
 	   const ClibResistance& val);
-
-/// @brief バイナリダンプ
-/// @param[in] s 出力先のストリーム
-/// @param[in] val 値
-/// @relates ClibResistance
-ODO&
-operator<<(ODO& s,
-	   const ClibResistance& val);
-
-/// @brief バイナリリストア
-/// @param[in] s 入力元のストリーム
-/// @param[out] val 値を格納する変数
-/// @relates ClibResistance
-IDO&
-operator>>(IDO& s,
-	   ClibResistance& val);
 
 
 //////////////////////////////////////////////////////////////////////
@@ -327,33 +309,6 @@ operator<<(ostream& s,
 	   const ClibResistance& val)
 {
   return s << val.value();
-}
-
-// @brief バイナリダンプ
-// @param[in] s 出力先のストリーム
-// @param[in] val 値
-// @relates ClibResistance
-inline
-ODO&
-operator<<(ODO& s,
-	   const ClibResistance& val)
-{
-  return s << val.value();
-}
-
-// @brief バイナリリストア
-// @param[in] s 入力元のストリーム
-// @param[out] val 値を格納する変数
-// @relates ClibResistance
-inline
-IDO&
-operator>>(IDO& s,
-	   ClibResistance& val)
-{
-  double tmp_val;
-  s >> tmp_val;
-  val = ClibResistance(tmp_val);
-  return s;
 }
 
 END_NAMESPACE_YM_CLIB

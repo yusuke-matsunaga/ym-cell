@@ -10,8 +10,6 @@
 
 
 #include "ym/clib.h"
-#include "ym/IDO.h"
-#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -157,22 +155,6 @@ operator>=(const ClibArea& left,
 ostream&
 operator<<(ostream& s,
 	   const ClibArea& val);
-
-/// @brief バイナリダンプ
-/// @param[in] s 出力先のストリーム
-/// @param[in] val 値
-/// @relates ClibArea
-ODO&
-operator<<(ODO& s,
-	   const ClibArea& val);
-
-/// @brief バイナリリストア
-/// @param[in] s 入力元のストリーム
-/// @param[out] val 値を格納する変数
-/// @relates ClibArea
-IDO&
-operator>>(IDO& s,
-	   ClibArea& val);
 
 
 //////////////////////////////////////////////////////////////////////
@@ -333,33 +315,6 @@ operator<<(ostream& s,
 	   const ClibArea& val)
 {
   return s << val.value();
-}
-
-// @brief バイナリダンプ
-// @param[in] s 出力先のストリーム
-// @param[in] val 値
-// @relates ClibArea
-inline
-ODO&
-operator<<(ODO& s,
-	   const ClibArea& val)
-{
-  return s << val.value();
-}
-
-// @brief バイナリリストア
-// @param[in] s 入力元のストリーム
-// @param[out] val 値を格納する変数
-// @relates ClibArea
-inline
-IDO&
-operator>>(IDO& s,
-	   ClibArea& val)
-{
-  double tmp_val;
-  s >> tmp_val;
-  val = ClibArea(tmp_val);
-  return s;
 }
 
 END_NAMESPACE_YM_CLIB

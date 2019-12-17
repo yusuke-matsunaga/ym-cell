@@ -10,7 +10,6 @@
 
 
 #include "ym/clib.h"
-#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -93,7 +92,7 @@ public:
   /// @param[in] s 出力先のストリーム
   virtual
   void
-  dump(ODO& s) const = 0;
+  dump(ostream& s) const = 0;
 
 };
 

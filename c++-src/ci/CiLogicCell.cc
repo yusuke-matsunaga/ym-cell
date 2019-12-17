@@ -26,7 +26,6 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
 // @param[in] timing_list タイミング情報のリスト
-// @param[in] alloc メモリアロケータ
 CiLogicCell::CiLogicCell(CiCellLibrary* library,
 			 const ShString& name,
 			 ClibArea area,
@@ -35,8 +34,7 @@ CiLogicCell::CiLogicCell(CiCellLibrary* library,
 			 const vector<CiInoutPin*>& inout_list,
 			 const vector<CiBus*>& bus_list,
 			 const vector<CiBundle*>& bundle_list,
-			 const vector<CiTiming*>& timing_list,
-			 Alloc& alloc) :
+			 const vector<CiTiming*>& timing_list) :
   CiCell(library, name, area,
 	 input_list,
 	 output_list,
@@ -44,8 +42,7 @@ CiLogicCell::CiLogicCell(CiCellLibrary* library,
 	 vector<CiInternalPin*>(),
 	 bus_list,
 	 bundle_list,
-	 timing_list,
-	 alloc)
+	 timing_list)
 {
 }
 

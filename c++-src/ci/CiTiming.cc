@@ -23,8 +23,8 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] cond タイミング条件を表す式
 CiTiming::CiTiming(ClibTimingType type,
 		   const Expr& cond) :
-  mType(type),
-  mCond(cond)
+  mType{type},
+  mCond{cond}
 {
 }
 

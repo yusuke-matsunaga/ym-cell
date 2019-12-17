@@ -18,16 +18,16 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief コンストラクタ
 CiPatGraph::CiPatGraph() :
-  mInputNum(0U),
-  mEdgeNum(0U),
-  mEdgeList(nullptr)
+  mInputNum{0},
+  mEdgeNum{0},
+  mEdgeList{nullptr}
 {
 }
 
 // @brief デストラクタ
 CiPatGraph::~CiPatGraph()
 {
-  // mEdgeList はメモリアロケータが管理している．
+  delete [] mEdgeList;
 }
 
 // @brief 代表関数番号を返す．
@@ -86,13 +86,17 @@ CiPatGraph::edge(int pos) const
 void
 CiPatGraph::init(int rep_id,
 		 int input_num,
-		 int edge_num,
-		 Alloc& alloc)
+		 int edge_num)
 {
   mRepId = rep_id;
   mInputNum = input_num;
   mEdgeNum = edge_num;
-  alloc_array(alloc);
+  if ( mEdgeNum > 0 ) {
+    mEdgeList = new int[mEdgeNum];
+  }
+  else {
+    mEdgeList = nullptr;
+  }
 }
 
 // @brief 枝のデータを設定する．
@@ -106,21 +110,6 @@ CiPatGraph::set_edge(int pos,
   ASSERT_COND( pos < edge_num() );
 
   mEdgeList[pos] = edge;
-}
-
-// @brief mEdgeList を確保する．
-// @param[in] alloc メモリアロケータ
-// @note mEdgeNum に値が設定されているものとする．
-void
-CiPatGraph::alloc_array(Alloc& alloc)
-{
-  if ( mEdgeNum > 0 ) {
-    void* p = alloc.get_memory(sizeof(int) * mEdgeNum);
-    mEdgeList = new (p) int[mEdgeNum];
-  }
-  else {
-    mEdgeList = nullptr;
-  }
 }
 
 END_NAMESPACE_YM_CLIB

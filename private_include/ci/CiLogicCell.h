@@ -43,8 +43,7 @@ private:
 	      const vector<CiInoutPin*>& inout_list,
 	      const vector<CiBus*>& bus_list,
 	      const vector<CiBundle*>& bundle_list,
-	      const vector<CiTiming*>& timing_list,
-	      Alloc& alloc);
+	      const vector<CiTiming*>& timing_list);
 
   /// @brief デストラクタ
   ~CiLogicCell();

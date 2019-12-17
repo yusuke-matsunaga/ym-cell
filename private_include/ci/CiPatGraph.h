@@ -10,9 +10,6 @@
 
 
 #include "ym/ClibPatGraph.h"
-#include "ym/Alloc.h"
-#include "ym/IDO.h"
-#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -72,14 +69,13 @@ public:
   /// @brief バイナリダンプを行う．
   /// @param[in] bos 出力先のストリーム
   void
-  dump(ODO& bos) const;
+  dump(ostream& bos) const;
 
   /// @brief バイナリファイルを読み込む．
   /// @param[in] bis 入力元のストリーム
   /// @param[in] alloc メモリアロケータ
   void
-  restore(IDO& bis,
-	  Alloc& alloc);
+  restore(istream& bis);
 
 
 public:
@@ -95,8 +91,7 @@ public:
   void
   init(int rep_id,
        int input_num,
-       int edge_num,
-       Alloc& alloc);
+       int edge_num);
 
   /// @brief 枝のデータを設定する．
   /// @param[in] pos 位置番号 ( 0 <= pos < edge_num() )
@@ -111,12 +106,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // 下請け関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief mEdgeList を確保する．
-  /// @param[in] alloc メモリアロケータ
-  /// @note mEdgeNum に値が設定されているものとする．
-  void
-  alloc_array(Alloc& alloc);
 
 
 private:

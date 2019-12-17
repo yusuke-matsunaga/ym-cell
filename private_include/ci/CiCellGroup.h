@@ -12,9 +12,6 @@
 #include "ym/ClibCellGroup.h"
 #include "ym/ClibObjList.h"
 #include "ym/NpnMapM.h"
-#include "ym/Alloc.h"
-#include "ym/IDO.h"
-#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -46,8 +43,7 @@ public:
   CiCellGroup(int id,
 	      const NpnMapM& map,
 	      int pininfo,
-	      const vector<CiCell*>& cell_list,
-	      Alloc& alloc);
+	      const vector<CiCell*>& cell_list);
 
   /// @brief エラーオブジェクト用のコンストラクタ
   CiCellGroup();
@@ -203,8 +199,7 @@ public:
   init(int id,
        const NpnMapM& map,
        int pininfo,
-       const vector<CiCell*>& cell_list,
-       Alloc& alloc);
+       const vector<CiCell*>& cell_list);
 
   /// @brief 親のセルクラスを設定する．
   /// @param[in] cell_class 親のクラス
@@ -243,7 +238,7 @@ public:
   /// @brief バイナリダンプを行う．
   /// @param[in] bos 出力先のストリーム
   void
-  dump(ODO& bos) const override;
+  dump(ostream& bos) const override;
 
 
 private:

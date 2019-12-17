@@ -11,9 +11,6 @@
 
 #include "ym/ClibCellClass.h"
 #include "ym/ClibObjList.h"
-#include "ym/Alloc.h"
-#include "ym/IDO.h"
-#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -39,8 +36,7 @@ public:
   /// @param[in] alloc メモリアロケータ
   CiCellClass(int id,
 	      const vector<NpnMapM>& idmap_list,
-	      const vector<CiCellGroup*>& group_list,
-	      Alloc& alloc);
+	      const vector<CiCellGroup*>& group_list);
 
   /// @brief エラーオブジェクト用のコンストラクタ
   CiCellClass();
@@ -88,7 +84,7 @@ public:
   /// @brief バイナリダンプを行う．
   /// @param[in] bos 出力先のストリーム
   void
-  dump(ODO& bos) const override;
+  dump(ostream& bos) const override;
 
 
 private:

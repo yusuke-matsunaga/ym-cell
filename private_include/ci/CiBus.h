@@ -12,7 +12,6 @@
 #include "ym/ClibBus.h"
 #include "ym/ClibObjList.h"
 #include "ym/ShString.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -29,10 +28,10 @@ class CiBus :
 private:
 
   /// @brief コンストラクタ
-  CiBus();
+  CiBus() = default;
 
   /// @brief デストラクタ
-  ~CiBus();
+  ~CiBus() = default;
 
 
 public:
@@ -67,8 +66,7 @@ private:
   void
   init(const ShString& name,
        const ClibBusType* bus_type,
-       const vector<ClibCellPin*>& pin_list,
-       Alloc& alloc);
+       const vector<ClibCellPin*>& pin_list);
 
 
 private:
@@ -80,7 +78,7 @@ private:
   ShString mName;
 
   // バスの型
-  const ClibBusType* mBusType;
+  const ClibBusType* mBusType{nullptr};
 
   // ピンのリスト
   ClibCellPinList mPinList;

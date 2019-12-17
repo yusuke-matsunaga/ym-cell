@@ -29,7 +29,6 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] next_state "next_state" 関数の式
 // @param[in] clocked_on "clocked_on" 関数の式
 // @param[in] clocked_on_also "clocked_on_also" 関数の式
-// @param[in] alloc メモリアロケータ
 CiFFCell::CiFFCell(CiCellLibrary* library,
 		   const ShString& name,
 		   ClibArea area,
@@ -41,8 +40,7 @@ CiFFCell::CiFFCell(CiCellLibrary* library,
 		   const vector<CiTiming*>& timing_list,
 		   const Expr& next_state,
 		   const Expr& clocked_on,
-		   const Expr& clocked_on_also,
-		   Alloc& alloc) :
+		   const Expr& clocked_on_also) :
   CiCell(library, name, area,
 	 input_list,
 	 output_list,
@@ -50,8 +48,7 @@ CiFFCell::CiFFCell(CiCellLibrary* library,
 	 vector<CiInternalPin*>(),
 	 bus_list,
 	 bundle_list,
-	 timing_list,
-	 alloc),
+	 timing_list),
   mNextState(next_state),
   mClock(clocked_on),
   mClock2(clocked_on_also)
@@ -113,7 +110,6 @@ CiFFCell::clock2_expr() const
 // @param[in] clocked_on "clocked_on" 関数の式
 // @param[in] clocked_on_also "clocked_on_also" 関数の式
 // @param[in] clear "clear" 関数の式
-// @param[in] alloc メモリアロケータ
 CiFFRCell::CiFFRCell(CiCellLibrary* library,
 		     const ShString& name,
 		     ClibArea area,
@@ -126,8 +122,7 @@ CiFFRCell::CiFFRCell(CiCellLibrary* library,
 		     const Expr& next_state,
 		     const Expr& clocked_on,
 		     const Expr& clocked_on_also,
-		     const Expr& clear,
-		     Alloc& alloc) :
+		     const Expr& clear) :
   CiFFCell(library, name, area,
 	   input_list,
 	   output_list,
@@ -137,8 +132,7 @@ CiFFRCell::CiFFRCell(CiCellLibrary* library,
 	   timing_list,
 	   next_state,
 	   clocked_on,
-	   clocked_on_also,
-	   alloc),
+	   clocked_on_also),
   mClear(clear)
 {
 }
@@ -182,7 +176,6 @@ CiFFRCell::clear_expr() const
 // @param[in] clocked_on "clocked_on" 関数の式
 // @param[in] clocked_on_also "clocked_on_also" 関数の式
 // @param[in] preset "preset" 関数の式
-// @param[in] alloc メモリアロケータ
 CiFFSCell::CiFFSCell(CiCellLibrary* library,
 		     const ShString& name,
 		     ClibArea area,
@@ -195,8 +188,7 @@ CiFFSCell::CiFFSCell(CiCellLibrary* library,
 		     const Expr& next_state,
 		     const Expr& clocked_on,
 		     const Expr& clocked_on_also,
-		     const Expr& preset,
-		     Alloc& alloc) :
+		     const Expr& preset) :
   CiFFCell(library, name, area,
 	   input_list,
 	   output_list,
@@ -206,8 +198,7 @@ CiFFSCell::CiFFSCell(CiCellLibrary* library,
 	   timing_list,
 	   next_state,
 	   clocked_on,
-	   clocked_on_also,
-	   alloc),
+	   clocked_on_also),
   mPreset(preset)
 {
 }
@@ -254,7 +245,6 @@ CiFFSCell::preset_expr() const
 // @param[in] preset "preset" 関数の式
 // @param[in] clear_preset_var1 clear と preset が同時にオンになったときの値1
 // @param[in] clear_preset_var2 clear と preset が同時にオンになったときの値1
-// @param[in] alloc メモリアロケータ
 CiFFSRCell::CiFFSRCell(CiCellLibrary* library,
 		       const ShString& name,
 		       ClibArea area,
@@ -270,8 +260,7 @@ CiFFSRCell::CiFFSRCell(CiCellLibrary* library,
 		       const Expr& clear,
 		       const Expr& preset,
 		       int clear_preset_var1,
-		       int clear_preset_var2,
-		       Alloc& alloc) :
+		       int clear_preset_var2) :
   CiFFRCell(library, name, area,
 	    input_list,
 	    output_list,
@@ -282,8 +271,7 @@ CiFFSRCell::CiFFSRCell(CiCellLibrary* library,
 	    next_state,
 	    clocked_on,
 	    clocked_on_also,
-	    clear,
-	    alloc),
+	    clear),
   mPreset(preset)
 {
   mClearPresetVal[0] = clear_preset_var1;

@@ -46,8 +46,7 @@ private:
 	    const vector<CiInternalPin*>& internal_list,
 	    const vector<CiBus*>& bus_list,
 	    const vector<CiBundle*>& bundle_list,
-	    const vector<CiTiming*>& timing_list,
-	    Alloc& alloc);
+	    const vector<CiTiming*>& timing_list);
 
   /// @brief デストラクタ
   ~CiFsmCell();

@@ -52,8 +52,7 @@ protected:
 	      const vector<CiTiming*>& timing_list,
 	      const Expr& data_in,
 	      const Expr& enable,
-	      const Expr& enable_also,
-	      Alloc& alloc);
+	      const Expr& enable_also);
 
   /// @brief デストラクタ
   ~CiLatchCell();
@@ -126,7 +125,6 @@ protected:
   /// @param[in] enable "enable" 関数の式
   /// @param[in] enable_also "enable_also" 関数の式
   /// @param[in] clear "clear" 関数の式
-  /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
   CiLatchRCell(CiCellLibrary* library,
@@ -141,8 +139,7 @@ protected:
 	       const Expr& data_in,
 	       const Expr& enable,
 	       const Expr& enable_also,
-	       const Expr& clear,
-	       Alloc& alloc);
+	       const Expr& clear);
 
   /// @brief デストラクタ
   ~CiLatchRCell();
@@ -199,7 +196,6 @@ protected:
   /// @param[in] enable "enable" 関数の式
   /// @param[in] enable_also "enable_also" 関数の式
   /// @param[in] preset "preset" 関数の式
-  /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
   CiLatchSCell(CiCellLibrary* library,
@@ -214,8 +210,7 @@ protected:
 	       const Expr& data_in,
 	       const Expr& enable,
 	       const Expr& enable_also,
-	       const Expr& preset,
-	       Alloc& alloc);
+	       const Expr& preset);
 
   /// @brief デストラクタ
   ~CiLatchSCell();
@@ -275,7 +270,6 @@ protected:
   /// @param[in] preset "preset" 関数の式
   /// @param[in] clear_preset_var1 clear と preset が同時にオンになったときの値1
   /// @param[in] clear_preset_var2 clear と preset が同時にオンになったときの値2
-  /// @param[in] alloc メモリアロケータ
   /// *1: - false 論理式なし
   ///     - true 論理式あり
   CiLatchSRCell(CiCellLibrary* library,
@@ -293,8 +287,7 @@ protected:
 		const Expr& clear,
 		const Expr& preset,
 		int clear_preset_var1,
-		int clear_preset_var2,
-		Alloc& alloc);
+		int clear_preset_var2);
 
   /// @brief デストラクタ
   ~CiLatchSRCell();

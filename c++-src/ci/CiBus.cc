@@ -16,18 +16,6 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiBus
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-CiBus::CiBus() :
-  mBusType(nullptr)
-{
-}
-
-// @brief デストラクタ
-CiBus::~CiBus()
-{
-  // メモリ管理は他のクラスが行っている．
-}
-
 // @brief 名前の取得
 string
 CiBus::name() const
@@ -61,12 +49,11 @@ CiBus::pin(int pos) const
 void
 CiBus::init(const ShString& name,
 	    const ClibBusType* bus_type,
-	    const vector<ClibCellPin*>& pin_list,
-	    Alloc& alloc)
+	    const vector<ClibCellPin*>& pin_list)
 {
   mName = name;
   mBusType = bus_type;
-  mPinList.init(pin_list, alloc);
+  mPinList.init(pin_list);
 }
 
 END_NAMESPACE_YM_CLIB

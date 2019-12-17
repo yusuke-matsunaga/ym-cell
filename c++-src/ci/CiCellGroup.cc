@@ -63,16 +63,14 @@ END_NONAMESPACE
 // @param[in] map 変換マップ
 // @param[in] pininfo ピン情報
 // @param[in] cell_list セルのリスト
-// @param[in] alloc メモリアロケータ
 CiCellGroup::CiCellGroup(int id,
 			 const NpnMapM& map,
 			 int pininfo,
-			 const vector<CiCell*>& cell_list,
-			 Alloc& alloc) :
-  mId(id),
-  mRepClass(nullptr),
-  mMap(map),
-  mPinInfo(pininfo)
+			 const vector<CiCell*>& cell_list) :
+  mId{id},
+  mRepClass{nullptr},
+  mMap{map},
+  mPinInfo{pininfo}
 {
   int n = cell_list.size();
   vector<ClibCell*> _cell_list;
@@ -81,13 +79,13 @@ CiCellGroup::CiCellGroup(int id,
     cell->set_group(this);
     _cell_list.push_back(cell);
   }
-  mCellList.init(_cell_list, alloc);
+  mCellList.init(_cell_list);
 }
 
 // @brief エラーオブジェクト用のコンストラクタ
 CiCellGroup::CiCellGroup() :
-  mId(-1),
-  mRepClass(nullptr)
+  mId{-1},
+  mRepClass{nullptr}
 {
 }
 

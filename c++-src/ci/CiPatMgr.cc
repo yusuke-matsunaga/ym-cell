@@ -23,20 +23,16 @@ using namespace nsLibcomp;
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] alloc メモリアロケータ
-CiPatMgr::CiPatMgr(Alloc& alloc) :
-  mAlloc(alloc),
-  mNodeNum(0U),
-  mNodeTypeArray(nullptr),
-  mEdgeArray(nullptr),
-  mPatNum(0),
-  mPatArray(nullptr)
+CiPatMgr::CiPatMgr()
 {
 }
 
 // @brief デストラクタ
 CiPatMgr::~CiPatMgr()
 {
+  delete [] mNodeTypeArray;
+  delete [] mEdgeArray;
+  delete [] mPatArray;
 }
 
 // @brief このセルライブラリに含まれるセルの最大の入力数を得る．
@@ -104,7 +100,7 @@ CiPatMgr::copy(const LcPatMgr& src)
     int v = src.pat_node_list(i, node_list);
     int ne = node_list.size();
     CiPatGraph& pg = mPatArray[i];
-    pg.init(src.rep_id(i), v, ne, mAlloc);
+    pg.init(src.rep_id(i), v, ne);
     for (int j = 0; j < ne; ++ j) {
       pg.set_edge(j, node_list[j]);
     }
@@ -117,8 +113,8 @@ void
 CiPatMgr::set_node_num(int nn)
 {
   mNodeNum = nn;
-  mNodeTypeArray = mAlloc.get_array<ymuint>(mNodeNum);
-  mEdgeArray = mAlloc.get_array<ymuint>(mNodeNum * 2);
+  mNodeTypeArray = new ymuint[mNodeNum];
+  mEdgeArray = new ymuint[mNodeNum * 2];
 }
 
 // @brief パタン数を設定する．
@@ -126,7 +122,7 @@ void
 CiPatMgr::set_pat_num(int np)
 {
   mPatNum = np;
-  mPatArray = mAlloc.get_array<CiPatGraph>(mPatNum);
+  mPatArray = new CiPatGraph[mPatNum];
 }
 
 END_NAMESPACE_YM_CLIB

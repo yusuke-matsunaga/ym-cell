@@ -29,14 +29,14 @@ BEGIN_NAMESPACE_YM_CLIB
 BEGIN_NONAMESPACE
 
 void
-dump_lut(ODO& s,
+dump_lut(ostream& s,
 	 const ClibLut& lut)
 {
   if ( lut.dimension() > 0 ) {
     lut.dump(s);
   }
   else {
-    s.write_str(string());
+    //s.write_str(string());
   }
 }
 
@@ -49,7 +49,7 @@ END_NONAMESPACE
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-CiCellLibrary::dump(ODO& s) const
+CiCellLibrary::dump(ostream& s) const
 {
   // 名前
   s << name();
@@ -141,7 +141,7 @@ CiCellLibrary::dump(ODO& s) const
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-CiCell::dump(ODO& s) const
+CiCell::dump(ostream& s) const
 {
   ymuint8 tid = 0;
   if ( is_logic() ) {
@@ -251,7 +251,7 @@ CiCell::dump(ODO& s) const
 
 // @brief dump 用の共通情報を出力する．
 void
-CiCellPin::dump_common(ODO& s) const
+CiCellPin::dump_common(ostream& s) const
 {
   s << name();
 }
@@ -264,7 +264,7 @@ CiCellPin::dump_common(ODO& s) const
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-CiInputPin::dump(ODO& s) const
+CiInputPin::dump(ostream& s) const
 {
   dump_common(s);
 
@@ -281,7 +281,7 @@ CiInputPin::dump(ODO& s) const
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-CiOutputPin::dump(ODO& s) const
+CiOutputPin::dump(ostream& s) const
 {
   dump_common(s);
 
@@ -304,7 +304,7 @@ CiOutputPin::dump(ODO& s) const
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-CiInoutPin::dump(ODO& s) const
+CiInoutPin::dump(ostream& s) const
 {
   dump_common(s);
 
@@ -330,7 +330,7 @@ CiInoutPin::dump(ODO& s) const
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-CiInternalPin::dump(ODO& s) const
+CiInternalPin::dump(ostream& s) const
 {
   dump_common(s);
 
@@ -346,7 +346,7 @@ CiInternalPin::dump(ODO& s) const
 // @param[in] s 出力先のストリーム
 // @param[in] type_id 型の ID
 void
-CiTiming::dump_common(ODO& s,
+CiTiming::dump_common(ostream& s,
 		      ymuint8 type_id) const
 {
   s << type_id
@@ -362,7 +362,7 @@ CiTiming::dump_common(ODO& s,
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-CiTimingGeneric::dump(ODO& s) const
+CiTimingGeneric::dump(ostream& s) const
 {
   dump_common(s, 0);
 
@@ -382,7 +382,7 @@ CiTimingGeneric::dump(ODO& s) const
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-CiTimingPiecewise::dump(ODO& s) const
+CiTimingPiecewise::dump(ostream& s) const
 {
   dump_common(s, 1);
 
@@ -400,7 +400,7 @@ CiTimingPiecewise::dump(ODO& s) const
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-CiTimingLut1::dump(ODO& s) const
+CiTimingLut1::dump(ostream& s) const
 {
   dump_common(s, 2);
 
@@ -418,7 +418,7 @@ CiTimingLut1::dump(ODO& s) const
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-CiTimingLut2::dump(ODO& s) const
+CiTimingLut2::dump(ostream& s) const
 {
   dump_common(s, 3);
 
@@ -436,7 +436,7 @@ CiTimingLut2::dump(ODO& s) const
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-CiLut::dump(ODO& s) const
+CiLut::dump(ostream& s) const
 {
   s << template_id();
   int d = dimension();
@@ -473,7 +473,7 @@ CiLut::dump(ODO& s) const
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-CiLutTemplate::dump(ODO& s) const
+CiLutTemplate::dump(ostream& s) const
 {
   ymuint8 d = dimension();
   s << name()
@@ -496,7 +496,7 @@ CiLutTemplate::dump(ODO& s) const
 // @brief バイナリダンプを行う．
 // @param[in] bos 出力先のストリーム
 void
-CiCellGroup::dump(ODO& bos) const
+CiCellGroup::dump(ostream& bos) const
 {
   bos << mMap
       << mPinInfo
@@ -514,7 +514,7 @@ CiCellGroup::dump(ODO& bos) const
 // @brief バイナリダンプを行う．
 // @param[in] bos 出力先のストリーム
 void
-CiCellClass::dump(ODO& bos) const
+CiCellClass::dump(ostream& bos) const
 {
   // 同位体変換情報のダンプ
   bos << mIdmapNum;
@@ -537,7 +537,7 @@ CiCellClass::dump(ODO& bos) const
 // @brief バイナリダンプを行う．
 // @param[in] bos 出力先のストリーム
 void
-CiPatMgr::dump(ODO& bos) const
+CiPatMgr::dump(ostream& bos) const
 {
   // パタングラフのノード情報のダンプ
   bos << mNodeNum;
@@ -562,7 +562,7 @@ CiPatMgr::dump(ODO& bos) const
 // @brief バイナリダンプを行う．
 // @param[in] bos 出力先のストリーム
 void
-CiPatGraph::dump(ODO& bos) const
+CiPatGraph::dump(ostream& bos) const
 {
   bos << mRepId
       << mInputNum

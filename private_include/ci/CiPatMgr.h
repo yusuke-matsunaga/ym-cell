@@ -35,8 +35,7 @@ class CiPatMgr
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリアロケータ
-  CiPatMgr(Alloc& alloc);
+  CiPatMgr();
 
   /// @brief デストラクタ
   ~CiPatMgr();
@@ -150,26 +149,23 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // メモリアロケータ
-  Alloc& mAlloc;
-
   // ノード数
-  int mNodeNum;
+  int mNodeNum{0};
 
   // ノードの種類+入力番号を納めた配列
   // サイズは mNodeNum
-  ymuint* mNodeTypeArray;
+  ymuint* mNodeTypeArray{nullptr};
 
   // ファンインのノード番号＋反転属性を納めた配列
   // サイズは mNodeNum * 2
-  ymuint* mEdgeArray;
+  ymuint* mEdgeArray{nullptr};
 
   // パタン数
-  int mPatNum;
+  int mPatNum{0};
 
   // パタンの配列
   // サイズは mPatNum
-  CiPatGraph* mPatArray;
+  CiPatGraph* mPatArray{nullptr};
 
 };
 

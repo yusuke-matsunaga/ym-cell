@@ -16,17 +16,6 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiBundle
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-CiBundle::CiBundle()
-{
-}
-
-// @brief デストラクタ
-CiBundle::~CiBundle()
-{
-  // メモリ管理は他のクラスがやる．
-}
-
 // @brief 名前の取得
 string
 CiBundle::name() const
@@ -52,11 +41,10 @@ CiBundle::pin(int pos) const
 // @brief 内容を初期化する．
 void
 CiBundle::init(const ShString& name,
-	       const vector<ClibCellPin*>& pin_list,
-	       Alloc& alloc)
+	       const vector<ClibCellPin*>& pin_list)
 {
   mName = name;
-  mPinList.init(pin_list, alloc);
+  mPinList.init(pin_list);
 }
 
 END_NAMESPACE_YM_CLIB

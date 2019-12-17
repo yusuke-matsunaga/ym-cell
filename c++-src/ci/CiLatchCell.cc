@@ -29,7 +29,6 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] data_in "data_in" 関数の式
 // @param[in] enable "enable" 関数の式
 // @param[in] enable_also "enable_also" 関数の式
-// @param[in] alloc メモリアロケータ
 CiLatchCell::CiLatchCell(CiCellLibrary* library,
 			 const ShString& name,
 			 ClibArea area,
@@ -41,8 +40,7 @@ CiLatchCell::CiLatchCell(CiCellLibrary* library,
 			 const vector<CiTiming*>& timing_list,
 			 const Expr& data_in,
 			 const Expr& enable,
-			 const Expr& enable_also,
-			 Alloc& alloc) :
+			 const Expr& enable_also) :
   CiCell(library, name, area,
 	 input_list,
 	 output_list,
@@ -50,8 +48,7 @@ CiLatchCell::CiLatchCell(CiCellLibrary* library,
 	 vector<CiInternalPin*>(),
 	 bus_list,
 	 bundle_list,
-	 timing_list,
-	 alloc),
+	 timing_list),
   mDataIn(data_in),
   mEnable(enable),
   mEnable2(enable_also)
@@ -113,7 +110,6 @@ CiLatchCell::enable2_expr() const
 // @param[in] enable "enable" 関数の式
 // @param[in] enable_also "enable_also" 関数の式
 // @param[in] clear "clear" 関数の式
-// @param[in] alloc メモリアロケータ
 CiLatchRCell::CiLatchRCell(CiCellLibrary* library,
 			   const ShString& name,
 			   ClibArea area,
@@ -126,8 +122,7 @@ CiLatchRCell::CiLatchRCell(CiCellLibrary* library,
 			   const Expr& data_in,
 			   const Expr& enable,
 			   const Expr& enable_also,
-			   const Expr& clear,
-			   Alloc& alloc) :
+			   const Expr& clear) :
   CiLatchCell(library, name, area,
 	      input_list,
 	      output_list,
@@ -137,8 +132,7 @@ CiLatchRCell::CiLatchRCell(CiCellLibrary* library,
 	      timing_list,
 	      data_in,
 	      enable,
-	      enable_also,
-	      alloc),
+	      enable_also),
   mClear(clear)
 {
 }
@@ -182,7 +176,6 @@ CiLatchRCell::clear_expr() const
 // @param[in] enable "enable" 関数の式
 // @param[in] enable_also "enable_also" 関数の式
 // @param[in] preset "preset" 関数の式
-// @param[in] alloc メモリアロケータ
 // *1: - false 論理式なし
 //     - true 論理式あり
 CiLatchSCell::CiLatchSCell(CiCellLibrary* library,
@@ -197,8 +190,7 @@ CiLatchSCell::CiLatchSCell(CiCellLibrary* library,
 			   const Expr& data_in,
 			   const Expr& enable,
 			   const Expr& enable_also,
-			   const Expr& preset,
-			   Alloc& alloc) :
+			   const Expr& preset) :
   CiLatchCell(library, name, area,
 	      input_list,
 	      output_list,
@@ -208,8 +200,7 @@ CiLatchSCell::CiLatchSCell(CiCellLibrary* library,
 	      timing_list,
 	      data_in,
 	      enable,
-	      enable_also,
-	      alloc),
+	      enable_also),
   mPreset(preset)
 {
 }
@@ -256,7 +247,6 @@ CiLatchSCell::preset_expr() const
 // @param[in] preset "preset" 関数の式
 // @param[in] clear_preset_var1 clear と preset が同時にオンになったときの値1
 // @param[in] clear_preset_var2 clear と preset が同時にオンになったときの値2
-// @param[in] alloc メモリアロケータ
 // *1: - false 論理式なし
 //     - true 論理式あり
 CiLatchSRCell::CiLatchSRCell(CiCellLibrary* library,
@@ -274,8 +264,7 @@ CiLatchSRCell::CiLatchSRCell(CiCellLibrary* library,
 			     const Expr& clear,
 			     const Expr& preset,
 			     int clear_preset_var1,
-			     int clear_preset_var2,
-			     Alloc& alloc) :
+			     int clear_preset_var2) :
   CiLatchRCell(library, name, area,
 	       input_list,
 	       output_list,
@@ -286,8 +275,7 @@ CiLatchSRCell::CiLatchSRCell(CiCellLibrary* library,
 	       data_in,
 	       enable,
 	       enable_also,
-	       clear,
-	       alloc),
+	       clear),
   mPreset(preset)
 {
   mClearPresetVal[0] = clear_preset_var1;

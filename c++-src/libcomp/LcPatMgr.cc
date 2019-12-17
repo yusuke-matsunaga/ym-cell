@@ -32,7 +32,6 @@ BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
 // @brief コンストラクタ
 LcPatMgr::LcPatMgr() :
-  mAlloc(sizeof(LcPatNode), 1024),
   mHashTable(nullptr),
   mHashSize(0)
 {

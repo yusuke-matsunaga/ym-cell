@@ -36,7 +36,6 @@ BEGIN_NAMESPACE_YM_CLIB
 // @param[in] bus_list バスのリスト
 // @param[in] bundle_list バンドルのリスト
 // @param[in] timing_list タイミング情報のリスト
-// @param[in] alloc メモリアロケータ
 CiCell::CiCell(CiCellLibrary* library,
 	       const ShString& name,
 	       ClibArea area,
@@ -46,8 +45,7 @@ CiCell::CiCell(CiCellLibrary* library,
 	       const vector<CiInternalPin*>& internal_list,
 	       const vector<CiBus*>& bus_list,
 	       const vector<CiBundle*>& bundle_list,
-	       const vector<CiTiming*>& timing_list,
-	       Alloc& alloc)
+	       const vector<CiTiming*>& timing_list)
 {
   mLibrary = library;
 
@@ -62,8 +60,7 @@ CiCell::CiCell(CiCellLibrary* library,
   int no2 = mOutputNum + mInOutNum;
   if ( ni2 > 0 && no2 > 0 ) {
     int n = ni2 * no2 * 2;
-    void* s = alloc.get_memory(sizeof(const ClibTimingList) * n);
-    mTimingMap = new (s) ClibTimingList[n];
+    mTimingMap = new ClibTimingList[n];
   }
   else {
     mTimingMap = nullptr;
@@ -140,10 +137,10 @@ CiCell::CiCell(CiCellLibrary* library,
     mLibrary->reg_pin(pin);
   }
 
-  mPinList.init(_pin_list, alloc);
-  mInputList.init(_input_list, alloc);
-  mOutputList.init(_output_list, alloc);
-  mInternalList.init(_internal_list, alloc);
+  mPinList.init(_pin_list);
+  mInputList.init(_input_list);
+  mOutputList.init(_output_list);
+  mInternalList.init(_internal_list);
 
   int nt = timing_list.size();
   vector<ClibTiming*> _timing_list(nt);
@@ -152,7 +149,7 @@ CiCell::CiCell(CiCellLibrary* library,
     timing->mId = id;
     _timing_list[id] = timing;
   }
-  mTimingList.init(_timing_list, alloc);
+  mTimingList.init(_timing_list);
 }
 
 // @brief エラーオブジェクト用のコンストラクタ
@@ -174,7 +171,7 @@ CiCell::CiCell() :
 // @brief デストラクタ
 CiCell::~CiCell()
 {
-  // メモリの確保は別のクラスが担当している．
+  delete [] mTimingMap;
 }
 
 // @brief ID番号の取得

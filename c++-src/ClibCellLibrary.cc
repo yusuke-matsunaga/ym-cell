@@ -673,7 +673,7 @@ ClibCellLibrary::pg_edge_inv(int id) const
 // @brief 内容をバイナリダンプする．
 // @param[in] s 出力先のストリーム
 void
-ClibCellLibrary::dump(ODO& s) const
+ClibCellLibrary::dump(ostream& s) const
 {
   if ( mImpl ) {
     return mImpl->dump(s);
@@ -683,7 +683,7 @@ ClibCellLibrary::dump(ODO& s) const
 // @brief バイナリダンプされた内容を読み込む．
 // @param[in] s 入力元のストリーム
 void
-ClibCellLibrary::restore(IDO& s)
+ClibCellLibrary::restore(istream& s)
 {
   CiCellLibrary* new_impl = new CiCellLibrary();
   new_impl->restore(s);

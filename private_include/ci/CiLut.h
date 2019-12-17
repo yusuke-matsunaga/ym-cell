@@ -65,7 +65,7 @@ public:
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
   void
-  dump(ODO& s) const override;
+  dump(ostream& s) const override;
 
 
 protected:

@@ -35,7 +35,7 @@ private:
 	    int bit_to);
 
   /// @brief デストラクタ
-  ~CiBusType();
+  ~CiBusType() = default;
 
 
 public:

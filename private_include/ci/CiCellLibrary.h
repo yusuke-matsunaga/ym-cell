@@ -13,6 +13,7 @@
 #include "ym/ClibArea.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibCapacitance.h"
+#include "ym/ClibObjList.h"
 #include "ym/ClibResistance.h"
 #include "ym/ClibTiming.h"
 #include "ym/ClibCellPin.h"
@@ -350,12 +351,12 @@ public:
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
   void
-  dump(ODO& s) const;
+  dump(ostream& s) const;
 
   /// @brief バイナリダンプされた内容を読み込む．
   /// @param[in] s 入力元のストリーム
   void
-  restore(IDO& s);
+  restore(istream& s);
 
 
 public:
@@ -885,14 +886,11 @@ private:
   // 参照回数
   int mRefCount;
 
-  // メモリ確保用のオブジェクト
-  SimpleAlloc mAlloc;
-
   // 名前
   string mName;
 
   // テクノロジ
-  ClibTechnology mTechnology;
+  ClibTechnology mTechnology{ClibTechnology::cmos};
 
   // バス命名規則
   string mBusNamingStyle;
@@ -928,21 +926,19 @@ private:
   string mLeakagePowerUnit;
 
   // 遅延モデル
-  ClibDelayModel mDelayModel;
+  ClibDelayModel mDelayModel{ClibDelayModel::GenericCmos};
 
   // 遅延テンプレートのリスト
   ClibLutTemplateList mLutTemplateList;
 
-#if 0
   // 名前をキーにした遅延テンプレート番号のハッシュ表
-  HashMap<ShString, int> mLutHash;
-#endif
+  unordered_map<ShString, int> mLutHash;
 
   // セルのリスト
   ClibCellList mCellList;
 
   // 名前をキーにしたセルのハッシュ表
-  CiCellHash mCellHash;
+  unordered_map<ShString, CiCell*> mCellHash;
 
   // ピン名をキーにしたピン番号のハッシュ表
   CiCellPinHash mPinHash;

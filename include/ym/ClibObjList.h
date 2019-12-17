@@ -5,11 +5,10 @@
 /// @brief ClibObjList のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -17,6 +16,8 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 /// @class ClibObjIterator ClibObjList.h "ym/ClibObjList.h"
 /// @brief ClibObjList 用の反復子
+///
+/// 実際は T* を持っているのに const T& を返すところがミソ
 //////////////////////////////////////////////////////////////////////
 template<class T>
 class ClibObjIterator
@@ -80,13 +81,11 @@ class ClibObjList
 public:
 
   /// @brief 空のコンストラクタ
-  ClibObjList();
+  ClibObjList() = default;
 
   /// @brief 内容を指定したコンストラクタ
   /// @param[in] src_list ソースリスト
-  /// @param[in] alloc メモリアロケータ
-  ClibObjList(const vector<T*>& src_list,
-	      Alloc& alloc);
+  ClibObjList(const vector<T*>& src_list);
 
   /// @brief デストラクタ
   ~ClibObjList();
@@ -99,12 +98,10 @@ public:
 
   /// @brief 内容を(再)設定する．
   /// @param[in] src_list ソースリスト
-  /// @param[in] alloc メモリアロケータ
   ///
   /// 以前の内容は破棄される．
   void
-  init(const vector<T*>& src_list,
-       Alloc& alloc);
+  init(const vector<T*>& src_list);
 
   /// @brief 要素数を返す．
   int
@@ -136,10 +133,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素数
-  int mNum;
+  int mNum{0};
 
   // 要素(のポインタ)の配列
-  T** mBody;
+  T** mBody{nullptr};
 
 };
 
@@ -202,26 +199,13 @@ ClibObjIterator<T>::operator!=(const ClibObjIterator<T>& right) const
   return !operator==(right);
 }
 
-// @brief コンストラクタ
-template<class T>
-inline
-ClibObjList<T>::ClibObjList() :
-  mNum{0},
-  mBody{nullptr}
-{
-}
-
 // @brief 内容を指定したコンストラクタ
 // @param[in] src_list ソースリスト
-// @param[in] alloc メモリアロケータ
 template<class T>
 inline
-ClibObjList<T>::ClibObjList(const vector<T*>& src_list,
-			    Alloc& alloc) :
-  mNum{0},
-  mBody{nullptr}
+ClibObjList<T>::ClibObjList(const vector<T*>& src_list)
 {
-  init(src_list, alloc);
+  init(src_list);
 }
 
 // @brief デストラクタ
@@ -229,21 +213,21 @@ template<class T>
 inline
 ClibObjList<T>::~ClibObjList()
 {
+  delete [] mBody;
 }
 
 // @brief 内容を(再)設定する．
 // @param[in] src_list ソースリスト
-// @param[in] alloc メモリアロケータ
 //
 // 以前の内容は破棄される．
 template<class T>
 inline
 void
-ClibObjList<T>::init(const vector<T*>& src_list,
-		     Alloc& alloc)
+ClibObjList<T>::init(const vector<T*>& src_list)
 {
+  delete [] mBody;
   mNum = src_list.size();
-  mBody = alloc.get_array<T*>(mNum);
+  mBody = new T*[mNum];
   for ( int i = 0; i < mNum; ++ i ) {
     mBody[i] = src_list[i];
   }

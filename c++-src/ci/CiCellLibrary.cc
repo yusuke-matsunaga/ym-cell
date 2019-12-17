@@ -39,12 +39,8 @@ using namespace nsLibcomp;
 
 // @brief コンストラクタ
 CiCellLibrary::CiCellLibrary() :
-  mRefCount(0),
-  mAlloc(4096),
-  mPatMgr(mAlloc)
+  mRefCount(0)
 {
-  mTechnology = ClibTechnology::cmos;
-  mDelayModel = ClibDelayModel::GenericCmos;
 }
 
 // @brief デストラクタ
@@ -286,7 +282,7 @@ CiCellLibrary::cell_id(const string& name) const
 int
 CiCellLibrary::cell_id(const ShString& name) const
 {
-  return mCellHash.get(name);
+  return mCellHash.at(name)->id();
 }
 
 // @brief セルグループのリストを返す．
@@ -611,9 +607,9 @@ CiCellLibrary::set_lu_table_template_list(const vector<CiLutTemplate*>& template
     CiLutTemplate* tmpl = template_list[i];
     tmpl->mId = i;
     _template_list[i] = tmpl;
-    //mLutHash.add(tmpl->_name(), i);
+    mLutHash.emplace(tmpl->_name(), i);
   }
-  mLutTemplateList.init(_template_list, mAlloc);
+  mLutTemplateList.init(_template_list);
 }
 
 // @brief 1次元の LUT のテンプレートを作る．
@@ -625,9 +621,7 @@ CiCellLibrary::new_lut_template1(const ShString& name,
 				 ClibVarType var_type1,
 				 const vector<double>& index_list1)
 {
-  void* p = mAlloc.get_memory(sizeof(CiLutTemplate1D));
-  CiLutTemplate* tmpl = new (p) CiLutTemplate1D(name,
-						var_type1, index_list1);
+  CiLutTemplate* tmpl = new CiLutTemplate1D(name, var_type1, index_list1);
   return tmpl;
 }
 
@@ -644,10 +638,9 @@ CiCellLibrary::new_lut_template2(const ShString& name,
 				 ClibVarType var_type2,
 				 const vector<double>& index_list2)
 {
-  void* p = mAlloc.get_memory(sizeof(CiLutTemplate2D));
-  CiLutTemplate* tmpl = new (p) CiLutTemplate2D(name,
-						var_type1, index_list1,
-						var_type2, index_list2);
+  CiLutTemplate* tmpl = new CiLutTemplate2D(name,
+					    var_type1, index_list1,
+					    var_type2, index_list2);
   return tmpl;
 }
 
@@ -668,11 +661,10 @@ CiCellLibrary::new_lut_template3(const ShString& name,
 				 ClibVarType var_type3,
 				 const vector<double>& index_list3)
 {
-  void* p = mAlloc.get_memory(sizeof(CiLutTemplate3D));
-  CiLutTemplate* tmpl = new (p) CiLutTemplate3D(name,
-						var_type1, index_list1,
-						var_type2, index_list2,
-						var_type3, index_list3);
+  CiLutTemplate* tmpl = new CiLutTemplate3D(name,
+					    var_type1, index_list1,
+					    var_type2, index_list2,
+					    var_type3, index_list3);
   return tmpl;
 }
 
@@ -693,9 +685,9 @@ CiCellLibrary::set_cell_list(const vector<CiCell*>& cell_list,
     cell->mId = id;
     _cell_list[id] = cell;
     // 名前をキーにしたハッシュに登録する．
-    mCellHash.add(cell);
+    mCellHash.emplace(cell->name(), cell);
   }
-  mCellList.init(_cell_list, mAlloc);
+  mCellList.init(_cell_list);
 
   if ( do_compile ) {
     compile(cell_list);
@@ -721,15 +713,13 @@ CiCellLibrary::new_logic_cell(const ShString& name,
 			      const vector<CiBundle*>& bundle_list,
 			      const vector<CiTiming*>& timing_list)
 {
-  void* p = mAlloc.get_memory(sizeof(CiLogicCell));
-  CiCell* cell = new (p) CiLogicCell(this, name, area,
-				     input_list,
-				     output_list,
-				     inout_list,
-				     bus_list,
-				     bundle_list,
-				     timing_list,
-				     mAlloc);
+  CiCell* cell = new CiLogicCell(this, name, area,
+				 input_list,
+				 output_list,
+				 inout_list,
+				 bus_list,
+				 bundle_list,
+				 timing_list);
 
   return cell;
 }
@@ -771,68 +761,60 @@ CiCellLibrary::new_ff_cell(const ShString& name,
   CiCell* cell = nullptr;
   if ( has_clear ) {
     if ( has_preset ) {
-      void* p = mAlloc.get_memory(sizeof(CiFFSRCell));
-      cell = new (p) CiFFSRCell(this, name, area,
-				input_list,
-				output_list,
-				inout_list,
-				bus_list,
-				bundle_list,
-				timing_list,
-				next_state,
-				clocked_on,
-				clocked_on_also,
-				clear,
-				preset,
-				clear_preset_var1,
-				clear_preset_var2,
-				mAlloc);
+      cell = new CiFFSRCell(this, name, area,
+			    input_list,
+			    output_list,
+			    inout_list,
+			    bus_list,
+			    bundle_list,
+			    timing_list,
+			    next_state,
+			    clocked_on,
+			    clocked_on_also,
+			    clear,
+			    preset,
+			    clear_preset_var1,
+			    clear_preset_var2);
     }
     else {
-      void* p = mAlloc.get_memory(sizeof(CiFFRCell));
-      cell = new (p) CiFFRCell(this, name, area,
-			       input_list,
-			       output_list,
-			       inout_list,
-			       bus_list,
-			       bundle_list,
-			       timing_list,
-			       next_state,
-			       clocked_on,
-			       clocked_on_also,
-			       clear,
-			       mAlloc);
+      cell = new CiFFRCell(this, name, area,
+			   input_list,
+			   output_list,
+			   inout_list,
+			   bus_list,
+			   bundle_list,
+			   timing_list,
+			   next_state,
+			   clocked_on,
+			   clocked_on_also,
+			   clear);
     }
   }
   else {
     if ( has_preset ) {
-      void* p = mAlloc.get_memory(sizeof(CiFFSCell));
-      cell = new (p) CiFFSCell(this, name, area,
-			       input_list,
-			       output_list,
-			       inout_list,
-			       bus_list,
-			       bundle_list,
-			       timing_list,
-			       next_state,
-			       clocked_on,
-			       clocked_on_also,
-			       preset,
-			       mAlloc);
+      cell = new CiFFSCell(this, name, area,
+			   input_list,
+			   output_list,
+			   inout_list,
+			   bus_list,
+			   bundle_list,
+			   timing_list,
+			   next_state,
+			   clocked_on,
+			   clocked_on_also,
+			   preset);
     }
     else {
-      void* p = mAlloc.get_memory(sizeof(CiFFCell));
-      cell = new (p) CiFFCell(this, name, area,
-			      input_list,
-			      output_list,
-			      inout_list,
-			      bus_list,
-			      bundle_list,
-			      timing_list,
-			      next_state,
-			      clocked_on,
-			      clocked_on_also,
-			      mAlloc);
+      cell = new CiFFCell(this, name, area,
+			  input_list,
+			  output_list,
+			  inout_list,
+			  bus_list,
+			  bundle_list,
+			  timing_list,
+			  next_state,
+			  clocked_on,
+			  clocked_on_also);
     }
   }
 
@@ -880,68 +862,60 @@ CiCellLibrary::new_latch_cell(const ShString& name,
   CiCell* cell = nullptr;
   if ( has_clear ) {
     if ( has_preset ) {
-      void* p = mAlloc.get_memory(sizeof(CiLatchSRCell));
-      cell = new (p) CiLatchSRCell(this, name, area,
-				   input_list,
-				   output_list,
-				   inout_list,
-				   bus_list,
-				   bundle_list,
-				   timing_list,
-				   data_in,
-				   enable,
-				   enable_also,
-				   clear,
-				   preset,
-				   clear_preset_var1,
-				   clear_preset_var2,
-				   mAlloc);
+      cell = new CiLatchSRCell(this, name, area,
+			       input_list,
+			       output_list,
+			       inout_list,
+			       bus_list,
+			       bundle_list,
+			       timing_list,
+			       data_in,
+			       enable,
+			       enable_also,
+			       clear,
+			       preset,
+			       clear_preset_var1,
+			       clear_preset_var2);
     }
     else {
-      void* p = mAlloc.get_memory(sizeof(CiLatchRCell));
-      cell = new (p) CiLatchRCell(this, name, area,
-				  input_list,
-				  output_list,
-				  inout_list,
-				  bus_list,
-				  bundle_list,
-				  timing_list,
-				  data_in,
-				  enable,
-				  enable_also,
-				  clear,
-				  mAlloc);
+      cell = new CiLatchRCell(this, name, area,
+			      input_list,
+			      output_list,
+			      inout_list,
+			      bus_list,
+			      bundle_list,
+			      timing_list,
+			      data_in,
+			      enable,
+			      enable_also,
+			      clear);
     }
   }
   else {
     if ( has_preset ) {
-      void* p = mAlloc.get_memory(sizeof(CiLatchSCell));
-      cell = new (p) CiLatchSCell(this, name, area,
-				  input_list,
-				  output_list,
-				  inout_list,
-				  bus_list,
-				  bundle_list,
-				  timing_list,
-				  data_in,
-				  enable,
-				  enable_also,
-				  preset,
-				  mAlloc);
+      cell = new CiLatchSCell(this, name, area,
+			      input_list,
+			      output_list,
+			      inout_list,
+			      bus_list,
+			      bundle_list,
+			      timing_list,
+			      data_in,
+			      enable,
+			      enable_also,
+			      preset);
     }
     else {
-      void* p = mAlloc.get_memory(sizeof(CiLatchCell));
-      cell = new (p) CiLatchCell(this, name, area,
-				 input_list,
-				 output_list,
-				 inout_list,
-				 bus_list,
-				 bundle_list,
-				 timing_list,
-				 data_in,
-				 enable,
-				 enable_also,
-				 mAlloc);
+      cell = new CiLatchCell(this, name, area,
+			     input_list,
+			     output_list,
+			     inout_list,
+			     bus_list,
+			     bundle_list,
+			     timing_list,
+			     data_in,
+			     enable,
+			     enable_also);
     }
   }
 
@@ -969,16 +943,14 @@ CiCellLibrary::new_fsm_cell(const ShString& name,
 			    const vector<CiBundle*>& bundle_list,
 			    const vector<CiTiming*>& timing_list)
 {
-  void* p = mAlloc.get_memory(sizeof(CiFsmCell));
-  CiCell* cell = new (p) CiFsmCell(this, name, area,
-				   input_list,
-				   output_list,
-				   inout_list,
-				   internal_list,
-				   bus_list,
-				   bundle_list,
-				   timing_list,
-				   mAlloc);
+  CiCell* cell = new CiFsmCell(this, name, area,
+			       input_list,
+			       output_list,
+			       inout_list,
+			       internal_list,
+			       bus_list,
+			       bundle_list,
+			       timing_list);
 
   return cell;
 }
@@ -994,10 +966,8 @@ CiCellLibrary::new_cell_input(const ShString& name,
 			      ClibCapacitance rise_capacitance,
 			      ClibCapacitance fall_capacitance)
 {
-  void* p = mAlloc.get_memory(sizeof(CiInputPin));
-  CiInputPin* pin = new (p) CiInputPin(name,
-				       capacitance,
-				       rise_capacitance, fall_capacitance);
+  CiInputPin* pin = new CiInputPin(name, capacitance,
+				   rise_capacitance, fall_capacitance);
 
   return pin;
 }
@@ -1025,13 +995,12 @@ CiCellLibrary::new_cell_output(const ShString& name,
 			       ClibTime max_transition,
 			       ClibTime min_transition)
 {
-  void* p = mAlloc.get_memory(sizeof(CiOutputPin));
-  CiOutputPin* pin = new (p) CiOutputPin(name,
-					 has_logic, logic_expr,
-					 tristate_expr,
-					 max_fanout, min_fanout,
-					 max_capacitance, min_capacitance,
-					 max_transition, min_transition);
+  CiOutputPin* pin = new CiOutputPin(name,
+				     has_logic, logic_expr,
+				     tristate_expr,
+				     max_fanout, min_fanout,
+				     max_capacitance, min_capacitance,
+				     max_transition, min_transition);
 
   return pin;
 }
@@ -1065,15 +1034,14 @@ CiCellLibrary::new_cell_inout(const ShString& name,
 			      ClibTime max_transition,
 			      ClibTime min_transition)
 {
-  void* p = mAlloc.get_memory(sizeof(CiInoutPin));
-  CiInoutPin* pin =  new (p) CiInoutPin(name,
-					has_logic, logic_expr,
-					tristate_expr,
-					capacitance,
-					rise_capacitance, fall_capacitance,
-					max_fanout, min_fanout,
-					max_capacitance, min_capacitance,
-					max_transition, min_transition);
+  CiInoutPin* pin =  new CiInoutPin(name,
+				    has_logic, logic_expr,
+				    tristate_expr,
+				    capacitance,
+				    rise_capacitance, fall_capacitance,
+				    max_fanout, min_fanout,
+				    max_capacitance, min_capacitance,
+				    max_transition, min_transition);
 
   return pin;
 }
@@ -1083,8 +1051,7 @@ CiCellLibrary::new_cell_inout(const ShString& name,
 CiInternalPin*
 CiCellLibrary::new_cell_internal(const ShString& name)
 {
-  void* p = mAlloc.get_memory(sizeof(CiInternalPin));
-  CiInternalPin* pin = new (p) CiInternalPin(name);
+  CiInternalPin* pin = new CiInternalPin(name);
 
   return pin;
 }
@@ -1108,14 +1075,13 @@ CiCellLibrary::new_timing_generic(ClibTimingType type,
 				  ClibResistance rise_resistance,
 				  ClibResistance fall_resistance)
 {
-  void* p = mAlloc.get_memory(sizeof(CiTimingGeneric));
-  CiTiming* timing = new (p) CiTimingGeneric(type, cond,
-					     intrinsic_rise,
-					     intrinsic_fall,
-					     slope_rise,
-					     slope_fall,
-					     rise_resistance,
-					     fall_resistance);
+  CiTiming* timing = new CiTimingGeneric(type, cond,
+					 intrinsic_rise,
+					 intrinsic_fall,
+					 slope_rise,
+					 slope_fall,
+					 rise_resistance,
+					 fall_resistance);
 
   return timing;
 }
@@ -1137,14 +1103,13 @@ CiCellLibrary::new_timing_piecewise(ClibTimingType timing_type,
 				    ClibResistance rise_pin_resistance,
 				    ClibResistance fall_pin_resistance)
 {
-  void* p = mAlloc.get_memory(sizeof(CiTimingPiecewise));
-  CiTiming* timing = new (p) CiTimingPiecewise(timing_type, cond,
-					       intrinsic_rise,
-					       intrinsic_fall,
-					       slope_rise,
-					       slope_fall,
-					       rise_pin_resistance,
-					       fall_pin_resistance);
+  CiTiming* timing = new CiTimingPiecewise(timing_type, cond,
+					   intrinsic_rise,
+					   intrinsic_fall,
+					   slope_rise,
+					   slope_fall,
+					   rise_pin_resistance,
+					   fall_pin_resistance);
 
   return timing;
 }
@@ -1162,12 +1127,11 @@ CiCellLibrary::new_timing_lut1(ClibTimingType timing_type,
 			       ClibLut* rise_transition,
 			       ClibLut* fall_transition)
 {
-  void* p = mAlloc.get_memory(sizeof(CiTimingLut1));
-  CiTiming* timing = new (p) CiTimingLut1(timing_type, cond,
-					  cell_rise,
-					  cell_fall,
-					  rise_transition,
-					  fall_transition);
+  CiTiming* timing = new CiTimingLut1(timing_type, cond,
+				      cell_rise,
+				      cell_fall,
+				      rise_transition,
+				      fall_transition);
 
   return timing;
 }
@@ -1187,12 +1151,11 @@ CiCellLibrary::new_timing_lut2(ClibTimingType timing_type,
 			       ClibLut* rise_propagation,
 			       ClibLut* fall_propagation)
 {
-  void* p = mAlloc.get_memory(sizeof(CiTimingLut2));
-  CiTiming* timing = new (p) CiTimingLut2(timing_type, cond,
-					  rise_transition,
-					  fall_transition,
-					  rise_propagation,
-					  fall_propagation);
+  CiTiming* timing = new CiTimingLut2(timing_type, cond,
+				      rise_transition,
+				      fall_transition,
+				      rise_propagation,
+				      fall_propagation);
 
   return timing;
 }
@@ -1225,7 +1188,7 @@ CiCellLibrary::set_timing(CiCell* cell,
   for ( int i: Range(n) ) {
     _timing_list[i] = timing_list[i];
   }
-  cell->mTimingMap[base].init(_timing_list, mAlloc);
+  cell->mTimingMap[base].init(_timing_list);
 }
 
 // @brief 1次元の LUT を作る．
@@ -1237,8 +1200,7 @@ CiCellLibrary::new_lut1(const ClibLutTemplate* lut_template,
 			const vector<double>& value_array,
 			const vector<double>& index_array)
 {
-  void* p = mAlloc.get_memory(sizeof(CiLut1D));
-  ClibLut* lut = new (p) CiLut1D(lut_template, value_array, index_array);
+  ClibLut* lut = new CiLut1D(lut_template, value_array, index_array);
   return lut;
 }
 
@@ -1253,9 +1215,8 @@ CiCellLibrary::new_lut2(const ClibLutTemplate* lut_template,
 			const vector<double>& index_array1,
 			const vector<double>& index_array2)
 {
-  void* p = mAlloc.get_memory(sizeof(CiLut2D));
-  ClibLut* lut = new (p) CiLut2D(lut_template, value_array,
-				 index_array1, index_array2);
+  ClibLut* lut = new CiLut2D(lut_template, value_array,
+			     index_array1, index_array2);
   return lut;
 }
 
@@ -1272,9 +1233,8 @@ CiCellLibrary::new_lut3(const ClibLutTemplate* lut_template,
 			const vector<double>& index_array2,
 			const vector<double>& index_array3)
 {
-  void* p = mAlloc.get_memory(sizeof(CiLut3D));
-  ClibLut* lut = new (p) CiLut3D(lut_template, value_array,
-				 index_array1, index_array2, index_array3);
+  ClibLut* lut = new CiLut3D(lut_template, value_array,
+			     index_array1, index_array2, index_array3);
   return lut;
 }
 
@@ -1362,7 +1322,7 @@ CiCellLibrary::compile(const vector<CiCell*>& cell_list)
     group_list[g] = group;
     _group_list[g] = group;
   }
-  mGroupList.init(_group_list, mAlloc);
+  mGroupList.init(_group_list);
 
   // LcClass から CiCellClass を作る．
   int nc = libcomp.npn_class_num();
@@ -1377,7 +1337,7 @@ CiCellLibrary::compile(const vector<CiCell*>& cell_list)
     }
     class_list[c] = new_cell_class(c, src_class->idmap_list(), dst_group_list);
   }
-  mClassList.init(class_list, mAlloc);
+  mClassList.init(class_list);
 
   for ( int i: { 0, 1, 2, 3 } ) {
     mLogicGroup[i] = group_list[libcomp.logic_group(i)];
@@ -1492,8 +1452,7 @@ CiCellLibrary::new_cell_group(int id,
 			      int pininfo,
 			      const vector<CiCell*>& cell_list)
 {
-  void* p = mAlloc.get_memory(sizeof(CiCellGroup));
-  CiCellGroup* group = new (p) CiCellGroup(id, map, pininfo, cell_list, mAlloc);
+  CiCellGroup* group = new CiCellGroup(id, map, pininfo, cell_list);
 
   return group;
 }
@@ -1507,8 +1466,7 @@ CiCellLibrary::new_cell_class(int id,
 			      const vector<NpnMapM>& idmap_list,
 			      const vector<CiCellGroup*>& group_list)
 {
-  void* p = mAlloc.get_memory(sizeof(CiCellClass));
-  CiCellClass* cell_class = new (p) CiCellClass(id, idmap_list, group_list, mAlloc);
+  CiCellClass* cell_class = new CiCellClass(id, idmap_list, group_list);
 
   return cell_class;
 }
