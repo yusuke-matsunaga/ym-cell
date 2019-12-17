@@ -11,7 +11,6 @@
 
 #include "ym/clib.h"
 #include "ym/ShString.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB

@@ -10,9 +10,6 @@
 
 
 #include "ym/clib.h"
-#include "ym/IDO.h"
-#include "ym/ODO.h"
-#include "ym/Alloc.h"
 #include "lc/libcomp_nsdef.h"
 
 
@@ -111,7 +108,7 @@ public:
   /// @brief バイナリダンプを行う．
   /// @param[in] bos 出力先のストリーム
   void
-  dump(ODO& bos) const;
+  dump(ostream& bos) const;
 
 
 public:
@@ -129,7 +126,7 @@ public:
   /// @retval true 読み込みが成功した．
   /// @retval false 読み込みが失敗した．
   bool
-  restore(IDO& bis);
+  restore(istream& bis);
 
 
 private:

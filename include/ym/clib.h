@@ -13,6 +13,7 @@
 /// セルライブラリを扱うためのクラスライブラリ
 
 #include "ym_config.h"
+#include "ym/Array.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -70,15 +71,12 @@ class ClibFFInfo;
 class ClibLatchInfo;
 class ClibPatGraph;
 
-template<class T>
-class ClibObjList;
-
-using ClibCellList = ClibObjList<ClibCell>;
-using ClibCellPinList = ClibObjList<ClibCellPin>;
-using ClibCellGroupList = ClibObjList<ClibCellGroup>;
-using ClibCellClassList = ClibObjList<ClibCellClass>;
-using ClibTimingList = ClibObjList<ClibTiming>;
-using ClibLutTemplateList = ClibObjList<ClibLutTemplate>;
+using ClibCellList = Array<ClibCell>;
+using ClibCellPinList = Array<ClibCellPin>;
+using ClibCellGroupList = Array<ClibCellGroup>;
+using ClibCellClassList = Array<ClibCellClass>;
+using ClibTimingList = Array<ClibTiming>;
+using ClibLutTemplateList = Array<ClibLutTemplate>;
 
 END_NAMESPACE_YM_CLIB
 

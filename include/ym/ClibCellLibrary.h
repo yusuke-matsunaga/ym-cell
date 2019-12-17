@@ -11,8 +11,6 @@
 
 #include "ym/clib.h"
 #include "ym/logic.h"
-#include "ym/IDO.h"
-#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -359,12 +357,12 @@ public:
   /// @brief 内容をバイナリダンプする．
   /// @param[in] s 出力先のストリーム
   void
-  dump(ODO& s) const;
+  dump(ostream& s) const;
 
   /// @brief バイナリダンプされた内容を読み込む．
   /// @param[in] s 入力元のストリーム
   void
-  restore(IDO& s);
+  restore(istream& s);
 
 
 private:

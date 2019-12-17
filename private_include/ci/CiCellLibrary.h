@@ -16,8 +16,6 @@
 #include "ym/ClibResistance.h"
 #include "ym/ClibTiming.h"
 #include "ym/ClibCellPin.h"
-#include "ym/ClibObjList.h"
-#include "ym/SimpleAlloc.h"
 #include "ym/ShString.h"
 #include "ym/Expr.h"
 #include "CiLutHash.h"
