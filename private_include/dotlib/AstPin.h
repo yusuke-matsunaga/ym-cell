@@ -12,7 +12,6 @@
 #include "dotlib_nsdef.h"
 #include "AstNameListNode.h"
 #include "AstArray.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -30,11 +29,9 @@ public:
   /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
-  /// @param[in] alloc アロケータ
   AstPin(const FileRegion& attr_loc,
 	 const StrListHandler& header,
-	 const PinHandler& group,
-	 Alloc& alloc);
+	 const PinHandler& group);
 
   /// @brief デストラクタ
   ~AstPin();

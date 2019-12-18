@@ -22,8 +22,9 @@ const AstStrInt*
 AstMgr::new_str_int(const StrIntHandler& handler)
 {
   ++ mStrIntNum;
-  void* p = mAlloc.get_memory(sizeof(AstStrInt));
-  return new (p) AstStrInt(handler);
+  auto node = new AstStrInt(handler);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

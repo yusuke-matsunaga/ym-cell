@@ -24,8 +24,9 @@ AstMgr::new_cell(const FileRegion& attr_loc,
 		 const StrHandler& header,
 		 const CellHandler& group)
 {
-  void* p = mAlloc.get_memory(sizeof(AstCell));
-  return new (p) AstCell(attr_loc, header, group, mAlloc);
+  auto node = new AstCell(attr_loc, header, group);
+  mNodeList.push_back(node);
+  return node;
 }
 
 
@@ -40,14 +41,13 @@ AstMgr::new_cell(const FileRegion& attr_loc,
 // @param[in] alloc メモリアロケータ
 AstCell::AstCell(const FileRegion& attr_loc,
 		 const StrHandler& header,
-		 const CellHandler& group,
-		 Alloc& alloc) :
+		 const CellHandler& group) :
   AstNameNode{FileRegion{attr_loc, group.group_loc()}, header},
   mArea{group.mArea},
   mBusNamingStyle{group.mBusNamingStyle},
-  mPinList{group.mPinList, alloc},
-  mBusList{group.mBusList, alloc},
-  mBundleList{group.mBundleList, alloc},
+  mPinList{group.mPinList},
+  mBusList{group.mBusList},
+  mBundleList{group.mBundleList},
   mFF{group.mFF},
   mLatch{group.mLatch},
   mStateTable{group.mStateTable}

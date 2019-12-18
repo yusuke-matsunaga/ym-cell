@@ -29,11 +29,9 @@ public:
   /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] group グループ本体を読み込んだハンドラ
-  /// @param[in] alloc メモリアロケータ
   AstCell(const FileRegion& attr_loc,
 	  const StrHandler& header,
-	  const CellHandler& group,
-	  Alloc& alloc);
+	  const CellHandler& group);
 
   /// @brief デストラクタ
   ~AstCell();

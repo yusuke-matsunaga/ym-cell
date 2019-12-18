@@ -20,8 +20,9 @@ AstMgr::new_direction(const FileRegion& loc,
 		      ClibDirection value)
 {
   ++ mDirectionNum;
-  void* p = mAlloc.get_memory(sizeof(AstDirection));
-  return new (p) AstDirection(loc, value);
+  auto node = new AstDirection(loc, value);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

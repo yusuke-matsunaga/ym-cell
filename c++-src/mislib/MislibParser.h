@@ -5,15 +5,13 @@
 /// @brief MislibParser のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "mislib_nsdef.h"
 #include "ym/FileRegion.h"
 #include "ym/ShString.h"
-
-#include "MislibMgr.h"
 #include "MislibScanner.h"
 
 
@@ -28,10 +26,7 @@ class MislibParser
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] ido 入力データオブジェクト
-  /// @param[in] mgr MislibNode を管理するオブジェクト
-  MislibParser(IDO& ido,
-	       MislibMgr& mgr);
+  MislibParser();
 
   /// @brief デストラクタ
   ~MislibParser();
@@ -43,10 +38,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief パーズする．
+  /// @param[in] filename ファイル名
   /// @param[out] gate_list ゲートのASTを格納するリスト
   /// @return 読み込みが成功したら true を返す．
   bool
-  parse(vector<const MislibGate*>& gate_list);
+  parse(const string& filename,
+	vector<const MislibGate*>& gate_list);
 
 
 private:
@@ -81,11 +78,12 @@ private:
 
   /// @brief ピンリスト記述を読み込む．
   /// @param[out] pin_list ピンリストを表す AST のノードを格納するリスト
-  /// @return 成功したら true を返す．
+  /// @return ピンの先頭を返す．
   ///
+  /// エラーが起きたら nullptr を返す．
   /// ピン名の代わりに * の場合があるので注意
   MislibPin*
-  read_pin_list(bool& error);
+  read_pin_list();
 
 
 private:
@@ -109,6 +107,79 @@ private:
   MislibToken
   scan(FileRegion& lloc);
 
+  /// @brief 確保したオブジェクトをすべて削除する．
+  void
+  clear();
+
+  /// @brief GATE ノードを生成する．(通常版)
+  MislibGate*
+  new_gate(const FileRegion& loc,
+	   const MislibStr* name,
+	   const MislibNum* area,
+	   const MislibStr* oname,
+	   const MislibExpr* expr,
+	   const MislibPin* ipin_top);
+
+  /// @brief PIN ノードを生成する．
+  MislibPin*
+  new_pin(const FileRegion& loc,
+	  const MislibStr* name,
+	  const MislibPhase* phase,
+	  const MislibNum* input_load,
+	  const MislibNum* max_load,
+	  const MislibNum* rise_block_delay,
+	  const MislibNum* rise_fanout_delay,
+	  const MislibNum* fall_block_delay,
+	  const MislibNum* fall_fanout_delay);
+
+  /// @brief NOT ノードを生成する．
+  MislibExpr*
+  new_not(const FileRegion& loc,
+	  const MislibExpr* child1);
+
+  /// @brief AND ノードを生成する．
+  MislibExpr*
+  new_and(const FileRegion& loc,
+	  const MislibExpr* child1,
+	  const MislibExpr* child2);
+
+  /// @brief OR ノードを生成する．
+  MislibExpr*
+  new_or(const FileRegion& loc,
+	 const MislibExpr* child1,
+	 const MislibExpr* child2);
+
+  /// @brief XOR ノードを生成する．
+  MislibExpr*
+  new_xor(const FileRegion& loc,
+	  const MislibExpr* child1,
+	  const MislibExpr* child2);
+
+  /// @brief 定数0ノードを生成する．
+  MislibExpr*
+  new_const0(const FileRegion& loc);
+
+  /// @brief 定数1ノードを生成する．
+  MislibExpr*
+  new_const1(const FileRegion& loc);
+
+  /// @brief 変数ノードを生成する．
+  MislibExpr*
+  new_varname(const FileRegion& loc,
+	      ShString str);
+
+  /// @brief NONINV ノードを生成する．
+  MislibPhase*
+  new_noninv(const FileRegion& loc);
+
+  /// @brief INV ノードを生成する．
+  MislibPhase*
+  new_inv(const FileRegion& loc);
+
+  /// @brief UNKNOWN ノードを生成する．
+  MislibPhase*
+  new_unknown(const FileRegion& loc);
+
   /// @brief 直前のトークンが文字列の場合に文字列ノードを返す．
   MislibStr*
   new_str(const FileRegion& loc);
@@ -128,17 +199,17 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // MislibNode を管理するオブジェクト
-  MislibMgr& mMgr;
-
   // 字句解析器
-  MislibScanner mScanner;
+  unique_ptr<MislibScanner> mScanner;
 
   // 戻したトークン
   MislibToken mUngetToken;
 
   // 戻したトークンの位置
   FileRegion mUngetLoc;
+
+  // 生成したノードのリスト
+  vector<MislibNode*> mNodeList;
 
 };
 

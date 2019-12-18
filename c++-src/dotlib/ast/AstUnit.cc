@@ -22,8 +22,9 @@ AstMgr::new_unit(const FileRegion& loc,
 		 const AstFloat* unit_val,
 		 const AstString* unit_str)
 {
-  void* p = mAlloc.get_memory(sizeof(AstUnit));
-  return new (p) AstUnit(loc, unit_val, unit_str);
+  auto node = new AstUnit(loc, unit_val, unit_str);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

@@ -15,9 +15,11 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief コンストラクタ
-// @param[in] ido 入力データ
-DotlibScanner::DotlibScanner(IDO& ido) :
-  Scanner(ido)
+// @param[in] s 入力ストリーム
+// @param[in] file_info ファイル情報
+DotlibScanner::DotlibScanner(istream& s,
+			     const FileInfo& file_info) :
+  Scanner(s, file_info)
 {
 }
 

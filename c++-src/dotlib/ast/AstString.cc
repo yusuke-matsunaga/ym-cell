@@ -21,8 +21,9 @@ AstMgr::new_string(const FileRegion& loc,
 		   ShString value)
 {
   ++ mStrNum;
-  void* p = mAlloc.get_memory(sizeof(AstString));
-  return new (p) AstString(loc, value);
+  auto node = new AstString(loc, value);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

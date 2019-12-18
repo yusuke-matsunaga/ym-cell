@@ -22,8 +22,9 @@ AstMgr::new_piecewise(const FileRegion& loc,
 		      const AstFloat* val2)
 {
   ++ mPieceWiseNum;
-  void* p = mAlloc.get_memory(sizeof(AstPieceWise));
-  return new (p) AstPieceWise(loc, val1, val2);
+  auto node = new AstPieceWise(loc, val1, val2);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

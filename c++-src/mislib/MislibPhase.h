@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_MISLIB
 class MislibPhase :
   public MislibNode
 {
-  friend class MislibMgr;
+  friend class MislibParser;
 public:
 
   /// @breif 極性の種類
@@ -69,7 +69,7 @@ public:
 class MislibNoninv :
   public MislibPhase
 {
-  friend class MislibMgr;
+  friend class MislibParser;
 
 private:
 
@@ -108,7 +108,7 @@ public:
 class MislibInv :
   public MislibPhase
 {
-  friend class MislibMgr;
+  friend class MislibParser;
 
 private:
 
@@ -147,7 +147,7 @@ public:
 class MislibUnknown :
   public MislibPhase
 {
-  friend class MislibMgr;
+  friend class MislibParser;
 
 private:
 

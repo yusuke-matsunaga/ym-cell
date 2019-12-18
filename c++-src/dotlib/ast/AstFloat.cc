@@ -21,8 +21,9 @@ AstMgr::new_float(const FileRegion& loc,
 		  double value)
 {
   ++ mFloatNum;
-  void* p = mAlloc.get_memory(sizeof(AstFloat));
-  return new (p) AstFloat(loc, value);
+  auto node = new AstFloat(loc, value);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

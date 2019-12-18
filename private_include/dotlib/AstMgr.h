@@ -14,7 +14,6 @@
 #include "dotlib/AstCPType.h"
 #include "ym/ShString.h"
 #include "ym/FileRegion.h"
-#include "ym/SimpleAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -442,11 +441,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // メモリアロケータ
-  SimpleAlloc mAlloc;
-
   // 根のノード
   AstLibrary* mLibraryNode;
+
+  // 全てのノードのリスト
+  vector<AstNode*> mNodeList;
 
   // 個々の要素の使用数
   SizeType mBoolNum;

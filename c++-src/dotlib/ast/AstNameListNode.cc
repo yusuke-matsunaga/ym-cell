@@ -20,12 +20,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] loc ファイル上の位置
 // @param[in] header ヘッダを読み込んだハンドラ
-// @param[in] alloc アロケータ
 AstNameListNode::AstNameListNode(const FileRegion& loc,
-				 const StrListHandler& header,
-				 Alloc& alloc) :
+				 const StrListHandler& header) :
   AstNode{loc},
-  mNameList{header.value(), alloc}
+  mNameList{header.value()}
 {
 }
 

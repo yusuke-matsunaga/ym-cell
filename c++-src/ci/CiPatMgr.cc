@@ -68,23 +68,23 @@ CiPatMgr::copy(const LcPatMgr& src)
   int nn = src.node_num();
   set_node_num(nn);
   for (int i = 0; i < nn; ++ i) {
-    LcPatNode* src_node = src.node(i);
+    auto& src_node = src.node(i);
     int v = 0U;
-    if ( src_node->is_input() ) {
-      v = static_cast<int>(ClibPatType::Input) | (src_node->input_id() << 2);
+    if ( src_node.is_input() ) {
+      v = static_cast<int>(ClibPatType::Input) | (src_node.input_id() << 2);
     }
-    else if ( src_node->is_and() ) {
+    else if ( src_node.is_and() ) {
       v = static_cast<int>(ClibPatType::And);
     }
-    else if ( src_node->is_xor() ) {
+    else if ( src_node.is_xor() ) {
       v = static_cast<int>(ClibPatType::Xor);
     }
     mNodeTypeArray[i] = v;
     for ( auto j: { 0, 1 } ) {
       int v = 0U;
-      if ( !src_node->is_input() ) {
-	v = src_node->fanin(j)->id() * 2;
-	if ( src_node->fanin_inv(j) ) {
+      if ( !src_node.is_input() ) {
+	v = src_node.fanin(j)->id() * 2;
+	if ( src_node.fanin_inv(j) ) {
 	  v |= 1U;
 	}
       }

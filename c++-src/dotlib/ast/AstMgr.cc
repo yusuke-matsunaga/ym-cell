@@ -18,8 +18,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstMgr::AstMgr() :
-  mAlloc(4096)
+AstMgr::AstMgr()
 {
   clear();
 }
@@ -34,7 +33,10 @@ AstMgr::~AstMgr()
 void
 AstMgr::clear()
 {
-  mAlloc.destroy();
+  for ( auto node: mNodeList ) {
+    delete node;
+  }
+  mNodeList.clear();
 
   mLibraryNode = nullptr;
 

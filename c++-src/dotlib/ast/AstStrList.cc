@@ -25,8 +25,9 @@ AstMgr::new_str_list(const StrListHandler& handler)
   int n = value.size();
   ++ mStrVectNum;
   mStrVectElemSize += n;
-  void* p = mAlloc.get_memory(sizeof(AstStrList) + (n - 1) * sizeof(const AstString*));
-  return new (p) AstStrList(handler);
+  auto node = new AstStrList(handler);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

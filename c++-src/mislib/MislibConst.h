@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_MISLIB
 class MislibConst0 :
   public MislibExpr
 {
-  friend class MislibMgr;
+  friend class MislibParser;
 
 private:
 
@@ -63,7 +63,7 @@ public:
 class MislibConst1 :
   public MislibExpr
 {
-  friend class MislibMgr;
+  friend class MislibParser;
 
 private:
 

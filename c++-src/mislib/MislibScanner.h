@@ -28,8 +28,10 @@ class MislibScanner :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] ido 入力データ
-  MislibScanner(IDO& ido);
+  /// @param[in] s 入力ストリーム
+  /// @param[in] file_info ファイル情報
+  MislibScanner(istream& s,
+		const FileInfo& file_info);
 
   /// @brief デストラクタ
   ~MislibScanner();

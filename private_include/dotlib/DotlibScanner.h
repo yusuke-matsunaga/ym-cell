@@ -27,8 +27,10 @@ class DotlibScanner :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] ido 入力データ
-  DotlibScanner(IDO& ido);
+  /// @param[in] s 入力ストリーム
+  /// @param[in] file_info ファイル情報
+  DotlibScanner(istream& s,
+		const FileInfo& file_info);
 
   /// @brief デストラクタ
   ~DotlibScanner();

@@ -26,8 +26,9 @@ AstMgr::new_pin(const FileRegion& attr_loc,
 		const PinHandler& group)
 {
   ++ mPinNum;
-  void* p = mAlloc.get_memory(sizeof(AstPin));
-  return new (p) AstPin(attr_loc, header, group, mAlloc);
+  auto node = new AstPin(attr_loc, header, group);
+  mNodeList.push_back(node);
+  return node;
 }
 
 
@@ -39,12 +40,10 @@ AstMgr::new_pin(const FileRegion& attr_loc,
 // @param[in] attr_loc 属性のファイル上の位置
 // @param[in] header ヘッダを読み込んだハンドラ
 // @param[in] group グループ本体を読み込んだハンドラ
-// @param[in] alloc アロケータ
 AstPin::AstPin(const FileRegion& attr_loc,
 	       const StrListHandler& header,
-	       const PinHandler& group,
-	       Alloc& alloc) :
-  AstNameListNode{FileRegion(attr_loc, group.group_loc()), header, alloc},
+	       const PinHandler& group) :
+  AstNameListNode{FileRegion(attr_loc, group.group_loc()), header},
   mDirection{group.mDirection},
   mCapacitance{group.mCapacitance},
   mRiseCapacitance{group.mRiseCapacitance},
@@ -58,7 +57,7 @@ AstPin::AstPin(const FileRegion& attr_loc,
   mFunction{group.mFunction},
   mThreeState{group.mThreeState},
   mPinFuncType{group.mPinFuncType},
-  mTimingList{group.mTimingList, alloc}
+  mTimingList{group.mTimingList}
 {
 }
 

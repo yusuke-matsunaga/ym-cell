@@ -21,8 +21,9 @@ AstMgr::new_bool(const FileRegion& loc,
 		 bool value)
 {
   ++ mBoolNum;
-  void* p = mAlloc.get_memory(sizeof(AstBool));
-  return new (p) AstBool(loc, value);
+  auto node = new AstBool(loc, value);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

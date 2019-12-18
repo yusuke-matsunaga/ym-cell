@@ -14,8 +14,11 @@
 BEGIN_NAMESPACE_YM_MISLIB
 
 // コンストラクタ
-MislibScanner::MislibScanner(IDO& ido) :
-  Scanner(ido)
+// @param[in] s 入力ストリーム
+// @param[in] file_info ファイル情報
+MislibScanner::MislibScanner(istream& s,
+			     const FileInfo& file_info) :
+  Scanner{s, file_info}
 {
 }
 

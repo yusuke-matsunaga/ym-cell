@@ -11,7 +11,6 @@
 
 #include "mislib_nsdef.h"
 #include "ym/FileRegion.h"
-#include "ym/SimpleAlloc.h"
 #include "ym/ShString.h"
 
 
@@ -134,8 +133,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // MislibNode のメモリ確保用アロケータ
-  SimpleAlloc mAlloc;
+  // 生成したノードのリスト
+  vector<MislibNode*> mNodeList;
 
 };
 

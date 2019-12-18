@@ -24,8 +24,10 @@ AstMgr::new_int_vector(const FileRegion& loc,
   int n = value.size();
   ++ mIntVectNum;
   mIntVectElemSize += n;
-  void* p = mAlloc.get_memory(sizeof(AstIntVector) + sizeof(int*) * (n - 1));
-  return new (p) AstIntVector(loc, value);
+  auto node = new AstIntVector(loc, value);
+  mNodeList.push_back(node);
+  return node;
+
 }
 
 

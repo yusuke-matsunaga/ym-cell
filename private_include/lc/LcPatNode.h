@@ -24,10 +24,10 @@ class LcPatNode
 {
   friend class LcPatMgr;
 
-private:
+public:
 
   /// @brief コンストラクタ
-  LcPatNode();
+  LcPatNode(int id);
 
   /// @brief デストラクタ
   ~LcPatNode();
@@ -130,11 +130,12 @@ private:
 
 // @brief コンストラクタ
 inline
-LcPatNode::LcPatNode() :
-  mType(0U)
+LcPatNode::LcPatNode(int id) :
+  mId{id},
+  mType{0U},
+  mFanin{nullptr, nullptr},
+  mLink{nullptr}
 {
-  mFanin[0] = nullptr;
-  mFanin[1] = nullptr;
 }
 
 // @brief デストラクタ

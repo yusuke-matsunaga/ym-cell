@@ -22,8 +22,9 @@ const AstIntFloatVector*
 AstMgr::new_int_float_vector(const IntFloatVectorHandler& handler)
 {
   ++ mIntFloatVectorNum;
-  void* p = mAlloc.get_memory(sizeof(AstIntFloatVector));
-  return new (p) AstIntFloatVector(handler);
+  auto node = new AstIntFloatVector(handler);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

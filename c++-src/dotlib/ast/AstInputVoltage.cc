@@ -26,8 +26,9 @@ AstMgr::new_input_voltage(const FileRegion& attr_loc,
 			  const InputVoltageHandler& group)
 {
   ++ mInputVolNum;
-  void* p = mAlloc.get_memory(sizeof(AstInputVoltage));
-  return new (p) AstInputVoltage(attr_loc, header, group);
+  auto node = new AstInputVoltage(attr_loc, header, group);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

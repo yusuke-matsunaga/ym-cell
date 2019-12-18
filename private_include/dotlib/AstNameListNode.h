@@ -31,8 +31,7 @@ public:
   /// @param[in] header ヘッダを読み込んだハンドラ
   /// @param[in] alloc アロケータ
   AstNameListNode(const FileRegion& attr_loc,
-		  const StrListHandler& header,
-		  Alloc& alloc);
+		  const StrListHandler& header);
 
   /// @brief デストラクタ
   ~AstNameListNode();

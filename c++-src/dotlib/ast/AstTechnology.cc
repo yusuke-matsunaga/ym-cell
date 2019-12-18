@@ -21,8 +21,9 @@ AstMgr::new_technology(const FileRegion& loc,
 		       ClibTechnology value)
 {
   ++ mTechnologyNum;
-  void* p = mAlloc.get_memory(sizeof(AstTechnology));
-  return new (p) AstTechnology(loc, value);
+  auto node = new AstTechnology(loc, value);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

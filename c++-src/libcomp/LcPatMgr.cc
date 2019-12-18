@@ -48,7 +48,6 @@ LcPatMgr::~LcPatMgr()
 void
 LcPatMgr::init()
 {
-  mAlloc.destroy();
   mInputList.clear();
   mNodeList.clear();
   delete [] mHashTable;
@@ -56,7 +55,6 @@ LcPatMgr::init()
   mHashSize = 0;
   alloc_table(1024);
   mPatList.clear();
-  mRepList.clear();
 }
 
 // @brief 全ノード数を返す．
@@ -68,7 +66,7 @@ LcPatMgr::node_num() const
 
 // @brief ノードを返す．
 // @param[in] pos ノード番号 ( 0 <= pos < node_num() )
-LcPatNode*
+const LcPatNode&
 LcPatMgr::node(int pos) const
 {
   return mNodeList[pos];
@@ -88,7 +86,7 @@ LcPatMgr::pat_root(int id) const
 {
   ASSERT_COND( id >= 0 && id < pat_num() );
 
-  return mPatList[id];
+  return mPatList[id].first;
 }
 
 // @brief パタンの属している代表関数番号を返す．
@@ -98,7 +96,7 @@ LcPatMgr::rep_id(int id) const
 {
   ASSERT_COND( id >= 0 && id < pat_num() );
 
-  return mRepList[id];
+  return mPatList[id].second;
 }
 
 // @brief 論理式から生成されるパタンを登録する．
@@ -111,7 +109,7 @@ LcPatMgr::reg_pat(const Expr& expr,
   ASSERT_COND( rep_id >= 0 );
 
   if ( mExprList.size() <= rep_id ) {
-    mExprList.resize(rep_id + 1, vector<Expr>());
+    mExprList.resize(rep_id + 1, vector<Expr>{});
   }
 
   { // 同じ論理式を処理済みならなにもしない．
@@ -128,22 +126,23 @@ LcPatMgr::reg_pat(const Expr& expr,
   pg_sub(expr, tmp_pat_list);
 
   for ( auto pat1: tmp_pat_list ) {
-    mPatList.push_back(pat1);
-    mRepList.push_back(rep_id);
+    mPatList.push_back({pat1, rep_id});
   }
 
+#if 0
   // 入力ノードの整列
   for ( int i = 0; i < mNodeList.size(); ++ i ) {
-    LcPatNode* node = mNodeList[i];
+    LcPatNode* node = &mNodeList[i];
     if ( !node->is_input() ) continue;
     int iid = node->input_id();
     if ( iid == i ) continue;
-    LcPatNode* node1 = mNodeList[iid];
+    LcPatNode* node1 = &mNodeList[iid];
     mNodeList[iid] = node;
     node->mId = iid;
     mNodeList[i] = node1;
     node1->mId = i;
   }
+#endif
 }
 
 // @brief 2つの論理式が同形かどうか調べる．
@@ -453,10 +452,10 @@ LcPatMgr::make_input(VarId var)
 {
   int id = var.val();
   while ( mInputList.size() <= id ) {
-    LcPatNode* node = new_node();
+    LcPatNode& node = new_node();
     int input_id = mInputList.size();
-    node->mType = (input_id << 2) | LcPatNode::kInput;
-    mInputList.push_back(node);
+    node.mType = (input_id << 2) | LcPatNode::kInput;
+    mInputList.push_back(&node);
   }
   LcPatNode* node = mInputList[id];
   ASSERT_COND( node != nullptr );
@@ -519,10 +518,10 @@ LcPatMgr::make_node(const Expr& expr,
   }
 
   // 新しいノードを作る．
-  LcPatNode* node = new_node();
-  node->mType = type;
-  node->mFanin[0] = l_node;
-  node->mFanin[1] = r_node;
+  LcPatNode& node = new_node();
+  node.mType = type;
+  node.mFanin[0] = l_node;
+  node.mFanin[1] = r_node;
 
   // ハッシュ表に登録する．
   if ( node_num() >= mNextLimit ) {
@@ -530,29 +529,19 @@ LcPatMgr::make_node(const Expr& expr,
     // サイズが変わったのでインデックスを再計算する．
     idx = pos % mHashSize;
   }
-  node->mLink = mHashTable[idx];
-  mHashTable[idx] = node;
+  node.mLink = mHashTable[idx];
+  mHashTable[idx] = &node;
 
-  return LcPatHandle(node, oinv);
+  return LcPatHandle(&node, oinv);
 }
 
 // @brief ノードを作る．
-LcPatNode*
+LcPatNode&
 LcPatMgr::new_node()
 {
-  void* p = mAlloc.get_memory(sizeof(LcPatNode));
-  LcPatNode* node = new (p) LcPatNode();
-  node->mId = mNodeList.size();
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief ノードを削除する．
-void
-LcPatMgr::delete_node(LcPatNode* node)
-{
-  node->~LcPatNode();
-  mAlloc.put_memory(sizeof(LcPatNode), static_cast<void*>(node));
+  int id = mNodeList.size();
+  mNodeList.push_back({id});
+  return mNodeList.back();
 }
 
 // @brief ハッシュ表を確保する．
@@ -666,17 +655,17 @@ LcPatMgr::display(ostream& s) const
   s << "*** NODE SECTION ***" << endl;
   int n = node_num();
   for (int i = 0; i < n; ++ i) {
-    LcPatNode* node = this->node(i);
+    auto& node = this->node(i);
 
-    s << "Node#" << node->id() << ": ";
-    if ( node->is_input() ) {
-      s << "Input#" << node->input_id();
+    s << "Node#" << node.id() << ": ";
+    if ( node.is_input() ) {
+      s << "Input#" << node.input_id();
     }
     else {
-      if ( node->is_and() ) {
+      if ( node.is_and() ) {
 	s << "And";
       }
-      else if ( node->is_xor() ) {
+      else if ( node.is_xor() ) {
 	s << "Xor";
       }
       else {
@@ -694,7 +683,7 @@ LcPatMgr::display(ostream& s) const
 
   s << "*** PATTERN SECTION ***" << endl;
   int np = pat_num();
-  for (int i = 0; i < np; ++ i) {
+  for ( int i = 0; i < np; ++ i ) {
     LcPatHandle root = pat_root(i);
     s << "Pat#" << i << ": ";
     if ( root.inv() ) {
@@ -713,13 +702,13 @@ LcPatMgr::display(ostream& s) const
 // @param[in] fanin_pos ファンイン番号
 void
 LcPatMgr::display_edge(ostream& s,
-		       LcPatNode* node,
+		       const LcPatNode& node,
 		       int fanin_pos)
 {
-  if ( node->fanin_inv(fanin_pos) ) {
+  if ( node.fanin_inv(fanin_pos) ) {
     s << "~";
   }
-  s << "Node#" << node->fanin(fanin_pos)->id();
+  s << "Node#" << node.fanin(fanin_pos)->id();
 }
 
 END_NAMESPACE_YM_CLIB_LIBCOMP

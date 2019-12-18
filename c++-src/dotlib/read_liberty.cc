@@ -810,8 +810,8 @@ CiCellLibrary::read_liberty(const string& filename)
 {
   using namespace nsDotlib;
 
-  FileIDO ido;
-  if ( !ido.open(filename) ) {
+  ifstream fin(filename);
+  if ( !fin ) {
     ostringstream buf;
     buf << filename << ": Could not open.";
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -823,7 +823,7 @@ CiCellLibrary::read_liberty(const string& filename)
   }
 
   AstMgr mgr;
-  DotlibParser parser(ido, mgr, false);
+  DotlibParser parser(fin, {filename}, mgr, false);
   const AstLibrary* ast_library = parser.parse();
   if ( ast_library == nullptr ) {
     return false;

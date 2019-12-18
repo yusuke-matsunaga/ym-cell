@@ -24,8 +24,9 @@ AstMgr::new_timing(const FileRegion& attr_loc,
 		   const StrListHandler& header,
 		   const TimingHandler& group)
 {
-  void* p = mAlloc.get_memory(sizeof(AstTiming));
-  return new (p) AstTiming(attr_loc, header, group, mAlloc);
+  auto node = new AstTiming(attr_loc, header, group);
+  mNodeList.push_back(node);
+  return node;
 }
 
 
@@ -37,11 +38,9 @@ AstMgr::new_timing(const FileRegion& attr_loc,
 // @param[in] attr_loc 属性のファイル上の位置
 // @param[in] header ヘッダのハンドラ
 // @param[in] group グループ本体のハンドラ
-// @param[in] alloc メモリアロケータ
 AstTiming::AstTiming(const FileRegion& attr_loc,
 		     const StrListHandler& header,
-		     const TimingHandler& group,
-		     Alloc& alloc) :
+		     const TimingHandler& group) :
   AstNode(FileRegion{attr_loc, group.group_loc()}),
   mRelatedPin{group.mRelatedPin},
   mRelatedBusPins{group.mRelatedBusPins},
@@ -57,10 +56,10 @@ AstTiming::AstTiming(const FileRegion& attr_loc,
   mIntrinsicFall{group.mIntrinsicFall},
   mSlopeRise{group.mSlopeRise},
   mSlopeFall{group.mSlopeFall},
-  mRiseDelayIntercept{group.mRiseDelayIntercept, alloc},
-  mRisePinResistance{group.mRisePinResistance, alloc},
-  mFallDelayIntercept{group.mFallDelayIntercept, alloc},
-  mFallPinResistance{group.mRisePinResistance, alloc},
+  mRiseDelayIntercept{group.mRiseDelayIntercept},
+  mRisePinResistance{group.mRisePinResistance},
+  mFallDelayIntercept{group.mFallDelayIntercept},
+  mFallPinResistance{group.mRisePinResistance},
   mCellDegradation{group.mCellDegradation},
   mCellRise{group.mCellRise},
   mCellFall{group.mCellFall},

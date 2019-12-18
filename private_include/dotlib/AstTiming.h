@@ -29,11 +29,9 @@ public:
   /// @param[in] attr_loc 属性のファイル上の位置
   /// @param[in] header ヘッダのハンドラ
   /// @param[in] group グループ本体のハンドラ
-  /// @param[in] alloc メモリアロケータ
   AstTiming(const FileRegion& attr_loc,
 	    const StrListHandler& header,
-	    const TimingHandler& group,
-	    Alloc& alloc);
+	    const TimingHandler& group);
 
   /// @brief デストラクタ
   ~AstTiming();

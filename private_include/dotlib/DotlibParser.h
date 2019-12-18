@@ -28,11 +28,13 @@ class DotlibParser
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] ido 入力データオブジェクト
+  /// @param[in] s 入力ストリーム
+  /// @param[in] file_info ファイル情報
   /// @param[in] mgr AstNode を管理するオブジェクト
   /// @param[in] debug デバッグモード
   /// @param[in] allow_no_semi 行末のセミコロンなしを許すかどうか
-  DotlibParser(IDO& ido,
+  DotlibParser(istream& s,
+	       const FileInfo& file_info,
 	       AstMgr& mgr,
 	       bool debug,
 	       bool allow_no_semi = true);

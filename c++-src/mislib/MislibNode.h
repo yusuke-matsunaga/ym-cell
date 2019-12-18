@@ -29,6 +29,7 @@ public:
   MislibNode(const FileRegion& loc);
 
   /// @brief デストラクタ
+  virtual
   ~MislibNode();
 
 

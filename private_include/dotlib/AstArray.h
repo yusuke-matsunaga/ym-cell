@@ -9,7 +9,6 @@
 /// All rights reserved.
 
 #include "dotlib_nsdef.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -30,9 +29,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] src もとのオブジェクト
-  /// @param[in] alloc メモリアロケータ
-  AstArray(const vector<T>& src,
-	   Alloc& alloc);
+  AstArray(const vector<T>& src);
 
   /// @brief コピーコンストラクタ
   AstArray(const AstArray& src) = default;
@@ -97,12 +94,10 @@ private:
 // @param[in] alloc メモリアロケータ
 template<typename T>
 inline
-AstArray<T>::AstArray(const vector<T>& src,
-		      Alloc& alloc) :
+AstArray<T>::AstArray(const vector<T>& src) :
   mSize{src.size()}
 {
-  void* p = alloc.get_memory(sizeof(T) * mSize);
-  mBody = new (p) T[mSize];
+  mBody = new T[mSize];
   for ( SizeType i = 0; i < mSize; ++ i ) {
     mBody[i] = src[i];
   }
@@ -112,6 +107,7 @@ AstArray<T>::AstArray(const vector<T>& src,
 template<typename T>
 AstArray<T>::~AstArray()
 {
+  delete [] mBody;
 }
 
 // @brief 要素数を返す．

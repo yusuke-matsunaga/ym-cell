@@ -24,8 +24,9 @@ AstMgr::new_library(const FileRegion& attr_loc,
 		    const StrHandler& header,
 		    const LibraryHandler& group)
 {
-  void* p = mAlloc.get_memory(sizeof(AstLibrary));
-  return new (p) AstLibrary(attr_loc, header, group, mAlloc);
+  auto node = new AstLibrary(attr_loc, header, group);
+  mNodeList.push_back(node);
+  return node;
 }
 
 
@@ -36,11 +37,9 @@ AstMgr::new_library(const FileRegion& attr_loc,
 // @param[in] attr_loc 属性のファイル上の位置
 // @param[in] header ヘッダを読み込んだハンドラ
 // @param[in] group グループ本体を読み込んだハンドラ
-// @param[in] alloc メモリアロケータ
 AstLibrary::AstLibrary(const FileRegion& attr_loc,
 		       const StrHandler& header,
-		       const LibraryHandler& group,
-		       Alloc& alloc) :
+		       const LibraryHandler& group) :
   AstNameNode{FileRegion{attr_loc, group.group_loc()}, header},
   mTechnology{group.mTechnology},
   mDelayModel{group.mDelayModel},
@@ -54,8 +53,8 @@ AstLibrary::AstLibrary(const FileRegion& attr_loc,
   mPullingResistanceUnit{group.mPullingResistanceUnit},
   mTimeUnit{group.mTimeUnit},
   mVoltageUnit{group.mVoltageUnit},
-  mLutTemplateList{group.mLutTemplateList, alloc},
-  mCellList{group.mCellList, alloc}
+  mLutTemplateList{group.mLutTemplateList},
+  mCellList{group.mCellList}
 {
 }
 

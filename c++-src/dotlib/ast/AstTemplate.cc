@@ -25,8 +25,9 @@ AstMgr::new_template(const FileRegion& attr_loc,
 		     const TemplateHandler& group)
 {
   ++ mTemplateNum;
-  void* p = mAlloc.get_memory(sizeof(AstTemplate));
-  return new (p) AstTemplate(attr_loc, header, group);
+  auto node = new AstTemplate(attr_loc, header, group);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

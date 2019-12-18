@@ -26,8 +26,9 @@ AstMgr::new_latch(const FileRegion& attr_loc,
 		  const LatchHandler& group)
 {
   ++ mLatchNum;
-  void* p = mAlloc.get_memory(sizeof(AstLatch));
-  return new (p) AstLatch(attr_loc, header, group);
+  auto node = new AstLatch(attr_loc, header, group);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

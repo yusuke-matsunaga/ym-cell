@@ -26,8 +26,9 @@ AstMgr::new_domain(const FileRegion& attr_loc,
 		   const DomainHandler& group)
 {
   ++ mDomainNum;
-  void* p = mAlloc.get_memory(sizeof(AstDomain));
-  return new (p) AstDomain(attr_loc, header, group);
+  auto node = new AstDomain(attr_loc, header, group);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

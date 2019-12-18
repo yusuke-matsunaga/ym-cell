@@ -12,7 +12,6 @@
 #include "dotlib_nsdef.h"
 #include "AstNameNode.h"
 #include "AstArray.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -33,8 +32,7 @@ public:
   /// @param[in] alloc メモリアロケータ
   AstLibrary(const FileRegion& attr_loc,
 	     const StrHandler& header,
-	     const LibraryHandler& group,
-	     Alloc& alloc);
+	     const LibraryHandler& group);
 
   /// @brief デストラクタ
   ~AstLibrary();

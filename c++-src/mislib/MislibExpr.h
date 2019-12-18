@@ -51,7 +51,6 @@ protected:
   MislibExpr(const FileRegion& loc);
 
   /// @brief デストラクタ
-  virtual
   ~MislibExpr();
 
 

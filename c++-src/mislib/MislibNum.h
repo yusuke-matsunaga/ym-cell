@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_MISLIB
 class MislibNum :
   public MislibNode
 {
-  friend class MislibMgr;
+  friend class MislibParser;
 
 private:
 

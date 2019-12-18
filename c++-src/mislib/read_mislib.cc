@@ -294,23 +294,9 @@ CiCellLibrary::read_mislib(const string& filename)
 {
   using namespace nsMislib;
 
-  FileIDO ido;
-  if ( !ido.open(filename) ) {
-    // エラー
-    ostringstream buf;
-    buf << filename << " : No such file.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    FileRegion(),
-		    MsgType::Failure,
-		    "MISLIB_PARSER",
-		    buf.str());
-    return false;
-  }
-
-  MislibMgr mgr;
-  MislibParser parser(ido, mgr);
+  MislibParser parser;
   vector<const MislibGate*> gate_list;
-  if ( !parser.parse(gate_list) ) {
+  if ( !parser.parse(filename, gate_list) ) {
     return false;
   }
 

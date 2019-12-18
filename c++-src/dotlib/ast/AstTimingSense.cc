@@ -20,8 +20,9 @@ AstMgr::new_timing_sense(const FileRegion& loc,
 			 ClibTimingSense value)
 {
   ++ mTimingSenseNum;
-  void* p = mAlloc.get_memory(sizeof(AstTimingSense));
-  return new (p) AstTimingSense(loc, value);
+  auto node = new AstTimingSense(loc, value);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

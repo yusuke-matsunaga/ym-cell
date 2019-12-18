@@ -18,8 +18,9 @@ const AstCPType*
 AstMgr::new_cptype(const FileRegion& loc,
 		   AstCPType::Type value)
 {
-  void* p = mAlloc.get_memory(sizeof(AstCPType));
-  return new (p) AstCPType(loc, value);
+  auto node = new AstCPType(loc, value);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

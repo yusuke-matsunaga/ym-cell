@@ -24,8 +24,9 @@ AstMgr::new_float_vector(const FileRegion& loc,
   int n = value_list.size();
   ++ mFloatVectNum;
   mFloatVectElemSize += (n - 1);
-  void* p = mAlloc.get_memory(sizeof(AstFloatVector) + (n - 1) * sizeof(double));
-  return new (p) AstFloatVector(loc, value_list);
+  auto node = new AstFloatVector(loc, value_list);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

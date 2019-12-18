@@ -25,8 +25,9 @@ AstMgr::new_ff_bank(const FileRegion& attr_loc,
 		    const FFHandler& group)
 {
   ++ mFFBankNum;
-  void* p = mAlloc.get_memory(sizeof(AstFFBank));
-  return new (p) AstFFBank(attr_loc, header, group);
+  auto node = new AstFFBank(attr_loc, header, group);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

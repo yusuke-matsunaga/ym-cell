@@ -21,8 +21,9 @@ const AstStr2*
 AstMgr::new_str2(const StrStrHandler& handler)
 {
   ++ mStr2Num;
-  void* p = mAlloc.get_memory(sizeof(AstStr2));
-  return new (p) AstStr2(handler);
+  auto node = new AstStr2(handler);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

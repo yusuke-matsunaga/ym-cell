@@ -21,8 +21,9 @@ AstMgr::new_int(const FileRegion& loc,
 		int value)
 {
   ++ mIntNum;
-  void* p = mAlloc.get_memory(sizeof(AstInt));
-  return new (p) AstInt(loc, value);
+  auto node = new AstInt(loc, value);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

@@ -20,8 +20,9 @@ AstMgr::new_timing_type(const FileRegion& loc,
 			ClibTimingType value)
 {
   ++ mTimingTypeNum;
-  void* p = mAlloc.get_memory(sizeof(AstTimingType));
-  return new (p) AstTimingType(loc, value);
+  auto node = new AstTimingType(loc, value);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

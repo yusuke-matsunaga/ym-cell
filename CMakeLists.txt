@@ -67,7 +67,6 @@ set (mislib_SOURCES
   c++-src/mislib/MislibConst.cc
   c++-src/mislib/MislibExpr.cc
   c++-src/mislib/MislibGate.cc
-  c++-src/mislib/MislibMgr.cc
   c++-src/mislib/MislibNode.cc
   c++-src/mislib/MislibNot.cc
   c++-src/mislib/MislibNum.cc

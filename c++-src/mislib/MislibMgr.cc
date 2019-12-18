@@ -26,8 +26,7 @@ BEGIN_NAMESPACE_YM_MISLIB
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-MislibMgr::MislibMgr() :
-  mAlloc(4096)
+MislibMgr::MislibMgr()
 {
 }
 
@@ -41,7 +40,10 @@ MislibMgr::~MislibMgr()
 void
 MislibMgr::clear()
 {
-  mAlloc.destroy();
+  for ( auto node: mNodeList ) {
+    delete node;
+  }
+  mNodeList.clear();
 }
 
 // 文字列ノードを生成する．
@@ -49,8 +51,9 @@ MislibStr*
 MislibMgr::new_str(const FileRegion& loc,
 		   ShString str)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibStr));
-  return new (p) MislibStr(loc, str);
+  auto node = new MislibStr(loc, str);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // 数値ノードを生成する．
@@ -58,48 +61,54 @@ MislibNum*
 MislibMgr::new_num(const FileRegion& loc,
 		   double num)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibNum));
-  return new (p) MislibNum(loc, num);
+  auto node = new MislibNum(loc, num);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // NONINV ノードを生成する．
 MislibPhase*
 MislibMgr::new_noninv(const FileRegion& loc)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibNoninv));
-  return new (p) MislibNoninv(loc);
+  auto node = new MislibNoninv(loc);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // INV ノードを生成する．
 MislibPhase*
 MislibMgr::new_inv(const FileRegion& loc)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibInv));
-  return new (p) MislibInv(loc);
+  auto node = new MislibInv(loc);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // UNKNOWN ノードを生成する．
 MislibPhase*
 MislibMgr::new_unknown(const FileRegion& loc)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibUnknown));
-  return new (p) MislibUnknown(loc);
+  auto node = new MislibUnknown(loc);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // 定数0ノードを生成する．
 MislibExpr*
 MislibMgr::new_const0(const FileRegion& loc)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibConst0));
-  return new (p) MislibConst0(loc);
+  auto node = new MislibConst0(loc);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // 定数1ノードを生成する．
 MislibExpr*
 MislibMgr::new_const1(const FileRegion& loc)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibConst1));
-  return new (p) MislibConst1(loc);
+  auto node = new MislibConst1(loc);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // NOT ノードを生成する．
@@ -107,8 +116,9 @@ MislibExpr*
 MislibMgr::new_not(const FileRegion& loc,
 		   const MislibExpr* child1)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibNot));
-  return new (p) MislibNot(loc, child1);
+  auto node = new MislibNot(loc, child1);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // AND ノードを生成する．
@@ -117,8 +127,9 @@ MislibMgr::new_and(const FileRegion& loc,
 		   const MislibExpr* child1,
 		   const MislibExpr* child2)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibAnd));
-  return new (p) MislibAnd(loc, child1, child2);
+  auto node = new MislibAnd(loc, child1, child2);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // OR ノードを生成する．
@@ -127,8 +138,9 @@ MislibMgr::new_or(const FileRegion& loc,
 		  const MislibExpr* child1,
 		  const MislibExpr* child2)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibOr));
-  return new (p) MislibOr(loc, child1, child2);
+  auto node = new MislibOr(loc, child1, child2);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // XOR ノードを生成する．
@@ -137,8 +149,9 @@ MislibMgr::new_xor(const FileRegion& loc,
 		   const MislibExpr* child1,
 		   const MislibExpr* child2)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibXor));
-  return new (p) MislibXor(loc, child1, child2);
+  auto node = new MislibXor(loc, child1, child2);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief 変数ノードを生成する．
@@ -146,8 +159,9 @@ MislibExpr*
 MislibMgr::new_varname(const FileRegion& loc,
 		       ShString str)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibVarName));
-  return new (p) MislibVarName(loc, str);
+  auto node = new MislibVarName(loc, str);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // PIN ノードを生成する．
@@ -162,11 +176,12 @@ MislibMgr::new_pin(const FileRegion& loc,
 		   const MislibNum* fall_block_delay,
 		   const MislibNum* fall_fanout_delay)
 {
-  void* p = mAlloc.get_memory(sizeof(MislibPin));
-  return new (p) MislibPin(loc, name, phase,
-			   input_load, max_load,
-			   rise_block_delay, rise_fanout_delay,
-			   fall_block_delay, fall_fanout_delay);
+  auto node = new MislibPin(loc, name, phase,
+			    input_load, max_load,
+			    rise_block_delay, rise_fanout_delay,
+			    fall_block_delay, fall_fanout_delay);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // GATE ノードを生成する．
@@ -183,10 +198,11 @@ MislibMgr::new_gate(const FileRegion& loc,
   ASSERT_COND( oname != nullptr );
   ASSERT_COND( expr != nullptr );
 
-  void* p = mAlloc.get_memory(sizeof(MislibGate));
-  return new (p) MislibGate(loc, name, area,
-			    oname, expr,
-			    ipin_top);
+  auto node = new MislibGate(loc, name, area,
+			     oname, expr,
+			     ipin_top);
+  mNodeList.push_back(node);
+  return node;
 }
 
 END_NAMESPACE_YM_MISLIB

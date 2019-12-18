@@ -26,8 +26,9 @@ AstMgr::new_lut(const FileRegion& attr_loc,
 		const TableHandler& group)
 {
   ++ mLutNum;
-  void* p = mAlloc.get_memory(sizeof(AstLut));
-  return new (p) AstLut(attr_loc, header, group);
+  auto node = new AstLut(attr_loc, header, group);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

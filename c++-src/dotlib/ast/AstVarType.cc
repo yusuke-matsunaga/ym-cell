@@ -20,8 +20,9 @@ AstMgr::new_var_type(const FileRegion& loc,
 		     ClibVarType value)
 {
   ++ mVarTypeNum;
-  void* p = mAlloc.get_memory(sizeof(AstVarType));
-  return new (p) AstVarType(loc, value);
+  auto node = new AstVarType(loc, value);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

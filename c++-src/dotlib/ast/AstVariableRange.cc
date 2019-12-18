@@ -21,8 +21,9 @@ AstMgr::new_variable_range(const AstFloat* value1,
 			   const AstFloat* value2)
 {
   ++ mVarRangeNum;
-  void* p = mAlloc.get_memory(sizeof(AstVariableRange));
-  return new (p) AstVariableRange(value1, value2);
+  auto node = new AstVariableRange(value1, value2);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

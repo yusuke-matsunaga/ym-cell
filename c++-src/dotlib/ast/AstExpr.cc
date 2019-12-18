@@ -21,8 +21,9 @@ AstMgr::new_plus(const AstExpr* opr1,
 		 const AstExpr* opr2)
 {
   ++ mOprNum;
-  void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::Plus, opr1, opr2);
+  auto node = new AstOpr(AstExprType::Plus, opr1, opr2);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief - 演算子を表す AstExpr を生成する．
@@ -32,8 +33,9 @@ AstMgr::new_minus(const AstExpr* opr1,
 		  const AstExpr* opr2)
 {
   ++ mOprNum;
-  void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::Minus, opr1, opr2);
+  auto node = new AstOpr(AstExprType::Minus, opr1, opr2);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief * 演算子を表す AstExpr を生成する．
@@ -43,8 +45,9 @@ AstMgr::new_mult(const AstExpr* opr1,
 		 const AstExpr* opr2)
 {
   ++ mOprNum;
-  void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::Mult, opr1, opr2);
+  auto node = new AstOpr(AstExprType::Mult, opr1, opr2);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief / 演算子を表す AstExpr を生成する．
@@ -54,8 +57,9 @@ AstMgr::new_div(const AstExpr* opr1,
 		const AstExpr* opr2)
 {
   ++ mOprNum;
-  void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::Div, opr1, opr2);
+  auto node = new AstOpr(AstExprType::Div, opr1, opr2);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief NOT 演算子を表す AstExpr を生成する．
@@ -66,8 +70,9 @@ AstMgr::new_not(const FileRegion& loc,
 		const AstExpr* opr)
 {
   ++ mNotNum;
-  void* p = mAlloc.get_memory(sizeof(AstNot));
-  return new (p) AstNot(loc, opr);
+  auto node = new AstNot(loc, opr);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief AND 演算子を表す AstExpr を生成する．
@@ -77,8 +82,9 @@ AstMgr::new_and(const AstExpr* opr1,
 		const AstExpr* opr2)
 {
   ++ mOprNum;
-  void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::And, opr1, opr2);
+  auto node = new AstOpr(AstExprType::And, opr1, opr2);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief OR 演算子を表す AstExpr を生成する．
@@ -88,8 +94,9 @@ AstMgr::new_or(const AstExpr* opr1,
 	       const AstExpr* opr2)
 {
   ++ mOprNum;
-  void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::Or, opr1, opr2);
+  auto node = new AstOpr(AstExprType::Or, opr1, opr2);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief XOR 演算子を表す AstExpr を生成する．
@@ -99,8 +106,9 @@ AstMgr::new_xor(const AstExpr* opr1,
 		const AstExpr* opr2)
 {
   ++ mOprNum;
-  void* p = mAlloc.get_memory(sizeof(AstOpr));
-  return new (p) AstOpr(AstExprType::Xor, opr1, opr2);
+  auto node = new AstOpr(AstExprType::Xor, opr1, opr2);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief ブール値(0 or 1)を表す AstExpr を生成する．
@@ -111,8 +119,9 @@ AstMgr::new_bool_expr(const FileRegion& loc,
 		      bool val)
 {
   ++ mBoolExprNum;
-  void* p = mAlloc.get_memory(sizeof(AstBoolExpr));
-  return new (p) AstBoolExpr(loc, val);
+  auto node = new AstBoolExpr(loc, val);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief 実数値を表す AstExpr を生成する．
@@ -123,8 +132,9 @@ AstMgr::new_float_expr(const FileRegion& loc,
 		       double val)
 {
   ++ mFloatExprNum;
-  void* p = mAlloc.get_memory(sizeof(AstFloatExpr));
-  return new (p) AstFloatExpr(loc, val);
+  auto node = new AstFloatExpr(loc, val);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief VDDを表す AstExpr を生成する．
@@ -133,8 +143,9 @@ const AstExpr*
 AstMgr::new_vdd_expr(const FileRegion& loc)
 {
   ++ mSymbolExprNum;
-  void* p = mAlloc.get_memory(sizeof(AstSymbolExpr));
-  return new (p) AstSymbolExpr(loc, AstExprType::VDD);
+  auto node = new AstSymbolExpr(loc, AstExprType::VDD);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief VSSを表す AstExpr を生成する．
@@ -143,8 +154,9 @@ const AstExpr*
 AstMgr::new_vss_expr(const FileRegion& loc)
 {
   ++ mSymbolExprNum;
-  void* p = mAlloc.get_memory(sizeof(AstSymbolExpr));
-  return new (p) AstSymbolExpr(loc, AstExprType::VSS);
+  auto node = new AstSymbolExpr(loc, AstExprType::VSS);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief VCCを表す AstExpr を生成する．
@@ -153,8 +165,9 @@ const AstExpr*
 AstMgr::new_vcc_expr(const FileRegion& loc)
 {
   ++ mSymbolExprNum;
-  void* p = mAlloc.get_memory(sizeof(AstSymbolExpr));
-  return new (p) AstSymbolExpr(loc, AstExprType::VCC);
+  auto node = new AstSymbolExpr(loc, AstExprType::VCC);
+  mNodeList.push_back(node);
+  return node;
 }
 
 // @brief 文字列を表す AstExpr を生成する．
@@ -163,8 +176,9 @@ AstMgr::new_str_expr(const FileRegion& loc,
 		     const ShString& str)
 {
   ++ mStrExprNum;
-  void* p = mAlloc.get_memory(sizeof(AstStrExpr));
-  return new (p) AstStrExpr(loc, str);
+  auto node = new AstStrExpr(loc, str);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

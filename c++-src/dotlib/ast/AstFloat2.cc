@@ -21,8 +21,9 @@ const AstFloat2*
 AstMgr::new_float2(const FloatFloatHandler& handler)
 {
   ++ mFloat2Num;
-  void* p = mAlloc.get_memory(sizeof(AstFloat2));
-  return new (p) AstFloat2(handler);
+  auto node = new AstFloat2(handler);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

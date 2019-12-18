@@ -24,8 +24,9 @@ AstMgr::new_ff(const FileRegion& attr_loc,
 	       const FFHandler& group)
 {
   ++ mFFNum;
-  void* p = mAlloc.get_memory(sizeof(AstFF));
-  return new (p) AstFF(attr_loc, header, group);
+  auto node = new AstFF(attr_loc, header, group);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

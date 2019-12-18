@@ -22,8 +22,9 @@ const AstStrFloat*
 AstMgr::new_str_float(const StrFloatHandler& handler)
 {
   ++ mStrFloatNum;
-  void* p = mAlloc.get_memory(sizeof(AstStrFloat));
-  return new (p) AstStrFloat(handler);
+  auto node = new AstStrFloat(handler);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

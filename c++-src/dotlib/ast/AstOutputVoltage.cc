@@ -26,8 +26,9 @@ AstMgr::new_output_voltage(const FileRegion& attr_loc,
 			   const OutputVoltageHandler& group)
 {
   ++ mOutputVolNum;
-  void* p = mAlloc.get_memory(sizeof(AstOutputVoltage));
-  return new (p) AstOutputVoltage(attr_loc, header, group);
+  auto node = new AstOutputVoltage(attr_loc, header, group);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

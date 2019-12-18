@@ -21,8 +21,9 @@ AstMgr::new_delay_model(const FileRegion& loc,
 			ClibDelayModel value)
 {
   ++ mDelayModelNum;
-  void* p = mAlloc.get_memory(sizeof(AstDelayModel));
-  return new (p) AstDelayModel(loc, value);
+  auto node = new AstDelayModel(loc, value);
+  mNodeList.push_back(node);
+  return node;
 }
 
 

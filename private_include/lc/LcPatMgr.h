@@ -65,7 +65,7 @@ public:
 
   /// @brief ノードを返す．
   /// @param[in] pos ノード番号 ( 0 <= pos < node_num() )
-  LcPatNode*
+  const LcPatNode&
   node(int pos) const;
 
   /// @brief パタン数を返す．
@@ -149,12 +149,8 @@ private:
 	    LcPatHandle r_handle);
 
   /// @brief ノードを作る．
-  LcPatNode*
+  LcPatNode&
   new_node();
-
-  /// @brief ノードを削除する．
-  void
-  delete_node(LcPatNode* node);
 
 
 private:
@@ -212,7 +208,7 @@ private:
   static
   void
   display_edge(ostream& s,
-	       LcPatNode* node,
+	       const LcPatNode& node,
 	       int fanin_pos);
 
 
@@ -225,7 +221,7 @@ private:
   vector<LcPatNode*> mInputList;
 
   // 全ノードを収める配列
-  vector<LcPatNode*> mNodeList;
+  vector<LcPatNode> mNodeList;
 
   // AND/XOR ノードのハッシュ表
   LcPatNode** mHashTable;
@@ -236,17 +232,13 @@ private:
   // ハッシュ表を拡大する目安
   SizeType mNextLimit;
 
-  // パタンの根のハンドルのリスト
+  // パタンの根のハンドルと代表関数番号のペアのリスト
   // 配列のインデックスはパタン番号
-  vector<LcPatHandle> mPatList;
-
-  // 代表関数番号のリスト
-  // 配列のインデックスはパタン番号
-  vector<int> mRepList;
+  vector<pair<LcPatHandle, int>> mPatList;
 
   // 処理済みの論理式を収めたリストの配列
   // 配列のキーは代表関数番号
-  vector<vector<Expr> > mExprList;
+  vector<vector<Expr>> mExprList;
 
 };
 
