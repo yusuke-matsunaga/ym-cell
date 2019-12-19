@@ -31,7 +31,7 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 void
-CiCellLibrary::restore(istream s)
+CiCellLibrary::restore(istream& s)
 {
   string name;
   s >> name;
@@ -121,7 +121,7 @@ CiCellLibrary::restore(istream s)
     for ( int i: Range(n) ) {
       _group_list[i] = group_list[i];
     }
-    mGroupList.init(_group_list, mAlloc);
+    mGroupList.init(_group_list);
   }
 
   // セルクラス情報の読み込み
@@ -133,7 +133,7 @@ CiCellLibrary::restore(istream s)
     for ( int i: Range(n) ) {
       _class_list[i] = class_list[i];
     }
-    mClassList.init(_class_list, mAlloc);
+    mClassList.init(_class_list);
   }
 
   // 組み込み型の設定
@@ -160,7 +160,7 @@ CiCellLibrary::restore(istream s)
 BEGIN_NONAMESPACE
 
 ClibVarType
-restore_1dim(istream s,
+restore_1dim(istream& s,
 	     vector<double>& index_array)
 {
   ymuint8 tmp;
@@ -179,7 +179,7 @@ END_NONAMESPACE
 
 // @brief LUT テンプレートを読み込む．
 void
-CiCellLibrary::restore_lut_template(istream s)
+CiCellLibrary::restore_lut_template(istream& s)
 {
   int lut_num;
   s >> lut_num;
@@ -230,7 +230,7 @@ CiCellLibrary::restore_lut_template(istream s)
 BEGIN_NONAMESPACE
 
 void
-restore_tid_list(istream s,
+restore_tid_list(istream& s,
 		 const vector<CiTiming*>& global_timing_list,
 		 vector<CiTiming*>& timing_list)
 {
@@ -248,7 +248,7 @@ END_NONAMESPACE
 
 // @brief セルを読み込む．
 void
-CiCellLibrary::restore_cell(istream s,
+CiCellLibrary::restore_cell(istream& s,
 			    vector<CiCell*>& cell_list)
 {
   int nc;
@@ -296,10 +296,10 @@ CiCellLibrary::restore_cell(istream s,
       ClibTime max_t;
       ClibTime min_t;
       s >> name
-	>> has_logic
-	>> logic_expr
-	>> tristate_expr
-	>> max_f
+	>> has_logic;
+      logic_expr.restore(s);
+      tristate_expr.restore(s);
+      s >> max_f
 	>> min_f
 	>> max_c
 	>> min_c
@@ -331,10 +331,10 @@ CiCellLibrary::restore_cell(istream s,
       ClibTime max_t;
       ClibTime min_t;
       s >> name
-	>> has_logic
-	>> logic_expr
-	>> tristate_expr
-	>> cap
+	>> has_logic;
+      logic_expr.restore(s);
+      tristate_expr.restore(s);
+      s >> cap
 	>> r_cap
 	>> f_cap
 	>> max_f
@@ -397,12 +397,12 @@ CiCellLibrary::restore_cell(istream s,
 	Expr preset;
 	ymuint8 clear_preset_var1;
 	ymuint8 clear_preset_var2;
-	s >> next_state
-	  >> clocked_on
-	  >> clocked_on_also
-	  >> clear
-	  >> preset
-	  >> clear_preset_var1
+	next_state.restore(s);
+	clocked_on.restore(s);
+	clocked_on_also.restore(s);
+	clear.restore(s);
+	preset.restore(s);
+	s >> clear_preset_var1
 	  >> clear_preset_var2;
 	cell = new_ff_cell(shname, area,
 			   input_list,
@@ -428,12 +428,12 @@ CiCellLibrary::restore_cell(istream s,
 	Expr preset;
 	ymuint8 clear_preset_var1;
 	ymuint8 clear_preset_var2;
-	s >> data_in
-	  >> enable
-	  >> enable_also
-	  >> clear
-	  >> preset
-	  >> clear_preset_var1
+	data_in.restore(s);
+	enable.restore(s);
+	enable_also.restore(s);
+	clear.restore(s);
+	preset.restore(s);
+	s >> clear_preset_var1
 	  >> clear_preset_var2;
 	cell = new_latch_cell(shname, area,
 			      input_list,
@@ -484,7 +484,7 @@ CiCellLibrary::restore_cell(istream s,
 
 // @brief セルグループを読み込む．
 void
-CiCellLibrary::restore_cell_group(istream s,
+CiCellLibrary::restore_cell_group(istream& s,
 				  const vector<CiCell*>& global_cell_list,
 				  vector<CiCellGroup*>& group_list)
 {
@@ -495,8 +495,8 @@ CiCellLibrary::restore_cell_group(istream s,
     NpnMapM npnmap;
     int pininfo;
     int cell_num;
-    s >> npnmap
-      >> pininfo
+    npnmap.restore(s);
+    s >> pininfo
       >> cell_num;
     vector<CiCell*> cell_list(cell_num);
     for ( int i: Range(cell_num) ) {
@@ -510,7 +510,7 @@ CiCellLibrary::restore_cell_group(istream s,
 
 // @brief セルクラスを読み込む．
 void
-CiCellLibrary::restore_cell_class(istream s,
+CiCellLibrary::restore_cell_class(istream& s,
 				  const vector<CiCellGroup*>& global_group_list,
 				  vector<CiCellClass*>& class_list)
 {
@@ -522,7 +522,7 @@ CiCellLibrary::restore_cell_class(istream s,
     s >> idmap_num;
     vector<NpnMapM> idmap_list(idmap_num);
     for ( int i: Range(idmap_num) ) {
-      s >> idmap_list[i];
+      idmap_list[i].restore(s);
     }
 
     int group_num;
@@ -539,7 +539,7 @@ CiCellLibrary::restore_cell_class(istream s,
 
 // @brief タイミング情報を読み込む．
 void
-CiCellLibrary::restore_timing(istream s,
+CiCellLibrary::restore_timing(istream& s,
 			      vector<CiTiming*>& timing_list)
 {
   int nt;
@@ -551,8 +551,8 @@ CiCellLibrary::restore_timing(istream s,
     ymuint8 tmp;
     Expr cond;
     s >> ttype
-      >> tmp
-      >> cond;
+      >> tmp;
+    cond.restore(s);
 
     CiTiming* timing = nullptr;
     ClibTimingType timing_type = static_cast<ClibTimingType>(tmp);
@@ -638,7 +638,7 @@ CiCellLibrary::restore_timing(istream s,
 
 // @brief LUT を読み込む．
 ClibLut*
-CiCellLibrary::restore_lut(istream s)
+CiCellLibrary::restore_lut(istream& s)
 {
   int templ_id;
   s >> templ_id;
@@ -766,7 +766,7 @@ CiCellLibrary::restore_lut(istream s)
 // @retval true 読み込みが成功した．
 // @retval false 読み込みが失敗した．
 bool
-CiPatMgr::restore(istream bis)
+CiPatMgr::restore(istream& bis)
 {
   // ノードと枝の情報を読み込む．
   int nn;
@@ -786,7 +786,7 @@ CiPatMgr::restore(istream bis)
   bis >> np;
   set_pat_num(np);
   for ( int id: Range(mPatNum) ) {
-    mPatArray[id].restore(bis, mAlloc);
+    mPatArray[id].restore(bis);
   }
 
   return true;
@@ -800,13 +800,19 @@ CiPatMgr::restore(istream bis)
 // @brief バイナリファイルを読み込む．
 // @param[in] bis 入力元のストリーム
 void
-CiPatGraph::restore(istream bis,
-		    Alloc& alloc)
+CiPatGraph::restore(istream& bis)
 {
+  delete [] mEdgeList;
+
   bis >> mRepId
       >> mInputNum
       >> mEdgeNum;
-  alloc_array(alloc);
+  if ( mEdgeNum > 0 ) {
+    mEdgeList = new int[mEdgeNum];
+  }
+  else {
+    mEdgeList = nullptr;
+  }
   for ( int i: Range(mEdgeNum) ) {
     bis >> mEdgeList[i];
   }

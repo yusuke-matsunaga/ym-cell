@@ -5,7 +5,7 @@
 /// @brief ClibResistance のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -27,14 +27,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 空のコンストラクタ
-  ClibResistance();
+  ClibResistance() = default;
 
   /// @brief double からの変換コンストラクタ
   explicit
   ClibResistance(double v);
 
   /// @brief デストラクタ
-  ~ClibResistance();
+  ~ClibResistance() = default;
 
 
 public:
@@ -82,7 +82,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値
-  double mValue;
+  double mValue{0.0};
 
 };
 
@@ -150,28 +150,23 @@ ostream&
 operator<<(ostream& s,
 	   const ClibResistance& val);
 
+/// @brief ストリーム入力
+/// @param[in] s 入力元のストリーム
+/// @param[out] val 読み出された値
+/// @relates ClibResistance
+istream&
+operator>>(istream& s,
+	   ClibResistance& val);
+
 
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// @brief 空のコンストラクタ
-inline
-ClibResistance::ClibResistance() :
-  mValue(0.0)
-{
-}
-
 // @brief double からの変換コンストラクタ
 inline
 ClibResistance::ClibResistance(double v) :
-  mValue(v)
-{
-}
-
-// @brief デストラクタ
-inline
-ClibResistance::~ClibResistance()
+  mValue{v}
 {
 }
 
@@ -309,6 +304,21 @@ operator<<(ostream& s,
 	   const ClibResistance& val)
 {
   return s << val.value();
+}
+
+// @brief ストリーム入力
+// @param[in] s 入力元のストリーム
+// @param[out] val 読み出された値
+// @relates ClibResistance
+inline
+istream&
+operator>>(istream& s,
+	   ClibResistance& val)
+{
+  double tmp;
+  s >> tmp;
+  val = ClibResistance{tmp};
+  return s;
 }
 
 END_NAMESPACE_YM_CLIB

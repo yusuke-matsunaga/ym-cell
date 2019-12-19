@@ -830,33 +830,33 @@ private:
 
   /// @brief LUT テンプレートを読み込む．
   void
-  restore_lut_template(IDO& s);
+  restore_lut_template(istream& s);
 
   /// @brief セルを読み込む．
   void
-  restore_cell(IDO& s,
+  restore_cell(istream& s,
 	       vector<CiCell*>& cell_list);
 
   /// @brief セルグループを読み込む．
   void
-  restore_cell_group(IDO& s,
+  restore_cell_group(istream& s,
 		     const vector<CiCell*>& global_cell_list,
 		     vector<CiCellGroup*>& group_list);
 
   /// @brief セルクラスを読み込む．
   void
-  restore_cell_class(IDO& s,
+  restore_cell_class(istream& s,
 		     const vector<CiCellGroup*>& global_group_list,
 		     vector<CiCellClass*>& class_list);
 
   /// @brief タイミング情報を読み込む．
   void
-  restore_timing(IDO& s,
+  restore_timing(istream& s,
 		 vector<CiTiming*>& timing_list);
 
   /// @brief LUT を読み込む．
   ClibLut*
-  restore_lut(IDO& s);
+  restore_lut(istream& s);
 
 
 public:

@@ -107,10 +107,6 @@ private:
   MislibToken
   scan(FileRegion& lloc);
 
-  /// @brief 確保したオブジェクトをすべて削除する．
-  void
-  clear();
-
   /// @brief GATE ノードを生成する．(通常版)
   MislibGate*
   new_gate(const FileRegion& loc,
@@ -209,7 +205,7 @@ private:
   FileRegion mUngetLoc;
 
   // 生成したノードのリスト
-  vector<MislibNode*> mNodeList;
+  vector<unique_ptr<MislibNode>> mNodeList;
 
 };
 

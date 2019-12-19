@@ -50,7 +50,7 @@ set (ci_SOURCES
   c++-src/ci/CiPatMgr.cc
   c++-src/ci/CiTiming.cc
   c++-src/ci/dump.cc
-#  c++-src/ci/restore.cc
+  c++-src/ci/restore.cc
   )
 
 set (libcomp_SOURCES

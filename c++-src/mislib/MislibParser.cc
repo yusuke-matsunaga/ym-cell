@@ -83,7 +83,6 @@ MislibParser::MislibParser()
 // デストラクタ
 MislibParser::~MislibParser()
 {
-  clear();
 }
 
 // @brief ゲートを読み込む．
@@ -614,7 +613,7 @@ MislibParser::new_gate(const FileRegion& loc,
   auto node = new MislibGate(loc, name, area,
 			     oname, expr,
 			     ipin_top);
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -634,7 +633,7 @@ MislibParser::new_pin(const FileRegion& loc,
 			    input_load, max_load,
 			    rise_block_delay, rise_fanout_delay,
 			    fall_block_delay, fall_fanout_delay);
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -643,7 +642,7 @@ MislibPhase*
 MislibParser::new_noninv(const FileRegion& loc)
 {
   auto node = new MislibNoninv(loc);
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -652,7 +651,7 @@ MislibPhase*
 MislibParser::new_inv(const FileRegion& loc)
 {
   auto node = new MislibInv(loc);
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -661,7 +660,7 @@ MislibPhase*
 MislibParser::new_unknown(const FileRegion& loc)
 {
   auto node = new MislibUnknown(loc);
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -670,7 +669,7 @@ MislibExpr*
 MislibParser::new_const0(const FileRegion& loc)
 {
   auto node = new MislibConst0(loc);
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -679,7 +678,7 @@ MislibExpr*
 MislibParser::new_const1(const FileRegion& loc)
 {
   auto node = new MislibConst1(loc);
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -689,7 +688,7 @@ MislibParser::new_not(const FileRegion& loc,
 		      const MislibExpr* child1)
 {
   auto node = new MislibNot(loc, child1);
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -700,7 +699,7 @@ MislibParser::new_and(const FileRegion& loc,
 		      const MislibExpr* child2)
 {
   auto node = new MislibAnd(loc, child1, child2);
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -711,7 +710,7 @@ MislibParser::new_or(const FileRegion& loc,
 		     const MislibExpr* child2)
 {
   auto node = new MislibOr(loc, child1, child2);
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -722,7 +721,7 @@ MislibParser::new_xor(const FileRegion& loc,
 		      const MislibExpr* child2)
 {
   auto node = new MislibXor(loc, child1, child2);
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -732,7 +731,7 @@ MislibParser::new_varname(const FileRegion& loc,
 			  ShString str)
 {
   auto node = new MislibVarName(loc, str);
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -741,7 +740,7 @@ MislibStr*
 MislibParser::new_str(const FileRegion& loc)
 {
   auto node = new MislibStr(loc, ShString(mScanner->cur_string()));
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 
@@ -750,7 +749,7 @@ MislibNum*
 MislibParser::new_num(const FileRegion& loc)
 {
   auto node = new MislibNum(loc, mScanner->cur_num());
-  mNodeList.push_back(node);
+  mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }
 

@@ -9,8 +9,6 @@
 
 #include "gtest/gtest.h"
 #include "ym/ClibCellLibrary.h"
-#include "ym/FileIDO.h"
-#include "ym/FileODO.h"
 #include "ym/StreamMsgHandler.h"
 #include "ym/MsgMgr.h"
 
@@ -67,18 +65,16 @@ TEST(ClibCellLibraryTest, dump_restore)
     string dump_filename = "./foo.dump";
 
     {
-      FileODO odo;
-      bool r = odo.open(dump_filename);
-      ASSERT_TRUE ( r );
-      library.dump(odo);
+      ofstream s(dump_filename);
+      ASSERT_TRUE ( s.operator bool() );
+      library.dump(s);
     }
 
     ClibCellLibrary library2;
     {
-      FileIDO ido;
-      bool r = ido.open(dump_filename);
-      ASSERT_TRUE ( r );
-      library2.restore(ido);
+      ifstream s(dump_filename);
+      ASSERT_TRUE ( s.operator bool() );
+      library2.restore(s);
     }
 
     EXPECT_EQ( library.cell_num(), library2.cell_num() );

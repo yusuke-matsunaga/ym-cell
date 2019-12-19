@@ -5,7 +5,7 @@
 /// @brief ClibCapacitance のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -27,14 +27,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 空のコンストラクタ
-  ClibCapacitance();
+  ClibCapacitance() = default;
 
   /// @brief double からの変換コンストラクタ
   explicit
   ClibCapacitance(double v);
 
   /// @brief デストラクタ
-  ~ClibCapacitance();
+  ~ClibCapacitance() = default;
 
 
 public:
@@ -82,7 +82,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値
-  double mValue;
+  double mValue{0.0};
 
 };
 
@@ -150,29 +150,23 @@ ostream&
 operator<<(ostream& s,
 	   const ClibCapacitance& val);
 
+/// @brief ストリーム入力
+/// @param[in] s 入力元のストリーム
+/// @param[out] val 読み出された値
+/// @relates ClibCapacitance
+istream&
+operator>>(istream& s,
+	   ClibCapacitance& val);
+
 
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-
-// @brief 空のコンストラクタ
-inline
-ClibCapacitance::ClibCapacitance() :
-  mValue(0.0)
-{
-}
-
 // @brief double からの変換コンストラクタ
 inline
 ClibCapacitance::ClibCapacitance(double v) :
-  mValue(v)
-{
-}
-
-// @brief デストラクタ
-inline
-ClibCapacitance::~ClibCapacitance()
+  mValue{v}
 {
 }
 
@@ -310,6 +304,21 @@ operator<<(ostream& s,
 	   const ClibCapacitance& val)
 {
   return s << val.value();
+}
+
+// @brief ストリーム入力
+// @param[in] s 入力元のストリーム
+// @param[out] val 読み出された値
+// @relates ClibCapacitance
+inline
+istream&
+operator>>(istream& s,
+	   ClibCapacitance& val)
+{
+  double tmp;
+  s >> tmp;
+  val = ClibCapacitance{tmp};
+  return s;
 }
 
 END_NAMESPACE_YM_CLIB

@@ -5,7 +5,7 @@
 /// @brief ClibTime のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -27,14 +27,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 空のコンストラクタ
-  ClibTime();
+  ClibTime() = default;
 
   /// @brief double からの変換用コンストラクタ
   explicit
   ClibTime(double v);
 
   /// @brief デストラクタ
-  ~ClibTime();
+  ~ClibTime() = default;
 
 
 public:
@@ -82,7 +82,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値
-  double mValue;
+  double mValue{0.0};
 
 };
 
@@ -147,28 +147,23 @@ ostream&
 operator<<(ostream& s,
 	   const ClibTime& val);
 
+/// @brief ストリーム入力
+/// @param[in] s 入力元のストリーム
+/// @param[out] val 読み出された値
+/// @relates ClibTime
+istream&
+operator>>(istream& s,
+	   ClibTime& val);
+
 
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// @brief 空のコンストラクタ
-inline
-ClibTime::ClibTime() :
-  mValue(0.0)
-{
-}
-
 // @brief double からの変換コンストラクタ
 inline
 ClibTime::ClibTime(double v) :
-  mValue(v)
-{
-}
-
-// @brief デストラクタ
-inline
-ClibTime::~ClibTime()
+  mValue{v}
 {
 }
 
@@ -306,6 +301,21 @@ operator<<(ostream& s,
 	   const ClibTime& val)
 {
   return s << val.value();
+}
+
+// @brief ストリーム入力
+// @param[in] s 入力元のストリーム
+// @param[out] val 読み出された値
+// @relates ClibTime
+inline
+istream&
+operator>>(istream& s,
+	   ClibTime& val)
+{
+  double tmp;
+  s >> tmp;
+  val = ClibTime{tmp};
+  return s;
 }
 
 END_NAMESPACE_YM_CLIB
