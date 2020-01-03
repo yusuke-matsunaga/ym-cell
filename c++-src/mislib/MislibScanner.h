@@ -12,8 +12,8 @@
 #include "mislib_nsdef.h"
 #include "MislibToken.h"
 
+#include "ym/InputFileObj.h"
 #include "ym/StrBuff.h"
-#include "ym/Scanner.h"
 
 
 BEGIN_NAMESPACE_YM_MISLIB
@@ -22,19 +22,16 @@ BEGIN_NAMESPACE_YM_MISLIB
 /// @class MislibScanner MislibScanner.h "MislibScanner.h"
 /// @brief Mislib 用の LEX クラス
 //////////////////////////////////////////////////////////////////////
-class MislibScanner :
-  public Scanner
+class MislibScanner
 {
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] s 入力ストリーム
-  /// @param[in] file_info ファイル情報
-  MislibScanner(istream& s,
-		const FileInfo& file_info);
+  /// @param[in] in 入力ファイルオブジェクト
+  MislibScanner(InputFileObj& in);
 
   /// @brief デストラクタ
-  ~MislibScanner();
+  ~MislibScanner() = default;
 
 
 public:
@@ -53,7 +50,7 @@ public:
 
   /// @brief cur_string() を double に変換したものを返す．
   double
-  cur_num() const;
+  cur_float() const;
 
 
 private:
@@ -71,6 +68,12 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // 入力ファイルオブジェクト
+  InputFileObj& mIn;
+
+  // 現在読込中の文字列の先頭の位置
+  FileLoc mFirstLoc;
 
   // 現在読込中の文字列を貯めておくバッファ
   StrBuff mCurString;
@@ -93,7 +96,7 @@ MislibScanner::cur_string() const
 // @brief cur_string() を double に変換したものを返す．
 inline
 double
-MislibScanner::cur_num() const
+MislibScanner::cur_float() const
 {
   return strtod(cur_string(), static_cast<char**>(nullptr));
 }

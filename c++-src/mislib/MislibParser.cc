@@ -106,7 +106,9 @@ MislibParser::parse(const string& filename,
 		      buf.str());
       return false;
     }
-    unique_ptr<MislibScanner> new_scanner{new MislibScanner(fin, {filename})};
+
+    InputFileObj in{fin, {filename}};
+    unique_ptr<MislibScanner> new_scanner{new MislibScanner(in)};
     mScanner.swap(new_scanner);
   }
 
@@ -517,7 +519,7 @@ MislibParser::scan(FileRegion& lloc)
       break;
 
     case NUM:
-      cout << "NUM(" << mScanner->cur_num() << ")" << endl;
+      cout << "NUM(" << mScanner->cur_float() << ")" << endl;
       break;
 
     case NONINV:
@@ -748,7 +750,7 @@ MislibParser::new_str(const FileRegion& loc)
 MislibNum*
 MislibParser::new_num(const FileRegion& loc)
 {
-  auto node = new MislibNum(loc, mScanner->cur_num());
+  auto node = new MislibNum(loc, mScanner->cur_float());
   mNodeList.push_back(unique_ptr<MislibNode>{node});
   return node;
 }

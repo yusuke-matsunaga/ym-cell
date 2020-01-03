@@ -822,8 +822,9 @@ CiCellLibrary::read_liberty(const string& filename)
     return false;
   }
 
+  InputFileObj in{fin, {filename}};
   AstMgr mgr;
-  DotlibParser parser(fin, {filename}, mgr, false);
+  DotlibParser parser(in, mgr, false);
   const AstLibrary* ast_library = parser.parse();
   if ( ast_library == nullptr ) {
     return false;

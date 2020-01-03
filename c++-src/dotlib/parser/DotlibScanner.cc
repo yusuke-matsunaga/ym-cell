@@ -3,7 +3,7 @@
 /// @brief DotlibScanner の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -15,33 +15,10 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief コンストラクタ
-// @param[in] s 入力ストリーム
-// @param[in] file_info ファイル情報
-DotlibScanner::DotlibScanner(istream& s,
-			     const FileInfo& file_info) :
-  Scanner(s, file_info)
+// @param[in] in 入力ファイルオブジェクト
+DotlibScanner::DotlibScanner(InputFileObj& in) :
+  mIn{in}
 {
-}
-
-// デストラクタ
-DotlibScanner::~DotlibScanner()
-{
-}
-
-// @brief 直前の read_token() に対応する整数値を返す．
-// @note 型が INT_NUM でなかったときの値は不定
-int
-DotlibScanner::cur_int() const
-{
-  return strtol(cur_string(), nullptr, 10);
-}
-
-// @brief 直前の read_token() に対応する実数値を返す．
-// @note 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
-double
-DotlibScanner::cur_float() const
-{
-  return strtod(cur_string(), nullptr);
 }
 
 // @brief トークンを一つとってくる．
@@ -53,7 +30,7 @@ DotlibScanner::read_token(FileRegion& loc,
 {
   mSymbolMode = symbol_mode;
   TokenType type = scan();
-  loc = cur_loc();
+  loc = FileRegion{mFirstLoc, mIn.cur_loc()};
   return type;
 }
 
@@ -67,8 +44,8 @@ DotlibScanner::scan()
   mCurString.clear();
 
  ST_INIT: // 初期状態
-  c = get();
-  set_first_loc();
+  c = mIn.get();
+  mFirstLoc = mIn.cur_loc();
   if ( is_symbol(c) ) {
     mCurString.put_char(c);
     goto ST_ID;
@@ -97,10 +74,10 @@ DotlibScanner::scan()
     goto ST_DQ;
 
   case '\\':
-    c = peek();
+    c = mIn.peek();
     if ( c == '\n' ) {
       // 無視する．
-      accept();
+      mIn.accept();
       goto ST_INIT;
     }
     // それ以外はバックスラッシュがなかったことにする．
@@ -142,7 +119,7 @@ DotlibScanner::scan()
   default:
     // それ以外はエラーなんじゃない？
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    cur_loc(),
+		    mIn.cur_loc(),
 		    MsgType::Error,
 		    "DOTLIB_LEX",
 		    "syntax error");
@@ -151,9 +128,9 @@ DotlibScanner::scan()
   ASSERT_NOT_REACHED;
 
  ST_MINUS: // '-' を読み込んだ時
-  c = peek();
+  c = mIn.peek();
   if ( isdigit(c) ) {
-    accept();
+    mIn.accept();
     mCurString.put_char('-');
     mCurString.put_char(c);
     goto ST_NUM1;
@@ -161,23 +138,23 @@ DotlibScanner::scan()
   return TokenType::MINUS;
 
  ST_NUM1: // 一文字目が[0-9]の時
-  c = peek();
+  c = mIn.peek();
   if ( isdigit(c) ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto ST_NUM1;
   }
   if ( c == '.' ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto ST_DOT;
   }
   return TokenType::INT_NUM;
 
  ST_DOT: // [0-9]*'.' を読み込んだ時
-  c = peek();
+  c = mIn.peek();
   if ( isdigit(c) ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto ST_NUM2;
   }
@@ -185,7 +162,7 @@ DotlibScanner::scan()
     ostringstream buf;
     buf << "digit number expected after dot";
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    cur_loc(),
+		    mIn.cur_loc(),
 		    MsgType::Error,
 		    "DOTLIB_LEX",
 		    buf.str());
@@ -193,28 +170,28 @@ DotlibScanner::scan()
   }
 
  ST_NUM2: // [0-9]*'.'[0-9]* を読み込んだ時
-  c = peek();
+  c = mIn.peek();
   if ( isdigit(c) ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto ST_NUM2;
   }
   if ( c == 'e' || c == 'E' ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto ST_NUM3;
   }
   return TokenType::FLOAT_NUM;
 
  ST_NUM3: // [0-9]*'.'[0-9]*(e|E)を読み込んだ時
-  c = peek();
+  c = mIn.peek();
   if ( isdigit(c) ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto ST_NUM4;
   }
   if ( c == '+' || c == '-' ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto ST_NUM4;
   }
@@ -222,7 +199,7 @@ DotlibScanner::scan()
     ostringstream buf;
     buf << "exponent value expected";
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    cur_loc(),
+		    mIn.cur_loc(),
 		    MsgType::Error,
 		    "DOTLIB_LEX",
 		    buf.str());
@@ -230,25 +207,25 @@ DotlibScanner::scan()
   }
 
  ST_NUM4: // [0-9]*'.'[0-9]*(e|E)(+|-)?[0-9]*を読み込んだ直後
-  c = peek();
+  c = mIn.peek();
   if ( isdigit(c) ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto ST_NUM4;
   }
   return TokenType::FLOAT_NUM;
 
  ST_ID: // 一文字目が[a-zA-Z_]の時
-  c = peek();
+  c = mIn.peek();
   if ( is_symbol(c) || isdigit(c) ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto ST_ID;
   }
   return TokenType::SYMBOL;
 
  ST_DQ: // "があったら次の"までを強制的に文字列だと思う．
-  c = get();
+  c = mIn.get();
   if ( c == '\"' ) {
     return TokenType::SYMBOL;
   }
@@ -256,7 +233,7 @@ DotlibScanner::scan()
     ostringstream buf;
     buf << "unexpected newline in quoted string.";
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    cur_loc(),
+		    mIn.cur_loc(),
 		    MsgType::Error,
 		    "DOTLIB_LEX",
 		    buf.str());
@@ -266,14 +243,14 @@ DotlibScanner::scan()
     ostringstream buf;
     buf << "unexpected end-of-file in quoted string.";
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    cur_loc(),
+		    mIn.cur_loc(),
 		    MsgType::Error,
 		    "DOTLIB_LEX",
 		    buf.str());
     return TokenType::ERROR;
   }
   if ( c == '\\' ) {
-    c = get();
+    c = mIn.get();
     if ( c != '\n' ) {
       // 改行以外はバックスラッシュをそのまま解釈する．
       mCurString.put_char('\\');
@@ -283,19 +260,19 @@ DotlibScanner::scan()
   goto ST_DQ;
 
  ST_comment1: // '/' を読み込んだ直後
-  c = peek();
+  c = mIn.peek();
   if ( c == '/' ) { // C++ スタイルのコメント
-    accept();
+    mIn.accept();
     goto ST_comment2;
   }
   if ( c == '*' ) { // C スタイルのコメント
-    accept();
+    mIn.accept();
     goto ST_comment3;
   }
   return TokenType::DIV;
 
  ST_comment2: // 改行まで読み飛ばす．
-  c = get();
+  c = mIn.get();
   if ( c == '\n' ) {
     goto ST_INIT;
   }
@@ -305,7 +282,7 @@ DotlibScanner::scan()
   goto ST_comment2;
 
  ST_comment3: // "/*" を読み込んだ直後
-  c = get();
+  c = mIn.get();
   if ( c == EOF ) {
     goto ST_EOF;
   }
@@ -315,7 +292,7 @@ DotlibScanner::scan()
   goto ST_comment3;
 
  ST_comment4: // "/* 〜 *" まで読み込んだ直後
-  c = get();
+  c = mIn.get();
   if ( c == EOF ) {
     goto ST_EOF;
   }
@@ -332,7 +309,7 @@ DotlibScanner::scan()
     ostringstream buf;
     buf << "Unexpected end-of-file in comment block.";
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    cur_loc(),
+		    mIn.cur_loc(),
 		    MsgType::Error,
 		    "DOTLIB_LEX",
 		    buf.str());

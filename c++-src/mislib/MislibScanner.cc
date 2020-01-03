@@ -3,7 +3,7 @@
 /// @brief MislibScanner の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -14,16 +14,9 @@
 BEGIN_NAMESPACE_YM_MISLIB
 
 // コンストラクタ
-// @param[in] s 入力ストリーム
-// @param[in] file_info ファイル情報
-MislibScanner::MislibScanner(istream& s,
-			     const FileInfo& file_info) :
-  Scanner{s, file_info}
-{
-}
-
-// デストラクタ
-MislibScanner::~MislibScanner()
+// @param[in] in 入力ファイルオブジェクト
+MislibScanner::MislibScanner(InputFileObj& in) :
+  mIn{in}
 {
 }
 
@@ -33,7 +26,7 @@ MislibToken
 MislibScanner::read_token(FileRegion& loc)
 {
   MislibToken token = scan();
-  loc = cur_loc();
+  loc = FileRegion{mFirstLoc, mIn.cur_loc()};
   return token;
 }
 
@@ -47,8 +40,8 @@ MislibScanner::scan()
   mCurString.clear();
 
  state1:
-  c = get();
-  set_first_loc();
+  c = mIn.get();
+  mFirstLoc = mIn.cur_loc();
   if ( isalpha(c) || (c == '_') ) {
     mCurString.put_char(c);
     goto state2;
@@ -80,9 +73,9 @@ MislibScanner::scan()
 
   // 一文字目が[a-zA-Z_]の時
  state2:
-  c = peek();
+  c = mIn.peek();
   if ( isalpha(c) || isdigit(c) || (c == '_') ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto state2;
   }
@@ -114,19 +107,19 @@ MislibScanner::scan()
 
   // 一文字目が[0-9]の時
  state3:
-  c = peek();
+  c = mIn.peek();
   if ( isdigit(c) ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto state3;
   }
   if ( c == '.' ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto state5;
   }
   if ( c == 'E' || c == 'e' ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto state8;
   }
@@ -134,7 +127,7 @@ MislibScanner::scan()
 
   // 一文字目が"."の時
  state4:
-  c = get();
+  c = mIn.get();
   if ( isdigit(c) ) {
     mCurString.put_char(c);
     goto state5;
@@ -143,14 +136,14 @@ MislibScanner::scan()
 
   // [0-9]*"."を読み終えたところ
  state5:
-  c = peek();
+  c = mIn.peek();
   if ( isdigit(c) ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto state5;
   }
   if ( c == 'E' || c == 'e' ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto state8;
   }
@@ -158,14 +151,14 @@ MislibScanner::scan()
 
   // [0-9]*"."[Ee]を読み終えたところ
  state8:
-  c = peek();
+  c = mIn.peek();
   if ( c == '-' ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto state9;
   }
   if ( isdigit(c) ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto state9;
   }
@@ -173,9 +166,9 @@ MislibScanner::scan()
 
   // [0-9]*"."[Ee]-?を読み終えたところ
  state9:
-  c = peek();
+  c = mIn.peek();
   if ( isdigit(c) ) {
-    accept();
+    mIn.accept();
     mCurString.put_char(c);
     goto state9;
   }
@@ -183,7 +176,7 @@ MislibScanner::scan()
 
   // '#'があったら改行までループする．
  state6:
-  c = get();
+  c = mIn.get();
   if ( c == '\n' ) {
     goto state1;
   }
@@ -191,7 +184,7 @@ MislibScanner::scan()
 
   // "があったら次の"までを強制的に文字列だと思う．
  state7:
-  c = get();
+  c = mIn.get();
   if ( c == '\"' ) {
     return STR;
   }
@@ -203,7 +196,7 @@ MislibScanner::scan()
     ostringstream buf;
     buf << "Syntax error: illegal input (" << mCurString << ").";
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    cur_loc(),
+		    mIn.cur_loc(),
 		    MsgType::Error,
 		    "MISLIB_PARSE",
 		    buf.str().c_str());
