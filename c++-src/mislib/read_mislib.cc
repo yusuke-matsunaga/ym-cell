@@ -26,7 +26,6 @@
 #include "MislibStr.h"
 #include "MislibNum.h"
 
-#include "ym/FileIDO.h"
 #include "ym/Expr.h"
 #include "ym/TvFunc.h"
 #include "ym/MsgMgr.h"

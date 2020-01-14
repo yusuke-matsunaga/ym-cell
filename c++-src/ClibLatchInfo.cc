@@ -193,25 +193,19 @@ ClibLatchInfo::xq_pos() const
 }
 
 // @brief バイナリダンプを行う．
-// @param[in] bos 出力先のストリーム
-// @param[in] latchinfo 対象の ClibLatchInfo
-// @return ストリームを返す．
-ODO&
-operator<<(ODO& bos,
-	   const ClibLatchInfo& latchinfo)
+// @param[in] s 出力先のストリーム
+void
+ClibLatchInfo::dump(ostream& s) const
 {
-  return bos << latchinfo.mBits;
+  s.write(reinterpret_cast<const char*>(&mBits), sizeof(mBits));
 }
 
 // @brief バイナリファイルを読み込む．
-// @param[in] bis 入力元のストリーム
-// @param[out] latchinfo 結果を格納する変数
-// @return ストリームを返す．
-IDO&
-operator>>(IDO& bis,
-	   ClibLatchInfo& latchinfo)
+// @param[in] s 入力元のストリーム
+void
+ClibLatchInfo::restore(istream& s)
 {
-  return bis >> latchinfo.mBits;
+  s.read(reinterpret_cast<char*>(&mBits), sizeof(mBits));
 }
 
 END_NAMESPACE_YM_CLIB

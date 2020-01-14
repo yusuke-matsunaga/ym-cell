@@ -40,7 +40,6 @@
 #include "dotlib/AstTechnology.h"
 
 #include "dotlib/TokenType.h"
-#include "ym/FileIDO.h"
 #include "ym/MsgMgr.h"
 #include "ym/ShString.h"
 

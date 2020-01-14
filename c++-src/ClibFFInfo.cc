@@ -180,25 +180,19 @@ ClibFFInfo::xq_pos() const
 }
 
 // @brief バイナリダンプを行う．
-// @param[in] bos 出力先のストリーム
-// @param[in] ffinfo 対象の ClibFFInfo
-// @return ストリームを返す．
-ODO&
-operator<<(ODO& bos,
-	   const ClibFFInfo& ffinfo)
+// @param[in] s 出力先のストリーム
+void
+ClibFFInfo::dump(ostream& s) const
 {
-  return bos << ffinfo.mBits;
+  s.write(reinterpret_cast<const char*>(&mBits), sizeof(mBits));
 }
 
 // @brief バイナリファイルを読み込む．
-// @param[in] bis 入力元のストリーム
-// @param[out] ffinfo 結果を格納する変数
-// @return ストリームを返す．
-IDO&
-operator>>(IDO& bis,
-	   ClibFFInfo& ffinfo)
+// @param[in] s 入力元のストリーム
+void
+ClibFFInfo::restore(istream& s)
 {
-  return bis >> ffinfo.mBits;
+  s.read(reinterpret_cast<char*>(&mBits), sizeof(mBits));
 }
 
 END_NAMESPACE_YM_CLIB

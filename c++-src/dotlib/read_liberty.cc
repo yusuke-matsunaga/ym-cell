@@ -47,7 +47,6 @@
 #include "dotlib/AstTimingType.h"
 #include "dotlib/AstVarType.h"
 
-#include "ym/FileIDO.h"
 #include "ym/Expr.h"
 #include "ym/TvFunc.h"
 #include "ym/MsgMgr.h"

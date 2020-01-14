@@ -10,8 +10,6 @@
 
 
 #include "ym/clib.h"
-#include "ym/IDO.h"
-#include "ym/ODO.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -114,22 +112,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief バイナリダンプを行う．
-  /// @param[in] bos 出力先のストリーム
-  /// @param[in] ffinfo 対象の ClibFFInfo
-  /// @return ストリームを返す．
-  friend
-  ODO&
-  operator<<(ODO& bos,
-	     const ClibFFInfo& ffinfo);
+  /// @param[in] s 出力先のストリーム
+  void
+  dump(ostream& s) const;
 
   /// @brief バイナリファイルを読み込む．
-  /// @param[in] bis 入力元のストリーム
-  /// @param[out] ffinfo 結果を格納する変数
-  /// @return ストリームを返す．
-  friend
-  IDO&
-  operator>>(IDO& bis,
-	     ClibFFInfo& ffinfo);
+  /// @param[in] s 入力元のストリーム
+  void
+  restore(istream& s);
 
 
 private:
