@@ -24,13 +24,13 @@ class LcSignature
 public:
 
   /// @brief 種類を表す列挙型
-  enum Type {
+  enum class Type {
     /// @brief 組み合わせ論理
-    kLogicType = 0,
+    Logic = 0,
     /// @brief FF
-    kFFType = 1,
+    FF = 1,
     /// @brief ラッチ
-    kLatchType = 2
+    Latch = 2
   };
 
 
@@ -39,11 +39,11 @@ public:
   /// @brief コンストラクタ
   ///
   /// 内容は不定
-  LcSignature();
+  LcSignature() = default;
 
   /// @brief コピーコンストラクタ
   /// @param[in] src コピー元のオブジェクト
-  LcSignature(const LcSignature& src);
+  LcSignature(const LcSignature& src) = default;
 
   /// @brief 変換付きのコピーコンストラクタ
   /// @param[in] src コピー元のオブジェクト
@@ -56,7 +56,7 @@ public:
   LcSignature(const Expr& expr);
 
   /// @brief 単純なFFセル/ラッチセルのシグネチャを作るコンストラクタ
-  /// @param[in] type 種類 (kFFType/kLatchType)
+  /// @param[in] type 種類 (kFFType/Type::Latch)
   /// @param[in] has_q Q出力の有無
   /// @param[in] has_xq 反転Q出力の有無
   /// @param[in] has_clear クリア端子の有無
@@ -97,21 +97,21 @@ public:
 
   /// @brief クロック/イネーブルの論理関数を返す．
   ///
-  /// type() == kFFType, kLatchType の時のみ意味を持つ．
+  /// type() == Type::FF, Type::Latch の時のみ意味を持つ．
   /// ラッチの時は enable を表す論理関数を返す．
   TvFunc
   clock() const;
 
   /// @brief 次状態関数を返す．
   ///
-  /// type() == kFFType, kLatchType の時のみ意味を持つ．
+  /// type() == Type::FF, Type::Latch の時のみ意味を持つ．
   /// ラッチの時は data_in を表す論理関数を返す．
   TvFunc
   next_state() const;
 
   /// @brief クリア条件を持つ時に true を返す．
   ///
-  /// type() == kFFType, kLatchType の時のみ意味を持つ．
+  /// type() == Type::FF, Type::Latch の時のみ意味を持つ．
   bool
   has_clear() const;
 
@@ -123,7 +123,7 @@ public:
 
   /// @brief プリセット条件を持つ時に true を返す．
   ///
-  /// type() == kFFType, kLatchType の時のみ意味を持つ．
+  /// type() == Type::FF, Type::Latch の時のみ意味を持つ．
   bool
   has_preset() const;
 
@@ -171,6 +171,18 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief Logic タイプにセットする．
+  void
+  set_Logic();
+
+  /// @brief FF タイプにセットする．
+  void
+  set_FF();
+
+  /// @brief Latch タイプにセットする．
+  void
+  set_Latch();
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -181,13 +193,13 @@ private:
   // 0-1: タイプ
   // 2: クリア端子
   // 3: プリセット端子
-  ymuint mTypeBits;
+  bitset<4> mTypeBits{0};
 
   // 入力ピン数
-  int mInputNum;
+  int mInputNum{0};
 
   // 出力ピン数
-  int mOutputNum;
+  int mOutputNum{0};
 
   // 論理式を持つかどうかのフラグと tristate 条件を持つかどうかのフラグの配列
   // 要素数は mOutputNum
@@ -225,7 +237,36 @@ inline
 LcSignature::Type
 LcSignature::type() const
 {
-  return static_cast<Type>(mTypeBits & 3U);
+  ymuint b0 = mTypeBits[0];
+  ymuint b1 = mTypeBits[1];
+  return static_cast<Type>(b0 | (b1 << 1));
+}
+
+// @brief Logic タイプにセットする．
+inline
+void
+LcSignature::set_Logic()
+{
+  mTypeBits.set(0, 0);
+  mTypeBits.set(1, 0);
+}
+
+// @brief FF タイプにセットする．
+inline
+void
+LcSignature::set_FF()
+{
+  mTypeBits.set(0, 1);
+  mTypeBits.set(1, 0);
+}
+
+// @brief Latch タイプにセットする．
+inline
+void
+LcSignature::set_Latch()
+{
+  mTypeBits.set(0, 0);
+  mTypeBits.set(1, 1);
 }
 
 // @brief 入力数
@@ -246,7 +287,7 @@ LcSignature::output_num() const
 
 // @brief クロック/イネーブルの論理関数を返す．
 //
-// type() == kFFType, kLatchType の時のみ意味を持つ．
+// type() == Type::FF, Type::Latch の時のみ意味を持つ．
 inline
 TvFunc
 LcSignature::clock() const
@@ -256,7 +297,7 @@ LcSignature::clock() const
 
 // @brief 次状態関数を返す．
 //
-// type() == kFFType, kLatchType の時のみ意味を持つ．
+// type() == Type::FF, Type::Latch の時のみ意味を持つ．
 // ラッチの時は data_in を表す論理関数を返す．
 inline
 TvFunc
@@ -270,7 +311,7 @@ inline
 bool
 LcSignature::has_clear() const
 {
-  return static_cast<bool>((mTypeBits >> 2) & 1U);
+  return mTypeBits[2];
 }
 
 // @brief クリア条件を表す論理関数を返す．
@@ -288,7 +329,7 @@ inline
 bool
 LcSignature::has_preset() const
 {
-  return static_cast<bool>((mTypeBits >> 3) & 1U);
+  return mTypeBits[3];
 }
 
 // @brief プリセット条件を表す論理関数を返す．

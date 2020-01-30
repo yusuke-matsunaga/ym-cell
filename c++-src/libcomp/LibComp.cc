@@ -345,7 +345,7 @@ LibComp::_ff_init()
     bool has_preset;
     decode(i, has_q, has_xq, has_clear, has_preset);
 
-    LcSignature sig(LcSignature::kFFType, has_q, has_xq, has_clear, has_preset);
+    LcSignature sig(LcSignature::Type::FF, has_q, has_xq, has_clear, has_preset);
     LcGroup* group = _find_group(sig);
     LcClass* cclass = group->parent();
     mFFClass[i] = cclass->id();
@@ -363,7 +363,7 @@ LibComp::_latch_init()
     bool has_preset;
     decode(i, has_q, has_xq, has_clear, has_preset);
 
-    LcSignature sig(LcSignature::kLatchType, has_q, has_xq, has_clear, has_preset);
+    LcSignature sig(LcSignature::Type::Latch, has_q, has_xq, has_clear, has_preset);
     LcGroup* group = _find_group(sig);
     LcClass* cclass = group->parent();
     mLatchClass[i] = cclass->id();

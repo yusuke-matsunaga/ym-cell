@@ -19,7 +19,7 @@ TEST(LcSignatureTest, constr)
 {
   LcSignature sig;
 
-  EXPECT_EQ( LcSignature::kLogicType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::Logic, sig.type() );
   EXPECT_EQ( 0, sig.input_num() );
   EXPECT_EQ( 0, sig.output_num() );
 
@@ -37,7 +37,7 @@ TEST(LcSignatureTest, const0)
   Expr expr = Expr::make_zero();
   LcSignature sig(expr);
 
-  EXPECT_EQ( LcSignature::kLogicType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::Logic, sig.type() );
   EXPECT_EQ( 0, sig.input_num() );
   EXPECT_EQ( 1, sig.output_num() );
 
@@ -60,7 +60,7 @@ TEST(LcSignatureTest, buff)
   Expr expr = Expr::make_posi_literal(VarId(0));
   LcSignature sig(expr);
 
-  EXPECT_EQ( LcSignature::kLogicType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::Logic, sig.type() );
   EXPECT_EQ( 1, sig.input_num() );
   EXPECT_EQ( 1, sig.output_num() );
 
@@ -88,7 +88,7 @@ TEST(LcSignatureTest, and2)
   TvFunc f0 = TvFunc::make_posi_literal(2, VarId(0));
   TvFunc f1 = TvFunc::make_posi_literal(2, VarId(1));
   TvFunc and2 = f0 & f1;
-  EXPECT_EQ( LcSignature::kLogicType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::Logic, sig.type() );
   EXPECT_EQ( 2, sig.input_num() );
   EXPECT_EQ( 1, sig.output_num() );
 
@@ -109,14 +109,14 @@ TEST(LcSignatureTest, and2)
 // Q あり，クリアなし，プリセットなし
 TEST(LcSignatureTest, FF10)
 {
-  LcSignature sig(LcSignature::kFFType,
+  LcSignature sig(LcSignature::Type::FF,
 		  true, false,
 		  false, false);
   int ni = 2;
   int no = 1;
   int nfi = ni + 2;
 
-  EXPECT_EQ( LcSignature::kFFType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::FF, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
@@ -138,14 +138,14 @@ TEST(LcSignatureTest, FF10)
 // XQ あり，クリアなし，プリセットなし
 TEST(LcSignatureTest, FF01)
 {
-  LcSignature sig(LcSignature::kFFType,
+  LcSignature sig(LcSignature::Type::FF,
 		  false, true,
 		  false, false);
   int ni = 2;
   int no = 1;
   int nfi = ni + 2;
 
-  EXPECT_EQ( LcSignature::kFFType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::FF, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
@@ -167,14 +167,14 @@ TEST(LcSignatureTest, FF01)
 // Q, XQ あり，クリアなし，プリセットなし
 TEST(LcSignatureTest, FF11)
 {
-  LcSignature sig(LcSignature::kFFType,
+  LcSignature sig(LcSignature::Type::FF,
 		  true, true,
 		  false, false);
   int ni = 2;
   int no = 2;
   int nfi = ni + 2;
 
-  EXPECT_EQ( LcSignature::kFFType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::FF, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
@@ -201,14 +201,14 @@ TEST(LcSignatureTest, FF11)
 // Q あり，クリアあり，プリセットなし
 TEST(LcSignatureTest, FF10R)
 {
-  LcSignature sig(LcSignature::kFFType,
+  LcSignature sig(LcSignature::Type::FF,
 		  true, false,
 		  true, false);
   int ni = 3;
   int no = 1;
   int nfi = ni + 2;
 
-  EXPECT_EQ( LcSignature::kFFType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::FF, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
@@ -230,14 +230,14 @@ TEST(LcSignatureTest, FF10R)
 // Q あり，クリアなし，プリセットあり
 TEST(LcSignatureTest, FF10S)
 {
-  LcSignature sig(LcSignature::kFFType,
+  LcSignature sig(LcSignature::Type::FF,
 		  true, false,
 		  false, true);
   int ni = 3;
   int no = 1;
   int nfi = ni + 2;
 
-  EXPECT_EQ( LcSignature::kFFType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::FF, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
@@ -259,14 +259,14 @@ TEST(LcSignatureTest, FF10S)
 // Q あり，クリアあり，プリセットあり
 TEST(LcSignatureTest, FF10RS)
 {
-  LcSignature sig(LcSignature::kFFType,
+  LcSignature sig(LcSignature::Type::FF,
 		  true, false,
 		  true, true);
   int ni = 4;
   int no = 1;
   int nfi = ni + 2;
 
-  EXPECT_EQ( LcSignature::kFFType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::FF, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
@@ -289,14 +289,14 @@ TEST(LcSignatureTest, FF10RS)
 // XQ あり，クリアなし，プリセットなし
 TEST(LcSignatureTest, Latch01)
 {
-  LcSignature sig(LcSignature::kLatchType,
+  LcSignature sig(LcSignature::Type::Latch,
 		  false, true,
 		  false, false);
   int ni = 2;
   int no = 1;
   int nfi = ni + 2;
 
-  EXPECT_EQ( LcSignature::kLatchType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::Latch, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
@@ -318,14 +318,14 @@ TEST(LcSignatureTest, Latch01)
 // Q, XQ あり，クリアなし，プリセットなし
 TEST(LcSignatureTest, Latch11)
 {
-  LcSignature sig(LcSignature::kLatchType,
+  LcSignature sig(LcSignature::Type::Latch,
 		  true, true,
 		  false, false);
   int ni = 2;
   int no = 2;
   int nfi = ni + 2;
 
-  EXPECT_EQ( LcSignature::kLatchType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::Latch, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
@@ -352,14 +352,14 @@ TEST(LcSignatureTest, Latch11)
 // Q あり，クリアあり，プリセットなし
 TEST(LcSignatureTest, Latch10R)
 {
-  LcSignature sig(LcSignature::kLatchType,
+  LcSignature sig(LcSignature::Type::Latch,
 		  true, false,
 		  true, false);
   int ni = 3;
   int no = 1;
   int nfi = ni + 2;
 
-  EXPECT_EQ( LcSignature::kLatchType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::Latch, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
@@ -381,14 +381,14 @@ TEST(LcSignatureTest, Latch10R)
 // Q あり，クリアなし，プリセットあり
 TEST(LcSignatureTest, Latch10S)
 {
-  LcSignature sig(LcSignature::kLatchType,
+  LcSignature sig(LcSignature::Type::Latch,
 		  true, false,
 		  false, true);
   int ni = 3;
   int no = 1;
   int nfi = ni + 2;
 
-  EXPECT_EQ( LcSignature::kLatchType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::Latch, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
@@ -410,14 +410,14 @@ TEST(LcSignatureTest, Latch10S)
 // Q あり，クリアあり，プリセットあり
 TEST(LcSignatureTest, Latch10RS)
 {
-  LcSignature sig(LcSignature::kLatchType,
+  LcSignature sig(LcSignature::Type::Latch,
 		  true, false,
 		  true, true);
   int ni = 4;
   int no = 1;
   int nfi = ni + 2;
 
-  EXPECT_EQ( LcSignature::kLatchType, sig.type() );
+  EXPECT_EQ( LcSignature::Type::Latch, sig.type() );
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
