@@ -303,10 +303,10 @@ Expr
 AstBoolExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
 {
   if ( mValue ) {
-    return Expr::zero();
+    return Expr::make_zero();
   }
   else {
-    return Expr::one();
+    return Expr::make_one();
   }
 }
 
@@ -428,7 +428,7 @@ AstStrExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
   }
 
   int id = pin_map.at(mValue);
-  return Expr::posi_literal(VarId(id));
+  return Expr::make_posi_literal(VarId(id));
 }
 
 // @brief 内容をストリーム出力する．

@@ -39,7 +39,7 @@ MislibConst0::type() const
 Expr
 MislibConst0::to_expr(const unordered_map<ShString, int>& name_map) const
 {
-  return Expr::zero();
+  return Expr::make_zero();
 }
 
 // 内容を出力する．
@@ -80,7 +80,7 @@ MislibConst1::type() const
 Expr
 MislibConst1::to_expr(const unordered_map<ShString, int>& name_map) const
 {
-  return Expr::one();
+  return Expr::make_one();
 }
 
 // 内容を出力する．

@@ -144,7 +144,7 @@ gen_expr(const AstExpr* expr_node,
   }
   else {
     has_expr = false;
-    return Expr::zero();
+    return Expr::make_zero();
   }
 }
 

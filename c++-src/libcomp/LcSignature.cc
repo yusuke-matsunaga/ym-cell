@@ -111,23 +111,23 @@ LcSignature::LcSignature(Type type,
     mTypeBits |= 8U;
   }
   mInputNum = ni - 2;
-  mClockFunc = TvFunc::posi_literal(ni, clock_var);
-  mNextStateFunc = TvFunc::posi_literal(ni, data_var);
+  mClockFunc = TvFunc::make_posi_literal(ni, clock_var);
+  mNextStateFunc = TvFunc::make_posi_literal(ni, data_var);
   if ( has_clear ) {
-    mClearFunc = TvFunc::posi_literal(ni, clear_var);
+    mClearFunc = TvFunc::make_posi_literal(ni, clear_var);
   }
   if ( has_preset ) {
-    mPresetFunc = TvFunc::posi_literal(ni, preset_var);
+    mPresetFunc = TvFunc::make_posi_literal(ni, preset_var);
   }
   int no = 0;
   if ( has_q ) {
     mOutputBits[no] = 1U;
-    mOutputFunc[no] = TvFunc::posi_literal(ni, iq_var);
+    mOutputFunc[no] = TvFunc::make_posi_literal(ni, iq_var);
     ++ no;
   }
   if ( has_xq ) {
     mOutputBits[no] = 1U;
-    mOutputFunc[no] = TvFunc::posi_literal(ni, iqn_var);
+    mOutputFunc[no] = TvFunc::make_posi_literal(ni, iqn_var);
     ++ no;
   }
 }

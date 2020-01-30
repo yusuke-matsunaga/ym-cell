@@ -46,7 +46,7 @@ MislibVarName::to_expr(const unordered_map<ShString, int>& name_map) const
 
   int id = name_map.at(varname());
   VarId var(id);
-  return Expr::posi_literal(var);
+  return Expr::make_posi_literal(var);
 }
 
 // @brief 変数名を取り出す

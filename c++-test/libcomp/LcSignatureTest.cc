@@ -34,7 +34,7 @@ TEST(LcSignatureTest, constr)
 // 定数０のシグネチャ
 TEST(LcSignatureTest, const0)
 {
-  Expr expr = Expr::zero();
+  Expr expr = Expr::make_zero();
   LcSignature sig(expr);
 
   EXPECT_EQ( LcSignature::kLogicType, sig.type() );
@@ -50,14 +50,14 @@ TEST(LcSignatureTest, const0)
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::zero(0), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_zero(0), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 }
 
 // バッファのシグネチャ
 TEST(LcSignatureTest, buff)
 {
-  Expr expr = Expr::posi_literal(VarId(0));
+  Expr expr = Expr::make_posi_literal(VarId(0));
   LcSignature sig(expr);
 
   EXPECT_EQ( LcSignature::kLogicType, sig.type() );
@@ -73,20 +73,20 @@ TEST(LcSignatureTest, buff)
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::posi_literal(1, VarId(0)), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_posi_literal(1, VarId(0)), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 }
 
 // 2入力ANDのシグネチャ
 TEST(LcSignatureTest, and2)
 {
-  Expr lit0 = Expr::posi_literal(VarId(0));
-  Expr lit1 = Expr::posi_literal(VarId(1));
+  Expr lit0 = Expr::make_posi_literal(VarId(0));
+  Expr lit1 = Expr::make_posi_literal(VarId(1));
   Expr expr = lit0 & lit1;
   LcSignature sig(expr);
 
-  TvFunc f0 = TvFunc::posi_literal(2, VarId(0));
-  TvFunc f1 = TvFunc::posi_literal(2, VarId(1));
+  TvFunc f0 = TvFunc::make_posi_literal(2, VarId(0));
+  TvFunc f1 = TvFunc::make_posi_literal(2, VarId(1));
   TvFunc and2 = f0 & f1;
   EXPECT_EQ( LcSignature::kLogicType, sig.type() );
   EXPECT_EQ( 2, sig.input_num() );
@@ -120,8 +120,8 @@ TEST(LcSignatureTest, FF10)
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(2)), sig.clock() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(3)), sig.next_state() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(2)), sig.clock() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(3)), sig.next_state() );
 
   EXPECT_FALSE( sig.has_clear() );
 
@@ -129,7 +129,7 @@ TEST(LcSignatureTest, FF10)
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(0)), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(0)), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 
 }
@@ -149,8 +149,8 @@ TEST(LcSignatureTest, FF01)
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(2)), sig.clock() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(3)), sig.next_state() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(2)), sig.clock() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(3)), sig.next_state() );
 
   EXPECT_FALSE( sig.has_clear() );
 
@@ -158,7 +158,7 @@ TEST(LcSignatureTest, FF01)
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(1)), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(1)), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 
 }
@@ -178,8 +178,8 @@ TEST(LcSignatureTest, FF11)
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(2)), sig.clock() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(3)), sig.next_state() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(2)), sig.clock() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(3)), sig.next_state() );
 
   EXPECT_FALSE( sig.has_clear() );
 
@@ -187,12 +187,12 @@ TEST(LcSignatureTest, FF11)
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(0)), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(0)), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 
   EXPECT_TRUE( sig.has_logic(1) );
   EXPECT_FALSE( sig.is_tristate(1) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(1)), sig.output_func(1) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(1)), sig.output_func(1) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(1) );
 
 }
@@ -212,17 +212,17 @@ TEST(LcSignatureTest, FF10R)
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(2)), sig.clock() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(3)), sig.next_state() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(2)), sig.clock() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(3)), sig.next_state() );
 
   EXPECT_TRUE( sig.has_clear() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(4)), sig.clear_func() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(4)), sig.clear_func() );
 
   EXPECT_FALSE( sig.has_preset() );
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(0)), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(0)), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 }
 
@@ -241,17 +241,17 @@ TEST(LcSignatureTest, FF10S)
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(2)), sig.clock() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(3)), sig.next_state() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(2)), sig.clock() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(3)), sig.next_state() );
 
   EXPECT_FALSE( sig.has_clear() );
 
   EXPECT_TRUE( sig.has_preset() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(4)), sig.preset_func() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(4)), sig.preset_func() );
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(0)), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(0)), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 }
 
@@ -270,18 +270,18 @@ TEST(LcSignatureTest, FF10RS)
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(2)), sig.clock() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(3)), sig.next_state() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(2)), sig.clock() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(3)), sig.next_state() );
 
   EXPECT_TRUE( sig.has_clear() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(4)), sig.clear_func() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(4)), sig.clear_func() );
 
   EXPECT_TRUE( sig.has_preset() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(5)), sig.preset_func() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(5)), sig.preset_func() );
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(0)), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(0)), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 }
 
@@ -300,8 +300,8 @@ TEST(LcSignatureTest, Latch01)
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(2)), sig.clock() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(3)), sig.next_state() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(2)), sig.clock() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(3)), sig.next_state() );
 
   EXPECT_FALSE( sig.has_clear() );
 
@@ -309,7 +309,7 @@ TEST(LcSignatureTest, Latch01)
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(1)), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(1)), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 
 }
@@ -329,8 +329,8 @@ TEST(LcSignatureTest, Latch11)
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(2)), sig.clock() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(3)), sig.next_state() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(2)), sig.clock() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(3)), sig.next_state() );
 
   EXPECT_FALSE( sig.has_clear() );
 
@@ -338,12 +338,12 @@ TEST(LcSignatureTest, Latch11)
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(0)), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(0)), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 
   EXPECT_TRUE( sig.has_logic(1) );
   EXPECT_FALSE( sig.is_tristate(1) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(1)), sig.output_func(1) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(1)), sig.output_func(1) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(1) );
 
 }
@@ -363,17 +363,17 @@ TEST(LcSignatureTest, Latch10R)
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(2)), sig.clock() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(3)), sig.next_state() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(2)), sig.clock() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(3)), sig.next_state() );
 
   EXPECT_TRUE( sig.has_clear() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(4)), sig.clear_func() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(4)), sig.clear_func() );
 
   EXPECT_FALSE( sig.has_preset() );
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(0)), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(0)), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 }
 
@@ -392,17 +392,17 @@ TEST(LcSignatureTest, Latch10S)
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(2)), sig.clock() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(3)), sig.next_state() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(2)), sig.clock() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(3)), sig.next_state() );
 
   EXPECT_FALSE( sig.has_clear() );
 
   EXPECT_TRUE( sig.has_preset() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(4)), sig.preset_func() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(4)), sig.preset_func() );
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(0)), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(0)), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 }
 
@@ -421,18 +421,18 @@ TEST(LcSignatureTest, Latch10RS)
   EXPECT_EQ( ni, sig.input_num() );
   EXPECT_EQ( no, sig.output_num() );
 
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(2)), sig.clock() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(3)), sig.next_state() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(2)), sig.clock() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(3)), sig.next_state() );
 
   EXPECT_TRUE( sig.has_clear() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(4)), sig.clear_func() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(4)), sig.clear_func() );
 
   EXPECT_TRUE( sig.has_preset() );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(5)), sig.preset_func() );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(5)), sig.preset_func() );
 
   EXPECT_TRUE( sig.has_logic(0) );
   EXPECT_FALSE( sig.is_tristate(0) );
-  EXPECT_EQ( TvFunc::posi_literal(nfi, VarId(0)), sig.output_func(0) );
+  EXPECT_EQ( TvFunc::make_posi_literal(nfi, VarId(0)), sig.output_func(0) );
   EXPECT_EQ( TvFunc(), sig.tristate_func(0) );
 }
 

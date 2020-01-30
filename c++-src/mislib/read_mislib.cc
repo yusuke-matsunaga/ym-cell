@@ -131,7 +131,7 @@ new_gate(const MislibGate* gate,
   Expr function = opin_expr->to_expr(ipin_name_map);
   CiOutputPin* opin = library->new_cell_output(opin_name,
 					       true, function,
-					       Expr::zero(),
+					       Expr::make_zero(),
 					       ClibCapacitance::infty(),
 					       ClibCapacitance(0.0),
 					       ClibCapacitance::infty(),
@@ -149,7 +149,7 @@ new_gate(const MislibGate* gate,
       ClibTime f_i(pt_pin->fall_block_delay()->num());
       ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
       CiTiming* timing = library->new_timing_generic(ClibTimingType::Combinational,
-						     Expr::one(),
+						     Expr::make_one(),
 						     r_i, f_i,
 						     ClibTime(0.0), ClibTime(0.0),
 						     r_r, f_r);
@@ -164,7 +164,7 @@ new_gate(const MislibGate* gate,
     ClibTime f_i(pt_pin->fall_block_delay()->num());
     ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
     CiTiming* timing = library->new_timing_generic(ClibTimingType::Combinational,
-						   Expr::one(),
+						   Expr::make_one(),
 						   r_i, f_i,
 						   ClibTime(0.0), ClibTime(0.0),
 						   r_r, f_r);
