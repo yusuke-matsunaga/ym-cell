@@ -88,11 +88,11 @@ public:
   type() const;
 
   /// @brief 入力数
-  int
+  SizeType
   input_num() const;
 
   /// @brief 出力数
-  int
+  SizeType
   output_num() const;
 
   /// @brief クロック/イネーブルの論理関数を返す．
@@ -196,10 +196,10 @@ private:
   bitset<4> mTypeBits{0};
 
   // 入力ピン数
-  int mInputNum{0};
+  SizeType mInputNum{0};
 
   // 出力ピン数
-  int mOutputNum{0};
+  SizeType mOutputNum{0};
 
   // 論理式を持つかどうかのフラグと tristate 条件を持つかどうかのフラグの配列
   // 要素数は mOutputNum
@@ -271,7 +271,7 @@ LcSignature::set_Latch()
 
 // @brief 入力数
 inline
-int
+SizeType
 LcSignature::input_num() const
 {
   return mInputNum;
@@ -279,7 +279,7 @@ LcSignature::input_num() const
 
 // @brief 出力数
 inline
-int
+SizeType
 LcSignature::output_num() const
 {
   return mOutputNum;

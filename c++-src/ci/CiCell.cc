@@ -197,7 +197,7 @@ CiCell::area() const
 }
 
 // @brief ピン数の取得
-int
+SizeType
 CiCell::pin_num() const
 {
   return mPinList.num();
@@ -253,28 +253,28 @@ CiCell::pin_id(const ShString& name) const
 }
 
 // @brief 入力ピン数の取得
-int
+SizeType
 CiCell::input_num() const
 {
   return mInputNum;
 }
 
 // @brief 出力ピン数の取得
-int
+SizeType
 CiCell::output_num() const
 {
   return mOutputNum;
 }
 
 // @brief 入出力ピン数の取得
-int
+SizeType
 CiCell::inout_num() const
 {
   return mInOutNum;
 }
 
 // @brief 内部ピン数の取得
-int
+SizeType
 CiCell::internal_num() const
 {
   return mInternalList.num();
@@ -282,7 +282,7 @@ CiCell::internal_num() const
 
 // @brief 入力ピン+入出力ピン数の取得
 // @note input_num() + inout_num() に等しい．
-int
+SizeType
 CiCell::input_num2() const
 {
   return mInputList.num();
@@ -298,7 +298,7 @@ CiCell::input(int pos) const
 
 // @brief 出力ピン+入出力ピン数の取得
 // @note output_num() + inout_num() に等しい．
-int
+SizeType
 CiCell::output_num2() const
 {
   return mOutputList.num();
@@ -329,7 +329,7 @@ CiCell::internal(int pos) const
 }
 
 // @brief バス数の取得
-int
+SizeType
 CiCell::bus_num() const
 {
   return mBusNum;
@@ -356,7 +356,7 @@ CiCell::bus_id(const string& name) const
 }
 
 // @brief バンドル数の取得
-int
+SizeType
 CiCell::bundle_num() const
 {
   return mBundleNum;

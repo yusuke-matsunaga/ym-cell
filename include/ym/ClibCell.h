@@ -27,7 +27,7 @@ public:
 
   /// @brief デストラクタ
   virtual
-  ~ClibCell() { }
+  ~ClibCell() = default;
 
 
 public:
@@ -60,7 +60,7 @@ public:
 
   /// @brief ピン数の取得
   virtual
-  int
+  SizeType
   pin_num() const = 0;
 
   /// @brief ピンのリストの取得
@@ -95,28 +95,28 @@ public:
 
   /// @brief 入力ピン数の取得
   virtual
-  int
+  SizeType
   input_num() const = 0;
 
   /// @brief 出力ピン数の取得
   virtual
-  int
+  SizeType
   output_num() const = 0;
 
   /// @brief 入出力ピン数の取得
   virtual
-  int
+  SizeType
   inout_num() const = 0;
 
   /// @brief 内部ピン数の取得
   virtual
-  int
+  SizeType
   internal_num() const = 0;
 
   /// @brief 入力ピン+入出力ピン数の取得
   /// @note input_num() + inout_num() に等しい．
   virtual
-  int
+  SizeType
   input_num2() const = 0;
 
   /// @brief 入力ピンの取得
@@ -129,7 +129,7 @@ public:
   /// @brief 出力ピン+入出力ピン数の取得
   /// @note output_num() + inout_num() に等しい．
   virtual
-  int
+  SizeType
   output_num2() const = 0;
 
   /// @brief 出力ピンの取得
@@ -153,7 +153,7 @@ public:
 
   /// @brief バス数の取得
   virtual
-  int
+  SizeType
   bus_num() const = 0;
 
   /// @brief バスの取得
@@ -173,7 +173,7 @@ public:
 
   /// @brief バンドル数の取得
   virtual
-  int
+  SizeType
   bundle_num() const = 0;
 
   /// @brief バンドルの取得

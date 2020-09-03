@@ -63,7 +63,7 @@ LcSignature::LcSignature(Type type,
 			 bool has_xq,
 			 bool has_clear,
 			 bool has_preset) :
-  mOutputNum{has_q ? (has_xq ? 2 : 1) : (has_xq ? 1 : 0)},
+  mOutputNum{has_q ? (has_xq ? 2U : 1U) : (has_xq ? 1U : 0U)},
   mOutputBits(mOutputNum, 0U),
   mOutputFunc(mOutputNum),
   mTristateFunc(mOutputNum)

@@ -93,7 +93,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ピン数の取得
-  int
+  SizeType
   pin_num() const override;
 
   /// @brief ピンのリストの取得
@@ -123,24 +123,24 @@ public:
   pin_id(const string& name) const override;
 
   /// @brief 入力ピン数の取得
-  int
+  SizeType
   input_num() const override;
 
   /// @brief 出力ピン数の取得
-  int
+  SizeType
   output_num() const override;
 
   /// @brief 入出力ピン数の取得
-  int
+  SizeType
   inout_num() const override;
 
   /// @brief 内部ピン数の取得
-  int
+  SizeType
   internal_num() const override;
 
   /// @brief 入力ピン+入出力ピン数の取得
   /// @note input_num() + inout_num() に等しい．
-  int
+  SizeType
   input_num2() const override;
 
   /// @brief 入力ピンの取得
@@ -151,7 +151,7 @@ public:
 
   /// @brief 出力ピン+入出力ピン数の取得
   /// @note output_num() + inout_num() に等しい．
-  int
+  SizeType
   output_num2() const override;
 
   /// @brief 出力ピンの取得
@@ -171,7 +171,7 @@ public:
   internal(int id) const override;
 
   /// @brief バス数の取得
-  int
+  SizeType
   bus_num() const override;
 
   /// @brief バスの取得
@@ -188,7 +188,7 @@ public:
   bus_id(const string& name) const override;
 
   /// @brief バンドル数の取得
-  int
+  SizeType
   bundle_num() const override;
 
   /// @brief バンドルの取得
@@ -403,13 +403,13 @@ private:
   ClibCellPinList mPinList;
 
   // 入力ピン数
-  int mInputNum;
+  SizeType mInputNum;
 
   // 出力ピン数
-  int mOutputNum;
+  SizeType mOutputNum;
 
   // 入出力ピン数
-  int mInOutNum;
+  SizeType mInOutNum;
 
   // 入力ピン+入出力ピンのリスト
   ClibCellPinList mInputList;
@@ -421,13 +421,13 @@ private:
   ClibCellPinList mInternalList;
 
   // バス数
-  int mBusNum;
+  SizeType mBusNum;
 
   // バスピンの配列
   CiBus* mBusArray;
 
   // バンドル数
-  int mBundleNum;
+  SizeType mBundleNum;
 
   // バンドルピンの配列
   CiBundle* mBundleArray;
