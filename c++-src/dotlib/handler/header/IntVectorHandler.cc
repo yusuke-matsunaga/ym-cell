@@ -41,7 +41,8 @@ IntVectorHandler::initialize()
 bool
 IntVectorHandler::read_value(int count)
 {
-  return parser().read_int_vector(mValue);
+  mValue = parser().read_int_vector();
+  return mValue != nullptr;
 }
 
 // @brief end_header() 内で呼ばれる終了処理関数

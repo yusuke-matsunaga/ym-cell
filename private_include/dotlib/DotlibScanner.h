@@ -5,9 +5,8 @@
 /// @brief DotlibScanner のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 #include "ym/InputFileObj.h"
@@ -26,8 +25,10 @@ class DotlibScanner
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] in 入力ファイルオブジェクト
-  DotlibScanner(InputFileObj& in);
+  DotlibScanner(InputFileObj& in) ///< [in] 入力ファイルオブジェクト
+    : mIn{in}
+  {
+  }
 
   /// @brief デストラクタ
   ~DotlibScanner() = default;
@@ -39,28 +40,35 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief トークンを一つ読み込む．
-  /// @param[out] loc ファイル上の位置情報を格納する変数
-  /// @param[in] symbol_mode 数字も文字とみなすモード
   /// @return トークンの型を返す．
   TokenType
-  read_token(FileRegion& loc,
-	     bool symbol_mode = false);
+  read_token(FileRegion& loc,           ///< [out] ファイル上の位置情報を格納する変数
+	     bool symbol_mode = false); ///< [in] 数字も文字とみなすモード
 
   /// @brief 直前の read_token() に対応する文字列を返す．
   const char*
-  cur_string() const;
+  cur_string() const
+  {
+    return mCurString.c_str();
+  }
 
   /// @brief 直前の read_token() に対応する整数値を返す．
   ///
   /// 型が INT_NUM でなかったときの値は不定
   int
-  cur_int() const;
+  cur_int() const
+  {
+    return strtol(cur_string(), nullptr, 10);
+  }
 
   /// @brief 直前の read_token() に対応する実数値を返す．
   ///
   /// 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
   double
-  cur_float() const;
+  cur_float() const
+  {
+    return strtod(cur_string(), nullptr);
+  }
 
 
 private:
@@ -74,7 +82,8 @@ private:
   scan();
 
   /// @brief c が文字の時に true を返す．
-  /// @note mSymbolMode が true なら数字も文字とみなす．
+  ///
+  /// mSymbolMode が true なら数字も文字とみなす．
   bool
   is_symbol(int c);
 
@@ -97,37 +106,6 @@ private:
   StrBuff mCurString;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// 直前の read_token() に対応する文字列を返す．
-inline
-const char*
-DotlibScanner::cur_string() const
-{
-  return mCurString.c_str();
-}
-
-// @brief 直前の read_token() に対応する整数値を返す．
-// 型が INT_NUM でなかったときの値は不定
-inline
-int
-DotlibScanner::cur_int() const
-{
-  return strtol(cur_string(), nullptr, 10);
-}
-
-// @brief 直前の read_token() に対応する実数値を返す．
-// 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
-inline
-double
-DotlibScanner::cur_float() const
-{
-  return strtod(cur_string(), nullptr);
-}
 
 END_NAMESPACE_YM_DOTLIB
 

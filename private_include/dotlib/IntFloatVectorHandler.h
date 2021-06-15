@@ -5,7 +5,7 @@
 /// @brief IntFloatVectorHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/ElemHandler.h"
@@ -23,8 +23,7 @@ class IntFloatVectorHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  IntFloatVectorHandler(DotlibParser& parser);
+  IntFloatVectorHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~IntFloatVectorHandler();
@@ -37,11 +36,17 @@ public:
 
   /// @brief 読み込んだ1番目の値を返す．
   const AstInt*
-  value1() const;
+  value1() const
+  {
+    return mValue1;
+  }
 
   /// @brief 読み込んだ2番目の値を返す．
   const AstFloatVector*
-  value2() const;
+  value2() const
+  {
+    return mValue2;
+  }
 
 
 private:
@@ -81,27 +86,6 @@ private:
   const AstFloatVector* mValue2;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 読み込んだ1番目の値を返す．
-inline
-const AstInt*
-IntFloatVectorHandler::value1() const
-{
-  return mValue1;
-}
-
-// @brief 読み込んだ2番目の値を返す．
-inline
-const AstFloatVector*
-IntFloatVectorHandler::value2() const
-{
-  return mValue2;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

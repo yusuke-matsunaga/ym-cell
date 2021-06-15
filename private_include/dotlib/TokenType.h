@@ -5,9 +5,8 @@
 /// @brief TokenType の定義ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 
@@ -73,8 +72,8 @@ enum class TokenType {
 
 /// @brief TokenType 内容をストリームに出力する．
 ostream&
-operator<<(ostream& s,
-	   TokenType type);
+operator<<(ostream& s,      ///< [in] 出力先のストリーム
+	   TokenType type); ///< [in] トークンタイプ
 
 END_NAMESPACE_YM_DOTLIB
 

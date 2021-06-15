@@ -3,7 +3,7 @@
 /// @brief DotlibParser の実装ファイル ( simple attribute 関連 )
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -53,7 +53,10 @@ DotlibParser::parse_bool(const AstBool*& dst,
     const char* tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
-				       { return parser.read_raw_string(tmp_str, value_loc); });
+    {
+      tmp_str = parser.read_raw_string(value_loc);
+      return tmp_str != nullptr;
+    });
     if ( stat ) {
       bool bval;
       if ( strcmp(tmp_str, "true") == 0 ) {
@@ -97,7 +100,16 @@ DotlibParser::parse_int(const AstInt*& dst,
   }
   else {
     return parse_simple_attribute([&](DotlibParser& parser) -> bool
-				  { return parser.read_int(dst); });
+    {
+      auto tmp = parser.read_int();
+      if ( tmp ) {
+	dst = tmp;
+	return true;
+      }
+      else {
+	return false;
+      }
+    });
   }
 }
 
@@ -121,7 +133,16 @@ DotlibParser::parse_float(const AstFloat*& dst,
   }
   else {
     return parse_simple_attribute([&](DotlibParser& parser) -> bool
-				  { return parser.read_float(dst); });
+    {
+      auto tmp = parser.read_float();
+      if ( tmp ) {
+	dst = tmp;
+	return true;
+      }
+      else {
+	return false;
+      }
+    });
   }
 }
 
@@ -145,7 +166,10 @@ DotlibParser::parse_string(const AstString*& dst,
   }
   else {
     return parse_simple_attribute([&](DotlibParser& parser) -> bool
-				  { return parser.read_string(dst); });
+    {
+      dst = parser.read_string();
+      return dst != nullptr;
+    });
   }
 }
 
@@ -171,7 +195,10 @@ DotlibParser::parse_delay_model(const AstDelayModel*& dst,
     const char* tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
-				       { return parser.read_raw_string(tmp_str, value_loc); });
+    {
+      tmp_str = parser.read_raw_string(value_loc);
+      return tmp_str != nullptr;
+    });
     if ( stat ) {
       ClibDelayModel value;
       if ( strcmp(tmp_str, "generic_cmos") == 0 ) {
@@ -234,7 +261,10 @@ DotlibParser::parse_direction(const AstDirection*& dst,
     const char* tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
-				       { return parser.read_raw_string(tmp_str, value_loc); });
+    {
+      tmp_str = parser.read_raw_string(value_loc);
+      return tmp_str != nullptr;
+    });
     if ( stat ) {
       ClibDirection value;
       if ( strcmp(tmp_str, "input") == 0 ) {
@@ -289,7 +319,10 @@ DotlibParser::parse_function(const AstExpr*& dst,
     const char* tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
-				       { return parser.read_raw_string(tmp_str, value_loc); });
+    {
+      tmp_str = parser.read_raw_string(value_loc);
+      return tmp_str != nullptr;
+    });
     if ( stat ) {
       FuncParser read(tmp_str, value_loc, mgr());
       stat = read(dst);
@@ -321,7 +354,10 @@ DotlibParser::parse_timing_sense(const AstTimingSense*& dst,
     const char* tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
-				       { return parser.read_raw_string(tmp_str, value_loc); });
+    {
+      tmp_str = parser.read_raw_string(value_loc);
+      return tmp_str != nullptr;
+    });
     if ( stat ) {
       ClibTimingSense value;
       if ( strcmp(tmp_str, "positive_unate") == 0 ) {
@@ -374,7 +410,10 @@ DotlibParser::parse_timing_type(const AstTimingType*& dst,
     const char* tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
-				       { return parser.read_raw_string(tmp_str, value_loc); });
+    {
+      tmp_str = parser.read_raw_string(value_loc);
+      return tmp_str != nullptr;
+    });
     if ( stat ) {
       ClibTimingType value;
       if ( strcmp(tmp_str, "combinational") == 0 ) {
@@ -508,7 +547,10 @@ DotlibParser::parse_vartype(const AstVarType*& dst,
     const char* tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
-				       { return parser.read_raw_string(tmp_str, value_loc); });
+    {
+      tmp_str = parser.read_raw_string(value_loc);
+      return tmp_str != nullptr;
+    });
     if ( stat ) {
       ClibVarType value;
       if ( strcmp(tmp_str, "input_net_transition") == 0 ) {

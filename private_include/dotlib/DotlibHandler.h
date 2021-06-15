@@ -5,9 +5,8 @@
 /// @brief DotlibHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 #include "dotlib/DotlibParser.h"
@@ -75,8 +74,10 @@ class DotlibHandler
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  DotlibHandler(DotlibParser& parser);
+  DotlibHandler(DotlibParser& parser) ///< [in] パーサー
+    : mParser{parser}
+  {
+  }
 
   /// @brief コピーコンストラクタは禁止
   DotlibHandler(const DotlibHandler& src) = delete;
@@ -96,39 +97,63 @@ protected:
 
   /// @brief パーサーを得る．
   DotlibParser&
-  parser();
+  parser()
+  {
+    return mParser;
+  }
 
   /// @brief 直前の read_token() に対応する文字列を返す．
   const char*
-  cur_string();
+  cur_string()
+  {
+    return parser().cur_string();
+  }
 
   /// @brief 直前の read_token() に対応する整数値を返す．
   ///
   /// 型が INT_NUM でなかったときの値は不定
   int
-  cur_int();
+  cur_int()
+  {
+    return parser().cur_int();
+  }
 
   /// @brief 直前の read_token() に対応する実数値を返す．
   ///
   /// 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
   double
-  cur_float();
+  cur_float()
+  {
+    return parser().cur_float();
+  }
 
   /// @brief 直前の read_token() に対応する位置を返す．
   FileRegion
-  cur_loc();
+  cur_loc()
+  {
+    return parser().cur_loc();
+  }
 
   /// @brief 文字列を属性値に変換する．
   AttrType
-  conv_to_attr(const char* str);
+  conv_to_attr(const char* str)
+  {
+    return parser().conv_to_attr(str);
+  }
 
   /// @brief AstMgr を得る．
   AstMgr&
-  mgr();
+  mgr()
+  {
+    return parser().mgr();
+  }
 
   /// @brief デバッグモードの時 true を返す．
   bool
-  debug();
+  debug()
+  {
+    return parser().debug();
+  }
 
 
 private:
@@ -140,87 +165,6 @@ private:
   DotlibParser& mParser;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] parser パーサー
-inline
-DotlibHandler::DotlibHandler(DotlibParser& parser) :
-  mParser{parser}
-{
-}
-
-// @brief パーサーを得る．
-inline
-DotlibParser&
-DotlibHandler::parser()
-{
-  return mParser;
-}
-
-// @brief 直前の read_token() に対応する文字列を返す．
-inline
-const char*
-DotlibHandler::cur_string()
-{
-  return parser().cur_string();
-}
-
-// @brief 直前の read_token() に対応する整数値を返す．
-//
-// 型が INT_NUM でなかったときの値は不定
-inline
-int
-DotlibHandler::cur_int()
-{
-  return parser().cur_int();
-}
-
-// @brief 直前の read_token() に対応する実数値を返す．
-//
-// 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
-inline
-double
-DotlibHandler::cur_float()
-{
-  return parser().cur_float();
-}
-
-// @brief 直前の read_token() に対応する位置を返す．
-inline
-FileRegion
-DotlibHandler::cur_loc()
-{
-  return parser().cur_loc();
-}
-
-// @brief 文字列を属性値に変換する．
-inline
-AttrType
-DotlibHandler::conv_to_attr(const char* str)
-{
-  return parser().conv_to_attr(str);
-}
-
-// @brief AstMgr を得る．
-inline
-AstMgr&
-DotlibHandler::mgr()
-{
-  return parser().mgr();
-}
-
-// @brief デバッグモードの時 true を返す．
-inline
-bool
-DotlibHandler::debug()
-{
-  return parser().debug();
-}
 
 END_NAMESPACE_YM_DOTLIB
 

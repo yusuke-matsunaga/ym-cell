@@ -24,8 +24,7 @@ class AstStrList :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] handler ハンドラ
-  AstStrList(const StrListHandler& handler);
+  AstStrList(const StrListHandler& handler); ///< [in] ハンドラ
 
   /// @brief デストラクタ
   ~AstStrList();
@@ -38,24 +37,32 @@ public:
 
   /// @brief リストの要素数を返す．
   int
-  size() const;
+  size() const
+  {
+    return mNum;
+  }
 
   /// @brief リストの要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   const AstString*
-  value(int pos) const;
+  value(int pos) const ///< [in] 位置番号 ( 0 <= pos < size() )
+  {
+    ASSERT_COND( pos >= 0 && pos < size() );
+
+    return mBody[pos];
+  }
 
   /// @brief リストを取り出す．
-  /// @param[out] vector リストを格納する変数
-  void
-  get_vector(vector<const AstString*>& vector) const;
+  vector<const AstString*>
+  get_vector() const
+  {
+    return vector<const AstString*>(&mBody[0], &mBody[size()]);
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -70,30 +77,6 @@ private:
   const AstString* mBody[1];
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief リストの要素数を返す．
-inline
-int
-AstStrList::size() const
-{
-  return mNum;
-}
-
-// @brief リストの要素を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-inline
-const AstString*
-AstStrList::value(int pos) const
-{
-  ASSERT_COND( pos >= 0 && pos < size() );
-
-  return mBody[pos];
-}
 
 END_NAMESPACE_YM_DOTLIB
 

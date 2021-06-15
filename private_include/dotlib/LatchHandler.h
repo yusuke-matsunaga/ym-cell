@@ -5,7 +5,7 @@
 /// @brief LatchHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/FLHandler.h"
@@ -35,8 +35,7 @@ class LatchHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  LatchHandler(DotlibParser& parser);
+  LatchHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~LatchHandler();
@@ -49,15 +48,24 @@ public:
 
   /// @brief enable_on を返す．
   const AstExpr*
-  enable_on() const;
+  enable_on() const
+  {
+    return mEnableOn;
+  }
 
   /// @brief enable_on_also を返す．
   const AstExpr*
-  enable_on_also() const;
+  enable_on_also() const
+  {
+    return mEnableOnAlso;
+  }
 
   /// @brief data_in を返す．
   const AstExpr*
-  data_in() const;
+  data_in() const
+  {
+    return mDataIn;
+  }
 
 
 protected:
@@ -97,35 +105,6 @@ private:
   const AstExpr* mDataIn;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief enable_on を返す．
-inline
-const AstExpr*
-LatchHandler::enable_on() const
-{
-  return mEnableOn;
-}
-
-// @brief enable_on_also を返す．
-inline
-const AstExpr*
-LatchHandler::enable_on_also() const
-{
-  return mEnableOnAlso;
-}
-
-// @brief data_in を返す．
-inline
-const AstExpr*
-LatchHandler::data_in() const
-{
-  return mDataIn;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

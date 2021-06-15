@@ -5,9 +5,8 @@
 /// @brief ClibLut のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 
@@ -25,7 +24,7 @@ protected:
 
   /// @brief デストラクタ
   virtual
-  ~ClibLut() { }
+  ~ClibLut() = default;
 
 
 public:
@@ -49,38 +48,39 @@ public:
   dimension() const = 0;
 
   /// @brief 変数型の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
   ClibVarType
-  variable_type(int var) const = 0;
+  variable_type(int var) const ///< [in] 変数番号 ( 0 <= var < dimension() )
+  = 0;
 
   /// @brief インデックス数の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
   int
-  index_num(int var) const = 0;
+  index_num(int var) const ///< [in] 変数番号 ( 0 <= var < dimension() )
+  = 0;
 
   /// @brief インデックス値の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
-  /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
   virtual
   double
-  index(int var,
-	int pos) const = 0;
+  index(int var,       ///< [in] 変数番号 ( 0 <= var < dimension() )
+	int pos) const ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  = 0;
 
   /// @brief 格子点の値の取得
-  /// @param[in] pos_array 格子点座標
-  /// @note pos_array のサイズは dimension() と同じ
+  ///
+  /// pos_array のサイズは dimension() と同じ
   virtual
   double
-  grid_value(const vector<int>& pos_array) const = 0;
+  grid_value(const vector<int>& pos_array) const ///< [in] pos_array 格子点座標
+  = 0;
 
   /// @brief 値の取得
-  /// @param[in] val_array 入力の値の配列
+  ///
   /// @note val_array のサイズは dimension() と同じ
   virtual
   double
-  value(const vector<double>& val_array) const = 0;
+  value(const vector<double>& val_array) const ///< [in] 入力の値の配列
+  = 0;
 
 
 public:
@@ -89,10 +89,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   virtual
   void
-  dump(ostream& s) const = 0;
+  dump(ostream& s) const ///< [in] 出力先のストリーム
+  = 0;
 
 };
 

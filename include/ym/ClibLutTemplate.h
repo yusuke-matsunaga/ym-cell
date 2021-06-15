@@ -5,9 +5,8 @@
 /// @brief ClibLutTemplate のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 
@@ -25,7 +24,7 @@ protected:
 
   /// @brief デストラクタ
   virtual
-  ~ClibLutTemplate() { }
+  ~ClibLutTemplate() = default;
 
 
 public:
@@ -49,24 +48,23 @@ public:
   dimension() const = 0;
 
   /// @brief 変数型の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
   ClibVarType
-  variable_type(int var) const = 0;
+  variable_type(int var) const ///< [in] 変数番号 ( 0 <= var < dimension() )
+  = 0;
 
   /// @brief インデックス数の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   virtual
   int
-  index_num(int var) const = 0;
+  index_num(int var) const ///< [in] 変数番号 ( 0 <= var < dimension() )
+  = 0;
 
   /// @brief デフォルトインデックス値の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
-  /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
   virtual
   double
-  index(int var,
-	int pos) const = 0;
+  index(int var,       ///< [in] 変数番号 ( 0 <= var < dimension() )
+	int pos) const ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  = 0;
 
 
 public:
@@ -75,10 +73,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   virtual
   void
-  dump(ostream& s) const = 0;
+  dump(ostream& s) const ///< [in] 出力先のストリーム
+  = 0;
 
 };
 

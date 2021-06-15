@@ -5,9 +5,8 @@
 /// @brief LcPatHandle のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "lc/libcomp_nsdef.h"
 
@@ -25,32 +24,41 @@ class LcPatHandle
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] node ノード
-  /// @param[in] inv 反転属性
   explicit
-  LcPatHandle(LcPatNode* node = nullptr,
-	      bool inv = false);
+  LcPatHandle(LcPatNode* node = nullptr, ///< [in] ノード
+	      bool inv = false)          ///< [in] 反転属性
+  {
+    set(node, inv);
+  }
 
   /// @brief デストラクタ
-  ~LcPatHandle();
+  ~LcPatHandle() = default;
 
 
 public:
 
   /// @brief ノードを取り出す．
   LcPatNode*
-  node() const;
+  node() const
+  {
+    return reinterpret_cast<LcPatNode*>(mData & ~1UL);
+  }
 
   /// @brief 反転属性を取り出す．
   bool
-  inv() const;
+  inv() const
+  {
+    return static_cast<bool>(mData & 1UL);
+  }
 
   /// @brief 値を設定する．
-  /// @param[in] node ノード
-  /// @param[in] inv 反転属性
   void
-  set(LcPatNode* node,
-      bool inv);
+  set(LcPatNode* node, ///< [in] ノード
+      bool inv)        ///< [in] 反転属性
+  {
+    // bool に対する & 1UL は不必要だが念のため．
+    mData = reinterpret_cast<ympuint>(node) | (static_cast<ympuint>(inv) & 1UL);
+  }
 
 
 private:
@@ -62,55 +70,6 @@ private:
   ympuint mData;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] node ノード
-// @param[in] inv 反転属性
-inline
-LcPatHandle::LcPatHandle(LcPatNode* node,
-			 bool inv)
-{
-  set(node, inv);
-}
-
-// @brief デストラクタ
-inline
-LcPatHandle::~LcPatHandle()
-{
-}
-
-// @brief ノードを取り出す．
-inline
-LcPatNode*
-LcPatHandle::node() const
-{
-  return reinterpret_cast<LcPatNode*>(mData & ~1UL);
-}
-
-// @brief 反転属性を取り出す．
-inline
-bool
-LcPatHandle::inv() const
-{
-  return static_cast<bool>(mData & 1UL);
-}
-
-// @brief 値を設定する．
-// @param[in] node ノード
-// @param[in] inv 反転属性
-inline
-void
-LcPatHandle::set(LcPatNode* node,
-		 bool inv)
-{
-  // bool に対する & 1UL は不必要だが念のため．
-  mData = reinterpret_cast<ympuint>(node) | (static_cast<ympuint>(inv) & 1UL);
-}
 
 END_NAMESPACE_YM_CLIB_LIBCOMP
 

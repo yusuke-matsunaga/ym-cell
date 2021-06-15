@@ -5,9 +5,8 @@
 /// @brief ClibTiming のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 #include "ym/logic.h"
@@ -28,7 +27,7 @@ protected:
 
   /// @brief デストラクタ
   virtual
-  ~ClibTiming() { }
+  ~ClibTiming() = default;
 
 
 public:
@@ -37,7 +36,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ID番号の取得
-  /// @note timing = cell->timing(id); の時，timing->id() = id となる．
+  ///
+  /// timing = cell->timing(id); の時，timing->id() = id となる．
   virtual
   int
   id() const = 0;
@@ -48,7 +48,8 @@ public:
   type() const = 0;
 
   /// @brief タイミング条件式の取得
-  /// @note ない場合には定数1の式が返される．
+  ///
+  /// ない場合には定数1の式が返される．
   virtual
   Expr
   timing_cond() const = 0;
@@ -164,10 +165,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   virtual
   void
-  dump(ostream& s) const = 0;
+  dump(ostream& s) const ///< [in] 出力先のストリーム
+  = 0;
 
 };
 

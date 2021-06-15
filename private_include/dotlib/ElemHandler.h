@@ -5,9 +5,8 @@
 /// @brief ElemHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/HeaderHandler.h"
 
@@ -24,10 +23,8 @@ class ElemHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  /// @param[in] num ヘッダ内の要素数
-  ElemHandler(DotlibParser& parser,
-	      int num);
+  ElemHandler(DotlibParser& parser, ///< [in] パーサー
+	      int num);             ///< [in] ヘッダ内の要素数
 
   /// @brief デストラクタ
   ~ElemHandler();
@@ -100,11 +97,6 @@ private:
   int mNum;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
 
 END_NAMESPACE_YM_DOTLIB
 

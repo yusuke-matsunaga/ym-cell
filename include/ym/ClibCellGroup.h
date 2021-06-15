@@ -5,9 +5,8 @@
 /// @brief ClibCellGroup のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 #include "ym/logic.h"
@@ -26,7 +25,7 @@ public:
 
   /// @brief デストラクタ
   virtual
-  ~ClibCellGroup() { }
+  ~ClibCellGroup() = default;
 
 
 public:
@@ -35,7 +34,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ID番号を返す．
-  /// @note ClibCellLibrary::group(id) で返されるオブジェクトの id() は id となる．
+  ///
+  /// ClibCellLibrary::group(id) で返されるオブジェクトの id() は id となる．
   virtual
   int
   id() const = 0;
@@ -63,13 +63,15 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief FFセルの場合のピン情報を返す．
-  /// @note FFセル以外の場合には返り値は不定
+  ///
+  /// FFセル以外の場合には返り値は不定
   virtual
   ClibFFInfo
   ff_info() const = 0;
 
   /// @brief ラッチセルの場合のピン情報を返す．
-  /// @note ラッチセル以外の場合には返り値は不定
+  ///
+  /// ラッチセル以外の場合には返り値は不定
   virtual
   ClibLatchInfo
   latch_info() const = 0;
@@ -134,7 +136,8 @@ public:
   clear_sense() const = 0;
 
   /// @brief クリア入力のピン番号を返す．
-  /// @note クリア入力がない場合の値は不定
+  ///
+  /// クリア入力がない場合の値は不定
   virtual
   int
   clear_pos() const = 0;
@@ -153,7 +156,8 @@ public:
   preset_sense() const = 0;
 
   /// @brief プリセット入力のピン番号を返す．
-  /// @note プリセット入力がない場合の値は不定
+  ///
+  /// プリセット入力がない場合の値は不定
   virtual
   int
   preset_pos() const = 0;

@@ -5,7 +5,7 @@
 /// @brief TimingHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/GroupHandler.h"
@@ -113,8 +113,7 @@ class TimingHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  TimingHandler(DotlibParser& parser);
+  TimingHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~TimingHandler();

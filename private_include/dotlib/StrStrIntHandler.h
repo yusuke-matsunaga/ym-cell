@@ -5,9 +5,8 @@
 /// @brief StrStrIntHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/ElemHandler.h"
 
@@ -24,8 +23,7 @@ class StrStrIntHandler :
 public:
 
   /// @brief 親を持つハンドラ用のコンストラクタ
-  /// @param[in] parser パーサー
-  StrStrIntHandler(DotlibParser& parser);
+  StrStrIntHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~StrStrIntHandler();
@@ -38,15 +36,24 @@ public:
 
   /// @brief 1番目の値を返す．
   const AstString*
-  value1() const;
+  value1() const
+  {
+    return mValue[0];
+  }
 
   /// @brief 2番目の値を返す．
   const AstString*
-  value2() const;
+  value2() const
+  {
+    return mValue[1];
+  }
 
   /// @brief 3番目の値を取り出す．
   const AstInt*
-  value3() const;
+  value3() const
+  {
+    return mValue3;
+  }
 
 
 private:
@@ -59,9 +66,8 @@ private:
   initialize() override;
 
   /// @brief ヘッダの値を読み込む処理
-  /// @param[in] count read_value() の呼ばれた回数
   bool
-  read_value(int count) override;
+  read_value(int count) override; ///< [in] read_value() の呼ばれた回数
 
   /// @brief end_header() 内で呼ばれる終了処理関数
   void
@@ -80,35 +86,6 @@ private:
   const AstInt* mValue3;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 1番目の値を返す．
-inline
-const AstString*
-StrStrIntHandler::value1() const
-{
-  return mValue[0];
-}
-
-// @brief 2番目の値を返す．
-inline
-const AstString*
-StrStrIntHandler::value2() const
-{
-  return mValue[1];
-}
-
-// @brief 3番目の値を取り出す．
-inline
-const AstInt*
-StrStrIntHandler::value3() const
-{
-  return mValue3;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

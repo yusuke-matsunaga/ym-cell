@@ -34,7 +34,7 @@ void
 StrStrHandler::initialize()
 {
   mValue[0] = nullptr;
-  mValue[0] = nullptr;
+  mValue[1] = nullptr;
 }
 
 // @brief ヘッダの値を読み込む処理
@@ -44,7 +44,8 @@ StrStrHandler::read_value(int count)
 {
   ASSERT_COND( count == 0 || count == 1 );
 
-  return parser().read_string(mValue[count]);
+  mValue[count] = parser().read_string();
+  return mValue[count] != nullptr;
 }
 
 // @brief end_header() 内で呼ばれる終了処理関数

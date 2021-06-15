@@ -48,14 +48,14 @@ CiBusType::name() const
 ClibBusType::BaseType
 CiBusType::base_type() const
 {
-  return kArrayType;
+  return ClibBusType::ArrayType;
 }
 
 // @brief data_type の取得
 ClibBusType::DataType
 CiBusType::data_type() const
 {
-  return kBitType;
+  return ClibBusType::BitType;
 }
 
 // @brief ビット幅の取得

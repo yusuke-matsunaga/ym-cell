@@ -6,7 +6,6 @@
 /// Copyright (C) 2017 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "gtest/gtest.h"
 #include "ym/ClibCellLibrary.h"
 #include "ym/StreamMsgHandler.h"

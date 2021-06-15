@@ -5,9 +5,8 @@
 /// @brief ピンの方向を表す AstNode の継承クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "AstNode.h"
 
@@ -24,10 +23,8 @@ class AstDirection :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
-  AstDirection(const FileRegion& loc,
-	       ClibDirection value);
+  AstDirection(const FileRegion& loc, ///< [in] ファイル上の位置
+	       ClibDirection value);  ///< [in] 値
 
   /// @brief デストラクタ
   ~AstDirection();
@@ -40,14 +37,16 @@ public:
 
   /// @brief CellPinDirection を返す．
   ClibDirection
-  value() const;
+  value() const
+  {
+    return mValue;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -59,19 +58,6 @@ private:
   ClibDirection mValue;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief CellPinDirection を返す．
-inline
-ClibDirection
-AstDirection::value() const
-{
-  return mValue;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

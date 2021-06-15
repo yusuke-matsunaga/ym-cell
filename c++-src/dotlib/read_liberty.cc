@@ -58,20 +58,29 @@ BEGIN_NAMESPACE_YM_DOTLIB
 BEGIN_NONAMESPACE
 
 // 文字列を空白で区切る
-void
+// string の定番コード
+// ただし結果は ShString のリストとなる．
+vector<ShString>
 split(const string& src_str,
-      vector<ShString>& str_list)
+      const string& delim = " \t\n")
 {
-  string tmp_str{src_str};
+  vector<ShString> ans;
+  string::size_type start = 0;
   for ( ; ; ) {
-    string::size_type p = tmp_str.find_first_of(' ');
-    string tmp = tmp_str.substr(0, p);
-    str_list.push_back(ShString(tmp));
+    // start 以降で初めて delim とマッチする位置を探す．
+    string::size_type p = src_str.find_first_of(delim, start);
     if ( p == string::npos ) {
+      // 終端に達した．
       break;
     }
-    tmp_str = tmp_str.substr(p + 1, string::npos);
+    string::size_type n = p - start;
+    if ( n > 0 ) {
+      string tmp = src_str.substr(start, n);
+      ans.push_back(ShString(tmp));
+    }
+    start = p + 1;
   }
+  return ans;
 }
 
 // lut を読み込む．
@@ -80,8 +89,10 @@ gen_lut(CiCellLibrary* library,
 	const AstLut* lut_node,
 	const unordered_map<ShString, const ClibLutTemplate*>& template_dict)
 {
-  ShString name = lut_node->name()->value();
+  // lut 名を template_dict から探す．
+  ShString name{lut_node->name()->value()};
   if ( template_dict.count(name) == 0 ) {
+    // 見つからなかった．
     ostringstream buf;
     buf << lut_node->name()
 	<< ": No such lu_table template";
@@ -93,41 +104,48 @@ gen_lut(CiCellLibrary* library,
     return nullptr;
   }
 
-  auto templ = template_dict.at(name);
+  // テンプレートを取り出す．
+  auto templ{template_dict.at(name)};
   int d = templ->dimension();
 
+  // 各軸のインデックス値を取り出す．
   vector<double> index1_array;
   if ( lut_node->index_1() ) {
-    lut_node->index_1()->get_vector(index1_array);
+    index1_array = lut_node->index_1()->get_vector();
   }
   vector<double> index2_array;
   if ( d >= 2 && lut_node->index_2() ) {
-    lut_node->index_2()->get_vector(index2_array);
+    index2_array = lut_node->index_2()->get_vector();
   }
   vector<double> index3_array;
   if ( d >= 3 && lut_node->index_3() ) {
-    lut_node->index_3()->get_vector(index3_array);
+    index3_array = lut_node->index_3()->get_vector();
   }
 
-  const AstFloatVector* vector_node = lut_node->value_list();
-  vector<double> value_array;
-  vector_node->get_vector(value_array);
+  // 値を取り出す．
+  auto vector_node{lut_node->value_list()};
+  vector<double> value_array{vector_node->get_vector()};
 
   ClibLut* lut = nullptr;
-  if ( d == 1 ) {
+  switch ( d ) {
+  case 1:
     lut = library->new_lut1(templ, value_array,
 			    index1_array);
-  }
-  else if ( d == 2 ) {
+    break;
+  case 2:
     lut = library->new_lut2(templ, value_array,
 			    index1_array,
 			    index2_array);
-  }
-  else if ( d == 3 ) {
+    break;
+  case 3:
     lut = library->new_lut3(templ, value_array,
 			    index1_array,
 			    index2_array,
 			    index3_array);
+    break;
+  default:
+    ASSERT_NOT_REACHED;
+    break;
   }
   return lut;
 }
@@ -410,9 +428,8 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 
       // タイミング情報の設定
       if ( ast_timing->related_pin() ) {
-	ShString tmp_str{ast_timing->related_pin()->value()};
-	vector<ShString> pin_name_list;
-	split(tmp_str, pin_name_list);
+	string tmp_str{ast_timing->related_pin()->value()};
+	auto pin_name_list = split(tmp_str);
 	for ( auto pin_name: pin_name_list ) {
 	  if ( pin_map.count(pin_name) == 0 ) {
 	    ostringstream buf;
@@ -539,33 +556,30 @@ set_library(const AstLibrary* ast_library,
   for ( auto ast_template: ast_library->lut_template_list() ) {
     CiLutTemplate* tmpl = nullptr;
     ShString name = ast_template->name()->value();
-    vector<double> index_1;
-    vector<double> index_2;
-    vector<double> index_3;
     int d = ast_template->dimension();
     switch ( d ) {
     case 1:
-      ast_template->index_1()->get_vector(index_1);
       tmpl = library->new_lut_template1(name,
-					ast_template->variable_1()->value(), index_1);
+					ast_template->variable_1()->value(),
+					ast_template->index_1()->get_vector());
       break;
 
     case 2:
-      ast_template->index_1()->get_vector(index_1);
-      ast_template->index_2()->get_vector(index_2);
       tmpl = library->new_lut_template2(name,
-					ast_template->variable_1()->value(), index_1,
-					ast_template->variable_2()->value(), index_2);
+					ast_template->variable_1()->value(),
+					ast_template->index_1()->get_vector(),
+					ast_template->variable_2()->value(),
+					ast_template->index_2()->get_vector());
       break;
 
     case 3:
-      ast_template->index_1()->get_vector(index_1);
-      ast_template->index_2()->get_vector(index_2);
-      ast_template->index_3()->get_vector(index_3);
       tmpl = library->new_lut_template3(name,
-					ast_template->variable_1()->value(), index_1,
-					ast_template->variable_2()->value(), index_2,
-					ast_template->variable_3()->value(), index_3);
+					ast_template->variable_1()->value(),
+					ast_template->index_1()->get_vector(),
+					ast_template->variable_2()->value(),
+					ast_template->index_2()->get_vector(),
+					ast_template->variable_3()->value(),
+					ast_template->index_3()->get_vector());
       break;
 
     default:
@@ -809,6 +823,7 @@ CiCellLibrary::read_liberty(const string& filename)
 {
   using namespace nsDotlib;
 
+  // ファイルを開く
   ifstream fin(filename);
   if ( !fin ) {
     ostringstream buf;
@@ -818,17 +833,22 @@ CiCellLibrary::read_liberty(const string& filename)
 		    MsgType::Failure,
 		    "DOTLIB_PARSER",
 		    buf.str());
+    // ファイルが開けなかった．
     return false;
   }
 
+  // 読み込んでASTを作る．
   InputFileObj in{fin, {filename}};
   AstMgr mgr;
   DotlibParser parser(in, mgr, false);
   const AstLibrary* ast_library = parser.parse();
   if ( ast_library == nullptr ) {
+    // 読み込みに失敗した．
     return false;
   }
 
+  // AST の内容をライブラリに設定する．
+  // ここではエラーは起こらないはず．
   set_library(ast_library, this);
 
   return true;

@@ -3,13 +3,11 @@
 /// @brief DotlibParser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/DotlibParser.h"
 #include "dotlib/HeaderHandler.h"
-//#include "dotlib/GroupHandler.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/TokenType.h"
 
@@ -109,17 +107,16 @@ DotlibParser::parse()
 }
 
 // @brief Simple Attribute を読み込む．
-// @param[in] handler ハンドラ
 // @retval true 正しく読み込めた．
 // @retval false エラーが起こった．
 bool
-DotlibParser::parse_simple_attribute(ParseFunc parse_func)
+DotlibParser::parse_simple_attribute(SimpleHandler handler)
 {
   if ( !expect(TokenType::COLON) ) {
     return false;
   }
 
-  bool stat = parse_func(*this);
+  bool stat = handler(*this);
 
   if ( !expect_nl() ) {
     return false;
@@ -198,33 +195,33 @@ DotlibParser::expect(TokenType req_type)
     return true;
   }
 
-  const char* type_str = nullptr;
-  switch ( req_type ) {
-  case TokenType::COLON:      type_str = "':'"; break;
-  case TokenType::SEMI:       type_str = "';'"; break;
-  case TokenType::COMMA:      type_str = "','"; break;
-  case TokenType::PLUS:       type_str = "'+'"; break;
-  case TokenType::MINUS:      type_str = "'-'"; break;
-  case TokenType::MULT:       type_str = "'*'"; break;
-  case TokenType::DIV:        type_str = "'/'"; break;
-  case TokenType::NOT:        type_str = "'!'"; break;
-  case TokenType::AND:        type_str = "'&'"; break;
-  case TokenType::OR:         type_str = "'|'"; break;
-  case TokenType::XOR:        type_str = "'^'"; break;
-  case TokenType::PRIME:      type_str = "'";   break;
-  case TokenType::LP:         type_str = "'('"; break;
-  case TokenType::RP:         type_str = "')'"; break;
-  case TokenType::LCB:        type_str = "'{'"; break;
-  case TokenType::RCB:        type_str = "'}'"; break;
-  case TokenType::SYMBOL:     type_str = "STR"; break;
-  case TokenType::INT_NUM:    type_str = "INT"; break;
-  case TokenType::FLOAT_NUM:  type_str = "FLOAT"; break;
-  case TokenType::EXPRESSION: type_str = "EXPRESSION"; break;
-  case TokenType::NL:         type_str = "new-line"; break;
-  default:                    ASSERT_NOT_REACHED;
-  }
-
   {
+    // エラーメッセージを作る．
+    const char* type_str = nullptr;
+    switch ( req_type ) {
+    case TokenType::COLON:      type_str = "':'"; break;
+    case TokenType::SEMI:       type_str = "';'"; break;
+    case TokenType::COMMA:      type_str = "','"; break;
+    case TokenType::PLUS:       type_str = "'+'"; break;
+    case TokenType::MINUS:      type_str = "'-'"; break;
+    case TokenType::MULT:       type_str = "'*'"; break;
+    case TokenType::DIV:        type_str = "'/'"; break;
+    case TokenType::NOT:        type_str = "'!'"; break;
+    case TokenType::AND:        type_str = "'&'"; break;
+    case TokenType::OR:         type_str = "'|'"; break;
+    case TokenType::XOR:        type_str = "'^'"; break;
+    case TokenType::PRIME:      type_str = "'";   break;
+    case TokenType::LP:         type_str = "'('"; break;
+    case TokenType::RP:         type_str = "')'"; break;
+    case TokenType::LCB:        type_str = "'{'"; break;
+    case TokenType::RCB:        type_str = "'}'"; break;
+    case TokenType::SYMBOL:     type_str = "STR"; break;
+    case TokenType::INT_NUM:    type_str = "INT"; break;
+    case TokenType::FLOAT_NUM:  type_str = "FLOAT"; break;
+    case TokenType::EXPRESSION: type_str = "EXPRESSION"; break;
+    case TokenType::NL:         type_str = "new-line"; break;
+    default:                    ASSERT_NOT_REACHED;
+    }
     ostringstream buf;
     buf << "syntax error. " << type_str << " is expected.";
     MsgMgr::put_msg(__FILE__, __LINE__,

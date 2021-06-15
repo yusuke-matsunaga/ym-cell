@@ -5,9 +5,8 @@
 /// @brief FloatFloatHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/ElemHandler.h"
 
@@ -24,8 +23,7 @@ class FloatFloatHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  FloatFloatHandler(DotlibParser& parser);
+  FloatFloatHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~FloatFloatHandler();
@@ -38,11 +36,17 @@ public:
 
   /// @brief 1番目の値を返す．
   const AstFloat*
-  value1() const;
+  value1() const
+  {
+    return mValue[0];
+  }
 
   /// @brief 2番目の値を返す．
   const AstFloat*
-  value2() const;
+  value2() const
+  {
+    return mValue[1];
+  }
 
 
 private:
@@ -73,27 +77,6 @@ private:
   const AstFloat* mValue[2];
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 1番目の値を返す．
-inline
-const AstFloat*
-FloatFloatHandler::value1() const
-{
-  return mValue[0];
-}
-
-// @brief 2番目の値を返す．
-inline
-const AstFloat*
-FloatFloatHandler::value2() const
-{
-  return mValue[1];
-}
 
 END_NAMESPACE_YM_DOTLIB
 

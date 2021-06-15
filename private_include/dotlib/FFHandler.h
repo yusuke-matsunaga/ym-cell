@@ -5,7 +5,7 @@
 /// @brief FFHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/FLHandler.h"
@@ -35,8 +35,7 @@ class FFHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  FFHandler(DotlibParser& parser);
+  FFHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~FFHandler();
@@ -49,15 +48,24 @@ public:
 
   /// @brief clocked_on を返す．
   const AstExpr*
-  clocked_on() const;
+  clocked_on() const
+  {
+    return mClockedOn;
+  }
 
   /// @brief clocked_on_also を返す．
   const AstExpr*
-  clocked_on_also() const;
+  clocked_on_also() const
+  {
+    return mClockedOnAlso;
+  }
 
   /// @brief next_state を返す．
   const AstExpr*
-  next_state() const;
+  next_state() const
+  {
+    return mNextState;
+  }
 
 
 public:
@@ -97,35 +105,6 @@ private:
   const AstExpr* mNextState;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief clocked_on を返す．
-inline
-const AstExpr*
-FFHandler::clocked_on() const
-{
-  return mClockedOn;
-}
-
-// @brief clocked_on_also を返す．
-inline
-const AstExpr*
-FFHandler::clocked_on_also() const
-{
-  return mClockedOnAlso;
-}
-
-// @brief next_state を返す．
-inline
-const AstExpr*
-FFHandler::next_state() const
-{
-  return mNextState;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

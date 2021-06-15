@@ -5,9 +5,8 @@
 /// @brief AstDomain のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 #include "AstNode.h"
@@ -25,12 +24,9 @@ class AstDomain :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
-  AstDomain(const FileRegion& attr_loc,
-	    const StrHandler& header,
-	    const DomainHandler& group);
+  AstDomain(const FileRegion& attr_loc,  ///< [in] 属性のファイル上の位置
+	    const StrHandler& header,    ///< [in] ヘッダを読み込んだハンドラ
+	    const DomainHandler& group); ///< [in] グループ本体を読み込んだハンドラ
 
 
   /// @brief デストラクタ
@@ -71,11 +67,9 @@ public:
   variable_3_range() const;
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,                     ///< [in] 出力先のストリーム
+       int indent = 0) const override; ///< [in] インデント量
 
 
 private:

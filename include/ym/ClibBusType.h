@@ -23,23 +23,25 @@ public:
 
   /// @brief base_type を表す型
   enum BaseType {
-    kArrayType
+    // 今はこれだけ
+    ArrayType
   };
 
   /// @brief data_type を表す型
   enum DataType {
-    kBitType
+    // 今はこれだけ
+    BitType
   };
 
 
 public:
 
   /// @brief コンストラクタ
-  ClibBusType() { }
+  ClibBusType() = default;
 
   /// @brief デストラクタ
   virtual
-  ~ClibBusType() { }
+  ~ClibBusType() = default;
 
 
 public:
@@ -78,7 +80,8 @@ public:
   bit_to() const = 0;
 
   /// @brief 向きの取得
-  /// @note true の時，降順を表す．
+  ///
+  /// true の時，降順を表す．
   virtual
   bool
   downto() const = 0;

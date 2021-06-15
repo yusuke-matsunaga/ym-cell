@@ -5,9 +5,8 @@
 /// @brief StrFloatHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/ElemHandler.h"
 
@@ -24,8 +23,7 @@ class StrFloatHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  StrFloatHandler(DotlibParser& parser);
+  StrFloatHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~StrFloatHandler();
@@ -38,11 +36,17 @@ public:
 
   /// @brief 1番目の要素を返す．
   const AstString*
-  value1() const;
+  value1() const
+  {
+    return mValue1;
+  }
 
   /// @brief 2番目の要素を返す．
   const AstFloat*
-  value2() const;
+  value2() const
+  {
+    return mValue2;
+  }
 
 
 private:
@@ -55,9 +59,8 @@ private:
   initialize() override;
 
   /// @brief ヘッダの値を読み込む処理
-  /// @param[in] count read_value() の呼ばれた回数
   bool
-  read_value(int count) override;
+  read_value(int count) override; ///< [in] read_value() の呼ばれた回数
 
   /// @brief end_header() 内で呼ばれる終了処理関数
   void
@@ -76,27 +79,6 @@ private:
   const AstFloat* mValue2;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 1番目の要素を返す．
-inline
-const AstString*
-StrFloatHandler::value1() const
-{
-  return mValue1;
-}
-
-// @brief 2番目の要素を返す．
-inline
-const AstFloat*
-StrFloatHandler::value2() const
-{
-  return mValue2;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

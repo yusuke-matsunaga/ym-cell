@@ -43,10 +43,12 @@ bool
 IntFloatVectorHandler::read_value(int count)
 {
   if ( count == 0 ) {
-    return parser().read_int(mValue1);
+    mValue1 = parser().read_int();
+    return mValue1 != nullptr;
   }
   else {
-    return parser().read_float_vector(mValue2);
+    mValue2 = parser().read_float_vector();
+    return mValue2 != nullptr;
   }
 }
 

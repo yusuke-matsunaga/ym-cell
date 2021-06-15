@@ -5,9 +5,8 @@
 /// @brief AstLatchBank のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "AstLatch.h"
 
@@ -24,12 +23,9 @@ class AstLatchBank :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
-  AstLatchBank(const FileRegion& attr_loc,
-	       const StrStrIntHandler& header,
-	       const LatchHandler& group);
+  AstLatchBank(const FileRegion& attr_loc,     ///< [in] 属性のファイル上の位置
+	       const StrStrIntHandler& header, ///< [in] ヘッダを読み込んだハンドラ
+	       const LatchHandler& group);     ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief デストラクタ
   ~AstLatchBank();
@@ -42,14 +38,16 @@ public:
 
   /// @brief ビット数を返す．
   const AstInt*
-  bits() const;
+  bits() const
+  {
+    return mBits;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -61,19 +59,6 @@ private:
   const AstInt* mBits;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief ビット数を返す．
-inline
-const AstInt*
-AstLatchBank::bits() const
-{
-  return mBits;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

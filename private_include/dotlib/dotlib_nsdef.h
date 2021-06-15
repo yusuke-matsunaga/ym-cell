@@ -5,9 +5,8 @@
 /// @brief dotlib サブモジュールの定義ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 #include "ym/FileRegion.h"
@@ -136,7 +135,6 @@ class AstWireLoad;
 class AstWireLoadSelection;
 class AstWireLoadTable;
 
-
 enum class TokenType;
 enum class AttrType;
 
@@ -146,20 +144,16 @@ enum class AttrType;
 //////////////////////////////////////////////////////////////////////
 
 // @brief 未対応の属性名に対するエラーメッセージを出力する．
-// @param[in] attr_type 対象の属性
-// @param[in] attr_loc attr_type のファイル上の位置
+extern
 void
-syntax_error(AttrType attr_type,
-	     const FileRegion& attr_loc);
+syntax_error(AttrType attr_type,          ///< [in] 対象の属性
+	     const FileRegion& attr_loc); ///< [in] attr_type のファイル上の位置
 
 /// @brief 同じ属性が重複して定義されている時のエラーを出力する．
-/// @param[in] attr_type 属性の型
-/// @param[in] attr_loc 属性のファイル上の位置
-/// @param[in] prev_node 以前に定義されたノード
 void
-duplicate_error(AttrType attr_type,
-		const FileRegion& attr_loc,
-		const AstNode* prev_node);
+duplicate_error(AttrType attr_type,         ///< [in] 属性の型
+		const FileRegion& attr_loc, ///< [in] 属性のファイル上の位置
+		const AstNode* prev_node);  ///< [in] 以前に定義されたノード
 
 END_NAMESPACE_YM_DOTLIB
 

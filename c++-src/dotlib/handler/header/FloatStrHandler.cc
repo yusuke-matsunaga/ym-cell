@@ -3,9 +3,8 @@
 /// @brief FloatStrHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/FloatStrHandler.h"
 #include "ym/MsgMgr.h"
@@ -43,10 +42,12 @@ bool
 FloatStrHandler::read_value(int count)
 {
   if ( count == 0 ) {
-    return parser().read_float(mValue1);
+    mValue1 = parser().read_float();
+    return mValue1 != nullptr;
   }
   else {
-    return parser().read_string(mValue2);
+    mValue2 = parser().read_string();
+    return mValue2 != nullptr;
   }
 }
 

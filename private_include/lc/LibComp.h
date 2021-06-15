@@ -5,12 +5,12 @@
 /// @brief LibComp のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "lc/libcomp_nsdef.h"
 #include "lc/LcPatMgr.h"
+
 
 BEGIN_NAMESPACE_YM_CLIB
 
@@ -43,18 +43,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief セルのグループ化，クラス化を行う．
-  /// @param[in] cell_list セルのリスト
   void
-  compile(const vector<CiCell*>& cell_list);
+  compile(const vector<CiCell*>& cell_list); ///< [in] セルのリスト
 
   /// @brief パタングラフの情報を取り出す．
   const LcPatMgr&
   pat_mgr() const;
 
   /// @brief グラフ構造全体の内容を表示する．
-  /// @param[in] s 出力先のストリーム
   void
-  display(ostream& s) const;
+  display(ostream& s) const; ///< [in] 出力先のストリーム
 
 
 public:
@@ -67,53 +65,44 @@ public:
   group_num() const;
 
   /// @brief セルグループを返す．
-  /// @param[in] id セルグループ番号 ( 0 <= id < group_num() )
   LcGroup*
-  group(int id) const;
+  group(int id) const; ///< [in] セルグループ番号 ( 0 <= id < group_num() )
 
   /// @brief NPN同値クラスの数を返す．
   int
   npn_class_num() const;
 
   /// @brief NPN同値クラスを返す．
-  /// @param[in] id NPN同値クラス番号 ( 0 <= id < npn_class_num() )
   LcClass*
-  npn_class(int id) const;
+  npn_class(int id) const; ///< [in] NPN同値クラス番号 ( 0 <= id < npn_class_num() )
 
   /// @brief 定義済みの論理グループ番号を返す．
-  /// @param[in] id 番号
+  ///
+  /// 番号の意味は以下の通り．
   /// - 0: 定数0
   /// - 1: 定数1
   /// - 2: バッファ
   /// - 3: インバーター
   int
-  logic_group(int id) const;
+  logic_group(int id) const; ///< [in] 番号
 
   /// @brief 定義済みのFFクラス番号を返す．
-  /// @param[in] has_q Q端子の有無
-  /// @param[in] has_xq 反転Q端子の有無
-  /// @param[in] has_clear クリア端子の有無
-  /// @param[in] has_preset プリセット端子の有無
   ///
   /// has_q == false && has_xq == false は不適
   int
-  ff_class(bool has_q,
-	   bool has_xq,
-	   bool has_clear,
-	   bool has_preset) const;
+  ff_class(bool has_q,             ///< [in] Q端子の有無
+	   bool has_xq,            ///< [in] 反転Q端子の有無
+	   bool has_clear,         ///< [in] クリア端子の有無
+	   bool has_preset) const; ///< [in] プリセット端子の有無
 
   /// @brief 定義済みのラッチクラス番号を返す．
-  /// @param[in] has_q Q端子の有無
-  /// @param[in] has_xq 反転Q端子の有無
-  /// @param[in] has_clear クリア端子の有無
-  /// @param[in] has_preset プリセット端子の有無
   ///
   /// has_q == false && has_xq == false は不適
   int
-  latch_class(bool has_q,
-	      bool has_xq,
-	      bool has_clear,
-	      bool has_preset);
+  latch_class(bool has_q,       ///< [in] Q端子の有無
+	      bool has_xq,      ///< [in] 反転Q端子の有無
+	      bool has_clear,   ///< [in] クリア端子の有無
+	      bool has_preset); ///< [in] プリセット端子の有無
 
 
 private:
@@ -134,53 +123,43 @@ private:
   _latch_init();
 
   /// @brief セルを追加する．
-  /// @param[in] cell セル
   void
-  _add_cell(CiCell* cell);
+  _add_cell(CiCell* cell); ///< [in] セル
 
   /// @brief シグネチャに対応する LcGroup を求める．
-  /// @param[in] sig シグネチャ
   ///
   /// なければ新規に作る．
   LcGroup*
-  _find_group(const LcSignature& sig);
+  _find_group(const LcSignature& sig); ///< [in] シグネチャ
 
   /// @brief 論理式に対応する LcGroup を求める．
-  /// @param[in] expr 論理式
   ///
   /// こちらは1出力の論理セル用
   /// 内部で _reg_pat() を呼ぶ．
   LcGroup*
-  _find_group(const Expr& expr);
+  _find_group(const Expr& expr); ///< [in] 論理式
 
   /// @brief 新しいグループを作る．
   LcGroup*
   _new_group();
 
   /// @brief 新しいクラスを作る．
-  /// @param[in] rep_sig 代表シグネチャ
   LcClass*
-  _new_class(const LcSignature& rep_sig);
+  _new_class(const LcSignature& rep_sig); ///< [in] 代表シグネチャ
 
   /// @brief 正規変換を求める．
-  /// @param[in] sig シグネチャ
   /// @return 正規シグネチャへの変換マップを返す．
   NpnMapM
-  _cannonical_map(const LcSignature& sig);
+  _cannonical_map(const LcSignature& sig); ///< [in] シグネチャ
 
   /// @brief 同位体変換リストを求める．
-  /// @param[in] sig シグネチャ
-  /// @param[out] idmap_list 同位体変換のリスト
-  void
-  _find_idmap_list(const LcSignature& sig,
-		  vector<NpnMapM>& idmap_list);
+  vector<NpnMapM>
+  _find_idmap_list(const LcSignature& sig); ///< [in] シグネチャ
 
   /// @brief expr から生成されるパタンを登録する．
-  /// @param[in] expr 論理式
-  /// @param[in] fgroup expr の属している機能グループ
   void
-  _reg_expr(const Expr& expr,
-	    LcGroup* fgroup);
+  _reg_expr(const Expr& expr, ///< [in] 論理式
+	    LcGroup* fgroup); ///< [in] expr の属している機能グループ
 
 
 private:

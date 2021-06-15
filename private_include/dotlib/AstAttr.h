@@ -5,9 +5,8 @@
 /// @brief AstAttr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 #include "AstNode.h"
@@ -27,15 +26,11 @@ class AstAttr :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] attr_type 属性
-  /// @param[in] value 値
-  AstAttr(const FileRegion& loc,
-	  AttrType attr_type,
-	  const AstNode* value);
+  AstAttr(const FileRegion& loc, ///< [in] ファイル上の位置
+	  AttrType attr_type,    ///< [in] 属性
+	  const AstNode* value); ///< [in] 値
 
   /// @brief デストラクタ
-  virtual
   ~AstAttr();
 
 
@@ -46,19 +41,23 @@ public:
 
   /// @brief 属性を得る．
   AttrType
-  attr_type() const;
+  attr_type() const
+  {
+    return mAttrType;
+  }
 
   /// @brief 属性の値を得る．
   const AstNode*
-  attr_value() const;
+  attr_value() const
+  {
+    return mValue;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
-  virtual
   void
-  dump(ostream& s,
-       int indent = 0) const;
+  dump(ostream& s,      ///< [in] 出力先のストリーム
+       int indent = 0)  ///< [in] インデント量
+    const override;
 
 
 private:
@@ -73,28 +72,6 @@ private:
   const AstNode* mValue;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 属性を得る．
-inline
-AttrType
-AstAttr::attr_type() const
-{
-  return mAttrType;
-}
-
-// @brief 属性の値を得る．
-inline
-const AstNode*
-AstAttr::attr_value() const
-{
-  return mValue;
-}
-
 
 END_NAMESPACE_YM_DOTLIB
 

@@ -5,7 +5,7 @@
 /// @brief ym-clib 用の定義ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2014, 2016, 2017 Yusuke Matsunaga (松永 裕介)
+/// Copyright (C) 2005-2014, 2016, 2017, 2021 Yusuke Matsunaga (松永 裕介)
 /// All rights reserved.
 
 /// @defgroup ClibCellGroup セルライブラリ
@@ -117,172 +117,164 @@ using nsClib::ClibPatGraph;
 //////////////////////////////////////////////////////////////////////
 /// @brief テクノロジを表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum class ClibTechnology
-  {
-   cmos,
-   fpga
-  };
+enum class ClibTechnology : ymuint8
+{
+  cmos,
+  fpga
+};
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief 遅延モデルを表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum class ClibDelayModel
-  {
-   GenericCmos,
-   TableLookup,
-   PiecewiseCmos,
-   Cmos2,
-   Dcm
-  };
+enum class ClibDelayModel : ymuint8
+{
+  GenericCmos,
+  TableLookup,
+  PiecewiseCmos,
+  Cmos2,
+  Dcm
+};
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief ピンの方向を表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum class ClibDirection
-  {
-   Input,
-   Output,
-   Inout,
-   Internal
-  };
+enum class ClibDirection : ymuint8
+{
+  Input,
+  Output,
+  Inout,
+  Internal
+};
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief タイミングの条件を表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum class ClibTimingSense
-  {
-   PosiUnate = 1,
-   NegaUnate = 2,
-   NonUnate  = 3
-  };
+enum class ClibTimingSense : ymuint8
+{
+  PosiUnate = 1,
+  NegaUnate = 2,
+  NonUnate  = 3
+};
 
 
 /////////////////////////////////////////////////////////////////////
 /// @brief タイミング情報の型を表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum class ClibTimingType
-  {
-   Combinational          = 0,
-   CombinationalRise      = 1,
-   CombinationalFall      = 2,
+enum class ClibTimingType : ymuint8
+{
+  Combinational          = 0,
+  CombinationalRise      = 1,
+  CombinationalFall      = 2,
 
-   ThreeStateEnable       = 3,
-   ThreeStateDisable      = 4,
-   ThreeStateEnableRise   = 5,
-   ThreeStateEnableFall   = 6,
-   ThreeStateDisableRise  = 7,
-   ThreeStateDisableFall  = 8,
+  ThreeStateEnable       = 3,
+  ThreeStateDisable      = 4,
+  ThreeStateEnableRise   = 5,
+  ThreeStateEnableFall   = 6,
+  ThreeStateDisableRise  = 7,
+  ThreeStateDisableFall  = 8,
 
-   RisingEdge             = 9,
-   FallingEdge            = 10,
+  RisingEdge             = 9,
+  FallingEdge            = 10,
 
-   Preset                 = 11,
-   Clear                  = 12,
+  Preset                 = 11,
+  Clear                  = 12,
 
-   HoldRising             = 13,
-   HoldFalling            = 14,
+  HoldRising             = 13,
+  HoldFalling            = 14,
 
-   SetupRising            = 15,
-   SetupFalling           = 16,
+  SetupRising            = 15,
+  SetupFalling           = 16,
 
-   RecoveryRising         = 17,
-   RecoveryFalling        = 18,
+  RecoveryRising         = 17,
+  RecoveryFalling        = 18,
 
-   SkewRising             = 19,
-   SkewFalling            = 20,
+  SkewRising             = 19,
+  SkewFalling            = 20,
 
-   RemovalRising          = 21,
-   RemovalFalling         = 22,
+  RemovalRising          = 21,
+  RemovalFalling         = 22,
 
-   NonSeqSetupRising      = 23,
-   NonSeqSetupFalling     = 24,
-   NonSeqHoldRising       = 25,
-   NonSeqHoldFalling      = 26,
+  NonSeqSetupRising      = 23,
+  NonSeqSetupFalling     = 24,
+  NonSeqHoldRising       = 25,
+  NonSeqHoldFalling      = 26,
 
-   NochangeHighHigh       = 27,
-   NochangeHighLow        = 28,
-   NochangeLowHigh        = 29,
-   NochangeLowLow         = 30
-  };
+  NochangeHighHigh       = 27,
+  NochangeHighLow        = 28,
+  NochangeLowHigh        = 29,
+  NochangeLowLow         = 30
+};
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief ルックアップテーブルの変数の型
 //////////////////////////////////////////////////////////////////////
-enum class ClibVarType
-  {
-   InputNetTransition,
+enum class ClibVarType : ymuint8
+{
+  InputNetTransition,
 
-   TotalOutputNetCapacitance,
-   OutputNetLength,
-   OutputNetWireCap,
-   OutputNetPinCap,
+  TotalOutputNetCapacitance,
+  OutputNetLength,
+  OutputNetWireCap,
+  OutputNetPinCap,
 
-   EqualOrOppositeOutputNetCapacitance,
-   InputTransitionTime,
+  EqualOrOppositeOutputNetCapacitance,
+  InputTransitionTime,
 
-   RelatedOutTotalOutputNetCapacitance,
-   RelatedOutOutputNetLength,
-   RelatedOutOutputNetWireCap,
-   RelatedOutOutputNetPinCap,
+  RelatedOutTotalOutputNetCapacitance,
+  RelatedOutOutputNetLength,
+  RelatedOutOutputNetWireCap,
+  RelatedOutOutputNetPinCap,
 
-   ConstrainedPinTransition,
+  ConstrainedPinTransition,
 
-   RelatedPinTransition,
+  RelatedPinTransition,
 
-   None
-  };
+  None
+};
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief パタングラフのノードの型
 //////////////////////////////////////////////////////////////////////
-enum class ClibPatType
-  {
-   Input = 0,
-   And   = 2,
-   Xor   = 3
-  };
+enum class ClibPatType : ymuint8
+{
+  Input = 0,
+  And   = 2,
+  Xor   = 3
+};
 
 
 //////////////////////////////////////////////////////////////////////
 // ストリーム出力演算子
 //////////////////////////////////////////////////////////////////////
 
-/// @brief ストリーム出力演算子
-/// @param[in] s 出力先のストリーム
-/// @param[in] delay_model 遅延モデル
+/// @brief ClibDelayModel のストリーム出力演算子
 /// @return s を返す．
 ostream&
-operator<<(ostream& s,
-	   ClibDelayModel delay_model);
+operator<<(ostream& s,                  ///< [in] 出力先のストリーム
+	   ClibDelayModel delay_model); ///< [in] 遅延モデル
 
-/// @brief ストリーム出力演算子
-/// @param[in] s 出力先のストリーム
-/// @param[in] timing_sense タイミングセンス
+/// @brief ClibTimingSense のストリーム出力演算子
 /// @return s を返す．
 ostream&
-operator<<(ostream& s,
-	   ClibTimingSense timing_sense);
+operator<<(ostream& s,                    ///< [in] 出力先のストリーム
+	   ClibTimingSense timing_sense); ///< [in] タイミングセンス
 
-/// @brief ストリーム出力演算子
-/// @param[in] s 出力先のストリーム
-/// @param[in] timing_type タイミング条件
+/// @brief ClibTimingType のストリーム出力演算子
 /// @return s を返す．
 ostream&
-operator<<(ostream& s,
-	   ClibTimingType timing_type);
+operator<<(ostream& s,                  ///< [in] 出力先のストリーム
+	   ClibTimingType timing_type); ///< [in] タイミング条件
 
-/// @brief ストリーム出力演算子
-/// @param[in] s 出力先のストリーム
-/// @param[in] var_type 変数の型
+/// @brief ClibVarType のストリーム出力演算子
 /// @return s を返す．
 ostream&
-operator<<(ostream& s,
-	   ClibVarType var_type);
+operator<<(ostream& s,            ///< [in] 出力先のストリーム
+	   ClibVarType var_type); ///< [in] 変数の型
 
 
 END_NAMESPACE_YM

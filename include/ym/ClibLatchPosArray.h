@@ -5,9 +5,8 @@
 /// @brief ClibLatchPosArray のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 
@@ -29,7 +28,7 @@ public:
 
   /// @brief シグネチャを指定するコンストラクタ
   explicit
-  ClibLatchPosArray(int sig);
+  ClibLatchPosArray(int sig); ///< [in] 設定するシグネチャ
 
   /// @brief デストラクタ
   ~ClibLatchPosArray();
@@ -64,7 +63,8 @@ public:
   has_enable() const;
 
   /// @brief クリア入力のピン番号を返す．
-  /// @note クリア入力がない場合の値は不定
+  ///
+  /// クリア入力がない場合の値は不定
   int
   clear_pos() const;
 
@@ -80,7 +80,8 @@ public:
   has_clear() const;
 
   /// @brief プリセット入力のピン番号を返す．
-  /// @note プリセット入力がない場合の値は不定
+  ///
+  /// プリセット入力がない場合の値は不定
   int
   preset_pos() const;
 
@@ -110,30 +111,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief シグネチャを設定する．
-  /// @param[in] sig 設定するシグネチャ
   void
-  set_signature(int sig);
+  set_signature(int sig); ///< [in] 設定するシグネチャ
 
   /// @brief 個々の情報を設定する．
-  /// @param[in] data_pos データ入力のピン番号
-  /// @param[in] enable_pos イネーブル入力のピン番号
-  /// @param[in] enable_sense イネーブル入力の極性情報
-  /// @param[in] clear_pos クリア入力のピン番号
-  /// @param[in] clear_sense クリア入力の極性情報
-  /// @param[in] preset_pos プリセット入力のピン番号
-  /// @param[in] preset_sense プリセット入力の極性情報
-  /// @param[in] q_pos 肯定出力のピン番号
-  /// @param[in] iq_pos 否定出力のピン番号
   void
-  set(int data_pos,
-      int enable_pos,
-      int enable_sense,
-      int clear_pos,
-      int clear_sense,
-      int preset_pos,
-      int preset_sense,
-      int q_pos,
-      int iq_pos);
+  set(int data_pos,     ///< [in] データ入力のピン番号
+      int enable_pos,   ///< [in] イネーブル入力のピン番号
+      int enable_sense, ///< [in] イネーブル入力の極性情報
+      int clear_pos,    ///< [in] クリア入力のピン番号
+      int clear_sense,  ///< [in] クリア入力の極性情報
+      int preset_pos,   ///< [in] プリセット入力のピン番号
+      int preset_sense, ///< [in] プリセット入力の極性情報
+      int q_pos,        ///< [in] 肯定出力のピン番号
+      int iq_pos);      ///< [in] 否定出力のピン番号
 
 
 private:

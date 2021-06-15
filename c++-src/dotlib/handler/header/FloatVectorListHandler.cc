@@ -44,8 +44,8 @@ FloatVectorListHandler::_begin_header()
 bool
 FloatVectorListHandler::_read_header_value(int count)
 {
-  FileRegion loc;
-  return parser().read_float_vector(loc, mValueList);
+  FileRegion loc; // ダミー
+  return parser().read_float_vector(mValueList, loc);
 }
 
 // @brief 読み込みが終了した時の処理を行う．

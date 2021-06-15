@@ -3,9 +3,8 @@
 /// @brief DotlibScanner の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/DotlibScanner.h"
 #include "dotlib/TokenType.h"
@@ -13,13 +12,6 @@
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief コンストラクタ
-// @param[in] in 入力ファイルオブジェクト
-DotlibScanner::DotlibScanner(InputFileObj& in) :
-  mIn{in}
-{
-}
 
 // @brief トークンを一つとってくる．
 // @param[out] loc ファイル上の位置情報を格納する変数

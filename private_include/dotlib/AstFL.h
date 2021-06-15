@@ -5,9 +5,8 @@
 /// @brief AstFL のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 #include "AstNode.h"
@@ -27,20 +26,14 @@ class AstFL :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
-  AstFL(const FileRegion& attr_loc,
-	const StrStrHandler& header,
-	const FLHandler& group);
+  AstFL(const FileRegion& attr_loc,  ///< [in] 属性のファイル上の位置
+	const StrStrHandler& header, ///< [in] ヘッダを読み込んだハンドラ
+	const FLHandler& group);     ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief コンストラクタ
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
-  AstFL(const FileRegion& attr_loc,
-	const StrStrIntHandler& header,
-	const FLHandler& group);
+  AstFL(const FileRegion& attr_loc,     ///< [in] 属性のファイル上の位置
+	const StrStrIntHandler& header, ///< [in] ヘッダを読み込んだハンドラ
+	const FLHandler& group);        ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief デストラクタ
   ~AstFL();
@@ -53,27 +46,45 @@ public:
 
   /// @brief var1 の名前を返す．
   const AstString*
-  var1_name() const;
+  var1_name() const
+  {
+    return mVar1;
+  }
 
   /// @brief var2 の名前を返す．
   const AstString*
-  var2_name() const;
+  var2_name() const
+  {
+    return mVar2;
+  }
 
   /// @brief "clear" を返す．
   const AstExpr*
-  clear() const;
+  clear() const
+  {
+    return mClear;
+  }
 
   /// @brief "preset" を返す．
   const AstExpr*
-  preset() const;
+  preset() const
+  {
+    return mPreset;
+  }
 
   /// @brief "clear_preset_var1" を返す．
   const AstCPType*
-  clear_preset_var1() const;
+  clear_preset_var1() const
+  {
+    return mClearPresetVar1;
+  }
 
   /// @brief "clear_preset_var2" を返す．
   const AstCPType*
-  clear_preset_var2() const;
+  clear_preset_var2() const
+  {
+    return mClearPresetVar2;
+  }
 
 
 private:
@@ -100,59 +111,6 @@ private:
   const AstCPType* mClearPresetVar2;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief var1 の名前を返す．
-inline
-const AstString*
-AstFL::var1_name() const
-{
-  return mVar1;
-}
-
-// @brief var2 の名前を返す．
-inline
-const AstString*
-AstFL::var2_name() const
-{
-  return mVar2;
-}
-
-// @brief "clear" を返す．
-inline
-const AstExpr*
-AstFL::clear() const
-{
-  return mClear;
-}
-
-// @brief "preset" を返す．
-inline
-const AstExpr*
-AstFL::preset() const
-{
-  return mPreset;
-}
-
-// @brief "clear_preset_var1" を返す．
-inline
-const AstCPType*
-AstFL::clear_preset_var1() const
-{
-  return mClearPresetVar1;
-}
-
-// @brief "clear_preset_var2" を返す．
-inline
-const AstCPType*
-AstFL::clear_preset_var2() const
-{
-  return mClearPresetVar2;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

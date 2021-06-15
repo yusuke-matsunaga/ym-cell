@@ -5,9 +5,8 @@
 /// @brief ClibResistance のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 
@@ -18,6 +17,10 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @ingroup ClibGroup
 /// @class ClibResistance ClibResistance.h "ym/ClibResistance.h"
 /// @brief 抵抗値を表すクラス
+///
+/// 内容的には double そのものだが他の単位との演算が
+/// 行えないようになっている．
+/// ClibResistance 同士の演算も加減算のみ定義されている．
 //////////////////////////////////////////////////////////////////////
 class ClibResistance
 {
@@ -27,11 +30,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 空のコンストラクタ
+  ///
+  /// 内容は 0.0 で初期化される．
   ClibResistance() = default;
 
   /// @brief double からの変換コンストラクタ
   explicit
-  ClibResistance(double v);
+  ClibResistance(double v) : ///< [in] 設定する値
+    mValue{v}
+  {
+  }
 
   /// @brief デストラクタ
   ~ClibResistance() = default;
@@ -45,7 +53,10 @@ public:
   /// @brief 無限大の値を作る．
   static
   ClibResistance
-  infty();
+  infty()
+  {
+    return ClibResistance(std::numeric_limits<double>::max());
+  }
 
 
 public:
@@ -55,7 +66,10 @@ public:
 
   /// @brief 値を得る．
   double
-  value() const;
+  value() const
+  {
+    return mValue;
+  }
 
 
 public:
@@ -65,15 +79,27 @@ public:
 
   /// @brief 代入演算子
   const ClibResistance&
-  operator=(const ClibResistance& src);
+  operator=(const ClibResistance& src) ///< [in] コピー元のオブジェクト
+  {
+    mValue = src.mValue;
+    return *this;
+  }
 
   /// @brief 加算付き代入演算子
   const ClibResistance&
-  operator+=(const ClibResistance& src);
+  operator+=(const ClibResistance& src) ///< [in] オペランド
+  {
+    mValue += src.mValue;
+    return *this;
+  }
 
   /// @brief 減算付き代入演算子
   const ClibResistance&
-  operator-=(const ClibResistance& src);
+  operator-=(const ClibResistance& src) ///< [in] オペランド
+  {
+    mValue -= src.mValue;
+    return *this;
+  }
 
 
 private:
@@ -87,233 +113,101 @@ private:
 };
 
 /// @brief 加算
-/// @param[in] left, right オペランド
 /// @relates ClibResistance
-ClibResistance
-operator+(const ClibResistance& left,
-	  const ClibResistance& right);
-
-/// @brief 減算
-/// @param[in] left, right オペランド
-/// @relates ClibResistance
-ClibResistance
-operator-(const ClibResistance& left,
-	  const ClibResistance& right);
-
-/// @brief 等価比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibResistance
-bool
-operator==(const ClibResistance& left,
-	   const ClibResistance& right);
-
-/// @brief 非等価比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibResistance
-bool
-operator!=(const ClibResistance& left,
-	   const ClibResistance& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibResistance
-bool
-operator<(const ClibResistance& left,
-	  const ClibResistance& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibResistance
-bool
-operator>(const ClibResistance& left,
-	  const ClibResistance& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibResistance
-bool
-operator<=(const ClibResistance& left,
-	   const ClibResistance& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibResistance
-bool
-operator>=(const ClibResistance& left,
-	   const ClibResistance& right);
-
-/// @brief ストリーム出力
-/// @param[in] s 出力先のストリーム
-/// @param[in] val 値
-/// @relates ClibResistance
-ostream&
-operator<<(ostream& s,
-	   const ClibResistance& val);
-
-/// @brief ストリーム入力
-/// @param[in] s 入力元のストリーム
-/// @param[out] val 読み出された値
-/// @relates ClibResistance
-istream&
-operator>>(istream& s,
-	   ClibResistance& val);
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief double からの変換コンストラクタ
-inline
-ClibResistance::ClibResistance(double v) :
-  mValue{v}
-{
-}
-
-// @brief 無限大の値を作る．
 inline
 ClibResistance
-ClibResistance::infty()
-{
-  return ClibResistance(std::numeric_limits<double>::max());
-}
-
-// @brief 値を得る．
-inline
-double
-ClibResistance::value() const
-{
-  return mValue;
-}
-
-// @brief 代入演算子
-inline
-const ClibResistance&
-ClibResistance::operator=(const ClibResistance& src)
-{
-  mValue = src.mValue;
-  return *this;
-}
-
-// @brief 加算付き代入演算子
-inline
-const ClibResistance&
-ClibResistance::operator+=(const ClibResistance& src)
-{
-  mValue += src.mValue;
-  return *this;
-}
-
-// @brief 減算付き代入演算子
-inline
-const ClibResistance&
-ClibResistance::operator-=(const ClibResistance& src)
-{
-  mValue -= src.mValue;
-  return *this;
-}
-
-// @brief 加算
-inline
-ClibResistance
-operator+(const ClibResistance& left,
-	  const ClibResistance& right)
+operator+(const ClibResistance& left,  ///< [in] 左のオペランド
+	  const ClibResistance& right) ///< [in] 右のオペランド
 {
   return ClibResistance(left).operator+=(right);
 }
 
-// @brief 減算
+/// @brief 減算
+/// @relates ClibResistance
 inline
 ClibResistance
-operator-(const ClibResistance& left,
-	  const ClibResistance& right)
+operator-(const ClibResistance& left,  ///< [in] 左のオペランド
+	  const ClibResistance& right) ///< [in] 右のオペランド
 {
   return ClibResistance(left).operator-=(right);
 }
 
-// @brief 等価比較演算子
-// @param[in] left, right オペランド
-// @relates ClibResistance
+/// @brief 等価比較演算子
+/// @relates ClibResistance
 inline
 bool
-operator==(const ClibResistance& left,
-	   const ClibResistance& right)
+operator==(const ClibResistance& left,  ///< [in] 左のオペランド
+	   const ClibResistance& right)	///< [in] 右のオペランド
 {
   return left.value() == right.value();
 }
 
-// @brief 非等価比較演算子
-// @param[in] left, right オペランド
-// @relates ClibResistance
+/// @brief 非等価比較演算子
+/// @relates ClibResistance
 inline
 bool
-operator!=(const ClibResistance& left,
-	   const ClibResistance& right)
+operator!=(const ClibResistance& left,  ///< [in] 左のオペランド
+	   const ClibResistance& right)	///< [in] 右のオペランド
 {
   return !operator==(left, right);
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibResistance
+/// @brief 大小比較演算子
+/// @relates ClibResistance
 inline
 bool
-operator<(const ClibResistance& left,
-	  const ClibResistance& right)
+operator<(const ClibResistance& left,  ///< [in] 左のオペランド
+	  const ClibResistance& right) ///< [in] 右のオペランド
 {
   return left.value() < right.value();
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibResistance
+/// @brief 大小比較演算子
+/// @relates ClibResistance
 inline
 bool
-operator>(const ClibResistance& left,
-	  const ClibResistance& right)
+operator>(const ClibResistance& left,  ///< [in] 左のオペランド
+	  const ClibResistance& right) ///< [in] 右のオペランド
 {
   return operator<(right, left);
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibResistance
+/// @brief 大小比較演算子
+/// @relates ClibResistance
 inline
 bool
-operator<=(const ClibResistance& left,
-	   const ClibResistance& right)
+operator<=(const ClibResistance& left,  ///< [in] 左のオペランド
+	   const ClibResistance& right)	///< [in] 右のオペランド
 {
   return !operator<(right, left);
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibResistance
+/// @brief 大小比較演算子
+/// @relates ClibResistance
 inline
 bool
-operator>=(const ClibResistance& left,
-	   const ClibResistance& right)
+operator>=(const ClibResistance& left,  ///< [in] 左のオペランド
+	   const ClibResistance& right)	///< [in] 右のオペランド
 {
   return !operator<(left, right);
 }
 
-// @brief ストリーム出力
+/// @brief ストリーム出力
+/// @relates ClibResistance
 inline
 ostream&
-operator<<(ostream& s,
-	   const ClibResistance& val)
+operator<<(ostream& s,                ///< [in] 出力先のストリーム
+	   const ClibResistance& val) ///< [in] 値
 {
   return s << val.value();
 }
 
-// @brief ストリーム入力
-// @param[in] s 入力元のストリーム
-// @param[out] val 読み出された値
-// @relates ClibResistance
+/// @brief ストリーム入力
+/// @relates ClibResistance
 inline
 istream&
-operator>>(istream& s,
-	   ClibResistance& val)
+operator>>(istream& s,          ///< [in] 入力元のストリーム
+	   ClibResistance& val) ///< [out] 読み出された値を格納する変数
 {
   double tmp;
   s >> tmp;

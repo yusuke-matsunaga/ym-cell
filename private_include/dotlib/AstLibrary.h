@@ -5,9 +5,8 @@
 /// @brief AstLibrary のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 #include "AstNameNode.h"
@@ -26,13 +25,9 @@ class AstLibrary :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
-  /// @param[in] alloc メモリアロケータ
-  AstLibrary(const FileRegion& attr_loc,
-	     const StrHandler& header,
-	     const LibraryHandler& group);
+  AstLibrary(const FileRegion& attr_loc,   ///< [in] 属性のファイル上の位置
+	     const StrHandler& header,     ///< [in] ヘッダを読み込んだハンドラ
+	     const LibraryHandler& group); ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief デストラクタ
   ~AstLibrary();
@@ -45,67 +40,107 @@ public:
 
   /// @brief "technology" を返す．
   const AstTechnology*
-  technology() const;
+  technology() const
+  {
+    return mTechnology;
+  }
 
   /// @brief "delay_model" を返す．
   const AstDelayModel*
-  delay_model() const;
+  delay_model() const
+  {
+    return mDelayModel;
+  }
 
   /// @brief "bus_naming_style" を返す．
   const AstString*
-  bus_naming_style() const;
+  bus_naming_style() const
+  {
+    return mBusNamingStyle;
+  }
 
   /// @brief "comment" を返す．
   const AstString*
-  comment() const;
+  comment() const
+  {
+    return mComment;
+  }
 
   /// @brief "date" を返す．
   const AstString*
-  date() const;
+  date() const
+  {
+    return mDate;
+  }
 
   /// @brief "revision" を返す．
   const AstString*
-  revision() const;
+  revision() const
+  {
+    return mRevision;
+  }
 
   /// @brief "capacitive_load_unit" を返す．
   const AstFloatStr*
-  capacitive_load_unit() const;
+  capacitive_load_unit() const
+  {
+    return mCapacitiveLoadUnit;
+  }
 
   /// @brief "current_unit" を返す．
   const AstString*
-  current_unit() const;
+  current_unit() const
+  {
+    return mCurrentUnit;
+  }
 
   /// @brief "leakage_power_unit" を返す．
   const AstString*
-  leakage_power_unit() const;
+  leakage_power_unit() const
+  {
+    return mLeakagePowerUnit;
+  }
 
   /// @brief "pulling_resistance_unit" を返す．
   const AstString*
-  pulling_resistance_unit() const;
+  pulling_resistance_unit() const
+  {
+    return mPullingResistanceUnit;
+  }
 
   /// @brief "time_unit" を返す．
   const AstString*
-  time_unit() const;
+  time_unit() const
+  {
+    return mTimeUnit;
+  }
 
   /// @brief "voltage_unit" を返す．
   const AstString*
-  voltage_unit() const;
+  voltage_unit() const
+  {
+    return mVoltageUnit;
+  }
 
   /// @brief "lu_table_template" のリストを返す．
   AstArray<const AstTemplate*>
-  lut_template_list() const;
+  lut_template_list() const
+  {
+    return mLutTemplateList;
+  }
 
-  /// @brief セルのリストの要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < cell_num() )
+  /// @brief セルのリストを返す．
   AstArray<const AstCell*>
-  cell_list() const;
+  cell_list() const
+  {
+    return mCellList;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -156,123 +191,6 @@ private:
   AstArray<const AstCell*> mCellList;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief "technology" を返す．
-inline
-const AstTechnology*
-AstLibrary::technology() const
-{
-  return mTechnology;
-}
-
-// @brief "delay_model" を返す．
-inline
-const AstDelayModel*
-AstLibrary::delay_model() const
-{
-  return mDelayModel;
-}
-
-// @brief "bus_naming_style" を返す．
-inline
-const AstString*
-AstLibrary::bus_naming_style() const
-{
-  return mBusNamingStyle;
-}
-
-// @brief "comment" を返す．
-inline
-const AstString*
-AstLibrary::comment() const
-{
-  return mComment;
-}
-
-// @brief "date" を返す．
-inline
-const AstString*
-AstLibrary::date() const
-{
-  return mDate;
-}
-
-// @brief "revision" を返す．
-inline
-const AstString*
-AstLibrary::revision() const
-{
-  return mRevision;
-}
-
-// @brief "capacitive_load_unit"->top() を返す．
-inline
-const AstFloatStr*
-AstLibrary::capacitive_load_unit() const
-{
-  return mCapacitiveLoadUnit;
-}
-
-// @brief "current_unit" を返す．
-inline
-const AstString*
-AstLibrary::current_unit() const
-{
-  return mCurrentUnit;
-}
-
-// @brief "leakage_power_unit" を返す．
-inline
-const AstString*
-AstLibrary::leakage_power_unit() const
-{
-  return mLeakagePowerUnit;
-}
-
-// @brief "pulling_resistance_unit" を返す．
-inline
-const AstString*
-AstLibrary::pulling_resistance_unit() const
-{
-  return mPullingResistanceUnit;
-}
-
-// @brief "time_unit" を返す．
-inline
-const AstString*
-AstLibrary::time_unit() const
-{
-  return mTimeUnit;
-}
-
-// @brief "voltage_unit" を返す．
-inline
-const AstString*
-AstLibrary::voltage_unit() const
-{
-  return mVoltageUnit;
-}
-
-// @brief "lu_table_template" のリストを返す．
-inline
-AstArray<const AstTemplate*>
-AstLibrary::lut_template_list() const
-{
-  return mLutTemplateList;
-}
-
-// @brief セルのリストを返す．
-inline
-AstArray<const AstCell*>
-AstLibrary::cell_list() const
-{
-  return mCellList;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

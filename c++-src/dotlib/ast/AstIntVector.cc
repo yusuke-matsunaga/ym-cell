@@ -53,18 +53,6 @@ AstIntVector::~AstIntVector()
 {
 }
 
-// @brief ベクタを取り出す．
-// @param[out] vector ベクタを格納する変数
-void
-AstIntVector::get_vector(vector<int>& vector) const
-{
-  vector.clear();
-  vector.resize(mNum);
-  for ( auto i: Range(mNum) ) {
-    vector[i] = value(i);
-  }
-}
-
 // @brief 内容をストリーム出力する．
 // @param[in] s 出力先のストリーム
 // @param[in] indent インデント量

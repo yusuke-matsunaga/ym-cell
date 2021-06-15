@@ -5,9 +5,8 @@
 /// @brief DolibTiming のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 #include "AstNode.h"
@@ -26,12 +25,9 @@ class AstTiming :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダのハンドラ
-  /// @param[in] group グループ本体のハンドラ
-  AstTiming(const FileRegion& attr_loc,
-	    const StrListHandler& header,
-	    const TimingHandler& group);
+  AstTiming(const FileRegion& attr_loc,   ///< [in] 属性のファイル上の位置
+	    const StrListHandler& header, ///< [in] ヘッダを読み込んだハンドラ
+	    const TimingHandler& group);  ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief デストラクタ
   ~AstTiming();
@@ -48,87 +44,150 @@ public:
 
   /// @brief "related_pin" を返す．
   const AstString*
-  related_pin() const;
+  related_pin() const
+  {
+    return mRelatedPin;
+  }
 
   /// @brief "related_bus_pins" を返す．
   const AstString*
-  related_bus_pins() const;
+  related_bus_pins() const
+  {
+    return mRelatedBusPins;
+  }
 
   /// @brief "related_bus_equivalent" を返す．
   const AstString*
-  related_bus_equivalent() const;
+  related_bus_equivalent() const
+  {
+    return mRelatedBusEquivalent;
+  }
 
   /// @brief "timing_sense" を返す．
   const AstTimingSense*
-  timing_sense() const;
+  timing_sense() const
+  {
+    return mTimingSense;
+  }
 
   /// @brief "timing_type" を返す．
   const AstTimingType*
-  timing_type() const;
+  timing_type() const
+  {
+    return mTimingType;
+  }
 
   /// @brief "when" を返す．
   const AstExpr*
-  when() const;
+  when() const
+  {
+    return mWhen;
+  }
 
   /// @brief "when_start" を返す．
   const AstExpr*
-  when_start() const;
+  when_start() const
+  {
+    return mWhenStart;
+  }
 
   /// @brief "when_end" を返す．
   const AstExpr*
-  when_end() const;
+  when_end() const
+  {
+    return mWhenEnd;
+  }
 
   /// @brief "rise_resistance" を返す．
   const AstFloat*
-  rise_resistance() const;
+  rise_resistance() const
+  {
+    return mRiseResistance;
+  }
 
   /// @brief "fall_resistance" を返す．
   const AstFloat*
-  fall_resistance() const;
+  fall_resistance() const
+  {
+    return mFallResistance;
+  }
 
   /// @brief "intrinsic_rise" を返す．
   const AstFloat*
-  intrinsic_rise() const;
+  intrinsic_rise() const
+  {
+    return mIntrinsicRise;
+  }
 
   /// @brief "intrinsic_fall" を返す．
   const AstFloat*
-  intrinsic_fall() const;
+  intrinsic_fall() const
+  {
+    return mIntrinsicFall;
+  }
 
   /// @brief "slope_rise" を返す．
   const AstFloat*
-  slope_rise() const;
+  slope_rise() const
+  {
+    return mSlopeRise;
+  }
 
   /// @brief "slope_fall" を返す．
   const AstFloat*
-  slope_fall() const;
+  slope_fall() const
+  {
+    return mSlopeFall;
+  }
 
   /// @brief "rise_delay_intercept" を返す．
   AstArray<const AstIntFloat*>
-  rise_delay_intercept() const;
+  rise_delay_intercept() const
+  {
+    return mRiseDelayIntercept;
+  }
 
   /// @brief "fall_delay_intercept" を返す．
   AstArray<const AstIntFloat*>
-  fall_delay_intercept() const;
+  fall_delay_intercept() const
+  {
+    return mFallDelayIntercept;
+  }
 
   /// @brief "rise_pin_resistance" を返す．
   AstArray<const AstIntFloat*>
-  rise_pin_resistance() const;
+  rise_pin_resistance() const
+  {
+    return mRisePinResistance;
+  }
 
   /// @brief "fall_pin_resistance" を返す．
   AstArray<const AstIntFloat*>
-  fall_pin_resistance() const;
+  fall_pin_resistance() const
+  {
+    return mFallPinResistance;
+  }
 
   /// @brief "cell_degradation" を返す．
   const AstCellDegradation*
-  cell_degradation() const;
+  cell_degradation() const
+  {
+    return mCellDegradation;
+  }
 
   /// @brief "cell_rise" を返す．
   const AstLut*
-  cell_rise() const;
+  cell_rise() const
+  {
+    return mCellRise;
+  }
 
   /// @brief "cell_fall" を返す．
   const AstLut*
-  cell_fall() const;
+  cell_fall() const
+  {
+    return mCellFall;
+  }
 
   /// @brief "compact_ccs_rise" を返す．
   const AstCCS*
@@ -140,50 +199,79 @@ public:
 
   /// @brief "rise_constraint" を返す．
   const AstLut*
-  rise_constraint() const;
+  rise_constraint() const
+  {
+    return mRiseConstraint;
+  }
 
   /// @brief "fall_constraint" を返す．
   const AstLut*
-  fall_constraint() const;
+  fall_constraint() const
+  {
+    return mFallConstraint;
+  }
 
   /// @brief "rise_propagation" を返す．
   const AstLut*
-  rise_propagation() const;
+  rise_propagation() const
+  {
+    return mRisePropagation;
+  }
 
   /// @brief "fall_propagation" を返す．
   const AstLut*
-  fall_propagation() const;
+  fall_propagation() const
+  {
+    return mFallPropagation;
+  }
 
   /// @brief "rise_transition" を返す．
   const AstLut*
-  rise_transition() const;
+  rise_transition() const
+  {
+    return mRiseTransition;
+  }
 
   /// @brief "fall_transition" を返す．
   const AstLut*
-  fall_transition() const;
+  fall_transition() const
+  {
+    return mFallTransition;
+  }
 
   /// @brief "retaining_rise" を返す．
   const AstLut*
-  retaining_rise() const;
+  retaining_rise() const
+  {
+    return mRetainingRise;
+  }
 
   /// @brief "retaining_fall" を返す．
   const AstLut*
-  retaining_fall() const;
+  retaining_fall() const
+  {
+    return mRetainingFall;
+  }
 
   /// @brief "retain_rise_slew" を返す．
   const AstLut*
-  retain_rise_slew() const;
+  retain_rise_slew() const
+  {
+    return mRetainRiseSlew;
+  }
 
   /// @brief "retain_fall_slew" を返す．
   const AstLut*
-  retain_fall_slew() const;
+  retain_fall_slew() const
+  {
+    return mRetainFallSlew;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -294,259 +382,6 @@ private:
   const AstLut* mRetainFallSlew;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief "related_pin" を返す．
-inline
-const AstString*
-AstTiming::related_pin() const
-{
-  return mRelatedPin;
-}
-
-// @brief "related_bus_pins" を返す．
-inline
-const AstString*
-AstTiming::related_bus_pins() const
-{
-  return mRelatedBusPins;
-}
-
-// @brief "related_bus_equivalent" を返す．
-inline
-const AstString*
-AstTiming::related_bus_equivalent() const
-{
-  return mRelatedBusEquivalent;
-}
-
-// @brief "timing_sense" を返す．
-inline
-const AstTimingSense*
-AstTiming::timing_sense() const
-{
-  return mTimingSense;
-}
-
-// @brief "timing_type" を返す．
-inline
-const AstTimingType*
-AstTiming::timing_type() const
-{
-  return mTimingType;
-}
-
-// @brief "when" を返す．
-inline
-const AstExpr*
-AstTiming::when() const
-{
-  return mWhen;
-}
-
-// @brief "when_start" を返す．
-inline
-const AstExpr*
-AstTiming::when_start() const
-{
-  return mWhenStart;
-}
-
-// @brief "when_end" を返す．
-inline
-const AstExpr*
-AstTiming::when_end() const
-{
-  return mWhenEnd;
-}
-
-// @brief "fall_resistance" を返す．
-inline
-const AstFloat*
-AstTiming::fall_resistance() const
-{
-  return mFallResistance;
-}
-
-// @brief "rise_resistance" を返す．
-inline
-const AstFloat*
-AstTiming::rise_resistance() const
-{
-  return mRiseResistance;
-}
-
-// @brief "intrinsic_fall" を返す．
-inline
-const AstFloat*
-AstTiming::intrinsic_fall() const
-{
-  return mIntrinsicFall;
-}
-
-// @brief "intrinsic_rise" を返す．
-inline
-const AstFloat*
-AstTiming::intrinsic_rise() const
-{
-  return mIntrinsicRise;
-}
-
-// @brief "slope_fall" を返す．
-inline
-const AstFloat*
-AstTiming::slope_fall() const
-{
-  return mSlopeFall;
-}
-
-// @brief "slope_rise" を返す．
-inline
-const AstFloat*
-AstTiming::slope_rise() const
-{
-  return mSlopeRise;
-}
-
-// @brief "fall_delay_intercept" を返す．
-inline
-AstArray<const AstIntFloat*>
-AstTiming::fall_delay_intercept() const
-{
-  return mFallDelayIntercept;
-}
-
-// @brief "rise_delay_intercept" を返す．
-inline
-AstArray<const AstIntFloat*>
-AstTiming::rise_delay_intercept() const
-{
-  return mRiseDelayIntercept;
-}
-
-// @brief "fall_pin_resistance" を返す．
-inline
-AstArray<const AstIntFloat*>
-AstTiming::fall_pin_resistance() const
-{
-  return mFallPinResistance;
-}
-
-// @brief "rise_pin_resistance" を返す．
-inline
-AstArray<const AstIntFloat*>
-AstTiming::rise_pin_resistance() const
-{
-  return mRisePinResistance;
-}
-
-// @brief "cell_degradation" を返す．
-inline
-const AstCellDegradation*
-AstTiming::cell_degradation() const
-{
-  return mCellDegradation;
-}
-
-// @brief "cell_fall" を返す．
-inline
-const AstLut*
-AstTiming::cell_fall() const
-{
-  return mCellFall;
-}
-
-// @brief "cell_rise" を返す．
-inline
-const AstLut*
-AstTiming::cell_rise() const
-{
-  return mCellRise;
-}
-
-// @brief "fall_constraint" を返す．
-inline
-const AstLut*
-AstTiming::fall_constraint() const
-{
-  return mFallConstraint;
-}
-
-// @brief "rise_constraint" を返す．
-inline
-const AstLut*
-AstTiming::rise_constraint() const
-{
-  return mRiseConstraint;
-}
-
-// @brief "fall_propagation" を返す．
-inline
-const AstLut*
-AstTiming::fall_propagation() const
-{
-  return mFallPropagation;
-}
-
-// @brief "rise_propagation" を返す．
-inline
-const AstLut*
-AstTiming::rise_propagation() const
-{
-  return mRisePropagation;
-}
-
-// @brief "fall_transition" を返す．
-inline
-const AstLut*
-AstTiming::fall_transition() const
-{
-  return mFallTransition;
-}
-
-// @brief "rise_transition" を返す．
-inline
-const AstLut*
-AstTiming::rise_transition() const
-{
-  return mRiseTransition;
-}
-
-// @brief "retaining_fall" を返す．
-inline
-const AstLut*
-AstTiming::retaining_fall() const
-{
-  return mRetainingFall;
-}
-
-// @brief "retaining_rise" を返す．
-inline
-const AstLut*
-AstTiming::retaining_rise() const
-{
-  return mRetainingRise;
-}
-
-// @brief "retain_fall_slew" を返す．
-inline
-const AstLut*
-AstTiming::retain_fall_slew() const
-{
-  return mRetainFallSlew;
-}
-
-// @brief "retain_rise_slew" を返す．
-inline
-const AstLut*
-AstTiming::retain_rise_slew() const
-{
-  return mRetainRiseSlew;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

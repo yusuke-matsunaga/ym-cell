@@ -5,7 +5,7 @@
 /// @brief DomainHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/GroupHandler.h"
@@ -25,8 +25,7 @@ class DomainHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  DomainHandler(DotlibParser& parser);
+  DomainHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~DomainHandler();
@@ -39,27 +38,45 @@ public:
 
   /// @brief calc_mode を返す．
   const AstString*
-  calc_mode() const;
+  calc_mode() const
+  {
+    return mCalcMode;
+  }
 
   /// @brief coefs を返す．
   const AstFloatVector*
-  coefs() const;
+  coefs() const
+  {
+    return mCoefs;
+  }
 
   /// @brief orders を返す．
   const AstIntVector*
-  orders() const;
+  orders() const
+  {
+    return mOrders;
+  }
 
   /// @brief variable_1_range を返す．
   const AstFloat2*
-  variable_1_range() const;
+  variable_1_range() const
+  {
+    return mVar1Range;
+  }
 
   /// @brief variable_2_range を返す．
   const AstFloat2*
-  variable_2_range() const;
+  variable_2_range() const
+  {
+    return mVar2Range;
+  }
 
   /// @brief variable_3_range を返す．
   const AstFloat2*
-  variable_3_range() const;
+  variable_3_range() const
+  {
+    return mVar3Range;
+  }
 
 
 public:
@@ -108,59 +125,6 @@ private:
   const AstFloat2* mVar3Range;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief calc_mode を返す．
-inline
-const AstString*
-DomainHandler::calc_mode() const
-{
-  return mCalcMode;
-}
-
-// @brief coefs を返す．
-inline
-const AstFloatVector*
-DomainHandler::coefs() const
-{
-  return mCoefs;
-}
-
-// @brief orders を返す．
-inline
-const AstIntVector*
-DomainHandler::orders() const
-{
-  return mOrders;
-}
-
-// @brief variable_1_range を返す．
-inline
-const AstFloat2*
-DomainHandler::variable_1_range() const
-{
-  return mVar1Range;
-}
-
-// @brief variable_2_range を返す．
-inline
-const AstFloat2*
-DomainHandler::variable_2_range() const
-{
-  return mVar2Range;
-}
-
-// @brief variable_3_range を返す．
-inline
-const AstFloat2*
-DomainHandler::variable_3_range() const
-{
-  return mVar3Range;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

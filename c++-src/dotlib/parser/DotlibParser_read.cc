@@ -3,9 +3,8 @@
 /// @brief DotlibParser の実装ファイル ( simple attribute 関連 )
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/DotlibParser.h"
 #include "dotlib/AstMgr.h"
@@ -17,17 +16,13 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief 直前に読んだトークンから AstInt を生成する．
-// @param[out] dst 結果を格納する変数
-// @retval true 読み込みが成功した．
-// @retval false 読み込みが失敗した．
-bool
-DotlibParser::read_int(const AstInt*& dst)
+const AstInt*
+DotlibParser::read_int()
 {
   FileRegion value_loc;
   TokenType value_type = read_token(value_loc, false);
   if ( value_type == TokenType::INT_NUM ) {
-    dst = mgr().new_int(value_loc, cur_int());
-    return true;
+    return mgr().new_int(value_loc, cur_int());
   }
   else {
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -35,23 +30,19 @@ DotlibParser::read_int(const AstInt*& dst)
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. 'integer' value is expected.");
-    return false;
+    return nullptr;
   }
 }
 
 // @brief 直前に読んだトークンから AstFloat を生成する．
-// @param[out] dst 結果を格納する変数
-// @retval true 読み込みが成功した．
-// @retval false 読み込みが失敗した．
-bool
-DotlibParser::read_float(const AstFloat*& dst)
+const AstFloat*
+DotlibParser::read_float()
 {
   FileRegion value_loc;
   TokenType value_type = read_token(value_loc, false);
   // int 型も float 型とみなす．
   if ( value_type == TokenType::FLOAT_NUM || value_type == TokenType::INT_NUM ) {
-    dst = mgr().new_float(value_loc, cur_float());
-    return true;
+    return mgr().new_float(value_loc, cur_float());
   }
   else {
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -59,23 +50,17 @@ DotlibParser::read_float(const AstFloat*& dst)
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. 'float' value is expected.");
-    return false;
+    return nullptr;
   }
 }
 
 // @brief 直前に読んだトークンから文字列を取り出す．
-// @param[out] dst 結果を格納する変数
-// @param[out] value_loc トークンのファイル上の位置
-// @retval true 読み込みが成功した．
-// @retval false 読み込みが失敗した．
-bool
-DotlibParser::read_raw_string(const char*& dst,
-			      FileRegion& value_loc)
+const char*
+DotlibParser::read_raw_string(FileRegion& value_loc)
 {
   TokenType value_type = read_token(value_loc, true);
   if ( value_type == TokenType::SYMBOL ) {
-    dst = cur_string();
-    return true;
+    return cur_string();
   }
   else {
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -83,23 +68,18 @@ DotlibParser::read_raw_string(const char*& dst,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. 'string' value is expected.");
-    return false;
+    return nullptr;
   }
 }
 
 // @brief 直前に読んだトークンから AstString を生成する．
-// @param[out] dst 結果を格納する変数
-// @retval true 読み込みが成功した．
-// @retval false 読み込みが失敗した．
-bool
-DotlibParser::read_string(const AstString*& dst)
+const AstString*
+DotlibParser::read_string()
 {
-  const char* tmp_str;
   FileRegion value_loc;
-  bool stat = read_raw_string(tmp_str, value_loc);
-  if ( stat ) {
-    dst = mgr().new_string(value_loc, ShString(tmp_str));
-    return true;
+  auto tmp_str = read_raw_string(value_loc);
+  if ( tmp_str ) {
+    return mgr().new_string(value_loc, ShString(tmp_str));
   }
   else {
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -107,20 +87,20 @@ DotlibParser::read_string(const AstString*& dst)
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. 'string' value is expected.");
-    return false;
+    return nullptr;
   }
 }
 
 // @brief 直前に読んだトークンから AstIntVector を生成する．
-// @param[out] dst 結果を格納する変数
-// @retval true 読み込みが成功した．
-// @retval false 読み込みが失敗した．
-bool
-DotlibParser::read_int_vector(const AstIntVector*& dst)
+const AstIntVector*
+DotlibParser::read_int_vector()
 {
-  const char* tmp_str;
   FileRegion value_loc;
-  bool stat = read_raw_string(tmp_str, value_loc);
+  auto tmp_str = read_raw_string(value_loc);
+  if ( tmp_str == nullptr ) {
+    return nullptr;
+  }
+
   vector<int> dst_list;
   string buf;
   char c = '\0';
@@ -135,7 +115,7 @@ DotlibParser::read_int_vector(const AstIntVector*& dst)
 			MsgType::Error,
 			"DOTLIB_PARSER",
 			"Syntax error. Null element.");
-	return false;
+	return nullptr;
       }
       dst_list.push_back(atoi(buf.c_str()));
       buf.clear();
@@ -148,36 +128,32 @@ DotlibParser::read_int_vector(const AstIntVector*& dst)
     dst_list.push_back(atoi(buf.c_str()));
   }
 
-  dst = mgr().new_int_vector(value_loc, dst_list);
-
-  return true;
+  return mgr().new_int_vector(value_loc, dst_list);
 }
 
 // @brief 直前に読んだトークンから AstFloatVector を生成する．
-// @param[out] dst 結果を格納する変数
-// @retval true 読み込みが成功した．
-// @retval false 読み込みが失敗した．
-bool
-DotlibParser::read_float_vector(const AstFloatVector*& dst)
+const AstFloatVector*
+DotlibParser::read_float_vector()
 {
   FileRegion value_loc;
   vector<double> dst_list;
-  bool stat = read_float_vector(value_loc, dst_list);
+  bool stat = read_float_vector(dst_list, value_loc);
   if ( stat ) {
-    dst = mgr().new_float_vector(value_loc, dst_list);
+    return mgr().new_float_vector(value_loc, dst_list);
   }
-  return stat;
+  else {
+    return nullptr;
+  }
 }
 
 // @brief 直前に読んだトークンから float のリストを生成する．
-// @param[int] dst_list 値を格納するリスト
 // @retval true 正しく読み込んだ．
 // @retval false エラーが起こった．
 //
 // dst_list は初期化せず，末尾に追加する．
 bool
-DotlibParser::read_float_vector(FileRegion& value_loc,
-				vector<double>& dst_list)
+DotlibParser::read_float_vector(vector<double>& dst_list,
+				FileRegion& value_loc)
 {
   TokenType value_type = read_token(value_loc, false);
   if ( value_type != TokenType::SYMBOL ) {

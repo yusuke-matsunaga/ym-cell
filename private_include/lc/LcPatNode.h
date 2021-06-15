@@ -5,9 +5,8 @@
 /// @brief LcPatNode のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "lc/libcomp_nsdef.h"
 
@@ -27,65 +26,102 @@ class LcPatNode
 public:
 
   /// @brief コンストラクタ
-  LcPatNode(int id);
+  LcPatNode(int id) ///< [in] ID番号
+    : mId{id},
+      mType{0U},
+      mFanin{nullptr, nullptr},
+      mLink{nullptr}
+  {
+  }
 
   /// @brief デストラクタ
-  ~LcPatNode();
+  ~LcPatNode() = default;
 
 
 public:
 
   /// @brief ノード番号を返す．
   int
-  id() const;
+  id() const
+  {
+    return mId;
+  }
 
   /// @brief 入力の時 true を返す．
   bool
-  is_input() const;
+  is_input() const
+  {
+    return ((mType & 3U) == INPUT);
+  }
 
   /// @brief AND の時 true を返す．
   bool
-  is_and() const;
+  is_and() const
+  {
+    return ((mType & 3U) == AND);
+  }
 
   /// @brief XOR の時 true を返す．
   bool
-  is_xor() const;
+  is_xor() const
+  {
+    return ((mType & 3U) == XOR);
+  }
 
   /// @brief 入力の時に入力番号を返す．
   int
-  input_id() const;
+  input_id() const
+  {
+    return mType >> 2;
+  }
 
   /// @brief AND/XOR の時にファンインのノードを返す．
-  /// @param[in] pos 位置 ( 0 or 1 )
   LcPatNode*
-  fanin(int pos) const;
+  fanin(int pos) const ///< [in] 位置 ( 0 or 1 )
+  {
+    return mFanin[pos];
+  }
 
   /// @brief AND/XOR の時にファンイン0のノードを返す．
   LcPatNode*
-  fanin0() const;
+  fanin0() const
+  {
+    return mFanin[0];
+  }
 
   /// @brief AND/XOR の時にファンイン1のノードを返す．
   LcPatNode*
-  fanin1() const;
+  fanin1() const
+  {
+    return mFanin[1];
+  }
 
   /// @brief AND/XOR の時にファンインの極性を返す．
-  /// @param[in] pos 位置 ( 0 or 1 )
   /// @retval true 反転あり
   /// @retval false 反転なし
   bool
-  fanin_inv(int pos) const;
+  fanin_inv(int pos) const ///< [in] 位置 ( 0 or 1 )
+  {
+    return static_cast<bool>((mType >> (pos + 2)) & 1U);
+  }
 
   /// @brief AND/XOR の時にファンイン0の極性を返す．
   /// @retval true 反転あり
   /// @retval false 反転なし
   bool
-  fanin_inv0() const;
+  fanin_inv0() const
+  {
+    return static_cast<bool>((mType >> 2) & 1U);
+  }
 
   /// @brief AND/XOR の時にファンイン1の極性を返す．
   /// @retval true 反転あり
   /// @retval false 反転なし
   bool
-  fanin_inv1() const;
+  fanin_inv1() const
+  {
+    return static_cast<bool>((mType >> 3) & 1U);
+  }
 
 
 private:
@@ -94,10 +130,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ノードの種類
-  enum tType {
-    kInput = 0,
-    kAnd   = 1,
-    kXor   = 2
+  enum Type {
+    INPUT = 0,
+    AND   = 1,
+    XOR   = 2
   };
 
 
@@ -122,123 +158,6 @@ private:
   LcPatNode* mLink;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-inline
-LcPatNode::LcPatNode(int id) :
-  mId{id},
-  mType{0U},
-  mFanin{nullptr, nullptr},
-  mLink{nullptr}
-{
-}
-
-// @brief デストラクタ
-inline
-LcPatNode::~LcPatNode()
-{
-}
-
-// @brief ノード番号を返す．
-inline
-int
-LcPatNode::id() const
-{
-  return mId;
-}
-
-// @brief 入力の時 true を返す．
-inline
-bool
-LcPatNode::is_input() const
-{
-  return ((mType & 3U) == kInput);
-}
-
-// @brief AND の時 true を返す．
-inline
-bool
-LcPatNode::is_and() const
-{
-  return ((mType & 3U) == kAnd);
-}
-
-// @brief XOR の時 true を返す．
-inline
-bool
-LcPatNode::is_xor() const
-{
-  return ((mType & 3U) == kXor);
-}
-
-// @brief 入力の時に入力番号を返す．
-inline
-int
-LcPatNode::input_id() const
-{
-  return mType >> 2;
-}
-
-// @brief AND/XOR の時にファンインのノードを返す．
-// @param[in] pos 位置 ( 0 or 1 )
-inline
-LcPatNode*
-LcPatNode::fanin(int pos) const
-{
-  return mFanin[pos];
-}
-
-// @brief AND/XOR の時にファンイン0のノードを返す．
-inline
-LcPatNode*
-LcPatNode::fanin0() const
-{
-  return mFanin[0];
-}
-
-// @brief AND/XOR の時にファンイン1のノードを返す．
-inline
-LcPatNode*
-LcPatNode::fanin1() const
-{
-  return mFanin[1];
-}
-
-// @brief AND/XOR の時にファンインの極性を返す．
-// @param[in] pos 位置 ( 0 or 1 )
-// @retval true 反転あり
-// @retval false 反転なし
-inline
-bool
-LcPatNode::fanin_inv(int pos) const
-{
-  return static_cast<bool>((mType >> (pos + 2)) & 1U);
-}
-
-// @brief AND/XOR の時にファンイン0の極性を返す．
-// @retval true 反転あり
-// @retval false 反転なし
-inline
-bool
-LcPatNode::fanin_inv0() const
-{
-  return static_cast<bool>((mType >> 2) & 1U);
-}
-
-// @brief AND/XOR の時にファンイン1の極性を返す．
-// @retval true 反転あり
-// @retval false 反転なし
-inline
-bool
-LcPatNode::fanin_inv1() const
-{
-  return static_cast<bool>((mType >> 3) & 1U);
-}
 
 END_NAMESPACE_YM_CLIB_LIBCOMP
 

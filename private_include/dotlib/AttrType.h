@@ -5,9 +5,8 @@
 /// @brief 属性を表す列挙型
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 
@@ -498,8 +497,8 @@ enum class AttrType {
 
 /// @brief AttrType の内容をストリームに出力する．
 ostream&
-operator<<(ostream& s,
-	   AttrType attr);
+operator<<(ostream& s,     ///< [in] 出力先のストリーム
+	   AttrType attr); ///< [in] 出力する値
 
 END_NAMESPACE_YM_DOTLIB
 

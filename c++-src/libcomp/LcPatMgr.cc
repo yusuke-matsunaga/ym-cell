@@ -454,7 +454,7 @@ LcPatMgr::make_input(VarId var)
   while ( mInputList.size() <= id ) {
     LcPatNode& node = new_node();
     int input_id = mInputList.size();
-    node.mType = (input_id << 2) | LcPatNode::kInput;
+    node.mType = (input_id << 2) | LcPatNode::INPUT;
     mInputList.push_back(&node);
   }
   LcPatNode* node = mInputList[id];
@@ -481,16 +481,16 @@ LcPatMgr::make_node(const Expr& expr,
   bool oinv = false;
   int type = 0U;
   if ( expr.is_and() ) {
-    type = LcPatNode::kAnd;
+    type = LcPatNode::AND;
   }
   else if ( expr.is_or() ) {
-    type = LcPatNode::kAnd;
+    type = LcPatNode::AND;
     l_inv = !l_inv;
     r_inv = !r_inv;
     oinv = true;
   }
   else if ( expr.is_xor() ) {
-    type = LcPatNode::kXor;
+    type = LcPatNode::XOR;
     oinv = l_inv ^ r_inv;
     l_inv = false;
     r_inv = false;

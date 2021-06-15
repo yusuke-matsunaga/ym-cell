@@ -41,7 +41,8 @@ StrHandler::initialize()
 bool
 StrHandler::read_value(int count)
 {
-  return parser().read_string(mValue);
+  mValue = parser().read_string();
+  return mValue != nullptr;
 }
 
 // @brief end_header() 内で呼ばれる終了処理関数

@@ -5,9 +5,8 @@
 /// @brief StrListHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/HeaderHandler.h"
 
@@ -24,8 +23,7 @@ class StrListHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  StrListHandler(DotlibParser& parser);
+  StrListHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~StrListHandler();
@@ -38,7 +36,10 @@ public:
 
   /// @brief 読み込んだ値を返す．
   vector<const AstString*>
-  value() const;
+  value() const
+  {
+    return mValue;
+  }
 
 
 private:
@@ -53,16 +54,14 @@ private:
   _begin_header() override;
 
   /// @brief 値を読み込む処理
-  /// @param[in] count read_value() の呼ばれた回数
   bool
-  _read_header_value(int count) override;
+  _read_header_value(int count) override; ///< [in] read_value() の呼ばれた回数
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  _end_header(int count) override;
+  _end_header(int count) override; ///< [in] 読み込んだ要素数
 
 
 private:
@@ -74,19 +73,6 @@ private:
   vector<const AstString*> mValue;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 読み込んだ値を返す．
-inline
-vector<const AstString*>
-StrListHandler::value() const
-{
-  return mValue;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

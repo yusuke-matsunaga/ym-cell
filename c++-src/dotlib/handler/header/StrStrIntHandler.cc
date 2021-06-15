@@ -34,6 +34,8 @@ StrStrIntHandler::~StrStrIntHandler()
 void
 StrStrIntHandler::initialize()
 {
+  mValue[0] = nullptr;
+  mValue[1] = nullptr;
   mValue3 = nullptr;
 }
 
@@ -45,10 +47,12 @@ StrStrIntHandler::read_value(int count)
   ASSERT_COND( count >= 0 && count < 3 );
 
   if ( count < 2 ) {
-    return parser().read_string(mValue[count]);
+    mValue[count] = parser().read_string();
+    return mValue[count] != nullptr;
   }
   else {
-    return parser().read_int(mValue3);
+    mValue3 = parser().read_int();
+    return mValue3 != nullptr;
   }
 }
 

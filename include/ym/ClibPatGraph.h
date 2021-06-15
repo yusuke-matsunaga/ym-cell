@@ -5,9 +5,8 @@
 /// @brief ClibPatGraph のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 
@@ -19,6 +18,8 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @class ClibPatGraph ClibPatGraph.h "ym/ClibPatGraph.h"
 /// @brief パタングラフを表すクラス
 ///
+/// このクラスは実装を隠すためにインターフェイスの定義のみとなっている．
+///
 /// 実際には根の反転属性と枝のリストしか持っていない．
 /// その他の情報は ClibPatMgr から補完する．
 //////////////////////////////////////////////////////////////////////
@@ -28,7 +29,7 @@ public:
 
   /// @brief デストラクタ
   virtual
-  ~ClibPatGraph() { }
+  ~ClibPatGraph() = default;
 
 
 public:
@@ -59,10 +60,10 @@ public:
   edge_num() const = 0;
 
   /// @brief 枝(の番号)を返す．
-  /// @param[in] pos 位置 ( 0 <= pos < edge_num() )
   virtual
   int
-  edge(int pos) const = 0;
+  edge(int pos) const ///< [in] 位置 ( 0 <= pos < edge_num() )
+  = 0;
 
 };
 

@@ -5,9 +5,8 @@
 /// @brief AstIntVector のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "AstNode.h"
 
@@ -24,10 +23,8 @@ class AstIntVector :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
-  AstIntVector(const FileRegion& loc,
-	       const vector<int>& value);
+  AstIntVector(const FileRegion& loc,     ///< [in] ファイル上の位置
+	       const vector<int>& value); ///< [in] 値
 
   /// @brief デストラクタ
   ~AstIntVector();
@@ -40,24 +37,32 @@ public:
 
   /// @brief 要素数を返す．
   int
-  size() const;
+  size() const
+  {
+    return mNum;
+  }
 
   /// @brief 要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   int
-  value(int pos) const;
+  value(int pos) const ///< [in] 位置番号 ( 0 <= pos < size() )
+  {
+    ASSERT_COND( pos >= 0 && pos < size() );
+
+    return mBody[pos];
+  }
 
   /// @brief ベクタを取り出す．
-  /// @param[out] vector ベクタを格納する変数
-  void
-  get_vector(vector<int>& vector) const;
+  vector<int>
+  get_vector() const
+  {
+    return vector<int>(&mBody[0], &mBody[size()]);
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -72,30 +77,6 @@ private:
   int mBody[1];
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数
-//////////////////////////////////////////////////////////////////////
-
-// @brief 要素数を返す．
-inline
-int
-AstIntVector::size() const
-{
-  return mNum;
-}
-
-// @brief 要素を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-inline
-int
-AstIntVector::value(int pos) const
-{
-  ASSERT_COND( pos >= 0 && pos < size() );
-
-  return mBody[pos];
-}
 
 END_NAMESPACE_YM_DOTLIB
 

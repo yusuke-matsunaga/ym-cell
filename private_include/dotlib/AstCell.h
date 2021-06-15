@@ -5,9 +5,8 @@
 /// @brief AstCell のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 #include "AstNameNode.h"
@@ -26,12 +25,9 @@ class AstCell :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
-  AstCell(const FileRegion& attr_loc,
-	  const StrHandler& header,
-	  const CellHandler& group);
+  AstCell(const FileRegion& attr_loc, ///< [in] 属性のファイル上の位置
+	  const StrHandler& header,   ///< [in] ヘッダを読み込んだハンドラ
+	  const CellHandler& group);  ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief デストラクタ
   ~AstCell();

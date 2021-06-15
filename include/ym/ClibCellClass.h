@@ -5,9 +5,8 @@
 /// @brief ClibCellClass のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 #include "ym/logic.h"
@@ -26,7 +25,7 @@ public:
 
   /// @brief デストラクタ
   virtual
-  ~ClibCellClass() { }
+  ~ClibCellClass() = default;
 
 
 public:
@@ -35,22 +34,24 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ID番号を返す．
-  /// @note ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
+  ///
+  /// ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
   virtual
   int
   id() const = 0;
 
   /// @brief 同位体変換の個数を得る．
-  /// @note 恒等変換は含まない．
+  ///
+  /// 恒等変換は含まない．
   virtual
   int
   idmap_num() const = 0;
 
   /// @brief 同位体変換を得る．
-  /// @param[in] pos 位置番号 ( 0 <= pos < idmap_num() )
   virtual
   const NpnMapM&
-  idmap(int pos) const = 0;
+  idmap(int pos) const ///< [in] 位置番号 ( 0 <= pos < idmap_num() )
+  = 0;
 
 
 public:
@@ -70,10 +71,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   virtual
   void
-  dump(ostream& s) const = 0;
+  dump(ostream& s) const ///< [in] 出力先のストリーム
+  = 0;
 
 };
 

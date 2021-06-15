@@ -5,7 +5,7 @@
 /// @brief OutputVoltageHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/GroupHandler.h"
@@ -23,8 +23,7 @@ class OutputVoltageHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  OutputVoltageHandler(DotlibParser& parser);
+  OutputVoltageHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~OutputVoltageHandler();
@@ -37,19 +36,31 @@ public:
 
   /// @brief vil の値を返す．
   const AstExpr*
-  vol() const;
+  vol() const
+  {
+    return mVol;
+  }
 
   /// @brief vih の値を返す．
   const AstExpr*
-  voh() const;
+  voh() const
+  {
+    return mVoh;
+  }
 
   /// @brief vimin の値を返す．
   const AstExpr*
-  vomin() const;
+  vomin() const
+  {
+    return mVomin;
+  }
 
   /// @brief vimax の値を返す．
   const AstExpr*
-  vomax() const;
+  vomax() const
+  {
+    return mVomax;
+  }
 
 
 protected:
@@ -86,43 +97,6 @@ private:
   const AstExpr* mVomax;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief vil の値を返す．
-inline
-const AstExpr*
-OutputVoltageHandler::vol() const
-{
-  return mVol;
-}
-
-// @brief vih の値を返す．
-inline
-const AstExpr*
-OutputVoltageHandler::voh() const
-{
-  return mVoh;
-}
-
-// @brief vimin の値を返す．
-inline
-const AstExpr*
-OutputVoltageHandler::vomin() const
-{
-  return mVomin;
-}
-
-// @brief vimax の値を返す．
-inline
-const AstExpr*
-OutputVoltageHandler::vomax() const
-{
-  return mVomax;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

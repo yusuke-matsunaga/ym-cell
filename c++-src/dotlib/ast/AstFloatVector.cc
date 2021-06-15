@@ -52,18 +52,6 @@ AstFloatVector::~AstFloatVector()
 {
 }
 
-// @brief ベクタの全体を取り出す．
-// @param[out] vector 結果を格納する変数
-void
-AstFloatVector::get_vector(vector<double>& vector) const
-{
-  vector.clear();
-  vector.resize(mNum);
-  for ( auto i: Range(mNum) ) {
-    vector[i] = mBody[i];
-  }
-}
-
 // @brief 内容をストリーム出力する．
 // @param[in] s 出力先のストリーム
 // @param[in] indent インデント量

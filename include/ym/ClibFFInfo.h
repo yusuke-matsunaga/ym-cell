@@ -5,9 +5,8 @@
 /// @brief ClibFFInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 
@@ -28,15 +27,15 @@ public:
   ClibFFInfo();
 
   /// @brief コンストラクタ
-  /// @param[in] pos_array ピン位置と極性情報の配列
-  /// @note pos_array の意味は以下の通り
+  ///
+  /// pos_array の意味は以下の通り
   ///  - pos_array[0] : データ入力のピン番号     (3bit)
   ///  - pos_array[1] : クロック入力のピン番号   (3bit) | 極性情報 (1bit)
   ///  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
   ///  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
   ///  - pos_array[4] : 肯定出力のピン番号       (3bit)
   ///  - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか(1bit)
-  ClibFFInfo(int pos_array[]);
+  ClibFFInfo(int pos_array[]); ///< [in] ピン位置と極性情報の配列
 
   /// @brief デストラクタ
   ~ClibFFInfo();
@@ -88,12 +87,14 @@ public:
   clock_pos() const;
 
   /// @brief クリア入力のピン番号を返す．
-  /// @note クリア入力がない場合の値は不定
+  ///
+  /// クリア入力がない場合の値は不定
   int
   clear_pos() const;
 
   /// @brief プリセット入力のピン番号を返す．
-  /// @note プリセット入力がない場合の値は不定
+  ///
+  /// プリセット入力がない場合の値は不定
   int
   preset_pos() const;
 
@@ -112,14 +113,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief バイナリダンプを行う．
-  /// @param[in] s 出力先のストリーム
   void
-  dump(ostream& s) const;
+  dump(ostream& s) const; ///< [in] 出力先のストリーム
 
   /// @brief バイナリファイルを読み込む．
-  /// @param[in] s 入力元のストリーム
   void
-  restore(istream& s);
+  restore(istream& s); ///< [in] 入力元のストリーム
 
 
 private:

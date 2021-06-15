@@ -5,9 +5,8 @@
 /// @brief ClibTime のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 
@@ -18,6 +17,10 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @ingroup ClibGroup
 /// @class ClibTime ClibTime.h "ym/ClibTime.h"
 /// @brief 時間を表すクラス
+///
+/// 内容的には double そのものだが他の単位との演算が
+/// 行えないようになっている．
+/// ClibTime 同士の演算も加減算のみ定義されている．
 //////////////////////////////////////////////////////////////////////
 class ClibTime
 {
@@ -27,11 +30,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 空のコンストラクタ
+  ///
+  /// 内容は 0.0 に初期化される．
   ClibTime() = default;
 
   /// @brief double からの変換用コンストラクタ
   explicit
-  ClibTime(double v);
+  ClibTime(double v) : ///< [in] 設定する値
+    mValue{v}
+  {
+  }
 
   /// @brief デストラクタ
   ~ClibTime() = default;
@@ -45,7 +53,10 @@ public:
   /// @brief 無限大の値を作る．
   static
   ClibTime
-  infty();
+  infty()
+  {
+    return ClibTime(std::numeric_limits<double>::max());
+  }
 
 
 public:
@@ -55,7 +66,10 @@ public:
 
   /// @brief 値を得る．
   double
-  value() const;
+  value() const
+  {
+    return mValue;
+  }
 
 
 public:
@@ -65,15 +79,27 @@ public:
 
   /// @brief 代入演算子
   const ClibTime&
-  operator=(const ClibTime& src);
+  operator=(const ClibTime& src) ///< [in] コピー元のオブジェクト
+  {
+    mValue = src.mValue;
+    return *this;
+  }
 
   /// @brief 加算付き代入演算子
   const ClibTime&
-  operator+=(const ClibTime& src);
+  operator+=(const ClibTime& src) ///< [in] オペランド
+  {
+    mValue += src.mValue;
+    return *this;
+  }
 
   /// @brief 減算付き代入演算子
   const ClibTime&
-  operator-=(const ClibTime& src);
+  operator-=(const ClibTime& src) ///< [in] オペランド
+  {
+    mValue -= src.mValue;
+    return *this;
+  }
 
 
 private:
@@ -87,230 +113,100 @@ private:
 };
 
 /// @brief 加算
-/// @param[in] left, right オペランド
 /// @relates ClibTime
-ClibTime
-operator+(const ClibTime& left,
-	  const ClibTime& right);
-
-/// @brief 減算
-/// @param[in] left, right オペランド
-/// @relates ClibTime
-ClibTime
-operator-(const ClibTime& left,
-	  const ClibTime& right);
-
-/// @brief 等価比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibTime
-bool
-operator==(const ClibTime& left,
-	   const ClibTime& right);
-
-/// @brief 非等価比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibTime
-bool
-operator!=(const ClibTime& left,
-	   const ClibTime& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibTime
-bool
-operator<(const ClibTime& left,
-	  const ClibTime& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibTime
-bool
-operator>(const ClibTime& left,
-	  const ClibTime& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibTime
-bool
-operator<=(const ClibTime& left,
-	   const ClibTime& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibTime
-bool
-operator>=(const ClibTime& left,
-	   const ClibTime& right);
-
-/// @brief ストリーム出力
-ostream&
-operator<<(ostream& s,
-	   const ClibTime& val);
-
-/// @brief ストリーム入力
-/// @param[in] s 入力元のストリーム
-/// @param[out] val 読み出された値
-/// @relates ClibTime
-istream&
-operator>>(istream& s,
-	   ClibTime& val);
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief double からの変換コンストラクタ
-inline
-ClibTime::ClibTime(double v) :
-  mValue{v}
-{
-}
-
-// @brief 無限大の値を作る．
 inline
 ClibTime
-ClibTime::infty()
-{
-  return ClibTime(std::numeric_limits<double>::max());
-}
-
-// @brief 値を得る．
-inline
-double
-ClibTime::value() const
-{
-  return mValue;
-}
-
-// @brief 代入演算子
-inline
-const ClibTime&
-ClibTime::operator=(const ClibTime& src)
-{
-  mValue = src.mValue;
-  return *this;
-}
-
-// @brief 加算付き代入演算子
-inline
-const ClibTime&
-ClibTime::operator+=(const ClibTime& src)
-{
-  mValue += src.mValue;
-  return *this;
-}
-
-// @brief 減算付き代入演算子
-inline
-const ClibTime&
-ClibTime::operator-=(const ClibTime& src)
-{
-  mValue -= src.mValue;
-  return *this;
-}
-
-// @brief 加算
-inline
-ClibTime
-operator+(const ClibTime& left,
-	  const ClibTime& right)
+operator+(const ClibTime& left,  ///< [in] 左のオペランド
+	  const ClibTime& right) ///< [in] 右のオペランド
 {
   return ClibTime(left).operator+=(right);
 }
 
-// @brief 減算
+/// @brief 減算
+/// @relates ClibTime
 inline
 ClibTime
-operator-(const ClibTime& left,
-	  const ClibTime& right)
+operator-(const ClibTime& left,  ///< [in] 左のオペランド
+	  const ClibTime& right) ///< [in] 右のオペランド
 {
   return ClibTime(left).operator-=(right);
 }
 
-// @brief 等価比較演算子
-// @param[in] left, right オペランド
-// @relates ClibTime
+/// @brief 等価比較演算子
+/// @relates ClibTime
 inline
 bool
-operator==(const ClibTime& left,
-	   const ClibTime& right)
+operator==(const ClibTime& left,  ///< [in] 左のオペランド
+	   const ClibTime& right) ///< [in] 右のオペランド
 {
   return left.value() == right.value();
 }
 
-// @brief 非等価比較演算子
-// @param[in] left, right オペランド
-// @relates ClibTime
+/// @brief 非等価比較演算子
+/// @relates ClibTime
 inline
 bool
-operator!=(const ClibTime& left,
-	   const ClibTime& right)
+operator!=(const ClibTime& left,  ///< [in] 左のオペランド
+	   const ClibTime& right) ///< [in] 右のオペランド
 {
   return !operator==(left, right);
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibTime
+/// @brief 大小比較演算子
+/// @relates ClibTime
 inline
 bool
-operator<(const ClibTime& left,
-	  const ClibTime& right)
+operator<(const ClibTime& left,  ///< [in] 左のオペランド
+	  const ClibTime& right) ///< [in] 右のオペランド
 {
   return left.value() < right.value();
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibTime
+/// @brief 大小比較演算子
+/// @relates ClibTime
 inline
 bool
-operator>(const ClibTime& left,
-	  const ClibTime& right)
+operator>(const ClibTime& left,  ///< [in] 左のオペランド
+	  const ClibTime& right) ///< [in] 右のオペランド
 {
   return operator<(right, left);
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibTime
+/// @brief 大小比較演算子
+/// @relates ClibTime
 inline
 bool
-operator<=(const ClibTime& left,
-	   const ClibTime& right)
+operator<=(const ClibTime& left,  ///< [in] 左のオペランド
+	   const ClibTime& right) ///< [in] 右のオペランド
 {
   return !operator<(right, left);
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibTime
+/// @brief 大小比較演算子
+/// @relates ClibTime
 inline
 bool
-operator>=(const ClibTime& left,
-	   const ClibTime& right)
+operator>=(const ClibTime& left,  ///< [in] 左のオペランド
+	   const ClibTime& right) ///< [in] 右のオペランド
 {
   return !operator<(left, right);
 }
 
-// @brief ストリーム出力
+/// @brief ストリーム出力
 inline
 ostream&
-operator<<(ostream& s,
-	   const ClibTime& val)
+operator<<(ostream& s,          ///< [in] 出力先のストリーム
+	   const ClibTime& val) ///< [in] 値
 {
   return s << val.value();
 }
 
-// @brief ストリーム入力
-// @param[in] s 入力元のストリーム
-// @param[out] val 読み出された値
-// @relates ClibTime
+/// @brief ストリーム入力
+/// @relates ClibTime
 inline
 istream&
-operator>>(istream& s,
-	   ClibTime& val)
+operator>>(istream& s,    ///< [in] 入力元のストリーム
+	   ClibTime& val) ///< [out] 読み出された値
 {
   double tmp;
   s >> tmp;

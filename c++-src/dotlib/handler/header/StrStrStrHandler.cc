@@ -45,7 +45,8 @@ StrStrStrHandler::read_value(int count)
 {
   ASSERT_COND( count >= 0 && count < 3);
 
-  return parser().read_string(mValue[count]);
+  mValue[count] = parser().read_string();
+  return mValue[count] != nullptr;
 }
 
 // @brief end_header() 内で呼ばれる終了処理関数

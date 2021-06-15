@@ -5,9 +5,8 @@
 /// @brief StrHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/ElemHandler.h"
 
@@ -24,8 +23,7 @@ class StrHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  StrHandler(DotlibParser& parser);
+  StrHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~StrHandler();
@@ -38,7 +36,10 @@ public:
 
   /// @brief 読み込んだ値を返す．
   const AstString*
-  value() const;
+  value() const
+  {
+    return mValue;
+  }
 
 
 private:
@@ -51,9 +52,8 @@ private:
   initialize() override;
 
   /// @brief ヘッダの値を読み込む処理
-  /// @param[in] count read_value() の呼ばれた回数
   bool
-  read_value(int count) override;
+  read_value(int count) override; ///< [in] read_value() の呼ばれた回数
 
   /// @brief end_header() 内で呼ばれる終了処理関数
   void
@@ -69,19 +69,6 @@ private:
   const AstString* mValue;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 読み込んだ値を返す．
-inline
-const AstString*
-StrHandler::value() const
-{
-  return mValue;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

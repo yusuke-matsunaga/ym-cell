@@ -3,9 +3,8 @@
 /// @brief DotlibParser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/DotlibParser.h"
 #include "FuncParser.h"
@@ -72,8 +71,6 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief Group Statement を読み込む．
-// @param[in] header_handler ヘッダ読み込みハンドラ (HeaderHandler の継承クラス)
-// @param[in] group_handler グループ読み込みハンドラ (GroupHandler の継承クラス)
 // @retval true 正しく読み込めた．
 // @retval false エラーが起こった．
 bool
@@ -142,13 +139,8 @@ DotlibParser::parse_group_statement(HeaderHandler& header_handler,
 }
 
 // @brief 'cell' Group Statement のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
-//
-// この属性は重複チェックは行わない．
 bool
 DotlibParser::parse_cell(vector<const AstCell*>& dst_list,
 			 AttrType attr_type,
@@ -163,13 +155,8 @@ DotlibParser::parse_cell(vector<const AstCell*>& dst_list,
 }
 
 // @brief 'domain' Group Statement のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
 bool
 DotlibParser::parse_domain(const AstDomain*& dst,
 			   AttrType attr_type,
@@ -190,15 +177,10 @@ DotlibParser::parse_domain(const AstDomain*& dst,
 }
 
 // @brief 'ff' Group Statement のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
 bool
-DotlibParser::parse_ff(const AstFF* dst,
+DotlibParser::parse_ff(const AstFF*& dst,
 		       AttrType attr_type,
 		       const FileRegion& attr_loc)
 {
@@ -217,15 +199,10 @@ DotlibParser::parse_ff(const AstFF* dst,
 }
 
 // @brief 'ff_bank' Group Statement のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
 bool
-DotlibParser::parse_ff_bank(const AstFFBank* dst,
+DotlibParser::parse_ff_bank(const AstFFBank*& dst,
 			    AttrType attr_type,
 			    const FileRegion& attr_loc)
 {
@@ -244,13 +221,8 @@ DotlibParser::parse_ff_bank(const AstFFBank* dst,
 }
 
 // @brief 'input_voltage' Group Statement のパースを行う．
-// @param[in] dst_list 結果を格納するリスト
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
-//
-// この属性は重複チェックは行わない．
 bool
 DotlibParser::parse_input_voltage(vector<const AstInputVoltage*>& dst_list,
 				  AttrType attr_type,
@@ -265,15 +237,10 @@ DotlibParser::parse_input_voltage(vector<const AstInputVoltage*>& dst_list,
 }
 
 // @brief 'latch' Group Statement のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
 bool
-DotlibParser::parse_latch(const AstLatch* dst,
+DotlibParser::parse_latch(const AstLatch*& dst,
 			  AttrType attr_type,
 			  const FileRegion& attr_loc)
 {
@@ -292,15 +259,10 @@ DotlibParser::parse_latch(const AstLatch* dst,
 }
 
 // @brief 'latch_bank' Group Statement のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
 bool
-DotlibParser::parse_latch_bank(const AstLatchBank* dst,
+DotlibParser::parse_latch_bank(const AstLatchBank*& dst,
 			       AttrType attr_type,
 			       const FileRegion& attr_loc)
 {
@@ -319,13 +281,8 @@ DotlibParser::parse_latch_bank(const AstLatchBank* dst,
 }
 
 // @brief 'Library' Group Statement のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
 bool
 DotlibParser::parse_library(const AstLibrary*& dst,
 			    AttrType attr_type,
@@ -346,13 +303,8 @@ DotlibParser::parse_library(const AstLibrary*& dst,
 }
 
 // @brief 'OutputVoltage' Group Statement のパースを行う．
-// @param[in] dst_list 結果を格納するリスト
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
-//
-// この属性は重複チェックは行わない．
 bool
 DotlibParser::parse_output_voltage(vector<const AstOutputVoltage*>& dst_list,
 				   AttrType attr_type,
@@ -367,9 +319,6 @@ DotlibParser::parse_output_voltage(vector<const AstOutputVoltage*>& dst_list,
 }
 
 // @brief 'pin' Group Statement のパースを行う．
-// @param[in] dst_list 結果を格納するリスト
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
 //
@@ -388,13 +337,8 @@ DotlibParser::parse_pin(vector<const AstPin*>& dst_list,
 }
 
 // @brief 'table' Group Statement のパースを行う．
-// @param[in] dst 結果を格納する変数
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
-//
-// すでに設定済みの属性に重複して設定しようとするとエラーになる．
 bool
 DotlibParser::parse_table(const AstLut*& dst,
 			  AttrType attr_type,
@@ -415,13 +359,8 @@ DotlibParser::parse_table(const AstLut*& dst,
 }
 
 // @brief 'lut_template' Group Statement のパースを行う．
-// @param[in] dst_list 結果を格納するリスト
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
-//
-// この属性は重複チェックは行わない．
 bool
 DotlibParser::parse_template(vector<const AstTemplate*>& dst_list,
 			     AttrType attr_type,
@@ -436,13 +375,8 @@ DotlibParser::parse_template(vector<const AstTemplate*>& dst_list,
 }
 
 // @brief 'timing' Group Statement のパースを行う．
-// @param[in] dst_list 結果を格納するリスト
-// @param[in] attr_type 属性の型
-// @param[in] attr_loc 属性のファイル上の位置
 // @retval true 正常にパーズした．
 // @retval false パーズ中にエラーが起こった．
-//
-// この属性は重複チェックは行わない．
 bool
 DotlibParser::parse_timing(vector<const AstTiming*>& dst_list,
 			   AttrType attr_type,

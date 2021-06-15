@@ -5,9 +5,8 @@
 /// @brief AstPin のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 #include "AstNameListNode.h"
@@ -26,12 +25,9 @@ class AstPin :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
-  AstPin(const FileRegion& attr_loc,
-	 const StrListHandler& header,
-	 const PinHandler& group);
+  AstPin(const FileRegion& attr_loc,   ///< [in] 属性のファイル上の位置
+	 const StrListHandler& header, ///< [in] ヘッダを読み込んだハンドラ
+	 const PinHandler& group);     ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief デストラクタ
   ~AstPin();
@@ -44,70 +40,114 @@ public:
 
   /// @brief "direction" を返す．
   const AstDirection*
-  direction() const;
+  direction() const
+  {
+    return mDirection;
+  }
 
   /// @brief "capacitance" を返す．
   const AstFloat*
-  capacitance() const;
+  capacitance() const
+  {
+    return mCapacitance;
+  }
 
   /// @brief "rise_capacitance" を返す．
   const AstFloat*
-  rise_capacitance() const;
+  rise_capacitance() const
+  {
+    return mRiseCapacitance;
+  }
 
   /// @brief "fall_capacitance" を返す．
   const AstFloat*
-  fall_capacitance() const;
+  fall_capacitance() const
+  {
+    return mFallCapacitance;
+  }
 
   /// @brief "max_fanout" を返す．
   const AstFloat*
-  max_fanout() const;
+  max_fanout() const
+  {
+    return mMaxFanout;
+  }
 
   /// @brief "min_fanout" を返す．
   const AstFloat*
-  min_fanout() const;
+  min_fanout() const
+  {
+    return mMinFanout;
+  }
 
   /// @brief "max_capacitance" を返す．
   const AstFloat*
-  max_capacitance() const;
+  max_capacitance() const
+  {
+    return mMaxCapacitance;
+  }
 
   /// @brief "min_capacitance" を返す．
   const AstFloat*
-  min_capacitance() const;
+  min_capacitance() const
+  {
+    return mMinCapacitance;
+  }
 
   /// @brief "max_transition" を返す．
   const AstFloat*
-  max_transition() const;
+  max_transition() const
+  {
+    return mMaxTransition;
+  }
 
   /// @brief "min_transition" を返す．
   const AstFloat*
-  min_transition() const;
+  min_transition() const
+  {
+    return mMinTransition;
+  }
 
   /// @brief "function" を返す．
   const AstExpr*
-  function() const;
+  function() const
+  {
+    return mFunction;
+  }
 
   /// @brief "three_state" を返す．
   const AstExpr*
-  three_state() const;
+  three_state() const
+  {
+    return mThreeState;
+  }
 
   /// @brief "internal_node" を返す．
   const AstString*
-  internal_node() const;
+  internal_node() const
+  {
+    return mInternalNode;
+  }
 
   /// @brief "pin_func_type" を返す．
   const AstString*
-  pin_func_type() const;
+  pin_func_type() const
+  {
+    return mPinFuncType;
+  }
 
   /// @brief 'timing' グループのリストを返す．
   AstArray<const AstTiming*>
-  timing_list() const;
+  timing_list() const
+  {
+    return mTimingList;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -161,131 +201,6 @@ private:
   AstArray<const AstTiming*> mTimingList;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief "direction" を返す．
-inline
-const AstDirection*
-AstPin::direction() const
-{
-  return mDirection;
-}
-
-// @brief "capacitance" を返す．
-inline
-const AstFloat*
-AstPin::capacitance() const
-{
-  return mCapacitance;
-}
-
-// @brief "rise_capacitance" を返す．
-inline
-const AstFloat*
-AstPin::rise_capacitance() const
-{
-  return mRiseCapacitance;
-}
-
-// @brief "fall_capacitance" を返す．
-inline
-const AstFloat*
-AstPin::fall_capacitance() const
-{
-  return mFallCapacitance;
-}
-
-// @brief "max_fanout" を返す．
-inline
-const AstFloat*
-AstPin::max_fanout() const
-{
-  return mMaxFanout;
-}
-
-// @brief "min_fanout" を返す．
-inline
-const AstFloat*
-AstPin::min_fanout() const
-{
-  return mMinFanout;
-}
-
-// @brief "max_capacitance" を返す．
-inline
-const AstFloat*
-AstPin::max_capacitance() const
-{
-  return mMaxCapacitance;
-}
-
-// @brief "min_capacitance" を返す．
-inline
-const AstFloat*
-AstPin::min_capacitance() const
-{
-  return mMinCapacitance;
-}
-
-// @brief "max_transition" を返す．
-inline
-const AstFloat*
-AstPin::max_transition() const
-{
-  return mMaxTransition;
-}
-
-// @brief "min_transition" を返す．
-inline
-const AstFloat*
-AstPin::min_transition() const
-{
-  return mMinTransition;
-}
-
-// @brief "function" を返す．
-inline
-const AstExpr*
-AstPin::function() const
-{
-  return mFunction;
-}
-
-// @brief "three_state" を返す．
-inline
-const AstExpr*
-AstPin::three_state() const
-{
-  return mThreeState;
-}
-
-// @brief "internal_node" を返す．
-inline
-const AstString*
-AstPin::internal_node() const
-{
-  return mInternalNode;
-}
-
-// @brief "pin_func_type" を返す．
-inline
-const AstString*
-AstPin::pin_func_type() const
-{
-  return mPinFuncType;
-}
-
-// @brief 'timing' グループのリストを返す．
-inline
-AstArray<const AstTiming*>
-AstPin::timing_list() const
-{
-  return mTimingList;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

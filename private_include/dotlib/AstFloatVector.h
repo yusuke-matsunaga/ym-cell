@@ -5,9 +5,8 @@
 /// @brief AstFloatVector のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "AstNode.h"
 
@@ -24,10 +23,8 @@ class AstFloatVector :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value_list 値のリスト
-  AstFloatVector(const FileRegion& loc,
-		 const vector<double>& value_list);
+  AstFloatVector(const FileRegion& loc,             ///< [in] ファイル上の位置
+		 const vector<double>& value_list); ///< [in] 値のリスト
 
   /// @brief デストラクタ
   ~AstFloatVector();
@@ -40,24 +37,32 @@ public:
 
   /// @brief ベクタの要素数を返す．
   int
-  size() const;
+  size() const
+  {
+    return mNum;
+  }
 
   /// @brief ベクタの要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   double
-  value(int pos) const;
+  value(int pos) const ///< [in] 位置番号 ( 0 <= pos < size() )
+  {
+    ASSERT_COND( pos >= 0 && pos < size() );
+
+    return mBody[pos];
+  }
 
   /// @brief ベクタの全体を取り出す．
-  /// @param[out] vector 結果を格納する変数
-  void
-  get_vector(vector<double>& vector) const;
+  vector<double>
+  get_vector() const
+  {
+    return vector<double>(&mBody[0], &mBody[size()]);
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -72,30 +77,6 @@ private:
   double mBody[1];
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief ベクタの要素数を返す．
-inline
-int
-AstFloatVector::size() const
-{
-  return mNum;
-}
-
-// @brief ベクタの要素を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < vector_size() )
-inline
-double
-AstFloatVector::value(int pos) const
-{
-  ASSERT_COND( pos >= 0 && pos < size() );
-
-  return mBody[pos];
-}
 
 END_NAMESPACE_YM_DOTLIB
 

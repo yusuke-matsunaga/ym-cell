@@ -41,8 +41,8 @@ FloatVectorHandler::initialize()
 bool
 FloatVectorHandler::read_value(int count)
 {
-  FileRegion loc;
-  return parser().read_float_vector(loc, mValueList);
+  FileRegion loc; // ダミー
+  return parser().read_float_vector(mValueList, loc);
 }
 
 // @brief end_header() 内で呼ばれる終了処理関数

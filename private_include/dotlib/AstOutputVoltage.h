@@ -5,7 +5,7 @@
 /// @brief AstOutputVoltage のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "AstNode.h"
@@ -23,12 +23,9 @@ class AstOutputVoltage :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
-  AstOutputVoltage(const FileRegion& attr_loc,
-		   const StrHandler& header,
-		   const OutputVoltageHandler& group);
+  AstOutputVoltage(const FileRegion& attr_loc,         ///< [in] 属性のファイル上の位置
+		   const StrHandler& header,	       ///< [in] ヘッダを読み込んだハンドラ
+		   const OutputVoltageHandler& group); ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief デストラクタ
   ~AstOutputVoltage();
@@ -41,30 +38,44 @@ public:
 
   /// @brief 名前を返す．
   const AstString*
-  name() const;
+  name() const
+  {
+    return mName;
+  }
 
   /// @brief 'vol' を返す．
   const AstExpr*
-  vol() const;
+  vol() const
+  {
+    return mVol;
+  }
 
   /// @brief 'voh' を返す．
   const AstExpr*
-  voh() const;
+  voh() const
+  {
+    return mVoh;
+  }
 
   /// @brief 'vomin' を返す．
   const AstExpr*
-  vomin() const;
+  vomin() const
+  {
+    return mVoMin;
+  }
 
   /// @brief 'vomax' を返す．
   const AstExpr*
-  vomax() const;
+  vomax() const
+  {
+    return mVoMax;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -94,51 +105,6 @@ private:
   const AstExpr* mVoMax;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 名前を返す．
-inline
-const AstString*
-AstOutputVoltage::name() const
-{
-  return mName;
-}
-
-// @brief 'vol' を返す．
-inline
-const AstExpr*
-AstOutputVoltage::vol() const
-{
-  return mVol;
-}
-
-// @brief 'voh' を返す．
-inline
-const AstExpr*
-AstOutputVoltage::voh() const
-{
-  return mVoh;
-}
-
-// @brief 'vomin' を返す．
-inline
-const AstExpr*
-AstOutputVoltage::vomin() const
-{
-  return mVoMin;
-}
-
-// @brief 'vomax' を返す．
-inline
-const AstExpr*
-AstOutputVoltage::vomax() const
-{
-  return mVoMax;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

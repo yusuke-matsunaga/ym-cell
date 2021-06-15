@@ -480,7 +480,7 @@ LibComp::_new_class(const LcSignature& rep_sig)
   int new_id = mClassList.size();
   LcClass* fclass = new LcClass(new_id, rep_sig);
   mClassList.push_back(fclass);
-  _find_idmap_list(rep_sig, fclass->mIdmapList);
+  fclass->mIdmapList = _find_idmap_list(rep_sig);
 
   return fclass;
 }
@@ -507,11 +507,11 @@ LibComp::_cannonical_map(const LcSignature& sig)
 // @brief 同位体変換リストを求める．
 // @param[in] sig シグネチャ
 // @param[out] idmap_list 同位体変換のリスト
-void
-LibComp::_find_idmap_list(const LcSignature& sig,
-			 vector<NpnMapM>& idmap_list)
+vector<NpnMapM>
+LibComp::_find_idmap_list(const LcSignature& sig)
 {
 #warning "TODO: 未完"
+  return vector<NpnMapM>{};
 }
 
 // @brief expr から生成されるパタンを登録する．

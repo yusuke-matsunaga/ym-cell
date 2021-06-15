@@ -24,7 +24,7 @@ public:
 
   /// @brief デストラクタ
   virtual
-  ~ClibBus() { }
+  ~ClibBus() = default;
 
 
 public:
@@ -48,10 +48,10 @@ public:
   pin_num() const = 0;
 
   /// @brief ピンの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
   virtual
   const ClibCellPin&
-  pin(int pos) const = 0;
+  pin(int pos) const ///< [in] 位置番号 ( 0 <= pos < pin_num() )
+  = 0;
 
 };
 

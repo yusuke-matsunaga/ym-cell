@@ -5,7 +5,7 @@
 /// @brief FLHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/GroupHandler.h"
@@ -37,8 +37,7 @@ class FLHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  FLHandler(DotlibParser& parser);
+  FLHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~FLHandler();

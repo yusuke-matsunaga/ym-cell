@@ -5,9 +5,8 @@
 /// @brief AstVarType の継承クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "AstNode.h"
 
@@ -24,10 +23,8 @@ class AstVarType :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
-  AstVarType(const FileRegion& loc,
-	     ClibVarType value);
+  AstVarType(const FileRegion& loc, ///< [in] ファイル上の位置
+	     ClibVarType value);    ///< [in] 値
 
   /// @brief デストラクタ
   ~AstVarType();
@@ -40,14 +37,16 @@ public:
 
   /// @brief VarType を返す．
   ClibVarType
-  value() const;
+  value() const
+  {
+    return mValue;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -59,19 +58,6 @@ private:
   ClibVarType mValue;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief VarType を返す．
-inline
-ClibVarType
-AstVarType::value() const
-{
-  return mValue;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

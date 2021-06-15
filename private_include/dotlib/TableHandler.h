@@ -5,7 +5,7 @@
 /// @brief TableHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/GroupHandler.h"
@@ -23,8 +23,7 @@ class TableHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  TableHandler(DotlibParser& parser);
+  TableHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~TableHandler();
@@ -37,43 +36,73 @@ public:
 
   /// @brief index_1 を返す．
   const AstFloatVector*
-  index_1() const;
+  index_1() const
+  {
+    return mIndex1;
+  }
 
   /// @brief index_2 を返す．
   const AstFloatVector*
-  index_2() const;
+  index_2() const
+  {
+    return mIndex2;
+  }
 
   /// @brief index_3 を返す．
   const AstFloatVector*
-  index_3() const;
+  index_3() const
+  {
+    return mIndex3;
+  }
 
   /// @brief values を返す．
   const AstFloatVector*
-  values() const;
+  values() const
+  {
+    return mValues;
+  }
 
   /// @brief coefs を返す．
   const AstFloatVector*
-  coefs() const;
+  coefs() const
+  {
+    return mCoefs;
+  }
 
   /// @brief orders を返す．
   const AstIntVector*
-  orders() const;
+  orders() const
+  {
+    return mOrders;
+  }
 
   /// @brief variable_1_range を返す．
   const AstFloat2*
-  variable_1_range() const;
+  variable_1_range() const
+  {
+    return mVar1Range;
+  }
 
   /// @brief variable_2_range を返す．
   const AstFloat2*
-  variable_2_range() const;
+  variable_2_range() const
+  {
+    return mVar2Range;
+  }
 
   /// @brief variable_3_range を返す．
   const AstFloat2*
-  variable_3_range() const;
+  variable_3_range() const
+  {
+    return mVar3Range;
+  }
 
   /// @brief domain を返す．
   const AstDomain*
-  domain() const;
+  domain() const
+  {
+    return mDomain;
+  }
 
 
 public:
@@ -134,91 +163,6 @@ private:
   const AstDomain* mDomain;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief index_1 を返す．
-inline
-const AstFloatVector*
-TableHandler::index_1() const
-{
-  return mIndex1;
-}
-
-// @brief index_2 を返す．
-inline
-const AstFloatVector*
-TableHandler::index_2() const
-{
-  return mIndex2;
-}
-
-// @brief index_3 を返す．
-inline
-const AstFloatVector*
-TableHandler::index_3() const
-{
-  return mIndex3;
-}
-
-// @brief values を返す．
-inline
-const AstFloatVector*
-TableHandler::values() const
-{
-  return mValues;
-}
-
-// @brief coefs を返す．
-inline
-const AstFloatVector*
-TableHandler::coefs() const
-{
-  return mCoefs;
-}
-
-// @brief orders を返す．
-inline
-const AstIntVector*
-TableHandler::orders() const
-{
-  return mOrders;
-}
-
-// @brief variable_1_range を返す．
-inline
-const AstFloat2*
-TableHandler::variable_1_range() const
-{
-  return mVar1Range;
-}
-
-// @brief variable_2_range を返す．
-inline
-const AstFloat2*
-TableHandler::variable_2_range() const
-{
-  return mVar2Range;
-}
-
-// @brief variable_3_range を返す．
-inline
-const AstFloat2*
-TableHandler::variable_3_range() const
-{
-  return mVar3Range;
-}
-
-// @brief domain を返す．
-inline
-const AstDomain*
-TableHandler::domain() const
-{
-  return mDomain;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

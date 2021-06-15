@@ -5,9 +5,8 @@
 /// @brief AstNode の継承クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "AstNode.h"
 
@@ -24,16 +23,14 @@ class AstCPType :
 public:
 
   // 値
-  enum Type { kL, kH, kN, kT, kX };
+  enum Type { L, H, N, T, X };
 
 
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
-  AstCPType(const FileRegion& loc,
-	    Type value);
+  AstCPType(const FileRegion& loc, ///< [in] ファイル上の位置
+	    Type value);           ///< [in] 値
 
   /// @brief デストラクタ
   ~AstCPType();
@@ -46,14 +43,16 @@ public:
 
   /// @brief 値を返す．
   Type
-  value() const;
+  value() const
+  {
+    return mValue;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -65,19 +64,6 @@ private:
   Type mValue;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief CellPinDirection を返す．
-inline
-AstCPType::Type
-AstCPType::value() const
-{
-  return mValue;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

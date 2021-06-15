@@ -5,9 +5,8 @@
 /// @brief LcClass のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "lc/libcomp_nsdef.h"
 #include "lc/LcSignature.h"
@@ -26,10 +25,8 @@ class LcClass
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] id ID番号
-  /// @param[in] rep_sig 代表シグネチャ
-  LcClass(int id,
-	  const LcSignature& rep_sig);
+  LcClass(int id,                      ///< [in] ID番号
+	  const LcSignature& rep_sig); ///< [in] 代表シグネチャ
 
   /// @brief デストラクタ
   ~LcClass();
@@ -42,24 +39,36 @@ public:
 
   /// @brief ID番号を返す．
   int
-  id() const;
+  id() const
+  {
+    return mId;
+  }
 
   /// @brief 代表シグネチャを返す．
   const LcSignature&
-  rep_sig() const;
+  rep_sig() const
+  {
+    return mRepSig;
+  }
 
   /// @brief 同位体変換のリストを返す．
   const vector<NpnMapM>&
-  idmap_list() const;
+  idmap_list() const
+  {
+    return mIdmapList;
+  }
 
   /// @brief このクラスに属しているグループのリストを返す．
   const vector<LcGroup*>&
-  group_list() const;
+  group_list() const
+  {
+    return mGroupList;
+  }
 
   /// @brief グループを追加する．
   void
-  add_group(LcGroup* group,
-	    const NpnMapM& map);
+  add_group(LcGroup* group,      ///< [in] グループ
+	    const NpnMapM& map); ///< [in] 代表シグネチャへの変換マップ
 
 
 private:
@@ -80,43 +89,6 @@ private:
   vector<LcGroup*> mGroupList;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief ID番号を返す．
-inline
-int
-LcClass::id() const
-{
-  return mId;
-}
-
-// @brief 代表シグネチャを返す．
-inline
-const LcSignature&
-LcClass::rep_sig() const
-{
-  return mRepSig;
-}
-
-// @brief 同位体変換のリストを返す．
-inline
-const vector<NpnMapM>&
-LcClass::idmap_list() const
-{
-  return mIdmapList;
-}
-
-// @brief このクラスに属しているグループのリストを返す．
-inline
-const vector<LcGroup*>&
-LcClass::group_list() const
-{
-  return mGroupList;
-}
 
 END_NAMESPACE_YM_CLIB_LIBCOMP
 

@@ -5,9 +5,8 @@
 /// @brief AstExpr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "AstNode.h"
 #include "ym/Expr.h"
@@ -48,8 +47,7 @@ public:
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc 位置情報
-  AstExpr(const FileRegion& loc);
+  AstExpr(const FileRegion& loc); ///< [in] 位置情報
 
   /// @brief デストラクタ
   ~AstExpr();
@@ -106,11 +104,11 @@ public:
   opr2() const;
 
   /// @brief Expr を作る．
-  /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   virtual
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const = 0;
+  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+    const = 0;
 
 };
 
@@ -127,10 +125,8 @@ class AstBoolExpr :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] loc 位置情報
-  /// @param[in] val 値
-  AstBoolExpr(const FileRegion& loc,
-	      bool val);
+  AstBoolExpr(const FileRegion& loc, ///< [in] 位置情報
+	      bool val);             ///< [in] 値
 
   /// @brief デストラクタ
   ~AstBoolExpr();
@@ -152,17 +148,16 @@ public:
   bool_value() const override;
 
   /// @brief Expr を作る．
-  /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override;
+  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+    const override;
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -194,10 +189,8 @@ class AstFloatExpr :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] loc 位置情報
-  /// @param[in] val 値
-  AstFloatExpr(const FileRegion& loc,
-	       double val);
+  AstFloatExpr(const FileRegion& loc, ///< [in] 位置情報
+	       double val);           ///< [in] 値
 
   /// @brief デストラクタ
   ~AstFloatExpr();
@@ -219,17 +212,16 @@ public:
   float_value() const override;
 
   /// @brief Expr を作る．
-  /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override;
+  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+    const override;
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -261,10 +253,8 @@ class AstStrExpr :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] loc 位置情報
-  /// @param[in] val 値
-  AstStrExpr(const FileRegion& loc,
-	     const ShString& val);
+  AstStrExpr(const FileRegion& loc, ///< [in] 位置情報
+	     const ShString& val);  ///< [in] 値
 
   /// @brief デストラクタ
   ~AstStrExpr();
@@ -286,17 +276,16 @@ public:
   string_value() const override;
 
   /// @brief Expr を作る．
-  /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override;
+  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+    const override;
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -327,10 +316,8 @@ class AstSymbolExpr :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] type シンボルの種類(VDD, VSS, VCC)
-  AstSymbolExpr(const FileRegion& loc,
-		Type type);
+  AstSymbolExpr(const FileRegion& loc, ///< [in] ファイル上の位置
+		Type type);            ///< [in] シンボルの種類(VDD, VSS, VCC)
 
   /// @brief デストラクタ
   ~AstSymbolExpr();
@@ -346,17 +333,16 @@ public:
   type() const override;
 
   /// @brief Expr を作る．
-  /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override;
+  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+    const override;
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -388,10 +374,8 @@ class AstNot :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] opr オペランド
-  AstNot(const FileRegion& loc,
-	 const AstExpr* opr);
+  AstNot(const FileRegion& loc, ///< [in] ファイル上の位置
+	 const AstExpr* opr);   ///< [in] オペランド
 
   /// @brief デストラクタ
    ~AstNot();
@@ -407,22 +391,22 @@ public:
   type() const override;
 
   /// @brief 第一オペランドを返す．
-  /// @note type() が演算子の型の時のみ意味を持つ．
+  ///
+  /// type() が演算子の型の時のみ意味を持つ．
   const AstExpr*
   opr1() const override;
 
   /// @brief Expr を作る．
-  /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override;
+  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+    const override;
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -448,11 +432,9 @@ class AstOpr :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] type 演算子の型
-  /// @param[in] opr1, opr2 オペランド
-  AstOpr(Type type,
-	 const AstExpr* opr1,
-	 const AstExpr* opr2);
+  AstOpr(Type type,            ///< [in] 演算子の型
+	 const AstExpr* opr1,  ///< [in] 第1オペランド
+	 const AstExpr* opr2); ///< [in] 第2オペランド
 
   /// @brief デストラクタ
   ~AstOpr();
@@ -472,27 +454,28 @@ public:
   is_opr() const override;
 
   /// @brief 第一オペランドを返す．
-  /// @note type() が演算子の型の時のみ意味を持つ．
+  ///
+  ///  type() が演算子の型の時のみ意味を持つ．
   const AstExpr*
   opr1() const override;
 
   /// @brief 第二オペランドを返す．
-  /// @note type() が演算子の型の時のみ意味を持つ．
+  ///
+  /// type() が演算子の型の時のみ意味を持つ．
   const AstExpr*
   opr2() const override;
 
   /// @brief Expr を作る．
-  /// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override;
+  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+    const override;
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:

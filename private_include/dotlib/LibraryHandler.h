@@ -5,7 +5,7 @@
 /// @brief LibraryHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/GroupHandler.h"
@@ -25,8 +25,7 @@ class LibraryHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  LibraryHandler(DotlibParser& parser);
+  LibraryHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~LibraryHandler();

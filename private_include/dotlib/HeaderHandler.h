@@ -5,9 +5,8 @@
 /// @brief HeaderHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/DotlibHandler.h"
 
@@ -50,11 +49,9 @@ class HeaderHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  HeaderHandler(DotlibParser& parser);
+  HeaderHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
-  virtual
   ~HeaderHandler();
 
 
@@ -65,11 +62,17 @@ public:
 
   /// @brief '(' のファイル上の位置を返す．
   const FileRegion&
-  first_loc() const;
+  first_loc() const
+  {
+    return mFirstLoc;
+  }
 
   /// @brief ')' のファイル上の位置を返す．
   const FileRegion&
-  last_loc() const;
+  last_loc() const
+  {
+    return mLastLoc;
+  }
 
 
 public:
@@ -78,29 +81,25 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダの開始処理
-  /// @param[in] loc '(' のファイル上の位置
   ///
   /// '(' を読み込んだ時に呼ばれる．
   void
-  begin_header(const FileRegion& loc);
+  begin_header(const FileRegion& loc); ///< [in] '(' のファイル上の位置
 
   /// @brief ヘッダの値を読み込む処理
-  /// @param[in] count read_header_value() の呼ばれた回数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  read_header_value(int count);
+  read_header_value(int count); ///< [in] read_header_value() の呼ばれた回数
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] loc ')' のファイル上の位置
-  /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   ///
   /// ')' を読み込んだ直後に呼ばれる．
   bool
-  end_header(const FileRegion& loc,
-	     int count);
+  end_header(const FileRegion& loc, ///< [in] ')' のファイル上の位置
+	     int count);            ///< [in] 読み込んだ要素数
 
 
 private:
@@ -109,28 +108,27 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダの開始処理
+  ///
   /// '(' を読み込んだ時に呼ばれる．
   virtual
   void
   _begin_header() = 0;
 
   /// @brief ヘッダの値を読み込む処理
-  /// @param[in] count read_header_value() の呼ばれた回数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   virtual
   bool
-  _read_header_value(int count) = 0;
+  _read_header_value(int count) = 0; ///< [in] read_header_value() の呼ばれた回数
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @param[in] count 読み込んだ要素数
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   ///
   /// ')' を読み込んだ直後に呼ばれる．
   virtual
   bool
-  _end_header(int count) = 0;
+  _end_header(int count) = 0; ///< [in] 読み込んだ要素数
 
 
 private:
@@ -145,27 +143,6 @@ private:
   FileRegion mLastLoc;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief '(' のファイル上の位置を返す．
-inline
-const FileRegion&
-HeaderHandler::first_loc() const
-{
-  return mFirstLoc;
-}
-
-// @brief ')' のファイル上の位置を返す．
-inline
-const FileRegion&
-HeaderHandler::last_loc() const
-{
-  return mLastLoc;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

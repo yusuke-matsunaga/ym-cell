@@ -5,7 +5,7 @@
 /// @brief AstInputVoltage のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "AstNode.h"
@@ -23,12 +23,9 @@ class AstInputVoltage :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
-  AstInputVoltage(const FileRegion& attr_loc,
-		  const StrHandler& header,
-		  const InputVoltageHandler& group);
+  AstInputVoltage(const FileRegion& attr_loc,        ///< [in] 属性のファイル上の位置
+		  const StrHandler& header,          ///< [in] ヘッダを読み込んだハンドラ
+		  const InputVoltageHandler& group); ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief デストラクタ
   ~AstInputVoltage();
@@ -41,30 +38,44 @@ public:
 
   /// @brief 名前を返す．
   const AstString*
-  name() const;
+  name() const
+  {
+    return mName;
+  }
 
   /// @brief 'vil' を返す．
   const AstExpr*
-  vil() const;
+  vil() const
+  {
+    return mVil;
+  }
 
   /// @brief 'vih' を返す．
   const AstExpr*
-  vih() const;
+  vih() const
+  {
+    return mVih;
+  }
 
   /// @brief 'vimin' を返す．
   const AstExpr*
-  vimin() const;
+  vimin() const
+  {
+    return mViMin;
+  }
 
   /// @brief 'vimax' を返す．
   const AstExpr*
-  vimax() const;
+  vimax() const
+  {
+    return mViMax;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -94,51 +105,6 @@ private:
   const AstExpr* mViMax;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 名前を返す．
-inline
-const AstString*
-AstInputVoltage::name() const
-{
-  return mName;
-}
-
-// @brief 'vil' を返す．
-inline
-const AstExpr*
-AstInputVoltage::vil() const
-{
-  return mVil;
-}
-
-// @brief 'vih' を返す．
-inline
-const AstExpr*
-AstInputVoltage::vih() const
-{
-  return mVih;
-}
-
-// @brief 'vimin' を返す．
-inline
-const AstExpr*
-AstInputVoltage::vimin() const
-{
-  return mViMin;
-}
-
-// @brief 'vimax' を返す．
-inline
-const AstExpr*
-AstInputVoltage::vimax() const
-{
-  return mViMax;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

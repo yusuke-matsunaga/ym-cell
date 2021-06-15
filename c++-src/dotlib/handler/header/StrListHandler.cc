@@ -43,12 +43,14 @@ StrListHandler::_begin_header()
 bool
 StrListHandler::_read_header_value(int count)
 {
-  const AstString* str;
-  bool stat = parser().read_string(str);
-  if ( stat ) {
+  auto str = parser().read_string();
+  if ( str ) {
     mValue.push_back(str);
+    return true;
   }
-  return stat;
+  else {
+    return false;
+  }
 }
 
 // @brief 読み込みが終了した時の処理を行う．

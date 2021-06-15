@@ -5,9 +5,8 @@
 /// @brief ClibCellPin のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 #include "ym/logic.h"
@@ -26,7 +25,7 @@ protected:
 
   /// @brief デストラクタ
   virtual
-  ~ClibCellPin() { }
+  ~ClibCellPin() = default;
 
 
 public:
@@ -50,25 +49,29 @@ public:
   direction() const = 0;
 
   /// @brief 入力ピンの時に true を返す．
-  /// @note direction() == kInput と等価
+  ///
+  /// direction() == ClibDirection::Input と等価
   virtual
   bool
   is_input() const = 0;
 
   /// @brief 出力ピンの時に true を返す．
-  /// @note direction() == kOutput と等価
+  ///
+  /// direction() == ClibDirection::Output と等価
   virtual
   bool
   is_output() const = 0;
 
   /// @brief 入出力ピンの時に true を返す．
-  /// @note direction() == kInout と等価
+  ///
+  /// direction() == ClibDirection::Inout と等価
   virtual
   bool
   is_inout() const = 0;
 
   /// @brief 内部ピンの時に true を返す．
-  /// @note direction() == kInternal と等価
+  ///
+  /// direction() == ClibDirection::Internal と等価
   virtual
   bool
   is_internal() const = 0;
@@ -80,7 +83,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入力ピン番号を返す．
-  /// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
+  ///
+  /// 入力ピンもしくは入出力ピンの時のみ意味を持つ．
   virtual
   int
   input_id() const = 0;
@@ -107,7 +111,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 出力ピン番号を返す．
-  /// @note 出力ピンもしくは入出力ピンの時のみ意味を持つ．
+  ///
+  /// 出力ピンもしくは入出力ピンの時のみ意味を持つ．
   virtual
   int
   output_id() const = 0;
@@ -169,7 +174,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内部ピン番号を返す．
-  /// @note 内部ピンの時のみ意味を持つ．
+  ///
+  /// 内部ピンの時のみ意味を持つ．
   virtual
   int
   internal_id() const = 0;
@@ -181,10 +187,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   virtual
   void
-  dump(ostream& s) const = 0;
+  dump(ostream& s) const ///< [in] 出力先のストリーム
+  = 0;
 
 };
 

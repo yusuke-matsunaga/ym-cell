@@ -51,18 +51,6 @@ AstStrList::~AstStrList()
 {
 }
 
-// @brief リストを取り出す．
-// @param[out] vector リストを格納する変数
-void
-AstStrList::get_vector(vector<const AstString*>& vector) const
-{
-  vector.clear();
-  vector.resize(mNum);
-  for ( auto i: Range(mNum) ) {
-    vector[i] = value(i);
-  }
-}
-
 // @brief 内容をストリーム出力する．
 // @param[in] s 出力先のストリーム
 // @param[in] indent インデント量

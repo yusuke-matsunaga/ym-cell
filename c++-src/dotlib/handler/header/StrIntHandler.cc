@@ -43,10 +43,12 @@ bool
 StrIntHandler::read_value(int count)
 {
   if ( count == 0 ) {
-    return parser().read_string(mValue1);
+    mValue1 = parser().read_string();
+    return mValue1 != nullptr;
   }
   else {
-    return parser().read_int(mValue2);
+    mValue2 = parser().read_int();
+    return mValue2 != nullptr;
   }
 }
 

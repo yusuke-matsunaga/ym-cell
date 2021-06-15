@@ -5,12 +5,12 @@
 /// @brief LcGroup.h
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "lc/libcomp_nsdef.h"
 #include "ym/NpnMapM.h"
+
 
 BEGIN_NAMESPACE_YM_CLIB
 
@@ -31,8 +31,7 @@ class LcGroup
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] id ID番号
-  LcGroup(int id);
+  LcGroup(int id); ///< [in] ID番号
 
   /// @brief デストラクタ
   ~LcGroup();
@@ -61,9 +60,8 @@ public:
   cell_list() const;
 
   /// @brief セルを追加する．
-  /// @param[in] cell セル
   void
-  add_cell(CiCell* cell);
+  add_cell(CiCell* cell); ///< [in] 追加するセル
 
 
 private:

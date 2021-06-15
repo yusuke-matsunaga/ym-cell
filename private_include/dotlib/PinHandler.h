@@ -5,7 +5,7 @@
 /// @brief PinHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/GroupHandler.h"
@@ -149,8 +149,7 @@ class PinHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  PinHandler(DotlibParser& parser);
+  PinHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~PinHandler();

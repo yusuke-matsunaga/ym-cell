@@ -5,9 +5,8 @@
 /// @brief AstTemplate のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 #include "AstNode.h"
@@ -25,13 +24,9 @@ class AstTemplate :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダのハンドラ
-  /// @param[in] group グループ本体のハンドラ
-  AstTemplate(const FileRegion& attr_loc,
-	      const StrHandler& header,
-	      const TemplateHandler& group);
+  AstTemplate(const FileRegion& attr_loc,    ///< [in] ファイル上の位置
+	      const StrHandler& header,	     ///< [in] ヘッダのハンドラ
+	      const TemplateHandler& group); ///< [in] グループ本体のハンドラ
 
   /// @brief デストラクタ
   ~AstTemplate();
@@ -44,48 +39,74 @@ public:
 
   /// @brief 名前を返す．
   const AstString*
-  name() const;
+  name() const
+  {
+    return mName;
+  }
 
   /// @brief 次元数を返す．
   int
-  dimension() const;
+  dimension() const
+  {
+    return mDimension;
+  }
 
   /// @brief 'variable_1' を返す．
   const AstVarType*
-  variable_1() const;
+  variable_1() const
+  {
+    return mVar1;
+  }
 
   /// @brief 'variable_2' を返す．
   const AstVarType*
-  variable_2() const;
+  variable_2() const
+  {
+    return mVar2;
+  }
 
   /// @brief 'variable_3' を返す．
   const AstVarType*
-  variable_3() const;
+  variable_3() const
+  {
+    return mVar3;
+  }
 
   /// @brief 'index_1' を返す．
   const AstFloatVector*
-  index_1() const;
+  index_1() const
+  {
+    return mIndex1;
+  }
 
   /// @brief 'index_2' を返す．
   const AstFloatVector*
-  index_2() const;
+  index_2() const
+  {
+    return mIndex2;
+  }
 
   /// @brief 'index_3' を返す．
   const AstFloatVector*
-  index_3() const;
+  index_3() const
+  {
+    return mIndex3;
+  }
 
   /// @brief 'domain' のノードを返す．
   ///
   /// 未定義なら nullptr を返す．
   const AstDomain*
-  domain() const;
+  domain() const
+  {
+    return mDomain;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -121,85 +142,6 @@ private:
   const AstDomain* mDomain;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 名前を返す．
-inline
-const AstString*
-AstTemplate::name() const
-{
-  return mName;
-}
-
-// @brief 次元数を返す．
-inline
-int
-AstTemplate::dimension() const
-{
-  return mDimension;
-}
-
-// @brief 'variable_1' を返す．
-inline
-const AstVarType*
-AstTemplate::variable_1() const
-{
-  return mVar1;
-}
-
-// @brief 'variable_2' を返す．
-inline
-const AstVarType*
-AstTemplate::variable_2() const
-{
-  return mVar2;
-}
-
-// @brief 'variable_3' を返す．
-inline
-const AstVarType*
-AstTemplate::variable_3() const
-{
-  return mVar3;
-}
-
-// @brief 'index_1' を返す．
-inline
-const AstFloatVector*
-AstTemplate::index_1() const
-{
-  return mIndex1;
-}
-
-/// @brief 'index_2' を返す．
-inline
-const AstFloatVector*
-AstTemplate::index_2() const
-{
-  return mIndex2;
-}
-
-// @brief 'index_3' を返す．
-inline
-const AstFloatVector*
-AstTemplate::index_3() const
-{
-  return mIndex3;
-}
-
-// @brief 'domain' のノードを返す．
-//
-// 未定義なら nullptr を返す．
-inline
-const AstDomain*
-AstTemplate::domain() const
-{
-  return mDomain;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

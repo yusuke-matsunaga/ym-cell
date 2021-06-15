@@ -5,9 +5,8 @@
 /// @brief AstStrFloat のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 #include "AstNode.h"
@@ -25,8 +24,7 @@ class AstStrFloat :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] handler ハンドラ
-  AstStrFloat(const StrFloatHandler& handler);
+  AstStrFloat(const StrFloatHandler& handler); ///< [in] ハンドラ
 
   /// @brief デストラクタ
   ~AstStrFloat();
@@ -39,18 +37,23 @@ public:
 
   /// @brief 値1を得る．
   const AstString*
-  value1() const;
+  value1() const
+  {
+    return mVal1;
+  }
 
   /// @brief 値2を得る．
   const AstFloat*
-  value2() const;
+  value2() const
+  {
+    return mVal2;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -71,26 +74,6 @@ private:
   const AstFloat* mVal2;
 
 };
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 値1を得る．
-inline
-const AstString*
-AstStrFloat::value1() const
-{
-  return mVal1;
-}
-
-// @brief 値2を得る．
-inline
-const AstFloat*
-AstStrFloat::value2() const
-{
-  return mVal2;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

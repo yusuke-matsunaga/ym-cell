@@ -5,9 +5,8 @@
 /// @brief FloatVectorListHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/HeaderHandler.h"
 
@@ -26,8 +25,7 @@ class FloatVectorListHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  FloatVectorListHandler(DotlibParser& parser);
+  FloatVectorListHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~FloatVectorListHandler();
@@ -40,7 +38,10 @@ public:
 
   /// @brief 読み込んだ値を返す．
   const vector<double>&
-  value_list() const;
+  value_list() const
+  {
+    return mValueList;
+  }
 
 
 private:
@@ -82,19 +83,6 @@ private:
   vector<double> mValueList;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 読み込んだ値を返す．
-inline
-const vector<double>&
-FloatVectorListHandler::value_list() const
-{
-  return mValueList;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

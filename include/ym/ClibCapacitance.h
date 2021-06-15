@@ -5,9 +5,8 @@
 /// @brief ClibCapacitance のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 
@@ -18,6 +17,9 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @ingroup ClibGroup
 /// @class ClibCapacitance ClibCapacitance.h "ym/ClibCapacitance.h"
 /// @brief 容量値を表すクラス
+///
+/// 内容はただの double だが他の数値型との演算を禁止するために独立
+/// したクラスとしている．
 //////////////////////////////////////////////////////////////////////
 class ClibCapacitance
 {
@@ -27,11 +29,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 空のコンストラクタ
+  ///
+  /// 内容は 0.0 に初期化される．
   ClibCapacitance() = default;
 
   /// @brief double からの変換コンストラクタ
   explicit
-  ClibCapacitance(double v);
+  ClibCapacitance(double v) : ///< [in] 設定する値
+    mValue{v}
+  {
+  }
 
   /// @brief デストラクタ
   ~ClibCapacitance() = default;
@@ -45,7 +52,10 @@ public:
   /// @brief 無限大の値を作る．
   static
   ClibCapacitance
-  infty();
+  infty()
+  {
+    return ClibCapacitance(std::numeric_limits<double>::max());
+  }
 
 
 public:
@@ -55,7 +65,10 @@ public:
 
   /// @brief 値を得る．
   double
-  value() const;
+  value() const
+  {
+    return mValue;
+  }
 
 
 public:
@@ -65,15 +78,27 @@ public:
 
   /// @brief 代入演算子
   const ClibCapacitance&
-  operator=(const ClibCapacitance& src);
+  operator=(const ClibCapacitance& src) ///< [in] コピー元のオブジェクト
+  {
+    mValue = src.mValue;
+    return *this;
+  }
 
   /// @brief 加算付き代入演算子
   const ClibCapacitance&
-  operator+=(const ClibCapacitance& src);
+  operator+=(const ClibCapacitance& src) ///< [in] オペランド
+  {
+    mValue += src.mValue;
+    return *this;
+  }
 
   /// @brief 減算付き代入演算子
   const ClibCapacitance&
-  operator-=(const ClibCapacitance& src);
+  operator-=(const ClibCapacitance& src) ///< [in] オペランド
+  {
+    mValue -= src.mValue;
+    return *this;
+  }
 
 
 private:
@@ -87,233 +112,101 @@ private:
 };
 
 /// @brief 加算
-/// @param[in] left, right オペランド
 /// @relates ClibCapacitance
-ClibCapacitance
-operator+(const ClibCapacitance& left,
-	  const ClibCapacitance& right);
-
-/// @brief 減算
-/// @param[in] left, right オペランド
-/// @relates ClibCapacitance
-ClibCapacitance
-operator-(const ClibCapacitance& left,
-	  const ClibCapacitance& right);
-
-/// @brief 等価比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibCapacitance
-bool
-operator==(const ClibCapacitance& left,
-	   const ClibCapacitance& right);
-
-/// @brief 非等価比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibCapacitance
-bool
-operator!=(const ClibCapacitance& left,
-	   const ClibCapacitance& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibCapacitance
-bool
-operator<(const ClibCapacitance& left,
-	  const ClibCapacitance& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibCapacitance
-bool
-operator>(const ClibCapacitance& left,
-	  const ClibCapacitance& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibCapacitance
-bool
-operator<=(const ClibCapacitance& left,
-	   const ClibCapacitance& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibCapacitance
-bool
-operator>=(const ClibCapacitance& left,
-	   const ClibCapacitance& right);
-
-/// @brief ストリーム出力
-/// @param[in] s 出力先のストリーム
-/// @param[in] val 値
-/// @relates ClibCapacitance
-ostream&
-operator<<(ostream& s,
-	   const ClibCapacitance& val);
-
-/// @brief ストリーム入力
-/// @param[in] s 入力元のストリーム
-/// @param[out] val 読み出された値
-/// @relates ClibCapacitance
-istream&
-operator>>(istream& s,
-	   ClibCapacitance& val);
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief double からの変換コンストラクタ
-inline
-ClibCapacitance::ClibCapacitance(double v) :
-  mValue{v}
-{
-}
-
-// @brief 無限大の値を作る．
 inline
 ClibCapacitance
-ClibCapacitance::infty()
-{
-  return ClibCapacitance(std::numeric_limits<double>::max());
-}
-
-// @brief 値を得る．
-inline
-double
-ClibCapacitance::value() const
-{
-  return mValue;
-}
-
-// @brief 代入演算子
-inline
-const ClibCapacitance&
-ClibCapacitance::operator=(const ClibCapacitance& src)
-{
-  mValue = src.mValue;
-  return *this;
-}
-
-// @brief 加算付き代入演算子
-inline
-const ClibCapacitance&
-ClibCapacitance::operator+=(const ClibCapacitance& src)
-{
-  mValue += src.mValue;
-  return *this;
-}
-
-// @brief 減算付き代入演算子
-inline
-const ClibCapacitance&
-ClibCapacitance::operator-=(const ClibCapacitance& src)
-{
-  mValue -= src.mValue;
-  return *this;
-}
-
-// @brief 加算
-inline
-ClibCapacitance
-operator+(const ClibCapacitance& left,
-	  const ClibCapacitance& right)
+operator+(const ClibCapacitance& left,  ///< [in] 左のオペランド
+	  const ClibCapacitance& right)	///< [in] 右のオペランド
 {
   return ClibCapacitance(left).operator+=(right);
 }
 
-// @brief 減算
+/// @brief 減算
+/// @relates ClibCapacitance
 inline
 ClibCapacitance
-operator-(const ClibCapacitance& left,
-	  const ClibCapacitance& right)
+operator-(const ClibCapacitance& left,  ///< [in] 左のオペランド
+	  const ClibCapacitance& right)	///< [in] 右のオペランド
 {
   return ClibCapacitance(left).operator-=(right);
 }
 
-// @brief 等価比較演算子
-// @param[in] left, right オペランド
-// @relates ClibCapacitance
+/// @brief 等価比較演算子
+/// @relates ClibCapacitance
 inline
 bool
-operator==(const ClibCapacitance& left,
-	   const ClibCapacitance& right)
+operator==(const ClibCapacitance& left,  ///< [in] 左のオペランド
+	   const ClibCapacitance& right) ///< [in] 右のオペランド
 {
   return left.value() == right.value();
 }
 
-// @brief 非等価比較演算子
-// @param[in] left, right オペランド
-// @relates ClibCapacitance
+/// @brief 非等価比較演算子
+/// @relates ClibCapacitance
 inline
 bool
-operator!=(const ClibCapacitance& left,
-	   const ClibCapacitance& right)
+operator!=(const ClibCapacitance& left,  ///< [in] 左のオペランド
+	   const ClibCapacitance& right) ///< [in] 右のオペランド
 {
   return !operator==(left, right);
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibCapacitance
+/// @brief 大小比較演算子
+/// @relates ClibCapacitance
 inline
 bool
-operator<(const ClibCapacitance& left,
-	  const ClibCapacitance& right)
+operator<(const ClibCapacitance& left,  ///< [in] 左のオペランド
+	  const ClibCapacitance& right)	///< [in] 右のオペランド
 {
   return left.value() < right.value();
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibCapacitance
+/// @brief 大小比較演算子
+/// @relates ClibCapacitance
 inline
 bool
-operator>(const ClibCapacitance& left,
-	  const ClibCapacitance& right)
+operator>(const ClibCapacitance& left,  ///< [in] 左のオペランド
+	  const ClibCapacitance& right)	///< [in] 右のオペランド
 {
   return operator<(right, left);
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibCapacitance
+/// @brief 大小比較演算子
+/// @relates ClibCapacitance
 inline
 bool
-operator<=(const ClibCapacitance& left,
-	   const ClibCapacitance& right)
+operator<=(const ClibCapacitance& left,  ///< [in] 左のオペランド
+	   const ClibCapacitance& right) ///< [in] 右のオペランド
 {
   return !operator<(right, left);
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibCapacitance
+/// @brief 大小比較演算子
+/// @relates ClibCapacitance
 inline
 bool
-operator>=(const ClibCapacitance& left,
-	   const ClibCapacitance& right)
+operator>=(const ClibCapacitance& left,  ///< [in] 左のオペランド
+	   const ClibCapacitance& right) ///< [in] 右のオペランド
 {
   return !operator<(left, right);
 }
 
-// @brief ストリーム出力
+/// @brief ストリーム出力
+/// @relates ClibCapacitance
 inline
 ostream&
-operator<<(ostream& s,
-	   const ClibCapacitance& val)
+operator<<(ostream& s,                 ///< [in] 出力先のストリーム
+	   const ClibCapacitance& val) ///< [in] 値
 {
   return s << val.value();
 }
 
-// @brief ストリーム入力
-// @param[in] s 入力元のストリーム
-// @param[out] val 読み出された値
-// @relates ClibCapacitance
+/// @brief ストリーム入力
+/// @relates ClibCapacitance
 inline
 istream&
-operator>>(istream& s,
-	   ClibCapacitance& val)
+operator>>(istream& s,           ///< [in] 入力元のストリーム
+	   ClibCapacitance& val) ///< [out] 読み出された値を格納する変数
 {
   double tmp;
   s >> tmp;

@@ -5,9 +5,8 @@
 /// @brief AstMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/dotlib_nsdef.h"
 #include "dotlib/AttrType.h"
@@ -61,89 +60,71 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief + 演算子を表す AstExpr を生成する．
-  /// @param[in] opr1, opr2 オペランド
   const AstExpr*
-  new_plus(const AstExpr* opr1,
-	   const AstExpr* opr2);
+  new_plus(const AstExpr* opr1,  ///< [in] 第1オペランド
+	   const AstExpr* opr2); ///< [in] 第2オペランド
 
   /// @brief - 演算子を表す AstExpr を生成する．
-  /// @param[in] opr1, opr2 オペランド
   const AstExpr*
-  new_minus(const AstExpr* opr1,
-	    const AstExpr* opr2);
+  new_minus(const AstExpr* opr1,  ///< [in] 第1オペランド
+	    const AstExpr* opr2); ///< [in] 第2オペランド
 
   /// @brief * 演算子を表す AstExpr を生成する．
-  /// @param[in] opr1, opr2 オペランド
   const AstExpr*
-  new_mult(const AstExpr* opr1,
-	   const AstExpr* opr2);
+  new_mult(const AstExpr* opr1,  ///< [in] 第1オペランド
+	   const AstExpr* opr2); ///< [in] 第2オペランド
 
   /// @brief / 演算子を表す AstExpr を生成する．
-  /// @param[in] opr1, opr2 オペランド
   const AstExpr*
-  new_div(const AstExpr* opr1,
-	  const AstExpr* opr2);
+  new_div(const AstExpr* opr1,  ///< [in] 第1オペランド
+	  const AstExpr* opr2);	///< [in] 第2オペランド
 
   /// @brief NOT 演算子を表す AstExpr を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] opr オペランド
   const AstExpr*
-  new_not(const FileRegion& loc,
-	  const AstExpr* opr);
+  new_not(const FileRegion& loc, ///< [in] ファイル上の位置
+	  const AstExpr* opr);   ///< [in] オペランド
 
   /// @brief AND 演算子を表す AstExpr を生成する．
-  /// @param[in] opr1, opr2 オペランド
   const AstExpr*
-  new_and(const AstExpr* opr1,
-	  const AstExpr* opr2);
+  new_and(const AstExpr* opr1,  ///< [in] 第1オペランド
+	  const AstExpr* opr2);	///< [in] 第2オペランド
 
   /// @brief OR 演算子を表す AstExpr を生成する．
-  /// @param[in] opr1, opr2 オペランド
   const AstExpr*
-  new_or(const AstExpr* opr1,
-	 const AstExpr* opr2);
+  new_or(const AstExpr* opr1,  ///< [in] 第1オペランド
+	 const AstExpr* opr2); ///< [in] 第2オペランド
 
   /// @brief XOR 演算子を表す AstExpr を生成する．
-  /// @param[in] opr1, opr2 オペランド
   const AstExpr*
-  new_xor(const AstExpr* opr1,
-	  const AstExpr* opr2);
+  new_xor(const AstExpr* opr1,  ///< [in] 第1オペランド
+	  const AstExpr* opr2);	///< [in] 第2オペランド
 
   /// @brief ブール値(0 or 1)を表す AstExpr を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] val 値
   const AstExpr*
-  new_bool_expr(const FileRegion& loc,
-		bool val);
+  new_bool_expr(const FileRegion& loc, ///< [in] ファイル上の位置
+		bool val);             ///< [in] 値
 
   /// @brief 実数値を表す AstExpr を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] val 値
   const AstExpr*
-  new_float_expr(const FileRegion& loc,
-		 double val);
+  new_float_expr(const FileRegion& loc, ///< [in] ファイル上の位置
+		 double val);		///< [in] 値
 
   /// @brief VDDを表す AstExpr を生成する．
-  /// @param[in] loc ファイル上の位置
   const AstExpr*
-  new_vdd_expr(const FileRegion& loc);
+  new_vdd_expr(const FileRegion& loc); ///< [in] ファイル上の位置
 
   /// @brief VSSを表す AstExpr を生成する．
-  /// @param[in] loc ファイル上の位置
   const AstExpr*
-  new_vss_expr(const FileRegion& loc);
+  new_vss_expr(const FileRegion& loc); ///< [in] ファイル上の位置
 
   /// @brief VCCを表す AstExpr を生成する．
-  /// @param[in] loc ファイル上の位置
   const AstExpr*
-  new_vcc_expr(const FileRegion& loc);
+  new_vcc_expr(const FileRegion& loc); ///< [in] ファイル上の位置
 
   /// @brief 文字列を表す AstExpr を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] str 値
   const AstExpr*
-  new_str_expr(const FileRegion& loc,
-	       const ShString& str);
+  new_str_expr(const FileRegion& loc, ///< [in] ファイル上の位置
+	       const ShString& str);  ///< [in] 値
 
 
 public:
@@ -152,95 +133,69 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ブール値を表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
   const AstBool*
-  new_bool(const FileRegion& loc,
-	   bool value);
+  new_bool(const FileRegion& loc, ///< [in] ファイル上の位置
+	   bool value);		  ///< [in] 値
 
   /// @brief clear_preset_var の値を表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
   const AstCPType*
-  new_cptype(const FileRegion& loc,
-	     AstCPType::Type value);
+  new_cptype(const FileRegion& loc,  ///< [in] ファイル上の位置
+	     AstCPType::Type value); ///< [in] 値
 
   /// @brief 整数値を表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
   const AstInt*
-  new_int(const FileRegion& loc,
-	  int value);
+  new_int(const FileRegion& loc, ///< [in] ファイル上の位置
+	  int value);		 ///< [in] 値
 
   /// @brief 実数値を表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
   const AstFloat*
-  new_float(const FileRegion& loc,
-	    double value);
+  new_float(const FileRegion& loc, ///< [in] ファイル上の位置
+	    double value);	   ///< [in] 値
 
   /// @brief float のベクタ型の AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値(double のベクタ)
   const AstFloatVector*
-  new_float_vector(const FileRegion& loc,
-		   const vector<double>& value);
+  new_float_vector(const FileRegion& loc,        ///< [in] ファイル上の位置
+		   const vector<double>& value); ///< [in] 値
 
   /// @brief 整数値のベクタを表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value_list 値のリスト
   const AstIntVector*
-  new_int_vector(const FileRegion& loc,
-		 const vector<int>& value_list);
+  new_int_vector(const FileRegion& loc,          ///< [in] ファイル上の位置
+		 const vector<int>& value_list); ///< [in] 値
 
   /// @brief 文字列シンボルを表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
   const AstString*
-  new_string(const FileRegion& loc,
-	     ShString value);
+  new_string(const FileRegion& loc, ///< [in] ファイル上の位置
+	     ShString value);	    ///< [in] 値
 
   /// @brief technology を表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
   const AstTechnology*
-  new_technology(const FileRegion& loc,
-		 ClibTechnology value);
+  new_technology(const FileRegion& loc, ///< [in] ファイル上の位置
+		 ClibTechnology value);	///< [in] 値
 
   /// @brief delay model を表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
   const AstDelayModel*
-  new_delay_model(const FileRegion& loc,
-		  ClibDelayModel value);
+  new_delay_model(const FileRegion& loc, ///< [in] ファイル上の位置
+		  ClibDelayModel value); ///< [in] 値
 
   /// @brief direction を表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
   const AstDirection*
-  new_direction(const FileRegion& loc,
-		ClibDirection value);
+  new_direction(const FileRegion& loc, ///< [in] ファイル上の位置
+		ClibDirection value);  ///< [in] 値
 
   /// @brief timing_sense を表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
   const AstTimingSense*
-  new_timing_sense(const FileRegion& loc,
-		   ClibTimingSense value);
+  new_timing_sense(const FileRegion& loc,  ///< [in] ファイル上の位置
+		   ClibTimingSense value); ///< [in] 値
 
   /// @brief timing_type を表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
   const AstTimingType*
-  new_timing_type(const FileRegion& loc,
-		  ClibTimingType value);
+  new_timing_type(const FileRegion& loc, ///< [in] ファイル上の位置
+		  ClibTimingType value); ///< [in] 値
 
   /// @brief var_type を表す AstNode を生成する．
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] value 値
   const AstVarType*
-  new_var_type(const FileRegion& loc,
-	       ClibVarType value);
+  new_var_type(const FileRegion& loc, ///< [in] ファイル上の位置
+	       ClibVarType value);    ///< [in] 値
 
 
 public:
@@ -249,49 +204,40 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ( float, float ) 型の AstNode を生成する．
-  /// @param[in] handler ハンドラ
   const AstFloat2*
-  new_float2(const FloatFloatHandler& handler);
+  new_float2(const FloatFloatHandler& handler); ///< [in] ハンドラ
 
   /// @brief ( float, string ) 型の AstNode を生成する．
-  /// @param[in] handler ハンドラ
   const AstFloatStr*
-  new_float_str(const FloatStrHandler& handler);
+  new_float_str(const FloatStrHandler& handler); ///< [in] ハンドラ
 
   /// @brief ( integer, float ) 型の AstNode を生成する．
-  /// @param[in] handler ハンドラ
   const AstIntFloat*
-  new_int_float(const IntFloatHandler& handler);
+  new_int_float(const IntFloatHandler& handler); ///< [in] ハンドラ
 
   /// @brief ( integer, float_vector ) 型の AstNode を生成する．
-  /// @param[in] handler ハンドラ
   const AstIntFloatVector*
-  new_int_float_vector(const IntFloatVectorHandler& handler);
+  new_int_float_vector(const IntFloatVectorHandler& handler); ///< [in] ハンドラ
 
   /// @brief ( string, float ) 型の AstNode を生成する．
-  /// @param[in] handler ハンドラ
   const AstStrFloat*
-  new_str_float(const StrFloatHandler& handler);
+  new_str_float(const StrFloatHandler& handler); ///< [in] ハンドラ
 
   /// @brief ( string, int ) 型の AstNode を生成する．
-  /// @param[in] handler ハンドラ
   const AstStrInt*
-  new_str_int(const StrIntHandler& handler);
+  new_str_int(const StrIntHandler& handler); ///< [in] ハンドラ
 
   /// @brief ( string, string, ... ) 型の AstNode を生成する．
-  /// @param[in] handler ハンドラ
   const AstStrList*
-  new_str_list(const StrListHandler& handler);
+  new_str_list(const StrListHandler& handler); ///< [in] ハンドラ
 
   /// @brief ( string, string ) 型の AstNode を生成する．
-  /// @param[in] handler ハンドラ
   const AstStr2*
-  new_str2(const StrStrHandler& handler);
+  new_str2(const StrStrHandler& handler); ///< [in] ハンドラ
 
   /// @brief ( string, string, string ) 型の AstNode を生成する．
-  /// @param[in] handler ハンドラ
   const AstStr3*
-  new_str3(const StrStrStrHandler& handler);
+  new_str3(const StrStrStrHandler& handler); ///< [in] ハンドラ
 
 
 public:
@@ -300,31 +246,22 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ライブラリを表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
   const AstLibrary*
-  new_library(const FileRegion& attr_loc,
-	      const StrHandler& header,
-	      const LibraryHandler& group);
+  new_library(const FileRegion& attr_loc,   ///< [in] 属性のファイル上の位置
+	      const StrHandler& header,     ///< [in] ヘッダを読み込んだハンドラ
+	      const LibraryHandler& group); ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief セルを表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
   const AstCell*
-  new_cell(const FileRegion& attr_loc,
-	   const StrHandler& header,
-	   const CellHandler& group);
+  new_cell(const FileRegion& attr_loc, ///< [in] 属性のファイル上の位置
+	   const StrHandler& header,   ///< [in] ヘッダを読み込んだハンドラ
+	   const CellHandler& group);  ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief ピンを表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
   const AstPin*
-  new_pin(const FileRegion& attr_loc,
-	  const StrListHandler& header,
-	  const PinHandler& group);
+  new_pin(const FileRegion& attr_loc,   ///< [in] 属性のファイル上の位置
+	  const StrListHandler& header,	///< [in] ヘッダを読み込んだハンドラ
+	  const PinHandler& group);	///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief cell_degradation を表す AstNode を生成する．
   /// @param[in] header ヘッダを読み込んだハンドラ
@@ -341,99 +278,68 @@ public:
 		       const AstDomain* domain);
 
   /// @brief ff を表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
   const AstFF*
-  new_ff(const FileRegion& attr_loc,
-	 const StrStrHandler& header,
-	 const FFHandler& group);
+  new_ff(const FileRegion& attr_loc,  ///< [in] 属性のファイル上の位置
+	 const StrStrHandler& header, ///< [in] ヘッダを読み込んだハンドラ
+	 const FFHandler& group);     ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief ff_bank を表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
   const AstFFBank*
-  new_ff_bank(const FileRegion& attr_loc,
-	      const StrStrIntHandler& header,
-	      const FFHandler& group);
+  new_ff_bank(const FileRegion& attr_loc,     ///< [in] 属性のファイル上の位置
+	      const StrStrIntHandler& header, ///< [in] ヘッダを読み込んだハンドラ
+	      const FFHandler& group);	      ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief latch を表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
   const AstLatch*
-  new_latch(const FileRegion& attr_loc,
-	    const StrStrHandler& header,
-	    const LatchHandler& group);
+  new_latch(const FileRegion& attr_loc,  ///< [in] 属性のファイル上の位置
+	    const StrStrHandler& header, ///< [in] ヘッダを読み込んだハンドラ
+	    const LatchHandler& group);	 ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief latch_bank を表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
   const AstLatchBank*
-  new_latch_bank(const FileRegion& attr_loc,
-		 const StrStrIntHandler& header,
-		 const LatchHandler& group);
+  new_latch_bank(const FileRegion& attr_loc,     ///< [in] 属性のファイル上の位置
+		 const StrStrIntHandler& header, ///< [in] ヘッダを読み込んだハンドラ
+		 const LatchHandler& group);	 ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief lut template を表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダのハンドラ
-  /// @param[in] group グループ本体のハンドラ
   const AstTemplate*
-  new_template(const FileRegion& attr_loc,
-	       const StrHandler& header,
-	       const TemplateHandler& group);
+  new_template(const FileRegion& attr_loc,    ///< [in] 属性のファイル上の位置
+	       const StrHandler& header,      ///< [in] ヘッダを読み込んだハンドラ
+	       const TemplateHandler& group); ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief lut を表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダのハンドラ
-  /// @param[in] group グループ本体のハンドラ
   const AstLut*
-  new_lut(const FileRegion& attr_loc,
-	  const StrHandler& header,
-	  const TableHandler& group);
+  new_lut(const FileRegion& attr_loc,  ///< [in] 属性のファイル上の位置
+	  const StrHandler& header,    ///< [in] ヘッダを読み込んだハンドラ
+	  const TableHandler& group);  ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief input voltage を表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
   const AstInputVoltage*
-  new_input_voltage(const FileRegion& attr_loc,
-		    const StrHandler& header,
-		    const InputVoltageHandler& group);
+  new_input_voltage(const FileRegion& attr_loc,        ///< [in] 属性のファイル上の位置
+		    const StrHandler& header,	       ///< [in] ヘッダを読み込んだハンドラ
+		    const InputVoltageHandler& group); ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief output voltage を表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
   const AstOutputVoltage*
-  new_output_voltage(const FileRegion& attr_loc,
-		     const StrHandler& header,
-		     const OutputVoltageHandler& group);
+  new_output_voltage(const FileRegion& attr_loc,         ///< [in] 属性のファイル上の位置
+		     const StrHandler& header,		 ///< [in] ヘッダを読み込んだハンドラ
+		     const OutputVoltageHandler& group); ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief domain を表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
   const AstDomain*
-  new_domain(const FileRegion& attr_loc,
-	     const StrHandler& header,
-	     const DomainHandler& group);
+  new_domain(const FileRegion& attr_loc,  ///< [in] 属性のファイル上の位置
+	     const StrHandler& header,	  ///< [in] ヘッダを読み込んだハンドラ
+	     const DomainHandler& group); ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief timing を表す AstNode を生成する．
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダのハンドラ
-  /// @param[in] group グループ本体のハンドラ
   const AstTiming*
-  new_timing(const FileRegion& attr_loc,
-	     const StrListHandler& header,
-	     const TimingHandler& group);
+  new_timing(const FileRegion& attr_loc,   ///< [in] 属性のファイル上の位置
+	     const StrListHandler& header, ///< [in] ヘッダを読み込んだハンドラ
+	     const TimingHandler& group);  ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief 使用メモリ量の一覧を出力する．
-  /// @param[in] s 出力先のストリーム
   void
-  show_stats(ostream& s) const;
+  show_stats(ostream& s) const; ///< [in] 出力先のストリーム
 
 
 private:

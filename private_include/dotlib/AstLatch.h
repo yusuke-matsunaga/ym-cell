@@ -5,7 +5,7 @@
 /// @brief AstLatch のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -24,20 +24,14 @@ class AstLatch :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
-  AstLatch(const FileRegion& attr_loc,
-	   const StrStrHandler& header,
-	   const LatchHandler& group);
+  AstLatch(const FileRegion& attr_loc,  ///< [in] 属性のファイル上の位置
+	   const StrStrHandler& header, ///< [in] ヘッダを読み込んだハンドラ
+	   const LatchHandler& group);  ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief コンストラクタ
-  /// @param[in] attr_loc 属性のファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] group グループ本体を読み込んだハンドラ
-  AstLatch(const FileRegion& attr_loc,
-	   const StrStrIntHandler& header,
-	   const LatchHandler& group);
+  AstLatch(const FileRegion& attr_loc,     ///< [in] 属性のファイル上の位置
+	   const StrStrIntHandler& header, ///< [in] ヘッダを読み込んだハンドラ
+	   const LatchHandler& group);     ///< [in] グループ本体を読み込んだハンドラ
 
   /// @brief デストラクタ
   ~AstLatch();
@@ -50,22 +44,30 @@ public:
 
   /// @brief "enable" を返す．
   const AstExpr*
-  enable() const;
+  enable() const
+  {
+    return mEnable;
+  }
 
   /// @brief "enable_also" を返す．
   const AstExpr*
-  enable_also() const;
+  enable_also() const
+  {
+    return mEnableAlso;
+  }
 
   /// @brief "data_in" を返す．
   const AstExpr*
-  data_in() const;
+  data_in() const
+  {
+    return mDataIn;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   void
-  dump(ostream& s,
-       int indent = 0) const override;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const override;
 
 
 private:
@@ -83,35 +85,6 @@ private:
   const AstExpr* mDataIn;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief "enable" を返す．
-inline
-const AstExpr*
-AstLatch::enable() const
-{
-  return mEnable;
-}
-
-// @brief "enable_also" を返す．
-inline
-const AstExpr*
-AstLatch::enable_also() const
-{
-  return mEnableAlso;
-}
-
-// @brief "data_in" を返す．
-inline
-const AstExpr*
-AstLatch::data_in() const
-{
-  return mDataIn;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

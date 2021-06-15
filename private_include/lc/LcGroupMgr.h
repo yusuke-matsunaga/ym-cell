@@ -5,9 +5,8 @@
 /// @brief LcGroupMgr.h
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "lc/libcomp_nsdef.h"
 #include "ym/NpnMapM.h"
@@ -25,8 +24,7 @@ class LcGroupMgr
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] libcomp 親の LibComp
-  LcGroupMgr(LibComp& libcomp);
+  LcGroupMgr(LibComp& libcomp); ///< [in] 親の LibComp
 
   /// @brief デストラクタ
   ~LcGroupMgr();
@@ -42,18 +40,15 @@ public:
   clear();
 
   /// @brief セルを追加する．
-  /// @param[in] cell セル
   void
-  add_cell(Cell* cell);
+  add_cell(Cell* cell); ///< [in] 追加するセル
 
   /// @brief シグネチャに対応する LcGroup を求める．
-  /// @param[in] sig シグネチャ
-  /// @param[in] builtin 組み込みクラスの時 true にするフラグ
   ///
   /// なければ新規に作る．
   LcGroup*
-  find_group(const LcSignature& sig,
-	     bool builtin);
+  find_group(const LcSignature& sig, ///< [in] シグネチャ
+	     bool builtin);          ///< [in] 組み込みクラスの時 true にするフラグ
 
 
 private:
@@ -62,22 +57,17 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 代表シグネチャを求める．
-  /// @param[in] sig シグネチャ
-  /// @param[out] rep_sig 代表シグネチャ
-  /// @param[out] xmap 変換
   virtual
   void
-  find_rep(const LcSignature& sig,
-	   LcSignature& rep_sig,
-	   NpnMapM& xmap) = 0;
+  find_rep(const LcSignature& sig, ///< [in] シグネチャ
+	   LcSignature& rep_sig,   ///< [out] 代表シグネチャ
+	   NpnMapM& xmap) = 0;     ///< [out] 変換マップ
 
   /// @brief 同位体変換リストを求める．
-  /// @param[in] sig シグネチャ
-  /// @param[out] idmap_list 同位体変換のリスト
   virtual
   void
-  find_idmap_list(const LcSignature& sig,
-		  vector<NpnMapM>& idmap_list) = 0;
+  find_idmap_list(const LcSignature& sig,           ///< [in] シグネチャ
+		  vector<NpnMapM>& idmap_list) = 0; ///< [in] 同位体変換のリスト
 
 
 protected:

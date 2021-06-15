@@ -5,9 +5,8 @@
 /// @brief AstNode のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib_nsdef.h"
 #include "AttrType.h"
@@ -68,8 +67,7 @@ class AstNode
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  AstNode(const FileRegion& loc);
+   AstNode(const FileRegion& loc); ///< [in] ファイル上の位置
 
   /// @brief デストラクタ
   virtual
@@ -83,15 +81,17 @@ public:
 
   /// @brief ファイル上の位置を返す．
   FileRegion
-  loc() const;
+  loc() const
+  {
+    return mLoc;
+  }
 
   /// @brief 内容をストリーム出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   virtual
   void
-  dump(ostream& s,
-       int indent = 0) const = 0;
+  dump(ostream& s,     ///< [in] 出力先のストリーム
+       int indent = 0) ///< [in] インデント量
+    const = 0;
 
 
 protected:
@@ -100,23 +100,19 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief インデント数分だけ空白を出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] indent インデント量
   static
   void
-  dump_indent(ostream& s,
-	      int indent);
+  dump_indent(ostream& s,  ///< [in] 出力先のストリーム
+	      int indent); ///< [in] インデント量
 
   /// @brief 文字列を出力する．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] str 対象の文字列
   ///
   /// str 中に [a-zA-Z0-9_] 以外の文字が含まれていたら
   /// " " で囲んで出力する．
   static
   void
-  dump_string(ostream& s,
-	      const char* str);
+  dump_string(ostream& s,       ///< [in] 出力先のストリーム
+	      const char* str); ///< [in] 対象の文字列
 
 
 private:
@@ -137,19 +133,6 @@ operator<<(ostream& s,
 {
   node->dump(s, 0);
   return s;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief ファイル上の位置を返す．
-inline
-FileRegion
-AstNode::loc() const
-{
-  return mLoc;
 }
 
 END_NAMESPACE_YM_DOTLIB

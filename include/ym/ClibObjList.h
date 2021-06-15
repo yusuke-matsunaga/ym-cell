@@ -5,7 +5,7 @@
 /// @brief ClibObjList のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018, 2019 Yusuke Matsunaga
+/// Copyright (C) 2018, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
@@ -25,11 +25,13 @@ class ClibObjIterator
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] obj_ptr 要素へのポインタ
-  ClibObjIterator(T** obj_ptr);
+  ClibObjIterator(T** obj_ptr) : ///< [in] 要素へのポインタ
+    mObjPtr{obj_ptr}
+  {
+  }
 
   /// @brief デストラクタ
-  ~ClibObjIterator();
+  ~ClibObjIterator() = default;
 
 
 public:
@@ -39,19 +41,33 @@ public:
 
   /// @brief dereference 演算子
   const T&
-  operator*() const;
+  operator*() const
+  {
+    return **mObjPtr;
+  }
 
   /// @brief 増加演算子
   ClibObjIterator<T>
-  operator++();
+  operator++()
+  {
+    ++ mObjPtr;
+
+    return *this;
+  }
 
   /// @brief 等価比較演算子
   bool
-  operator==(const ClibObjIterator<T>& right) const;
+  operator==(const ClibObjIterator<T>& right) const ///< [in] 比較対象のオペランド
+  {
+    return mObjPtr == right.mObjPtr;
+  }
 
   /// @brief 非等価比較演算子
   bool
-  operator!=(const ClibObjIterator<T>& right) const;
+  operator!=(const ClibObjIterator<T>& right) const ///< [in] 比較対象のオペランド
+  {
+    return !operator==(right);
+  }
 
 
 private:
@@ -84,11 +100,16 @@ public:
   ClibObjList() = default;
 
   /// @brief 内容を指定したコンストラクタ
-  /// @param[in] src_list ソースリスト
-  ClibObjList(const vector<T*>& src_list);
+  ClibObjList(const vector<T*>& src_list)  ///< [in] ソースリスト
+  {
+    init(src_list);
+  }
 
   /// @brief デストラクタ
-  ~ClibObjList();
+  ~ClibObjList()
+  {
+    delete [] mBody;
+  }
 
 
 public:
@@ -97,28 +118,48 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を(再)設定する．
-  /// @param[in] src_list ソースリスト
   ///
   /// 以前の内容は破棄される．
   void
-  init(const vector<T*>& src_list);
+  init(const vector<T*>& src_list) ///< [in] ソースリスト
+  {
+    delete [] mBody;
+    mNum = src_list.size();
+    mBody = new T*[mNum];
+    for ( int i = 0; i < mNum; ++ i ) {
+      mBody[i] = src_list[i];
+    }
+  }
 
   /// @brief 要素数を返す．
   int
-  num() const;
+  num() const
+  {
+    return mNum;
+  }
 
   /// @brief 要素を返す．
-  /// @param[in] pos 要素の位置 ( 0 <= pos < num() )
   const T&
-  operator[](int pos) const;
+  operator[](int pos) const ///< [in] 要素の位置 ( 0 <= pos < num() )
+  {
+    ASSERT_COND( pos >= 0 && pos < num() );
+
+    return *mBody[pos];
+  }
 
   /// @brief 先頭の反復子を返す．
   ClibObjIterator<T>
-  begin() const;
+  begin() const
+  {
+    return ClibObjIterator<T>(mBody);
+  }
 
   /// @brief 末尾の反復子を返す．
   ClibObjIterator<T>
-  end() const;
+  end() const
+  {
+    return ClibObjIterator<T>(mBody + num());
+  }
 
 
 private:
@@ -140,7 +181,7 @@ private:
 
 };
 
-
+#if 0
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
@@ -271,6 +312,7 @@ ClibObjList<T>::end() const
 {
   return ClibObjIterator<T>(mBody + num());
 }
+#endif
 
 END_NAMESPACE_YM_CLIB
 

@@ -3,9 +3,8 @@
 /// @brief AstCPType の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/AstCPType.h"
 #include "dotlib/AstMgr.h"
@@ -52,11 +51,11 @@ AstCPType::dump(ostream& s,
 {
   const char* tmp = nullptr;
   switch ( value() ) {
-  case kL: tmp = "L"; break;
-  case kH: tmp = "H"; break;
-  case kN: tmp = "N"; break;
-  case kT: tmp = "T"; break;
-  case kX: tmp = "X"; break;
+  case L: tmp = "L"; break;
+  case H: tmp = "H"; break;
+  case N: tmp = "N"; break;
+  case T: tmp = "T"; break;
+  case X: tmp = "X"; break;
   }
   dump_string(s, tmp);
 }

@@ -5,9 +5,8 @@
 /// @brief AttrDic のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "AttrType.h"
 
@@ -26,7 +25,7 @@ public:
   AttrDic();
 
   /// @brief デストラクタ
-  ~AttrDic();
+  ~AttrDic() = default;
 
 
 public:
@@ -35,12 +34,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 文字列を属性値に変換する．
-  /// @param[in] str 文字列
   /// @return str に対応する AttrType の値
   ///
   /// 対応する値がない場合は ATTR_none を返す．
   AttrType
-  get(const char* str) const;
+  get(const char* str) const ///< [in] 文字列
+  {
+    if ( mDic.count(str) > 0 ) {
+      return mDic.at(str);
+    }
+    else {
+      return AttrType::none;
+    }
+  }
 
 
 private:
@@ -58,35 +64,6 @@ private:
   unordered_map<string, AttrType> mDic;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief デストラクタ
-inline
-AttrDic::~AttrDic()
-{
-}
-
-// @brief 文字列を属性値に変換する．
-// @param[in] str 文字列
-// @return str に対応する AttrType の値
-//
-// 対応する値がない場合は AttrType::none を返す．
-inline
-AttrType
-AttrDic::get(const char* str) const
-{
-  if ( mDic.count(str) > 0 ) {
-    return mDic.at(str);
-  }
-  else {
-    return AttrType::none;
-  }
-}
-
 
 END_NAMESPACE_YM_DOTLIB
 

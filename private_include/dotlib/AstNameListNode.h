@@ -5,7 +5,7 @@
 /// @brief AstNameListNode のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2019 Yusuke Matsunaga
+/// Copyright (C) 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib_nsdef.h"
@@ -27,11 +27,8 @@ class AstNameListNode :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] header ヘッダを読み込んだハンドラ
-  /// @param[in] alloc アロケータ
-  AstNameListNode(const FileRegion& attr_loc,
-		  const StrListHandler& header);
+  AstNameListNode(const FileRegion& attr_loc,    ///< [in] ファイル上の位置
+		  const StrListHandler& header); ///< [in] ヘッダを読み込んだハンドラ
 
   /// @brief デストラクタ
   ~AstNameListNode();
@@ -44,7 +41,10 @@ public:
 
   /// @brief 名前のリストを返す．
   AstArray<const AstString*>
-  name_list() const;
+  name_list() const
+  {
+    return mNameList;
+  }
 
 
 private:
@@ -62,19 +62,6 @@ private:
   AstArray<const AstString*> mNameList;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 名前のリストを返す．
-inline
-AstArray<const AstString*>
-AstNameListNode::name_list() const
-{
-  return mNameList;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

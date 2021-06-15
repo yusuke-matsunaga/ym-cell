@@ -5,9 +5,8 @@
 /// @brief EmptyHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/ElemHandler.h"
 
@@ -27,8 +26,7 @@ class EmptyHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  EmptyHandler(DotlibParser& parser);
+  EmptyHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~EmptyHandler();

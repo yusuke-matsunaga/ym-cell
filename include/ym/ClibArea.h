@@ -5,9 +5,8 @@
 /// @brief ClibArea のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2016, 2017, 2018, 2019 Yusuke Matsunaga (松永 裕介)
+/// Copyright (C) 2005-2011, 2014, 2016, 2017, 2018, 2019, 2021 Yusuke Matsunaga (松永 裕介)
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 
@@ -32,12 +31,15 @@ public:
 
   /// @brief 空のコンストラクタ
   ///
-  /// 内容は不定
+  /// 内容は 0.0 に初期化される．
   ClibArea() = default;
 
   /// @brief double からの変換コンストラクタ
   explicit
-  ClibArea(double v);
+  ClibArea(double v) : ///< [in] 設定する値
+    mValue{v}
+  {
+  }
 
   /// @brief デストラクタ
   ~ClibArea() = default;
@@ -51,7 +53,10 @@ public:
   /// @brief 無限大の値を作る．
   static
   ClibArea
-  infty();
+  infty()
+  {
+    return ClibArea(std::numeric_limits<double>::max());
+  }
 
 
 public:
@@ -61,7 +66,10 @@ public:
 
   /// @brief 値を得る．
   double
-  value() const;
+  value() const
+  {
+    return mValue;
+  }
 
 
 public:
@@ -71,15 +79,27 @@ public:
 
   /// @brief 代入演算子
   ClibArea&
-  operator=(const ClibArea& src);
+  operator=(const ClibArea& src) ///< [in] コピー元のオブジェクト
+  {
+    mValue = src.mValue;
+    return *this;
+  }
 
   /// @brief 加算付き代入演算子
   ClibArea&
-  operator+=(const ClibArea& src);
+  operator+=(const ClibArea& src) ///< [in] オペランド
+  {
+    mValue += src.mValue;
+    return *this;
+  }
 
   /// @brief 減算付き代入演算子
   ClibArea&
-  operator-=(const ClibArea& src);
+  operator-=(const ClibArea& src) ///< [in] オペランド
+  {
+    mValue -= src.mValue;
+    return *this;
+  }
 
 
 private:
@@ -93,233 +113,101 @@ private:
 };
 
 /// @brief 加算
-/// @param[in] left, right オペランド
 /// @relates ClibArea
-ClibArea
-operator+(const ClibArea& left,
-	  const ClibArea& right);
-
-/// @brief 減算
-/// @param[in] left, right オペランド
-/// @relates ClibArea
-ClibArea
-operator-(const ClibArea& left,
-	  const ClibArea& right);
-
-/// @brief 等価比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibArea
-bool
-operator==(const ClibArea& left,
-	   const ClibArea& right);
-
-/// @brief 非等価比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibArea
-bool
-operator!=(const ClibArea& left,
-	   const ClibArea& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibArea
-bool
-operator<(const ClibArea& left,
-	  const ClibArea& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibArea
-bool
-operator>(const ClibArea& left,
-	  const ClibArea& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibArea
-bool
-operator<=(const ClibArea& left,
-	   const ClibArea& right);
-
-/// @brief 大小比較演算子
-/// @param[in] left, right オペランド
-/// @relates ClibArea
-bool
-operator>=(const ClibArea& left,
-	   const ClibArea& right);
-
-/// @brief ストリーム出力
-/// @param[in] s 出力先のストリーム
-/// @param[in] val 値
-/// @relates ClibArea
-ostream&
-operator<<(ostream& s,
-	   const ClibArea& val);
-
-/// @brief ストリーム入力
-/// @param[in] s 入力元のストリーム
-/// @param[out] val 読み出された値
-/// @relates ClibArea
-istream&
-operator>>(istream& s,
-	   ClibArea& val);
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief double からの変換コンストラクタ
-inline
-ClibArea::ClibArea(double v) :
-  mValue{v}
-{
-}
-
-// @brief 無限大の値を作る．
 inline
 ClibArea
-ClibArea::infty()
-{
-  return ClibArea(std::numeric_limits<double>::max());
-}
-
-// @brief 値を得る．
-inline
-double
-ClibArea::value() const
-{
-  return mValue;
-}
-
-// @brief 代入演算子
-inline
-ClibArea&
-ClibArea::operator=(const ClibArea& src)
-{
-  mValue = src.mValue;
-  return *this;
-}
-
-// @brief 加算付き代入演算子
-inline
-ClibArea&
-ClibArea::operator+=(const ClibArea& src)
-{
-  mValue += src.mValue;
-  return *this;
-}
-
-// @brief 減算付き代入演算子
-inline
-ClibArea&
-ClibArea::operator-=(const ClibArea& src)
-{
-  mValue -= src.mValue;
-  return *this;
-}
-
-// @brief 加算
-inline
-ClibArea
-operator+(const ClibArea& left,
-	  const ClibArea& right)
+operator+(const ClibArea& left,  ///< [in] 左のオペランド
+	  const ClibArea& right) ///< [in] 右のオペランド
 {
   return ClibArea(left).operator+=(right);
 }
 
-// @brief 減算
+/// @brief 減算
+/// @relates ClibArea
 inline
 ClibArea
-operator-(const ClibArea& left,
-	  const ClibArea& right)
+operator-(const ClibArea& left,  ///< [in] 左のオペランド
+	  const ClibArea& right) ///< [in] 右のオペランド
 {
   return ClibArea(left).operator-=(right);
 }
 
-// @brief 等価比較演算子
-// @param[in] left, right オペランド
-// @relates ClibArea
+/// @brief 等価比較演算子
+/// @relates ClibArea
 inline
 bool
-operator==(const ClibArea& left,
-	   const ClibArea& right)
+operator==(const ClibArea& left,  ///< [in] 左のオペランド
+	   const ClibArea& right) ///< [in] 右のオペランド
 {
   return left.value() == right.value();
 }
 
-// @brief 非等価比較演算子
-// @param[in] left, right オペランド
-// @relates ClibArea
+/// @brief 非等価比較演算子
+/// @relates ClibArea
 inline
 bool
-operator!=(const ClibArea& left,
-	   const ClibArea& right)
+operator!=(const ClibArea& left,  ///< [in] 左のオペランド
+	   const ClibArea& right) ///< [in] 右のオペランド
 {
   return !operator==(left, right);
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibArea
+/// @brief 大小比較演算子
+/// @relates ClibArea
 inline
 bool
-operator<(const ClibArea& left,
-	  const ClibArea& right)
+operator<(const ClibArea& left,  ///< [in] 左のオペランド
+	  const ClibArea& right) ///< [in] 右のオペランド
 {
   return left.value() < right.value();
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibArea
+/// @brief 大小比較演算子
+/// @relates ClibArea
 inline
 bool
-operator>(const ClibArea& left,
-	  const ClibArea& right)
+operator>(const ClibArea& left,  ///< [in] 左のオペランド
+	  const ClibArea& right) ///< [in] 右のオペランド
 {
   return operator<(right, left);
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibArea
+/// @brief 大小比較演算子
+/// @relates ClibArea
 inline
 bool
-operator<=(const ClibArea& left,
-	   const ClibArea& right)
+operator<=(const ClibArea& left,  ///< [in] 左のオペランド
+	   const ClibArea& right) ///< [in] 右のオペランド
 {
   return !operator<(right, left);
 }
 
-// @brief 大小比較演算子
-// @param[in] left, right オペランド
-// @relates ClibArea
+/// @brief 大小比較演算子
+/// @relates ClibArea
 inline
 bool
-operator>=(const ClibArea& left,
-	   const ClibArea& right)
+operator>=(const ClibArea& left,  ///< [in] 左のオペランド
+	   const ClibArea& right) ///< [in] 右のオペランド
 {
   return !operator<(left, right);
 }
 
-// @brief ストリーム出力
+/// @brief ストリーム出力
+/// @relates ClibArea
 inline
 ostream&
-operator<<(ostream& s,
-	   const ClibArea& val)
+operator<<(ostream& s,          ///< [in] 出力先のストリーム
+	   const ClibArea& val) ///< [in] 値
 {
   return s << val.value();
 }
 
-// @brief ストリーム入力
-// @param[in] s 入力元のストリーム
-// @param[out] val 読み出された値
-// @relates ClibArea
+/// @brief ストリーム入力
+/// @relates ClibArea
 inline
 istream&
-operator>>(istream& s,
-	   ClibArea& val)
+operator>>(istream& s,    ///< [in] 入力元のストリーム
+	   ClibArea& val) ///< [out] 読み出された値を格納する変数
 {
   double tmp;
   s >> tmp;

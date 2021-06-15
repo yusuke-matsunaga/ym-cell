@@ -5,9 +5,8 @@
 /// @brief GroupHandler のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/DotlibHandler.h"
 
@@ -42,8 +41,7 @@ class GroupHandler :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parser パーサー
-  GroupHandler(DotlibParser& parser);
+  GroupHandler(DotlibParser& parser); ///< [in] パーサー
 
   /// @brief デストラクタ
   ~GroupHandler();
@@ -56,7 +54,10 @@ public:
 
   /// @brief 読み込んだグループ定義のファイル上の位置を返す．
   const FileRegion&
-  group_loc() const;
+  group_loc() const
+  {
+    return mGroupLoc;
+  }
 
 
 public:
@@ -70,14 +71,12 @@ public:
   begin_group() = 0;
 
   /// @brief attr_type に対応する属性を読み込む．
-  /// @param[in] attr_type 対象の属性
-  /// @param[in] attr_loc attr_type のファイル上の位置
   /// @retval true 正常にパーズした．
   /// @retval false パーズ中にエラーが起こった．
   virtual
   bool
-  read_group_attr(AttrType attr_type,
-		  const FileRegion& attr_loc);
+  read_group_attr(AttrType attr_type,          ///< [in] 対象の属性
+		  const FileRegion& attr_loc); ///< [in] attr_type のファイル上の位置
 
   /// @brief グループ記述の終わり
   /// @retval true 正常にパーズした．
@@ -93,24 +92,19 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 属性がセットされているかチェックする．
-  /// @param[in] val 値を持つノード
-  /// @param[in] attr_type 属性の型
-  /// @param[in] group_loc グループ記述全体の位置
   /// @retval true val が値を持っていた．
   /// @retval false val が nullptr だった．
   ///
   /// val が nullptr の時にエラー出力を行う．
   bool
-  check_attr(const AstNode* val,
-	     AttrType attr_type,
-	     const FileRegion& group_loc);
+  check_attr(const AstNode* val,           ///< [in] 値を持つノード
+	     AttrType attr_type,           ///< [in] 属性の型
+	     const FileRegion& group_loc); ///< [in] グループ記述全体の位置
 
   /// @brief パース関数を登録する．
-  /// @param[in] attr_type 属性
-  /// @param[in] func パース関数
   void
-  reg_func(AttrType attr_type,
-	   ParseFunc func);
+  reg_func(AttrType attr_type, ///< [in] 属性
+	   ParseFunc func);    ///< [in] パース関数
 
 
 private:
@@ -125,19 +119,6 @@ private:
   FileRegion mGroupLoc;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 読み込んだグループ定義のファイル上の位置を返す．
-inline
-const FileRegion&
-GroupHandler::group_loc() const
-{
-  return mGroupLoc;
-}
 
 END_NAMESPACE_YM_DOTLIB
 

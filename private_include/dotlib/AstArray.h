@@ -5,7 +5,7 @@
 /// @brief AstArray のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2019 Yusuke Matsunaga
+/// Copyright (C) 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib_nsdef.h"
@@ -28,8 +28,14 @@ public:
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] src もとのオブジェクト
-  AstArray(const vector<T>& src);
+  AstArray(const vector<T>& src)  ///< [in] もとのオブジェクト
+    : mSize{src.size()},
+      mBody{new T[mSize]}
+  {
+    for ( SizeType i = 0; i < mSize; ++ i ) {
+      mBody[i] = src[i];
+    }
+  }
 
   /// @brief コピーコンストラクタ
   AstArray(const AstArray& src) = default;
@@ -39,7 +45,10 @@ public:
   operator=(const AstArray& src) = default;
 
   /// @brief デストラクタ
-  ~AstArray();
+  ~AstArray()
+  {
+    delete [] mBody;
+  }
 
 
 public:
@@ -49,20 +58,33 @@ public:
 
   /// @brief 要素数を返す．
   SizeType
-  size() const;
+  size() const
+  {
+    return mSize;
+  }
 
   /// @brief 要素を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   T
-  operator[](SizeType pos) const;
+  operator[](SizeType pos) const ///< [in] 位置番号 ( 0 <= pos < size() )
+  {
+    ASSERT_COND( 0 <= pos && pos < size() );
+
+    return mBody[pos];
+  }
 
   /// @brief 先頭の反復子を返す．
   iterator
-  begin() const;
+  begin() const
+  {
+    return mBody;
+  }
 
   /// @brief 末尾の反復子を返す．
   iterator
-  end() const;
+  end() const
+  {
+    return mBody + mSize;
+  }
 
 
 private:
@@ -83,71 +105,6 @@ private:
   T* mBody;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] src もとのオブジェクト
-// @param[in] alloc メモリアロケータ
-template<typename T>
-inline
-AstArray<T>::AstArray(const vector<T>& src) :
-  mSize{src.size()}
-{
-  mBody = new T[mSize];
-  for ( SizeType i = 0; i < mSize; ++ i ) {
-    mBody[i] = src[i];
-  }
-}
-
-// @brief デストラクタ
-template<typename T>
-AstArray<T>::~AstArray()
-{
-  delete [] mBody;
-}
-
-// @brief 要素数を返す．
-template<typename T>
-inline
-SizeType
-AstArray<T>::size() const
-{
-  return mSize;
-}
-
-// @brief 要素を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-template<typename T>
-inline
-T
-AstArray<T>::operator[](SizeType pos) const
-{
-  ASSERT_COND( 0 <= pos && pos < size() );
-
-  return mBody[pos];
-}
-
-// @brief 先頭の反復子を返す．
-template<typename T>
-inline
-typename AstArray<T>::iterator
-AstArray<T>::begin() const
-{
-  return mBody;
-}
-
-// @brief 末尾の反復子を返す．
-template<typename T>
-inline
-typename AstArray<T>::iterator
-AstArray<T>::end() const
-{
-  return mBody + mSize;
-}
 
 END_NAMESPACE_YM_DOTLIB
 
