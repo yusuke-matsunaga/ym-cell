@@ -16,8 +16,9 @@ include_directories(
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory ( c++-test/libcomp )
 add_subdirectory ( c++-test/cell_library )
+add_subdirectory ( c++-test/dotlib )
+add_subdirectory ( c++-test/libcomp )
 
 
 # ===================================================================

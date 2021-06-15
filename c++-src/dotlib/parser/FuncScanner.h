@@ -5,9 +5,8 @@
 /// @brief FuncScanner のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/dotlib_nsdef.h"
 #include "ym/StrBuff.h"
@@ -27,7 +26,7 @@ public:
   /// @brief コンストラクタ
   /// @param[in] str 文字列
   /// @param[in] str のファイル上の位置
-  FuncScanner(const char* str,
+  FuncScanner(const string& str,
 	      const FileRegion& loc);
 
   /// @brief デストラクタ
@@ -92,7 +91,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // パーズ中の文字列
-  const char* mSrcString;
+  string mSrcString;
 
   // mString のファイル位置
   FileRegion mSrcLoc;

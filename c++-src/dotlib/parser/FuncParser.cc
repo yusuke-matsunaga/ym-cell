@@ -3,9 +3,8 @@
 /// @brief FuncParser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "FuncParser.h"
 #include "dotlib/AstExpr.h"
@@ -24,7 +23,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @param[in] str 対象の文字列
 // @param[in] loc ファイル上の位置
 // @param[in] mgr AstMgr
-FuncParser::FuncParser(const char* str,
+FuncParser::FuncParser(const string& str,
 		       const FileRegion& loc,
 		       AstMgr& mgr) :
   mScanner(str, loc),

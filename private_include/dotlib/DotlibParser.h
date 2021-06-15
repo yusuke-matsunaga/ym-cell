@@ -12,6 +12,7 @@
 #include "AttrType.h"
 #include "AttrDic.h"
 #include "DotlibScanner.h"
+#include "TokenType.h"
 #include "ym/FileRegion.h"
 
 
@@ -889,10 +890,10 @@ private:
   bool mAllowNoSemi;
 
   // 読み戻したトークンの型
-  TokenType mUngetType;
+  TokenType mUngetType{TokenType::ERROR};
 
   // 読み戻したトークンの位置
-  FileRegion mUngetLoc;
+  FileRegion mUngetLoc{};
 
   // ヘッダ用のハンドラ
   unique_ptr<StrHandler> mStrHeader;

@@ -44,7 +44,9 @@ DotlibParser::DotlibParser(InputFileObj& in,
 			   bool debug,
 			   bool allow_no_semi) :
   mScanner{in},
-  mAstMgr{mgr}
+  mAstMgr{mgr},
+  mDebug{debug},
+  mAllowNoSemi{allow_no_semi}
 {
 }
 
@@ -116,13 +118,11 @@ DotlibParser::parse_simple_attribute(SimpleHandler handler)
     return false;
   }
 
-  bool stat = handler(*this);
-
-  if ( !expect_nl() ) {
+  if ( !handler(*this) ) {
     return false;
   }
 
-  return true;
+  return expect_nl();
 }
 
 // @brief Complex Attribute を読み込む．
@@ -149,6 +149,7 @@ DotlibParser::parse_header(HeaderHandler& handler)
   if ( !expect(TokenType::LP) ) {
     return false;
   }
+
   FileRegion first_loc = cur_loc();
   handler.begin_header(first_loc);
 

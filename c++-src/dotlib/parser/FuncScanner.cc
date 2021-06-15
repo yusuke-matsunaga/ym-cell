@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "FuncScanner.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
@@ -21,13 +20,13 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] str 文字列
 // @param[in] str のファイル上の位置
-FuncScanner::FuncScanner(const char* str,
+FuncScanner::FuncScanner(const string& str,
 			 const FileRegion& loc)
+  : mSrcString{str},
+    mSrcLoc{loc},
+    mCurPos{0},
+    mUngetType{TokenType::ERROR}
 {
-  mSrcString = str;
-  mSrcLoc = loc;
-  mCurPos = 0;
-  mUngetType = TokenType::ERROR;
 }
 
 // @brief デストラクタ

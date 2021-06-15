@@ -50,19 +50,25 @@ DotlibParser::parse_bool(const AstBool*& dst,
     return false;
   }
   else {
-    const char* tmp_str;
+    string tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
     {
-      tmp_str = parser.read_raw_string(value_loc);
-      return tmp_str != nullptr;
+      auto s = parser.read_raw_string(value_loc);
+      if ( s != nullptr ) {
+	tmp_str = s;
+	return true;
+      }
+      else {
+	return false;
+      }
     });
     if ( stat ) {
       bool bval;
-      if ( strcmp(tmp_str, "true") == 0 ) {
+      if ( tmp_str == "true" ) {
 	bval = true;
       }
-      else if ( strcmp(tmp_str, "false") == 0 ) {
+      else if ( tmp_str == "false" ) {
 	bval = false;
       }
       else {
@@ -192,28 +198,34 @@ DotlibParser::parse_delay_model(const AstDelayModel*& dst,
     return false;
   }
   else {
-    const char* tmp_str;
+    string tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
     {
-      tmp_str = parser.read_raw_string(value_loc);
-      return tmp_str != nullptr;
+      auto s = parser.read_raw_string(value_loc);
+      if ( s != nullptr ) {
+	tmp_str = s;
+	return true;
+      }
+      else {
+	return false;
+      }
     });
     if ( stat ) {
       ClibDelayModel value;
-      if ( strcmp(tmp_str, "generic_cmos") == 0 ) {
+      if ( tmp_str == "generic_cmos" ) {
 	value = ClibDelayModel::GenericCmos;
       }
-      else if ( strcmp(tmp_str, "table_lookup") == 0 ) {
+      else if ( tmp_str == "table_lookup" ) {
 	value = ClibDelayModel::TableLookup;
       }
-      else if ( strcmp(tmp_str, "piecewise_cmos") == 0 ) {
+      else if ( tmp_str == "piecewise_cmos" ) {
 	value = ClibDelayModel::PiecewiseCmos;
       }
-      else if ( strcmp(tmp_str, "cmos2") == 0 ) {
+      else if ( tmp_str == "cmos2" ) {
 	value = ClibDelayModel::Cmos2;
       }
-      else if ( strcmp(tmp_str, "dcm") == 0 ) {
+      else if ( tmp_str == "dcm" ) {
 	value = ClibDelayModel::Dcm;
       }
       else {
@@ -258,25 +270,31 @@ DotlibParser::parse_direction(const AstDirection*& dst,
     return false;
   }
   else {
-    const char* tmp_str;
+    string tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
     {
-      tmp_str = parser.read_raw_string(value_loc);
-      return tmp_str != nullptr;
+      auto s = parser.read_raw_string(value_loc);
+      if ( s != nullptr ) {
+	tmp_str = s;
+	return true;
+      }
+      else {
+	return false;
+      }
     });
     if ( stat ) {
       ClibDirection value;
-      if ( strcmp(tmp_str, "input") == 0 ) {
+      if ( tmp_str == "input" ) {
 	value = ClibDirection::Input;
       }
-      else if ( strcmp(tmp_str, "output") == 0 ) {
+      else if ( tmp_str == "output" ) {
 	value = ClibDirection::Output;
       }
-      else if ( strcmp(tmp_str, "inout") == 0 ) {
+      else if ( tmp_str == "inout" ) {
 	value = ClibDirection::Inout;
       }
-      else if ( strcmp(tmp_str, "internal") == 0 ) {
+      else if ( tmp_str == "internal" ) {
 	value = ClibDirection::Internal;
       }
       else {
@@ -316,12 +334,18 @@ DotlibParser::parse_function(const AstExpr*& dst,
     return false;
   }
   else {
-    const char* tmp_str;
+    string tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
     {
-      tmp_str = parser.read_raw_string(value_loc);
-      return tmp_str != nullptr;
+      auto s = parser.read_raw_string(value_loc);
+      if ( s != nullptr ) {
+	tmp_str = s;
+	return true;
+      }
+      else {
+	return false;
+      }
     });
     if ( stat ) {
       FuncParser read(tmp_str, value_loc, mgr());
@@ -351,22 +375,28 @@ DotlibParser::parse_timing_sense(const AstTimingSense*& dst,
     return false;
   }
   else {
-    const char* tmp_str;
+    string tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
     {
-      tmp_str = parser.read_raw_string(value_loc);
-      return tmp_str != nullptr;
+      auto s = parser.read_raw_string(value_loc);
+      if ( s != nullptr ) {
+	tmp_str = s;
+	return true;
+      }
+      else {
+	return false;
+      }
     });
     if ( stat ) {
       ClibTimingSense value;
-      if ( strcmp(tmp_str, "positive_unate") == 0 ) {
+      if ( tmp_str == "positive_unate" ) {
 	value = ClibTimingSense::PosiUnate;
       }
-      else if ( strcmp(tmp_str, "negative_unate") == 0 ) {
+      else if ( tmp_str == "negative_unate" ) {
 	value = ClibTimingSense::NegaUnate;
       }
-      else if ( strcmp(tmp_str, "non_unate") == 0 ) {
+      else if ( tmp_str == "non_unate" ) {
 	value = ClibTimingSense::NonUnate;
       }
       else {
@@ -407,106 +437,112 @@ DotlibParser::parse_timing_type(const AstTimingType*& dst,
     return false;
   }
   else {
-    const char* tmp_str;
+    string tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
     {
-      tmp_str = parser.read_raw_string(value_loc);
-      return tmp_str != nullptr;
+      auto s = parser.read_raw_string(value_loc);
+      if ( s != nullptr ) {
+	tmp_str = s;
+	return true;
+      }
+      else {
+	return false;
+      }
     });
     if ( stat ) {
       ClibTimingType value;
-      if ( strcmp(tmp_str, "combinational") == 0 ) {
+      if ( tmp_str == "combinational" ) {
 	value = ClibTimingType::Combinational;
       }
-      else if ( strcmp(tmp_str, "combinational_rise") == 0 ) {
+      else if ( tmp_str == "combinational_rise" ) {
 	value = ClibTimingType::CombinationalRise;
       }
-      else if ( strcmp(tmp_str, "combinational_fall") == 0 ) {
+      else if ( tmp_str == "combinational_fall" ) {
 	value = ClibTimingType::CombinationalFall;
       }
-      else if ( strcmp(tmp_str, "three_state_enable") == 0 ) {
+      else if ( tmp_str == "three_state_enable" ) {
 	value = ClibTimingType::ThreeStateEnable;
       }
-      else if ( strcmp(tmp_str, "three_state_enable_rise") == 0 ) {
+      else if ( tmp_str == "three_state_enable_rise" ) {
 	value = ClibTimingType::ThreeStateEnableRise;
       }
-      else if ( strcmp(tmp_str, "three_state_enable_fall") == 0 ) {
+      else if ( tmp_str == "three_state_enable_fall" ) {
 	value = ClibTimingType::ThreeStateEnableFall;
       }
-      else if ( strcmp(tmp_str, "three_state_disable") == 0 ) {
+      else if ( tmp_str == "three_state_disable" ) {
 	value = ClibTimingType::ThreeStateDisable;
       }
-      else if ( strcmp(tmp_str, "three_state_disable_rise") == 0 ) {
+      else if ( tmp_str == "three_state_disable_rise" ) {
 	value = ClibTimingType::ThreeStateDisableRise;
       }
-      else if ( strcmp(tmp_str, "three_state_disable_fall") == 0 ) {
+      else if ( tmp_str == "three_state_disable_fall" ) {
 	value = ClibTimingType::ThreeStateDisableFall;
       }
-      else if ( strcmp(tmp_str, "rising_edge") == 0 ) {
+      else if ( tmp_str == "rising_edge" ) {
 	value = ClibTimingType::RisingEdge;
       }
-      else if ( strcmp(tmp_str, "falling_edge") == 0 ) {
+      else if ( tmp_str == "falling_edge" ) {
 	value = ClibTimingType::FallingEdge;
       }
-      else if ( strcmp(tmp_str, "preset") == 0 ) {
+      else if ( tmp_str == "preset" ) {
 	value = ClibTimingType::Preset;
       }
-      else if ( strcmp(tmp_str, "clear") == 0 ) {
+      else if ( tmp_str == "clear" ) {
 	value = ClibTimingType::Clear;
       }
-      else if ( strcmp(tmp_str, "hold_rising") == 0 ) {
+      else if ( tmp_str == "hold_rising" ) {
 	value = ClibTimingType::HoldRising;
       }
-      else if ( strcmp(tmp_str, "hold_falling") == 0 ) {
+      else if ( tmp_str == "hold_falling" ) {
 	value = ClibTimingType::HoldFalling;
       }
-      else if ( strcmp(tmp_str, "setup_rising") == 0 ) {
+      else if ( tmp_str == "setup_rising" ) {
 	value = ClibTimingType::SetupRising;
       }
-      else if ( strcmp(tmp_str, "setup_falling") == 0 ) {
+      else if ( tmp_str == "setup_falling" ) {
 	value = ClibTimingType::SetupFalling;
       }
-      else if ( strcmp(tmp_str, "recovery_rising") == 0 ) {
+      else if ( tmp_str == "recovery_rising" ) {
 	value = ClibTimingType::RecoveryRising;
       }
-      else if ( strcmp(tmp_str, "recovery_falling") == 0 ) {
+      else if ( tmp_str == "recovery_falling" ) {
 	value = ClibTimingType::RecoveryFalling;
       }
-      else if ( strcmp(tmp_str, "skew_rising") == 0 ) {
+      else if ( tmp_str == "skew_rising" ) {
 	value = ClibTimingType::SkewRising;
       }
-      else if ( strcmp(tmp_str, "skew_falling") == 0 ) {
+      else if ( tmp_str == "skew_falling" ) {
 	value = ClibTimingType::SkewFalling;
       }
-      else if ( strcmp(tmp_str, "removal_rising") == 0 ) {
+      else if ( tmp_str == "removal_rising" ) {
 	value = ClibTimingType::RemovalRising;
       }
-      else if ( strcmp(tmp_str, "removal_falling") == 0 ) {
+      else if ( tmp_str == "removal_falling" ) {
 	value = ClibTimingType::RemovalFalling;
       }
-      else if ( strcmp(tmp_str, "non_seq_setup_rising") == 0 ) {
+      else if ( tmp_str == "non_seq_setup_rising" ) {
 	value = ClibTimingType::NonSeqSetupRising;
       }
-      else if ( strcmp(tmp_str, "non_seq_setup_falling") == 0 ) {
+      else if ( tmp_str == "non_seq_setup_falling" ) {
 	value = ClibTimingType::NonSeqSetupFalling;
       }
-      else if ( strcmp(tmp_str, "non_seq_hold_rising") == 0 ) {
+      else if ( tmp_str == "non_seq_hold_rising" ) {
 	value = ClibTimingType::NonSeqHoldRising;
       }
-      else if ( strcmp(tmp_str, "non_seq_hold_falling") == 0 ) {
+      else if ( tmp_str == "non_seq_hold_falling" ) {
 	value = ClibTimingType::NonSeqHoldFalling;
       }
-      else if ( strcmp(tmp_str, "nochange_high_high") == 0 ) {
+      else if ( tmp_str == "nochange_high_high" ) {
 	value = ClibTimingType::NochangeHighHigh;
       }
-      else if ( strcmp(tmp_str, "nochange_high_low") == 0 ) {
+      else if ( tmp_str == "nochange_high_low" ) {
 	value = ClibTimingType::NochangeHighLow;
       }
-      else if ( strcmp(tmp_str, "nochange_low_high") == 0 ) {
+      else if ( tmp_str == "nochange_low_high" ) {
 	value = ClibTimingType::NochangeLowHigh;
       }
-      else if ( strcmp(tmp_str, "nochange_low_low") == 0 ) {
+      else if ( tmp_str == "nochange_low_low" ) {
 	value = ClibTimingType::NochangeLowLow;
       }
       else {
@@ -544,52 +580,58 @@ DotlibParser::parse_vartype(const AstVarType*& dst,
     return false;
   }
   else {
-    const char* tmp_str;
+    string tmp_str;
     FileRegion value_loc;
     bool stat = parse_simple_attribute([&](DotlibParser& parser) -> bool
     {
-      tmp_str = parser.read_raw_string(value_loc);
-      return tmp_str != nullptr;
+      auto s = parser.read_raw_string(value_loc);
+      if ( s != nullptr ) {
+	tmp_str = s;
+	return true;
+      }
+      else {
+	return false;
+      }
     });
     if ( stat ) {
       ClibVarType value;
-      if ( strcmp(tmp_str, "input_net_transition") == 0 ) {
+      if ( tmp_str == "input_net_transition" ) {
 	value = ClibVarType::InputNetTransition;
       }
-      else if ( strcmp(tmp_str, "total_output_net_capacitance") == 0 ) {
+      else if ( tmp_str == "total_output_net_capacitance" ) {
 	value = ClibVarType::TotalOutputNetCapacitance;
       }
-      else if ( strcmp(tmp_str, "equal_or_opposite_output_net_capacitance") == 0 ) {
+      else if ( tmp_str == "equal_or_opposite_output_net_capacitance" ) {
 	value = ClibVarType::EqualOrOppositeOutputNetCapacitance;
       }
-      else if ( strcmp(tmp_str, "input_transition_time") == 0 ) {
+      else if ( tmp_str == "input_transition_time" ) {
 	value = ClibVarType::InputTransitionTime;
       }
-      else if ( strcmp(tmp_str, "output_net_length") == 0 ) {
+      else if ( tmp_str == "output_net_length" ) {
 	value = ClibVarType::OutputNetLength;
       }
-      else if ( strcmp(tmp_str, "output_net_wire_cap") == 0 ) {
+      else if ( tmp_str == "output_net_wire_cap" ) {
 	value = ClibVarType::OutputNetWireCap;
       }
-      else if ( strcmp(tmp_str, "output_net_pin_cap") == 0 ) {
+      else if ( tmp_str == "output_net_pin_cap" ) {
 	value = ClibVarType::OutputNetPinCap;
       }
-      else if ( strcmp(tmp_str, "related_out_total_output_net_capacitance") == 0 ) {
+      else if ( tmp_str == "related_out_total_output_net_capacitance" ) {
 	value = ClibVarType::RelatedOutTotalOutputNetCapacitance;
       }
-      else if ( strcmp(tmp_str, "related_out_output_net_length") == 0 ) {
+      else if ( tmp_str == "related_out_output_net_length" ) {
 	value = ClibVarType::RelatedOutOutputNetLength;
       }
-      else if ( strcmp(tmp_str, "related_out_output_net_wire_cap") == 0 ) {
+      else if ( tmp_str == "related_out_output_net_wire_cap" ) {
 	value = ClibVarType::RelatedOutOutputNetWireCap;
       }
-      else if ( strcmp(tmp_str, "related_out_output_net_pin_cap") == 0 ) {
+      else if ( tmp_str == "related_out_output_net_pin_cap" ) {
 	value = ClibVarType::RelatedOutOutputNetPinCap;
       }
-      else if ( strcmp(tmp_str, "constrained_pin_transition") == 0 ) {
+      else if ( tmp_str == "constrained_pin_transition" ) {
 	value = ClibVarType::ConstrainedPinTransition;
       }
-      else if ( strcmp(tmp_str, "related_pin_transition") == 0 ) {
+      else if ( tmp_str == "related_pin_transition" ) {
 	value = ClibVarType::RelatedPinTransition;
       }
       else {
@@ -635,7 +677,7 @@ DotlibParser::parse_expr(const AstExpr*& dst,
       return false;
     }
 
-    const AstExpr* value = read_expr(TokenType::SEMI);
+    auto value = read_expr(TokenType::SEMI);
     if ( value != nullptr ) {
       if ( expect_nl() ) {
 	dst = value;
