@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "AstNode.h"
 
 
@@ -24,7 +23,8 @@ class AstStrList :
 public:
 
   /// @brief コンストラクタ
-  AstStrList(const StrListHandler& handler); ///< [in] ハンドラ
+  AstStrList(const vector<AstString*>& str_list, ///< [in] 文字列のリスト
+	     const FileRegion& loc);             ///< [in] ファイル上の位置
 
   /// @brief デストラクタ
   ~AstStrList();
@@ -39,7 +39,7 @@ public:
   int
   size() const
   {
-    return mNum;
+    return mBody.size();
   }
 
   /// @brief リストの要素を返す．
@@ -55,14 +55,17 @@ public:
   vector<const AstString*>
   get_vector() const
   {
-    return vector<const AstString*>(&mBody[0], &mBody[size()]);
+    return mBody;
   }
+
+  /// @brief ファイル上の位置を返す．
+  FileRegion
+  loc() const override;
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
+  dump(ostream& s,                     ///< [in] 出力先のストリーム
+       int indent = 0) const override; ///< [in] インデント量
 
 
 private:
@@ -70,11 +73,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 要素数
-  int mNum;
-
   // リストの本体
-  const AstString* mBody[1];
+  vector<const AstString*> mBody;
+
+  // ファイル上の位置
+  FileRegion mLoc;
 
 };
 

@@ -45,7 +45,9 @@ AstDomain::AstDomain(const FileRegion& attr_loc,
 		     const DomainHandler& group) :
   AstNode{FileRegion{attr_loc, group.group_loc()}},
   mName{header.value()},
+#if 0
   mCalcMode{group.calc_mode()},
+#endif
   mCoefs{group.coefs()},
   mOrders{group.orders()},
   mVar1Range{group.variable_1_range()},

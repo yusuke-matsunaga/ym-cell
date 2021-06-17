@@ -130,11 +130,8 @@ set (dotlib_SOURCES
   #c++-src/dotlib/handler/CellInternalPower.cc
   #c++-src/dotlib/handler/DefineHandler.cc
 
-  c++-src/dotlib/ast/AstBool.cc
   c++-src/dotlib/ast/AstCell.cc
   c++-src/dotlib/ast/AstCPType.cc
-  c++-src/dotlib/ast/AstDelayModel.cc
-  c++-src/dotlib/ast/AstDirection.cc
   c++-src/dotlib/ast/AstDomain.cc
   c++-src/dotlib/ast/AstExpr.cc
   c++-src/dotlib/ast/AstFF.cc
@@ -159,6 +156,7 @@ set (dotlib_SOURCES
   c++-src/dotlib/ast/AstNode.cc
   c++-src/dotlib/ast/AstOutputVoltage.cc
   c++-src/dotlib/ast/AstPin.cc
+  c++-src/dotlib/ast/AstSimple.cc
   c++-src/dotlib/ast/AstStr2.cc
   c++-src/dotlib/ast/AstStr3.cc
   c++-src/dotlib/ast/AstStrFloat.cc
@@ -167,10 +165,7 @@ set (dotlib_SOURCES
   c++-src/dotlib/ast/AstStrList.cc
   c++-src/dotlib/ast/AstTemplate.cc
   c++-src/dotlib/ast/AstTiming.cc
-  c++-src/dotlib/ast/AstTimingSense.cc
-  c++-src/dotlib/ast/AstTimingType.cc
-  c++-src/dotlib/ast/AstTechnology.cc
-  c++-src/dotlib/ast/AstVarType.cc
+  c++-src/dotlib/ast/AstValue.cc
 
   #c++-src/dotlib/ast/AstCell.cc
   #c++-src/dotlib/ast/AstCellDegradation.cc

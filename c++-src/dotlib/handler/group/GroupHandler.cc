@@ -40,7 +40,9 @@ GroupHandler::read_group_attr(AttrType attr_type,
 {
   if ( mFuncDict.count(attr_type) > 0 ) {
     auto func = mFuncDict.at(attr_type);
-    return func(parser(), attr_type, attr_loc);
+    auto node = func(parser(), attr_type, attr_loc);
+    mNode.push_back(node);
+    return true;
   }
   else {
     syntax_error(attr_type, attr_loc);

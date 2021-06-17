@@ -44,6 +44,7 @@ AstPin::AstPin(const FileRegion& attr_loc,
 	       const StrListHandler& header,
 	       const PinHandler& group) :
   AstNameListNode{FileRegion(attr_loc, group.group_loc()), header},
+#if 0
   mDirection{group.mDirection},
   mCapacitance{group.mCapacitance},
   mRiseCapacitance{group.mRiseCapacitance},
@@ -58,6 +59,8 @@ AstPin::AstPin(const FileRegion& attr_loc,
   mThreeState{group.mThreeState},
   mPinFuncType{group.mPinFuncType},
   mTimingList{group.mTimingList}
+#endif
+  mTimingList{vector<const AstTiming*>{}}
 {
 }
 

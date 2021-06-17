@@ -132,6 +132,7 @@ public:
   // simple attribute の値を表す AstNode を作る関数
   //////////////////////////////////////////////////////////////////////
 
+#if 0
   /// @brief ブール値を表す AstNode を生成する．
   const AstBool*
   new_bool(const FileRegion& loc, ///< [in] ファイル上の位置
@@ -196,13 +197,14 @@ public:
   const AstVarType*
   new_var_type(const FileRegion& loc, ///< [in] ファイル上の位置
 	       ClibVarType value);    ///< [in] 値
-
+#endif
 
 public:
   //////////////////////////////////////////////////////////////////////
   // complex attribute の値を表す AstNode を作る関数
   //////////////////////////////////////////////////////////////////////
 
+#if 0
   /// @brief ( float, float ) 型の AstNode を生成する．
   const AstFloat2*
   new_float2(const FloatFloatHandler& handler); ///< [in] ハンドラ
@@ -238,13 +240,14 @@ public:
   /// @brief ( string, string, string ) 型の AstNode を生成する．
   const AstStr3*
   new_str3(const StrStrStrHandler& handler); ///< [in] ハンドラ
-
+#endif
 
 public:
   //////////////////////////////////////////////////////////////////////
   // group statement の値を表す AstNode を作る関数
   //////////////////////////////////////////////////////////////////////
 
+#if 0
   /// @brief ライブラリを表す AstNode を生成する．
   const AstLibrary*
   new_library(const FileRegion& attr_loc,   ///< [in] 属性のファイル上の位置
@@ -340,7 +343,7 @@ public:
   /// @brief 使用メモリ量の一覧を出力する．
   void
   show_stats(ostream& s) const; ///< [in] 出力先のストリーム
-
+#endif
 
 private:
   //////////////////////////////////////////////////////////////////////

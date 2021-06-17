@@ -26,77 +26,77 @@ TimingHandler::TimingHandler(DotlibParser& parser) :
   // パース関数の登録
   reg_func(AttrType::clock_gating_flag,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_bool(mClockGatingFlag, attr_type, attr_loc); });
+	   { return parser.add_bool(mBoolList, attr_type, attr_loc); });
   reg_func(AttrType::default_timing,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_bool(mDefaultTiming, attr_type, attr_loc); });
+	   { return parser.add_bool(mBoolList, attr_type, attr_loc); });
   reg_func(AttrType::fall_resistance,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_float(mFallResistance, attr_type, attr_loc); });
+	   { return parser.add_float(mFloatList, attr_type, attr_loc); });
   reg_func(AttrType::fpga_arc_condition,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_function(mFpgaArcCondition, attr_type, attr_loc); });
+	   { return parser.add_function(mExprList, attr_type, attr_loc); });
   reg_func(AttrType::fpga_domain_style,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_string(mFpgaDomainStyle, attr_type, attr_loc); });
+	   { return parser.add_string(mStrList, attr_type, attr_loc); });
   reg_func(AttrType::interdependence_id,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_int(mInterdependenceId, attr_type, attr_loc); });
+	   { return parser.add_int(mIntList, attr_type, attr_loc); });
   reg_func(AttrType::intrinsic_fall,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_float(mIntrinsicFall, attr_type, attr_loc); });
+	   { return parser.add_float(mFloatList, attr_type, attr_loc); });
   reg_func(AttrType::intrinsic_rise,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_float(mIntrinsicRise, attr_type, attr_loc); });
+	   { return parser.add_float(mFloatList, attr_type, attr_loc); });
   reg_func(AttrType::related_bus_equivalent,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_string(mRelatedBusEquivalent, attr_type, attr_loc); });
+	   { return parser.add_string(mStrList, attr_type, attr_loc); });
   reg_func(AttrType::related_bus_pins,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_string(mRelatedBusPins, attr_type, attr_loc); });
+	   { return parser.add_string(mStrList, attr_type, attr_loc); });
   reg_func(AttrType::related_output_pin,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_string(mRelatedOutputPin, attr_type, attr_loc); });
+	   { return parser.add_string(mStrList, attr_type, attr_loc); });
   reg_func(AttrType::related_pin,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_string(mRelatedPin, attr_type, attr_loc); });
+	   { return parser.add_string(mStrList, attr_type, attr_loc); });
   reg_func(AttrType::rise_resistance,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_float(mRiseResistance, attr_type, attr_loc); });
+	   { return parser.add_float(mFloatList, attr_type, attr_loc); });
   // sdf_cond
   // sdf_cond_end
   // sdf_cond_start
   // sdf_edges
   reg_func(AttrType::slope_fall,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_float(mSlopeFall, attr_type, attr_loc); });
+	   { return parser.add_float(mFloatList, attr_type, attr_loc); });
   reg_func(AttrType::slope_rise,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_float(mSlopeRise, attr_type, attr_loc); });
+	   { return parser.add_float(mFloatList, attr_type, attr_loc); });
   reg_func(AttrType::steady_state_resistance_above_high,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_float(mSteadyStateResistanceAboveHigh, attr_type, attr_loc); });
+	   { return parser.add_float(mFloatList, attr_type, attr_loc); });
   reg_func(AttrType::steady_state_resistance_below_low,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_float(mSteadyStateResistanceBelowLow, attr_type, attr_loc); });
+	   { return parser.add_float(mFloatList, attr_type, attr_loc); });
   reg_func(AttrType::tied_off,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_bool(mTiedOff, attr_type, attr_loc); });
+	   { return parser.add_bool(mBoolList, attr_type, attr_loc); });
   reg_func(AttrType::timing_sense,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_timing_sense(mTimingSense, attr_type, attr_loc); });
+	   { return parser.set_timing_sense(mTimingSense, attr_type, attr_loc); });
   reg_func(AttrType::timing_type,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_timing_type(mTimingType, attr_type, attr_loc); });
+	   { return parser.set_timing_type(mTimingType, attr_type, attr_loc); });
   reg_func(AttrType::when,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_function(mWhen, attr_type, attr_loc); });
+	   { return parser.add_function(mExprList, attr_type, attr_loc); });
   reg_func(AttrType::when_end,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_function(mWhenEnd, attr_type, attr_loc); });
+	   { return parser.add_function(mExprList, attr_type, attr_loc); });
   reg_func(AttrType::when_start,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_function(mWhenStart, attr_type, attr_loc); });
+	   { return parser.add_function(mExprList, attr_type, attr_loc); });
 
   reg_func(AttrType::fall_delay_intercept,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
@@ -186,54 +186,19 @@ TimingHandler::~TimingHandler()
 void
 TimingHandler::begin_group()
 {
-  mClockGatingFlag = nullptr;
-  mDefaultTiming = nullptr;
-  mFallResistance = nullptr;
-  mFpgaArcCondition = nullptr;
-  mFpgaDomainStyle = nullptr;
-  mInterdependenceId = nullptr;
-  mIntrinsicFall = nullptr;
-  mIntrinsicRise = nullptr;
-  mRelatedBusEquivalent = nullptr;
-  mRelatedBusPins = nullptr;
-  mRelatedOutputPin = nullptr;
-  mRelatedPin = nullptr;
-  mRiseResistance = nullptr;
-  mSdfCond = nullptr;
-  mSdfCondEnd = nullptr;
-  mSdfCondStart = nullptr;
-  mSdfEdges = nullptr;
-  mSlopeFall = nullptr;
-  mSlopeRise = nullptr;
-  mSteadyStateResistanceAboveHigh = nullptr;
-  mSteadyStateResistanceBelowLow = nullptr;
-  mSteadyStateResistanceHigh = nullptr;
-  mSteadyStateResistanceLow = nullptr;
-  mTiedOff = nullptr;
+  mBoolList.clear();
+  mIntList.clear();
+  mFloatList.clear();
+  mExprList.clear();
+
   mTimingSense = nullptr;
   mTimingType = nullptr;
-  mWhen = nullptr;
-  mWhenEnd = nullptr;
-  mWhenStart = nullptr;
 
   mFallDelayIntercept.clear();
   mFallPinResistance.clear();
 
-  mModeName = nullptr;
-  mModeValue = nullptr;
-
   mRiseDelayIntercept.clear();
   mRisePinResistance.clear();
-
-  mCellDegradation = nullptr;
-  mCellFall = nullptr;
-  mCellRise = nullptr;
-  mCompactCCSFall = nullptr;
-  mCompactCCSRise = nullptr;
-  mFallConstraint = nullptr;
-  mFallTransition = nullptr;
-  mRiseConstraint = nullptr;
-  mRiseTransition = nullptr;
 
   // mNoiseImmunityAbove
   // mNoiseImmunityBelowLow
@@ -249,11 +214,6 @@ TimingHandler::begin_group()
   // mPropagatedNoisePeakTimeRatioLow
   // mPropagatedNoiseWidthHigh
   // mPropagatedNoiseWidthLow
-
-  mRetainingRise = nullptr;
-  mRetainingFall = nullptr;
-  mRetainRiseSlew = nullptr;
-  mRetainFallSlew = nullptr;
 
   // mSteadyStateCurrentHigh
   // mSteadyStateCurrentLow

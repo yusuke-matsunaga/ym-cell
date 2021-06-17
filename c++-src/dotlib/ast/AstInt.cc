@@ -3,46 +3,23 @@
 /// @brief AstInt の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
-#include "dotlib/AstMgr.h"
 #include "dotlib/AstInt.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-// @brief 整数値を表す AstNode を生成する．
-// @param[in] loc ファイル上の位置
-// @param[in] value 値
-const AstInt*
-AstMgr::new_int(const FileRegion& loc,
-		int value)
-{
-  ++ mIntNum;
-  auto node = new AstInt(loc, value);
-  mNodeList.push_back(node);
-  return node;
-}
-
-
 //////////////////////////////////////////////////////////////////////
 /// クラス AstInt
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-// @param[in] loc ファイル上の位置
-// @param[in] value 値
-AstInt::AstInt(const FileRegion& loc,
-	       int value) :
-  AstNode(loc),
-  mValue(value)
-{
-}
-
-// @brief デストラクタ
-AstInt::~AstInt()
+/// @brief コンストラクタ
+AstInt::AstInt(int value,                   ///< [in] 値
+	       const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
+  : AstValue(val_loc),
+    mValue{value}
 {
 }
 

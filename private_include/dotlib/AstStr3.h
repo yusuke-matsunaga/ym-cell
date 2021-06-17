@@ -24,7 +24,9 @@ class AstStr3 :
 public:
 
   /// @brief コンストラクタ
-  AstStr3(const StrStrStrHandler& handler); ///< [in] ハンドラ
+  AstStr3(const AstString* value1,  ///< [in] 値1
+	  const AstString* value2,  ///< [in] 値2
+	  const AstString* value3); ///< [in] 値3
 
   /// @brief デストラクタ
   ~AstStr3();
@@ -58,9 +60,9 @@ public:
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
+  dump(ostream& s,                     ///< [in] 出力先のストリーム
+       int indent = 0) const override; ///< [in] インデント量
+
 
 
 private:

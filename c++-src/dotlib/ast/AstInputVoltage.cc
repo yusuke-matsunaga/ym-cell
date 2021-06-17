@@ -16,22 +16,6 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-// @brief input voltage を表す AstNode を生成する．
-// @param[in] attr_loc 属性のファイル上の位置
-// @param[in] header ヘッダを読み込んだハンドラ
-// @param[in] group グループ本体を読み込んだハンドラ
-const AstInputVoltage*
-AstMgr::new_input_voltage(const FileRegion& attr_loc,
-			  const StrHandler& header,
-			  const InputVoltageHandler& group)
-{
-  ++ mInputVolNum;
-  auto node = new AstInputVoltage(attr_loc, header, group);
-  mNodeList.push_back(node);
-  return node;
-}
-
-
 //////////////////////////////////////////////////////////////////////
 // クラス AstInputVoltage
 //////////////////////////////////////////////////////////////////////
@@ -44,11 +28,13 @@ AstInputVoltage::AstInputVoltage(const FileRegion& attr_loc,
 				 const StrHandler& header,
 				 const InputVoltageHandler& group) :
   AstNode(FileRegion(attr_loc, group.group_loc())),
-  mName{header.value()},
+  mName{header.value()}
+#if 0
   mVil{group.vil()},
   mVih{group.vih()},
   mViMin{group.vimin()},
   mViMax{group.vimax()}
+#endif
 {
 }
 

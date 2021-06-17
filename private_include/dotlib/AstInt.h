@@ -8,26 +8,26 @@
 /// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "AstNode.h"
+#include "AstValue.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class AstInt AstInt.h "AstInt.h"
-/// @brief 整数値を表すクラス
+/// @brief 整数値のノードを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstInt :
-  public AstNode
+  public AstValue
 {
 public:
 
   /// @brief コンストラクタ
-  AstInt(const FileRegion& loc, ///< [in] ファイル上の位置
-	 int value);            ///< [in] 値
+  AstInt(int value,                  ///< [in] 値
+	 const FileRegion& val_loc); ///< [in] 値のファイル上の位置
 
   /// @brief デストラクタ
-  ~AstInt();
+  ~AstInt() = default;
 
 
 public:
@@ -37,16 +37,11 @@ public:
 
   /// @brief 整数値を返す．
   int
-  value() const
-  {
-    return mValue;
-  }
+  int_value() const override;
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
+  dump(ostream& s) const override; ///< [in] 出力先のストリーム
 
 
 private:

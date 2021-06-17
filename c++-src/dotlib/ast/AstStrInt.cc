@@ -3,52 +3,43 @@
 /// @brief AstStrInt の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
-#include "dotlib/AstMgr.h"
 #include "dotlib/AstStrInt.h"
 #include "dotlib/AstString.h"
 #include "dotlib/AstInt.h"
-#include "dotlib/StrIntHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief ( string, int ) 型の AstNode を生成する．
-// @param[in] handler ハンドラ
-const AstStrInt*
-AstMgr::new_str_int(const StrIntHandler& handler)
-{
-  ++ mStrIntNum;
-  auto node = new AstStrInt(handler);
-  mNodeList.push_back(node);
-  return node;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス AstStrInt
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] handler ハンドラ
-AstStrInt::AstStrInt(const StrIntHandler& handler) :
-  AstNode(FileRegion(handler.first_loc(), handler.last_loc())),
-  mVal1(handler.value1()),
-  mVal2(handler.value2())
+AstStrInt::AstStrInt(const AstString* value1,
+		     const AstInt* value2)
+  : mVal1{value1},
+    mVal2{value2}
 {
 }
 
 // @brief デストラクタ
 AstStrInt::~AstStrInt()
 {
+  delete mVal1;
+  delete mVal2;
+}
+
+// @brief ファイル上の位置を返す．
+FileRegion
+AstStrInt::loc() const
+{
+  return FileRegion(mVal1->loc(), mVal2->loc());
 }
 
 // @brief 内容をストリーム出力する．
-// @param[in] s 出力先のストリーム
-// @param[in] indent インデント量
 void
 AstStrInt::dump(ostream& s,
 		int indent) const

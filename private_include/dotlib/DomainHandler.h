@@ -36,12 +36,14 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
+#if 0
   /// @brief calc_mode を返す．
   const AstString*
   calc_mode() const
   {
     return mCalcMode;
   }
+#endif
 
   /// @brief coefs を返す．
   const AstFloatVector*
@@ -106,8 +108,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // string
+  vector<const AstString*> mStrList;
+
   // calc_mode
-  const AstString* mCalcMode;
+  //const AstString* mCalcMode;
 
   // coefs
   const AstFloatVector* mCoefs;

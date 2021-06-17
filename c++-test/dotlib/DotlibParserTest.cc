@@ -51,10 +51,8 @@ TEST_F(DotlibParserTest, parse_bool1)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstBool* dst = nullptr;
-  bool stat = parser.parse_bool(dst, attr_type, loc);
+  auto dst = parser.parse_bool(attr_type, loc);
 
-  EXPECT_TRUE( stat );
   ASSERT_TRUE( dst != nullptr );
   EXPECT_EQ( true, dst->value() );
 }
@@ -65,10 +63,8 @@ TEST_F(DotlibParserTest, parse_bool2)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstBool* dst = nullptr;
-  bool stat = parser.parse_bool(dst, attr_type, loc);
+  auto dst = parser.parse_bool(attr_type, loc);
 
-  EXPECT_TRUE( stat );
   ASSERT_TRUE( dst != nullptr );
   EXPECT_EQ( false, dst->value() );
 }
@@ -79,10 +75,9 @@ TEST_F(DotlibParserTest, parse_bool3)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstBool* dst = nullptr;
-  bool stat = parser.parse_bool(dst, attr_type, loc);
+  auto dst = parser.parse_bool(attr_type, loc);
 
-  EXPECT_FALSE( stat );
+  EXPECT_TRUE( dst == nullptr );
 }
 
 TEST_F(DotlibParserTest, parse_bool4)
@@ -91,10 +86,9 @@ TEST_F(DotlibParserTest, parse_bool4)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstBool* dst = nullptr;
-  bool stat = parser.parse_bool(dst, attr_type, loc);
+  auto dst = parser.parse_bool(attr_type, loc);
 
-  EXPECT_FALSE( stat );
+  EXPECT_TRUE( dst == nullptr );
 }
 
 TEST_F(DotlibParserTest, parse_bool5)
@@ -103,22 +97,20 @@ TEST_F(DotlibParserTest, parse_bool5)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstBool* dst = nullptr;
-  bool stat = parser.parse_bool(dst, attr_type, loc);
+  auto dst = parser.parse_bool(attr_type, loc);
 
-  EXPECT_FALSE( stat );
+  EXPECT_TRUE( dst == nullptr );
 }
 
 TEST_F(DotlibParserTest, parse_bool6)
 {
   istringstream buf{": true\n"};
   InputFileObj in{buf, info};
+  // allow_no_semi が true なので成功する．
   DotlibParser parser{in, mgr, false, true};
 
-  const AstBool* dst = nullptr;
-  bool stat = parser.parse_bool(dst, attr_type, loc);
+  auto dst = parser.parse_bool(attr_type, loc);
 
-  EXPECT_TRUE( stat );
   ASSERT_TRUE( dst != nullptr );
   EXPECT_EQ( true, dst->value() );
 }
@@ -129,10 +121,8 @@ TEST_F(DotlibParserTest, parse_int1)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstInt* dst = nullptr;
-  bool stat = parser.parse_int(dst, attr_type, loc);
+  auto dst = parser.parse_int(attr_type, loc);
 
-  EXPECT_TRUE( stat );
   ASSERT_TRUE( dst != nullptr );
   EXPECT_EQ( 123, dst->value() );
 }
@@ -143,10 +133,8 @@ TEST_F(DotlibParserTest, parse_int2)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstInt* dst = nullptr;
-  bool stat = parser.parse_int(dst, attr_type, loc);
+  auto dst = parser.parse_int(attr_type, loc);
 
-  EXPECT_FALSE( stat );
   EXPECT_TRUE( dst == nullptr );
 }
 
@@ -156,10 +144,8 @@ TEST_F(DotlibParserTest, parse_float1)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstFloat* dst = nullptr;
-  bool stat = parser.parse_float(dst, attr_type, loc);
+  auto dst = parser.parse_float(attr_type, loc);
 
-  EXPECT_TRUE( stat );
   ASSERT_TRUE( dst != nullptr );
   EXPECT_EQ( 123.456, dst->value() );
 }
@@ -170,10 +156,8 @@ TEST_F(DotlibParserTest, parse_float2)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstFloat* dst = nullptr;
-  bool stat = parser.parse_float(dst, attr_type, loc);
+  auto dst = parser.parse_float(attr_type, loc);
 
-  EXPECT_TRUE( stat );
   ASSERT_TRUE( dst != nullptr );
   EXPECT_EQ( 123, dst->value() );
 }
@@ -184,10 +168,8 @@ TEST_F(DotlibParserTest, parse_float3)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstFloat* dst = nullptr;
-  bool stat = parser.parse_float(dst, attr_type, loc);
+  auto dst = parser.parse_float(attr_type, loc);
 
-  EXPECT_FALSE( stat );
   EXPECT_TRUE( dst == nullptr );
 }
 
@@ -197,10 +179,8 @@ TEST_F(DotlibParserTest, parse_string1)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstString* dst = nullptr;
-  bool stat = parser.parse_string(dst, attr_type, loc);
+  auto dst = parser.parse_string(attr_type, loc);
 
-  EXPECT_TRUE( stat );
   ASSERT_TRUE( dst != nullptr );
   EXPECT_EQ( "abcdefg", dst->value() );
 }
@@ -211,10 +191,8 @@ TEST_F(DotlibParserTest, parse_string2)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstString* dst = nullptr;
-  bool stat = parser.parse_string(dst, attr_type, loc);
+  auto dst = parser.parse_string(attr_type, loc);
 
-  EXPECT_TRUE( stat );
   ASSERT_TRUE( dst != nullptr );
   EXPECT_EQ( "abcdefg", dst->value() );
 }
@@ -225,10 +203,8 @@ TEST_F(DotlibParserTest, parse_string3)
   InputFileObj in{buf, info};
   DotlibParser parser{in, mgr, false, false};
 
-  const AstString* dst = nullptr;
-  bool stat = parser.parse_string(dst, attr_type, loc);
+  auto dst = parser.parse_string(attr_type, loc);
 
-  EXPECT_TRUE( stat );
   ASSERT_TRUE( dst != nullptr );
   EXPECT_EQ( "1.3a", dst->value() );
 }

@@ -24,7 +24,8 @@ class AstStrFloat :
 public:
 
   /// @brief コンストラクタ
-  AstStrFloat(const StrFloatHandler& handler); ///< [in] ハンドラ
+  AstStrFloat(const AstString* value1, ///< [in] 値1
+	      const AstFloat* value2); ///< [in] 値2
 
   /// @brief デストラクタ
   ~AstStrFloat();
@@ -51,9 +52,8 @@ public:
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
+  dump(ostream& s,                     ///< [in] 出力先のストリーム
+       int indent = 0) const override; ///< [in] インデント量
 
 
 private:

@@ -3,46 +3,23 @@
 /// @brief AstNode の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
-#include "dotlib/AstMgr.h"
 #include "dotlib/AstFloat.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief 実数値を表す AstNode を生成する．
-// @param[in] loc ファイル上の位置
-// @param[in] value 値
-const AstFloat*
-AstMgr::new_float(const FileRegion& loc,
-		  double value)
-{
-  ++ mFloatNum;
-  auto node = new AstFloat(loc, value);
-  mNodeList.push_back(node);
-  return node;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 /// クラス AstFloat
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc ファイル上の位置
-// @param[in] value 値
-AstFloat::AstFloat(const FileRegion& loc,
-		   double value) :
-  AstNode(loc),
-  mValue(value)
-{
-}
-
-// @brief デストラクタ
-AstFloat::~AstFloat()
+AstFloat::AstFloat(double value,                ///< [in] 値
+		   const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
+  : AstValue(val_loc),
+    mValue{value}
 {
 }
 

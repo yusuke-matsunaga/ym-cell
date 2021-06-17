@@ -51,115 +51,93 @@ public:
   // simple attribute を読み込む関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ブール値 のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @brief 整数値型の simple attribute のパースを行う．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_bool(const AstBool*& dst,         ///< [out] 結果を格納する変数
-	     AttrType attr_type,          ///< [in] 属性の型
-	     const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
-
-  /// @brief 整数値 のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_int(const AstInt*& dst,          ///< [out] 結果を格納する変数
-	    AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_int(AttrType attr_type,          ///< [in] 属性の型
 	    const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
-  /// @brief float 値のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @brief float 値型の simple attribute のパースを行う．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_float(const AstFloat*& dst,        ///< [out] 結果を格納する変数
-	      AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_float(AttrType attr_type,          ///< [in] 属性の型
 	      const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
-  /// @brief 文字列値のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @brief 文字列値の simple attribute のパースを行う．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_string(const AstString*& dst,       ///< [out] 結果を格納する変数
-	       AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_string(AttrType attr_type,          ///< [in] 属性の型
 	       const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
-  /// @brief 'delay_model' Simple Attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @brief ブール値型の simple attribute のパースを行う．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_delay_model(const AstDelayModel*& dst,   ///< [out] 結果を格納する変数
-		    AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_bool(AttrType attr_type,          ///< [in] 属性の型
+	     const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
+
+  /// @brief 'delay_model' Simple Attribute のパースを行う．
+  /// @return パース結果を返す．
+  ///
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_delay_model(AttrType attr_type,          ///< [in] 属性の型
 		    const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
   /// @brief 'direction' Simple Attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_direction(const AstDirection*& dst,    ///< [out] 結果を格納する変数
-		  AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_direction(AttrType attr_type,          ///< [in] 属性の型
 		  const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
-  /// @brief 'timing_sense' Simple Attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @brief 式型の simple attribute のパースを行う．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_timing_sense(const AstTimingSense*& dst,  ///< [out] 結果を格納する変数
-		     AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_expr(AttrType attr_type,          ///< [in] 属性の型
+	     const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
+
+  /// @brief "式" 型の simple attribute のパースを行う．
+  /// @return パース結果を返す．
+  ///
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_function(AttrType attr_type,          ///< [in] 属性の型
+		 const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
+
+  /// @brief 'timing_sense' Simple Attribute のパースを行う．
+  /// @return パース結果を返す．
+  ///
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_timing_sense(AttrType attr_type,          ///< [in] 属性の型
 		     const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
   /// @brief 'timing_type' Simple Attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_timing_type(const AstTimingType*& dst,   ///< [out] 結果を格納する変数
-		    AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_timing_type(AttrType attr_type,          ///< [in] 属性の型
 		    const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
   /// @brief 'var_type' Simple Attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_vartype(const AstVarType*& dst,      ///< [out] 結果を格納する変数
-		AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_vartype(AttrType attr_type,          ///< [in] 属性の型
 		const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
-
-  /// @brief 式のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_expr(const AstExpr*& dst,         ///< [out] 結果を格納する変数
-	     AttrType attr_type,          ///< [in] 属性の型
-	     const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
-
-  /// @brief 論理関数のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_function(const AstExpr*& dst,         ///< [out] 結果を格納する変数
-		 AttrType attr_type,          ///< [in] 属性の型
-		 const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
 
 public:
@@ -168,184 +146,115 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 'define' Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  bool
-  parse_define(vector<const AstStr3*>& dst_list, ///< [out] 結果を格納するリスト
-	       AttrType attr_type,               ///< [in] 属性の型
+  /// @return パース結果を返す．
+  ///
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_define(AttrType attr_type,               ///< [in] 属性の型
 	       const FileRegion& attr_loc);      ///< [in] 属性のファイル上の位置
 
   /// @brief ( float, float ) の形式の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  /// - 'variable_n_range'
-  bool
-  parse_float_float(const AstFloat2*& dst,       ///< [out] 結果を格納する変数
-		    AttrType attr_type,          ///< [in] 属性の型
-		    const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_float2(AttrType attr_type,          ///< [in] 属性の型
+	       const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
   /// @brief ( float, string ) 型の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  /// - 'capacitive_load_unit'
-  bool
-  parse_float_string(const AstFloatStr*& dst,     ///< [out] 結果を格納する変数
-		     AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_float_string(AttrType attr_type,          ///< [in] 属性の型
 		     const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
   /// @brief ( "float, float, ... " ) の形式の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  /// - 'coefs'
-  /// - 'curve_x'
-  /// - 'index'
-  /// - 'piece_define'
-  bool
-  parse_float_vector(const AstFloatVector*& dst,  ///< [out] 結果を格納する変数
-		     AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_float_vector(AttrType attr_type,          ///< [in] 属性の型
 		     const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
   /// @brief ( integer, float ) の形式の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  /// - 'fanout_length'
-  /// - 'fanout_area'
-  /// - 'fanout_capacitance'
-  /// - 'fanout_resistance'
-  bool
-  parse_int_float(const AstIntFloat*& dst,     ///< [out] 結果を格納する変数
-		  AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_int_float(AttrType attr_type,          ///< [in] 属性の型
 		  const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
   /// @brief ( integer, "float, float, ... " ) の形式の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  /// - 'curve_y'
-  bool
-  parse_int_float_vector(const AstIntFloatVector*& dst, ///< [out] 結果を格納する変数
-			 AttrType attr_type,            ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_int_float_vector(AttrType attr_type,            ///< [in] 属性の型
 			 const FileRegion& attr_loc);   ///< [in] 属性のファイル上の位置
 
   /// @brief ( "integer, integer, ... " ) の形式の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  /// - 'orders'
-  bool
-  parse_int_vector(const AstIntVector*& dst,    ///< [out] 結果を格納する変数
-		   AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_int_vector(AttrType attr_type,          ///< [in] 属性の型
 		   const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
-  /// @brief ( integer, float ) 型の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// この属性は重複チェックは行わない．
-  bool
-  parse_int_float(vector<const AstIntFloat*>& dst_list, ///< [out] 結果を格納するリスト
-		  AttrType attr_type,                   ///< [in] 属性の型
-		  const FileRegion& attr_loc);          ///< [in] 属性のファイル上の位置
-
   /// @brief ( string ) 型の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  /// - 'base_curve_type'
-  /// - 'library_features'
-  bool
-  parse_string_complex(const AstString*& dst,       ///< [out] 結果を格納する変数
-		       AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_string_complex(AttrType attr_type,          ///< [in] 属性の型
 		       const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
   /// @brief ( string, float ) の形式の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// この属性は重複チェックは行わない．
-  /// - 'power_rail'
-  /// - 'voltage_map'
-  bool
-  parse_string_float(vector<const AstStrFloat*>& dst_list, ///< [out] 結果を格納するリスト
-		     AttrType attr_type,                   ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_string_float(AttrType attr_type,                   ///< [in] 属性の型
 		     const FileRegion& attr_loc);          ///< [in] 属性のファイル上の位置
 
   /// @brief ( string, integer ) の形式の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// この属性は重複チェックは行わない．
-  /// - 'max_count'
-  bool
-  parse_string_int(vector<const AstStrInt*>& dst_list, ///< [out] 結果を格納するリスト
-		   AttrType attr_type,                 ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_string_int(AttrType attr_type,                 ///< [in] 属性の型
 		   const FileRegion& attr_loc);        ///< [in] 属性のファイル上の位置
 
   /// @brief ( string, string, ... ) の形式の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  /// - 'routing_layers'
-  /// - 'valid_speed_grade'
-  /// - 'valid_step_levels'
-  bool
-  parse_string_list(const AstStrList*& dst,      ///< [out] 結果を格納する変数
-		    AttrType attr_type,          ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_string_list(AttrType attr_type,          ///< [in] 属性の型
 		    const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
   /// @brief ( string, string ) の形式の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  /// - 'default_part'
-  bool
-  parse_string_string(const AstStr2*& dst,         ///< [out] 結果を格納する変数
-		      AttrType attr_type,	   ///< [in] 属性の型
-		      const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
-
-  /// @brief ( string, string ) の形式の Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
-  ///
-  /// - 'define_cell_area'
-  /// - 'define_group'
-  /// - 'mapping'
-  bool
-  parse_string_string(vector<const AstStr2*>& dst_list, ///< [out] 結果を格納するリスト
-		      AttrType attr_type,               ///< [in] 属性の型
-		      const FileRegion& attr_loc);      ///< [in] 属性のファイル上の位置
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_string2(AttrType attr_type,	     ///< [in] 属性の型
+		const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
   /// @brief 'Technology' Complex Attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_technology(const AstTechnology*& dst,   ///< [out] 結果を格納する変数
-		   AttrType attr_type,		///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_technology(AttrType attr_type,		///< [in] 属性の型
 		   const FileRegion& attr_loc);	///< [in] 属性のファイル上の位置
 
   /// @brief 'values' Complex attribute のパースを行う．
-  /// @retval true 正常にパーズした．
-  /// @retval false パーズ中にエラーが起こった．
+  /// @return パース結果を返す．
   ///
-  /// すでに設定済みの属性に重複して設定しようとするとエラーになる．
-  bool
-  parse_values(const AstFloatVector*& dst,  ///< [out] 結果を格納する変数
-	       AttrType attr_type,	    ///< [in] 属性の型
+  /// エラーの時は nullptr を返す．
+  const AstAttr*
+  parse_values(AttrType attr_type,	    ///< [in] 属性の型
 	       const FileRegion& attr_loc); ///< [in] 属性のファイル上の位置
 
 
@@ -694,18 +603,104 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 直前に読んだトークンから AstInt を生成する．
-  /// @return 生成した AstInt を返す．
+  /// @return 生成した AstValue を返す．
   ///
   /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-  const AstInt*
+  unique_ptr<const AstValue>
   read_int();
 
   /// @brief 直前に読んだトークンから AstFloat を生成する．
-  /// @return 生成した AstFloat を返す．
+  /// @return 生成した AstValue を返す．
   ///
   /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-  const AstFloat*
+  unique_ptr<const AstValue>
   read_float();
+
+  /// @brief 直前に読んだトークンから AstString を生成する．
+  /// @return 生成した AstValue を返す．
+  ///
+  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+  unique_ptr<const AstValue>
+  read_string();
+
+  /// @brief 直前に読んだトークンから AstBool を生成する．
+  /// @return 生成した AstValue を返す．
+  ///
+  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+  unique_ptr<const AstValue>
+  read_bool();
+
+  /// @brief 直前に読んだトークンから AstDelayModel を生成する．
+  /// @param[in] 生成した AstValue を返す．
+  ///
+  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+  unique_ptr<const AstValue>
+  read_delay_model();
+
+  /// @brief 直前に読んだトークンから AstDirection を生成する．
+  /// @param[in] 生成した AstValue を返す．
+  ///
+  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+  unique_ptr<const AstValue>
+  read_direction();
+
+  /// @brief 直前に読んだトークンから AstTechnology を生成する．
+  /// @param[in] 生成した AstValue を返す．
+  ///
+  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+  unique_ptr<const AstValue>
+  read_technology();
+
+  /// @brief 直前に読んだトークンから AstTimingSense を生成する．
+  /// @param[in] 生成した AstValue を返す．
+  ///
+  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+  unique_ptr<const AstValue>
+  read_timing_sense();
+
+  /// @brief 直前に読んだトークンから AstTimingType を生成する．
+  /// @param[in] 生成した AstValue を返す．
+  ///
+  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+  unique_ptr<const AstValue>
+  read_timing_type();
+
+  /// @brief 直前に読んだトークンから AstVarType を生成する．
+  /// @param[in] 生成した AstValue を返す．
+  ///
+  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+  unique_ptr<const AstValue>
+  read_vartype();
+
+  /// @brief 直前に読んだトークンから AstIntVector を生成する．
+  /// @return 生成した AstValue を返す．
+  ///
+  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+  unique_ptr<const AstValue>
+  read_int_vector();
+
+  /// @brief 直前に読んだトークンから AstFloatVector を生成する．
+  /// @return 生成した AstValue を返す．
+  ///
+  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+  unique_ptr<const AstValue>
+  read_float_vector();
+
+  /// @brief 式を表す AstExprValue を生成する．
+  /// @return 生成した AstValue を返す．
+  ///
+  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+  unique_ptr<const AstValue>
+  read_expr();
+
+  /// @brief 直前に読んだトークンから float のリストを生成する．
+  /// @retval true 正しく読み込んだ．
+  /// @retval false エラーが起こった．
+  ///
+  /// dst_list は初期化せず，末尾に追加する．
+  bool
+  read_raw_float_vector(vector<double>& dst_list, ///< [out] 値を格納するリスト
+			FileRegion& loc);         ///< [out] ファイル上の位置
 
   /// @brief 直前に読んだトークンから文字列を取り出す．
   /// @return 文字列を返す．
@@ -714,35 +709,12 @@ public:
   const char*
   read_raw_string(FileRegion& value_loc);   ///< [out] トークンのファイル上の位置
 
-  /// @brief 直前に読んだトークンから AstString を生成する．
-  /// @return 生成した AstString を返す．
+  /// @brief expression を読み込む．
+  /// @return 生成した AstValue を返す．
   ///
   /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-  const AstString*
-  read_string();
-
-  /// @brief 直前に読んだトークンから AstIntVector を生成する．
-  /// @return 生成した AstIntVector を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-  const AstIntVector*
-  read_int_vector();
-
-  /// @brief 直前に読んだトークンから AstFloatVector を生成する．
-  /// @return 生成した AstFloatVector を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-  const AstFloatVector*
-  read_float_vector();
-
-  /// @brief 直前に読んだトークンから float のリストを生成する．
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起こった．
-  ///
-  /// dst_list は初期化せず，末尾に追加する．
-  bool
-  read_float_vector(vector<double>& dst_list, ///< [out] 値を格納するリスト
-		    FileRegion& loc);         ///< [out] ファイル上の位置
+  const AstExpr*
+  _read_expr(TokenType end_marker); ///< [in] 末尾のトークンのタイプ
 
   /// @brief 引数の種類のトークンでなければエラーメッセージを出力する．
   bool
@@ -751,10 +723,6 @@ public:
   /// @brief 行末まで読み込む．
   bool
   expect_nl();
-
-  /// @brief expression を読み込む．
-  const AstExpr*
-  read_expr(TokenType end_marker); ///< [in] 末尾のトークンのタイプ
 
   /// @brief トークンを一つ読み込む．
   /// @return トークンの型を返す．
@@ -859,11 +827,11 @@ private:
 
   /// @brief primary を読み込む．
   const AstExpr*
-  read_primary();
+  _read_primary();
 
   /// @brief prudct を読み込む．
   const AstExpr*
-  read_product();
+  _read_product();
 
 
 private:

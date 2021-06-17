@@ -3,52 +3,43 @@
 /// @brief AstIntFloatVector の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
-#include "dotlib/AstMgr.h"
 #include "dotlib/AstIntFloatVector.h"
 #include "dotlib/AstInt.h"
 #include "dotlib/AstFloatVector.h"
-#include "dotlib/IntFloatVectorHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief ( float, float ) 型の AstNode を生成する．
-// @param[in] handler ハンドラ
-const AstIntFloatVector*
-AstMgr::new_int_float_vector(const IntFloatVectorHandler& handler)
-{
-  ++ mIntFloatVectorNum;
-  auto node = new AstIntFloatVector(handler);
-  mNodeList.push_back(node);
-  return node;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス AstIntFloatVector
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] handler ハンドラ
-AstIntFloatVector::AstIntFloatVector(const IntFloatVectorHandler& handler) :
-  AstNode(FileRegion(handler.first_loc(), handler.last_loc())),
-  mVal1(handler.value1()),
-  mVal2(handler.value2())
+AstIntFloatVector::AstIntFloatVector(const AstInt* value1,
+				     const AstFloatVector* value2)
+  : mVal1{val1},
+    mVal2{val2}
 {
 }
 
 // @brief デストラクタ
 AstIntFloatVector::~AstIntFloatVector()
 {
+  delete mVal1;
+  delete mVal2;
+}
+
+// @brief ファイル上の位置を返す．
+FileRegion
+AstIntFloatVector::loc() const
+{
+  return FileRegion(mVal1->loc(), mVal2->loc());
 }
 
 // @brief 内容をストリーム出力する．
-// @param[in] s 出力先のストリーム
-// @param[in] indent インデント量
 void
 AstIntFloatVector::dump(ostream& s,
 			int indent) const

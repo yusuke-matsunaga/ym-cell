@@ -3,53 +3,36 @@
 /// @brief AstFloatVector の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
-#include "dotlib/AstMgr.h"
 #include "dotlib/AstFloatVector.h"
-#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief float のベクタ型の AstNode を生成する．
-// @param[in] loc ファイル上の位置
-// @param[in] value_list 値のリスト
-const AstFloatVector*
-AstMgr::new_float_vector(const FileRegion& loc,
-			 const vector<double>& value_list)
-{
-  int n = value_list.size();
-  ++ mFloatVectNum;
-  mFloatVectElemSize += (n - 1);
-  auto node = new AstFloatVector(loc, value_list);
-  mNodeList.push_back(node);
-  return node;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス AstFloatVector
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc ファイル上の位置
-// @param[in] value_list 値のリスト
-AstFloatVector::AstFloatVector(const FileRegion& loc,
-			       const vector<double>& value_list) :
-  AstNode(loc),
-  mNum(value_list.size())
+AstFloatVector::AstFloatVector(const vector<double>& value_list,
+			       const FileRegion& loc)
+  : mBody{value_list},
+    mLoc{loc}
 {
-  for ( auto i: Range(mNum) ) {
-    mBody[i] = value_list[i];
-  }
 }
 
 // @brief デストラクタ
 AstFloatVector::~AstFloatVector()
 {
+}
+
+// @brief ファイル上の位置を返す．
+FileRegion
+AstFloatVector::loc() const
+{
+  return mLoc;
 }
 
 // @brief 内容をストリーム出力する．
@@ -61,8 +44,8 @@ AstFloatVector::dump(ostream& s,
 {
   const char* comma = "";
   s << "(";
-  for ( auto i: Range(mNum) ) {
-    s << comma << mBody[i];
+  for ( auto flt: mBody ) {
+    s << comma << flt;
     comma = ", ";
   }
   s << ")";

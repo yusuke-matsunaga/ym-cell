@@ -25,13 +25,13 @@ TemplateHandler::TemplateHandler(DotlibParser& parser) :
   // パース関数の登録
   reg_func(AttrType::variable_1,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_vartype(mVar1, attr_type, attr_loc); });
+	   { return parser.add_vartype(mVarTypeList, attr_type, attr_loc); });
   reg_func(AttrType::variable_2,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_vartype(mVar2, attr_type, attr_loc); });
+	   { return parser.add_vartype(mVarTypeList, attr_type, attr_loc); });
   reg_func(AttrType::variable_3,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_vartype(mVar3, attr_type, attr_loc); });
+	   { return parser.add_vartype(mVarTypeList, attr_type, attr_loc); });
   reg_func(AttrType::index_1,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_float_vector(mIndex1, attr_type, attr_loc); });
@@ -72,9 +72,7 @@ void
 TemplateHandler::begin_group()
 {
   mDimension = 0;
-  mVar1 = nullptr;
-  mVar2 = nullptr;
-  mVar3 = nullptr;
+  mVarTypeList.clear();
   mIndex1 = nullptr;
   mIndex2 = nullptr;
   mIndex3 = nullptr;
@@ -87,6 +85,7 @@ TemplateHandler::begin_group()
 bool
 TemplateHandler::end_group()
 {
+#if 0
   if ( mVar1 == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group_loc(),
@@ -153,7 +152,7 @@ TemplateHandler::end_group()
       return false;
     }
   }
-
+#endif
   return true;
 }
 

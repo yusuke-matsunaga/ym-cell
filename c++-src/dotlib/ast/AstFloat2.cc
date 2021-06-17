@@ -3,46 +3,37 @@
 /// @brief AstFloat2 の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
-#include "dotlib/AstMgr.h"
 #include "dotlib/AstFloat2.h"
 #include "dotlib/AstFloat.h"
-#include "dotlib/FloatFloatHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief ( float, float ) 型の AstNode を生成する．
-// @param[in] handler ハンドラ
-const AstFloat2*
-AstMgr::new_float2(const FloatFloatHandler& handler)
-{
-  ++ mFloat2Num;
-  auto node = new AstFloat2(handler);
-  mNodeList.push_back(node);
-  return node;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス AstFloat2
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] handler ハンドラ
-AstFloat2::AstFloat2(const FloatFloatHandler& handler) :
-  AstNode(FileRegion(handler.first_loc(), handler.last_loc())),
-  mVal1(handler.value1()),
-  mVal2(handler.value2())
+AstFloat2::AstFloat2(const AstFloat* value1,
+		     const AstFloat* value2)
+  : mVal1{value1},
+    mVal2{value2}
 {
 }
 
 // @brief デストラクタ
 AstFloat2::~AstFloat2()
 {
+}
+
+// @brief ファイル上の位置を返す．
+FileRegion
+AstFloat2::loc() const
+{
+  return FileRegion(mVal1->loc(), mVal2->loc());
 }
 
 // @brief 内容をストリーム出力する．

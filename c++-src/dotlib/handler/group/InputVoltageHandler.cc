@@ -26,16 +26,16 @@ InputVoltageHandler::InputVoltageHandler(DotlibParser& parser) :
   // パース関数の登録
   reg_func(AttrType::vil,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_expr(mVil, attr_type, attr_loc); });
+	   { return parser.add_expr(mExprList, attr_type, attr_loc); });
   reg_func(AttrType::vih,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_expr(mVih, attr_type, attr_loc); });
+	   { return parser.add_expr(mExprList, attr_type, attr_loc); });
   reg_func(AttrType::vimin,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_expr(mVimin, attr_type, attr_loc); });
+	   { return parser.add_expr(mExprList, attr_type, attr_loc); });
   reg_func(AttrType::vimax,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_expr(mVimax, attr_type, attr_loc); });
+	   { return parser.add_expr(mExprList, attr_type, attr_loc); });
 }
 
 // @brief デストラクタ
@@ -47,10 +47,7 @@ InputVoltageHandler::~InputVoltageHandler()
 void
 InputVoltageHandler::begin_group()
 {
-  mVil = nullptr;
-  mVih = nullptr;
-  mVimin = nullptr;
-  mVimax = nullptr;
+  mExprList.clear();
 }
 
 // @brief グループ記述の終わり
@@ -59,6 +56,7 @@ InputVoltageHandler::begin_group()
 bool
 InputVoltageHandler::end_group()
 {
+#if 0
   if ( !check_attr(mVil,   AttrType::vil,   group_loc()) ||
        !check_attr(mVih,   AttrType::vih,   group_loc()) ||
        !check_attr(mVimin, AttrType::vimin, group_loc()) ||
@@ -68,6 +66,9 @@ InputVoltageHandler::end_group()
   else {
     return true;
   }
+#else
+  return false;
+#endif
 }
 
 END_NAMESPACE_YM_DOTLIB

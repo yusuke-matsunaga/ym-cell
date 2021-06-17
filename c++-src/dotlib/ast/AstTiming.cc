@@ -42,6 +42,7 @@ AstTiming::AstTiming(const FileRegion& attr_loc,
 		     const StrListHandler& header,
 		     const TimingHandler& group) :
   AstNode(FileRegion{attr_loc, group.group_loc()}),
+#if 0
   mRelatedPin{group.mRelatedPin},
   mRelatedBusPins{group.mRelatedBusPins},
   mRelatedBusEquivalent{group.mRelatedBusEquivalent},
@@ -75,6 +76,11 @@ AstTiming::AstTiming(const FileRegion& attr_loc,
   mRetainingFall{group.mRetainingFall},
   mRetainRiseSlew{group.mRetainRiseSlew},
   mRetainFallSlew{group.mRetainFallSlew}
+#endif
+  mRiseDelayIntercept{vector<const AstIntFloat*>{}},
+  mFallDelayIntercept{vector<const AstIntFloat*>{}},
+  mRisePinResistance{vector<const AstIntFloat*>{}},
+  mFallPinResistance{vector<const AstIntFloat*>{}}
 {
 }
 

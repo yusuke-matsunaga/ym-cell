@@ -3,9 +3,8 @@
 /// @brief AstTemplate の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/AstMgr.h"
 #include "dotlib/AstTemplate.h"
@@ -14,22 +13,6 @@
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief lut template を表す AstNode を生成する．
-// @param[in] attr_loc 属性のファイル上の位置
-// @param[in] header ヘッダのハンドラ
-// @param[in] group グループ本体のハンドラ
-const AstTemplate*
-AstMgr::new_template(const FileRegion& attr_loc,
-		     const StrHandler& header,
-		     const TemplateHandler& group)
-{
-  ++ mTemplateNum;
-  auto node = new AstTemplate(attr_loc, header, group);
-  mNodeList.push_back(node);
-  return node;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス AstTemplate
@@ -43,7 +26,8 @@ AstTemplate::AstTemplate(const FileRegion& attr_loc,
 			 const StrHandler& header,
 			 const TemplateHandler& group) :
   AstNode(FileRegion{attr_loc, group.group_loc()}),
-  mName{header.value()},
+  mName{header.value()}
+#if 0
   mDimension{group.mDimension},
   mVar1{group.mVar1},
   mVar2{group.mVar2},
@@ -52,6 +36,7 @@ AstTemplate::AstTemplate(const FileRegion& attr_loc,
   mIndex2{group.mIndex2},
   mIndex3{group.mIndex3},
   mDomain{group.mDomain}
+#endif
 {
 }
 

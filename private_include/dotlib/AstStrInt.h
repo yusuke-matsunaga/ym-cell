@@ -24,7 +24,8 @@ class AstStrInt :
 public:
 
   /// @brief コンストラクタ
-  AstStrInt(const StrIntHandler& handler); ///< [in] ハンドラ
+  AstStrInt(const AstString* value1, ///< [in] 値1
+	    const AstInt* value2);   ///< [in] 値2
 
   /// @brief デストラクタ
   ~AstStrInt();
@@ -49,11 +50,15 @@ public:
     return mVal2;
   }
 
+  /// @brief ファイル上の位置を返す．
+  FileRegion
+  loc() const override;
+
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
+  dump(ostream& s,                     ///< [in] 出力先のストリーム
+       int indent = 0) const override; ///< [in] インデント量
+
 
 
 private:

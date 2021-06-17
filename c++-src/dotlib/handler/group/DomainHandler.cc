@@ -3,9 +3,8 @@
 /// @brief DomainHandler の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/DomainHandler.h"
 #include "ym/MsgMgr.h"
@@ -24,22 +23,28 @@ DomainHandler::DomainHandler(DotlibParser& parser) :
 {
   // パース関数の登録
   reg_func(AttrType::calc_mode,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_string(mCalcMode, attr_type, attr_loc); });
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc)
+	   -> const AstSimple*
+	   { return parser.parse_string(attr_type, attr_loc); });
   reg_func(AttrType::coefs,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc)
+	   -> const AstSimple*
 	   { return parser.parse_float_vector(mCoefs, attr_type, attr_loc); });
   reg_func(AttrType::orders,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc)
+	   -> const AstSimple*
 	   { return parser.parse_int_vector(mOrders, attr_type, attr_loc); });
   reg_func(AttrType::variable_1_range,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc)
+	   -> const AstSimple*
 	   { return parser.parse_float_float(mVar1Range, attr_type, attr_loc); });
   reg_func(AttrType::variable_2_range,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc)
+	   -> const AstSimple*
 	   { return parser.parse_float_float(mVar2Range, attr_type, attr_loc); });
   reg_func(AttrType::variable_3_range,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc)
+	   -> const AstSimple*
 	   { return parser.parse_float_float(mVar3Range, attr_type, attr_loc); });
 }
 
@@ -68,7 +73,8 @@ DomainHandler::parse_value(const AstDomain*& dst)
 void
 DomainHandler::begin_group()
 {
-  mCalcMode = nullptr;
+  mStrList.clear();
+
   mCoefs = nullptr;
   mOrders = nullptr;
   mVar1Range = nullptr;
@@ -82,6 +88,7 @@ DomainHandler::begin_group()
 bool
 DomainHandler::end_group()
 {
+#if 0
   if ( mCalcMode == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group_loc(),
@@ -90,7 +97,9 @@ DomainHandler::end_group()
 		    "'calc_mode' is missing.");
     return false;
   }
-  else if ( mCoefs == nullptr ) {
+  else
+#endif
+  if ( mCoefs == nullptr ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    group_loc(),
 		    MsgType::Error,

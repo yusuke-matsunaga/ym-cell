@@ -8,26 +8,26 @@
 /// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "AstNode.h"
+#include "AstValue.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class AstTechnology AstTechnology.h "AstTechnology.h"
-/// @brief technologyを表すクラス
+/// @brief technology のノードを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstTechnology :
-  public AstNode
+  public AstValue
 {
 public:
 
   /// @brief コンストラクタ
-  AstTechnology(const FileRegion& loc, ///< [in] ファイル上の位置
-		ClibTechnology value); ///< [in] 値
+  AstTechnology(ClibTechnology value,       ///< [in] 値
+		const FileRegion& val_loc); ///< [in] 値のファイル上の位置
 
   /// @brief デストラクタ
-  ~AstTechnology();
+  ~AstTechnology() = default;
 
 
 public:
@@ -37,16 +37,11 @@ public:
 
   /// @brief Technology を返す．
   ClibTechnology
-  value() const
-  {
-    return mValue;
-  }
+  technology_value() const override;
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
+  dump(ostream& s) const override; ///< [in] 出力先のストリーム
 
 
 private:

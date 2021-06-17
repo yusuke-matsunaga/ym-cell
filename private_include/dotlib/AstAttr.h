@@ -21,17 +21,15 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class AstAttr :
   public AstNode
 {
-  friend class AstMgr;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  AstAttr(const FileRegion& loc, ///< [in] ファイル上の位置
-	  AttrType attr_type,    ///< [in] 属性
-	  const AstNode* value); ///< [in] 値
+  AstAttr(AttrType attr_type,                  ///< [in] 属性の型
+	  const FileRegion& attr_loc,          ///< [in] 属性のファイル上の位置
+	  unique_ptr<const AstValue>&& value); ///< [in] 値
 
   /// @brief デストラクタ
-  ~AstAttr();
+  ~AstAttr() = default;
 
 
 public:
@@ -46,18 +44,28 @@ public:
     return mAttrType;
   }
 
-  /// @brief 属性の値を得る．
-  const AstNode*
-  attr_value() const
+  /// @brief 属性名のファイル上の位置を返す．
+  FileRegion
+  attr_loc() const
   {
-    return mValue;
+    return mAttrLoc;
   }
+
+  /// @brief 属性の値を得る．
+  const AstValue*
+  value() const
+  {
+    return mValue.get();
+  }
+
+  /// @brief 全体のファイル上の位置を返す．
+  FileRegion
+  loc() const override;
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,      ///< [in] 出力先のストリーム
-       int indent = 0)  ///< [in] インデント量
-    const override;
+  dump(ostream& s,                     ///< [in] 出力先のストリーム
+       int indent = 0) const override; ///< [in] インデント量
 
 
 private:
@@ -68,8 +76,11 @@ private:
   // 属性
   AttrType mAttrType;
 
+  // 属性のファイル上の位置
+  FileRegion mAttrLoc;
+
   // 値
-  const AstNode* mValue;
+  unique_ptr<const AstValue> mValue;
 
 };
 

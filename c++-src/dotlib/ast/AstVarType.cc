@@ -3,47 +3,17 @@
 /// @brief AstVarType の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/AstMgr.h"
 #include "dotlib/AstVarType.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-// @brief var_type を表す AstNode を生成する．
-// @param[in] loc ファイル上の位置
-// @param[in] value 値
-const AstVarType*
-AstMgr::new_var_type(const FileRegion& loc,
-		     ClibVarType value)
-{
-  ++ mVarTypeNum;
-  auto node = new AstVarType(loc, value);
-  mNodeList.push_back(node);
-  return node;
-}
-
-
 //////////////////////////////////////////////////////////////////////
 // クラス AstVarType
 //////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] loc ファイル上の位置
-// @param[in] value 値
-AstVarType::AstVarType(const FileRegion& loc,
-		       ClibVarType value) :
-  AstNode(loc),
-  mValue(value)
-{
-}
-
-// @brief デストラクタ
-AstVarType::~AstVarType()
-{
-}
 
 // @brief 内容をストリーム出力する．
 // @param[in] s 出力先のストリーム

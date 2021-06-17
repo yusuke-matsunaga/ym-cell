@@ -3,47 +3,40 @@
 /// @brief AstFloatStr の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
-#include "dotlib/AstMgr.h"
 #include "dotlib/AstFloatStr.h"
 #include "dotlib/AstFloat.h"
 #include "dotlib/AstString.h"
-#include "dotlib/FloatStrHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief ( float, string ) 型の AstNode を生成する．
-// @param[in] handler ハンドラ
-const AstFloatStr*
-AstMgr::new_float_str(const FloatStrHandler& handler)
-{
-  ++ mFloatStrNum;
-  auto node = new AstFloatStr(handler);
-  mNodeList.push_back(node);
-  return node;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス AstFloatStr
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] handler ハンドラ
-AstFloatStr::AstFloatStr(const FloatStrHandler& handler) :
-  AstNode(FileRegion(handler.first_loc(), handler.last_loc())),
-  mVal1(handler.value1()),
-  mVal2(handler.value2())
+AstFloatStr::AstFloatStr(const AstFloat* value1,
+			 const AstString* value2)
+  : mVal1{value1},
+    mVal2{value2}
 {
 }
 
 // @brief デストラクタ
 AstFloatStr::~AstFloatStr()
 {
+  delete mVal1;
+  delete mVal2;
+}
+
+// @brief ファイル上の位置を返す．
+FileRegion
+AstFloatStr::loc() const
+{
+  return FileRegion(mVal1->loc(), mVal2->loc());
 }
 
 // @brief 内容をストリーム出力する．

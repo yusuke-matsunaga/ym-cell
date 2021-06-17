@@ -24,7 +24,8 @@ class AstFloat2 :
 public:
 
   /// @brief コンストラクタ
-  AstFloat2(const FloatFloatHandler& handler); ///< [in] ハンドラ
+  AstFloat2(const AstFloat* value1,  ///< [in] 値1
+	    const AstFloat* value2); ///< [in] 値2
 
   /// @brief デストラクタ
   ~AstFloat2();
@@ -48,6 +49,10 @@ public:
   {
     return mVal2;
   }
+
+  /// @brief ファイル上の位置を返す．
+  FileRegion
+  loc() const override;
 
   /// @brief 内容をストリーム出力する．
   void

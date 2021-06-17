@@ -58,6 +58,9 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // string
+  vector<const AstString*> mStrList;
+
   // "technology"
   const AstTechnology* mTechnology;
 
@@ -65,34 +68,34 @@ private:
   const AstDelayModel* mDelayModel;
 
   // "bus_naming_style"
-  const AstString* mBusNamingStyle;
+  //const AstString* mBusNamingStyle;
 
   // "comment"
-  const AstString* mComment;
+  //const AstString* mComment;
 
   // "date"
-  const AstString* mDate;
+  //const AstString* mDate;
 
   // "revision"
-  const AstString* mRevision;
+  //const AstString* mRevision;
 
   // "capacitive_load_unit"
   const AstFloatStr* mCapacitiveLoadUnit;
 
   // "current_unit"
-  const AstString* mCurrentUnit;
+  //const AstString* mCurrentUnit;
 
   // "leakage_power_unit"
-  const AstString* mLeakagePowerUnit;
+  //const AstString* mLeakagePowerUnit;
 
   // "pulling_resistance_unit"
-  const AstString* mPullingResistanceUnit;
+  //const AstString* mPullingResistanceUnit;
 
   // "time_unit"
-  const AstString* mTimeUnit;
+  //const AstString* mTimeUnit;
 
   // "voltage_unit"
-  const AstString* mVoltageUnit;
+  //const AstString* mVoltageUnit;
 
   // lu_table_template のリスト
   vector<const AstTemplate*> mLutTemplateList;

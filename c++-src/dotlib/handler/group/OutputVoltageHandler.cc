@@ -26,16 +26,16 @@ OutputVoltageHandler::OutputVoltageHandler(DotlibParser& parser) :
   // パース関数の登録
   reg_func(AttrType::vol,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_expr(mVol, attr_type, attr_loc); });
+	   { return parser.add_expr(mExprList, attr_type, attr_loc); });
   reg_func(AttrType::voh,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_expr(mVoh, attr_type, attr_loc); });
+	   { return parser.add_expr(mExprList, attr_type, attr_loc); });
   reg_func(AttrType::vomin,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_expr(mVomin, attr_type, attr_loc); });
+	   { return parser.add_expr(mExprList, attr_type, attr_loc); });
   reg_func(AttrType::vomax,
 	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
-	   { return parser.parse_expr(mVomax, attr_type, attr_loc); });
+	   { return parser.add_expr(mExprList, attr_type, attr_loc); });
 }
 
 // @brief デストラクタ
@@ -47,10 +47,7 @@ OutputVoltageHandler::~OutputVoltageHandler()
 void
 OutputVoltageHandler::begin_group()
 {
-  mVol = nullptr;
-  mVoh = nullptr;
-  mVomin = nullptr;
-  mVomax = nullptr;
+  mExprList.clear();
 }
 
 // @brief グループ記述の終わり
@@ -59,6 +56,7 @@ OutputVoltageHandler::begin_group()
 bool
 OutputVoltageHandler::end_group()
 {
+#if 0
   if ( !check_attr(mVol,   AttrType::vol,   group_loc()) ||
        !check_attr(mVoh,   AttrType::voh,   group_loc()) ||
        !check_attr(mVomin, AttrType::vomin, group_loc()) ||
@@ -68,6 +66,9 @@ OutputVoltageHandler::end_group()
   else {
     return true;
   }
+#else
+  return false;
+#endif
 }
 
 END_NAMESPACE_YM_DOTLIB

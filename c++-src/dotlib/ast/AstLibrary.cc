@@ -41,6 +41,7 @@ AstLibrary::AstLibrary(const FileRegion& attr_loc,
 		       const StrHandler& header,
 		       const LibraryHandler& group) :
   AstNameNode{FileRegion{attr_loc, group.group_loc()}, header},
+#if 0
   mTechnology{group.mTechnology},
   mDelayModel{group.mDelayModel},
   mBusNamingStyle{group.mBusNamingStyle},
@@ -53,6 +54,7 @@ AstLibrary::AstLibrary(const FileRegion& attr_loc,
   mPullingResistanceUnit{group.mPullingResistanceUnit},
   mTimeUnit{group.mTimeUnit},
   mVoltageUnit{group.mVoltageUnit},
+#endif
   mLutTemplateList{group.mLutTemplateList},
   mCellList{group.mCellList}
 {

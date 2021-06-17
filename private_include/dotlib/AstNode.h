@@ -58,20 +58,18 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///   * Latch_bank:        AstLatch
 ///   * StateTable:        AstStateTable
 ///
-/// 共通の仮想関数は dump() のみ．
+/// 共通の仮想関数は loc(), dump() のみ．
 //////////////////////////////////////////////////////////////////////
 class AstNode
 {
-  friend class AstMgr;
-
 protected:
 
   /// @brief コンストラクタ
-   AstNode(const FileRegion& loc); ///< [in] ファイル上の位置
+  AstNode() = default;
 
   /// @brief デストラクタ
   virtual
-  ~AstNode();
+  ~AstNode() = default;
 
 
 public:
@@ -80,18 +78,15 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル上の位置を返す．
+  virtual
   FileRegion
-  loc() const
-  {
-    return mLoc;
-  }
+  loc() const = 0;
 
   /// @brief 内容をストリーム出力する．
   virtual
   void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const = 0;
+  dump(ostream& s,                ///< [in] 出力先のストリーム
+       int indent = 0) const = 0; ///< [in] インデント量
 
 
 protected:
@@ -113,15 +108,6 @@ protected:
   void
   dump_string(ostream& s,       ///< [in] 出力先のストリーム
 	      const char* str); ///< [in] 対象の文字列
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // ファイル上の位置
-  FileRegion mLoc;
 
 };
 

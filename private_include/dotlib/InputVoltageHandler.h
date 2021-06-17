@@ -34,6 +34,7 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
+#if 0
   /// @brief vil の値を返す．
   const AstExpr*
   vil() const
@@ -61,6 +62,7 @@ public:
   {
     return mVimax;
   }
+#endif
 
 
 public:
@@ -84,17 +86,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // vil
-  const AstExpr* mVil;
-
-  // vih
-  const AstExpr* mVih;
-
-  // vimin
-  const AstExpr* mVimin;
-
-  // vimax
-  const AstExpr* mVimax;
+  // expr
+  vector<const AstExpr*> mExprList;
 
 };
 

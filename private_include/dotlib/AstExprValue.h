@@ -1,8 +1,8 @@
-﻿#ifndef ASTBOOL_H
-#define ASTBOOL_H
+﻿#ifndef ASTEXPRVALUE_H
+#define ASTEXPRVALUE_H
 
-/// @file AstBool.h
-/// @brief AstBool のヘッダファイル
+/// @file AstExprValue.h
+/// @brief AstExprValue のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
@@ -14,20 +14,19 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class AstBool AstBool.h "AstBool.h"
-/// @brief ブール値のノードを表すクラス
+/// @class AstExprValue AstExprValue.h "AstExprValue.h"
+/// @brief AstExpr を持つ AstValue の派生クラス
 //////////////////////////////////////////////////////////////////////
-class AstBool :
+class AstExprValue :
   public AstValue
 {
 public:
 
   /// @brief コンストラクタ
-  AstBool(bool value,                 ///< [in] 値
-	  const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+  AstExprValue(const AstExpr* value); ///< [in] 値
 
   /// @brief デストラクタ
-  ~AstBool() = default;
+  ~AstExprValue() = default;
 
 
 public:
@@ -35,9 +34,9 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ブール値を返す．
-  bool
-  bool_value() const override;
+  /// @brief expr 型の値を返す．
+  const AstExpr*
+  expr_value() const override;
 
   /// @brief 内容をストリーム出力する．
   void
@@ -50,10 +49,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値
-  bool mValue;
+  const AstExpr* mValue;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTBOOL_H
+#endif // ASTINT_H

@@ -3,9 +3,8 @@
 /// @brief AstOutputVoltage の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "dotlib/AstOutputVoltage.h"
 #include "dotlib/AstMgr.h"
@@ -15,22 +14,6 @@
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief output voltage を表す AstNode を生成する．
-// @param[in] attr_loc 属性のファイル上の位置
-// @param[in] header ヘッダを読み込んだハンドラ
-// @param[in] group グループ本体を読み込んだハンドラ
-const AstOutputVoltage*
-AstMgr::new_output_voltage(const FileRegion& attr_loc,
-			   const StrHandler& header,
-			   const OutputVoltageHandler& group)
-{
-  ++ mOutputVolNum;
-  auto node = new AstOutputVoltage(attr_loc, header, group);
-  mNodeList.push_back(node);
-  return node;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス AstOutputVoltage
@@ -44,11 +27,13 @@ AstOutputVoltage::AstOutputVoltage(const FileRegion& attr_loc,
 				   const StrHandler& header,
 				   const OutputVoltageHandler& group) :
   AstNode{FileRegion(attr_loc, group.group_loc())},
-  mName{header.value()},
+  mName{header.value()}
+#if 0
   mVol{group.vol()},
   mVoh{group.voh()},
   mVoMin{group.vomin()},
   mVoMax{group.vomax()}
+#endif
 {
 }
 

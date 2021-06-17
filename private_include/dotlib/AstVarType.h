@@ -8,26 +8,30 @@
 /// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "AstNode.h"
+#include "AstValue.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class AstVarType AstVarType.h "AstVarType.h"
-/// @brief var typeを表すクラス
+/// @brief var type の simple attribute を表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstVarType :
-  public AstNode
+  public AstValue
 {
 public:
 
   /// @brief コンストラクタ
-  AstVarType(const FileRegion& loc, ///< [in] ファイル上の位置
-	     ClibVarType value);    ///< [in] 値
+  AstVarType(ClibVarType value,           ///< [in] 値
+	     const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
+    : AstValue(val_loc),
+      mValue{value}
+  {
+  }
 
   /// @brief デストラクタ
-  ~AstVarType();
+  ~AstVarType() = default;
 
 
 public:
@@ -37,16 +41,11 @@ public:
 
   /// @brief VarType を返す．
   ClibVarType
-  value() const
-  {
-    return mValue;
-  }
+  vartype_value() const override;
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
+  dump(ostream& s) const override; ///< [in] 出力先のストリーム
 
 
 private:

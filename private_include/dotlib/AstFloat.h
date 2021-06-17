@@ -8,26 +8,26 @@
 /// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "AstNode.h"
+#include "AstValue.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class AstFloat AstFloat.h "AstFloat.h"
-/// @brief 実数値を表すクラス
+/// @brief 実数値のノードを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstFloat :
-  public AstNode
+  public AstValue
 {
 public:
 
   /// @brief コンストラクタ
-  AstFloat(const FileRegion& loc, ///< [in] ファイル上の位置
-	   double value);         ///< [in] 値
+  AstFloat(double value,               ///< [in] 値
+	   const FileRegion& val_loc); ///< [in] 値のファイル上の位置
 
   /// @brief デストラクタ
-  ~AstFloat();
+  ~AstFloat() = default;
 
 
 public:
@@ -36,19 +36,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 数値を返す．
-  ///
-  /// type() が Float の時のみ意味を持つ．
   double
-  value() const
-  {
-    return mValue;
-  }
+  float_value() const override;
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
+  dump(ostream& s) const override; ///< [in] 出力先のストリーム
 
 
 private:

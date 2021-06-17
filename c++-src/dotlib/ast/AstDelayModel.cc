@@ -3,46 +3,23 @@
 /// @brief DotlibDelayModel の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
-#include "dotlib/AstMgr.h"
 #include "dotlib/AstDelayModel.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief delay model を表す AstNode を生成する．
-// @param[in] loc ファイル上の位置
-// @param[in] value 値
-const AstDelayModel*
-AstMgr::new_delay_model(const FileRegion& loc,
-			ClibDelayModel value)
-{
-  ++ mDelayModelNum;
-  auto node = new AstDelayModel(loc, value);
-  mNodeList.push_back(node);
-  return node;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス AstDelayModel
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc ファイル上の位置
-// @param[in] value 値
-AstDelayModel::AstDelayModel(const FileRegion& loc,
-			     ClibDelayModel value) :
-  AstNode(loc),
-  mValue(value)
-{
-}
-
-// @brief デストラクタ
-AstDelayModel::~AstDelayModel()
+AstDelayModel::AstDelayModel(ClibDelayModel value,
+			     const FileRegion& val_loc)
+  : AstValue(val_loc),
+    mValue{value}
 {
 }
 

@@ -61,14 +61,8 @@ private:
   // 次元
   int mDimension;
 
-  // variable_1
-  const AstVarType* mVar1;
-
-  // variable_2
-  const AstVarType* mVar2;
-
-  // variable_3
-  const AstVarType* mVar3;
+  // vartype
+  vector<const AstVarType*> mVarTypeList;
 
   // index_1
   const AstFloatVector* mIndex1;

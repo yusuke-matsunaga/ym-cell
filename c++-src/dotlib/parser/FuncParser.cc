@@ -8,6 +8,7 @@
 
 #include "FuncParser.h"
 #include "dotlib/AstExpr.h"
+#include "dotlib/AstExprValue.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
@@ -37,12 +38,17 @@ FuncParser::~FuncParser()
 }
 
 // @brief 論理式を読み込む．
-bool
-FuncParser::operator()(const AstExpr*& dst)
+unique_ptr<const AstValue>
+FuncParser::operator()()
 {
-  dst = read_expr(TokenType::END);
+  auto expr = read_expr(TokenType::END);
 
-  return dst != nullptr;
+  if ( epxr != nullptr ) {
+    return unique_ptr<const AstValue>{new AstExprValue(expr)};
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief primary を読み込む．

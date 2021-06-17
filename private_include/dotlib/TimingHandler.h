@@ -140,80 +140,96 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+#if 0
+  // bool
+  vector<const AstBool*> mBoolList;
+
+  // int
+  vector<const AstInt*> mIntList;
+
+  // float
+  vector<const AstFloat*> mFloatList;
+
+  // string
+  vector<const AstString*> mStrList;
+
+  // expr
+  vector<const AstExpr*> mExprList;
+
   // clock_gating_flag
-  const AstBool* mClockGatingFlag;
+  //const AstBool* mClockGatingFlag;
 
   // default_timing
-  const AstBool* mDefaultTiming;
+  //const AstBool* mDefaultTiming;
 
   // fall_resistance
-  const AstFloat* mFallResistance;
+  //const AstFloat* mFallResistance;
 
   // fpga_arc_condition
-  const AstExpr* mFpgaArcCondition;
+  //const AstExpr* mFpgaArcCondition;
 
   // fpga_domain_style
-  const AstString* mFpgaDomainStyle;
+  //const AstString* mFpgaDomainStyle;
 
   // interdependence_id
-  const AstInt* mInterdependenceId;
+  //const AstInt* mInterdependenceId;
 
   // intrinsic_fall
-  const AstFloat* mIntrinsicFall;
+  //const AstFloat* mIntrinsicFall;
 
   // intrinsic_rise
-  const AstFloat* mIntrinsicRise;
+  //const AstFloat* mIntrinsicRise;
 
   // related_bus_equivalent
-  const AstString* mRelatedBusEquivalent;
+  //const AstString* mRelatedBusEquivalent;
 
   // related_bus_pins
-  const AstString* mRelatedBusPins;
+  //const AstString* mRelatedBusPins;
 
   // related_output_pin
-  const AstString* mRelatedOutputPin;
+  //const AstString* mRelatedOutputPin;
 
   // related_pin
-  const AstString* mRelatedPin;
+  //const AstString* mRelatedPin;
 
   // rise_resistance
-  const AstFloat* mRiseResistance;
+  //const AstFloat* mRiseResistance;
 
   // sdf_cond
-  const AstString* mSdfCond;
+  //const AstString* mSdfCond;
 
   // sdf_cond_end
-  const AstString* mSdfCondEnd;
+  //const AstString* mSdfCondEnd;
 
   // sdf_cond_start
-  const AstString* mSdfCondStart;
+  //const AstString* mSdfCondStart;
 
   // sdf_edges (noedge, start_edge, end_edge, both_edges)
-  const AstString* mSdfEdges;
+  //const AstString* mSdfEdges;
 
   // sensitization_master
-  const AstString* mSensitizationMaster;
+  //const AstString* mSensitizationMaster;
 
   // slope_fall
-  const AstFloat* mSlopeFall;
+  //const AstFloat* mSlopeFall;
 
   // slope_rise
-  const AstFloat* mSlopeRise;
+  //const AstFloat* mSlopeRise;
 
   // steady_state_resistance_above_high
-  const AstFloat* mSteadyStateResistanceAboveHigh;
+  //const AstFloat* mSteadyStateResistanceAboveHigh;
 
   // steady_state_resistance_below_low
-  const AstFloat* mSteadyStateResistanceBelowLow;
+  //const AstFloat* mSteadyStateResistanceBelowLow;
 
   // steady_state_resistance_high
-  const AstFloat* mSteadyStateResistanceHigh;
+  //const AstFloat* mSteadyStateResistanceHigh;
 
   // steady_state_resistance_low
-  const AstFloat* mSteadyStateResistanceLow;
+  //const AstFloat* mSteadyStateResistanceLow;
 
   // tied_off
-  const AstBool* mTiedOff;
+  //const AstBool* mTiedOff;
 
   // timing_sense
   const AstTimingSense* mTimingSense;
@@ -222,19 +238,19 @@ private:
   const AstTimingType* mTimingType;
 
   // wave_fall_sampling_index
-  const AstInt* mWaveFallSamplingIndex;
+  //const AstInt* mWaveFallSamplingIndex;
 
   // wave_rise_sampling_index
-  const AstInt* mWaveRiseSamplingIndex;
+  //const AstInt* mWaveRiseSamplingIndex;
 
   // when
-  const AstExpr* mWhen;
+  //const AstExpr* mWhen;
 
   // when_end
-  const AstExpr* mWhenEnd;
+  //const AstExpr* mWhenEnd;
 
   // when_start
-  const AstExpr* mWhenStart;
+  //const AstExpr* mWhenStart;
 
   // fall_delay_intercept
   vector<const AstIntFloat*> mFallDelayIntercept;
@@ -243,8 +259,8 @@ private:
   vector<const AstIntFloat*> mFallPinResistance;
 
   // mode
-  const AstString* mModeName;
-  const AstString* mModeValue;
+  //const AstString* mModeName;
+  //const AstString* mModeValue;
 
   // pin_name_map
   const AstStrList* mPinNameMap;
@@ -351,6 +367,7 @@ private:
   // steady_state_current_low
 
   // steady_state_current_tristate
+#endif
 
 };
 

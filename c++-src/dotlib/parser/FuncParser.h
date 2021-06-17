@@ -44,8 +44,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 論理式を読み込む．
-  bool
-  operator()(const AstExpr*& dst);
+  unique_ptr<const AstValue>
+  operator()();
 
 
 private:

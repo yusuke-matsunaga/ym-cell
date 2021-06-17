@@ -182,249 +182,247 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+#if 0
+  // bool
+  vector<const AstBool*> mBoolList;
+
+  // int
+  vector<const AstInt*> mIntList;
+
+  // float
+  vector<const AstFloat*> mFloatList;
+
+  // string
+  vector<const AstString*> mStrList;
+
+  // expr
+  vector<const AstExpr*> mExprList;
+
   // bit_width
-  const AstInt* mBitWidth;
+  //const AstInt* mBitWidth;
 
   // capacitance
-  const AstFloat* mCapacitance;
-
-  // clock
-  const AstBool* mClock;
-
-  // clock_gate_clock_pin
-  const AstBool* mClockGateClockPin;
-
-  // clock_gate_enable_pin
-  const AstBool* mClockGateEnablePin;
-
-  // clock_gate_test_pin
-  const AstBool* mClockGateTestPin;
-
-  // clock_gate_obs_pin
-  const AstBool* mClockGateObsPin;
-
-  // clock_gate_out_pin
-  const AstBool* mClockGateOutPin;
+  //const AstFloat* mCapacitance;
 
   // complementary_pin
-  const AstString* mComplementaryPin;
+  //const AstString* mComplementaryPin;
 
   // connection_class
-  const AstString* mConnectionClass;
+  //const AstString* mConnectionClass;
 
   // direction
   const AstDirection* mDirection;
 
   // dont_faut
-  const AstString* mDontFault;
+  //const AstString* mDontFault;
 
   // drive_current
-  const AstFloat* mDriveCurrent;
+  //const AstFloat* mDriveCurrent;
 
   // driver_type
-  const AstString* mDriverType;
+  //const AstString* mDriverType;
 
   // fall_capacitance
-  const AstFloat* mFallCapacitance;
+  //const AstFloat* mFallCapacitance;
 
   // fall_current_slope_after_threshold
-  const AstFloat* mFallCurrentSlopeAfterThreshold;
+  //const AstFloat* mFallCurrentSlopeAfterThreshold;
 
   // fall_current_slope_before_threshold
-  const AstFloat* mFallCurrentSlopeBeforeThreshold;
+  //const AstFloat* mFallCurrentSlopeBeforeThreshold;
 
   // fall_time_after_threshold
-  const AstFloat* mFallTimeAfterThreshold;
+  //const AstFloat* mFallTimeAfterThreshold;
 
   // fall_time_before_threshold
-  const AstFloat* mFallTimeBeforeThreshold;
+  //const AstFloat* mFallTimeBeforeThreshold;
 
   // fanout_load
-  const AstFloat* mFanoutLoad;
+  //const AstFloat* mFanoutLoad;
 
   // fault_model
-  const AstString* mFaultModel;
+  //const AstString* mFaultModel;
 
   // function
-  const AstExpr* mFunction;
+  //const AstExpr* mFunction;
 
   // has_builtin_pad
-  const AstBool* mHasBuiltinPad;
+  //const AstBool* mHasBuiltinPad;
 
   // hysteresis
-  const AstBool* mHysteresis;
+  //const AstBool* mHysteresis;
 
   // input_map
-  const AstString* mInputMap;
+  //const AstString* mInputMap;
 
   // input_signal_level
-  const AstString* mInputSignalLevel;
+  //const AstString* mInputSignalLevel;
 
   // input_threshold_pct_fall
-  const AstFloat* mInputThresholdPctFall;
+  //const AstFloat* mInputThresholdPctFall;
 
   // input_threshold_pct_rise
-  const AstFloat* mInputThresholdPctRise;
+  //const AstFloat* mInputThresholdPctRise;
 
   // input_voltage
-  const AstString* mInputVoltage;
+  //const AstString* mInputVoltage;
 
   // internal_node
-  const AstString* mInternalNode;
+  //const AstString* mInternalNode;
 
   // inverted_output
-  const AstBool* mInvertedOutput;
+  //const AstBool* mInvertedOutput;
 
   // is_pad
-  const AstBool* mIsPad;
+  //const AstBool* mIsPad;
 
   // isolation_cell_enable_pin
-  const AstBool* mIsolationCellEnablePin;
+  //const AstBool* mIsolationCellEnablePin;
 
   // level_shifter_enable_pin
-  const AstBool* mLevelShifterEnablePin;
+  //const AstBool* mLevelShifterEnablePin;
 
   // map_to_logic
-  const AstBool* mMapToLogic;
+  //const AstBool* mMapToLogic;
 
   // max_capacitance
-  const AstFloat* mMaxCapacitance;
+  //const AstFloat* mMaxCapacitance;
 
   // max_fanout
-  const AstFloat* mMaxFanout;
+  //const AstFloat* mMaxFanout;
 
   // max_input_noise_width
-  const AstFloat* mMaxInputNoiseWidth;
+  //const AstFloat* mMaxInputNoiseWidth;
 
   // max_transition
-  const AstFloat* mMaxTransition;
+  //const AstFloat* mMaxTransition;
 
   // min_capacitance
-  const AstFloat* mMinCapacitance;
+  //const AstFloat* mMinCapacitance;
 
   // min_fanout
-  const AstFloat* mMinFanout;
+  //const AstFloat* mMinFanout;
 
   // min_input_noise_width
-  const AstFloat* mMinInputNoiseWidth;
+  //const AstFloat* mMinInputNoiseWidth;
 
   // min_period
-  const AstFloat* mMinPeriod;
+  //const AstFloat* mMinPeriod;
 
   // min_pulse_width_high
-  const AstFloat* mMinPulseWidthHigh;
+  //const AstFloat* mMinPulseWidthHigh;
 
   // min_pulse_width_low
-  const AstFloat* mMinPulseWidthLow;
+  //const AstFloat* mMinPulseWidthLow;
 
   // min_transition
-  const AstFloat* mMinTransition;
+  //const AstFloat* mMinTransition;
 
   // multicell_pad_pin
-  const AstBool* mMulticellPadPin;
+  //const AstBool* mMulticellPadPin;
 
   // nextstate_type
-  const AstString* mNextstateType;
+  //const AstString* mNextstateType;
 
   // output_signal_level
-  const AstString* mOutputSignalLevel;
+  //const AstString* mOutputSignalLevel;
 
   // output_voltage
-  const AstString* mOutputVoltage;
+  //const AstString* mOutputVoltage;
 
   // pg_function
-  const AstExpr* mPgFunction;
+  //const AstExpr* mPgFunction;
 
   // pin_func_type
-  const AstString* mPinFuncType;
+  //const AstString* mPinFuncType;
 
   // power_down_function
-  const AstExpr* mPowerDownFunction;
+  //const AstExpr* mPowerDownFunction;
 
   // prefer_tied
-  const AstString* mPreferTied;
+  //const AstString* mPreferTied;
 
   // primary_output
-  const AstBool* mPrimaryOutput;
+  //const AstBool* mPrimaryOutput;
 
   // pulling_current
-  const AstFloat* mPullingCurrent;
+  //const AstFloat* mPullingCurrent;
 
   // pulling_resistance
-  const AstFloat* mPullingResistance;
+  //const AstFloat* mPullingResistance;
 
   // pulse_clock
-  const AstString* mPulseClock;
+  //const AstString* mPulseClock;
 
   // related_ground_pin
-  const AstString* mRelatedGroundPin;
+  //const AstString* mRelatedGroundPin;
 
   // related_power_pin
-  const AstString* mRelatedPowerPin;
+  //const AstString* mRelatedPowerPin;
 
   // rise_capacitance
-  const AstFloat* mRiseCapacitance;
+  //const AstFloat* mRiseCapacitance;
 
   // rise_current_slope_after_threshold
-  const AstFloat* mRiseCurrentSlopeAfterThreshold;
+  //const AstFloat* mRiseCurrentSlopeAfterThreshold;
 
   // rise_current_slope_before_threshold
-  const AstFloat* mRiseCurrentSlopeBeforeThreshold;
+  //const AstFloat* mRiseCurrentSlopeBeforeThreshold;
 
   // rise_time_after_threshold
-  const AstFloat* mRiseTimeAfterThreshold;
+  //const AstFloat* mRiseTimeAfterThreshold;
 
   // rise_time_before_threshold
-  const AstFloat* mRiseTimeBeforeThreshold;
+  //const AstFloat* mRiseTimeBeforeThreshold;
 
   // signal_type
-  const AstString* mSignalType;
+  //const AstString* mSignalType;
 
   // slew_control
-  const AstString* mSlewControl;
+  //const AstString* mSlewControl;
 
   // slew_lower_threshold_pct_fall
-  const AstFloat* mSlewLowerThresholdPctFall;
+  //const AstFloat* mSlewLowerThresholdPctFall;
 
   // slew_lower_threshold_pct_rise
-  const AstFloat* mSlewLowerThresholdPctRise;
+  //const AstFloat* mSlewLowerThresholdPctRise;
 
   // slew_upper_threshold_pct_fall
-  const AstFloat* mSlewUpperThresholdPctFall;
+  //const AstFloat* mSlewUpperThresholdPctFall;
 
   // slew_upper_threshold_pct_rise
-  const AstFloat* mSlewUpperThresholdPctRise;
+  //const AstFloat* mSlewUpperThresholdPctRise;
 
   // state_function
-  const AstExpr* mStateFunction;
+  //const AstExpr* mStateFunction;
 
   // std_cell_main_rail
-  const AstBool* mStdCellMainRail;
+  //const AstBool* mStdCellMainRail;
 
   // switch_function
-  const AstExpr* mSwitchFunction;
+  //const AstExpr* mSwitchFunction;
 
   // switch_pin
-  const AstBool* mSwitchPin;
+  //const AstBool* mSwitchPin;
 
   // test_output_only
-  const AstBool* mTestOutputOnly;
+  //const AstBool* mTestOutputOnly;
 
   // three_state
-  const AstExpr* mThreeState;
+  //const AstExpr* mThreeState;
 
   // vdhl_name
-  const AstString* mVhdlName;
+  //const AstString* mVhdlName;
 
   // x_function
-  const AstExpr* mXFunction;
+  //const AstExpr* mXFunction;
 
   // fall_capacitance_range
   const AstFloat2* mFallCapacitanceRange;
 
   // power_gating_pin
-  const AstString* mPowerGatingPinString;
-  const AstInt* mPowerGatingPinInt;
+  //const AstString* mPowerGatingPinString;
+  //const AstInt* mPowerGatingPinInt;
 
   // rise_capacitance_range
   const AstFloat2* mRiseCapacitanceRange;
@@ -470,6 +468,7 @@ private:
 
   // tlatch
   // ???
+#endif
 
 };
 

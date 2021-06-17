@@ -8,23 +8,23 @@
 /// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "AstNode.h"
+#include "AstValue.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class AstString AstString.h "AstString.h"
-/// @brief 文字列を表すクラス
+/// @brief 文字列のノード を表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstString :
-  public AstNode
+  public AstValue
 {
 public:
 
   /// @brief コンストラクタ
-  AstString(const FileRegion& loc, ///< [in] ファイル上の位置
-	    ShString value);	   ///< [in] 値
+  AstString(ShString value,             ///< [in] 値
+	    const FileRegion& val_loc); ///< [in] 値のファイル上の位置
 
   /// @brief デストラクタ
   ~AstString();
@@ -36,18 +36,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 定数シンボルを返す．
-  /// @note type() が kString の時のみ意味を持つ．
   ShString
-  value() const
-  {
-    return mValue;
-  }
+  string_value() const override;
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
+  dump(ostream& s) const override; ///< [in] 出力先のストリーム
 
 
 private:

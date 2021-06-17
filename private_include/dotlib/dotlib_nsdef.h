@@ -63,8 +63,8 @@ class TemplateHandler;
 class TimingHandler;
 
 class AstMgr;
+class AstAttr;
 class AstBaseCurves;
-class AstBool;
 class AstBus;
 class AstBundle;
 class AstCCS;
@@ -73,26 +73,16 @@ class AstCellDegradation;
 class AstCellType;
 class AstClutTemplate;
 class AstCPType;
-class AstDelayModel;
-class AstDirection;
 class AstDomain;
 class AstDynamicCurrent;
 class AstExpr;
 class AstFlutTemplate;
-class AstFloat;
-class AstFloat2;
-class AstFloatStr;
-class AstFloatVector;
 class AstFF;
 class AstFFBank;
 class AstFpgaIsd;
 class AstFYM;
 class AstGeneratedClock;
 class AstInputVoltage;
-class AstInt;
-class AstIntFloat;
-class AstIntFloatVector;
-class AstIntVector;
 class AstIntrinsicParasitic;
 class AstLatch;
 class AstLatchBank;
@@ -113,24 +103,15 @@ class AstScaledCell;
 class AstScalingFactors;
 class AstSensitization;
 class AstStateTable;
-class AstStr2;
-class AstStr3;
-class AstStrFloat;
-class AstStrInt;
-class AstString;
-class AstStrList;
-class AstTechnology;
 class AstTemplate;
 class AstTestCell;
 class AstTiming;
 class AstTimingRange;
-class AstTimingSense;
-class AstTimingType;
 class AstType;
 class AstUnit;
 class AstUserParameters;
+class AstValue;
 class AstVariableRange;
-class AstVarType;
 class AstWireLoad;
 class AstWireLoadSelection;
 class AstWireLoadTable;
@@ -138,6 +119,20 @@ class AstWireLoadTable;
 enum class TokenType;
 enum class AttrType;
 
+class AstString;
+class AstFloat;
+class AstInt;
+class AstTechnology;
+class AstVarType;
+class AstIntFloat;
+class AstFloatVector;
+class AstFloat2;
+class AstDelayModel;
+class AstIntVector;
+class AstTimingSense;
+class AstTimingType;
+class AstFloatStr;
+class AstDirection;
 
 //////////////////////////////////////////////////////////////////////
 // エラー出力用の便利関数
@@ -150,6 +145,7 @@ syntax_error(AttrType attr_type,          ///< [in] 対象の属性
 	     const FileRegion& attr_loc); ///< [in] attr_type のファイル上の位置
 
 /// @brief 同じ属性が重複して定義されている時のエラーを出力する．
+extern
 void
 duplicate_error(AttrType attr_type,         ///< [in] 属性の型
 		const FileRegion& attr_loc, ///< [in] 属性のファイル上の位置

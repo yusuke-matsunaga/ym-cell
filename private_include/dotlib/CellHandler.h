@@ -120,6 +120,7 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+#if 0
   // area
   const AstFloat* mArea;
 
@@ -313,6 +314,7 @@ private:
 
   // type
   vector<const AstType*> mTypeList;
+#endif
 
 };
 

@@ -120,7 +120,8 @@ using nsClib::ClibPatGraph;
 enum class ClibTechnology : ymuint8
 {
   cmos,
-  fpga
+  fpga,
+  none
 };
 
 
@@ -133,7 +134,8 @@ enum class ClibDelayModel : ymuint8
   TableLookup,
   PiecewiseCmos,
   Cmos2,
-  Dcm
+  Dcm,
+  None
 };
 
 
@@ -145,7 +147,8 @@ enum class ClibDirection : ymuint8
   Input,
   Output,
   Inout,
-  Internal
+  Internal,
+  None
 };
 
 
@@ -156,7 +159,8 @@ enum class ClibTimingSense : ymuint8
 {
   PosiUnate = 1,
   NegaUnate = 2,
-  NonUnate  = 3
+  NonUnate  = 3,
+  None
 };
 
 
@@ -205,7 +209,9 @@ enum class ClibTimingType : ymuint8
   NochangeHighHigh       = 27,
   NochangeHighLow        = 28,
   NochangeLowHigh        = 29,
-  NochangeLowLow         = 30
+  NochangeLowLow         = 30,
+
+  None
 };
 
 
