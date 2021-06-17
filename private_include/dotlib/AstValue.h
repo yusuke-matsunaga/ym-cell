@@ -16,14 +16,24 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class AstValue AstValue.h "AstValue.h"
-/// @brief 単一の値を表す基底クラス
+/// @brief 値を表す基底クラス
+///
+/// 以下の３種類がある．
+/// - simple attribute の値に対応したもの．
+/// - complex attribute の値に対応したもの．
+/// - group statement の値に対応したもの．
+///
+/// ただし，complex attribute でも `technology` のように単一の値
+/// を持つものもあり，その場合は simple attribute と同一となる．
+/// また，group statement の場合はヘッダ部分は complex attribute と同一
+/// の形を持つ．要素として複数の AstAttr を持つ．
 //////////////////////////////////////////////////////////////////////
 class AstValue
 {
 public:
 
   /// @brief コンストラクタ
-  AstValue(const FileRegion& loc);   ///< [in] 値のファイル上の位置)
+  AstValue(const FileRegion& loc); ///< [in] 値のファイル上の位置)
 
   /// @brief デストラクタ
   virtual
@@ -126,12 +136,53 @@ public:
   vector<double>
   float_vector_value() const;
 
-  /// @brief string vector 型の値を返す．
+  /// @brief complex attribute の場合の要素数を返す．
   ///
-  /// string vector 型でない場合の値は不定
+  /// 異なる型の場合の値は不定
   virtual
-  vector<ShString>
-  string_vector_value() const;
+  int
+  complex_elem_size() const;
+
+  /// @brief complex attribute の要素を返す．
+  ///
+  /// 異なる型の場合の値は不定
+  virtual
+  const AstValue*
+  complex_elem_value(int pos) const; ///< [in] 位置番号( 0 <= pos < complex_elem_size )
+
+  /// @brief group statement のヘッダの要素数を返す．
+  ///
+  /// 異なる型の場合の値は不定
+  int
+  group_header_size() const
+  {
+    // 実は complex と同じ
+    return complex_elem_size();
+  }
+
+  /// @brief group statement のヘッダの要素を返す．
+  ///
+  /// 異なる型の場合の値は不定
+  const AstValue*
+  group_header_value(int pos) const ///< [in] 位置番号( 0 <= pos < group_header_size() )
+  {
+    // 実は complex と同じ
+    return complex_elem_value(pos);
+  }
+
+  /// @brief group statement の要素数を返す．
+  ///
+  /// 異なる型の場合の値は不定
+  virtual
+  int
+  group_elem_size() const;
+
+  /// @brief group statement の要素の属性を返す．
+  ///
+  /// 異なる型の場合の値は不定
+  virtual
+  const AstAttr*
+  group_elem_attr(int pos) const; ///< [in] 位置番号( 0 <= pos < group_elem_size() )
 
   /// @brief 値のファイル上の位置を返す．
   FileRegion

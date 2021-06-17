@@ -29,8 +29,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstValue::AstValue(const FileRegion& loc) :
-  mValLoc{loc}
+AstValue::AstValue(const FileRegion& loc)
+  : mValLoc{loc}
 {
 }
 
@@ -151,13 +151,40 @@ AstValue::float_vector_value() const
   return vector<double>{};
 }
 
-// @brief string vector 型の値を返す．
+// @brief complex attribute の場合の要素数を返す．
 //
-// string vector 型でない場合の値は不定
-vector<ShString>
-AstValue::string_vector_value() const
+// 異なる型の場合の値は不定
+int
+AstValue::complex_elem_size() const
 {
-  return vector<ShString>{};
+  return 0;
+}
+
+// @brief complex attribute の要素を返す．
+//
+// 異なる型の場合の値は不定
+const AstValue*
+AstValue::complex_elem_value(int pos) const
+{
+  return nullptr;
+}
+
+// @brief group statement の要素数を返す．
+//
+// 異なる型の場合の値は不定
+int
+AstValue::group_elem_size() const
+{
+  return 0;
+}
+
+// @brief group statement の要素の属性を返す．
+//
+// 異なる型の場合の値は不定
+const AstAttr*
+AstValue::group_elem_attr(int pos) const
+{
+  return nullptr;
 }
 
 
@@ -602,6 +629,64 @@ AstFloatVector::dump(ostream& s) const
     s << comma << d;
     comma = ", ";
   }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス AstComplexValue
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ(引数1)
+AstComplexValue::AstComplexValue(unique_ptr<const AstValue>&& value1)
+  : AstValue(value1->loc()),
+    mElemList{std::move(value1)}
+{
+}
+
+// @brief コンストラクタ(引数2)
+AstComplexValue::AstComplexValue(unique_ptr<const AstValue>&& value1,
+				 unique_ptr<const AstValue>&& value2)
+  : AstValue(FileRegion(value1->loc(), value2->loc())),
+    mElemList{std::move(value1), std::move(vluae2)}
+{
+}
+
+
+// @brief コンストラクタ(引数3)
+AstComplexValue::AstComplexValue(unique_ptr<const AstValue>&& value1,
+				 unique_ptr<const AstValue>&& value2,
+				 unique_ptr<const AstValue>&& value2)
+  : mAstValue(FileRegion(value1->loc(), value2->loc())),
+    mElemList{std::move(value1), std::move(value2), std::move(value3)}
+{
+}
+
+// @brief コンストラクタ(可変引数)
+AstComplexValue::AstComplexValue(const vector<unique_ptr<const AstValue>>& value_list)
+  : mAstValue(FileRegion(value_list.front()->loc(), value_list.back()->loc()))
+{
+  for ( auto& ptr: value_list ) {
+    mElemList.push_back(std::move(ptr));
+  }
+}
+
+// @brief complex attribute の場合の要素数を返す．
+//
+// 異なる型の場合の値は不定
+int
+AstComplexValue::complex_elem_size() const
+{
+  return mElemList.size();
+}
+
+// @brief complex attribute の要素を返す．
+//
+// 異なる型の場合の値は不定
+const AstValue*
+AstComplexValue::complex_elem_value(int pos) const
+{
+  ASSERT_COND( 0 <= pos && pos < complex_elem_size() );
+  return mElemList[pos].get();
 }
 
 END_NAMESPACE_YM_DOTLIB
