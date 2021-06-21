@@ -11,9 +11,6 @@
 #include "gtest/gtest.h"
 #include "dotlib_nsdef.h"
 #include "AttrKwd.h"
-//#include "Parser.h"
-//#include "AstAttr.h"
-//#include "AstValue.h"
 #include "ym/MsgMgr.h"
 #include "ym/StreamMsgHandler.h"
 

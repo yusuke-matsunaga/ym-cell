@@ -265,6 +265,10 @@ private:
   TokenType
   _scan();
 
+  /// @brief c が区切り文字の時に true を返す．
+  bool
+  _is_delimiter(int c);
+
   /// @brief c が文字の時に true を返す．
   ///
   /// mSymbolMode が true なら数字も文字とみなす．

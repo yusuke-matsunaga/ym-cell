@@ -21,15 +21,23 @@ AstValuePtr
 Scanner::read_int()
 {
   Token value_token{read_token()};
+  if ( value_token.type() == TokenType::ERROR ) {
+    return {};
+  }
   if ( value_token.type() == TokenType::INT_NUM ) {
     return AstValue::new_int(cur_int(), value_token.loc());
   }
   else {
+    ostringstream emsg;
+    emsg << "Syntax error: " << cur_string()
+	 << ": Not an integer value("
+	 << value_token.type()
+	 << ").";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_token.loc(),
 		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error. 'integer' value is expected.");
+		    "DOTLIB_SCANNER",
+		    emsg.str());
     return {};
   }
 }
@@ -42,16 +50,24 @@ AstValuePtr
 Scanner::read_float()
 {
   Token value_token{read_token()};
+  if ( value_token.type() == TokenType::ERROR ) {
+    return {};
+  }
   // int 型も float 型とみなす．
   if ( value_token.type() == TokenType::FLOAT_NUM || value_token.type() == TokenType::INT_NUM ) {
     return AstValue::new_float(cur_float(), value_token.loc());
   }
   else {
+    ostringstream emsg;
+    emsg << "Syntax error: " << cur_string()
+	 << ": Not a number value("
+	 << value_token.type()
+	 << ").";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_token.loc(),
 		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error. 'float' value is expected.");
+		    "DOTLIB_SCANNER",
+		    emsg.str());
     return {};
   }
 }
@@ -72,7 +88,7 @@ Scanner::read_string()
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,
-		    "DOTLIB_PARSER",
+		    "DOTLIB_SCANNER",
 		    "Syntax error. 'string' value is expected.");
     return {};
   }
@@ -99,7 +115,7 @@ Scanner::read_bool()
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  value_loc,
 		  MsgType::Error,
-		  "DOTLIB_PARSER",
+		  "DOTLIB_SCANNER",
 		  "Syntax error. only 'true' or 'false' are allowed.");
   return {};
 }
@@ -139,7 +155,7 @@ Scanner::read_delay_model()
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,
-		    "DOTLIB_PARSER",
+		    "DOTLIB_SCANNER",
 		    buf.str());
     return {};
   }
@@ -178,7 +194,7 @@ Scanner::read_direction()
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,
-		    "DOTLIB_PARSER",
+		    "DOTLIB_SCANNER",
 		    buf.str());
     return {};
   }
@@ -211,7 +227,7 @@ Scanner::read_technology()
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,
-		    "DOTLIB_PARSER",
+		    "DOTLIB_SCANNER",
 		    buf.str());
     return {};
   }
@@ -247,7 +263,7 @@ Scanner::read_timing_sense()
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,
-		    "DOTLIB_PARSER",
+		    "DOTLIB_SCANNER",
 		    buf.str());
     return {};
   }
@@ -364,7 +380,7 @@ Scanner::read_timing_type()
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,
-		    "DOTLIB_PARSER",
+		    "DOTLIB_SCANNER",
 		    "Syntax error. Illegal string for timing type.");
     return {};
   }
@@ -430,7 +446,7 @@ Scanner::read_vartype()
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,
-		    "DOTLIB_PARSER",
+		    "DOTLIB_SCANNER",
 		    buf.str());
     return {};
   }
@@ -463,7 +479,7 @@ Scanner::read_int_vector()
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			value_loc,
 			MsgType::Error,
-			"DOTLIB_PARSER",
+			"DOTLIB_SCANNER",
 			"Syntax error. Null element.");
 	return nullptr;
       }

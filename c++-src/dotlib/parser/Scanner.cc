@@ -60,7 +60,7 @@ Scanner::read_attr()
 // dst_list は初期化せず，末尾に追加する．
 bool
 Scanner::read_raw_float_vector(vector<double>& dst_list, ///< [out] 値を格納するリスト
-				     FileRegion& loc)          ///< [out] ファイル上の位置
+				     FileRegion& loc)    ///< [out] ファイル上の位置
 {
   Token token = read_token();
   if ( token.type() != TokenType::SYMBOL ) {
@@ -88,7 +88,20 @@ Scanner::read_raw_float_vector(vector<double>& dst_list, ///< [out] 値を格納
 			"Syntax error. Null element.");
 	return false;
       }
-      dst_list.push_back(strtod(buf.c_str(), nullptr));
+      char* end;
+      double val = strtod(buf.c_str(), &end);
+      if ( end[0] != '\0' ) {
+	ostringstream emsg;
+	emsg << "Syntax error: "
+	     << buf << ": Could not convert to a number.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			token.loc(),
+			MsgType::Error,
+			"DOTLIB_PARSER",
+			emsg.str());
+	return false;
+      }
+      dst_list.push_back(val);
       buf.clear();
     }
     else {
@@ -287,11 +300,13 @@ Scanner::_scan()
 
   default:
     // それ以外はエラーなんじゃない？
+    ostringstream emsg;
+    emsg << "Syntax error: " << c << ": Unexpected charactor.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    mIn.cur_loc(),
 		    MsgType::Error,
-		    "DOTLIB_LEX",
-		    "syntax error");
+		    "DOTLIB_SCANNER",
+		    emsg.str());
     return TokenType::ERROR;
   }
   ASSERT_NOT_REACHED;
@@ -318,7 +333,20 @@ Scanner::_scan()
     mCurString.put_char(c);
     goto ST_DOT;
   }
-  return TokenType::INT_NUM;
+  if ( _is_delimiter(c) ) {
+    return TokenType::INT_NUM;
+  }
+  { // 数字の後に不適切な文字が付いている．
+    mCurString.put_char(c);
+    ostringstream emsg;
+    emsg << "Syntx error: " << mCurString << ": Not a number value.";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    mIn.cur_loc(),
+		    MsgType::Error,
+		    "DOTLIB_SCANNER",
+		    emsg.str());
+    return TokenType::ERROR;
+  }
 
  ST_DOT: // [0-9]*'.' を読み込んだ時
   c = mIn.peek();
@@ -328,12 +356,13 @@ Scanner::_scan()
     goto ST_NUM2;
   }
   { // '.' の直後はかならず数字
+    mCurString.put_char(c);
     ostringstream buf;
-    buf << "digit number expected after dot";
+    buf << "Syntax error: " << mCurString << ": Digit number expected after dot";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    mIn.cur_loc(),
 		    MsgType::Error,
-		    "DOTLIB_LEX",
+		    "DOTLIB_SCANNER",
 		    buf.str());
     return TokenType::ERROR;
   }
@@ -350,7 +379,20 @@ Scanner::_scan()
     mCurString.put_char(c);
     goto ST_NUM3;
   }
-  return TokenType::FLOAT_NUM;
+  if ( _is_delimiter(c) ) {
+    return TokenType::FLOAT_NUM;
+  }
+  { // 数字の後に不適切な文字が付いている．
+    mCurString.put_char(c);
+    ostringstream emsg;
+    emsg << "Syntax error: " << mCurString << ": Not a number value.";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    mIn.cur_loc(),
+		    MsgType::Error,
+		    "DOTLIB_SCANNER",
+		    emsg.str());
+    return TokenType::ERROR;
+  }
 
  ST_NUM3: // [0-9]*'.'[0-9]*(e|E)を読み込んだ時
   c = mIn.peek();
@@ -370,7 +412,7 @@ Scanner::_scan()
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    mIn.cur_loc(),
 		    MsgType::Error,
-		    "DOTLIB_LEX",
+		    "DOTLIB_SCANNER",
 		    buf.str());
     return TokenType::ERROR;
   }
@@ -404,7 +446,7 @@ Scanner::_scan()
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    mIn.cur_loc(),
 		    MsgType::Error,
-		    "DOTLIB_LEX",
+		    "DOTLIB_SCANNER",
 		    buf.str());
     return TokenType::ERROR;
   }
@@ -414,7 +456,7 @@ Scanner::_scan()
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    mIn.cur_loc(),
 		    MsgType::Error,
-		    "DOTLIB_LEX",
+		    "DOTLIB_SCANNER",
 		    buf.str());
     return TokenType::ERROR;
   }
@@ -480,10 +522,22 @@ Scanner::_scan()
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    mIn.cur_loc(),
 		    MsgType::Error,
-		    "DOTLIB_LEX",
+		    "DOTLIB_SCANNER",
 		    buf.str());
   }
   return TokenType::ERROR;
+}
+
+// @brief c が区切り文字の時に true を返す．
+bool
+Scanner::_is_delimiter(int c)
+{
+  if ( c == ' ' || c == '\t' || c == '\n' ||
+       c == ',' || c == ';' || c == ')' ||
+       c == EOF ) {
+    return true;
+  }
+  return false;
 }
 
 // @brief c が文字の時に true を返す．
