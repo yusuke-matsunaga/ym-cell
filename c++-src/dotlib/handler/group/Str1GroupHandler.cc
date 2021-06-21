@@ -8,7 +8,7 @@
 
 
 #include "dotlib/Str1GroupHandler.h"
-#include "dotlib/DotlibParser.h"
+#include "dotlib/Parser.h"
 #include "dotlib/AstMgr.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-Str1GroupHandler::Str1GroupHandler(DotlibParser& parser) :
+Str1GroupHandler::Str1GroupHandler(Parser& parser) :
   GroupHandler(parser)
 {
 }

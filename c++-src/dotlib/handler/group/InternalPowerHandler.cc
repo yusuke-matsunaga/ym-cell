@@ -17,7 +17,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-InternalPowerHandler::InternalPowerHandler(DotlibParser& parser) :
+InternalPowerHandler::InternalPowerHandler(Parser& parser) :
   GroupHandler(parser)
 {
 #if 0

@@ -20,30 +20,30 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-CellDegradationHandler::CellDegradationHandler(DotlibParser& parser) :
+CellDegradationHandler::CellDegradationHandler(Parser& parser) :
   Str1GroupHandler(parser)
 {
   // パース関数の登録
   reg_func(AttrType::calc_mode,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_string(mCalcMode, attr_type, attr_loc); });
   reg_func(AttrType::index_1,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_index(mIndex1, attr_type, attr_loc); });
   reg_func(AttrType::values,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_values(mValues, attr_type, attr_loc); });
   reg_func(AttrType::coefs,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_coefs(mCoefs, attr_type, attr_loc); });
   reg_func(AttrType::orders,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_orders(mOrders, attr_type, attr_loc); });
   reg_func(AttrType::variable_1_range,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_variable_range(mVar1Range, attr_type, attr_loc); });
   reg_func(AttrType::domain,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_domain(mDomain, attr_type, attr_loc); });
 }
 

@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "dotlib/dotlib_nsdef.h"
 
 #include "ci/CiCellLibrary.h"
@@ -23,29 +22,8 @@
 #include "ym/ClibLut.h"
 #include "ym/ClibLutTemplate.h"
 
-#include "dotlib/DotlibParser.h"
-#include "dotlib/AstMgr.h"
-#include "dotlib/AstNode.h"
-#include "dotlib/AstLibrary.h"
-#include "dotlib/AstCell.h"
-#include "dotlib/AstFF.h"
-#include "dotlib/AstLatch.h"
-#include "dotlib/AstPin.h"
-#include "dotlib/AstTiming.h"
-#include "dotlib/AstTemplate.h"
-#include "dotlib/AstLut.h"
-#include "dotlib/AstExpr.h"
-#include "dotlib/AstInt.h"
-#include "dotlib/AstFloat.h"
-#include "dotlib/AstFloatStr.h"
-#include "dotlib/AstFloatVector.h"
-#include "dotlib/AstString.h"
-#include "dotlib/AstTechnology.h"
-#include "dotlib/AstDelayModel.h"
-#include "dotlib/AstDirection.h"
-#include "dotlib/AstTimingSense.h"
-#include "dotlib/AstTimingType.h"
-#include "dotlib/AstVarType.h"
+#include "dotlib/Parser.h"
+#include "dotlib/AstAttr.h"
 
 #include "ym/Expr.h"
 #include "ym/TvFunc.h"
@@ -83,6 +61,7 @@ split(const string& src_str,
   return ans;
 }
 
+#if 0
 // lut を読み込む．
 ClibLut*
 gen_lut(CiCellLibrary* library,
@@ -810,6 +789,7 @@ set_library(const AstLibrary* ast_library,
 
   library->set_cell_list(cell_list);
 }
+#endif
 
 END_NONAMESPACE
 
@@ -843,9 +823,8 @@ CiCellLibrary::read_liberty(const string& filename)
 
   // 読み込んでASTを作る．
   InputFileObj in{fin, {filename}};
-  AstMgr mgr;
-  DotlibParser parser(in, mgr, false);
-  const AstLibrary* ast_library = parser.parse();
+  Parser parser(in, false);
+  auto ast_library{parser.parse()};
   if ( ast_library == nullptr ) {
     // 読み込みに失敗した．
     return false;
@@ -853,7 +832,7 @@ CiCellLibrary::read_liberty(const string& filename)
 
   // AST の内容をライブラリに設定する．
   // ここではエラーは起こらないはず．
-  set_library(ast_library, this);
+  //set_library(ast_library, this);
 
   return true;
 }

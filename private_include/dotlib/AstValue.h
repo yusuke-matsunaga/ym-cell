@@ -10,6 +10,7 @@
 
 #include "dotlib_nsdef.h"
 #include "ym/FileRegion.h"
+#include "ym/ShString.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -32,18 +33,121 @@ class AstValue
 {
 public:
 
-  /// @brief コンストラクタ
-  AstValue(const FileRegion& loc); ///< [in] 値のファイル上の位置)
+  /// @brief int 値を作る．
+  static
+  AstValuePtr
+  new_int(int value,              ///< [in] 値
+	  const FileRegion& loc); ///< [in] 値の位置
+
+  /// @brief float 値を作る．
+  static
+  AstValuePtr
+  new_float(double value,           ///< [in] 値
+	    const FileRegion& loc); ///< [in] 値の位置
+
+  /// @brief string 値を作る．
+  static
+  AstValuePtr
+  new_string(const ShString& value,  ///< [in] 値
+	     const FileRegion& loc); ///< [in] 値の位置
+
+  /// @brief bool 値を作る．
+  static
+  AstValuePtr
+  new_bool(bool value,             ///< [in] 値
+	   const FileRegion& loc); ///< [in] 値の位置
+
+  /// @brief delay_model 値を作る．
+  static
+  AstValuePtr
+  new_delay_model(ClibDelayModel value,   ///< [in] 値
+		  const FileRegion& loc); ///< [in] 値の位置
+
+  /// @brief direction 値を作る．
+  static
+  AstValuePtr
+  new_direction(ClibDirection value,    ///< [in] 値
+		const FileRegion& loc); ///< [in] 値の位置
+
+  /// @brief technology 値を作る．
+  static
+  AstValuePtr
+  new_technology(ClibTechnology value,   ///< [in] 値
+		 const FileRegion& loc); ///< [in] 値の位置
+
+  /// @brief timing_sense 値を作る．
+  static
+  AstValuePtr
+  new_timing_sense(ClibTimingSense value,  ///< [in] 値
+		   const FileRegion& loc); ///< [in] 値の位置
+
+  /// @brief timing_type 値を作る．
+  static
+  AstValuePtr
+  new_timing_type(ClibTimingType value,   ///< [in] 値
+		  const FileRegion& loc); ///< [in] 値の位置
+
+  /// @brief vartype 値を作る．
+  static
+  AstValuePtr
+  new_vartype(ClibVarType value,      ///< [in] 値
+	      const FileRegion& loc); ///< [in] 値の位置
+
+  /// @brief expr 値を作る．
+  static
+  AstValuePtr
+  new_expr(unique_ptr<const AstExpr>&& value); ///< [in] 値
+
+  /// @brief int vector 値を作る．
+  static
+  AstValuePtr
+  new_int_vector(const vector<int>& value, ///< [in] 値
+		 const FileRegion& loc);   ///< [in] 値の位置
+
+  /// @brief float vector 値を作る．
+  static
+  AstValuePtr
+  new_float_vector(const vector<double>& value, ///< [in] 値
+		   const FileRegion& loc);      ///< [in] 値の位置
+
+  /// @brief complex 値を作る．
+  static
+  AstValuePtr
+  new_complex(vector<AstValuePtr>& value, ///< [in] 値のリスト
+	      const FileRegion& loc);     ///< [in] 値の位置
+
+  /// @brief group 値を作る．
+  static
+  AstValuePtr
+  new_group(AstValuePtr&& header,           ///< [in] ヘッダ
+	    vector<AstAttrPtr>& child_list, ///< [in] 要素のリスト
+	    const FileRegion& loc);         ///< [in] 値の位置
+
+  /// @brief 無効な参照値を返す．
+  static
+  const AstValue&
+  null_ref();
 
   /// @brief デストラクタ
   virtual
   ~AstValue() = default;
 
 
+protected:
+
+  /// @brief コンストラクタ
+  AstValue(const FileRegion& loc); ///< [in] 値のファイル上の位置)
+
+
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 適正な値を持っている時 true を返す．
+  virtual
+  bool
+  is_valid() const;
 
   /// @brief int 型の値を返す．
   ///
@@ -119,7 +223,7 @@ public:
   ///
   /// expr 型でない場合の値は不定
   virtual
-  const AstExpr*
+  const AstExpr&
   expr_value() const;
 
   /// @brief int vector 型の値を返す．
@@ -147,28 +251,15 @@ public:
   ///
   /// 異なる型の場合の値は不定
   virtual
-  const AstValue*
+  const AstValue&
   complex_elem_value(int pos) const; ///< [in] 位置番号( 0 <= pos < complex_elem_size )
 
-  /// @brief group statement のヘッダの要素数を返す．
+  /// @brief group statement のヘッダを返す．
   ///
   /// 異なる型の場合の値は不定
-  int
-  group_header_size() const
-  {
-    // 実は complex と同じ
-    return complex_elem_size();
-  }
-
-  /// @brief group statement のヘッダの要素を返す．
-  ///
-  /// 異なる型の場合の値は不定
-  const AstValue*
-  group_header_value(int pos) const ///< [in] 位置番号( 0 <= pos < group_header_size() )
-  {
-    // 実は complex と同じ
-    return complex_elem_value(pos);
-  }
+  virtual
+  const AstValue&
+  group_header_value() const;
 
   /// @brief group statement の要素数を返す．
   ///
@@ -181,15 +272,12 @@ public:
   ///
   /// 異なる型の場合の値は不定
   virtual
-  const AstAttr*
+  const AstAttr&
   group_elem_attr(int pos) const; ///< [in] 位置番号( 0 <= pos < group_elem_size() )
 
   /// @brief 値のファイル上の位置を返す．
   FileRegion
-  loc() const
-  {
-    return mLoc;
-  }
+  loc() const { return mLoc; }
 
   /// @brief 内容を出力する．
   virtual

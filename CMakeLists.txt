@@ -83,94 +83,21 @@ set (dotlib_SOURCES
   c++-src/dotlib/read_liberty.cc
 
   c++-src/dotlib/parser/AttrDic.cc
-  c++-src/dotlib/parser/DotlibParser.cc
-  c++-src/dotlib/parser/DotlibParser_read.cc
-  c++-src/dotlib/parser/DotlibParser_simple.cc
-  c++-src/dotlib/parser/DotlibParser_complex.cc
-  c++-src/dotlib/parser/DotlibParser_group.cc
-  c++-src/dotlib/parser/DotlibScanner.cc
+  c++-src/dotlib/parser/AttrType.cc
   c++-src/dotlib/parser/FuncParser.cc
   c++-src/dotlib/parser/FuncScanner.cc
+  c++-src/dotlib/parser/HeaderHandler.cc
+  c++-src/dotlib/parser/Parser.cc
+  c++-src/dotlib/parser/Parser_complex.cc
+  c++-src/dotlib/parser/Parser_group.cc
+  c++-src/dotlib/parser/Parser_simple.cc
+  c++-src/dotlib/parser/Scanner.cc
+  c++-src/dotlib/parser/Scanner_value.cc
+  c++-src/dotlib/parser/Scanner_expr.cc
 
-  c++-src/dotlib/handler/header/ElemHandler.cc
-  c++-src/dotlib/handler/header/EmptyHandler.cc
-  c++-src/dotlib/handler/header/FloatFloatHandler.cc
-  c++-src/dotlib/handler/header/FloatStrHandler.cc
-  c++-src/dotlib/handler/header/FloatVectorHandler.cc
-  c++-src/dotlib/handler/header/FloatVectorListHandler.cc
-  c++-src/dotlib/handler/header/HeaderHandler.cc
-  c++-src/dotlib/handler/header/IntFloatHandler.cc
-  c++-src/dotlib/handler/header/IntFloatVectorHandler.cc
-  c++-src/dotlib/handler/header/IntVectorHandler.cc
-  c++-src/dotlib/handler/header/StrHandler.cc
-  c++-src/dotlib/handler/header/StrIntHandler.cc
-  c++-src/dotlib/handler/header/StrStrHandler.cc
-  c++-src/dotlib/handler/header/StrStrIntHandler.cc
-  c++-src/dotlib/handler/header/StrStrStrHandler.cc
-  c++-src/dotlib/handler/header/StrFloatHandler.cc
-  c++-src/dotlib/handler/header/StrListHandler.cc
-
-  c++-src/dotlib/handler/group/CellHandler.cc
-  c++-src/dotlib/handler/group/DomainHandler.cc
-  c++-src/dotlib/handler/group/FFHandler.cc
-  c++-src/dotlib/handler/group/FLHandler.cc
-  c++-src/dotlib/handler/group/GroupHandler.cc
-  c++-src/dotlib/handler/group/InputVoltageHandler.cc
-  c++-src/dotlib/handler/group/LatchHandler.cc
-  c++-src/dotlib/handler/group/LibraryHandler.cc
-  c++-src/dotlib/handler/group/OutputVoltageHandler.cc
-  c++-src/dotlib/handler/group/PinHandler.cc
-  c++-src/dotlib/handler/group/TableHandler.cc
-  c++-src/dotlib/handler/group/TemplateHandler.cc
-  c++-src/dotlib/handler/group/TimingHandler.cc
-
-  #c++-src/dotlib/handler/group/InternalPowerHandler.cc
-
-  #c++-src/dotlib/handler/group/CellDegradationHandler.cc
-  #c++-src/dotlib/handler/CellInternalPower.cc
-  #c++-src/dotlib/handler/DefineHandler.cc
-
-  c++-src/dotlib/ast/AstCell.cc
-  c++-src/dotlib/ast/AstCPType.cc
-  c++-src/dotlib/ast/AstDomain.cc
+  c++-src/dotlib/ast/AstAttr.cc
   c++-src/dotlib/ast/AstExpr.cc
-  c++-src/dotlib/ast/AstFF.cc
-  c++-src/dotlib/ast/AstFFBank.cc
-  c++-src/dotlib/ast/AstFL.cc
-  c++-src/dotlib/ast/AstFloat.cc
-  c++-src/dotlib/ast/AstFloat2.cc
-  c++-src/dotlib/ast/AstFloatStr.cc
-  c++-src/dotlib/ast/AstFloatVector.cc
-  c++-src/dotlib/ast/AstInputVoltage.cc
-  c++-src/dotlib/ast/AstInt.cc
-  c++-src/dotlib/ast/AstIntFloat.cc
-  c++-src/dotlib/ast/AstIntFloatVector.cc
-  c++-src/dotlib/ast/AstIntVector.cc
-  c++-src/dotlib/ast/AstLatch.cc
-  c++-src/dotlib/ast/AstLatchBank.cc
-  c++-src/dotlib/ast/AstLibrary.cc
-  c++-src/dotlib/ast/AstLut.cc
-  c++-src/dotlib/ast/AstMgr.cc
-  c++-src/dotlib/ast/AstNameListNode.cc
-  c++-src/dotlib/ast/AstNameNode.cc
-  c++-src/dotlib/ast/AstNode.cc
-  c++-src/dotlib/ast/AstOutputVoltage.cc
-  c++-src/dotlib/ast/AstPin.cc
-  c++-src/dotlib/ast/AstSimple.cc
-  c++-src/dotlib/ast/AstStr2.cc
-  c++-src/dotlib/ast/AstStr3.cc
-  c++-src/dotlib/ast/AstStrFloat.cc
-  c++-src/dotlib/ast/AstStrInt.cc
-  c++-src/dotlib/ast/AstString.cc
-  c++-src/dotlib/ast/AstStrList.cc
-  c++-src/dotlib/ast/AstTemplate.cc
-  c++-src/dotlib/ast/AstTiming.cc
   c++-src/dotlib/ast/AstValue.cc
-
-  #c++-src/dotlib/ast/AstCell.cc
-  #c++-src/dotlib/ast/AstCellDegradation.cc
-  #c++-src/dotlib/ast/AstLibrary.cc
-  #c++-src/dotlib/ast/AstStateTable.cc
   )
 
 

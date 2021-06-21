@@ -8,7 +8,6 @@
 
 
 #include "dotlib/FFHandler.h"
-#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -19,34 +18,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-FFHandler::FFHandler(DotlibParser& parser) :
+FFHandler::FFHandler(Parser& parser) :
   FLHandler(parser)
 {
-}
-
-// @brief デストラクタ
-FFHandler::~FFHandler()
-{
-}
-
-// @brief グループ記述の始まり
-void
-FFHandler::begin_group()
-{
-  mClockedOn = nullptr;
-  mClockedOnAlso = nullptr;
-  mNextState = nullptr;
-}
-
-// @brief グループ記述の終わり
-// @retval true 正常にパーズした．
-// @retval false パーズ中にエラーが起こった．
-bool
-FFHandler::end_group()
-{
-  // エラーチェック
-
-  return true;
 }
 
 END_NAMESPACE_YM_DOTLIB

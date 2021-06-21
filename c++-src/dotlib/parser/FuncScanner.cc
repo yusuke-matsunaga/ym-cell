@@ -25,7 +25,7 @@ FuncScanner::FuncScanner(const string& str,
   : mSrcString{str},
     mSrcLoc{loc},
     mCurPos{0},
-    mUngetType{TokenType::ERROR}
+    mCurType{TokenType::ERROR}
 {
 }
 
@@ -37,12 +37,11 @@ FuncScanner::~FuncScanner()
 // @brief トークンを読み込む．
 // @param[out] loc 対応するファイル上の位置情報を格納する変数
 TokenType
-FuncScanner::read_token(FileRegion& loc)
+FuncScanner::peek_token(FileRegion& loc)
 {
-  if ( mUngetType != TokenType::ERROR ) {
-    TokenType ans = mUngetType;
-    loc = mUngetLoc;
-    mUngetType = TokenType::ERROR;
+  if ( mCurType != TokenType::ERROR ) {
+    TokenType ans = mCurType;
+    loc = mCurLoc;
     return ans;
   }
 
@@ -133,15 +132,21 @@ FuncScanner::read_token(FileRegion& loc)
   return TokenType::INT_NUM;
 }
 
-// @brief 読み込んだトークンを戻す．
-// @param[in] type トークンの型
-// @param[in] loc トークンの位置
+// @brief 読み込んだトークンを確定する．
 void
-FuncScanner::unget_token(TokenType type,
-			 const FileRegion& loc)
+FuncScanner::accept_token()
 {
-  mUngetType = type;
-  mUngetLoc = loc;
+  mCurType = TokenType::ERROR;
+}
+
+// @brief トークンを読み込み確定する．
+// @param[out] loc 対応するファイル上の位置情報を格納する変数
+TokenType
+FuncScanner::read_token(FileRegion& loc)
+{
+  auto ans = peek_token(loc);
+  accept_token();
+  return ans;
 }
 
 // @brief 直前の read_token() で読んだトークン文字列を返す．

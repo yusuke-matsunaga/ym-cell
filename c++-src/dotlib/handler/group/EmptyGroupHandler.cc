@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-EmptyGroupHandler::EmptyGroupHandler(DotlibParser& parser) :
+EmptyGroupHandler::EmptyGroupHandler(Parser& parser) :
   GroupHandler(parser)
 {
 }

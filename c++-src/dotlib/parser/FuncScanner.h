@@ -41,14 +41,16 @@ public:
   /// @brief トークンを読み込む．
   /// @param[out] loc 対応するファイル上の位置情報を格納する変数
   TokenType
-  read_token(FileRegion& loc);
+  peek_token(FileRegion& loc);
 
-  /// @brief 読み込んだトークンを戻す．
-  /// @param[in] type トークンの型
-  /// @param[in] loc トークンの位置
+  /// @brief 読み込んだトークンを確定する．
   void
-  unget_token(TokenType type,
-	      const FileRegion& loc);
+  accept_token();
+
+  /// @brief トークンを読み込み確定する．
+  /// @param[out] loc 対応するファイル上の位置情報を格納する変数
+  TokenType
+  read_token(FileRegion& loc);
 
   /// @brief 直前の read_token() で読んだトークンの文字列を返す．
   const char*
@@ -105,11 +107,11 @@ private:
   // 最初のコラム位置
   int mFirstColumn;
 
-  // 読み戻したトークンの型
-  TokenType mUngetType;
+  // 現在のトークンの型
+  TokenType mCurType;
 
-  // 読み戻したトークンの位置
-  FileRegion mUngetLoc;
+  // 現在のトークンの位置
+  FileRegion mCurLoc;
 
 };
 

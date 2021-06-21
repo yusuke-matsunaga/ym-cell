@@ -7,19 +7,9 @@
 /// All rights reserved.
 
 #include "dotlib/AstValue.h"
-#include "dotlib/AstInt.h"
-#include "dotlib/AstFloat.h"
-#include "dotlib/AstString.h"
-#include "dotlib/AstBool.h"
-#include "dotlib/AstDelayModel.h"
-#include "dotlib/AstDirection.h"
-#include "dotlib/AstTechnology.h"
-#include "dotlib/AstTimingSense.h"
-#include "dotlib/AstTimingType.h"
-#include "dotlib/AstVarType.h"
-#include "dotlib/AstIntVector.h"
-#include "dotlib/AstFloatVector.h"
-#include "dotlib/AstStrVector.h"
+#include "dotlib/AstAttr.h"
+#include "dotlib/AstExpr.h"
+#include "AstValue_int.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -28,10 +18,145 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // クラス AstValue
 //////////////////////////////////////////////////////////////////////
 
+// @brief int 値を作る．
+AstValuePtr
+AstValue::new_int(int value,
+		  const FileRegion& loc)
+{
+  return AstValuePtr{new AstInt(value, loc)};
+}
+
+// @brief float 値を作る．
+AstValuePtr
+AstValue::new_float(double value,
+		    const FileRegion& loc)
+{
+  return AstValuePtr{new AstFloat(value, loc)};
+}
+
+// @brief string 値を作る．
+AstValuePtr
+AstValue::new_string(const ShString& value,
+		     const FileRegion& loc)
+{
+  return AstValuePtr{new AstString(value, loc)};
+}
+
+// @brief bool 値を作る．
+AstValuePtr
+AstValue::new_bool(bool value,
+		   const FileRegion& loc)
+{
+  return AstValuePtr{new AstBool(value, loc)};
+}
+
+// @brief delay_model 値を作る．
+AstValuePtr
+AstValue::new_delay_model(ClibDelayModel value,
+			  const FileRegion& loc)
+{
+  return AstValuePtr{new AstDelayModel(value, loc)};
+}
+
+// @brief direction 値を作る．
+AstValuePtr
+AstValue::new_direction(ClibDirection value,
+			const FileRegion& loc)
+{
+  return AstValuePtr{new AstDirection(value, loc)};
+}
+
+// @brief technology 値を作る．
+AstValuePtr
+AstValue::new_technology(ClibTechnology value,
+			 const FileRegion& loc)
+{
+  return AstValuePtr{new AstTechnology(value, loc)};
+}
+
+// @brief timing_sense 値を作る．
+AstValuePtr
+AstValue::new_timing_sense(ClibTimingSense value,
+			   const FileRegion& loc)
+{
+  return AstValuePtr{new AstTimingSense(value, loc)};
+}
+
+// @brief timing_type 値を作る．
+AstValuePtr
+AstValue::new_timing_type(ClibTimingType value,
+			  const FileRegion& loc)
+{
+  return AstValuePtr{new AstTimingType(value, loc)};
+}
+
+// @brief vartype 値を作る．
+AstValuePtr
+AstValue::new_vartype(ClibVarType value,
+		      const FileRegion& loc)
+{
+  return AstValuePtr{new AstVarType(value, loc)};
+}
+
+// @brief expr 値を作る．
+AstValuePtr
+AstValue::new_expr(AstExprPtr&& value)
+{
+  return AstValuePtr{new AstExprValue(std::move(value))};
+}
+
+// @brief int vector 値を作る．
+AstValuePtr
+AstValue::new_int_vector(const vector<int>& value,
+			 const FileRegion& loc)
+{
+  return AstValuePtr{new AstIntVector(value, loc)};
+}
+
+// @brief float vector 値を作る．
+AstValuePtr
+AstValue::new_float_vector(const vector<double>& value,
+			   const FileRegion& loc)
+{
+  return AstValuePtr{new AstFloatVector(value, loc)};
+}
+
+// @brief complex 値を作る．
+AstValuePtr
+AstValue::new_complex(vector<AstValuePtr>& value,
+		      const FileRegion& loc)
+{
+  return AstValuePtr{new AstComplexValue(value, loc)};
+}
+
+// @brief group 値を作る．
+AstValuePtr
+AstValue::new_group(AstValuePtr&& header,
+		    vector<AstAttrPtr>& child_list,
+		    const FileRegion& loc)
+{
+  return AstValuePtr{new AstGroupValue(std::move(header), child_list, loc)};
+}
+
+// @brief 無効な参照値を返す．
+const AstValue&
+AstValue::null_ref()
+{
+  static AstNullValue dummy;
+  return dummy;
+}
+
 // @brief コンストラクタ
 AstValue::AstValue(const FileRegion& loc)
-  : mValLoc{loc}
+  : mLoc{loc}
 {
+}
+
+// @brief 適正な値を持っている時 true を返す．
+bool
+AstValue::is_valid() const
+{
+  return true;
 }
 
 // @brief int 型の値を返す．
@@ -127,10 +252,11 @@ AstValue::vartype_value() const
 // @brief expr 型の値を返す．
 //
 // expr 型でない場合の値は不定
-const AstExpr*
+const AstExpr&
 AstValue::expr_value() const
 {
-  return nullptr;
+  ASSERT_NOT_REACHED;
+  return AstExpr::null_ref();
 }
 
 // @brief int vector 型の値を返す．
@@ -163,10 +289,19 @@ AstValue::complex_elem_size() const
 // @brief complex attribute の要素を返す．
 //
 // 異なる型の場合の値は不定
-const AstValue*
+const AstValue&
 AstValue::complex_elem_value(int pos) const
 {
-  return nullptr;
+  return AstValue::null_ref();
+}
+
+// @brief group statement のヘッダを返す．
+//
+// 異なる型の場合の値は不定
+const AstValue&
+AstValue::group_header_value() const
+{
+  return AstValue::null_ref();
 }
 
 // @brief group statement の要素数を返す．
@@ -181,10 +316,11 @@ AstValue::group_elem_size() const
 // @brief group statement の要素の属性を返す．
 //
 // 異なる型の場合の値は不定
-const AstAttr*
+const AstAttr&
 AstValue::group_elem_attr(int pos) const
 {
-  return nullptr;
+  static AstAttr dummy;
+  return dummy;
 }
 
 
@@ -212,7 +348,7 @@ AstInt::int_value() const
 void
 AstInt::dump(ostream& s) const
 {
-  s << value();
+  s << int_value();
 }
 
 
@@ -240,7 +376,7 @@ AstFloat::float_value() const
 void
 AstFloat::dump(ostream& s) const
 {
-  s << value();
+  s << float_value();
 }
 
 
@@ -267,7 +403,7 @@ AstString::string_value() const
 void
 AstString::dump(ostream& s) const
 {
-  dump_string(s, value());
+  s << string_value();
 }
 
 
@@ -294,8 +430,8 @@ AstBool::bool_value() const
 void
 AstBool::dump(ostream& s) const
 {
-  const char* tmp = value() ? "true" : "false";
-  dump_string(s, tmp);
+  const char* tmp = bool_value() ? "true" : "false";
+  s << tmp;
 }
 
 
@@ -323,7 +459,7 @@ void
 AstDelayModel::dump(ostream& s) const
 {
   const char* tmp = "---";
-  switch ( mValue ) {
+  switch ( delay_model_value() ) {
   case ClibDelayModel::GenericCmos:   tmp = "generic cmos"; break;
   case ClibDelayModel::TableLookup:   tmp = "table lookup"; break;
   case ClibDelayModel::PiecewiseCmos: tmp = "piesewise cmos"; break;
@@ -331,7 +467,7 @@ AstDelayModel::dump(ostream& s) const
   case ClibDelayModel::Dcm:           tmp = "dcm"; break;
   default: break;
   }
-  dump_string(s, tmp);
+  s << tmp;
 }
 
 
@@ -349,7 +485,7 @@ AstDirection::AstDirection(ClibDirection value,       ///< [in] 値
 
 // @brief direction を返す．
 ClibDirection
-direction_value() const
+AstDirection::direction_value() const
 {
   return mValue;
 }
@@ -359,14 +495,14 @@ void
 AstDirection::dump(ostream& s) const
 {
   const char* tmp = "---";
-  switch ( mValue ) {
+  switch ( direction_value() ) {
   case ClibDirection::Input:    tmp = "input";    break;
   case ClibDirection::Output:   tmp = "output";   break;
   case ClibDirection::Inout:    tmp = "inout";    break;
   case ClibDirection::Internal: tmp = "internal"; break;
   default: break;
   }
-  dump_string(s, tmp);
+  s << tmp;
 }
 
 
@@ -375,24 +511,24 @@ AstDirection::dump(ostream& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstExprValue::AstExprValue(const AstExpr* value)
+AstExprValue::AstExprValue(AstExprPtr&& value)
   : AstValue(value->loc()),
-    mValue{value}
+    mValue{std::move(value)}
 {
 }
 
 // @brief expr 型の値を返す．
-const AstExpr*
+const AstExpr&
 AstExprValue::expr_value() const
 {
-  return mValue;
+  return *mValue;
 }
 
 // @brief 内容をストリーム出力する．
 void
 AstExprValue::dump(ostream& s) const
 {
-  mValue->dump(s);
+  s << expr_value().decompile();
 }
 
 
@@ -420,12 +556,12 @@ void
 AstTechnology::dump(ostream& s) const
 {
   const char* tmp = "---";
-  switch ( mValue ) {
+  switch ( technology_value() ) {
   case ClibTechnology::cmos: tmp = "cmos"; break;
   case ClibTechnology::fpga: tmp = "fpga"; break;
   default: break;
   }
-  dump_string(s, tmp);
+  s << tmp;
 }
 
 
@@ -453,13 +589,13 @@ void
 AstTimingSense::dump(ostream& s) const
 {
   const char* tmp = "---";
-  switch ( mValue ) {
+  switch ( timing_sense_value() ) {
   case ClibTimingSense::PosiUnate: tmp = "positive unate"; break;
   case ClibTimingSense::NegaUnate: tmp = "negative unate"; break;
   case ClibTimingSense::NonUnate:  tmp = "non unate";      break;
   default: break;
   }
-  dump_string(s, tmp);
+  s << tmp;
 }
 
 
@@ -487,7 +623,7 @@ void
 AstTimingType::dump(ostream& s) const
 {
   const char* tmp = "---";
-  switch ( mValue ) {
+  switch ( timing_type_value() ) {
   case ClibTimingType::Combinational:         tmp = "combinational"; break;
   case ClibTimingType::CombinationalRise:     tmp = "combinational rise"; break;
   case ClibTimingType::CombinationalFall:     tmp = "combinational fall"; break;
@@ -521,7 +657,7 @@ AstTimingType::dump(ostream& s) const
   case ClibTimingType::NochangeLowLow:        tmp = "nochange low low"; break;
   default: break;
   }
-  dump_string(s, tmp);
+  s << tmp;
 }
 
 
@@ -549,7 +685,7 @@ void
 AstVarType::dump(ostream& s) const
 {
   const char* tmp = "---";
-  switch ( mValue ) {
+  switch ( vartype_value() ) {
   case ClibVarType::InputNetTransition:                  tmp = "input net transition"; break;
   case ClibVarType::InputTransitionTime:                 tmp = "input transition time"; break;
   case ClibVarType::TotalOutputNetCapacitance:           tmp = "output net capacitance"; break;
@@ -566,7 +702,7 @@ AstVarType::dump(ostream& s) const
   case ClibVarType::None:                                tmp = "none"; break;
   default: break;
   }
-  dump_string(s, tmp);
+  s << tmp;
 }
 
 
@@ -636,34 +772,10 @@ AstFloatVector::dump(ostream& s) const
 // クラス AstComplexValue
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ(引数1)
-AstComplexValue::AstComplexValue(unique_ptr<const AstValue>&& value1)
-  : AstValue(value1->loc()),
-    mElemList{std::move(value1)}
-{
-}
-
-// @brief コンストラクタ(引数2)
-AstComplexValue::AstComplexValue(unique_ptr<const AstValue>&& value1,
-				 unique_ptr<const AstValue>&& value2)
-  : AstValue(FileRegion(value1->loc(), value2->loc())),
-    mElemList{std::move(value1), std::move(vluae2)}
-{
-}
-
-
-// @brief コンストラクタ(引数3)
-AstComplexValue::AstComplexValue(unique_ptr<const AstValue>&& value1,
-				 unique_ptr<const AstValue>&& value2,
-				 unique_ptr<const AstValue>&& value2)
-  : mAstValue(FileRegion(value1->loc(), value2->loc())),
-    mElemList{std::move(value1), std::move(value2), std::move(value3)}
-{
-}
-
 // @brief コンストラクタ(可変引数)
-AstComplexValue::AstComplexValue(const vector<unique_ptr<const AstValue>>& value_list)
-  : mAstValue(FileRegion(value_list.front()->loc(), value_list.back()->loc()))
+AstComplexValue::AstComplexValue(vector<AstValuePtr>& value_list,
+				 const FileRegion& loc)
+  : AstValue(loc)
 {
   for ( auto& ptr: value_list ) {
     mElemList.push_back(std::move(ptr));
@@ -682,11 +794,102 @@ AstComplexValue::complex_elem_size() const
 // @brief complex attribute の要素を返す．
 //
 // 異なる型の場合の値は不定
-const AstValue*
+const AstValue&
 AstComplexValue::complex_elem_value(int pos) const
 {
   ASSERT_COND( 0 <= pos && pos < complex_elem_size() );
-  return mElemList[pos].get();
+  return *mElemList[pos];
+}
+
+// @brief 内容を出力する．
+void
+AstComplexValue::dump(ostream& s) const
+{
+  const char* comma = "";
+  s << "( ";
+  for ( auto& ptr: mElemList ) {
+    s << comma;
+    ptr->dump(s);
+    comma = ", ";
+  }
+  s << ")";
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス AstGroupValue
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+AstGroupValue::AstGroupValue(AstValuePtr&& header_value,
+			     vector<AstAttrPtr>& child_list,
+			     const FileRegion& loc)
+  : AstValue(loc),
+    mHeader{std::move(header_value)}
+{
+  for ( auto& p: child_list ) {
+    mChildList.push_back(std::move(p));
+  }
+}
+
+// @brief group statement のヘッダを返す．
+//
+// 異なる型の場合の値は不定
+const AstValue&
+AstGroupValue::group_header_value() const
+{
+  return *mHeader;
+}
+
+// @brief group statement の要素数を返す．
+//
+// 異なる型の場合の値は不定
+int
+AstGroupValue::group_elem_size() const
+{
+  return mChildList.size();
+}
+
+// @brief group statement の要素の属性を返す．
+//
+// 異なる型の場合の値は不定
+const AstAttr&
+AstGroupValue::group_elem_attr(int pos) const
+{
+  ASSERT_COND( 0 <= pos && pos < group_elem_size() );
+
+  return *mChildList[pos];
+}
+
+// @brief 内容を出力する．
+void
+AstGroupValue::dump(ostream& s) const
+{
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス AstNullValue
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+AstNullValue::AstNullValue()
+  : AstValue(FileRegion{})
+{
+}
+
+// @brief 適正な値を持っている時 true を返す．
+bool
+AstNullValue::is_valid() const
+{
+  return false;
+}
+
+// @brief 内容を出力する．
+void
+AstNullValue::dump(ostream& s) const
+{
+  s << "---";
 }
 
 END_NAMESPACE_YM_DOTLIB

@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-LatchBankHandler::LatchBankHandler(DotlibParser& parser) :
+LatchBankHandler::LatchBankHandler(Parser& parser) :
   Str2IntGroupHandler(parser)
 {
 }

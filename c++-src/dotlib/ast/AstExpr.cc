@@ -3,198 +3,162 @@
 /// @brief AstExpr の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
-#include "dotlib/AstMgr.h"
 #include "dotlib/AstExpr.h"
 #include "ym/MsgMgr.h"
+#include "AstExpr_int.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-// @brief + 演算子を表す AstExpr を生成する．
-// @param[in] opr1, opr2 オペランド
-const AstExpr*
-AstMgr::new_plus(const AstExpr* opr1,
-		 const AstExpr* opr2)
-{
-  ++ mOprNum;
-  auto node = new AstOpr(AstExprType::Plus, opr1, opr2);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief - 演算子を表す AstExpr を生成する．
-// @param[in] opr1, opr2 オペランド
-const AstExpr*
-AstMgr::new_minus(const AstExpr* opr1,
-		  const AstExpr* opr2)
-{
-  ++ mOprNum;
-  auto node = new AstOpr(AstExprType::Minus, opr1, opr2);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief * 演算子を表す AstExpr を生成する．
-// @param[in] opr1, opr2 オペランド
-const AstExpr*
-AstMgr::new_mult(const AstExpr* opr1,
-		 const AstExpr* opr2)
-{
-  ++ mOprNum;
-  auto node = new AstOpr(AstExprType::Mult, opr1, opr2);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief / 演算子を表す AstExpr を生成する．
-// @param[in] opr1, opr2 オペランド
-const AstExpr*
-AstMgr::new_div(const AstExpr* opr1,
-		const AstExpr* opr2)
-{
-  ++ mOprNum;
-  auto node = new AstOpr(AstExprType::Div, opr1, opr2);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief NOT 演算子を表す AstExpr を生成する．
-// @param[in] loc ファイル上の位置
-// @param[in] opr オペランド
-const AstExpr*
-AstMgr::new_not(const FileRegion& loc,
-		const AstExpr* opr)
-{
-  ++ mNotNum;
-  auto node = new AstNot(loc, opr);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief AND 演算子を表す AstExpr を生成する．
-// @param[in] opr1, opr2 オペランド
-const AstExpr*
-AstMgr::new_and(const AstExpr* opr1,
-		const AstExpr* opr2)
-{
-  ++ mOprNum;
-  auto node = new AstOpr(AstExprType::And, opr1, opr2);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief OR 演算子を表す AstExpr を生成する．
-// @param[in] opr1, opr2 オペランド
-const AstExpr*
-AstMgr::new_or(const AstExpr* opr1,
-	       const AstExpr* opr2)
-{
-  ++ mOprNum;
-  auto node = new AstOpr(AstExprType::Or, opr1, opr2);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief XOR 演算子を表す AstExpr を生成する．
-// @param[in] opr1, opr2 オペランド
-const AstExpr*
-AstMgr::new_xor(const AstExpr* opr1,
-		const AstExpr* opr2)
-{
-  ++ mOprNum;
-  auto node = new AstOpr(AstExprType::Xor, opr1, opr2);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief ブール値(0 or 1)を表す AstExpr を生成する．
-// @param[in] loc ファイル上の位置
-// @param[in] val 値
-const AstExpr*
-AstMgr::new_bool_expr(const FileRegion& loc,
-		      bool val)
-{
-  ++ mBoolExprNum;
-  auto node = new AstBoolExpr(loc, val);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief 実数値を表す AstExpr を生成する．
-// @param[in] loc ファイル乗の位置
-// @param[in] val 値
-const AstExpr*
-AstMgr::new_float_expr(const FileRegion& loc,
-		       double val)
-{
-  ++ mFloatExprNum;
-  auto node = new AstFloatExpr(loc, val);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief VDDを表す AstExpr を生成する．
-// @param[in] loc ファイル上の位置
-const AstExpr*
-AstMgr::new_vdd_expr(const FileRegion& loc)
-{
-  ++ mSymbolExprNum;
-  auto node = new AstSymbolExpr(loc, AstExprType::VDD);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief VSSを表す AstExpr を生成する．
-// @param[in] loc ファイル上の位置
-const AstExpr*
-AstMgr::new_vss_expr(const FileRegion& loc)
-{
-  ++ mSymbolExprNum;
-  auto node = new AstSymbolExpr(loc, AstExprType::VSS);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief VCCを表す AstExpr を生成する．
-// @param[in] loc ファイル上の位置
-const AstExpr*
-AstMgr::new_vcc_expr(const FileRegion& loc)
-{
-  ++ mSymbolExprNum;
-  auto node = new AstSymbolExpr(loc, AstExprType::VCC);
-  mNodeList.push_back(node);
-  return node;
-}
-
-// @brief 文字列を表す AstExpr を生成する．
-const AstExpr*
-AstMgr::new_str_expr(const FileRegion& loc,
-		     const ShString& str)
-{
-  ++ mStrExprNum;
-  auto node = new AstStrExpr(loc, str);
-  mNodeList.push_back(node);
-  return node;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス AstExpr
 //////////////////////////////////////////////////////////////////////
 
+// @brief ブール値を作る．
+AstExprPtr
+AstExpr::new_bool(bool value,
+		  const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstBoolExpr(loc, value)};
+}
+
+// @brief 数値を作る．
+AstExprPtr
+AstExpr::new_float(double value,
+		   const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstFloatExpr(loc, value)};
+}
+
+// @brief 文字列を作る．
+AstExprPtr
+AstExpr::new_string(const ShString& value,
+		    const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstStrExpr(loc, value)};
+}
+
+// @brief VDDシンボルを作る．
+AstExprPtr
+AstExpr::new_vdd(const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstSymbolExpr(loc, AstExpr::VDD)};
+}
+
+/// @brief VSSシンボルを作る．
+AstExprPtr
+AstExpr::new_vss(const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstSymbolExpr(loc, AstExpr::VSS)};
+}
+
+// @brief VCCシンボルを作る．
+AstExprPtr
+AstExpr::new_vcc(const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstSymbolExpr(loc, AstExpr::VCC)};
+}
+
+// @brief not 演算子を作る．
+AstExprPtr
+AstExpr::new_not(AstExprPtr&& opr1,
+		 const FileRegion& loc)
+{
+  return unique_ptr<AstNot>{new AstNot(loc, std::move(opr1))};
+}
+
+// @brief plus 演算子を作る．
+AstExprPtr
+AstExpr::new_plus(AstExprPtr&& opr1,
+		  AstExprPtr&& opr2,
+		  const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstOpr(AstExpr::Plus,
+					std::move(opr1),
+					std::move(opr2))};
+}
+
+/// @brief minus 演算子を作る．
+AstExprPtr
+AstExpr::new_minus(AstExprPtr&& opr1,
+		   AstExprPtr&& opr2,
+		   const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstOpr(AstExpr::Minus,
+					std::move(opr1),
+					std::move(opr2))};
+}
+
+// @brief mult 演算子を作る．
+AstExprPtr
+AstExpr::new_mult(AstExprPtr&& opr1,
+		  AstExprPtr&& opr2,
+		  const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstOpr(AstExpr::Mult,
+					std::move(opr1),
+					std::move(opr2))};
+}
+
+// @brief div 演算子を作る．
+AstExprPtr
+AstExpr::new_div(AstExprPtr&& opr1,
+		 AstExprPtr&& opr2,
+		 const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstOpr(AstExpr::Div,
+					std::move(opr1),
+					std::move(opr2))};
+}
+
+// @brief and 演算子を作る．
+AstExprPtr
+AstExpr::new_and(AstExprPtr&& opr1,
+		 AstExprPtr&& opr2,
+		 const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstOpr(AstExpr::And,
+					std::move(opr1),
+					std::move(opr2))};
+}
+
+// @brief or 演算子を作る．
+AstExprPtr
+AstExpr::new_or(AstExprPtr&& opr1,
+		AstExprPtr&& opr2,
+		const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstOpr(AstExpr::Or,
+					std::move(opr1),
+					std::move(opr2))};
+}
+
+// @brief xor 演算子を作る．
+AstExprPtr
+AstExpr::new_xor(AstExprPtr&& opr1,
+		 AstExprPtr&& opr2,
+		 const FileRegion& loc)
+{
+  return unique_ptr<AstExpr>{new AstOpr(AstExpr::Xor,
+					std::move(opr1),
+					std::move(opr2))};
+}
+
+// @brief 無効なリファレンスを返す．
+const AstExpr&
+AstExpr::null_ref()
+{
+  static AstNullExpr dummy;
+  return dummy;
+}
+
 // @brief コンストラクタ
 // @param[in] loc 位置情報
 AstExpr::AstExpr(const FileRegion& loc) :
-  AstNode(loc)
-{
-}
-
-// @brief デストラクタ
-AstExpr::~AstExpr()
+  mLoc{loc}
 {
 }
 
@@ -241,23 +205,23 @@ AstExpr::string_value() const
 // @brief 第一オペランドを返す．
 //
 // Not, Plus, Minus, Mult, Div の時のみ意味を持つ．
-const AstExpr*
+const AstExpr&
 AstExpr::opr1() const
 {
   ASSERT_NOT_REACHED;
 
-  return nullptr;
+  return null_ref();
 }
 
 // @brief 第二オペランドを返す．
 //
 // Plus, Minus, Mult, Div の時のみ意味を持つ．
-const AstExpr*
+const AstExpr&
 AstExpr::opr2() const
 {
   ASSERT_NOT_REACHED;
 
-  return nullptr;
+  return null_ref();
 }
 
 
@@ -275,13 +239,8 @@ AstBoolExpr::AstBoolExpr(const FileRegion& loc,
 {
 }
 
-// @brief デストラクタ
-AstBoolExpr::~AstBoolExpr()
-{
-}
-
 // @brief 型を返す．
-AstExprType
+AstExpr::Type
 AstBoolExpr::type() const
 {
   return Type::Bool;
@@ -310,13 +269,16 @@ AstBoolExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
   }
 }
 
-// @brief 内容をストリーム出力する．
-// @param[in] s 出力先のストリーム
-// @param[in] indent インデント量
-void
-AstBoolExpr::dump(ostream& s,
-		  int indent) const
+// @brief 内容を表す文字列を返す．
+string
+AstBoolExpr::decompile() const
 {
+  if ( mValue ) {
+    return "1";
+  }
+  else {
+    return "0";
+  }
 }
 
 
@@ -330,17 +292,12 @@ AstBoolExpr::dump(ostream& s,
 AstFloatExpr::AstFloatExpr(const FileRegion& loc,
 			   double val) :
   AstExpr(loc),
-  mValue(val)
-{
-}
-
-// @brief デストラクタ
-AstFloatExpr::~AstFloatExpr()
+  mValue{val}
 {
 }
 
 // @brief 型を返す．
-AstExprType
+AstExpr::Type
 AstFloatExpr::type() const
 {
   return Type::Float;
@@ -362,16 +319,16 @@ Expr
 AstFloatExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
 {
   ASSERT_NOT_REACHED;
-  return Expr();
+  return Expr::make_invalid();
 }
 
-// @brief 内容をストリーム出力する．
-// @param[in] s 出力先のストリーム
-// @param[in] indent インデント量
-void
-AstFloatExpr::dump(ostream& s,
-		   int indent) const
+// @brief 内容を表す文字列を返す．
+string
+AstFloatExpr::decompile() const
 {
+  ostringstream buf;
+  buf << mValue;
+  return buf.str();
 }
 
 
@@ -385,17 +342,12 @@ AstFloatExpr::dump(ostream& s,
 AstStrExpr::AstStrExpr(const FileRegion& loc,
 		       const ShString& val) :
   AstExpr(loc),
-  mValue(val)
-{
-}
-
-// @brief デストラクタ
-AstStrExpr::~AstStrExpr()
+  mValue{val}
 {
 }
 
 // @brief 型を返す．
-AstExprType
+AstExpr::Type
 AstStrExpr::type() const
 {
   return Type::Str;
@@ -424,20 +376,18 @@ AstStrExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
-    return Expr();
+    return Expr::make_invalid();
   }
 
   int id = pin_map.at(mValue);
   return Expr::make_posi_literal(VarId(id));
 }
 
-// @brief 内容をストリーム出力する．
-// @param[in] s 出力先のストリーム
-// @param[in] indent インデント量
-void
-AstStrExpr::dump(ostream& s,
-		 int indent) const
+// @brief 内容を表す文字列を返す．
+string
+AstStrExpr::decompile() const
 {
+  return mValue;
 }
 
 
@@ -451,17 +401,12 @@ AstStrExpr::dump(ostream& s,
 AstSymbolExpr::AstSymbolExpr(const FileRegion& loc,
 			     Type type) :
   AstExpr(loc),
-  mType(type)
-{
-}
-
-// @brief デストラクタ
-AstSymbolExpr::~AstSymbolExpr()
+  mType{type}
 {
 }
 
 // @brief 型を返す．
-AstExprType
+AstExpr::Type
 AstSymbolExpr::type() const
 {
   return mType;
@@ -474,17 +419,20 @@ Expr
 AstSymbolExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
 {
   ASSERT_NOT_REACHED;
-  return Expr();
+  return Expr::make_invalid();
 }
 
-// @brief 内容をストリーム出力する．
-// @param[in] s 出力先のストリーム
-// @param[in] indent インデント量
-void
-AstSymbolExpr::dump(ostream& s,
-		    int indent) const
+// @brief 内容を表す文字列を返す．
+string
+AstSymbolExpr::decompile() const
 {
-#warning "TODO: 未完成"
+  switch ( mType ) {
+  case VDD: return "VDD";
+  case VSS: return "VSS";
+  case VCC: return "VCC";
+  default: ASSERT_NOT_REACHED; break;
+  }
+  return string();
 }
 
 
@@ -496,19 +444,14 @@ AstSymbolExpr::dump(ostream& s,
 // @param[in] loc ファイル上の位置
 // @param[in] opr オペランド
 AstNot::AstNot(const FileRegion& loc,
-	       const AstExpr* opr) :
+	       AstExprPtr&& opr) :
   AstExpr(loc),
-  mOpr1(opr)
-{
-}
-
-// @brief デストラクタ
-AstNot::~AstNot()
+  mOpr1{std::move(opr)}
 {
 }
 
 // @brief 型を得る．
-AstExprType
+AstExpr::Type
 AstNot::type() const
 {
   return Type::Not;
@@ -516,10 +459,10 @@ AstNot::type() const
 
 // @brief 第一オペランドを返す．
 // @note type() が演算子の型の時のみ意味を持つ．
-const AstExpr*
+const AstExpr&
 AstNot::opr1() const
 {
-  return mOpr1;
+  return *mOpr1;
 }
 
 // @brief Expr を作る．
@@ -528,21 +471,17 @@ AstNot::opr1() const
 Expr
 AstNot::to_expr(const unordered_map<ShString, int>& pin_map) const
 {
-  Expr expr1 = opr1()->to_expr(pin_map);
+  Expr expr1 = opr1().to_expr(pin_map);
   return ~expr1;
 }
 
-// @brief 内容をストリーム出力する．
-// @param[in] s 出力先のストリーム
-// @param[in] indent インデント量
-void
-AstNot::dump(ostream& s,
-	     int indent) const
+// @brief 内容を表す文字列を返す．
+string
+AstNot::decompile() const
 {
-  dump_indent(s, indent);
-  s << "!( ";
-  opr1()->dump(s, 0);
-  s << " )";
+  ostringstream buf;
+  buf << "~" << opr1().decompile();
+  return buf.str();
 }
 
 
@@ -554,22 +493,17 @@ AstNot::dump(ostream& s,
 // @param[in] type 演算子の型
 // @param[in] opr1, opr2 オペランド
 AstOpr::AstOpr(Type type,
-	       const AstExpr* opr1,
-	       const AstExpr* opr2) :
+	       AstExprPtr&& opr1,
+	       AstExprPtr&& opr2) :
   AstExpr(FileRegion(opr1->loc(), opr2->loc())),
-  mType(type),
-  mOpr1(opr1),
-  mOpr2(opr2)
-{
-}
-
-// @brief デストラクタ
-AstOpr::~AstOpr()
+  mType{type},
+  mOpr1{std::move(opr1)},
+  mOpr2{std::move(opr2)}
 {
 }
 
 // @brief 型を得る．
-AstExprType
+AstExpr::Type
 AstOpr::type() const
 {
   return mType;
@@ -584,18 +518,18 @@ AstOpr::is_opr() const
 
 // @brief 第一オペランドを返す．
 // @note type() が演算子の型の時のみ意味を持つ．
-const AstExpr*
+const AstExpr&
 AstOpr::opr1() const
 {
-  return mOpr1;
+  return *mOpr1;
 }
 
 // @brief 第二オペランドを返す．
 // @note type() が演算子の型の時のみ意味を持つ．
-const AstExpr*
+const AstExpr&
 AstOpr::opr2() const
 {
-  return mOpr2;
+  return *mOpr2;
 }
 
 // @brief Expr を作る．
@@ -604,8 +538,8 @@ AstOpr::opr2() const
 Expr
 AstOpr::to_expr(const unordered_map<ShString, int>& pin_map) const
 {
-  Expr expr1 = opr1()->to_expr(pin_map);
-  Expr expr2 = opr2()->to_expr(pin_map);
+  Expr expr1 = opr1().to_expr(pin_map);
+  Expr expr2 = opr2().to_expr(pin_map);
   switch ( type() ) {
   case Type::And: return expr1 & expr2;
   case Type::Or:  return expr1 | expr2;
@@ -616,28 +550,59 @@ AstOpr::to_expr(const unordered_map<ShString, int>& pin_map) const
   return Expr();
 }
 
-// @brief 内容をストリーム出力する．
-// @param[in] s 出力先のストリーム
-// @param[in] indent インデント量
-void
-AstOpr::dump(ostream& s,
-		int indent) const
+// @brief 内容を表す文字列を返す．
+string
+AstOpr::decompile() const
 {
-  dump_indent(s, indent);
-  s << "( ";
-  opr1()->dump(s, 0);
+  ostringstream buf;
+  buf << "( ";
+  buf << opr1().decompile();
   switch ( type() ) {
-  case Type::Plus:  s << " + "; break;
-  case Type::Minus: s << " - "; break;
-  case Type::Mult:  s << " * "; break;
-  case Type::Div:   s << " / "; break;
-  case Type::And:   s << " & "; break;
-  case Type::Or:    s << " | "; break;
-  case Type::Xor:   s << " ^ "; break;
-  default:           ASSERT_NOT_REACHED; break;
+  case Type::Plus:  buf << " + "; break;
+  case Type::Minus: buf << " - "; break;
+  case Type::Mult:  buf << " * "; break;
+  case Type::Div:   buf << " / "; break;
+  case Type::And:   buf << " & "; break;
+  case Type::Or:    buf << " | "; break;
+  case Type::Xor:   buf << " ^ "; break;
+  default:ASSERT_NOT_REACHED; break;
   }
-  opr2()->dump(s, 0);
-  s << " )";
+  buf << opr2().decompile();
+  buf << " )";
+  return buf.str();
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス AtNullExpr
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+AstNullExpr::AstNullExpr()
+  : AstExpr(FileRegion{})
+{
+}
+
+// @brief 型を返す．
+AstExpr::Type
+AstNullExpr::type() const
+{
+  return Type::Null;
+}
+
+// @brief Expr を作る．
+// @return 対応する式(Expr)を返す．
+Expr
+AstNullExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
+{
+  return Expr::make_invalid();
+}
+
+// @brief 内容を表す文字列を返す．
+string
+AstNullExpr::decompile() const
+{
+  return "---";
 }
 
 END_NAMESPACE_YM_DOTLIB

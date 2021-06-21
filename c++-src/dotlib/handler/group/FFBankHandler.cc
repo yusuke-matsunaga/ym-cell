@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-FFBankHandler::FFBankHandler(DotlibParser& parser) :
+FFBankHandler::FFBankHandler(Parser& parser) :
   Str2IntGroupHandler(parser)
 {
 }

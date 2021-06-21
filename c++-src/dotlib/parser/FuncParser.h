@@ -29,10 +29,8 @@ public:
   /// @brief コンストラクタ
   /// @param[in] str 対象の文字列
   /// @param[in] loc ファイル上の位置
-  /// @param[in] mgr AstMgr
   FuncParser(const string& str,
-	     const FileRegion& loc,
-	     AstMgr& mgr);
+	     const FileRegion& loc);
 
   /// @brief デストラクタ
   ~FuncParser();
@@ -44,7 +42,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 論理式を読み込む．
-  unique_ptr<const AstValue>
+  AstValuePtr
   operator()();
 
 
@@ -54,32 +52,20 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief primary を読み込む．
-  const AstExpr*
+  AstExprPtr
   read_primary();
 
   /// @brief プライム付きの primary を読み込む．
-  const AstExpr*
+  AstExprPtr
   read_primary2();
 
   /// @brief product を読み込む．
-  const AstExpr*
+  AstExprPtr
   read_product();
 
   /// @brief expression を読み込む．
-  const AstExpr*
+  AstExprPtr
   read_expr(TokenType end_marker);
-
-  /// @brief トークンを読み込む．
-  /// @param[out] loc 対応するファイル上の位置情報を格納する変数
-  TokenType
-  read_token(FileRegion& loc);
-
-  /// @brief 読み込んだトークンを戻す．
-  /// @param[in] type トークンの型
-  /// @param[in] loc トークンの位置
-  void
-  unget_token(TokenType type,
-	      const FileRegion& loc);
 
 
 private:
@@ -89,15 +75,6 @@ private:
 
   // 字句解析器
   FuncScanner mScanner;
-
-  // 読み戻したトークンの型
-  TokenType mUngetType;
-
-  // 読み戻したトークンの位置
-  FileRegion mUngetLoc;
-
-  // AstMgr
-  AstMgr& mMgr;
 
 };
 

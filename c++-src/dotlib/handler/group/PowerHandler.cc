@@ -21,30 +21,30 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief コンストラクタ
 // @param[in] parser パーサー
-PowerHandler::PowerHandler(DotlibParser& parser) :
+PowerHandler::PowerHandler(Parser& parser) :
   Str1GroupHandler(parser)
 {
   // パース関数の登録
   reg_func(AttrType::index_1,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_index(mIndex1, attr_type, attr_loc); });
   reg_func(AttrType::index_2,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_index(mIndex2, attr_type, attr_loc); });
   reg_func(AttrType::index_3,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_index(mIndex3, attr_type, attr_loc); });
   reg_func(AttrType::values,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_values(mValues, attr_type, attr_loc); });
   reg_func(AttrType::coefs,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_str1complex(mCoefs, attr_type, attr_loc); });
   reg_func(AttrType::orders,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_str1complex(mOrders, attr_type, attr_loc); });
   reg_func(AttrType::domain,
-	   [=](DotlibParser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
+	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_domain(mDomain, attr_type, attr_loc); });
 }
 

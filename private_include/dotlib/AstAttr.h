@@ -8,8 +8,9 @@
 /// Copyright (C) 2005-2012, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib_nsdef.h"
-#include "AstNode.h"
+#include "dotlib/dotlib_nsdef.h"
+#include "dotlib/AttrKwd.h"
+#include "dotlib/AstValue.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -17,16 +18,26 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 /// @class AstAttr AstAttr.h "AstAttr.h"
 /// @brief 属性を表すクラス
+///
+/// 属性は
+/// - 属性名 (AttrType)
+/// - 値
+/// の組で表されるが，値には様々な種類がある．
 //////////////////////////////////////////////////////////////////////
-class AstAttr :
-  public AstNode
+class AstAttr
 {
 public:
 
+  /// @brief 空のコンストラクタ
+  ///
+  /// 無効な値となる．
+  AstAttr() = default;
+
   /// @brief コンストラクタ
-  AstAttr(AttrType attr_type,                  ///< [in] 属性の型
-	  const FileRegion& attr_loc,          ///< [in] 属性のファイル上の位置
-	  unique_ptr<const AstValue>&& value); ///< [in] 値
+  AstAttr(const AttrKwd& attr,                ///< [in] 属性の型
+	  unique_ptr<const AstValue>&& value) ///< [in] 値
+    : mAttr{attr},
+      mValue{std::move(value)} { }
 
   /// @brief デストラクタ
   ~AstAttr() = default;
@@ -37,35 +48,22 @@ public:
   // 内容を参照する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 属性を得る．
-  AttrType
-  attr_type() const
-  {
-    return mAttrType;
-  }
+  /// @brief 有効な値を表す時 true を返す．
+  bool
+  is_valid() const { return mAttr.type() != AttrType::none; }
 
-  /// @brief 属性名のファイル上の位置を返す．
-  FileRegion
-  attr_loc() const
-  {
-    return mAttrLoc;
-  }
+  /// @brief 属性を得る．
+  const AttrKwd&
+  attr() const { return mAttr; }
 
   /// @brief 属性の値を得る．
-  const AstValue*
-  value() const
-  {
-    return mValue.get();
-  }
-
-  /// @brief 全体のファイル上の位置を返す．
-  FileRegion
-  loc() const override;
+  const AstValue&
+  value() const { return *mValue; }
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,                     ///< [in] 出力先のストリーム
-       int indent = 0) const override; ///< [in] インデント量
+  dump(ostream& s,            ///< [in] 出力先のストリーム
+       int indent = 0) const; ///< [in] インデント量
 
 
 private:
@@ -74,16 +72,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 属性
-  AttrType mAttrType;
-
-  // 属性のファイル上の位置
-  FileRegion mAttrLoc;
+  AttrKwd mAttr;
 
   // 値
-  unique_ptr<const AstValue> mValue;
+  AstValuePtr mValue;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // DOTLIBNODEIMPL_H
+#endif // ASTATTR_H

@@ -8,49 +8,145 @@
 /// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "AstNode.h"
+#include "dotlib/dotlib_nsdef.h"
 #include "ym/Expr.h"
+#include "ym/ShString.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-/// @brief 型を表す列挙型
-enum class AstExprType {
-  Bool,
-  Float,
-  Str,
-  VDD,
-  VSS,
-  VCC,
-  Not,
-  Plus,
-  Minus,
-  Mult,
-  Div,
-  And,
-  Or,
-  Xor,
-};
-
 
 //////////////////////////////////////////////////////////////////////
 /// @class AstExpr AstExpr.h "AstExpr.h"
 /// @brief 式を表すノードのクラス
 //////////////////////////////////////////////////////////////////////
-class AstExpr :
-  public AstNode
+class AstExpr
 {
 public:
 
-  using Type = AstExprType;
+  /// @brief 型を表す列挙型
+  enum Type {
+    Bool,  ///< ブール値
+    Float, ///< 数値
+    Str,   ///< 文字列
+    VDD,   ///< VDD
+    VSS,   ///< VSS
+    VCC,   ///< VCC
+    Plus,  ///< + 演算子
+    Minus, ///< - 演算子
+    Mult,  ///< * 演算子
+    Div,   ///< / 演算子
+    Not,   ///< NOT 演算子
+    And,   ///< AND 演算子
+    Or,    ///< OR 演算子
+    Xor,   ///< XOR 演算子
+    Null   ///< 無効値
+  };
+
 
 public:
 
-  /// @brief コンストラクタ
-  AstExpr(const FileRegion& loc); ///< [in] 位置情報
+  /// @brief ブール値を作る．
+  static
+  AstExprPtr
+  new_bool(bool value,             ///< [in] 値
+	   const FileRegion& loc); ///< [in] 位置
+
+  /// @brief 数値を作る．
+  static
+  AstExprPtr
+  new_float(double value,           ///< [in] 値
+	    const FileRegion& loc); ///< [in] 位置
+
+  /// @brief 文字列を作る．
+  static
+  AstExprPtr
+  new_string(const ShString& value,  ///< [in] 値
+	     const FileRegion& loc); ///< [in] 位置
+
+  /// @brief VDDシンボルを作る．
+  static
+  AstExprPtr
+  new_vdd(const FileRegion& loc); ///< [in] 位置
+
+  /// @brief VSSシンボルを作る．
+  static
+  AstExprPtr
+  new_vss(const FileRegion& loc); ///< [in] 位置
+
+  /// @brief VCCシンボルを作る．
+  static
+  AstExprPtr
+  new_vcc(const FileRegion& loc); ///< [in] 位置
+
+  /// @brief not 演算子を作る．
+  static
+  AstExprPtr
+  new_not(AstExprPtr&& opr1, ///< [in] 第１オペランド
+	  const FileRegion& loc);           ///< [in] 演算子の位置
+
+  /// @brief plus 演算子を作る．
+  static
+  AstExprPtr
+  new_plus(AstExprPtr&& opr1, ///< [in] 第1オペランド
+	   AstExprPtr&& opr2, ///< [in] 第2オペランド
+	   const FileRegion& loc);           ///< [in] 演算子の位置
+
+  /// @brief minus 演算子を作る．
+  static
+  AstExprPtr
+  new_minus(AstExprPtr&& opr1, ///< [in] 第1オペランド
+	    AstExprPtr&& opr2, ///< [in] 第2オペランド
+	    const FileRegion& loc);           ///< [in] 演算子の位置
+
+  /// @brief mult 演算子を作る．
+  static
+  AstExprPtr
+  new_mult(AstExprPtr&& opr1, ///< [in] 第1オペランド
+	   AstExprPtr&& opr2, ///< [in] 第2オペランド
+	   const FileRegion& loc);           ///< [in] 演算子の位置
+
+  /// @brief div 演算子を作る．
+  static
+  AstExprPtr
+  new_div(AstExprPtr&& opr1, ///< [in] 第1オペランド
+	  AstExprPtr&& opr2, ///< [in] 第2オペランド
+	  const FileRegion& loc);           ///< [in] 演算子の位置
+
+  /// @brief and 演算子を作る．
+  static
+  AstExprPtr
+  new_and(AstExprPtr&& opr1, ///< [in] 第1オペランド
+	  AstExprPtr&& opr2, ///< [in] 第2オペランド
+	  const FileRegion& loc);           ///< [in] 演算子の位置
+
+  /// @brief or 演算子を作る．
+  static
+  AstExprPtr
+  new_or(AstExprPtr&& opr1, ///< [in] 第1オペランド
+	 AstExprPtr&& opr2, ///< [in] 第2オペランド
+	 const FileRegion& loc);           ///< [in] 演算子の位置
+
+  /// @brief xor 演算子を作る．
+  static
+  AstExprPtr
+  new_xor(AstExprPtr&& opr1, ///< [in] 第1オペランド
+	  AstExprPtr&& opr2, ///< [in] 第2オペランド
+	  const FileRegion& loc);           ///< [in] 演算子の位置
+
+  /// @brief 無効なリファレンスを返す．
+  static
+  const AstExpr&
+  null_ref();
 
   /// @brief デストラクタ
-  ~AstExpr();
+  virtual
+  ~AstExpr() = default;
+
+
+protected:
+
+  /// @brief コンストラクタ
+  AstExpr(const FileRegion& loc); ///< [in] 位置情報
 
 
 public:
@@ -93,77 +189,30 @@ public:
   ///
   /// Not, Plus, Minus, Mult, Div, And, Or, Xor の時のみ意味を持つ．
   virtual
-  const AstExpr*
+  const AstExpr&
   opr1() const;
 
   /// @brief 第二オペランドを返す．
   ///
   /// Plus, Minus, Mult, Div, And, Or, Xor の時のみ意味を持つ．
   virtual
-  const AstExpr*
+  const AstExpr&
   opr2() const;
 
   /// @brief Expr を作る．
   /// @return 対応する式(Expr)を返す．
   virtual
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
-    const = 0;
+  to_expr(const unordered_map<ShString, int>& pin_map) const = 0; ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
 
-};
+  /// @brief 位置を返す．
+  FileRegion
+  loc() const { return mLoc; }
 
-
-//////////////////////////////////////////////////////////////////////
-/// @class AstBoolExpr AstExpr.h "AstExpr.h"
-/// @brief ブール値を表す AstExpr
-//////////////////////////////////////////////////////////////////////
-class AstBoolExpr :
-  public AstExpr
-{
-  friend class AstMgr;
-
-protected:
-
-  /// @brief コンストラクタ
-  AstBoolExpr(const FileRegion& loc, ///< [in] 位置情報
-	      bool val);             ///< [in] 値
-
-  /// @brief デストラクタ
-  ~AstBoolExpr();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 型を返す．
-  Type
-  type() const override;
-
-  /// @brief ブール値を返す．
-  ///
-  /// Bool の時のみ意味を持つ．
-  bool
-  bool_value() const override;
-
-  /// @brief Expr を作る．
-  /// @return 対応する式(Expr)を返す．
-  Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
-    const override;
-
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
+  /// @brief 内容を表す文字列を返す．
+  virtual
+  string
+  decompile() const = 0;
 
 
 private:
@@ -171,326 +220,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 値
-  bool mValue;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class AstFloatExpr AstExpr.h "AstExpr.h"
-/// @brief 浮動小数点値を表す AstExpr
-//////////////////////////////////////////////////////////////////////
-class AstFloatExpr :
-  public AstExpr
-{
-  friend class AstMgr;
-
-protected:
-
-  /// @brief コンストラクタ
-  AstFloatExpr(const FileRegion& loc, ///< [in] 位置情報
-	       double val);           ///< [in] 値
-
-  /// @brief デストラクタ
-  ~AstFloatExpr();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 型を返す．
-  Type
-  type() const override;
-
-  /// @brief 浮動小数点値を返す．
-  ///
-  /// Float の時のみ意味を持つ．
-  double
-  float_value() const override;
-
-  /// @brief Expr を作る．
-  /// @return 対応する式(Expr)を返す．
-  Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
-    const override;
-
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 値
-  double mValue;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class AstStrExpr AstExpr.h "AstExpr.h"
-/// @brief 文字列値を表す AstExpr
-//////////////////////////////////////////////////////////////////////
-class AstStrExpr :
-  public AstExpr
-{
-  friend class AstMgr;
-
-protected:
-
-  /// @brief コンストラクタ
-  AstStrExpr(const FileRegion& loc, ///< [in] 位置情報
-	     const ShString& val);  ///< [in] 値
-
-  /// @brief デストラクタ
-  ~AstStrExpr();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 型を返す．
-  Type
-  type() const override;
-
-  /// @brief 文字列値を返す．
-  ///
-  /// Str の時のみ意味を持つ．
-  ShString
-  string_value() const override;
-
-  /// @brief Expr を作る．
-  /// @return 対応する式(Expr)を返す．
-  Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
-    const override;
-
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 値
-  ShString mValue;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class AstSymbolExpr AstExpr.h "AstExpr.h"
-//////////////////////////////////////////////////////////////////////
-class AstSymbolExpr :
-  public AstExpr
-{
-  friend class AstMgr;
-
-protected:
-
-  /// @brief コンストラクタ
-  AstSymbolExpr(const FileRegion& loc, ///< [in] ファイル上の位置
-		Type type);            ///< [in] シンボルの種類(VDD, VSS, VCC)
-
-  /// @brief デストラクタ
-  ~AstSymbolExpr();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 型を返す．
-  Type
-  type() const override;
-
-  /// @brief Expr を作る．
-  /// @return 対応する式(Expr)を返す．
-  Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
-    const override;
-
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 型
-  Type mType;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class AstNot AstExpr.h "AstExpr.h"
-/// @brief NOT 演算子を表すクラス
-//////////////////////////////////////////////////////////////////////
-class AstNot :
-  public AstExpr
-{
-  friend class AstMgr;
-
-private:
-
-  /// @brief コンストラクタ
-  AstNot(const FileRegion& loc, ///< [in] ファイル上の位置
-	 const AstExpr* opr);   ///< [in] オペランド
-
-  /// @brief デストラクタ
-   ~AstNot();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 型を得る．
-  Type
-  type() const override;
-
-  /// @brief 第一オペランドを返す．
-  ///
-  /// type() が演算子の型の時のみ意味を持つ．
-  const AstExpr*
-  opr1() const override;
-
-  /// @brief Expr を作る．
-  /// @return 対応する式(Expr)を返す．
-  Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
-    const override;
-
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 第一オペランド
-  const AstExpr* mOpr1;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class AstOpr AstExpr.h "AstExpr.h"
-/// @brief 演算子を表すクラス
-//////////////////////////////////////////////////////////////////////
-class AstOpr :
-  public AstExpr
-{
-  friend class AstMgr;
-
-private:
-
-  /// @brief コンストラクタ
-  AstOpr(Type type,            ///< [in] 演算子の型
-	 const AstExpr* opr1,  ///< [in] 第1オペランド
-	 const AstExpr* opr2); ///< [in] 第2オペランド
-
-  /// @brief デストラクタ
-  ~AstOpr();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 型を得る．
-  Type
-  type() const override;
-
-  /// @brief 演算子型(Plus, Minsu, Mult, Div, And, Or, Xor)の時に true を返す．
-  bool
-  is_opr() const override;
-
-  /// @brief 第一オペランドを返す．
-  ///
-  ///  type() が演算子の型の時のみ意味を持つ．
-  const AstExpr*
-  opr1() const override;
-
-  /// @brief 第二オペランドを返す．
-  ///
-  /// type() が演算子の型の時のみ意味を持つ．
-  const AstExpr*
-  opr2() const override;
-
-  /// @brief Expr を作る．
-  /// @return 対応する式(Expr)を返す．
-  Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
-    const override;
-
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s,     ///< [in] 出力先のストリーム
-       int indent = 0) ///< [in] インデント量
-    const override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 型
-  Type mType;
-
-  // 第一オペランド
-  const AstExpr* mOpr1;
-
-  // 第二オペランド
-  const AstExpr* mOpr2;
+  // 位置
+  FileRegion mLoc;
 
 };
 

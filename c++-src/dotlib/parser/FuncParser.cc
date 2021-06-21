@@ -8,8 +8,7 @@
 
 #include "FuncParser.h"
 #include "dotlib/AstExpr.h"
-#include "dotlib/AstExprValue.h"
-#include "dotlib/AstMgr.h"
+#include "dotlib/AstValue.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
@@ -23,12 +22,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief コンストラクタ
 // @param[in] str 対象の文字列
 // @param[in] loc ファイル上の位置
-// @param[in] mgr AstMgr
 FuncParser::FuncParser(const string& str,
-		       const FileRegion& loc,
-		       AstMgr& mgr) :
-  mScanner(str, loc),
-  mMgr(mgr)
+		       const FileRegion& loc)
+  : mScanner(str, loc)
 {
 }
 
@@ -38,21 +34,19 @@ FuncParser::~FuncParser()
 }
 
 // @brief 論理式を読み込む．
-unique_ptr<const AstValue>
+AstValuePtr
 FuncParser::operator()()
 {
-  auto expr = read_expr(TokenType::END);
+  auto expr{read_expr(TokenType::END)};
+  if ( expr == nullptr ) {
+    return {};
+  }
 
-  if ( epxr != nullptr ) {
-    return unique_ptr<const AstValue>{new AstExprValue(expr)};
-  }
-  else {
-    return nullptr;
-  }
+  return AstValue::new_expr(std::move(expr));
 }
 
 // @brief primary を読み込む．
-const AstExpr*
+AstExprPtr
 FuncParser::read_primary()
 {
   FileRegion loc;
@@ -62,7 +56,7 @@ FuncParser::read_primary()
   }
   if ( type == TokenType::SYMBOL ) {
     ShString name(mScanner.cur_string());
-    return mMgr.new_str_expr(loc, name);
+    return AstExpr::new_string(name, loc);
   }
   if ( type == TokenType::INT_NUM ) {
     int v = mScanner.cur_int();
@@ -74,7 +68,7 @@ FuncParser::read_primary()
 		      "Syntax error. 0 or 1 is expected.");
       return nullptr;
     }
-    return mMgr.new_bool_expr(loc, static_cast<bool>(v));
+    return AstExpr::new_bool(static_cast<bool>(v), loc);
   }
 
   MsgMgr::put_msg(__FILE__, __LINE__,
@@ -82,80 +76,78 @@ FuncParser::read_primary()
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  "Syntax error. number is expected.");
-  return nullptr;
+  return {};
 }
 
 // @brief プライム付きの primary を読み込む．
-const AstExpr*
+AstExprPtr
 FuncParser::read_primary2()
 {
   FileRegion loc;
-  TokenType type = mScanner.read_token(loc);
+  TokenType type = mScanner.peek_token(loc);
   if ( type == TokenType::NOT ) {
-    const AstExpr* opr = read_primary();
+    mScanner.accept_token();
+    auto opr{read_primary()};
     if ( opr == nullptr ) {
-      return nullptr;
+      return {};
     }
-    return mMgr.new_not(FileRegion(loc, opr->loc()), opr);
-  }
-  mScanner.unget_token(type, loc);
-
-  const AstExpr* node = read_primary();
-  if ( node == nullptr ) {
-    return nullptr;
+    return AstExpr::new_not(std::move(opr), opr->loc());
   }
 
-  type = mScanner.read_token(loc);
+  auto expr{read_primary()};
+  if ( expr == nullptr ) {
+    return {};
+  }
+
+  type = mScanner.peek_token(loc);
   if ( type == TokenType::PRIME ) {
-    return mMgr.new_not(FileRegion(node->loc(), loc), node);
+    mScanner.accept_token();
+    return AstExpr::new_not(std::move(expr), loc);
   }
-  mScanner.unget_token(type, loc);
 
-  return node;
+  return expr;
 }
 
 // @brief product を読み込む．
-const AstExpr*
+AstExprPtr
 FuncParser::read_product()
 {
-  const AstExpr* opr1 = read_primary2();
+  auto opr1{read_primary2()};
   if ( opr1 == nullptr ) {
-    return nullptr;
+    return {};
   }
 
   for ( ; ; ) {
     FileRegion loc;
-    TokenType type = mScanner.read_token(loc);
+    TokenType type = mScanner.peek_token(loc);
     if ( type == TokenType::AND ) {
-      const AstExpr* opr2 = read_primary2();
+      mScanner.accept_token();
+      auto opr2{read_primary2()};
       if ( opr2 == nullptr ) {
-	return nullptr;
+	return {};
       }
-      opr1 = mMgr.new_and(opr1, opr2);
+      opr1 = AstExpr::new_and(std::move(opr1), std::move(opr2), loc);
     }
     else if ( type == TokenType::NOT || type == TokenType::LP || type == TokenType::SYMBOL ) {
-      mScanner.unget_token(type, loc);
-      const AstExpr* opr2 = read_primary2();
+      auto opr2{read_primary2()};
       if ( opr2 == nullptr ) {
-	return nullptr;
+	return {};
       }
-      opr1 = mMgr.new_and(opr1, opr2);
+      opr1 = AstExpr::new_and(std::move(opr1), std::move(opr2), loc);
     }
     else {
-      // token を戻す．
-      mScanner.unget_token(type, loc);
       return opr1;
     }
   }
 }
 
 // @brief expression を読み込む．
-const AstExpr*
+AstExprPtr
 FuncParser::read_expr(TokenType end_marker)
 {
-  const AstExpr* opr1 = read_product();
+  auto opr1{read_product()};
   if ( opr1 == nullptr ) {
-    return nullptr;
+    return {};
   }
   for ( ; ; ) {
     FileRegion loc;
@@ -164,15 +156,15 @@ FuncParser::read_expr(TokenType end_marker)
       return opr1;
     }
     if ( type == TokenType::OR || type == TokenType::XOR ) {
-      const AstExpr* opr2 = read_product();
+      auto opr2{read_product()};
       if ( opr2 == nullptr ) {
-	return nullptr;
+	return {};
       }
       if ( type == TokenType::XOR ) {
-	opr1 = mMgr.new_xor(opr1, opr2);
+	opr1 = AstExpr::new_xor(std::move(opr1), std::move(opr2), loc);
       }
       else {
-	opr1 = mMgr.new_or(opr1, opr2);
+	opr1 = AstExpr::new_or(std::move(opr1), std::move(opr2), loc);
       }
     }
     else {
