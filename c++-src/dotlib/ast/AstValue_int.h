@@ -14,11 +14,40 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
+/// @class AstSimple AstSimple.h "AstSimple.h"
+/// @brief simple attribute の値を表す基底クラス
+//////////////////////////////////////////////////////////////////////
+class AstSimple :
+  public AstValue
+{
+public:
+
+  /// @brief コンストラクタ
+  AstSimple(const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+
+  /// @brief デストラクタ
+  ~AstSimple() = default;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をストリーム出力する．
+  void
+  dump(ostream& s,                 ///< [in] 出力先のストリーム
+       int ilevel) const override; ///< [in] インデントレベル
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @class AstInt AstValue_int.h "AstValue_int.h"
 /// @brief 整数値のノードを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstInt :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -39,9 +68,9 @@ public:
   int
   int_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -60,7 +89,7 @@ private:
 /// @brief 実数値のノードを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstFloat :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -81,9 +110,9 @@ public:
   double
   float_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -102,7 +131,7 @@ private:
 /// @brief 文字列のノード を表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstString :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -123,9 +152,9 @@ public:
   ShString
   string_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -144,7 +173,7 @@ private:
 /// @brief ブール値のノードを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstBool :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -165,9 +194,9 @@ public:
   bool
   bool_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -186,7 +215,7 @@ private:
 /// @brief delay model のノードを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstDelayModel :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -207,9 +236,9 @@ public:
   ClibDelayModel
   delay_model_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -228,7 +257,7 @@ private:
 /// @brief 'direction' のノードを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstDirection :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -249,9 +278,9 @@ public:
   ClibDirection
   direction_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -270,7 +299,7 @@ private:
 /// @brief technology のノードを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstTechnology :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -291,9 +320,9 @@ public:
   ClibTechnology
   technology_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -312,7 +341,7 @@ private:
 /// @brief timing sense のノードを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstTimingSense :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -333,9 +362,9 @@ public:
   ClibTimingSense
   timing_sense_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -354,7 +383,7 @@ private:
 /// @brief timing type のノードを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstTimingType :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -375,9 +404,9 @@ public:
   ClibTimingType
   timing_type_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -396,7 +425,7 @@ private:
 /// @brief var type の simple attribute を表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstVarType :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -417,9 +446,9 @@ public:
   ClibVarType
   vartype_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -438,7 +467,7 @@ private:
 /// @brief 整数値のベクタを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstIntVector :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -459,9 +488,9 @@ public:
   vector<int>
   int_vector_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -480,7 +509,7 @@ private:
 /// @brief ベクタを表すクラス
 //////////////////////////////////////////////////////////////////////
 class AstFloatVector :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -501,9 +530,9 @@ public:
   vector<double>
   float_vector_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -522,7 +551,7 @@ private:
 /// @brief AstExpr を持つ AstValue の派生クラス
 //////////////////////////////////////////////////////////////////////
 class AstExprValue :
-  public AstValue
+  public AstSimple
 {
 public:
 
@@ -542,9 +571,9 @@ public:
   const AstExpr&
   expr_value() const override;
 
-  /// @brief 内容をストリーム出力する．
-  void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -592,9 +621,14 @@ public:
   const AstValue&
   complex_elem_value(int pos) const override; ///< [in] 位置番号( 0 <= pos < complex_elem_size )
 
-  /// @brief 内容を出力する．
+  /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  dump(ostream& s,                 ///< [in] 出力先のストリーム
+       int ilevel) const override; ///< [in] インデントレベル
+
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -648,9 +682,14 @@ public:
   const AstAttr&
   group_elem_attr(int pos) const override; ///< [in] 位置番号( 0 <= pos < group_elem_size() )
 
-  /// @brief 内容を出力する．
+  /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  dump(ostream& s,                 ///< [in] 出力先のストリーム
+       int ilevel) const override; ///< [in] インデントレベル
+
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 
 private:
@@ -692,9 +731,14 @@ public:
   bool
   is_valid() const override;
 
-  /// @brief 内容を出力する．
+  /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s) const override; ///< [in] 出力先のストリーム
+  dump(ostream& s,                 ///< [in] 出力先のストリーム
+       int ilevel) const override; ///< [in] インデントレベル
+
+  /// @brief 値を表す文字列を返す．
+  string
+  decompile() const override;
 
 };
 

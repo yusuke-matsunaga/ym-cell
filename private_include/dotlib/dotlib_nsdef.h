@@ -45,9 +45,19 @@ class AttrKwd;
 enum class TokenType;
 enum class AttrType;
 
+// AstXXX の unique_ptr
 using AstExprPtr = unique_ptr<const AstExpr>;
 using AstValuePtr = unique_ptr<const AstValue>;
 using AstAttrPtr = unique_ptr<const AstAttr>;
+
+// simple attribute を読み込む関数の型定義
+using SimpleHandler = std::function<AstValuePtr(Scanner&)>;
+
+// group statement の要素を読み込む関数の型定義
+using AttrHandler = std::function<AstAttrPtr(Parser&, const AttrKwd&)>;
+
+// AttrHandler の辞書
+using AttrHandlerDict = std::unordered_map<AttrType, AttrHandler>;
 
 
 //////////////////////////////////////////////////////////////////////

@@ -14,6 +14,19 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
+BEGIN_NONAMESPACE
+
+void
+dump_indent(ostream& s,
+	    int ilevel)
+{
+  for ( int i = 0; i < ilevel; ++ i ) {
+    s << "  ";
+  }
+}
+
+END_NONAMESPACE
+
 //////////////////////////////////////////////////////////////////////
 // クラス AstValue
 //////////////////////////////////////////////////////////////////////
@@ -325,13 +338,33 @@ AstValue::group_elem_attr(int pos) const
 
 
 //////////////////////////////////////////////////////////////////////
+// クラス AstSimple
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+AstSimple::AstSimple(const FileRegion& val_loc)
+  : AstValue(val_loc)
+{
+}
+
+// @brief 内容をストリーム出力する．
+void
+AstSimple::dump(ostream& s,
+		int ilevel) const
+{
+  // ilevel は無視
+  s << " : " << decompile() << ";" << endl;
+}
+
+
+//////////////////////////////////////////////////////////////////////
 /// クラス AstInt
 //////////////////////////////////////////////////////////////////////
 
 /// @brief コンストラクタ
 AstInt::AstInt(int value,                   ///< [in] 値
 	       const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
-  : AstValue(val_loc),
+  : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -343,12 +376,13 @@ AstInt::int_value() const
   return mValue;
 }
 
-// @brief 内容をストリーム出力する．
-// @param[in] s 出力先のストリーム
-void
-AstInt::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstInt::decompile() const
 {
-  s << int_value();
+  ostringstream buf;
+  buf << int_value();
+  return buf.str();
 }
 
 
@@ -359,7 +393,7 @@ AstInt::dump(ostream& s) const
 // @brief コンストラクタ
 AstFloat::AstFloat(double value,                ///< [in] 値
 		   const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
-  : AstValue(val_loc),
+  : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -371,12 +405,13 @@ AstFloat::float_value() const
   return mValue;
 }
 
-// @brief 内容をストリーム出力する．
-// @param[in] s 出力先のストリーム
-void
-AstFloat::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstFloat::decompile() const
 {
-  s << float_value();
+  ostringstream buf;
+  buf << float_value();
+  return buf.str();
 }
 
 
@@ -387,7 +422,7 @@ AstFloat::dump(ostream& s) const
 // @brief コンストラクタ
 AstString::AstString(ShString value,            ///< [in] 値
 		     const FileRegion& val_loc) ///< [in] 値のファイル上の位置
-  : AstValue(val_loc),
+  : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -399,11 +434,28 @@ AstString::string_value() const
   return mValue;
 }
 
-// @brief 内容をストリーム出力する．
-void
-AstString::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstString::decompile() const
 {
-  s << string_value();
+  // " が必要か調べる．
+  string s{string_value()};
+  bool need_quote = false;
+  if ( !isalpha(s[0]) && s[0] != '_' ) {
+    need_quote = true;
+  }
+  for ( auto c: s ) {
+    if ( isspace(c) ) {
+      need_quote = true;
+      break;
+    }
+  }
+  if ( need_quote ) {
+    return "\"" + s + "\"";
+  }
+  else {
+    return s;
+  }
 }
 
 
@@ -414,7 +466,7 @@ AstString::dump(ostream& s) const
 // @brief コンストラクタ
 AstBool::AstBool(bool value,                 ///< [in] 値
 		 const FileRegion& val_loc)  ///< [in] 値のファイル上の位置
-  : AstValue(val_loc),
+  : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -426,12 +478,12 @@ AstBool::bool_value() const
   return mValue;
 }
 
-// @brief 内容をストリーム出力する．
-void
-AstBool::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstBool::decompile() const
 {
   const char* tmp = bool_value() ? "true" : "false";
-  s << tmp;
+  return tmp;
 }
 
 
@@ -442,7 +494,7 @@ AstBool::dump(ostream& s) const
 // @brief コンストラクタ
 AstDelayModel::AstDelayModel(ClibDelayModel value,
 			     const FileRegion& val_loc)
-  : AstValue(val_loc),
+  : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -454,20 +506,20 @@ AstDelayModel::delay_model_value() const
   return mValue;
 }
 
-// @brief 内容をストリーム出力する．
-void
-AstDelayModel::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstDelayModel::decompile() const
 {
   const char* tmp = "---";
   switch ( delay_model_value() ) {
-  case ClibDelayModel::GenericCmos:   tmp = "generic cmos"; break;
-  case ClibDelayModel::TableLookup:   tmp = "table lookup"; break;
-  case ClibDelayModel::PiecewiseCmos: tmp = "piesewise cmos"; break;
+  case ClibDelayModel::GenericCmos:   tmp = "generic_cmos"; break;
+  case ClibDelayModel::TableLookup:   tmp = "table_lookup"; break;
+  case ClibDelayModel::PiecewiseCmos: tmp = "piecewise_cmos"; break;
   case ClibDelayModel::Cmos2:         tmp = "cmos2"; break;
   case ClibDelayModel::Dcm:           tmp = "dcm"; break;
   default: break;
   }
-  s << tmp;
+  return tmp;
 }
 
 
@@ -478,7 +530,7 @@ AstDelayModel::dump(ostream& s) const
 // @brief コンストラクタ
 AstDirection::AstDirection(ClibDirection value,       ///< [in] 値
 			   const FileRegion& val_loc) ///< [in] 値のファイル上の位置
-  : AstValue(val_loc),
+  : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -490,9 +542,9 @@ AstDirection::direction_value() const
   return mValue;
 }
 
-// @brief 内容をストリーム出力する．
-void
-AstDirection::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstDirection::decompile() const
 {
   const char* tmp = "---";
   switch ( direction_value() ) {
@@ -502,7 +554,7 @@ AstDirection::dump(ostream& s) const
   case ClibDirection::Internal: tmp = "internal"; break;
   default: break;
   }
-  s << tmp;
+  return tmp;
 }
 
 
@@ -512,7 +564,7 @@ AstDirection::dump(ostream& s) const
 
 // @brief コンストラクタ
 AstExprValue::AstExprValue(AstExprPtr&& value)
-  : AstValue(value->loc()),
+  : AstSimple(value->loc()),
     mValue{std::move(value)}
 {
 }
@@ -524,11 +576,11 @@ AstExprValue::expr_value() const
   return *mValue;
 }
 
-// @brief 内容をストリーム出力する．
-void
-AstExprValue::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstExprValue::decompile() const
 {
-  s << expr_value().decompile();
+  return expr_value().decompile();
 }
 
 
@@ -539,7 +591,7 @@ AstExprValue::dump(ostream& s) const
 // @brief コンストラクタ
 AstTechnology::AstTechnology(ClibTechnology value,      ///< [in] 値
 			     const FileRegion& val_loc) ///< [in] 値のファイル上の位置
-  : AstValue(val_loc),
+  : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -551,9 +603,9 @@ AstTechnology::technology_value() const
   return mValue;
 }
 
-// @brief 内容をストリーム出力する．
-void
-AstTechnology::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstTechnology::decompile() const
 {
   const char* tmp = "---";
   switch ( technology_value() ) {
@@ -561,7 +613,7 @@ AstTechnology::dump(ostream& s) const
   case ClibTechnology::fpga: tmp = "fpga"; break;
   default: break;
   }
-  s << tmp;
+  return tmp;
 }
 
 
@@ -572,7 +624,7 @@ AstTechnology::dump(ostream& s) const
 /// @brief コンストラクタ
 AstTimingSense::AstTimingSense(ClibTimingSense value,       ///< [in] 値
 			       const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
-  : AstValue(val_loc),
+  : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -584,18 +636,18 @@ AstTimingSense::timing_sense_value() const
   return mValue;
 }
 
-// @brief 内容をストリーム出力する．
-void
-AstTimingSense::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstTimingSense::decompile() const
 {
   const char* tmp = "---";
   switch ( timing_sense_value() ) {
-  case ClibTimingSense::PosiUnate: tmp = "positive unate"; break;
-  case ClibTimingSense::NegaUnate: tmp = "negative unate"; break;
-  case ClibTimingSense::NonUnate:  tmp = "non unate";      break;
+  case ClibTimingSense::PosiUnate: tmp = "positive_unate"; break;
+  case ClibTimingSense::NegaUnate: tmp = "negative_unate"; break;
+  case ClibTimingSense::NonUnate:  tmp = "non_unate";      break;
   default: break;
   }
-  s << tmp;
+  return tmp;
 }
 
 
@@ -606,7 +658,7 @@ AstTimingSense::dump(ostream& s) const
 // @brief コンストラクタ
 AstTimingType::AstTimingType(ClibTimingType value,        ///< [in] 値
 			     const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
-  : AstValue(val_loc),
+  : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -618,46 +670,46 @@ AstTimingType::timing_type_value() const
   return mValue;
 }
 
-// @brief 内容をストリーム出力する．
-void
-AstTimingType::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstTimingType::decompile() const
 {
   const char* tmp = "---";
   switch ( timing_type_value() ) {
   case ClibTimingType::Combinational:         tmp = "combinational"; break;
-  case ClibTimingType::CombinationalRise:     tmp = "combinational rise"; break;
-  case ClibTimingType::CombinationalFall:     tmp = "combinational fall"; break;
-  case ClibTimingType::ThreeStateEnable:      tmp = "three state enable"; break;
-  case ClibTimingType::ThreeStateDisable:     tmp = "three state disable"; break;
-  case ClibTimingType::ThreeStateEnableRise:  tmp = "three state enable rise"; break;
-  case ClibTimingType::ThreeStateEnableFall:  tmp = "three state enable fall"; break;
-  case ClibTimingType::ThreeStateDisableRise: tmp = "three state disable rise"; break;
-  case ClibTimingType::ThreeStateDisableFall: tmp = "three state disable fall"; break;
-  case ClibTimingType::RisingEdge:            tmp = "rising edge"; break;
-  case ClibTimingType::FallingEdge:           tmp = "falling edge"; break;
+  case ClibTimingType::CombinationalRise:     tmp = "combinational_rise"; break;
+  case ClibTimingType::CombinationalFall:     tmp = "combinational_fall"; break;
+  case ClibTimingType::ThreeStateEnable:      tmp = "three_state_enable"; break;
+  case ClibTimingType::ThreeStateDisable:     tmp = "three_state_disable"; break;
+  case ClibTimingType::ThreeStateEnableRise:  tmp = "three_state_enable_rise"; break;
+  case ClibTimingType::ThreeStateEnableFall:  tmp = "three_state_enable_fall"; break;
+  case ClibTimingType::ThreeStateDisableRise: tmp = "three_state_disable_rise"; break;
+  case ClibTimingType::ThreeStateDisableFall: tmp = "three_state_disable_fall"; break;
+  case ClibTimingType::RisingEdge:            tmp = "rising_edge"; break;
+  case ClibTimingType::FallingEdge:           tmp = "falling_edge"; break;
   case ClibTimingType::Preset:                tmp = "preset"; break;
   case ClibTimingType::Clear:                 tmp = "clear"; break;
-  case ClibTimingType::HoldRising:            tmp = "hold rising"; break;
-  case ClibTimingType::HoldFalling:           tmp = "hold falling"; break;
-  case ClibTimingType::SetupRising:           tmp = "setup rising"; break;
-  case ClibTimingType::SetupFalling:          tmp = "setup falling"; break;
-  case ClibTimingType::RecoveryRising:        tmp = "recovery rising"; break;
-  case ClibTimingType::RecoveryFalling:       tmp = "recovery falling"; break;
-  case ClibTimingType::SkewRising:            tmp = "skew rising"; break;
-  case ClibTimingType::SkewFalling:           tmp = "skew falling"; break;
-  case ClibTimingType::RemovalRising:         tmp = "removal rising"; break;
-  case ClibTimingType::RemovalFalling:        tmp = "removal falling"; break;
-  case ClibTimingType::NonSeqSetupRising:     tmp = "non seq setup rising"; break;
-  case ClibTimingType::NonSeqSetupFalling:    tmp = "non seq setup falling"; break;
-  case ClibTimingType::NonSeqHoldRising:      tmp = "non seq hold rising"; break;
-  case ClibTimingType::NonSeqHoldFalling:     tmp = "non seq hold falling"; break;
-  case ClibTimingType::NochangeHighHigh:      tmp = "nochange high high"; break;
-  case ClibTimingType::NochangeHighLow:       tmp = "nochange high low"; break;
-  case ClibTimingType::NochangeLowHigh:       tmp = "nochange low high"; break;
-  case ClibTimingType::NochangeLowLow:        tmp = "nochange low low"; break;
+  case ClibTimingType::HoldRising:            tmp = "hold_rising"; break;
+  case ClibTimingType::HoldFalling:           tmp = "hold_falling"; break;
+  case ClibTimingType::SetupRising:           tmp = "setup_rising"; break;
+  case ClibTimingType::SetupFalling:          tmp = "setup_falling"; break;
+  case ClibTimingType::RecoveryRising:        tmp = "recovery_rising"; break;
+  case ClibTimingType::RecoveryFalling:       tmp = "recovery_falling"; break;
+  case ClibTimingType::SkewRising:            tmp = "skew_rising"; break;
+  case ClibTimingType::SkewFalling:           tmp = "skew_falling"; break;
+  case ClibTimingType::RemovalRising:         tmp = "removal_rising"; break;
+  case ClibTimingType::RemovalFalling:        tmp = "removal_falling"; break;
+  case ClibTimingType::NonSeqSetupRising:     tmp = "non_seq_setup_rising"; break;
+  case ClibTimingType::NonSeqSetupFalling:    tmp = "non_seq_setup_falling"; break;
+  case ClibTimingType::NonSeqHoldRising:      tmp = "non_seq_hold_rising"; break;
+  case ClibTimingType::NonSeqHoldFalling:     tmp = "non_seq_hold_falling"; break;
+  case ClibTimingType::NochangeHighHigh:      tmp = "nochange_high_high"; break;
+  case ClibTimingType::NochangeHighLow:       tmp = "nochange_high_low"; break;
+  case ClibTimingType::NochangeLowHigh:       tmp = "nochange_low_high"; break;
+  case ClibTimingType::NochangeLowLow:        tmp = "nochange_low_low"; break;
   default: break;
   }
-  s << tmp;
+  return tmp;
 }
 
 
@@ -668,7 +720,7 @@ AstTimingType::dump(ostream& s) const
 // @brief コンストラクタ
 AstVarType::AstVarType(ClibVarType value,           ///< [in] 値
 		       const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
-  : AstValue(val_loc),
+  : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -680,29 +732,29 @@ AstVarType::vartype_value() const
   return mValue;
 }
 
-// @brief 内容をストリーム出力する．
-void
-AstVarType::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstVarType::decompile() const
 {
   const char* tmp = "---";
   switch ( vartype_value() ) {
-  case ClibVarType::InputNetTransition:                  tmp = "input net transition"; break;
-  case ClibVarType::InputTransitionTime:                 tmp = "input transition time"; break;
-  case ClibVarType::TotalOutputNetCapacitance:           tmp = "output net capacitance"; break;
-  case ClibVarType::EqualOrOppositeOutputNetCapacitance: tmp = "equal or opposite output net capacitance"; break;
-  case ClibVarType::OutputNetLength:                     tmp = "output net length"; break;
-  case ClibVarType::OutputNetWireCap:                    tmp = "output net wire cap"; break;
-  case ClibVarType::OutputNetPinCap:                     tmp = "output net pin cap"; break;
-  case ClibVarType::RelatedOutTotalOutputNetCapacitance: tmp = "related out total output net capacitance"; break;
-  case ClibVarType::RelatedOutOutputNetLength:           tmp = "related out output net length"; break;
-  case ClibVarType::RelatedOutOutputNetWireCap:          tmp = "related out output net wire cap"; break;
-  case ClibVarType::RelatedOutOutputNetPinCap:           tmp = "related out output net pin cap"; break;
-  case ClibVarType::ConstrainedPinTransition:            tmp = "constrained pin transition"; break;
-  case ClibVarType::RelatedPinTransition:                tmp = "related pin transition"; break;
+  case ClibVarType::InputNetTransition:                  tmp = "input_net_transition"; break;
+  case ClibVarType::InputTransitionTime:                 tmp = "input_transition_time"; break;
+  case ClibVarType::TotalOutputNetCapacitance:           tmp = "total_output_net_capacitance"; break;
+  case ClibVarType::EqualOrOppositeOutputNetCapacitance: tmp = "equal_or_opposite_output_net_capacitance"; break;
+  case ClibVarType::OutputNetLength:                     tmp = "output_net_length"; break;
+  case ClibVarType::OutputNetWireCap:                    tmp = "output_net_wire_cap"; break;
+  case ClibVarType::OutputNetPinCap:                     tmp = "output_net_pin_cap"; break;
+  case ClibVarType::RelatedOutTotalOutputNetCapacitance: tmp = "related_out_total_output_net_capacitance"; break;
+  case ClibVarType::RelatedOutOutputNetLength:           tmp = "related_out_output_net_length"; break;
+  case ClibVarType::RelatedOutOutputNetWireCap:          tmp = "related_out_output_net_wire_cap"; break;
+  case ClibVarType::RelatedOutOutputNetPinCap:           tmp = "related_out_output_net_pin_cap"; break;
+  case ClibVarType::ConstrainedPinTransition:            tmp = "constrained_pin_transition"; break;
+  case ClibVarType::RelatedPinTransition:                tmp = "related_pin_transition"; break;
   case ClibVarType::None:                                tmp = "none"; break;
   default: break;
   }
-  s << tmp;
+  return tmp;
 }
 
 
@@ -713,7 +765,7 @@ AstVarType::dump(ostream& s) const
 /// @brief コンストラクタ
 AstIntVector::AstIntVector(const vector<int>& value,
 			   const FileRegion& loc)
-  : AstValue(loc),
+  : AstSimple(loc),
     mBody{value}
 {
 }
@@ -725,15 +777,19 @@ AstIntVector::int_vector_value() const
   return mBody;
 }
 
-// @brief 内容をストリーム出力する．
-void
-AstIntVector::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstIntVector::decompile() const
 {
+  ostringstream buf;
   const char* comma = "";
+  buf << "\"";
   for ( auto i: mBody ) {
-    s << comma << i;
+    buf << comma << i;
     comma = ", ";
   }
+  buf << "\"";
+  return buf.str();
 }
 
 
@@ -744,7 +800,7 @@ AstIntVector::dump(ostream& s) const
 // @brief コンストラクタ
 AstFloatVector::AstFloatVector(const vector<double>& value_list,
 			       const FileRegion& loc)
-  : AstValue(loc),
+  : AstSimple(loc),
     mBody{value_list}
 {
 }
@@ -756,15 +812,19 @@ AstFloatVector::float_vector_value() const
   return mBody;
 }
 
-// @brief 内容をストリーム出力する．
-void
-AstFloatVector::dump(ostream& s) const
+// @brief 値を表す文字列を返す．
+string
+AstFloatVector::decompile() const
 {
+  ostringstream buf;
   const char* comma = "";
+  buf << "\"";
   for ( auto d: mBody ) {
-    s << comma << d;
+    buf << comma << d;
     comma = ", ";
   }
+  buf << "\"";
+  return buf.str();
 }
 
 
@@ -801,18 +861,28 @@ AstComplexValue::complex_elem_value(int pos) const
   return *mElemList[pos];
 }
 
-// @brief 内容を出力する．
+// @brief 内容をストリーム出力する．
 void
-AstComplexValue::dump(ostream& s) const
+AstComplexValue::dump(ostream& s,
+		      int ilevel) const
+{
+  // ilevel は無視
+  s << decompile() << ";" << endl;
+}
+
+// @brief 値を表す文字列を返す．
+string
+AstComplexValue::decompile() const
 {
   const char* comma = "";
-  s << "( ";
+  ostringstream buf;
+  buf << "( ";
   for ( auto& ptr: mElemList ) {
-    s << comma;
-    ptr->dump(s);
+    buf << comma << ptr->decompile();
     comma = ", ";
   }
-  s << ")";
+  buf << ")";
+  return buf.str();
 }
 
 
@@ -861,10 +931,25 @@ AstGroupValue::group_elem_attr(int pos) const
   return *mChildList[pos];
 }
 
-// @brief 内容を出力する．
+// @brief 内容をストリーム出力する．
 void
-AstGroupValue::dump(ostream& s) const
+AstGroupValue::dump(ostream& s,
+		    int ilevel) const
 {
+  s << group_header_value().decompile()
+    << " {" << endl;
+  for ( auto& ptr: mChildList ) {
+    ptr->dump(s, ilevel + 1);
+  }
+  dump_indent(s, ilevel);
+  s << "}" << endl;
+}
+
+// @brief 値を表す文字列を返す．
+string
+AstGroupValue::decompile() const
+{
+  return string{};
 }
 
 
@@ -885,11 +970,33 @@ AstNullValue::is_valid() const
   return false;
 }
 
-// @brief 内容を出力する．
+// @brief 内容をストリーム出力する．
 void
-AstNullValue::dump(ostream& s) const
+AstNullValue::dump(ostream& s,
+		   int ilevel) const
 {
-  s << "---";
+}
+
+// @brief 値を表す文字列を返す．
+string
+AstNullValue::decompile() const
+{
+  return "---";
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス AstAttr
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をストリーム出力する．
+void
+AstAttr::dump(ostream& s,
+	      int ilevel) const
+{
+  dump_indent(s, ilevel);
+  s << attr().type();
+  value().dump(s, ilevel);
 }
 
 END_NAMESPACE_YM_DOTLIB

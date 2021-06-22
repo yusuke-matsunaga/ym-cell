@@ -14,9 +14,11 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief 内容をストリーム出力する．
 void
 AstAttr::dump(ostream& s,
-	      int indent) const
+	      int ilevel) const
 {
-  // 未完
+  dump_indent(s, ilevel);
+  s << attr().type();
+  value().dump(s, ilevel);
 }
 
 END_NAMESPACE_YM_DOTLIB

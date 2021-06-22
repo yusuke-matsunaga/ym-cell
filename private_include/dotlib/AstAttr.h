@@ -63,7 +63,7 @@ public:
   /// @brief 内容をストリーム出力する．
   void
   dump(ostream& s,            ///< [in] 出力先のストリーム
-       int indent = 0) const; ///< [in] インデント量
+       int ilevel = 0) const; ///< [in] インデントレベル
 
 
 private:

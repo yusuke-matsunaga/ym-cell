@@ -24,9 +24,12 @@ TEST_F(ParserTest, parse_float_float1)
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
+
   EXPECT_EQ( 2, value.complex_elem_size() );
   EXPECT_EQ( 1.0, value.complex_elem_value(0).float_value() );
   EXPECT_EQ( 2.0, value.complex_elem_value(1).float_value() );
+
+  EXPECT_EQ( "( 1, 2)", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_float_float2)
@@ -87,9 +90,11 @@ TEST_F(ParserTest, parse_float_string1)
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
+
   EXPECT_EQ( 2, value.complex_elem_size() );
   EXPECT_EQ( 1.0, value.complex_elem_value(0).float_value() );
   EXPECT_EQ( "ff", value.complex_elem_value(1).string_value() );
+  EXPECT_EQ( "( 1, ff)", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_float_string2)
@@ -106,6 +111,7 @@ TEST_F(ParserTest, parse_float_string2)
   EXPECT_EQ( 2, value.complex_elem_size() );
   EXPECT_EQ( 1.0, value.complex_elem_value(0).float_value() );
   EXPECT_EQ( "ff", value.complex_elem_value(1).string_value() );
+  EXPECT_EQ( "( 1, ff)", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_float_string3)
@@ -154,7 +160,10 @@ TEST_F(ParserTest, parse_float_vector1)
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
-  auto fv = value.float_vector_value();
+  EXPECT_EQ( "( \"1, 2, 3\")", value.decompile() );
+
+  EXPECT_EQ( 1, value.complex_elem_size() );
+  auto fv = value.complex_elem_value(0).float_vector_value();
   EXPECT_EQ( 3, fv.size() );
   EXPECT_EQ( 1.0, fv[0] );
   EXPECT_EQ( 2.0, fv[1] );
@@ -207,9 +216,11 @@ TEST_F(ParserTest, parse_int_float1)
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
+
   EXPECT_EQ( 2, value.complex_elem_size() );
   EXPECT_EQ( 1, value.complex_elem_value(0).int_value() );
   EXPECT_EQ( 2.3, value.complex_elem_value(1).float_value() );
+  EXPECT_EQ( "( 1, 2.3)", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_int_float2)
@@ -270,12 +281,14 @@ TEST_F(ParserTest, parse_int_float_vector1)
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
+
   EXPECT_EQ( 2, value.complex_elem_size() );
   EXPECT_EQ( 1, value.complex_elem_value(0).int_value() );
   auto fv = value.complex_elem_value(1).float_vector_value();
   EXPECT_EQ( 2, fv.size() );
   EXPECT_EQ( 2.3, fv[0] );
   EXPECT_EQ( 4.5, fv[1] );
+  EXPECT_EQ( "( 1, \"2.3, 4.5\")", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_int_float_vector2)
@@ -324,7 +337,10 @@ TEST_F(ParserTest, parse_int_vector1)
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
-  auto iv = value.int_vector_value();
+  EXPECT_EQ( "( \"1, 2, 3\")", value.decompile() );
+
+  EXPECT_EQ( 1, value.complex_elem_size() );
+  auto iv = value.complex_elem_value(0).int_vector_value();
   EXPECT_EQ( 3, iv.size() );
   EXPECT_EQ( 1, iv[0] );
   EXPECT_EQ( 2, iv[1] );
@@ -364,7 +380,13 @@ TEST_F(ParserTest, parse_string_complex1)
   auto dst = parser.parse_string_complex(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( "abc", dst->value().string_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( "( abc)", value.decompile() );
+
+  EXPECT_EQ( 1, value.complex_elem_size() );
+  EXPECT_EQ( "abc", value.complex_elem_value(0).string_value() );
+
 }
 
 TEST_F(ParserTest, parse_string_complex2)
@@ -376,7 +398,11 @@ TEST_F(ParserTest, parse_string_complex2)
   auto dst = parser.parse_string_complex(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( "abc", dst->value().string_value() );
+  auto& value = dst->value();
+  EXPECT_EQ( "( abc)", value.decompile() );
+
+  EXPECT_EQ( 1, value.complex_elem_size() );
+  EXPECT_EQ( "abc", value.complex_elem_value(0).string_value() );
 }
 
 TEST_F(ParserTest, parse_string_complex3)
@@ -413,9 +439,11 @@ TEST_F(ParserTest, parse_string_float1)
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
+
   EXPECT_EQ( 2, value.complex_elem_size() );
   EXPECT_EQ( "abc", value.complex_elem_value(0).string_value() );
   EXPECT_EQ( 1.2, value.complex_elem_value(1).float_value() );
+  EXPECT_EQ( "( abc, 1.2)", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_string_float2)
@@ -464,9 +492,11 @@ TEST_F(ParserTest, parse_string_int1)
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
+
   EXPECT_EQ( 2, value.complex_elem_size() );
   EXPECT_EQ( "abc", value.complex_elem_value(0).string_value() );
   EXPECT_EQ( 1, value.complex_elem_value(1).int_value() );
+  EXPECT_EQ( "( abc, 1)", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_string_int2)
@@ -520,6 +550,7 @@ TEST_F(ParserTest, parse_string_list1)
   EXPECT_EQ( "abc", value.complex_elem_value(0).string_value() );
   EXPECT_EQ( "def", value.complex_elem_value(1).string_value() );
   EXPECT_EQ( "ghi", value.complex_elem_value(2).string_value() );
+  EXPECT_EQ( "( abc, def, ghi)", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_string_list2)
@@ -537,6 +568,7 @@ TEST_F(ParserTest, parse_string_list2)
   EXPECT_EQ( "abc", value.complex_elem_value(0).string_value() );
   EXPECT_EQ( "def", value.complex_elem_value(1).string_value() );
   EXPECT_EQ( "ghi", value.complex_elem_value(2).string_value() );
+  EXPECT_EQ( "( abc, def, ghi)", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_string_list3)
@@ -552,6 +584,7 @@ TEST_F(ParserTest, parse_string_list3)
   auto& value = dst->value();
 
   EXPECT_EQ( 0, value.complex_elem_size() );
+  EXPECT_EQ( "( )", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_string_string1)
@@ -568,6 +601,7 @@ TEST_F(ParserTest, parse_string_string1)
   EXPECT_EQ( 2, value.complex_elem_size() );
   EXPECT_EQ( "abc", value.complex_elem_value(0).string_value() );
   EXPECT_EQ( "def", value.complex_elem_value(1).string_value() );
+  EXPECT_EQ( "( abc, def)", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_string_string2)
@@ -584,6 +618,7 @@ TEST_F(ParserTest, parse_string_string2)
   EXPECT_EQ( 2, value.complex_elem_size() );
   EXPECT_EQ( "abc", value.complex_elem_value(0).string_value() );
   EXPECT_EQ( "def", value.complex_elem_value(1).string_value() );
+  EXPECT_EQ( "( abc, def)", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_string_string3)
@@ -625,6 +660,7 @@ TEST_F(ParserTest, parse_define1)
   EXPECT_EQ( "abc", value.complex_elem_value(0).string_value() );
   EXPECT_EQ( "def", value.complex_elem_value(1).string_value() );
   EXPECT_EQ( "xyz", value.complex_elem_value(2).string_value() );
+  EXPECT_EQ( "( abc, def, xyz)", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_define2)
@@ -659,8 +695,10 @@ TEST_F(ParserTest, parse_technology1)
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
+  EXPECT_EQ( "( cmos)", value.decompile() );
 
-  EXPECT_EQ( ClibTechnology::cmos, value.technology_value() );
+  EXPECT_EQ( 1, value.complex_elem_size() );
+  EXPECT_EQ( ClibTechnology::cmos, value.complex_elem_value(0).technology_value() );
 }
 
 TEST_F(ParserTest, parse_technology2)
@@ -673,8 +711,10 @@ TEST_F(ParserTest, parse_technology2)
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
+  EXPECT_EQ( "( fpga)", value.decompile() );
 
-  EXPECT_EQ( ClibTechnology::fpga, value.technology_value() );
+  EXPECT_EQ( 1, value.complex_elem_size() );
+  EXPECT_EQ( ClibTechnology::fpga, value.complex_elem_value(0).technology_value() );
 }
 
 TEST_F(ParserTest, parse_technology3)
@@ -723,6 +763,7 @@ TEST_F(ParserTest, parse_values1)
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
+  EXPECT_EQ( "( \"1.1, 2.2, 3.3\", \"4.4, 5.5, 6.6\")", value.decompile() );
 
   EXPECT_EQ( 2, value.complex_elem_size() );
 

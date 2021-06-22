@@ -23,7 +23,10 @@ TEST_F(ParserTest, parse_bool1)
   auto dst = parser.parse_bool(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( true, dst->value().bool_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( true, value.bool_value() );
+  EXPECT_EQ( "true", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_bool2)
@@ -35,7 +38,10 @@ TEST_F(ParserTest, parse_bool2)
   auto dst = parser.parse_bool(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( false, dst->value().bool_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( false, value.bool_value() );
+  EXPECT_EQ( "false", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_bool3)
@@ -85,7 +91,10 @@ TEST_F(ParserTest, parse_bool6)
   auto dst = parser.parse_bool(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( true, dst->value().bool_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( true, value.bool_value() );
+  EXPECT_EQ( "true", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_int1)
@@ -97,7 +106,10 @@ TEST_F(ParserTest, parse_int1)
   auto dst = parser.parse_int(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( 123, dst->value().int_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( 123, value.int_value() );
+  EXPECT_EQ( "123", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_int2)
@@ -121,7 +133,10 @@ TEST_F(ParserTest, parse_float1)
   auto dst = parser.parse_float(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( 123.456, dst->value().float_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( 123.456, value.float_value() );
+  EXPECT_EQ( "123.456", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_float2)
@@ -134,7 +149,10 @@ TEST_F(ParserTest, parse_float2)
   auto dst = parser.parse_float(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( 123, dst->value().float_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( 123, value.float_value() );
+  EXPECT_EQ( "123", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_float3)
@@ -158,7 +176,10 @@ TEST_F(ParserTest, parse_string1)
   auto dst = parser.parse_string(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( "abcdefg", dst->value().string_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( "abcdefg", value.string_value() );
+  EXPECT_EQ( "abcdefg", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_string2)
@@ -171,7 +192,26 @@ TEST_F(ParserTest, parse_string2)
   auto dst = parser.parse_string(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( "abcdefg", dst->value().string_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( "abcdefg", value.string_value() );
+  EXPECT_EQ( "abcdefg", value.decompile() );
+}
+
+TEST_F(ParserTest, parse_string2b)
+{
+  // " で囲まれていれば空白を含んでもOK
+  istringstream buf(": \"abc def\";\n");
+  InputFileObj in{buf, info};
+  Parser parser{in, false, false};
+
+  auto dst = parser.parse_string(attr);
+
+  ASSERT_TRUE( dst != nullptr );
+  auto& value = dst->value();
+
+  EXPECT_EQ( "abc def", value.string_value() );
+  EXPECT_EQ( "\"abc def\"", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_string3)
@@ -184,7 +224,10 @@ TEST_F(ParserTest, parse_string3)
   auto dst = parser.parse_string(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( "1.3a", dst->value().string_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( "1.3a", value.string_value() );
+  EXPECT_EQ( "\"1.3a\"", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_delay_model1)
@@ -196,7 +239,10 @@ TEST_F(ParserTest, parse_delay_model1)
   auto dst = parser.parse_delay_model(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibDelayModel::GenericCmos, dst->value().delay_model_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibDelayModel::GenericCmos, value.delay_model_value() );
+  EXPECT_EQ( "generic_cmos", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_delay_model2)
@@ -208,7 +254,10 @@ TEST_F(ParserTest, parse_delay_model2)
   auto dst = parser.parse_delay_model(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibDelayModel::TableLookup, dst->value().delay_model_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibDelayModel::TableLookup, value.delay_model_value() );
+  EXPECT_EQ( "table_lookup", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_delay_model3)
@@ -220,7 +269,10 @@ TEST_F(ParserTest, parse_delay_model3)
   auto dst = parser.parse_delay_model(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibDelayModel::PiecewiseCmos, dst->value().delay_model_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibDelayModel::PiecewiseCmos, value.delay_model_value() );
+  EXPECT_EQ( "piecewise_cmos", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_delay_model4)
@@ -232,7 +284,10 @@ TEST_F(ParserTest, parse_delay_model4)
   auto dst = parser.parse_delay_model(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibDelayModel::Cmos2, dst->value().delay_model_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibDelayModel::Cmos2, value.delay_model_value() );
+  EXPECT_EQ( "cmos2", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_delay_model5)
@@ -244,7 +299,10 @@ TEST_F(ParserTest, parse_delay_model5)
   auto dst = parser.parse_delay_model(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibDelayModel::Dcm, dst->value().delay_model_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibDelayModel::Dcm, value.delay_model_value() );
+  EXPECT_EQ( "dcm", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_delay_model6)
@@ -268,7 +326,10 @@ TEST_F(ParserTest, parse_direction1)
   auto dst = parser.parse_direction(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibDirection::Input, dst->value().direction_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibDirection::Input, value.direction_value() );
+  EXPECT_EQ( "input", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_direction2)
@@ -280,7 +341,10 @@ TEST_F(ParserTest, parse_direction2)
   auto dst = parser.parse_direction(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibDirection::Output, dst->value().direction_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibDirection::Output, value.direction_value() );
+  EXPECT_EQ( "output", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_direction3)
@@ -292,7 +356,10 @@ TEST_F(ParserTest, parse_direction3)
   auto dst = parser.parse_direction(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibDirection::Inout, dst->value().direction_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibDirection::Inout, value.direction_value() );
+  EXPECT_EQ( "inout", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_direction4)
@@ -304,7 +371,10 @@ TEST_F(ParserTest, parse_direction4)
   auto dst = parser.parse_direction(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibDirection::Internal, dst->value().direction_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibDirection::Internal, value.direction_value() );
+  EXPECT_EQ( "internal", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_direction5)
@@ -328,7 +398,10 @@ TEST_F(ParserTest, parse_timing_sense1)
   auto dst = parser.parse_timing_sense(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingSense::PosiUnate, dst->value().timing_sense_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingSense::PosiUnate, value.timing_sense_value() );
+  EXPECT_EQ( "positive_unate", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_sense2)
@@ -340,7 +413,10 @@ TEST_F(ParserTest, parse_timing_sense2)
   auto dst = parser.parse_timing_sense(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingSense::NegaUnate, dst->value().timing_sense_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingSense::NegaUnate, value.timing_sense_value() );
+  EXPECT_EQ( "negative_unate", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_sense3)
@@ -352,7 +428,10 @@ TEST_F(ParserTest, parse_timing_sense3)
   auto dst = parser.parse_timing_sense(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingSense::NonUnate, dst->value().timing_sense_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingSense::NonUnate, value.timing_sense_value() );
+  EXPECT_EQ( "non_unate", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_sense4)
@@ -376,7 +455,10 @@ TEST_F(ParserTest, parse_timing_type1)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::Combinational, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::Combinational, value.timing_type_value() );
+  EXPECT_EQ( "combinational", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type2)
@@ -388,7 +470,10 @@ TEST_F(ParserTest, parse_timing_type2)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::CombinationalRise, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::CombinationalRise, value.timing_type_value() );
+  EXPECT_EQ( "combinational_rise", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type3)
@@ -400,7 +485,10 @@ TEST_F(ParserTest, parse_timing_type3)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::CombinationalFall, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::CombinationalFall, value.timing_type_value() );
+  EXPECT_EQ( "combinational_fall", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type4)
@@ -412,7 +500,10 @@ TEST_F(ParserTest, parse_timing_type4)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::ThreeStateEnable, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::ThreeStateEnable, value.timing_type_value() );
+  EXPECT_EQ( "three_state_enable", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type5)
@@ -424,7 +515,10 @@ TEST_F(ParserTest, parse_timing_type5)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::ThreeStateDisable, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::ThreeStateDisable, value.timing_type_value() );
+  EXPECT_EQ( "three_state_disable", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type6)
@@ -436,7 +530,10 @@ TEST_F(ParserTest, parse_timing_type6)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::ThreeStateEnableRise, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::ThreeStateEnableRise, value.timing_type_value() );
+  EXPECT_EQ( "three_state_enable_rise", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type7)
@@ -448,7 +545,10 @@ TEST_F(ParserTest, parse_timing_type7)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::ThreeStateEnableFall, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::ThreeStateEnableFall, value.timing_type_value() );
+  EXPECT_EQ( "three_state_enable_fall", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type8)
@@ -460,7 +560,10 @@ TEST_F(ParserTest, parse_timing_type8)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::ThreeStateDisableRise, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::ThreeStateDisableRise, value.timing_type_value() );
+  EXPECT_EQ( "three_state_disable_rise", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type9)
@@ -472,7 +575,10 @@ TEST_F(ParserTest, parse_timing_type9)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::ThreeStateDisableFall, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::ThreeStateDisableFall, value.timing_type_value() );
+  EXPECT_EQ( "three_state_disable_fall", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type10)
@@ -484,7 +590,10 @@ TEST_F(ParserTest, parse_timing_type10)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::RisingEdge, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::RisingEdge, value.timing_type_value() );
+  EXPECT_EQ( "rising_edge", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type11)
@@ -496,7 +605,10 @@ TEST_F(ParserTest, parse_timing_type11)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::FallingEdge, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::FallingEdge, value.timing_type_value() );
+  EXPECT_EQ( "falling_edge", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type12)
@@ -508,7 +620,10 @@ TEST_F(ParserTest, parse_timing_type12)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::Preset, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::Preset, value.timing_type_value() );
+  EXPECT_EQ( "preset", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type13)
@@ -520,7 +635,10 @@ TEST_F(ParserTest, parse_timing_type13)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::Clear, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::Clear, value.timing_type_value() );
+  EXPECT_EQ( "clear", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type14)
@@ -532,7 +650,10 @@ TEST_F(ParserTest, parse_timing_type14)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::HoldRising, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::HoldRising, value.timing_type_value() );
+  EXPECT_EQ( "hold_rising", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type15)
@@ -544,7 +665,10 @@ TEST_F(ParserTest, parse_timing_type15)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::HoldFalling, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::HoldFalling, value.timing_type_value() );
+  EXPECT_EQ( "hold_falling", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type16)
@@ -556,7 +680,10 @@ TEST_F(ParserTest, parse_timing_type16)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::SetupRising, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::SetupRising, value.timing_type_value() );
+  EXPECT_EQ( "setup_rising", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type17)
@@ -568,7 +695,10 @@ TEST_F(ParserTest, parse_timing_type17)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::SetupFalling, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::SetupFalling, value.timing_type_value() );
+  EXPECT_EQ( "setup_falling", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type18)
@@ -580,7 +710,10 @@ TEST_F(ParserTest, parse_timing_type18)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::RecoveryRising, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::RecoveryRising, value.timing_type_value() );
+  EXPECT_EQ( "recovery_rising", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type19)
@@ -592,7 +725,10 @@ TEST_F(ParserTest, parse_timing_type19)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::RecoveryFalling, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::RecoveryFalling, value.timing_type_value() );
+  EXPECT_EQ( "recovery_falling", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type20)
@@ -604,7 +740,10 @@ TEST_F(ParserTest, parse_timing_type20)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::SkewRising, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::SkewRising, value.timing_type_value() );
+  EXPECT_EQ( "skew_rising", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type21)
@@ -616,7 +755,10 @@ TEST_F(ParserTest, parse_timing_type21)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::SkewFalling, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::SkewFalling, value.timing_type_value() );
+  EXPECT_EQ( "skew_falling", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type22)
@@ -628,7 +770,10 @@ TEST_F(ParserTest, parse_timing_type22)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::RemovalRising, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::RemovalRising, value.timing_type_value() );
+  EXPECT_EQ( "removal_rising", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type23)
@@ -640,7 +785,10 @@ TEST_F(ParserTest, parse_timing_type23)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::RemovalFalling, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::RemovalFalling, value.timing_type_value() );
+  EXPECT_EQ( "removal_falling", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type24)
@@ -652,7 +800,10 @@ TEST_F(ParserTest, parse_timing_type24)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::NonSeqSetupRising, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::NonSeqSetupRising, value.timing_type_value() );
+  EXPECT_EQ( "non_seq_setup_rising", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type25)
@@ -664,7 +815,10 @@ TEST_F(ParserTest, parse_timing_type25)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::NonSeqSetupFalling, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::NonSeqSetupFalling, value.timing_type_value() );
+  EXPECT_EQ( "non_seq_setup_falling", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type26)
@@ -676,7 +830,10 @@ TEST_F(ParserTest, parse_timing_type26)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::NonSeqHoldRising, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::NonSeqHoldRising, value.timing_type_value() );
+  EXPECT_EQ( "non_seq_hold_rising", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type27)
@@ -688,7 +845,10 @@ TEST_F(ParserTest, parse_timing_type27)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::NonSeqHoldFalling, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::NonSeqHoldFalling, value.timing_type_value() );
+  EXPECT_EQ( "non_seq_hold_falling", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type28)
@@ -700,7 +860,10 @@ TEST_F(ParserTest, parse_timing_type28)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::NochangeHighHigh, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::NochangeHighHigh, value.timing_type_value() );
+  EXPECT_EQ( "nochange_high_high", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type29)
@@ -712,7 +875,10 @@ TEST_F(ParserTest, parse_timing_type29)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::NochangeHighLow, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::NochangeHighLow, value.timing_type_value() );
+  EXPECT_EQ( "nochange_high_low", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type30)
@@ -724,7 +890,10 @@ TEST_F(ParserTest, parse_timing_type30)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::NochangeLowHigh, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::NochangeLowHigh, value.timing_type_value() );
+  EXPECT_EQ( "nochange_low_high", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type31)
@@ -736,7 +905,10 @@ TEST_F(ParserTest, parse_timing_type31)
   auto dst = parser.parse_timing_type(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibTimingType::NochangeLowLow, dst->value().timing_type_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibTimingType::NochangeLowLow, value.timing_type_value() );
+  EXPECT_EQ( "nochange_low_low", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_timing_type32)
@@ -760,7 +932,10 @@ TEST_F(ParserTest, parse_vartype1)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::InputNetTransition, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::InputNetTransition, value.vartype_value() );
+  EXPECT_EQ( "input_net_transition", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_vartype2)
@@ -772,7 +947,10 @@ TEST_F(ParserTest, parse_vartype2)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::TotalOutputNetCapacitance, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::TotalOutputNetCapacitance, value.vartype_value() );
+  EXPECT_EQ( "total_output_net_capacitance", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_vartype3)
@@ -784,7 +962,10 @@ TEST_F(ParserTest, parse_vartype3)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::OutputNetLength, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::OutputNetLength, value.vartype_value() );
+  EXPECT_EQ( "output_net_length", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_vartype4)
@@ -796,7 +977,10 @@ TEST_F(ParserTest, parse_vartype4)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::OutputNetWireCap, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::OutputNetWireCap, value.vartype_value() );
+  EXPECT_EQ( "output_net_wire_cap", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_vartype5)
@@ -808,7 +992,10 @@ TEST_F(ParserTest, parse_vartype5)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::OutputNetPinCap, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::OutputNetPinCap, value.vartype_value() );
+  EXPECT_EQ( "output_net_pin_cap", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_vartype6)
@@ -820,7 +1007,10 @@ TEST_F(ParserTest, parse_vartype6)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::EqualOrOppositeOutputNetCapacitance, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::EqualOrOppositeOutputNetCapacitance, value.vartype_value() );
+  EXPECT_EQ( "equal_or_opposite_output_net_capacitance", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_vartype7)
@@ -832,7 +1022,9 @@ TEST_F(ParserTest, parse_vartype7)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::InputTransitionTime, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::InputTransitionTime, value.vartype_value() );
 }
 
 TEST_F(ParserTest, parse_vartype8)
@@ -844,7 +1036,10 @@ TEST_F(ParserTest, parse_vartype8)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::RelatedOutTotalOutputNetCapacitance, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::RelatedOutTotalOutputNetCapacitance, value.vartype_value() );
+  EXPECT_EQ( "related_out_total_output_net_capacitance", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_vartype9)
@@ -856,7 +1051,10 @@ TEST_F(ParserTest, parse_vartype9)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::RelatedOutOutputNetLength, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::RelatedOutOutputNetLength, value.vartype_value() );
+  EXPECT_EQ( "related_out_output_net_length", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_vartype10)
@@ -868,7 +1066,10 @@ TEST_F(ParserTest, parse_vartype10)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::RelatedOutOutputNetWireCap, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::RelatedOutOutputNetWireCap, value.vartype_value() );
+  EXPECT_EQ( "related_out_output_net_wire_cap", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_vartype11)
@@ -880,7 +1081,10 @@ TEST_F(ParserTest, parse_vartype11)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::RelatedOutOutputNetPinCap, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::RelatedOutOutputNetPinCap, value.vartype_value() );
+  EXPECT_EQ( "related_out_output_net_pin_cap", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_vartype12)
@@ -892,7 +1096,10 @@ TEST_F(ParserTest, parse_vartype12)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::ConstrainedPinTransition, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::ConstrainedPinTransition, value.vartype_value() );
+  EXPECT_EQ( "constrained_pin_transition", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_vartype13)
@@ -904,7 +1111,10 @@ TEST_F(ParserTest, parse_vartype13)
   auto dst = parser.parse_vartype(attr);
 
   ASSERT_TRUE( dst != nullptr );
-  EXPECT_EQ( ClibVarType::RelatedPinTransition, dst->value().vartype_value() );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::RelatedPinTransition, value.vartype_value() );
+  EXPECT_EQ( "related_pin_transition", value.decompile() );
 }
 
 TEST_F(ParserTest, parse_vartype15)

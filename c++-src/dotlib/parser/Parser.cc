@@ -16,36 +16,6 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-// static member の定義
-EmptyHeader Parser::sEmptyHeader;
-FloatFloatHeader Parser::sFloatFloatHeader;
-FloatStrHeader Parser::sFloatStrHeader;
-FloatVectorHeader Parser::sFloatVectorHeader;
-FloatVectorListHeader Parser::sFloatVectorListHeader;
-IntFloatHeader Parser::sIntFloatHeader;
-IntFloatVectorHeader Parser::sIntFloatVectorHeader;
-IntVectorHeader Parser::sIntVectorHeader;
-StrFloatHeader Parser::sStrFloatHeader;
-StrListHeader Parser::sStrListHeader;
-StrHeader Parser::sStrHeader;
-StrIntHeader Parser::sStrIntHeader;
-StrStrHeader Parser::sStrStrHeader;
-StrStrIntHeader Parser::sStrStrIntHeader;
-StrStrStrHeader Parser::sStrStrStrHeader;
-TechnologyHeader Parser::sTechnologyHeader;
-
-Parser::AttrHandlerDict Parser::sCellGroupDict;
-Parser::AttrHandlerDict Parser::sDomainGroupDict;
-Parser::AttrHandlerDict Parser::sFFGroupDict;
-Parser::AttrHandlerDict Parser::sInputVoltageGroupDict;
-Parser::AttrHandlerDict Parser::sLatchGroupDict;
-Parser::AttrHandlerDict Parser::sLibraryGroupDict;
-Parser::AttrHandlerDict Parser::sOutputVoltageGroupDict;
-Parser::AttrHandlerDict Parser::sPinGroupDict;
-Parser::AttrHandlerDict Parser::sTableGroupDict;
-Parser::AttrHandlerDict Parser::sTemplateGroupDict;
-Parser::AttrHandlerDict Parser::sTimingGroupDict;
-
 // @brief コンストラクタ
 // @param[in] in 入力ファイルオブジェクト
 // @param[in] mgr AstNode を管理するオブジェクト
@@ -147,7 +117,6 @@ Parser::read_tail()
     token = mScanner.read_token();
   }
   else if ( !mAllowNoSemi ) {
-    cout << "token = " << string(token) << endl;
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    token.loc(),
 		    MsgType::Error,

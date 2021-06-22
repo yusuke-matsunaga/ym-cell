@@ -458,15 +458,6 @@ private:
   // 内部で用いられる下請け関数
   //////////////////////////////////////////////////////////////////////
 
-  // simple attribute を読み込む関数の型定義
-  using SimpleHandler = std::function< AstValuePtr(Scanner&)>;
-
-  // group statement の要素を読み込む関数の型定義
-  using AttrHandler = std::function<AstAttrPtr(Parser&, const AttrKwd&)>;
-
-  // AttrHandler の辞書
-  using AttrHandlerDict = std::unordered_map<AttrType, AttrHandler>;
-
   /// @brief Simple Attribute を読み込む．
   /// @retrun 結果の AstAttr を返す．
   ///
@@ -519,22 +510,22 @@ private:
   bool mAllowNoSemi;
 
   // complex attribute/group statement header 用のハンドラ
-  static EmptyHeader sEmptyHeader;
-  static FloatFloatHeader sFloatFloatHeader;
-  static FloatStrHeader sFloatStrHeader;
-  static FloatVectorHeader sFloatVectorHeader;
-  static FloatVectorListHeader sFloatVectorListHeader;
-  static IntFloatHeader sIntFloatHeader;
-  static IntFloatVectorHeader sIntFloatVectorHeader;
-  static IntVectorHeader sIntVectorHeader;
-  static StrFloatHeader sStrFloatHeader;
-  static StrListHeader sStrListHeader;
-  static StrHeader sStrHeader;
-  static StrIntHeader sStrIntHeader;
-  static StrStrHeader sStrStrHeader;
-  static StrStrIntHeader sStrStrIntHeader;
-  static StrStrStrHeader sStrStrStrHeader;
-  static TechnologyHeader sTechnologyHeader;
+  static FixedElemHeader sEmptyHeader;
+  static FixedElemHeader sFloatFloatHeader;
+  static FixedElemHeader sFloatStrHeader;
+  static FixedElemHeader sFloatVectorHeader;
+  static FixedElemHeader sIntFloatHeader;
+  static FixedElemHeader sIntFloatVectorHeader;
+  static FixedElemHeader sIntVectorHeader;
+  static FixedElemHeader sStrFloatHeader;
+  static FixedElemHeader sStrHeader;
+  static FixedElemHeader sStrIntHeader;
+  static FixedElemHeader sStrStrHeader;
+  static FixedElemHeader sStrStrIntHeader;
+  static FixedElemHeader sStrStrStrHeader;
+  static FixedElemHeader sTechnologyHeader;
+  static ListHeader sFloatVectorListHeader;
+  static ListHeader sStrListHeader;
 
   // 各 group statement のハンドラ辞書
   static AttrHandlerDict sCellGroupDict;

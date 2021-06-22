@@ -90,12 +90,12 @@ set (dotlib_SOURCES
   c++-src/dotlib/parser/Parser.cc
   c++-src/dotlib/parser/Parser_complex.cc
   c++-src/dotlib/parser/Parser_group.cc
+  c++-src/dotlib/parser/Parser_handler.cc
   c++-src/dotlib/parser/Parser_simple.cc
   c++-src/dotlib/parser/Scanner.cc
   c++-src/dotlib/parser/Scanner_value.cc
   c++-src/dotlib/parser/Scanner_expr.cc
 
-  c++-src/dotlib/ast/AstAttr.cc
   c++-src/dotlib/ast/AstExpr.cc
   c++-src/dotlib/ast/AstValue.cc
   )
