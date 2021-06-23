@@ -20,7 +20,7 @@ TEST_F(ParserTest, parse_float_float1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_float(attr);
+  auto dst = parse_float_float(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -39,7 +39,7 @@ TEST_F(ParserTest, parse_float_float2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_float(attr);
+  auto dst = parse_float_float(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
 }
@@ -51,7 +51,7 @@ TEST_F(ParserTest, parse_float_float3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_float(attr);
+  auto dst = parse_float_float(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
 }
@@ -63,7 +63,7 @@ TEST_F(ParserTest, parse_float_float4)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_float(attr);
+  auto dst = parse_float_float(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
 }
@@ -75,7 +75,7 @@ TEST_F(ParserTest, parse_float_float5)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_float(attr);
+  auto dst = parse_float_float(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
 }
@@ -86,7 +86,7 @@ TEST_F(ParserTest, parse_float_string1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_string(attr);
+  auto dst = parse_float_string(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -104,7 +104,7 @@ TEST_F(ParserTest, parse_float_string2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_string(attr);
+  auto dst = parse_float_string(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -121,7 +121,7 @@ TEST_F(ParserTest, parse_float_string3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_string(attr);
+  auto dst = parse_float_string(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -133,7 +133,7 @@ TEST_F(ParserTest, parse_float_string4)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_string(attr);
+  auto dst = parse_float_string(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -145,7 +145,7 @@ TEST_F(ParserTest, parse_float_string5)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_string(attr);
+  auto dst = parse_float_string(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -156,7 +156,7 @@ TEST_F(ParserTest, parse_float_vector1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_vector(attr);
+  auto dst = parse_float_vector(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -177,7 +177,7 @@ TEST_F(ParserTest, parse_float_vector2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_vector(attr);
+  auto dst = parse_float_vector(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -189,7 +189,7 @@ TEST_F(ParserTest, parse_float_vector3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_vector(attr);
+  auto dst = parse_float_vector(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -201,7 +201,7 @@ TEST_F(ParserTest, parse_float_vector4)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_vector(attr);
+  auto dst = parse_float_vector(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -212,7 +212,7 @@ TEST_F(ParserTest, parse_int_float1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_int_float(attr);
+  auto dst = parse_int_float(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -230,7 +230,7 @@ TEST_F(ParserTest, parse_int_float2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_int_float(attr);
+  auto dst = parse_int_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -242,7 +242,7 @@ TEST_F(ParserTest, parse_int_float3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_int_float(attr);
+  auto dst = parse_int_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -254,7 +254,7 @@ TEST_F(ParserTest, parse_int_float4)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_int_float(attr);
+  auto dst = parse_int_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -266,7 +266,7 @@ TEST_F(ParserTest, parse_int_float5)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_int_float(attr);
+  auto dst = parse_int_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -277,7 +277,7 @@ TEST_F(ParserTest, parse_int_float_vector1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_int_float_vector(attr);
+  auto dst = parse_int_float_vector(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -298,7 +298,7 @@ TEST_F(ParserTest, parse_int_float_vector2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_int_float_vector(attr);
+  auto dst = parse_int_float_vector(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
 }
@@ -310,7 +310,7 @@ TEST_F(ParserTest, parse_int_float_vector3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_int_float_vector(attr);
+  auto dst = parse_int_float_vector(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
 }
@@ -322,7 +322,7 @@ TEST_F(ParserTest, parse_int_float_vector4)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_int_float_vector(attr);
+  auto dst = parse_int_float_vector(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
 }
@@ -333,7 +333,7 @@ TEST_F(ParserTest, parse_int_vector1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_int_vector(attr);
+  auto dst = parse_int_vector(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -354,7 +354,7 @@ TEST_F(ParserTest, parse_int_vector2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_int_vector(attr);
+  auto dst = parse_int_vector(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -366,7 +366,7 @@ TEST_F(ParserTest, parse_int_vector3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_int_vector(attr);
+  auto dst = parse_int_vector(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -377,7 +377,7 @@ TEST_F(ParserTest, parse_string_complex1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_complex(attr);
+  auto dst = parse_string_complex(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -395,7 +395,7 @@ TEST_F(ParserTest, parse_string_complex2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_complex(attr);
+  auto dst = parse_string_complex(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -412,7 +412,7 @@ TEST_F(ParserTest, parse_string_complex3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_complex(attr);
+  auto dst = parse_string_complex(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -424,7 +424,7 @@ TEST_F(ParserTest, parse_string_complex4)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_complex(attr);
+  auto dst = parse_string_complex(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -435,7 +435,7 @@ TEST_F(ParserTest, parse_string_float1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_float(attr);
+  auto dst = parse_string_float(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -453,7 +453,7 @@ TEST_F(ParserTest, parse_string_float2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_float(attr);
+  auto dst = parse_string_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -465,7 +465,7 @@ TEST_F(ParserTest, parse_string_float3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_float(attr);
+  auto dst = parse_string_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -477,7 +477,7 @@ TEST_F(ParserTest, parse_string_float4)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_float(attr);
+  auto dst = parse_string_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -488,7 +488,7 @@ TEST_F(ParserTest, parse_string_int1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_int(attr);
+  auto dst = parse_string_int(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -506,7 +506,7 @@ TEST_F(ParserTest, parse_string_int2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_int(attr);
+  auto dst = parse_string_int(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -518,7 +518,7 @@ TEST_F(ParserTest, parse_string_int3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_int(attr);
+  auto dst = parse_string_int(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -530,7 +530,7 @@ TEST_F(ParserTest, parse_string_int4)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_int(attr);
+  auto dst = parse_string_int(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -541,7 +541,7 @@ TEST_F(ParserTest, parse_string_list1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_list(attr);
+  auto dst = parse_string_list(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -559,7 +559,7 @@ TEST_F(ParserTest, parse_string_list2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_list(attr);
+  auto dst = parse_string_list(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -578,7 +578,7 @@ TEST_F(ParserTest, parse_string_list3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_list(attr);
+  auto dst = parse_string_list(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -593,7 +593,7 @@ TEST_F(ParserTest, parse_string_string1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_string(attr);
+  auto dst = parse_string_string(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -610,7 +610,7 @@ TEST_F(ParserTest, parse_string_string2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_string(attr);
+  auto dst = parse_string_string(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -628,7 +628,7 @@ TEST_F(ParserTest, parse_string_string3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_string(attr);
+  auto dst = parse_string_string(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -640,7 +640,7 @@ TEST_F(ParserTest, parse_string_string4)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_string_string(attr);
+  auto dst = parse_string_string(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -651,7 +651,7 @@ TEST_F(ParserTest, parse_define1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_define(attr);
+  auto dst = parse_define(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -670,7 +670,7 @@ TEST_F(ParserTest, parse_define2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_define(attr);
+  auto dst = parse_define(parser, attr);
   EXPECT_TRUE( dst == nullptr );
 }
 
@@ -681,7 +681,7 @@ TEST_F(ParserTest, parse_define3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_define(attr);
+  auto dst = parse_define(parser, attr);
   EXPECT_TRUE( dst == nullptr );
 }
 
@@ -691,7 +691,7 @@ TEST_F(ParserTest, parse_technology1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_technology(attr);
+  auto dst = parse_technology(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -707,7 +707,7 @@ TEST_F(ParserTest, parse_technology2)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_technology(attr);
+  auto dst = parse_technology(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -724,7 +724,7 @@ TEST_F(ParserTest, parse_technology3)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_technology(attr);
+  auto dst = parse_technology(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -736,7 +736,7 @@ TEST_F(ParserTest, parse_technology4)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_technology(attr);
+  auto dst = parse_technology(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -748,7 +748,7 @@ TEST_F(ParserTest, parse_technology5)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_technology(attr);
+  auto dst = parse_technology(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
 }
@@ -759,7 +759,7 @@ TEST_F(ParserTest, parse_values1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_values(attr);
+  auto dst = parse_values(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();

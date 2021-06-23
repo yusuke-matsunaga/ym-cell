@@ -3,7 +3,7 @@
 /// @brief AttrDic の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2018 Yusuke Matsunaga
+/// Copyright (C) 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/AttrDic.h"
@@ -30,6 +30,8 @@ AttrDic::AttrDic()
   mDic["calc_mode"] = AttrType::calc_mode;
   mDic["capacitance"] = AttrType::capacitance;
   mDic["capacitive_load_unit"] = AttrType::capacitive_load_unit;
+  mDic["ccsn_first_stage"] = AttrType::ccsn_first_stage;
+  mDic["ccsn_last_stage"] = AttrType::ccsn_last_stage;
   mDic["cell"] = AttrType::cell;
   mDic["cell_degradation"] = AttrType::cell_degradation;
   mDic["cell_fall"] = AttrType::cell_fall;
@@ -57,16 +59,20 @@ AttrDic::AttrDic()
   mDic["current_unit"] = AttrType::current_unit;
   mDic["data_in"] = AttrType::data_in;
   mDic["date"] = AttrType::date;
+  mDic["dc_current"] = AttrType::dc_current;
   mDic["dc_current_template"] = AttrType::dc_current_template;
   mDic["default_cell_leakage_power"] = AttrType::default_cell_leakage_power;
   mDic["default_connection_class"] = AttrType::default_connection_class;
   mDic["default_fall_delay_intercept"] = AttrType::default_fall_delay_intercept;
   mDic["default_fall_pin_resistance"] = AttrType::default_fall_pin_resistance;
   mDic["default_fanout_load"] = AttrType::default_fanout_load;
+  mDic["default_fpga_isd"] = AttrType::default_fpga_isd;
   mDic["default_inout_pin_cap"] = AttrType::default_inout_pin_cap;
   mDic["default_inout_pin_fall_res"] = AttrType::default_inout_pin_fall_res;
   mDic["default_inout_pin_rise_res"] = AttrType::default_inout_pin_rise_res;
   mDic["default_input_pin_cap"] = AttrType::default_input_pin_cap;
+  mDic["default_input_pin_fall_res"] = AttrType::default_input_pin_fall_res;
+  mDic["default_input_pin_rise_res"] = AttrType::default_input_pin_rise_res;
   mDic["default_intrinsic_fall"] = AttrType::default_intrinsic_fall;
   mDic["default_intrinsic_rise"] = AttrType::default_intrinsic_rise;
   mDic["default_leakage_power_density"] = AttrType::default_leakage_power_density;
@@ -120,6 +126,7 @@ AttrDic::AttrDic()
   mDic["fall_current_slope_after_threshold"] = AttrType::fall_current_slope_after_threshold;
   mDic["fall_current_slope_before_threshold"] = AttrType::fall_current_slope_before_threshold;
   mDic["fall_delay_intercept"] = AttrType::fall_delay_intercept;
+  mDic["fall_net_delay"] = AttrType::fall_net_delay;
   mDic["fall_pin_resistance"] = AttrType::fall_pin_resistance;
   mDic["fall_power"] = AttrType::fall_power;
   mDic["fall_propagation"] = AttrType::fall_propagation;
@@ -139,6 +146,7 @@ AttrDic::AttrDic()
   mDic["ff"] = AttrType::ff;
   mDic["ff_bank"] = AttrType::ff_bank;
   mDic["fpga_arc_condition"] = AttrType::fpga_arc_condition;
+  mDic["fpga_cell_type"] = AttrType::fpga_cell_type;
   mDic["fpga_domain_style"] = AttrType::fpga_domain_style;
   mDic["fpga_technology"] = AttrType::fpga_technology;
   mDic["function"] = AttrType::function;
@@ -158,9 +166,11 @@ AttrDic::AttrDic()
   mDic["index_3"] = AttrType::index_3;
   mDic["input_map"] = AttrType::input_map;
   mDic["input_signal_level"] = AttrType::input_signal_level;
+  mDic["input_signal_swing"] = AttrType::input_signal_swing;
   mDic["input_threshold_pct_fall"] = AttrType::input_threshold_pct_fall;
   mDic["input_threshold_pct_rise"] = AttrType::input_threshold_pct_rise;
   mDic["input_voltage"] = AttrType::input_voltage;
+  mDic["input_voltage_range"] = AttrType::input_voltage_range;
   mDic["interdependence_id"] = AttrType::interdependence_id;
   mDic["interface_timing"] = AttrType::interface_timing;
   mDic["internal_node"] = AttrType::internal_node;
@@ -172,6 +182,8 @@ AttrDic::AttrDic()
   mDic["io_type"] = AttrType::io_type;
   mDic["is_clock_gating_cell"] = AttrType::is_clock_gating_cell;
   mDic["is_filler_cell"] = AttrType::is_filler_cell;
+  mDic["is_isolation_cell"] = AttrType::is_isolation_cell;
+  mDic["is_level_shifter"] = AttrType::is_level_shifter;
   mDic["is_pad"] = AttrType::is_pad;
   mDic["isolation_cell_enable_pin"] = AttrType::isolation_cell_enable_pin;
   mDic["iv_lut_template"] = AttrType::iv_lut_template;
@@ -292,6 +304,7 @@ AttrDic::AttrDic()
   mDic["leakage_power_unit"] = AttrType::leakage_power_unit;
   mDic["leakage_power"] = AttrType::leakage_power;
   mDic["level_shifter_enable_pin"] = AttrType::level_shifter_enable_pin;
+  mDic["level_shifter_type"] = AttrType::level_shifter_type;
   mDic["library_features"] = AttrType::library_features;
   mDic["library"] = AttrType::library;
   mDic["lu_table_template"] = AttrType::lu_table_template;
@@ -332,9 +345,11 @@ AttrDic::AttrDic()
   mDic["output_current_rise"] = AttrType::output_current_rise;
   mDic["output_current_template"] = AttrType::output_current_template;
   mDic["output_signal_level"] = AttrType::output_signal_level;
+  mDic["output_signal_swing"] = AttrType::output_signal_swing;
   mDic["output_threshold_pct_fall"] = AttrType::output_threshold_pct_fall;
   mDic["output_threshold_pct_rise"] = AttrType::output_threshold_pct_rise;
   mDic["output_voltage"] = AttrType::output_voltage;
+  mDic["output_voltage_range"] = AttrType::output_voltage_range;
   mDic["pad_cell"] = AttrType::pad_cell;
   mDic["pad_type"] = AttrType::pad_type;
   mDic["parameter1"] = AttrType::parameter1;
@@ -347,19 +362,26 @@ AttrDic::AttrDic()
   mDic["piece_define"] = AttrType::piece_define;
   mDic["piece_type"] = AttrType::piece_type;
   mDic["pin"] = AttrType::pin;
+  mDic["pin_capacitance"] = AttrType::pin_capacitance;
+  mDic["pin_equal"] = AttrType::pin_equal;
+  mDic["pin_group"] = AttrType::pin_group;
   mDic["pin_func_type"] = AttrType::pin_func_type;
+  mDic["pin_name_map"] = AttrType::pin_name_map;
   mDic["pin_opposite"] = AttrType::pin_opposite;
   mDic["poly_template"] = AttrType::poly_template;
   mDic["power"] = AttrType::power;
   mDic["power_cell_type"] = AttrType::power_cell_type;
   mDic["power_down_function"] = AttrType::power_down_function;
+  mDic["power_gating_cell"] = AttrType::power_gating_cell;
+  mDic["power_gating_pin"] = AttrType::power_gating_pin;
   mDic["power_level"] = AttrType::power_level;
   mDic["power_lut_template"] = AttrType::power_lut_template;
   mDic["power_poly_template"] = AttrType::power_poly_template;
   mDic["power_model"] = AttrType::power_model;
   mDic["power_rail"] = AttrType::power_rail;
-  mDic["power_supply_namestring"] = AttrType::power_supply_namestring;
   mDic["power_supply"] = AttrType::power_supply;
+  mDic["power_supply_namestring"] = AttrType::power_supply_namestring;
+  mDic["power_unit"] = AttrType::power_unit;
   mDic["prefer_tied"] = AttrType::prefer_tied;
   mDic["preferred"] = AttrType::preferred;
   mDic["preferred_input_pad_voltage"] = AttrType::preferred_input_pad_voltage;
@@ -396,6 +418,7 @@ AttrDic::AttrDic()
   mDic["related_pin"] = AttrType::related_pin;
   mDic["related_power_pin"] = AttrType::related_power_pin;
   mDic["resistance"] = AttrType::resistance;
+  mDic["resistance_unit"] = AttrType::resistance_unit;
   mDic["resource_usage"] = AttrType::resource_usage;
   mDic["retain_fall_slew"] = AttrType::retain_fall_slew;
   mDic["retain_rise_slew"] = AttrType::retain_rise_slew;
@@ -408,6 +431,7 @@ AttrDic::AttrDic()
   mDic["rise_current_slope_after_threshold"] = AttrType::rise_current_slope_after_threshold;
   mDic["rise_current_slope_before_threshold"] = AttrType::rise_current_slope_before_threshold;
   mDic["rise_delay_intercept"] = AttrType::rise_delay_intercept;
+  mDic["rise_net_delay"] = AttrType::rise_net_delay;
   mDic["rise_pin_resistance"] = AttrType::rise_pin_resistance;
   mDic["rise_power"] = AttrType::rise_power;
   mDic["rise_propagation"] = AttrType::rise_propagation;
@@ -425,6 +449,7 @@ AttrDic::AttrDic()
   mDic["sdf_cond_end"] = AttrType::sdf_cond_end;
   mDic["sdf_cond_start"] = AttrType::sdf_cond_start;
   mDic["sdf_edges"] = AttrType::sdf_edges;
+  mDic["sensitization_master"] = AttrType::sensitization_master;
   mDic["signal_type"] = AttrType::signal_type;
   mDic["simulation"] = AttrType::simulation;
   mDic["single_bit_degenerate"] = AttrType::single_bit_degenerate;
@@ -448,6 +473,7 @@ AttrDic::AttrDic()
   mDic["steady_state_current_tristate"] = AttrType::steady_state_current_tristate;
   mDic["steady_state_resistance_above_high"] = AttrType::steady_state_resistance_above_high;
   mDic["steady_state_resistance_below_low"] = AttrType::steady_state_resistance_below_low;
+  mDic["switch_cell_type"] = AttrType::switch_cell_type;
   mDic["switch_function"] = AttrType::switch_function;
   mDic["switch_pin"] = AttrType::switch_pin;
   mDic["switching_interval"] = AttrType::switching_interval;
@@ -458,6 +484,7 @@ AttrDic::AttrDic()
   mDic["test_cell"] = AttrType::test_cell;
   mDic["test_output_only"] = AttrType::test_output_only;
   mDic["three_state"] = AttrType::three_state;
+  mDic["threshold_voltage_group"] = AttrType::threshold_voltage_group;
   mDic["tied_off"] = AttrType::tied_off;
   mDic["time_unit"] = AttrType::time_unit;
   mDic["timing_model_type"] = AttrType::timing_model_type;

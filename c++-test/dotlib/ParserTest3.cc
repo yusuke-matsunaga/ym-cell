@@ -14,6 +14,7 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
+#if 0
 TEST_F(ParserTest, parse_input_voltage1)
 {
   istringstream buf("( 1.0, 2 );\n"
@@ -22,13 +23,56 @@ TEST_F(ParserTest, parse_input_voltage1)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  auto dst = parser.parse_float_float(attr);
+  auto dst = parse_float_float(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
   EXPECT_EQ( 2, value.complex_elem_size() );
   EXPECT_EQ( 1.0, value.complex_elem_value(0).float_value() );
   EXPECT_EQ( 2.0, value.complex_elem_value(1).float_value() );
+}
+#endif
+
+TEST_F(ParserTest, parse_cell0)
+{
+  // ヘッダの検査
+  istringstream buf("( test ) {\n"
+		    "}\n");
+  InputFileObj in{buf, info};
+  Parser parser{in, false, false};
+
+  AttrKwd attr{AttrType::cell, FileRegion{}};
+  auto dst = parse_cell(parser, attr);
+
+  ASSERT_TRUE( dst != nullptr );
+  auto& value = dst->value();
+
+  auto& header = value.group_header_value();
+  ASSERT_TRUE( header.is_valid() );
+
+  EXPECT_EQ( 1, header.complex_elem_size() );
+  EXPECT_EQ( "test", header.complex_elem_value(0).string_value() );
+}
+
+TEST_F(ParserTest, parse_cell_area)
+{
+  istringstream buf("( test ) {\n"
+		    "  area: 1.2; \n"
+		    "}\n");
+  InputFileObj in{buf, info};
+  Parser parser{in, false, false};
+
+  AttrKwd attr{AttrType::cell, FileRegion{}};
+  auto dst = parse_cell(parser, attr);
+
+  ASSERT_TRUE( dst != nullptr );
+  auto& value = dst->value();
+
+  EXPECT_EQ( 1, value.group_elem_size() );
+  auto& attr1 = value.group_elem_attr(0);
+
+  EXPECT_EQ( AttrType::area, attr1.attr().type() );
+  EXPECT_EQ( 1.2, attr1.value().float_value() );
 }
 
 END_NAMESPACE_YM_DOTLIB

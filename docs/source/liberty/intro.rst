@@ -14,8 +14,13 @@ liberty 形式の読み込みについて
 
 の3種類がある．
 
+simple attribute は単一の値を持つ．
+complex attribute は複数の値のリストを持つ．
+group statement は他の simple/complex attribute や group statment
+を子供に持つ．
 根本は library group statement (:ref:`library_group`)
 でその下に再帰的に属性を持つ．
+
 liberty の文法では先頭のトークンを読み込んだ時点で上記の
 ３種類の属性の区別ができるので，各属性ごとに個別のパースクラス
 を用意する．
@@ -30,28 +35,30 @@ simple attributeのパース
 
 のシンタックスで表される．
 属性の種類に依らずにセミコロン(;)までを読み込む．
-属性値とそれを表すAstのクラス(後述)は以下の通り．
+属性名を読んだ時点でどのタイプの値を読むかがわかるので，
+専用の関数を用いる．
+属性の型と対応する `Parser` クラスの読み込み関数を示す．
 
 .. table::
    :align: left
    :widths: auto
 
    ====================== ======================
-   属性の型               対応する Ast クラス
+   属性の型               対応する読み込み関数
    ====================== ======================
-   int                    AstInt
-   bool		          AstBool
+   int                    read_int()
+   bool		          read_bool()
    'clear_preset_var_n'   AstCPType
-   'delay_model'          AstDelayModel
-   'direction'		  AstPinDirection
-   expr                   AstExpr
-   float		  AstFloat
-   function               AstExpr
-   string		  AstString
-   'technology'           AstTechnology
-   'timing_sense'	  AstTimingSense
-   'timing_type'	  AstTimingType
-   'variable_type'	  AstVarType
+   'delay_model'          read_delay_model()
+   'direction'		  read_direction()
+   expr                   read_expr()
+   float		  read_float()
+   function               read_function()
+   string		  read_string()
+   'technology'           read_technology()
+   'timing_sense'	  read_timing_sense()
+   'timing_type'	  read_timing_type()
+   'variable_type'	  read_vartype()
    ====================== ======================
 
 このなかの delay_model, direction, technology, timing_sense, timing_type,
@@ -60,7 +67,6 @@ variable_type は string 型の特定な文字列のみを受け付ける．
 属性値の部分に空白を含むためパーサー的には別に扱う．
 ややこしいのは文字列中に式を書いた function 記述という型もある．
 こちらは一旦文字列としてパースしてから式に変換する．
-前者は ExprHandler，後者は FuncHandler で扱う．
 
 実装ファイルは DotlibParser_simple.cc にある．
 
@@ -92,6 +98,14 @@ complex attributeのパース
 後述の group statement のヘッダと complex attribute
 は全く同じ形式なので同一のハンドラ(HeaderHandler)で読み込む．
 
+これらの属性には属性値の個数が決まっているものと，
+可変のものがある．
+前者は異なる型の属性値が混在する場合があるが，
+後者はすべて同一の型の属性値となる．
+前者のタイプの属性は `FixedElemHeader` クラスで扱う．
+後者は `ListHeader` クラスで扱う．
+どちらも読み込む属性値のハンドラを引数として与える．
+
 
 group statementのパース
 ------------------------
@@ -119,23 +133,27 @@ complex attribute と group statement のヘッダ部分に現れる形式は以
    :align: left
    :widths: auto
 
-   ================================================== =======================   ====================
-   形式						      ハンドラクラス            対応する Ast クラス
-   ================================================== =======================   ====================
-   ( )						      EmptyHandler
-   ( float, float )                                   FloatFloatHandler         AstFloat2
-   ( float, string )				      FloatStrHandler           AstFloatStr
-   ( "float, float, ..." )                            FloatVectorHandler        AstFloatVector
-   ( "float, float, ...", "float, flot, ...", ... )   FloatVectorListHandler    AstFloatVectorList
-   ( integer, float )				      IntFloatHandler           AstIntFloat
-   ( integer, "float, float, ..." )                   IntFloatVectorHandler     AstIntFloatVector
-   ( "integer, integer, ..." )			      IntVectorHandler          AstIntVector
-   ( string )					      StrHandler                AstString
-   ( string, integer )				      StrIntHandler             AstStrInt
-   ( string, string, ... )			      StrListHandler            AstStrList
-   ( string, string )				      StrStrHandler             AstStr2
-   ( string, string, integer )			      StrStrIntHandler          AstStr2Int
-   ================================================== =======================   ====================
+   ================================================== =======================
+   形式						      ハンドラ
+   ================================================== =======================
+   ( )						      sEmptyHeader
+   ( float, float )                                   sFloatFloatHeader
+   ( float, string )				      sFloatStrHeader
+   ( "float, float, ..." )                            sFloatVectorHeader
+   ( integer, float )				      sIntFloatHeader
+   ( integer, "float, float, ..." )                   sIntFloatVectorHeader
+   ( "integer, integer, ..." )			      sIntVectorHeader
+   ( string )					      sStrHeader
+   ( string, integer )				      sfStrIntHeader
+   ( string, string )				      sStrStrHeader
+   ( string, string, integer )			      sStrStrIntHeader
+   ( string, string, string )			      sStrStrStrHeader
+   ================================================== =======================
+   ( "float, float, ...", "float, flot, ...", ... )   sFloatVectorListHeader
+   ( string, string, ... )			      sStrListHeader
+   ================================================== =======================
+
+このうち最後の２つの形式は要素数が可変の形式である．
 
 
 パーサーの基本構造
@@ -149,6 +167,13 @@ group statement の各属性用のパース関数を作る．
 というクラスを用いる．
 この DotlibHandler を継承したクラスが実際のパース処理を行う．
 
+
+パース結果を表すクラス
+-----------------------
+
+どの属性も， `属性名` と `対応する値` の組で表される．
+`属性名` は `AttrKwd` クラスで，対応する値は `AstValue`
+クラスで表す．属性全体は `AstAttr` クラスで表す．
 パースした構文木を表すために AstNode というクラスを用意する．
 実際には AstNode の派生クラスの木構造で構文木を表す．
 

@@ -29,6 +29,7 @@ Scanner::read_attr()
   for ( token = read_token(); token.type() == TokenType::NL; token = read_token() ) { }
 
   if ( token.type() != TokenType::SYMBOL ) {
+    cout << "token.type() = " << token.type() << endl;
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    token.loc(),
 		    MsgType::Error,
@@ -60,7 +61,7 @@ Scanner::read_attr()
 // dst_list は初期化せず，末尾に追加する．
 bool
 Scanner::read_raw_float_vector(vector<double>& dst_list, ///< [out] 値を格納するリスト
-				     FileRegion& loc)    ///< [out] ファイル上の位置
+			       FileRegion& loc)    ///< [out] ファイル上の位置
 {
   Token token = read_token();
   if ( token.type() != TokenType::SYMBOL ) {

@@ -27,13 +27,11 @@ class FuncParser
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] str 対象の文字列
-  /// @param[in] loc ファイル上の位置
-  FuncParser(const string& str,
-	     const FileRegion& loc);
+  FuncParser(const string& str,      ///< [in] 対象の文字列
+	     const FileRegion& loc); ///< [in] ファイル上の位置
 
   /// @brief デストラクタ
-  ~FuncParser();
+  ~FuncParser() = default;
 
 
 public:
@@ -42,6 +40,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 論理式を読み込む．
+  /// @return 読み込んだ式を表す値を返す．
   AstValuePtr
   operator()();
 

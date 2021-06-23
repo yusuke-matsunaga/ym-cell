@@ -28,8 +28,8 @@ TEST(FuncScannerTest, read_token1)
   };
 
   for ( auto exp: exp_list ) {
-    auto token_type = scanner.read_token(loc);
-    EXPECT_EQ( exp, token_type );
+    auto token = scanner.read_token();
+    EXPECT_EQ( exp, token.type() );
   }
 }
 

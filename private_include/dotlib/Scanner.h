@@ -301,6 +301,125 @@ private:
 
 };
 
+
+//////////////////////////////////////////////////////////////////////
+/// @{
+/// @name 値(AstValue) を読み込む関数
+//////////////////////////////////////////////////////////////////////
+
+/// @brief int 型を値を読み込む．
+/// @return 生成した AstValue を返す．
+///
+/// エラーの時は nullptr を返す．
+inline
+AstValuePtr
+read_int(Scanner& scanner) { return scanner.read_int(); }
+
+/// @brief float 型の値を読み込む．
+/// @return 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_float(Scanner& scanner) { return scanner.read_float(); }
+
+/// @brief string 型の値を読み込む．
+/// @return 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_string(Scanner& scanner) { return scanner.read_string(); }
+
+/// @brief bool 型の値を読み込む．
+/// @return 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_bool(Scanner& scanner) { return scanner.read_bool(); }
+
+/// @brief delay_model 型の値を読み込む．
+/// @param[in] 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_delay_model(Scanner& scanner) { return scanner.read_delay_model(); }
+
+/// @brief direction 型の値を読み込む．
+/// @param[in] 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_direction(Scanner& scanner) { return scanner.read_direction(); }
+
+/// @brief technology 型の値を読み込む．
+/// @param[in] 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_technology(Scanner& scanner) { return scanner.read_technology(); }
+
+/// @brief timing_sense 型の値を読み込む．
+/// @param[in] 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_timing_sense(Scanner& scanner) { return scanner.read_timing_sense(); }
+
+/// @brief timing_type 型の値を読み込む．
+/// @param[in] 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_timing_type(Scanner& scanner) { return scanner.read_timing_type(); }
+
+/// @brief vartype 型の値を読み込む．
+/// @param[in] 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_vartype(Scanner& scanner) { return scanner.read_vartype(); }
+
+/// @brief int vector 型の値を読み込む．
+/// @return 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_int_vector(Scanner& scanner) { return scanner.read_int_vector(); }
+
+/// @brief float vector 型の値を読み込む．
+/// @return 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_float_vector(Scanner& scanner) { return scanner.read_float_vector(); }
+
+/// @brief 式を表す AstValue を生成する．
+/// @return 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_expr(Scanner& scanner) { return scanner.read_expr(); }
+
+/// @brief "式" を表す AstValue を生成する．
+inline
+AstValuePtr
+read_function(Scanner& scanner) { return scanner.read_function(); }
+
+//////////////////////////////////////////////////////////////////////
+/// @}
+//////////////////////////////////////////////////////////////////////
+
 END_NAMESPACE_YM_DOTLIB
 
 #endif // SCANNER_H

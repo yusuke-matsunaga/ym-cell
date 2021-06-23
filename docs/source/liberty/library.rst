@@ -338,6 +338,17 @@ power_unit
    1mW, 100uW, 10uW, 1uW, 100nW, 10nW, 1nW, 100pW, 10pW, 1pW
 
 
+.. _library_preferred_input_pad_voltage:
+
+preferred_input_pad_voltage
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+   preferred_input_pad_voltage : name_(string) ;
+
+`name` には `input voltage group` 名を指定する．
+
 
 .. _library_preferred_output_pad_slew_rate_control:
 
@@ -353,18 +364,6 @@ preferred_output_pad_slew_rate_control
 ::
 
    high, medium, low, none
-
-
-.. _library_preferred_input_pad_voltage:
-
-preferred_input_pad_voltage
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-   preferred_input_pad_voltage : name_(string) ;
-
-`name` には `input voltage group` 名を指定する．
 
 
 

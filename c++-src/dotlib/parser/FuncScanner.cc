@@ -7,7 +7,6 @@
 /// All rights reserved.
 
 #include "FuncScanner.h"
-#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -18,31 +17,20 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] str 文字列
-// @param[in] str のファイル上の位置
 FuncScanner::FuncScanner(const string& str,
 			 const FileRegion& loc)
   : mSrcString{str},
     mSrcLoc{loc},
-    mCurPos{0},
-    mCurType{TokenType::ERROR}
-{
-}
-
-// @brief デストラクタ
-FuncScanner::~FuncScanner()
+    mCurPos{0}
 {
 }
 
 // @brief トークンを読み込む．
-// @param[out] loc 対応するファイル上の位置情報を格納する変数
-TokenType
-FuncScanner::peek_token(FileRegion& loc)
+Token
+FuncScanner::peek_token()
 {
-  if ( mCurType != TokenType::ERROR ) {
-    TokenType ans = mCurType;
-    loc = mCurLoc;
-    return ans;
+  if ( mCurToken.type() != TokenType::ERROR ) {
+    return mCurToken;
   }
 
   mCurString.clear();
@@ -63,42 +51,42 @@ FuncScanner::peek_token(FileRegion& loc)
 
   switch ( c ) {
   case '\0':
-    loc = cur_loc();
-    return TokenType::END;
+    mCurToken = Token(TokenType::END, cur_loc());
+    goto END;
 
   case ' ':
   case '\t':
     goto ST_INIT; // 最初の空白は読み飛ばす．
 
   case '!':
-    loc = cur_loc();
-    return TokenType::NOT;
+    mCurToken = Token(TokenType::NOT, cur_loc());
+    goto END;
 
   case '|':
   case '+':
-    loc = cur_loc();
-    return TokenType::OR;
+    mCurToken = Token(TokenType::OR, cur_loc());
+    goto END;
 
   case '&':
   case '*':
-    loc = cur_loc();
-    return TokenType::AND;
+    mCurToken = Token(TokenType::AND, cur_loc());
+    goto END;
 
   case '^':
-    loc = cur_loc();
-    return TokenType::XOR;
+    mCurToken = Token(TokenType::XOR, cur_loc());
+    goto END;
 
   case '(':
-    loc = cur_loc();
-    return TokenType::LP;
+    mCurToken = Token(TokenType::LP, cur_loc());
+    goto END;
 
   case ')':
-    loc = cur_loc();
-    return TokenType::RP;
+    mCurToken = Token(TokenType::RP, cur_loc());
+    goto END;
 
   case '\'':
-    loc = cur_loc();
-    return TokenType::PRIME;
+    mCurToken = Token(TokenType::PRIME, cur_loc());
+    goto END;
 
   default:
     // それ以外はエラー
@@ -107,8 +95,7 @@ FuncScanner::peek_token(FileRegion& loc)
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error");
-    loc = cur_loc();
-    return TokenType::ERROR;
+    return Token(TokenType::ERROR, cur_loc());
   }
 
  ST_ID: // 文字列モード
@@ -118,8 +105,8 @@ FuncScanner::peek_token(FileRegion& loc)
     mCurString.put_char(c);
     goto ST_ID;
   }
-  loc = cur_loc();
-  return TokenType::SYMBOL;
+  mCurToken = Token(TokenType::SYMBOL, cur_loc());
+  goto END;
 
  ST_NUM: // 数字モード
   c = peek();
@@ -128,23 +115,24 @@ FuncScanner::peek_token(FileRegion& loc)
     mCurString.put_char(c);
     goto ST_NUM;
   }
-  loc = cur_loc();
-  return TokenType::INT_NUM;
+  mCurToken = Token(TokenType::INT_NUM, cur_loc());
+
+ END:
+  return mCurToken;
 }
 
 // @brief 読み込んだトークンを確定する．
 void
 FuncScanner::accept_token()
 {
-  mCurType = TokenType::ERROR;
+  mCurToken = Token(TokenType::ERROR, FileRegion{});
 }
 
 // @brief トークンを読み込み確定する．
-// @param[out] loc 対応するファイル上の位置情報を格納する変数
-TokenType
-FuncScanner::read_token(FileRegion& loc)
+Token
+FuncScanner::read_token()
 {
-  auto ans = peek_token(loc);
+  auto ans = peek_token();
   accept_token();
   return ans;
 }

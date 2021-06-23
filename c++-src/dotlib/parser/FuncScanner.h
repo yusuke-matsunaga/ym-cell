@@ -9,6 +9,7 @@
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
+#include "dotlib/Token.h"
 #include "ym/StrBuff.h"
 #include "ym/FileRegion.h"
 
@@ -24,13 +25,11 @@ class FuncScanner
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] str 文字列
-  /// @param[in] str のファイル上の位置
-  FuncScanner(const string& str,
-	      const FileRegion& loc);
+  FuncScanner(const string& str,      ///< [in] 文字列
+	      const FileRegion& loc); ///< [in] str のファイル上の位置
 
   /// @brief デストラクタ
-  ~FuncScanner();
+  ~FuncScanner() = default;
 
 
 public:
@@ -39,18 +38,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief トークンを読み込む．
-  /// @param[out] loc 対応するファイル上の位置情報を格納する変数
-  TokenType
-  peek_token(FileRegion& loc);
+  Token
+  peek_token();
 
   /// @brief 読み込んだトークンを確定する．
   void
   accept_token();
 
   /// @brief トークンを読み込み確定する．
-  /// @param[out] loc 対応するファイル上の位置情報を格納する変数
-  TokenType
-  read_token(FileRegion& loc);
+  Token
+  read_token();
 
   /// @brief 直前の read_token() で読んだトークンの文字列を返す．
   const char*
@@ -107,11 +104,8 @@ private:
   // 最初のコラム位置
   int mFirstColumn;
 
-  // 現在のトークンの型
-  TokenType mCurType;
-
-  // 現在のトークンの位置
-  FileRegion mCurLoc;
+  // 現在のトークン
+  Token mCurToken;
 
 };
 

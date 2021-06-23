@@ -9,7 +9,6 @@
 #include "FuncParser.h"
 #include "dotlib/AstExpr.h"
 #include "dotlib/AstValue.h"
-#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
 
@@ -25,11 +24,6 @@ BEGIN_NAMESPACE_YM_DOTLIB
 FuncParser::FuncParser(const string& str,
 		       const FileRegion& loc)
   : mScanner(str, loc)
-{
-}
-
-// @brief デストラクタ
-FuncParser::~FuncParser()
 {
 }
 
@@ -49,30 +43,37 @@ FuncParser::operator()()
 AstExprPtr
 FuncParser::read_primary()
 {
-  FileRegion loc;
-  TokenType type = mScanner.read_token(loc);
-  if ( type == TokenType::LP ) {
+  Token token = mScanner.read_token();
+  switch ( token.type() ) {
+  case TokenType::LP:
     return read_expr(TokenType::RP);
-  }
-  if ( type == TokenType::SYMBOL ) {
-    ShString name(mScanner.cur_string());
-    return AstExpr::new_string(name, loc);
-  }
-  if ( type == TokenType::INT_NUM ) {
-    int v = mScanner.cur_int();
-    if ( v != 0 && v != 1 ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      loc,
-		      MsgType::Error,
-		      "DOTLIB_PARSER",
-		      "Syntax error. 0 or 1 is expected.");
-      return nullptr;
+
+  case TokenType::SYMBOL:
+    {
+      ShString name(mScanner.cur_string());
+      return AstExpr::new_string(name, token.loc());
     }
-    return AstExpr::new_bool(static_cast<bool>(v), loc);
+
+  case TokenType::INT_NUM:
+    {
+      int v = mScanner.cur_int();
+      if ( v != 0 && v != 1 ) {
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			token.loc(),
+			MsgType::Error,
+			"DOTLIB_PARSER",
+			"Syntax error. 0 or 1 is expected.");
+	return {};
+      }
+      return AstExpr::new_bool(static_cast<bool>(v), token.loc());
+    }
+
+  default:
+    break;
   }
 
   MsgMgr::put_msg(__FILE__, __LINE__,
-		  loc,
+		  token.loc(),
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  "Syntax error. number is expected.");
@@ -83,9 +84,8 @@ FuncParser::read_primary()
 AstExprPtr
 FuncParser::read_primary2()
 {
-  FileRegion loc;
-  TokenType type = mScanner.peek_token(loc);
-  if ( type == TokenType::NOT ) {
+  Token token = mScanner.peek_token();
+  if ( token.type() == TokenType::NOT ) {
     mScanner.accept_token();
     auto opr{read_primary()};
     if ( opr == nullptr ) {
@@ -99,10 +99,10 @@ FuncParser::read_primary2()
     return {};
   }
 
-  type = mScanner.peek_token(loc);
-  if ( type == TokenType::PRIME ) {
+  token = mScanner.peek_token();
+  if ( token.type() == TokenType::PRIME ) {
     mScanner.accept_token();
-    return AstExpr::new_not(std::move(expr), loc);
+    return AstExpr::new_not(std::move(expr), token.loc());
   }
 
   return expr;
@@ -118,24 +118,32 @@ FuncParser::read_product()
   }
 
   for ( ; ; ) {
-    FileRegion loc;
-    TokenType type = mScanner.peek_token(loc);
-    if ( type == TokenType::AND ) {
-      mScanner.accept_token();
-      auto opr2{read_primary2()};
-      if ( opr2 == nullptr ) {
-	return {};
+    Token token = mScanner.peek_token();
+    switch ( token.type() ) {
+    case TokenType::AND:
+      {
+	mScanner.accept_token();
+	auto opr2{read_primary2()};
+	if ( opr2 == nullptr ) {
+	  return {};
+	}
+	opr1 = AstExpr::new_and(std::move(opr1), std::move(opr2), token.loc());
       }
-      opr1 = AstExpr::new_and(std::move(opr1), std::move(opr2), loc);
-    }
-    else if ( type == TokenType::NOT || type == TokenType::LP || type == TokenType::SYMBOL ) {
-      auto opr2{read_primary2()};
-      if ( opr2 == nullptr ) {
-	return {};
+      break;
+
+    case TokenType::NOT:
+    case TokenType::LP:
+    case TokenType::SYMBOL:
+      {
+	auto opr2{read_primary2()};
+	if ( opr2 == nullptr ) {
+	  return {};
+	}
+	opr1 = AstExpr::new_and(std::move(opr1), std::move(opr2), token.loc());
       }
-      opr1 = AstExpr::new_and(std::move(opr1), std::move(opr2), loc);
-    }
-    else {
+      break;
+
+    default:
       return opr1;
     }
   }
@@ -150,8 +158,9 @@ FuncParser::read_expr(TokenType end_marker)
     return {};
   }
   for ( ; ; ) {
-    FileRegion loc;
-    TokenType type = mScanner.read_token(loc);
+    Token token = mScanner.read_token();
+    auto type = token.type();
+    auto loc = token.loc();
     if ( type == end_marker ) {
       return opr1;
     }
@@ -173,7 +182,7 @@ FuncParser::read_expr(TokenType end_marker)
 		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error.");
-      return nullptr;
+      return {};
     }
   }
 }

@@ -10,6 +10,8 @@
   calc_mode
   capacitance
   capacitive_load_unit
+  ccsn_first_stage
+  ccsn_last_stage
   cell
   cell_degradation
   cell_fall
@@ -37,16 +39,20 @@
   current_unit
   data_in
   date
+  dc_current
   dc_current_template
   default_cell_leakage_power
   default_connection_class
   default_fall_delay_intercept
   default_fall_pin_resistance
   default_fanout_load
+  default_fpga_isd
   default_inout_pin_cap
   default_inout_pin_fall_res
   default_inout_pin_rise_res
   default_input_pin_cap
+  default_input_pin_fall_res
+  default_input_pin_rise_res
   default_intrinsic_fall
   default_intrinsic_rise
   default_leakage_power_density
@@ -100,6 +106,7 @@
   fall_current_slope_after_threshold
   fall_current_slope_before_threshold
   fall_delay_intercept
+  fall_net_delay
   fall_pin_resistance
   fall_power
   fall_propagation
@@ -139,6 +146,7 @@
   index_3
   input_map
   input_signal_level
+  input_signal_swing
   input_threshold_pct_fall
   input_threshold_pct_rise
   input_voltage
@@ -317,6 +325,7 @@
   output_current_rise
   output_current_template
   output_signal_level
+  output_signal_swing
   output_threshold_pct_fall
   output_threshold_pct_rise
   output_voltage
@@ -333,7 +342,9 @@
   piece_define
   piece_type
   pin
+  pin_capacitance
   pin_equal
+  pin_group
   pin_func_type
   pin_name_map
   pin_opposite
@@ -342,13 +353,15 @@
   power_cell_type
   power_down_function
   power_gating_cell
+  power_gating_pin
   power_level
   power_lut_template
   power_poly_template
   power_model
   power_rail
-  power_supply_namestring
   power_supply
+  power_supply_namestring
+  power_unit
   prefer_tied
   preferred
   preferred_input_pad_voltage
@@ -385,6 +398,7 @@
   related_pin
   related_power_pin
   resistance
+  resistance_unit
   resource_usage
   retain_fall_slew
   retain_rise_slew
@@ -397,6 +411,7 @@
   rise_current_slope_after_threshold
   rise_current_slope_before_threshold
   rise_delay_intercept
+  rise_net_delay
   rise_pin_resistance
   rise_power
   rise_propagation

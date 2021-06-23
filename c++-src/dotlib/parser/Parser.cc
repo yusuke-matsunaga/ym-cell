@@ -16,6 +16,65 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
+FixedElemHeader Parser::sEmptyHeader({});
+
+FixedElemHeader Parser::sFloatFloatHeader(
+  { read_float, read_float }
+);
+
+FixedElemHeader Parser::sFloatStrHeader(
+  { read_float, read_string }
+);
+
+FixedElemHeader Parser::sFloatVectorHeader(
+  { read_float_vector }
+);
+
+FixedElemHeader Parser::sIntFloatHeader(
+  { read_int, read_float }
+);
+
+FixedElemHeader Parser::sIntFloatVectorHeader(
+  { read_int, read_float_vector }
+);
+
+FixedElemHeader Parser::sIntVectorHeader(
+  { read_int_vector }
+);
+
+FixedElemHeader Parser::sStrFloatHeader(
+  { read_string, read_float }
+);
+
+FixedElemHeader Parser::sStrHeader(
+  { read_string }
+);
+
+FixedElemHeader Parser::sStrIntHeader(
+  { read_string, read_int }
+);
+
+FixedElemHeader Parser::sStrStrHeader(
+  { read_string, read_string }
+);
+
+FixedElemHeader Parser::sStrStrIntHeader(
+  { read_string, read_string, read_int }
+);
+
+FixedElemHeader Parser::sStrStrStrHeader(
+  { read_string, read_string, read_string }
+);
+
+FixedElemHeader Parser::sTechnologyHeader(
+  { read_technology }
+);
+
+ListHeader Parser::sFloatVectorListHeader( read_float_vector );
+
+ListHeader Parser::sStrListHeader( read_string );
+
+
 // @brief コンストラクタ
 // @param[in] in 入力ファイルオブジェクト
 // @param[in] mgr AstNode を管理するオブジェクト
@@ -55,7 +114,7 @@ Parser::parse()
   }
 
   // 本体を読み込む．
-  auto library{parse_library(attr)};
+  auto library{parse_library(*this, attr)};
   if ( library == nullptr ) {
     return {};
   }
@@ -80,28 +139,152 @@ Parser::parse()
   return library;
 }
 
+// @brief Simple Attribute を読み込む．
+// @retrun 結果の AstAttr を返す．
+//
+// エラーが起こったら nullptr を返す．
+AstAttrPtr
+Parser::parse_simple_attribute(const AttrKwd& attr,
+				     SimpleHandler handler)
+{
+  // 属性名の直後は必ず ':' でなければならない．
+  Token token = mScanner.read_and_verify(TokenType::COLON);
+  if ( token.type() != TokenType::COLON ) {
+    return {};
+  }
+
+  // その後の値を読み込む．
+  auto value{handler(mScanner)};
+  if ( value == nullptr ) {
+    // エラー
+    return {};
+  }
+
+  // 末尾の ';' を確認
+  if ( !read_tail() ) {
+    // エラー
+    return {};
+  }
+
+  // 値を返す．
+  return AstAttrPtr{new AstAttr(attr, std::move(value))};
+}
+
+// @brief Complex Attribute を読み込む．
+AstAttrPtr
+Parser::parse_complex_attribute(const AttrKwd& attr,
+				HeaderHandler& handler)
+{
+  auto value{parse_header(handler)};
+  if ( value == nullptr ) {
+    return {};
+  }
+
+  if ( !read_tail() ) {
+    return {};
+  }
+
+  return AstAttrPtr{new AstAttr(attr, std::move(value))};
+}
+
+// @brief Group Statement を読み込む．
+// @retrun 結果の AstAttr を返す．
+//
+// エラーが起こったら nullptr を返す．
+AstAttrPtr
+Parser::parse_group_statement(const AttrKwd& attr,
+			      HeaderHandler& header_handler,
+			      const AttrHandlerDict& attr_handler_dict)
+{
+  // ヘッダをパースする．
+  auto header_value{parse_header(header_handler)};
+  if ( header_value == nullptr ) {
+    // エラー
+    return {};
+  }
+
+  // グループ本体の始まり
+  Token lcb_token = mScanner.read_and_verify(TokenType::LCB);
+  if ( lcb_token.type() != TokenType::LCB ) {
+    return {};
+  }
+
+  vector<AstAttrPtr> child_list;
+  for ( ; ; ) {
+    Token token = mScanner.peek_token();
+    if ( token.type() == TokenType::NL ) {
+      mScanner.accept_token();
+      // 改行は読み飛ばす．
+      continue;
+    }
+    if ( token.type() == TokenType::RCB ) {
+      // '}' ならグループ記述の終わり
+      FileRegion rcb_loc{token.loc()};
+      mScanner.accept_token();
+
+      // グループ本体の終わり．
+      Token token = mScanner.read_and_verify(TokenType::NL);
+      if ( token.type() != TokenType::NL ) {
+	return {};
+      }
+
+      // 値を作る．
+      FileRegion loc{lcb_token.loc(), rcb_loc};
+      auto group_value{AstValue::new_group(std::move(header_value), child_list, loc)};
+      return AstAttrPtr{new AstAttr(attr, std::move(group_value))};
+    }
+
+    // 子供の要素を読み込む．
+    AttrKwd child_attr{mScanner.read_attr()};
+    if ( child_attr.type() == AttrType::none ) {
+      return {};
+    }
+    if ( attr_handler_dict.count(child_attr.type()) > 0 ) {
+      auto handler{attr_handler_dict.at(child_attr.type())};
+      auto child{handler(*this, child_attr)};
+      if ( child == nullptr ) {
+	return {};
+      }
+      child_list.push_back(std::move(child));
+    }
+    else {
+      // 対応するハンドラが登録されていない．
+      syntax_error(child_attr);
+      return {};
+    }
+  }
+}
+
 // @brief Complex Attribute, GroupStatement のヘッダを読み込む．
 AstValuePtr
 Parser::parse_header(HeaderHandler& handler)
 {
+  // まず '(' があるか確認する．
   Token lp_token = mScanner.read_and_verify(TokenType::LP);
   if ( lp_token.type() != TokenType::LP ) {
+    // エラー
     return {};
   }
 
+  // complex attribute の始まり
   handler.begin_header(lp_token.loc());
   for (int count = 0; ; ++ count) {
     Token token = mScanner.peek_token();
     if ( token.type() == TokenType::RP ) {
+      // ')' を読み込んだので終わる．
       mScanner.accept_token();
+      // complex attribute の終わり
       return handler.end_header(token.loc(), count);
     }
     if ( count > 0 ) {
+      // 要素と要素の間には ',' が必要
       Token comma = mScanner.read_and_verify(TokenType::COMMA);
       if ( comma.type() != TokenType::COMMA ) {
+	// エラー
 	return {};
       }
     }
+    // ハンドラを用いて値を読み込む．
     if ( !handler.read_header_value(mScanner, count) ) {
       return {};
     }
@@ -112,6 +295,10 @@ Parser::parse_header(HeaderHandler& handler)
 bool
 Parser::read_tail()
 {
+  // 通常は ';' '\n' を適正なパタンとみなす．
+  // ただし，mAllowNoSemi が true の場合には
+  // ';' がなくてもよい．．
+  // またファイルの末尾の場合には改行は不要
   Token token = mScanner.read_token();
   if ( token.type() == TokenType::SEMI ) {
     token = mScanner.read_token();
