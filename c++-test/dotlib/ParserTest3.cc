@@ -41,7 +41,7 @@ TEST_F(ParserTest, parse_cell0)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  AttrKwd attr{AttrType::cell, FileRegion{}};
+  AttrKwd attr{"cell", FileRegion{}};
   auto dst = parse_cell(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
@@ -62,7 +62,7 @@ TEST_F(ParserTest, parse_cell_area)
   InputFileObj in{buf, info};
   Parser parser{in, false, false};
 
-  AttrKwd attr{AttrType::cell, FileRegion{}};
+  AttrKwd attr{"cell", FileRegion{}};
   auto dst = parse_cell(parser, attr);
 
   ASSERT_TRUE( dst != nullptr );
@@ -71,7 +71,7 @@ TEST_F(ParserTest, parse_cell_area)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1 = value.group_elem_attr(0);
 
-  EXPECT_EQ( AttrType::area, attr1.attr().type() );
+  EXPECT_EQ( "area", attr1.attr().name() );
   EXPECT_EQ( 1.2, attr1.value().float_value() );
 }
 

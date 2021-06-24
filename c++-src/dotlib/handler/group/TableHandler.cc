@@ -22,43 +22,43 @@ TableHandler::TableHandler(Parser& parser) :
   GroupHandler(parser)
 {
   // パース関数の登録
-  reg_func(AttrType::index_1,
+  reg_func("index_1,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_float_vector(attr_type, attr_loc); });
-  reg_func(AttrType::index_2,
+  reg_func("index_2,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_float_vector(attr_type, attr_loc); });
-  reg_func(AttrType::index_3,
+  reg_func("index_3,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_float_vector(attr_type, attr_loc); });
-  reg_func(AttrType::values,
+  reg_func("values,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_values(attr_type, attr_loc); });
-  reg_func(AttrType::coefs,
+  reg_func("coefs,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_float_vector(attr_type, attr_loc); });
-  reg_func(AttrType::orders,
+  reg_func("orders,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_int_vector(attr_type, attr_loc); });
-  reg_func(AttrType::variable_1_range,
+  reg_func("variable_1_range,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_float_float(attr_type, attr_loc); });
-  reg_func(AttrType::variable_2_range,
+  reg_func("variable_2_range,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_float_float(attr_type, attr_loc); });
-  reg_func(AttrType::variable_3_range,
+  reg_func("variable_3_range,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_float_float(attr_type, attr_loc); });
-  reg_func(AttrType::domain,
+  reg_func("domain,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_domain(attr_type, attr_loc); });

@@ -37,7 +37,9 @@ public:
   AstAttr(const AttrKwd& attr,                ///< [in] 属性の型
 	  unique_ptr<const AstValue>&& value) ///< [in] 値
     : mAttr{attr},
-      mValue{std::move(value)} { }
+      mValue{std::move(value)}
+  {
+  }
 
   /// @brief デストラクタ
   ~AstAttr() = default;
@@ -50,7 +52,7 @@ public:
 
   /// @brief 有効な値を表す時 true を返す．
   bool
-  is_valid() const { return mAttr.type() != AttrType::none; }
+  is_valid() const { return mAttr.name() != "none"; }
 
   /// @brief 属性を得る．
   const AttrKwd&

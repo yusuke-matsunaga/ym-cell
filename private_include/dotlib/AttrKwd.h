@@ -8,7 +8,8 @@
 /// Copyright (C) 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/AttrType.h"
+#include "dotlib/dotlib_nsdef.h"
+#include "ym/FileRegion.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -27,9 +28,9 @@ public:
   AttrKwd() = default;
 
   /// @brief 内容を指定したコンストラクタ
-  AttrKwd(AttrType attr_type,         ///< [in] 属性の種類
+  AttrKwd(const char* attr_name,      ///< [in] 属性名
 	  const FileRegion& attr_loc) ///< [in] 属性のファイル上の位置
-    : mType{attr_type},
+    : mName{attr_name},
       mLoc{attr_loc}
   {
   }
@@ -43,9 +44,9 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 種類を返す．
-  AttrType
-  type() const { return mType; }
+  /// @brief 属性名を返す．
+  string
+  name() const { return mName; }
 
   /// @brief 位置を返す．
   FileRegion
@@ -57,8 +58,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 種類
-  AttrType mType;
+  // 属性名
+  string mName;
 
   // 位置
   FileRegion mLoc;

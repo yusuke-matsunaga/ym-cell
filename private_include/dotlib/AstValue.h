@@ -8,7 +8,7 @@
 /// Copyright (C) 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib_nsdef.h"
+#include "dotlib/dotlib_nsdef.h"
 #include "ym/FileRegion.h"
 #include "ym/ShString.h"
 

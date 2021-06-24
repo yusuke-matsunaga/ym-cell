@@ -15,7 +15,6 @@
 #include "ym/InputFileObj.h"
 #include "ym/FileRegion.h"
 #include "ym/StrBuff.h"
-#include "AttrDic.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -283,9 +282,6 @@ private:
 
   // 入力ファイルオブジェクト
   InputFileObj& mIn;
-
-  // 属性用の辞書
-  AttrDic mAttrDic;
 
   // シンボルモード
   bool mSymbolMode;

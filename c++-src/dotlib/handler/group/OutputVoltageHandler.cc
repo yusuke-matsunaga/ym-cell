@@ -22,19 +22,19 @@ OutputVoltageHandler::OutputVoltageHandler(Parser& parser) :
   GroupHandler(parser)
 {
   // パース関数の登録
-  reg_func(AttrType::vol,
+  reg_func("vol,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_expr(attr_type, attr_loc); });
-  reg_func(AttrType::voh,
+  reg_func("voh,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_expr(attr_type, attr_loc); });
-  reg_func(AttrType::vomin,
+  reg_func("vomin,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_expr(attr_type, attr_loc); });
-  reg_func(AttrType::vomax,
+  reg_func("vomax,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_expr(attr_type, attr_loc); });

@@ -25,25 +25,25 @@ PowerHandler::PowerHandler(Parser& parser) :
   Str1GroupHandler(parser)
 {
   // パース関数の登録
-  reg_func(AttrType::index_1,
+  reg_func("index_1,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_index(mIndex1, attr_type, attr_loc); });
-  reg_func(AttrType::index_2,
+  reg_func("index_2,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_index(mIndex2, attr_type, attr_loc); });
-  reg_func(AttrType::index_3,
+  reg_func("index_3,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_index(mIndex3, attr_type, attr_loc); });
-  reg_func(AttrType::values,
+  reg_func("values,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_values(mValues, attr_type, attr_loc); });
-  reg_func(AttrType::coefs,
+  reg_func("coefs,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_str1complex(mCoefs, attr_type, attr_loc); });
-  reg_func(AttrType::orders,
+  reg_func("orders,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_str1complex(mOrders, attr_type, attr_loc); });
-  reg_func(AttrType::domain,
+  reg_func("domain,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_domain(mDomain, attr_type, attr_loc); });
 }

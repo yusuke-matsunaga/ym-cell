@@ -39,19 +39,7 @@ Scanner::read_attr()
   }
 
   const char* attr_name = cur_string();
-  AttrType attr_type = mAttrDic.get(attr_name);
-  if ( attr_type == AttrType::none ) {
-    ostringstream buf;
-    buf << attr_name << ": syntax error."
-	<< " attribute keyword is expected";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    token.loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    buf.str());
-  }
-
-  return AttrKwd(attr_type, token.loc());
+  return AttrKwd(attr_name, token.loc());
 }
 
 // @brief float のリストを読み込む．

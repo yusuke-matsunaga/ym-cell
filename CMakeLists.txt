@@ -82,8 +82,6 @@ set (mislib_SOURCES
 set (dotlib_SOURCES
   c++-src/dotlib/read_liberty.cc
 
-  c++-src/dotlib/parser/AttrDic.cc
-  c++-src/dotlib/parser/AttrType.cc
   c++-src/dotlib/parser/FuncParser.cc
   c++-src/dotlib/parser/FuncScanner.cc
   c++-src/dotlib/parser/HeaderHandler.cc

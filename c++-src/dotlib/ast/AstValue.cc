@@ -995,7 +995,7 @@ AstAttr::dump(ostream& s,
 	      int ilevel) const
 {
   dump_indent(s, ilevel);
-  s << attr().type();
+  s << attr().name();
   value().dump(s, ilevel);
 }
 

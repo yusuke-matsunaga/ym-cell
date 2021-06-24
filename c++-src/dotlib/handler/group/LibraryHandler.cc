@@ -22,57 +22,57 @@ LibraryHandler::LibraryHandler(Parser& parser) :
   GroupHandler(parser)
 {
   // パース関数の登録
-  reg_func(AttrType::technology,
+  reg_func("technology,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_technology(attr_type, attr_loc); });
-  reg_func(AttrType::delay_model,
+  reg_func("delay_model,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_delay_model(attr_type, attr_loc); });
-  reg_func(AttrType::bus_naming_style,
+  reg_func("bus_naming_style,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_string(attr_type, attr_loc); });
-  reg_func(AttrType::comment,
+  reg_func("comment,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_string(attr_type, attr_loc); });
-  reg_func(AttrType::date,
+  reg_func("date,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_string(attr_type, attr_loc); });
-  reg_func(AttrType::revision,
+  reg_func("revision,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_string(attr_type, attr_loc); });
-  reg_func(AttrType::capacitive_load_unit,
+  reg_func("capacitive_load_unit,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_float_string(attr_type, attr_loc); });
-  reg_func(AttrType::current_unit,
+  reg_func("current_unit,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_string(attr_type, attr_loc); });
-  reg_func(AttrType::leakage_power_unit,
+  reg_func("leakage_power_unit,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_string(attr_type, attr_loc); });
-  reg_func(AttrType::pulling_resistance_unit,
+  reg_func("pulling_resistance_unit,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_string(attr_type, attr_loc); });
-  reg_func(AttrType::time_unit,
+  reg_func("time_unit,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_string(attr_type, attr_loc); });
-  reg_func(AttrType::voltage_unit,
+  reg_func("voltage_unit,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   { return parser.parse_string(attr_type, attr_loc); });
-  reg_func(AttrType::lu_table_template,
+  reg_func("lu_table_template,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   { return parser.parse_template(attr_type, attr_loc); });
-  reg_func(AttrType::cell,
+  reg_func("cell,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   { return parser.parse_cell(attr_type, attr_loc); });
 

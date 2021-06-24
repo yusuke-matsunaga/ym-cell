@@ -32,8 +32,6 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // クラス名の前方宣言
 class Parser;
 class Scanner;
-class HeaderHandler;
-class GroupHandler;
 
 class AstAttr;
 class AstExpr;
@@ -43,7 +41,6 @@ class Token;
 class AttrKwd;
 
 enum class TokenType;
-enum class AttrType;
 
 // AstXXX の unique_ptr
 using AstExprPtr = unique_ptr<const AstExpr>;
@@ -57,7 +54,7 @@ using SimpleHandler = std::function<AstValuePtr(Scanner&)>;
 using AttrHandler = std::function<AstAttrPtr(Parser&, const AttrKwd&)>;
 
 // AttrHandler の辞書
-using AttrHandlerDict = std::unordered_map<AttrType, AttrHandler>;
+using AttrHandlerDict = std::unordered_map<string, AttrHandler>;
 
 
 //////////////////////////////////////////////////////////////////////

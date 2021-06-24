@@ -103,7 +103,7 @@ Parser::parse()
 {
   // 先頭(根本)の属性は 'library' でなければならない．
   auto attr{mScanner.read_attr()};
-  if ( attr.type() != AttrType::library ) {
+  if ( attr.name() != "library" ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    attr.loc(),
 		    MsgType::Error,
@@ -236,11 +236,11 @@ Parser::parse_group_statement(const AttrKwd& attr,
 
     // 子供の要素を読み込む．
     AttrKwd child_attr{mScanner.read_attr()};
-    if ( child_attr.type() == AttrType::none ) {
+    if ( child_attr.name() == "none" ) {
       return {};
     }
-    if ( attr_handler_dict.count(child_attr.type()) > 0 ) {
-      auto handler{attr_handler_dict.at(child_attr.type())};
+    if ( attr_handler_dict.count(child_attr.name()) > 0 ) {
+      auto handler{attr_handler_dict.at(child_attr.name())};
       auto child{handler(*this, child_attr)};
       if ( child == nullptr ) {
 	return {};
@@ -342,7 +342,7 @@ void
 syntax_error(const AttrKwd& attr)
 {
   ostringstream buf;
-  buf << "Syntax error. Unexpected keyword: " << attr.type();
+  buf << "Syntax error. Unexpected keyword: " << attr.name();
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  attr.loc(),
 		  MsgType::Error,
@@ -358,7 +358,7 @@ duplicate_error(const AttrKwd& attr,
 		const AstAttr* prev_node)
 {
   ostringstream buf;
-  buf << attr.type() << " appear more than once."
+  buf << attr.name() << " appear more than once."
       << " Previously appears at " << prev_node->attr().loc();
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  attr.loc(),

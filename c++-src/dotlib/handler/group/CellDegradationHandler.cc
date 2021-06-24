@@ -24,25 +24,25 @@ CellDegradationHandler::CellDegradationHandler(Parser& parser) :
   Str1GroupHandler(parser)
 {
   // パース関数の登録
-  reg_func(AttrType::calc_mode,
+  reg_func("calc_mode,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_string(mCalcMode, attr_type, attr_loc); });
-  reg_func(AttrType::index_1,
+  reg_func("index_1,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_index(mIndex1, attr_type, attr_loc); });
-  reg_func(AttrType::values,
+  reg_func("values,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_values(mValues, attr_type, attr_loc); });
-  reg_func(AttrType::coefs,
+  reg_func("coefs,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_coefs(mCoefs, attr_type, attr_loc); });
-  reg_func(AttrType::orders,
+  reg_func("orders,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_orders(mOrders, attr_type, attr_loc); });
-  reg_func(AttrType::variable_1_range,
+  reg_func("variable_1_range,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_variable_range(mVar1Range, attr_type, attr_loc); });
-  reg_func(AttrType::domain,
+  reg_func("domain,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc) -> bool
 	   { return parser.parse_domain(mDomain, attr_type, attr_loc); });
 }

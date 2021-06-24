@@ -97,6 +97,10 @@ private:
   parse_header(HeaderHandler& handler); ///< [in] ハンドラ(HeaderHandler の継承クラス)
 
   /// @brief 行末まで読み込む．
+  ///
+  /// 具体的には ';' '/n' を確認する．
+  /// ただし， mAllowNoSemi が true の場合には
+  /// ';' を無視する．
   bool
   read_tail();
 

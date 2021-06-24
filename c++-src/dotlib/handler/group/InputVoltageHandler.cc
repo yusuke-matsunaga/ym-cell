@@ -23,19 +23,19 @@ InputVoltageHandler::InputVoltageHandler(Parser& parser) :
   GroupHandler(parser)
 {
   // パース関数の登録
-  reg_func(AttrType::vil,
+  reg_func("vil,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_expr(attr_type, attr_loc); });
-  reg_func(AttrType::vih,
+  reg_func("vih,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_expr(attr_type, attr_loc); });
-  reg_func(AttrType::vimin,
+  reg_func("vimin,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_expr(attr_type, attr_loc); });
-  reg_func(AttrType::vimax,
+  reg_func("vimax,"
 	   [=](Parser& parser, AttrType attr_type, const FileRegion& attr_loc)
 	   -> unique_ptr<const AstAttr>
 	   { return parser.parse_expr(attr_type, attr_loc); });
