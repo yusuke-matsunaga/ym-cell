@@ -75,9 +75,9 @@ public:
   ///
   /// エラーが起こったら nullptr を返す．
   AstAttrPtr
-  parse_group_statement(const AttrKwd& attr,           ///< [in] 属性の型
-			HeaderHandler& header_handler, ///< [in] ヘッダ読み込みハンドラ
-			const AttrHandlerDict& attr_handler_dict); ///< [in] 要素のハンドラ辞書
+  parse_group_statement(const AttrKwd& attr,            ///< [in] 属性の型
+			const char* group_name,         ///< [in] 親のグループ名
+			HeaderHandler& header_handler); ///< [in] ヘッダ読み込みハンドラ
 
   /// @brief デバッグモードの時 true を返す．
   bool
@@ -125,10 +125,12 @@ public:
   // complex attribute/group statement header 用のハンドラ
   static FixedElemHeader sEmptyHeader;
   static FixedElemHeader sFloatFloatHeader;
+  static FixedElemHeader sFloatFloatStrHeader;
   static FixedElemHeader sFloatStrHeader;
   static FixedElemHeader sFloatVectorHeader;
   static FixedElemHeader sIntFloatHeader;
   static FixedElemHeader sIntFloatVectorHeader;
+  static FixedElemHeader sIntStrHeader;
   static FixedElemHeader sIntVectorHeader;
   static FixedElemHeader sStrFloatHeader;
   static FixedElemHeader sStrHeader;
@@ -136,9 +138,14 @@ public:
   static FixedElemHeader sStrStrHeader;
   static FixedElemHeader sStrStrIntHeader;
   static FixedElemHeader sStrStrStrHeader;
+  static FanoutLengthHeader sFanoutLengthHeader;
   static FixedElemHeader sTechnologyHeader;
   static ListHeader sFloatVectorListHeader;
+  static ListHeader sIntListHeader;
   static ListHeader sStrListHeader;
+
+  // グループハンドラの辞書
+  static unordered_map<string, AttrHandler> sHandlerDict;
 
 };
 
@@ -154,8 +161,8 @@ public:
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_int(Parser& parser,      ///< [in] パーサー
-	  const AttrKwd& attr) ///< [in] 属性の型
+simple_int(Parser& parser,      ///< [in] パーサー
+	   const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_simple_attribute(attr, read_int);
 }
@@ -166,8 +173,8 @@ parse_int(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_float(Parser& parser,      ///< [in] パーサー
-	    const AttrKwd& attr) ///< [in] 属性の型
+simple_float(Parser& parser,      ///< [in] パーサー
+	     const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_simple_attribute(attr, read_float);
 }
@@ -178,8 +185,8 @@ parse_float(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_string(Parser& parser,      ///< [in] パーサー
-	     const AttrKwd& attr) ///< [in] 属性の型
+simple_string(Parser& parser,      ///< [in] パーサー
+	      const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_simple_attribute(attr, read_string);
 }
@@ -190,8 +197,8 @@ parse_string(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_bool(Parser& parser,      ///< [in] パーサー
-	   const AttrKwd& attr) ///< [in] 属性の型
+simple_bool(Parser& parser,      ///< [in] パーサー
+	    const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_simple_attribute(attr, read_bool);
 }
@@ -202,8 +209,8 @@ parse_bool(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_delay_model(Parser& parser,      ///< [in] パーサー
-		  const AttrKwd& attr) ///< [in] 属性の型
+simple_delay_model(Parser& parser,      ///< [in] パーサー
+		   const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_simple_attribute(attr, read_delay_model);
 }
@@ -214,8 +221,8 @@ parse_delay_model(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_direction(Parser& parser,      ///< [in] パーサー
-		const AttrKwd& attr) ///< [in] 属性の型
+simple_direction(Parser& parser,      ///< [in] パーサー
+		 const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_simple_attribute(attr, read_direction);
 }
@@ -226,8 +233,8 @@ parse_direction(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_expr(Parser& parser,      ///< [in] パーサー
-	   const AttrKwd& attr) ///< [in] 属性の型
+simple_expr(Parser& parser,      ///< [in] パーサー
+	    const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_simple_attribute(attr, read_expr);
 }
@@ -238,8 +245,8 @@ parse_expr(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_function(Parser& parser,      ///< [in] パーサー
-	       const AttrKwd& attr) ///< [in] 属性の型
+simple_function(Parser& parser,      ///< [in] パーサー
+		const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_simple_attribute(attr, read_function);
 }
@@ -250,8 +257,8 @@ parse_function(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_timing_sense(Parser& parser,      ///< [in] パーサー
-		   const AttrKwd& attr) ///< [in] 属性の型
+simple_timing_sense(Parser& parser,      ///< [in] パーサー
+		    const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_simple_attribute(attr, read_timing_sense);
 }
@@ -262,8 +269,8 @@ parse_timing_sense(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_timing_type(Parser& parser,      ///< [in] パーサー
-		  const AttrKwd& attr) ///< [in] 属性の型
+simple_timing_type(Parser& parser,      ///< [in] パーサー
+		   const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_simple_attribute(attr, read_timing_type);
 }
@@ -274,11 +281,15 @@ parse_timing_type(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_vartype(Parser& parser,      ///< [in] パーサー
-	      const AttrKwd& attr) ///< [in] 属性の型
+simple_vartype(Parser& parser,      ///< [in] パーサー
+	       const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_simple_attribute(attr, read_vartype);
 }
+
+//////////////////////////////////////////////////////////////////////
+/// @}
+//////////////////////////////////////////////////////////////////////
 
 
 //////////////////////////////////////////////////////////////////////
@@ -286,28 +297,28 @@ parse_vartype(Parser& parser,      ///< [in] パーサー
 /// @name complex attribute を読み込む関数
 //////////////////////////////////////////////////////////////////////
 
-/// @brief 'define' Complex attribute のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-inline
-AstAttrPtr
-parse_define(Parser& parser,      ///< [in] パーサー
-	     const AttrKwd& attr) ///< [in] 属性の型
-{
-  return parser.parse_complex_attribute(attr, Parser::sStrStrStrHeader);
-}
-
 /// @brief ( float, float ) の形式の Complex attribute のパースを行う．
 /// @return パース結果を返す．
 ///
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_float_float(Parser& parser,      ///< [in] パーサー
-		  const AttrKwd& attr) ///< [in] 属性の型
+complex_float_float(Parser& parser,      ///< [in] パーサー
+		    const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sFloatFloatHeader);
+}
+
+/// @brief ( float, float, string ) の形式の Complex attribute のパースを行う．
+/// @return パース結果を返す．
+///
+/// エラーの時は nullptr を返す．
+inline
+AstAttrPtr
+complex_float_float_string(Parser& parser,      ///< [in] パーサー
+			   const AttrKwd& attr) ///< [in] 属性の型
+{
+  return parser.parse_complex_attribute(attr, Parser::sFloatFloatStrHeader);
 }
 
 /// @brief ( float, string ) 型の Complex attribute のパースを行う．
@@ -316,8 +327,8 @@ parse_float_float(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_float_string(Parser& parser,      ///< [in] パーサー
-		   const AttrKwd& attr) ///< [in] 属性の型
+complex_float_string(Parser& parser,      ///< [in] パーサー
+		     const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sFloatStrHeader);
 }
@@ -328,8 +339,8 @@ parse_float_string(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_float_vector(Parser& parser,      ///< [in] パーサー
-		   const AttrKwd& attr) ///< [in] 属性の型
+complex_float_vector(Parser& parser,      ///< [in] パーサー
+		     const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sFloatVectorHeader);
 }
@@ -340,10 +351,22 @@ parse_float_vector(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_int_float(Parser& parser,      ///< [in] パーサー
-		const AttrKwd& attr) ///< [in] 属性の型
+complex_int_float(Parser& parser,      ///< [in] パーサー
+		  const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sIntFloatHeader);
+}
+
+/// @brief ( integer, string ) の形式の Complex attribute のパースを行う．
+/// @return パース結果を返す．
+///
+/// エラーの時は nullptr を返す．
+inline
+AstAttrPtr
+complex_int_string(Parser& parser,      ///< [in] パーサー
+		   const AttrKwd& attr) ///< [in] 属性の型
+{
+  return parser.parse_complex_attribute(attr, Parser::sIntStrHeader);
 }
 
 /// @brief ( integer, "float, float, ... " ) の形式の Complex attribute のパースを行う．
@@ -352,10 +375,22 @@ parse_int_float(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_int_float_vector(Parser& parser,      ///< [in] パーサー
-		       const AttrKwd& attr) ///< [in] 属性の型
+complex_int_float_vector(Parser& parser,      ///< [in] パーサー
+			 const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sIntFloatVectorHeader);
+}
+
+/// @brief ( integer, integer, ...  ) の形式の Complex attribute のパースを行う．
+/// @return パース結果を返す．
+///
+/// エラーの時は nullptr を返す．
+inline
+AstAttrPtr
+complex_int_list(Parser& parser,      ///< [in] パーサー
+		 const AttrKwd& attr) ///< [in] 属性の型
+{
+  return parser.parse_complex_attribute(attr, Parser::sIntListHeader);
 }
 
 /// @brief ( "integer, integer, ... " ) の形式の Complex attribute のパースを行う．
@@ -364,8 +399,8 @@ parse_int_float_vector(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_int_vector(Parser& parser,      ///< [in] パーサー
-		 const AttrKwd& attr) ///< [in] 属性の型
+complex_int_vector(Parser& parser,      ///< [in] パーサー
+		   const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sIntVectorHeader);
 }
@@ -376,8 +411,8 @@ parse_int_vector(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_string_complex(Parser& parser,      ///< [in] パーサー
-		     const AttrKwd& attr) ///< [in] 属性の型
+complex_string(Parser& parser,      ///< [in] パーサー
+	       const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sStrHeader);
 }
@@ -388,8 +423,8 @@ parse_string_complex(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_string_float(Parser& parser,      ///< [in] パーサー
-		   const AttrKwd& attr) ///< [in] 属性の型
+complex_string_float(Parser& parser,      ///< [in] パーサー
+		     const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sStrFloatHeader);
 }
@@ -400,8 +435,8 @@ parse_string_float(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_string_int(Parser& parser,      ///< [in] パーサー
-		 const AttrKwd& attr) ///< [in] 属性の型
+complex_string_int(Parser& parser,      ///< [in] パーサー
+		   const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sStrIntHeader);
 }
@@ -412,8 +447,8 @@ parse_string_int(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_string_list(Parser& parser,      ///< [in] パーサー
-		  const AttrKwd& attr) ///< [in] 属性の型
+complex_string_list(Parser& parser,      ///< [in] パーサー
+		    const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sStrListHeader);
 }
@@ -424,10 +459,34 @@ parse_string_list(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_string_string(Parser& parser,      ///< [in] パーサー
-		    const AttrKwd& attr) ///< [in] 属性の型
+complex_string_string(Parser& parser,      ///< [in] パーサー
+		      const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sStrStrHeader);
+}
+
+/// @brief ( string, string, string ) の形式の Complex attribute のパースを行う．
+/// @return パース結果を返す．
+///
+/// エラーの時は nullptr を返す．
+inline
+AstAttrPtr
+complex_string_string_string(Parser& parser,      ///< [in] パーサー
+			     const AttrKwd& attr) ///< [in] 属性の型
+{
+  return parser.parse_complex_attribute(attr, Parser::sStrStrStrHeader);
+}
+
+/// @brief 'fanout_length' Complex Attribute のパースを行う．
+/// @return パース結果を返す．
+///
+/// エラーの時は nullptr を返す．
+inline
+AstAttrPtr
+complex_fanout_length(Parser& parser,      ///< [in] パーサー
+		      const AttrKwd& attr) ///< [in] 属性の型
+{
+  return parser.parse_complex_attribute(attr, Parser::sFanoutLengthHeader);
 }
 
 /// @brief 'Technology' Complex Attribute のパースを行う．
@@ -436,8 +495,8 @@ parse_string_string(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_technology(Parser& parser,      ///< [in] パーサー
-		 const AttrKwd& attr) ///< [in] 属性の型
+complex_technology(Parser& parser,      ///< [in] パーサー
+		   const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sTechnologyHeader);
 }
@@ -448,11 +507,15 @@ parse_technology(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-parse_values(Parser& parser,      ///< [in] パーサー
-	     const AttrKwd& attr) ///< [in] 属性の型
+complex_values(Parser& parser,      ///< [in] パーサー
+	       const AttrKwd& attr) ///< [in] 属性の型
 {
   return parser.parse_complex_attribute(attr, Parser::sFloatVectorListHeader);
 }
+
+//////////////////////////////////////////////////////////////////////
+/// @}
+//////////////////////////////////////////////////////////////////////
 
 
 //////////////////////////////////////////////////////////////////////
@@ -460,436 +523,61 @@ parse_values(Parser& parser,      ///< [in] パーサー
 /// @name group statement を読み込む関数
 //////////////////////////////////////////////////////////////////////
 
-/// @brief 'base_curves' Group Statement のパースを行う．
+/// @brief () タイプの group statment のパースを行なう．
 /// @return パース結果を返す．
 ///
 /// エラーの時は nullptr を返す．
-extern
+inline
 AstAttrPtr
-parse_base_curves(Parser& parser,       ///< [in] パーサー
-		  const AttrKwd& attr); ///< [in] 属性の型
+group_empty(Parser& parser,         ///< [in] パーサー
+	    const AttrKwd& attr,    ///< [in] 属性の型
+	    const char* group_name) ///< [in] 親のグループ名
+{
+  return parser.parse_group_statement(attr, group_name, Parser::sEmptyHeader);
+}
 
-/// @brief 'bundle' group statement のパースを行なう．
-/// @return パース結果を返す．
-extern
-AstAttrPtr
-parse_bundle(Parser& parser,       ///< [in] パーサー
-	     const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'bus' group statement のパースを行なう．
-/// @return パース結果を返す．
-extern
-AstAttrPtr
-parse_bus(Parser& parser,       ///< [in] パーサー
-	  const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'cell' group statement のパースを行なう．
-/// @return パース結果を返す．
-extern
-AstAttrPtr
-parse_cell(Parser& parser,       ///< [in] パーサー
-	   const AttrKwd& attr); ///< [in] 属性(cell)
-
-/// @brief 'ccsn_XXX' group statement のパースを行なう．
-/// @return パース結果を返す．
-extern
-AstAttrPtr
-parse_ccsn(Parser& parser,       ///< [in] パーサー
-	   const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'compact_lut_template' Group Statement のパースを行う．
+/// @brief ( string ) タイプの group statment のパースを行なう．
 /// @return パース結果を返す．
 ///
 /// エラーの時は nullptr を返す．
-extern
+inline
 AstAttrPtr
-parse_clut_template(Parser& parser,       ///< [in] パーサー
-		    const AttrKwd& attr); ///< [in] 属性の型
+group_string(Parser& parser,         ///< [in] パーサー
+	     const AttrKwd& attr,    ///< [in] 属性の型
+	     const char* group_name) ///< [in] 親のグループ名
+{
+  return parser.parse_group_statement(attr, group_name, Parser::sStrHeader);
+}
 
-/// @brief 'dc_current' Group Statement のパースを行う．
+/// @brief ( string, string ) タイプの group statment のパースを行なう．
 /// @return パース結果を返す．
 ///
 /// エラーの時は nullptr を返す．
-extern
+inline
 AstAttrPtr
-parse_dc_current(Parser& parser,       ///< [in] パーサー
-		 const AttrKwd& attr); ///< [in] 属性の型
+group_string_string(Parser& parser,         ///< [in] パーサー
+		    const AttrKwd& attr,    ///< [in] 属性の型
+		    const char* group_name) ///< [in] 親のグループ名
+{
+  return parser.parse_group_statement(attr, group_name, Parser::sStrStrHeader);
+}
 
-/// @brief 'XXX_degradation' Group Statement のパースを行う．
+/// @brief ( string, string, int ) タイプの group statment のパースを行なう．
 /// @return パース結果を返す．
 ///
 /// エラーの時は nullptr を返す．
-extern
+inline
 AstAttrPtr
-parse_degradation(Parser& parser,       ///< [in] パーサー
-		  const AttrKwd& attr); ///< [in] 属性の型
+group_string_string_int(Parser& parser,         ///< [in] パーサー
+			const AttrKwd& attr,    ///< [in] 属性の型
+			const char* group_name) ///< [in] 親のグループ名
+{
+  return parser.parse_group_statement(attr, group_name, Parser::sStrStrIntHeader);
+}
 
-/// @brief 'domain' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_domain(Parser& parser,       ///< [in] パーサー
-	     const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'electromigration' group statement のパースを行なう．
-/// @return パース結果を返す．
-extern
-AstAttrPtr
-parse_electromigration(Parser& parser,       ///< [in] パーサー
-		       const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'ff' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_ff(Parser& parser,       ///< [in] パーサー
-	 const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'ff_bank' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_ff_bank(Parser& parser,       ///< [in] パーサー
-	      const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'fault_lut_template' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_flut_template(Parser& parser,       ///< [in] パーサー
-		    const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'fpga_isd' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_fpga_isd(Parser& parser,       ///< [in] パーサー
-	       const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'hyperbolic_noise' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_hyperbolic_noise(Parser& parser,       ///< [in] パーサー
-		       const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'input_voltage' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_input_voltage(Parser& parser,       ///< [in] パーサー
-		    const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'internal_power' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_internal_power(Parser& parser,       ///< [in] パーサー
-		     const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'latch' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_latch(Parser& parser,       ///< [in] パーサー
-	    const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'latch_bank' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_latch_bank(Parser& parser,       ///< [in] パーサー
-		 const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'leakage_current' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_leakage_current(Parser& parser,       ///< [in] パーサー
-		      const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'leakage_power' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_leakage_power(Parser& parser,       ///< [in] パーサー
-		    const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'library' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_library(Parser& parser,       ///< [in] パーサー
-	      const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'lut' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_lut(Parser& parser,       ///< [in] パーサー
-	  const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'minimum_period' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_minimum_period(Parser& parser,       ///< [in] パーサー
-		     const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'operating_conditions' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_operating_conditions(Parser& parser,       ///< [in] パーサー
-			   const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'output_voltage' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_output_voltage(Parser& parser,       ///< [in] パーサー
-		     const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'part' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_part(Parser& parser,       ///< [in] パーサー
-	   const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'pin' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_pin(Parser& parser,       ///< [in] パーサー
-	  const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'pin_capacitance' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_pin_capacitance(Parser& parser,       ///< [in] パーサー
-		      const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'pin_group' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_pin_group(Parser& parser,       ///< [in] パーサー
-		const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'poly_template' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_poly_template(Parser& parser,       ///< [in] パーサー
-		    const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'power_supply' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_power_supply(Parser& parser,       ///< [in] パーサー
-		   const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'min|max_pulse_width' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_pulse_width(Parser& parser,       ///< [in] パーサー
-		  const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'scaled_cell' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_scaled_cell(Parser& parser,       ///< [in] パーサー
-		  const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'scaling_factors' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_scaling_factors(Parser& parser,       ///< [in] パーサー
-		      const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'sensitization' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_sensitization(Parser& parser,       ///< [in] パーサー
-		    const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'signal_swing' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_signal_swing(Parser& parser,       ///< [in] パーサー
-		   const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'statetable' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_statetable(Parser& parser,       ///< [in] パーサー
-		 const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'table' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_table(Parser& parser,       ///< [in] パーサー
-	    const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'lut_template' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_template(Parser& parser,       ///< [in] パーサー
-	       const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'timing' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_timing(Parser& parser,       ///< [in] パーサー
-	     const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'tlatch' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_tlatch(Parser& parser,       ///< [in] パーサー
-	     const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'trans' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_trans(Parser& parser,       ///< [in] パーサー
-	    const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'timing_range' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_timing_range(Parser& parser,       ///< [in] パーサー
-		   const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'type' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_type(Parser& parser,       ///< [in] パーサー
-	   const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'user_parameters' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_user_parameters(Parser& parser,       ///< [in] パーサー
-		      const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'wire_load' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_wire_load(Parser& parser,       ///< [in] パーサー
-		const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'wire_load_selection' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_wire_load_selection(Parser& parser,       ///< [in] パーサー
-			  const AttrKwd& attr); ///< [in] 属性の型
-
-/// @brief 'wire_load_table' Group Statement のパースを行う．
-/// @return パース結果を返す．
-///
-/// エラーの時は nullptr を返す．
-extern
-AstAttrPtr
-parse_wire_load_table(Parser& parser,       ///< [in] パーサー
-		      const AttrKwd& attr); ///< [in] 属性の型
+//////////////////////////////////////////////////////////////////////
+/// @}
+//////////////////////////////////////////////////////////////////////
 
 END_NAMESPACE_YM_DOTLIB
 

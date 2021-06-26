@@ -13,6 +13,8 @@
 
 #include "ym/MsgMgr.h"
 
+#include "Parser_ext.h"
+
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
@@ -20,6 +22,10 @@ FixedElemHeader Parser::sEmptyHeader({});
 
 FixedElemHeader Parser::sFloatFloatHeader(
   { read_float, read_float }
+);
+
+FixedElemHeader Parser::sFloatFloatStrHeader(
+  { read_float, read_float, read_string }
 );
 
 FixedElemHeader Parser::sFloatStrHeader(
@@ -36,6 +42,10 @@ FixedElemHeader Parser::sIntFloatHeader(
 
 FixedElemHeader Parser::sIntFloatVectorHeader(
   { read_int, read_float_vector }
+);
+
+FixedElemHeader Parser::sIntStrHeader(
+  { read_int, read_string }
 );
 
 FixedElemHeader Parser::sIntVectorHeader(
@@ -70,10 +80,17 @@ FixedElemHeader Parser::sTechnologyHeader(
   { read_technology }
 );
 
+FanoutLengthHeader Parser::sFanoutLengthHeader;
+
 ListHeader Parser::sFloatVectorListHeader( read_float_vector );
+
+ListHeader Parser::sIntListHeader( read_int );
 
 ListHeader Parser::sStrListHeader( read_string );
 
+unordered_map<string, AttrHandler> Parser::sHandlerDict{
+#include "Parser_dict.cc"
+};
 
 // @brief コンストラクタ
 // @param[in] in 入力ファイルオブジェクト
@@ -114,7 +131,7 @@ Parser::parse()
   }
 
   // 本体を読み込む．
-  auto library{parse_library(*this, attr)};
+  auto library{parse_group_statement(attr, "library", sStrHeader)};
   if ( library == nullptr ) {
     return {};
   }
@@ -193,8 +210,8 @@ Parser::parse_complex_attribute(const AttrKwd& attr,
 // エラーが起こったら nullptr を返す．
 AstAttrPtr
 Parser::parse_group_statement(const AttrKwd& attr,
-			      HeaderHandler& header_handler,
-			      const AttrHandlerDict& attr_handler_dict)
+			      const char* group_name,
+			      HeaderHandler& header_handler)
 {
   // ヘッダをパースする．
   auto header_value{parse_header(header_handler)};
@@ -239,8 +256,9 @@ Parser::parse_group_statement(const AttrKwd& attr,
     if ( child_attr.name() == "none" ) {
       return {};
     }
-    if ( attr_handler_dict.count(child_attr.name()) > 0 ) {
-      auto handler{attr_handler_dict.at(child_attr.name())};
+    string key = string(group_name) + ":" + child_attr.name();
+    if ( sHandlerDict.count(key) > 0 ) {
+      auto handler{sHandlerDict.at(key)};
       auto child{handler(*this, child_attr)};
       if ( child == nullptr ) {
 	return {};

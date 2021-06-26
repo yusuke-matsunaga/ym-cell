@@ -133,6 +133,46 @@ FixedElemHeader::_end_header(int count)
 
 
 //////////////////////////////////////////////////////////////////////
+// クラス FanoutLengthHeader
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+FanoutLengthHeader::FanoutLengthHeader()
+{
+}
+
+// @brief ヘッダの値を読み込む処理
+AstValuePtr
+FanoutLengthHeader::_read_header_value(Scanner& scanner,
+				       int count)
+{
+  switch ( count ) {
+  case 0: return scanner.read_int();
+  case 2: return scanner.read_float();
+  case 3: return scanner.read_float();
+  case 4: return scanner.read_float();
+  default: break;
+  }
+  ostringstream buf;
+  buf << "Syntx error: "
+      << "Too many values, expected " << 5 << ".";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  FileRegion(lp_loc(), rp_loc()),
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  buf.str());
+  return {};
+}
+
+// @brief 読み込みが終了した時の処理を行う．
+bool
+FanoutLengthHeader::_end_header(int count)
+{
+  return true;
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // クラス ListHeader
 //////////////////////////////////////////////////////////////////////
 

@@ -90,46 +90,6 @@ set (dotlib_SOURCES
   c++-src/dotlib/parser/Scanner_value.cc
   c++-src/dotlib/parser/Scanner_expr.cc
 
-  c++-src/dotlib/parser/parse_bundle.cc
-  c++-src/dotlib/parser/parse_bus.cc
-  c++-src/dotlib/parser/parse_ccsn.cc
-  c++-src/dotlib/parser/parse_cell.cc
-  c++-src/dotlib/parser/parse_degradation.cc
-  c++-src/dotlib/parser/parse_dc_current.cc
-  c++-src/dotlib/parser/parse_domain.cc
-  c++-src/dotlib/parser/parse_electromigration.cc
-  c++-src/dotlib/parser/parse_ff.cc
-  c++-src/dotlib/parser/parse_hyperbolic_noise.cc
-  c++-src/dotlib/parser/parse_input_voltage.cc
-  c++-src/dotlib/parser/parse_internal_power.cc
-  c++-src/dotlib/parser/parse_latch.cc
-  c++-src/dotlib/parser/parse_leakage_current.cc
-  c++-src/dotlib/parser/parse_leakage_power.cc
-  c++-src/dotlib/parser/parse_library.cc
-  c++-src/dotlib/parser/parse_lut.cc
-  c++-src/dotlib/parser/parse_minimum_period.cc
-  c++-src/dotlib/parser/parse_operating_conditions.cc
-  c++-src/dotlib/parser/parse_output_voltage.cc
-  c++-src/dotlib/parser/parse_part.cc
-  c++-src/dotlib/parser/parse_pin.cc
-  c++-src/dotlib/parser/parse_pin_capacitance.cc
-  c++-src/dotlib/parser/parse_pin_group.cc
-  c++-src/dotlib/parser/parse_power_supply.cc
-  c++-src/dotlib/parser/parse_pulse_width.cc
-  c++-src/dotlib/parser/parse_scaling_factors.cc
-  c++-src/dotlib/parser/parse_signal_swing.cc
-  c++-src/dotlib/parser/parse_statetable.cc
-  c++-src/dotlib/parser/parse_table.cc
-  c++-src/dotlib/parser/parse_template.cc
-  c++-src/dotlib/parser/parse_timing.cc
-  c++-src/dotlib/parser/parse_timing_range.cc
-  c++-src/dotlib/parser/parse_tlatch.cc
-  c++-src/dotlib/parser/parse_trans.cc
-  c++-src/dotlib/parser/parse_type.cc
-  c++-src/dotlib/parser/parse_wire_load.cc
-  c++-src/dotlib/parser/parse_wire_load_selection.cc
-  c++-src/dotlib/parser/parse_wire_load_table.cc
-
   c++-src/dotlib/ast/AstExpr.cc
   c++-src/dotlib/ast/AstValue.cc
   )

@@ -53,9 +53,6 @@ using SimpleHandler = std::function<AstValuePtr(Scanner&)>;
 // group statement の要素を読み込む関数の型定義
 using AttrHandler = std::function<AstAttrPtr(Parser&, const AttrKwd&)>;
 
-// AttrHandler の辞書
-using AttrHandlerDict = std::unordered_map<string, AttrHandler>;
-
 
 //////////////////////////////////////////////////////////////////////
 // エラー出力用の便利関数

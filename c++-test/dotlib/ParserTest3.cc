@@ -33,7 +33,7 @@ TEST_F(ParserTest, parse_input_voltage1)
 }
 #endif
 
-TEST_F(ParserTest, parse_cell0)
+TEST_F(ParserTest, group_cell0)
 {
   // ヘッダの検査
   istringstream buf("( test ) {\n"
@@ -42,7 +42,7 @@ TEST_F(ParserTest, parse_cell0)
   Parser parser{in, false, false};
 
   AttrKwd attr{"cell", FileRegion{}};
-  auto dst = parse_cell(parser, attr);
+  auto dst = group_string(parser, attr, "cell");
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -63,7 +63,7 @@ TEST_F(ParserTest, parse_cell_area)
   Parser parser{in, false, false};
 
   AttrKwd attr{"cell", FileRegion{}};
-  auto dst = parse_cell(parser, attr);
+  auto dst = group_string(parser, attr, "cell");
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();

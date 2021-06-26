@@ -148,14 +148,14 @@ rise_resistance
     rise_resistance : float ;
 
 
-.. _timing_sdf_conf:
+.. _timing_sdf_cond:
 
 sdf_conf
 ^^^^^^^^^
 
 ::
 
-    sdf_conf : "SDF expression" ;
+    sdf_cond : "SDF expression" ;
 
 
 .. _timing_sdf_cond_end:
