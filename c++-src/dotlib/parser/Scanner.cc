@@ -328,7 +328,7 @@ Scanner::_scan()
   { // 数字の後に不適切な文字が付いている．
     mCurString.put_char(c);
     ostringstream emsg;
-    emsg << "Syntx error: " << mCurString << ": Not a number value.";
+    emsg << "Syntx error: " << mCurString << ": Illegal character for number value.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    mIn.cur_loc(),
 		    MsgType::Error,
@@ -374,7 +374,7 @@ Scanner::_scan()
   { // 数字の後に不適切な文字が付いている．
     mCurString.put_char(c);
     ostringstream emsg;
-    emsg << "Syntax error: " << mCurString << ": Not a number value.";
+    emsg << "Syntax error: " << mCurString << ": Illegal character for number value.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    mIn.cur_loc(),
 		    MsgType::Error,

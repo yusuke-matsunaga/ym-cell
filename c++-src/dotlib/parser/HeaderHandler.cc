@@ -33,8 +33,10 @@ HeaderHandler::begin_header(const FileRegion& loc)
 // @brief ヘッダの値を読み込む処理
 bool
 HeaderHandler::read_header_value(Scanner& scanner,
+				 const FileRegion& loc,
 				 int count)
 {
+  mRpLoc = loc;
   auto value{_read_header_value(scanner, count)};
   if ( value != nullptr ) {
     mValueList.push_back(std::move(value));
@@ -99,7 +101,7 @@ FixedElemHeader::_read_header_value(Scanner& scanner,
   }
   else {
     ostringstream buf;
-    buf << "Syntx error: "
+    buf << "Syntax error: "
 	<< "Too many values, expected " << mHandlerList.size() << ".";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    FileRegion(lp_loc(), rp_loc()),
@@ -117,7 +119,7 @@ FixedElemHeader::_end_header(int count)
   ASSERT_COND( count <= mHandlerList.size() );
   if ( count < mHandlerList.size() ) {
     ostringstream buf;
-    buf << "Syntx error: "
+    buf << "Syntax error: "
 	<< "Too few values, expected " << mHandlerList.size() << ".";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    FileRegion(lp_loc(), rp_loc()),

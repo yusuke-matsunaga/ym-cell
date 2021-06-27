@@ -11,6 +11,8 @@
 #include "AstAttr.h"
 #include "AstValue.h"
 
+#include "parse_simple.h"
+
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
@@ -54,6 +56,10 @@ TEST_F(ParserTest, simple_bool3)
   auto dst = simple_bool(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: fals: Illegal value for boolean, only 'true' or 'false' are allowed.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, simple_bool4)
@@ -66,6 +72,10 @@ TEST_F(ParserTest, simple_bool4)
   auto dst = simple_bool(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 9 - 20: (ERROR  ) [DOTLIB_PARSER]: Syntax error. New-line is expected.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, simple_bool5)
@@ -78,6 +88,10 @@ TEST_F(ParserTest, simple_bool5)
   auto dst = simple_bool(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error. Semicolon is expected.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, simple_bool6)
@@ -122,6 +136,10 @@ TEST_F(ParserTest, simple_int2)
   auto dst = simple_int(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: a123: Not an integer value(SYMBOL).\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, simple_float1)
@@ -165,6 +183,10 @@ TEST_F(ParserTest, simple_float3)
   auto dst = simple_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: f123: Not a number value(SYMBOL).\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, simple_string1)
@@ -315,6 +337,10 @@ TEST_F(ParserTest, simple_delay_model6)
   auto dst = simple_delay_model(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 8: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abcdef: Illegal value for 'delay_model'. 'generic_cmos', 'table_lookup', 'piecewise_cmos', 'cmos2' or 'dcm' are expected.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, simple_direction1)
@@ -387,6 +413,10 @@ TEST_F(ParserTest, simple_direction5)
   auto dst = simple_direction(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 0.1: Illegal value for 'direction'. 'input', 'output', 'inout' or 'internal' are expected.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, simple_timing_sense1)
@@ -444,6 +474,10 @@ TEST_F(ParserTest, simple_timing_sense4)
   auto dst = simple_timing_sense(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 7: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: unate: Illegal value for 'timing_sense'. Only 'positive_unate', 'negative_unate', or 'non_unate' are allowed here.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, simple_timing_type1)
@@ -921,6 +955,10 @@ TEST_F(ParserTest, simple_timing_type32)
   auto dst = simple_timing_type(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abc: Illegal value for 'timing_type'.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, simple_vartype1)
@@ -1127,6 +1165,10 @@ TEST_F(ParserTest, simple_vartype15)
   auto dst = simple_vartype(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abc: Illegal value for 'variable_type'.\n",
+	     msg_list[0]);
 }
 
 END_NAMESPACE_YM_DOTLIB

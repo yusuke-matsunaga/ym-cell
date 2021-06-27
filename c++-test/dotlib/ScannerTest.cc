@@ -11,7 +11,7 @@
 #include "TokenType.h"
 #include "ym/InputFileObj.h"
 #include "ym/MsgMgr.h"
-#include "ym/StreamMsgHandler.h"
+#include "ym/StrListMsgHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -22,13 +22,12 @@ class ScannerTest :
 public:
 
   ScannerTest()
-    : mh{&cout}
   {
     MsgMgr::attach_handler(&mh);
   }
 
-  FileInfo info;
-  StreamMsgHandler mh;
+  FileInfo info{"scanner_test.lib"};
+  StrListMsgHandler mh;
 
 };
 
@@ -105,6 +104,10 @@ TEST_F(ScannerTest, read_int2)
   auto value1 = scanner.read_int();
 
   EXPECT_TRUE( value1 == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 123.45: Not an integer value(FLOAT).\n",
+	     msg_list[0]);
 }
 
 TEST_F(ScannerTest, read_int3)
@@ -117,6 +120,50 @@ TEST_F(ScannerTest, read_int3)
   auto value1 = scanner.read_int();
 
   EXPECT_TRUE( value1 == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: a123: Not an integer value(SYMBOL).\n",
+	     msg_list[0]);
+}
+
+TEST_F(ScannerTest, read_bool1)
+{
+  istringstream buf{"true"};
+  InputFileObj in{buf, info};
+  Scanner scanner{in};
+
+  auto value1 = scanner.read_bool();
+
+  ASSERT_TRUE( value1 != nullptr );
+  EXPECT_EQ( true, value1->bool_value() );
+}
+
+TEST_F(ScannerTest, read_bool2)
+{
+  istringstream buf{"false"};
+  InputFileObj in{buf, info};
+  Scanner scanner{in};
+
+  auto value1 = scanner.read_bool();
+
+  ASSERT_TRUE( value1 != nullptr );
+  EXPECT_EQ( false, value1->bool_value() );
+}
+
+TEST_F(ScannerTest, read_bool3)
+{
+  // 大文字小文字は区別される．
+  istringstream buf{"True"};
+  InputFileObj in{buf, info};
+  Scanner scanner{in};
+
+  auto value1 = scanner.read_bool();
+
+  EXPECT_TRUE( value1 == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: True: Illegal value for boolean, only 'true' or 'false' are allowed.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ScannerTest, read_float1)
@@ -154,6 +201,10 @@ TEST_F(ScannerTest, read_float3)
   auto value1 = scanner.read_float();
 
   EXPECT_TRUE( value1 == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: f123: Not a number value(SYMBOL).\n",
+	     msg_list[0]);
 }
 
 TEST_F(ScannerTest, read_float4)
@@ -166,6 +217,10 @@ TEST_F(ScannerTest, read_float4)
   auto value1 = scanner.read_float();
 
   EXPECT_TRUE( value1 == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "scanner_test.lib: line 1, column 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 12.3f: Illegal character for number value.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ScannerTest, read_string1)
@@ -277,6 +332,10 @@ TEST_F(ScannerTest, read_delay_model6)
   auto value1 = scanner.read_delay_model();
 
   ASSERT_TRUE( value1 == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: dmos2: Illegal value for 'delay_model'. 'generic_cmos', 'table_lookup', 'piecewise_cmos', 'cmos2' or 'dcm' are expected.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ScannerTest, read_direction1)
@@ -338,6 +397,10 @@ TEST_F(ScannerTest, read_direction5)
   auto value1 = scanner.read_direction();
 
   ASSERT_TRUE( value1 == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: inbut: Illegal value for 'direction'. 'input', 'output', 'inout' or 'internal' are expected.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ScannerTest, read_timing_sense1)
@@ -387,6 +450,10 @@ TEST_F(ScannerTest, read_timing_sense4)
   auto value1 = scanner.read_timing_sense();
 
   ASSERT_TRUE( value1 == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: unate: Illegal value for 'timing_sense'. Only 'positive_unate', 'negative_unate', or 'non_unate' are allowed here.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ScannerTest, read_timing_type1)
@@ -772,6 +839,10 @@ TEST_F(ScannerTest, read_timing_type32)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 3: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abc: Illegal value for 'timing_type'.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ScannerTest, read_vartype1)
@@ -928,6 +999,21 @@ TEST_F(ScannerTest, read_vartype13)
 
   ASSERT_TRUE( value1 != nullptr );
   EXPECT_EQ( ClibVarType::RelatedPinTransition, value1->vartype_value() );
+}
+
+TEST_F(ScannerTest, read_vartype14)
+{
+  istringstream buf{"related_pn_transition"};
+  InputFileObj in{buf, info};
+  Scanner scanner{in};
+
+  auto value1 = scanner.read_vartype();
+
+  ASSERT_TRUE( value1 == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 21: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: related_pn_transition: Illegal value for 'variable_type'.\n",
+	     msg_list[0]);
 }
 
 END_NAMESPACE_YM_DOTLIB

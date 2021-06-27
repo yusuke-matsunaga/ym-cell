@@ -63,8 +63,9 @@ public:
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  read_header_value(Scanner& scanner, ///< [in] 字句解析器
-		    int count);       ///< [in] read_header_value() の呼ばれた回数
+  read_header_value(Scanner& scanner,      ///< [in] 字句解析器
+		    const FileRegion& loc, ///< [in] 現在のファイル上の位置
+		    int count);            ///< [in] read_header_value() の呼ばれた回数
 
   /// @brief 読み込みが終了した時の処理を行う．
   /// @retrun 結果の AstValue を返す．
@@ -106,8 +107,8 @@ private:
   /// @return 読み込んだ値を返す．
   virtual
   AstValuePtr
-  _read_header_value(Scanner& scanner, ///< [in] 字句解析器
-		     int count) = 0;   ///< [in] read_header_value() の呼ばれた回数
+  _read_header_value(Scanner& scanner,      ///< [in] 字句解析器
+		     int count) = 0;        ///< [in] read_header_value() の呼ばれた回数
 
   /// @brief 読み込みが終了した時の処理を行う．
   /// @retval true 正しく読み込んだ．
@@ -159,8 +160,8 @@ private:
 
   /// @brief ヘッダの値を読み込む処理
   AstValuePtr
-  _read_header_value(Scanner& scanner,    ///< [in] 字句解析器
-		     int count) override; ///< [in] read_header_value() の呼ばれた回数
+  _read_header_value(Scanner& scanner,      ///< [in] 字句解析器
+		     int count) override;   ///< [in] read_header_value() の呼ばれた回数
 
   /// @brief 読み込みが終了した時の処理を行う．
   bool
@@ -201,8 +202,8 @@ private:
 
   /// @brief ヘッダの値を読み込む処理
   AstValuePtr
-  _read_header_value(Scanner& scanner,    ///< [in] 字句解析器
-		     int count) override; ///< [in] read_header_value() の呼ばれた回数
+  _read_header_value(Scanner& scanner,      ///< [in] 字句解析器
+		     int count) override;   ///< [in] read_header_value() の呼ばれた回数
 
   /// @brief 読み込みが終了した時の処理を行う．
   bool
@@ -240,8 +241,8 @@ private:
 
   /// @brief 値を読み込む処理
   AstValuePtr
-  _read_header_value(Scanner& scanner,    ///< [in] 字句解析器
-		     int count) override; ///< [in] read_value() の呼ばれた回数
+  _read_header_value(Scanner& scanner,      ///< [in] 字句解析器
+		     int count) override;   ///< [in] read_value() の呼ばれた回数
 
   /// @brief 読み込みが終了した時の処理を行う．
   /// @retval true 正しく読み込んだ．

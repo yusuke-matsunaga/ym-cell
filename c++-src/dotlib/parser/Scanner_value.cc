@@ -112,11 +112,14 @@ Scanner::read_bool()
     }
   }
 
+  ostringstream buf;
+  buf << "Syntax error: "
+      << tmp_str << ": Illegal value for boolean, only 'true' or 'false' are allowed.";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  value_loc,
 		  MsgType::Error,
 		  "DOTLIB_SCANNER",
-		  "Syntax error. only 'true' or 'false' are allowed.");
+		  buf.str());
   return {};
 }
 
@@ -149,7 +152,7 @@ Scanner::read_delay_model()
   }
   if ( value == ClibDelayModel::None ) {
     ostringstream buf;
-    buf << tmp_str << ": Illegal value for 'delay_model'."
+    buf << "Syntax error: " << tmp_str << ": Illegal value for 'delay_model'."
 	<< " 'generic_cmos', 'table_lookup', "
 	<< "'piecewise_cmos', 'cmos2' or 'dcm' are expected.";
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -189,7 +192,7 @@ Scanner::read_direction()
   }
   if ( value == ClibDirection::None ) {
     ostringstream buf;
-    buf << tmp_str << ": Illegal value for 'direction'."
+    buf << "Syntax error: " << tmp_str << ": Illegal value for 'direction'."
 	<< " 'input', 'output', 'inout' or 'internal' are expected.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
@@ -222,8 +225,8 @@ Scanner::read_technology()
   }
   if ( value == ClibTechnology::none ) {
     ostringstream buf;
-    buf << tmp_str << ": Illegal value for 'technology'. "
-	<< " Only 'cmos' or 'fpga' are allowed here.";
+    buf << "Syntax error: " << tmp_str << ": Illegal value for 'technology'. "
+	<< "Only 'cmos' or 'fpga' are allowed here.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,
@@ -258,7 +261,7 @@ Scanner::read_timing_sense()
   }
   if ( value == ClibTimingSense::None ) {
     ostringstream buf;
-    buf << tmp_str << ": Illegal value for 'timing_sense'."
+    buf << "Syntax error: " << tmp_str << ": Illegal value for 'timing_sense'."
 	<< " Only 'positive_unate', 'negative_unate', or 'non_unate' are allowed here.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
@@ -377,11 +380,14 @@ Scanner::read_timing_type()
     }
   }
   if ( value == ClibTimingType::None ) {
+    ostringstream buf;
+    buf << "Syntax error: "
+	<< tmp_str << ": Illegal value for 'timing_type'.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
-		    "Syntax error. Illegal string for timing type.");
+		    buf.str());
     return {};
   }
 
@@ -441,8 +447,8 @@ Scanner::read_vartype()
   }
   if ( value == ClibVarType::None ) {
     ostringstream buf;
-    buf << "Syntax error. "
-	<< tmp_str << " is not a valid string for variable type.";
+    buf << "Syntax error: "
+	<< tmp_str << ": Illegal value for 'variable_type'.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    value_loc,
 		    MsgType::Error,

@@ -11,6 +11,8 @@
 #include "AstAttr.h"
 #include "AstValue.h"
 
+#include "parse_complex.h"
+
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
@@ -42,6 +44,10 @@ TEST_F(ParserTest, complex_float_float2)
   auto dst = complex_float_float(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_float3)
@@ -54,6 +60,10 @@ TEST_F(ParserTest, complex_float_float3)
   auto dst = complex_float_float(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 11: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_float4)
@@ -66,6 +76,10 @@ TEST_F(ParserTest, complex_float_float4)
   auto dst = complex_float_float(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 7: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 1.0: Not a number value(SYMBOL).\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_float5)
@@ -78,6 +92,10 @@ TEST_F(ParserTest, complex_float_float5)
   auto dst = complex_float_float(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 8 - 12: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: false: Not a number value(SYMBOL).\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_string1)
@@ -124,6 +142,10 @@ TEST_F(ParserTest, complex_float_string3)
   auto dst = complex_float_string(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_string4)
@@ -136,6 +158,10 @@ TEST_F(ParserTest, complex_float_string4)
   auto dst = complex_float_string(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 10: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_string5)
@@ -148,6 +174,10 @@ TEST_F(ParserTest, complex_float_string5)
   auto dst = complex_float_string(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 7: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 1.0: Not a number value(SYMBOL).\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_vector1)
@@ -180,6 +210,10 @@ TEST_F(ParserTest, complex_float_vector2)
   auto dst = complex_float_vector(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 18: (ERROR  ) [DOTLIB_PARSER]: Syntax error: 2.0a: Could not convert to a number.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_vector3)
@@ -192,6 +226,10 @@ TEST_F(ParserTest, complex_float_vector3)
   auto dst = complex_float_vector(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_vector4)
@@ -204,6 +242,10 @@ TEST_F(ParserTest, complex_float_vector4)
   auto dst = complex_float_vector(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 18: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float1)
@@ -233,6 +275,10 @@ TEST_F(ParserTest, complex_int_float2)
   auto dst = complex_int_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 5: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float3)
@@ -245,6 +291,10 @@ TEST_F(ParserTest, complex_int_float3)
   auto dst = complex_int_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 9: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float4)
@@ -257,6 +307,10 @@ TEST_F(ParserTest, complex_int_float4)
   auto dst = complex_int_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 1: Not an integer value(SYMBOL).\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float5)
@@ -269,6 +323,10 @@ TEST_F(ParserTest, complex_int_float5)
   auto dst = complex_int_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 6 - 10: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 2.3: Not a number value(SYMBOL).\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float_vector1)
@@ -301,6 +359,10 @@ TEST_F(ParserTest, complex_int_float_vector2)
   auto dst = complex_int_float_vector(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 5: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float_vector3)
@@ -313,6 +375,10 @@ TEST_F(ParserTest, complex_int_float_vector3)
   auto dst = complex_int_float_vector(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 16: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float_vector4)
@@ -325,6 +391,10 @@ TEST_F(ParserTest, complex_int_float_vector4)
   auto dst = complex_int_float_vector(parser, attr);
 
   ASSERT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 1: Not an integer value(SYMBOL).\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_vector1)
@@ -357,6 +427,10 @@ TEST_F(ParserTest, complex_int_vector2)
   auto dst = complex_int_vector(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_vector3)
@@ -369,9 +443,13 @@ TEST_F(ParserTest, complex_int_vector3)
   auto dst = complex_int_vector(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 12: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 1.\n",
+	     msg_list[0]);
 }
 
-TEST_F(ParserTest, complex_string_complex1)
+TEST_F(ParserTest, complex_string1)
 {
   istringstream buf("( abc );\n");
   InputFileObj in{buf, info};
@@ -389,7 +467,7 @@ TEST_F(ParserTest, complex_string_complex1)
 
 }
 
-TEST_F(ParserTest, complex_string_complex2)
+TEST_F(ParserTest, complex_string2)
 {
   istringstream buf("( \"abc\" );\n");
   InputFileObj in{buf, info};
@@ -405,7 +483,7 @@ TEST_F(ParserTest, complex_string_complex2)
   EXPECT_EQ( "abc", value.complex_elem_value(0).string_value() );
 }
 
-TEST_F(ParserTest, complex_string_complex3)
+TEST_F(ParserTest, complex_string3)
 {
   // 要素数が少ない．
   istringstream buf("( );\n");
@@ -415,9 +493,13 @@ TEST_F(ParserTest, complex_string_complex3)
   auto dst = complex_string(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 3: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 1.\n",
+	     msg_list[0]);
 }
 
-TEST_F(ParserTest, complex_string_complex4)
+TEST_F(ParserTest, complex_string4)
 {
   // 要素数が多い．
   istringstream buf("( abc, def );\n");
@@ -427,6 +509,10 @@ TEST_F(ParserTest, complex_string_complex4)
   auto dst = complex_string(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 6: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_float1)
@@ -456,6 +542,10 @@ TEST_F(ParserTest, complex_string_float2)
   auto dst = complex_string_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_float3)
@@ -468,6 +558,10 @@ TEST_F(ParserTest, complex_string_float3)
   auto dst = complex_string_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 11: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_float4)
@@ -480,6 +574,10 @@ TEST_F(ParserTest, complex_string_float4)
   auto dst = complex_string_float(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 8 - 12: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 1.2: Not a number value(SYMBOL).\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_int1)
@@ -509,6 +607,10 @@ TEST_F(ParserTest, complex_string_int2)
   auto dst = complex_string_int(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_int3)
@@ -521,6 +623,10 @@ TEST_F(ParserTest, complex_string_int3)
   auto dst = complex_string_int(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 9: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_int4)
@@ -533,6 +639,10 @@ TEST_F(ParserTest, complex_string_int4)
   auto dst = complex_string_int(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 8 - 10: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 1: Not an integer value(SYMBOL).\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_list1)
@@ -631,6 +741,10 @@ TEST_F(ParserTest, complex_string_string3)
   auto dst = complex_string_string(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_string4)
@@ -643,6 +757,10 @@ TEST_F(ParserTest, complex_string_string4)
   auto dst = complex_string_string(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 11: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_string_string1)
@@ -671,7 +789,12 @@ TEST_F(ParserTest, complex_string_string_string2)
   Parser parser{in, false, false};
 
   auto dst = complex_string_string_string(parser, attr);
+
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 14: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 3.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_string_string3)
@@ -682,7 +805,12 @@ TEST_F(ParserTest, complex_string_string_string3)
   Parser parser{in, false, false};
 
   auto dst = complex_string_string_string(parser, attr);
+
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 18: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 3.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_technology1)
@@ -727,6 +855,10 @@ TEST_F(ParserTest, complex_technology3)
   auto dst = complex_technology(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 3: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_technology4)
@@ -739,6 +871,10 @@ TEST_F(ParserTest, complex_technology4)
   auto dst = complex_technology(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_technology5)
@@ -751,6 +887,10 @@ TEST_F(ParserTest, complex_technology5)
   auto dst = complex_technology(parser, attr);
 
   EXPECT_TRUE( dst == nullptr );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abc: Illegal value for 'technology'. Only 'cmos' or 'fpga' are allowed here.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_values1)

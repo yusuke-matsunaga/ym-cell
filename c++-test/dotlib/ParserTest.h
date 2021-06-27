@@ -12,7 +12,7 @@
 #include "dotlib_nsdef.h"
 #include "AttrKwd.h"
 #include "ym/MsgMgr.h"
-#include "ym/StreamMsgHandler.h"
+#include "ym/StrListMsgHandler.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -23,14 +23,13 @@ class ParserTest :
 public:
 
   ParserTest()
-    : mh{&cout}
   {
     MsgMgr::attach_handler(&mh);
   }
 
-  FileInfo info;
+  FileInfo info{"parser_test.lib"};
   AttrKwd attr;
-  StreamMsgHandler mh;
+  StrListMsgHandler mh;
 
 };
 

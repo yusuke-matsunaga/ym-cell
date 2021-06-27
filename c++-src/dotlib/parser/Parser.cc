@@ -13,7 +13,9 @@
 
 #include "ym/MsgMgr.h"
 
-#include "Parser_ext.h"
+#include "parse_simple.h"
+#include "parse_complex.h"
+#include "parse_group.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -303,7 +305,7 @@ Parser::parse_header(HeaderHandler& handler)
       }
     }
     // ハンドラを用いて値を読み込む．
-    if ( !handler.read_header_value(mScanner, count) ) {
+    if ( !handler.read_header_value(mScanner, token.loc(), count) ) {
       return {};
     }
   }
@@ -337,7 +339,7 @@ Parser::read_tail()
 		  token.loc(),
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
-		  "Syntax error. new-line is expected.");
+		  "Syntax error. New-line is expected.");
 
   return false;
 }
