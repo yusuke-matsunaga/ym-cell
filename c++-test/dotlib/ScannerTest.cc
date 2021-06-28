@@ -74,11 +74,11 @@ TEST_F(ScannerTest, read_token2)
   //EXPECT_TRUE( strcmp(scanner.cur_string(), "xyz") == 0 );
 
   auto token3 = scanner.read_token();
-  EXPECT_EQ( TokenType::INT_NUM, token3.type() );
+  EXPECT_EQ( TokenType::SYMBOL, token3.type() );
   //EXPECT_EQ( 123, scanner.cur_int() );
 
   auto token4 = scanner.read_token();
-  EXPECT_EQ( TokenType::FLOAT_NUM, token4.type() );
+  EXPECT_EQ( TokenType::SYMBOL, token4.type() );
   //EXPECT_EQ( 456.78, scanner.cur_float() );
 }
 
@@ -106,7 +106,7 @@ TEST_F(ScannerTest, read_int2)
   EXPECT_TRUE( value1 == nullptr );
   auto msg_list = mh.message_list();
   EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 123.45: Not an integer value(FLOAT).\n",
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 123.45: Not an integer value.\n",
 	     msg_list[0]);
 }
 
@@ -122,7 +122,7 @@ TEST_F(ScannerTest, read_int3)
   EXPECT_TRUE( value1 == nullptr );
   auto msg_list = mh.message_list();
   EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: a123: Not an integer value(SYMBOL).\n",
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: a123: Not an integer value.\n",
 	     msg_list[0]);
 }
 
@@ -203,7 +203,7 @@ TEST_F(ScannerTest, read_float3)
   EXPECT_TRUE( value1 == nullptr );
   auto msg_list = mh.message_list();
   EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: f123: Not a number value(SYMBOL).\n",
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: f123: Not a number value.\n",
 	     msg_list[0]);
 }
 
@@ -219,7 +219,7 @@ TEST_F(ScannerTest, read_float4)
   EXPECT_TRUE( value1 == nullptr );
   auto msg_list = mh.message_list();
   EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "scanner_test.lib: line 1, column 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 12.3f: Illegal character for number value.\n",
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 12.3f: Not a number value.\n",
 	     msg_list[0]);
 }
 

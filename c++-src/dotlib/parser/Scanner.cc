@@ -12,13 +12,6 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-// @brief コンストラクタ
-Scanner::Scanner(InputFileObj& in) ///< [in] 入力ファイルオブジェクト
-  : mIn{in},
-    mSymbolMode{false}
-{
-}
-
 // @brief 属性を読み込む．
 AttrKwd
 Scanner::read_attr()
@@ -29,7 +22,6 @@ Scanner::read_attr()
   for ( token = read_token(); token.type() == TokenType::NL; token = read_token() ) { }
 
   if ( token.type() != TokenType::SYMBOL ) {
-    cout << "token.type() = " << token.type() << endl;
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    token.loc(),
 		    MsgType::Error,
@@ -38,8 +30,7 @@ Scanner::read_attr()
     return AttrKwd{};
   }
 
-  const char* attr_name = cur_string();
-  return AttrKwd(attr_name, token.loc());
+  return AttrKwd(token.value(), token.loc());
 }
 
 // @brief float のリストを読み込む．
@@ -51,27 +42,27 @@ bool
 Scanner::read_raw_float_vector(vector<double>& dst_list, ///< [out] 値を格納するリスト
 			       FileRegion& loc)    ///< [out] ファイル上の位置
 {
-  Token token = read_token();
-  if ( token.type() != TokenType::SYMBOL ) {
+  auto token = read_token();
+  loc = token.loc();
+  auto tmp_str = token.str_value();
+  if ( tmp_str == string() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    token.loc(),
+		    loc,
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. 'string' value is expected.");
     return false;
   }
 
-  const char* tmp_str = cur_string();
   string buf;
-  char c = '\0';
-  for ( const char* s = tmp_str; (c = *s) ; ++ s ) {
+  for ( auto c: tmp_str ) {
     if ( isspace(c) ) {
       continue;
     }
     else if ( c == ',' ) {
       if ( buf.size() == 0 ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
-			token.loc(),
+			loc,
 			MsgType::Error,
 			"DOTLIB_PARSER",
 			"Syntax error. Null element.");
@@ -84,7 +75,7 @@ Scanner::read_raw_float_vector(vector<double>& dst_list, ///< [out] 値を格納
 	emsg << "Syntax error: "
 	     << buf << ": Could not convert to a number.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
-			token.loc(),
+			loc,
 			MsgType::Error,
 			"DOTLIB_PARSER",
 			emsg.str());
@@ -100,34 +91,8 @@ Scanner::read_raw_float_vector(vector<double>& dst_list, ///< [out] 値を格納
   if ( buf.size() > 0 ) {
     dst_list.push_back(strtod(buf.c_str(), nullptr));
   }
-  loc = token.loc();
 
   return true;
-}
-
-// @brief 文字列を読み込む．
-// @return 文字列を返す．
-//
-// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-const char*
-Scanner::read_raw_string(FileRegion& value_loc) ///< [out] トークンのファイル上の位置
-{
-  auto old_symbol_flag{mSymbolMode};
-  mSymbolMode = true;
-  Token token = read_token();
-  mSymbolMode = old_symbol_flag;
-  if ( token.type() == TokenType::SYMBOL ) {
-    value_loc = token.loc();
-    return cur_string();
-  }
-  else {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error. 'string' value is expected.");
-    return {};
-  }
 }
 
 // @brief 次のトークンを調べる．
@@ -139,7 +104,7 @@ Scanner::peek_token()
 {
   if ( mCurToken.type() == TokenType::ERROR ) {
     auto type = _scan();
-    mCurToken = {type, FileRegion(mFirstLoc, mIn.cur_loc())};
+    mCurToken = {type, FileRegion(mFirstLoc, mIn.cur_loc()), ShString(mCurString)};
   }
   return mCurToken;
 }
@@ -189,8 +154,8 @@ Scanner::read_and_verify(TokenType token_type)
   case TokenType::LCB:        type_str = "'{'"; break;
   case TokenType::RCB:        type_str = "'}'"; break;
   case TokenType::SYMBOL:     type_str = "STR"; break;
-  case TokenType::INT_NUM:    type_str = "INT"; break;
-  case TokenType::FLOAT_NUM:  type_str = "FLOAT"; break;
+  case TokenType::BOOL_0:     type_str = "BOOL_0"; break;
+  case TokenType::BOOL_1:     type_str = "BOOL_1"; break;
   case TokenType::EXPRESSION: type_str = "EXPRESSION"; break;
   case TokenType::NL:         type_str = "new-line"; break;
   default:                    ASSERT_NOT_REACHED;
@@ -205,49 +170,40 @@ Scanner::read_and_verify(TokenType token_type)
   return Token{};
 }
 
-// @brief read_token() の下請け関数
-// @return トークンの型を返す．
+// @brief 一文字読み込む．
+// @return 読み込んだトークンを返す．
 TokenType
 Scanner::_scan()
 {
   int c;
-
   mCurString.clear();
 
  ST_INIT: // 初期状態
   c = mIn.get();
   mFirstLoc = mIn.cur_loc();
-  if ( _is_symbol(c) ) {
-    mCurString.put_char(c);
-    goto ST_ID;
-  }
-  if ( isdigit(c) ) {
-    mCurString.put_char(c);
-    goto ST_NUM1;
-  }
 
   switch (c) {
-  case '.':
-    mCurString.put_char(c);
-    goto ST_DOT;
-
   case EOF:
     return TokenType::END;
 
   case ' ':
   case '\t':
-    goto ST_INIT; // 最初の空白は読み飛ばす．
+    // 先頭の空白文字はスキップ
+    goto ST_INIT;
 
   case '\n':
+    // 改行
     return TokenType::NL;
 
   case '\"':
+    // " によるクォート
     goto ST_DQ;
 
   case '\\':
+    // エスケープシーケンスは改行のみが有効
     c = mIn.peek();
     if ( c == '\n' ) {
-      // 無視する．
+      // ただの空白とみなす．
       mIn.accept();
       goto ST_INIT;
     }
@@ -255,6 +211,7 @@ Scanner::_scan()
     goto ST_INIT;
 
   case '/':
+    // コメントの可能性を調べる．
     goto ST_comment1;
 
   case ':':
@@ -270,7 +227,7 @@ Scanner::_scan()
     return TokenType::PLUS;
 
   case '-':
-    goto ST_MINUS;
+    return TokenType::MINUS;
 
   case '*':
     return TokenType::MULT;
@@ -288,143 +245,40 @@ Scanner::_scan()
     return TokenType::RCB;
 
   default:
-    // それ以外はエラーなんじゃない？
-    ostringstream emsg;
-    emsg << "Syntax error: " << c << ": Unexpected charactor.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    mIn.cur_loc(),
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    emsg.str());
-    return TokenType::ERROR;
+    // それ以外は一旦文字列の要素とみなす．
+    mCurString.put_char(c);
+    goto ST_SYMBOL;
   }
   ASSERT_NOT_REACHED;
 
- ST_MINUS: // '-' を読み込んだ時
+ ST_SYMBOL: // シンボルモード
   c = mIn.peek();
-  if ( isdigit(c) ) {
-    mIn.accept();
-    mCurString.put_char('-');
-    mCurString.put_char(c);
-    goto ST_NUM1;
-  }
-  return TokenType::MINUS;
+  switch ( c ) {
+  case EOF:
+  case ' ':
+  case '\t':
+  case '\n':
+  case '/':
+  case ':':
+  case ';':
+  case ',':
+  case '+':
+  case '-':
+  case '*':
+  case '(':
+  case ')':
+  case '{':
+  case '}':
+    return TokenType::SYMBOL;
 
- ST_NUM1: // 一文字目が[0-9]の時
-  c = mIn.peek();
-  if ( isdigit(c) ) {
+  default:
     mIn.accept();
     mCurString.put_char(c);
-    goto ST_NUM1;
+    goto ST_SYMBOL;
   }
-  if ( c == '.' ) {
-    mIn.accept();
-    mCurString.put_char(c);
-    goto ST_DOT;
-  }
-  if ( _is_delimiter(c) ) {
-    return TokenType::INT_NUM;
-  }
-  { // 数字の後に不適切な文字が付いている．
-    mCurString.put_char(c);
-    ostringstream emsg;
-    emsg << "Syntx error: " << mCurString << ": Illegal character for number value.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    mIn.cur_loc(),
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    emsg.str());
-    return TokenType::ERROR;
-  }
+  ASSERT_NOT_REACHED;
 
- ST_DOT: // [0-9]*'.' を読み込んだ時
-  c = mIn.peek();
-  if ( isdigit(c) ) {
-    mIn.accept();
-    mCurString.put_char(c);
-    goto ST_NUM2;
-  }
-  { // '.' の直後はかならず数字
-    mCurString.put_char(c);
-    ostringstream buf;
-    buf << "Syntax error: " << mCurString << ": Digit number expected after dot";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    mIn.cur_loc(),
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    buf.str());
-    return TokenType::ERROR;
-  }
-
- ST_NUM2: // [0-9]*'.'[0-9]* を読み込んだ時
-  c = mIn.peek();
-  if ( isdigit(c) ) {
-    mIn.accept();
-    mCurString.put_char(c);
-    goto ST_NUM2;
-  }
-  if ( c == 'e' || c == 'E' ) {
-    mIn.accept();
-    mCurString.put_char(c);
-    goto ST_NUM3;
-  }
-  if ( _is_delimiter(c) ) {
-    return TokenType::FLOAT_NUM;
-  }
-  { // 数字の後に不適切な文字が付いている．
-    mCurString.put_char(c);
-    ostringstream emsg;
-    emsg << "Syntax error: " << mCurString << ": Illegal character for number value.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    mIn.cur_loc(),
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    emsg.str());
-    return TokenType::ERROR;
-  }
-
- ST_NUM3: // [0-9]*'.'[0-9]*(e|E)を読み込んだ時
-  c = mIn.peek();
-  if ( isdigit(c) ) {
-    mIn.accept();
-    mCurString.put_char(c);
-    goto ST_NUM4;
-  }
-  if ( c == '+' || c == '-' ) {
-    mIn.accept();
-    mCurString.put_char(c);
-    goto ST_NUM4;
-  }
-  { // (e|E) の直後はかならず数字か符号
-    ostringstream buf;
-    buf << "exponent value expected";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    mIn.cur_loc(),
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    buf.str());
-    return TokenType::ERROR;
-  }
-
- ST_NUM4: // [0-9]*'.'[0-9]*(e|E)(+|-)?[0-9]*を読み込んだ直後
-  c = mIn.peek();
-  if ( isdigit(c) ) {
-    mIn.accept();
-    mCurString.put_char(c);
-    goto ST_NUM4;
-  }
-  return TokenType::FLOAT_NUM;
-
- ST_ID: // 一文字目が[a-zA-Z_]の時
-  c = mIn.peek();
-  if ( _is_symbol(c) || isdigit(c) ) {
-    mIn.accept();
-    mCurString.put_char(c);
-    goto ST_ID;
-  }
-  return TokenType::SYMBOL;
-
- ST_DQ: // "があったら次の"までを強制的に文字列だと思う．
+ ST_DQ: // '"'があったら次の'"'までを強制的に文字列だと思う．
   c = mIn.get();
   if ( c == '\"' ) {
     return TokenType::SYMBOL;
@@ -451,9 +305,9 @@ Scanner::_scan()
   }
   if ( c == '\\' ) {
     c = mIn.get();
-    if ( c != '\n' ) {
-      // 改行以外はバックスラッシュをそのまま解釈する．
-      mCurString.put_char('\\');
+    if ( c == '\n' ) {
+      // エスケープされた改行は空白に置き換える．
+      c = ' ';
     }
   }
   mCurString.put_char(c);
@@ -484,7 +338,7 @@ Scanner::_scan()
  ST_comment3: // "/*" を読み込んだ直後
   c = mIn.get();
   if ( c == EOF ) {
-    goto ST_EOF;
+    goto ST_comment_EOF;
   }
   if ( c == '*' ) {
     goto ST_comment4;
@@ -494,7 +348,7 @@ Scanner::_scan()
  ST_comment4: // "/* 〜 *" まで読み込んだ直後
   c = mIn.get();
   if ( c == EOF ) {
-    goto ST_EOF;
+    goto ST_comment_EOF;
   }
   if ( c == '/' ) {
     goto ST_INIT;
@@ -504,7 +358,7 @@ Scanner::_scan()
   }
   goto ST_comment3;
 
- ST_EOF:
+ ST_comment_EOF:
   {
     ostringstream buf;
     buf << "Unexpected end-of-file in comment block.";
@@ -517,32 +371,38 @@ Scanner::_scan()
   return TokenType::ERROR;
 }
 
-// @brief c が区切り文字の時に true を返す．
-bool
-Scanner::_is_delimiter(int c)
-{
-  if ( c == ' ' || c == '\t' || c == '\n' ||
-       c == ',' || c == ';' || c == ')' ||
-       c == EOF ) {
-    return true;
-  }
-  return false;
-}
 
-// @brief c が文字の時に true を返す．
-// @note mSymbolMode が true なら数字も文字とみなす．
-bool
-Scanner::_is_symbol(int c)
+//////////////////////////////////////////////////////////////////////
+// クラス Token
+//////////////////////////////////////////////////////////////////////
+
+// @brief トークンを表す文字列を返す．
+string
+Token::str_value() const
 {
-  if ( isalpha(c) || c == '_' ) {
-    return true;
+  switch ( type() ) {
+  case TokenType::COLON:  return ":";
+  case TokenType::SEMI:   return ";";
+  case TokenType::COMMA:  return ",";
+  case TokenType::PLUS:   return "+";
+  case TokenType::MINUS:  return "-";
+  case TokenType::MULT:   return "*";
+  case TokenType::DIV:    return "/";
+  case TokenType::NOT:    return "~";
+  case TokenType::AND:    return "&";
+  case TokenType::OR:     return "|";
+  case TokenType::XOR:    return "^";
+  case TokenType::LP:     return "(";
+  case TokenType::RP:     return ")";
+  case TokenType::LCB:    return "{";
+  case TokenType::RCB:    return "*";
+  case TokenType::PRIME:  return "'";
+  case TokenType::SYMBOL: return value();
+  case TokenType::BOOL_0: return "0";
+  case TokenType::BOOL_1: return "1";
+  default: break;
   }
-  if ( mSymbolMode ) {
-    if ( isdigit(c) || c == '.' ) {
-      return true;
-    }
-  }
-  return false;
+  return string();
 }
 
 END_NAMESPACE_YM_DOTLIB

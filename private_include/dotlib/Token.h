@@ -11,6 +11,7 @@
 #include "dotlib_nsdef.h"
 #include "dotlib/TokenType.h"
 #include "ym/FileRegion.h"
+#include "ym/ShString.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -27,9 +28,11 @@ public:
   Token() = default;
 
   /// @brief 内容を指定したコンストラクタ
-  Token(TokenType type,        ///< [in] トークンの種類
-	const FileRegion& loc) ///< [in] トークンの位置
+  Token(TokenType type,              ///< [in] トークンの種類
+	const FileRegion& loc,       ///< [in] トークンの位置
+	ShString value = ShString{}) ///< [in] トークンの値
     : mType{type},
+      mStr{value},
       mLoc{loc}
   {
   }
@@ -47,17 +50,19 @@ public:
   TokenType
   type() const { return mType; }
 
+  /// @brief トークンの値を返す．
+  ///
+  /// type() == TokenType::Symbol の時のみ意味を持つ．
+  ShString
+  value() const { return mStr; }
+
   /// @brief トークンの位置を返す．
   FileRegion
   loc() const { return mLoc; }
 
   /// @brief トークンを表す文字列を返す．
-  operator string() const
-  {
-    ostringstream buf;
-    buf << loc() << ": " << type();
-    return buf.str();
-  }
+  string
+  str_value() const;
 
 
 private:
@@ -68,10 +73,23 @@ private:
   // 種類
   TokenType mType{TokenType::ERROR};
 
+  // 文字列
+  ShString mStr;
+
   // 位置
   FileRegion mLoc{};
 
 };
+
+inline
+ostream&
+operator<<(ostream& s,
+	   const Token& token)
+{
+  s << token.loc() << ": " << token.type()
+    << "[" << token.str_value() << "]";
+  return s;
+}
 
 END_NAMESPACE_YM_DOTLIB
 

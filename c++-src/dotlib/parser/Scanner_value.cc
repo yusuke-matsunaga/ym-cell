@@ -20,26 +20,30 @@ BEGIN_NAMESPACE_YM_DOTLIB
 AstValuePtr
 Scanner::read_int()
 {
-  Token value_token{read_token()};
-  if ( value_token.type() == TokenType::ERROR ) {
-    return {};
+  auto token = read_token();
+  auto tmp_str = token.str_value();
+  SizeType n = tmp_str.size();
+  bool ok = true;
+  for ( int i = 0; i < n; ++ i ) {
+    if ( !isdigit(tmp_str[i]) ) {
+      ok = false;
+      break;
+    }
   }
-  if ( value_token.type() == TokenType::INT_NUM ) {
-    return AstValue::new_int(cur_int(), value_token.loc());
+  if ( ok ) {
+    int val = atoi(tmp_str.c_str());
+    return AstValue::new_int(val, token.loc());
   }
-  else {
-    ostringstream emsg;
-    emsg << "Syntax error: " << cur_string()
-	 << ": Not an integer value("
-	 << value_token.type()
-	 << ").";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_token.loc(),
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    emsg.str());
-    return {};
-  }
+
+  ostringstream emsg;
+  emsg << "Syntax error: " << tmp_str
+       << ": Not an integer value.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  token.loc(),
+		  MsgType::Error,
+		  "DOTLIB_SCANNER",
+		  emsg.str());
+  return {};
 }
 
 // @brief float 型の値を読み込む．
@@ -49,27 +53,24 @@ Scanner::read_int()
 AstValuePtr
 Scanner::read_float()
 {
-  Token value_token{read_token()};
-  if ( value_token.type() == TokenType::ERROR ) {
-    return {};
+  auto token = read_token();
+  auto tmp_str = token.str_value();
+  char* end;
+  double value = strtod(tmp_str.c_str(), &end);
+  if ( end[0] == '\0' ) {
+    // 全体が float 文字列だった．
+    return AstValue::new_float(value, token.loc());
   }
-  // int 型も float 型とみなす．
-  if ( value_token.type() == TokenType::FLOAT_NUM || value_token.type() == TokenType::INT_NUM ) {
-    return AstValue::new_float(cur_float(), value_token.loc());
-  }
-  else {
-    ostringstream emsg;
-    emsg << "Syntax error: " << cur_string()
-	 << ": Not a number value("
-	 << value_token.type()
-	 << ").";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_token.loc(),
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    emsg.str());
-    return {};
-  }
+
+  ostringstream emsg;
+  emsg << "Syntax error: " << tmp_str
+       << ": Not a number value.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  token.loc(),
+		  MsgType::Error,
+		  "DOTLIB_SCANNER",
+		  emsg.str());
+  return {};
 }
 
 // @brief string 型の値を読み込む．
@@ -79,19 +80,17 @@ Scanner::read_float()
 AstValuePtr
 Scanner::read_string()
 {
-  FileRegion value_loc;
-  auto tmp_str = read_raw_string(value_loc);
-  if ( tmp_str ) {
-    return AstValue::new_string(ShString(tmp_str), value_loc);
+  auto token = read_token();
+  if ( token.type() == TokenType::SYMBOL ) {
+    return AstValue::new_string(token.value(), token.loc());
   }
-  else {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    "Syntax error. 'string' value is expected.");
-    return {};
-  }
+
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  token.loc(),
+		  MsgType::Error,
+		  "DOTLIB_SCANNER",
+		  "Syntax error. 'string' value is expected.");
+  return {};
 }
 
 // @brief bool 型の値を読み込む．
@@ -101,22 +100,20 @@ Scanner::read_string()
 AstValuePtr
 Scanner::read_bool()
 {
-  FileRegion value_loc;
-  auto tmp_str = read_raw_string(value_loc);
-  if ( tmp_str != nullptr ) {
-    if ( strcmp(tmp_str, "true") == 0 ) {
-      return AstValue::new_bool(true, value_loc);
-    }
-    if ( strcmp(tmp_str, "false") == 0 ) {
-      return AstValue::new_bool(false, value_loc);
-    }
+  auto token = read_token();
+  auto tmp_str = token.str_value();
+  if ( tmp_str == "true" ) {
+    return AstValue::new_bool(true, token.loc());
+  }
+  if ( tmp_str == "false" ) {
+    return AstValue::new_bool(false, token.loc());
   }
 
   ostringstream buf;
   buf << "Syntax error: "
       << tmp_str << ": Illegal value for boolean, only 'true' or 'false' are allowed.";
   MsgMgr::put_msg(__FILE__, __LINE__,
-		  value_loc,
+		  token.loc(),
 		  MsgType::Error,
 		  "DOTLIB_SCANNER",
 		  buf.str());
@@ -130,40 +127,38 @@ Scanner::read_bool()
 AstValuePtr
 Scanner::read_delay_model()
 {
-  FileRegion value_loc;
-  auto tmp_str = read_raw_string(value_loc);
+  auto token = read_token();
+  auto tmp_str = token.str_value();
   ClibDelayModel value{ClibDelayModel::None};
-  if ( tmp_str != nullptr ) {
-    if ( strcmp(tmp_str, "generic_cmos") == 0 ) {
-      value = ClibDelayModel::GenericCmos;
-    }
-    else if ( strcmp(tmp_str, "table_lookup") == 0 ) {
-      value = ClibDelayModel::TableLookup;
-    }
-    else if ( strcmp(tmp_str, "piecewise_cmos") == 0 ) {
-      value = ClibDelayModel::PiecewiseCmos;
-    }
-    else if ( strcmp(tmp_str, "cmos2") == 0 ) {
-      value = ClibDelayModel::Cmos2;
-    }
-    else if ( strcmp(tmp_str, "dcm") == 0 ) {
-      value = ClibDelayModel::Dcm;
-    }
+  if ( tmp_str == "generic_cmos" ) {
+    value = ClibDelayModel::GenericCmos;
   }
-  if ( value == ClibDelayModel::None ) {
-    ostringstream buf;
-    buf << "Syntax error: " << tmp_str << ": Illegal value for 'delay_model'."
-	<< " 'generic_cmos', 'table_lookup', "
-	<< "'piecewise_cmos', 'cmos2' or 'dcm' are expected.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    buf.str());
-    return {};
+  else if ( tmp_str == "table_lookup" ) {
+    value = ClibDelayModel::TableLookup;
+  }
+  else if ( tmp_str == "piecewise_cmos" ) {
+    value = ClibDelayModel::PiecewiseCmos;
+  }
+  else if ( tmp_str == "cmos2" ) {
+    value = ClibDelayModel::Cmos2;
+  }
+  else if ( tmp_str == "dcm" ) {
+    value = ClibDelayModel::Dcm;
+  }
+  if ( value != ClibDelayModel::None ) {
+    return AstValue::new_delay_model(value, token.loc());
   }
 
-  return AstValue::new_delay_model(value, value_loc);
+  ostringstream buf;
+  buf << "Syntax error: " << tmp_str << ": Illegal value for 'delay_model'."
+      << " 'generic_cmos', 'table_lookup', "
+      << "'piecewise_cmos', 'cmos2' or 'dcm' are expected.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  token.loc(),
+		  MsgType::Error,
+		  "DOTLIB_SCANNER",
+		  buf.str());
+  return {};
 }
 
 // @brief direction 型の値を読み込む．
@@ -173,36 +168,34 @@ Scanner::read_delay_model()
 AstValuePtr
 Scanner::read_direction()
 {
-  FileRegion value_loc;
-  auto tmp_str = read_raw_string(value_loc);
+  auto token = read_token();
+  auto tmp_str = token.str_value();
   ClibDirection value{ClibDirection::None};
-  if ( tmp_str != nullptr ) {
-    if ( strcmp(tmp_str, "input") == 0 ) {
-      value = ClibDirection::Input;
-    }
-    else if ( strcmp(tmp_str, "output") == 0 ) {
-      value = ClibDirection::Output;
-    }
-    else if ( strcmp(tmp_str, "inout") == 0 ) {
-      value = ClibDirection::Inout;
-    }
-    else if ( strcmp(tmp_str, "internal") == 0 ) {
-      value = ClibDirection::Internal;
-    }
+  if ( tmp_str == "input" ) {
+    value = ClibDirection::Input;
   }
-  if ( value == ClibDirection::None ) {
-    ostringstream buf;
-    buf << "Syntax error: " << tmp_str << ": Illegal value for 'direction'."
-	<< " 'input', 'output', 'inout' or 'internal' are expected.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    buf.str());
-    return {};
+  else if ( tmp_str == "output" ) {
+    value = ClibDirection::Output;
+  }
+  else if ( tmp_str == "inout" ) {
+    value = ClibDirection::Inout;
+  }
+  else if ( tmp_str == "internal" ) {
+    value = ClibDirection::Internal;
+  }
+  if ( value != ClibDirection::None ) {
+    return AstValue::new_direction(value, token.loc());
   }
 
-  return AstValue::new_direction(value, value_loc);
+  ostringstream buf;
+  buf << "Syntax error: " << tmp_str << ": Illegal value for 'direction'."
+      << " 'input', 'output', 'inout' or 'internal' are expected.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  token.loc(),
+		  MsgType::Error,
+		  "DOTLIB_SCANNER",
+		  buf.str());
+  return {};
 }
 
 // @brief technology 型の値を読み込む．
@@ -212,30 +205,28 @@ Scanner::read_direction()
 AstValuePtr
 Scanner::read_technology()
 {
-  FileRegion value_loc;
-  auto tmp_str = read_raw_string(value_loc);
+  auto token = read_token();
+  auto tmp_str = token.str_value();
   ClibTechnology value{ClibTechnology::none};
-  if ( tmp_str != nullptr ) {
-    if ( strcmp(tmp_str, "cmos") == 0 ) {
-      value = ClibTechnology::cmos;
-    }
-    else if ( strcmp(tmp_str, "fpga") == 0 ) {
-      value = ClibTechnology::fpga;
-    }
+  if ( tmp_str == "cmos" ) {
+    value = ClibTechnology::cmos;
   }
-  if ( value == ClibTechnology::none ) {
-    ostringstream buf;
-    buf << "Syntax error: " << tmp_str << ": Illegal value for 'technology'. "
-	<< "Only 'cmos' or 'fpga' are allowed here.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    buf.str());
-    return {};
+  else if ( tmp_str == "fpga" ) {
+    value = ClibTechnology::fpga;
+  }
+  if ( value != ClibTechnology::none ) {
+    return AstValue::new_technology(value, token.loc());
   }
 
-  return AstValue::new_technology(value, value_loc);
+  ostringstream buf;
+  buf << "Syntax error: " << tmp_str << ": Illegal value for 'technology'. "
+      << "Only 'cmos' or 'fpga' are allowed here.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  token.loc(),
+		  MsgType::Error,
+		  "DOTLIB_SCANNER",
+		  buf.str());
+  return {};
 }
 
 // @brief timing_sense 型の値を読み込む．
@@ -245,33 +236,31 @@ Scanner::read_technology()
 AstValuePtr
 Scanner::read_timing_sense()
 {
-  FileRegion value_loc;
-  auto tmp_str = read_raw_string(value_loc);
+  auto token = read_token();
   ClibTimingSense value{ClibTimingSense::None};
-  if ( tmp_str != nullptr ) {
-    if ( strcmp(tmp_str, "positive_unate") == 0 ) {
-      value = ClibTimingSense::PosiUnate;
-    }
-    else if ( strcmp(tmp_str, "negative_unate") == 0 ) {
-      value = ClibTimingSense::NegaUnate;
-    }
-    else if ( strcmp(tmp_str, "non_unate") == 0 ) {
-      value = ClibTimingSense::NonUnate;
-    }
+  auto tmp_str = token.str_value();
+  if ( tmp_str == "positive_unate" ) {
+    value = ClibTimingSense::PosiUnate;
   }
-  if ( value == ClibTimingSense::None ) {
-    ostringstream buf;
-    buf << "Syntax error: " << tmp_str << ": Illegal value for 'timing_sense'."
-	<< " Only 'positive_unate', 'negative_unate', or 'non_unate' are allowed here.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    buf.str());
-    return {};
+  else if ( tmp_str == "negative_unate" ) {
+    value = ClibTimingSense::NegaUnate;
+  }
+  else if ( tmp_str == "non_unate" ) {
+    value = ClibTimingSense::NonUnate;
+  }
+  if ( value != ClibTimingSense::None ) {
+    return AstValue::new_timing_sense(value, token.loc());
   }
 
-  return AstValue::new_timing_sense(value, value_loc);
+  ostringstream buf;
+  buf << "Syntax error: " << tmp_str << ": Illegal value for 'timing_sense'."
+      << " Only 'positive_unate', 'negative_unate', or 'non_unate' are allowed here.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  token.loc(),
+		  MsgType::Error,
+		  "DOTLIB_SCANNER",
+		  buf.str());
+  return {};
 }
 
 // @brief timing_type 型の値を読み込む．
@@ -281,117 +270,115 @@ Scanner::read_timing_sense()
 AstValuePtr
 Scanner::read_timing_type()
 {
-  FileRegion value_loc;
-  auto tmp_str = read_raw_string(value_loc);
+  auto token = read_token();
+  auto tmp_str = token.str_value();
   ClibTimingType value{ClibTimingType::None};
-  if ( tmp_str != nullptr ) {
-    if ( strcmp(tmp_str, "combinational") == 0 ) {
-      value = ClibTimingType::Combinational;
-    }
-    else if ( strcmp(tmp_str, "combinational_rise") == 0 ) {
-      value = ClibTimingType::CombinationalRise;
-    }
-    else if ( strcmp(tmp_str, "combinational_fall") == 0 ) {
-      value = ClibTimingType::CombinationalFall;
-    }
-    else if ( strcmp(tmp_str, "three_state_enable") == 0 ) {
-      value = ClibTimingType::ThreeStateEnable;
-    }
-    else if ( strcmp(tmp_str, "three_state_enable_rise") == 0 ) {
-      value = ClibTimingType::ThreeStateEnableRise;
-    }
-    else if ( strcmp(tmp_str, "three_state_enable_fall") == 0 ) {
-      value = ClibTimingType::ThreeStateEnableFall;
-    }
-    else if ( strcmp(tmp_str, "three_state_disable") == 0 ) {
-      value = ClibTimingType::ThreeStateDisable;
-    }
-    else if ( strcmp(tmp_str, "three_state_disable_rise") == 0 ) {
-      value = ClibTimingType::ThreeStateDisableRise;
-    }
-    else if ( strcmp(tmp_str, "three_state_disable_fall") == 0 ) {
-      value = ClibTimingType::ThreeStateDisableFall;
-    }
-    else if ( strcmp(tmp_str, "rising_edge") == 0 ) {
-      value = ClibTimingType::RisingEdge;
-    }
-    else if ( strcmp(tmp_str, "falling_edge") == 0 ) {
-      value = ClibTimingType::FallingEdge;
-    }
-    else if ( strcmp(tmp_str, "preset") == 0 ) {
-      value = ClibTimingType::Preset;
-    }
-    else if ( strcmp(tmp_str, "clear") == 0 ) {
-      value = ClibTimingType::Clear;
-    }
-    else if ( strcmp(tmp_str, "hold_rising") == 0 ) {
-      value = ClibTimingType::HoldRising;
-    }
-    else if ( strcmp(tmp_str, "hold_falling") == 0 ) {
-      value = ClibTimingType::HoldFalling;
-    }
-    else if ( strcmp(tmp_str, "setup_rising") == 0 ) {
-      value = ClibTimingType::SetupRising;
-    }
-    else if ( strcmp(tmp_str, "setup_falling") == 0 ) {
-      value = ClibTimingType::SetupFalling;
-    }
-    else if ( strcmp(tmp_str, "recovery_rising") == 0 ) {
-      value = ClibTimingType::RecoveryRising;
-    }
-    else if ( strcmp(tmp_str, "recovery_falling") == 0 ) {
-      value = ClibTimingType::RecoveryFalling;
-    }
-    else if ( strcmp(tmp_str, "skew_rising") == 0 ) {
-      value = ClibTimingType::SkewRising;
-    }
-    else if ( strcmp(tmp_str, "skew_falling") == 0 ) {
-      value = ClibTimingType::SkewFalling;
-    }
-    else if ( strcmp(tmp_str, "removal_rising") == 0 ) {
-      value = ClibTimingType::RemovalRising;
-    }
-    else if ( strcmp(tmp_str, "removal_falling") == 0 ) {
-      value = ClibTimingType::RemovalFalling;
-    }
-    else if ( strcmp(tmp_str, "non_seq_setup_rising") == 0 ) {
-      value = ClibTimingType::NonSeqSetupRising;
-    }
-    else if ( strcmp(tmp_str, "non_seq_setup_falling") == 0 ) {
-      value = ClibTimingType::NonSeqSetupFalling;
-    }
-    else if ( strcmp(tmp_str, "non_seq_hold_rising") == 0 ) {
-      value = ClibTimingType::NonSeqHoldRising;
-    }
-    else if ( strcmp(tmp_str, "non_seq_hold_falling") == 0 ) {
-      value = ClibTimingType::NonSeqHoldFalling;
-    }
-    else if ( strcmp(tmp_str, "nochange_high_high") == 0 ) {
-      value = ClibTimingType::NochangeHighHigh;
-    }
-    else if ( strcmp(tmp_str, "nochange_high_low") == 0 ) {
-      value = ClibTimingType::NochangeHighLow;
-    }
-    else if ( strcmp(tmp_str, "nochange_low_high") == 0 ) {
-      value = ClibTimingType::NochangeLowHigh;
-    }
-    else if ( strcmp(tmp_str, "nochange_low_low") == 0 ) {
-      value = ClibTimingType::NochangeLowLow;
-    }
+  if ( tmp_str == "combinational" ) {
+    value = ClibTimingType::Combinational;
+  }
+  else if ( tmp_str == "combinational_rise" ) {
+    value = ClibTimingType::CombinationalRise;
+  }
+  else if ( tmp_str == "combinational_fall" ) {
+    value = ClibTimingType::CombinationalFall;
+  }
+  else if ( tmp_str == "three_state_enable" ) {
+    value = ClibTimingType::ThreeStateEnable;
+  }
+  else if ( tmp_str == "three_state_enable_rise" ) {
+    value = ClibTimingType::ThreeStateEnableRise;
+  }
+  else if ( tmp_str == "three_state_enable_fall" ) {
+    value = ClibTimingType::ThreeStateEnableFall;
+  }
+  else if ( tmp_str == "three_state_disable" ) {
+    value = ClibTimingType::ThreeStateDisable;
+  }
+  else if ( tmp_str == "three_state_disable_rise" ) {
+    value = ClibTimingType::ThreeStateDisableRise;
+  }
+  else if ( tmp_str == "three_state_disable_fall" ) {
+    value = ClibTimingType::ThreeStateDisableFall;
+  }
+  else if ( tmp_str == "rising_edge" ) {
+    value = ClibTimingType::RisingEdge;
+  }
+  else if ( tmp_str == "falling_edge" ) {
+    value = ClibTimingType::FallingEdge;
+  }
+  else if ( tmp_str == "preset" ) {
+    value = ClibTimingType::Preset;
+  }
+  else if ( tmp_str == "clear" ) {
+    value = ClibTimingType::Clear;
+  }
+  else if ( tmp_str == "hold_rising" ) {
+    value = ClibTimingType::HoldRising;
+  }
+  else if ( tmp_str == "hold_falling" ) {
+    value = ClibTimingType::HoldFalling;
+  }
+  else if ( tmp_str == "setup_rising" ) {
+    value = ClibTimingType::SetupRising;
+  }
+  else if ( tmp_str == "setup_falling" ) {
+    value = ClibTimingType::SetupFalling;
+  }
+  else if ( tmp_str == "recovery_rising" ) {
+    value = ClibTimingType::RecoveryRising;
+  }
+  else if ( tmp_str == "recovery_falling" ) {
+    value = ClibTimingType::RecoveryFalling;
+  }
+  else if ( tmp_str == "skew_rising" ) {
+    value = ClibTimingType::SkewRising;
+  }
+  else if ( tmp_str == "skew_falling" ) {
+    value = ClibTimingType::SkewFalling;
+  }
+  else if ( tmp_str == "removal_rising" ) {
+    value = ClibTimingType::RemovalRising;
+  }
+  else if ( tmp_str == "removal_falling" ) {
+    value = ClibTimingType::RemovalFalling;
+  }
+  else if ( tmp_str == "non_seq_setup_rising" ) {
+    value = ClibTimingType::NonSeqSetupRising;
+  }
+  else if ( tmp_str == "non_seq_setup_falling" ) {
+    value = ClibTimingType::NonSeqSetupFalling;
+  }
+  else if ( tmp_str == "non_seq_hold_rising" ) {
+    value = ClibTimingType::NonSeqHoldRising;
+  }
+  else if ( tmp_str == "non_seq_hold_falling" ) {
+    value = ClibTimingType::NonSeqHoldFalling;
+  }
+  else if ( tmp_str == "nochange_high_high" ) {
+    value = ClibTimingType::NochangeHighHigh;
+  }
+  else if ( tmp_str == "nochange_high_low" ) {
+    value = ClibTimingType::NochangeHighLow;
+  }
+  else if ( tmp_str == "nochange_low_high" ) {
+    value = ClibTimingType::NochangeLowHigh;
+  }
+  else if ( tmp_str == "nochange_low_low" ) {
+    value = ClibTimingType::NochangeLowLow;
   }
   if ( value == ClibTimingType::None ) {
     ostringstream buf;
     buf << "Syntax error: "
 	<< tmp_str << ": Illegal value for 'timing_type'.";
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
+		    token.loc(),
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
 		    buf.str());
     return {};
   }
 
-  return AstValue::new_timing_type(value, value_loc);
+  return AstValue::new_timing_type(value, token.loc());
 }
 
 // @brief vartype 型の値を読み込む．
@@ -401,63 +388,61 @@ Scanner::read_timing_type()
 AstValuePtr
 Scanner::read_vartype()
 {
-  FileRegion value_loc;
-  auto tmp_str = read_raw_string(value_loc);
+  auto token = read_token();
+  auto tmp_str = token.str_value();
   ClibVarType value{ClibVarType::None};
-  if ( tmp_str != nullptr ) {
-    if ( strcmp(tmp_str, "input_net_transition") == 0 ) {
-      value = ClibVarType::InputNetTransition;
-    }
-    else if ( strcmp(tmp_str, "total_output_net_capacitance") == 0 ) {
-      value = ClibVarType::TotalOutputNetCapacitance;
-    }
-    else if ( strcmp(tmp_str, "equal_or_opposite_output_net_capacitance") == 0 ) {
-      value = ClibVarType::EqualOrOppositeOutputNetCapacitance;
-    }
-    else if ( strcmp(tmp_str, "input_transition_time") == 0 ) {
-      value = ClibVarType::InputTransitionTime;
-    }
-    else if ( strcmp(tmp_str, "output_net_length") == 0 ) {
-      value = ClibVarType::OutputNetLength;
-    }
-    else if ( strcmp(tmp_str, "output_net_wire_cap") == 0 ) {
-      value = ClibVarType::OutputNetWireCap;
-    }
-    else if ( strcmp(tmp_str, "output_net_pin_cap") == 0 ) {
-      value = ClibVarType::OutputNetPinCap;
-    }
-    else if ( strcmp(tmp_str, "related_out_total_output_net_capacitance") == 0 ) {
-      value = ClibVarType::RelatedOutTotalOutputNetCapacitance;
-    }
-    else if ( strcmp(tmp_str, "related_out_output_net_length") == 0 ) {
-      value = ClibVarType::RelatedOutOutputNetLength;
-    }
-    else if ( strcmp(tmp_str, "related_out_output_net_wire_cap") == 0 ) {
-      value = ClibVarType::RelatedOutOutputNetWireCap;
-    }
-    else if ( strcmp(tmp_str, "related_out_output_net_pin_cap") == 0 ) {
-      value = ClibVarType::RelatedOutOutputNetPinCap;
-    }
-    else if ( strcmp(tmp_str, "constrained_pin_transition") == 0 ) {
-      value = ClibVarType::ConstrainedPinTransition;
-    }
-    else if ( strcmp(tmp_str, "related_pin_transition") == 0 ) {
-      value = ClibVarType::RelatedPinTransition;
-    }
+  if ( tmp_str == "input_net_transition" ) {
+    value = ClibVarType::InputNetTransition;
   }
-  if ( value == ClibVarType::None ) {
-    ostringstream buf;
-    buf << "Syntax error: "
-	<< tmp_str << ": Illegal value for 'variable_type'.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    value_loc,
-		    MsgType::Error,
-		    "DOTLIB_SCANNER",
-		    buf.str());
-    return {};
+  else if ( tmp_str == "total_output_net_capacitance" ) {
+    value = ClibVarType::TotalOutputNetCapacitance;
+  }
+  else if ( tmp_str == "equal_or_opposite_output_net_capacitance" ) {
+    value = ClibVarType::EqualOrOppositeOutputNetCapacitance;
+  }
+  else if ( tmp_str == "input_transition_time" ) {
+    value = ClibVarType::InputTransitionTime;
+  }
+  else if ( tmp_str == "output_net_length" ) {
+    value = ClibVarType::OutputNetLength;
+  }
+  else if ( tmp_str == "output_net_wire_cap" ) {
+    value = ClibVarType::OutputNetWireCap;
+  }
+  else if ( tmp_str == "output_net_pin_cap" ) {
+    value = ClibVarType::OutputNetPinCap;
+  }
+  else if ( tmp_str == "related_out_total_output_net_capacitance" ) {
+    value = ClibVarType::RelatedOutTotalOutputNetCapacitance;
+  }
+  else if ( tmp_str == "related_out_output_net_length" ) {
+    value = ClibVarType::RelatedOutOutputNetLength;
+  }
+  else if ( tmp_str == "related_out_output_net_wire_cap" ) {
+    value = ClibVarType::RelatedOutOutputNetWireCap;
+  }
+  else if ( tmp_str == "related_out_output_net_pin_cap" ) {
+    value = ClibVarType::RelatedOutOutputNetPinCap;
+  }
+  else if ( tmp_str == "constrained_pin_transition" ) {
+    value = ClibVarType::ConstrainedPinTransition;
+  }
+  else if ( tmp_str == "related_pin_transition" ) {
+    value = ClibVarType::RelatedPinTransition;
+  }
+  if ( value != ClibVarType::None ) {
+    return AstValue::new_vartype(value, token.loc());
   }
 
-  return AstValue::new_vartype(value, value_loc);
+  ostringstream buf;
+  buf << "Syntax error: "
+      << tmp_str << ": Illegal value for 'variable_type'.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  token.loc(),
+		  MsgType::Error,
+		  "DOTLIB_SCANNER",
+		  buf.str());
+  return {};
 }
 
 // @brief int vector 型の値を読み込む．
@@ -467,40 +452,47 @@ Scanner::read_vartype()
 AstValuePtr
 Scanner::read_int_vector()
 {
-  FileRegion value_loc;
-  auto tmp_str = read_raw_string(value_loc);
-  if ( tmp_str == nullptr ) {
+  auto token = read_token();
+  auto tmp_str = token.str_value();
+  if ( tmp_str == string() ) {
     return {};
   }
 
   vector<int> dst_list;
   string buf;
-  char c = '\0';
-  for ( const char* s = tmp_str; (c = *s) ; ++ s ) {
+  for ( auto c: tmp_str ) {
     if ( isspace(c) ) {
       continue;
     }
     else if ( c == ',' ) {
       if ( buf.size() == 0 ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
-			value_loc,
+			token.loc(),
 			MsgType::Error,
 			"DOTLIB_SCANNER",
-			"Syntax error. Null element.");
-	return nullptr;
+			"Syntax error: Null element.");
+	return {};
       }
       dst_list.push_back(atoi(buf.c_str()));
       buf.clear();
     }
-    else {
+    else if ( isdigit(c) ) {
       buf += c;
+    }
+    else {
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      token.loc(),
+		      MsgType::Error,
+		      "DOTLIB_SCANNER",
+		      "Syntax error: Integer value expected.");
+      return {};
     }
   }
   if ( buf.size() > 0 ) {
     dst_list.push_back(atoi(buf.c_str()));
   }
 
-  return AstValue::new_int_vector(dst_list, value_loc);
+  return AstValue::new_int_vector(dst_list, token.loc());
 }
 
 // @brief float vector 型の値を読み込む．

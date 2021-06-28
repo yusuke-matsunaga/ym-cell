@@ -52,17 +52,14 @@ enum class TokenType {
   PRIME,
   /// @brief シンボル
   SYMBOL,
-  /// @brief 整数値
-  INT_NUM,
-  /// @brief 浮動小数点数値
-  FLOAT_NUM,
+  /// @brief ブール値0
+  BOOL_0,
+  /// @brief ブール値1
+  BOOL_1,
   /// @brief 式
   EXPRESSION,
   /// @brief 改行
   NL,
-
-  /// @brief 属性
-  ATTR,
 
   /// @brief エラー
   ERROR,

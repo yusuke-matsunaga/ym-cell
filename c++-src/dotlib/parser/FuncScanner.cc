@@ -44,10 +44,6 @@ FuncScanner::peek_token()
     mCurString.put_char(c);
     goto ST_ID;
   }
-  if ( c == '0' || c == '1' ) {
-    mCurString.put_char(c);
-    goto ST_NUM;
-  }
 
   switch ( c ) {
   case '\0':
@@ -88,6 +84,14 @@ FuncScanner::peek_token()
     mCurToken = Token(TokenType::PRIME, cur_loc());
     goto END;
 
+  case '0':
+    mCurToken = Token(TokenType::BOOL_0, cur_loc());
+    goto END;
+
+  case '1':
+    mCurToken = Token(TokenType::BOOL_1, cur_loc());
+    goto END;
+
   default:
     // それ以外はエラー
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -107,15 +111,6 @@ FuncScanner::peek_token()
   }
   mCurToken = Token(TokenType::SYMBOL, cur_loc());
   goto END;
-
- ST_NUM: // 数字モード
-  c = peek();
-  if ( c == '0' || c == '1' ) {
-    accept();
-    mCurString.put_char(c);
-    goto ST_NUM;
-  }
-  mCurToken = Token(TokenType::INT_NUM, cur_loc());
 
  END:
   return mCurToken;

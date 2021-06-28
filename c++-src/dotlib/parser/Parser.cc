@@ -410,9 +410,9 @@ operator<<(ostream& s,
   case TokenType::RP:         type_str = "')'"; break;
   case TokenType::LCB:        type_str = "'{'"; break;
   case TokenType::RCB:        type_str = "'}'"; break;
-  case TokenType::INT_NUM:    type_str = "INT"; break;
-  case TokenType::FLOAT_NUM:  type_str = "FLOAT"; break;
   case TokenType::SYMBOL:     type_str = "SYMBOL"; break;
+  case TokenType::BOOL_0:     type_str = "BOOL_0"; break;
+  case TokenType::BOOL_1:     type_str = "BOOL_1"; break;
   case TokenType::EXPRESSION: type_str = "EXPRESSION"; break;
   case TokenType::NL:         type_str = "new-line"; break;
   case TokenType::ERROR :     type_str = "error"; break;

@@ -90,7 +90,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // パーズ中の文字列
-  string mSrcString;
+  StrBuff mSrcString;
 
   // mString のファイル位置
   FileRegion mSrcLoc;

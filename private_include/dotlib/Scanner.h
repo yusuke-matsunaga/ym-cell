@@ -33,7 +33,10 @@ class Scanner
 public:
 
   /// @brief コンストラクタ
-  Scanner(InputFileObj& in); ///< [in] 入力ファイルオブジェクト
+  Scanner(InputFileObj& in) ///< [in] 入力ファイルオブジェクト
+    : mIn{in}
+  {
+  }
 
   /// @brief デストラクタ
   ~Scanner() = default;
@@ -46,6 +49,10 @@ public:
 
   /// @brief 属性を読み込む．
   /// @return 属性を返す．
+  ///
+  /// 具体的には ':' または '(' をエンドマーカーとして
+  /// 非空白文字からなる文字列を読み込む．
+  /// " によるクォートやエスケープシーケンスはない．
   AttrKwd
   read_attr();
 
@@ -209,29 +216,6 @@ private:
   read_raw_float_vector(vector<double>& dst_list, ///< [out] 値を格納するリスト
 			FileRegion& loc);         ///< [out] ファイル上の位置
 
-  /// @brief 文字列を読み込む．
-  /// @return 文字列を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-  const char*
-  read_raw_string(FileRegion& value_loc); ///< [out] トークンのファイル上の位置
-
-  /// @brief 直前の read_token() に対応する文字列を返す．
-  const char*
-  cur_string() const { return mCurString.c_str(); }
-
-  /// @brief 直前の read_token() に対応する整数値を返す．
-  ///
-  /// 型が INT_NUM でなかったときの値は不定
-  int
-  cur_int() const { return strtol(cur_string(), nullptr, 10); }
-
-  /// @brief 直前の read_token() に対応する実数値を返す．
-  ///
-  /// 型が FLOAT_NUM/INT_NUM でなかったときの値は不定
-  double
-  cur_float() const { return strtod(cur_string(), nullptr); }
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -259,20 +243,15 @@ private:
   // 低レベルの下請け関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief read_token() の下請け関数
-  /// @return トークンの型を返す．
+  /// @brief 1文字読み込む．
+  /// @return 読み込んだトークンを返す．
+  ///
+  /// Cスタイルのコメント '/* - */' と
+  /// C++スタイルのコメント '//' を認識して
+  /// 読み飛ばす．
+  ///
   TokenType
   _scan();
-
-  /// @brief c が区切り文字の時に true を返す．
-  bool
-  _is_delimiter(int c);
-
-  /// @brief c が文字の時に true を返す．
-  ///
-  /// mSymbolMode が true なら数字も文字とみなす．
-  bool
-  _is_symbol(int c);
 
 
 private:
@@ -282,9 +261,6 @@ private:
 
   // 入力ファイルオブジェクト
   InputFileObj& mIn;
-
-  // シンボルモード
-  bool mSymbolMode;
 
   // _scan の結果のトークン
   Token mCurToken{};
@@ -296,125 +272,6 @@ private:
   StrBuff mCurString;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-/// @{
-/// @name 値(AstValue) を読み込む関数
-//////////////////////////////////////////////////////////////////////
-
-/// @brief int 型を値を読み込む．
-/// @return 生成した AstValue を返す．
-///
-/// エラーの時は nullptr を返す．
-inline
-AstValuePtr
-read_int(Scanner& scanner) { return scanner.read_int(); }
-
-/// @brief float 型の値を読み込む．
-/// @return 生成した AstValue を返す．
-///
-/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-inline
-AstValuePtr
-read_float(Scanner& scanner) { return scanner.read_float(); }
-
-/// @brief string 型の値を読み込む．
-/// @return 生成した AstValue を返す．
-///
-/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-inline
-AstValuePtr
-read_string(Scanner& scanner) { return scanner.read_string(); }
-
-/// @brief bool 型の値を読み込む．
-/// @return 生成した AstValue を返す．
-///
-/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-inline
-AstValuePtr
-read_bool(Scanner& scanner) { return scanner.read_bool(); }
-
-/// @brief delay_model 型の値を読み込む．
-/// @param[in] 生成した AstValue を返す．
-///
-/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-inline
-AstValuePtr
-read_delay_model(Scanner& scanner) { return scanner.read_delay_model(); }
-
-/// @brief direction 型の値を読み込む．
-/// @param[in] 生成した AstValue を返す．
-///
-/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-inline
-AstValuePtr
-read_direction(Scanner& scanner) { return scanner.read_direction(); }
-
-/// @brief technology 型の値を読み込む．
-/// @param[in] 生成した AstValue を返す．
-///
-/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-inline
-AstValuePtr
-read_technology(Scanner& scanner) { return scanner.read_technology(); }
-
-/// @brief timing_sense 型の値を読み込む．
-/// @param[in] 生成した AstValue を返す．
-///
-/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-inline
-AstValuePtr
-read_timing_sense(Scanner& scanner) { return scanner.read_timing_sense(); }
-
-/// @brief timing_type 型の値を読み込む．
-/// @param[in] 生成した AstValue を返す．
-///
-/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-inline
-AstValuePtr
-read_timing_type(Scanner& scanner) { return scanner.read_timing_type(); }
-
-/// @brief vartype 型の値を読み込む．
-/// @param[in] 生成した AstValue を返す．
-///
-/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-inline
-AstValuePtr
-read_vartype(Scanner& scanner) { return scanner.read_vartype(); }
-
-/// @brief int vector 型の値を読み込む．
-/// @return 生成した AstValue を返す．
-///
-/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-inline
-AstValuePtr
-read_int_vector(Scanner& scanner) { return scanner.read_int_vector(); }
-
-/// @brief float vector 型の値を読み込む．
-/// @return 生成した AstValue を返す．
-///
-/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-inline
-AstValuePtr
-read_float_vector(Scanner& scanner) { return scanner.read_float_vector(); }
-
-/// @brief 式を表す AstValue を生成する．
-/// @return 生成した AstValue を返す．
-///
-/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
-inline
-AstValuePtr
-read_expr(Scanner& scanner) { return scanner.read_expr(); }
-
-/// @brief "式" を表す AstValue を生成する．
-inline
-AstValuePtr
-read_function(Scanner& scanner) { return scanner.read_function(); }
-
-//////////////////////////////////////////////////////////////////////
-/// @}
-//////////////////////////////////////////////////////////////////////
 
 END_NAMESPACE_YM_DOTLIB
 

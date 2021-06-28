@@ -51,21 +51,13 @@ FuncParser::read_primary()
   case TokenType::SYMBOL:
     {
       ShString name(mScanner.cur_string());
-      return AstExpr::new_string(name, token.loc());
-    }
-
-  case TokenType::INT_NUM:
-    {
-      int v = mScanner.cur_int();
-      if ( v != 0 && v != 1 ) {
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			token.loc(),
-			MsgType::Error,
-			"DOTLIB_PARSER",
-			"Syntax error. 0 or 1 is expected.");
-	return {};
+      if ( name == "0" ) {
+	return AstExpr::new_bool(false, token.loc());
       }
-      return AstExpr::new_bool(static_cast<bool>(v), token.loc());
+      if ( name == "1" ) {
+	return AstExpr::new_bool(true, token.loc());
+      }
+      return AstExpr::new_string(name, token.loc());
     }
 
   default:

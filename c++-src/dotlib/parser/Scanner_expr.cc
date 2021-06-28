@@ -35,10 +35,10 @@ Scanner::read_expr()
 AstValuePtr
 Scanner::read_function()
 {
-  FileRegion value_loc;
-  auto tmp_str = read_raw_string(value_loc);
+  auto token = read_token();
+  auto tmp_str = token.str_value();
 
-  FuncParser read(tmp_str, value_loc);
+  FuncParser read(tmp_str, token.loc());
   return AstValuePtr{read()};
 }
 
@@ -91,14 +91,14 @@ Scanner::_read_primary()
 
   case TokenType::SYMBOL:
     {
-      const char* name = cur_string();
-      if ( strcmp(name, "VDD") == 0 ) {
+      auto name = token.str_value();
+      if ( name == "VDD" ) {
 	return AstExpr::new_vdd(token.loc());
       }
-      else if ( strcmp(name, "VSS") == 0 ) {
+      else if ( name == "VSS" ) {
 	return AstExpr::new_vss(token.loc());
       }
-      else if ( strcmp(name, "VCC") == 0 ) {
+      else if ( name == "VCC" ) {
 	return AstExpr::new_vcc(token.loc());
       }
       else {
@@ -112,10 +112,6 @@ Scanner::_read_primary()
       }
     }
     // ここには来ない．
-
-  case TokenType::FLOAT_NUM:
-  case TokenType::INT_NUM:
-    return AstExpr::new_float(cur_float(), token.loc());
 
   default:
     break;
