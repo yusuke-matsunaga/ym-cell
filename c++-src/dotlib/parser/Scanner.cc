@@ -33,68 +33,6 @@ Scanner::read_attr()
   return AttrKwd(token.value(), token.loc());
 }
 
-// @brief float のリストを読み込む．
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起こった．
-//
-// dst_list は初期化せず，末尾に追加する．
-bool
-Scanner::read_raw_float_vector(vector<double>& dst_list, ///< [out] 値を格納するリスト
-			       FileRegion& loc)    ///< [out] ファイル上の位置
-{
-  auto token = read_token();
-  loc = token.loc();
-  auto tmp_str = token.str_value();
-  if ( tmp_str == string() ) {
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc,
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    "Syntax error. 'string' value is expected.");
-    return false;
-  }
-
-  string buf;
-  for ( auto c: tmp_str ) {
-    if ( isspace(c) ) {
-      continue;
-    }
-    else if ( c == ',' ) {
-      if ( buf.size() == 0 ) {
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			loc,
-			MsgType::Error,
-			"DOTLIB_PARSER",
-			"Syntax error. Null element.");
-	return false;
-      }
-      char* end;
-      double val = strtod(buf.c_str(), &end);
-      if ( end[0] != '\0' ) {
-	ostringstream emsg;
-	emsg << "Syntax error: "
-	     << buf << ": Could not convert to a number.";
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			loc,
-			MsgType::Error,
-			"DOTLIB_PARSER",
-			emsg.str());
-	return false;
-      }
-      dst_list.push_back(val);
-      buf.clear();
-    }
-    else {
-      buf += c;
-    }
-  }
-  if ( buf.size() > 0 ) {
-    dst_list.push_back(strtod(buf.c_str(), nullptr));
-  }
-
-  return true;
-}
-
 // @brief 次のトークンを調べる．
 // @return トークンを返す．
 //
