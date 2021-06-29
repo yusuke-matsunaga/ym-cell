@@ -35,11 +35,12 @@ operator<<(ostream& s,
 	   ClibDelayModel delay_model)
 {
   switch ( delay_model ) {
-  case ClibDelayModel::GenericCmos:   s << "generic_cmos"; break;
-  case ClibDelayModel::TableLookup:   s << "table_lookup"; break;
-  case ClibDelayModel::PiecewiseCmos: s << "piecewise_cmos"; break;
-  case ClibDelayModel::Cmos2:         s << "cmos2"; break;
-  case ClibDelayModel::Dcm:           s << "dcm"; break;
+  case ClibDelayModel::generic_cmos:   s << "generic_cmos"; break;
+  case ClibDelayModel::table_lookup:   s << "table_lookup"; break;
+  case ClibDelayModel::piecewise_cmos: s << "piecewise_cmos"; break;
+  case ClibDelayModel::cmos2:         s << "cmos2"; break;
+  case ClibDelayModel::dcm:           s << "dcm"; break;
+  case ClibDelayModel::polynomial:    s << "polynomial"; break;
   default: ASSERT_NOT_REACHED;
   }
   return s;
@@ -54,9 +55,9 @@ operator<<(ostream& s,
 	   ClibTimingSense timing_sense)
 {
   switch ( timing_sense ) {
-  case ClibTimingSense::PosiUnate: s << "posi_unate"; break;
-  case ClibTimingSense::NegaUnate: s << "nega_unate"; break;
-  case ClibTimingSense::NonUnate:  s << "non_unate"; break;
+  case ClibTimingSense::positive_unate: s << "posi_unate"; break;
+  case ClibTimingSense::negative_unate: s << "nega_unate"; break;
+  case ClibTimingSense::non_unate:  s << "non_unate"; break;
   default: ASSERT_NOT_REACHED;
   }
   return s;
@@ -71,47 +72,47 @@ operator<<(ostream& s,
 	   ClibTimingType timing_type)
 {
   switch ( timing_type ) {
-  case ClibTimingType::Combinational:         s << "combinational"; break;
-  case ClibTimingType::CombinationalRise:     s << "combinational_rise"; break;
-  case ClibTimingType::CombinationalFall:     s << "combinational_fall"; break;
+  case ClibTimingType::combinational:         s << "combinational"; break;
+  case ClibTimingType::combinational_rise:    s << "combinational_rise"; break;
+  case ClibTimingType::combinational_fall:    s << "combinational_fall"; break;
 
-  case ClibTimingType::ThreeStateEnable:      s << "three_state_enable"; break;
-  case ClibTimingType::ThreeStateDisable:     s << "three_state_disable"; break;
-  case ClibTimingType::ThreeStateEnableRise:  s << "three_state_enable_rise"; break;
-  case ClibTimingType::ThreeStateEnableFall:  s << "three_state_enable_fall"; break;
-  case ClibTimingType::ThreeStateDisableRise: s << "three_state_disable_rise"; break;
-  case ClibTimingType::ThreeStateDisableFall: s << "three_state_disable_fall"; break;
+  case ClibTimingType::three_state_enable:      s << "three_state_enable"; break;
+  case ClibTimingType::three_state_disable:     s << "three_state_disable"; break;
+  case ClibTimingType::three_state_enable_rise:  s << "three_state_enable_rise"; break;
+  case ClibTimingType::three_state_enable_fall:  s << "three_state_enable_fall"; break;
+  case ClibTimingType::three_state_disable_rise: s << "three_state_disable_rise"; break;
+  case ClibTimingType::three_state_disable_fall: s << "three_state_disable_fall"; break;
 
-  case ClibTimingType::RisingEdge:            s << "rising_edge"; break;
-  case ClibTimingType::FallingEdge:           s << "falling_edge"; break;
+  case ClibTimingType::rising_edge:            s << "rising_edge"; break;
+  case ClibTimingType::falling_edge:           s << "falling_edge"; break;
 
-  case ClibTimingType::Preset:                s << "preset"; break;
-  case ClibTimingType::Clear:                 s << "clear"; break;
+  case ClibTimingType::preset:                s << "preset"; break;
+  case ClibTimingType::clear:                 s << "clear"; break;
 
-  case ClibTimingType::HoldRising:            s << "hold_rising"; break;
-  case ClibTimingType::HoldFalling:           s << "hold_falling"; break;
+  case ClibTimingType::hold_rising:            s << "hold_rising"; break;
+  case ClibTimingType::hold_falling:           s << "hold_falling"; break;
 
-  case ClibTimingType::SetupRising:           s << "setup_rising"; break;
-  case ClibTimingType::SetupFalling:          s << "setup_falling"; break;
+  case ClibTimingType::setup_rising:           s << "setup_rising"; break;
+  case ClibTimingType::setup_falling:          s << "setup_falling"; break;
 
-  case ClibTimingType::RecoveryRising:        s << "recover_rising"; break;
-  case ClibTimingType::RecoveryFalling:       s << "recover_falling"; break;
+  case ClibTimingType::recovery_rising:        s << "recover_rising"; break;
+  case ClibTimingType::recovery_falling:       s << "recover_falling"; break;
 
-  case ClibTimingType::SkewRising:            s << "skew_rising"; break;
-  case ClibTimingType::SkewFalling:           s << "skew_falling"; break;
+  case ClibTimingType::skew_rising:            s << "skew_rising"; break;
+  case ClibTimingType::skew_falling:           s << "skew_falling"; break;
 
-  case ClibTimingType::RemovalRising:         s << "removal_rising"; break;
-  case ClibTimingType::RemovalFalling:        s << "removal_falling"; break;
+  case ClibTimingType::removal_rising:         s << "removal_rising"; break;
+  case ClibTimingType::removal_falling:        s << "removal_falling"; break;
 
-  case ClibTimingType::NonSeqSetupRising:     s << "non_seq_setup_rising"; break;
-  case ClibTimingType::NonSeqSetupFalling:    s << "non_seq_setup_falling"; break;
-  case ClibTimingType::NonSeqHoldRising:      s << "non_seq_hold_rising"; break;
-  case ClibTimingType::NonSeqHoldFalling:     s << "non_seq_hold_falling"; break;
+  case ClibTimingType::non_seq_setup_rising:     s << "non_seq_setup_rising"; break;
+  case ClibTimingType::non_seq_setup_falling:    s << "non_seq_setup_falling"; break;
+  case ClibTimingType::non_seq_hold_rising:      s << "non_seq_hold_rising"; break;
+  case ClibTimingType::non_seq_hold_falling:     s << "non_seq_hold_falling"; break;
 
-  case ClibTimingType::NochangeHighHigh:      s << "nochange_high_high"; break;
-  case ClibTimingType::NochangeHighLow:       s << "nochange_high_low"; break;
-  case ClibTimingType::NochangeLowHigh:       s << "nochange_low_high"; break;
-  case ClibTimingType::NochangeLowLow:        s << "nochange_low_low"; break;
+  case ClibTimingType::nochange_high_high:      s << "nochange_high_high"; break;
+  case ClibTimingType::nochange_high_low:       s << "nochange_high_low"; break;
+  case ClibTimingType::nochange_low_high:       s << "nochange_low_high"; break;
+  case ClibTimingType::nochange_low_low:        s << "nochange_low_low"; break;
 
   default: ASSERT_NOT_REACHED;
   }
@@ -127,51 +128,51 @@ operator<<(ostream& s,
 	   ClibVarType var_type)
 {
   switch ( var_type ) {
-  case ClibVarType::InputNetTransition:
+  case ClibVarType::input_net_transition:
     s << "input_net_transition";
     break;
 
-  case ClibVarType::TotalOutputNetCapacitance:
+  case ClibVarType::total_output_net_capacitance:
     s << "total_output_net_capacitance";
     break;
 
-  case ClibVarType::OutputNetLength:
+  case ClibVarType::output_net_length:
     s << "output_net_length";
     break;
 
-  case ClibVarType::OutputNetWireCap:
+  case ClibVarType::output_net_wire_cap:
     s << "output_net_wire_cap";
     break;
 
-  case ClibVarType::OutputNetPinCap:
+  case ClibVarType::output_net_pin_cap:
     s << "output_net_pin_cap";
     break;
 
-  case ClibVarType::RelatedOutTotalOutputNetCapacitance:
+  case ClibVarType::related_out_total_output_net_capacitance:
     s << "related_out_total_output_net_capacitance";
     break;
 
-  case ClibVarType::RelatedOutOutputNetLength:
+  case ClibVarType::related_out_output_net_length:
     s << "related_out_output_net_length";
     break;
 
-  case ClibVarType::RelatedOutOutputNetWireCap:
+  case ClibVarType::related_out_output_net_wire_cap:
     s << "related_out_output_net_wire_cap";
     break;
 
-  case ClibVarType::RelatedOutOutputNetPinCap:
+  case ClibVarType::related_out_output_net_pin_cap:
     s << "related_out_output_net_pin_cap";
     break;
 
-  case ClibVarType::ConstrainedPinTransition:
+  case ClibVarType::constrained_pin_transition:
     s << "constrained_pin_transition";
     break;
 
-  case ClibVarType::RelatedPinTransition:
+  case ClibVarType::related_pin_transition:
     s << "related_pin_transition";
     break;
 
-  case ClibVarType::None:
+  case ClibVarType::none:
     s << "none";
     break;
 
@@ -288,10 +289,10 @@ display_timing(ostream& s,
       << "    Input Pin        = " << cell.input(ipos).name() << endl
       << "    Output Pin       = " << cell.output(opos).name() << endl
       << "    Sense            = ";
-    if ( sense == ClibTimingSense::PosiUnate ) {
+    if ( sense == ClibTimingSense::positive_unate ) {
       s << "positive unate";
     }
-    else if ( sense == ClibTimingSense::NegaUnate ) {
+    else if ( sense == ClibTimingSense::negative_unate ) {
       s << "negative unate";
     }
     else {
@@ -301,15 +302,16 @@ display_timing(ostream& s,
     if ( !timing.timing_cond().is_one() ) {
       s << "    When             = " << timing.timing_cond() << endl;
     }
+
     switch ( delay_model ) {
-    case ClibDelayModel::GenericCmos:
+    case ClibDelayModel::generic_cmos:
       s << "    Rise Intrinsic   = " << timing.intrinsic_rise() << endl
 	<< "    Rise Resistance  = " << timing.rise_resistance() << endl
 	<< "    Fall Intrinsic   = " << timing.intrinsic_fall() << endl
 	<< "    Fall Resistance  = " << timing.fall_resistance() << endl;
       break;
 
-    case ClibDelayModel::TableLookup:
+    case ClibDelayModel::table_lookup:
       display_lut(s, "Clib Rise", timing.cell_rise());
       display_lut(s, "Rise Transition", timing.rise_transition());
       display_lut(s, "Rise Propagation", timing.rise_propagation());
@@ -319,13 +321,19 @@ display_timing(ostream& s,
       display_lut(s, "Fall Propagation", timing.fall_propagation());
       break;
 
-    case ClibDelayModel::PiecewiseCmos:
+    case ClibDelayModel::piecewise_cmos:
       break;
 
-    case ClibDelayModel::Cmos2:
+    case ClibDelayModel::cmos2:
       break;
 
-    case ClibDelayModel::Dcm:
+    case ClibDelayModel::dcm:
+      break;
+
+    case ClibDelayModel::polynomial:
+      break;
+
+    case ClibDelayModel::none:
       break;
     }
   }
@@ -659,8 +667,8 @@ display_library(ostream& s,
     int no2 = cell.output_num2();
     for ( int ipos: Range(ni2) ) {
       for ( int opos: Range(no2) ) {
-	display_timing(s, cell, ipos, opos, ClibTimingSense::PosiUnate, delay_model);
-	display_timing(s, cell, ipos, opos, ClibTimingSense::NegaUnate, delay_model);
+	display_timing(s, cell, ipos, opos, ClibTimingSense::positive_unate, delay_model);
+	display_timing(s, cell, ipos, opos, ClibTimingSense::negative_unate, delay_model);
       }
     }
     s << endl;

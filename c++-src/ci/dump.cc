@@ -230,12 +230,12 @@ CiCell::dump(ostream& s) const
   // 個別の条件ごとのタイミング情報のダンプ
   for ( int ipos: Range(input_num2()) ) {
     for ( int opos: Range(output_num2()) ) {
-      const ClibTimingList& timing_list1 = this->timing_list(ipos, opos, ClibTimingSense::PosiUnate);
+      const ClibTimingList& timing_list1 = this->timing_list(ipos, opos, ClibTimingSense::positive_unate);
       s << timing_list1.num();
       for ( auto& timing: timing_list1 ) {
 	s << timing.id();
       }
-      const ClibTimingList& timing_list2 = this->timing_list(ipos, opos, ClibTimingSense::NegaUnate);
+      const ClibTimingList& timing_list2 = this->timing_list(ipos, opos, ClibTimingSense::negative_unate);
       s << timing_list2.num();
       for ( auto& timing: timing_list2 ) {
 	s << timing.id();

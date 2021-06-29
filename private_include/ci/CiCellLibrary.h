@@ -926,7 +926,7 @@ private:
   string mLeakagePowerUnit;
 
   // 遅延モデル
-  ClibDelayModel mDelayModel{ClibDelayModel::GenericCmos};
+  ClibDelayModel mDelayModel{ClibDelayModel::generic_cmos};
 
   // 遅延テンプレートのリスト
   ClibLutTemplateList mLutTemplateList;

@@ -472,11 +472,11 @@ CiCellLibrary::restore_cell(istream& s,
       for ( int opos: Range(no + nio) ) {
 	vector<CiTiming*> timing_list1;
 	restore_tid_list(s, timing_list, timing_list1);
-	set_timing(cell, ipos, opos, ClibTimingSense::PosiUnate, timing_list1);
+	set_timing(cell, ipos, opos, ClibTimingSense::positive_unate, timing_list1);
 
 	vector<CiTiming*> timing_list2;
 	restore_tid_list(s, timing_list, timing_list2);
-	set_timing(cell, ipos, opos, ClibTimingSense::NegaUnate, timing_list2);
+	set_timing(cell, ipos, opos, ClibTimingSense::negative_unate, timing_list2);
       }
     }
   }

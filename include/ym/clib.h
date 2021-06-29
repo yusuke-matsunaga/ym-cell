@@ -130,12 +130,13 @@ enum class ClibTechnology : ymuint8
 //////////////////////////////////////////////////////////////////////
 enum class ClibDelayModel : ymuint8
 {
-  GenericCmos,
-  TableLookup,
-  PiecewiseCmos,
-  Cmos2,
-  Dcm,
-  None
+  generic_cmos,
+  table_lookup,
+  piecewise_cmos,
+  cmos2,
+  dcm,
+  polynomial,
+  none
 };
 
 
@@ -144,11 +145,11 @@ enum class ClibDelayModel : ymuint8
 //////////////////////////////////////////////////////////////////////
 enum class ClibDirection : ymuint8
 {
-  Input,
-  Output,
-  Inout,
-  Internal,
-  None
+  input,
+  output,
+  inout,
+  internal,
+  none
 };
 
 
@@ -157,10 +158,10 @@ enum class ClibDirection : ymuint8
 //////////////////////////////////////////////////////////////////////
 enum class ClibTimingSense : ymuint8
 {
-  PosiUnate = 1,
-  NegaUnate = 2,
-  NonUnate  = 3,
-  None
+  positive_unate = 1,
+  negative_unate = 2,
+  non_unate  = 3,
+  none
 };
 
 
@@ -169,49 +170,49 @@ enum class ClibTimingSense : ymuint8
 //////////////////////////////////////////////////////////////////////
 enum class ClibTimingType : ymuint8
 {
-  Combinational          = 0,
-  CombinationalRise      = 1,
-  CombinationalFall      = 2,
+  combinational            = 0,
+  combinational_rise       = 1,
+  combinational_fall       = 2,
 
-  ThreeStateEnable       = 3,
-  ThreeStateDisable      = 4,
-  ThreeStateEnableRise   = 5,
-  ThreeStateEnableFall   = 6,
-  ThreeStateDisableRise  = 7,
-  ThreeStateDisableFall  = 8,
+  three_state_enable       = 3,
+  three_state_disable      = 4,
+  three_state_enable_rise  = 5,
+  three_state_enable_fall  = 6,
+  three_state_disable_rise = 7,
+  three_state_disable_fall = 8,
 
-  RisingEdge             = 9,
-  FallingEdge            = 10,
+  rising_edge              = 9,
+  falling_edge             = 10,
 
-  Preset                 = 11,
-  Clear                  = 12,
+  preset                   = 11,
+  clear                    = 12,
 
-  HoldRising             = 13,
-  HoldFalling            = 14,
+  hold_rising              = 13,
+  hold_falling             = 14,
 
-  SetupRising            = 15,
-  SetupFalling           = 16,
+  setup_rising             = 15,
+  setup_falling            = 16,
 
-  RecoveryRising         = 17,
-  RecoveryFalling        = 18,
+  recovery_rising          = 17,
+  recovery_falling         = 18,
 
-  SkewRising             = 19,
-  SkewFalling            = 20,
+  skew_rising              = 19,
+  skew_falling             = 20,
 
-  RemovalRising          = 21,
-  RemovalFalling         = 22,
+  removal_rising           = 21,
+  removal_falling          = 22,
 
-  NonSeqSetupRising      = 23,
-  NonSeqSetupFalling     = 24,
-  NonSeqHoldRising       = 25,
-  NonSeqHoldFalling      = 26,
+  non_seq_setup_rising     = 23,
+  non_seq_setup_falling    = 24,
+  non_seq_hold_rising      = 25,
+  non_seq_hold_falling     = 26,
 
-  NochangeHighHigh       = 27,
-  NochangeHighLow        = 28,
-  NochangeLowHigh        = 29,
-  NochangeLowLow         = 30,
+  nochange_high_high      = 27,
+  nochange_high_low        = 28,
+  nochange_low_high        = 29,
+  nochange_low_low         = 30,
 
-  None
+  none
 };
 
 
@@ -220,26 +221,26 @@ enum class ClibTimingType : ymuint8
 //////////////////////////////////////////////////////////////////////
 enum class ClibVarType : ymuint8
 {
-  InputNetTransition,
+  input_net_transition,
 
-  TotalOutputNetCapacitance,
-  OutputNetLength,
-  OutputNetWireCap,
-  OutputNetPinCap,
+  total_output_net_capacitance,
+  output_net_length,
+  output_net_wire_cap,
+  output_net_pin_cap,
 
-  EqualOrOppositeOutputNetCapacitance,
-  InputTransitionTime,
+  equal_or_opposite_output_net_capacitance,
+  input_transition_time,
 
-  RelatedOutTotalOutputNetCapacitance,
-  RelatedOutOutputNetLength,
-  RelatedOutOutputNetWireCap,
-  RelatedOutOutputNetPinCap,
+  related_out_total_output_net_capacitance,
+  related_out_output_net_length,
+  related_out_output_net_wire_cap,
+  related_out_output_net_pin_cap,
 
-  ConstrainedPinTransition,
+  constrained_pin_transition,
 
-  RelatedPinTransition,
+  related_pin_transition,
 
-  None
+  none
 };
 
 
@@ -281,7 +282,6 @@ operator<<(ostream& s,                  ///< [in] 出力先のストリーム
 ostream&
 operator<<(ostream& s,            ///< [in] 出力先のストリーム
 	   ClibVarType var_type); ///< [in] 変数の型
-
 
 END_NAMESPACE_YM
 

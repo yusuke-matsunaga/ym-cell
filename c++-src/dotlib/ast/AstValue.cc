@@ -214,7 +214,7 @@ AstValue::bool_value() const
 ClibDelayModel
 AstValue::delay_model_value() const
 {
-  return ClibDelayModel::None;
+  return ClibDelayModel::none;
 }
 
 // @brief direction 型の値を返す．
@@ -223,7 +223,7 @@ AstValue::delay_model_value() const
 ClibDirection
 AstValue::direction_value() const
 {
-  return ClibDirection::None;
+  return ClibDirection::none;
 }
 
 // @brief technology 型の値を返す．
@@ -241,7 +241,7 @@ AstValue::technology_value() const
 ClibTimingSense
 AstValue::timing_sense_value() const
 {
-  return ClibTimingSense::None;
+  return ClibTimingSense::none;
 }
 
 // @brief timing_type 型の値を返す．
@@ -250,7 +250,7 @@ AstValue::timing_sense_value() const
 ClibTimingType
 AstValue::timing_type_value() const
 {
-  return ClibTimingType::None;
+  return ClibTimingType::none;
 }
 
 // @brief vartype 型の値を返す．
@@ -259,7 +259,7 @@ AstValue::timing_type_value() const
 ClibVarType
 AstValue::vartype_value() const
 {
-  return ClibVarType::None;
+  return ClibVarType::none;
 }
 
 // @brief expr 型の値を返す．
@@ -512,11 +512,11 @@ AstDelayModel::decompile() const
 {
   const char* tmp = "---";
   switch ( delay_model_value() ) {
-  case ClibDelayModel::GenericCmos:   tmp = "generic_cmos"; break;
-  case ClibDelayModel::TableLookup:   tmp = "table_lookup"; break;
-  case ClibDelayModel::PiecewiseCmos: tmp = "piecewise_cmos"; break;
-  case ClibDelayModel::Cmos2:         tmp = "cmos2"; break;
-  case ClibDelayModel::Dcm:           tmp = "dcm"; break;
+  case ClibDelayModel::generic_cmos:   tmp = "generic_cmos"; break;
+  case ClibDelayModel::table_lookup:   tmp = "table_lookup"; break;
+  case ClibDelayModel::piecewise_cmos: tmp = "piecewise_cmos"; break;
+  case ClibDelayModel::cmos2:         tmp = "cmos2"; break;
+  case ClibDelayModel::dcm:           tmp = "dcm"; break;
   default: break;
   }
   return tmp;
@@ -548,10 +548,10 @@ AstDirection::decompile() const
 {
   const char* tmp = "---";
   switch ( direction_value() ) {
-  case ClibDirection::Input:    tmp = "input";    break;
-  case ClibDirection::Output:   tmp = "output";   break;
-  case ClibDirection::Inout:    tmp = "inout";    break;
-  case ClibDirection::Internal: tmp = "internal"; break;
+  case ClibDirection::input:    tmp = "input";    break;
+  case ClibDirection::output:   tmp = "output";   break;
+  case ClibDirection::inout:    tmp = "inout";    break;
+  case ClibDirection::internal: tmp = "internal"; break;
   default: break;
   }
   return tmp;
@@ -642,9 +642,9 @@ AstTimingSense::decompile() const
 {
   const char* tmp = "---";
   switch ( timing_sense_value() ) {
-  case ClibTimingSense::PosiUnate: tmp = "positive_unate"; break;
-  case ClibTimingSense::NegaUnate: tmp = "negative_unate"; break;
-  case ClibTimingSense::NonUnate:  tmp = "non_unate";      break;
+  case ClibTimingSense::positive_unate: tmp = "positive_unate"; break;
+  case ClibTimingSense::negative_unate: tmp = "negative_unate"; break;
+  case ClibTimingSense::non_unate:  tmp = "non_unate";      break;
   default: break;
   }
   return tmp;
@@ -676,37 +676,37 @@ AstTimingType::decompile() const
 {
   const char* tmp = "---";
   switch ( timing_type_value() ) {
-  case ClibTimingType::Combinational:         tmp = "combinational"; break;
-  case ClibTimingType::CombinationalRise:     tmp = "combinational_rise"; break;
-  case ClibTimingType::CombinationalFall:     tmp = "combinational_fall"; break;
-  case ClibTimingType::ThreeStateEnable:      tmp = "three_state_enable"; break;
-  case ClibTimingType::ThreeStateDisable:     tmp = "three_state_disable"; break;
-  case ClibTimingType::ThreeStateEnableRise:  tmp = "three_state_enable_rise"; break;
-  case ClibTimingType::ThreeStateEnableFall:  tmp = "three_state_enable_fall"; break;
-  case ClibTimingType::ThreeStateDisableRise: tmp = "three_state_disable_rise"; break;
-  case ClibTimingType::ThreeStateDisableFall: tmp = "three_state_disable_fall"; break;
-  case ClibTimingType::RisingEdge:            tmp = "rising_edge"; break;
-  case ClibTimingType::FallingEdge:           tmp = "falling_edge"; break;
-  case ClibTimingType::Preset:                tmp = "preset"; break;
-  case ClibTimingType::Clear:                 tmp = "clear"; break;
-  case ClibTimingType::HoldRising:            tmp = "hold_rising"; break;
-  case ClibTimingType::HoldFalling:           tmp = "hold_falling"; break;
-  case ClibTimingType::SetupRising:           tmp = "setup_rising"; break;
-  case ClibTimingType::SetupFalling:          tmp = "setup_falling"; break;
-  case ClibTimingType::RecoveryRising:        tmp = "recovery_rising"; break;
-  case ClibTimingType::RecoveryFalling:       tmp = "recovery_falling"; break;
-  case ClibTimingType::SkewRising:            tmp = "skew_rising"; break;
-  case ClibTimingType::SkewFalling:           tmp = "skew_falling"; break;
-  case ClibTimingType::RemovalRising:         tmp = "removal_rising"; break;
-  case ClibTimingType::RemovalFalling:        tmp = "removal_falling"; break;
-  case ClibTimingType::NonSeqSetupRising:     tmp = "non_seq_setup_rising"; break;
-  case ClibTimingType::NonSeqSetupFalling:    tmp = "non_seq_setup_falling"; break;
-  case ClibTimingType::NonSeqHoldRising:      tmp = "non_seq_hold_rising"; break;
-  case ClibTimingType::NonSeqHoldFalling:     tmp = "non_seq_hold_falling"; break;
-  case ClibTimingType::NochangeHighHigh:      tmp = "nochange_high_high"; break;
-  case ClibTimingType::NochangeHighLow:       tmp = "nochange_high_low"; break;
-  case ClibTimingType::NochangeLowHigh:       tmp = "nochange_low_high"; break;
-  case ClibTimingType::NochangeLowLow:        tmp = "nochange_low_low"; break;
+  case ClibTimingType::combinational:         tmp = "combinational"; break;
+  case ClibTimingType::combinational_rise:     tmp = "combinational_rise"; break;
+  case ClibTimingType::combinational_fall:     tmp = "combinational_fall"; break;
+  case ClibTimingType::three_state_enable:      tmp = "three_state_enable"; break;
+  case ClibTimingType::three_state_disable:     tmp = "three_state_disable"; break;
+  case ClibTimingType::three_state_enable_rise:  tmp = "three_state_enable_rise"; break;
+  case ClibTimingType::three_state_enable_fall:  tmp = "three_state_enable_fall"; break;
+  case ClibTimingType::three_state_disable_rise: tmp = "three_state_disable_rise"; break;
+  case ClibTimingType::three_state_disable_fall: tmp = "three_state_disable_fall"; break;
+  case ClibTimingType::rising_edge:            tmp = "rising_edge"; break;
+  case ClibTimingType::falling_edge:           tmp = "falling_edge"; break;
+  case ClibTimingType::preset:                tmp = "preset"; break;
+  case ClibTimingType::clear:                 tmp = "clear"; break;
+  case ClibTimingType::hold_rising:            tmp = "hold_rising"; break;
+  case ClibTimingType::hold_falling:           tmp = "hold_falling"; break;
+  case ClibTimingType::setup_rising:           tmp = "setup_rising"; break;
+  case ClibTimingType::setup_falling:          tmp = "setup_falling"; break;
+  case ClibTimingType::recovery_rising:        tmp = "recovery_rising"; break;
+  case ClibTimingType::recovery_falling:       tmp = "recovery_falling"; break;
+  case ClibTimingType::skew_rising:            tmp = "skew_rising"; break;
+  case ClibTimingType::skew_falling:           tmp = "skew_falling"; break;
+  case ClibTimingType::removal_rising:         tmp = "removal_rising"; break;
+  case ClibTimingType::removal_falling:        tmp = "removal_falling"; break;
+  case ClibTimingType::non_seq_setup_rising:     tmp = "non_seq_setup_rising"; break;
+  case ClibTimingType::non_seq_setup_falling:    tmp = "non_seq_setup_falling"; break;
+  case ClibTimingType::non_seq_hold_rising:      tmp = "non_seq_hold_rising"; break;
+  case ClibTimingType::non_seq_hold_falling:     tmp = "non_seq_hold_falling"; break;
+  case ClibTimingType::nochange_high_high:      tmp = "nochange_high_high"; break;
+  case ClibTimingType::nochange_high_low:       tmp = "nochange_high_low"; break;
+  case ClibTimingType::nochange_low_high:       tmp = "nochange_low_high"; break;
+  case ClibTimingType::nochange_low_low:        tmp = "nochange_low_low"; break;
   default: break;
   }
   return tmp;
@@ -738,20 +738,20 @@ AstVarType::decompile() const
 {
   const char* tmp = "---";
   switch ( vartype_value() ) {
-  case ClibVarType::InputNetTransition:                  tmp = "input_net_transition"; break;
-  case ClibVarType::InputTransitionTime:                 tmp = "input_transition_time"; break;
-  case ClibVarType::TotalOutputNetCapacitance:           tmp = "total_output_net_capacitance"; break;
-  case ClibVarType::EqualOrOppositeOutputNetCapacitance: tmp = "equal_or_opposite_output_net_capacitance"; break;
-  case ClibVarType::OutputNetLength:                     tmp = "output_net_length"; break;
-  case ClibVarType::OutputNetWireCap:                    tmp = "output_net_wire_cap"; break;
-  case ClibVarType::OutputNetPinCap:                     tmp = "output_net_pin_cap"; break;
-  case ClibVarType::RelatedOutTotalOutputNetCapacitance: tmp = "related_out_total_output_net_capacitance"; break;
-  case ClibVarType::RelatedOutOutputNetLength:           tmp = "related_out_output_net_length"; break;
-  case ClibVarType::RelatedOutOutputNetWireCap:          tmp = "related_out_output_net_wire_cap"; break;
-  case ClibVarType::RelatedOutOutputNetPinCap:           tmp = "related_out_output_net_pin_cap"; break;
-  case ClibVarType::ConstrainedPinTransition:            tmp = "constrained_pin_transition"; break;
-  case ClibVarType::RelatedPinTransition:                tmp = "related_pin_transition"; break;
-  case ClibVarType::None:                                tmp = "none"; break;
+  case ClibVarType::input_net_transition:                  tmp = "input_net_transition"; break;
+  case ClibVarType::input_transition_time:                 tmp = "input_transition_time"; break;
+  case ClibVarType::total_output_net_capacitance:           tmp = "total_output_net_capacitance"; break;
+  case ClibVarType::equal_or_opposite_output_net_capacitance: tmp = "equal_or_opposite_output_net_capacitance"; break;
+  case ClibVarType::output_net_length:                     tmp = "output_net_length"; break;
+  case ClibVarType::output_net_wire_cap:                    tmp = "output_net_wire_cap"; break;
+  case ClibVarType::output_net_pin_cap:                     tmp = "output_net_pin_cap"; break;
+  case ClibVarType::related_out_total_output_net_capacitance: tmp = "related_out_total_output_net_capacitance"; break;
+  case ClibVarType::related_out_output_net_length:           tmp = "related_out_output_net_length"; break;
+  case ClibVarType::related_out_output_net_wire_cap:          tmp = "related_out_output_net_wire_cap"; break;
+  case ClibVarType::related_out_output_net_pin_cap:           tmp = "related_out_output_net_pin_cap"; break;
+  case ClibVarType::constrained_pin_transition:            tmp = "constrained_pin_transition"; break;
+  case ClibVarType::related_pin_transition:                tmp = "related_pin_transition"; break;
+  case ClibVarType::none:                                tmp = "none"; break;
   default: break;
   }
   return tmp;

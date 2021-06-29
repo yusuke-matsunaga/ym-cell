@@ -270,7 +270,7 @@ TEST_F(ScannerTest, read_delay_model1)
   auto value1 = scanner.read_delay_model();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibDelayModel::GenericCmos, value1->delay_model_value() );
+  EXPECT_EQ( ClibDelayModel::generic_cmos, value1->delay_model_value() );
 }
 
 TEST_F(ScannerTest, read_delay_model2)
@@ -283,7 +283,7 @@ TEST_F(ScannerTest, read_delay_model2)
   auto value1 = scanner.read_delay_model();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibDelayModel::TableLookup, value1->delay_model_value() );
+  EXPECT_EQ( ClibDelayModel::table_lookup, value1->delay_model_value() );
 }
 
 TEST_F(ScannerTest, read_delay_model3)
@@ -295,7 +295,7 @@ TEST_F(ScannerTest, read_delay_model3)
   auto value1 = scanner.read_delay_model();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibDelayModel::PiecewiseCmos, value1->delay_model_value() );
+  EXPECT_EQ( ClibDelayModel::piecewise_cmos, value1->delay_model_value() );
 }
 
 TEST_F(ScannerTest, read_delay_model4)
@@ -307,7 +307,7 @@ TEST_F(ScannerTest, read_delay_model4)
   auto value1 = scanner.read_delay_model();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibDelayModel::Cmos2, value1->delay_model_value() );
+  EXPECT_EQ( ClibDelayModel::cmos2, value1->delay_model_value() );
 }
 
 TEST_F(ScannerTest, read_delay_model5)
@@ -319,7 +319,7 @@ TEST_F(ScannerTest, read_delay_model5)
   auto value1 = scanner.read_delay_model();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibDelayModel::Dcm, value1->delay_model_value() );
+  EXPECT_EQ( ClibDelayModel::dcm, value1->delay_model_value() );
 }
 
 TEST_F(ScannerTest, read_delay_model6)
@@ -347,7 +347,7 @@ TEST_F(ScannerTest, read_direction1)
   auto value1 = scanner.read_direction();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibDirection::Input, value1->direction_value() );
+  EXPECT_EQ( ClibDirection::input, value1->direction_value() );
 }
 
 TEST_F(ScannerTest, read_direction2)
@@ -360,7 +360,7 @@ TEST_F(ScannerTest, read_direction2)
   auto value1 = scanner.read_direction();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibDirection::Output, value1->direction_value() );
+  EXPECT_EQ( ClibDirection::output, value1->direction_value() );
 }
 
 TEST_F(ScannerTest, read_direction3)
@@ -372,7 +372,7 @@ TEST_F(ScannerTest, read_direction3)
   auto value1 = scanner.read_direction();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibDirection::Inout, value1->direction_value() );
+  EXPECT_EQ( ClibDirection::inout, value1->direction_value() );
 }
 
 TEST_F(ScannerTest, read_direction4)
@@ -384,7 +384,7 @@ TEST_F(ScannerTest, read_direction4)
   auto value1 = scanner.read_direction();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibDirection::Internal, value1->direction_value() );
+  EXPECT_EQ( ClibDirection::internal, value1->direction_value() );
 }
 
 TEST_F(ScannerTest, read_direction5)
@@ -412,7 +412,7 @@ TEST_F(ScannerTest, read_timing_sense1)
   auto value1 = scanner.read_timing_sense();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingSense::PosiUnate, value1->timing_sense_value() );
+  EXPECT_EQ( ClibTimingSense::positive_unate, value1->timing_sense_value() );
 }
 
 TEST_F(ScannerTest, read_timing_sense2)
@@ -425,7 +425,7 @@ TEST_F(ScannerTest, read_timing_sense2)
   auto value1 = scanner.read_timing_sense();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingSense::NegaUnate, value1->timing_sense_value() );
+  EXPECT_EQ( ClibTimingSense::negative_unate, value1->timing_sense_value() );
 }
 
 TEST_F(ScannerTest, read_timing_sense3)
@@ -437,7 +437,7 @@ TEST_F(ScannerTest, read_timing_sense3)
   auto value1 = scanner.read_timing_sense();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingSense::NonUnate, value1->timing_sense_value() );
+  EXPECT_EQ( ClibTimingSense::non_unate, value1->timing_sense_value() );
 }
 
 TEST_F(ScannerTest, read_timing_sense4)
@@ -465,7 +465,7 @@ TEST_F(ScannerTest, read_timing_type1)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::Combinational, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::combinational, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type2)
@@ -478,7 +478,7 @@ TEST_F(ScannerTest, read_timing_type2)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::CombinationalRise, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::combinational_rise, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type3)
@@ -490,7 +490,7 @@ TEST_F(ScannerTest, read_timing_type3)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::CombinationalFall, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::combinational_fall, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type4)
@@ -502,7 +502,7 @@ TEST_F(ScannerTest, read_timing_type4)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::ThreeStateEnable, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::three_state_enable, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type5)
@@ -514,7 +514,7 @@ TEST_F(ScannerTest, read_timing_type5)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::ThreeStateDisable, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::three_state_disable, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type6)
@@ -526,7 +526,7 @@ TEST_F(ScannerTest, read_timing_type6)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::ThreeStateEnableRise, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::three_state_enable_rise, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type7)
@@ -538,7 +538,7 @@ TEST_F(ScannerTest, read_timing_type7)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::ThreeStateEnableFall, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::three_state_enable_fall, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type8)
@@ -550,7 +550,7 @@ TEST_F(ScannerTest, read_timing_type8)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::ThreeStateDisableRise, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::three_state_disable_rise, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type9)
@@ -562,7 +562,7 @@ TEST_F(ScannerTest, read_timing_type9)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::ThreeStateDisableFall, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::three_state_disable_fall, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type10)
@@ -574,7 +574,7 @@ TEST_F(ScannerTest, read_timing_type10)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::RisingEdge, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::rising_edge, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type11)
@@ -586,7 +586,7 @@ TEST_F(ScannerTest, read_timing_type11)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::FallingEdge, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::falling_edge, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type12)
@@ -598,7 +598,7 @@ TEST_F(ScannerTest, read_timing_type12)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::Preset, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::preset, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type13)
@@ -610,7 +610,7 @@ TEST_F(ScannerTest, read_timing_type13)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::Clear, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::clear, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type14)
@@ -622,7 +622,7 @@ TEST_F(ScannerTest, read_timing_type14)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::HoldRising, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::hold_rising, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type15)
@@ -634,7 +634,7 @@ TEST_F(ScannerTest, read_timing_type15)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::HoldFalling, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::hold_falling, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type16)
@@ -646,7 +646,7 @@ TEST_F(ScannerTest, read_timing_type16)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::SetupRising, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::setup_rising, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type17)
@@ -658,7 +658,7 @@ TEST_F(ScannerTest, read_timing_type17)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::SetupFalling, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::setup_falling, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type18)
@@ -670,7 +670,7 @@ TEST_F(ScannerTest, read_timing_type18)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::RecoveryRising, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::recovery_rising, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type19)
@@ -682,7 +682,7 @@ TEST_F(ScannerTest, read_timing_type19)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::RecoveryFalling, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::recovery_falling, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type20)
@@ -694,7 +694,7 @@ TEST_F(ScannerTest, read_timing_type20)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::SkewRising, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::skew_rising, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type21)
@@ -706,7 +706,7 @@ TEST_F(ScannerTest, read_timing_type21)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::SkewFalling, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::skew_falling, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type22)
@@ -718,7 +718,7 @@ TEST_F(ScannerTest, read_timing_type22)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::RemovalRising, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::removal_rising, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type23)
@@ -730,7 +730,7 @@ TEST_F(ScannerTest, read_timing_type23)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::RemovalFalling, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::removal_falling, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type24)
@@ -742,7 +742,7 @@ TEST_F(ScannerTest, read_timing_type24)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::NonSeqSetupRising, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::non_seq_setup_rising, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type25)
@@ -754,7 +754,7 @@ TEST_F(ScannerTest, read_timing_type25)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::NonSeqSetupFalling, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::non_seq_setup_falling, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type26)
@@ -766,7 +766,7 @@ TEST_F(ScannerTest, read_timing_type26)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::NonSeqHoldRising, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::non_seq_hold_rising, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type27)
@@ -778,7 +778,7 @@ TEST_F(ScannerTest, read_timing_type27)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::NonSeqHoldFalling, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::non_seq_hold_falling, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type28)
@@ -790,7 +790,7 @@ TEST_F(ScannerTest, read_timing_type28)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::NochangeHighHigh, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::nochange_high_high, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type29)
@@ -802,7 +802,7 @@ TEST_F(ScannerTest, read_timing_type29)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::NochangeHighLow, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::nochange_high_low, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type30)
@@ -814,7 +814,7 @@ TEST_F(ScannerTest, read_timing_type30)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::NochangeLowHigh, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::nochange_low_high, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type31)
@@ -826,7 +826,7 @@ TEST_F(ScannerTest, read_timing_type31)
   auto value1 = scanner.read_timing_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibTimingType::NochangeLowLow, value1->timing_type_value() );
+  EXPECT_EQ( ClibTimingType::nochange_low_low, value1->timing_type_value() );
 }
 
 TEST_F(ScannerTest, read_timing_type32)
@@ -854,7 +854,7 @@ TEST_F(ScannerTest, read_vartype1)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::InputNetTransition, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::input_net_transition, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype2)
@@ -866,7 +866,7 @@ TEST_F(ScannerTest, read_vartype2)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::TotalOutputNetCapacitance, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::total_output_net_capacitance, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype3)
@@ -878,7 +878,7 @@ TEST_F(ScannerTest, read_vartype3)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::OutputNetLength, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::output_net_length, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype4)
@@ -890,7 +890,7 @@ TEST_F(ScannerTest, read_vartype4)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::OutputNetWireCap, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::output_net_wire_cap, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype5)
@@ -902,7 +902,7 @@ TEST_F(ScannerTest, read_vartype5)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::OutputNetPinCap, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::output_net_pin_cap, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype6)
@@ -914,7 +914,7 @@ TEST_F(ScannerTest, read_vartype6)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::EqualOrOppositeOutputNetCapacitance, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::equal_or_opposite_output_net_capacitance, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype7)
@@ -926,7 +926,7 @@ TEST_F(ScannerTest, read_vartype7)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::InputTransitionTime, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::input_transition_time, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype8)
@@ -938,7 +938,7 @@ TEST_F(ScannerTest, read_vartype8)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::RelatedOutTotalOutputNetCapacitance, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::related_out_total_output_net_capacitance, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype9)
@@ -950,7 +950,7 @@ TEST_F(ScannerTest, read_vartype9)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::RelatedOutOutputNetLength, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::related_out_output_net_length, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype10)
@@ -962,7 +962,7 @@ TEST_F(ScannerTest, read_vartype10)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::RelatedOutOutputNetWireCap, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::related_out_output_net_wire_cap, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype11)
@@ -974,7 +974,7 @@ TEST_F(ScannerTest, read_vartype11)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::RelatedOutOutputNetPinCap, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::related_out_output_net_pin_cap, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype12)
@@ -986,7 +986,7 @@ TEST_F(ScannerTest, read_vartype12)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::ConstrainedPinTransition, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::constrained_pin_transition, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype13)
@@ -998,7 +998,7 @@ TEST_F(ScannerTest, read_vartype13)
   auto value1 = scanner.read_vartype();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::RelatedPinTransition, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::related_pin_transition, value1->vartype_value() );
 }
 
 TEST_F(ScannerTest, read_vartype14)

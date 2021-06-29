@@ -129,30 +129,33 @@ Scanner::read_delay_model()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
-  ClibDelayModel value{ClibDelayModel::None};
+  ClibDelayModel value{ClibDelayModel::none};
   if ( tmp_str == "generic_cmos" ) {
-    value = ClibDelayModel::GenericCmos;
+    value = ClibDelayModel::generic_cmos;
   }
   else if ( tmp_str == "table_lookup" ) {
-    value = ClibDelayModel::TableLookup;
+    value = ClibDelayModel::table_lookup;
   }
   else if ( tmp_str == "piecewise_cmos" ) {
-    value = ClibDelayModel::PiecewiseCmos;
+    value = ClibDelayModel::piecewise_cmos;
   }
   else if ( tmp_str == "cmos2" ) {
-    value = ClibDelayModel::Cmos2;
+    value = ClibDelayModel::cmos2;
   }
   else if ( tmp_str == "dcm" ) {
-    value = ClibDelayModel::Dcm;
+    value = ClibDelayModel::dcm;
   }
-  if ( value != ClibDelayModel::None ) {
+  else if ( tmp_str == "polynomial" ) {
+    value = ClibDelayModel::polynomial;
+  }
+  if ( value != ClibDelayModel::none ) {
     return AstValue::new_delay_model(value, token.loc());
   }
 
   ostringstream buf;
   buf << "Syntax error: " << tmp_str << ": Illegal value for 'delay_model'."
       << " 'generic_cmos', 'table_lookup', "
-      << "'piecewise_cmos', 'cmos2' or 'dcm' are expected.";
+      << "'piecewise_cmos', 'cmos2', 'dcm' or 'polynomial' are expected.";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  token.loc(),
 		  MsgType::Error,
@@ -170,20 +173,20 @@ Scanner::read_direction()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
-  ClibDirection value{ClibDirection::None};
+  ClibDirection value{ClibDirection::none};
   if ( tmp_str == "input" ) {
-    value = ClibDirection::Input;
+    value = ClibDirection::input;
   }
   else if ( tmp_str == "output" ) {
-    value = ClibDirection::Output;
+    value = ClibDirection::output;
   }
   else if ( tmp_str == "inout" ) {
-    value = ClibDirection::Inout;
+    value = ClibDirection::inout;
   }
   else if ( tmp_str == "internal" ) {
-    value = ClibDirection::Internal;
+    value = ClibDirection::internal;
   }
-  if ( value != ClibDirection::None ) {
+  if ( value != ClibDirection::none ) {
     return AstValue::new_direction(value, token.loc());
   }
 
@@ -237,18 +240,18 @@ AstValuePtr
 Scanner::read_timing_sense()
 {
   auto token = read_token();
-  ClibTimingSense value{ClibTimingSense::None};
+  ClibTimingSense value{ClibTimingSense::none};
   auto tmp_str = token.str_value();
   if ( tmp_str == "positive_unate" ) {
-    value = ClibTimingSense::PosiUnate;
+    value = ClibTimingSense::positive_unate;
   }
   else if ( tmp_str == "negative_unate" ) {
-    value = ClibTimingSense::NegaUnate;
+    value = ClibTimingSense::negative_unate;
   }
   else if ( tmp_str == "non_unate" ) {
-    value = ClibTimingSense::NonUnate;
+    value = ClibTimingSense::non_unate;
   }
-  if ( value != ClibTimingSense::None ) {
+  if ( value != ClibTimingSense::none ) {
     return AstValue::new_timing_sense(value, token.loc());
   }
 
@@ -272,101 +275,101 @@ Scanner::read_timing_type()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
-  ClibTimingType value{ClibTimingType::None};
+  ClibTimingType value{ClibTimingType::none};
   if ( tmp_str == "combinational" ) {
-    value = ClibTimingType::Combinational;
+    value = ClibTimingType::combinational;
   }
   else if ( tmp_str == "combinational_rise" ) {
-    value = ClibTimingType::CombinationalRise;
+    value = ClibTimingType::combinational_rise;
   }
   else if ( tmp_str == "combinational_fall" ) {
-    value = ClibTimingType::CombinationalFall;
+    value = ClibTimingType::combinational_fall;
   }
   else if ( tmp_str == "three_state_enable" ) {
-    value = ClibTimingType::ThreeStateEnable;
+    value = ClibTimingType::three_state_enable;
   }
   else if ( tmp_str == "three_state_enable_rise" ) {
-    value = ClibTimingType::ThreeStateEnableRise;
+    value = ClibTimingType::three_state_enable_rise;
   }
   else if ( tmp_str == "three_state_enable_fall" ) {
-    value = ClibTimingType::ThreeStateEnableFall;
+    value = ClibTimingType::three_state_enable_fall;
   }
   else if ( tmp_str == "three_state_disable" ) {
-    value = ClibTimingType::ThreeStateDisable;
+    value = ClibTimingType::three_state_disable;
   }
   else if ( tmp_str == "three_state_disable_rise" ) {
-    value = ClibTimingType::ThreeStateDisableRise;
+    value = ClibTimingType::three_state_disable_rise;
   }
   else if ( tmp_str == "three_state_disable_fall" ) {
-    value = ClibTimingType::ThreeStateDisableFall;
+    value = ClibTimingType::three_state_disable_fall;
   }
   else if ( tmp_str == "rising_edge" ) {
-    value = ClibTimingType::RisingEdge;
+    value = ClibTimingType::rising_edge;
   }
   else if ( tmp_str == "falling_edge" ) {
-    value = ClibTimingType::FallingEdge;
+    value = ClibTimingType::falling_edge;
   }
   else if ( tmp_str == "preset" ) {
-    value = ClibTimingType::Preset;
+    value = ClibTimingType::preset;
   }
   else if ( tmp_str == "clear" ) {
-    value = ClibTimingType::Clear;
+    value = ClibTimingType::clear;
   }
   else if ( tmp_str == "hold_rising" ) {
-    value = ClibTimingType::HoldRising;
+    value = ClibTimingType::hold_rising;
   }
   else if ( tmp_str == "hold_falling" ) {
-    value = ClibTimingType::HoldFalling;
+    value = ClibTimingType::hold_falling;
   }
   else if ( tmp_str == "setup_rising" ) {
-    value = ClibTimingType::SetupRising;
+    value = ClibTimingType::setup_rising;
   }
   else if ( tmp_str == "setup_falling" ) {
-    value = ClibTimingType::SetupFalling;
+    value = ClibTimingType::setup_falling;
   }
   else if ( tmp_str == "recovery_rising" ) {
-    value = ClibTimingType::RecoveryRising;
+    value = ClibTimingType::recovery_rising;
   }
   else if ( tmp_str == "recovery_falling" ) {
-    value = ClibTimingType::RecoveryFalling;
+    value = ClibTimingType::recovery_falling;
   }
   else if ( tmp_str == "skew_rising" ) {
-    value = ClibTimingType::SkewRising;
+    value = ClibTimingType::skew_rising;
   }
   else if ( tmp_str == "skew_falling" ) {
-    value = ClibTimingType::SkewFalling;
+    value = ClibTimingType::skew_falling;
   }
   else if ( tmp_str == "removal_rising" ) {
-    value = ClibTimingType::RemovalRising;
+    value = ClibTimingType::removal_rising;
   }
   else if ( tmp_str == "removal_falling" ) {
-    value = ClibTimingType::RemovalFalling;
+    value = ClibTimingType::removal_falling;
   }
   else if ( tmp_str == "non_seq_setup_rising" ) {
-    value = ClibTimingType::NonSeqSetupRising;
+    value = ClibTimingType::non_seq_setup_rising;
   }
   else if ( tmp_str == "non_seq_setup_falling" ) {
-    value = ClibTimingType::NonSeqSetupFalling;
+    value = ClibTimingType::non_seq_setup_falling;
   }
   else if ( tmp_str == "non_seq_hold_rising" ) {
-    value = ClibTimingType::NonSeqHoldRising;
+    value = ClibTimingType::non_seq_hold_rising;
   }
   else if ( tmp_str == "non_seq_hold_falling" ) {
-    value = ClibTimingType::NonSeqHoldFalling;
+    value = ClibTimingType::non_seq_hold_falling;
   }
   else if ( tmp_str == "nochange_high_high" ) {
-    value = ClibTimingType::NochangeHighHigh;
+    value = ClibTimingType::nochange_high_high;
   }
   else if ( tmp_str == "nochange_high_low" ) {
-    value = ClibTimingType::NochangeHighLow;
+    value = ClibTimingType::nochange_high_low;
   }
   else if ( tmp_str == "nochange_low_high" ) {
-    value = ClibTimingType::NochangeLowHigh;
+    value = ClibTimingType::nochange_low_high;
   }
   else if ( tmp_str == "nochange_low_low" ) {
-    value = ClibTimingType::NochangeLowLow;
+    value = ClibTimingType::nochange_low_low;
   }
-  if ( value == ClibTimingType::None ) {
+  if ( value == ClibTimingType::none ) {
     ostringstream buf;
     buf << "Syntax error: "
 	<< tmp_str << ": Illegal value for 'timing_type'.";
@@ -390,47 +393,47 @@ Scanner::read_vartype()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
-  ClibVarType value{ClibVarType::None};
+  ClibVarType value{ClibVarType::none};
   if ( tmp_str == "input_net_transition" ) {
-    value = ClibVarType::InputNetTransition;
+    value = ClibVarType::input_net_transition;
   }
   else if ( tmp_str == "total_output_net_capacitance" ) {
-    value = ClibVarType::TotalOutputNetCapacitance;
+    value = ClibVarType::total_output_net_capacitance;
   }
   else if ( tmp_str == "equal_or_opposite_output_net_capacitance" ) {
-    value = ClibVarType::EqualOrOppositeOutputNetCapacitance;
+    value = ClibVarType::equal_or_opposite_output_net_capacitance;
   }
   else if ( tmp_str == "input_transition_time" ) {
-    value = ClibVarType::InputTransitionTime;
+    value = ClibVarType::input_transition_time;
   }
   else if ( tmp_str == "output_net_length" ) {
-    value = ClibVarType::OutputNetLength;
+    value = ClibVarType::output_net_length;
   }
   else if ( tmp_str == "output_net_wire_cap" ) {
-    value = ClibVarType::OutputNetWireCap;
+    value = ClibVarType::output_net_wire_cap;
   }
   else if ( tmp_str == "output_net_pin_cap" ) {
-    value = ClibVarType::OutputNetPinCap;
+    value = ClibVarType::output_net_pin_cap;
   }
   else if ( tmp_str == "related_out_total_output_net_capacitance" ) {
-    value = ClibVarType::RelatedOutTotalOutputNetCapacitance;
+    value = ClibVarType::related_out_total_output_net_capacitance;
   }
   else if ( tmp_str == "related_out_output_net_length" ) {
-    value = ClibVarType::RelatedOutOutputNetLength;
+    value = ClibVarType::related_out_output_net_length;
   }
   else if ( tmp_str == "related_out_output_net_wire_cap" ) {
-    value = ClibVarType::RelatedOutOutputNetWireCap;
+    value = ClibVarType::related_out_output_net_wire_cap;
   }
   else if ( tmp_str == "related_out_output_net_pin_cap" ) {
-    value = ClibVarType::RelatedOutOutputNetPinCap;
+    value = ClibVarType::related_out_output_net_pin_cap;
   }
   else if ( tmp_str == "constrained_pin_transition" ) {
-    value = ClibVarType::ConstrainedPinTransition;
+    value = ClibVarType::constrained_pin_transition;
   }
   else if ( tmp_str == "related_pin_transition" ) {
-    value = ClibVarType::RelatedPinTransition;
+    value = ClibVarType::related_pin_transition;
   }
-  if ( value != ClibVarType::None ) {
+  if ( value != ClibVarType::none ) {
     return AstValue::new_vartype(value, token.loc());
   }
 
@@ -523,7 +526,7 @@ Scanner::read_float_vector()
     else if ( c == ',' ) {
       if ( buf.size() == 0 ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
-			token.loc(),
+			value_loc,
 			MsgType::Error,
 			"DOTLIB_PARSER",
 			"Syntax error. Null element.");
@@ -536,7 +539,7 @@ Scanner::read_float_vector()
 	emsg << "Syntax error: "
 	     << buf << ": Could not convert to a number.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
-			loc,
+			value_loc,
 			MsgType::Error,
 			"DOTLIB_PARSER",
 			emsg.str());

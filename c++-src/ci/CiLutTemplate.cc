@@ -69,7 +69,7 @@ CiLutTemplateBad::dimension() const
 ClibVarType
 CiLutTemplateBad::variable_type(int var) const
 {
-  return ClibVarType::None;
+  return ClibVarType::none;
 }
 
 // @brief インデックス数の取得

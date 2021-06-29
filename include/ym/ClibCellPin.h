@@ -50,28 +50,28 @@ public:
 
   /// @brief 入力ピンの時に true を返す．
   ///
-  /// direction() == ClibDirection::Input と等価
+  /// direction() == ClibDirection::input と等価
   virtual
   bool
   is_input() const = 0;
 
   /// @brief 出力ピンの時に true を返す．
   ///
-  /// direction() == ClibDirection::Output と等価
+  /// direction() == ClibDirection::output と等価
   virtual
   bool
   is_output() const = 0;
 
   /// @brief 入出力ピンの時に true を返す．
   ///
-  /// direction() == ClibDirection::Inout と等価
+  /// direction() == ClibDirection::inout と等価
   virtual
   bool
   is_inout() const = 0;
 
   /// @brief 内部ピンの時に true を返す．
   ///
-  /// direction() == ClibDirection::Internal と等価
+  /// direction() == ClibDirection::internal と等価
   virtual
   bool
   is_internal() const = 0;

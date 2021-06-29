@@ -215,7 +215,7 @@ CiInputPin::~CiInputPin()
 ClibDirection
 CiInputPin::direction() const
 {
-  return ClibDirection::Input;
+  return ClibDirection::input;
 }
 
 // @brief 入力ピンの時に true を返す．
@@ -427,7 +427,7 @@ CiOutputPin::~CiOutputPin()
 ClibDirection
 CiOutputPin::direction() const
 {
-  return ClibDirection::Output;
+  return ClibDirection::output;
 }
 
 // @brief 出力ピンの時に true を返す．
@@ -489,7 +489,7 @@ CiInoutPin::~CiInoutPin()
 ClibDirection
 CiInoutPin::direction() const
 {
-  return ClibDirection::Inout;
+  return ClibDirection::inout;
 }
 
 // @brief 入出力ピンの時に true を返す．
@@ -549,7 +549,7 @@ CiInternalPin::~CiInternalPin()
 ClibDirection
 CiInternalPin::direction() const
 {
-  return ClibDirection::Internal;
+  return ClibDirection::internal;
 }
 
 // @brief 内部ピンの時に true を返す．

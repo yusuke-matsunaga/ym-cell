@@ -82,11 +82,11 @@ CiCellLibrary::technology() const
 
 // @brief 遅延モデルの取得
 // 返り値は
-// - ClibDelayModel::GenericCmos
-// - ClibDelayModel::TableLookup
-// - ClibDelayModel::PiecewiseCmos
-// - ClibDelayModel::Cmos2
-// - ClibDelayModel::Dcm
+// - ClibDelayModel::generic_cmos
+// - ClibDelayModel::table_lookup
+// - ClibDelayModel::piecewise_cmos
+// - ClibDelayModel::cmos2
+// - ClibDelayModel::dcm
 // のいずれか
 ClibDelayModel
 CiCellLibrary::delay_model() const
@@ -1179,8 +1179,8 @@ CiCellLibrary::set_timing(CiCell* cell,
 {
   int base = (opin_id * cell->input_num2() + ipin_id) * 2;
   switch ( timing_sense ) {
-  case ClibTimingSense::PosiUnate: base += 0; break;
-  case ClibTimingSense::NegaUnate: base += 1; break;
+  case ClibTimingSense::positive_unate: base += 0; break;
+  case ClibTimingSense::negative_unate: base += 1; break;
   default: ASSERT_NOT_REACHED;
   }
   int n = timing_list.size();

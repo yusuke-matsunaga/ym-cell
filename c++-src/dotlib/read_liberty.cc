@@ -157,7 +157,7 @@ gen_pin(const vector<const AstPin*>& pin_list,
 {
   for ( auto pin_info: pin_list ) {
     switch ( pin_info->direction()->direction_value() ) {
-    case ClibDirection::Input:
+    case ClibDirection::input:
       // 入力ピンの生成
       {
 	ClibCapacitance cap{pin_info->capacitance()->float_value()};
@@ -170,7 +170,7 @@ gen_pin(const vector<const AstPin*>& pin_list,
       }
       break;
 
-    case ClibDirection::Output:
+    case ClibDirection::output:
       // 出力の生成
       {
 	bool has_logic;
@@ -196,7 +196,7 @@ gen_pin(const vector<const AstPin*>& pin_list,
       }
       break;
 
-    case ClibDirection::Inout:
+    case ClibDirection::inout:
       // 入出力ピンの生成
       {
 	bool has_logic;
@@ -226,7 +226,7 @@ gen_pin(const vector<const AstPin*>& pin_list,
       }
       break;
 
-    case ClibDirection::Internal:
+    case ClibDirection::internal:
       // 内部ピンの生成
       for ( auto name: pin_info->name_list() ) {
 	CiInternalPin* pin = library->new_cell_internal(name->string_value());
@@ -255,7 +255,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
       Expr cond = gen_expr(ast_timing->when(), pin_map, dummy);
       CiTiming* timing = nullptr;
       switch ( library->delay_model() ) {
-      case ClibDelayModel::GenericCmos:
+      case ClibDelayModel::generic_cmos:
 	{
 	  ClibTime intrinsic_rise{ast_timing->intrinsic_rise()->float_value()};
 	  ClibTime intrinsic_fall{ast_timing->intrinsic_fall()->float_value()};
@@ -270,7 +270,7 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	}
 	break;
 
-      case ClibDelayModel::TableLookup:
+      case ClibDelayModel::table_lookup:
 	{
 	  const AstLut* cr_node = ast_timing->cell_rise();
 	  const AstLut* rt_node = ast_timing->rise_transition();
@@ -389,19 +389,19 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	}
 	break;
 
-      case ClibDelayModel::PiecewiseCmos:
+      case ClibDelayModel::piecewise_cmos:
 	// 未実装
 	break;
 
-      case ClibDelayModel::Cmos2:
+      case ClibDelayModel::cmos2:
 	// 未実装
 	break;
 
-      case ClibDelayModel::Dcm:
+      case ClibDelayModel::dcm:
 	// 未実装
 	break;
 
-      case ClibDelayModel::None:
+      case ClibDelayModel::none:
 	ASSERT_NOT_REACHED;
 	break;
       }
@@ -426,15 +426,15 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 	  }
 	  int id = pin_map.at(pin_name);
 	  switch ( timing_sense ) {
-	  case ClibTimingSense::PosiUnate:
+	  case ClibTimingSense::positive_unate:
 	    timing_list_array[id * 2 + 0].push_back(timing);
 	    break;
 
-	  case ClibTimingSense::NegaUnate:
+	  case ClibTimingSense::negative_unate:
 	    timing_list_array[id * 2 + 1].push_back(timing);
 	    break;
 
-	  case ClibTimingSense::NonUnate:
+	  case ClibTimingSense::non_unate:
 	    timing_list_array[id * 2 + 0].push_back(timing);
 	    timing_list_array[id * 2 + 1].push_back(timing);
 	    break;
@@ -589,10 +589,10 @@ set_library(const AstLibrary* ast_library,
     for ( auto pin_info: ast_cell->pin_list() ) {
       int nn = pin_info->name_list().size();
       switch ( pin_info->direction()->direction_value() ) {
-      case ClibDirection::Input:    ni += nn; break;
-      case ClibDirection::Output:   no += nn; break;
-      case ClibDirection::Inout:    nio += nn; break;
-      case ClibDirection::Internal: nit += nn; break;
+      case ClibDirection::input:    ni += nn; break;
+      case ClibDirection::output:   no += nn; break;
+      case ClibDirection::inout:    nio += nn; break;
+      case ClibDirection::internal: nit += nn; break;
       default: ASSERT_NOT_REACHED; break;
       }
     }
@@ -607,15 +607,15 @@ set_library(const AstLibrary* ast_library,
       int itpos = 0;
       for ( auto pin_info: ast_cell->pin_list() ) {
 	switch ( pin_info->direction()->direction_value() ) {
-	case ClibDirection::Input:
-	case ClibDirection::Inout:
+	case ClibDirection::input:
+	case ClibDirection::inout:
 	  for ( auto name: pin_info->name_list() ) {
 	    pin_map[name->string_value()] = ipos;
 	    ++ ipos;
 	  }
 	  break;
 
-	case ClibDirection::Internal:
+	case ClibDirection::internal:
 	  for ( auto name: pin_info->name_list() ) {
 	    pin_map[name->string_value()] = itpos + ni2;
 	    ++ itpos;
@@ -760,13 +760,13 @@ set_library(const AstLibrary* ast_library,
 	if ( !timing_list_p.empty() ) {
 	  CiTiming* timing = timing_list_p[0];
 	  bool depend = true;
-	  if ( timing->type() == ClibTimingType::Combinational ) {
+	  if ( timing->type() == ClibTimingType::combinational ) {
 	    if ( opin.has_function() && !(~n_func && p_func) ) {
 	      depend = false;
 	    }
 	  }
 	  if ( depend ) {
-	    library->set_timing(cell, iid, oid, ClibTimingSense::PosiUnate, timing_list_p);
+	    library->set_timing(cell, iid, oid, ClibTimingSense::positive_unate, timing_list_p);
 	  }
 	}
 
@@ -774,13 +774,13 @@ set_library(const AstLibrary* ast_library,
 	if ( !timing_list_n.empty() ) {
 	  CiTiming* timing = timing_list_n[0];
 	  bool depend = true;
-	  if ( timing->type() == ClibTimingType::Combinational ) {
+	  if ( timing->type() == ClibTimingType::combinational ) {
 	    if ( opin.has_function() && !(~p_func && n_func) ) {
 	      depend = false;
 	    }
 	  }
 	  if ( depend ) {
-	    library->set_timing(cell, iid, oid, ClibTimingSense::NegaUnate, timing_list_n);
+	    library->set_timing(cell, iid, oid, ClibTimingSense::negative_unate, timing_list_n);
 	  }
 	}
       }

@@ -400,8 +400,8 @@ CiCell::timing_list(int ipos,
 {
   int base = (opos * input_num2() + ipos) * 2;
   switch ( sense ) {
-  case ClibTimingSense::PosiUnate: base += 0; break;
-  case ClibTimingSense::NegaUnate: base += 1; break;
+  case ClibTimingSense::positive_unate: base += 0; break;
+  case ClibTimingSense::negative_unate: base += 1; break;
   default:
     ASSERT_NOT_REACHED;
   }

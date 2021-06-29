@@ -135,7 +135,7 @@ ClibCellLibrary::delay_model() const
   }
   else {
     // デフォルト値
-    return ClibDelayModel::GenericCmos;
+    return ClibDelayModel::generic_cmos;
   }
 }
 
