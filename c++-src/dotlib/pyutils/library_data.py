@@ -21,6 +21,8 @@ simple_attrs = (
     ('comment', 'string'),
     ('current_unit', 'string'),
     ('date', 'string'),
+    ('default_fpga_isd', 'string'),
+    ('default_threshold_voltage_group', 'string'),
     ('delay_model', 'delay_model'),
     ('em_temp_degradation_factor', 'float'),
     ('fpga_domain_style', 'string'),
@@ -33,8 +35,8 @@ simple_attrs = (
     ('piece_type', 'string'),
     ('power_model', 'string'),
     ('power_unit', 'string'),
-    ('prefered_(input|output)_pad_voltage', 'string'),
-    ('prefered_output_pad_slew_rate_control', 'string'),
+    ('preferred_(input|output)_pad_voltage', 'string'),
+    ('preferred_output_pad_slew_rate_control', 'string'),
     ('pulling_resistance_unit', 'string'),
     ('resistance_unit', 'string'),
     ('revision', 'string'),
@@ -49,9 +51,8 @@ simple_attrs = (
     ('default_(fall|rise)_delay_intercept', 'float'),
     ('default_(fall|rise)_pin_resistance', 'float'),
     ('default_fanout_load', 'float'),
-    ('default_fpga_isd', 'string'),
     ('default_(inout|input|output)_pin_cap', 'float'),
-    ('default_(inout|output)_pin_(fall|rise)_res', 'float'),
+    ('default_(inout|input|output)_pin_(fall|rise)_res', 'float'),
     ('default_intrinsic_(fall|rise)', 'float'),
     ('default_leakage_power_density', 'float'),
     ('default_max_capacitance', 'float'),
@@ -98,6 +99,7 @@ complex_attrs = (
     ('piece_define', 'string'),
     ('routing_layers', 'string_list'),
     ('technology', 'technology'),
+    ('voltage_map', 'string_float')
 )
 
 groups = (
@@ -125,7 +127,8 @@ groups = (
     ('power_poly_template', 'poly_template'),
     ('power_supply', 'power_supply'),
     ('propagation_lut_template', 'template'),
-    ('scaled_cell', 'cell'),
+    ('scaled_cell', 'scaled_cell'),
+#    ('scaling_factors', 'scaling_factors'), マニュアルに詳細な記述なし．
     ('sensitization', 'sensitization'),
     ('timing', 'timing'),
     ('timing_range', 'timing_range'),

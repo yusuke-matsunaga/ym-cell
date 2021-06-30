@@ -1,6 +1,6 @@
 
-/// @file ParserTest2.cc
-/// @brief ParserTest の実装ファイル(2)
+/// @file ParserTest_complex.cc
+/// @brief commplex attribute 用のパース関数のテスト
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2021 Yusuke Matsunaga

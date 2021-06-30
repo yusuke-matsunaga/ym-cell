@@ -270,6 +270,18 @@ group_cell(Parser& parser,      ///< [in] パーサー
   return parser.parse_group_statement(attr, "cell", Parser::sStrHeader);
 }
 
+/// @brief scaled_cell group statment のパースを行なう．
+/// @return パース結果を返す．
+///
+/// エラーの時は nullptr を返す．
+inline
+AstAttrPtr
+group_scaled_cell(Parser& parser,      ///< [in] パーサー
+                  const AttrKwd& attr) ///< [in] 属性の型
+{
+  return parser.parse_group_statement(attr, "scaled_cell", Parser::sStrStrHeader);
+}
+
 /// @brief model group statment のパースを行なう．
 /// @return パース結果を返す．
 ///

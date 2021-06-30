@@ -97,6 +97,34 @@ date
 ダブルクォート(")に囲まれている限り任意の文字を使うことができる．
 
 
+
+.. _library_default_fpga_isd:
+
+default_fpga_isd
+^^^^^^^^^^^^^^^^^
+
+::
+
+   default_fpga_isd : fpga_isd_name_(id) ;
+
+`fpga_isd` group を複数定義した場合，
+デフォルトの `fpga_isd` を指定するために用いる．
+`fpga_isd_name` は定義した `fpga_isd` の名前(string)を指定する．
+
+
+.. _library_default_threshold_voltage_group:
+
+default_threshold_voltage_group
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+   default_threshold_voltage_group : group_name_(id) ;
+
+セルが属するカテゴリを指定する．
+`group_name` にはカテゴリ名(string)を指定する．
+
+
 .. _library_delay_model:
 
 delay_model
@@ -127,17 +155,6 @@ em_temp_degradation_factor
 
 エレクトロマイグレーションのデグラデーションファクターを指定する．
 `value` には浮動小数点を指定する．
-
-
-.. _library_fall_net_delay:
-
-fall_net_delay
-^^^^^^^^^^^^^^^
-
-::
-
-   fall_net_delay : name_(id) ;
-
 
 
 .. _library_fpga_domain_style:
@@ -196,7 +213,7 @@ input_threshold_pct_rise
 
 ::
 
-   input_threshold_pct_fall : trip_point_(float) ;
+   input_threshold_pct_rise : trip_point_(float) ;
 
 入力が0から1に変化する時のしきい値を 0.0 から 100.0 の値で指定する．
 
@@ -398,15 +415,6 @@ pulling_resistance_unit
 この属性が指定されなかった場合のデフォルト値はない．
 
 
-.. _library_rise_net_delay:
-
-rise_net_delay
-^^^^^^^^^^^^^^^
-
-::
-
-   rise_net_delay : name_(id) ;
-
 
 .. _library_resistance_unit:
 
@@ -517,19 +525,6 @@ slew_upper_threshold_pct_rise
 端子の値が 0 から 1 に変化する時のupper thresholdを 0.0 から100.0 の範囲で指定する．
 
 
-.. _library_threshold_voltage_group:
-
-default_threshold_voltage_group
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-   default_threshold_voltage_group : group_name_(id) ;
-
-セルが属するカテゴリを指定する．
-`group_name` にはカテゴリ名(string)を指定する．
-
-
 .. _library_time_unit:
 
 time_unit
@@ -621,21 +616,6 @@ default_fanout_load
 ::
 
    default_fanout_load : value_(float) ;
-
-
-
-.. _library_default_fpga_isd:
-
-default_fpga_isd
-^^^^^^^^^^^^^^^^^
-
-::
-
-   default_fpga_isd : fpga_isd_name_(id) ;
-
-`fpga_isd` group を複数定義した場合，
-デフォルトの `fpga_isd` を指定するために用いる．
-`fpga_isd_name` は定義した `fpga_isd` の名前(string)を指定する．
 
 
 .. _library_default_inout_pin_cap:
@@ -1425,6 +1405,15 @@ complex attribute になっているのかは謎．
 `name` は  `cmos` か `fpga` ．
 デフォルトは `cmos` ．
 
+.. _library_voltage_map:
+
+voltage_map
+^^^^^^^^^^^^
+
+::
+
+   voltage_map ( voltage_name_(string), voltage_value_(float) ) ;
+
 
 .. _library_group_:
 
@@ -1647,6 +1636,8 @@ scaling_factors
 ::
 
    scaling_factors ( name_(id) ) { }
+
+マニュアルにはこれ以外の情報なし．
 
 
 .. _library_timing:

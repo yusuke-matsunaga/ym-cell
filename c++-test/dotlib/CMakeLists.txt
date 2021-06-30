@@ -39,10 +39,16 @@ ym_add_gtest ( cell_FuncScanner_test
   )
 
 ym_add_gtest ( cell_DotlibParser_test
-  ParserTest1.cc
-  ParserTest2.cc
-  ParserTest3.cc
-  ParserTest_library.cc
+  ParserTest_simple.cc
+  ParserTest_complex.cc
+  ParserTest_group.cc
+  ParserTest_library_simple.cc
+  ParserTest_library_default.cc
+  ParserTest_library_k_process.cc
+  ParserTest_library_k_temp.cc
+  ParserTest_library_k_volt.cc
+  ParserTest_library_complex.cc
+  ParserTest_library_group.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>

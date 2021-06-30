@@ -99,6 +99,15 @@ hd.add_group_data('cell', 'string',
 
 
 ####################################################
+# scaled_cell
+####################################################
+
+hd.add_group_data('scaled_cell', 'string_string',
+                  simple_attrs=simple_attrs,
+                  complex_attrs=complex_attrs)
+
+
+####################################################
 #   model
 ####################################################
 model_simple_attrs = simple_attrs + (('cell_name', 'string'),)
