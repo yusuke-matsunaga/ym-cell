@@ -34,7 +34,7 @@ TEST(ClibCellLibraryTest, read_mislib)
 TEST(ClibCellLibraryTest, read_liberty)
 {
   try {
-    StreamMsgHandler handler(&cout);
+    StreamMsgHandler handler(cout);
     MsgMgr::attach_handler(&handler);
     string filename = string(DATA_DIR) + string("/HIT018.typ.snp");
     ClibCellLibrary library;

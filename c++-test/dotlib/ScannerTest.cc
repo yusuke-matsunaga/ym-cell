@@ -334,7 +334,7 @@ TEST_F(ScannerTest, read_delay_model6)
   ASSERT_TRUE( value1 == nullptr );
   auto msg_list = mh.message_list();
   EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: dmos2: Illegal value for 'delay_model'. 'generic_cmos', 'table_lookup', 'piecewise_cmos', 'cmos2' or 'dcm' are expected.\n",
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: dmos2: Illegal value for 'delay_model'. 'generic_cmos', 'table_lookup', 'piecewise_cmos', 'cmos2', 'dcm' or 'polynomial' are expected.\n",
 	     msg_list[0]);
 }
 

@@ -24,7 +24,7 @@ class ParserTest :
 public:
 
   ParserTest()
-    : mh2{&cout}
+    : mh2{cout}
   {
     MsgMgr::attach_handler(&mh);
     MsgMgr::attach_handler(&mh2);
