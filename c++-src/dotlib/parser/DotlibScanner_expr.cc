@@ -6,7 +6,7 @@
 /// Copyright (C) 2005-2011, 2014, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/Scanner.h"
+#include "dotlib/DotlibScanner.h"
 #include "dotlib/AstExpr.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-Scanner::read_expr()
+DotlibScanner::read_expr()
 {
   auto expr{_read_expr(TokenType::SEMI)};
   if ( expr ) {
@@ -33,7 +33,7 @@ Scanner::read_expr()
 
 // @brief "式" を表す AstValue を生成する．
 AstValuePtr
-Scanner::read_function()
+DotlibScanner::read_function()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
@@ -44,7 +44,7 @@ Scanner::read_function()
 
 // @brief expression を読み込む．
 AstExprPtr
-Scanner::_read_expr(TokenType end_marker)
+DotlibScanner::_read_expr(TokenType end_marker)
 {
   auto opr1{_read_product()};
   if ( opr1 == nullptr ) {
@@ -82,7 +82,7 @@ Scanner::_read_expr(TokenType end_marker)
 
 // @brief primary を読み込む．
 AstExprPtr
-Scanner::_read_primary()
+DotlibScanner::_read_primary()
 {
   Token token = read_token();
   switch ( token.type() ) {
@@ -127,7 +127,7 @@ Scanner::_read_primary()
 
 // @brief prudct を読み込む．
 AstExprPtr
-Scanner::_read_product()
+DotlibScanner::_read_product()
 {
   auto opr1{_read_primary()};
   if ( opr1 == nullptr ) {

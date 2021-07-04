@@ -22,8 +22,7 @@ TEST_F(ParserTest, parse_input_voltage1)
   istringstream buf("( 1.0, 2 );\n"
 		    ""
   );
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = parse_float_float(parser, attr);
 
@@ -40,8 +39,7 @@ TEST_F(ParserTest, group_cell0)
   // ヘッダの検査
   istringstream buf("( test ) {\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"cell", FileRegion{}};
   auto dst = group_cell(parser, attr);
@@ -61,8 +59,7 @@ TEST_F(ParserTest, parse_cell_area)
   istringstream buf("( test ) {\n"
 		    "  area: 1.2; \n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"cell", FileRegion{}};
   auto dst = group_cell(parser, attr);

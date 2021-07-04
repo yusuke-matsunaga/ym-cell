@@ -6,7 +6,7 @@
 /// Copyright (C) 2005-2011, 2014, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/Scanner.h"
+#include "dotlib/DotlibScanner.h"
 #include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 
@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //
 // エラーの時は nullptr を返す．
 AstValuePtr
-Scanner::read_int()
+DotlibScanner::read_int()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
@@ -51,7 +51,7 @@ Scanner::read_int()
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-Scanner::read_float()
+DotlibScanner::read_float()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
@@ -78,7 +78,7 @@ Scanner::read_float()
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-Scanner::read_string()
+DotlibScanner::read_string()
 {
   auto token = read_token();
   if ( token.type() == TokenType::SYMBOL ) {
@@ -98,7 +98,7 @@ Scanner::read_string()
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-Scanner::read_bool()
+DotlibScanner::read_bool()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
@@ -125,7 +125,7 @@ Scanner::read_bool()
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-Scanner::read_delay_model()
+DotlibScanner::read_delay_model()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
@@ -169,7 +169,7 @@ Scanner::read_delay_model()
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-Scanner::read_direction()
+DotlibScanner::read_direction()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
@@ -206,7 +206,7 @@ Scanner::read_direction()
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-Scanner::read_technology()
+DotlibScanner::read_technology()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
@@ -237,7 +237,7 @@ Scanner::read_technology()
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-Scanner::read_timing_sense()
+DotlibScanner::read_timing_sense()
 {
   auto token = read_token();
   ClibTimingSense value{ClibTimingSense::none};
@@ -271,7 +271,7 @@ Scanner::read_timing_sense()
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-Scanner::read_timing_type()
+DotlibScanner::read_timing_type()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
@@ -389,7 +389,7 @@ Scanner::read_timing_type()
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-Scanner::read_vartype()
+DotlibScanner::read_vartype()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
@@ -453,7 +453,7 @@ Scanner::read_vartype()
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-Scanner::read_int_vector()
+DotlibScanner::read_int_vector()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
@@ -503,7 +503,7 @@ Scanner::read_int_vector()
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-Scanner::read_float_vector()
+DotlibScanner::read_float_vector()
 {
   auto token = read_token();
   auto value_loc = token.loc();

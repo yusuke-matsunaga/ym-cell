@@ -17,6 +17,7 @@ include_directories(
 # ===================================================================
 
 add_subdirectory ( c++-test/cell_library )
+add_subdirectory ( c++-test/mislib )
 add_subdirectory ( c++-test/dotlib )
 add_subdirectory ( c++-test/libcomp )
 
@@ -64,19 +65,9 @@ set (libcomp_SOURCES
 
 set (mislib_SOURCES
   c++-src/mislib/read_mislib.cc
-  c++-src/mislib/MislibBop.cc
-  c++-src/mislib/MislibConst.cc
-  c++-src/mislib/MislibExpr.cc
-  c++-src/mislib/MislibGate.cc
   c++-src/mislib/MislibNode.cc
-  c++-src/mislib/MislibNot.cc
-  c++-src/mislib/MislibNum.cc
   c++-src/mislib/MislibParser.cc
-  c++-src/mislib/MislibPhase.cc
-  c++-src/mislib/MislibPin.cc
   c++-src/mislib/MislibScanner.cc
-  c++-src/mislib/MislibStr.cc
-  c++-src/mislib/MislibVarName.cc
   )
 
 set (dotlib_SOURCES
@@ -86,9 +77,9 @@ set (dotlib_SOURCES
   c++-src/dotlib/parser/FuncScanner.cc
   c++-src/dotlib/parser/HeaderHandler.cc
   c++-src/dotlib/parser/Parser.cc
-  c++-src/dotlib/parser/Scanner.cc
-  c++-src/dotlib/parser/Scanner_value.cc
-  c++-src/dotlib/parser/Scanner_expr.cc
+  c++-src/dotlib/parser/DotlibScanner.cc
+  c++-src/dotlib/parser/DotlibScanner_value.cc
+  c++-src/dotlib/parser/DotlibScanner_expr.cc
 
   c++-src/dotlib/ast/AstExpr.cc
   c++-src/dotlib/ast/AstValue.cc

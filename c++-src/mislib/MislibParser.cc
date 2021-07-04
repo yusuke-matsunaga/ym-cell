@@ -8,16 +8,10 @@
 
 
 #include "MislibParser.h"
-#include "MislibPhase.h"
-#include "MislibConst.h"
-#include "MislibNot.h"
-#include "MislibBop.h"
-#include "MislibVarName.h"
-#include "MislibStr.h"
-#include "MislibNum.h"
+#include "MislibScanner.h"
 #include "MislibExpr.h"
 #include "MislibGate.h"
-#include "MislibPin.h"
+#include "MislibNode.h"
 #include "ym/MsgMgr.h"
 
 
@@ -34,8 +28,10 @@ BEGIN_NONAMESPACE
 
 // 論理式中に現れる名前を ipin_set に積む．
 void
-get_ipin_names(const MislibExpr* expr_node,
-	       unordered_set<ShString>& ipin_set)
+get_ipin_names(
+  const MislibExpr* expr_node,
+  unordered_set<ShString>& ipin_set
+)
 {
   ShString name;
 
@@ -52,14 +48,14 @@ get_ipin_names(const MislibExpr* expr_node,
     break;
 
   case MislibExpr::Not:
-    get_ipin_names(expr_node->child1(), ipin_set);
+    get_ipin_names(expr_node->opr1(), ipin_set);
     break;
 
   case MislibExpr::And:
   case MislibExpr::Or:
   case MislibExpr::Xor:
-    get_ipin_names(expr_node->child1(), ipin_set);
-    get_ipin_names(expr_node->child2(), ipin_set);
+    get_ipin_names(expr_node->opr1(), ipin_set);
+    get_ipin_names(expr_node->opr2(), ipin_set);
     break;
 
   default:
@@ -74,126 +70,111 @@ END_NONAMESPACE
 // クラス MislibParser
 //////////////////////////////////////////////////////////////////////
 
-// コンストラクタ
-MislibParser::MislibParser()
-{
-  mUngetToken = END;
-}
-
-// デストラクタ
-MislibParser::~MislibParser()
-{
-}
-
 // @brief ゲートを読み込む．
-// @param[in] filename ファイル名
-// @param[out] gate_list ゲートのASTを格納するリスト
-// @return 読み込みが成功したら true を返す．
 bool
-MislibParser::parse(const string& filename,
-		    vector<const MislibGate*>& gate_list)
+MislibParser::parse(
+  const string& filename,
+  vector<MislibGatePtr>& gate_list
+)
 {
-  {
-    ifstream fin{filename};
-    if ( !fin ) {
-      // エラー
-      ostringstream buf;
-      buf << filename << " : No such file.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      FileRegion(),
-		      MsgType::Failure,
-		      "MISLIB_PARSER",
-		      buf.str());
-      return false;
-    }
-
-    InputFileObj in{fin, {filename}};
-    unique_ptr<MislibScanner> new_scanner{new MislibScanner(in)};
-    mScanner.swap(new_scanner);
+  ifstream fin{filename};
+  if ( !fin ) {
+    // エラー
+    ostringstream buf;
+    buf << filename << " : No such file.";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    FileRegion(),
+		    MsgType::Failure,
+		    "MISLIB_PARSER",
+		    buf.str());
+    return false;
   }
+
+  MislibScanner scanner(fin, {filename});
+  mScanner = &scanner;
 
   gate_list.clear();
   for ( ; ; ) {
-    FileRegion loc;
-    MislibToken tok = scan(loc);
-    if ( tok == END ) {
+    MislibToken tok = scan();
+    auto type = tok.type();
+    if ( type == MislibToken::END ) {
       break;
     }
 
-    if ( tok != GATE ) {
+    if ( type != MislibToken::GATE ) {
       // シンタックスエラー
       return false;
     }
 
-    FileRegion loc0 = loc;
+    FileRegion loc0 = tok.loc();
+
     // 次は STR
-    tok = scan(loc);
-    if ( tok != STR ) {
+    auto name = read_str();
+    if ( name == nullptr ) {
       // シンタックスエラー
       return false;
     }
-    MislibStr* name = new_str(loc);
 
     // 次は NUM
-    tok = scan(loc);
-    if ( tok != NUM ) {
+    auto area = read_num();
+    if ( area == nullptr ) {
       // シンタックスエラー
       return false;
     }
-    MislibNum* area = new_num(loc);
 
     // 次は STR
-    tok = scan(loc);
-    if ( tok != STR ) {
+    auto opin = read_str();
+    if ( opin == nullptr ) {
       // シンタックスエラー
       return false;
     }
-    MislibStr* opin = new_str(loc);
 
     // 次は EQ
-    tok = scan(loc);
-    if ( tok != EQ ) {
+    if ( !expect_token(MislibToken::EQ) ) {
       // シンタックスエラー
       return false;
     }
 
     // 次は式
-    MislibExpr* expr = read_expr(SEMI);
+    auto expr = read_expr(MislibToken::SEMI);
     if ( expr == nullptr ) {
       // エラー
       return false;
     }
 
     // 次は SEMI
-    tok = scan(loc);
-    if ( tok != SEMI ) {
+    if ( !expect_token(MislibToken::SEMI) ) {
       // シンタックスエラー
       return false;
     }
 
-    FileRegion loc1 = loc;
-
     // 次はピンリスト
-    const MislibPin* ipin_top = read_pin_list();
-    if ( ipin_top == nullptr ) {
+    vector<MislibPinPtr> ipin_list;
+    if ( !read_pin_list(ipin_list) ) {
       // エラー
       return false;
     }
+
     // 末尾のノードを位置を loc1 に設定する．
-    for ( auto pin = ipin_top; pin != nullptr; pin = pin->next() ) {
-      loc1 = pin->loc();
+    FileRegion loc1;
+    if ( ipin_list.size() > 0 ) {
+      loc1 = ipin_list.back()->loc();
     }
 
-    MislibGate* gate = new_gate(FileRegion(loc0, loc1), name, area,
-				opin, expr, ipin_top);
-    gate_list.push_back(gate);
+    auto gate = new_gate(FileRegion(loc0, loc1),
+			 move(name), move(area),
+			 move(opin), move(expr),
+			 move(ipin_list));
+    gate_list.push_back(move(gate));
   }
   return check_gate_list(gate_list);
 }
 
 // @brief 読み込んだゲートリストが正しいかチェックする．
 bool
-MislibParser::check_gate_list(const vector<const MislibGate*>& gate_list)
+MislibParser::check_gate_list(
+  const vector<MislibGatePtr>& gate_list
+)
 {
   int prev_errnum = MsgMgr::error_num();
 
@@ -201,7 +182,7 @@ MislibParser::check_gate_list(const vector<const MislibGate*>& gate_list)
   // また，セル内のピン名が重複していないか，出力ピンの論理式に現れるピン名
   // と入力ピンに齟齬がないかもチェックする．
   unordered_map<ShString, const MislibGate*> cell_map;
-  for ( auto gate: gate_list ) {
+  for ( auto& gate: gate_list ) {
     ShString name = gate->name()->str();
     if ( cell_map.count(name) > 0 ) {
       auto node = cell_map.at(name);
@@ -217,11 +198,13 @@ MislibParser::check_gate_list(const vector<const MislibGate*>& gate_list)
       continue;
     }
     // 情報を登録する．
-    cell_map.emplace(name, gate);
+    cell_map.emplace(name, gate.get());
 
     // 入力ピン名のチェック
     unordered_map<ShString, const MislibPin*> ipin_map;
-    for ( auto ipin = gate->ipin_top(); ipin != nullptr; ipin = ipin->next() ) {
+    int npin = gate->ipin_num();
+    for ( int i = 0; i < npin; ++ i ) {
+      auto ipin = gate->ipin(i);
       ShString name = ipin->name()->str();
       if ( ipin_map.count(name) > 0 ) {
 	auto node = ipin_map.at(name);
@@ -283,39 +266,78 @@ MislibParser::check_gate_list(const vector<const MislibGate*>& gate_list)
   return true;
 }
 
+// @brief 文字列を読み込む．
+// @return 文字列を表す AST のノードを返す．
+//
+// エラーが起きたら nullptr を返す．
+MislibStrPtr
+MislibParser::read_str()
+{
+  auto tok = scan();
+  if ( tok.type() != MislibToken::STR ) {
+    // シンタックスエラー
+    return nullptr;
+  }
+  auto node = new_str(tok.loc());
+  return node;
+}
+
+// @brief 数値を読み込む．
+// @return 数値を表す AST のノードを返す．
+//
+// エラーが起きたら nullptr を返す．
+MislibNumPtr
+MislibParser::read_num()
+{
+  auto tok = scan();
+  if ( tok.type() != MislibToken::NUM ) {
+    // シンタックスエラー
+    return nullptr;
+  }
+  auto node = new_num(tok.loc());
+  return node;
+}
+
 // @brief 式を読み込む．
 // @return 式を表す AST のノードを返す．
 //
 // エラーが起きたら nullptr を返す．
-MislibExpr*
-MislibParser::read_expr(MislibToken end_token)
+MislibExprPtr
+MislibParser::read_expr(
+  MislibToken::Type end_type
+)
 {
-  MislibExpr* expr1 = read_product();
+  auto expr1 = read_product();
   if ( expr1 == nullptr ) {
     return nullptr;
   }
 
   for ( ; ; ) {
-    MislibToken tok = peek();
-    if ( tok == end_token ) {
+    auto tok = peek();
+    auto type = tok.type();
+    if ( type == end_type ) {
       return expr1;
     }
-    if ( tok != PLUS && tok != HAT ) {
+    if ( type != MislibToken::PLUS && type != MislibToken::HAT ) {
       // シンタックスエラー
       cout << "Error in read_expr(): PLUS or HAT is expected" << endl;
       return nullptr;
     }
     skip_token();
 
-    MislibExpr* expr2 = read_product();
+    auto expr2 = read_product();
     if ( expr2 == nullptr ) {
       return nullptr;
     }
-    if ( tok == PLUS ) {
-      expr1 = new_or(FileRegion(expr1->loc(), expr2->loc()), expr1, expr2);
+    if ( type == MislibToken::PLUS ) {
+      expr1 = new_or(FileRegion(expr1->loc(), expr2->loc()),
+		     move(expr1),
+		     move(expr2));
     }
     else {
-      expr1 = new_xor(FileRegion(expr1->loc(), expr2->loc()), expr1, expr2);
+      expr1 = new_xor(FileRegion(expr1->loc(), expr2->loc()),
+		      move(expr1),
+		      move(expr2));
     }
   }
 }
@@ -324,21 +346,23 @@ MislibParser::read_expr(MislibToken end_token)
 // @return 式を表す AST のノードを返す．
 //
 // エラーが起きたら nullptr を返す．
-MislibExpr*
+MislibExprPtr
 MislibParser::read_product()
 {
-  MislibExpr* expr1 = read_literal();
+  auto expr1 = read_literal();
   if ( expr1 == nullptr ) {
     return nullptr;
   }
-  while ( peek() == STAR ) {
+  while ( peek().type() == MislibToken::STAR ) {
     skip_token();
 
-    MislibExpr* expr2 = read_literal();
+    auto expr2 = read_literal();
     if ( expr2 == nullptr ) {
       return nullptr;
     }
-    expr1 = new_and(FileRegion(expr1->loc(), expr2->loc()), expr1, expr2);
+    expr1 = new_and(FileRegion(expr1->loc(), expr2->loc()),
+		    move(expr1),
+		    move(expr2));
   }
   return expr1;
 }
@@ -347,34 +371,33 @@ MislibParser::read_product()
 // @return 式を表す AST のノードを返す．
 //
 // エラーが起きたら nullptr を返す．
-MislibExpr*
+MislibExprPtr
 MislibParser::read_literal()
 {
-  FileRegion loc;
-  MislibToken tok = scan(loc);
-  switch ( tok ) {
-  case STR:
-    return new_varname(loc, ShString(mScanner->cur_string()));
+  auto tok = scan();
+  switch ( tok.type() ) {
+  case MislibToken::STR:
+    return new_varname(tok.loc(), ShString(mScanner->cur_string()));
 
-  case CONST0:
-    return new_const0(loc);
+  case MislibToken::CONST0:
+    return new_const0(tok.loc());
 
-  case CONST1:
-    return new_const1(loc);
+  case MislibToken::CONST1:
+    return new_const1(tok.loc());
 
-  case LP:
+  case MislibToken::LP:
     {
-      MislibExpr* expr = read_expr(RP);
-      FileRegion dummy_loc;
-      tok = scan(dummy_loc);
-      ASSERT_COND( tok == RP );
+      auto expr = read_expr(MislibToken::RP);
+      tok = scan();
+      ASSERT_COND( tok.type() == MislibToken::RP );
       return expr;
     }
 
-  case NOT:
+  case MislibToken::NOT:
     {
-      MislibExpr* expr = read_literal();
-      return new_not(FileRegion(loc, expr->loc()), expr);
+      auto expr = read_literal();
+      return new_not(FileRegion(tok.loc(), expr->loc()),
+		     move(expr));
     }
 
   default:
@@ -386,101 +409,93 @@ MislibParser::read_literal()
 }
 
 // @brief ピンリスト記述を読み込む．
-// @return ピンリストを表す AST のノードを返す．
-//
-// エラーが起きたら nullptr を返す．
-// ピン名の代わりに * の場合があるので注意
-MislibPin*
-MislibParser::read_pin_list()
+bool
+MislibParser::read_pin_list(
+  vector<MislibPinPtr>& pin_list
+)
 {
-  MislibPin* top_node = nullptr;
-  MislibPin* prev_node = nullptr;
   for ( ; ; ) {
-    MislibPin* node;
-    FileRegion loc;
-
     // 最初は PIN
-    MislibToken tok = peek();
-    if ( tok != PIN ) {
+    auto tok = peek();
+    if ( tok.type() != MislibToken::PIN ) {
       // 終わる．
       break;
     }
+
+    // 'pin' の位置
+    FileRegion pin_loc = tok.loc();
     // peek したトークンを読み込む．
-    scan(loc);
+    skip_token();
 
     // 次は STR か STAR
-    FileRegion loc0 = loc;
-    tok = scan(loc);
-    MislibStr* name = nullptr;
-    if ( tok == STR ) {
-      name = new_str(loc);
+    tok = scan();
+    auto type = tok.type();
+    MislibStrPtr name;
+    if ( type == MislibToken::STR ) {
+      name = new_str(tok.loc());
     }
-    else if ( tok == STAR ) {
+    else if ( type == MislibToken::STAR ) {
       // name は nullptr のまま
     }
     else {
       // シンタックスエラー
-      return nullptr;
+      return false;
     }
 
     // 次は NONINV/INV/UNKNOWN のいずれか
-    tok = scan(loc);
-    MislibPhase* phase = nullptr;
-    switch ( tok ) {
-    case NONINV:  phase = new_noninv(loc); break;
-    case INV:     phase = new_inv(loc); break;
-    case UNKNOWN: phase = new_unknown(loc); break;
-    default: return nullptr;
+    tok = scan();
+    MislibPhasePtr phase;
+    switch ( tok.type() ) {
+    case MislibToken::NONINV:  phase = new_noninv(tok.loc()); break;
+    case MislibToken::INV:     phase = new_inv(tok.loc()); break;
+    case MislibToken::UNKNOWN: phase = new_unknown(tok.loc()); break;
+    default: return false;
     }
 
     // あとは 6 個の NUM
-    MislibNum* val[6];
+    MislibNumPtr val[6];
     for ( int i = 0; i < 6; ++ i ) {
-      tok = scan(loc);
-      if ( tok != NUM ) {
+      auto node = read_num();
+      if ( node == nullptr ) {
 	// シンタックスエラー
-	return nullptr;
+	return false;
       }
-      val[i] = new_num(loc);
+      val[i] = move(node);
     }
 
-    MislibPin* pin = new_pin(FileRegion(loc0, loc), name, phase,
-			     val[0], val[1], val[2],
-			     val[3], val[4], val[5]);
-    if ( prev_node != nullptr ) {
-      prev_node->set_next(pin);
-    }
-    else {
-      top_node = pin;
-    }
-    prev_node = pin;
+    auto pin = new_pin(FileRegion(pin_loc, val[5]->loc()),
+		       move(name),  move(phase),
+		       move(val[0]), move(val[1]),
+		       move(val[2]), move(val[3]),
+		       move(val[4]), move(val[5]));
+    pin_list.push_back(move(pin));
   }
 
   // 名前が nullptr (STAR) のピンがある場合はそれが唯一の要素である場合に限る．
   bool has_star = false;
-  for ( const MislibPin* pin = top_node; pin != nullptr; pin = pin->next() ) {
+  for ( auto& pin: pin_list ) {
     if ( pin->name() == nullptr ) {
       has_star = true;
     }
   }
-  if ( has_star && top_node->next() != nullptr ) {
+  if ( has_star && pin_list.size() > 1 ) {
     // シンタックスエラー
-    top_node = nullptr;
+    return false;
   }
 
-  return top_node;
+  return true;;
 }
 
 // @brief 次のトークンを盗み見る．
 MislibToken
 MislibParser::peek()
 {
-  if ( mUngetToken == END ) {
-    mUngetToken = mScanner->read_token(mUngetLoc);
+  if ( mUngetToken.type() == MislibToken::ERROR ) {
+    mUngetToken = mScanner->read_token();
   }
   if ( debug_read_token ) {
     cout << "MislibParser::peek(): "
-	 << mUngetToken << endl;
+	 << mUngetToken.type() << endl;
   }
   return mUngetToken;
 }
@@ -491,107 +506,103 @@ MislibParser::skip_token()
 {
   if ( debug_read_token ) {
     cout << "MislibParser::skip_token(): "
-	 << mUngetToken << " is discarded" << endl;
+	 << mUngetToken.type() << " is discarded" << endl;
   }
-  mUngetToken = END;
+  mUngetToken = {};
 }
 
 // @brief 字句解析を行う．
-// @param[out] lval トークンの値を格納する変数
 // @return トークンの型を返す．
-//
-// lval に値がセットされない場合もある．
 MislibToken
-MislibParser::scan(FileRegion& lloc)
+MislibParser::scan()
 {
   MislibToken tok = mUngetToken;
-  lloc = mUngetLoc;
-  mUngetToken = END;
-  if ( tok == END ) {
-    tok = mScanner->read_token(lloc);
+  mUngetToken = {};
+  if ( tok.type() == MislibToken::ERROR ) {
+    tok = mScanner->read_token();
   }
 
   if ( debug_read_token ) {
     cout << "MislibParser::scan(): ";
-    switch ( tok ) {
-    case STR:
+    switch ( tok.type() ) {
+    case MislibToken::STR:
       cout << "STR(" << mScanner->cur_string() << ")" << endl;
       break;
 
-    case NUM:
+    case MislibToken::NUM:
       cout << "NUM(" << mScanner->cur_float() << ")" << endl;
       break;
 
-    case NONINV:
+    case MislibToken::NONINV:
       cout << "NONINV" << endl;
       break;
 
-    case INV:
+    case MislibToken::INV:
       cout << "INV" << endl;
       break;
 
-    case UNKNOWN:
+    case MislibToken::UNKNOWN:
       cout << "UNKNOWN" << endl;
       break;
 
-    case CONST0:
+    case MislibToken::CONST0:
       cout << "CONST0" << endl;
       break;
 
-    case CONST1:
+    case MislibToken::CONST1:
       cout << "CONST1" << endl;
       break;
 
-    case LP:
+    case MislibToken::LP:
       cout << "LP" << endl;
       break;
 
-    case RP:
+    case MislibToken::RP:
       cout << "RP" << endl;
       break;
 
-    case SEMI:
+    case MislibToken::SEMI:
       cout << "SEMI" << endl;
       break;
 
-    case EQ:
+    case MislibToken::EQ:
       cout << "EQ" << endl;
       break;
 
-    case GATE:
+    case MislibToken::GATE:
       cout << "GATE" << endl;
       break;
 
-    case PIN:
+    case MislibToken::PIN:
       cout << "PIN" << endl;
       break;
 
-    case ERROR:
+    case MislibToken::ERROR:
       cout << "ERROR" << endl;
       break;
 
-    case PLUS:
+    case MislibToken::PLUS:
       cout << "PLUS" << endl;
       break;
 
-    case HAT:
+    case MislibToken::HAT:
       cout << "HAT" << endl;
       break;
 
-    case STAR:
+    case MislibToken::STAR:
       cout << "STAR" << endl;
       break;
 
-    case NOT:
+    case MislibToken::NOT:
       cout << "NOT" << endl;
       break;
 
-    case END:
+    case MislibToken::END:
       cout << "END" << endl;
       break;
 
     default:
-      cout << tok << endl;
+      cout << tok.type() << endl;
       break;
     }
   }
@@ -599,184 +610,201 @@ MislibParser::scan(FileRegion& lloc)
 }
 
 // GATE ノードを生成する．
-MislibGate*
-MislibParser::new_gate(const FileRegion& loc,
-		       const MislibStr* name,
-		       const MislibNum* area,
-		       const MislibStr* oname,
-		       const MislibExpr* expr,
-		       const MislibPin* ipin_top)
+MislibGatePtr
+MislibParser::new_gate(
+  const FileRegion& loc,
+  MislibStrPtr&& name,
+  MislibNumPtr&& area,
+  MislibStrPtr&& oname,
+  MislibExprPtr&& expr,
+  vector<MislibPinPtr>&& ipin_list)
 {
   ASSERT_COND( name != nullptr );
   ASSERT_COND( area != nullptr );
   ASSERT_COND( oname != nullptr );
   ASSERT_COND( expr != nullptr );
 
-  auto node = new MislibGate(loc, name, area,
-			     oname, expr,
-			     ipin_top);
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  auto node = new MislibGate(loc,
+			     move(name),
+			     move(area),
+			     move(oname),
+			     move(expr),
+			     move(ipin_list));
+  return MislibGatePtr{node};
 }
 
 // PIN ノードを生成する．
-MislibPin*
-MislibParser::new_pin(const FileRegion& loc,
-		      const MislibStr* name,
-		      const MislibPhase* phase,
-		      const MislibNum* input_load,
-		      const MislibNum* max_load,
-		      const MislibNum* rise_block_delay,
-		      const MislibNum* rise_fanout_delay,
-		      const MislibNum* fall_block_delay,
-		      const MislibNum* fall_fanout_delay)
+MislibPinPtr
+MislibParser::new_pin(
+  const FileRegion& loc,
+  MislibStrPtr&& name,
+  MislibPhasePtr&& phase,
+  MislibNumPtr&& input_load,
+  MislibNumPtr&& max_load,
+  MislibNumPtr&& rise_block_delay,
+  MislibNumPtr&& rise_fanout_delay,
+  MislibNumPtr&& fall_block_delay,
+  MislibNumPtr&& fall_fanout_delay
+)
 {
-  auto node = new MislibPin(loc, name, phase,
-			    input_load, max_load,
-			    rise_block_delay, rise_fanout_delay,
-			    fall_block_delay, fall_fanout_delay);
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  auto node = new MislibPin(loc,
+			    move(name),
+			    move(phase),
+			    move(input_load),
+			    move(max_load),
+			    move(rise_block_delay),
+			    move(rise_fanout_delay),
+			    move(fall_block_delay),
+			    move(fall_fanout_delay));
+  return MislibPinPtr{node};
 }
 
 // NONINV ノードを生成する．
-MislibPhase*
-MislibParser::new_noninv(const FileRegion& loc)
+MislibPhasePtr
+MislibParser::new_noninv(
+  const FileRegion& loc
+)
 {
   auto node = new MislibNoninv(loc);
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  return MislibPhasePtr{node};
 }
 
 // INV ノードを生成する．
-MislibPhase*
-MislibParser::new_inv(const FileRegion& loc)
+MislibPhasePtr
+MislibParser::new_inv(
+  const FileRegion& loc
+)
 {
   auto node = new MislibInv(loc);
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  return MislibPhasePtr{node};
 }
 
 // UNKNOWN ノードを生成する．
-MislibPhase*
-MislibParser::new_unknown(const FileRegion& loc)
+MislibPhasePtr
+MislibParser::new_unknown(
+  const FileRegion& loc
+)
 {
   auto node = new MislibUnknown(loc);
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  return MislibPhasePtr{node};
 }
 
 // 定数0ノードを生成する．
-MislibExpr*
-MislibParser::new_const0(const FileRegion& loc)
+MislibExprPtr
+MislibParser::new_const0(
+  const FileRegion& loc
+)
 {
   auto node = new MislibConst0(loc);
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  return MislibExprPtr{node};
 }
 
 // 定数1ノードを生成する．
-MislibExpr*
-MislibParser::new_const1(const FileRegion& loc)
+MislibExprPtr
+MislibParser::new_const1(
+  const FileRegion& loc
+)
 {
   auto node = new MislibConst1(loc);
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  return MislibExprPtr{node};
 }
 
 // NOT ノードを生成する．
-MislibExpr*
-MislibParser::new_not(const FileRegion& loc,
-		      const MislibExpr* child1)
+MislibExprPtr
+MislibParser::new_not(
+  const FileRegion& loc,
+  MislibExprPtr&& opr1
+)
 {
-  auto node = new MislibNot(loc, child1);
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  auto node = new MislibNot(loc, move(opr1));
+  return MislibExprPtr{node};
 }
 
 // AND ノードを生成する．
-MislibExpr*
-MislibParser::new_and(const FileRegion& loc,
-		      const MislibExpr* child1,
-		      const MislibExpr* child2)
+MislibExprPtr
+MislibParser::new_and(
+  const FileRegion& loc,
+  MislibExprPtr&& opr1,
+  MislibExprPtr&& opr2
+)
 {
-  auto node = new MislibAnd(loc, child1, child2);
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  auto node = new MislibAnd(loc,
+			    move(opr1),
+			    move(opr2));
+  return MislibExprPtr{node};
 }
 
 // OR ノードを生成する．
-MislibExpr*
-MislibParser::new_or(const FileRegion& loc,
-		     const MislibExpr* child1,
-		     const MislibExpr* child2)
+MislibExprPtr
+MislibParser::new_or(
+  const FileRegion& loc,
+  MislibExprPtr&& opr1,
+  MislibExprPtr&& opr2
+)
 {
-  auto node = new MislibOr(loc, child1, child2);
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  auto node = new MislibOr(loc,
+			   move(opr1),
+			   move(opr2));
+  return MislibExprPtr{node};
 }
 
 // XOR ノードを生成する．
-MislibExpr*
-MislibParser::new_xor(const FileRegion& loc,
-		      const MislibExpr* child1,
-		      const MislibExpr* child2)
+MislibExprPtr
+MislibParser::new_xor(
+  const FileRegion& loc,
+  MislibExprPtr&& opr1,
+  MislibExprPtr&& opr2
+)
 {
-  auto node = new MislibXor(loc, child1, child2);
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  auto node = new MislibXor(loc,
+			    move(opr1),
+			    move(opr2));
+  return MislibExprPtr{node};
 }
 
 // @brief 変数ノードを生成する．
-MislibExpr*
-MislibParser::new_varname(const FileRegion& loc,
-			  ShString str)
+MislibExprPtr
+MislibParser::new_varname(
+  const FileRegion& loc,
+  const char* str
+)
 {
   auto node = new MislibVarName(loc, str);
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  return MislibExprPtr{node};
 }
 
 // @brief 直前のトークンが文字列の場合に文字列ノードを返す．
-MislibStr*
-MislibParser::new_str(const FileRegion& loc)
+MislibStrPtr
+MislibParser::new_str(
+  const FileRegion& loc
+)
 {
-  auto node = new MislibStr(loc, ShString(mScanner->cur_string()));
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  auto node = new MislibStr(loc, mScanner->cur_string());
+  return MislibStrPtr{node};
 }
 
 // @brief 直前のトークンが数字の場合に数字ノードを返す．
-MislibNum*
-MislibParser::new_num(const FileRegion& loc)
+MislibNumPtr
+MislibParser::new_num(
+  const FileRegion& loc
+)
 {
   auto node = new MislibNum(loc, mScanner->cur_float());
-  mNodeList.push_back(unique_ptr<MislibNode>{node});
-  return node;
+  return MislibNumPtr{node};
 }
 
 // @brief エラーメッセージを出力する．
 void
-MislibParser::error(const FileRegion& loc,
-		    const char* msg)
+MislibParser::error(
+  const FileRegion& loc,
+  const char* msg
+)
 {
-  string buff;
-  const char* msg2;
-  // 好みの問題だけど "parse error" よりは "syntax error" の方が好き．
-  if ( !strncmp(msg, "parse error", 11) ) {
-    buff ="syntax error";
-    buff += (msg + 11);
-    msg2 = buff.c_str();
-  }
-  else {
-    msg2 = msg;
-  }
-
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  loc,
 		  MsgType::Error,
 		  "MISLIB_PARSER",
-		  msg2);
+		  msg);
 }
 
 END_NAMESPACE_YM_MISLIB

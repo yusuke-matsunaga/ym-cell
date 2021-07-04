@@ -822,8 +822,7 @@ CiCellLibrary::read_liberty(const string& filename)
   }
 
   // 読み込んでASTを作る．
-  InputFileObj in{fin, {filename}};
-  Parser parser(in, false);
+  Parser parser(fin, {filename}, false);
   auto ast_library{parser.parse()};
   if ( ast_library == nullptr ) {
     // 読み込みに失敗した．

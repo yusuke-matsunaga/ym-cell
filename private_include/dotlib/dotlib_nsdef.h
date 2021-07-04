@@ -31,7 +31,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // クラス名の前方宣言
 class Parser;
-class Scanner;
+class DotlibScanner;
 
 class AstAttr;
 class AstExpr;
@@ -48,7 +48,7 @@ using AstValuePtr = unique_ptr<const AstValue>;
 using AstAttrPtr = unique_ptr<const AstAttr>;
 
 // simple attribute を読み込む関数の型定義
-using SimpleHandler = std::function<AstValuePtr(Scanner&)>;
+using SimpleHandler = std::function<AstValuePtr(DotlibScanner&)>;
 
 // group statement の要素を読み込む関数の型定義
 using AttrHandler = std::function<AstAttrPtr(Parser&, const AttrKwd&)>;

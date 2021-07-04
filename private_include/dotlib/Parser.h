@@ -11,7 +11,7 @@
 #include "dotlib/dotlib_nsdef.h"
 #include "dotlib/AttrKwd.h"
 #include "dotlib/HeaderHandler.h"
-#include "dotlib/Scanner.h"
+#include "dotlib/DotlibScanner.h"
 #include "dotlib/TokenType.h"
 
 #include "ym/FileRegion.h"
@@ -28,9 +28,12 @@ class Parser
 public:
 
   /// @brief コンストラクタ
-  Parser(InputFileObj& in,           ///< [in] 入力ファイルオブジェクト
-	 bool debug,                 ///< [in] デバッグモード
-	 bool allow_no_semi = true); ///< [in] 行末のセミコロンなしを許すかどうか
+  Parser(
+    istream& s,                ///< [in] 入力ストリーム
+    const FileInfo& file_info, ///< [in] ファイル情報
+    bool debug,                ///< [in] デバッグモード
+    bool allow_no_semi = true  ///< [in] 行末のセミコロンなしを許すかどうか
+  );
 
   /// @brief デストラクタ
   ~Parser();
@@ -111,7 +114,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 字句解析器
-  Scanner mScanner;
+  DotlibScanner mScanner;
 
   // デバッグモード
   bool mDebug;

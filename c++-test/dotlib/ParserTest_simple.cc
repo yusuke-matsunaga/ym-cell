@@ -19,8 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 TEST_F(ParserTest, simple_bool1)
 {
   istringstream buf{": true;\n"};
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_bool(parser, attr);
 
@@ -34,8 +33,7 @@ TEST_F(ParserTest, simple_bool1)
 TEST_F(ParserTest, simple_bool2)
 {
   istringstream buf{": false;\n"};
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_bool(parser, attr);
 
@@ -50,8 +48,7 @@ TEST_F(ParserTest, simple_bool3)
 {
   // スペルミス
   istringstream buf{": fals;\n"};
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_bool(parser, attr);
 
@@ -66,8 +63,7 @@ TEST_F(ParserTest, simple_bool4)
 {
   // セミコロンの後に改行がない
   istringstream buf{": true; another_attr"};
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_bool(parser, attr);
 
@@ -82,8 +78,7 @@ TEST_F(ParserTest, simple_bool5)
 {
   // セミコロンがない．
   istringstream buf{": true\n"};
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_bool(parser, attr);
 
@@ -99,8 +94,7 @@ TEST_F(ParserTest, simple_bool6)
   // セミコロンがないが，
   // allow_no_semi が true なので成功する．
   istringstream buf{": true\n"};
-  InputFileObj in{buf, info};
-  Parser parser{in, false, true};
+  Parser parser{buf, info, false, true};
 
   auto dst = simple_bool(parser, attr);
 
@@ -114,8 +108,7 @@ TEST_F(ParserTest, simple_bool6)
 TEST_F(ParserTest, simple_int1)
 {
   istringstream buf(": 123;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_int(parser, attr);
 
@@ -130,8 +123,7 @@ TEST_F(ParserTest, simple_int2)
 {
   // 非数字
   istringstream buf(": a123;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_int(parser, attr);
 
@@ -145,8 +137,7 @@ TEST_F(ParserTest, simple_int2)
 TEST_F(ParserTest, simple_float1)
 {
   istringstream buf(": 123.456;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_float(parser, attr);
 
@@ -161,8 +152,7 @@ TEST_F(ParserTest, simple_float2)
 {
   // 整数でもOK
   istringstream buf(": 123;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_float(parser, attr);
 
@@ -177,8 +167,7 @@ TEST_F(ParserTest, simple_float3)
 {
   // 先頭が非数字
   istringstream buf(": f123.456;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_float(parser, attr);
 
@@ -192,8 +181,7 @@ TEST_F(ParserTest, simple_float3)
 TEST_F(ParserTest, simple_string1)
 {
   istringstream buf(": abcdefg;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_string(parser, attr);
 
@@ -208,8 +196,7 @@ TEST_F(ParserTest, simple_string2)
 {
   // " で囲まれていてもOK
   istringstream buf(": \"abcdefg\";\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_string(parser, attr);
 
@@ -224,8 +211,7 @@ TEST_F(ParserTest, simple_string2b)
 {
   // " で囲まれていれば空白を含んでもOK
   istringstream buf(": \"abc def\";\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_string(parser, attr);
 
@@ -240,8 +226,7 @@ TEST_F(ParserTest, simple_string3)
 {
   // 先頭が数字でもOK
   istringstream buf(": 1.3a;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_string(parser, attr);
 
@@ -255,8 +240,7 @@ TEST_F(ParserTest, simple_string3)
 TEST_F(ParserTest, simple_delay_model1)
 {
   istringstream buf(": generic_cmos;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_delay_model(parser, attr);
 
@@ -270,8 +254,7 @@ TEST_F(ParserTest, simple_delay_model1)
 TEST_F(ParserTest, simple_delay_model2)
 {
   istringstream buf(": table_lookup;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_delay_model(parser, attr);
 
@@ -285,8 +268,7 @@ TEST_F(ParserTest, simple_delay_model2)
 TEST_F(ParserTest, simple_delay_model3)
 {
   istringstream buf(": piecewise_cmos;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_delay_model(parser, attr);
 
@@ -300,8 +282,7 @@ TEST_F(ParserTest, simple_delay_model3)
 TEST_F(ParserTest, simple_delay_model4)
 {
   istringstream buf(": cmos2;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_delay_model(parser, attr);
 
@@ -315,8 +296,7 @@ TEST_F(ParserTest, simple_delay_model4)
 TEST_F(ParserTest, simple_delay_model5)
 {
   istringstream buf(": dcm;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_delay_model(parser, attr);
 
@@ -331,8 +311,7 @@ TEST_F(ParserTest, simple_delay_model6)
 {
   // 不適切な文字列．
   istringstream buf(": abcdef;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_delay_model(parser, attr);
 
@@ -346,8 +325,7 @@ TEST_F(ParserTest, simple_delay_model6)
 TEST_F(ParserTest, simple_direction1)
 {
   istringstream buf(": input;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_direction(parser, attr);
 
@@ -361,8 +339,7 @@ TEST_F(ParserTest, simple_direction1)
 TEST_F(ParserTest, simple_direction2)
 {
   istringstream buf(": output;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_direction(parser, attr);
 
@@ -376,8 +353,7 @@ TEST_F(ParserTest, simple_direction2)
 TEST_F(ParserTest, simple_direction3)
 {
   istringstream buf(": inout;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_direction(parser, attr);
 
@@ -391,8 +367,7 @@ TEST_F(ParserTest, simple_direction3)
 TEST_F(ParserTest, simple_direction4)
 {
   istringstream buf(": internal;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_direction(parser, attr);
 
@@ -407,8 +382,7 @@ TEST_F(ParserTest, simple_direction5)
 {
   // 不適切な文字列
   istringstream buf(": 0.1;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_direction(parser, attr);
 
@@ -422,8 +396,7 @@ TEST_F(ParserTest, simple_direction5)
 TEST_F(ParserTest, simple_timing_sense1)
 {
   istringstream buf(": positive_unate;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_sense(parser, attr);
 
@@ -437,8 +410,7 @@ TEST_F(ParserTest, simple_timing_sense1)
 TEST_F(ParserTest, simple_timing_sense2)
 {
   istringstream buf(": negative_unate;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_sense(parser, attr);
 
@@ -452,8 +424,7 @@ TEST_F(ParserTest, simple_timing_sense2)
 TEST_F(ParserTest, simple_timing_sense3)
 {
   istringstream buf(": non_unate;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_sense(parser, attr);
 
@@ -468,8 +439,7 @@ TEST_F(ParserTest, simple_timing_sense4)
 {
   // 不適切な文字列
   istringstream buf(": unate;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_sense(parser, attr);
 
@@ -483,8 +453,7 @@ TEST_F(ParserTest, simple_timing_sense4)
 TEST_F(ParserTest, simple_timing_type1)
 {
   istringstream buf(": combinational;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -498,8 +467,7 @@ TEST_F(ParserTest, simple_timing_type1)
 TEST_F(ParserTest, simple_timing_type2)
 {
   istringstream buf(": combinational_rise;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -513,8 +481,7 @@ TEST_F(ParserTest, simple_timing_type2)
 TEST_F(ParserTest, simple_timing_type3)
 {
   istringstream buf(": combinational_fall;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -528,8 +495,7 @@ TEST_F(ParserTest, simple_timing_type3)
 TEST_F(ParserTest, simple_timing_type4)
 {
   istringstream buf(": three_state_enable;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -543,8 +509,7 @@ TEST_F(ParserTest, simple_timing_type4)
 TEST_F(ParserTest, simple_timing_type5)
 {
   istringstream buf(": three_state_disable;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -558,8 +523,7 @@ TEST_F(ParserTest, simple_timing_type5)
 TEST_F(ParserTest, simple_timing_type6)
 {
   istringstream buf(": three_state_enable_rise;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -573,8 +537,7 @@ TEST_F(ParserTest, simple_timing_type6)
 TEST_F(ParserTest, simple_timing_type7)
 {
   istringstream buf(": three_state_enable_fall;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -588,8 +551,7 @@ TEST_F(ParserTest, simple_timing_type7)
 TEST_F(ParserTest, simple_timing_type8)
 {
   istringstream buf(": three_state_disable_rise;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -603,8 +565,7 @@ TEST_F(ParserTest, simple_timing_type8)
 TEST_F(ParserTest, simple_timing_type9)
 {
   istringstream buf(": three_state_disable_fall;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -618,8 +579,7 @@ TEST_F(ParserTest, simple_timing_type9)
 TEST_F(ParserTest, simple_timing_type10)
 {
   istringstream buf(": rising_edge;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -633,8 +593,7 @@ TEST_F(ParserTest, simple_timing_type10)
 TEST_F(ParserTest, simple_timing_type11)
 {
   istringstream buf(": falling_edge;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -648,8 +607,7 @@ TEST_F(ParserTest, simple_timing_type11)
 TEST_F(ParserTest, simple_timing_type12)
 {
   istringstream buf(": preset;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -663,8 +621,7 @@ TEST_F(ParserTest, simple_timing_type12)
 TEST_F(ParserTest, simple_timing_type13)
 {
   istringstream buf(": clear;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -678,8 +635,7 @@ TEST_F(ParserTest, simple_timing_type13)
 TEST_F(ParserTest, simple_timing_type14)
 {
   istringstream buf(": hold_rising;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -693,8 +649,7 @@ TEST_F(ParserTest, simple_timing_type14)
 TEST_F(ParserTest, simple_timing_type15)
 {
   istringstream buf(": hold_falling;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -708,8 +663,7 @@ TEST_F(ParserTest, simple_timing_type15)
 TEST_F(ParserTest, simple_timing_type16)
 {
   istringstream buf(": setup_rising;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -723,8 +677,7 @@ TEST_F(ParserTest, simple_timing_type16)
 TEST_F(ParserTest, simple_timing_type17)
 {
   istringstream buf(": setup_falling;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -738,8 +691,7 @@ TEST_F(ParserTest, simple_timing_type17)
 TEST_F(ParserTest, simple_timing_type18)
 {
   istringstream buf(": recovery_rising;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -753,8 +705,7 @@ TEST_F(ParserTest, simple_timing_type18)
 TEST_F(ParserTest, simple_timing_type19)
 {
   istringstream buf(": recovery_falling;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -768,8 +719,7 @@ TEST_F(ParserTest, simple_timing_type19)
 TEST_F(ParserTest, simple_timing_type20)
 {
   istringstream buf(": skew_rising;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -783,8 +733,7 @@ TEST_F(ParserTest, simple_timing_type20)
 TEST_F(ParserTest, simple_timing_type21)
 {
   istringstream buf(": skew_falling;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -798,8 +747,7 @@ TEST_F(ParserTest, simple_timing_type21)
 TEST_F(ParserTest, simple_timing_type22)
 {
   istringstream buf(": removal_rising;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -813,8 +761,7 @@ TEST_F(ParserTest, simple_timing_type22)
 TEST_F(ParserTest, simple_timing_type23)
 {
   istringstream buf(": removal_falling;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -828,8 +775,7 @@ TEST_F(ParserTest, simple_timing_type23)
 TEST_F(ParserTest, simple_timing_type24)
 {
   istringstream buf(": non_seq_setup_rising;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -843,8 +789,7 @@ TEST_F(ParserTest, simple_timing_type24)
 TEST_F(ParserTest, simple_timing_type25)
 {
   istringstream buf(": non_seq_setup_falling;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -858,8 +803,7 @@ TEST_F(ParserTest, simple_timing_type25)
 TEST_F(ParserTest, simple_timing_type26)
 {
   istringstream buf(": non_seq_hold_rising;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -873,8 +817,7 @@ TEST_F(ParserTest, simple_timing_type26)
 TEST_F(ParserTest, simple_timing_type27)
 {
   istringstream buf(": non_seq_hold_falling;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -888,8 +831,7 @@ TEST_F(ParserTest, simple_timing_type27)
 TEST_F(ParserTest, simple_timing_type28)
 {
   istringstream buf(": nochange_high_high;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -903,8 +845,7 @@ TEST_F(ParserTest, simple_timing_type28)
 TEST_F(ParserTest, simple_timing_type29)
 {
   istringstream buf(": nochange_high_low;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -918,8 +859,7 @@ TEST_F(ParserTest, simple_timing_type29)
 TEST_F(ParserTest, simple_timing_type30)
 {
   istringstream buf(": nochange_low_high;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -933,8 +873,7 @@ TEST_F(ParserTest, simple_timing_type30)
 TEST_F(ParserTest, simple_timing_type31)
 {
   istringstream buf(": nochange_low_low;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -949,8 +888,7 @@ TEST_F(ParserTest, simple_timing_type32)
 {
   // 不適切な文字列
   istringstream buf(": abc;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_timing_type(parser, attr);
 
@@ -964,8 +902,7 @@ TEST_F(ParserTest, simple_timing_type32)
 TEST_F(ParserTest, simple_vartype1)
 {
   istringstream buf(": input_net_transition;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -979,8 +916,7 @@ TEST_F(ParserTest, simple_vartype1)
 TEST_F(ParserTest, simple_vartype2)
 {
   istringstream buf(": total_output_net_capacitance;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -994,8 +930,7 @@ TEST_F(ParserTest, simple_vartype2)
 TEST_F(ParserTest, simple_vartype3)
 {
   istringstream buf(": output_net_length;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -1009,8 +944,7 @@ TEST_F(ParserTest, simple_vartype3)
 TEST_F(ParserTest, simple_vartype4)
 {
   istringstream buf(": output_net_wire_cap;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -1024,8 +958,7 @@ TEST_F(ParserTest, simple_vartype4)
 TEST_F(ParserTest, simple_vartype5)
 {
   istringstream buf(": output_net_pin_cap;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -1039,8 +972,7 @@ TEST_F(ParserTest, simple_vartype5)
 TEST_F(ParserTest, simple_vartype6)
 {
   istringstream buf(": equal_or_opposite_output_net_capacitance;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -1054,8 +986,7 @@ TEST_F(ParserTest, simple_vartype6)
 TEST_F(ParserTest, simple_vartype7)
 {
   istringstream buf(": input_transition_time;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -1068,8 +999,7 @@ TEST_F(ParserTest, simple_vartype7)
 TEST_F(ParserTest, simple_vartype8)
 {
   istringstream buf(": related_out_total_output_net_capacitance;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -1083,8 +1013,7 @@ TEST_F(ParserTest, simple_vartype8)
 TEST_F(ParserTest, simple_vartype9)
 {
   istringstream buf(": related_out_output_net_length;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -1098,8 +1027,7 @@ TEST_F(ParserTest, simple_vartype9)
 TEST_F(ParserTest, simple_vartype10)
 {
   istringstream buf(": related_out_output_net_wire_cap;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -1113,8 +1041,7 @@ TEST_F(ParserTest, simple_vartype10)
 TEST_F(ParserTest, simple_vartype11)
 {
   istringstream buf(": related_out_output_net_pin_cap;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -1128,8 +1055,7 @@ TEST_F(ParserTest, simple_vartype11)
 TEST_F(ParserTest, simple_vartype12)
 {
   istringstream buf(": constrained_pin_transition;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -1143,8 +1069,7 @@ TEST_F(ParserTest, simple_vartype12)
 TEST_F(ParserTest, simple_vartype13)
 {
   istringstream buf(": related_pin_transition;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 
@@ -1159,8 +1084,7 @@ TEST_F(ParserTest, simple_vartype15)
 {
   // 不適切な文字列
   istringstream buf(": abc;\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = simple_vartype(parser, attr);
 

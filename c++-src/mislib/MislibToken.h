@@ -5,67 +5,121 @@
 /// @brief MislibToken のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2014 Yusuke Matsunaga
+/// Copyright (C) 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "mislib_nsdef.h"
+#include "ym/FileRegion.h"
 
 
 BEGIN_NAMESPACE_YM_MISLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @brief mislib 形式のトークン定義
+/// @class MislibToken MislibToken.h "MislibToken.h"
+/// @brief mislib 形式のトークンを表すクラス
 //////////////////////////////////////////////////////////////////////
-enum MislibToken {
-  STR,
-  NUM,
-  LP,
-  RP,
-  SEMI,
-  EQ,
-  GATE,
-  PIN,
-  NONINV,
-  INV,
-  UNKNOWN,
-  CONST0,
-  CONST1,
-  PLUS,
-  HAT,
-  STAR,
-  NOT,
-  END,
-  ERROR
+class MislibToken
+{
+public:
+
+  /// @brief トークンの種類を表す列挙型
+  enum Type {
+    STR,     ///< 文字列(識別子)
+    NUM,     ///< 数値
+    LP,      ///< '('
+    RP,      ///< ')'
+    SEMI,    ///< ';'
+    EQ,      ///< '='
+    GATE,    ///< 'gate'
+    PIN,     ///< 'pin'
+    NONINV,  ///< 'noinv'
+    INV,     ///< 'inv'
+    UNKNOWN, ///< 'unknown'
+    CONST0,  ///< 'const0'
+    CONST1,  ///< 'const1'
+    PLUS,    ///< '+'
+    HAT,     ///< '^'
+    STAR,    ///< '*'
+    NOT,     ///< '!'
+    END,     ///< 末尾
+    ERROR    ///< エラー
+  };
+
+public:
+
+  /// @brief コンストラクタ
+  MislibToken() = default;
+
+  /// @brief 値を指定したコンストラクタ
+  MislibToken(
+    Type type,            ///< [in] トークンの種類
+    const FileRegion& loc ///< [in] ファイル上の位置
+  ) : mType{type},
+      mLoc{loc}
+  {
+  }
+
+  /// @brief デストラクタ
+  ~MislibToken() = default;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief トークンの種類を返す．
+  Type
+  type() const { return mType; }
+
+  /// @brief ファイル上の位置を返す．
+  FileRegion
+  loc() const { return mLoc; }
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 種類
+  Type mType{Type::ERROR};
+
+  // 位置
+  FileRegion mLoc;
+
 };
 
-/// @brief MislibToken のストリーム出力
+/// @brief MislibToken::Type のストリーム出力
 inline
 ostream&
-operator<<(ostream& s,
-	   MislibToken tok)
+operator<<(
+  ostream& s,
+  MislibToken::Type type)
 {
-  switch ( tok ) {
-  case STR:     s << "STR"; break;
-  case NUM:     s << "NUM"; break;
-  case LP:      s << "LP"; break;
-  case RP:      s << "RP"; break;
-  case SEMI:    s << "SEMI"; break;
-  case EQ:      s << "EQ"; break;
-  case GATE:    s << "GATE"; break;
-  case PIN:     s << "PIN"; break;
-  case NONINV:  s << "NONINV"; break;
-  case INV:     s << "INV"; break;
-  case UNKNOWN: s << "UNKNOWN"; break;
-  case CONST0:  s << "CONST0"; break;
-  case CONST1:  s << "CONST1"; break;
-  case PLUS:    s << "PLUS"; break;
-  case HAT:     s << "HAT"; break;
-  case STAR:    s << "STAR"; break;
-  case NOT:     s << "NOT"; break;
-  case END:     s << "END"; break;
-  case ERROR:   s << "ERROR"; break;
-  default: ASSERT_NOT_REACHED;
+  switch ( type ) {
+  case MislibToken::STR:     s << "STR"; break;
+  case MislibToken::NUM:     s << "NUM"; break;
+  case MislibToken::LP:      s << "LP"; break;
+  case MislibToken::RP:      s << "RP"; break;
+  case MislibToken::SEMI:    s << "SEMI"; break;
+  case MislibToken::EQ:      s << "EQ"; break;
+  case MislibToken::GATE:    s << "GATE"; break;
+  case MislibToken::PIN:     s << "PIN"; break;
+  case MislibToken::NONINV:  s << "NONINV"; break;
+  case MislibToken::INV:     s << "INV"; break;
+  case MislibToken::UNKNOWN: s << "UNKNOWN"; break;
+  case MislibToken::CONST0:  s << "CONST0"; break;
+  case MislibToken::CONST1:  s << "CONST1"; break;
+  case MislibToken::PLUS:    s << "PLUS"; break;
+  case MislibToken::HAT:     s << "HAT"; break;
+  case MislibToken::STAR:    s << "STAR"; break;
+  case MislibToken::NOT:     s << "NOT"; break;
+  case MislibToken::END:     s << "END"; break;
+  case MislibToken::ERROR:   s << "ERROR"; break;
+  default:
+    s << "----";
+    ASSERT_NOT_REACHED;
   }
   return s;
 }

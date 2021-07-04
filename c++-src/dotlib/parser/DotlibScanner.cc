@@ -6,7 +6,7 @@
 /// Copyright (C) 2005-2011, 2014, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/Scanner.h"
+#include "dotlib/DotlibScanner.h"
 #include "ym/MsgMgr.h"
 
 
@@ -14,7 +14,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief 属性を読み込む．
 AttrKwd
-Scanner::read_attr()
+DotlibScanner::read_attr()
 {
   Token token;
 
@@ -38,25 +38,25 @@ Scanner::read_attr()
 //
 // このトークンは読み込まれない．
 Token
-Scanner::peek_token()
+DotlibScanner::peek_token()
 {
   if ( mCurToken.type() == TokenType::ERROR ) {
     auto type = _scan();
-    mCurToken = {type, FileRegion(mFirstLoc, mIn.cur_loc()), ShString(mCurString)};
+    mCurToken = {type, cur_region(), ShString(mCurString)};
   }
   return mCurToken;
 }
 
 // @brief 調べたトークンを読み込む．
 void
-Scanner::accept_token()
+DotlibScanner::accept_token()
 {
   mCurToken = Token{}; // 不正値
 }
 
 // @brief トークンを一つとってくる．
 Token
-Scanner::read_token()
+DotlibScanner::read_token()
 {
   auto ans{peek_token()};
   accept_token();
@@ -65,7 +65,7 @@ Scanner::read_token()
 
 // @brief トークンを読み込み，期待値と比較する．
 Token
-Scanner::read_and_verify(TokenType token_type)
+DotlibScanner::read_and_verify(TokenType token_type)
 {
   auto token{read_token()};
   if ( token.type() == token_type ) {
@@ -111,14 +111,14 @@ Scanner::read_and_verify(TokenType token_type)
 // @brief 一文字読み込む．
 // @return 読み込んだトークンを返す．
 TokenType
-Scanner::_scan()
+DotlibScanner::_scan()
 {
   int c;
   mCurString.clear();
 
  ST_INIT: // 初期状態
-  c = mIn.get();
-  mFirstLoc = mIn.cur_loc();
+  c = get();
+  set_first_loc();
 
   switch (c) {
   case EOF:
@@ -139,10 +139,10 @@ Scanner::_scan()
 
   case '\\':
     // エスケープシーケンスは改行のみが有効
-    c = mIn.peek();
+    c = peek();
     if ( c == '\n' ) {
       // ただの空白とみなす．
-      mIn.accept();
+      accept();
       goto ST_INIT;
     }
     // それ以外はバックスラッシュがなかったことにする．
@@ -190,7 +190,7 @@ Scanner::_scan()
   ASSERT_NOT_REACHED;
 
  ST_SYMBOL: // シンボルモード
-  c = mIn.peek();
+  c = peek();
   switch ( c ) {
   case EOF:
   case ' ':
@@ -210,14 +210,14 @@ Scanner::_scan()
     return TokenType::SYMBOL;
 
   default:
-    mIn.accept();
+    accept();
     mCurString.put_char(c);
     goto ST_SYMBOL;
   }
   ASSERT_NOT_REACHED;
 
  ST_DQ: // '"'があったら次の'"'までを強制的に文字列だと思う．
-  c = mIn.get();
+  c = get();
   if ( c == '\"' ) {
     return TokenType::SYMBOL;
   }
@@ -225,7 +225,7 @@ Scanner::_scan()
     ostringstream buf;
     buf << "unexpected newline in quoted string.";
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    mIn.cur_loc(),
+		    cur_region(),
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
 		    buf.str());
@@ -235,14 +235,14 @@ Scanner::_scan()
     ostringstream buf;
     buf << "unexpected end-of-file in quoted string.";
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    mIn.cur_loc(),
+		    cur_region(),
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
 		    buf.str());
     return TokenType::ERROR;
   }
   if ( c == '\\' ) {
-    c = mIn.get();
+    c = get();
     if ( c == '\n' ) {
       // エスケープされた改行は空白に置き換える．
       c = ' ';
@@ -252,19 +252,19 @@ Scanner::_scan()
   goto ST_DQ;
 
  ST_comment1: // '/' を読み込んだ直後
-  c = mIn.peek();
+  c = peek();
   if ( c == '/' ) { // C++ スタイルのコメント
-    mIn.accept();
+    accept();
     goto ST_comment2;
   }
   if ( c == '*' ) { // C スタイルのコメント
-    mIn.accept();
+    accept();
     goto ST_comment3;
   }
   return TokenType::DIV;
 
  ST_comment2: // 改行まで読み飛ばす．
-  c = mIn.get();
+  c = get();
   if ( c == '\n' ) {
     goto ST_INIT;
   }
@@ -274,7 +274,7 @@ Scanner::_scan()
   goto ST_comment2;
 
  ST_comment3: // "/*" を読み込んだ直後
-  c = mIn.get();
+  c = get();
   if ( c == EOF ) {
     goto ST_comment_EOF;
   }
@@ -284,7 +284,7 @@ Scanner::_scan()
   goto ST_comment3;
 
  ST_comment4: // "/* 〜 *" まで読み込んだ直後
-  c = mIn.get();
+  c = get();
   if ( c == EOF ) {
     goto ST_comment_EOF;
   }
@@ -301,7 +301,7 @@ Scanner::_scan()
     ostringstream buf;
     buf << "Unexpected end-of-file in comment block.";
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    mIn.cur_loc(),
+		    cur_region(),
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
 		    buf.str());

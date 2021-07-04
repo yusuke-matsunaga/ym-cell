@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 #include "dotlib/HeaderHandler.h"
-#include "dotlib/Scanner.h"
+#include "dotlib/DotlibScanner.h"
 #include "dotlib/AstValue.h"
 #include "ym/MsgMgr.h"
 
@@ -32,7 +32,7 @@ HeaderHandler::begin_header(const FileRegion& loc)
 
 // @brief ヘッダの値を読み込む処理
 bool
-HeaderHandler::read_header_value(Scanner& scanner,
+HeaderHandler::read_header_value(DotlibScanner& scanner,
 				 const FileRegion& loc,
 				 int count)
 {
@@ -91,7 +91,7 @@ FixedElemHeader::FixedElemHeader(const vector<SimpleHandler>& handler_list)
 // @brief 値を読み込む処理
 // @param[in] count read_value() の呼ばれた回数
 AstValuePtr
-FixedElemHeader::_read_header_value(Scanner& scanner,
+FixedElemHeader::_read_header_value(DotlibScanner& scanner,
 				    int count)
 {
   ASSERT_COND( count >= 0 );
@@ -145,7 +145,7 @@ FanoutLengthHeader::FanoutLengthHeader()
 
 // @brief ヘッダの値を読み込む処理
 AstValuePtr
-FanoutLengthHeader::_read_header_value(Scanner& scanner,
+FanoutLengthHeader::_read_header_value(DotlibScanner& scanner,
 				       int count)
 {
   switch ( count ) {
@@ -186,7 +186,7 @@ ListHeader::ListHeader(SimpleHandler handler)
 
 // @brief 値を読み込む処理
 AstValuePtr
-ListHeader::_read_header_value(Scanner& scanner,
+ListHeader::_read_header_value(DotlibScanner& scanner,
 			       int count)
 {
   // count は無視

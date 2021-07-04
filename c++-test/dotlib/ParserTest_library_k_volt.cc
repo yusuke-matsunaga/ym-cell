@@ -21,8 +21,7 @@ TEST_F(ParserTest, library_k_volt_cell_fall1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_cell_fall: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -49,8 +48,7 @@ TEST_F(ParserTest, library_k_volt_cell_leakage_power1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_cell_leakage_power: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -77,8 +75,7 @@ TEST_F(ParserTest, library_k_volt_cell_rise1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_cell_rise: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -105,8 +102,7 @@ TEST_F(ParserTest, library_k_volt_drive_current1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_drive_current: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -133,8 +129,7 @@ TEST_F(ParserTest, library_k_volt_drive_fall1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_drive_fall: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -161,8 +156,7 @@ TEST_F(ParserTest, library_k_volt_drive_rise1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_drive_rise: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -189,8 +183,7 @@ TEST_F(ParserTest, library_k_volt_fall_delay_intercept1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_fall_delay_intercept: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -217,8 +210,7 @@ TEST_F(ParserTest, library_k_volt_fall_pin_resistance1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_fall_pin_resistance: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -245,8 +237,7 @@ TEST_F(ParserTest, library_k_volt_fall_propagation1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_fall_propagation: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -273,8 +264,7 @@ TEST_F(ParserTest, library_k_volt_fall_transition1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_fall_transition: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -301,8 +291,7 @@ TEST_F(ParserTest, library_k_volt_hold_fall1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_hold_fall: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -329,8 +318,7 @@ TEST_F(ParserTest, library_k_volt_hold_rise1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_hold_rise: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -357,8 +345,7 @@ TEST_F(ParserTest, library_k_volt_internal_power1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_internal_power: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -385,8 +372,7 @@ TEST_F(ParserTest, library_k_volt_intrinsic_fall1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_intrinsic_fall: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -413,8 +399,7 @@ TEST_F(ParserTest, library_k_volt_intrinsic_rise1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_intrinsic_rise: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -441,8 +426,7 @@ TEST_F(ParserTest, library_k_volt_min_period1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_min_period: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -469,8 +453,7 @@ TEST_F(ParserTest, library_k_volt_min_pulse_width_high1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_min_pulse_width_high: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -497,8 +480,7 @@ TEST_F(ParserTest, library_k_volt_min_pulse_width_low1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_min_pulse_width_low: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -525,8 +507,7 @@ TEST_F(ParserTest, library_k_volt_nochange_fall1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_nochange_fall: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -553,8 +534,7 @@ TEST_F(ParserTest, library_k_volt_nochange_rise1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_nochange_rise: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -581,8 +561,7 @@ TEST_F(ParserTest, library_k_volt_pin_cap1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_pin_cap: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -609,8 +588,7 @@ TEST_F(ParserTest, library_k_volt_recoverry_fall1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_recovery_fall: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -637,8 +615,7 @@ TEST_F(ParserTest, library_k_volt_recovery_rise1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_recovery_rise: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -665,8 +642,7 @@ TEST_F(ParserTest, library_k_volt_removal_fall1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_removal_fall: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -693,8 +669,7 @@ TEST_F(ParserTest, library_k_volt_removal_rise1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_removal_rise: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -721,8 +696,7 @@ TEST_F(ParserTest, library_k_volt_rise_delay_intercept1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_rise_delay_intercept: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -749,8 +723,7 @@ TEST_F(ParserTest, library_k_volt_rise_pin_resistance1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_rise_pin_resistance: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -777,8 +750,7 @@ TEST_F(ParserTest, library_k_volt_rise_propagation1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_rise_propagation: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -805,8 +777,7 @@ TEST_F(ParserTest, library_k_volt_rise_transition1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_rise_transition: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -833,8 +804,7 @@ TEST_F(ParserTest, library_k_volt_setup_fall1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_setup_fall: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -861,8 +831,7 @@ TEST_F(ParserTest, library_k_volt_setup_rise1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_setup_rise: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -889,8 +858,7 @@ TEST_F(ParserTest, library_k_volt_skew_fall1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_skew_fall: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -917,8 +885,7 @@ TEST_F(ParserTest, library_k_volt_skew_rise1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_skew_rise: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -945,8 +912,7 @@ TEST_F(ParserTest, library_k_volt_slope_fall1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_slope_fall: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -973,8 +939,7 @@ TEST_F(ParserTest, library_k_volt_slope_rise1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_slope_rise: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -1001,8 +966,7 @@ TEST_F(ParserTest, library_k_volt_wire_cap1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_wire_cap: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -1029,8 +993,7 @@ TEST_F(ParserTest, library_k_volt_wire_res1)
   istringstream buf("( test ) {\n"
 		    "  k_volt_wire_res: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);

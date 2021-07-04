@@ -7,9 +7,8 @@
 /// All rights reserved.
 
 #include "gtest/gtest.h"
-#include "Scanner.h"
+#include "DotlibScanner.h"
 #include "TokenType.h"
-#include "ym/InputFileObj.h"
 #include "ym/MsgMgr.h"
 #include "ym/StrListMsgHandler.h"
 
@@ -34,8 +33,7 @@ public:
 TEST_F(ScannerTest, read_token1)
 {
   istringstream buf{":;,+-*/(){}\n"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   TokenType exp_list[] = {
     TokenType::COLON,
@@ -62,8 +60,7 @@ TEST_F(ScannerTest, read_token1)
 TEST_F(ScannerTest, read_token2)
 {
   istringstream buf{"abcdef xyz 123\t456.78"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto token1 = scanner.read_token();
   EXPECT_EQ( TokenType::SYMBOL, token1.type() );
@@ -85,8 +82,7 @@ TEST_F(ScannerTest, read_token2)
 TEST_F(ScannerTest, read_int1)
 {
   istringstream buf{"123"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_int();
 
@@ -98,8 +94,7 @@ TEST_F(ScannerTest, read_int2)
 {
   // 浮動小数点数はNG
   istringstream buf{"123.45"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_int();
 
@@ -114,8 +109,7 @@ TEST_F(ScannerTest, read_int3)
 {
   // 非数字文字で始まっているのでNG
   istringstream buf{"a123"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_int();
 
@@ -129,8 +123,7 @@ TEST_F(ScannerTest, read_int3)
 TEST_F(ScannerTest, read_bool1)
 {
   istringstream buf{"true"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_bool();
 
@@ -141,8 +134,7 @@ TEST_F(ScannerTest, read_bool1)
 TEST_F(ScannerTest, read_bool2)
 {
   istringstream buf{"false"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_bool();
 
@@ -154,8 +146,7 @@ TEST_F(ScannerTest, read_bool3)
 {
   // 大文字小文字は区別される．
   istringstream buf{"True"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_bool();
 
@@ -169,8 +160,7 @@ TEST_F(ScannerTest, read_bool3)
 TEST_F(ScannerTest, read_float1)
 {
   istringstream buf{"123.456"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_float();
 
@@ -182,8 +172,7 @@ TEST_F(ScannerTest, read_float2)
 {
   // 整数はOK
   istringstream buf{"123"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_float();
 
@@ -195,8 +184,7 @@ TEST_F(ScannerTest, read_float3)
 {
   // 非数字から始まっているのでNG
   istringstream buf{"f123"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_float();
 
@@ -211,8 +199,7 @@ TEST_F(ScannerTest, read_float4)
 {
   // 非数字を含んでいるのでNG
   istringstream buf{"12.3f"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_float();
 
@@ -226,8 +213,7 @@ TEST_F(ScannerTest, read_float4)
 TEST_F(ScannerTest, read_string1)
 {
   istringstream buf{"abcdefg"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_string();
 
@@ -239,8 +225,7 @@ TEST_F(ScannerTest, read_string2)
 {
   // " で囲まれていてもOK
   istringstream buf{"\"abcdefg\""};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_string();
 
@@ -252,8 +237,7 @@ TEST_F(ScannerTest, read_string3)
 {
   // 先頭が数字でもOK
   istringstream buf{"1.2a"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_string();
 
@@ -264,8 +248,7 @@ TEST_F(ScannerTest, read_string3)
 TEST_F(ScannerTest, read_delay_model1)
 {
   istringstream buf{"generic_cmos"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_delay_model();
 
@@ -277,8 +260,7 @@ TEST_F(ScannerTest, read_delay_model2)
 {
   // " で囲まれていてもOK
   istringstream buf{"\"table_lookup\""};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_delay_model();
 
@@ -289,8 +271,7 @@ TEST_F(ScannerTest, read_delay_model2)
 TEST_F(ScannerTest, read_delay_model3)
 {
   istringstream buf{"piecewise_cmos"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_delay_model();
 
@@ -301,8 +282,7 @@ TEST_F(ScannerTest, read_delay_model3)
 TEST_F(ScannerTest, read_delay_model4)
 {
   istringstream buf{"cmos2"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_delay_model();
 
@@ -313,8 +293,7 @@ TEST_F(ScannerTest, read_delay_model4)
 TEST_F(ScannerTest, read_delay_model5)
 {
   istringstream buf{"dcm"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_delay_model();
 
@@ -326,8 +305,7 @@ TEST_F(ScannerTest, read_delay_model6)
 {
   // 不適切な文字列
   istringstream buf{"dmos2"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_delay_model();
 
@@ -341,8 +319,7 @@ TEST_F(ScannerTest, read_delay_model6)
 TEST_F(ScannerTest, read_direction1)
 {
   istringstream buf{"input"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_direction();
 
@@ -354,8 +331,7 @@ TEST_F(ScannerTest, read_direction2)
 {
   // " で囲まれていてもOK
   istringstream buf{"\"output\""};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_direction();
 
@@ -366,8 +342,7 @@ TEST_F(ScannerTest, read_direction2)
 TEST_F(ScannerTest, read_direction3)
 {
   istringstream buf{"inout"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_direction();
 
@@ -378,8 +353,7 @@ TEST_F(ScannerTest, read_direction3)
 TEST_F(ScannerTest, read_direction4)
 {
   istringstream buf{"internal"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_direction();
 
@@ -391,8 +365,7 @@ TEST_F(ScannerTest, read_direction5)
 {
   // 不適切な文字列
   istringstream buf{"inbut"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_direction();
 
@@ -406,8 +379,7 @@ TEST_F(ScannerTest, read_direction5)
 TEST_F(ScannerTest, read_timing_sense1)
 {
   istringstream buf{"positive_unate"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_sense();
 
@@ -419,8 +391,7 @@ TEST_F(ScannerTest, read_timing_sense2)
 {
   // " で囲まれていてもOK
   istringstream buf{"\"negative_unate\""};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_sense();
 
@@ -431,8 +402,7 @@ TEST_F(ScannerTest, read_timing_sense2)
 TEST_F(ScannerTest, read_timing_sense3)
 {
   istringstream buf{"non_unate"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_sense();
 
@@ -444,8 +414,7 @@ TEST_F(ScannerTest, read_timing_sense4)
 {
   // 不適切な文字列
   istringstream buf{"unate"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_sense();
 
@@ -459,8 +428,7 @@ TEST_F(ScannerTest, read_timing_sense4)
 TEST_F(ScannerTest, read_timing_type1)
 {
   istringstream buf{"combinational"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -472,8 +440,7 @@ TEST_F(ScannerTest, read_timing_type2)
 {
   // " で囲まれていてもOK
   istringstream buf{"\"combinational_rise\""};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -484,8 +451,7 @@ TEST_F(ScannerTest, read_timing_type2)
 TEST_F(ScannerTest, read_timing_type3)
 {
   istringstream buf{"combinational_fall"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -496,8 +462,7 @@ TEST_F(ScannerTest, read_timing_type3)
 TEST_F(ScannerTest, read_timing_type4)
 {
   istringstream buf{"three_state_enable"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -508,8 +473,7 @@ TEST_F(ScannerTest, read_timing_type4)
 TEST_F(ScannerTest, read_timing_type5)
 {
   istringstream buf{"three_state_disable"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -520,8 +484,7 @@ TEST_F(ScannerTest, read_timing_type5)
 TEST_F(ScannerTest, read_timing_type6)
 {
   istringstream buf{"three_state_enable_rise"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -532,8 +495,7 @@ TEST_F(ScannerTest, read_timing_type6)
 TEST_F(ScannerTest, read_timing_type7)
 {
   istringstream buf{"three_state_enable_fall"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -544,8 +506,7 @@ TEST_F(ScannerTest, read_timing_type7)
 TEST_F(ScannerTest, read_timing_type8)
 {
   istringstream buf{"three_state_disable_rise"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -556,8 +517,7 @@ TEST_F(ScannerTest, read_timing_type8)
 TEST_F(ScannerTest, read_timing_type9)
 {
   istringstream buf{"three_state_disable_fall"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -568,8 +528,7 @@ TEST_F(ScannerTest, read_timing_type9)
 TEST_F(ScannerTest, read_timing_type10)
 {
   istringstream buf{"rising_edge"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -580,8 +539,7 @@ TEST_F(ScannerTest, read_timing_type10)
 TEST_F(ScannerTest, read_timing_type11)
 {
   istringstream buf{"falling_edge"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -592,8 +550,7 @@ TEST_F(ScannerTest, read_timing_type11)
 TEST_F(ScannerTest, read_timing_type12)
 {
   istringstream buf{"preset"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -604,8 +561,7 @@ TEST_F(ScannerTest, read_timing_type12)
 TEST_F(ScannerTest, read_timing_type13)
 {
   istringstream buf{"clear"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -616,8 +572,7 @@ TEST_F(ScannerTest, read_timing_type13)
 TEST_F(ScannerTest, read_timing_type14)
 {
   istringstream buf{"hold_rising"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -628,8 +583,7 @@ TEST_F(ScannerTest, read_timing_type14)
 TEST_F(ScannerTest, read_timing_type15)
 {
   istringstream buf{"hold_falling"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -640,8 +594,7 @@ TEST_F(ScannerTest, read_timing_type15)
 TEST_F(ScannerTest, read_timing_type16)
 {
   istringstream buf{"setup_rising"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -652,8 +605,7 @@ TEST_F(ScannerTest, read_timing_type16)
 TEST_F(ScannerTest, read_timing_type17)
 {
   istringstream buf{"setup_falling"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -664,8 +616,7 @@ TEST_F(ScannerTest, read_timing_type17)
 TEST_F(ScannerTest, read_timing_type18)
 {
   istringstream buf{"recovery_rising"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -676,8 +627,7 @@ TEST_F(ScannerTest, read_timing_type18)
 TEST_F(ScannerTest, read_timing_type19)
 {
   istringstream buf{"recovery_falling"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -688,8 +638,7 @@ TEST_F(ScannerTest, read_timing_type19)
 TEST_F(ScannerTest, read_timing_type20)
 {
   istringstream buf{"skew_rising"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -700,8 +649,7 @@ TEST_F(ScannerTest, read_timing_type20)
 TEST_F(ScannerTest, read_timing_type21)
 {
   istringstream buf{"skew_falling"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -712,8 +660,7 @@ TEST_F(ScannerTest, read_timing_type21)
 TEST_F(ScannerTest, read_timing_type22)
 {
   istringstream buf{"removal_rising"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -724,8 +671,7 @@ TEST_F(ScannerTest, read_timing_type22)
 TEST_F(ScannerTest, read_timing_type23)
 {
   istringstream buf{"removal_falling"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -736,8 +682,7 @@ TEST_F(ScannerTest, read_timing_type23)
 TEST_F(ScannerTest, read_timing_type24)
 {
   istringstream buf{"non_seq_setup_rising"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -748,8 +693,7 @@ TEST_F(ScannerTest, read_timing_type24)
 TEST_F(ScannerTest, read_timing_type25)
 {
   istringstream buf{"non_seq_setup_falling"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -760,8 +704,7 @@ TEST_F(ScannerTest, read_timing_type25)
 TEST_F(ScannerTest, read_timing_type26)
 {
   istringstream buf{"non_seq_hold_rising"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -772,8 +715,7 @@ TEST_F(ScannerTest, read_timing_type26)
 TEST_F(ScannerTest, read_timing_type27)
 {
   istringstream buf{"non_seq_hold_falling"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -784,8 +726,7 @@ TEST_F(ScannerTest, read_timing_type27)
 TEST_F(ScannerTest, read_timing_type28)
 {
   istringstream buf{"nochange_high_high"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -796,8 +737,7 @@ TEST_F(ScannerTest, read_timing_type28)
 TEST_F(ScannerTest, read_timing_type29)
 {
   istringstream buf{"nochange_high_low"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -808,8 +748,7 @@ TEST_F(ScannerTest, read_timing_type29)
 TEST_F(ScannerTest, read_timing_type30)
 {
   istringstream buf{"nochange_low_high"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -820,8 +759,7 @@ TEST_F(ScannerTest, read_timing_type30)
 TEST_F(ScannerTest, read_timing_type31)
 {
   istringstream buf{"nochange_low_low"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -833,8 +771,7 @@ TEST_F(ScannerTest, read_timing_type32)
 {
   // 不適切な文字列
   istringstream buf{"abc"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_timing_type();
 
@@ -848,8 +785,7 @@ TEST_F(ScannerTest, read_timing_type32)
 TEST_F(ScannerTest, read_vartype1)
 {
   istringstream buf{"input_net_transition"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -860,8 +796,7 @@ TEST_F(ScannerTest, read_vartype1)
 TEST_F(ScannerTest, read_vartype2)
 {
   istringstream buf{"total_output_net_capacitance"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -872,8 +807,7 @@ TEST_F(ScannerTest, read_vartype2)
 TEST_F(ScannerTest, read_vartype3)
 {
   istringstream buf{"output_net_length"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -884,8 +818,7 @@ TEST_F(ScannerTest, read_vartype3)
 TEST_F(ScannerTest, read_vartype4)
 {
   istringstream buf{"output_net_wire_cap"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -896,8 +829,7 @@ TEST_F(ScannerTest, read_vartype4)
 TEST_F(ScannerTest, read_vartype5)
 {
   istringstream buf{"output_net_pin_cap"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -908,8 +840,7 @@ TEST_F(ScannerTest, read_vartype5)
 TEST_F(ScannerTest, read_vartype6)
 {
   istringstream buf{"equal_or_opposite_output_net_capacitance"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -920,8 +851,7 @@ TEST_F(ScannerTest, read_vartype6)
 TEST_F(ScannerTest, read_vartype7)
 {
   istringstream buf{"input_transition_time"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -932,8 +862,7 @@ TEST_F(ScannerTest, read_vartype7)
 TEST_F(ScannerTest, read_vartype8)
 {
   istringstream buf{"related_out_total_output_net_capacitance"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -944,8 +873,7 @@ TEST_F(ScannerTest, read_vartype8)
 TEST_F(ScannerTest, read_vartype9)
 {
   istringstream buf{"related_out_output_net_length"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -956,8 +884,7 @@ TEST_F(ScannerTest, read_vartype9)
 TEST_F(ScannerTest, read_vartype10)
 {
   istringstream buf{"related_out_output_net_wire_cap"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -968,8 +895,7 @@ TEST_F(ScannerTest, read_vartype10)
 TEST_F(ScannerTest, read_vartype11)
 {
   istringstream buf{"related_out_output_net_pin_cap"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -980,8 +906,7 @@ TEST_F(ScannerTest, read_vartype11)
 TEST_F(ScannerTest, read_vartype12)
 {
   istringstream buf{"constrained_pin_transition"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -992,8 +917,7 @@ TEST_F(ScannerTest, read_vartype12)
 TEST_F(ScannerTest, read_vartype13)
 {
   istringstream buf{"related_pin_transition"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 
@@ -1004,8 +928,7 @@ TEST_F(ScannerTest, read_vartype13)
 TEST_F(ScannerTest, read_vartype14)
 {
   istringstream buf{"related_pn_transition"};
-  InputFileObj in{buf, info};
-  Scanner scanner{in};
+  DotlibScanner scanner{buf, info};
 
   auto value1 = scanner.read_vartype();
 

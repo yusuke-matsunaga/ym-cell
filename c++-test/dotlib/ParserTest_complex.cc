@@ -19,8 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 TEST_F(ParserTest, complex_float_float1)
 {
   istringstream buf("( 1.0, 2 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_float(parser, attr);
 
@@ -38,8 +37,7 @@ TEST_F(ParserTest, complex_float_float2)
 {
   // 要素数が少ない
   istringstream buf("( 1.0 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_float(parser, attr);
 
@@ -54,8 +52,7 @@ TEST_F(ParserTest, complex_float_float3)
 {
   // 要素数が多い
   istringstream buf("( 1.0, 2.0, 3.0 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_float(parser, attr);
 
@@ -70,8 +67,7 @@ TEST_F(ParserTest, complex_float_float4)
 {
   // 1番目の要素の型が合わない．
   istringstream buf("( 1.0f, 2.0 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_float(parser, attr);
 
@@ -86,8 +82,7 @@ TEST_F(ParserTest, complex_float_float5)
 {
   // 2番目の要素の型が合わない．
   istringstream buf("( 1.0, false );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_float(parser, attr);
 
@@ -101,8 +96,7 @@ TEST_F(ParserTest, complex_float_float5)
 TEST_F(ParserTest, complex_float_string1)
 {
   istringstream buf("( 1.0, ff );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_string(parser, attr);
 
@@ -119,8 +113,7 @@ TEST_F(ParserTest, complex_float_string2)
 {
   // " で囲まれた文字列
   istringstream buf("( 1.0, \"ff\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_string(parser, attr);
 
@@ -136,8 +129,7 @@ TEST_F(ParserTest, complex_float_string3)
 {
   // 要素数が少ない．
   istringstream buf("( 1.0 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_string(parser, attr);
 
@@ -152,8 +144,7 @@ TEST_F(ParserTest, complex_float_string4)
 {
   // 要素数が多い．
   istringstream buf("( 1.0, ff, 2.0 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_string(parser, attr);
 
@@ -168,8 +159,7 @@ TEST_F(ParserTest, complex_float_string5)
 {
   // 1番目の要素の型が不適
   istringstream buf("( a1.0, \"ff\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_string(parser, attr);
 
@@ -183,8 +173,7 @@ TEST_F(ParserTest, complex_float_string5)
 TEST_F(ParserTest, complex_float_vector1)
 {
   istringstream buf("( \"1.0, 2.0, 3.0\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_vector(parser, attr);
 
@@ -204,8 +193,7 @@ TEST_F(ParserTest, complex_float_vector2)
 {
   // 文字列の内容が不適切
   istringstream buf("( \"1.0, 2.0a, 3.0\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_vector(parser, attr);
 
@@ -220,8 +208,7 @@ TEST_F(ParserTest, complex_float_vector3)
 {
   // 要素数が少ない．
   istringstream buf("(  );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_vector(parser, attr);
 
@@ -236,8 +223,7 @@ TEST_F(ParserTest, complex_float_vector4)
 {
   // 要素数が多い．
   istringstream buf("( \"1.0, 2.0, 3.0\", \"4.0, 5.0\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_float_vector(parser, attr);
 
@@ -251,8 +237,7 @@ TEST_F(ParserTest, complex_float_vector4)
 TEST_F(ParserTest, complex_int_float1)
 {
   istringstream buf("( 1, 2.3 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_int_float(parser, attr);
 
@@ -269,8 +254,7 @@ TEST_F(ParserTest, complex_int_float2)
 {
   // 要素数が少ない．
   istringstream buf("( 1 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_int_float(parser, attr);
 
@@ -285,8 +269,7 @@ TEST_F(ParserTest, complex_int_float3)
 {
   // 要素数が多い．
   istringstream buf("( 1, 2.3, 3.0 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_int_float(parser, attr);
 
@@ -301,8 +284,7 @@ TEST_F(ParserTest, complex_int_float4)
 {
   // 1番目の要素の型が不適切
   istringstream buf("( 1x, 2.3 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_int_float(parser, attr);
 
@@ -317,8 +299,7 @@ TEST_F(ParserTest, complex_int_float5)
 {
   // 2番目の要素の型が不適切
   istringstream buf("( 1, _2.3 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_int_float(parser, attr);
 
@@ -332,8 +313,7 @@ TEST_F(ParserTest, complex_int_float5)
 TEST_F(ParserTest, complex_int_float_vector1)
 {
   istringstream buf("( 1, \"2.3, 4.5\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_int_float_vector(parser, attr);
 
@@ -353,8 +333,7 @@ TEST_F(ParserTest, complex_int_float_vector2)
 {
   // 要素の数が少ない．
   istringstream buf("( 1 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_int_float_vector(parser, attr);
 
@@ -369,8 +348,7 @@ TEST_F(ParserTest, complex_int_float_vector3)
 {
   // 要素の数が多い．
   istringstream buf("( 1, \"2.3, 4.5\", abc );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_int_float_vector(parser, attr);
 
@@ -385,8 +363,7 @@ TEST_F(ParserTest, complex_int_float_vector4)
 {
   // 1番目の要素の型が不適切
   istringstream buf("( 1a, \"2.3, 4.5\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_int_float_vector(parser, attr);
 
@@ -400,8 +377,7 @@ TEST_F(ParserTest, complex_int_float_vector4)
 TEST_F(ParserTest, complex_int_vector1)
 {
   istringstream buf("( \"1, 2, 3\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_int_vector(parser, attr);
 
@@ -421,8 +397,7 @@ TEST_F(ParserTest, complex_int_vector2)
 {
   // 要素の数が少ない．
   istringstream buf("(  );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_int_vector(parser, attr);
 
@@ -437,8 +412,7 @@ TEST_F(ParserTest, complex_int_vector3)
 {
   // 要素の数が多い．
   istringstream buf("( \"1, 2, 3\", \"4, 5\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_int_vector(parser, attr);
 
@@ -452,8 +426,7 @@ TEST_F(ParserTest, complex_int_vector3)
 TEST_F(ParserTest, complex_string1)
 {
   istringstream buf("( abc );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string(parser, attr);
 
@@ -470,8 +443,7 @@ TEST_F(ParserTest, complex_string1)
 TEST_F(ParserTest, complex_string2)
 {
   istringstream buf("( \"abc\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string(parser, attr);
 
@@ -487,8 +459,7 @@ TEST_F(ParserTest, complex_string3)
 {
   // 要素数が少ない．
   istringstream buf("( );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string(parser, attr);
 
@@ -503,8 +474,7 @@ TEST_F(ParserTest, complex_string4)
 {
   // 要素数が多い．
   istringstream buf("( abc, def );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string(parser, attr);
 
@@ -518,8 +488,7 @@ TEST_F(ParserTest, complex_string4)
 TEST_F(ParserTest, complex_string_float1)
 {
   istringstream buf("( abc, 1.2 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_float(parser, attr);
 
@@ -536,8 +505,7 @@ TEST_F(ParserTest, complex_string_float2)
 {
   // 要素数が少ない．
   istringstream buf("( abc );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_float(parser, attr);
 
@@ -552,8 +520,7 @@ TEST_F(ParserTest, complex_string_float3)
 {
   // 要素数が多い．
   istringstream buf("( abc, 1.2, xyz );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_float(parser, attr);
 
@@ -568,8 +535,7 @@ TEST_F(ParserTest, complex_string_float4)
 {
   // 2番目の要素の型が不適
   istringstream buf("( abc, \"xyz\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_float(parser, attr);
 
@@ -583,8 +549,7 @@ TEST_F(ParserTest, complex_string_float4)
 TEST_F(ParserTest, complex_string_int1)
 {
   istringstream buf("( abc, 1 );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_int(parser, attr);
 
@@ -601,8 +566,7 @@ TEST_F(ParserTest, complex_string_int2)
 {
   // 要素数が少ない．
   istringstream buf("( abc );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_int(parser, attr);
 
@@ -617,8 +581,7 @@ TEST_F(ParserTest, complex_string_int3)
 {
   // 要素数が多い．
   istringstream buf("( abc, 1, xyz );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_int(parser, attr);
 
@@ -633,8 +596,7 @@ TEST_F(ParserTest, complex_string_int4)
 {
   // 2番目の要素の型が不適
   istringstream buf("( abc, \"cd\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_int(parser, attr);
 
@@ -648,8 +610,7 @@ TEST_F(ParserTest, complex_string_int4)
 TEST_F(ParserTest, complex_string_list1)
 {
   istringstream buf("( abc, def, ghi );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_list(parser, attr);
 
@@ -666,8 +627,7 @@ TEST_F(ParserTest, complex_string_list1)
 TEST_F(ParserTest, complex_string_list2)
 {
   istringstream buf("( \"abc\", def, ghi );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_list(parser, attr);
 
@@ -685,8 +645,7 @@ TEST_F(ParserTest, complex_string_list3)
 {
   // 定義上は空もあり．
   istringstream buf("( );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_list(parser, attr);
 
@@ -700,8 +659,7 @@ TEST_F(ParserTest, complex_string_list3)
 TEST_F(ParserTest, complex_string_string1)
 {
   istringstream buf("( abc, def );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_string(parser, attr);
 
@@ -717,8 +675,7 @@ TEST_F(ParserTest, complex_string_string1)
 TEST_F(ParserTest, complex_string_string2)
 {
   istringstream buf("( abc, \"def\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_string(parser, attr);
 
@@ -735,8 +692,7 @@ TEST_F(ParserTest, complex_string_string3)
 {
   // 要素数が少ない．
   istringstream buf("( abc );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_string(parser, attr);
 
@@ -751,8 +707,7 @@ TEST_F(ParserTest, complex_string_string4)
 {
   // 要素数が多い．
   istringstream buf("( abc, def, xyz );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_string(parser, attr);
 
@@ -766,8 +721,7 @@ TEST_F(ParserTest, complex_string_string4)
 TEST_F(ParserTest, complex_string_string_string1)
 {
   istringstream buf("( abc, \"def\", xyz );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_string_string(parser, attr);
 
@@ -785,8 +739,7 @@ TEST_F(ParserTest, complex_string_string_string2)
 {
   // 要素数が少ない．
   istringstream buf("( abc, \"def\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_string_string(parser, attr);
 
@@ -801,8 +754,7 @@ TEST_F(ParserTest, complex_string_string_string3)
 {
   // 要素数が多い．
   istringstream buf("( abc, \"def\", xyz, \"012\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_string_string_string(parser, attr);
 
@@ -816,8 +768,7 @@ TEST_F(ParserTest, complex_string_string_string3)
 TEST_F(ParserTest, complex_technology1)
 {
   istringstream buf("( cmos );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_technology(parser, attr);
 
@@ -832,8 +783,7 @@ TEST_F(ParserTest, complex_technology1)
 TEST_F(ParserTest, complex_technology2)
 {
   istringstream buf("( fpga );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_technology(parser, attr);
 
@@ -849,8 +799,7 @@ TEST_F(ParserTest, complex_technology3)
 {
   // 要素数が少ない．
   istringstream buf("( );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_technology(parser, attr);
 
@@ -865,8 +814,7 @@ TEST_F(ParserTest, complex_technology4)
 {
   // 要素数が多い．
   istringstream buf("( cmos, fpga );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_technology(parser, attr);
 
@@ -881,8 +829,7 @@ TEST_F(ParserTest, complex_technology5)
 {
   // 内容が不適切
   istringstream buf("( abc );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_technology(parser, attr);
 
@@ -896,8 +843,7 @@ TEST_F(ParserTest, complex_technology5)
 TEST_F(ParserTest, complex_values1)
 {
   istringstream buf("( \"1.1, 2.2, 3.3\", \"4.4, 5.5, 6.6\" );\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   auto dst = complex_values(parser, attr);
 

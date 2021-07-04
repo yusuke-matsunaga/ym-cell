@@ -12,8 +12,8 @@
 #include "dotlib/AttrKwd.h"
 #include "dotlib/AstValue.h"
 #include "dotlib/Token.h"
-#include "ym/InputFileObj.h"
 #include "ym/FileRegion.h"
+#include "ym/Scanner.h"
 #include "ym/StrBuff.h"
 
 
@@ -28,18 +28,21 @@ BEGIN_NAMESPACE_YM_DOTLIB
 ///
 /// 結果は AstValue の unique_ptr (AstValuePtr) が返される．
 //////////////////////////////////////////////////////////////////////
-class Scanner
+class DotlibScanner :
+  public Scanner
 {
 public:
 
   /// @brief コンストラクタ
-  Scanner(InputFileObj& in) ///< [in] 入力ファイルオブジェクト
-    : mIn{in}
+  DotlibScanner(
+    istream& s,               ///< [in] 入力ストリーム
+    const FileInfo& file_info ///< [in] ファイル情報
+  ) : Scanner(s, file_info)
   {
   }
 
   /// @brief デストラクタ
-  ~Scanner() = default;
+  ~DotlibScanner() = default;
 
 
 public:
@@ -228,7 +231,7 @@ private:
   // 低レベルの下請け関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 1文字読み込む．
+  /// @brief 一語読み込む．
   /// @return 読み込んだトークンを返す．
   ///
   /// Cスタイルのコメント '/* - */' と
@@ -244,14 +247,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 入力ファイルオブジェクト
-  InputFileObj& mIn;
-
   // _scan の結果のトークン
   Token mCurToken{};
-
-  // _scan で処理中のトークンの先頭の位置
-  FileLoc mFirstLoc;
 
   // _scan の結果の文字列を格納する
   StrBuff mCurString;

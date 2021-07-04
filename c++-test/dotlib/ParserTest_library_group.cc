@@ -25,8 +25,7 @@ TEST_F(ParserTest, library_cell)
 		    "  cell ( cell_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -58,8 +57,7 @@ TEST_F(ParserTest, library_dc_current_template)
 		    "  dc_current_template ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -91,8 +89,7 @@ TEST_F(ParserTest, library_em_lut_template)
 		    "  em_lut_template ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -124,8 +121,7 @@ TEST_F(ParserTest, library_fall_net_delay)
 		    "  fall_net_delay ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -157,8 +153,7 @@ TEST_F(ParserTest, library_fall_transition_degradation)
 		    "  fall_transition_degradation ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -190,8 +185,7 @@ TEST_F(ParserTest, library_faults_lut_template)
 		    "  faults_lut_template ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -223,8 +217,7 @@ TEST_F(ParserTest, library_input_voltage)
 		    "  input_voltage ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -256,8 +249,7 @@ TEST_F(ParserTest, library_iv_lut_template)
 		    "  iv_lut_template ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -289,8 +281,7 @@ TEST_F(ParserTest, library_lu_table_template)
 		    "  lu_table_template ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -322,8 +313,7 @@ TEST_F(ParserTest, library_noise_lut_template)
 		    "  noise_lut_template ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -355,8 +345,7 @@ TEST_F(ParserTest, library_operating_conditions)
 		    "  operating_conditions ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -388,8 +377,7 @@ TEST_F(ParserTest, library_output_voltage)
 		    "  output_voltage ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -421,8 +409,7 @@ TEST_F(ParserTest, library_part)
 		    "  part ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -454,8 +441,7 @@ TEST_F(ParserTest, library_poly_template)
 		    "  poly_template ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -487,8 +473,7 @@ TEST_F(ParserTest, library_power_lut_template)
 		    "  power_lut_template ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -520,8 +505,7 @@ TEST_F(ParserTest, library_power_poly_template)
 		    "  power_poly_template ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -553,8 +537,7 @@ TEST_F(ParserTest, library_power_supply)
 		    "  power_supply ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -586,8 +569,7 @@ TEST_F(ParserTest, library_propagation_lut_template)
 		    "  propagation_lut_template ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -619,8 +601,7 @@ TEST_F(ParserTest, library_rise_net_delay)
 		    "  rise_net_delay ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -652,8 +633,7 @@ TEST_F(ParserTest, library_rise_transition_degradation)
 		    "  rise_transition_degradation ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -685,8 +665,7 @@ TEST_F(ParserTest, library_scaled_cell)
 		    "  scaled_cell ( temp_A, cond_B ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -720,8 +699,7 @@ TEST_F(ParserTest, library_scaling_factors)
 		    "  scaling_factors ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -754,8 +732,7 @@ TEST_F(ParserTest, library_timing)
 		    "  timing ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -787,8 +764,7 @@ TEST_F(ParserTest, library_timing_range)
 		    "  timing_range ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -820,8 +796,7 @@ TEST_F(ParserTest, library_type)
 		    "  type ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -853,8 +828,7 @@ TEST_F(ParserTest, library_wire_load)
 		    "  wire_load ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -886,8 +860,7 @@ TEST_F(ParserTest, library_wire_load_selection)
 		    "  wire_load_selection ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -919,8 +892,7 @@ TEST_F(ParserTest, library_wire_load_table)
 		    "  wire_load_table ( temp_A ) {\n"
 		    "  }\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);

@@ -26,7 +26,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// エラーの時は nullptr を返す．
 inline
 AstValuePtr
-read_int(Scanner& scanner) { return scanner.read_int(); }
+read_int(DotlibScanner& scanner) { return scanner.read_int(); }
 
 /// @brief float 型の値を読み込む．
 /// @return 生成した AstValue を返す．
@@ -34,7 +34,7 @@ read_int(Scanner& scanner) { return scanner.read_int(); }
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_float(Scanner& scanner) { return scanner.read_float(); }
+read_float(DotlibScanner& scanner) { return scanner.read_float(); }
 
 /// @brief string 型の値を読み込む．
 /// @return 生成した AstValue を返す．
@@ -42,7 +42,7 @@ read_float(Scanner& scanner) { return scanner.read_float(); }
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_string(Scanner& scanner) { return scanner.read_string(); }
+read_string(DotlibScanner& scanner) { return scanner.read_string(); }
 
 /// @brief bool 型の値を読み込む．
 /// @return 生成した AstValue を返す．
@@ -50,7 +50,7 @@ read_string(Scanner& scanner) { return scanner.read_string(); }
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_bool(Scanner& scanner) { return scanner.read_bool(); }
+read_bool(DotlibScanner& scanner) { return scanner.read_bool(); }
 
 /// @brief delay_model 型の値を読み込む．
 /// @param[in] 生成した AstValue を返す．
@@ -58,7 +58,7 @@ read_bool(Scanner& scanner) { return scanner.read_bool(); }
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_delay_model(Scanner& scanner) { return scanner.read_delay_model(); }
+read_delay_model(DotlibScanner& scanner) { return scanner.read_delay_model(); }
 
 /// @brief direction 型の値を読み込む．
 /// @param[in] 生成した AstValue を返す．
@@ -66,7 +66,7 @@ read_delay_model(Scanner& scanner) { return scanner.read_delay_model(); }
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_direction(Scanner& scanner) { return scanner.read_direction(); }
+read_direction(DotlibScanner& scanner) { return scanner.read_direction(); }
 
 /// @brief technology 型の値を読み込む．
 /// @param[in] 生成した AstValue を返す．
@@ -74,7 +74,7 @@ read_direction(Scanner& scanner) { return scanner.read_direction(); }
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_technology(Scanner& scanner) { return scanner.read_technology(); }
+read_technology(DotlibScanner& scanner) { return scanner.read_technology(); }
 
 /// @brief timing_sense 型の値を読み込む．
 /// @param[in] 生成した AstValue を返す．
@@ -82,7 +82,7 @@ read_technology(Scanner& scanner) { return scanner.read_technology(); }
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_timing_sense(Scanner& scanner) { return scanner.read_timing_sense(); }
+read_timing_sense(DotlibScanner& scanner) { return scanner.read_timing_sense(); }
 
 /// @brief timing_type 型の値を読み込む．
 /// @param[in] 生成した AstValue を返す．
@@ -90,7 +90,7 @@ read_timing_sense(Scanner& scanner) { return scanner.read_timing_sense(); }
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_timing_type(Scanner& scanner) { return scanner.read_timing_type(); }
+read_timing_type(DotlibScanner& scanner) { return scanner.read_timing_type(); }
 
 /// @brief vartype 型の値を読み込む．
 /// @param[in] 生成した AstValue を返す．
@@ -98,7 +98,7 @@ read_timing_type(Scanner& scanner) { return scanner.read_timing_type(); }
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_vartype(Scanner& scanner) { return scanner.read_vartype(); }
+read_vartype(DotlibScanner& scanner) { return scanner.read_vartype(); }
 
 /// @brief int vector 型の値を読み込む．
 /// @return 生成した AstValue を返す．
@@ -106,7 +106,7 @@ read_vartype(Scanner& scanner) { return scanner.read_vartype(); }
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_int_vector(Scanner& scanner) { return scanner.read_int_vector(); }
+read_int_vector(DotlibScanner& scanner) { return scanner.read_int_vector(); }
 
 /// @brief float vector 型の値を読み込む．
 /// @return 生成した AstValue を返す．
@@ -114,7 +114,7 @@ read_int_vector(Scanner& scanner) { return scanner.read_int_vector(); }
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_float_vector(Scanner& scanner) { return scanner.read_float_vector(); }
+read_float_vector(DotlibScanner& scanner) { return scanner.read_float_vector(); }
 
 /// @brief 式を表す AstValue を生成する．
 /// @return 生成した AstValue を返す．
@@ -122,12 +122,12 @@ read_float_vector(Scanner& scanner) { return scanner.read_float_vector(); }
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_expr(Scanner& scanner) { return scanner.read_expr(); }
+read_expr(DotlibScanner& scanner) { return scanner.read_expr(); }
 
 /// @brief "式" を表す AstValue を生成する．
 inline
 AstValuePtr
-read_function(Scanner& scanner) { return scanner.read_function(); }
+read_function(DotlibScanner& scanner) { return scanner.read_function(); }
 
 //////////////////////////////////////////////////////////////////////
 /// @}

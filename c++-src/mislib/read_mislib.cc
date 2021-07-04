@@ -17,14 +17,9 @@
 #include "ym/ClibTiming.h"
 
 #include "MislibParser.h"
-#include "MislibMgr.h"
 #include "MislibNode.h"
 #include "MislibGate.h"
-#include "MislibPin.h"
-#include "MislibPhase.h"
 #include "MislibExpr.h"
-#include "MislibStr.h"
-#include "MislibNum.h"
 
 #include "ym/Expr.h"
 #include "ym/TvFunc.h"
@@ -63,14 +58,14 @@ dfs(const MislibExpr* expr,
     break;
 
   case MislibExpr::Not:
-    dfs(expr->child1(), name_list, name_map);
+    dfs(expr->opr1(), name_list, name_map);
     break;
 
   case MislibExpr::And:
   case MislibExpr::Or:
   case MislibExpr::Xor:
-    dfs(expr->child1(), name_list, name_map);
-    dfs(expr->child2(), name_list, name_map);
+    dfs(expr->opr1(), name_list, name_map);
+    dfs(expr->opr2(), name_list, name_map);
     break;
 
   default:
@@ -79,8 +74,10 @@ dfs(const MislibExpr* expr,
 }
 
 CiCell*
-new_gate(const MislibGate* gate,
-	 CiCellLibrary* library)
+new_gate(
+  const MislibGate* gate,
+  CiCellLibrary* library
+)
 {
   ShString name = gate->name()->str();
   ClibArea area(gate->area()->num());
@@ -88,16 +85,19 @@ new_gate(const MislibGate* gate,
   ShString opin_name = gate->opin_name()->str();
   const MislibExpr* opin_expr = gate->opin_expr();
 
-  const MislibPin* ipin_top = gate->ipin_top();
+  int npin = gate->ipin_num();
+  const MislibPin* ipin_top = nullptr;
   vector<const MislibPin*> ipin_array;
   vector<ShString> ipin_name_list;
   NameMap ipin_name_map;
   bool wildcard_pin = false;
-  if ( ipin_top != nullptr ) {
+  if ( npin > 0 ) {
+    ipin_top = gate->ipin(0);
     if ( ipin_top->name() != nullptr ) {
       // 通常の入力ピン定義がある場合
       // ipin_list の順に入力ピンを作る．
-      for ( auto pin = ipin_top; pin != nullptr; pin = pin->next() ) {
+      for ( int i = 0; i < npin; ++ i ) {
+	auto pin = gate->ipin(i);
 	ShString name = pin->name()->str();
 	ASSERT_COND( ipin_name_map.count(name) == 0 );
 	ipin_name_map[name] = ipin_array.size();
@@ -141,22 +141,7 @@ new_gate(const MislibGate* gate,
 
   // タイミング情報の生成
   vector<CiTiming*> timing_list(ni);
-  if ( !wildcard_pin ) {
-    for ( int i = 0; i < ni; ++ i ) {
-      const MislibPin* pt_pin = ipin_array[i];
-      ClibTime r_i(pt_pin->rise_block_delay()->num());
-      ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
-      ClibTime f_i(pt_pin->fall_block_delay()->num());
-      ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
-      CiTiming* timing = library->new_timing_generic(ClibTimingType::combinational,
-						     Expr::make_one(),
-						     r_i, f_i,
-						     ClibTime(0.0), ClibTime(0.0),
-						     r_r, f_r);
-      timing_list[i] = timing;
-    }
-  }
-  else {
+  if ( wildcard_pin ) {
     vector<CiTiming*> timing_list(1);
     const MislibPin* pt_pin = ipin_top;
     ClibTime r_i(pt_pin->rise_block_delay()->num());
@@ -169,6 +154,21 @@ new_gate(const MislibGate* gate,
 						   ClibTime(0.0), ClibTime(0.0),
 						   r_r, f_r);
     for ( int i = 0; i < ni; ++ i ) {
+      timing_list[i] = timing;
+    }
+  }
+  else {
+    for ( int i = 0; i < ni; ++ i ) {
+      const MislibPin* pt_pin = ipin_array[i];
+      ClibTime r_i(pt_pin->rise_block_delay()->num());
+      ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
+      ClibTime f_i(pt_pin->fall_block_delay()->num());
+      ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
+      CiTiming* timing = library->new_timing_generic(ClibTimingType::combinational,
+						     Expr::make_one(),
+						     r_i, f_i,
+						     ClibTime(0.0), ClibTime(0.0),
+						     r_r, f_r);
       timing_list[i] = timing;
     }
   }
@@ -261,7 +261,7 @@ new_gate(const MislibGate* gate,
 // @param[in] library 設定対象のライブラリ
 void
 set_library(const string& lib_name,
-	    const vector<const MislibGate*>& gate_list,
+	    const vector<MislibGatePtr>& gate_list,
 	    CiCellLibrary* library)
 {
   // 名前の設定
@@ -269,8 +269,8 @@ set_library(const string& lib_name,
 
   // セルの内容の設定
   vector<CiCell*> cell_list;
-  for ( auto gate: gate_list ) {
-    CiCell* cell = new_gate(gate, library);
+  for ( auto& gate: gate_list ) {
+    CiCell* cell = new_gate(gate.get(), library);
     cell_list.push_back(cell);
   }
 
@@ -294,7 +294,7 @@ CiCellLibrary::read_mislib(const string& filename)
   using namespace nsMislib;
 
   MislibParser parser;
-  vector<const MislibGate*> gate_list;
+  vector<MislibGatePtr> gate_list;
   if ( !parser.parse(filename, gate_list) ) {
     return false;
   }

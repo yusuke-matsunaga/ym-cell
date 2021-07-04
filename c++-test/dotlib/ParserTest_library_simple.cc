@@ -21,8 +21,7 @@ TEST_F(ParserTest, library_header)
   // ヘッダの検査
   istringstream buf("( test ) {\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -42,8 +41,7 @@ TEST_F(ParserTest, library_bus_naming_style)
   istringstream buf("( test ) {\n"
 		    "  bus_naming_style: %s[%d];\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -70,8 +68,7 @@ TEST_F(ParserTest, library_comment)
   istringstream buf("( test ) {\n"
 		    "  comment: \"this is a comment\";\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -98,8 +95,7 @@ TEST_F(ParserTest, library_current_unit)
   istringstream buf("( test ) {\n"
 		    "  current_unit: uA;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -126,8 +122,7 @@ TEST_F(ParserTest, library_date)
   istringstream buf("( test ) {\n"
 		    "  date: \"2021/06/28\";\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -154,8 +149,7 @@ TEST_F(ParserTest, library_delay_model1)
   istringstream buf("( test ) {\n"
 		    "  delay_model: generic_cmos;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -182,8 +176,7 @@ TEST_F(ParserTest, library_delay_model2)
   istringstream buf("( test ) {\n"
 		    "  delay_model: table_lookup;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -210,8 +203,7 @@ TEST_F(ParserTest, library_delay_model3)
   istringstream buf("( test ) {\n"
 		    "  delay_model: piecewise_cmos;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -238,8 +230,7 @@ TEST_F(ParserTest, library_delay_model4)
   istringstream buf("( test ) {\n"
 		    "  delay_model: dcm;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -266,8 +257,7 @@ TEST_F(ParserTest, library_delay_model5)
   istringstream buf("( test ) {\n"
 		    "  delay_model: polynomial;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -294,8 +284,7 @@ TEST_F(ParserTest, library_delay_model6)
   istringstream buf("( test ) {\n"
 		    "  delay_model: xyz;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -312,8 +301,7 @@ TEST_F(ParserTest, library_em_temp_degradation_factor1)
   istringstream buf("( test ) {\n"
 		    "  em_temp_degradation_factor: 1.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -340,8 +328,7 @@ TEST_F(ParserTest, library_fpga_domain_style)
   istringstream buf("( test ) {\n"
 		    "  fpga_domain_style: abc;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -368,8 +355,7 @@ TEST_F(ParserTest, library_fpga_technology1)
   istringstream buf("( test ) {\n"
 		    "  fpga_technology: xyz;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -396,8 +382,7 @@ TEST_F(ParserTest, library_in_place_swap_mode1)
   istringstream buf("( test ) {\n"
 		    "  in_place_swap_mode: match_footprint;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -424,8 +409,7 @@ TEST_F(ParserTest, library_input_threshold_pct_fall1)
   istringstream buf("( test ) {\n"
 		    "  input_threshold_pct_fall: 123.456;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -452,8 +436,7 @@ TEST_F(ParserTest, library_input_threshold_pct_rise1)
   istringstream buf("( test ) {\n"
 		    "  input_threshold_pct_rise: 123.456;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -480,8 +463,7 @@ TEST_F(ParserTest, library_leakage_power_unit1)
   istringstream buf("( test ) {\n"
 		    "  leakage_power_unit: 1mW;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -508,8 +490,7 @@ TEST_F(ParserTest, library_nom_calc_mode1)
   istringstream buf("( test ) {\n"
 		    "  nom_calc_mode: abc;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -536,8 +517,7 @@ TEST_F(ParserTest, library_nom_process1)
   istringstream buf("( test ) {\n"
 		    "  nom_process: 1.1;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -564,8 +544,7 @@ TEST_F(ParserTest, library_nom_temperature1)
   istringstream buf("( test ) {\n"
 		    "  nom_temperature: 1.2;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -592,8 +571,7 @@ TEST_F(ParserTest, library_nom_voltage1)
   istringstream buf("( test ) {\n"
 		    "  nom_voltage: 1.3;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -620,8 +598,7 @@ TEST_F(ParserTest, library_output_threshold_pct_fall1)
   istringstream buf("( test ) {\n"
 		    "  output_threshold_pct_fall: 123.456;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -648,8 +625,7 @@ TEST_F(ParserTest, library_output_threshold_pct_rise1)
   istringstream buf("( test ) {\n"
 		    "  output_threshold_pct_rise: 123.456;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -676,8 +652,7 @@ TEST_F(ParserTest, library_piece_type1)
   istringstream buf("( test ) {\n"
 		    "  piece_type: piece_length;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -704,8 +679,7 @@ TEST_F(ParserTest, library_power_model1)
   istringstream buf("( test ) {\n"
 		    "  power_model: table_lookup;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -732,8 +706,7 @@ TEST_F(ParserTest, library_power_unit1)
   istringstream buf("( test ) {\n"
 		    "  power_unit: 100uW;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -760,8 +733,7 @@ TEST_F(ParserTest, library_preferred_input_pad_voltage1)
   istringstream buf("( test ) {\n"
 		    "  preferred_input_pad_voltage: VSS1;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -788,8 +760,7 @@ TEST_F(ParserTest, library_preferred_output_pad_slew_rate_control1)
   istringstream buf("( test ) {\n"
 		    "  preferred_output_pad_slew_rate_control: high;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -816,8 +787,7 @@ TEST_F(ParserTest, library_preferred_output_pad_voltage1)
   istringstream buf("( test ) {\n"
 		    "  preferred_output_pad_voltage: VDD2;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -844,8 +814,7 @@ TEST_F(ParserTest, library_pulling_resistance_unit1)
   istringstream buf("( test ) {\n"
 		    "  pulling_resistance_unit: 100ohm;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -872,8 +841,7 @@ TEST_F(ParserTest, library_resistance_unit1)
   istringstream buf("( test ) {\n"
 		    "  resistance_unit: 1kohm;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -900,8 +868,7 @@ TEST_F(ParserTest, library_revision1)
   istringstream buf("( test ) {\n"
 		    "  revision: 1.0a;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -928,8 +895,7 @@ TEST_F(ParserTest, library_simulation1)
   istringstream buf("( test ) {\n"
 		    "  simulation: true;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -956,8 +922,7 @@ TEST_F(ParserTest, library_slew_derate_from_library1)
   istringstream buf("( test ) {\n"
 		    "  slew_derate_from_library: 0.9;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -984,8 +949,7 @@ TEST_F(ParserTest, library_slew_lower_threshold_pct_fall1)
   istringstream buf("( test ) {\n"
 		    "  slew_lower_threshold_pct_fall: 30.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -1012,8 +976,7 @@ TEST_F(ParserTest, library_slew_lower_threshold_pct_rise1)
   istringstream buf("( test ) {\n"
 		    "  slew_lower_threshold_pct_rise: 40.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -1040,8 +1003,7 @@ TEST_F(ParserTest, library_slew_upper_threshold_pct_fall1)
   istringstream buf("( test ) {\n"
 		    "  slew_upper_threshold_pct_fall: 50.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -1068,8 +1030,7 @@ TEST_F(ParserTest, library_slew_upper_threshold_pct_rise1)
   istringstream buf("( test ) {\n"
 		    "  slew_upper_threshold_pct_rise: 60.0;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -1096,8 +1057,7 @@ TEST_F(ParserTest, library_default_threshold_voltage_group1)
   istringstream buf("( test ) {\n"
 		    "  default_threshold_voltage_group: high_vt_cell;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -1124,8 +1084,7 @@ TEST_F(ParserTest, library_time_unit1)
   istringstream buf("( test ) {\n"
 		    "  time_unit: 1ps;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);
@@ -1152,8 +1111,7 @@ TEST_F(ParserTest, library_voltage_unit1)
   istringstream buf("( test ) {\n"
 		    "  voltage_unit: 10ms;\n"
 		    "}\n");
-  InputFileObj in{buf, info};
-  Parser parser{in, false, false};
+  Parser parser{buf, info, false, false};
 
   AttrKwd attr{"library", FileRegion{}};
   auto dst = group_library(parser, attr);

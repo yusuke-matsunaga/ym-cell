@@ -95,14 +95,12 @@ unordered_map<string, AttrHandler> Parser::sHandlerDict{
 };
 
 // @brief コンストラクタ
-// @param[in] in 入力ファイルオブジェクト
-// @param[in] mgr AstNode を管理するオブジェクト
-// @param[in] debug デバッグモード
-// @param[in] allow_no_semi 行末のセミコロンなしを許すかどうか
-Parser::Parser(InputFileObj& in,
-	       bool debug,
-	       bool allow_no_semi)
-  : mScanner{in},
+Parser::Parser(
+  istream& s,                ///< [in] 入力ストリーム
+  const FileInfo& file_info, ///< [in] ファイル情報
+  bool debug,                ///< [in] デバッグモード
+  bool allow_no_semi         ///< [in] 行末のセミコロンなしを許すかどうか
+) : mScanner{s, file_info},
     mDebug{debug},
     mAllowNoSemi{allow_no_semi}
 {

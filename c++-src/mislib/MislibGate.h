@@ -2,14 +2,14 @@
 #define MISLIBGATE_H
 
 /// @file MislibGate.h
-/// @brief MislibGate のヘッダファイル(その2)
+/// @brief MislibGate のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "MislibNode.h"
+#include "MislibExpr.h"
 
 
 BEGIN_NAMESPACE_YM_MISLIB
@@ -21,26 +21,27 @@ BEGIN_NAMESPACE_YM_MISLIB
 class MislibGate :
   public MislibNode
 {
-  friend class MislibParser;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  /// @param[in] loc 位置情報
-  /// @param[in] name 名前を表すパース木
-  /// @param[in] area 面積を表すパース木
-  /// @param[in] opin_name 出力ピン名を表すパース木
-  /// @param[in] opin_expr 出力の論理式を表すパース木
-  /// @param[in] ipin_top 先頭の入力ピンを表すパース木
-  MislibGate(const FileRegion& loc,
-	     const MislibStr* name,
-	     const MislibNum* area,
-	     const MislibStr* opin_name,
-	     const MislibExpr* opin_expr,
-	     const MislibPin* ipin_top);
+  MislibGate(
+    const FileRegion& loc,                ///< [in] 位置情報
+    MislibStrPtr&& name,                  ///< [in] 名前を表すノード
+    MislibNumPtr&& area,                  ///< [in] 面積を表すノード
+    MislibStrPtr&& opin_name,             ///< [in] 出力品名を表すノード
+    MislibExprPtr&& opin_expr,            ///< [in] 出力の論理式を表すノード
+    vector<MislibPinPtr>&& ipin_list ///< [in] 入力ピンを表すノードのリスト
+  ) : MislibNode(loc),
+      mName{move(name)},
+      mArea{move(area)},
+      mOpinName{move(opin_name)},
+      mOpinExpr{move(opin_expr)},
+      mIpinList{move(ipin_list)}
+  {
+  }
 
   /// @brief デストラクタ
-  ~MislibGate();
+  ~MislibGate() = default;
 
 
 public:
@@ -50,28 +51,39 @@ public:
 
   /// @brief ゲート名を表すオブジェクトを取り出す．
   const MislibStr*
-  name() const;
+  name() const { return mName.get(); }
 
   /// @brief 面積を表すオブジェクトを返す．
   const MislibNum*
-  area() const;
+  area() const { return mArea.get(); }
 
   /// @brief 出力ピン名を表すオブジェクトを返す．
   const MislibStr*
-  opin_name() const;
+  opin_name() const { return mOpinName.get(); }
 
   /// @brief 出力の論理式を表すオブジェクトを返す．
   const MislibExpr*
-  opin_expr() const;
+  opin_expr() const { return mOpinExpr.get(); }
 
-  /// @brief 入力ピンのリストを返す．
+  /// @brief 入力ピン数を返す．
+  int
+  ipin_num() const { return mIpinList.size(); }
+
+  /// @brief 入力ピンを返す．
   const MislibPin*
-  ipin_top() const;
+  ipin(
+    int pos ///< [in] 位置 ( 0 <= pos < ipin_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < ipin_num() );
+    return mIpinList[pos].get();
+  }
 
-  /// @brief 内容を出力する．
-  /// デバッグ用
+  /// @brief 内容を出力する(デバッグ用)．
   void
-  dump(ostream& s) const;
+  dump(
+    ostream& s ///< [in] 出力ストリーム
+  ) const;
 
 
 private:
@@ -80,66 +92,133 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 名前
-  const MislibStr* mName;
+  MislibStrPtr mName;
 
   // 面積
-  const MislibNum* mArea;
+  MislibNumPtr mArea;
 
   // 出力ピン名
-  const MislibStr* mOpinName;
+  MislibStrPtr mOpinName;
 
   // 出力の論理式
-  const MislibExpr* mOpinExpr;
+  MislibExprPtr mOpinExpr;
 
-  // 先頭の入力ピン
-  const MislibPin* mIpinTop;
+  // 入力ピンのリスト
+  vector<MislibPinPtr> mIpinList;
 
 };
 
 
 //////////////////////////////////////////////////////////////////////
-// インライン関数の定義
+/// @class MislibPin MislibPin.h "MislibPin.h"
+/// @brief ピンを表すクラス
 //////////////////////////////////////////////////////////////////////
-
-// @brief ゲート名を表すオブジェクトを取り出す．
-inline
-const MislibStr*
-MislibGate::name() const
+class MislibPin :
+  public MislibNode
 {
-  return mName;
-}
+public:
 
-// @brief 面積を表すオブジェクトを返す．
-inline
-const MislibNum*
-MislibGate::area() const
-{
-  return mArea;
-}
+  /// @brief コンストラクタ
+  MislibPin(
+    const FileRegion& loc,            ///< [in] 位置情報
+    MislibStrPtr&& name,              ///< [in] ピン名
+    MislibPhasePtr&& phase,           ///< [in] 極性
+    MislibNumPtr&& input_load,        ///< [in] 入力負荷
+    MislibNumPtr&& max_load,          ///< [in] 最大駆動負荷
+    MislibNumPtr&& rise_block_delay,  ///< [in] 立ち上がり固定遅延
+    MislibNumPtr&& rise_fanout_delay, ///< [in] 立ち上がり負荷依存遅延
+    MislibNumPtr&& fall_block_delay,  ///< [in] 立ち下がり固定遅延
+    MislibNumPtr&& fall_fanout_delay  ///< [in] 立ち下がり負荷依存遅延
+  ) : MislibNode(loc),
+      mName{move(name)},
+      mPhase{move(phase)},
+      mInputLoad{move(input_load)},
+      mMaxLoad{move(max_load)},
+      mRiseBlockDelay{move(rise_block_delay)},
+      mRiseFanoutDelay{move(rise_fanout_delay)},
+      mFallBlockDelay{move(fall_block_delay)},
+      mFallFanoutDelay{move(fall_fanout_delay)}
+  {
+  }
 
-// @brief 出力ピン名を表すオブジェクトを返す．
-inline
-const MislibStr*
-MislibGate::opin_name() const
-{
-  return mOpinName;
-}
+  /// @brief デストラクタ
+  ~MislibPin() = default;
 
-// @brief 出力の論理式を表すオブジェクトを返す．
-inline
-const MislibExpr*
-MislibGate::opin_expr() const
-{
-  return mOpinExpr;
-}
 
-// @brief 入力ピンのリストを返す．
-inline
-const MislibPin*
-MislibGate::ipin_top() const
-{
-  return mIpinTop;
-}
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ピン名を表すオブジェクトを取り出す．
+  const MislibStr*
+  name() const { return mName.get(); }
+
+  /// @brief 極性情報を表すオブジェクトを取り出す．
+  const MislibPhase*
+  phase() const { return mPhase.get(); }
+
+  /// @brief 入力負荷を表すオブジェクトを取り出す．
+  const MislibNum*
+  input_load() const { return mInputLoad.get(); }
+
+  /// @brief 最大駆動負荷を表すオブジェクトを取り出す．
+  const MislibNum*
+  max_load() const { return mMaxLoad.get(); }
+
+  /// @brief 立ち上がり固定遅延を表すオブジェクトを取り出す．
+  const MislibNum*
+  rise_block_delay() const { return mRiseBlockDelay.get(); }
+
+  /// @brief 立ち上がり負荷依存遅延を表すオブジェクトを取り出す．
+  const MislibNum*
+  rise_fanout_delay() const { return mRiseFanoutDelay.get(); }
+
+  /// @brief 立ち下がり固定遅延を表すオブジェクトを取り出す．
+  const MislibNum*
+  fall_block_delay() const { return mFallBlockDelay.get(); }
+
+  /// @brief 立ち下がり負荷依存遅延を表すオブジェクトを取り出す．
+  const MislibNum*
+  fall_fanout_delay() const { return mFallFanoutDelay.get(); }
+
+  /// @brief 内容を出力する(デバッグ用)．
+  void
+  dump(
+    ostream& s ///< [in] 出力ストリーム
+  ) const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 入力ピン名
+  MislibStrPtr mName;
+
+  // 極性情報
+  MislibPhasePtr mPhase;
+
+  // 入力負荷
+  MislibNumPtr mInputLoad;
+
+  // 最大駆動負荷
+  MislibNumPtr mMaxLoad;
+
+  // 立ち上がり固有遅延
+  MislibNumPtr mRiseBlockDelay;
+
+  // 立ち上がり負荷依存遅延係数
+  MislibNumPtr mRiseFanoutDelay;
+
+  // 立ち下がり固有遅延
+  MislibNumPtr mFallBlockDelay;
+
+  // 立ち下がり負荷依存遅延係数
+  MislibNumPtr mFallFanoutDelay;
+
+};
 
 END_NAMESPACE_YM_MISLIB
 
