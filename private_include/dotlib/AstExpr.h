@@ -48,90 +48,118 @@ public:
   /// @brief ブール値を作る．
   static
   AstExprPtr
-  new_bool(bool value,             ///< [in] 値
-	   const FileRegion& loc); ///< [in] 位置
+  new_bool(
+    bool value,           ///< [in] 値
+    const FileRegion& loc ///< [in] 位置
+  );
 
   /// @brief 数値を作る．
   static
   AstExprPtr
-  new_float(double value,           ///< [in] 値
-	    const FileRegion& loc); ///< [in] 位置
+  new_float(
+    double value,         ///< [in] 値
+    const FileRegion& loc ///< [in] 位置
+  );
 
   /// @brief 文字列を作る．
   static
   AstExprPtr
-  new_string(const ShString& value,  ///< [in] 値
-	     const FileRegion& loc); ///< [in] 位置
+  new_string(
+    const ShString& value, ///< [in] 値
+    const FileRegion& loc  ///< [in] 位置
+  );
 
   /// @brief VDDシンボルを作る．
   static
   AstExprPtr
-  new_vdd(const FileRegion& loc); ///< [in] 位置
+  new_vdd(
+    const FileRegion& loc ///< [in] 位置
+  );
 
   /// @brief VSSシンボルを作る．
   static
   AstExprPtr
-  new_vss(const FileRegion& loc); ///< [in] 位置
+  new_vss(
+    const FileRegion& loc ///< [in] 位置
+  );
 
   /// @brief VCCシンボルを作る．
   static
   AstExprPtr
-  new_vcc(const FileRegion& loc); ///< [in] 位置
+  new_vcc(
+    const FileRegion& loc ///< [in] 位置
+  );
 
   /// @brief not 演算子を作る．
   static
   AstExprPtr
-  new_not(AstExprPtr&& opr1, ///< [in] 第１オペランド
-	  const FileRegion& loc);           ///< [in] 演算子の位置
+  new_not(
+    AstExprPtr&& opr1,    ///< [in] 第１オペランド
+    const FileRegion& loc ///< [in] 演算子の位置
+  );
 
   /// @brief plus 演算子を作る．
   static
   AstExprPtr
-  new_plus(AstExprPtr&& opr1, ///< [in] 第1オペランド
-	   AstExprPtr&& opr2, ///< [in] 第2オペランド
-	   const FileRegion& loc);           ///< [in] 演算子の位置
+  new_plus(
+    AstExprPtr&& opr1,    ///< [in] 第1オペランド
+    AstExprPtr&& opr2, 	  ///< [in] 第2オペランド
+    const FileRegion& loc ///< [in] 演算子の位置
+  );
 
   /// @brief minus 演算子を作る．
   static
   AstExprPtr
-  new_minus(AstExprPtr&& opr1, ///< [in] 第1オペランド
-	    AstExprPtr&& opr2, ///< [in] 第2オペランド
-	    const FileRegion& loc);           ///< [in] 演算子の位置
+  new_minus(
+    AstExprPtr&& opr1,    ///< [in] 第1オペランド
+    AstExprPtr&& opr2, 	  ///< [in] 第2オペランド
+    const FileRegion& loc ///< [in] 演算子の位置
+  );
 
   /// @brief mult 演算子を作る．
   static
   AstExprPtr
-  new_mult(AstExprPtr&& opr1, ///< [in] 第1オペランド
-	   AstExprPtr&& opr2, ///< [in] 第2オペランド
-	   const FileRegion& loc);           ///< [in] 演算子の位置
+  new_mult(
+    AstExprPtr&& opr1,    ///< [in] 第1オペランド
+    AstExprPtr&& opr2, 	  ///< [in] 第2オペランド
+    const FileRegion& loc ///< [in] 演算子の位置
+  );
 
   /// @brief div 演算子を作る．
   static
   AstExprPtr
-  new_div(AstExprPtr&& opr1, ///< [in] 第1オペランド
-	  AstExprPtr&& opr2, ///< [in] 第2オペランド
-	  const FileRegion& loc);           ///< [in] 演算子の位置
+  new_div(
+    AstExprPtr&& opr1,    ///< [in] 第1オペランド
+    AstExprPtr&& opr2, 	  ///< [in] 第2オペランド
+    const FileRegion& loc ///< [in] 演算子の位置
+  );
 
   /// @brief and 演算子を作る．
   static
   AstExprPtr
-  new_and(AstExprPtr&& opr1, ///< [in] 第1オペランド
-	  AstExprPtr&& opr2, ///< [in] 第2オペランド
-	  const FileRegion& loc);           ///< [in] 演算子の位置
+  new_and(
+    AstExprPtr&& opr1,    ///< [in] 第1オペランド
+    AstExprPtr&& opr2, 	  ///< [in] 第2オペランド
+    const FileRegion& loc ///< [in] 演算子の位置
+  );
 
   /// @brief or 演算子を作る．
   static
   AstExprPtr
-  new_or(AstExprPtr&& opr1, ///< [in] 第1オペランド
-	 AstExprPtr&& opr2, ///< [in] 第2オペランド
-	 const FileRegion& loc);           ///< [in] 演算子の位置
+  new_or(
+    AstExprPtr&& opr1,    ///< [in] 第1オペランド
+    AstExprPtr&& opr2, 	  ///< [in] 第2オペランド
+    const FileRegion& loc ///< [in] 演算子の位置
+  );
 
   /// @brief xor 演算子を作る．
   static
   AstExprPtr
-  new_xor(AstExprPtr&& opr1, ///< [in] 第1オペランド
-	  AstExprPtr&& opr2, ///< [in] 第2オペランド
-	  const FileRegion& loc);           ///< [in] 演算子の位置
+  new_xor(
+    AstExprPtr&& opr1,    ///< [in] 第1オペランド
+    AstExprPtr&& opr2, 	  ///< [in] 第2オペランド
+    const FileRegion& loc ///< [in] 演算子の位置
+  );
 
   /// @brief 無効なリファレンスを返す．
   static
@@ -146,7 +174,9 @@ public:
 protected:
 
   /// @brief コンストラクタ
-  AstExpr(const FileRegion& loc); ///< [in] 位置情報
+  AstExpr(
+    const FileRegion& loc ///< [in] 位置情報
+  );
 
 
 public:
@@ -203,7 +233,9 @@ public:
   /// @return 対応する式(Expr)を返す．
   virtual
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const = 0; ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+  to_expr(
+    const unordered_map<ShString, int>& pin_map ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+  ) const = 0;
 
   /// @brief 位置を返す．
   FileRegion

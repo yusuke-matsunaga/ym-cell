@@ -9,7 +9,6 @@
 #include "dotlib/Parser.h"
 #include "dotlib/AstValue.h"
 #include "dotlib/AstAttr.h"
-#include "dotlib/TokenType.h"
 
 #include "ym/MsgMgr.h"
 
@@ -161,8 +160,10 @@ Parser::parse()
 //
 // エラーが起こったら nullptr を返す．
 AstAttrPtr
-Parser::parse_simple_attribute(const AttrKwd& attr,
-				     SimpleHandler handler)
+Parser::parse_simple_attribute(
+  const AttrKwd& attr,
+  SimpleHandler handler
+)
 {
   // 属性名の直後は必ず ':' でなければならない．
   Token token = mScanner.read_and_verify(TokenType::COLON);
@@ -189,8 +190,10 @@ Parser::parse_simple_attribute(const AttrKwd& attr,
 
 // @brief Complex Attribute を読み込む．
 AstAttrPtr
-Parser::parse_complex_attribute(const AttrKwd& attr,
-				HeaderHandler& handler)
+Parser::parse_complex_attribute(
+  const AttrKwd& attr,
+  HeaderHandler& handler
+)
 {
   auto value{parse_header(handler)};
   if ( value == nullptr ) {
@@ -209,9 +212,11 @@ Parser::parse_complex_attribute(const AttrKwd& attr,
 //
 // エラーが起こったら nullptr を返す．
 AstAttrPtr
-Parser::parse_group_statement(const AttrKwd& attr,
-			      const char* group_name,
-			      HeaderHandler& header_handler)
+Parser::parse_group_statement(
+  const AttrKwd& attr,
+  const char* group_name,
+  HeaderHandler& header_handler
+)
 {
   // ヘッダをパースする．
   auto header_value{parse_header(header_handler)};
@@ -275,7 +280,9 @@ Parser::parse_group_statement(const AttrKwd& attr,
 
 // @brief Complex Attribute, GroupStatement のヘッダを読み込む．
 AstValuePtr
-Parser::parse_header(HeaderHandler& handler)
+Parser::parse_header(
+  HeaderHandler& handler
+)
 {
   // まず '(' があるか確認する．
   Token lp_token = mScanner.read_and_verify(TokenType::LP);
@@ -357,7 +364,9 @@ Parser::debug()
 // @brief 未対応の属性名に対するエラーメッセージを出力する．
 // @param[in] attr 対象の属性
 void
-syntax_error(const AttrKwd& attr)
+syntax_error(
+  const AttrKwd& attr
+)
 {
   ostringstream buf;
   buf << "Syntax error. Unexpected keyword: " << attr.name();
@@ -372,8 +381,10 @@ syntax_error(const AttrKwd& attr)
 // @param[in] attr 属性の型
 // @param[in] prev_node 以前に定義されたノード
 void
-duplicate_error(const AttrKwd& attr,
-		const AstAttr* prev_node)
+duplicate_error(
+  const AttrKwd& attr,
+  const AstAttr* prev_node
+)
 {
   ostringstream buf;
   buf << attr.name() << " appear more than once."
@@ -392,8 +403,10 @@ duplicate_error(const AttrKwd& attr,
 
 // @brief TokenType 内容をストリームに出力する．
 ostream&
-operator<<(ostream& s,
-	   TokenType type)
+operator<<(
+  ostream& s,
+  TokenType type
+)
 {
   const char* type_str = nullptr;
   switch ( type ) {

@@ -25,8 +25,10 @@ class FuncScanner
 public:
 
   /// @brief コンストラクタ
-  FuncScanner(const string& str,      ///< [in] 文字列
-	      const FileRegion& loc); ///< [in] str のファイル上の位置
+  FuncScanner(
+    const string& str,    ///< [in] 文字列
+    const FileRegion& loc ///< [in] str のファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~FuncScanner() = default;

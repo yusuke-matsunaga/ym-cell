@@ -8,7 +8,6 @@
 
 #include "gtest/gtest.h"
 #include "FuncScanner.h"
-#include "TokenType.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

@@ -57,15 +57,19 @@ public:
   ///
   /// '(' を読み込んだ時に呼ばれる．
   void
-  begin_header(const FileRegion& loc); ///< [in] '(' のファイル上の位置
+  begin_header(
+    const FileRegion& loc ///< [in] '(' のファイル上の位置
+  );
 
   /// @brief ヘッダの値を読み込む処理
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  read_header_value(DotlibScanner& scanner, ///< [in] 字句解析器
-		    const FileRegion& loc,  ///< [in] 現在のファイル上の位置
-		    int count);             ///< [in] read_header_value() の呼ばれた回数
+  read_header_value(
+    DotlibScanner& scanner, ///< [in] 字句解析器
+    const FileRegion& loc,  ///< [in] 現在のファイル上の位置
+    int count               ///< [in] read_header_value() の呼ばれた回数
+  );
 
   /// @brief 読み込みが終了した時の処理を行う．
   /// @retrun 結果の AstValue を返す．
@@ -73,8 +77,10 @@ public:
   /// - ')' を読み込んだ直後に呼ばれる．
   /// - エラーの時は nullptr を返す．
   AstValuePtr
-  end_header(const FileRegion& loc, ///< [in] ')' のファイル上の位置
-	     int count);            ///< [in] 読み込んだ要素数
+  end_header(
+    const FileRegion& loc, ///< [in] ')' のファイル上の位置
+    int count              ///< [in] 読み込んだ要素数
+  );
 
 
 protected:
@@ -107,8 +113,10 @@ private:
   /// @return 読み込んだ値を返す．
   virtual
   AstValuePtr
-  _read_header_value(DotlibScanner& scanner, ///< [in] 字句解析器
-		     int count) = 0;         ///< [in] read_header_value() の呼ばれた回数
+  _read_header_value(
+    DotlibScanner& scanner, ///< [in] 字句解析器
+    int count               ///< [in] read_header_value() の呼ばれた回数
+  ) = 0;
 
   /// @brief 読み込みが終了した時の処理を行う．
   /// @retval true 正しく読み込んだ．
@@ -117,7 +125,9 @@ private:
   /// - ')' を読み込んだ直後に呼ばれる．
   virtual
   bool
-  _end_header(int count) = 0; ///< [in] 読み込んだ要素数
+  _end_header(
+    int count ///< [in] 読み込んだ要素数
+  ) = 0;
 
 
 private:
@@ -147,7 +157,9 @@ class FixedElemHeader :
 public:
 
   /// @brief コンストラクタ
-  FixedElemHeader(const vector<SimpleHandler>& handler_list); ///< [in] 各要素のハンドラのリスト
+  FixedElemHeader(
+    initializer_list<SimpleHandler> handler_list ///< [in] 各要素のハンドラのリスト
+  );
 
   /// @brief デストラクタ
   ~FixedElemHeader() = default;
@@ -160,12 +172,16 @@ private:
 
   /// @brief ヘッダの値を読み込む処理
   AstValuePtr
-  _read_header_value(DotlibScanner& scanner, ///< [in] 字句解析器
-		     int count) override;    ///< [in] read_header_value() の呼ばれた回数
+  _read_header_value(
+    DotlibScanner& scanner, ///< [in] 字句解析器
+    int count               ///< [in] read_header_value() の呼ばれた回数
+  ) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
   bool
-  _end_header(int count) override;   ///< [in] 読み込んだ要素数
+  _end_header(
+    int count ///< [in] 読み込んだ要素数
+  ) override;
 
 
 private:
@@ -202,12 +218,16 @@ private:
 
   /// @brief ヘッダの値を読み込む処理
   AstValuePtr
-  _read_header_value(DotlibScanner& scanner, ///< [in] 字句解析器
-		     int count) override;    ///< [in] read_header_value() の呼ばれた回数
+  _read_header_value(
+    DotlibScanner& scanner, ///< [in] 字句解析器
+    int count               ///< [in] read_header_value() の呼ばれた回数
+  ) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
   bool
-  _end_header(int count) override;   ///< [in] 読み込んだ要素数
+  _end_header(
+    int count ///< [in] 読み込んだ要素数
+  ) override;
 
 
 private:
@@ -228,7 +248,9 @@ class ListHeader :
 public:
 
   /// @brief コンストラクタ
-  ListHeader(SimpleHandler handler); ///< [in] 要素のハンドラ
+  ListHeader(
+    SimpleHandler handler ///< [in] 要素のハンドラ
+  );
 
   /// @brief デストラクタ
   ~ListHeader() = default;
@@ -241,14 +263,18 @@ private:
 
   /// @brief 値を読み込む処理
   AstValuePtr
-  _read_header_value(DotlibScanner& scanner, ///< [in] 字句解析器
-		     int count) override;    ///< [in] read_value() の呼ばれた回数
+  _read_header_value(
+    DotlibScanner& scanner, ///< [in] 字句解析器
+    int count               ///< [in] read_value() の呼ばれた回数
+  ) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
   bool
-  _end_header(int count) override; ///< [in] 読み込んだ要素数
+  _end_header(
+    int count ///< [in] 読み込んだ要素数
+  ) override;
 
 
 private:

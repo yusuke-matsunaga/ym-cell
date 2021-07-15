@@ -17,9 +17,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-FuncScanner::FuncScanner(const string& str,
-			 const FileRegion& loc)
-  : mSrcString{str},
+FuncScanner::FuncScanner(
+  const string& str,
+  const FileRegion& loc
+) : mSrcString{str},
     mSrcLoc{loc},
     mCurPos{0}
 {

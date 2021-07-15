@@ -198,7 +198,9 @@ public:
   /// 期待値と異なっていた場合，エラーメッセージを出力し
   /// 不正値(TokenType::none)を返す．
   Token
-  read_and_verify(TokenType exp_type); ///< [in] 期待値
+  read_and_verify(
+    TokenType exp_type ///< [in] 期待値
+  );
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -215,7 +217,9 @@ private:
   ///
   /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstExprPtr
-  _read_expr(TokenType end_marker); ///< [in] 末尾のトークンのタイプ
+  _read_expr(
+    TokenType end_marker ///< [in] 末尾のトークンのタイプ
+  );
 
   /// @brief primary を読み込む．
   AstExprPtr

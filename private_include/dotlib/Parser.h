@@ -12,7 +12,6 @@
 #include "dotlib/AttrKwd.h"
 #include "dotlib/HeaderHandler.h"
 #include "dotlib/DotlibScanner.h"
-#include "dotlib/TokenType.h"
 
 #include "ym/FileRegion.h"
 
@@ -62,25 +61,31 @@ public:
   ///
   /// エラーが起こったら nullptr を返す．
   AstAttrPtr
-  parse_simple_attribute(const AttrKwd& attr,    ///< [in] 属性の型
-			 SimpleHandler handler); ///< [in] simple 属性ハンドラ
+  parse_simple_attribute(
+    const AttrKwd& attr,  ///< [in] 属性の型
+    SimpleHandler handler ///< [in] simple 属性ハンドラ
+  );
 
   /// @brief Complex Attribute を読み込む．
   /// @retrun 結果の AstAttr を返す．
   ///
   /// エラーが起こったら nullptr を返す．
   AstAttrPtr
-  parse_complex_attribute(const AttrKwd& attr,     ///< [in] 属性の型
-			  HeaderHandler& handler); ///< [in] ヘッダ読み込みハンドラ
+  parse_complex_attribute(
+    const AttrKwd& attr,   ///< [in] 属性の型
+    HeaderHandler& handler ///< [in] ヘッダ読み込みハンドラ
+  );
 
   /// @brief Group Statement を読み込む．
   /// @retrun 結果の AstAttr を返す．
   ///
   /// エラーが起こったら nullptr を返す．
   AstAttrPtr
-  parse_group_statement(const AttrKwd& attr,            ///< [in] 属性の型
-			const char* group_name,         ///< [in] 親のグループ名
-			HeaderHandler& header_handler); ///< [in] ヘッダ読み込みハンドラ
+  parse_group_statement(
+    const AttrKwd& attr,          ///< [in] 属性の型
+    const char* group_name,       ///< [in] 親のグループ名
+    HeaderHandler& header_handler ///< [in] ヘッダ読み込みハンドラ
+  );
 
   /// @brief デバッグモードの時 true を返す．
   bool
@@ -97,7 +102,9 @@ private:
   ///
   /// エラーが起こったら nullptr を返す．
   AstValuePtr
-  parse_header(HeaderHandler& handler); ///< [in] ハンドラ(HeaderHandler の継承クラス)
+  parse_header(
+    HeaderHandler& handler ///< [in] ハンドラ(HeaderHandler の継承クラス)
+  );
 
   /// @brief 行末まで読み込む．
   ///

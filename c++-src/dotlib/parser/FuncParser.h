@@ -27,8 +27,10 @@ class FuncParser
 public:
 
   /// @brief コンストラクタ
-  FuncParser(const string& str,      ///< [in] 対象の文字列
-	     const FileRegion& loc); ///< [in] ファイル上の位置
+  FuncParser(
+    const string& str,    ///< [in] 対象の文字列
+    const FileRegion& loc ///< [in] ファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~FuncParser() = default;
@@ -64,7 +66,9 @@ private:
 
   /// @brief expression を読み込む．
   AstExprPtr
-  read_expr(TokenType end_marker);
+  read_expr(
+    TokenType end_marker
+  );
 
 
 private:

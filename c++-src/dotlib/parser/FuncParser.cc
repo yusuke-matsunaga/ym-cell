@@ -19,11 +19,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] str 対象の文字列
-// @param[in] loc ファイル上の位置
-FuncParser::FuncParser(const string& str,
-		       const FileRegion& loc)
-  : mScanner(str, loc)
+FuncParser::FuncParser(
+  const string& str,
+  const FileRegion& loc
+) : mScanner(str, loc)
 {
 }
 
@@ -143,7 +142,9 @@ FuncParser::read_product()
 
 // @brief expression を読み込む．
 AstExprPtr
-FuncParser::read_expr(TokenType end_marker)
+FuncParser::read_expr(
+  TokenType end_marker
+)
 {
   auto opr1{read_product()};
   if ( opr1 == nullptr ) {

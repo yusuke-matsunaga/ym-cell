@@ -65,7 +65,9 @@ DotlibScanner::read_token()
 
 // @brief トークンを読み込み，期待値と比較する．
 Token
-DotlibScanner::read_and_verify(TokenType token_type)
+DotlibScanner::read_and_verify(
+  TokenType token_type
+)
 {
   auto token{read_token()};
   if ( token.type() == token_type ) {

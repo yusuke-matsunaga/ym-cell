@@ -28,9 +28,10 @@ public:
   AttrKwd() = default;
 
   /// @brief 内容を指定したコンストラクタ
-  AttrKwd(const char* attr_name,      ///< [in] 属性名
-	  const FileRegion& attr_loc) ///< [in] 属性のファイル上の位置
-    : mName{attr_name},
+  AttrKwd(
+    const char* attr_name,     ///< [in] 属性名
+    const FileRegion& attr_loc ///< [in] 属性のファイル上の位置
+  ) : mName{attr_name},
       mLoc{attr_loc}
   {
   }

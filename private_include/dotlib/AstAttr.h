@@ -20,8 +20,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief 属性を表すクラス
 ///
 /// 属性は
-/// - 属性名 (AttrType)
-/// - 値
+/// - 属性名 (AttrKwd)
+/// - 値 (AttrValue)
 /// の組で表されるが，値には様々な種類がある．
 //////////////////////////////////////////////////////////////////////
 class AstAttr
@@ -34,9 +34,10 @@ public:
   AstAttr() = default;
 
   /// @brief コンストラクタ
-  AstAttr(const AttrKwd& attr,                ///< [in] 属性の型
-	  unique_ptr<const AstValue>&& value) ///< [in] 値
-    : mAttr{attr},
+  AstAttr(
+    const AttrKwd& attr,               ///< [in] 属性の型
+    unique_ptr<const AstValue>&& value ///< [in] 値
+  ) : mAttr{attr},
       mValue{std::move(value)}
   {
   }
@@ -64,8 +65,10 @@ public:
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,            ///< [in] 出力先のストリーム
-       int ilevel = 0) const; ///< [in] インデントレベル
+  dump(
+    ostream& s,    ///< [in] 出力先のストリーム
+    int ilevel = 0 ///< [in] インデントレベル
+  ) const;
 
 
 private:

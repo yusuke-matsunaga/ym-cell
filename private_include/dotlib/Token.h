@@ -8,8 +8,7 @@
 /// Copyright (C) 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib_nsdef.h"
-#include "dotlib/TokenType.h"
+#include "dotlib/dotlib_nsdef.h"
 #include "ym/FileRegion.h"
 #include "ym/ShString.h"
 
@@ -28,10 +27,11 @@ public:
   Token() = default;
 
   /// @brief 内容を指定したコンストラクタ
-  Token(TokenType type,              ///< [in] トークンの種類
-	const FileRegion& loc,       ///< [in] トークンの位置
-	ShString value = ShString{}) ///< [in] トークンの値
-    : mType{type},
+  Token(
+    TokenType type,             ///< [in] トークンの種類
+    const FileRegion& loc,      ///< [in] トークンの位置
+    ShString value = ShString{} ///< [in] トークンの値
+  ) : mType{type},
       mStr{value},
       mLoc{loc}
   {

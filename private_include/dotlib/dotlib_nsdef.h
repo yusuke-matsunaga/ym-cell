@@ -54,6 +54,45 @@ using SimpleHandler = std::function<AstValuePtr(DotlibScanner&)>;
 using AttrHandler = std::function<AstAttrPtr(Parser&, const AttrKwd&)>;
 
 
+/// @brief トークンの値
+/// 基本的には dotlib のシンタックスにしたがっているが，
+/// 一部，function 属性の文字列の中身をパーズする時のみ現れるシンボルがある．
+/// AND, OR, XOR, PRIME がそれ．
+enum class TokenType {
+  COLON,      ///< コロン(:)
+  SEMI,       ///< セミコロン(;)
+  COMMA,      ///< コンマ(,)
+  PLUS,       ///< プラス(+)
+  MINUS,      ///< マイナス(-)
+  MULT,       ///< 掛ける(*)
+  DIV,        ///< 割る(/)
+  NOT,        ///< NOT
+  AND,        ///< AND
+  OR,         ///< OR
+  XOR,        ///< XOR
+  LP,         ///< 左括弧( ( )
+  RP,         ///< 右括弧( ) )
+  LCB,        ///< 左中括弧( { )
+  RCB,        ///< 右中括弧( } )
+  PRIME,      ///< プライム( ' )
+  SYMBOL,     ///< シンボル
+  BOOL_0,     ///< ブール値0
+  BOOL_1,     ///< ブール値1
+  EXPRESSION, ///< 式
+  NL,         ///< 改行
+
+  ERROR,      ///< エラー
+  END,        ///< ファイルの末尾
+};
+
+/// @brief TokenType 内容をストリームに出力する．
+ostream&
+operator<<(
+  ostream& s,    ///< [in] 出力先のストリーム
+  TokenType type ///< [in] トークンタイプ
+);
+
+
 //////////////////////////////////////////////////////////////////////
 // エラー出力用の便利関数
 //////////////////////////////////////////////////////////////////////
@@ -61,13 +100,17 @@ using AttrHandler = std::function<AstAttrPtr(Parser&, const AttrKwd&)>;
 // @brief 未対応の属性名に対するエラーメッセージを出力する．
 extern
 void
-syntax_error(const AttrKwd& attr); ///< [in] 対象の属性
+syntax_error(
+  const AttrKwd& attr ///< [in] 対象の属性
+);
 
 /// @brief 同じ属性が重複して定義されている時のエラーを出力する．
 extern
 void
-duplicate_error(const AttrKwd& attr,       ///< [in] 属性の型
-		const AstAttr* prev_attr); ///< [in] 以前に定義された属性
+duplicate_error(
+  const AttrKwd& attr,     ///< [in] 属性の型
+  const AstAttr* prev_attr ///< [in] 以前に定義された属性
+);
 
 END_NAMESPACE_YM_DOTLIB
 

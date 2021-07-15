@@ -36,92 +36,122 @@ public:
   /// @brief int 値を作る．
   static
   AstValuePtr
-  new_int(int value,              ///< [in] 値
-	  const FileRegion& loc); ///< [in] 値の位置
+  new_int(
+    int value,            ///< [in] 値
+    const FileRegion& loc ///< [in] 値の位置
+  );
 
   /// @brief float 値を作る．
   static
   AstValuePtr
-  new_float(double value,           ///< [in] 値
-	    const FileRegion& loc); ///< [in] 値の位置
+  new_float(
+    double value,         ///< [in] 値
+    const FileRegion& loc ///< [in] 値の位置
+  );
 
   /// @brief string 値を作る．
   static
   AstValuePtr
-  new_string(const ShString& value,  ///< [in] 値
-	     const FileRegion& loc); ///< [in] 値の位置
+  new_string(
+    const ShString& value, ///< [in] 値
+    const FileRegion& loc  ///< [in] 値の位置
+  );
 
   /// @brief bool 値を作る．
   static
   AstValuePtr
-  new_bool(bool value,             ///< [in] 値
-	   const FileRegion& loc); ///< [in] 値の位置
+  new_bool(
+    bool value,           ///< [in] 値
+    const FileRegion& loc ///< [in] 値の位置
+  );
 
   /// @brief delay_model 値を作る．
   static
   AstValuePtr
-  new_delay_model(ClibDelayModel value,   ///< [in] 値
-		  const FileRegion& loc); ///< [in] 値の位置
+  new_delay_model(
+    ClibDelayModel value, ///< [in] 値
+    const FileRegion& loc ///< [in] 値の位置
+  );
 
   /// @brief direction 値を作る．
   static
   AstValuePtr
-  new_direction(ClibDirection value,    ///< [in] 値
-		const FileRegion& loc); ///< [in] 値の位置
+  new_direction(
+    ClibDirection value,  ///< [in] 値
+    const FileRegion& loc ///< [in] 値の位置
+  );
 
   /// @brief technology 値を作る．
   static
   AstValuePtr
-  new_technology(ClibTechnology value,   ///< [in] 値
-		 const FileRegion& loc); ///< [in] 値の位置
+  new_technology(
+    ClibTechnology value, ///< [in] 値
+    const FileRegion& loc ///< [in] 値の位置
+  );
 
   /// @brief timing_sense 値を作る．
   static
   AstValuePtr
-  new_timing_sense(ClibTimingSense value,  ///< [in] 値
-		   const FileRegion& loc); ///< [in] 値の位置
+  new_timing_sense(
+    ClibTimingSense value, ///< [in] 値
+    const FileRegion& loc  ///< [in] 値の位置
+  );
 
   /// @brief timing_type 値を作る．
   static
   AstValuePtr
-  new_timing_type(ClibTimingType value,   ///< [in] 値
-		  const FileRegion& loc); ///< [in] 値の位置
+  new_timing_type(
+    ClibTimingType value, ///< [in] 値
+    const FileRegion& loc ///< [in] 値の位置
+  );
 
   /// @brief vartype 値を作る．
   static
   AstValuePtr
-  new_vartype(ClibVarType value,      ///< [in] 値
-	      const FileRegion& loc); ///< [in] 値の位置
+  new_vartype(
+    ClibVarType value,    ///< [in] 値
+    const FileRegion& loc ///< [in] 値の位置
+  );
 
   /// @brief expr 値を作る．
   static
   AstValuePtr
-  new_expr(unique_ptr<const AstExpr>&& value); ///< [in] 値
+  new_expr(
+    AstExprPtr&& value ///< [in] 値
+  );
 
   /// @brief int vector 値を作る．
   static
   AstValuePtr
-  new_int_vector(const vector<int>& value, ///< [in] 値
-		 const FileRegion& loc);   ///< [in] 値の位置
+  new_int_vector(
+    const vector<int>& value, ///< [in] 値
+    const FileRegion& loc     ///< [in] 値の位置
+  );
 
   /// @brief float vector 値を作る．
   static
   AstValuePtr
-  new_float_vector(const vector<double>& value, ///< [in] 値
-		   const FileRegion& loc);      ///< [in] 値の位置
+  new_float_vector(
+    const vector<double>& value, ///< [in] 値
+    const FileRegion& loc        ///< [in] 値の位置
+  );
 
   /// @brief complex 値を作る．
   static
   AstValuePtr
-  new_complex(vector<AstValuePtr>& value, ///< [in] 値のリスト
-	      const FileRegion& loc);     ///< [in] 値の位置
+  new_complex(
+    vector<AstValuePtr>& value, ///< [in] 値のリスト
+    const FileRegion& loc       ///< [in] 値の位置
+  );
 
   /// @brief group 値を作る．
   static
   AstValuePtr
-  new_group(AstValuePtr&& header,           ///< [in] ヘッダ
-	    vector<AstAttrPtr>& child_list, ///< [in] 要素のリスト
-	    const FileRegion& loc);         ///< [in] 値の位置
+  new_group(
+    AstValuePtr&& header,           ///< [in] ヘッダ
+    vector<AstAttrPtr>& child_list, ///< [in] 要素のリスト
+    const FileRegion& loc           ///< [in] 値の位置
+  );
 
   /// @brief 無効な参照値を返す．
   static
@@ -136,7 +166,9 @@ public:
 protected:
 
   /// @brief コンストラクタ
-  AstValue(const FileRegion& loc); ///< [in] 値のファイル上の位置)
+  AstValue(
+    const FileRegion& loc ///< [in] 値のファイル上の位置)
+  );
 
 
 public:
@@ -252,7 +284,9 @@ public:
   /// 異なる型の場合の値は不定
   virtual
   const AstValue&
-  complex_elem_value(int pos) const; ///< [in] 位置番号( 0 <= pos < complex_elem_size )
+  complex_elem_value(
+    int pos ///< [in] 位置番号( 0 <= pos < complex_elem_size )
+  ) const;
 
   /// @brief group statement のヘッダを返す．
   ///
@@ -273,7 +307,9 @@ public:
   /// 異なる型の場合の値は不定
   virtual
   const AstAttr&
-  group_elem_attr(int pos) const; ///< [in] 位置番号( 0 <= pos < group_elem_size() )
+  group_elem_attr(
+    int pos ///< [in] 位置番号( 0 <= pos < group_elem_size() )
+  ) const;
 
   /// @brief 値のファイル上の位置を返す．
   FileRegion
@@ -282,8 +318,10 @@ public:
   /// @brief 内容を出力する．
   virtual
   void
-  dump(ostream& s,            ///< [in] 出力先のストリーム
-       int ilevel) const = 0; ///< [in] インデントレベル
+  dump(
+    ostream& s, ///< [in] 出力先のストリーム
+    int ilevel  ///< [in] インデントレベル
+  ) const = 0;
 
   /// @brief 値を表す文字列を返す．
   virtual

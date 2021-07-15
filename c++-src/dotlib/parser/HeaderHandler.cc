@@ -23,7 +23,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //
 // '(' を読み込んだ時に呼ばれる．
 void
-HeaderHandler::begin_header(const FileRegion& loc)
+HeaderHandler::begin_header(
+  const FileRegion& loc
+)
 {
   mLpLoc = loc;
   mValueList.clear();
@@ -32,9 +34,11 @@ HeaderHandler::begin_header(const FileRegion& loc)
 
 // @brief ヘッダの値を読み込む処理
 bool
-HeaderHandler::read_header_value(DotlibScanner& scanner,
-				 const FileRegion& loc,
-				 int count)
+HeaderHandler::read_header_value(
+  DotlibScanner& scanner,
+  const FileRegion& loc,
+  int count
+)
 {
   mRpLoc = loc;
   auto value{_read_header_value(scanner, count)};
@@ -55,8 +59,10 @@ HeaderHandler::read_header_value(DotlibScanner& scanner,
 //
 // ')' を読み込んだ直後に呼ばれる．
 AstValuePtr
-HeaderHandler::end_header(const FileRegion& loc,
-			  int count)
+HeaderHandler::end_header(
+  const FileRegion& loc,
+  int count
+)
 {
   mRpLoc = loc;
   if ( _end_header(count) ) {
@@ -83,16 +89,19 @@ HeaderHandler::_begin_header()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-FixedElemHeader::FixedElemHeader(const vector<SimpleHandler>& handler_list)
-  : mHandlerList{handler_list}
+FixedElemHeader::FixedElemHeader(
+  initializer_list<SimpleHandler> handler_list
+) : mHandlerList{handler_list}
 {
 }
 
 // @brief 値を読み込む処理
 // @param[in] count read_value() の呼ばれた回数
 AstValuePtr
-FixedElemHeader::_read_header_value(DotlibScanner& scanner,
-				    int count)
+FixedElemHeader::_read_header_value(
+  DotlibScanner& scanner,
+  int count
+)
 {
   ASSERT_COND( count >= 0 );
   if ( count < mHandlerList.size() ) {
@@ -114,7 +123,9 @@ FixedElemHeader::_read_header_value(DotlibScanner& scanner,
 
 // @brief 読み込みが終了した時の処理を行う．
 bool
-FixedElemHeader::_end_header(int count)
+FixedElemHeader::_end_header(
+  int count
+)
 {
   ASSERT_COND( count <= mHandlerList.size() );
   if ( count < mHandlerList.size() ) {
@@ -145,8 +156,10 @@ FanoutLengthHeader::FanoutLengthHeader()
 
 // @brief ヘッダの値を読み込む処理
 AstValuePtr
-FanoutLengthHeader::_read_header_value(DotlibScanner& scanner,
-				       int count)
+FanoutLengthHeader::_read_header_value(
+  DotlibScanner& scanner,
+  int count
+)
 {
   switch ( count ) {
   case 0: return scanner.read_int();
@@ -168,7 +181,9 @@ FanoutLengthHeader::_read_header_value(DotlibScanner& scanner,
 
 // @brief 読み込みが終了した時の処理を行う．
 bool
-FanoutLengthHeader::_end_header(int count)
+FanoutLengthHeader::_end_header(
+  int count
+)
 {
   return true;
 }
@@ -179,15 +194,18 @@ FanoutLengthHeader::_end_header(int count)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ListHeader::ListHeader(SimpleHandler handler)
-  : mHandler{handler}
+ListHeader::ListHeader(
+  SimpleHandler handler
+) : mHandler{handler}
 {
 }
 
 // @brief 値を読み込む処理
 AstValuePtr
-ListHeader::_read_header_value(DotlibScanner& scanner,
-			       int count)
+ListHeader::_read_header_value(
+  DotlibScanner& scanner,
+  int count
+)
 {
   // count は無視
   return mHandler(scanner);
@@ -195,7 +213,9 @@ ListHeader::_read_header_value(DotlibScanner& scanner,
 
 // @brief 読み込みが終了した時の処理を行う．
 bool
-ListHeader::_end_header(int count)
+ListHeader::_end_header(
+  int count
+)
 {
   // count は無視
   return true;

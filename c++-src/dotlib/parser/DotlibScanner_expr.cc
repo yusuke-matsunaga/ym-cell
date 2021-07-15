@@ -8,7 +8,6 @@
 
 #include "dotlib/DotlibScanner.h"
 #include "dotlib/AstExpr.h"
-#include "dotlib/TokenType.h"
 #include "ym/MsgMgr.h"
 #include "FuncParser.h"
 
@@ -44,7 +43,9 @@ DotlibScanner::read_function()
 
 // @brief expression を読み込む．
 AstExprPtr
-DotlibScanner::_read_expr(TokenType end_marker)
+DotlibScanner::_read_expr(
+  TokenType end_marker
+)
 {
   auto opr1{_read_product()};
   if ( opr1 == nullptr ) {

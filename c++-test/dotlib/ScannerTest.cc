@@ -8,7 +8,6 @@
 
 #include "gtest/gtest.h"
 #include "DotlibScanner.h"
-#include "TokenType.h"
 #include "ym/MsgMgr.h"
 #include "ym/StrListMsgHandler.h"
 
