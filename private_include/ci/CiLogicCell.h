@@ -5,9 +5,8 @@
 /// @brief CiLogicCell のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "CiCell.h"
 
@@ -26,27 +25,29 @@ class CiLogicCell :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] library 親のセルライブラリ
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
-  CiLogicCell(CiCellLibrary* library,
-	      const ShString& name,
-	      ClibArea area,
-	      const vector<CiInputPin*>& input_list,
-	      const vector<CiOutputPin*>& output_list,
-	      const vector<CiInoutPin*>& inout_list,
-	      const vector<CiBus*>& bus_list,
-	      const vector<CiBundle*>& bundle_list,
-	      const vector<CiTiming*>& timing_list);
+  CiLogicCell(
+    CiCellLibrary* library,                  ///< [in] 親のセルライブラリ
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area,                           ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiBus*>& bus_list,          ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,    ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list     ///< [in] タイミング情報のリスト
+  ) : CiCell(library, name, area,
+	     input_list,
+	     output_list,
+	     inout_list,
+	     vector<CiInternalPin*>(),
+	     bus_list,
+	     bundle_list,
+	     timing_list)
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiLogicCell();
+  ~CiLogicCell() = default;
 
 
 public:

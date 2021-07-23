@@ -25,8 +25,10 @@ public:
 
   /// @brief コンストラクタ
   explicit
-  LcPatHandle(LcPatNode* node = nullptr, ///< [in] ノード
-	      bool inv = false)          ///< [in] 反転属性
+  LcPatHandle(
+    LcPatNode* node = nullptr, ///< [in] ノード
+    bool inv = false           ///< [in] 反転属性
+  )
   {
     set(node, inv);
   }
@@ -38,10 +40,10 @@ public:
 public:
 
   /// @brief ノードを取り出す．
-  LcPatNode*
+  const LcPatNode&
   node() const
   {
-    return reinterpret_cast<LcPatNode*>(mData & ~1UL);
+    return *reinterpret_cast<LcPatNode*>(mData & ~1UL);
   }
 
   /// @brief 反転属性を取り出す．
@@ -53,8 +55,10 @@ public:
 
   /// @brief 値を設定する．
   void
-  set(LcPatNode* node, ///< [in] ノード
-      bool inv)        ///< [in] 反転属性
+  set(
+    LcPatNode* node, ///< [in] ノード
+    bool inv         ///< [in] 反転属性
+  )
   {
     // bool に対する & 1UL は不必要だが念のため．
     mData = reinterpret_cast<ympuint>(node) | (static_cast<ympuint>(inv) & 1UL);

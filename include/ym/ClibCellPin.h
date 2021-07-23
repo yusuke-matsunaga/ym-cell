@@ -35,7 +35,7 @@ public:
 
   /// @brief ピン番号を返す．
   virtual
-  int
+  SizeType
   pin_id() const = 0;
 
   /// @brief ピン名を返す．
@@ -86,7 +86,7 @@ public:
   ///
   /// 入力ピンもしくは入出力ピンの時のみ意味を持つ．
   virtual
-  int
+  SizeType
   input_id() const = 0;
 
   /// @brief 負荷容量を返す．
@@ -114,7 +114,7 @@ public:
   ///
   /// 出力ピンもしくは入出力ピンの時のみ意味を持つ．
   virtual
-  int
+  SizeType
   output_id() const = 0;
 
   /// @brief 論理式を持っているときに true を返す．
@@ -177,7 +177,7 @@ public:
   ///
   /// 内部ピンの時のみ意味を持つ．
   virtual
-  int
+  SizeType
   internal_id() const = 0;
 
 
@@ -189,8 +189,9 @@ public:
   /// @brief 内容をバイナリダンプする．
   virtual
   void
-  dump(ostream& s) const ///< [in] 出力先のストリーム
-  = 0;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const = 0;
 
 };
 

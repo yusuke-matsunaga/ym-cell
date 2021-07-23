@@ -3,9 +3,8 @@
 /// @brief CiCellGroup の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ci/CiCellGroup.h"
 #include "ci/CiCellLibrary.h"
@@ -54,49 +53,30 @@ get_pos(ymuint bits,
 
 END_NONAMESPACE
 
+
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellGroup
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] id 番号
-// @param[in] map 変換マップ
-// @param[in] pininfo ピン情報
-// @param[in] cell_list セルのリスト
-CiCellGroup::CiCellGroup(int id,
-			 const NpnMapM& map,
-			 int pininfo,
-			 const vector<CiCell*>& cell_list) :
-  mId{id},
-  mRepClass{nullptr},
-  mMap{map},
-  mPinInfo{pininfo}
+CiCellGroup::CiCellGroup(
+  SizeType id,
+  const NpnMapM& map,
+  int pininfo,
+  const vector<CiCell*>& cell_list
+) : mId{id},
+    mRepClass{nullptr},
+    mMap{map},
+    mPinInfo{pininfo},
+    mCellList{cell_list}
 {
-  int n = cell_list.size();
-  vector<ClibCell*> _cell_list;
-  _cell_list.reserve(n);
   for ( auto cell: cell_list ) {
     cell->set_group(this);
-    _cell_list.push_back(cell);
   }
-  mCellList.init(_cell_list);
-}
-
-// @brief エラーオブジェクト用のコンストラクタ
-CiCellGroup::CiCellGroup() :
-  mId{-1},
-  mRepClass{nullptr}
-{
-}
-
-// @brief デストラクタ
-CiCellGroup::~CiCellGroup()
-{
 }
 
 // @brief ID番号を返す．
-// @note ClibCellLibrary::group(id) で返されるオブジェクトの id() は id となる．
-int
+SizeType
 CiCellGroup::id() const
 {
   return mId;
@@ -169,7 +149,7 @@ CiCellGroup::has_data() const
 }
 
 // @brief データ入力のピン番号を返す．
-int
+SizeType
 CiCellGroup::data_pos() const
 {
   return get_pos(mPinInfo, INPUT);
@@ -186,7 +166,7 @@ CiCellGroup::clock_sense() const
 }
 
 // @brief クロック入力のピン番号を返す．
-int
+SizeType
 CiCellGroup::clock_pos() const
 {
   return get_pos(mPinInfo, CLOCK);
@@ -210,7 +190,7 @@ CiCellGroup::enable_sense() const
 }
 
 // @brief イネーブル入力のピン番号を返す．
-int
+SizeType
 CiCellGroup::enable_pos() const
 {
   return get_pos(mPinInfo, ENABLE);
@@ -224,9 +204,6 @@ CiCellGroup::has_clear() const
 }
 
 // @brief クリア入力のタイプを返す．
-// @retval 0 なし
-// @retval 1 High sensitive
-// @retval 2 Low sensitive
 int
 CiCellGroup::clear_sense() const
 {
@@ -234,8 +211,7 @@ CiCellGroup::clear_sense() const
 }
 
 // @brief クリア入力のピン番号を返す．
-// @note クリア入力がない場合の値は不定
-int
+SizeType
 CiCellGroup::clear_pos() const
 {
   return get_pos(mPinInfo, CLEAR);
@@ -249,9 +225,6 @@ CiCellGroup::has_preset() const
 }
 
 // @brief プリセット入力のタイプを返す．
-// @retval 0 なし
-// @retval 1 High sensitive
-// @retval 2 Low sensitive
 int
 CiCellGroup::preset_sense() const
 {
@@ -259,53 +232,57 @@ CiCellGroup::preset_sense() const
 }
 
 // @brief プリセット入力のピン番号を返す．
-// @note プリセット入力がない場合の値は不定
-int
+SizeType
 CiCellGroup::preset_pos() const
 {
   return get_pos(mPinInfo, PRESET);
 }
 
 // @brief 肯定出力のピン番号を返す．
-int
+SizeType
 CiCellGroup::q_pos() const
 {
   return get_pos(mPinInfo, OUTPUT1);
 }
 
 // @brief 否定出力のピン番号を返す．
-int
+SizeType
 CiCellGroup::xq_pos() const
 {
   return get_pos(mPinInfo, OUTPUT2);
 }
 
-// @brief セルのリストを返す．
-const ClibCellList&
-CiCellGroup::cell_list() const
+// @brief セル数を返す．
+SizeType
+CiCellGroup::cell_num() const
 {
-  return mCellList;
+  return mCellList.size();
+}
+
+// @brief セルを返す．
+const ClibCell&
+CiCellGroup::cell(
+  SizeType pos ///< [in] インデックス ( 0 <= pos < cell_num() )
+) const
+{
+  ASSERT_COND( 0 <= pos && pos < cell_num() );
+  return *mCellList[pos];
 }
 
 // @brief 親のセルクラスを設定する．
-// @param[in] cell_class 親のクラス
 void
-CiCellGroup::set_class(CiCellClass* cell_class)
+CiCellGroup::set_class(
+  CiCellClass* cell_class
+)
 {
   mRepClass = cell_class;
 }
 
 // @brief FFのピン情報を設定する．
-// @param[in] pos_array ピン位置と極性情報の配列
-// @note pos_array の意味は以下の通り
-//  - pos_array[0] : データ入力のピン番号     (3bit)
-//  - pos_array[1] : クロック入力のピン番号   (3bit) | 極性情報 (1bit)
-//  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
-//  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
-//  - pos_array[4] : 肯定出力のピン番号       (3bit)
-//  - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか (1bit)
 void
-CiCellGroup::set_ff_info(int pos_array[])
+CiCellGroup::set_ff_info(
+  SizeType pos_array[]
+)
 {
   mPinInfo = 0U;
   mPinInfo |= encode(pos_array[0], INPUT);
@@ -317,16 +294,10 @@ CiCellGroup::set_ff_info(int pos_array[])
 }
 
 // @brief ラッチのピン情報を設定する．
-// @param[in] pos_array ピン位置と極性情報の配列
-// @note pos_array の意味は以下の通り
-//  - pos_array[0] : データ入力のピン番号     (3bit)
-//  - pos_array[1] : イネーブル入力のピン番号 (3bit) | 極性情報 (2bit)
-//  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
-//  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
-//  - pos_array[4] : 肯定出力のピン番号       (3bit)
-//  - pos_array[5] : 否定出力のピン番号       (3bit)
 void
-CiCellGroup::set_latch_info(int pos_array[])
+CiCellGroup::set_latch_info(
+  SizeType pos_array[]
+)
 {
   mPinInfo = 0U;
   mPinInfo |= encode(pos_array[0], INPUT);

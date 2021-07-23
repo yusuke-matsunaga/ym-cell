@@ -36,12 +36,12 @@ public:
 
   /// @brief 代表関数番号を返す．
   virtual
-  int
+  SizeType
   rep_id() const = 0;
 
   /// @brief 根のノード番号を返す．
   virtual
-  int
+  SizeType
   root_id() const = 0;
 
   /// @brief 根の反転属性を返す．
@@ -51,19 +51,20 @@ public:
 
   /// @brief 入力数を返す．
   virtual
-  int
+  SizeType
   input_num() const = 0;
 
   /// @brief 枝数を返す．
   virtual
-  int
+  SizeType
   edge_num() const = 0;
 
   /// @brief 枝(の番号)を返す．
   virtual
-  int
-  edge(int pos) const ///< [in] 位置 ( 0 <= pos < edge_num() )
-  = 0;
+  SizeType
+  edge(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < edge_num() )
+  ) const = 0;
 
 };
 

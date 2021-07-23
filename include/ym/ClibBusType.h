@@ -5,7 +5,7 @@
 /// @brief ClibBusType のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
@@ -66,17 +66,17 @@ public:
 
   /// @brief ビット幅の取得
   virtual
-  int
+  SizeType
   bit_width() const = 0;
 
   /// @brief 開始ビットの取得
   virtual
-  int
+  SizeType
   bit_from() const = 0;
 
   /// @brief 終了ビットの取得
   virtual
-  int
+  SizeType
   bit_to() const = 0;
 
   /// @brief 向きの取得

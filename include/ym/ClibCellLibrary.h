@@ -32,16 +32,20 @@ public:
   /// @brief コンストラクタ
   ///
   /// 空の状態で初期化される．
-  ClibCellLibrary();
+  ClibCellLibrary() = default;
 
   /// @brief コピーコンストラクタ
   ///
   /// '浅い'コピーを行う．
-  ClibCellLibrary(const ClibCellLibrary& src); ///< [in] コピー元のオブジェクト
+  ClibCellLibrary(
+    const ClibCellLibrary& src ///< [in] コピー元のオブジェクト
+  );
 
   /// @brief 代入演算子
-  const ClibCellLibrary&
-  operator=(const ClibCellLibrary& src); ///< [in] コピー元のオブジェクト
+  ClibCellLibrary&
+  operator=(
+    const ClibCellLibrary& src ///< [in] コピー元のオブジェクト
+  );
 
   /// @brief デストラクタ
   ~ClibCellLibrary();
@@ -57,14 +61,18 @@ public:
   ///
   /// 読み込みが失敗した場合はなにもしないで false を返す．
   bool
-  read_mislib(const string& filename); ///< [in] ファイル名
+  read_mislib(
+    const string& filename ///< [in] ファイル名
+  );
 
   /// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
   /// @return 読み込みが成功したら true を返す．
   ///
   /// 読み込みが失敗した場合はなにもしないで false を返す．
   bool
-  read_mislib(const char* filename) ///< [in] ファイル名
+  read_mislib(
+    const char* filename ///< [in] ファイル名
+  )
   {
     return read_mislib(string(filename));
   }
@@ -74,14 +82,18 @@ public:
   ///
   /// 読み込みが失敗した場合はなにもしないで false を返す．
   bool
-  read_liberty(const string& filename); ///< [in] ファイル名
+  read_liberty(
+    const string& filename ///< [in] ファイル名
+  );
 
   /// @brief liberty 形式のファイルを読み込んでライブラリに設定する．
   /// @return 読み込みが成功したら true を返す．
   ///
   /// 読み込みが失敗した場合はなにもしないで false を返す．
   bool
-  read_liberty(const char* filename) ///< [in] ファイル名
+  read_liberty(
+    const char* filename ///< [in] ファイル名
+  )
   {
     return read_liberty(string(filename));
   }
@@ -98,19 +110,19 @@ public:
 
   /// @brief テクノロジの取得
   /// 返り値は
-  /// - Cmos
-  /// - Fpga
+  /// - cmos
+  /// - fpga
   /// のどちらか
   ClibTechnology
   technology() const;
 
   /// @brief 遅延モデルの取得
   /// 返り値は
-  /// - GenericCmos
-  /// - TableLookup
-  /// - PiecewiseCmos
-  /// - Cmos2
-  /// - Dcm
+  /// - generic_cmos
+  /// - table_lookup
+  /// - piecewise_cmos
+  /// - cmos2
+  /// - dcm
   /// のいずれか
   ClibDelayModel
   delay_model() const;
@@ -163,29 +175,31 @@ public:
   string
   leakage_power_unit() const;
 
-  /// @brief 遅延テーブルのテンプレートのリストの取得
-  const ClibLutTemplateList&
-  lu_table_template_list() const;
-
   /// @brief 遅延テーブルのテンプレート数の取得
-  int
+  SizeType
   lu_table_template_num() const;
 
-  /// @brief 遅延テーブルのテンプレート番号の取得
+  /// @brief 遅延テーブルのテンプレートの取得
   const ClibLutTemplate&
-  lu_table_template(int table_id) const; ///< [in] テンプレート番号 ( 0 <= table_id < lu_table_template_num() )
+  lu_table_template(
+    SizeType table_id ///< [in] テンプレート番号 ( 0 <= table_id < lu_table_template_num() )
+  ) const;
 
   /// @brief 遅延テーブルのテンプレート番号の取得
   ///
   /// なければ -1 を返す．
-  int
-  lu_table_template_id(const char* name) const; ///< [in] テンプレート名
+  SizeType
+  lu_table_template_id(
+    const char* name ///< [in] テンプレート名
+  ) const;
 
   /// @brief バスタイプの取得
   ///
   /// なければ nullptr を返す．
   const ClibBusType&
-  bus_type(const char* name) const; ///< [in] バスタイプ名
+  bus_type(
+    const char* name ///< [in] バスタイプ名
+  ) const;
 
 
 public:
@@ -193,40 +207,57 @@ public:
   // セル情報の取得
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief このライブラリの持つセルのリストの取得
-  const ClibCellList&
-  cell_list() const;
-
   /// @brief このライブラリの持つセル数の取得
-  int
+  SizeType
   cell_num() const;
 
   /// @brief セル情報の取得
   /// @return 該当するセル情報を返す．
   const ClibCell&
-  cell(int cell_id) const; ///< [in] セル番号 ( 0 <= cell_id < cell_num() )
+  cell(
+    SizeType cell_id ///< [in] セル番号 ( 0 <= cell_id < cell_num() )
+  ) const;
 
   /// @brief 名前からのセル番号の取得
   /// @return セル番号を返す．
   ///
-  /// なければ -1 を返す．
-  int
-  cell_id(const char* name) const; ///< [in] セル名
+  /// なければ CLIB_NULLID を返す．
+  SizeType
+  cell_id(
+    const char* name ///< [in] セル名
+  ) const;
 
   /// @brief 名前からのセル番号の取得
   /// @return セル番号を返す．
   ///
-  /// なければ -1 を返す．
-  int
-  cell_id(const string& name) const; ///< [in] セル名
+  /// なければ CLIB_NULLID を返す．
+  SizeType
+  cell_id(
+    const string& name ///< [in] セル名
+  ) const
+  {
+    return cell_id(name.c_str());
+  }
 
-  /// @brief セルグループのリストを返す．
-  const ClibCellGroupList&
-  group_list() const;
+  /// @brief セルグループ数の取得
+  SizeType
+  cell_group_num() const;
 
-  /// @brief NPN同値クラスのリストを返す．
-  const ClibCellClassList&
-  npn_class_list() const;
+  /// @brief セルグループの取得
+  const ClibCellGroup&
+  cell_group(
+    SizeType id ///< [in] グループ番号 ( 0 <= id < cell_group_num() )
+  ) const;
+
+  /// @brief NPN同値クラス数の取得
+  SizeType
+  npn_class_num() const;
+
+  /// @brief NPN同値クラスの取得
+  const ClibCellClass&
+  npn_class(
+    SizeType id ///< [in] 同値クラス番号 ( 0 <= id < npn_class_num() )
+  ) const;
 
 
 public:
@@ -260,8 +291,10 @@ public:
   ///
   /// 該当するセルがないときでも空のセルクラスが返される．
   const ClibCellClass&
-  simple_ff_class(bool has_clear,         ///< [in] クリア端子を持つとき true にする．
-		  bool has_preset) const; ///< [in] プリセット端子を持つとき true にする．
+  simple_ff_class(
+    bool has_clear, ///< [in] クリア端子を持つとき true にする．
+    bool has_preset ///< [in] プリセット端子を持つとき true にする．
+  ) const;
 
 
 public:
@@ -273,8 +306,10 @@ public:
   ///
   /// 該当するセルがないときでも空のセルクラスが返される．
   const ClibCellClass&
-  simple_latch_class(bool has_clear,         ///< [in] クリア端子を持つとき true にする．
-		     bool has_preset) const; ///< [in] プリセット端子を持つとき true にする．
+  simple_latch_class(
+    bool has_clear, ///< [in] クリア端子を持つとき true にする．
+    bool has_preset ///< [in] プリセット端子を持つとき true にする．
+  ) const;
 
 
 public:
@@ -283,55 +318,73 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 総パタン数を返す．
-  int
+  SizeType
   pg_pat_num() const;
 
   /// @brief パタンを返す．
   const ClibPatGraph&
-  pg_pat(int id) const; ///< [in] パタン番号 ( 0 <= id < pg_pat_num() )
+  pg_pat(
+    SizeType id ///< [in] パタン番号 ( 0 <= id < pg_pat_num() )
+  ) const;
 
   /// @brief パタンの最大の入力数を得る．
-  int
+  SizeType
   pg_max_input() const;
 
   /// @brief 総ノード数を返す．
-  int
+  SizeType
   pg_node_num() const;
 
   /// @brief ノードの種類を返す．
   ClibPatType
-  pg_node_type(int id) const; ///< [in] ノード番号 ( 0 <= id < pg_node_num() )
+  pg_node_type(
+    SizeType id ///< [in] ノード番号 ( 0 <= id < pg_node_num() )
+  ) const;
 
   /// @brief ノードが入力ノードの時に入力番号を返す．
   ///
   /// 入力ノードでない場合の返り値は不定
-  int
-  pg_input_id(int id) const; ///< [in] ノード番号 ( 0 <= id < pg_node_num() )
+  SizeType
+  pg_input_id(
+    SizeType id ///< [in] ノード番号 ( 0 <= id < pg_node_num() )
+  ) const;
 
   /// @brief 入力のノード番号を返す．
   /// @return input_id の入力に対応するノードのノード番号
-  int
-  pg_input_node(int input_id) const; ///< [in] 入力番号 ( 0 <= input_id < pg_input_num() )
+  SizeType
+  pg_input_node(
+    SizeType input_id ///< [in] 入力番号 ( 0 <= input_id < pg_input_num() )
+  ) const;
 
   /// @brief 総枝数を返す．
-  int
+  SizeType
   pg_edge_num() const;
 
   /// @brief 枝のファンイン元のノード番号を返す．
-  int
-  pg_edge_from(int id) const; ///< [in] 枝番号 ( 0 <= id < edge_num() )
+  SizeType
+  pg_edge_from(
+    SizeType id ///< [in] 枝番号 ( 0 <= id < edge_num() )
+  ) const;
 
   /// @brief 枝のファンアウト先のノード番号を返す．
-  int
-  pg_edge_to(int id) const; ///< [in] 枝番号 ( 0 <= id < edge_num() )
+  SizeType
+  pg_edge_to(
+    SizeType id ///< [in] 枝番号 ( 0 <= id < edge_num() )
+  ) const;
 
   /// @brief 枝のファンアウト先の入力位置( 0 or 1 ) を返す．
-  int
-  pg_edge_pos(int id) const; ///< [in] 枝番号 ( 0 <= id < edge_num() )
+  SizeType
+  pg_edge_pos(
+    SizeType id ///< [in] 枝番号 ( 0 <= id < edge_num() )
+  ) const;
 
   /// @brief 枝の反転属性を返す．
+  /// @retval true 反転あり
+  /// @retval false 反転なし
   bool
-  pg_edge_inv(int id) const; ///< [in] 枝番号 ( 0 <= id < edge_num() )
+  pg_edge_inv(
+    SizeType id ///< [in] 枝番号 ( 0 <= id < edge_num() )
+  ) const;
 
 
 public:
@@ -341,11 +394,15 @@ public:
 
   /// @brief 内容をバイナリダンプする．
   void
-  dump(ostream& s) const; ///< [in] 出力先のストリーム
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const;
 
   /// @brief バイナリダンプされた内容を読み込む．
   void
-  restore(istream& s); ///< [in] 入力元のストリーム
+  restore(
+    istream& s ///< [in] 入力元のストリーム
+  );
 
 
 private:
@@ -358,7 +415,9 @@ private:
   /// CiCellLibrary の参照回数を適切に管理する．
   /// mImpl はこの関数以外では変更しない．
   void
-  change_impl(CiCellLibrary* new_impl); ///< [in] 新しいオブジェクト
+  change_impl(
+    CiCellLibrary* new_impl ///< [in] 新しいオブジェクト
+  );
 
 
 private:
@@ -367,15 +426,17 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 実装クラス
-  CiCellLibrary* mImpl;
+  CiCellLibrary* mImpl{nullptr};
 
 };
 
 /// @relates ClibCellLibrary
 /// @brief 内容を出力する．
 void
-display_library(ostream& s,                      ///< [in] 出力先のストリーム
-		const ClibCellLibrary& library); ///< [in] 対象のセルライブラリ
+display_library(
+  ostream& s,                    ///< [in] 出力先のストリーム
+  const ClibCellLibrary& library ///< [in] 対象のセルライブラリ
+);
 
 END_NAMESPACE_YM_CLIB
 

@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ci/CiCellPin.h"
 
 
@@ -16,20 +15,8 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiCellPin
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-// @param[in] name ピン名
-CiCellPin::CiCellPin(const ShString& name) :
-  mName(name)
-{
-}
-
-// @brief デストラクタ
-CiCellPin::~CiCellPin()
-{
-}
-
 // @brief ピン番号を返す．
-int
+SizeType
 CiCellPin::pin_id() const
 {
   return mId;
@@ -71,8 +58,7 @@ CiCellPin::is_internal() const
 }
 
 // @brief 入力ピン番号を返す．
-// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-int
+SizeType
 CiCellPin::input_id() const
 {
   return 0;
@@ -100,8 +86,7 @@ CiCellPin::fall_capacitance() const
 }
 
 // @brief 出力ピン番号を返す．
-// @note 出力ピンもしくは入出力ピンの時のみ意味を持つ．
-int
+SizeType
 CiCellPin::output_id() const
 {
   return 0;
@@ -178,8 +163,7 @@ CiCellPin::min_transition() const
 }
 
 // @brief 内部ピン番号を返す．
-// @note 内部ピンの時のみ意味を持つ．
-int
+SizeType
 CiCellPin::internal_id() const
 {
   return 0;
@@ -189,27 +173,6 @@ CiCellPin::internal_id() const
 //////////////////////////////////////////////////////////////////////
 // クラス CiInputPin
 //////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] name ピン名
-// @param[in] capacitance 負荷容量
-// @param[in] rise_capacitance 立ち上がり時の負荷容量
-// @param[in] fall_capacitance 立ち下がり時の負荷容量
-CiInputPin::CiInputPin(const ShString& name,
-		       ClibCapacitance capacitance,
-		       ClibCapacitance rise_capacitance,
-		       ClibCapacitance fall_capacitance) :
-  CiCellPin(name),
-  mCapacitance(capacitance),
-  mRiseCapacitance(rise_capacitance),
-  mFallCapacitance(fall_capacitance)
-{
-}
-
-// @brief デストラクタ
-CiInputPin::~CiInputPin()
-{
-}
 
 // @brief 方向を返す．
 ClibDirection
@@ -226,8 +189,7 @@ CiInputPin::is_input() const
 }
 
 // @brief 入力ピン番号を返す．
-// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-int
+SizeType
 CiInputPin::input_id() const
 {
   return mInputId;
@@ -259,56 +221,8 @@ CiInputPin::fall_capacitance() const
 // クラス CiOutputPinBase
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-// @param[in] name ピン名
-// @param[in] has_logic 論理式を持つとき true にするフラグ
-// @param[in] logic_expr 論理式
-// @param[in] tristate_expr tristate 条件式
-// @param[in] max_fanout 最大ファンアウト容量
-// @param[in] min_fanout 最小ファンアウト容量
-// @param[in] max_capacitance 最大負荷容量
-// @param[in] min_capacitance 最小負荷容量
-// @param[in] max_transition 最大遷移時間
-// @param[in] min_transition 最小遷移時間
-CiOutputPinBase::CiOutputPinBase(const ShString& name,
-				 bool has_logic,
-				 const Expr& logic_expr,
-				 const Expr& tristate_expr,
-				 ClibCapacitance max_fanout,
-				 ClibCapacitance min_fanout,
-				 ClibCapacitance max_capacitance,
-				 ClibCapacitance min_capacitance,
-				 ClibTime max_transition,
-				 ClibTime min_transition) :
-  CiCellPin(name),
-  mHasFunction(0U),
-  mFunction(logic_expr),
-  mThreeState(tristate_expr),
-  mMaxFanout(max_fanout),
-  mMinFanout(min_fanout),
-  mMaxCapacitance(max_capacitance),
-  mMinCapacitance(min_capacitance),
-  mMaxTransition(max_transition),
-  mMinTransition(min_transition)
-{
-  if ( has_logic ) {
-    if ( tristate_expr.is_zero() ) {
-      mHasFunction = 1U;
-    }
-    else {
-      mHasFunction = 3U;
-    }
-  }
-}
-
-// @brief デストラクタ
-CiOutputPinBase::~CiOutputPinBase()
-{
-}
-
 // @brief 出力ピン番号を返す．
-// @note 出力ピンもしくは入出力ピンの時のみ意味を持つ．
-int
+SizeType
 CiOutputPinBase::output_id() const
 {
   return mOutputId;
@@ -318,7 +232,7 @@ CiOutputPinBase::output_id() const
 bool
 CiOutputPinBase::has_function() const
 {
-  return static_cast<bool>(mHasFunction & 1U);
+  return mFlags[0];
 }
 
 // @brief 機能を表す論理式を返す．
@@ -332,7 +246,7 @@ CiOutputPinBase::function() const
 bool
 CiOutputPinBase::has_three_state() const
 {
-  return static_cast<bool>((mHasFunction >> 1) & 1U);
+  return mFlags[1];
 }
 
 // @brief three_state 論理式を返す．
@@ -389,40 +303,6 @@ CiOutputPinBase::min_transition() const
 // クラス CiOutputPin
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-// @param[in] name ピン名
-// @param[in] has_logic 論理式を持つとき true にするフラグ
-// @param[in] logic_expr 論理式
-// @param[in] tristate_expr tristate 条件式
-// @param[in] max_fanout 最大ファンアウト容量
-// @param[in] min_fanout 最小ファンアウト容量
-// @param[in] max_capacitance 最大負荷容量
-// @param[in] min_capacitance 最小負荷容量
-// @param[in] max_transition 最大遷移時間
-// @param[in] min_transition 最小遷移時間
-CiOutputPin::CiOutputPin(const ShString& name,
-			 bool has_logic,
-			 const Expr& logic_expr,
-			 const Expr& tristate_expr,
-			 ClibCapacitance max_fanout,
-			 ClibCapacitance min_fanout,
-			 ClibCapacitance max_capacitance,
-			 ClibCapacitance min_capacitance,
-			 ClibTime max_transition,
-			 ClibTime min_transition) :
-  CiOutputPinBase(name,
-		  has_logic, logic_expr, tristate_expr,
-		  max_fanout, min_fanout,
-		  max_capacitance, min_capacitance,
-		  max_transition, min_transition)
-{
-}
-
-// @brief デストラクタ
-CiOutputPin::~CiOutputPin()
-{
-}
-
 // @brief 方向を返す．
 ClibDirection
 CiOutputPin::direction() const
@@ -442,49 +322,6 @@ CiOutputPin::is_output() const
 // クラス CiInoutPin
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-// @param[in] name ピン名
-// @param[in] has_logic 論理式を持つとき true にするフラグ
-// @param[in] logic_expr 論理式
-// @param[in] tristate_expr tristate 条件式
-// @param[in] capacitance 負荷容量
-// @param[in] rise_capacitance 立ち上がり時の負荷容量
-// @param[in] fall_capacitance 立ち下がり時の負荷容量
-// @param[in] max_fanout 最大ファンアウト容量
-// @param[in] min_fanout 最小ファンアウト容量
-// @param[in] max_capacitance 最大負荷容量
-// @param[in] min_capacitance 最小負荷容量
-// @param[in] max_transition 最大遷移時間
-// @param[in] min_transition 最小遷移時間
-CiInoutPin::CiInoutPin(const ShString& name,
-		       bool has_logic,
-		       const Expr& logic_expr,
-		       const Expr& tristate_expr,
-		       ClibCapacitance capacitance,
-		       ClibCapacitance rise_capacitance,
-		       ClibCapacitance fall_capacitance,
-		       ClibCapacitance max_fanout,
-		       ClibCapacitance min_fanout,
-		       ClibCapacitance max_capacitance,
-		       ClibCapacitance min_capacitance,
-		       ClibTime max_transition,
-		       ClibTime min_transition) :
-  CiOutputPinBase(name,
-		  has_logic, logic_expr, tristate_expr,
-		  max_fanout, min_fanout,
-		  max_capacitance, min_capacitance,
-		  max_transition, min_transition),
-  mCapacitance(capacitance),
-  mRiseCapacitance(rise_capacitance),
-  mFallCapacitance(fall_capacitance)
-{
-}
-
-// @brief デストラクタ
-CiInoutPin::~CiInoutPin()
-{
-}
-
 // @brief 方向を返す．
 ClibDirection
 CiInoutPin::direction() const
@@ -500,8 +337,7 @@ CiInoutPin::is_inout() const
 }
 
 // @brief 入力ピン番号を返す．
-// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-int
+SizeType
 CiInoutPin::input_id() const
 {
   return mInputId;
@@ -533,18 +369,6 @@ CiInoutPin::fall_capacitance() const
 // クラス CiInternalPin
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-// @param[in] name ピン名
-CiInternalPin::CiInternalPin(const ShString& name) :
-  CiCellPin(name)
-{
-}
-
-// @brief デストラクタ
-CiInternalPin::~CiInternalPin()
-{
-}
-
 // @brief 方向を返す．
 ClibDirection
 CiInternalPin::direction() const
@@ -560,8 +384,7 @@ CiInternalPin::is_internal() const
 }
 
 // @brief 内部ピン番号を返す．
-// @note 内部ピンの時のみ意味を持つ．
-int
+SizeType
 CiInternalPin::internal_id() const
 {
   return mInternalId;

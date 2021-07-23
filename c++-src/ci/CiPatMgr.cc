@@ -3,9 +3,8 @@
 /// @brief CiPatMgr の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ci/CiPatMgr.h"
 #include "ci/CiPatGraph.h"
@@ -22,27 +21,13 @@ using namespace nsLibcomp;
 // クラス CiPatMgr
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-CiPatMgr::CiPatMgr()
-{
-}
-
-// @brief デストラクタ
-CiPatMgr::~CiPatMgr()
-{
-  delete [] mNodeTypeArray;
-  delete [] mEdgeArray;
-  delete [] mPatArray;
-}
-
 // @brief このセルライブラリに含まれるセルの最大の入力数を得る．
-int
+SizeType
 CiPatMgr::max_input() const
 {
-  int ans = 0;
-  for ( int i = 0; i < mPatNum; ++ i ) {
-    const ClibPatGraph& pat = this->pat(i);
-    int ni = pat.input_num();
+  SizeType ans = 0;
+  for ( auto& pat: mPatArray ) {
+    auto ni = pat.input_num();
     if ( ans < ni ) {
       ans = ni;
     }
@@ -50,40 +35,51 @@ CiPatMgr::max_input() const
   return ans;
 }
 
-// @brief パタンを返す．
-// @param[in] id パタン番号 ( 0 <= id < pat_num() )
-const ClibPatGraph&
-CiPatMgr::pat(int id) const
+// @brief 総パタン数を返す．
+SizeType
+CiPatMgr::pat_num() const
 {
-  ASSERT_COND( id < pat_num() );
+  // CiPatGraph の定義が必要なのでヘッダファイルに書けない．
+  return mPatArray.size();
+}
+
+// @brief パタンを返す．
+const ClibPatGraph&
+CiPatMgr::pat(
+  SizeType id ///< [in] パタン番号 ( 0 <= id < pat_num() )
+) const
+{
+  // CiPatGraph の定義が必要なのでヘッダファイルに書けない．
+  ASSERT_COND( 0 <= id && id < pat_num() );
   return mPatArray[id];
 }
 
 // @brief LcPatMgr の情報をコピーする．
-// @param[in] src コピー元
 void
-CiPatMgr::copy(const LcPatMgr& src)
+CiPatMgr::copy(
+  const LcPatMgr& src
+)
 {
   // ノードの情報をコピーする．
-  int nn = src.node_num();
+  auto nn = src.node_num();
   set_node_num(nn);
-  for (int i = 0; i < nn; ++ i) {
+  for ( auto i = 0; i < nn; ++ i ) {
     auto& src_node = src.node(i);
-    int v = 0U;
+    SizeType v = 0U;
     if ( src_node.is_input() ) {
-      v = static_cast<int>(ClibPatType::Input) | (src_node.input_id() << 2);
+      v = static_cast<SizeType>(ClibPatType::Input) | (src_node.input_id() << 2);
     }
     else if ( src_node.is_and() ) {
-      v = static_cast<int>(ClibPatType::And);
+      v = static_cast<SizeType>(ClibPatType::And);
     }
     else if ( src_node.is_xor() ) {
-      v = static_cast<int>(ClibPatType::Xor);
+      v = static_cast<SizeType>(ClibPatType::Xor);
     }
     mNodeTypeArray[i] = v;
     for ( auto j: { 0, 1 } ) {
-      int v = 0U;
+      SizeType v = 0U;
       if ( !src_node.is_input() ) {
-	v = src_node.fanin(j)->id() * 2;
+	v = src_node.fanin(j).id() * 2;
 	if ( src_node.fanin_inv(j) ) {
 	  v |= 1U;
 	}
@@ -93,36 +89,40 @@ CiPatMgr::copy(const LcPatMgr& src)
   }
 
   // パタンの情報をコピーする．
-  int np = src.pat_num();
+  auto np = src.pat_num();
   set_pat_num(np);
-  for (int i = 0; i < np; ++ i) {
-    vector<int> node_list;
-    int v = src.pat_node_list(i, node_list);
-    int ne = node_list.size();
+  for ( auto i = 0; i < np; ++ i ) {
+    vector<SizeType> node_list;
+    auto v = src.pat_node_list(i, node_list);
+    auto ne = node_list.size();
     CiPatGraph& pg = mPatArray[i];
     pg.init(src.rep_id(i), v, ne);
-    for (int j = 0; j < ne; ++ j) {
+    for ( auto j = 0; j < ne; ++ j ) {
       pg.set_edge(j, node_list[j]);
     }
   }
 }
 
 // @brief ノード数を設定する．
-// @param[in] nn ノード数
 void
-CiPatMgr::set_node_num(int nn)
+CiPatMgr::set_node_num(
+  SizeType nn
+)
 {
-  mNodeNum = nn;
-  mNodeTypeArray = new ymuint[mNodeNum];
-  mEdgeArray = new ymuint[mNodeNum * 2];
+  mNodeTypeArray.clear();
+  mNodeTypeArray.resize(nn);
+  mEdgeArray.clear();
+  mEdgeArray.resize(nn * 2);
 }
 
 // @brief パタン数を設定する．
 void
-CiPatMgr::set_pat_num(int np)
+CiPatMgr::set_pat_num(
+  SizeType np
+)
 {
-  mPatNum = np;
-  mPatArray = new CiPatGraph[mPatNum];
+  mPatArray.clear();
+  mPatArray.resize(np);
 }
 
 END_NAMESPACE_YM_CLIB

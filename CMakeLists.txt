@@ -56,8 +56,6 @@ set (ci_SOURCES
   )
 
 set (libcomp_SOURCES
-  c++-src/libcomp/LcClass.cc
-  c++-src/libcomp/LcGroup.cc
   c++-src/libcomp/LcPatMgr.cc
   c++-src/libcomp/LcSignature.cc
   c++-src/libcomp/LibComp.cc

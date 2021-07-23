@@ -5,12 +5,10 @@
 /// @brief CiCellClass のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/ClibCellClass.h"
-#include "ym/ClibObjList.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -33,16 +31,21 @@ public:
   /// @param[in] id 番号
   /// @param[in] idmap_list 同位体変換リスト
   /// @param[in] group_list グループのリスト
-  /// @param[in] alloc メモリアロケータ
-  CiCellClass(int id,
-	      const vector<NpnMapM>& idmap_list,
-	      const vector<CiCellGroup*>& group_list);
+  CiCellClass(
+    SizeType id,
+    const vector<NpnMapM>& idmap_list,
+    const vector<CiCellGroup*>& group_list
+  ) : mId{id},
+      mIdmapList{idmap_list},
+      mGroupList{group_list}
+  {
+  }
 
   /// @brief エラーオブジェクト用のコンストラクタ
-  CiCellClass();
+  CiCellClass() = default;
 
   /// @brief デストラクタ
-  ~CiCellClass();
+  ~CiCellClass() = default;
 
 
 public:
@@ -52,18 +55,20 @@ public:
 
   /// @brief ID番号を返す．
   /// @note ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
-  int
+  SizeType
   id() const override;
 
   /// @brief 同位体変換の個数を得る．
   /// @note 恒等変換は含まない．
-  int
+  SizeType
   idmap_num() const override;
 
   /// @brief 同位体変換を得る．
   /// @param[in] pos 位置番号 ( 0 <= pos < idmap_num() )
   const NpnMapM&
-  idmap(int pos) const override;
+  idmap(
+    SizeType pos
+  ) const override;
 
 
 public:
@@ -71,9 +76,15 @@ public:
   // このクラスに属しているセルグループの情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セルグループのリストを返す．
-  const ClibCellGroupList&
-  group_list() const override;
+  /// @brief グループ数を返す．
+  SizeType
+  cell_group_num() const override;
+
+  /// @brief グループを返す．
+  const ClibCellGroup&
+  cell_group(
+    SizeType pos ///< [in] インデックス ( 0 <= pos < cell_group_num() )
+  ) const override;
 
 
 public:
@@ -82,9 +93,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief バイナリダンプを行う．
-  /// @param[in] bos 出力先のストリーム
   void
-  dump(ostream& bos) const override;
+  dump(
+    ostream& bos ///< [in] 出力先のストリーム
+  ) const override;
 
 
 private:
@@ -93,16 +105,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID番号
-  int mId;
-
-  // 同位体変換の数
-  int mIdmapNum;
+  SizeType mId{CLIB_NULLID};
 
   // 同位体変換の配列
-  NpnMapM* mIdmapList;
+  vector<NpnMapM> mIdmapList;
 
   // セルグループのリスト
-  ClibCellGroupList mGroupList;
+  vector<CiCellGroup*> mGroupList;
 
 };
 

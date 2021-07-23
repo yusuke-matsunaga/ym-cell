@@ -39,14 +39,15 @@ public:
 
   /// @brief ピン数の取得
   virtual
-  int
+  SizeType
   pin_num() const = 0;
 
   /// @brief ピンの取得
   virtual
   const ClibCellPin&
-  pin(int pos) const ///< [in] 位置番号 ( 0 <= pos < pin_num() )
-  = 0;
+  pin(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
+  ) const = 0;
 
 };
 

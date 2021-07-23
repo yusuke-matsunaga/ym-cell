@@ -5,9 +5,8 @@
 /// @brief CiPatMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 #include "lc/libcomp_nsdef.h"
@@ -35,10 +34,10 @@ class CiPatMgr
 public:
 
   /// @brief コンストラクタ
-  CiPatMgr();
+  CiPatMgr() = default;
 
   /// @brief デストラクタ
-  ~CiPatMgr();
+  ~CiPatMgr() = default;
 
 
 public:
@@ -47,67 +46,110 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief パタンの最大の入力数を得る．
-  int
+  SizeType
   max_input() const;
 
   /// @brief 総ノード数を返す．
-  int
-  node_num() const;
+  SizeType
+  node_num() const
+  {
+    return mNodeTypeArray.size();
+  }
 
   /// @brief ノードの種類を返す．
-  /// @param[in] id ノード番号 ( 0 <= id < node_num() )
   ClibPatType
-  node_type(int id) const;
+  node_type(
+    SizeType id ///< [in] ノード番号 ( 0 <= id < node_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= id && id < node_num() );
+    return static_cast<ClibPatType>(mNodeTypeArray[id] & 3U);
+  }
 
   /// @brief ノードが入力ノードの時に入力番号を返す．
-  /// @param[in] id ノード番号 ( 0 <= id < node_num() )
-  /// @note 入力ノードでない場合の返り値は不定
-  int
-  input_id(int id) const;
+  ///
+  /// 入力ノードでない場合の返り値は不定
+  SizeType
+  input_id(
+    SizeType id ///< [in] ノード番号 ( 0 <= id < node_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= id && id < node_num() );
+    return (mNodeTypeArray[id] >> 2);
+  }
 
   /// @brief 入力のノード番号を返す．
-  /// @param[in] input_id 入力番号 ( 0 <= input_id < input_num() )
   /// @return input_id の入力に対応するノードのノード番号
-  int
-  input_node(int input_id) const;
+  SizeType
+  input_node(
+    SizeType input_id ///< [in] 入力番号 ( 0 <= input_id < input_num() )
+  ) const
+  {
+    return input_id;
+  }
 
   /// @brief 総枝数を返す．
-  int
-  edge_num() const;
+  SizeType
+  edge_num() const
+  {
+    return mEdgeArray.size();
+  }
 
   /// @brief 枝のファンイン元のノード番号を返す．
-  /// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
-  int
-  edge_from(int id) const;
+  SizeType
+  edge_from(
+    SizeType id ///< [in] 枝番号 ( 0 <= id < edge_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= id && id < edge_num() );
+    return (mEdgeArray[id] >> 1);
+  }
 
   /// @brief 枝のファンアウト先のノード番号を返す．
-  /// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
-  int
-  edge_to(int id) const;
+  SizeType
+  edge_to(
+    SizeType id ///< [in] 枝番号 ( 0 <= id < edge_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= id && id < edge_num() );
+    return (id / 2);
+  }
 
   /// @brief 枝のファンアウト先の入力位置( 0 or 1 ) を返す．
-  /// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
-  int
-  edge_pos(int id) const;
+  SizeType
+  edge_pos(
+    SizeType id ///< [in] 枝番号 ( 0 <= id < node_num() * 2 )
+  ) const
+  {
+    ASSERT_COND( 0 <= id && id < edge_num() );
+    return (id & 1U);
+  }
 
   /// @brief 枝の反転属性を返す．
-  /// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
   bool
-  edge_inv(int id) const;
+  edge_inv(
+    SizeType id ///< [in] 枝番号 ( 0 <= id < node_num() * 2 )
+  ) const
+  {
+    ASSERT_COND( 0 <= id && id < edge_num() );
+    return static_cast<bool>(mEdgeArray[id] & 1U);
+  }
 
   /// @brief 総パタン数を返す．
-  int
+  SizeType
   pat_num() const;
 
   /// @brief パタンを返す．
-  /// @param[in] id パタン番号 ( 0 <= id < pat_num() )
   const ClibPatGraph&
-  pat(int id) const;
+  pat(
+    SizeType id ///< [in] パタン番号 ( 0 <= id < pat_num() )
+  ) const;
 
   /// @brief バイナリダンプを行う．
-  /// @param[in] bos 出力先のストリーム
   void
-  dump(ostream& bos) const;
+  dump(
+    ostream& bos ///< [in] 出力先のストリーム
+  ) const;
 
 
 public:
@@ -116,16 +158,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief LcPatMgr の情報をコピーする．
-  /// @param[in] src コピー元
   void
-  copy(const nsLibcomp::LcPatMgr& src);
+  copy(
+    const nsLibcomp::LcPatMgr& src ///< [in] コピー元
+  );
 
   /// @brief データを読み込んでセットする．
-  /// @param[in] bis 入力元のストリーム
   /// @retval true 読み込みが成功した．
   /// @retval false 読み込みが失敗した．
   bool
-  restore(istream& bis);
+  restore(
+    istream& bis ///< [in] 入力元のストリーム
+  );
 
 
 private:
@@ -134,14 +178,16 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ノード数を設定する．
-  /// @param[in] nn ノード数
-  /// @param[in] alloc メモリアロケータ
   void
-  set_node_num(int nn);
+  set_node_num(
+    SizeType nn ///< [in] ノード数
+  );
 
   /// @brief パタン数を設定する．
   void
-  set_pat_num(int np);
+  set_pat_num(
+    SizeType np ///< [in] パタン数
+  );
 
 
 private:
@@ -149,119 +195,19 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ノード数
-  int mNodeNum{0};
-
   // ノードの種類+入力番号を納めた配列
-  // サイズは mNodeNum
-  ymuint* mNodeTypeArray{nullptr};
+  // サイズはノード数
+  vector<SizeType> mNodeTypeArray;
 
   // ファンインのノード番号＋反転属性を納めた配列
-  // サイズは mNodeNum * 2
-  ymuint* mEdgeArray{nullptr};
-
-  // パタン数
-  int mPatNum{0};
+  // サイズはノード数 x 2
+  vector<SizeType> mEdgeArray;
 
   // パタンの配列
-  // サイズは mPatNum
-  CiPatGraph* mPatArray{nullptr};
+  // サイズはパタン数
+  vector<CiPatGraph> mPatArray;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief ノード数を返す．
-inline
-int
-CiPatMgr::node_num() const
-{
-  return mNodeNum;
-}
-
-// @brief ノードの種類を返す．
-// @param[in] id ノード番号 ( 0 <= id < node_num() )
-inline
-ClibPatType
-CiPatMgr::node_type(int id) const
-{
-  return static_cast<ClibPatType>(mNodeTypeArray[id] & 3U);
-}
-
-// @brief ノードが入力ノードの時に入力番号を返す．
-// @param[in] id ノード番号 ( 0 <= id < node_num() )
-// @note 入力ノードでない場合の返り値は不定
-inline
-int
-CiPatMgr::input_id(int id) const
-{
-  return (mNodeTypeArray[id] >> 2);
-}
-
-// @brief 入力のノード番号を返す．
-// @param[in] input_id 入力番号 ( 0 <= input_id < input_num() )
-// @return input_id の入力に対応するノードのノード番号
-inline
-int
-CiPatMgr::input_node(int input_id) const
-{
-  return input_id;
-}
-
-// @brief 総枝数を返す．
-inline
-int
-CiPatMgr::edge_num() const
-{
-  return node_num() * 2;
-}
-
-// @brief 枝のファンイン元のノード番号を返す．
-// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
-inline
-int
-CiPatMgr::edge_from(int id) const
-{
-  return (mEdgeArray[id] >> 1);
-}
-
-// @brief 枝のファンアウト先のノード番号を返す．
-// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
-inline
-int
-CiPatMgr::edge_to(int id) const
-{
-  return (id / 2);
-}
-
-// @brief 枝のファンアウト先の入力位置( 0 or 1 ) を返す．
-// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
-inline
-int
-CiPatMgr::edge_pos(int id) const
-{
-  return (id & 1U);
-}
-
-// @brief 枝の反転属性を返す．
-// @param[in] id 枝番号 ( 0 <= id < node_num() * 2 )
-inline
-bool
-CiPatMgr::edge_inv(int id) const
-{
-  return static_cast<bool>(mEdgeArray[id] & 1U);
-}
-
-// @brief 総パタン数を返す．
-inline
-int
-CiPatMgr::pat_num() const
-{
-  return mPatNum;
-}
 
 END_NAMESPACE_YM_CLIB
 

@@ -70,16 +70,6 @@ class ClibFFInfo;
 class ClibLatchInfo;
 class ClibPatGraph;
 
-template<class T>
-class ClibObjList;
-
-using ClibCellList = ClibObjList<ClibCell>;
-using ClibCellPinList = ClibObjList<ClibCellPin>;
-using ClibCellGroupList = ClibObjList<ClibCellGroup>;
-using ClibCellClassList = ClibObjList<ClibCellClass>;
-using ClibTimingList = ClibObjList<ClibTiming>;
-using ClibLutTemplateList = ClibObjList<ClibLutTemplate>;
-
 END_NAMESPACE_YM_CLIB
 
 
@@ -254,6 +244,9 @@ enum class ClibPatType : ymuint8
   Xor   = 3
 };
 
+/// @brief 無効なID番号を表す値
+const SizeType CLIB_NULLID = -1;
+
 
 //////////////////////////////////////////////////////////////////////
 // ストリーム出力演算子
@@ -262,26 +255,34 @@ enum class ClibPatType : ymuint8
 /// @brief ClibDelayModel のストリーム出力演算子
 /// @return s を返す．
 ostream&
-operator<<(ostream& s,                  ///< [in] 出力先のストリーム
-	   ClibDelayModel delay_model); ///< [in] 遅延モデル
+operator<<(
+  ostream& s,                ///< [in] 出力先のストリーム
+  ClibDelayModel delay_model ///< [in] 遅延モデル
+);
 
 /// @brief ClibTimingSense のストリーム出力演算子
 /// @return s を返す．
 ostream&
-operator<<(ostream& s,                    ///< [in] 出力先のストリーム
-	   ClibTimingSense timing_sense); ///< [in] タイミングセンス
+operator<<(
+  ostream& s,                  ///< [in] 出力先のストリーム
+  ClibTimingSense timing_sense ///< [in] タイミングセンス
+);
 
 /// @brief ClibTimingType のストリーム出力演算子
 /// @return s を返す．
 ostream&
-operator<<(ostream& s,                  ///< [in] 出力先のストリーム
-	   ClibTimingType timing_type); ///< [in] タイミング条件
+operator<<(
+  ostream& s,                ///< [in] 出力先のストリーム
+  ClibTimingType timing_type ///< [in] タイミング条件
+);
 
 /// @brief ClibVarType のストリーム出力演算子
 /// @return s を返す．
 ostream&
-operator<<(ostream& s,            ///< [in] 出力先のストリーム
-	   ClibVarType var_type); ///< [in] 変数の型
+operator<<(
+  ostream& s,          ///< [in] 出力先のストリーム
+  ClibVarType var_type ///< [in] 変数の型
+);
 
 END_NAMESPACE_YM
 

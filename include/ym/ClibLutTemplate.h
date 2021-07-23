@@ -34,7 +34,7 @@ public:
 
   /// @brief ID番号の取得
   virtual
-  int
+  SizeType
   id() const = 0;
 
   /// @brief 名前の取得
@@ -44,27 +44,30 @@ public:
 
   /// @brief 次元数の取得
   virtual
-  int
+  SizeType
   dimension() const = 0;
 
   /// @brief 変数型の取得
   virtual
   ClibVarType
-  variable_type(int var) const ///< [in] 変数番号 ( 0 <= var < dimension() )
-  = 0;
+  variable_type(
+    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const = 0;
 
   /// @brief インデックス数の取得
   virtual
-  int
-  index_num(int var) const ///< [in] 変数番号 ( 0 <= var < dimension() )
-  = 0;
+  SizeType
+  index_num(
+    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const = 0;
 
   /// @brief デフォルトインデックス値の取得
   virtual
   double
-  index(int var,       ///< [in] 変数番号 ( 0 <= var < dimension() )
-	int pos) const ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
-  = 0;
+  index(
+    SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
+    SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  ) const = 0;
 
 
 public:
@@ -75,8 +78,9 @@ public:
   /// @brief 内容をバイナリダンプする．
   virtual
   void
-  dump(ostream& s) const ///< [in] 出力先のストリーム
-  = 0;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const = 0;
 
 };
 

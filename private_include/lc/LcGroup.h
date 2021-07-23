@@ -31,37 +31,55 @@ class LcGroup
 public:
 
   /// @brief コンストラクタ
-  LcGroup(int id); ///< [in] ID番号
+  LcGroup(
+    SizeType id ///< [in] ID番号
+  ) : mId{id},
+      mParent{nullptr}
+  {
+  }
 
   /// @brief デストラクタ
-  ~LcGroup();
+  ~LcGroup() = default;
 
 
 public:
 
   /// @brief ID番号を返す．
-  int
-  id() const;
+  SizeType
+  id() const
+  {
+    return mId;
+  }
 
   /// @brief 親の LcClass を返す．
-  LcClass*
-  parent() const;
+  LcClass&
+  parent() const
+  {
+    return *mParent;
+  }
 
   /// @brief 親のクラスに対する変換マップを返す．
   const NpnMapM&
-  map() const;
-
-  /// @brief 実体を返す．
-  ClibCellGroup*
-  cell_group() const;
+  map() const
+  {
+    return mMap;
+  }
 
   /// @brief 属しているセルのリストを返す．
   const vector<CiCell*>&
-  cell_list() const;
+  cell_list() const
+  {
+    return mCellList;
+  }
 
   /// @brief セルを追加する．
   void
-  add_cell(CiCell* cell); ///< [in] 追加するセル
+  add_cell(
+    CiCell* cell ///< [in] 追加するセル
+  )
+  {
+    mCellList.push_back(cell);
+  }
 
 
 private:
@@ -70,16 +88,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID番号
-  int mId;
+  SizeType mId;
 
   // 親の LcClass
   LcClass* mParent;
 
   // 親のクラスに対する変換マップ
   NpnMapM mMap;
-
-  // 実体のオブジェクト
-  ClibCellGroup* mCellGroup;
 
   // セルのリスト
   vector<CiCell*> mCellList;

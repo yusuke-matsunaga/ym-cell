@@ -5,12 +5,10 @@
 /// @brief CiBus のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/ClibBus.h"
-#include "ym/ClibObjList.h"
 #include "ym/ShString.h"
 
 
@@ -30,6 +28,9 @@ private:
   /// @brief コンストラクタ
   CiBus() = default;
 
+
+public:
+
   /// @brief デストラクタ
   ~CiBus() = default;
 
@@ -48,13 +49,14 @@ public:
   bus_type() const override;
 
   /// @brief ピン数の取得
-  int
+  SizeType
   pin_num() const override;
 
   /// @brief ピンの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
   const ClibCellPin&
-  pin(int pos) const override;
+  pin(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
+  ) const override;
 
 
 private:
@@ -64,9 +66,11 @@ private:
 
   /// @brief 内容を初期化する．
   void
-  init(const ShString& name,
-       const ClibBusType* bus_type,
-       const vector<ClibCellPin*>& pin_list);
+  init(
+    const ShString& name,
+    const ClibBusType* bus_type,
+    vector<const ClibCellPin*>&& pin_list
+  );
 
 
 private:
@@ -81,7 +85,7 @@ private:
   const ClibBusType* mBusType{nullptr};
 
   // ピンのリスト
-  ClibCellPinList mPinList;
+  vector<const ClibCellPin*> mPinList;
 
 };
 

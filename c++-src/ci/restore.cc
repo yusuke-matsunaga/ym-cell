@@ -3,9 +3,8 @@
 /// @brief CiCellLibrary の実装ファイル(restore()関係)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ci/CiCellLibrary.h"
 #include "ci/CiCellClass.h"
@@ -31,7 +30,9 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 void
-CiCellLibrary::restore(istream& s)
+CiCellLibrary::restore(
+  istream& s
+)
 {
   string name;
   s >> name;
@@ -105,52 +106,29 @@ CiCellLibrary::restore(istream& s)
   restore_lut_template(s);
 
   // セル情報の読み込み
-  vector<CiCell*> cell_list;
-  restore_cell(s, cell_list);
-
-  // コンパイル情報は直接 restore するので
-  // LibComp を呼ぶ必要はない．
-  set_cell_list(cell_list, false);
+  restore_cell(s);
 
   // セルグループ情報の読み込み
-  vector<CiCellGroup*> group_list;
-  restore_cell_group(s, cell_list, group_list);
-  {
-    int n = group_list.size();
-    vector<ClibCellGroup*> _group_list(n);
-    for ( int i: Range(n) ) {
-      _group_list[i] = group_list[i];
-    }
-    mGroupList.init(_group_list);
-  }
+  restore_cell_group(s);
 
   // セルクラス情報の読み込み
-  vector<CiCellClass*> class_list;
-  restore_cell_class(s, group_list, class_list);
-  {
-    int n = class_list.size();
-    vector<ClibCellClass*> _class_list(n);
-    for ( int i: Range(n) ) {
-      _class_list[i] = class_list[i];
-    }
-    mClassList.init(_class_list);
-  }
+  restore_cell_class(s);
 
   // 組み込み型の設定
-  for ( int i: { 0, 1, 2, 3 } ) {
-    int group_id;
+  for ( auto i: { 0, 1, 2, 3 } ) {
+    SizeType group_id;
     s >> group_id;
-    mLogicGroup[i] = group_list[group_id];
+    mLogicGroup[i] = mGroupList[group_id].get();
   }
-  for ( int i: { 0, 1, 2, 3 } ) {
-    int class_id;
+  for ( auto i: { 0, 1, 2, 3 } ) {
+    SizeType class_id;
     s >> class_id;
-    mFFClass[i] = class_list[class_id];
+    mFFClass[i] = mClassList[class_id].get();
   }
-  for ( int i: { 0, 1, 2, 3 } ) {
-    int class_id;
+  for ( auto i: { 0, 1, 2, 3 } ) {
+    SizeType class_id;
     s >> class_id;
-    mLatchClass[i] = class_list[class_id];
+    mLatchClass[i] = mClassList[class_id].get();
   }
 
   // パタングラフの情報の設定
@@ -160,8 +138,10 @@ CiCellLibrary::restore(istream& s)
 BEGIN_NONAMESPACE
 
 ClibVarType
-restore_1dim(istream& s,
-	     vector<double>& index_array)
+restore_1dim(
+  istream& s,
+  vector<double>& index_array
+)
 {
   ymuint8 tmp;
   s >> tmp;
@@ -169,7 +149,7 @@ restore_1dim(istream& s,
   ymuint8 n;
   s >> n;
   index_array.resize(n);
-  for ( int i: Range(n) ) {
+  for ( auto i: Range(n) ) {
     s >> index_array[i];
   }
   return var_type;
@@ -179,12 +159,14 @@ END_NONAMESPACE
 
 // @brief LUT テンプレートを読み込む．
 void
-CiCellLibrary::restore_lut_template(istream& s)
+CiCellLibrary::restore_lut_template(
+  istream& s
+)
 {
-  int lut_num;
+  SizeType lut_num;
   s >> lut_num;
   vector<CiLutTemplate*> template_list(lut_num);
-  for ( int id: Range(lut_num) ) {
+  for ( auto id: Range(lut_num) ) {
     string name;
     ymuint8 d;
     s >> name
@@ -229,32 +211,32 @@ CiCellLibrary::restore_lut_template(istream& s)
 
 BEGIN_NONAMESPACE
 
-void
-restore_tid_list(istream& s,
-		 const vector<CiTiming*>& global_timing_list,
-		 vector<CiTiming*>& timing_list)
+vector<SizeType>
+restore_tid_list(
+  istream& s
+)
 {
-  int n;
+  SizeType n;
   s >> n;
-  timing_list.resize(n);
-  for ( int i: Range(n) ) {
-    int tid;
-    s >> tid;
-    timing_list[i] = global_timing_list[tid];
+  vector<SizeType> timing_id_list(n);
+  for ( auto i: Range(n) ) {
+    s >> timing_id_list[i];
   }
+  return timing_id_list;
 }
 
 END_NONAMESPACE
 
 // @brief セルを読み込む．
 void
-CiCellLibrary::restore_cell(istream& s,
-			    vector<CiCell*>& cell_list)
+CiCellLibrary::restore_cell(
+  istream& s
+)
 {
-  int nc;
+  SizeType nc;
   s >> nc;
-  cell_list.resize(nc);
-  for ( int cell_id: Range(nc) ) {
+  mCellList.resize(nc);
+  for ( auto cell_id: Range(nc) ) {
     ymuint8 type;
     string name;
     ClibArea area;
@@ -265,10 +247,10 @@ CiCellLibrary::restore_cell(istream& s,
     ShString shname(name);
 
     // 入力ピンの読み込み
-    int ni;
+    SizeType ni;
     s >> ni;
     vector<CiInputPin*> input_list(ni);
-    for ( int i: Range(ni) ) {
+    for ( auto i: Range(ni) ) {
       string name;
       ClibCapacitance cap;
       ClibCapacitance r_cap;
@@ -281,10 +263,10 @@ CiCellLibrary::restore_cell(istream& s,
     }
 
     // 出力ピンの読み込み
-    int no;
+    SizeType no;
     s >> no;
     vector<CiOutputPin*> output_list(no);
-    for ( int i: Range(no) ) {
+    for ( auto i: Range(no) ) {
       string name;
       bool has_logic;
       Expr logic_expr;
@@ -313,10 +295,10 @@ CiCellLibrary::restore_cell(istream& s,
     }
 
     // 入出力ピンの読み込み
-    int nio;
+    SizeType nio;
     s >> nio;
     vector<CiInoutPin*> inout_list(nio);
-    for ( int i: Range(nio) ) {
+    for ( auto i: Range(nio) ) {
       string name;
       bool has_logic;
       Expr logic_expr;
@@ -352,28 +334,27 @@ CiCellLibrary::restore_cell(istream& s,
     }
 
     // 内部ピンの読み込み
-    int nit;
+    SizeType nit;
     s >> nit;
     vector<CiInternalPin*> internal_list(nit);
-    for ( int i: Range(nit) ) {
+    for ( auto i: Range(nit) ) {
       string name;
       s >> name;
       internal_list[i] = new_cell_internal(ShString(name));
     }
 
     // バスピンの読み込み
-    int nbus;
+    SizeType nbus;
     s >> nbus;
     vector<CiBus*> bus_list(nbus);
 
     // バンドルピンの読み込み
-    int nbundle;
+    SizeType nbundle;
     s >> nbundle;
     vector<CiBundle*> bundle_list(nbundle);
 
     // タイミング情報の読み込み
-    vector<CiTiming*> timing_list;
-    restore_timing(s, timing_list);
+    vector<CiTiming*> timing_list = restore_timing(s);
 
     // セル本体の読み込み
     CiCell* cell = nullptr;
@@ -465,18 +446,17 @@ CiCellLibrary::restore_cell(istream& s,
       ASSERT_NOT_REACHED;
       break;
     }
-    cell_list[cell_id] = cell;
+    mCellList[cell_id] = unique_ptr<CiCell>{cell};
+    mCellHash.emplace(cell->name(), cell);
 
     // 個別の条件ごとのタイミング情報の設定
     for ( int ipos: Range(ni + nio) ) {
       for ( int opos: Range(no + nio) ) {
-	vector<CiTiming*> timing_list1;
-	restore_tid_list(s, timing_list, timing_list1);
-	set_timing(cell, ipos, opos, ClibTimingSense::positive_unate, timing_list1);
+	auto timing_list1 = restore_tid_list(s);
+	cell->set_timing(ipos, opos, ClibTimingSense::positive_unate, timing_list1);
 
-	vector<CiTiming*> timing_list2;
-	restore_tid_list(s, timing_list, timing_list2);
-	set_timing(cell, ipos, opos, ClibTimingSense::negative_unate, timing_list2);
+	auto timing_list2 = restore_tid_list(s);
+	cell->set_timing(ipos, opos, ClibTimingSense::negative_unate, timing_list2);
       }
     }
   }
@@ -484,69 +464,74 @@ CiCellLibrary::restore_cell(istream& s,
 
 // @brief セルグループを読み込む．
 void
-CiCellLibrary::restore_cell_group(istream& s,
-				  const vector<CiCell*>& global_cell_list,
-				  vector<CiCellGroup*>& group_list)
+CiCellLibrary::restore_cell_group(
+  istream& s
+)
 {
-  int ng;
+  SizeType ng;
   s >> ng;
-  group_list.resize(ng);
-  for ( int g: Range(ng) ) {
+  mGroupList.clear();
+  mGroupList.reserve(ng);
+  for ( auto g: Range(ng) ) {
     NpnMapM npnmap;
     int pininfo;
-    int cell_num;
+    SizeType cell_num;
     npnmap.restore(s);
     s >> pininfo
       >> cell_num;
     vector<CiCell*> cell_list(cell_num);
-    for ( int i: Range(cell_num) ) {
-      int cell_id;
+    for ( auto i: Range(cell_num) ) {
+      SizeType cell_id;
       s >> cell_id;
-      cell_list[i] = global_cell_list[cell_id];
+      cell_list[i] = mCellList[cell_id].get();
     }
-    group_list[g] = new_cell_group(g, npnmap, pininfo, cell_list);
+    auto group = new_cell_group(g, npnmap, pininfo, cell_list);
+    mGroupList.push_back(unique_ptr<CiCellGroup>{group});
   }
 }
 
 // @brief セルクラスを読み込む．
 void
-CiCellLibrary::restore_cell_class(istream& s,
-				  const vector<CiCellGroup*>& global_group_list,
-				  vector<CiCellClass*>& class_list)
+CiCellLibrary::restore_cell_class(
+  istream& s
+)
 {
-  int nc;
+  SizeType nc;
   s >> nc;
-  class_list.resize(nc);
-  for ( int c: Range(nc) ) {
-    int idmap_num;
+  mClassList.clear();
+  mClassList.reserve(nc);
+  for ( auto c: Range(nc) ) {
+    SizeType idmap_num;
     s >> idmap_num;
     vector<NpnMapM> idmap_list(idmap_num);
-    for ( int i: Range(idmap_num) ) {
+    for ( auto i: Range(idmap_num) ) {
       idmap_list[i].restore(s);
     }
 
-    int group_num;
+    SizeType group_num;
     s >> group_num;
     vector<CiCellGroup*> group_list(group_num);
-    for ( int i: Range(group_num) ) {
-      int group_id;
+    for ( auto i: Range(group_num) ) {
+      SizeType group_id;
       s >> group_id;
-      group_list[i] = global_group_list[group_id];
+      group_list[i] = mGroupList[group_id].get();
     }
-    class_list[c] = new_cell_class(c, idmap_list, group_list);
+    auto cclass = new_cell_class(c, idmap_list, group_list);
+    mClassList.push_back(unique_ptr<CiCellClass>{cclass});
   }
 }
 
 // @brief タイミング情報を読み込む．
-void
-CiCellLibrary::restore_timing(istream& s,
-			      vector<CiTiming*>& timing_list)
+vector<CiTiming*>
+CiCellLibrary::restore_timing(
+  istream& s
+)
 {
-  int nt;
+  SizeType nt;
   s >> nt;
-  timing_list.clear();
+  vector<CiTiming*> timing_list;
   timing_list.reserve(nt);
-  for ( int tid: Range(nt) ) {
+  for ( auto tid: Range(nt) ) {
     ymuint8 ttype;
     ymuint8 tmp;
     Expr cond;
@@ -581,7 +566,7 @@ CiCellLibrary::restore_timing(istream& s,
 
     case 1:
       {
-#if 0
+#if 0 // 不明
 	ClibTime i_r;
 	ClibTime i_f;
 	ClibTime s_r;
@@ -600,10 +585,10 @@ CiCellLibrary::restore_timing(istream& s,
 
     case 2:
       {
-	ClibLut* cell_rise = restore_lut(s);
-	ClibLut* cell_fall = restore_lut(s);
-	ClibLut* rise_transition = restore_lut(s);
-	ClibLut* fall_transition = restore_lut(s);
+	CiLut* cell_rise = restore_lut(s);
+	CiLut* cell_fall = restore_lut(s);
+	CiLut* rise_transition = restore_lut(s);
+	CiLut* fall_transition = restore_lut(s);
 	timing = new_timing_lut1(timing_type,
 				 cond,
 				 cell_rise,
@@ -615,10 +600,10 @@ CiCellLibrary::restore_timing(istream& s,
 
     case 3:
       {
-	ClibLut* rise_transition = restore_lut(s);
-	ClibLut* fall_transition = restore_lut(s);
-	ClibLut* rise_propagation = restore_lut(s);
-	ClibLut* fall_propagation = restore_lut(s);
+	CiLut* rise_transition = restore_lut(s);
+	CiLut* fall_transition = restore_lut(s);
+	CiLut* rise_propagation = restore_lut(s);
+	CiLut* fall_propagation = restore_lut(s);
 	timing = new_timing_lut1(timing_type,
 				 cond,
 				 rise_transition,
@@ -634,35 +619,39 @@ CiCellLibrary::restore_timing(istream& s,
     }
     timing_list.push_back(timing);
   }
+
+  return timing_list;
 }
 
 // @brief LUT を読み込む．
-ClibLut*
-CiCellLibrary::restore_lut(istream& s)
+CiLut*
+CiCellLibrary::restore_lut(
+  istream& s
+)
 {
-  int templ_id;
+  SizeType templ_id;
   s >> templ_id;
-  if ( templ_id == -1 ) {
+  if ( templ_id == CLIB_NULLID ) {
     return nullptr;
   }
 
-  const ClibLutTemplate& templ = mLutTemplateList[templ_id];
+  const ClibLutTemplate& templ = lu_table_template(templ_id);
 
-  int d = templ.dimension();
+  SizeType d = templ.dimension();
   switch ( d ) {
   case 1:
     {
       ymuint8 n;
       s >> n;
       vector<double> index_array(n);
-      for ( int i: Range(n) ) {
+      for ( auto i: Range(n) ) {
 	double val;
 	s >> val;
 	index_array[i] = val;
       }
 
       vector<double> value_array(n);
-      for ( int i: Range(n) ) {
+      for ( auto i: Range(n) ) {
 	double val;
 	s >> val;
 	value_array[i] = val;
@@ -677,7 +666,7 @@ CiCellLibrary::restore_lut(istream& s)
       ymuint8 n1;
       s >> n1;
       vector<double> index_array1(n1);
-      for ( int i: Range(n1) ) {
+      for ( auto i: Range(n1) ) {
 	double val;
 	s >> val;
 	index_array1[i] = val;
@@ -686,15 +675,15 @@ CiCellLibrary::restore_lut(istream& s)
       ymuint8 n2;
       s >> n2;
       vector<double> index_array2(n2);
-      for ( int i: Range(n2) ) {
+      for ( auto i: Range(n2) ) {
 	double val;
 	s >> val;
 	index_array2[i] = val;
       }
 
-      int n = n1 * n2;
+      SizeType n = n1 * n2;
       vector<double> value_array(n);
-      for ( int i: Range(n) ) {
+      for ( auto i: Range(n) ) {
 	double val;
 	s >> val;
 	value_array[i] = val;
@@ -710,7 +699,7 @@ CiCellLibrary::restore_lut(istream& s)
       ymuint8 n1;
       s >> n1;
       vector<double> index_array1(n1);
-      for ( int i: Range(n1) ) {
+      for ( auto i: Range(n1) ) {
 	double val;
 	s >> val;
 	index_array1[i] = val;
@@ -719,7 +708,7 @@ CiCellLibrary::restore_lut(istream& s)
       ymuint8 n2;
       s	>> n2;
       vector<double> index_array2(n2);
-      for ( int i: Range(n2) ) {
+      for ( auto i: Range(n2) ) {
 	double val;
 	s >> val;
 	index_array2[i] = val;
@@ -728,7 +717,7 @@ CiCellLibrary::restore_lut(istream& s)
       ymuint8 n3;
       s >> n3;
       vector<double> index_array3(n3);
-      for ( int i: Range(n3) ) {
+      for ( auto i: Range(n3) ) {
 	double val;
 	s >> val;
 	index_array3[i] = val;
@@ -736,7 +725,7 @@ CiCellLibrary::restore_lut(istream& s)
 
       int n = n1 * n2 * n3;
       vector<double> value_array(n);
-      for ( int i: Range(n) ) {
+      for ( auto i: Range(n) ) {
 	double val;
 	s >> val;
 	value_array[i] = val;
@@ -762,17 +751,16 @@ CiCellLibrary::restore_lut(istream& s)
 //////////////////////////////////////////////////////////////////////
 
 // @brief データを読み込んでセットする．
-// @param[in] bis 入力元のストリーム
-// @retval true 読み込みが成功した．
-// @retval false 読み込みが失敗した．
 bool
-CiPatMgr::restore(istream& bis)
+CiPatMgr::restore(
+  istream& bis
+)
 {
   // ノードと枝の情報を読み込む．
-  int nn;
+  SizeType nn;
   bis >> nn;
   set_node_num(nn);
-  for ( int i: Range(mNodeNum) ) {
+  for ( auto i: Range(node_num()) ) {
     bis >> mNodeTypeArray[i]
 	>> mEdgeArray[i * 2]
 	>> mEdgeArray[i * 2 + 1];
@@ -782,10 +770,10 @@ CiPatMgr::restore(istream& bis)
   }
 
   // パタングラフの情報を読み込む．
-  int np;
+  SizeType np;
   bis >> np;
   set_pat_num(np);
-  for ( int id: Range(mPatNum) ) {
+  for ( auto id: Range(pat_num()) ) {
     mPatArray[id].restore(bis);
   }
 
@@ -798,22 +786,19 @@ CiPatMgr::restore(istream& bis)
 //////////////////////////////////////////////////////////////////////
 
 // @brief バイナリファイルを読み込む．
-// @param[in] bis 入力元のストリーム
 void
-CiPatGraph::restore(istream& bis)
+CiPatGraph::restore(
+  istream& bis
+)
 {
-  delete [] mEdgeList;
+  SizeType ne;
 
   bis >> mRepId
       >> mInputNum
-      >> mEdgeNum;
-  if ( mEdgeNum > 0 ) {
-    mEdgeList = new int[mEdgeNum];
-  }
-  else {
-    mEdgeList = nullptr;
-  }
-  for ( int i: Range(mEdgeNum) ) {
+      >> ne;
+  mEdgeList.clear();
+  mEdgeList.resize(ne);
+  for ( auto i: Range(ne) ) {
     bis >> mEdgeList[i];
   }
 }

@@ -37,7 +37,7 @@ public:
   ///
   /// ClibCellLibrary::group(id) で返されるオブジェクトの id() は id となる．
   virtual
-  int
+  SizeType
   id() const = 0;
 
 
@@ -88,7 +88,7 @@ public:
 
   /// @brief データ入力のピン番号を返す．
   virtual
-  int
+  SizeType
   data_pos() const = 0;
 
   /// @brief クロック入力のタイプを返す．
@@ -101,7 +101,7 @@ public:
 
   /// @brief クロック入力のピン番号を返す．
   virtual
-  int
+  SizeType
   clock_pos() const = 0;
 
   /// @brief イネーブル入力を持つとき true を返す．
@@ -119,7 +119,7 @@ public:
 
   /// @brief イネーブル入力のピン番号を返す．
   virtual
-  int
+  SizeType
   enable_pos() const = 0;
 
   /// @brief クリア入力を持つタイプの時に true を返す．
@@ -139,7 +139,7 @@ public:
   ///
   /// クリア入力がない場合の値は不定
   virtual
-  int
+  SizeType
   clear_pos() const = 0;
 
   /// @brief プリセット入力を持つタイプの時に true を返す．
@@ -159,17 +159,17 @@ public:
   ///
   /// プリセット入力がない場合の値は不定
   virtual
-  int
+  SizeType
   preset_pos() const = 0;
 
   /// @brief 肯定出力のピン番号を返す．
   virtual
-  int
+  SizeType
   q_pos() const = 0;
 
   /// @brief 否定出力のピン番号を返す．
   virtual
-  int
+  SizeType
   xq_pos() const = 0;
 
 
@@ -178,10 +178,17 @@ public:
   // このグループに属しているセルの情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セルのリストを返す．
+  /// @brief セル数を返す．
   virtual
-  const ClibCellList&
-  cell_list() const = 0;
+  SizeType
+  cell_num() const = 0;
+
+  /// @brief セルを返す．
+  virtual
+  const ClibCell&
+  cell(
+    SizeType pos ///< [in] インデックス ( 0 <= pos < cell_num() )
+  ) const = 0;
 
 
 public:
@@ -190,10 +197,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   virtual
   void
-  dump(ostream& s) const = 0;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const = 0;
 
 };
 

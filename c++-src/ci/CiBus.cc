@@ -3,9 +3,8 @@
 /// @brief CiBus の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ci/CiBus.h"
 
@@ -31,29 +30,33 @@ CiBus::bus_type() const
 }
 
 // @brief ピン数の取得
-int
+SizeType
 CiBus::pin_num() const
 {
-  return mPinList.num();
+  return mPinList.size();
 }
 
 // @brief ピンの取得
-// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
 const ClibCellPin&
-CiBus::pin(int pos) const
+CiBus::pin(
+  SizeType pos
+) const
 {
-  return mPinList[pos];
+  ASSERT_COND( 0 <= pos && pos < pin_num() );
+  return *mPinList[pos];
 }
 
 // @brief 内容を初期化する．
 void
-CiBus::init(const ShString& name,
-	    const ClibBusType* bus_type,
-	    const vector<ClibCellPin*>& pin_list)
+CiBus::init(
+  const ShString& name,
+  const ClibBusType* bus_type,
+  vector<const ClibCellPin*>&& pin_list
+)
 {
   mName = name;
   mBusType = bus_type;
-  mPinList.init(pin_list);
+  mPinList.swap(pin_list);
 }
 
 END_NAMESPACE_YM_CLIB
