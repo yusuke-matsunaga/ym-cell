@@ -13,7 +13,7 @@
 #include "ci/CiTiming.h"
 #include "ci/CiLutTemplate.h"
 
-#include "ym/ClibCellPin.h"
+#include "ym/ClibPin.h"
 #include "ym/ClibTiming.h"
 #include "ym/ClibArea.h"
 #include "ym/ClibResistance.h"

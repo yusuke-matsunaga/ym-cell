@@ -30,7 +30,7 @@ CiBundle::pin_num() const
 }
 
 // @brief ピンの取得
-const ClibCellPin&
+const ClibPin&
 CiBundle::pin(
   SizeType pos
 ) const
@@ -43,7 +43,7 @@ CiBundle::pin(
 void
 CiBundle::init(
   const ShString& name,
-  vector<const ClibCellPin*>&& pin_list
+  vector<const ClibPin*>&& pin_list
 )
 {
   mName = name;

@@ -121,11 +121,15 @@ public:
 
   /// @brief バイナリダンプを行う．
   void
-  dump(ostream& s) const; ///< [in] 出力先のストリーム
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const;
 
   /// @brief バイナリファイルを読み込む．
   void
-  restore(istream& s); ///< [in] 入力元のストリーム
+  restore(
+    istream& s ///< [in] 入力元のストリーム
+  );
 
 
 private:

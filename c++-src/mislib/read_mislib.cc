@@ -191,7 +191,6 @@ new_gate(
     TvFunc p_func = tv_function.cofactor(var, false);
     TvFunc n_func = tv_function.cofactor(var, true);
     ClibTimingSense sense_real = ClibTimingSense::non_unate;
-    bool redundant = false;
     if ( ~p_func && n_func ) {
       if ( ~n_func && p_func ) {
 	sense_real = ClibTimingSense::non_unate;
@@ -200,29 +199,25 @@ new_gate(
 	sense_real = ClibTimingSense::negative_unate;
       }
     }
-    else {
-      if ( ~n_func && p_func ) {
-	sense_real = ClibTimingSense::positive_unate;
-      }
-      else {
-	// つまり p_func == n_func ということ．
-	// つまりこの変数は出力に影響しない．
-	ostringstream buf;
-	buf << "The output function does not depend on the input pin, "
-	    << pt_pin->name()->str() << ".";
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			pt_pin->loc(),
-			MsgType::Warning,
-			"MISLIB_PARSER",
-			buf.str());
-	redundant = true;
-      }
+    else if ( ~n_func && p_func ) {
+      sense_real = ClibTimingSense::positive_unate;
     }
-
-    if ( redundant ) {
+    else {
+      // つまり p_func == n_func ということ．
+      // つまりこの変数は出力に影響しない．
+      ostringstream buf;
+      buf << "The output function does not depend on the input pin, "
+	  << pt_pin->name()->str() << ".";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      pt_pin->loc(),
+		      MsgType::Warning,
+		      "MISLIB_PARSER",
+		      buf.str());
+      // タイミング情報は設定しない．
       continue;
     }
 
+    // 実際の極性情報と記述が合っているか確かめる．
     ClibTimingSense sense = ClibTimingSense::non_unate;
     switch ( pt_pin->phase()->type() ) {
     case MislibPhase::Noninv:  sense = ClibTimingSense::positive_unate; break;
@@ -259,11 +254,11 @@ END_NAMESPACE_YM_MISLIB
 BEGIN_NAMESPACE_YM_CLIB
 
 // @brief mislib 形式のファイルを読み込んでライブラリに設定する．
-// @param[in] filename ファイル名
-// @param[in] library 設定対象のライブラリ
 // @return 読み込みが成功したら true を返す．
 bool
-CiCellLibrary::read_mislib(const string& filename)
+CiCellLibrary::read_mislib(
+  const string& filename ///< [in] filename ファイル名
+)
 {
   using namespace nsMislib;
 

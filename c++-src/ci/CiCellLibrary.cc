@@ -14,7 +14,7 @@
 #include "ci/CiFFCell.h"
 #include "ci/CiLatchCell.h"
 #include "ci/CiFsmCell.h"
-#include "ci/CiCellPin.h"
+#include "ci/CiPin.h"
 #include "ci/CiTiming.h"
 #include "ci/CiLutTemplate.h"
 #include "ci/CiLut.h"
@@ -512,8 +512,9 @@ CiCellLibrary::new_cell_output(
 )
 {
   auto pin = new CiOutputPin(name,
-			     has_logic, logic_expr,
-			     tristate_expr,
+#if 0
+			     has_logic, logic_expr, tristate_expr,
+#endif
 			     max_fanout, min_fanout,
 			     max_capacitance, min_capacitance,
 			     max_transition, min_transition);
@@ -553,8 +554,9 @@ CiCellLibrary::new_cell_inout(
 )
 {
   auto pin =  new CiInoutPin(name,
-			     has_logic, logic_expr,
-			     tristate_expr,
+#if 0
+			     has_logic, logic_expr, tristate_expr,
+#endif
 			     capacitance,
 			     rise_capacitance, fall_capacitance,
 			     max_fanout, min_fanout,
@@ -979,22 +981,64 @@ CiCellLibrary::new_cell_class(
 // @brief ピンを登録する．
 void
 CiCellLibrary::reg_pin(
-  CiCellPin* pin
+  const CiCell* cell,
+  ShString name,
+  SizeType id
 )
 {
-  mPinHash.add(pin);
+  mPinHash.add(cell->id(), name, id);
 }
 
 // @brief ピン名からピン番号を取り出す．
-// @param[in] cell セル
-// @param[in] name ピン名
-int
+SizeType
 CiCellLibrary::get_pin_id(
   const CiCell* cell,
   ShString name
 )
 {
-  return mPinHash.get(cell, name);
+  return mPinHash.get(cell->id(), name);
+}
+
+// @brief バスを登録する．
+void
+CiCellLibrary::reg_bus(
+  const CiCell* cell,
+  ShString name,
+  SizeType id
+)
+{
+  mBusHash.add(cell->id(), name, id);
+}
+
+// @brief バス名からバス番号を取り出す．
+SizeType
+CiCellLibrary::get_bus_id(
+  const CiCell* cell,
+  ShString name
+)
+{
+  return mBusHash.get(cell->id(), name);
+}
+
+// @brief バンドルを登録する．
+void
+CiCellLibrary::reg_bundle(
+  const CiCell* cell,
+  ShString name,
+  SizeType id
+)
+{
+  mBundleHash.add(cell->id(), name, id);
+}
+
+// @brief バンドル名からバンドル番号を取り出す．
+SizeType
+CiCellLibrary::get_bundle_id(
+  const CiCell* cell,
+  ShString name
+)
+{
+  return mBundleHash.get(cell->id(), name);
 }
 
 END_NAMESPACE_YM_CLIB

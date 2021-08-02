@@ -16,7 +16,7 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 class CiCellLibrary;
-class CiCellPin;
+class CiPin;
 class CiInputPin;
 class CiOutputPin;
 class CiInoutPin;
@@ -27,7 +27,7 @@ class CiTiming;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiCell CiCell.h "CiCell.h"
-/// @brief Clib の実装クラス
+/// @brief ClibCell の実装クラス
 //////////////////////////////////////////////////////////////////////
 class CiCell :
   public ClibCell
@@ -89,7 +89,7 @@ public:
 
   /// @brief ピンの取得
   /// @return ピン情報を返す．
-  const ClibCellPin&
+  const ClibPin&
   pin(
     SizeType pin_id ///< [in] ピン番号 ( 0 <= pin_id < pin_num() )
   ) const override;
@@ -106,11 +106,20 @@ public:
   /// @brief 名前からピン番号の取得
   /// @return name という名前のピン番号を返す．
   ///
-  /// なければ -1 を返す．
+  /// なければ CLIB_NULLID を返す．
   SizeType
   pin_id(
     const string& name ///< [in] ピン名
   ) const override;
+
+  /// @brief 名前からピン番号の取得
+  /// @return name という名前のピン番号を返す．
+  ///
+  /// なければ CLIB_NULLID を返す．
+  SizeType
+  pin_id(
+    const ShString& name ///< [in] ピン名
+  ) const;
 
   /// @brief 入力ピン数の取得
   SizeType
@@ -137,7 +146,7 @@ public:
   /// @brief 入力ピンの取得
   ///
   /// id >= input_num() の場合には入出力ピンが返される．
-  const ClibCellPin&
+  const ClibPin&
   input(
     SizeType id ///< [in] 入力番号 ( 0 <= id < input_num2() )
   ) const override;
@@ -151,19 +160,19 @@ public:
   /// @brief 出力ピンの取得
   ///
   /// id >= output_num() の場合には入出力ピンが返される．
-  const ClibCellPin&
+  const ClibPin&
   output(
     SizeType id ///< [in] 出力番号 ( 0 <= id < output_num2() )
   ) const override;
 
   /// @brief 入出力ピンの取得
-  const ClibCellPin&
+  const ClibPin&
   inout(
     SizeType id ///< [in] 番号 ( 0 <= id < inout_num() )
   ) const override;
 
   /// @brief 内部ピンの取得
-  const ClibCellPin&
+  const ClibPin&
   internal(
     SizeType id ///< [in] 内部ピン番号 ( 0 <= id < internal_num() )
   ) const override;
@@ -235,10 +244,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 機能情報の取得
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 属している ClibCellGroup を返す．
-  const ClibCellGroup&
-  cell_group() const override;
 
   /// @brief 組み合わせ論理セルの時に true を返す．
   bool
@@ -377,15 +382,6 @@ public:
   // 設定用の関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セルグループを設定する．
-  void
-  set_group(
-    const ClibCellGroup* group
-  )
-  {
-    mCellGroup = group;
-  }
-
   /// @brief タイミング情報をセットする．
   void
   set_timing(
@@ -398,29 +394,11 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 名前からピン番号の取得
-  /// @return name という名前のピン番号を返す．
-  ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
-  pin_id(
-    const ShString& name ///< [in] ピン名
-  ) const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
   // セルライブラリ
   CiCellLibrary* mLibrary{nullptr};
-
-  // セルグループ
-  const ClibCellGroup* mCellGroup{nullptr};
 
   // ID番号
   SizeType mId{CLIB_NULLID};
@@ -441,18 +419,18 @@ private:
   SizeType mInOutNum{0};
 
   // ピンのリスト
-  vector<unique_ptr<CiCellPin>> mPinList;
+  vector<unique_ptr<CiPin>> mPinList;
 
   // 入力ピン+入出力ピンのリスト
   // サイズ mInputNum + mInOutNum
-  vector<const ClibCellPin*> mInputList;
+  vector<const ClibPin*> mInputList;
 
   // 出力ピン+入出力ピンのリスト
   // サイズ mOutputNum + mInOutNum
-  vector<const ClibCellPin*> mOutputList;
+  vector<const ClibPin*> mOutputList;
 
   // 内部ピンのリスト
-  vector<const ClibCellPin*> mInternalList;
+  vector<const ClibPin*> mInternalList;
 
   // バスピンのリスト
   vector<unique_ptr<CiBus>> mBusList;

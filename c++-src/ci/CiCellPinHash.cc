@@ -49,7 +49,7 @@ CiCellPinHash::~CiCellPinHash()
 
 // @brief ピンを追加する．
 void
-CiCellPinHash::add(
+CiCellPinHash::add(o
   CiCellPin* pin
 )
 {

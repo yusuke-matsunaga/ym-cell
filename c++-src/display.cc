@@ -10,7 +10,7 @@
 #include "ym/ClibCell.h"
 #include "ym/ClibLut.h"
 #include "ym/ClibLutTemplate.h"
-#include "ym/ClibCellPin.h"
+#include "ym/ClibPin.h"
 #include "ym/ClibTiming.h"
 #include "ym/ClibCellClass.h"
 #include "ym/ClibCellGroup.h"
@@ -634,7 +634,7 @@ display_library(
     // ピンの情報
     for ( auto i: Range(cell.pin_num()) ) {
       auto& pin = cell.pin(i);
-      s << "  Pin#" << pin.pin_id() << "[ " << pin.name() << " ]: ";
+      s << "  Pin#" << i << "[ " << pin.name() << " ]: ";
       if ( pin.is_input() ) {
 	// 入力ピン
 	s << "Input#" << pin.input_id() << endl

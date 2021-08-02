@@ -65,6 +65,10 @@ public:
   bool
   is_ff() const override;
 
+  /// @brief FFセルの場合にFFのピン情報を得る．
+  ClibFFInfo
+  ff_info() const override;
+
   /// @brief FFセルの場合に次状態関数を表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
   Expr

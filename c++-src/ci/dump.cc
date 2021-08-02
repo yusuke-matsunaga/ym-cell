@@ -14,7 +14,9 @@
 #include "ci/CiFFCell.h"
 #include "ci/CiLatchCell.h"
 #include "ci/CiFsmCell.h"
-#include "ci/CiCellPin.h"
+#include "ci/CiPin.h"
+#include "ci/CiBus.h"
+#include "ci/CiBundle.h"
 #include "ci/CiTiming.h"
 #include "ci/CiLutTemplate.h"
 #include "ci/CiLut.h"
@@ -168,9 +170,6 @@ CiCell::dump(
     << name()
     << area();
 
-  // input_list(), output_list() は入出力ピンを含むので
-  // そのままでは使えない．
-
   // 入力ピンのダンプ
   s << input_num();
   for ( auto i: Range(input_num()) ) {
@@ -197,14 +196,33 @@ CiCell::dump(
 
   // バスのダンプ
   s << bus_num();
+  for ( auto i: Range(bus_num()) ) {
+    bus(i).dump(s);
+  }
 
   // バンドルのダンプ
   s << bundle_num();
+  for ( auto i: Range(bundle_num()) ) {
+    bundle(i).dump(s);
+  }
 
   // タイミング情報のダンプ
   s << timing_num();
   for ( auto i: Range(timing_num()) ) {
     timing(i).dump(s);
+  }
+
+  // 個別の条件ごとのタイミング情報のダンプ
+  for ( auto ipos: Range(input_num2()) ) {
+    for ( auto opos: Range(output_num2()) ) {
+      for ( auto sense: { ClibTimingSense::positive_unate, ClibTimingSense::negative_unate } ) {
+	auto& timing_id_list1 = timing_id_list(ipos, opos, sense);
+	s << timing_id_list1.size();
+	for ( auto id: timing_id_list1 ) {
+	  s << id;
+	}
+      }
+    }
   }
 
   // セルの付加的な情報のダンプ
@@ -226,19 +244,6 @@ CiCell::dump(
       << static_cast<ymuint8>(clear_preset_var1())
       << static_cast<ymuint8>(clear_preset_var2());
   }
-
-  // 個別の条件ごとのタイミング情報のダンプ
-  for ( auto ipos: Range(input_num2()) ) {
-    for ( auto opos: Range(output_num2()) ) {
-      for ( auto sense: { ClibTimingSense::positive_unate, ClibTimingSense::negative_unate } ) {
-	auto& timing_id_list1 = timing_id_list(ipos, opos, sense);
-	s << timing_id_list1.size();
-	for ( auto id: timing_id_list1 ) {
-	  s << id;
-	}
-      }
-    }
-  }
 }
 
 
@@ -248,11 +253,11 @@ CiCell::dump(
 
 // @brief dump 用の共通情報を出力する．
 void
-CiCellPin::dump_common(
+CiPin::dump_common(
   ostream& s
 ) const
 {
-  s << name();
+  s << _name();
 }
 
 
@@ -286,10 +291,7 @@ CiOutputPin::dump(
 {
   dump_common(s);
 
-  s << has_function()
-    << function()
-    << three_state()
-    << max_fanout()
+  s << max_fanout()
     << min_fanout()
     << max_capacitance()
     << min_capacitance()
@@ -310,10 +312,7 @@ CiInoutPin::dump(
 {
   dump_common(s);
 
-  s << has_function()
-    << function()
-    << three_state()
-    << capacitance()
+  s << capacitance()
     << rise_capacitance()
     << fall_capacitance()
     << max_fanout()
@@ -338,6 +337,42 @@ CiInternalPin::dump(
   dump_common(s);
 
   s << internal_id();
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiBus
+//////////////////////////////////////////////////////////////////////
+
+/// @brief 内容をバイナリダンプする．
+void
+CiBus::dump(
+  ostream& s ///< [in] 出力先のストリーム
+) const
+{
+  s << mName;
+  s << pin_num();
+  for ( auto pin: mPinList ) {
+    s << pin->name();
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiBundle
+//////////////////////////////////////////////////////////////////////
+
+/// @brief 内容をバイナリダンプする．
+void
+CiBundle::dump(
+  ostream& s ///< [in] 出力先のストリーム
+) const
+{
+  s << mName;
+  s << pin_num();
+  for ( auto pin: mPinList ) {
+    s << pin->name();
+  }
 }
 
 

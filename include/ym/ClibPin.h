@@ -1,8 +1,8 @@
-﻿#ifndef YM_CLIBCELLPIN_H
-#define YM_CLIBCELLPIN_H
+﻿#ifndef YM_CLIBPIN_H
+#define YM_CLIBPIN_H
 
-/// @file ym/ClibCellPin.h
-/// @brief ClibCellPin のヘッダファイル
+/// @file ym/ClibPin.h
+/// @brief ClibPin のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
@@ -16,27 +16,22 @@ BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @ingroup ClibGroup
-/// @class ClibCellPin ClibCellPin.h "ym/ClibCellPin.h"
+/// @class ClibPin ClibPin.h "ym/ClibPin.h"
 /// @brief セルのピンを表すクラス
 //////////////////////////////////////////////////////////////////////
-class ClibCellPin
+class ClibPin
 {
 protected:
 
   /// @brief デストラクタ
   virtual
-  ~ClibCellPin() = default;
+  ~ClibPin() = default;
 
 
 public:
   //////////////////////////////////////////////////////////////////////
   // 共通属性
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief ピン番号を返す．
-  virtual
-  SizeType
-  pin_id() const = 0;
 
   /// @brief ピン名を返す．
   virtual
@@ -116,26 +111,6 @@ public:
   virtual
   SizeType
   output_id() const = 0;
-
-  /// @brief 論理式を持っているときに true を返す．
-  virtual
-  bool
-  has_function() const = 0;
-
-  /// @brief 機能を表す論理式を返す．
-  virtual
-  Expr
-  function() const = 0;
-
-  /// @brief three_state 属性を持っているときに true を返す．
-  virtual
-  bool
-  has_three_state() const = 0;
-
-  /// @brief three_state 論理式を返す．
-  virtual
-  Expr
-  three_state() const = 0;
 
   /// @brief 最大ファンアウト容量を返す．
   virtual

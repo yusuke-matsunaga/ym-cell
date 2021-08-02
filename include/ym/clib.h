@@ -49,7 +49,7 @@ class ClibResistance;
 
 class ClibCellLibrary;
 class ClibCell;
-class ClibCellPin;
+class ClibPin;
 class ClibBusType;
 class ClibBus;
 class ClibBundle;
@@ -82,7 +82,7 @@ using nsClib::ClibResistance;
 
 using nsClib::ClibCellLibrary;
 using nsClib::ClibCell;
-using nsClib::ClibCellPin;
+using nsClib::ClibPin;
 using nsClib::ClibBusType;
 using nsClib::ClibBus;
 using nsClib::ClibBundle;

@@ -8,7 +8,7 @@
 
 #include "ci/CiCell.h"
 #include "ci/CiCellLibrary.h"
-#include "ci/CiCellPin.h"
+#include "ci/CiPin.h"
 #include "ci/CiTiming.h"
 #include "ci/CiBus.h"
 #include "ci/CiBundle.h"
@@ -43,84 +43,87 @@ CiCell::CiCell(
     mOutputNum{output_list.size()},
     mInOutNum{inout_list.size()}
 {
+  mPinList.reserve(mInputNum + mOutputNum + mInOutNum + internal_list.size());
+
+  // 入力ピン
+  mInputList.reserve(mInputNum + mInOutNum);
+  for ( auto pin: input_list ) {
+    auto pin_id = mPinList.size();
+    auto iid = mInputList.size();
+    pin->mInputId = iid;
+
+    mPinList.push_back(unique_ptr<CiPin>{pin});
+    mInputList.push_back(pin);
+    mLibrary->reg_pin(this, pin->_name(), pin_id);
+  }
+
+  // 出力ピン
+  mOutputList.reserve(mOutputNum + mInOutNum);
+  for ( auto pin: output_list ) {
+    auto pin_id = mPinList.size();
+    auto oid = mOutputList.size();
+    pin->mOutputId = oid;
+
+    mPinList.push_back(unique_ptr<CiPin>{pin});
+    mOutputList.push_back(pin);
+    mLibrary->reg_pin(this, pin->_name(), pin_id);
+  }
+
+  // 入出力ピン
+  for ( auto pin: inout_list ) {
+    auto pin_id = mPinList.size();
+    auto iid = mInputList.size();
+    auto oid = mOutputList.size();
+    pin->mInputId = iid;
+    pin->mOutputId = oid;
+
+    mPinList.push_back(unique_ptr<CiPin>{pin});
+    mInputList.push_back(pin);
+    mOutputList.push_back(pin);
+    mLibrary->reg_pin(this, pin->_name(), pin_id);
+  }
+
+  // 内部ピン
+  mInternalList.reserve(internal_list.size());
+  for ( auto pin: internal_list ) {
+    auto pin_id = mPinList.size();
+    auto id = mInternalList.size();
+    pin->mInternalId = id;
+
+    mPinList.push_back(unique_ptr<CiPin>{pin});
+    mInternalList.push_back(pin);
+    mLibrary->reg_pin(this, pin->_name(), pin_id);
+  }
+
+  // bus
+  mBusList.reserve(bus_list.size());
+  for ( auto bus: bus_list ) {
+    auto id = mBusList.size();
+    mBusList.push_back(unique_ptr<CiBus>{bus});
+    mLibrary->reg_bus(this, bus->_name(), id);
+  }
+
+  // bundle
+  mBundleList.reserve(bundle_list.size());
+  for ( auto bundle: bundle_list ) {
+    auto id = mBusList.size();
+    mBundleList.push_back(unique_ptr<CiBundle>{bundle});
+    mLibrary->reg_bundle(this, bundle->_name(), id);
+  }
+
+  // タイミングリスト
+  mTimingList.reserve(timing_list.size());
+  for ( auto timing: timing_list ) {
+    auto id = mTimingList.size();
+    timing->mId = id;
+    mTimingList.push_back(unique_ptr<CiTiming>{timing});
+  }
+
   auto ni2 = mInputNum + mInOutNum;
   auto no2 = mOutputNum + mInOutNum;
   if ( ni2 > 0 && no2 > 0 ) {
     auto n = ni2 * no2 * 2;
     mTimingMap.resize(n);
-  }
-
-  // バス，バンドル関係は未完
-
-  mPinList.reserve(mInputNum + mOutputNum + mInOutNum + internal_list.size());
-  mInputList.reserve(mInputNum + mInOutNum);
-  mOutputList.reserve(mOutputNum + mInOutNum);
-  mInternalList.reserve(internal_list.size());
-
-  SizeType pin_id = 0;
-  // 入力ピン
-  for ( auto iid: Range(mInputNum) ) {
-    auto pin = input_list[iid];
-    pin->mCell = this;
-    pin->mId = pin_id;
-    ++ pin_id;
-    pin->mInputId = iid;
-
-    mPinList.push_back(unique_ptr<CiCellPin>{pin});
-    mInputList.push_back(pin);
-    mLibrary->reg_pin(pin);
-  }
-
-  // 出力ピン
-  for ( auto oid: Range(mOutputNum) ) {
-    auto pin = output_list[oid];
-    pin->mCell = this;
-    pin->mId = pin_id;
-    ++ pin_id;
-    pin->mOutputId = oid;
-
-    mPinList.push_back(unique_ptr<CiCellPin>{pin});
-    mOutputList.push_back(pin);
-    mLibrary->reg_pin(pin);
-  }
-
-  // 入出力ピン
-  for ( auto id: Range(mInOutNum) ) {
-    auto pin = inout_list[id];
-
-    pin->mCell = this;
-    pin->mId = pin_id;
-    ++ pin_id;
-    pin->mInputId = mInputNum + id;
-    pin->mOutputId = mOutputNum + id;
-
-    mPinList.push_back(unique_ptr<CiCellPin>{pin});
-    mInputList.push_back(pin);
-    mOutputList.push_back(pin);
-    mLibrary->reg_pin(pin);
-  }
-
-  // 内部ピン
-  for ( auto id: Range(internal_list.size()) ) {
-    auto pin = internal_list[id];
-
-    pin->mCell = this;
-    pin->mId = pin_id;
-    ++ pin_id;
-    pin->mInternalId = id;
-
-    mPinList.push_back(unique_ptr<CiCellPin>{pin});
-    mInternalList.push_back(pin);
-    mLibrary->reg_pin(pin);
-  }
-
-  // タイミングリスト
-  auto nt = timing_list.size();
-  mTimingList.reserve(nt);
-  for ( auto id: Range(nt) ) {
-    auto timing = timing_list[id];
-    timing->mId = id;
-    mTimingList.push_back(unique_ptr<CiTiming>{timing});
   }
 }
 
@@ -165,7 +168,7 @@ CiCell::pin_num() const
 // @brief ピンの取得
 // @param[in] pin_id ピン番号 ( 0 <= pin_id < pin_num() )
 // @return ピン情報を返す．
-const ClibCellPin&
+const ClibPin&
 CiCell::pin(
   SizeType pin_id
 ) const
@@ -237,7 +240,7 @@ CiCell::input_num2() const
 }
 
 // @brief 入力ピンの取得
-const ClibCellPin&
+const ClibPin&
 CiCell::input(
   SizeType pos
 ) const
@@ -254,7 +257,7 @@ CiCell::output_num2() const
 }
 
 // @brief 出力ピンの取得
-const ClibCellPin&
+const ClibPin&
 CiCell::output(
   SizeType pos
 ) const
@@ -264,7 +267,7 @@ CiCell::output(
 }
 
 // @brief 入出力ピンの取得
-const ClibCellPin&
+const ClibPin&
 CiCell::inout(
   SizeType id
 ) const
@@ -274,7 +277,7 @@ CiCell::inout(
 }
 
 // @brief 内部ピンの取得
-const ClibCellPin&
+const ClibPin&
 CiCell::internal(
   SizeType pos
 ) const
@@ -306,8 +309,7 @@ CiCell::bus_id(
   const string& name
 ) const
 {
-  // 未完
-  return -1;
+  return mLibrary->get_bus_id(this, ShString(name));
 }
 
 // @brief バンドル数の取得
@@ -333,8 +335,7 @@ CiCell::bundle_id(
   const string& name
 ) const
 {
-  // 未完
-  return -1;
+  return mLibrary->get_bundle_id(this, ShString(name));
 }
 
 // @brief タイミング情報の数を返す．
@@ -391,13 +392,6 @@ CiCell::set_timing(
   mTimingMap[base] = timing_list;
 }
 
-// @brief 属している ClibCellGroup を返す．
-const ClibCellGroup&
-CiCell::cell_group() const
-{
-  return *mCellGroup;
-}
-
 // @brief 組み合わせ論理セルの時に true を返す．
 bool
 CiCell::is_logic() const
@@ -432,19 +426,14 @@ CiCell::has_logic(
   SizeType pin_id
 ) const
 {
-  return output(pin_id).has_function();
+  return false;
 }
 
 // @brief 全ての出力が論理式を持っているときに true を返す．
 bool
 CiCell::has_logic() const
 {
-  for ( auto i: Range(output_num2()) ) {
-    if ( !has_logic(i) ) {
-      return false;
-    }
-  }
-  return true;
+  return false;
 }
 
 // @brief 論理セルの場合に出力の論理式を返す．
@@ -453,7 +442,7 @@ CiCell::logic_expr(
   SizeType pin_id
 ) const
 {
-  return output(pin_id).function();
+  return Expr::make_zero();
 }
 
 // @brief 出力がトライステート条件を持っている時に true を返す．
@@ -462,7 +451,7 @@ CiCell::has_tristate(
   SizeType pin_id
 ) const
 {
-  return output(pin_id).has_three_state();
+  return false;
 }
 
 // @brief トライステートセルの場合にトライステート条件式を返す．
@@ -471,19 +460,14 @@ CiCell::tristate_expr(
   SizeType pin_id
 ) const
 {
-  return output(pin_id).three_state();
+  return Expr::make_zero();
 }
 
 // @brief FFセルの場合にFFのピン情報を得る．
 ClibFFInfo
 CiCell::ff_info() const
 {
-  if ( is_ff() ) {
-    return cell_group().ff_info();
-  }
-  else {
-    return ClibFFInfo();
-  }
+  return ClibFFInfo();
 }
 
 // @brief FFセルの場合に次状態関数を表す論理式を返す．
@@ -514,12 +498,7 @@ CiCell::clock2_expr() const
 ClibLatchInfo
 CiCell::latch_info() const
 {
-  if ( is_latch() ) {
-    return cell_group().latch_info();
-  }
-  else {
-    return ClibLatchInfo();
-  }
+  return ClibLatchInfo();
 }
 
 // @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．

@@ -18,24 +18,47 @@ BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 /// @class LcSignature LcSignature.h "LcSignature.h"
 /// @brief セルの機能を表すシグネチャ
 ///
-/// 1出力の組み合わせ回路(ゲート)の場合には論理式だが
-/// 多出力ゲート，FF，ラッチの場合が面倒
+/// 基本的には各出力の機能を表す論理関数だが，FF,ラッチの場合が面倒．
+/// 外部インターフェイスとしては2つのシグネチャが等しいかの比較と
+/// ハッシュ関数用のハッシュ値生成ができればよい．
+/// ただし，入力と出力の順序入れ替えおよび極性反転を行なうNPN変換
+/// に対応する必要がある．
+///
+/// 具体的には
+/// - 組み合わせ論理
+/// - FF
+/// - ラッチ
+/// の3種類に分けて考える．
+///
+/// 組み合わせ論理の場合に各出力に対して
+/// - 機能を表す論理関数
+/// - トライステート条件を表す論理関数
+/// を持つ．
+/// ともに入力変数の番号はセルの入力ピン番号に一致する．
+/// トライステート条件を表す論理関数はその関数の出力が1の時に
+/// 出力がトライステートになるものとする．
+/// トライステートにならない出力の場合，トラーステート条件は
+/// 恒偽関数となる．
+/// 場合によっては入力変数として現れない入力ピンや出力の機能が
+/// 定義されていない出力ピンがある場合もある．
+///
+/// FF の場合には
+/// - 出力のタイプ( q のみ，xq のみ，q と xq )
+/// - クロックエッジを表す論理関数
+/// - 次状態関数
+/// - クリア条件を表す論理関数(もしあれば)
+/// - プリセット条件を表す論理関数(もしあれば)
+///
+/// ラッチの場合には
+/// - 出力のタイプ( q のみ，xq のみ，q と xq )
+/// - イネーブルを表す論理関数
+/// - データ入力を表す論理関数
+/// - クリア条件を表す論理関数(もしあれば)
+/// - プリセット条件を表す論理関数(もしあれば)
+///
 //////////////////////////////////////////////////////////////////////
 class LcSignature
 {
-public:
-
-  /// @brief 種類を表す列挙型
-  enum class Type {
-    /// @brief 組み合わせ論理
-    Logic = 0,
-    /// @brief FF
-    FF = 1,
-    /// @brief ラッチ
-    Latch = 2
-  };
-
-
 public:
 
   /// @brief コンストラクタ
@@ -49,9 +72,11 @@ public:
   ) = default;
 
   /// @brief 変換付きのコピーコンストラクタ
+  ///
+  /// この形式は単一出力のトライステートなしの論理型のみ
   LcSignature(
     const LcSignature& src, ///< [in] コピー元のオブジェクト
-    const NpnMapM& xmap     ///< [in] 変換マップ
+    const NpnMap& xmap      ///< [in] 変換マップ
   );
 
   /// @brief 1出力の論理セルのシグネチャを作るコンストラクタ
@@ -64,7 +89,7 @@ public:
   /// type == Type::Logic は不適
   /// has_q == false && has_xq == false は不適
   LcSignature(
-    Type type,      ///< [in] 種類 (Type::FF/Type::Latch)
+    LcType type,    ///< [in] 種類 (Type::FF/Type::Latch)
     bool has_q,     ///< [in] Q出力の有無
     bool has_xq,    ///< [in] 反転Q出力の有無
     bool has_clear, ///< [in] クリア端子の有無
@@ -77,7 +102,7 @@ public:
   );
 
   /// @brief デストラクタ
-  ~LcSignature();
+  ~LcSignature() = default;
 
 
 public:
@@ -86,12 +111,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 種類を返す．
-  Type
+  LcType
   type() const
   {
     auto b0 = mTypeBits[0];
     auto b1 = mTypeBits[1];
-    return static_cast<Type>(b0 | (b1 << 1));
+    return static_cast<LcType>(b0 | (b1 << 1));
   }
 
   /// @brief 入力数
@@ -171,7 +196,7 @@ public:
   ) const
   {
     ASSERT_COND( opos < output_num() );
-    return static_cast<bool>((mOutputBits[opos] >> 0) & 1U);
+    return mOutputBits[opos][0];
   }
 
   /// @brief 出力の論理関数を返す．
@@ -193,7 +218,7 @@ public:
   ) const
   {
     ASSERT_COND( opos < output_num() );
-    return static_cast<bool>((mOutputBits[opos] >> 1) & 1U);
+    return mOutputBits[opos][1];
   }
 
   /// @brief tristate 条件を返す．
@@ -268,7 +293,7 @@ private:
 
   // 論理式を持つかどうかのフラグと tristate 条件を持つかどうかのフラグの配列
   // 要素数は mOutputNum
-  vector<ymuint> mOutputBits;
+  vector<bitset<2>> mOutputBits;
 
   // クロックの論理関数
   TvFunc mClockFunc;

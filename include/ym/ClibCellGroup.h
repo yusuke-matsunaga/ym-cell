@@ -46,11 +46,6 @@ public:
   // 機能情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 代表クラスを返す．
-  virtual
-  const ClibCellClass&
-  rep_class() const = 0;
-
   /// @brief 代表クラスに対する変換マップを返す．
   virtual
   const NpnMapM&

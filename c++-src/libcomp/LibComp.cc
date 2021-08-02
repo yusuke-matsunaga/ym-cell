@@ -228,7 +228,8 @@ LibComp::ff_class(
   bool has_q,
   bool has_xq,
   bool has_clear,
-  bool has_preset) const
+  bool has_preset
+) const
 {
   auto i = encode(has_q, has_xq, has_clear, has_preset);
   return mFFClass[i];
@@ -356,7 +357,7 @@ LibComp::_ff_init()
     bool has_preset;
     decode(i, has_q, has_xq, has_clear, has_preset);
 
-    LcSignature sig(LcSignature::Type::FF, has_q, has_xq, has_clear, has_preset);
+    LcSignature sig(LcType::FF, has_q, has_xq, has_clear, has_preset);
     LcGroup& group = _find_group(sig);
     LcClass& cclass = group.parent();
     mFFClass[i] = cclass.id();
@@ -374,7 +375,7 @@ LibComp::_latch_init()
     bool has_preset;
     decode(i, has_q, has_xq, has_clear, has_preset);
 
-    LcSignature sig(LcSignature::Type::Latch, has_q, has_xq, has_clear, has_preset);
+    LcSignature sig(LcType::Latch, has_q, has_xq, has_clear, has_preset);
     LcGroup& group = _find_group(sig);
     LcClass& cclass = group.parent();
     mLatchClass[i] = cclass.id();
@@ -425,29 +426,40 @@ LibComp::_find_group(
 {
   string sig_str = sig.str();
   if ( mGroupMap.count(sig_str) > 0 ) {
-    auto fgid = mGroupMap[sig_str];
+    auto fgid = mGroupMap.at(sig_str);
     // 既に登録されていた．
     return *mGroupList[fgid];
   }
 
   // なかったので新たに作る．
   auto fgroup = _new_group();
-  mGroupMap[sig_str] = fgroup->id();
+  mGroupMap.emplace(sig_str, fgroup->id());
 
   // 代表関数を求める．
-  NpnMapM xmap = _cannonical_map(sig);
-  LcSignature rep_sig(sig, xmap);
+  // 今は単一出力の論理型でトライステート状態を
+  // 持たない場合のみNPN同値類を考える．
+  // それ以外の場合は Group = NpnClass となる．
+  LcSignature rep_sig{sig};
+  NpnMapM xmap(sig.input_num(), sig.output_num());
+  if ( sig.output_num() == 1 &&
+       sig.type() == LcType::Logic &&
+       !sig.is_tristate(0) ) {
+    TvFunc f1 = sig.output_func(0);
+    NpnMap xmap1 = f1.npn_cannonical_map();
+    rep_sig = LcSignature(sig, xmap1);
+    xmap = NpnMapM(xmap1);
+  }
   string rep_sig_str = rep_sig.str();
   LcClass* fclass = nullptr;
   if ( mClassMap.count(rep_sig_str) > 0 ) {
-    auto fcid = mClassMap[rep_sig_str];
+    auto fcid = mClassMap.at(rep_sig_str);
     // 登録されていた．
     fclass = mClassList[fcid].get();
   }
   else {
     // まだ登録されていない．
     fclass = _new_class(rep_sig);
-    mClassMap[rep_sig_str] = fclass->id();
+    mClassMap.emplace(rep_sig_str, fclass->id());
   }
 
   // グループを追加する．
@@ -500,46 +512,11 @@ LibComp::_new_class(
   return fclass;
 }
 
-// @brief 正規変換を求める．
-// @param[in] sig シグネチャ
-// @return 正規シグネチャへの変換マップを返す．
-NpnMapM
-LibComp::_cannonical_map(
-  const LcSignature& sig
-)
-{
-  if ( sig.output_num() == 1 ) {
-    TvFunc f1 = sig.output_func(0);
-    NpnMap xmap1 = f1.npn_cannonical_map();
-    return NpnMapM(xmap1);
-  }
-  else {
-#warning "TODO: 未完"
-    NpnMapM ans;
-    ans.set_identity(sig.input_num(), sig.output_num());
-    return ans;
-  }
-}
-
-// @brief 同位体変換リストを求める．
-// @param[in] sig シグネチャ
-// @param[out] idmap_list 同位体変換のリスト
-vector<NpnMapM>
-LibComp::_find_idmap_list(
-  const LcSignature& sig
-)
-{
-#warning "TODO: 未完"
-  return vector<NpnMapM>{};
-}
-
 // @brief expr から生成されるパタンを登録する．
-// @param[in] expr 論理式
-// @param[in] fgroup expr の属している機能グループ
 void
 LibComp::_reg_expr(
-  const Expr& expr,
-  const LcGroup& fgroup
+  const Expr& expr,     ///< [in] 論理式
+  const LcGroup& fgroup ///< [in] expr の属している機能グループ
 )
 {
   const LcClass& fclass = fgroup.parent();
@@ -566,6 +543,16 @@ LibComp::_reg_expr(
   }
 }
 
+// @brief 同位体変換リストを求める．
+vector<NpnMapM>
+LibComp::_find_idmap_list(
+  const LcSignature& sig ///< [in] シグネチャ
+)
+{
+#warning "TODO: 未完"
+  return vector<NpnMapM>{};
+}
+
 // @brief グラフ構造全体をダンプする．
 // @param[in] s 出力先のストリーム
 void
@@ -583,8 +570,7 @@ LibComp::display(
       << ": " << group1.map()
       << endl;
     s << "  CELL:";
-    const vector<CiCell*>& cell_list = group1.cell_list();
-    for ( auto cell: cell_list ) {
+    for ( auto cell: group1.cell_list() ) {
       s << " " << cell->name();
     }
     s << endl;
@@ -602,8 +588,7 @@ LibComp::display(
     //cclass->rep_sig().print(s, 2);
     s << endl;
     s << "  equivalence = ";
-    const vector<LcGroup*>& group_list = cclass.group_list();
-    for ( auto group: group_list ) {
+    for ( auto group: cclass.group_list()) {
       s << " GROUP#" << group->id();
     }
     s << endl;

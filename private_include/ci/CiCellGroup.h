@@ -62,10 +62,6 @@ public:
   // 機能情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 代表クラスを返す．
-  const ClibCellClass&
-  rep_class() const override;
-
   /// @brief 代表クラスに対する変換マップを返す．
   const NpnMapM&
   map() const override;
@@ -259,7 +255,7 @@ private:
   SizeType mId{CLIB_NULLID};
 
   // 属している ClibCellClass
-  const ClibCellClass* mRepClass{nullptr};
+  //const ClibCellClass* mRepClass{nullptr};
 
   // ClibCellClass に対する入出力の変換関数
   NpnMapM mMap;

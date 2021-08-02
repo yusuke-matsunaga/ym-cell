@@ -24,6 +24,13 @@ END_NAMESPACE_YM_CLIB
 
 BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 
+/// @brief 種類を表す列挙型
+enum class LcType {
+  Logic = 0, ///< 組み合わせ論理
+  FF    = 1, ///< FF
+  Latch = 2  ///< ラッチ
+};
+
 class LibComp;
 class LcClass;
 class LcGroup;

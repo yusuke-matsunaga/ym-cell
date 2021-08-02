@@ -13,14 +13,13 @@
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibResistance.h"
 #include "ym/ClibTiming.h"
-#include "ym/ClibCellPin.h"
+#include "ym/ClibPin.h"
 #include "ym/ShString.h"
 #include "ym/Expr.h"
 #include "CiLutHash.h"
 #include "CiCellHash.h"
-#include "CiCellPin.h"
-#include "CiCellPinHash.h"
 #include "CiPatMgr.h"
+#include "CiPinHash.h"
 
 #include "ci/CiCell.h"
 #include "ci/CiCellGroup.h"
@@ -1145,16 +1144,52 @@ public:
   /// @brief ピンを登録する．
   void
   reg_pin(
-    CiCellPin* pin ///< [in] ピン
+    const CiCell* cell, ///< [in] 親のセル
+    ShString name,      ///< [in] ピン名
+    SizeType id         ///< [in] ピン番号
   );
 
   /// @brief ピン名からピン番号を取り出す．
   ///
   /// 見つからない場合は CLIB_NULLID を返す．
-  int
+  SizeType
   get_pin_id(
     const CiCell* cell, ///< [in] セル
     ShString name       ///< [in] ピン名
+  );
+
+  /// @brief バスを登録する．
+  void
+  reg_bus(
+    const CiCell* cell, ///< [in] 親のセル
+    ShString name,      ///< [in] バス名
+    SizeType id         ///< [in] バス番号
+  );
+
+  /// @brief バス名からバス番号を取り出す．
+  ///
+  /// 見つからない場合は CLIB_NULLID を返す．
+  SizeType
+  get_bus_id(
+    const CiCell* cell, ///< [in] セル
+    ShString name       ///< [in] バス名
+  );
+
+  /// @brief バンドルを登録する．
+  void
+  reg_bundle(
+    const CiCell* cell, ///< [in] 親のセル
+    ShString name,      ///< [in] バンドル名
+    SizeType id         ///< [in] バンドル番号
+  );
+
+  /// @brief バンドル名からバンドル番号を取り出す．
+  ///
+  /// 見つからない場合は CLIB_NULLID を返す．
+  SizeType
+  get_bundle_id(
+    const CiCell* cell, ///< [in] セル
+    ShString name       ///< [in] バンドル名
   );
 
 
@@ -1222,6 +1257,12 @@ private:
 
   // ピン名をキーにしたピン番号のハッシュ表
   CiCellPinHash mPinHash;
+
+  // バス名をキーにしたバス番号のハッシュ表
+  CiCellPinHash mBusHash;
+
+  // バンドル名をキーにしたバンドル番号のハッシュ表
+  CiCellPinHash mBundleHash;
 
   // セルグループのリスト
   vector<unique_ptr<CiCellGroup>> mGroupList;

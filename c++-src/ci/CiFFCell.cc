@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "ci/CiFFCell.h"
+#include "ym/ClibFFInfo.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -20,6 +21,13 @@ bool
 CiFFCell::is_ff() const
 {
   return true;
+}
+
+// @brief FFセルの場合にFFのピン情報を得る．
+ClibFFInfo
+CiFFCell::ff_info() const
+{
+  //return cell_group().ff_info();
 }
 
 // @brief FFセルの場合に次状態関数を表す論理式を返す．

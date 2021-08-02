@@ -37,7 +37,7 @@ CiBus::pin_num() const
 }
 
 // @brief ピンの取得
-const ClibCellPin&
+const ClibPin&
 CiBus::pin(
   SizeType pos
 ) const
@@ -51,7 +51,7 @@ void
 CiBus::init(
   const ShString& name,
   const ClibBusType* bus_type,
-  vector<const ClibCellPin*>&& pin_list
+  vector<const ClibPin*>&& pin_list
 )
 {
   mName = name;

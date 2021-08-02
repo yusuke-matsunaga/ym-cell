@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "ci/CiLatchCell.h"
+#include "ym/ClibLatchInfo.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -20,6 +21,13 @@ bool
 CiLatchCell::is_latch() const
 {
   return true;
+}
+
+// @brief ラッチセルの場合にFFのピン情報を得る．
+ClibLatchInfo
+CiLatchCell::latch_info() const
+{
+  //return cell_group().latch_info();
 }
 
 // @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．

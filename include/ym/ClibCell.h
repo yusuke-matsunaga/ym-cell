@@ -65,7 +65,7 @@ public:
   /// @brief ピンの取得
   /// @return ピン情報を返す．
   virtual
-  const ClibCellPin&
+  const ClibPin&
   pin(
     SizeType pin_id ///< [in] ピン番号 ( 0 <= pin_id < pin_num() )
   ) const = 0;
@@ -121,7 +121,7 @@ public:
   ///
   /// id >= input_num() の場合には入出力ピンが返される．
   virtual
-  const ClibCellPin&
+  const ClibPin&
   input(
     SizeType id ///< [in] 番号 ( 0 <= id < input_num2() )
   ) const = 0;
@@ -137,21 +137,21 @@ public:
   ///
   /// id >= output_num() の場合には入出力ピンが返される．
   virtual
-  const ClibCellPin&
+  const ClibPin&
   output(
     SizeType id ///< [in] 出力番号 ( 0 <= id < output_num2() )
   ) const = 0;
 
   /// @brief 入出力ピンの取得
   virtual
-  const ClibCellPin&
+  const ClibPin&
   inout(
     SizeType id ///< [in] 番号 ( 0 <= id < inout_num() )
   ) const = 0;
 
   /// @brief 内部ピンの取得
   virtual
-  const ClibCellPin&
+  const ClibPin&
   internal(
     SizeType id ///< [in] 内部ピン番号 ( 0 <= id < internal_num() )
   ) const = 0;
@@ -232,11 +232,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 機能情報の取得
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 属している ClibCellGroup を返す．
-  virtual
-  const ClibCellGroup&
-  cell_group() const = 0;
 
   /// @brief 組み合わせ論理セルの時に true を返す．
   virtual

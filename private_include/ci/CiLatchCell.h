@@ -65,6 +65,10 @@ public:
   bool
   is_latch() const override;
 
+  /// @brief ラッチセルの場合にFFのピン情報を得る．
+  ClibLatchInfo
+  latch_info() const override;
+
   /// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
   Expr

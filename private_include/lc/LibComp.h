@@ -175,24 +175,18 @@ private:
     const LcSignature& rep_sig ///< [in] 代表シグネチャ
   );
 
-  /// @brief 正規変換を求める．
-  /// @return 正規シグネチャへの変換マップを返す．
-  NpnMapM
-  _cannonical_map(
-    const LcSignature& sig ///< [in] シグネチャ
-  );
-
-  /// @brief 同位体変換リストを求める．
-  vector<NpnMapM>
-  _find_idmap_list(
-    const LcSignature& sig ///< [in] シグネチャ
-  );
-
   /// @brief expr から生成されるパタンを登録する．
   void
   _reg_expr(
     const Expr& expr,     ///< [in] 論理式
     const LcGroup& fgroup ///< [in] expr の属している機能グループ
+  );
+
+  /// @brief 同位体変換リストを求める．
+  static
+  vector<NpnMapM>
+  _find_idmap_list(
+    const LcSignature& sig ///< [in] シグネチャ
   );
 
 

@@ -65,14 +65,10 @@ CiCellGroup::CiCellGroup(
   int pininfo,
   const vector<CiCell*>& cell_list
 ) : mId{id},
-    mRepClass{nullptr},
     mMap{map},
     mPinInfo{pininfo},
     mCellList{cell_list}
 {
-  for ( auto cell: cell_list ) {
-    cell->set_group(this);
-  }
 }
 
 // @brief ID番号を返す．
@@ -80,13 +76,6 @@ SizeType
 CiCellGroup::id() const
 {
   return mId;
-}
-
-// @brief 代表クラスを返す．
-const ClibCellClass&
-CiCellGroup::rep_class() const
-{
-  return *mRepClass;
 }
 
 // @brief 代表クラスに対する変換マップを返す．
@@ -267,15 +256,6 @@ CiCellGroup::cell(
 {
   ASSERT_COND( 0 <= pos && pos < cell_num() );
   return *mCellList[pos];
-}
-
-// @brief 親のセルクラスを設定する．
-void
-CiCellGroup::set_class(
-  CiCellClass* cell_class
-)
-{
-  mRepClass = cell_class;
 }
 
 // @brief FFのピン情報を設定する．

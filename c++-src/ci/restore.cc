@@ -14,7 +14,7 @@
 #include "ci/CiFFCell.h"
 #include "ci/CiLatchCell.h"
 #include "ci/CiFsmCell.h"
-#include "ci/CiCellPin.h"
+#include "ci/CiPin.h"
 #include "ci/CiTiming.h"
 #include "ci/CiLutTemplate.h"
 #include "ci/CiLut.h"

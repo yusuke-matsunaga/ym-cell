@@ -44,6 +44,13 @@ public:
   string
   name() const override;
 
+  /// @brief 名前の取得
+  ShString
+  _name() const
+  {
+    return mName;
+  }
+
   /// @brief バスの型の取得
   const ClibBusType&
   bus_type() const override;
@@ -53,9 +60,21 @@ public:
   pin_num() const override;
 
   /// @brief ピンの取得
-  const ClibCellPin&
+  const ClibPin&
   pin(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
+  ) const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
   ) const override;
 
 
@@ -69,7 +88,7 @@ private:
   init(
     const ShString& name,
     const ClibBusType* bus_type,
-    vector<const ClibCellPin*>&& pin_list
+    vector<const ClibPin*>&& pin_list
   );
 
 
@@ -85,7 +104,7 @@ private:
   const ClibBusType* mBusType{nullptr};
 
   // ピンのリスト
-  vector<const ClibCellPin*> mPinList;
+  vector<const ClibPin*> mPinList;
 
 };
 

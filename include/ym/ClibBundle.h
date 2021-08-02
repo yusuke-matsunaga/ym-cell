@@ -44,9 +44,22 @@ public:
 
   /// @brief ピンの取得
   virtual
-  const ClibCellPin&
+  const ClibPin&
   pin(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
+  ) const = 0;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  virtual
+  void
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
   ) const = 0;
 
 };

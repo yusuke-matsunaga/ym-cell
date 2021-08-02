@@ -1,170 +1,135 @@
 ﻿
-/// @file CiCellPin.cc
-/// @brief CiCellPin の実装ファイル
+/// @file CiPin.cc
+/// @brief CiPin の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ci/CiCellPin.h"
+#include "ci/CiPin.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiCellPin
+// クラス CiPin
 //////////////////////////////////////////////////////////////////////
-
-// @brief ピン番号を返す．
-SizeType
-CiCellPin::pin_id() const
-{
-  return mId;
-}
 
 // @brief ピン名を返す．
 string
-CiCellPin::name() const
+CiPin::name() const
 {
   return mName;
 }
 
 // @brief 入力ピンの時に true を返す．
 bool
-CiCellPin::is_input() const
+CiPin::is_input() const
 {
   return false;
 }
 
 // @brief 出力ピンの時に true を返す．
 bool
-CiCellPin::is_output() const
+CiPin::is_output() const
 {
   return false;
 }
 
 // @brief 入出力ピンの時に true を返す．
 bool
-CiCellPin::is_inout() const
+CiPin::is_inout() const
 {
   return false;
 }
 
 // @brief 内部ピンの時に true を返す．
 bool
-CiCellPin::is_internal() const
+CiPin::is_internal() const
 {
   return false;
 }
 
 // @brief 入力ピン番号を返す．
 SizeType
-CiCellPin::input_id() const
+CiPin::input_id() const
 {
   return 0;
 }
 
 // @brief 負荷容量を返す．
 ClibCapacitance
-CiCellPin::capacitance() const
+CiPin::capacitance() const
 {
   return ClibCapacitance(0.0);
 }
 
 // @brief 立ち上がり時の負荷容量を返す．
 ClibCapacitance
-CiCellPin::rise_capacitance() const
+CiPin::rise_capacitance() const
 {
   return ClibCapacitance(0.0);
 }
 
 // @brief 立ち下がり時の負荷容量を返す．
 ClibCapacitance
-CiCellPin::fall_capacitance() const
+CiPin::fall_capacitance() const
 {
   return ClibCapacitance(0.0);
 }
 
 // @brief 出力ピン番号を返す．
 SizeType
-CiCellPin::output_id() const
+CiPin::output_id() const
 {
   return 0;
 }
 
-// @brief 論理式を持っているときに true を返す．
-bool
-CiCellPin::has_function() const
-{
-  return false;
-}
-
-// @brief 機能を表す論理式を返す．
-Expr
-CiCellPin::function() const
-{
-  return Expr::make_zero();
-}
-
-// @brief three_state 属性を持っているときに true を返す．
-bool
-CiCellPin::has_three_state() const
-{
-  return false;
-}
-
-// @brief three_state 論理式を返す．
-Expr
-CiCellPin::three_state() const
-{
-  return Expr::make_zero();
-}
-
 // @brief 最大ファンアウト容量を返す．
 ClibCapacitance
-CiCellPin::max_fanout() const
+CiPin::max_fanout() const
 {
   return ClibCapacitance(0.0);
 }
 
 // @brief 最小ファンアウト容量を返す．
 ClibCapacitance
-CiCellPin::min_fanout() const
+CiPin::min_fanout() const
 {
   return ClibCapacitance(0.0);
 }
 
 // @brief 最大負荷容量を返す．
 ClibCapacitance
-CiCellPin::max_capacitance() const
+CiPin::max_capacitance() const
 {
   return ClibCapacitance(0.0);
 }
 
 // @brief 最小負荷容量を返す．
 ClibCapacitance
-CiCellPin::min_capacitance() const
+CiPin::min_capacitance() const
 {
   return ClibCapacitance(0.0);
 }
 
 // @brief 最大遷移時間を返す．
 ClibTime
-CiCellPin::max_transition() const
+CiPin::max_transition() const
 {
   return ClibTime(0.0);
 }
 
 // @brief 最小遷移時間を返す．
 ClibTime
-CiCellPin::min_transition() const
+CiPin::min_transition() const
 {
   return ClibTime(0.0);
 }
 
 // @brief 内部ピン番号を返す．
 SizeType
-CiCellPin::internal_id() const
+CiPin::internal_id() const
 {
   return 0;
 }
@@ -226,34 +191,6 @@ SizeType
 CiOutputPinBase::output_id() const
 {
   return mOutputId;
-}
-
-// @brief 論理式を持っているときに true を返す．
-bool
-CiOutputPinBase::has_function() const
-{
-  return mFlags[0];
-}
-
-// @brief 機能を表す論理式を返す．
-Expr
-CiOutputPinBase::function() const
-{
-  return mFunction;
-}
-
-// @brief three_state 属性を持っているときに true を返す．
-bool
-CiOutputPinBase::has_three_state() const
-{
-  return mFlags[1];
-}
-
-// @brief three_state 論理式を返す．
-Expr
-CiOutputPinBase::three_state() const
-{
-  return mThreeState;
 }
 
 // @brief 最大ファンアウト容量を返す．
