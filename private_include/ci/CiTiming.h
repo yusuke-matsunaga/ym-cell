@@ -5,9 +5,8 @@
 /// @brief ClibTiming の実装クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/ClibTiming.h"
 #include "ym/ClibTime.h"
@@ -29,10 +28,10 @@ class CiTiming :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] type タイミング条件の型
-  /// @param[in] cond タイミング条件を表す式
-  CiTiming(ClibTimingType type,
-	   const Expr& cond);
+  CiTiming(
+    ClibTimingType type, ///< [in] タイミング条件の型
+    const Expr& cond     ///< [in] タイミング条件を表す式
+  );
 
   /// @brief デストラクタ
   ~CiTiming();
@@ -44,7 +43,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ID番号の取得
-  /// @note timing = cell->timing(id); の時，timing->id() = id となる．
+  ///
+  /// timing = cell->timing(id); の時，timing->id() = id となる．
   int
   id() const override;
 
@@ -53,7 +53,8 @@ public:
   type() const override;
 
   /// @brief タイミング条件式の取得
-  /// @note ない場合には定数1の式が返される．
+  ///
+  /// ない場合には定数1の式が返される．
   Expr
   timing_cond() const override;
 
@@ -152,11 +153,11 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 共通な情報をダンプする．
-  /// @param[in] s 出力先のストリーム
-  /// @param[in] type_id 型の ID
   void
-  dump_common(ostream& s,
-	      ymuint8 type_id) const;
+  dump_common(
+    ostream& s,     ///< [in] 出力先のストリーム
+    ymuint8 type_id ///< [in] 型の ID
+  ) const;
 
 
 private:
@@ -186,18 +187,14 @@ class CiTimingGP :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] timing_type タイミングの型
-  /// @param[in] cond タイミング条件を表す式
-  /// @param[in] intrinsic_rise 立ち上がり固有遅延
-  /// @param[in] intrinsic_fall 立ち下がり固有遅延
-  /// @param[in] slope_rise 立ち上がりスロープ遅延
-  /// @param[in] slope_fall 立ち下がりスロープ遅延
-  CiTimingGP(ClibTimingType timing_type,
-	     const Expr& cond,
-	     ClibTime intrinsic_rise,
-	     ClibTime intrinsic_fall,
-	     ClibTime slope_rise,
-	     ClibTime slope_fall);
+  CiTimingGP(
+    ClibTimingType timing_type, ///< [in] タイミングの型
+    const Expr& cond,           ///< [in] タイミング条件を表す式
+    ClibTime intrinsic_rise,    ///< [in] 立ち上がり固有遅延
+    ClibTime intrinsic_fall,    ///< [in] 立ち下がり固有遅延
+    ClibTime slope_rise,        ///< [in] 立ち上がりスロープ遅延
+    ClibTime slope_fall         ///< [in] 立ち下がりスロープ遅延
+  );
 
   /// @brief デストラクタ
   ~CiTimingGP();
@@ -257,22 +254,16 @@ class CiTimingGeneric :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] timing_type タイミングの型
-  /// @param[in] cond タイミング条件を表す式
-  /// @param[in] intrinsic_rise 立ち上がり固有遅延
-  /// @param[in] intrinsic_fall 立ち下がり固有遅延
-  /// @param[in] slope_rise 立ち上がりスロープ遅延
-  /// @param[in] slope_fall 立ち下がりスロープ遅延
-  /// @param[in] rise_resistance 立ち上がり遷移遅延パラメータ
-  /// @param[in] fall_resistance 立ち下がり遷移遅延パラメータ
-  CiTimingGeneric(ClibTimingType timing_type,
-		  const Expr& cond,
-		  ClibTime intrinsic_rise,
-		  ClibTime intrinsic_fall,
-		  ClibTime slope_rise,
-		  ClibTime slope_fall,
-		  ClibResistance rise_resistance,
-		  ClibResistance fall_resistance);
+  CiTimingGeneric(
+    ClibTimingType timing_type,     ///< [in] タイミングの型
+    const Expr& cond,               ///< [in] タイミング条件を表す式
+    ClibTime intrinsic_rise,        ///< [in] 立ち上がり固有遅延
+    ClibTime intrinsic_fall,        ///< [in] 立ち下がり固有遅延
+    ClibTime slope_rise,            ///< [in] 立ち上がりスロープ遅延
+    ClibTime slope_fall,            ///< [in] 立ち下がりスロープ遅延
+    ClibResistance rise_resistance, ///< [in] 立ち上がり遷移遅延パラメータ
+    ClibResistance fall_resistance  ///< [in] 立ち下がり遷移遅延パラメータ
+  );
 
   /// @brief デストラクタ
   ~CiTimingGeneric();
@@ -298,9 +289,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   void
-  dump(ostream& s) const override;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const override;
 
 
 private:
@@ -329,20 +321,16 @@ class CiTimingPiecewise :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] timing_type タイミングの型
-  /// @param[in] cond タイミング条件を表す式
-  /// @param[in] intrinsic_rise 立ち上がり固有遅延
-  /// @param[in] intrinsic_fall 立ち下がり固有遅延
-  /// @param[in] slope_rise 立ち上がりスロープ遅延
-  /// @param[in] slope_fall 立ち下がりスロープ遅延
-  CiTimingPiecewise(ClibTimingType timing_type,
-		    const Expr& cond,
-		    ClibTime intrinsic_rise,
-		    ClibTime intrinsic_fall,
-		    ClibTime slope_rise,
-		    ClibTime slope_fall,
-		    ClibResistance rise_pin_resistance,
-		    ClibResistance fall_pin_resistance);
+  CiTimingPiecewise(
+    ClibTimingType timing_type,         ///< [in] タイミングの型
+    const Expr& cond,                   ///< [in] タイミング条件を表す式
+    ClibTime intrinsic_rise,            ///< [in] 立ち上がり固有遅延
+    ClibTime intrinsic_fall,            ///< [in] 立ち下がり固有遅延
+    ClibTime slope_rise,                ///< [in] 立ち上がりスロープ遅延
+    ClibTime slope_fall,                ///< [in] 立ち下がりスロープ遅延
+    ClibResistance rise_pin_resistance, ///< [in] 立ち上がりピン抵抗
+    ClibResistance fall_pin_resistance  ///< [in] 立ち下がりピン抵抗
+  );
 
   /// @brief デストラクタ
   ~CiTimingPiecewise();
@@ -376,9 +364,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   void
-  dump(ostream& s) const override;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const override;
 
 
 private:
@@ -407,17 +396,14 @@ class CiTimingLut1 :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] timing_type タイミングの型
-  /// @param[in] cond タイミング条件を表す式
-  /// @param[in] cell_rise 立ち上がりセル遅延テーブル
-  /// @param[in] cell_fall 立ち下がりセル遅延テーブル
-  CiTimingLut1(ClibTimingType timing_type,
-	       const Expr& cond,
-	       ClibLut* cell_rise,
-	       ClibLut* cell_fall,
-	       ClibLut* rise_transition,
-	       ClibLut* fall_transition);
-
+  CiTimingLut1(
+    ClibTimingType timing_type, ///< [in] タイミングの型
+    const Expr& cond,           ///< [in] タイミング条件を表す式
+    ClibLut* cell_rise,         ///< [in] 立ち上がりセル遅延テーブル
+    ClibLut* cell_fall,         ///< [in] 立ち下がりセル遅延テーブル
+    ClibLut* rise_transition,   ///< [in] 立ち上がり遷移時間テーブル
+    ClibLut* fall_transition    ///< [in] 立ち下がり遷移時間テーブル
+  );
 
   /// @brief デストラクタ
   ~CiTimingLut1();
@@ -451,9 +437,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   void
-  dump(ostream& s) const override;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const override;
 
 
 private:
@@ -488,19 +475,14 @@ class CiTimingLut2 :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] timing_type タイミングの型
-  /// @param[in] cond タイミング条件を表す式
-  /// @param[in] rise_transition 立ち上がり遷移遅延テーブル
-  /// @param[in] fall_transition 立ち下がり遷移遅延テーブル
-  /// @param[in] rise_propagation 立ち上がり伝搬遅延テーブル
-  /// @param[in] fall_propagation 立ち下がり伝搬遅延テーブル
-  CiTimingLut2(ClibTimingType timing_type,
-	       const Expr& cond,
-	       ClibLut* rise_transition,
-	       ClibLut* fall_transition,
-	       ClibLut* rise_propagation,
-	       ClibLut* fall_propagation);
-
+  CiTimingLut2(
+    ClibTimingType timing_type, ///< [in] タイミングの型
+    const Expr& cond,           ///< [in] タイミング条件を表す式
+    ClibLut* rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
+    ClibLut* fall_transition,   ///< [in] 立ち下がり遷移遅延テーブル
+    ClibLut* rise_propagation,  ///< [in] 立ち上がり伝搬遅延テーブル
+    ClibLut* fall_propagation   ///< [in] 立ち下がり伝搬遅延テーブル
+  );
 
   /// @brief デストラクタ
   ~CiTimingLut2();
@@ -534,9 +516,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   void
-  dump(ostream& s) const override;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const override;
 
 
 private:

@@ -25,8 +25,9 @@ class ClibObjIterator
 public:
 
   /// @brief コンストラクタ
-  ClibObjIterator(T** obj_ptr) : ///< [in] 要素へのポインタ
-    mObjPtr{obj_ptr}
+  ClibObjIterator(
+    T** obj_ptr ///< [in] 要素へのポインタ
+  ) : mObjPtr{obj_ptr}
   {
   }
 
@@ -57,14 +58,18 @@ public:
 
   /// @brief 等価比較演算子
   bool
-  operator==(const ClibObjIterator<T>& right) const ///< [in] 比較対象のオペランド
+  operator==(
+    const ClibObjIterator<T>& right ///< [in] 比較対象のオペランド
+  ) const
   {
     return mObjPtr == right.mObjPtr;
   }
 
   /// @brief 非等価比較演算子
   bool
-  operator!=(const ClibObjIterator<T>& right) const ///< [in] 比較対象のオペランド
+  operator!=(
+    const ClibObjIterator<T>& right ///< [in] 比較対象のオペランド
+  ) const
   {
     return !operator==(right);
   }
@@ -100,7 +105,9 @@ public:
   ClibObjList() = default;
 
   /// @brief 内容を指定したコンストラクタ
-  ClibObjList(const vector<T*>& src_list)  ///< [in] ソースリスト
+  ClibObjList(
+    const vector<T*>& src_list ///< [in] ソースリスト
+  )
   {
     init(src_list);
   }
@@ -121,7 +128,9 @@ public:
   ///
   /// 以前の内容は破棄される．
   void
-  init(const vector<T*>& src_list) ///< [in] ソースリスト
+  init(
+    const vector<T*>& src_list ///< [in] ソースリスト
+  )
   {
     delete [] mBody;
     mNum = src_list.size();
@@ -140,7 +149,9 @@ public:
 
   /// @brief 要素を返す．
   const T&
-  operator[](int pos) const ///< [in] 要素の位置 ( 0 <= pos < num() )
+  operator[](
+    int pos ///< [in] 要素の位置 ( 0 <= pos < num() )
+  ) const
   {
     ASSERT_COND( pos >= 0 && pos < num() );
 
@@ -164,12 +175,6 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
@@ -180,139 +185,6 @@ private:
   T** mBody{nullptr};
 
 };
-
-#if 0
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] obj_ptr 要素へのポインタ
-template<class T>
-inline
-ClibObjIterator<T>::ClibObjIterator(T** obj_ptr) :
-  mObjPtr{obj_ptr}
-{
-}
-
-// @brief デストラクタ
-template<class T>
-inline
-ClibObjIterator<T>::~ClibObjIterator()
-{
-}
-
-// @brief dereference 演算子
-template<class T>
-inline
-const T&
-ClibObjIterator<T>::operator*() const
-{
-  return **mObjPtr;
-}
-
-// @brief 増加演算子
-template<class T>
-inline
-ClibObjIterator<T>
-ClibObjIterator<T>::operator++()
-{
-  ++ mObjPtr;
-
-  return *this;
-}
-
-// @brief 等価比較演算子
-template<class T>
-inline
-bool
-ClibObjIterator<T>::operator==(const ClibObjIterator<T>& right) const
-{
-  return mObjPtr == right.mObjPtr;
-}
-
-// @brief 非等価比較演算子
-template<class T>
-inline
-bool
-ClibObjIterator<T>::operator!=(const ClibObjIterator<T>& right) const
-{
-  return !operator==(right);
-}
-
-// @brief 内容を指定したコンストラクタ
-// @param[in] src_list ソースリスト
-template<class T>
-inline
-ClibObjList<T>::ClibObjList(const vector<T*>& src_list)
-{
-  init(src_list);
-}
-
-// @brief デストラクタ
-template<class T>
-inline
-ClibObjList<T>::~ClibObjList()
-{
-  delete [] mBody;
-}
-
-// @brief 内容を(再)設定する．
-// @param[in] src_list ソースリスト
-//
-// 以前の内容は破棄される．
-template<class T>
-inline
-void
-ClibObjList<T>::init(const vector<T*>& src_list)
-{
-  delete [] mBody;
-  mNum = src_list.size();
-  mBody = new T*[mNum];
-  for ( int i = 0; i < mNum; ++ i ) {
-    mBody[i] = src_list[i];
-  }
-}
-
-// @brief 要素数を返す．
-template<class T>
-inline
-int
-ClibObjList<T>::num() const
-{
-  return mNum;
-}
-
-// @brief 要素を返す．
-// @param[in] pos 要素の位置 ( 0 <= pos < num() )
-template<class T>
-inline
-const T&
-ClibObjList<T>::operator[](int pos) const
-{
-  ASSERT_COND( pos >= 0 && pos < num() );
-
-  return *mBody[pos];
-}
-
-// @brief 先頭の反復子を返す．
-template<class T>
-inline
-ClibObjIterator<T>
-ClibObjList<T>::begin() const
-{
-  return ClibObjIterator<T>(mBody);
-}
-
-// @brief 末尾の反復子を返す．
-template<class T>
-inline
-ClibObjIterator<T>
-ClibObjList<T>::end() const
-{
-  return ClibObjIterator<T>(mBody + num());
-}
-#endif
 
 END_NAMESPACE_YM_CLIB
 

@@ -31,37 +31,63 @@ class LcGroup
 public:
 
   /// @brief コンストラクタ
-  LcGroup(int id); ///< [in] ID番号
+  LcGroup(
+    int id ///< [in] ID番号
+  ) :  mId(id),
+       mParent(nullptr),
+       mCellGroup(nullptr)
+  {
+  }
 
   /// @brief デストラクタ
-  ~LcGroup();
+  ~LcGroup() = default;
 
 
 public:
 
   /// @brief ID番号を返す．
   int
-  id() const;
+  id() const
+  {
+    return mId;
+  }
 
   /// @brief 親の LcClass を返す．
   LcClass*
-  parent() const;
+  parent() const
+  {
+    return mParent;
+  }
 
   /// @brief 親のクラスに対する変換マップを返す．
   const NpnMapM&
-  map() const;
+  map() const
+  {
+    return mMap;
+  }
 
   /// @brief 実体を返す．
   ClibCellGroup*
-  cell_group() const;
+  cell_group() const
+  {
+    return mCellGroup;
+  }
 
   /// @brief 属しているセルのリストを返す．
   const vector<CiCell*>&
-  cell_list() const;
+  cell_list() const
+  {
+    return mCellList;
+  }
 
   /// @brief セルを追加する．
   void
-  add_cell(CiCell* cell); ///< [in] 追加するセル
+  add_cell(
+    CiCell* cell ///< [in] 追加するセル
+  )
+  {
+    mCellList.push_back(cell);
+  }
 
 
 private:

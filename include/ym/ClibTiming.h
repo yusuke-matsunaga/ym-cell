@@ -23,7 +23,7 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 class ClibTiming
 {
-protected:
+public:
 
   /// @brief デストラクタ
   virtual
@@ -167,8 +167,9 @@ public:
   /// @brief 内容をバイナリダンプする．
   virtual
   void
-  dump(ostream& s) const ///< [in] 出力先のストリーム
-  = 0;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const = 0;
 
 };
 

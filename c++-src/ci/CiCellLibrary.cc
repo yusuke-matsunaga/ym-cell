@@ -231,7 +231,9 @@ CiCellLibrary::lu_table_template_id(const ShString& name) const
 // @param[in] name バスタイプ名
 // @note なければ nullptr を返す．
 const ClibBusType&
-CiCellLibrary::bus_type(const char* name) const
+CiCellLibrary::bus_type(
+  const char* name
+) const
 {
   return bus_type(ShString(name));
 }
@@ -1171,11 +1173,13 @@ CiCellLibrary::new_timing_lut2(ClibTimingType timing_type,
 // @note ( *2 ) ipin_id で入出力ピンを表す時には入出力ピン番号
 //  + cell->input_num() を使う．
 void
-CiCellLibrary::set_timing(CiCell* cell,
-			  int ipin_id,
-			  int opin_id,
-			  ClibTimingSense timing_sense,
-			  const vector<CiTiming*>& timing_list)
+CiCellLibrary::set_timing(
+  CiCell* cell,
+  int ipin_id,
+  int opin_id,
+  ClibTimingSense timing_sense,
+  const vector<CiTiming*>& timing_list
+)
 {
   int base = (opin_id * cell->input_num2() + ipin_id) * 2;
   switch ( timing_sense ) {
@@ -1183,12 +1187,10 @@ CiCellLibrary::set_timing(CiCell* cell,
   case ClibTimingSense::negative_unate: base += 1; break;
   default: ASSERT_NOT_REACHED;
   }
-  int n = timing_list.size();
-  vector<ClibTiming*> _timing_list(n);
-  for ( int i: Range(n) ) {
-    _timing_list[i] = timing_list[i];
+  cell->mTimingMap[base].reserve(timing_list.size());
+  for ( auto timing: timing_list ) {
+    cell->mTimingMap[base].push_back(timing);
   }
-  cell->mTimingMap[base].init(_timing_list);
 }
 
 // @brief 1次元の LUT を作る．
@@ -1196,9 +1198,11 @@ CiCellLibrary::set_timing(CiCell* cell,
 // @param[in] value_array 値の配列
 // @param[in] index_array インデックス値のリスト
 ClibLut*
-CiCellLibrary::new_lut1(const ClibLutTemplate* lut_template,
-			const vector<double>& value_array,
-			const vector<double>& index_array)
+CiCellLibrary::new_lut1(
+  const ClibLutTemplate* lut_template,
+  const vector<double>& value_array,
+  const vector<double>& index_array
+)
 {
   ClibLut* lut = new CiLut1D(lut_template, value_array, index_array);
   return lut;
@@ -1210,10 +1214,12 @@ CiCellLibrary::new_lut1(const ClibLutTemplate* lut_template,
 // @param[in] index_array1 インデックス値のリスト
 // @param[in] index_array2 インデックス値のリスト
 ClibLut*
-CiCellLibrary::new_lut2(const ClibLutTemplate* lut_template,
-			const vector<double>& value_array,
-			const vector<double>& index_array1,
-			const vector<double>& index_array2)
+CiCellLibrary::new_lut2(
+  const ClibLutTemplate* lut_template,
+  const vector<double>& value_array,
+  const vector<double>& index_array1,
+  const vector<double>& index_array2
+)
 {
   ClibLut* lut = new CiLut2D(lut_template, value_array,
 			     index_array1, index_array2);
@@ -1227,11 +1233,13 @@ CiCellLibrary::new_lut2(const ClibLutTemplate* lut_template,
 // @param[in] index_array2 インデックス値のリスト
 // @param[in] index_array3 インデックス値のリスト
 ClibLut*
-CiCellLibrary::new_lut3(const ClibLutTemplate* lut_template,
-			const vector<double>& value_array,
-			const vector<double>& index_array1,
-			const vector<double>& index_array2,
-			const vector<double>& index_array3)
+CiCellLibrary::new_lut3(
+  const ClibLutTemplate* lut_template,
+  const vector<double>& value_array,
+  const vector<double>& index_array1,
+  const vector<double>& index_array2,
+  const vector<double>& index_array3
+)
 {
   ClibLut* lut = new CiLut3D(lut_template, value_array,
 			     index_array1, index_array2, index_array3);

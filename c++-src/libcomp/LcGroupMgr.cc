@@ -23,27 +23,6 @@ BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 // クラス LcGroupMgr
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-// @param[in] libcomp 親の LibComp
-LcGroupMgr::LcGroupMgr(LibComp& libcomp) :
-  mLibComp(libcomp)
-{
-}
-
-// @brief デストラクタ
-LcGroupMgr::~LcGroupMgr()
-{
-  clear();
-}
-
-// @brief 内容を空にする．
-void
-LcGroupMgr::clear()
-{
-  mGroupMap.clear();
-  mClassMap.clear();
-}
-
 // @brief セルを追加する．
 void
 LcGroupMgr::add_cell(Clib* cell)

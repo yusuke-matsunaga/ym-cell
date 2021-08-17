@@ -5,9 +5,8 @@
 /// @brief CiCellPinHash のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 #include "ym/ShString.h"
@@ -21,6 +20,8 @@ class CiCellPin;
 //////////////////////////////////////////////////////////////////////
 /// @class CiCellPinHash CiCellPinHash.h "CiCellPinHash.h"
 /// @brief ピン名のハッシュ表
+///
+/// CiCellPin そのものをハッシュ表中のリンクトリストの要素として用いる．
 //////////////////////////////////////////////////////////////////////
 class CiCellPinHash
 {
@@ -36,19 +37,20 @@ public:
 public:
 
   /// @brief ピンを追加する．
-  /// @param[in] pin 追加するピン
   void
-  add(CiCellPin* pin);
+  add(
+    CiCellPin* pin ///< [in] 追加するピン
+  );
 
   /// @brief ピンを取り出す．
-  /// @param[in] cell セル
-  /// @param[in] name 名前
   /// @return cell の name というピンのピン番号を返す．
   ///
   /// なければ -1 を返す．
   int
-  get(const CiCell* cell,
-      ShString name) const;
+  get(
+    const CiCell* cell, ///< [in] セル
+    ShString name       ///< [in] 名前
+  ) const;
 
 
 private:
@@ -57,16 +59,17 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief テーブルの領域を確保する．
-  /// @param[in] req_size 要求するサイズ
   void
-  alloc_table(SizeType req_size);
+  alloc_table(
+    SizeType req_size ///< [in] 要求するサイズ
+  );
 
   /// @brief 要素をリンクに追加する．
-  /// @param[in] pos 追加する位置
-  /// @param[in] pin 追加する要素
   void
-  add_pin(SizeType pos,
-	  CiCellPin* pin);
+  add_pin(
+    SizeType pos,  ///< [in] 追加する位置
+    CiCellPin* pin ///< [in] 追加する要素
+  );
 
 
 private:

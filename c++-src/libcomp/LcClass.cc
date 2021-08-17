@@ -3,9 +3,8 @@
 /// @brief LcClass の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "lc/LcClass.h"
 #include "lc/LcGroup.h"
@@ -18,12 +17,11 @@ BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] id ID番号
-// @param[in] rep_sig 代表シグネチャ
-LcClass::LcClass(int id,
-		 const LcSignature& rep_sig) :
-  mId(id),
-  mRepSig(rep_sig)
+LcClass::LcClass(
+  int id,
+  const LcSignature& rep_sig
+) : mId(id),
+    mRepSig(rep_sig)
 {
 }
 

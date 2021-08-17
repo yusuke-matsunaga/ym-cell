@@ -5,9 +5,8 @@
 /// @brief CiPatGraph のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/ClibPatGraph.h"
 
@@ -56,9 +55,10 @@ public:
   edge_num() const override;
 
   /// @brief 枝(の番号)を返す．
-  /// @param[in] pos 位置 ( 0 <= pos < edge_num() )
   int
-  edge(int pos) const override;
+  edge(
+    int pos ///< [in] 位置 ( 0 <= pos < edge_num() )
+  ) const override;
 
 
 public:
@@ -67,15 +67,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief バイナリダンプを行う．
-  /// @param[in] bos 出力先のストリーム
   void
-  dump(ostream& bos) const;
+  dump(
+    ostream& bos ///< [in] 出力先のストリーム
+  ) const;
 
   /// @brief バイナリファイルを読み込む．
-  /// @param[in] bis 入力元のストリーム
-  /// @param[in] alloc メモリアロケータ
   void
-  restore(istream& bis);
+  restore(
+    istream& bis ///< [in] 入力元のストリーム
+  );
 
 
 public:
@@ -84,28 +85,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 初期化する．
-  /// @param[in] rep_id 代表番号
-  /// @param[in] input_num 入力数
-  /// @param[in] edge_num 枝数
-  /// @param[in] alloc メモリアロケータ
   void
-  init(int rep_id,
-       int input_num,
-       int edge_num);
+  init(
+    int rep_id,    ///< [in] 代表番号
+    int input_num, ///< [in] 入力数
+    int edge_num   ///< [in] 枝数
+  );
 
   /// @brief 枝のデータを設定する．
-  /// @param[in] pos 位置番号 ( 0 <= pos < edge_num() )
-  /// @param[in] edge 枝
-  /// @note この関数を呼ぶ前に init() が呼ばれている必要がある．
+  ///
+  /// この関数を呼ぶ前に init() が呼ばれている必要がある．
   void
-  set_edge(int pos,
-	   int edge);
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 下請け関数
-  //////////////////////////////////////////////////////////////////////
+  set_edge(
+    int pos,  ///< [in] 位置番号 ( 0 <= pos < edge_num() )
+    int edge  ///< [in] 枝
+  );
 
 
 private:

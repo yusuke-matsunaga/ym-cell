@@ -26,8 +26,9 @@ class LcPatNode
 public:
 
   /// @brief コンストラクタ
-  LcPatNode(int id) ///< [in] ID番号
-    : mId{id},
+  LcPatNode(
+    int id ///< [in] ID番号
+  ) : mId{id},
       mType{0U},
       mFanin{nullptr, nullptr},
       mLink{nullptr}
@@ -77,7 +78,9 @@ public:
 
   /// @brief AND/XOR の時にファンインのノードを返す．
   LcPatNode*
-  fanin(int pos) const ///< [in] 位置 ( 0 or 1 )
+  fanin(
+    int pos ///< [in] 位置 ( 0 or 1 )
+  ) const
   {
     return mFanin[pos];
   }
@@ -100,7 +103,9 @@ public:
   /// @retval true 反転あり
   /// @retval false 反転なし
   bool
-  fanin_inv(int pos) const ///< [in] 位置 ( 0 or 1 )
+  fanin_inv(
+    int pos ///< [in] 位置 ( 0 or 1 )
+  ) const
   {
     return static_cast<bool>((mType >> (pos + 2)) & 1U);
   }

@@ -26,30 +26,20 @@ class CiFFCell :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] library 親のセルライブラリ
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
-  /// @param[in] next_state "next_state" 関数の式
-  /// @param[in] clocked_on "clocked_on" 関数の式
-  /// @param[in] clocked_on_also "clocked_on_also" 関数の式
-  CiFFCell(CiCellLibrary* library,
-	   const ShString& name,
-	   ClibArea area,
-	   const vector<CiInputPin*>& input_list,
-	   const vector<CiOutputPin*>& output_list,
-	   const vector<CiInoutPin*>& inout_list,
-	   const vector<CiBus*>& bus_list,
-	   const vector<CiBundle*>& bundle_list,
-	   const vector<CiTiming*>& timing_list,
-	   const Expr& next_state,
-	   const Expr& clocked_on,
-	   const Expr& clocked_on_also);
+  CiFFCell(
+    CiCellLibrary* library,                  ///< [in] 親のセルライブラリ
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area,                           ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiBus*>& bus_list,          ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,    ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング情報のリスト
+    const Expr& next_state,                  ///< [in] "next_state" 関数の式
+    const Expr& clocked_on,                  ///< [in] "clocked_on" 関数の式
+    const Expr& clocked_on_also              ///< [in] "clocked_on_also" 関数の式
+  );
 
   /// @brief デストラクタ
   ~CiFFCell();
@@ -109,32 +99,21 @@ class CiFFRCell :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] library 親のセルライブラリ
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
-  /// @param[in] next_state "next_state" 関数の式
-  /// @param[in] clocked_on "clocked_on" 関数の式
-  /// @param[in] clocked_on_also "clocked_on_also" 関数の式
-  /// @param[in] clear "clear" 関数の式
-  CiFFRCell(CiCellLibrary* library,
-	    const ShString& name,
-	    ClibArea area,
-	    const vector<CiInputPin*>& input_list,
-	    const vector<CiOutputPin*>& output_list,
-	    const vector<CiInoutPin*>& inout_list,
-	    const vector<CiBus*>& bus_list,
-	    const vector<CiBundle*>& bundle_list,
-	    const vector<CiTiming*>& timing_list,
-	    const Expr& next_state,
-	    const Expr& clocked_on,
-	    const Expr& clocked_on_also,
-	    const Expr& clear);
+  CiFFRCell(
+    CiCellLibrary* library,                  ///< [in] 親のセルライブラリ
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area,                           ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiBus*>& bus_list,          ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,    ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング情報のリスト
+    const Expr& next_state,                  ///< [in] "next_state" 関数の式
+    const Expr& clocked_on,                  ///< [in] "clocked_on" 関数の式
+    const Expr& clocked_on_also,             ///< [in] "clocked_on_also" 関数の式
+    const Expr& clear                        ///< [in] "clear" 関数の式
+  );
 
   /// @brief デストラクタ
   ~CiFFRCell();
@@ -178,35 +157,21 @@ class CiFFSCell :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] library 親のセルライブラリ
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
-  /// @param[in] next_state "next_state" 関数の式
-  /// @param[in] clocked_on "clocked_on" 関数の式
-  /// @param[in] clocked_on_also "clocked_on_also" 関数の式
-  /// @param[in] preset "preset" 関数の式
-  /// @param[in] alloc メモリアロケータ
-  /// *1: - false 論理式なし
-  ///     - true 論理式あり
-  CiFFSCell(CiCellLibrary* library,
-	    const ShString& name,
-	    ClibArea area,
-	    const vector<CiInputPin*>& input_list,
-	    const vector<CiOutputPin*>& output_list,
-	    const vector<CiInoutPin*>& inout_list,
-	    const vector<CiBus*>& bus_list,
-	    const vector<CiBundle*>& bundle_list,
-	    const vector<CiTiming*>& timing_list,
-	    const Expr& next_state,
-	    const Expr& clocked_on,
-	    const Expr& clocked_on_also,
-	    const Expr& preset);
+  CiFFSCell(
+    CiCellLibrary* library,                  ///< [in] 親のセルライブラリ
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area,                           ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiBus*>& bus_list,          ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,    ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング情報のリスト
+    const Expr& next_state,                  ///< [in] "next_state" 関数の式
+    const Expr& clocked_on,                  ///< [in] "clocked_on" 関数の式
+    const Expr& clocked_on_also,             ///< [in] "clocked_on_also" 関数の式
+    const Expr& preset                       ///< [in] "preset" 関数の式
+  );
 
   /// @brief デストラクタ
   ~CiFFSCell();
@@ -250,38 +215,24 @@ class CiFFSRCell :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] library 親のセルライブラリ
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
-  /// @param[in] next_state "next_state" 関数の式
-  /// @param[in] clocked_on "clocked_on" 関数の式
-  /// @param[in] clocked_on_also "clocked_on_also" 関数の式
-  /// @param[in] clear "clear" 関数の式
-  /// @param[in] preset "preset" 関数の式
-  /// @param[in] clear_preset_var1 clear と preset が同時にオンになったときの値1
-  /// @param[in] clear_preset_var2 clear と preset が同時にオンになったときの値2
-  CiFFSRCell(CiCellLibrary* library,
-	     const ShString& name,
-	     ClibArea area,
-	     const vector<CiInputPin*>& input_list,
-	     const vector<CiOutputPin*>& output_list,
-	     const vector<CiInoutPin*>& inout_list,
-	     const vector<CiBus*>& bus_list,
-	     const vector<CiBundle*>& bundle_list,
-	     const vector<CiTiming*>& timing_list,
-	     const Expr& next_state,
-	     const Expr& clocked_on,
-	     const Expr& clocked_on_also,
-	     const Expr& clear,
-	     const Expr& preset,
-	     int clear_preset_var1,
-	     int clear_preset_var2);
+  CiFFSRCell(
+    CiCellLibrary* library,                  ///< [in] 親のセルライブラリ
+    const ShString& name,		     ///< [in] 名前
+    ClibArea area,			     ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiBus*>& bus_list,	     ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,    ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング情報のリスト
+    const Expr& next_state,		     ///< [in] "next_state" 関数の式
+    const Expr& clocked_on,		     ///< [in] "clocked_on" 関数の式
+    const Expr& clocked_on_also,	     ///< [in] "clocked_on_also" 関数の式
+    const Expr& clear,			     ///< [in] "clear" 関数の式
+    const Expr& preset,                      ///< [in] "preset" 関数の式
+    int clear_preset_var1,                   ///< [in] clear と preset が同時にオンになったときの値1
+    int clear_preset_var2                    ///< [in] clear と preset が同時にオンになったときの値2
+  );
 
   /// @brief デストラクタ
   ~CiFFSRCell();

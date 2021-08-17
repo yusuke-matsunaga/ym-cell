@@ -10,6 +10,7 @@
 
 
 #include "ym/ClibBus.h"
+#include "ym/ClibBusType.h"
 #include "ym/ClibObjList.h"
 #include "ym/ShString.h"
 
@@ -52,9 +53,10 @@ public:
   pin_num() const override;
 
   /// @brief ピンの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
   const ClibCellPin&
-  pin(int pos) const override;
+  pin(
+    int pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
+  ) const override;
 
 
 private:
@@ -64,9 +66,11 @@ private:
 
   /// @brief 内容を初期化する．
   void
-  init(const ShString& name,
-       const ClibBusType* bus_type,
-       const vector<ClibCellPin*>& pin_list);
+  init(
+    const ShString& name,
+    const ClibBusType* bus_type,
+    const vector<ClibCellPin*>& pin_list
+  );
 
 
 private:

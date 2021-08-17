@@ -19,20 +19,19 @@ BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 //////////////////////////////////////////////////////////////////////
 
 // @brief 変換付きのコピーコンストラクタ
-// @param[in] src コピー元のオブジェクト
-// @param[in] xmap 変換マップ
-LcSignature::LcSignature(const LcSignature& src,
-			 const NpnMapM& xmap) :
-  mTypeBits{src.mTypeBits},
-  mInputNum{src.mInputNum},
-  mOutputNum{src.mOutputNum},
-  mOutputBits{src.mOutputBits},
-  mClockFunc{src.mClockFunc},
-  mNextStateFunc{src.mNextStateFunc},
-  mClearFunc{src.mClearFunc},
-  mPresetFunc{src.mPresetFunc},
-  mOutputFunc{src.mOutputFunc},
-  mTristateFunc{src.mTristateFunc}
+LcSignature::LcSignature(
+  const LcSignature& src,
+  const NpnMapM& xmap
+) : mTypeBits{src.mTypeBits},
+    mInputNum{src.mInputNum},
+    mOutputNum{src.mOutputNum},
+    mOutputBits{src.mOutputBits},
+    mClockFunc{src.mClockFunc},
+    mNextStateFunc{src.mNextStateFunc},
+    mClearFunc{src.mClearFunc},
+    mPresetFunc{src.mPresetFunc},
+    mOutputFunc{src.mOutputFunc},
+    mTristateFunc{src.mTristateFunc}
 {
   // あれ？ xmap 使ってない！
   ASSERT_NOT_REACHED;
@@ -40,12 +39,13 @@ LcSignature::LcSignature(const LcSignature& src,
 
 // @brief 1出力の論理セルのシグネチャを作るコンストラクタ
 // @param[in] expr 論理式
-LcSignature::LcSignature(const Expr& expr) :
-  mInputNum{expr.input_size()},
-  mOutputNum{1},
-  mOutputBits(mOutputNum, 0U),
-  mOutputFunc(mOutputNum),
-  mTristateFunc(mOutputNum)
+LcSignature::LcSignature(
+  const Expr& expr
+) : mInputNum{expr.input_size()},
+    mOutputNum{1},
+    mOutputBits(mOutputNum, 0U),
+    mOutputFunc(mOutputNum),
+    mTristateFunc(mOutputNum)
 {
   set_Logic();
   mOutputBits[0] = 1U;
@@ -58,15 +58,16 @@ LcSignature::LcSignature(const Expr& expr) :
 // @param[in] has_xq 反転Q出力の有無
 // @param[in] has_clear クリア端子の有無
 // @param[in] has_preset プリセット端子の有無
-LcSignature::LcSignature(Type type,
-			 bool has_q,
-			 bool has_xq,
-			 bool has_clear,
-			 bool has_preset) :
-  mOutputNum{has_q ? (has_xq ? 2U : 1U) : (has_xq ? 1U : 0U)},
-  mOutputBits(mOutputNum, 0U),
-  mOutputFunc(mOutputNum),
-  mTristateFunc(mOutputNum)
+LcSignature::LcSignature(
+  Type type,
+  bool has_q,
+  bool has_xq,
+  bool has_clear,
+  bool has_preset
+) : mOutputNum{has_q ? (has_xq ? 2U : 1U) : (has_xq ? 1U : 0U)},
+    mOutputBits(mOutputNum, 0U),
+    mOutputFunc(mOutputNum),
+    mTristateFunc(mOutputNum)
 {
   if ( type == Type::FF ) {
     set_FF();
@@ -119,12 +120,13 @@ LcSignature::LcSignature(Type type,
 
 // @brief コンストラクタ
 // @param[in] cell セル
-LcSignature::LcSignature(const ClibCell* cell) :
-  mInputNum{cell->input_num()},
-  mOutputNum{cell->output_num()},
-  mOutputBits(mOutputNum, 0U),
-  mOutputFunc(mOutputNum),
-  mTristateFunc(mOutputNum)
+LcSignature::LcSignature(
+  const ClibCell* cell
+) : mInputNum{cell->input_num()},
+    mOutputNum{cell->output_num()},
+    mOutputBits(mOutputNum, 0U),
+    mOutputFunc(mOutputNum),
+    mTristateFunc(mOutputNum)
 {
   int ni = mInputNum;
   if ( cell->is_logic() ) {
@@ -164,17 +166,14 @@ LcSignature::LcSignature(const ClibCell* cell) :
   }
 }
 
-// @brief デストラクタ
-LcSignature::~LcSignature()
-{
-}
-
 
 BEGIN_NONAMESPACE
 
 void
-tvfunc_to_str(const TvFunc& f,
-	      ostream& buf)
+tvfunc_to_str(
+  const TvFunc& f,
+  ostream& buf
+)
 {
   int n = f.nblk();
   for (int i = 0; i < n; ++ i) {
@@ -221,7 +220,9 @@ LcSignature::str() const
 
 // @brief 等価比較演算子
 bool
-LcSignature::operator==(const LcSignature& right) const
+LcSignature::operator==(
+  const LcSignature& right
+) const
 {
   if ( mTypeBits != right.mTypeBits ) {
     return false;

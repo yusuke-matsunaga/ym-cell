@@ -5,9 +5,8 @@
 /// @brief CiCellPin のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/ClibCellPin.h"
 #include "ym/ClibTime.h"
@@ -33,8 +32,9 @@ class CiCellPin :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] name ピン名
-  CiCellPin(const ShString& name);
+  CiCellPin(
+    const ShString& name ///< [in] ピン名
+  );
 
   /// @brief デストラクタ
   ~CiCellPin();
@@ -162,7 +162,9 @@ protected:
 
   /// @brief dump 用の共通情報を出力する．
   void
-  dump_common(ostream& s) const;
+  dump_common(
+    ostream& s ///< [in] 出力ストリーム
+  ) const;
 
 
 private:
@@ -198,14 +200,12 @@ class CiInputPin :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] name ピン名
-  /// @param[in] capacitance 負荷容量
-  /// @param[in] rise_capacitance 立ち上がり時の負荷容量
-  /// @param[in] fall_capacitance 立ち下がり時の負荷容量
-  CiInputPin(const ShString& name,
-	     ClibCapacitance capacitance,
-	     ClibCapacitance rise_capacitance,
-	     ClibCapacitance fall_capacitance);
+  CiInputPin(
+    const ShString& name,             ///< [in] ピン名
+    ClibCapacitance capacitance,      ///< [in] 負荷容量
+    ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
+    ClibCapacitance fall_capacitance  ///< [in] 立ち下がり時の負荷容量
+  );
 
   /// @brief デストラクタ
   ~CiInputPin();
@@ -254,9 +254,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   void
-  dump(ostream& s) const override;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const override;
 
 
 private:
@@ -291,26 +292,18 @@ class CiOutputPinBase :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] name ピン名
-  /// @param[in] has_logic 論理式を持つとき true にするフラグ
-  /// @param[in] logic_expr 論理式
-  /// @param[in] tristate_expr tristate 条件式
-  /// @param[in] max_fanout 最大ファンアウト容量
-  /// @param[in] min_fanout 最小ファンアウト容量
-  /// @param[in] max_capacitance 最大負荷容量
-  /// @param[in] min_capacitance 最小負荷容量
-  /// @param[in] max_transition 最大遷移時間
-  /// @param[in] min_transition 最小遷移時間
-  CiOutputPinBase(const ShString& name,
-		  bool has_logic,
-		  const Expr& logic_expr,
-		  const Expr& tristate_expr,
-		  ClibCapacitance max_fanout,
-		  ClibCapacitance min_fanout,
-		  ClibCapacitance max_capacitance,
-		  ClibCapacitance min_capacitance,
-		  ClibTime max_transition,
-		  ClibTime min_transition);
+  CiOutputPinBase(
+    const ShString& name,            ///< [in] ピン名
+    bool has_logic,                  ///< [in] 論理式を持つとき true にするフラグ
+    const Expr& logic_expr,          ///< [in] 論理式
+    const Expr& tristate_expr,       ///< [in] tristate 条件式
+    ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
+    ClibCapacitance min_fanout,      ///< [in] 最小ファンアウト容量
+    ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
+    ClibCapacitance min_capacitance, ///< [in] 最小負荷容量
+    ClibTime max_transition,         ///< [in] 最大遷移時間
+    ClibTime min_transition          ///< [in] 最小遷移時間
+  );
 
   /// @brief デストラクタ
   ~CiOutputPinBase();
@@ -421,26 +414,18 @@ class CiOutputPin :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] name ピン名
-  /// @param[in] has_logic 論理式を持つとき true にするフラグ
-  /// @param[in] logic_expr 論理式
-  /// @param[in] tristate_expr tristate 条件式
-  /// @param[in] max_fanout 最大ファンアウト容量
-  /// @param[in] min_fanout 最小ファンアウト容量
-  /// @param[in] max_capacitance 最大負荷容量
-  /// @param[in] min_capacitance 最小負荷容量
-  /// @param[in] max_transition 最大遷移時間
-  /// @param[in] min_transition 最小遷移時間
-  CiOutputPin(const ShString& name,
-	      bool has_logic,
-	      const Expr& logic_expr,
-	      const Expr& tristate_expr,
-	      ClibCapacitance max_fanout,
-	      ClibCapacitance min_fanout,
-	      ClibCapacitance max_capacitance,
-	      ClibCapacitance min_capacitance,
-	      ClibTime max_transition,
-	      ClibTime min_transition);
+  CiOutputPin(
+    const ShString& name,            ///< [in] ピン名
+    bool has_logic,                  ///< [in] 論理式を持つとき true にするフラグ
+    const Expr& logic_expr,          ///< [in] 論理式
+    const Expr& tristate_expr,       ///< [in] tristate 条件式
+    ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
+    ClibCapacitance min_fanout,      ///< [in] 最小ファンアウト容量
+    ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
+    ClibCapacitance min_capacitance, ///< [in] 最小負荷容量
+    ClibTime max_transition,         ///< [in] 最大遷移時間
+    ClibTime min_transition          ///< [in] 最小遷移時間
+  );
 
   /// @brief デストラクタ
   ~CiOutputPin();
@@ -466,9 +451,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   void
-  dump(ostream& s) const override;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const override;
 
 };
 
@@ -487,32 +473,21 @@ class CiInoutPin :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] name ピン名
-  /// @param[in] has_logic 論理式を持つとき true にするフラグ
-  /// @param[in] logic_expr 論理式
-  /// @param[in] tristate_expr tristate 条件式
-  /// @param[in] capacitance 負荷容量
-  /// @param[in] rise_capacitance 立ち上がり時の負荷容量
-  /// @param[in] fall_capacitance 立ち下がり時の負荷容量
-  /// @param[in] max_fanout 最大ファンアウト容量
-  /// @param[in] min_fanout 最小ファンアウト容量
-  /// @param[in] max_capacitance 最大負荷容量
-  /// @param[in] min_capacitance 最小負荷容量
-  /// @param[in] max_transition 最大遷移時間
-  /// @param[in] min_transition 最小遷移時間
-  CiInoutPin(const ShString& name,
-	     bool has_logic,
-	     const Expr& logic_expr,
-	     const Expr& tristate_expr,
-	     ClibCapacitance capacitance,
-	     ClibCapacitance rise_capacitance,
-	     ClibCapacitance fall_capacitance,
-	     ClibCapacitance max_fanout,
-	     ClibCapacitance min_fanout,
-	     ClibCapacitance max_capacitance,
-	     ClibCapacitance min_capacitance,
-	     ClibTime max_transition,
-	     ClibTime min_transition);
+  CiInoutPin(
+    const ShString& name,             ///< [in] ピン名
+    bool has_logic,                   ///< [in] 論理式を持つとき true にするフラグ
+    const Expr& logic_expr,           ///< [in] 論理式
+    const Expr& tristate_expr,        ///< [in] tristate 条件式
+    ClibCapacitance capacitance,      ///< [in] 負荷容量
+    ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
+    ClibCapacitance fall_capacitance, ///< [in] 立ち下がり時の負荷容量
+    ClibCapacitance max_fanout,       ///< [in] 最大ファンアウト容量
+    ClibCapacitance min_fanout,       ///< [in] 最小ファンアウト容量
+    ClibCapacitance max_capacitance,  ///< [in] 最大負荷容量
+    ClibCapacitance min_capacitance,  ///< [in] 最小負荷容量
+    ClibTime max_transition,          ///< [in] 最大遷移時間
+    ClibTime min_transition           ///< [in] 最小遷移時間
+  );
 
   /// @brief デストラクタ
   ~CiInoutPin();
@@ -561,9 +536,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   void
-  dump(ostream& s) const override;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const override;
 
 
 private:
@@ -599,8 +575,9 @@ class CiInternalPin :
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] name ピン名
-  CiInternalPin(const ShString& name);
+  CiInternalPin(
+    const ShString& name ///< [in] ピン名
+  );
 
   /// @brief デストラクタ
   ~CiInternalPin();
@@ -637,9 +614,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   void
-  dump(ostream& s) const override;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const override;
 
 
 private:

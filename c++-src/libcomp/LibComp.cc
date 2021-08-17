@@ -3,9 +3,8 @@
 /// @brief LibComp の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "lc/LibComp.h"
 #include "lc/LcClass.h"
@@ -24,8 +23,10 @@ BEGIN_NONAMESPACE
 
 // 論理式の変数を map にしたがって変換する．
 Expr
-xform_expr(const Expr& expr,
-	   const NpnMapM& map)
+xform_expr(
+  const Expr& expr,
+  const NpnMapM& map
+)
 {
   int ni = map.input_num();
   int no = map.output_num();
@@ -48,10 +49,12 @@ xform_expr(const Expr& expr,
 // has_q, has_xq, has_clear, has_preset をエンコードする．
 inline
 int
-encode(bool has_q,
-       bool has_xq,
-       bool has_clear,
-       bool has_preset)
+encode(
+  bool has_q,
+  bool has_xq,
+  bool has_clear,
+  bool has_preset
+)
 {
   int ans = 0;
   if ( has_q ) {
@@ -79,11 +82,13 @@ encode(bool has_q,
 // 整数から has_q, has_xq, has_clear, has_preset をデコードする．
 inline
 void
-decode(int val,
-       bool& has_q,
-       bool& has_xq,
-       bool& has_clear,
-       bool& has_preset)
+decode(
+  int val,
+  bool& has_q,
+  bool& has_xq,
+  bool& has_clear,
+  bool& has_preset
+)
 {
   int val1 = val >> 2;
   switch ( val1 ) {
@@ -110,22 +115,6 @@ END_NONAMESPACE
 //////////////////////////////////////////////////////////////////////
 // クラス LibComp
 //////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-LibComp::LibComp()
-{
-}
-
-// @brief デストラクタ
-LibComp::~LibComp()
-{
-  for ( auto lcgroup: mGroupList ) {
-    delete lcgroup;
-  }
-  for ( auto lcclass: mClassList ) {
-    delete lcclass;
-  }
-}
 
 // @brief パタングラフの情報を取り出す．
 const LcPatMgr&
@@ -176,7 +165,7 @@ LcGroup*
 LibComp::group(int id) const
 {
   ASSERT_COND( id >= 0 && id < group_num() );
-  return mGroupList[id];
+  return mGroupList[id].get();
 }
 
 // @brief NPN同値クラスの数を返す．
@@ -192,7 +181,7 @@ LcClass*
 LibComp::npn_class( int id) const
 {
   ASSERT_COND( id >= 0 && id < npn_class_num() );
-  return mClassList[id];
+  return mClassList[id].get();
 }
 
 // @brief 定義済みの論理グループ番号を返す．
@@ -416,7 +405,7 @@ LibComp::_find_group(const LcSignature& sig)
   if ( mGroupMap.count(sig_str) > 0 ) {
     int fgid = mGroupMap[sig_str];
     // 既に登録されていた．
-    return mGroupList[fgid];
+    return group(fgid);
   }
 
   // なかったので新たに作る．
@@ -431,7 +420,7 @@ LibComp::_find_group(const LcSignature& sig)
   if ( mClassMap.count(rep_sig_str) > 0 ) {
     int fcid = mClassMap[rep_sig_str];
     // 登録されていた．
-    fclass = mClassList[fcid];
+    fclass = npn_class(fcid);
   }
   else {
     // まだ登録されていない．
@@ -467,7 +456,7 @@ LibComp::_new_group()
 {
   int new_id = mGroupList.size();
   LcGroup* fgroup = new LcGroup(new_id);
-  mGroupList.push_back(fgroup);
+  mGroupList.push_back(unique_ptr<LcGroup>{fgroup});
 
   return fgroup;
 }
@@ -479,7 +468,7 @@ LibComp::_new_class(const LcSignature& rep_sig)
 {
   int new_id = mClassList.size();
   LcClass* fclass = new LcClass(new_id, rep_sig);
-  mClassList.push_back(fclass);
+  mClassList.push_back(unique_ptr<LcClass>{fclass});
   fclass->mIdmapList = _find_idmap_list(rep_sig);
 
   return fclass;

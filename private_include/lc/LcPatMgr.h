@@ -43,12 +43,16 @@ public:
 
   /// @brief 論理式から生成されるパタンを登録する．
   void
-  reg_pat(const Expr& expr, ///< [in] パタンの元となる論理式
-	  int rep_id);      ///< [in] このパタンが属する代表関数番号
+  reg_pat(
+    const Expr& expr, ///< [in] パタンの元となる論理式
+    int rep_id        ///< [in] このパタンが属する代表関数番号
+  );
 
   /// @brief 内容を出力する．(デバッグ用)
   void
-  display(ostream& s) const; ///< [in] 出力先のストリーム
+  display(
+    ostream& s ///<[in] 出力先のストリーム
+  ) const;
 
 
 public:
@@ -62,7 +66,9 @@ public:
 
   /// @brief ノードを返す．
   const LcPatNode&
-  node(int pos) const; ///< [in] ノード番号 ( 0 <= pos < node_num() )
+  node(
+    int pos ///< [in] ノード番号 ( 0 <= pos < node_num() )
+  ) const;
 
   /// @brief パタン数を返す．
   int
@@ -70,17 +76,23 @@ public:
 
   /// @brief パタンの根のハンドルを返す．
   LcPatHandle
-  pat_root(int id) const; ///< [in] パタン番号 ( 0 <= id < pat_num() )
+  pat_root(
+    int id ///< [in] パタン番号 ( 0 <= id < pat_num() )
+  ) const;
 
   /// @brief パタンのノードリストを返す．
   /// @return このパタンの入力数を返す．
   int
-  pat_node_list(int id,                        ///< [in] パタン番号 ( 0 <= id < pat_num() )
-		vector<int>& node_list) const; ///< [in] パタンを DFS 順でたどった時のノード番号のリスト
+  pat_node_list(
+    int id,                ///< [in] パタン番号 ( 0 <= id < pat_num() )
+    vector<int>& node_list ///< [in] パタンを DFS 順でたどった時のノード番号のリスト
+  ) const;
 
   /// @brief パタンの属している代表関数番号を返す．
   int
-  rep_id(int id) const; ///< [in] パタン番号 ( 0 <= id < pat_num() )
+  rep_id(
+    int id ///< [in] パタン番号 ( 0 <= id < pat_num() )
+  ) const;
 
 
 private:
@@ -91,46 +103,60 @@ private:
   /// @brief 2つの論理式が等しいかどうか調べる．
   static
   bool
-  check_equivalent(const Expr& expr1,
-		   const Expr& expr2);
+  check_equivalent(
+    const Expr& expr1,
+    const Expr& expr2
+  );
 
   /// @brief 2つのパタンが同型かどうか調べる．
   static
   bool
-  check_equivalent(LcPatHandle handle1,
-		   LcPatHandle handle2);
+  check_equivalent(
+    LcPatHandle handle1,
+    LcPatHandle handle2
+  );
 
   /// @brief check_equivalent の下請け関数
   static
   bool
-  ceq_sub(LcPatNode* node1,
-	  LcPatNode* node2,
-	  unordered_map<int, int>& map1,
-	  unordered_map<int, int>& map2);
+  ceq_sub(
+    LcPatNode* node1,
+    LcPatNode* node2,
+    unordered_map<int, int>& map1,
+    unordered_map<int, int>& map2
+  );
 
   /// @brief パタングラフを生成する再帰関数
   void
-  pg_sub(const Expr& expr,              ///< [in] 元になる論理式
-	 vector<LcPatHandle>& pg_list); ///< [in] パタングラフ番号のリスト
+  pg_sub(
+    const Expr& expr,            ///< [in] 元になる論理式
+    vector<LcPatHandle>& pg_list ///< [in] パタングラフ番号のリスト
+  );
 
   /// @brief テンプレートにしたがって2分木を作る．
   LcPatHandle
-  make_bintree(const Expr& expr,                 ///< [in] 論理式 (演算の種類を表すのに用いる)
-	       const vector<LcPatHandle>& input, ///< [in] 入力の配列
-	       int pat[],                        ///< [in] 2分木の形を表す配列
-	       int& pos);                        ///< [inout] pat[] 中の位置を示す変数
+  make_bintree(
+    const Expr& expr,                 ///< [in] 論理式 (演算の種類を表すのに用いる)
+    const vector<LcPatHandle>& input, ///< [in] 入力の配列
+    int pat[],                        ///< [in] 2分木の形を表す配列
+    int& pos                          ///< [inout] pat[] 中の位置を示す変数
+  );
 
   /// @brief 入力ノードを作る．
   ///
   /// 既にあるときはそれを返す．
   LcPatNode*
-  make_input(VarId var); ///< [in] 入力変数
+  make_input(
+    VarId var ///< [in] 入力変数
+  );
 
   /// @brief 論理式の種類に応じてノードを作る．
   LcPatHandle
-  make_node(const Expr& expr,      ///< [in] 論理式 (演算の種類を表すのに用いる)
-	    LcPatHandle l_handle,  ///< [in] 左の子供のパタン
-	    LcPatHandle r_handle); ///< [in] 右の子供のパタン
+  make_node(
+    const Expr& expr,     ///< [in] 論理式 (演算の種類を表すのに用いる)
+    LcPatHandle l_handle, ///< [in] 左の子供のパタン
+    LcPatHandle r_handle  ///< [in] 右の子供のパタン
+  );
 
   /// @brief ノードを作る．
   LcPatNode&
@@ -144,14 +170,18 @@ private:
 
   /// @brief ハッシュ表を確保する．
   void
-  alloc_table(SizeType req_size); ///< [in] サイズ
+  alloc_table(
+    SizeType req_size ///< [in] サイズ
+  );
 
   /// @brief LcPatNode のハッシュ関数
   static
   SizeType
-  hash_func(int type,           ///< [in] 種類
-	    LcPatNode* l_node,  ///< [in] 左の子供
-	    LcPatNode* r_node); ///< [in] 右の子供
+  hash_func(
+    int type,          ///< [in] 種類
+    LcPatNode* l_node, ///< [in] 左の子供
+    LcPatNode* r_node  ///< [in] 右の子供
+  );
 
 
 private:
@@ -162,17 +192,21 @@ private:
   /// @brief 枝の情報をエンコードする．
   static
   int
-  encode_edge(LcPatNode* node, ///< [in] 親のノード
-	      int fanin_pos);  ///< [in] ファンイン番号
+  encode_edge(
+    LcPatNode* node, ///< [in] 親のノード
+    int fanin_pos    ///< [in] ファンイン番号
+  );
 
 
   /// @brief パタングラフを DFS でたどって内容を val_list に入れる．
   /// @return 最大入力番号+1を返す．
   static
   int
-  dump_dfs(LcPatNode* node,        ///< [in] ノード
-	   vector<bool>& vmark,    ///< [in] 訪れたかどうかの情報を持つ配列
-	   vector<int>& val_list); ///< [in] ノードの情報を格納するリスト
+  dump_dfs(
+    LcPatNode* node,      ///< [in] ノード
+    vector<bool>& vmark,  ///< [in] 訪れたかどうかの情報を持つ配列
+    vector<int>& val_list ///< [in] ノードの情報を格納するリスト
+  );
 
 
 private:
@@ -183,9 +217,11 @@ private:
   /// @brief 枝の情報を出力する．
   static
   void
-  display_edge(ostream& s,            ///< [in] 出力先のストリーム
-	       const LcPatNode& node, ///< [in] 親のノード
-	       int fanin_pos);        ///< [in] ファンイン番号
+  display_edge(
+    ostream& s,            ///< [in] 出力先のストリーム
+    const LcPatNode& node, ///< [in] 親のノード
+    int fanin_pos          ///< [in] ファンイン番号
+  );
 
 
 private:

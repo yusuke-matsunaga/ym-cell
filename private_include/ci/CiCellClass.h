@@ -5,9 +5,8 @@
 /// @brief CiCellClass のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/ClibCellClass.h"
 #include "ym/ClibObjList.h"
@@ -30,13 +29,11 @@ class CiCellClass :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] id 番号
-  /// @param[in] idmap_list 同位体変換リスト
-  /// @param[in] group_list グループのリスト
-  /// @param[in] alloc メモリアロケータ
-  CiCellClass(int id,
-	      const vector<NpnMapM>& idmap_list,
-	      const vector<CiCellGroup*>& group_list);
+  CiCellClass(
+    int id,                                ///< [in] 番号
+    const vector<NpnMapM>& idmap_list,     ///< [in] 同位体変換リスト
+    const vector<CiCellGroup*>& group_list ///< [in] グループのリスト
+  );
 
   /// @brief エラーオブジェクト用のコンストラクタ
   CiCellClass();
@@ -51,19 +48,22 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ID番号を返す．
-  /// @note ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
+  ///
+  /// ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
   int
   id() const override;
 
   /// @brief 同位体変換の個数を得る．
-  /// @note 恒等変換は含まない．
+  ///
+  /// 恒等変換は含まない．
   int
   idmap_num() const override;
 
   /// @brief 同位体変換を得る．
-  /// @param[in] pos 位置番号 ( 0 <= pos < idmap_num() )
   const NpnMapM&
-  idmap(int pos) const override;
+  idmap(
+    int pos ///< [in] 位置番号 ( 0 <= pos < idmap_num() )
+  ) const override;
 
 
 public:
@@ -82,9 +82,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief バイナリダンプを行う．
-  /// @param[in] bos 出力先のストリーム
+  /// @param[in] bos
   void
-  dump(ostream& bos) const override;
+  dump(
+    ostream& bos ///< [in] 出力先のストリーム
+  ) const override;
 
 
 private:

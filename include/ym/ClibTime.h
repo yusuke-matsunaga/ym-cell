@@ -36,8 +36,9 @@ public:
 
   /// @brief double からの変換用コンストラクタ
   explicit
-  ClibTime(double v) : ///< [in] 設定する値
-    mValue{v}
+  ClibTime(
+    double v ///< [in] 設定する値
+  ) : mValue{v}
   {
   }
 
@@ -78,24 +79,33 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 代入演算子
+  /// @return 代入後の自身への参照を返す．
   const ClibTime&
-  operator=(const ClibTime& src) ///< [in] コピー元のオブジェクト
+  operator=(
+    const ClibTime& src ///< [in] コピー元のオブジェクト
+  )
   {
     mValue = src.mValue;
     return *this;
   }
 
   /// @brief 加算付き代入演算子
+  /// @return 代入後の自身への参照を返す．
   const ClibTime&
-  operator+=(const ClibTime& src) ///< [in] オペランド
+  operator+=(
+    const ClibTime& src ///< [in] オペランド
+  )
   {
     mValue += src.mValue;
     return *this;
   }
 
   /// @brief 減算付き代入演算子
+  /// @return 代入後の自身への参照を返す．
   const ClibTime&
-  operator-=(const ClibTime& src) ///< [in] オペランド
+  operator-=(
+    const ClibTime& src ///< [in] オペランド
+  )
   {
     mValue -= src.mValue;
     return *this;
@@ -114,80 +124,104 @@ private:
 
 /// @brief 加算
 /// @relates ClibTime
+/// @return 演算結果を返す．
 inline
 ClibTime
-operator+(const ClibTime& left,  ///< [in] 左のオペランド
-	  const ClibTime& right) ///< [in] 右のオペランド
+operator+(
+  const ClibTime& left, ///< [in] 左のオペランド
+  const ClibTime& right ///< [in] 右のオペランド
+)
 {
   return ClibTime(left).operator+=(right);
 }
 
 /// @brief 減算
 /// @relates ClibTime
+/// @return 演算結果を返す．
 inline
 ClibTime
-operator-(const ClibTime& left,  ///< [in] 左のオペランド
-	  const ClibTime& right) ///< [in] 右のオペランド
+operator-(
+  const ClibTime& left, ///< [in] 左のオペランド
+  const ClibTime& right ///< [in] 右のオペランド
+)
 {
   return ClibTime(left).operator-=(right);
 }
 
 /// @brief 等価比較演算子
 /// @relates ClibTime
+/// @return 演算結果を返す．
 inline
 bool
-operator==(const ClibTime& left,  ///< [in] 左のオペランド
-	   const ClibTime& right) ///< [in] 右のオペランド
+operator==(
+  const ClibTime& left, ///< [in] 左のオペランド
+  const ClibTime& right ///< [in] 右のオペランド
+)
 {
   return left.value() == right.value();
 }
 
 /// @brief 非等価比較演算子
 /// @relates ClibTime
+/// @return 演算結果を返す．
 inline
 bool
-operator!=(const ClibTime& left,  ///< [in] 左のオペランド
-	   const ClibTime& right) ///< [in] 右のオペランド
+operator!=(
+  const ClibTime& left, ///< [in] 左のオペランド
+  const ClibTime& right ///< [in] 右のオペランド
+)
 {
   return !operator==(left, right);
 }
 
 /// @brief 大小比較演算子
 /// @relates ClibTime
+/// @return 演算結果を返す．
 inline
 bool
-operator<(const ClibTime& left,  ///< [in] 左のオペランド
-	  const ClibTime& right) ///< [in] 右のオペランド
+operator<(
+  const ClibTime& left, ///< [in] 左のオペランド
+  const ClibTime& right ///< [in] 右のオペランド
+)
 {
   return left.value() < right.value();
 }
 
 /// @brief 大小比較演算子
 /// @relates ClibTime
+/// @return 演算結果を返す．
 inline
 bool
-operator>(const ClibTime& left,  ///< [in] 左のオペランド
-	  const ClibTime& right) ///< [in] 右のオペランド
+operator>(
+  const ClibTime& left, ///< [in] 左のオペランド
+  const ClibTime& right ///< [in] 右のオペランド
+)
 {
   return operator<(right, left);
 }
 
 /// @brief 大小比較演算子
 /// @relates ClibTime
+/// @return 演算結果を返す．
 inline
 bool
-operator<=(const ClibTime& left,  ///< [in] 左のオペランド
-	   const ClibTime& right) ///< [in] 右のオペランド
+operator<=(
+  const ClibTime& left, ///< [in] 左のオペランド
+  const ClibTime& right ///< [in] 右のオペランド
+)
 {
   return !operator<(right, left);
 }
 
 /// @brief 大小比較演算子
 /// @relates ClibTime
+/// @return 演算結果を返す．
 inline
 bool
-operator>=(const ClibTime& left,  ///< [in] 左のオペランド
-	   const ClibTime& right) ///< [in] 右のオペランド
+operator>=(
+  const ClibTime& left, ///< [in] 左のオペランド
+  const ClibTime& right ///< [in] 右のオペランド
+)
 {
   return !operator<(left, right);
 }
@@ -195,8 +229,10 @@ operator>=(const ClibTime& left,  ///< [in] 左のオペランド
 /// @brief ストリーム出力
 inline
 ostream&
-operator<<(ostream& s,          ///< [in] 出力先のストリーム
-	   const ClibTime& val) ///< [in] 値
+operator<<(
+  ostream& s,         ///< [in] 出力先のストリーム
+  const ClibTime& val ///< [in] 値
+)
 {
   return s << val.value();
 }
@@ -205,8 +241,10 @@ operator<<(ostream& s,          ///< [in] 出力先のストリーム
 /// @relates ClibTime
 inline
 istream&
-operator>>(istream& s,    ///< [in] 入力元のストリーム
-	   ClibTime& val) ///< [out] 読み出された値
+operator>>(
+  istream& s,   ///< [in] 入力元のストリーム
+  ClibTime& val ///< [out] 読み出された値
+)
 {
   double tmp;
   s >> tmp;

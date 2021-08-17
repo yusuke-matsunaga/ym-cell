@@ -22,24 +22,30 @@ const int PRESET  = 5;
 
 inline
 ymuint32
-encode(ymuint32 val,
-       int idx)
+encode(
+  ymuint32 val,
+  int idx
+)
 {
   return val << (5 * idx);
 }
 
 inline
 int
-get_sense(ymuint32 bits,
-	  int idx)
+get_sense(
+  ymuint32 bits,
+  int idx
+)
 {
   return (bits >> (5 * idx + 3)) & 3U;
 }
 
 inline
 int
-get_pos(ymuint32 bits,
-	int idx)
+get_pos(
+  ymuint32 bits,
+  int idx
+)
 {
   return (bits >> (5 * idx)) & 7U;
 }
@@ -50,24 +56,10 @@ END_NONAMESPACE
 // クラス ClibLatchInfo
 //////////////////////////////////////////////////////////////////////
 
-// @brief 空のコンストラクタ
-// @note 内容は不定
-ClibLatchInfo::ClibLatchInfo() :
-  mBits(0U)
-{
-}
-
 // @brief コンストラクタ
-// @param[in] pos_array ピン位置と極性情報の配列
-// @note pos_array の意味は以下の通り
-//  - pos_array[0] : データ入力のピン番号     (3bit)
-//  - pos_array[1] : イネーブル入力のピン番号 (3bit) | 極性情報 (2bit)
-//  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
-//  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
-//  - pos_array[4] : 肯定出力のピン番号       (3bit)
-//  - pos_array[5] : 肯定出力のピン番号       (3bit) | 有無 (1bit)
-ClibLatchInfo::ClibLatchInfo(int pos_array[]) :
-  mBits(0U)
+ClibLatchInfo::ClibLatchInfo(
+  int pos_array[]
+)
 {
   mBits |= encode(pos_array[0], INPUT);
   mBits |= encode(pos_array[1], ENABLE);
@@ -75,11 +67,6 @@ ClibLatchInfo::ClibLatchInfo(int pos_array[]) :
   mBits |= encode(pos_array[3], PRESET);
   mBits |= encode(pos_array[4], OUTPUT1);
   mBits |= encode(pos_array[5], OUTPUT2);
-}
-
-// @brief デストラクタ
-ClibLatchInfo::~ClibLatchInfo()
-{
 }
 
 // @brief イネーブル入力のタイプを返す．

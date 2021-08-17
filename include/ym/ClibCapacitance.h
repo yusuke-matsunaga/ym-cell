@@ -35,8 +35,9 @@ public:
 
   /// @brief double からの変換コンストラクタ
   explicit
-  ClibCapacitance(double v) : ///< [in] 設定する値
-    mValue{v}
+  ClibCapacitance(
+    double v ///< [in] 設定する値
+  ) : mValue{v}
   {
   }
 
@@ -77,24 +78,33 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 代入演算子
+  /// @return 代入後の自身への参照を返す．
   const ClibCapacitance&
-  operator=(const ClibCapacitance& src) ///< [in] コピー元のオブジェクト
+  operator=(
+    const ClibCapacitance& src ///< [in] コピー元のオブジェクト
+  )
   {
     mValue = src.mValue;
     return *this;
   }
 
   /// @brief 加算付き代入演算子
+  /// @return 代入後の自身への参照を返す．
   const ClibCapacitance&
-  operator+=(const ClibCapacitance& src) ///< [in] オペランド
+  operator+=(
+    const ClibCapacitance& src ///< [in] オペランド
+  )
   {
     mValue += src.mValue;
     return *this;
   }
 
   /// @brief 減算付き代入演算子
+  /// @return 代入後の自身への参照を返す．
   const ClibCapacitance&
-  operator-=(const ClibCapacitance& src) ///< [in] オペランド
+  operator-=(
+    const ClibCapacitance& src ///< [in] オペランド
+  )
   {
     mValue -= src.mValue;
     return *this;
@@ -113,80 +123,104 @@ private:
 
 /// @brief 加算
 /// @relates ClibCapacitance
+/// @return 演算結果を返す．
 inline
 ClibCapacitance
-operator+(const ClibCapacitance& left,  ///< [in] 左のオペランド
-	  const ClibCapacitance& right)	///< [in] 右のオペランド
+operator+(
+  const ClibCapacitance& left, ///< [in] 左のオペランド
+  const ClibCapacitance& right	///< [in] 右のオペランド
+)
 {
   return ClibCapacitance(left).operator+=(right);
 }
 
 /// @brief 減算
 /// @relates ClibCapacitance
+/// @return 演算結果を返す．
 inline
 ClibCapacitance
-operator-(const ClibCapacitance& left,  ///< [in] 左のオペランド
-	  const ClibCapacitance& right)	///< [in] 右のオペランド
+operator-(
+  const ClibCapacitance& left, ///< [in] 左のオペランド
+  const ClibCapacitance& right ///< [in] 右のオペランド
+)
 {
   return ClibCapacitance(left).operator-=(right);
 }
 
 /// @brief 等価比較演算子
 /// @relates ClibCapacitance
+/// @return 演算結果を返す．
 inline
 bool
-operator==(const ClibCapacitance& left,  ///< [in] 左のオペランド
-	   const ClibCapacitance& right) ///< [in] 右のオペランド
+operator==(
+  const ClibCapacitance& left, ///< [in] 左のオペランド
+  const ClibCapacitance& right ///< [in] 右のオペランド
+)
 {
   return left.value() == right.value();
 }
 
 /// @brief 非等価比較演算子
 /// @relates ClibCapacitance
+/// @return 演算結果を返す．
 inline
 bool
-operator!=(const ClibCapacitance& left,  ///< [in] 左のオペランド
-	   const ClibCapacitance& right) ///< [in] 右のオペランド
+operator!=(
+  const ClibCapacitance& left, ///< [in] 左のオペランド
+  const ClibCapacitance& right ///< [in] 右のオペランド
+)
 {
   return !operator==(left, right);
 }
 
 /// @brief 大小比較演算子
 /// @relates ClibCapacitance
+/// @return 演算結果を返す．
 inline
 bool
-operator<(const ClibCapacitance& left,  ///< [in] 左のオペランド
-	  const ClibCapacitance& right)	///< [in] 右のオペランド
+operator<(
+  const ClibCapacitance& left, ///< [in] 左のオペランド
+  const ClibCapacitance& right ///< [in] 右のオペランド
+)
 {
   return left.value() < right.value();
 }
 
 /// @brief 大小比較演算子
 /// @relates ClibCapacitance
+/// @return 演算結果を返す．
 inline
 bool
-operator>(const ClibCapacitance& left,  ///< [in] 左のオペランド
-	  const ClibCapacitance& right)	///< [in] 右のオペランド
+operator>(
+  const ClibCapacitance& left, ///< [in] 左のオペランド
+  const ClibCapacitance& right ///< [in] 右のオペランド
+)
 {
   return operator<(right, left);
 }
 
 /// @brief 大小比較演算子
 /// @relates ClibCapacitance
+/// @return 演算結果を返す．
 inline
 bool
-operator<=(const ClibCapacitance& left,  ///< [in] 左のオペランド
-	   const ClibCapacitance& right) ///< [in] 右のオペランド
+operator<=(
+  const ClibCapacitance& left, ///< [in] 左のオペランド
+  const ClibCapacitance& right ///< [in] 右のオペランド
+)
 {
   return !operator<(right, left);
 }
 
 /// @brief 大小比較演算子
 /// @relates ClibCapacitance
+/// @return 演算結果を返す．
 inline
 bool
-operator>=(const ClibCapacitance& left,  ///< [in] 左のオペランド
-	   const ClibCapacitance& right) ///< [in] 右のオペランド
+operator>=(
+  const ClibCapacitance& left, ///< [in] 左のオペランド
+  const ClibCapacitance& right ///< [in] 右のオペランド
+)
 {
   return !operator<(left, right);
 }
@@ -195,18 +229,21 @@ operator>=(const ClibCapacitance& left,  ///< [in] 左のオペランド
 /// @relates ClibCapacitance
 inline
 ostream&
-operator<<(ostream& s,                 ///< [in] 出力先のストリーム
-	   const ClibCapacitance& val) ///< [in] 値
+operator<<(
+  ostream& s,                ///< [in] 出力先のストリーム
+  const ClibCapacitance& val ///< [in] 値
+)
 {
   return s << val.value();
 }
 
 /// @brief ストリーム入力
-/// @relates ClibCapacitance
 inline
 istream&
-operator>>(istream& s,           ///< [in] 入力元のストリーム
-	   ClibCapacitance& val) ///< [out] 読み出された値を格納する変数
+operator>>(
+  istream& s,          ///< [in] 入力元のストリーム
+  ClibCapacitance& val ///< [out] 読み出された値を格納する変数
+)
 {
   double tmp;
   s >> tmp;

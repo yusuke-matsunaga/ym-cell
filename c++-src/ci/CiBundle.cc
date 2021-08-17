@@ -3,9 +3,8 @@
 /// @brief CiBundle の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ci/CiBundle.h"
 
@@ -33,15 +32,20 @@ CiBundle::pin_num() const
 // @brief ピンの取得
 // @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
 const ClibCellPin&
-CiBundle::pin(int pos) const
+CiBundle::pin(
+  int pos
+) const
 {
+  ASSERT_COND( 0 <= pos && pos < pin_num() );
   return mPinList[pos];
 }
 
 // @brief 内容を初期化する．
 void
-CiBundle::init(const ShString& name,
-	       const vector<ClibCellPin*>& pin_list)
+CiBundle::init(
+  const ShString& name,
+  const vector<ClibCellPin*>& pin_list
+)
 {
   mName = name;
   mPinList.init(pin_list);

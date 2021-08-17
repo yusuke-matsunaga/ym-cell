@@ -3,9 +3,8 @@
 /// @brief CiCell の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ci/CiCell.h"
 #include "ci/CiCellLibrary.h"
@@ -26,32 +25,21 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] library 親のセルライブラリ
-// @param[in] name 名前
-// @param[in] area 面積
-// @param[in] input_list 入力ピンのリスト
-// @param[in] output_list 出力ピンのリスト
-// @param[in] inout_list 入出力ピンのリスト
-// @param[in] internal_list 内部ピンのリスト
-// @param[in] bus_list バスのリスト
-// @param[in] bundle_list バンドルのリスト
-// @param[in] timing_list タイミング情報のリスト
-CiCell::CiCell(CiCellLibrary* library,
-	       const ShString& name,
-	       ClibArea area,
-	       const vector<CiInputPin*>& input_list,
-	       const vector<CiOutputPin*>& output_list,
-	       const vector<CiInoutPin*>& inout_list,
-	       const vector<CiInternalPin*>& internal_list,
-	       const vector<CiBus*>& bus_list,
-	       const vector<CiBundle*>& bundle_list,
-	       const vector<CiTiming*>& timing_list)
+CiCell::CiCell(
+  CiCellLibrary* library,
+  const ShString& name,
+  ClibArea area,
+  const vector<CiInputPin*>& input_list,
+  const vector<CiOutputPin*>& output_list,
+  const vector<CiInoutPin*>& inout_list,
+  const vector<CiInternalPin*>& internal_list,
+  const vector<CiBus*>& bus_list,
+  const vector<CiBundle*>& bundle_list,
+  const vector<CiTiming*>& timing_list
+) : mLibrary{library},
+    mName{name},
+    mArea{area}
 {
-  mLibrary = library;
-
-  mName = name;
-  mArea = area;
-
   mInputNum = input_list.size();
   mOutputNum = output_list.size();
   mInOutNum = inout_list.size();
@@ -60,10 +48,7 @@ CiCell::CiCell(CiCellLibrary* library,
   int no2 = mOutputNum + mInOutNum;
   if ( ni2 > 0 && no2 > 0 ) {
     int n = ni2 * no2 * 2;
-    mTimingMap = new ClibTimingList[n];
-  }
-  else {
-    mTimingMap = nullptr;
+    mTimingMap.resize(n);
   }
 
   // バス，バンドル関係は未完
@@ -142,14 +127,11 @@ CiCell::CiCell(CiCellLibrary* library,
   mOutputList.init(_output_list);
   mInternalList.init(_internal_list);
 
-  int nt = timing_list.size();
-  vector<ClibTiming*> _timing_list(nt);
-  for ( int id: Range(nt) ) {
-    CiTiming* timing = timing_list[id];
-    timing->mId = id;
-    _timing_list[id] = timing;
+  mTimingList.reserve(timing_list.size());
+  for ( auto timing: timing_list ) {
+    mTimingList.push_back(timing);
+    mTimingPool.push_back(unique_ptr<const ClibTiming>{timing});
   }
-  mTimingList.init(_timing_list);
 }
 
 // @brief エラーオブジェクト用のコンストラクタ
@@ -163,7 +145,6 @@ CiCell::CiCell() :
   mBusArray(nullptr),
   mBundleNum(0),
   mBundleArray(nullptr),
-  mTimingMap(nullptr),
   mCellGroup(nullptr)
 {
 }
@@ -171,7 +152,6 @@ CiCell::CiCell() :
 // @brief デストラクタ
 CiCell::~CiCell()
 {
-  delete [] mTimingMap;
 }
 
 // @brief ID番号の取得
@@ -383,20 +363,19 @@ CiCell::bundle_id(const string& name) const
 }
 
 // @brief タイミング情報のリストを返す．
-const ClibTimingList&
+vector<const ClibTiming*>
 CiCell::timing_list() const
 {
   return mTimingList;
 }
 
 // @brief 条件に合致するタイミング情報のリストを返す．
-// @param[in] ipos 開始ピン番号 ( 0 <= ipos < input_num2() )
-// @param[in] opos 終了ピン番号 ( 0 <= opos < output_num2() )
-// @param[in] timing_sense タイミング情報の摘要条件
-const ClibTimingList&
-CiCell::timing_list(int ipos,
-		    int opos,
-		    ClibTimingSense sense) const
+vector<const ClibTiming*>
+CiCell::timing_list(
+  int ipos,
+  int opos,
+  ClibTimingSense sense
+) const
 {
   int base = (opos * input_num2() + ipos) * 2;
   switch ( sense ) {

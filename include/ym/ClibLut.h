@@ -50,37 +50,42 @@ public:
   /// @brief 変数型の取得
   virtual
   ClibVarType
-  variable_type(int var) const ///< [in] 変数番号 ( 0 <= var < dimension() )
-  = 0;
+  variable_type(
+    int var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const = 0;
 
   /// @brief インデックス数の取得
   virtual
   int
-  index_num(int var) const ///< [in] 変数番号 ( 0 <= var < dimension() )
-  = 0;
+  index_num(
+    int var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const = 0;
 
   /// @brief インデックス値の取得
   virtual
   double
-  index(int var,       ///< [in] 変数番号 ( 0 <= var < dimension() )
-	int pos) const ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
-  = 0;
+  index(
+    int var, ///< [in] 変数番号 ( 0 <= var < dimension() )
+    int pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  ) const = 0;
 
   /// @brief 格子点の値の取得
   ///
   /// pos_array のサイズは dimension() と同じ
   virtual
   double
-  grid_value(const vector<int>& pos_array) const ///< [in] pos_array 格子点座標
-  = 0;
+  grid_value(
+    const vector<int>& pos_array ///< [in] pos_array 格子点座標
+  ) const = 0;
 
   /// @brief 値の取得
   ///
   /// @note val_array のサイズは dimension() と同じ
   virtual
   double
-  value(const vector<double>& val_array) const ///< [in] 入力の値の配列
-  = 0;
+  value(
+    const vector<double>& val_array ///< [in] 入力の値の配列
+  ) const = 0;
 
 
 public:
@@ -91,8 +96,9 @@ public:
   /// @brief 内容をバイナリダンプする．
   virtual
   void
-  dump(ostream& s) const ///< [in] 出力先のストリーム
-  = 0;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const = 0;
 
 };
 

@@ -5,9 +5,8 @@
 /// @brief CiCellGroup のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/ClibCellGroup.h"
 #include "ym/ClibObjList.h"
@@ -32,18 +31,15 @@ class CiCellGroup :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] id 番号
-  /// @param[in] map 変換マップ
-  /// @param[in] pininfo ピン情報
-  /// @param[in] cell_list セルのリスト
-  /// @param[in] alloc メモリアロケータ
   ///
   /// pininfo は restore() 時のみ指定する．
   /// それ以外は後で set_ff_info()/set_latch_info() で設定する．
-  CiCellGroup(int id,
-	      const NpnMapM& map,
-	      int pininfo,
-	      const vector<CiCell*>& cell_list);
+  CiCellGroup(
+    int id,                          ///< [in] 番号
+    const NpnMapM& map,              ///< [in] 変換マップ
+    int pininfo,                     ///< [in] ピン情報
+    const vector<CiCell*>& cell_list ///< [in] セルのリスト
+  );
 
   /// @brief エラーオブジェクト用のコンストラクタ
   CiCellGroup();
@@ -58,7 +54,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ID番号を返す．
-  /// @note ClibCellLibrary::group(id) で返されるオブジェクトの id() は id となる．
+  ///
+  /// ClibCellLibrary::group(id) で返されるオブジェクトの id() は id となる．
   int
   id() const override;
 
@@ -83,12 +80,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief FFセルの場合のピン情報を返す．
-  /// @note FFセル以外の場合には返り値は不定
+  ///
+  /// FFセル以外の場合には返り値は不定
   ClibFFInfo
   ff_info() const override;
 
   /// @brief ラッチセルの場合のピン情報を返す．
-  /// @note ラッチセル以外の場合には返り値は不定
+  ///
+  /// ラッチセル以外の場合には返り値は不定
   ClibLatchInfo
   latch_info() const override;
 
@@ -142,7 +141,8 @@ public:
   clear_sense() const override;
 
   /// @brief クリア入力のピン番号を返す．
-  /// @note クリア入力がない場合の値は不定
+  ///
+  /// クリア入力がない場合の値は不定
   int
   clear_pos() const override;
 
@@ -158,7 +158,8 @@ public:
   preset_sense() const override;
 
   /// @brief プリセット入力のピン番号を返す．
-  /// @note プリセット入力がない場合の値は不定
+  ///
+  /// プリセット入力がない場合の値は不定
   int
   preset_pos() const override;
 
@@ -187,47 +188,47 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 初期化する．
-  /// @param[in] id 番号
-  /// @param[in] map 変換マップ
-  /// @param[in] pininfo ピン情報
-  /// @param[in] cell_list セルのリスト
-  /// @param[in] alloc メモリアロケータ
   ///
   /// pininfo は restore() 時のみ指定する．
   /// それ以外は後で set_ff_info()/set_latch_info() で設定する．
   void
-  init(int id,
-       const NpnMapM& map,
-       int pininfo,
-       const vector<CiCell*>& cell_list);
+  init(
+    int id,                          ///< [in] 番号
+    const NpnMapM& map,              ///< [in] 変換マップ
+    int pininfo,                     ///< [in] ピン情報
+    const vector<CiCell*>& cell_list ///< [in] セルのリスト
+  );
 
   /// @brief 親のセルクラスを設定する．
-  /// @param[in] cell_class 親のクラス
   void
-  set_class(CiCellClass* cell_class);
+  set_class(
+    CiCellClass* cell_class ///< [in] 親のクラス
+  );
 
   /// @brief FFのピン情報を設定する．
-  /// @param[in] pos_array ピン位置と極性情報の配列
-  /// @note pos_array の意味は以下の通り
-  ///  - pos_array[0] : データ入力のピン番号     (3bit)
-  ///  - pos_array[1] : クロック入力のピン番号   (3bit) | 極性情報 (1bit)
-  ///  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
-  ///  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
-  ///  - pos_array[4] : 肯定出力のピン番号       (3bit)
-  ///  - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか (1bit)
   void
-  set_ff_info(int pos_array[]);
+  set_ff_info(
+    int pos_array[] ///< [in] ピン位置と極性情報の配列
+                    ///< pos_array の意味は以下の通り
+                    ///< - pos_array[0] : データ入力のピン番号     (3bit)
+                    ///< - pos_array[1] : クロック入力のピン番号   (3bit) | 極性情報 (1bit)
+                    ///< - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
+                    ///< - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
+                    ///< - pos_array[4] : 肯定出力のピン番号       (3bit)
+                    ///< - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか (1bit)
+  );
 
   /// @brief ラッチのピン情報を設定する．
-  /// @param[in] pos_array ピン位置と極性情報の配列
-  /// @note pos_array の意味は以下の通り
-  ///  - pos_array[0] : データ入力のピン番号     (3bit)
-  ///  - pos_array[1] : イネーブル入力のピン番号 (3bit) | 極性情報 (2bit)
-  ///  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
-  ///  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
-  ///  - pos_array[4] : 肯定出力のピン番号       (3bit)
-   void
-  set_latch_info(int pos_array[]);
+  void
+  set_latch_info(
+    int pos_array[] ///< [in] ピン位置と極性情報の配列
+                    ///< pos_array の意味は以下の通り
+                    ///< - pos_array[0] : データ入力のピン番号     (3bit)
+                    ///< - pos_array[1] : イネーブル入力のピン番号 (3bit) | 極性情報 (2bit)
+                    ///< - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
+                    ///< - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
+                    ///< - pos_array[4] : 肯定出力のピン番号       (3bit)
+  );
 
 
 public:
@@ -236,15 +237,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief バイナリダンプを行う．
-  /// @param[in] bos 出力先のストリーム
   void
-  dump(ostream& bos) const override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 下請け関数
-  //////////////////////////////////////////////////////////////////////
+  dump(
+    ostream& bos ///< [in] 出力先のストリーム
+  ) const override;
 
 
 private:

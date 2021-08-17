@@ -71,8 +71,9 @@ public:
   /// @return ピン情報を返す．
   virtual
   const ClibCellPin&
-  pin(int pin_id) const ///< [in] ピン番号 ( 0 <= pin_id < pin_num() )
-  = 0;
+  pin(
+    int pin_id ///< [in] ピン番号 ( 0 <= pin_id < pin_num() )
+  ) const = 0;
 
   /// @brief 名前からピン番号の取得
   /// @return name という名前のピン番号を返す．
@@ -80,8 +81,9 @@ public:
   /// なければ -1 を返す．
   virtual
   int
-  pin_id(const string& name) const ///< [in] ピン名
-  = 0;
+  pin_id(
+    const string& name ///< [in] ピン名
+  ) const = 0;
 
   /// @brief 名前からピン番号の取得
   /// @return name という名前のピン番号を返す．
@@ -89,8 +91,9 @@ public:
   /// なければ -1 を返す．
   virtual
   int
-  pin_id(const char* name) const ///< [in] ピン名
-  = 0;
+  pin_id(
+    const char* name ///< [in] ピン名
+  ) const = 0;
 
   /// @brief 入力ピン数の取得
   virtual
@@ -124,8 +127,9 @@ public:
   /// id >= input_num() の場合には入出力ピンが返される．
   virtual
   const ClibCellPin&
-  input(int id) const ///< [in] 番号 ( 0 <= id < input_num2() )
-  = 0;
+  input(
+    int id ///< [in] 番号 ( 0 <= id < input_num2() )
+  ) const = 0;
 
   /// @brief 出力ピン+入出力ピン数の取得
   ///
@@ -139,20 +143,23 @@ public:
   /// id >= output_num() の場合には入出力ピンが返される．
   virtual
   const ClibCellPin&
-  output(int id) const ///< [in] 出力番号 ( 0 <= id < output_num2() )
-  = 0;
+  output(
+    int id ///< [in] 出力番号 ( 0 <= id < output_num2() )
+  ) const = 0;
 
   /// @brief 入出力ピンの取得
   virtual
   const ClibCellPin&
-  inout(int id) const ///< [in] 番号 ( 0 <= id < inout_num() )
-  = 0;
+  inout(
+    int id ///< [in] 番号 ( 0 <= id < inout_num() )
+  ) const = 0;
 
   /// @brief 内部ピンの取得
   virtual
   const ClibCellPin&
-  internal(int id) const ///< [in] 内部ピン番号 ( 0 <= id < internal_num() )
-  = 0;
+  internal(
+    int id ///< [in] 内部ピン番号 ( 0 <= id < internal_num() )
+  ) const = 0;
 
   /// @brief バス数の取得
   virtual
@@ -162,8 +169,9 @@ public:
   /// @brief バスの取得
   virtual
   const ClibBus&
-  bus(int pos) const ///< [in] 位置番号 ( 0 <= pos < bus_num() )
-  = 0;
+  bus(
+    int pos ///< [in] 位置番号 ( 0 <= pos < bus_num() )
+  ) const = 0;
 
   /// @brief 名前からバス番号の取得
   /// @return name という名前のバス番号を返す．
@@ -171,8 +179,9 @@ public:
   /// なければ -1 を返す．
   virtual
   int
-  bus_id(const string& name) const ///< [in] バス名
-  = 0;
+  bus_id(
+    const string& name ///< [in] バス名
+  ) const = 0;
 
   /// @brief バンドル数の取得
   virtual
@@ -182,8 +191,9 @@ public:
   /// @brief バンドルの取得
   virtual
   const ClibBundle&
-  bundle(int pos) const ///< [in] 位置番号 ( 0 <= pos < bundle_num() )
-  = 0;
+  bundle(
+    int pos ///< [in] 位置番号 ( 0 <= pos < bundle_num() )
+  ) const = 0;
 
   /// @brief 名前からバンドル番号の取得
   /// @return name という名前のバンドル番号を返す．
@@ -191,8 +201,9 @@ public:
   /// なければ -1 を返す．
   virtual
   int
-  bundle_id(const string& name) const ///< [in] バンドル名
-  = 0;
+  bundle_id(
+    const string& name ///< [in] バンドル名
+  ) const = 0;
 
 
 public:
@@ -202,16 +213,17 @@ public:
 
   /// @brief タイミング情報のリストを返す．
   virtual
-  const ClibTimingList&
+  vector<const ClibTiming*>
   timing_list() const = 0;
 
   /// @brief 条件に合致するタイミング情報のリストを返す．
   virtual
-  const ClibTimingList&
-  timing_list(int ipos,                    ///< [in] 開始ピン番号 ( 0 <= ipos < input_num2() )
-	      int opos,                    ///< [in] 終了ピン番号 ( 0 <= opos < output_num2() )
-	      ClibTimingSense sense) const ///< [in] タイミング情報の摘要条件
-  = 0;
+  vector<const ClibTiming*>
+  timing_list(
+    int ipos,             ///< [in] 開始ピン番号 ( 0 <= ipos < input_num2() )
+    int opos,             ///< [in] 終了ピン番号 ( 0 <= opos < output_num2() )
+    ClibTimingSense sense ///< [in] タイミング情報の摘要条件
+  ) const = 0;
 
 
 public:
@@ -247,8 +259,9 @@ public:
   /// @brief 出力の論理式を持っている時に true を返す．
   virtual
   bool
-  has_logic(int pin_id) const ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  = 0;
+  has_logic(
+    int pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+  ) const = 0;
 
   /// @brief 全ての出力が論理式を持っているときに true を返す．
   virtual
@@ -260,14 +273,16 @@ public:
   /// 論理式中の変数番号は入力ピン番号に対応する．
   virtual
   Expr
-  logic_expr(int pin_id) const ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  = 0;
+  logic_expr(
+    int pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+  ) const = 0;
 
   /// @brief 出力がトライステート条件を持っている時に true を返す．
   virtual
   bool
-  has_tristate(int pin_id) const ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  = 0;
+  has_tristate(
+    int pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+  ) const = 0;
 
   /// @brief トライステートセルの場合にトライステート条件式を返す．
   ///
@@ -275,8 +290,9 @@ public:
   /// - 通常の論理セルの場合には定数0を返す．
   virtual
   Expr
-  tristate_expr(int pin_id) const ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  = 0;
+  tristate_expr(
+    int pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+  ) const = 0;
 
   /// @brief FFセルの場合にFFのピン情報を得る．
   virtual
@@ -380,8 +396,9 @@ public:
   /// @brief 内容をバイナリダンプする．
   virtual
   void
-  dump(ostream& s) const ///< [in] 出力先のストリーム
-  = 0;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const = 0;
 
 };
 

@@ -62,8 +62,9 @@ public:
   /// @brief 枝(の番号)を返す．
   virtual
   int
-  edge(int pos) const ///< [in] 位置 ( 0 <= pos < edge_num() )
-  = 0;
+  edge(
+    int pos ///< [in] 位置 ( 0 <= pos < edge_num() )
+  ) const = 0;
 
 };
 

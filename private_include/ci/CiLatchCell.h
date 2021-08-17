@@ -5,9 +5,8 @@
 /// @brief CiLatchCell のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "CiCell.h"
 
@@ -26,33 +25,20 @@ class CiLatchCell :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] library 親のセルライブラリ
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
-  /// @param[in] data_in "data_in" 関数の式
-  /// @param[in] enable "enable" 関数の式
-  /// @param[in] enable_also "enable_also" 関数の式
-  /// @param[in] alloc メモリアロケータ
-  /// *1: - false 論理式なし
-  ///     - true 論理式あり
-  CiLatchCell(CiCellLibrary* library,
-	      const ShString& name,
-	      ClibArea area,
-	      const vector<CiInputPin*>& input_list,
-	      const vector<CiOutputPin*>& output_list,
-	      const vector<CiInoutPin*>& inout_list,
-	      const vector<CiBus*>& bus_list,
-	      const vector<CiBundle*>& bundle_list,
-	      const vector<CiTiming*>& timing_list,
-	      const Expr& data_in,
-	      const Expr& enable,
-	      const Expr& enable_also);
+  CiLatchCell(
+    CiCellLibrary* library,                  ///< [in] 親のセルライブラリ
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area,                           ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiBus*>& bus_list,          ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,    ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング情報のリスト
+    const Expr& data_in,                     ///< [in] "data_in" 関数の式
+    const Expr& enable,                      ///< [in] "enable" 関数の式
+    const Expr& enable_also                  ///< [in] "enable_also" 関数の式
+  );
 
   /// @brief デストラクタ
   ~CiLatchCell();
@@ -112,34 +98,21 @@ class CiLatchRCell :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] library 親のセルライブラリ
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
-  /// @param[in] data_in "data_in" 関数の式
-  /// @param[in] enable "enable" 関数の式
-  /// @param[in] enable_also "enable_also" 関数の式
-  /// @param[in] clear "clear" 関数の式
-  /// *1: - false 論理式なし
-  ///     - true 論理式あり
-  CiLatchRCell(CiCellLibrary* library,
-	       const ShString& name,
-	       ClibArea area,
-	       const vector<CiInputPin*>& input_list,
-	       const vector<CiOutputPin*>& output_list,
-	       const vector<CiInoutPin*>& inout_list,
-	       const vector<CiBus*>& bus_list,
-	       const vector<CiBundle*>& bundle_list,
-	       const vector<CiTiming*>& timing_list,
-	       const Expr& data_in,
-	       const Expr& enable,
-	       const Expr& enable_also,
-	       const Expr& clear);
+  CiLatchRCell(
+    CiCellLibrary* library,                  ///< [in] 親のセルライブラリ
+    const ShString& name,		     ///< [in] 名前
+    ClibArea area,			     ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiBus*>& bus_list,	     ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,    ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング情報のリスト
+    const Expr& data_in,		     ///< [in] "data_in" 関数の式
+    const Expr& enable,			     ///< [in] "enable" 関数の式
+    const Expr& enable_also,		     ///< [in] "enable_also" 関数の式
+    const Expr& clear                        ///< [in] "clear" 関数の式
+  );
 
   /// @brief デストラクタ
   ~CiLatchRCell();
@@ -183,34 +156,21 @@ class CiLatchSCell :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] library 親のセルライブラリ
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
-  /// @param[in] data_in "data_in" 関数の式
-  /// @param[in] enable "enable" 関数の式
-  /// @param[in] enable_also "enable_also" 関数の式
-  /// @param[in] preset "preset" 関数の式
-  /// *1: - false 論理式なし
-  ///     - true 論理式あり
-  CiLatchSCell(CiCellLibrary* library,
-	       const ShString& name,
-	       ClibArea area,
-	       const vector<CiInputPin*>& input_list,
-	       const vector<CiOutputPin*>& output_list,
-	       const vector<CiInoutPin*>& inout_list,
-	       const vector<CiBus*>& bus_list,
-	       const vector<CiBundle*>& bundle_list,
-	       const vector<CiTiming*>& timing_list,
-	       const Expr& data_in,
-	       const Expr& enable,
-	       const Expr& enable_also,
-	       const Expr& preset);
+  CiLatchSCell(
+    CiCellLibrary* library,                  ///< [in] 親のセルライブラリ
+    const ShString& name,		     ///< [in] 名前
+    ClibArea area,			     ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiBus*>& bus_list,	     ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,    ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング情報のリスト
+    const Expr& data_in,		     ///< [in] "data_in" 関数の式
+    const Expr& enable,			     ///< [in] "enable" 関数の式
+    const Expr& enable_also,		     ///< [in] "enable_also" 関数の式
+    const Expr& preset                       ///< [in] "preset" 関数の式
+  );
 
   /// @brief デストラクタ
   ~CiLatchSCell();
@@ -254,40 +214,24 @@ class CiLatchSRCell :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] library 親のセルライブラリ
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
-  /// @param[in] data_in "data_in" 関数の式
-  /// @param[in] enable "enable" 関数の式
-  /// @param[in] enable_also "enable_also" 関数の式
-  /// @param[in] clear "clear" 関数の式
-  /// @param[in] preset "preset" 関数の式
-  /// @param[in] clear_preset_var1 clear と preset が同時にオンになったときの値1
-  /// @param[in] clear_preset_var2 clear と preset が同時にオンになったときの値2
-  /// *1: - false 論理式なし
-  ///     - true 論理式あり
-  CiLatchSRCell(CiCellLibrary* library,
-		const ShString& name,
-		ClibArea area,
-		const vector<CiInputPin*>& input_list,
-		const vector<CiOutputPin*>& output_list,
-		const vector<CiInoutPin*>& inout_list,
-		const vector<CiBus*>& bus_list,
-		const vector<CiBundle*>& bundle_list,
-		const vector<CiTiming*>& timing_list,
-		const Expr& data_in,
-		const Expr& enable,
-		const Expr& enable_also,
-		const Expr& clear,
-		const Expr& preset,
-		int clear_preset_var1,
-		int clear_preset_var2);
+  CiLatchSRCell(
+    CiCellLibrary* library,                  ///< [in] 親のセルライブラリ
+    const ShString& name,		     ///< [in] 名前
+    ClibArea area,			     ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiBus*>& bus_list,	     ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,    ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング情報のリスト
+    const Expr& data_in,		     ///< [in] "data_in" 関数の式
+    const Expr& enable,			     ///< [in] "enable" 関数の式
+    const Expr& enable_also,		     ///< [in] "enable_also" 関数の式
+    const Expr& clear,                       ///< [in] "clear" 関数の式
+    const Expr& preset,                      ///< [in] "preset" 関数の式
+    int clear_preset_var1,                   ///< [in] clear と preset が同時にオンになったときの値1
+    int clear_preset_var2                    ///< [in] clear と preset が同時にオンになったときの値1
+  );
 
   /// @brief デストラクタ
   ~CiLatchSRCell();

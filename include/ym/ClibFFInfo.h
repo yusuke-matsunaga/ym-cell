@@ -23,22 +23,22 @@ class ClibFFInfo
 public:
 
   /// @brief 空のコンストラクタ
-  /// @note 内容は不定
-  ClibFFInfo();
+  ClibFFInfo() = default;
 
   /// @brief コンストラクタ
-  ///
-  /// pos_array の意味は以下の通り
-  ///  - pos_array[0] : データ入力のピン番号     (3bit)
-  ///  - pos_array[1] : クロック入力のピン番号   (3bit) | 極性情報 (1bit)
-  ///  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
-  ///  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
-  ///  - pos_array[4] : 肯定出力のピン番号       (3bit)
-  ///  - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか(1bit)
-  ClibFFInfo(int pos_array[]); ///< [in] ピン位置と極性情報の配列
+  ClibFFInfo(
+    int pos_array[] ///< [in] ピン位置と極性情報の配列
+                    ///< pos_array の意味は以下の通り
+                    ///<  - pos_array[0] : データ入力のピン番号     (3bit)
+                    ///<  - pos_array[1] : クロック入力のピン番号   (3bit) | 極性情報 (1bit)
+                    ///<  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
+                    ///<  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
+                    ///<  - pos_array[4] : 肯定出力のピン番号       (3bit)
+                    ///<  - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか(1bit)
+  );
 
   /// @brief デストラクタ
-  ~ClibFFInfo();
+  ~ClibFFInfo() = default;
 
 
 public:
@@ -114,11 +114,15 @@ public:
 
   /// @brief バイナリダンプを行う．
   void
-  dump(ostream& s) const; ///< [in] 出力先のストリーム
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const;
 
   /// @brief バイナリファイルを読み込む．
   void
-  restore(istream& s); ///< [in] 入力元のストリーム
+  restore(
+    istream& s ///< [in] 入力元のストリーム
+  );
 
 
 private:
@@ -127,7 +131,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ピン情報，ピン番号をパックしたもの
-  ymuint32 mBits;
+  ymuint32 mBits{0U};
 
 };
 

@@ -24,10 +24,14 @@ class LcGroupMgr
 public:
 
   /// @brief コンストラクタ
-  LcGroupMgr(LibComp& libcomp); ///< [in] 親の LibComp
+  LcGroupMgr(
+    LibComp& libcomp ///< [in] 親の LibComp
+  ) : mLibComp(libcomp)
+  {
+  }
 
   /// @brief デストラクタ
-  ~LcGroupMgr();
+  ~LcGroupMgr() = default;
 
 
 public:
@@ -37,18 +41,26 @@ public:
 
   /// @brief 内容を空にする．
   void
-  clear();
+  clear()
+  {
+    mGroupMap.clear();
+    mClassMap.clear();
+  }
 
   /// @brief セルを追加する．
   void
-  add_cell(Cell* cell); ///< [in] 追加するセル
+  add_cell(
+    Cell* cell ///< [in] 追加するセル
+  );
 
   /// @brief シグネチャに対応する LcGroup を求める．
   ///
   /// なければ新規に作る．
   LcGroup*
-  find_group(const LcSignature& sig, ///< [in] シグネチャ
-	     bool builtin);          ///< [in] 組み込みクラスの時 true にするフラグ
+  find_group(
+    const LcSignature& sig, ///< [in] シグネチャ
+    bool builtin            ///< [in] 組み込みクラスの時 true にするフラグ
+  );
 
 
 private:
@@ -59,15 +71,19 @@ private:
   /// @brief 代表シグネチャを求める．
   virtual
   void
-  find_rep(const LcSignature& sig, ///< [in] シグネチャ
-	   LcSignature& rep_sig,   ///< [out] 代表シグネチャ
-	   NpnMapM& xmap) = 0;     ///< [out] 変換マップ
+  find_rep(
+    const LcSignature& sig, ///< [in] シグネチャ
+    LcSignature& rep_sig,   ///< [out] 代表シグネチャ
+    NpnMapM& xmap           ///< [out] 変換マップ
+  ) = 0;
 
   /// @brief 同位体変換リストを求める．
   virtual
   void
-  find_idmap_list(const LcSignature& sig,           ///< [in] シグネチャ
-		  vector<NpnMapM>& idmap_list) = 0; ///< [in] 同位体変換のリスト
+  find_idmap_list(
+    const LcSignature& sig,     ///< [in] シグネチャ
+    vector<NpnMapM>& idmap_list ///< [in] 同位体変換のリスト
+  ) = 0;
 
 
 protected:
@@ -78,9 +94,11 @@ protected:
   /// @brief 代表シグネチャを求める．
   static
   void
-  default_rep(const LcSignature& sig,
-	      LcSignature& rep_sig,
-	      NpnMapM& xmap);
+  default_rep(
+    const LcSignature& sig,
+    LcSignature& rep_sig,
+    NpnMapM& xmap
+  );
 
 
 private:

@@ -27,92 +27,89 @@
 BEGIN_NAMESPACE_YM
 
 // @brief ストリーム出力演算子
-// @param[in] s 出力先のストリーム
-// @param[in] delay_mode 遅延モード
-// @return s を返す．
 ostream&
-operator<<(ostream& s,
-	   ClibDelayModel delay_model)
+operator<<(
+  ostream& s,
+  ClibDelayModel delay_model
+)
 {
   switch ( delay_model ) {
   case ClibDelayModel::generic_cmos:   s << "generic_cmos"; break;
   case ClibDelayModel::table_lookup:   s << "table_lookup"; break;
   case ClibDelayModel::piecewise_cmos: s << "piecewise_cmos"; break;
-  case ClibDelayModel::cmos2:         s << "cmos2"; break;
-  case ClibDelayModel::dcm:           s << "dcm"; break;
-  case ClibDelayModel::polynomial:    s << "polynomial"; break;
+  case ClibDelayModel::cmos2:          s << "cmos2"; break;
+  case ClibDelayModel::dcm:            s << "dcm"; break;
+  case ClibDelayModel::polynomial:     s << "polynomial"; break;
   default: ASSERT_NOT_REACHED;
   }
   return s;
 }
 
 // @brief ストリーム出力演算子
-// @param[in] s 出力先のストリーム
-// @param[in] timing_sense タイミングセンス
-// @return s を返す．
 ostream&
-operator<<(ostream& s,
-	   ClibTimingSense timing_sense)
+operator<<(
+  ostream& s,
+  ClibTimingSense timing_sense
+)
 {
   switch ( timing_sense ) {
   case ClibTimingSense::positive_unate: s << "posi_unate"; break;
   case ClibTimingSense::negative_unate: s << "nega_unate"; break;
-  case ClibTimingSense::non_unate:  s << "non_unate"; break;
+  case ClibTimingSense::non_unate:      s << "non_unate"; break;
   default: ASSERT_NOT_REACHED;
   }
   return s;
 }
 
 // @brief ストリーム出力演算子
-// @param[in] s 出力先のストリーム
-// @param[in] timing_type タイミング条件
-// @return s を返す．
 ostream&
-operator<<(ostream& s,
-	   ClibTimingType timing_type)
+operator<<(
+  ostream& s,
+  ClibTimingType timing_type
+)
 {
   switch ( timing_type ) {
-  case ClibTimingType::combinational:         s << "combinational"; break;
-  case ClibTimingType::combinational_rise:    s << "combinational_rise"; break;
-  case ClibTimingType::combinational_fall:    s << "combinational_fall"; break;
+  case ClibTimingType::combinational:            s << "combinational"; break;
+  case ClibTimingType::combinational_rise:       s << "combinational_rise"; break;
+  case ClibTimingType::combinational_fall:       s << "combinational_fall"; break;
 
-  case ClibTimingType::three_state_enable:      s << "three_state_enable"; break;
-  case ClibTimingType::three_state_disable:     s << "three_state_disable"; break;
+  case ClibTimingType::three_state_enable:       s << "three_state_enable"; break;
+  case ClibTimingType::three_state_disable:      s << "three_state_disable"; break;
   case ClibTimingType::three_state_enable_rise:  s << "three_state_enable_rise"; break;
   case ClibTimingType::three_state_enable_fall:  s << "three_state_enable_fall"; break;
   case ClibTimingType::three_state_disable_rise: s << "three_state_disable_rise"; break;
   case ClibTimingType::three_state_disable_fall: s << "three_state_disable_fall"; break;
 
-  case ClibTimingType::rising_edge:            s << "rising_edge"; break;
-  case ClibTimingType::falling_edge:           s << "falling_edge"; break;
+  case ClibTimingType::rising_edge:              s << "rising_edge"; break;
+  case ClibTimingType::falling_edge:             s << "falling_edge"; break;
 
-  case ClibTimingType::preset:                s << "preset"; break;
-  case ClibTimingType::clear:                 s << "clear"; break;
+  case ClibTimingType::preset:                   s << "preset"; break;
+  case ClibTimingType::clear:                    s << "clear"; break;
 
-  case ClibTimingType::hold_rising:            s << "hold_rising"; break;
-  case ClibTimingType::hold_falling:           s << "hold_falling"; break;
+  case ClibTimingType::hold_rising:              s << "hold_rising"; break;
+  case ClibTimingType::hold_falling:             s << "hold_falling"; break;
 
-  case ClibTimingType::setup_rising:           s << "setup_rising"; break;
-  case ClibTimingType::setup_falling:          s << "setup_falling"; break;
+  case ClibTimingType::setup_rising:             s << "setup_rising"; break;
+  case ClibTimingType::setup_falling:            s << "setup_falling"; break;
 
-  case ClibTimingType::recovery_rising:        s << "recover_rising"; break;
-  case ClibTimingType::recovery_falling:       s << "recover_falling"; break;
+  case ClibTimingType::recovery_rising:          s << "recover_rising"; break;
+  case ClibTimingType::recovery_falling:         s << "recover_falling"; break;
 
-  case ClibTimingType::skew_rising:            s << "skew_rising"; break;
-  case ClibTimingType::skew_falling:           s << "skew_falling"; break;
+  case ClibTimingType::skew_rising:              s << "skew_rising"; break;
+  case ClibTimingType::skew_falling:             s << "skew_falling"; break;
 
-  case ClibTimingType::removal_rising:         s << "removal_rising"; break;
-  case ClibTimingType::removal_falling:        s << "removal_falling"; break;
+  case ClibTimingType::removal_rising:           s << "removal_rising"; break;
+  case ClibTimingType::removal_falling:          s << "removal_falling"; break;
 
   case ClibTimingType::non_seq_setup_rising:     s << "non_seq_setup_rising"; break;
   case ClibTimingType::non_seq_setup_falling:    s << "non_seq_setup_falling"; break;
   case ClibTimingType::non_seq_hold_rising:      s << "non_seq_hold_rising"; break;
   case ClibTimingType::non_seq_hold_falling:     s << "non_seq_hold_falling"; break;
 
-  case ClibTimingType::nochange_high_high:      s << "nochange_high_high"; break;
-  case ClibTimingType::nochange_high_low:       s << "nochange_high_low"; break;
-  case ClibTimingType::nochange_low_high:       s << "nochange_low_high"; break;
-  case ClibTimingType::nochange_low_low:        s << "nochange_low_low"; break;
+  case ClibTimingType::nochange_high_high:       s << "nochange_high_high"; break;
+  case ClibTimingType::nochange_high_low:        s << "nochange_high_low"; break;
+  case ClibTimingType::nochange_low_high:        s << "nochange_low_high"; break;
+  case ClibTimingType::nochange_low_low:         s << "nochange_low_low"; break;
 
   default: ASSERT_NOT_REACHED;
   }
@@ -120,12 +117,11 @@ operator<<(ostream& s,
 }
 
 // @brief ストリーム出力演算子
-// @param[in] s 出力先のストリーム
-// @param[in] var_type 変数の型
-// @return s を返す．
 ostream&
-operator<<(ostream& s,
-	   ClibVarType var_type)
+operator<<(
+  ostream& s,
+  ClibVarType var_type
+)
 {
   switch ( var_type ) {
   case ClibVarType::input_net_transition:
@@ -191,9 +187,11 @@ BEGIN_NONAMESPACE
 
 // LUT の情報を出力する．
 void
-display_lut(ostream& s,
-	    const char* label,
-	    const ClibLut& lut)
+display_lut(
+  ostream& s,
+  const char* label,
+  const ClibLut& lut
+)
 {
   int d = lut.dimension();
   if ( d == 0 ) {
@@ -276,16 +274,18 @@ display_lut(ostream& s,
 
 // タイミング情報を出力する．
 void
-display_timing(ostream& s,
-	       const ClibCell& cell,
-	       int ipos,
-	       int opos,
-	       ClibTimingSense sense,
-	       ClibDelayModel delay_model)
+display_timing(
+  ostream& s,
+  const ClibCell& cell,
+  int ipos,
+  int opos,
+  ClibTimingSense sense,
+  ClibDelayModel delay_model
+)
 {
   for ( auto& timing : cell.timing_list(ipos, opos, sense) ) {
     s << "  Timing:" << endl
-      << "    Type             = " << timing.type() << endl
+      << "    Type             = " << timing->type() << endl
       << "    Input Pin        = " << cell.input(ipos).name() << endl
       << "    Output Pin       = " << cell.output(opos).name() << endl
       << "    Sense            = ";
@@ -299,26 +299,26 @@ display_timing(ostream& s,
       ASSERT_NOT_REACHED;
     }
     s << endl;
-    if ( !timing.timing_cond().is_one() ) {
-      s << "    When             = " << timing.timing_cond() << endl;
+    if ( !timing->timing_cond().is_one() ) {
+      s << "    When             = " << timing->timing_cond() << endl;
     }
 
     switch ( delay_model ) {
     case ClibDelayModel::generic_cmos:
-      s << "    Rise Intrinsic   = " << timing.intrinsic_rise() << endl
-	<< "    Rise Resistance  = " << timing.rise_resistance() << endl
-	<< "    Fall Intrinsic   = " << timing.intrinsic_fall() << endl
-	<< "    Fall Resistance  = " << timing.fall_resistance() << endl;
+      s << "    Rise Intrinsic   = " << timing->intrinsic_rise() << endl
+	<< "    Rise Resistance  = " << timing->rise_resistance() << endl
+	<< "    Fall Intrinsic   = " << timing->intrinsic_fall() << endl
+	<< "    Fall Resistance  = " << timing->fall_resistance() << endl;
       break;
 
     case ClibDelayModel::table_lookup:
-      display_lut(s, "Clib Rise", timing.cell_rise());
-      display_lut(s, "Rise Transition", timing.rise_transition());
-      display_lut(s, "Rise Propagation", timing.rise_propagation());
+      display_lut(s, "Clib Rise", timing->cell_rise());
+      display_lut(s, "Rise Transition", timing->rise_transition());
+      display_lut(s, "Rise Propagation", timing->rise_propagation());
 
-      display_lut(s, "Clib Fall", timing.cell_fall());
-      display_lut(s, "Fall Transition", timing.fall_transition());
-      display_lut(s, "Fall Propagation", timing.fall_propagation());
+      display_lut(s, "Clib Fall", timing->cell_fall());
+      display_lut(s, "Fall Transition", timing->fall_transition());
+      display_lut(s, "Fall Propagation", timing->fall_propagation());
       break;
 
     case ClibDelayModel::piecewise_cmos:
@@ -341,9 +341,11 @@ display_timing(ostream& s,
 
 // セルクラスの情報を出力する．
 void
-display_class(ostream& s,
-	      const char* title,
-	      const ClibCellClass& cclass)
+display_class(
+  ostream& s,
+  const char* title,
+  const ClibCellClass& cclass
+)
 {
   s << title << endl;
   int n = cclass.idmap_num();
@@ -366,10 +368,12 @@ display_class(ostream& s,
 }
 
 void
-display_pos(ostream& s,
-	    const char* title,
-	    int pos,
-	    int sense)
+display_pos(
+  ostream& s,
+  const char* title,
+  int pos,
+  int sense
+)
 {
   if ( sense > 0 ) {
     s << " " << title << " = ";
@@ -382,9 +386,11 @@ display_pos(ostream& s,
 
 // FFセルクラスの情報を出力する．
 void
-display_ff_class(ostream& s,
-		 const char* title,
-		 const ClibCellClass& cclass)
+display_ff_class(
+  ostream& s,
+  const char* title,
+  const ClibCellClass& cclass
+)
 {
   s << title << endl;
   int n = cclass.idmap_num();
@@ -415,9 +421,11 @@ display_ff_class(ostream& s,
 
 // ラッチセルクラスの情報を出力する．
 void
-display_latch_class(ostream& s,
-		    const char* title,
-		    const ClibCellClass& cclass)
+display_latch_class(
+  ostream& s,
+  const char* title,
+  const ClibCellClass& cclass
+)
 {
   s << title << endl;
   int n = cclass.idmap_num();
@@ -447,9 +455,11 @@ display_latch_class(ostream& s,
 
 // セルグループの情報を出力する．
 void
-display_group(ostream& s,
-	      const char* title,
-	      const ClibCellGroup& group)
+display_group(
+  ostream& s,
+  const char* title,
+  const ClibCellGroup& group
+)
 {
   s << title << endl
     << "  Clib =";
@@ -461,9 +471,11 @@ display_group(ostream& s,
 }
 
 void
-display_index(ostream& s,
-	      const ClibLutTemplate& templ,
-	      int var)
+display_index(
+  ostream& s,
+  const ClibLutTemplate& templ,
+  int var
+)
 {
   int n = templ.index_num(var);
   s << "(";
@@ -478,8 +490,10 @@ display_index(ostream& s,
 END_NONAMESPACE
 
 void
-display_library(ostream& s,
-		const ClibCellLibrary& library)
+display_library(
+  ostream& s,
+  const ClibCellLibrary& library
+)
 {
   // ライブラリ名
   s << "Library(" << library.name() << ")" << endl;

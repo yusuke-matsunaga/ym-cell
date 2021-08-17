@@ -44,30 +44,40 @@ public:
   LcSignature() = default;
 
   /// @brief コピーコンストラクタ
-  LcSignature(const LcSignature& src) = default; ///< [in] コピー元のオブジェクト
+  LcSignature(
+    const LcSignature& src ///< [in] コピー元のオブジェクト
+  ) = default;
 
   /// @brief 変換付きのコピーコンストラクタ
-  LcSignature(const LcSignature& src, ///< [in] コピー元のオブジェクト
-	      const NpnMapM& xmap);   ///< [in] 変換マップ
+  LcSignature(
+    const LcSignature& src, ///< [in] コピー元のオブジェクト
+    const NpnMapM& xmap     ///< [in] 変換マップ
+  );
 
   /// @brief 1出力の論理セルのシグネチャを作るコンストラクタ
-  LcSignature(const Expr& expr); ///< [in] 論理式
+  LcSignature(
+    const Expr& expr ///< [in] 論理式
+  );
 
   /// @brief 単純なFFセル/ラッチセルのシグネチャを作るコンストラクタ
   ///
   /// type == Type::Logic は不適
   /// has_q == false && has_xq == false は不適
-  LcSignature(Type type,        ///< [in] 種類 (Type::FF/Type::Latch)
-	      bool has_q,       ///< [in] Q出力の有無
-	      bool has_xq,      ///< [in] 反転Q出力の有無
-	      bool has_clear,   ///< [in] クリア端子の有無
-	      bool has_preset); ///< [in] プリセット端子の有無
+  LcSignature(
+    Type type,      ///< [in] 種類 (Type::FF/Type::Latch)
+    bool has_q,     ///< [in] Q出力の有無
+    bool has_xq,    ///< [in] 反転Q出力の有無
+    bool has_clear, ///< [in] クリア端子の有無
+    bool has_preset ///< [in] プリセット端子の有無
+  );
 
   /// @brief セルを指定したコンストラクタ
-  LcSignature(const ClibCell* cell); ///< [in] セル
+  LcSignature(
+    const ClibCell* cell ///< [in] セル
+  );
 
   /// @brief デストラクタ
-  ~LcSignature();
+  ~LcSignature() = default;
 
 
 public:
@@ -156,7 +166,9 @@ public:
 
   /// @brief 論理式を持つ時に true を返す．
   bool
-  has_logic(int opos) const ///< [in] 出力位置 ( 0 <= opos < output_num() )
+  has_logic(
+    int opos ///< [in] 出力位置 ( 0 <= opos < output_num() )
+  ) const
   {
     ASSERT_COND( opos < output_num() );
     return static_cast<bool>((mOutputBits[opos] >> 0) & 1U);
@@ -166,7 +178,9 @@ public:
   ///
   /// has_state_var() == true の時は変数の数が input_num() + 2 となる．
   TvFunc
-  output_func(int opos) const ///< [in] 出力位置 ( 0 <= opos < output_num() )
+  output_func(
+    int opos ///< [in] 出力位置 ( 0 <= opos < output_num() )
+  ) const
   {
     ASSERT_COND( opos < output_num() );
     return mOutputFunc[opos];
@@ -174,7 +188,9 @@ public:
 
   /// @brief tristate 条件を持つ時に true を返す．
   bool
-  is_tristate(int opos) const ///< [in] 出力位置 ( 0 <= opos < output_num() )
+  is_tristate(
+    int opos ///< [in] 出力位置 ( 0 <= opos < output_num() )
+  ) const
   {
     ASSERT_COND( opos < output_num() );
     return static_cast<bool>((mOutputBits[opos] >> 1) & 1U);
@@ -184,7 +200,9 @@ public:
   ///
   /// is_tristate(opos) == false の時の値は不定
   TvFunc
-  tristate_func(int opos) const ///< [in] 出力位置 ( 0 <= opos < output_num() )
+  tristate_func(
+    int opos ///< [in] 出力位置 ( 0 <= opos < output_num() )
+  ) const
   {
     ASSERT_COND( opos < output_num() );
     return mTristateFunc[opos];
@@ -196,7 +214,9 @@ public:
 
   /// @brief 等価比較演算子
   bool
-  operator==(const LcSignature& right) const; ///< [in] 比較対象のオペランド
+  operator==(
+    const LcSignature& right ///< [in] 比較対象のオペランド
+  ) const;
 
 
 private:

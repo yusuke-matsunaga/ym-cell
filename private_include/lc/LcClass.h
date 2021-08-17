@@ -9,6 +9,7 @@
 /// All rights reserved.
 
 #include "lc/libcomp_nsdef.h"
+#include "lc/LcGroup.h"
 #include "lc/LcSignature.h"
 
 
@@ -25,11 +26,16 @@ class LcClass
 public:
 
   /// @brief コンストラクタ
-  LcClass(int id,                      ///< [in] ID番号
-	  const LcSignature& rep_sig); ///< [in] 代表シグネチャ
+  LcClass(
+    int id,                    ///< [in] ID番号
+    const LcSignature& rep_sig ///< [in] 代表シグネチャ
+  ) : mId(id),
+      mRepSig(rep_sig)
+  {
+  }
 
   /// @brief デストラクタ
-  ~LcClass();
+  ~LcClass() = default;
 
 
 public:
@@ -67,8 +73,15 @@ public:
 
   /// @brief グループを追加する．
   void
-  add_group(LcGroup* group,      ///< [in] グループ
-	    const NpnMapM& map); ///< [in] 代表シグネチャへの変換マップ
+  add_group(
+    LcGroup* group,    ///< [in] グループ
+    const NpnMapM& map ///< [in] 代表シグネチャへの変換マップ
+  )
+  {
+    mGroupList.push_back(group);
+    group->mParent = this;
+    group->mMap = map;
+  }
 
 
 private:

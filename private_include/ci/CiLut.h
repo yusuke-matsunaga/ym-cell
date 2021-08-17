@@ -5,9 +5,8 @@
 /// @brief CiLut のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/ClibLut.h"
 #include "ym/ShString.h"
@@ -27,7 +26,9 @@ class CiLut :
 protected:
 
   /// @brief コンストラクタ
-  CiLut(const ClibLutTemplate* lut_template);
+  CiLut(
+    const ClibLutTemplate* lut_template ///< [in] テンプレート
+  );
 
   /// @brief デストラクタ
   ~CiLut();
@@ -47,14 +48,16 @@ public:
   template_id() const override;
 
   /// @brief 変数型の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   ClibVarType
-  variable_type(int var) const override;
+  variable_type(
+    int var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const override;
 
   /// @brief インデックス数の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   int
-  index_num(int var) const override;
+  index_num(
+    int var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const override;
 
 
 public:
@@ -63,9 +66,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   void
-  dump(ostream& s) const override;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const override;
 
 
 protected:
@@ -76,8 +80,10 @@ protected:
   /// @brief val に対応する区間を求める．
   static
   int
-  search(double val,
-	 const vector<double>& index_array);
+  search(
+    double val,
+    const vector<double>& index_array
+  );
 
 
 private:
@@ -103,9 +109,11 @@ class CiLut1D :
 private:
 
   /// @brief コンストラクタ
-  CiLut1D(const ClibLutTemplate* lut_template,
-	  const vector<double>& value_array,
-	  const vector<double>& index_array = vector<double>());
+  CiLut1D(
+    const ClibLutTemplate* lut_template,                 ///< [in] テンプレート
+    const vector<double>& value_array,                   ///< [in] 値のリスト
+    const vector<double>& index_array = vector<double>() ///< [in] インデックスのリスト
+  );
 
   /// @brief デストラクタ
   ~CiLut1D();
@@ -121,28 +129,33 @@ public:
   dimension() const override;
 
   /// @brief インデックス数の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   int
-  index_num(int var) const override;
+  index_num(
+    int var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const override;
 
   /// @brief インデックス値の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
-  /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
   double
-  index(int var,
-	int pos) const override;
+  index(
+    int var, ///< [in] 変数番号 ( 0 <= var < dimension() )
+    int pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  ) const override;
 
   /// @brief 格子点の値の取得
-  /// @param[in] pos_array 格子点座標
-  /// @note pos_array のサイズは dimension() と同じ
+  ///
+  /// pos_array のサイズは dimension() と同じ
   double
-  grid_value(const vector<int>& pos_array) const override;
+  grid_value(
+    const vector<int>& pos_array ///< [in] 格子点座標
+  ) const override;
 
   /// @brief 値の取得
-  /// @param[in] val_array 入力の値の配列
-  /// @note val_array のサイズは dimension() と同じ
+  ///
+  /// val_array のサイズは dimension() と同じ
   double
-  value(const vector<double>& val_array) const override;
+  value(
+    const vector<double>& val_array ///< [in] 入力の値の配列
+  ) const override;
 
 
 private:
@@ -174,10 +187,12 @@ class CiLut2D :
 private:
 
   /// @brief コンストラクタ
-  CiLut2D(const ClibLutTemplate* lut_template,
-	  const vector<double>& value_array,
-	  const vector<double>& index_array1 = vector<double>(),
-	  const vector<double>& index_array2 = vector<double>());
+  CiLut2D(
+    const ClibLutTemplate* lut_template,                   ///< [in] テンプレート
+    const vector<double>& value_array,                     ///< [in] 値の配列
+    const vector<double>& index_array1 = vector<double>{}, ///< [in] インデックス1の配列
+    const vector<double>& index_array2 = vector<double>{}  ///< [in] インデックス2の配列
+  );
 
   /// @brief デストラクタ
   ~CiLut2D();
@@ -193,28 +208,33 @@ public:
   dimension() const override;
 
   /// @brief インデックス数の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   int
-  index_num(int var) const override;
+  index_num(
+    int var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const override;
 
   /// @brief インデックス値の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
-  /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
   double
-  index(int var,
-	int pos) const override;
+  index(
+    int var, ///< [in] 変数番号 ( 0 <= var < dimension() )
+    int pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  ) const override;
 
   /// @brief 格子点の値の取得
-  /// @param[in] pos_array 格子点座標
-  /// @note pos_array のサイズは dimension() と同じ
+  ///
+  /// pos_array のサイズは dimension() と同じ
   double
-  grid_value(const vector<int>& pos_array) const override;
+  grid_value(
+    const vector<int>& pos_array ///< [in] 格子点座標
+  ) const override;
 
   /// @brief 値の取得
-  /// @param[in] val_array 入力の値の配列
-  /// @note val_array のサイズは dimension() と同じ
+  ///
+  /// val_array のサイズは dimension() と同じ
   double
-  value(const vector<double>& val_array) const override;
+  value(
+    const vector<double>& val_array ///< [in] 入力の値の配列
+  ) const override;
 
 
 private:
@@ -223,11 +243,14 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief mValueArray のインデックスを計算する．
-  /// @param[in] idx1 1番めのインデックス
-  /// @param[in] idx2 2番めのインデックス
   int
-  idx(int idx1,
-      int idx2) const;
+  idx(
+    int idx1, ///< [in] 1番めのインデックス
+    int idx2  ///< [in] 2番めのインデックス
+  ) const
+  {
+    return idx1 * index_num(1) + idx2;
+  }
 
 
 private:
@@ -262,14 +285,15 @@ class CiLut3D :
 private:
 
   /// @brief コンストラクタ
-  CiLut3D(const ClibLutTemplate* lut_template,
-	  const vector<double>& value_array,
-	  const vector<double>& index_array1 = vector<double>(),
-	  const vector<double>& index_array2 = vector<double>(),
-	  const vector<double>& index_array3 = vector<double>());
+  CiLut3D(
+    const ClibLutTemplate* lut_template,                   ///< [in] テンプレート
+    const vector<double>& value_array,                     ///< [in] 値の配列
+    const vector<double>& index_array1 = vector<double>{}, ///< [in] インデックス1の配列
+    const vector<double>& index_array2 = vector<double>{}, ///< [in] インデックス2の配列
+    const vector<double>& index_array3 = vector<double>{}  ///< [in] インデックス3の配列
+  );
 
   /// @brief デストラクタ
-  virtual
   ~CiLut3D();
 
 
@@ -283,28 +307,33 @@ public:
   dimension() const override;
 
   /// @brief インデックス数の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
   int
-  index_num(int var) const override;
+  index_num(
+    int var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const override;
 
   /// @brief インデックス値の取得
-  /// @param[in] var 変数番号 ( 0 <= var < dimension() )
-  /// @param[in] pos 位置番号 ( 0 <= pos < index_num(var) )
   double
-  index(int var,
-	int pos) const override;
+  index(
+    int var, ///< [in] 変数番号 ( 0 <= var < dimension() )
+    int pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  ) const override;
 
   /// @brief 格子点の値の取得
-  /// @param[in] pos_array 格子点座標
-  /// @note pos_array のサイズは dimension() と同じ
+  ///
+  /// pos_array のサイズは dimension() と同じ
   double
-  grid_value(const vector<int>& pos_array) const override;
+  grid_value(
+    const vector<int>& pos_array ///< [in] 格子点座標
+  ) const override;
 
   /// @brief 値の取得
-  /// @param[in] val_array 入力の値の配列
-  /// @note val_array のサイズは dimension() と同じ
+  ///
+  /// val_array のサイズは dimension() と同じ
   double
-  value(const vector<double>& val_array) const override;
+  value(
+    const vector<double>& val_array ///< [in] 入力の値の配列
+  ) const override;
 
 
 private:
@@ -313,13 +342,15 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief mValueArray のインデックスを計算する．
-  /// @param[in] idx1 1番めのインデックス
-  /// @param[in] idx2 2番めのインデックス
-  /// @param[in] idx3 3番めのインデックス
   int
-  idx(int idx1,
-      int idx2,
-      int idx3) const;
+  idx(
+    int idx1, ///< [in] 1番めのインデックス
+    int idx2, ///< [in] 2番めのインデックス
+    int idx3  ///< [in] 3番めのインデックス
+  ) const
+  {
+    return ((idx1 * index_num(1) + idx2) * index_num(2)) + idx3;
+  }
 
 
 private:
@@ -340,35 +371,6 @@ private:
   vector<double> mValueArray;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief mValueArray のインデックスを計算する．
-// @param[in] idx1 1番めのインデックス
-// @param[in] idx2 2番めのインデックス
-inline
-int
-CiLut2D::idx(int idx1,
-	     int idx2) const
-{
-  return idx1 * index_num(1) + idx2;
-}
-
-// @brief mValueArray のインデックスを計算する．
-// @param[in] idx1 1番めのインデックス
-// @param[in] idx2 2番めのインデックス
-// @param[in] idx3 3番めのインデックス
-inline
-int
-CiLut3D::idx(int idx1,
-	     int idx2,
-	     int idx3) const
-{
-  return ((idx1 * index_num(1) + idx2) * index_num(2)) + idx3;
-}
 
 END_NAMESPACE_YM_CLIB
 

@@ -19,23 +19,25 @@ BEGIN_NAMESPACE_YM_CLIB
 // @brief コンストラクタ
 //
 // 空の状態で初期化される．
-ClibCellLibrary::ClibCellLibrary() :
-  mImpl{nullptr}
+ClibCellLibrary::ClibCellLibrary()
 {
 }
 
 // @brief コピーコンストラクタ
 //
 // '浅い'コピーを行う．
-ClibCellLibrary::ClibCellLibrary(const ClibCellLibrary& src) :
-  mImpl{nullptr}
+ClibCellLibrary::ClibCellLibrary(
+  const ClibCellLibrary& src
+)
 {
   change_impl(src.mImpl);
 }
 
 // @brief 代入演算子
-const ClibCellLibrary&
-ClibCellLibrary::operator=(const ClibCellLibrary& src)
+ClibCellLibrary&
+ClibCellLibrary::operator=(
+  const ClibCellLibrary& src
+)
 {
   change_impl(src.mImpl);
   return *this;
@@ -49,7 +51,9 @@ ClibCellLibrary::~ClibCellLibrary()
 
 // @brief mImpl を切り替える．
 void
-ClibCellLibrary::change_impl(CiCellLibrary* new_impl)
+ClibCellLibrary::change_impl(
+  CiCellLibrary* new_impl
+)
 {
   if ( mImpl == new_impl ) {
     // なにもしない．
@@ -71,7 +75,9 @@ ClibCellLibrary::change_impl(CiCellLibrary* new_impl)
 // @param[in] filename ファイル名
 // @return 読み込みが成功したら true を返す．
 bool
-ClibCellLibrary::read_mislib(const string& filename)
+ClibCellLibrary::read_mislib(
+  const string& filename
+)
 {
   auto new_impl{new CiCellLibrary()};
   bool stat = new_impl->read_mislib(filename);
@@ -88,7 +94,9 @@ ClibCellLibrary::read_mislib(const string& filename)
 // @param[in] filename ファイル名
 // @return 読み込みが成功したら true を返す．
 bool
-ClibCellLibrary::read_liberty(const string& filename)
+ClibCellLibrary::read_liberty(
+  const string& filename
+)
 {
   auto new_impl{new CiCellLibrary()};
   bool stat = new_impl->read_liberty(filename);

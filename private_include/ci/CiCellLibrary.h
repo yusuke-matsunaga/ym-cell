@@ -5,9 +5,8 @@
 /// @brief CiCellLibrary のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/ClibCellLibrary.h"
 #include "ym/ClibArea.h"
@@ -58,16 +57,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
-  /// @param[in] filename ファイル名
   /// @return 読み込みが成功したら true を返す．
   bool
-  read_mislib(const string& filename);
+  read_mislib(
+    const string& filename ///< [in] ファイル名
+  );
 
   /// @brief liberty 形式のファイルを読み込んでライブラリに設定する．
-  /// @param[in] filename ファイル名
   /// @return 読み込みが成功したら true を返す．
   bool
-  read_liberty(const string& filename);
+  read_liberty(
+    const string& filename ///< [in] ファイル名
+  );
 
 
 public:
@@ -80,17 +81,18 @@ public:
   name() const;
 
   /// @brief テクノロジの取得
-  /// このクラスは常に kTechAsic を返す．
+  ///
+  /// このクラスは常に ClibTechnology::cmos を返す．
   ClibTechnology
   technology() const;
 
   /// @brief 遅延モデルの取得
   /// 返り値は
-  /// - kClibDelayGenericCmos
-  /// - kClibDelayPiecewiseCmos
-  /// - kClibDelayTableLookup
-  /// - kClibDelayCmos2
-  /// - kClibDelayDcm
+  /// - ClibDelay::generic_cmos
+  /// - ClibDelay::piecewise_cmos
+  /// - ClibDelay::table_lookup
+  /// - ClibDelay::cmos2
+  /// - ClibDelay::dcm
   /// のいずれか
   ClibDelayModel
   delay_model() const;
@@ -128,12 +130,10 @@ public:
   pulling_resistance_unit() const;
 
   /// @brief 容量単位の取得
-  /// @note なぜかここだけインターフェイスが異なる．
   double
   capacitive_load_unit() const;
 
   /// @brief 容量単位文字列の取得
-  /// @note なぜかここだけインターフェイスが異なる．
   string
   capacitive_load_unit_str() const;
 
@@ -150,53 +150,61 @@ public:
   lu_table_template_num() const;
 
   /// @brief 遅延テーブルのテンプレート番号の取得
-  /// @param[in] table_id テンプレート番号 ( 0 <= table_id < lu_table_template_num() )
   const ClibLutTemplate&
-  lu_table_template(int table_id) const;
+  lu_table_template(
+    int table_id ///< [in] テンプレート番号 ( 0 <= table_id < lu_table_template_num() )
+  ) const;
 
 #if 0
   /// @brief ルックアップテーブルのテンプレート番号の取得
-  /// @param[in] name テンプレート名
   ///
   /// なければ -1 を返す．
   int
-  lu_table_template_id(const char* name) const;
+  lu_table_template_id(
+    const char* name ///< [in] テンプレート名
+  ) const;
 
   /// @brief ルックアップテーブルのテンプレート番号の取得
-  /// @param[in] name テンプレート名
   ///
   /// なければ -1 を返す．
   int
-  lu_table_template_id(const string& name) const;
+  lu_table_template_id(
+    const string& name ///< [in] テンプレート名
+  ) const;
 
   /// @brief ルックアップテーブルのテンプレート番号の取得
-  /// @param[in] name テンプレート名
+  /// @param[in] name
   ///
   /// なければ -1 を返す．
   int
-  lu_table_template_id(const ShString& name) const;
+  lu_table_template_id(
+    const ShString& name ///< [in] テンプレート名
+  ) const;
 #endif
 
   /// @brief バスタイプの取得
-  /// @param[in] name バスタイプ名
   ///
   /// なければ nullptr を返す．
   const ClibBusType&
-  bus_type(const char* name) const;
+  bus_type(
+    const char* name ///< [in] バスタイプ名
+  ) const;
 
   /// @brief バスタイプの取得
-  /// @param[in] name バスタイプ名
   ///
   /// なければ nullptr を返す．
   const ClibBusType&
-  bus_type(const string& name) const;
+  bus_type(
+    const string& name ///< [in] バスタイプ名
+  ) const;
 
   /// @brief バスタイプの取得
-  /// @param[in] name バスタイプ名
   ///
   /// なければ nullptr を返す．
   const ClibBusType&
-  bus_type(const ShString& name) const;
+  bus_type(
+    const ShString& name ///< [in] バスタイプ名
+  ) const;
 
 
 public:
@@ -210,15 +218,21 @@ public:
 
   /// @brief 名前からのセル番号の取得
   int
-  cell_id(const char* name) const;
+  cell_id(
+    const char* name ///< [in] セル名
+  ) const;
 
   /// @brief 名前からのセル番号の取得
   int
-  cell_id(const string& name) const;
+  cell_id(
+    const string& name ///< [in] セル名
+  ) const;
 
   /// @brief 名前からのセル番号の取得
   int
-  cell_id(const ShString& name) const;
+  cell_id(
+    const ShString& name ///< [in] セル名
+  ) const;
 
   /// @brief セルグループのリストを返す．
   const ClibCellGroupList&
@@ -257,12 +271,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 単純な型のFFクラスを返す．
-  /// @param[in] has_clear クリア端子を持つとき true にする．
-  /// @param[in] has_preset プリセット端子を持つとき true にする．
-  /// @note 該当するセルがないときでも空のセルクラスが返される．
+  ///
+  /// 該当するセルがないときでも空のセルクラスが返される．
   const ClibCellClass&
-  simple_ff_class(bool has_clear,
-		  bool has_preset) const;
+  simple_ff_class(
+    bool has_clear, ///< [in] クリア端子を持つとき true にする．
+    bool has_preset ///< [in] プリセット端子を持つとき true にする．
+  ) const;
 
 
 public:
@@ -271,12 +286,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 単純な型のラッチクラスを返す．
-  /// @param[in] has_clear クリア端子を持つとき true にする．
-  /// @param[in] has_preset プリセット端子を持つとき true にする．
-  /// @note 該当するセルがないときでも空のセルクラスが返される．
+  ///
+  /// 該当するセルがないときでも空のセルクラスが返される．
   const ClibCellClass&
-  simple_latch_class(bool has_clear,
-		     bool has_preset) const;
+  simple_latch_class(
+    bool has_clear, ///< [in] クリア端子を持つとき true にする．
+    bool has_preset ///< [in] プリセット端子を持つとき true にする．
+  ) const;
 
 
 public:
@@ -289,9 +305,10 @@ public:
   pg_pat_num() const;
 
   /// @brief パタンを返す．
-  /// @param[in] id パタン番号 ( 0 <= id < pg_pat_num() )
   const ClibPatGraph&
-  pg_pat(int id) const;
+  pg_pat(
+    int id ///< [in] パタン番号 ( 0 <= id < pg_pat_num() )
+  ) const;
 
   /// @brief パタンの最大の入力数を得る．
   int
@@ -302,45 +319,53 @@ public:
   pg_node_num() const;
 
   /// @brief ノードの種類を返す．
-  /// @param[in] id ノード番号 ( 0 <= id < pg_node_num() )
   ClibPatType
-  pg_node_type(int id) const;
+  pg_node_type(
+    int id ///< [in] ノード番号 ( 0 <= id < pg_node_num() )
+  ) const;
 
   /// @brief ノードが入力ノードの時に入力番号を返す．
-  /// @param[in] id ノード番号 ( 0 <= id < pg_node_num() )
-  /// @note 入力ノードでない場合の返り値は不定
+  ///
+  /// 入力ノードでない場合の返り値は不定
   int
-  pg_input_id(int id) const;
+  pg_input_id(
+    int id ///< [in] ノード番号 ( 0 <= id < pg_node_num() )
+  ) const;
 
   /// @brief 入力のノード番号を返す．
-  /// @param[in] input_id 入力番号 ( 0 <= input_id < pg_input_num() )
   /// @return input_id の入力に対応するノードのノード番号
   int
-  pg_input_node(int input_id) const;
+  pg_input_node(
+    int input_id ///< [in] 入力番号 ( 0 <= input_id < pg_input_num() )
+  ) const;
 
   /// @brief 総枝数を返す．
   int
   pg_edge_num() const;
 
   /// @brief 枝のファンイン元のノード番号を返す．
-  /// @param[in] id 枝番号 ( 0 <= id < pg_edge_num() )
   int
-  pg_edge_from(int id) const;
+  pg_edge_from(
+    int id ///< [in] 枝番号 ( 0 <= id < pg_edge_num() )
+  ) const;
 
   /// @brief 枝のファンアウト先のノード番号を返す．
-  /// @param[in] id 枝番号 ( 0 <= id < pg_edge_num() )
   int
-  pg_edge_to(int id) const;
+  pg_edge_to(
+    int id ///< [in] 枝番号 ( 0 <= id < pg_edge_num() )
+  ) const;
 
   /// @brief 枝のファンアウト先の入力位置( 0 or 1 ) を返す．
-  /// @param[in] id 枝番号 ( 0 <= id < pg_edge_num() )
   int
-  pg_edge_pos(int id) const;
+  pg_edge_pos(
+    int id ///< [in] 枝番号 ( 0 <= id < pg_edge_num() )
+  ) const;
 
   /// @brief 枝の反転属性を返す．
-  /// @param[in] id 枝番号 ( 0 <= id < pg_edge_num() )
   bool
-  pg_edge_inv(int id) const;
+  pg_edge_inv(
+    int id ///< [in] 枝番号 ( 0 <= id < pg_edge_num() )
+  ) const;
 
 
 public:
@@ -349,14 +374,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
-  /// @param[in] s 出力先のストリーム
   void
-  dump(ostream& s) const;
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const;
 
   /// @brief バイナリダンプされた内容を読み込む．
-  /// @param[in] s 入力元のストリーム
   void
-  restore(istream& s);
+  restore(
+    istream& s ///< [in] 入力元のストリーム
+  );
 
 
 public:
@@ -365,377 +392,290 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前を設定する．
-  /// @param[in] name 名前
   void
-  set_name(const string& name);
+  set_name(
+    const string& name ///< [in] 名前
+  );
 
   /// @brief 'technology' を設定する．
   void
-  set_technology(ClibTechnology technology);
+  set_technology(
+    ClibTechnology technology ///< [in] テクノロジ
+  );
 
   /// @brief 遅延モデルを設定する．
-  /// @param[in] delay_model 遅延モデル．
   void
-  set_delay_model(ClibDelayModel delay_model);
+  set_delay_model(
+    ClibDelayModel delay_model ///< [in] 遅延モデル．
+  );
 
   /// @brief 'capacitive_load_unit' を設定する．
-  /// @param[in] unit 単位
-  /// @param[in] ustr 単位の後に表示する文字列
   void
-  set_capacitive_load_unit(double unit,
-			   const string& ustr);
+  set_capacitive_load_unit(
+    double unit,       ///< [in] 単位
+    const string& ustr ///< [in] 単位の後に表示する文字列
+  );
 
   /// @brief 属性を設定する(浮動小数点型)
-  /// @param[in] attr_name 属性名
-  /// @param[in] value 値
   void
-  set_attr(const string& attr_name,
-	   double value);
+  set_attr(
+    const string& attr_name, ///< [in] 属性名
+    double value             ///< [in] 値
+  );
 
   /// @brief 属性を設定する(文字列型)．
-  /// @param[in] attr_name 属性名
-  /// @param[in] value 値
   void
-  set_attr(const string& attr_name,
-	   const string& value);
+  set_attr(
+    const string& attr_name, ///< [in] 属性名
+    const string& value      ///< [in] 値
+  );
 
   /// @brief 遅延テーブルのテンプレートのリストを設定する．
   void
-  set_lu_table_template_list(const vector<CiLutTemplate*>& template_list);
+  set_lu_table_template_list(
+    const vector<CiLutTemplate*>& template_list ///< [in] テンプレートのリスト
+  );
 
   /// @brief 1次元の LUT のテンプレートを作る．
-  /// @param[in] name 名前
-  /// @param[in] var_type1 変数型
-  /// @param[in] index_list1 インデックス値のリスト
   CiLutTemplate*
-  new_lut_template1(const ShString& name,
-		    ClibVarType var_type1,
-		    const vector<double>& index_list1);
+  new_lut_template1(
+    const ShString& name,             ///< [in] 名前
+    ClibVarType var_type1,            ///< [in] 変数型
+    const vector<double>& index_list1 ///< [in] インデックス値のリスト
+  );
 
   /// @brief 2次元の LUT のテンプレートを作る．
-  /// @param[in] name 名前
-  /// @param[in] var_type1 変数型
-  /// @param[in] index_list1 インデックス値のリスト
-  /// @param[in] var_type2 変数型
-  /// @param[in] index_list2 インデックス値のリスト
   CiLutTemplate*
-  new_lut_template2(const ShString& name,
-		    ClibVarType var_type1,
-		    const vector<double>& index_list1,
-		    ClibVarType var_type2,
-		    const vector<double>& index_list2);
+  new_lut_template2(
+    const ShString& name,              ///< [in] 名前
+    ClibVarType var_type1,             ///< [in] 変数型
+    const vector<double>& index_list1, ///< [in] インデックス値のリスト
+    ClibVarType var_type2,             ///< [in] 変数型
+    const vector<double>& index_list2  ///< [in] インデックス値のリスト
+  );
 
   /// @brief 3次元の LUT のテンプレートを作る．
-  /// @param[in] name 名前
-  /// @param[in] var_type1 変数型
-  /// @param[in] index_list1 インデックス値のリスト
-  /// @param[in] var_type2 変数型
-  /// @param[in] index_list2 インデックス値のリスト
-  /// @param[in] var_type3 変数型
-  /// @param[in] index_list3 インデックス値のリスト
   CiLutTemplate*
-  new_lut_template3(const ShString& name,
-		    ClibVarType var_type1,
-		    const vector<double>& index_list1,
-		    ClibVarType var_type2,
-		    const vector<double>& index_list2,
-		    ClibVarType var_type3,
-		    const vector<double>& index_list3);
+  new_lut_template3(
+    const ShString& name,              ///< [in] 名前
+    ClibVarType var_type1,             ///< [in] 変数型
+    const vector<double>& index_list1, ///< [in] インデックス値のリスト
+    ClibVarType var_type2,             ///< [in] 変数型
+    const vector<double>& index_list2, ///< [in] インデックス値のリスト
+    ClibVarType var_type3,             ///< [in] 変数型
+    const vector<double>& index_list3  ///< [in] インデックス値のリスト
+  );
 
   /// @brief セルのリストを設定する．
-  /// @param[in] cell_list セルのリスト
-  /// @param[in] do_compile compile() を実行する時 true にするフラグ
+  /// @param[in] cell_list
+  /// @param[in] do_compile
   ///
   /// restore() 時には compile() を実行する必要はない．
   void
-  set_cell_list(const vector<CiCell*>& cell_list,
-		bool do_compile = true);
+  set_cell_list(
+    const vector<CiCell*>& cell_list, ///< [in] セルのリスト
+    bool do_compile = true            ///< [in] compile() を実行する時 true にするフラグ
+  );
 
   /// @brief 論理セルを生成する．
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
   CiCell*
-  new_logic_cell(const ShString& name,
-		 ClibArea area,
-		 const vector<CiInputPin*>& input_list,
-		 const vector<CiOutputPin*>& output_list,
-		 const vector<CiInoutPin*>& inout_list,
-		 const vector<CiBus*>& bus_list,
-		 const vector<CiBundle*>& bundle_list,
-		 const vector<CiTiming*>& timing_list);
+  new_logic_cell(
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area,                           ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiBus*>& bus_list,          ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,    ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list     ///< [in] タイミング情報のリスト
+  );
 
   /// @brief FFセルを生成する．
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
-  /// @param[in] next_state "next_state" 関数の式
-  /// @param[in] clocked_on "clocked_on" 関数の式
-  /// @param[in] clocked_on_also "clocked_on_also" 関数の式
-  /// @param[in] clear "clear" 関数の式
-  /// @param[in] preset "preset" 関数の式
-  /// @param[in] clear_preset_var1 clear と preset が同時にオンになったときの値1
-  /// @param[in] clear_preset_var2 clear と preset が同時にオンになったときの値2
   CiCell*
-  new_ff_cell(const ShString& name,
-	      ClibArea area,
-	      const vector<CiInputPin*>& input_list,
-	      const vector<CiOutputPin*>& output_list,
-	      const vector<CiInoutPin*>& inout_list,
-	      const vector<CiBus*>& bus_list,
-	      const vector<CiBundle*>& bundle_list,
-	      const vector<CiTiming*>& timing_list,
-	      const Expr& next_state,
-	      const Expr& clocked_on,
-	      const Expr& clocked_on_also,
-	      const Expr& clear,
-	      const Expr& preset,
-	      int clear_preset_var1,
-	      int clear_preset_var2);
+  new_ff_cell(
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area,                           ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiBus*>& bus_list,	     ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,    ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング情報のリスト
+    const Expr& next_state,                  ///< [in] "next_state" 関数の式
+    const Expr& clocked_on,                  ///< [in] "clocked_on" 関数の式
+    const Expr& clocked_on_also,             ///< [in] "clocked_on_also" 関数の式
+    const Expr& clear,                       ///< [in] "clear" 関数の式
+    const Expr& preset,                      ///< [in] "preset" 関数の式
+    int clear_preset_var1,                   ///< [in] clear と preset が同時にオンになったときの値1
+    int clear_preset_var2                    ///< [in] clear と preset が同時にオンになったときの値2
+  );
 
   /// @brief ラッチセルを生成する．
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
-  /// @param[in] data_in "data_in" 関数の式
-  /// @param[in] enable "enable" 関数の式
-  /// @param[in] clear "clear" 関数の式
-  /// @param[in] preset "preset" 関数の式
-  /// @param[in] enable_also "enable_also" 関数の式
-  /// @param[in] clear_preset_var1 clear と preset が同時にオンになったときの値1
-  /// @param[in] clear_preset_var2 clear と preset が同時にオンになったときの値2
   CiCell*
-  new_latch_cell(const ShString& name,
-		 ClibArea area,
-		 const vector<CiInputPin*>& input_list,
-		 const vector<CiOutputPin*>& output_list,
-		 const vector<CiInoutPin*>& inout_list,
-		 const vector<CiBus*>& bus_list,
-		 const vector<CiBundle*>& bundle_list,
-		 const vector<CiTiming*>& timing_list,
-		 const Expr& data_in,
-		 const Expr& enable,
-		 const Expr& enable_also,
-		 const Expr& clear,
-		 const Expr& preset,
-		 int clear_preset_var1,
-		 int clear_preset_var2);
+  new_latch_cell(
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area,			     ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiBus*>& bus_list,	     ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,    ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング情報のリスト
+    const Expr& data_in,                     ///< [in] "data_in" 関数の式
+    const Expr& enable,                      ///< [in] "enable" 関数の式
+    const Expr& enable_also,                 ///< [in] "enable_also" 関数の式
+    const Expr& clear,                       ///< [in] "clear" 関数の式
+    const Expr& preset,                      ///< [in] "preset" 関数の式
+    int clear_preset_var1,                   ///< [in] clear と preset が同時にオンになったときの値1
+    int clear_preset_var2                    ///< [in] clear と preset が同時にオンになったときの値2
+  );
 
   /// @brief FSMセルを生成する．
-  /// @param[in] name 名前
-  /// @param[in] area 面積
-  /// @param[in] input_list 入力ピンのリスト
-  /// @param[in] output_list 出力ピンのリスト
-  /// @param[in] inout_list 入出力ピンのリスト
-  /// @param[in] internal_list 内部ピンのリスト
-  /// @param[in] bus_list バスのリスト
-  /// @param[in] bundle_list バンドルのリスト
-  /// @param[in] timing_list タイミング情報のリスト
   CiCell*
-  new_fsm_cell(const ShString& name,
-	       ClibArea area,
-	       const vector<CiInputPin*>& input_list,
-	       const vector<CiOutputPin*>& output_list,
-	       const vector<CiInoutPin*>& inout_list,
-	       const vector<CiInternalPin*>& internal_list,
-	       const vector<CiBus*>& bus_list,
-	       const vector<CiBundle*>& bundle_list,
-	       const vector<CiTiming*>& timing_list);
+  new_fsm_cell(
+    const ShString& name,                        ///< [in] 名前
+    ClibArea area,				 ///< [in] 面積
+    const vector<CiInputPin*>& input_list,	 ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list,	 ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,	 ///< [in] 入出力ピンのリスト
+    const vector<CiInternalPin*>& internal_list, ///< [in] 内部ピンのリスト
+    const vector<CiBus*>& bus_list,		 ///< [in] バスのリスト
+    const vector<CiBundle*>& bundle_list,	 ///< [in] バンドルのリスト
+    const vector<CiTiming*>& timing_list	 ///< [in] タイミング情報のリスト
+  );
 
   /// @brief セルの入力ピンを生成する．
-  /// @param[in] name 入力ピン名
-  /// @param[in] capacitance 入力ピンの負荷容量
-  /// @param[in] rise_capacitance 入力ピンの立ち上がり負荷容量
-  /// @param[in] fall_capacitance 入力ピンの立ち下がり負荷容量
   CiInputPin*
-  new_cell_input(const ShString& name,
-		 ClibCapacitance capacitance,
-		 ClibCapacitance rise_capacitance,
-		 ClibCapacitance fall_capacitance);
+  new_cell_input(
+    const ShString& name,             ///< [in] 入力ピン名
+    ClibCapacitance capacitance,      ///< [in] 入力ピンの負荷容量
+    ClibCapacitance rise_capacitance, ///< [in] 入力ピンの立ち上がり負荷容量
+    ClibCapacitance fall_capacitance  ///< [in] 入力ピンの立ち下がり負荷容量
+  );
 
   /// @brief セルの出力ピンの内容を設定する．
-  /// @param[in] name 出力ピン名
-  /// @param[in] has_logic 出力の論理式を持つ時に true となるフラグ
-  /// @param[in] logic_expr 出力の論理式
-  /// @param[in] tristate_expr トライステート条件の論理式
-  /// @param[in] max_fanout 最大ファンアウト容量
-  /// @param[in] min_fanout 最小ファンアウト容量
-  /// @param[in] max_capacitance 最大負荷容量
-  /// @param[in] min_capacitance 最小負荷容量
-  /// @param[in] max_transition 最大遷移時間
-  /// @param[in] min_transition 最小遷移時間
   CiOutputPin*
-  new_cell_output(const ShString& name,
-		  bool has_logic,
-		  const Expr& logic_expr,
-		  const Expr& tristate_expr,
-		  ClibCapacitance max_fanout,
-		  ClibCapacitance min_fanout,
-		  ClibCapacitance max_capacitance,
-		  ClibCapacitance min_capacitance,
-		  ClibTime max_transition,
-		  ClibTime min_transition);
+  new_cell_output(
+    const ShString& name,            ///< [in] 出力ピン名
+    bool has_logic,                  ///< [in] 出力の論理式を持つ時に true となるフラグ
+    const Expr& logic_expr,          ///< [in] 出力の論理式
+    const Expr& tristate_expr,       ///< [in] トライステート条件の論理式
+    ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
+    ClibCapacitance min_fanout,      ///< [in] 最小ファンアウト容量
+    ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
+    ClibCapacitance min_capacitance, ///< [in] 最小負荷容量
+    ClibTime max_transition,         ///< [in] 最大遷移時間
+    ClibTime min_transition          ///< [in] 最小遷移時間
+  );
 
   /// @brief セルの入出力ピンの内容を設定する．
-  /// @param[in] name 入出力ピン名
-  /// @param[in] has_logic 出力の論理式を持つ時に true となるフラグ
-  /// @param[in] logic_expr 出力の論理式
-  /// @param[in] tristate_expr トライステート条件の論理式
-  /// @param[in] capacitance 入力ピンの負荷容量
-  /// @param[in] rise_capacitance 入力ピンの立ち上がり負荷容量
-  /// @param[in] fall_capacitance 入力ピンの立ち下がり負荷容量
-  /// @param[in] max_fanout 最大ファンアウト容量
-  /// @param[in] min_fanout 最小ファンアウト容量
-  /// @param[in] max_capacitance 最大負荷容量
-  /// @param[in] min_capacitance 最小負荷容量
-  /// @param[in] max_transition 最大遷移時間
-  /// @param[in] min_transition 最小遷移時間
   CiInoutPin*
-  new_cell_inout(const ShString& name,
-		 bool has_logic,
-		 const Expr& logic_expr,
-		 const Expr& tristate_expr,
-		 ClibCapacitance capacitance,
-		 ClibCapacitance rise_capacitance,
-		 ClibCapacitance fall_capacitance,
-		 ClibCapacitance max_fanout,
-		 ClibCapacitance min_fanout,
-		 ClibCapacitance max_capacitance,
-		 ClibCapacitance min_capacitance,
-		 ClibTime max_transition,
-		 ClibTime min_transition);
+  new_cell_inout(
+    const ShString& name,             ///< [in] 入出力ピン名
+    bool has_logic,                   ///< [in] 出力の論理式を持つ時に true となるフラグ
+    const Expr& logic_expr,           ///< [in] 出力の論理式
+    const Expr& tristate_expr,        ///< [in] トライステート条件の論理式
+    ClibCapacitance capacitance,      ///< [in] 入力ピンの負荷容量
+    ClibCapacitance rise_capacitance, ///< [in] 入力ピンの立ち上がり負荷容量
+    ClibCapacitance fall_capacitance, ///< [in] 入力ピンの立ち下がり負荷容量
+    ClibCapacitance max_fanout,       ///< [in] 最大ファンアウト容量
+    ClibCapacitance min_fanout,       ///< [in] 最小ファンアウト容量
+    ClibCapacitance max_capacitance,  ///< [in] 最大負荷容量
+    ClibCapacitance min_capacitance,  ///< [in] 最小負荷容量
+    ClibTime max_transition,          ///< [in] 最大遷移時間
+    ClibTime min_transition           ///< [in] 最小遷移時間
+  );
 
   /// @brief セルの内部ピンを生成する．
-  /// @param[in] name 内部ピン名
   CiInternalPin*
-  new_cell_internal(const ShString& name);
+  new_cell_internal(
+    const ShString& name ///< [in] 内部ピン名
+  );
 
   /// @brief タイミング情報を作る(ジェネリック遅延モデル)．
-  /// @param[in] type タイミングの型
-  /// @param[in] cond タイミング条件を表す式
-  /// @param[in] intrinsic_rise 立ち上がり固有遅延
-  /// @param[in] intrinsic_fall 立ち下がり固有遅延
-  /// @param[in] slope_rise 立ち上がりスロープ遅延
-  /// @param[in] slope_fall 立ち下がりスロープ遅延
-  /// @param[in] rise_resistance 立ち上がり負荷依存係数
-  /// @param[in] fall_resistance 立ち下がり負荷依存係数
   CiTiming*
-  new_timing_generic(ClibTimingType type,
-		     const Expr& cond,
-		     ClibTime intrinsic_rise,
-		     ClibTime intrinsic_fall,
-		     ClibTime slope_rise,
-		     ClibTime slope_fall,
-		     ClibResistance rise_resistance,
-		     ClibResistance fall_resistance);
+  new_timing_generic(
+    ClibTimingType type,            ///< [in] タイミングの型
+    const Expr& cond,               ///< [in] タイミング条件を表す式
+    ClibTime intrinsic_rise,        ///< [in] 立ち上がり固有遅延
+    ClibTime intrinsic_fall,        ///< [in] 立ち下がり固有遅延
+    ClibTime slope_rise,            ///< [in] 立ち上がりスロープ遅延
+    ClibTime slope_fall,            ///< [in] 立ち下がりスロープ遅延
+    ClibResistance rise_resistance, ///< [in] 立ち上がり負荷依存係数
+    ClibResistance fall_resistance  ///< [in] 立ち下がり負荷依存係数
+  );
 
   /// @brief タイミング情報を作る(折れ線近似)．
-  /// @param[in] timing_type タイミングの型
-  /// @param[in] cond タイミング条件を表す式
-  /// @param[in] intrinsic_rise 立ち上がり固有遅延
-  /// @param[in] intrinsic_fall 立ち下がり固有遅延
-  /// @param[in] slope_rise 立ち上がりスロープ遅延
-  /// @param[in] slope_fall 立ち下がりスロープ遅延
   CiTiming*
-  new_timing_piecewise(ClibTimingType timing_type,
-		       const Expr& cond,
-		       ClibTime intrinsic_rise,
-		       ClibTime intrinsic_fall,
-		       ClibTime slope_rise,
-		       ClibTime slope_fall,
-		       ClibResistance rise_pin_resistance,
-		       ClibResistance fall_pin_resistance);
+  new_timing_piecewise(
+    ClibTimingType timing_type,         ///< [in] タイミングの型
+    const Expr& cond,                   ///< [in] タイミング条件を表す式
+    ClibTime intrinsic_rise,            ///< [in] 立ち上がり固有遅延
+    ClibTime intrinsic_fall,            ///< [in] 立ち下がり固有遅延
+    ClibTime slope_rise,                ///< [in] 立ち上がりスロープ遅延
+    ClibTime slope_fall,                ///< [in] 立ち下がりスロープ遅延
+    ClibResistance rise_pin_resistance, ///< [in] 立ち上がりピン抵抗
+    ClibResistance fall_pin_resistance  ///< [in] 立ち下がりピン抵抗
+  );
 
   /// @brief タイミング情報を作る(非線形タイプ1)．
-  /// @param[in] timing_type タイミングの型
-  /// @param[in] cond タイミング条件を表す式
-  /// @param[in] cell_rise 立ち上がりセル遅延テーブル
-  /// @param[in] cell_fall 立ち下がりセル遅延テーブル
-  /// @param[in] risze_transition 立ち上がり遷移テーブル
-  /// @param[in] fall_transition 立ち下がり遷移テーブル
   CiTiming*
-  new_timing_lut1(ClibTimingType timing_type,
-		  const Expr& cond,
-		  ClibLut* cell_rise,
-		  ClibLut* cell_fall,
-		  ClibLut* rise_transition,
-		  ClibLut* fall_transition);
+  new_timing_lut1(
+    ClibTimingType timing_type, ///< [in] タイミングの型
+    const Expr& cond,           ///< [in] タイミング条件を表す式
+    ClibLut* cell_rise,         ///< [in] 立ち上がりセル遅延テーブル
+    ClibLut* cell_fall,         ///< [in] 立ち下がりセル遅延テーブル
+    ClibLut* rise_transition,   ///< [in] 立ち上がり遷移テーブル
+    ClibLut* fall_transition    ///< [in] 立ち下がり遷移テーブル
+  );
 
   /// @brief タイミング情報を作る(非線形タイプ2)．
-  /// @param[in] timing_type タイミングの型
-  /// @param[in] cond タイミング条件を表す式
-  /// @param[in] rise_transition 立ち上がり遷移遅延テーブル
-  /// @param[in] fall_transition 立ち下がり遷移遅延テーブル
-  /// @param[in] rise_propagation 立ち上がり伝搬遅延テーブル
-  /// @param[in] fall_propagation 立ち下がり伝搬遅延テーブル
   CiTiming*
-  new_timing_lut2(ClibTimingType timing_type,
-		  const Expr& cond,
-		  ClibLut* rise_transition,
-		  ClibLut* fall_transition,
-		  ClibLut* rise_propagation,
-		  ClibLut* fall_propagation);
+  new_timing_lut2(
+    ClibTimingType timing_type, ///< [in] タイミングの型
+    const Expr& cond,           ///< [in] タイミング条件を表す式
+    ClibLut* rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
+    ClibLut* fall_transition,   ///< [in] 立ち下がり遷移遅延テーブル
+    ClibLut* rise_propagation,  ///< [in] 立ち上がり伝搬遅延テーブル
+    ClibLut* fall_propagation   ///< [in] 立ち下がり伝搬遅延テーブル
+  );
 
   /// @brief タイミング情報をセットする．
-  /// @param[in] cell セル
-  /// @param[in] input_id 入力ピンID
-  /// @param[in] output_id 出力ピンID
-  /// @param[in] timing_sense タイミングセンス
-  /// @param[in] timing_list タイミング情報のリスト
   void
-  set_timing(CiCell* cell,
-	     int input_id,
-	     int output_id,
-	     ClibTimingSense timing_sense,
-	     const vector<CiTiming*>& timing_list);
+  set_timing(
+    CiCell* cell,                        ///< [in] セル
+    int input_id,                        ///< [in] 入力ピンID
+    int output_id,                       ///< [in] 出力ピンID
+    ClibTimingSense timing_sense,        ///< [in] タイミングセンス
+    const vector<CiTiming*>& timing_list ///< [in] タイミング情報のリスト
+  );
 
   /// @brief 1次元の LUT を作る．
-  /// @param[in] lut_template テンプレート
-  /// @param[in] value_array 値の配列
-  /// @param[in] index_array インデックス値のリスト
   ClibLut*
-  new_lut1(const ClibLutTemplate* lut_template,
-	   const vector<double>& value_array,
-	   const vector<double>& index_array = vector<double>());
+  new_lut1(
+    const ClibLutTemplate* lut_template,                 ///< [in] テンプレート
+    const vector<double>& value_array,                   ///< [in] 値の配列
+    const vector<double>& index_array = vector<double>{} ///< [in] インデックス値のリスト
+  );
 
   /// @brief 2次元の LUT を作る．
-  /// @param[in] lut_template テンプレート
-  /// @param[in] value_array 値の配列
-  /// @param[in] index_array1 インデックス値のリスト
-  /// @param[in] index_array2 インデックス値のリスト
   ClibLut*
-  new_lut2(const ClibLutTemplate* lut_template,
-	   const vector<double>& value_array,
-	   const vector<double>& index_array1 = vector<double>(),
-	   const vector<double>& index_array2 = vector<double>());
+  new_lut2(
+    const ClibLutTemplate* lut_template,                   ///< [in] テンプレート
+    const vector<double>& value_array,                     ///< [in] 値の配列
+    const vector<double>& index_array1 = vector<double>{}, ///< [in] インデックス値のリスト
+    const vector<double>& index_array2 = vector<double>{}  ///< [in] インデックス値のリスト
+  );
 
   /// @brief 3次元の LUT を作る．
-  /// @param[in] lut_template テンプレート
-  /// @param[in] value_array 値の配列
-  /// @param[in] index_array1 インデックス値のリスト
-  /// @param[in] index_array2 インデックス値のリスト
-  /// @param[in] index_array3 インデックス値のリスト
   ClibLut*
-  new_lut3(const ClibLutTemplate* lut_template,
-	   const vector<double>& value_array,
-	   const vector<double>& index_array1 = vector<double>(),
-	   const vector<double>& index_array2 = vector<double>(),
-	   const vector<double>& index_array3 = vector<double>());
+  new_lut3(
+    const ClibLutTemplate* lut_template,                   ///< [in] テンプレート
+    const vector<double>& value_array,                     ///< [in] 値の配列
+    const vector<double>& index_array1 = vector<double>{}, ///< [in] インデックス値のリスト
+    const vector<double>& index_array2 = vector<double>{}, ///< [in] インデックス値のリスト
+    const vector<double>& index_array3 = vector<double>{}  ///< [in] インデックス値のリスト
+  );
 
 
 public:
@@ -802,61 +742,73 @@ private:
   ///
   /// 論理セルのパタングラフも作成する．
   void
-  compile(const vector<CiCell*>& cell_list);
+  compile(
+    const vector<CiCell*>& cell_list ///< [in] 対象のセルのリスト
+  );
 
 
   /// @brief セルグループを作る．
-  /// @param[in] id 番号
-  /// @param[in] map 変換マップ
-  /// @param[in] pininfo ピン情報
-  /// @param[in] cell_list セルのリスト
   ///
   /// pininfo は restore() 時のみ指定する．
   /// それ以外は後で set_ff_info()/set_latch_info() で設定する．
   CiCellGroup*
-  new_cell_group(int id,
-		 const NpnMapM& map,
-		 int pininfo,
-		 const vector<CiCell*>& cell_list);
+  new_cell_group(
+    int id,                          ///< [in] 番号
+    const NpnMapM& map,              ///< [in] 変換マップ
+    int pininfo,                     ///< [in] ピン情報
+    const vector<CiCell*>& cell_list ///< [in] セルのリスト
+  );
 
   /// @brief セルクラスを作る．
-  /// @param[in] id 番号
-  /// @param[in] idmap_list 同位体変換リスト
-  /// @param[in] group_list グループのリスト
   CiCellClass*
-  new_cell_class(int id,
-		 const vector<NpnMapM>& idmap_list,
-		 const vector<CiCellGroup*>& group_list);
+  new_cell_class(
+    int id,                                ///< [in] 番号
+    const vector<NpnMapM>& idmap_list,     ///< [in] 同位体変換リスト
+    const vector<CiCellGroup*>& group_list ///< [in] グループのリスト
+  );
 
   /// @brief LUT テンプレートを読み込む．
   void
-  restore_lut_template(istream& s);
+  restore_lut_template(
+    istream& s ///< [in] 入力ストリーム
+  );
 
   /// @brief セルを読み込む．
   void
-  restore_cell(istream& s,
-	       vector<CiCell*>& cell_list);
+  restore_cell(
+    istream& s,                ///< [in] 入力ストリーム
+    vector<CiCell*>& cell_list ///< [out] 読み込んだセルを格納するリスト
+  );
 
   /// @brief セルグループを読み込む．
   void
-  restore_cell_group(istream& s,
-		     const vector<CiCell*>& global_cell_list,
-		     vector<CiCellGroup*>& group_list);
+  restore_cell_group(
+    istream& s,                              ///< [in] 入力ストリーム
+    const vector<CiCell*>& global_cell_list, ///< [in] グローバルセルのリスト
+    vector<CiCellGroup*>& group_list         ///< [out] 読み込んだセルグループを格納するリスト
+  );
 
   /// @brief セルクラスを読み込む．
   void
-  restore_cell_class(istream& s,
-		     const vector<CiCellGroup*>& global_group_list,
-		     vector<CiCellClass*>& class_list);
+  restore_cell_class(
+    istream& s,                                    ///< [in] 入力ストリーム
+    const vector<CiCellGroup*>& global_group_list, ///< [in] グローバルグループのリスト
+    vector<CiCellClass*>& class_list               ///< [out] 読み込んだセルクラスを格納するリスト
+  );
 
   /// @brief タイミング情報を読み込む．
   void
-  restore_timing(istream& s,
-		 vector<CiTiming*>& timing_list);
+  restore_timing(
+    istream& s,                    ///< [in] 入力ストリーム
+    vector<CiTiming*>& timing_list ///< [out] 読み込んだタイミングを格納するリスト
+  );
 
   /// @brief LUT を読み込む．
+  /// @return 読み込んだLUTを返す．
   ClibLut*
-  restore_lut(istream& s);
+  restore_lut(
+    istream& s ///< [in] 入力ストリーム
+  );
 
 
 public:
@@ -866,16 +818,18 @@ public:
 
   /// @brief ピンを登録する．
   void
-  reg_pin(CiCellPin* pin);
+  reg_pin(
+    CiCellPin* pin ///< [in] ピン
+  );
 
   /// @brief ピン名からピン番号を取り出す．
-  /// @param[in] cell セル
-  /// @param[in] name ピン名
   ///
   /// 見つからない場合は -1 を返す．
   int
-  get_pin_id(const CiCell* cell,
-	     ShString name);
+  get_pin_id(
+    const CiCell* cell, ///< [in] セル
+    ShString name       ///< [in] ピン名
+  );
 
 
 private:

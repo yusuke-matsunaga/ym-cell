@@ -5,9 +5,8 @@
 /// @brief CiLutHash のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/clib.h"
 #include "ym/ShString.h"
@@ -35,16 +34,19 @@ public:
 public:
 
   /// @brief テンプレートを追加する．
-  /// @param[in] templ 追加するテンプレート
   void
-  add(CiLutTemplate* templ);
+  add(
+    CiLutTemplate* templ ///< [in] 追加するテンプレート
+  );
 
   /// @brief テンプレートを取り出す．
-  /// @param[in] name 名前
   /// @return name という名前のテンプレートを返す．
-  /// @note なければ nullptr を返す．
+  ///
+  /// なければ nullptr を返す．
   CiLutTemplate*
-  get(ShString name) const;
+  get(
+    ShString name ///< [in] 名前
+  ) const;
 
 
 private:
@@ -53,9 +55,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief テーブルの領域を確保する．
-  /// @param[in] req_size 要求するサイズ
   void
-  alloc_table(int req_size);
+  alloc_table(
+    int req_size ///< [in] 要求するサイズ
+  );
 
 
 private:

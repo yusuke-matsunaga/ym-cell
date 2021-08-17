@@ -8,6 +8,8 @@
 /// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
+#error "obsolete"
+
 #include "ym/clib.h"
 
 
@@ -28,7 +30,9 @@ public:
 
   /// @brief シグネチャを指定するコンストラクタ
   explicit
-  ClibLatchPosArray(int sig); ///< [in] 設定するシグネチャ
+  ClibLatchPosArray(
+    int sig ///< [in] 設定するシグネチャ
+  );
 
   /// @brief デストラクタ
   ~ClibLatchPosArray();
@@ -116,15 +120,17 @@ public:
 
   /// @brief 個々の情報を設定する．
   void
-  set(int data_pos,     ///< [in] データ入力のピン番号
-      int enable_pos,   ///< [in] イネーブル入力のピン番号
-      int enable_sense, ///< [in] イネーブル入力の極性情報
-      int clear_pos,    ///< [in] クリア入力のピン番号
-      int clear_sense,  ///< [in] クリア入力の極性情報
-      int preset_pos,   ///< [in] プリセット入力のピン番号
-      int preset_sense, ///< [in] プリセット入力の極性情報
-      int q_pos,        ///< [in] 肯定出力のピン番号
-      int iq_pos);      ///< [in] 否定出力のピン番号
+  set(
+    int data_pos,     ///< [in] データ入力のピン番号
+    int enable_pos,   ///< [in] イネーブル入力のピン番号
+    int enable_sense, ///< [in] イネーブル入力の極性情報
+    int clear_pos,    ///< [in] クリア入力のピン番号
+    int clear_sense,  ///< [in] クリア入力の極性情報
+    int preset_pos,   ///< [in] プリセット入力のピン番号
+    int preset_sense, ///< [in] プリセット入力の極性情報
+    int q_pos,        ///< [in] 肯定出力のピン番号
+    int iq_pos        ///< [in] 否定出力のピン番号
+  );
 
 
 private:

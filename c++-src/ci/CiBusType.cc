@@ -3,9 +3,8 @@
 /// @brief CiBusType の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ci/CiBusType.h"
 
@@ -17,15 +16,13 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] name 名前
-// @param[in] bit_from 開始位置
-// @param[in] bit_to 終了位置
-CiBusType::CiBusType(const ShString& name,
-		     int bit_from,
-		     int bit_to) :
-  mName(name),
-  mBitFrom(bit_from),
-  mBitTo(bit_to)
+CiBusType::CiBusType(
+  const ShString& name,
+  int bit_from,
+  int bit_to
+) : mName(name),
+    mBitFrom(bit_from),
+    mBitTo(bit_to)
 {
   if ( bit_from <= bit_to ) {
     mBitWidth = bit_to - bit_from + 1;
