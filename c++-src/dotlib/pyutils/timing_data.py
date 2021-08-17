@@ -68,9 +68,10 @@ groups = (
     ('steady_state_current_(high|low|tristate)', 'table'),
 )
 
-hd.add_group_data('timing', 'string',
+hd.add_group_data('timing', 'opt_string',
                   simple_attrs=simple_attrs,
-                  complex_attrs=complex_attrs)
+                  complex_attrs=complex_attrs,
+                  groups=groups)
 
 
 ####################################################

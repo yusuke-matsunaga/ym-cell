@@ -447,7 +447,7 @@ complex_attrs = (
     ('wire_load_from_area', 'float_float_string'),
 )
 
-hd.add_group_data('wire_load_selection', 'string',
+hd.add_group_data('wire_load_selection', 'opt_string',
                   complex_attrs=complex_attrs)
 
 

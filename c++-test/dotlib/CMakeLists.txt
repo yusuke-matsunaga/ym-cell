@@ -53,3 +53,12 @@ ym_add_gtest ( cell_DotlibParser_test
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   )
+
+ym_add_gtest ( cell_DotlibParser_test2
+  ParserTest_ast.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  DEFINITIONS
+  "-DDATA_DIR=\"${PROJECT_SOURCE_DIR}/ym-cell/testdata\""
+  )

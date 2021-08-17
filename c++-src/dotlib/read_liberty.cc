@@ -3,7 +3,7 @@
 /// @brief read_liberty の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 201 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
@@ -39,8 +39,10 @@ BEGIN_NONAMESPACE
 // string の定番コード
 // ただし結果は ShString のリストとなる．
 vector<ShString>
-split(const string& src_str,
-      const string& delim = " \t\n")
+split(
+  const string& src_str,
+  const string& delim = " \t\n"
+)
 {
   vector<ShString> ans;
   string::size_type start = 0;
@@ -64,9 +66,11 @@ split(const string& src_str,
 #if 0
 // lut を読み込む．
 ClibLut*
-gen_lut(CiCellLibrary* library,
-	const AstLut* lut_node,
-	const unordered_map<ShString, const ClibLutTemplate*>& template_dict)
+gen_lut(
+  CiCellLibrary* library,
+  const AstLut* lut_node,
+  const unordered_map<ShString, const ClibLutTemplate*>& template_dict
+)
 {
   // lut 名を template_dict から探す．
   ShString name{lut_node->name()->string_value()};
@@ -131,9 +135,11 @@ gen_lut(CiCellLibrary* library,
 
 // 論理式を生成する．
 Expr
-gen_expr(const AstExpr* expr_node,
-	 const unordered_map<ShString, int>& pin_map,
-	 bool& has_expr)
+gen_expr(
+  const AstExpr* expr_node,
+  const unordered_map<ShString, int>& pin_map,
+  bool& has_expr
+)
 {
   if ( expr_node ) {
     has_expr = true;
@@ -147,13 +153,15 @@ gen_expr(const AstExpr* expr_node,
 
 // ピンを生成する．
 void
-gen_pin(const vector<const AstPin*>& pin_list,
-	const unordered_map<ShString, int>& pin_map,
-	CiCellLibrary* library,
-	vector<CiInputPin*>& input_list,
-	vector<CiOutputPin*>& output_list,
-	vector<CiInoutPin*>& inout_list,
-	vector<CiInternalPin*>& internal_list)
+gen_pin(
+  const vector<const AstPin*>& pin_list,
+  const unordered_map<ShString, int>& pin_map,
+  CiCellLibrary* library,
+  vector<CiInputPin*>& input_list,
+  vector<CiOutputPin*>& output_list,
+  vector<CiInoutPin*>& inout_list,
+  vector<CiInternalPin*>& internal_list
+)
 {
   for ( auto pin_info: pin_list ) {
     switch ( pin_info->direction()->direction_value() ) {
@@ -241,12 +249,14 @@ gen_pin(const vector<const AstPin*>& pin_list,
 }
 
 void
-gen_timing_list(const vector<const AstPin*> pin_list,
-		const unordered_map<ShString, int>& pin_map,
-		const unordered_map<ShString, const ClibLutTemplate*>& template_dict,
-		CiCellLibrary* library,
-		vector<CiTiming*>& timing_list,
-		vector<vector<CiTiming*> >& timing_list_array)
+gen_timing_list(
+  const vector<const AstPin*> pin_list,
+  const unordered_map<ShString, int>& pin_map,
+  const unordered_map<ShString, const ClibLutTemplate*>& template_dict,
+  CiCellLibrary* library,
+  vector<CiTiming*>& timing_list,
+  vector<vector<CiTiming*> >& timing_list_array
+)
 {
   for ( auto pin_info: pin_list ) {
     for ( auto ast_timing: pin_info->timing_list() ) {
@@ -460,8 +470,10 @@ gen_timing_list(const vector<const AstPin*> pin_list,
 // @param[in] library_info ライブラリの情報を持つオブジェクト
 // @param[in] library設定対象のライブラリ
 void
-set_library(const AstLibrary* ast_library,
-	    CiCellLibrary* library)
+set_library(
+  const AstLibrary* ast_library,
+  CiCellLibrary* library
+)
 {
   // 'name' の設定
   library->set_name(ast_library->name()->string_value());
@@ -799,11 +811,11 @@ END_NAMESPACE_YM_DOTLIB
 BEGIN_NAMESPACE_YM_CLIB
 
 // @brief liberty 形式のファイルを読み込んでライブラリに設定する．
-// @param[in] filename ファイル名
-// @param[in] library 設定対象のライブラリ
 // @return 読み込みが成功したら true を返す．
 bool
-CiCellLibrary::read_liberty(const string& filename)
+CiCellLibrary::read_liberty(
+  const string& filename
+)
 {
   using namespace nsDotlib;
 

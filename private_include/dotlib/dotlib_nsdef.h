@@ -40,25 +40,11 @@ class AstValue;
 class Token;
 class AttrKwd;
 
-enum class TokenType;
-
-// AstXXX の unique_ptr
-using AstExprPtr = unique_ptr<const AstExpr>;
-using AstValuePtr = unique_ptr<const AstValue>;
-using AstAttrPtr = unique_ptr<const AstAttr>;
-
-// simple attribute を読み込む関数の型定義
-using SimpleHandler = std::function<AstValuePtr(DotlibScanner&)>;
-
-// group statement の要素を読み込む関数の型定義
-using AttrHandler = std::function<AstAttrPtr(Parser&, const AttrKwd&)>;
-
-
 /// @brief トークンの値
 /// 基本的には dotlib のシンタックスにしたがっているが，
 /// 一部，function 属性の文字列の中身をパーズする時のみ現れるシンボルがある．
 /// AND, OR, XOR, PRIME がそれ．
-enum class TokenType {
+enum class TokenType : ymuint8 {
   COLON,      ///< コロン(:)
   SEMI,       ///< セミコロン(;)
   COMMA,      ///< コンマ(,)
@@ -85,12 +71,24 @@ enum class TokenType {
   END,        ///< ファイルの末尾
 };
 
+
 /// @brief TokenType 内容をストリームに出力する．
 ostream&
 operator<<(
   ostream& s,    ///< [in] 出力先のストリーム
   TokenType type ///< [in] トークンタイプ
 );
+
+// AstXXX の unique_ptr
+using AstExprPtr = unique_ptr<const AstExpr>;
+using AstValuePtr = unique_ptr<const AstValue>;
+using AstAttrPtr = unique_ptr<const AstAttr>;
+
+// simple attribute を読み込む関数の型定義
+using SimpleHandler = std::function<AstValuePtr(DotlibScanner&)>;
+
+// group statement の要素を読み込む関数の型定義
+using AttrHandler = std::function<AstAttrPtr(Parser&, const AttrKwd&)>;
 
 
 //////////////////////////////////////////////////////////////////////

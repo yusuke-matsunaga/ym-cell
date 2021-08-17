@@ -163,6 +163,7 @@ FanoutLengthHeader::_read_header_value(
 {
   switch ( count ) {
   case 0: return scanner.read_int();
+  case 1: return scanner.read_float();
   case 2: return scanner.read_float();
   case 3: return scanner.read_float();
   case 4: return scanner.read_float();
@@ -218,6 +219,50 @@ ListHeader::_end_header(
 )
 {
   // count は無視
+  return true;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス OptElemHandler
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+OptElemHeader::OptElemHeader(
+  SimpleHandler handler ///< [in] 要素のハンドラ
+) : mHandler{handler}
+{
+}
+
+// @brief ヘッダの値を読み込む処理
+AstValuePtr
+OptElemHeader::_read_header_value(
+  DotlibScanner& scanner, ///< [in] 字句解析器
+  int count               ///< [in] read_header_value() の呼ばれた回数
+)
+{
+  if ( count == 0 ) {
+    return mHandler(scanner);
+  }
+
+  ostringstream buf;
+  buf << "Syntx error: "
+      << "Too many values, expected at most one.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  FileRegion(lp_loc(), rp_loc()),
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  buf.str());
+  return {};
+}
+
+// @brief 読み込みが終了した時の処理を行う．
+bool
+OptElemHeader::_end_header(
+  int count ///< [in] 読み込んだ要素数
+)
+{
+  // 0 でも可
   return true;
 }
 

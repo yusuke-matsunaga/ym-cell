@@ -89,6 +89,8 @@ ListHeader Parser::sIntListHeader( read_int );
 
 ListHeader Parser::sStrListHeader( read_string );
 
+OptElemHeader Parser::sOptStrHeader( read_string );
+
 unordered_map<string, AttrHandler> Parser::sHandlerDict{
 #include "Parser_dict.cc"
 };

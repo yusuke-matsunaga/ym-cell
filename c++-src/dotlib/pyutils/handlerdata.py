@@ -115,6 +115,7 @@ class HandlerData:
             'string': 'Str',
             'string_string': 'StrStr',
             'string_string_int': 'StrStrInt',
+            'opt_string': 'OptStr',
         }
 
         # group 名をキーにしてヘッダハンドラを格納する辞書
@@ -250,7 +251,6 @@ BEGIN_NAMESPACE_YM_DOTLIB
         fout.write(header)
 
         for name, header in self._group_dict.items():
-            spc = ' ' * len(name)
             fmt = """
 /// @brief {0} group statment のパースを行なう．
 /// @return パース結果を返す．
@@ -258,13 +258,15 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_{0}(Parser& parser,      ///< [in] パーサー
-      {1} const AttrKwd& attr) ///< [in] 属性の型
+group_{0}(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {{
-  return parser.parse_group_statement(attr, "{0}", Parser::s{2}Header);
+  return parser.parse_group_statement(attr, "{0}", Parser::s{1}Header);
 }}
 """
-            fout.write(fmt.format(name, spc, header))
+            fout.write(fmt.format(name, header))
 
         footer = """
 //////////////////////////////////////////////////////////////////////

@@ -24,8 +24,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_library(Parser& parser,      ///< [in] パーサー
-              const AttrKwd& attr) ///< [in] 属性の型
+group_library(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "library", Parser::sStrHeader);
 }
@@ -36,8 +38,10 @@ group_library(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_base_curves(Parser& parser,      ///< [in] パーサー
-                  const AttrKwd& attr) ///< [in] 属性の型
+group_base_curves(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "base_curves", Parser::sStrHeader);
 }
@@ -48,8 +52,10 @@ group_base_curves(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_clut_template(Parser& parser,      ///< [in] パーサー
-                    const AttrKwd& attr) ///< [in] 属性の型
+group_clut_template(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "clut_template", Parser::sStrHeader);
 }
@@ -60,8 +66,10 @@ group_clut_template(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_domain(Parser& parser,      ///< [in] パーサー
-             const AttrKwd& attr) ///< [in] 属性の型
+group_domain(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "domain", Parser::sStrHeader);
 }
@@ -72,8 +80,10 @@ group_domain(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_fpga_isd(Parser& parser,      ///< [in] パーサー
-               const AttrKwd& attr) ///< [in] 属性の型
+group_fpga_isd(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "fpga_isd", Parser::sStrHeader);
 }
@@ -84,8 +94,10 @@ group_fpga_isd(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_input_voltage(Parser& parser,      ///< [in] パーサー
-                    const AttrKwd& attr) ///< [in] 属性の型
+group_input_voltage(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "input_voltage", Parser::sStrHeader);
 }
@@ -96,8 +108,10 @@ group_input_voltage(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_output_voltage(Parser& parser,      ///< [in] パーサー
-                     const AttrKwd& attr) ///< [in] 属性の型
+group_output_voltage(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "output_voltage", Parser::sStrHeader);
 }
@@ -108,8 +122,10 @@ group_output_voltage(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_operating_conditions(Parser& parser,      ///< [in] パーサー
-                           const AttrKwd& attr) ///< [in] 属性の型
+group_operating_conditions(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "operating_conditions", Parser::sStrHeader);
 }
@@ -120,8 +136,10 @@ group_operating_conditions(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_part(Parser& parser,      ///< [in] パーサー
-           const AttrKwd& attr) ///< [in] 属性の型
+group_part(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "part", Parser::sStrHeader);
 }
@@ -132,8 +150,10 @@ group_part(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_speed_grade(Parser& parser,      ///< [in] パーサー
-                  const AttrKwd& attr) ///< [in] 属性の型
+group_speed_grade(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "speed_grade", Parser::sStrHeader);
 }
@@ -144,8 +164,10 @@ group_speed_grade(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_poly_template(Parser& parser,      ///< [in] パーサー
-                    const AttrKwd& attr) ///< [in] 属性の型
+group_poly_template(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "poly_template", Parser::sStrHeader);
 }
@@ -156,8 +178,10 @@ group_poly_template(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_power_supply(Parser& parser,      ///< [in] パーサー
-                   const AttrKwd& attr) ///< [in] 属性の型
+group_power_supply(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "power_supply", Parser::sStrHeader);
 }
@@ -168,8 +192,10 @@ group_power_supply(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_sensitization(Parser& parser,      ///< [in] パーサー
-                    const AttrKwd& attr) ///< [in] 属性の型
+group_sensitization(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "sensitization", Parser::sStrHeader);
 }
@@ -180,8 +206,10 @@ group_sensitization(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_table(Parser& parser,      ///< [in] パーサー
-            const AttrKwd& attr) ///< [in] 属性の型
+group_table(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "table", Parser::sStrHeader);
 }
@@ -192,8 +220,10 @@ group_table(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_template(Parser& parser,      ///< [in] パーサー
-               const AttrKwd& attr) ///< [in] 属性の型
+group_template(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "template", Parser::sStrHeader);
 }
@@ -204,8 +234,10 @@ group_template(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_timing_range(Parser& parser,      ///< [in] パーサー
-                   const AttrKwd& attr) ///< [in] 属性の型
+group_timing_range(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "timing_range", Parser::sStrHeader);
 }
@@ -216,8 +248,10 @@ group_timing_range(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_type(Parser& parser,      ///< [in] パーサー
-           const AttrKwd& attr) ///< [in] 属性の型
+group_type(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "type", Parser::sStrHeader);
 }
@@ -228,8 +262,10 @@ group_type(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_wire_load(Parser& parser,      ///< [in] パーサー
-                const AttrKwd& attr) ///< [in] 属性の型
+group_wire_load(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "wire_load", Parser::sStrHeader);
 }
@@ -240,10 +276,12 @@ group_wire_load(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_wire_load_selection(Parser& parser,      ///< [in] パーサー
-                          const AttrKwd& attr) ///< [in] 属性の型
+group_wire_load_selection(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
-  return parser.parse_group_statement(attr, "wire_load_selection", Parser::sStrHeader);
+  return parser.parse_group_statement(attr, "wire_load_selection", Parser::sOptStrHeader);
 }
 
 /// @brief wire_load_table group statment のパースを行なう．
@@ -252,8 +290,10 @@ group_wire_load_selection(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_wire_load_table(Parser& parser,      ///< [in] パーサー
-                      const AttrKwd& attr) ///< [in] 属性の型
+group_wire_load_table(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "wire_load_table", Parser::sStrHeader);
 }
@@ -264,8 +304,10 @@ group_wire_load_table(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_cell(Parser& parser,      ///< [in] パーサー
-           const AttrKwd& attr) ///< [in] 属性の型
+group_cell(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "cell", Parser::sStrHeader);
 }
@@ -276,8 +318,10 @@ group_cell(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_scaled_cell(Parser& parser,      ///< [in] パーサー
-                  const AttrKwd& attr) ///< [in] 属性の型
+group_scaled_cell(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "scaled_cell", Parser::sStrStrHeader);
 }
@@ -288,8 +332,10 @@ group_scaled_cell(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_model(Parser& parser,      ///< [in] パーサー
-            const AttrKwd& attr) ///< [in] 属性の型
+group_model(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "model", Parser::sStrHeader);
 }
@@ -300,8 +346,10 @@ group_model(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_dynamic_current(Parser& parser,      ///< [in] パーサー
-                      const AttrKwd& attr) ///< [in] 属性の型
+group_dynamic_current(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "dynamic_current", Parser::sEmptyHeader);
 }
@@ -312,8 +360,10 @@ group_dynamic_current(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_switching_group(Parser& parser,      ///< [in] パーサー
-                      const AttrKwd& attr) ///< [in] 属性の型
+group_switching_group(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "switching_group", Parser::sEmptyHeader);
 }
@@ -324,8 +374,10 @@ group_switching_group(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_sg_pg_current(Parser& parser,      ///< [in] パーサー
-                    const AttrKwd& attr) ///< [in] 属性の型
+group_sg_pg_current(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "sg_pg_current", Parser::sEmptyHeader);
 }
@@ -336,8 +388,10 @@ group_sg_pg_current(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_sg_vector(Parser& parser,      ///< [in] パーサー
-                const AttrKwd& attr) ///< [in] 属性の型
+group_sg_vector(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "sg_vector", Parser::sEmptyHeader);
 }
@@ -348,8 +402,10 @@ group_sg_vector(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_ff(Parser& parser,      ///< [in] パーサー
-         const AttrKwd& attr) ///< [in] 属性の型
+group_ff(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "ff", Parser::sStrStrHeader);
 }
@@ -360,8 +416,10 @@ group_ff(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_ff_bank(Parser& parser,      ///< [in] パーサー
-              const AttrKwd& attr) ///< [in] 属性の型
+group_ff_bank(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "ff_bank", Parser::sStrStrIntHeader);
 }
@@ -372,8 +430,10 @@ group_ff_bank(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_fpga_condition(Parser& parser,      ///< [in] パーサー
-                     const AttrKwd& attr) ///< [in] 属性の型
+group_fpga_condition(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "fpga_condition", Parser::sStrHeader);
 }
@@ -384,8 +444,10 @@ group_fpga_condition(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_fpga_condition_value(Parser& parser,      ///< [in] パーサー
-                           const AttrKwd& attr) ///< [in] 属性の型
+group_fpga_condition_value(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "fpga_condition_value", Parser::sStrHeader);
 }
@@ -396,8 +458,10 @@ group_fpga_condition_value(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_functional_yield_metric(Parser& parser,      ///< [in] パーサー
-                              const AttrKwd& attr) ///< [in] 属性の型
+group_functional_yield_metric(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "functional_yield_metric", Parser::sEmptyHeader);
 }
@@ -408,8 +472,10 @@ group_functional_yield_metric(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_average_number_of_faults(Parser& parser,      ///< [in] パーサー
-                               const AttrKwd& attr) ///< [in] 属性の型
+group_average_number_of_faults(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "average_number_of_faults", Parser::sStrHeader);
 }
@@ -420,8 +486,10 @@ group_average_number_of_faults(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_leakage_current(Parser& parser,      ///< [in] パーサー
-                      const AttrKwd& attr) ///< [in] 属性の型
+group_leakage_current(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "leakage_current", Parser::sEmptyHeader);
 }
@@ -432,8 +500,10 @@ group_leakage_current(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_lc_pg_current(Parser& parser,      ///< [in] パーサー
-                    const AttrKwd& attr) ///< [in] 属性の型
+group_lc_pg_current(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "lc_pg_current", Parser::sEmptyHeader);
 }
@@ -444,8 +514,10 @@ group_lc_pg_current(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_gate_leakage(Parser& parser,      ///< [in] パーサー
-                   const AttrKwd& attr) ///< [in] 属性の型
+group_gate_leakage(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "gate_leakage", Parser::sStrHeader);
 }
@@ -456,8 +528,10 @@ group_gate_leakage(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_leakage_power(Parser& parser,      ///< [in] パーサー
-                    const AttrKwd& attr) ///< [in] 属性の型
+group_leakage_power(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "leakage_power", Parser::sEmptyHeader);
 }
@@ -468,8 +542,10 @@ group_leakage_power(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_generated_clock(Parser& parser,      ///< [in] パーサー
-                      const AttrKwd& attr) ///< [in] 属性の型
+group_generated_clock(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "generated_clock", Parser::sStrHeader);
 }
@@ -480,8 +556,10 @@ group_generated_clock(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_intrinsic_parasitic(Parser& parser,      ///< [in] パーサー
-                          const AttrKwd& attr) ///< [in] 属性の型
+group_intrinsic_parasitic(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "intrinsic_parasitic", Parser::sStrHeader);
 }
@@ -492,8 +570,10 @@ group_intrinsic_parasitic(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_intrinsic_capacitance(Parser& parser,      ///< [in] パーサー
-                            const AttrKwd& attr) ///< [in] 属性の型
+group_intrinsic_capacitance(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "intrinsic_capacitance", Parser::sStrHeader);
 }
@@ -504,8 +584,10 @@ group_intrinsic_capacitance(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_intrinsic_resistance(Parser& parser,      ///< [in] パーサー
-                           const AttrKwd& attr) ///< [in] 属性の型
+group_intrinsic_resistance(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "intrinsic_resistance", Parser::sStrHeader);
 }
@@ -516,8 +598,10 @@ group_intrinsic_resistance(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_total_capacitance(Parser& parser,      ///< [in] パーサー
-                        const AttrKwd& attr) ///< [in] 属性の型
+group_total_capacitance(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "total_capacitance", Parser::sStrHeader);
 }
@@ -528,8 +612,10 @@ group_total_capacitance(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_latch(Parser& parser,      ///< [in] パーサー
-            const AttrKwd& attr) ///< [in] 属性の型
+group_latch(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "latch", Parser::sStrStrHeader);
 }
@@ -540,8 +626,10 @@ group_latch(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_latch_bank(Parser& parser,      ///< [in] パーサー
-                 const AttrKwd& attr) ///< [in] 属性の型
+group_latch_bank(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "latch_bank", Parser::sStrStrIntHeader);
 }
@@ -552,8 +640,10 @@ group_latch_bank(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_lut(Parser& parser,      ///< [in] パーサー
-          const AttrKwd& attr) ///< [in] 属性の型
+group_lut(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "lut", Parser::sStrHeader);
 }
@@ -564,8 +654,10 @@ group_lut(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_mode_definition(Parser& parser,      ///< [in] パーサー
-                      const AttrKwd& attr) ///< [in] 属性の型
+group_mode_definition(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "mode_definition", Parser::sStrHeader);
 }
@@ -576,8 +668,10 @@ group_mode_definition(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_mode_value(Parser& parser,      ///< [in] パーサー
-                 const AttrKwd& attr) ///< [in] 属性の型
+group_mode_value(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "mode_value", Parser::sStrHeader);
 }
@@ -588,8 +682,10 @@ group_mode_value(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_pg_pin(Parser& parser,      ///< [in] パーサー
-             const AttrKwd& attr) ///< [in] 属性の型
+group_pg_pin(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "pg_pin", Parser::sStrHeader);
 }
@@ -600,8 +696,10 @@ group_pg_pin(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_routing_track(Parser& parser,      ///< [in] パーサー
-                    const AttrKwd& attr) ///< [in] 属性の型
+group_routing_track(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "routing_track", Parser::sStrHeader);
 }
@@ -612,8 +710,10 @@ group_routing_track(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_statetable(Parser& parser,      ///< [in] パーサー
-                 const AttrKwd& attr) ///< [in] 属性の型
+group_statetable(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "statetable", Parser::sStrStrHeader);
 }
@@ -624,8 +724,10 @@ group_statetable(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_test_cell(Parser& parser,      ///< [in] パーサー
-                const AttrKwd& attr) ///< [in] 属性の型
+group_test_cell(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "test_cell", Parser::sEmptyHeader);
 }
@@ -636,8 +738,10 @@ group_test_cell(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_pin(Parser& parser,      ///< [in] パーサー
-          const AttrKwd& attr) ///< [in] 属性の型
+group_pin(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "pin", Parser::sStrHeader);
 }
@@ -648,8 +752,10 @@ group_pin(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_bundle(Parser& parser,      ///< [in] パーサー
-             const AttrKwd& attr) ///< [in] 属性の型
+group_bundle(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "bundle", Parser::sStrHeader);
 }
@@ -660,8 +766,10 @@ group_bundle(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_bus(Parser& parser,      ///< [in] パーサー
-          const AttrKwd& attr) ///< [in] 属性の型
+group_bus(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "bus", Parser::sStrHeader);
 }
@@ -672,8 +780,10 @@ group_bus(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_ccsn(Parser& parser,      ///< [in] パーサー
-           const AttrKwd& attr) ///< [in] 属性の型
+group_ccsn(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "ccsn", Parser::sEmptyHeader);
 }
@@ -684,8 +794,10 @@ group_ccsn(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_ccsn_dc_current(Parser& parser,      ///< [in] パーサー
-                      const AttrKwd& attr) ///< [in] 属性の型
+group_ccsn_dc_current(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "ccsn_dc_current", Parser::sStrHeader);
 }
@@ -696,8 +808,10 @@ group_ccsn_dc_current(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_ccsn_output_voltage(Parser& parser,      ///< [in] パーサー
-                          const AttrKwd& attr) ///< [in] 属性の型
+group_ccsn_output_voltage(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "ccsn_output_voltage", Parser::sStrHeader);
 }
@@ -708,8 +822,10 @@ group_ccsn_output_voltage(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_ccsn_propagated_noise(Parser& parser,      ///< [in] パーサー
-                            const AttrKwd& attr) ///< [in] 属性の型
+group_ccsn_propagated_noise(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "ccsn_propagated_noise", Parser::sStrHeader);
 }
@@ -720,8 +836,10 @@ group_ccsn_propagated_noise(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_electromigration(Parser& parser,      ///< [in] パーサー
-                       const AttrKwd& attr) ///< [in] 属性の型
+group_electromigration(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "electromigration", Parser::sEmptyHeader);
 }
@@ -732,8 +850,10 @@ group_electromigration(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_em_max_toggle_rate(Parser& parser,      ///< [in] パーサー
-                         const AttrKwd& attr) ///< [in] 属性の型
+group_em_max_toggle_rate(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "em_max_toggle_rate", Parser::sStrHeader);
 }
@@ -744,8 +864,10 @@ group_em_max_toggle_rate(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_hyperbolic_noise(Parser& parser,      ///< [in] パーサー
-                       const AttrKwd& attr) ///< [in] 属性の型
+group_hyperbolic_noise(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "hyperbolic_noise", Parser::sEmptyHeader);
 }
@@ -756,8 +878,10 @@ group_hyperbolic_noise(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_internal_power(Parser& parser,      ///< [in] パーサー
-                     const AttrKwd& attr) ///< [in] 属性の型
+group_internal_power(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "internal_power", Parser::sEmptyHeader);
 }
@@ -768,8 +892,10 @@ group_internal_power(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_power(Parser& parser,      ///< [in] パーサー
-            const AttrKwd& attr) ///< [in] 属性の型
+group_power(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "power", Parser::sStrHeader);
 }
@@ -780,8 +906,10 @@ group_power(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_max_cap(Parser& parser,      ///< [in] パーサー
-              const AttrKwd& attr) ///< [in] 属性の型
+group_max_cap(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "max_cap", Parser::sStrHeader);
 }
@@ -792,8 +920,10 @@ group_max_cap(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_max_trans(Parser& parser,      ///< [in] パーサー
-                const AttrKwd& attr) ///< [in] 属性の型
+group_max_trans(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "max_trans", Parser::sStrHeader);
 }
@@ -804,8 +934,10 @@ group_max_trans(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_min_pulse_width(Parser& parser,      ///< [in] パーサー
-                      const AttrKwd& attr) ///< [in] 属性の型
+group_min_pulse_width(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "min_pulse_width", Parser::sEmptyHeader);
 }
@@ -816,8 +948,10 @@ group_min_pulse_width(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_minimum_period(Parser& parser,      ///< [in] パーサー
-                     const AttrKwd& attr) ///< [in] 属性の型
+group_minimum_period(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "minimum_period", Parser::sEmptyHeader);
 }
@@ -828,8 +962,10 @@ group_minimum_period(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_pin_capacitance(Parser& parser,      ///< [in] パーサー
-                      const AttrKwd& attr) ///< [in] 属性の型
+group_pin_capacitance(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "pin_capacitance", Parser::sEmptyHeader);
 }
@@ -840,8 +976,10 @@ group_pin_capacitance(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_pc_capacitance(Parser& parser,      ///< [in] パーサー
-                     const AttrKwd& attr) ///< [in] 属性の型
+group_pc_capacitance(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "pc_capacitance", Parser::sStrHeader);
 }
@@ -852,8 +990,10 @@ group_pc_capacitance(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_pc_capacitance_range(Parser& parser,      ///< [in] パーサー
-                           const AttrKwd& attr) ///< [in] 属性の型
+group_pc_capacitance_range(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "pc_capacitance_range", Parser::sStrHeader);
 }
@@ -864,8 +1004,10 @@ group_pc_capacitance_range(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_pc_capacitance_range_lu(Parser& parser,      ///< [in] パーサー
-                              const AttrKwd& attr) ///< [in] 属性の型
+group_pc_capacitance_range_lu(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "pc_capacitance_range_lu", Parser::sStrHeader);
 }
@@ -876,8 +1018,10 @@ group_pc_capacitance_range_lu(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_tlatch(Parser& parser,      ///< [in] パーサー
-             const AttrKwd& attr) ///< [in] 属性の型
+group_tlatch(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "tlatch", Parser::sStrHeader);
 }
@@ -888,10 +1032,12 @@ group_tlatch(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_timing(Parser& parser,      ///< [in] パーサー
-             const AttrKwd& attr) ///< [in] 属性の型
+group_timing(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
-  return parser.parse_group_statement(attr, "timing", Parser::sStrHeader);
+  return parser.parse_group_statement(attr, "timing", Parser::sOptStrHeader);
 }
 
 /// @brief cell_degradation group statment のパースを行なう．
@@ -900,8 +1046,10 @@ group_timing(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_cell_degradation(Parser& parser,      ///< [in] パーサー
-                       const AttrKwd& attr) ///< [in] 属性の型
+group_cell_degradation(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "cell_degradation", Parser::sStrHeader);
 }
@@ -912,8 +1060,10 @@ group_cell_degradation(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_cell_rf(Parser& parser,      ///< [in] パーサー
-              const AttrKwd& attr) ///< [in] 属性の型
+group_cell_rf(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "cell_rf", Parser::sStrHeader);
 }
@@ -924,8 +1074,10 @@ group_cell_rf(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_compact_ccs(Parser& parser,      ///< [in] パーサー
-                  const AttrKwd& attr) ///< [in] 属性の型
+group_compact_ccs(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "compact_ccs", Parser::sStrHeader);
 }
@@ -936,8 +1088,10 @@ group_compact_ccs(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_noise_immunity(Parser& parser,      ///< [in] パーサー
-                     const AttrKwd& attr) ///< [in] 属性の型
+group_noise_immunity(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "noise_immunity", Parser::sStrHeader);
 }
@@ -948,8 +1102,10 @@ group_noise_immunity(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_output_current_rf(Parser& parser,      ///< [in] パーサー
-                        const AttrKwd& attr) ///< [in] 属性の型
+group_output_current_rf(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "output_current_rf", Parser::sStrHeader);
 }
@@ -960,8 +1116,10 @@ group_output_current_rf(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_oc_vector(Parser& parser,      ///< [in] パーサー
-                const AttrKwd& attr) ///< [in] 属性の型
+group_oc_vector(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "oc_vector", Parser::sStrHeader);
 }
@@ -972,8 +1130,10 @@ group_oc_vector(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_propagated_noise_height(Parser& parser,      ///< [in] パーサー
-                              const AttrKwd& attr) ///< [in] 属性の型
+group_propagated_noise_height(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "propagated_noise_height", Parser::sStrHeader);
 }
@@ -984,8 +1144,10 @@ group_propagated_noise_height(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_receiver_capacitance(Parser& parser,      ///< [in] パーサー
-                           const AttrKwd& attr) ///< [in] 属性の型
+group_receiver_capacitance(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "receiver_capacitance", Parser::sEmptyHeader);
 }
@@ -996,8 +1158,10 @@ group_receiver_capacitance(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_receiver_capacitance_value(Parser& parser,      ///< [in] パーサー
-                                 const AttrKwd& attr) ///< [in] 属性の型
+group_receiver_capacitance_value(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "receiver_capacitance_value", Parser::sStrHeader);
 }
@@ -1008,8 +1172,10 @@ group_receiver_capacitance_value(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_retaining_rf(Parser& parser,      ///< [in] パーサー
-                   const AttrKwd& attr) ///< [in] 属性の型
+group_retaining_rf(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_group_statement(attr, "retaining_rf", Parser::sStrHeader);
 }

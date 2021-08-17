@@ -153,6 +153,7 @@ public:
   static ListHeader sFloatVectorListHeader;
   static ListHeader sIntListHeader;
   static ListHeader sStrListHeader;
+  static OptElemHeader sOptStrHeader;
 
   // グループハンドラの辞書
   static unordered_map<string, AttrHandler> sHandlerDict;

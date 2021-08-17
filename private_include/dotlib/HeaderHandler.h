@@ -287,6 +287,54 @@ private:
 
 };
 
+
+//////////////////////////////////////////////////////////////////////
+/// @class OptElemHeader HeaderHandler.h "dotlib/HeaderHadler.h"
+/// @brief オプション形式のヘッダ用ハンドラ
+//////////////////////////////////////////////////////////////////////
+class OptElemHeader :
+  public HeaderHandler
+{
+public:
+
+  /// @brief コンストラクタ
+  OptElemHeader(
+    SimpleHandler handler ///< [in] 要素のハンドラ
+  );
+
+  /// @brief デストラクタ
+  ~OptElemHeader() = default;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // HeaderHandler の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ヘッダの値を読み込む処理
+  AstValuePtr
+  _read_header_value(
+    DotlibScanner& scanner, ///< [in] 字句解析器
+    int count               ///< [in] read_header_value() の呼ばれた回数
+  ) override;
+
+  /// @brief 読み込みが終了した時の処理を行う．
+  bool
+  _end_header(
+    int count ///< [in] 読み込んだ要素数
+  ) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 要素のハンドラ
+  SimpleHandler mHandler;
+
+};
+
 END_NAMESPACE_YM_DOTLIB
 
 #endif // HEADERHANDLER_H

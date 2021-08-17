@@ -25,8 +25,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_float_float(Parser& parser,      ///< [in] パーサー
-		    const AttrKwd& attr) ///< [in] 属性の型
+complex_float_float(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sFloatFloatHeader);
 }
@@ -37,8 +39,10 @@ complex_float_float(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_float_float_string(Parser& parser,      ///< [in] パーサー
-			   const AttrKwd& attr) ///< [in] 属性の型
+complex_float_float_string(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sFloatFloatStrHeader);
 }
@@ -49,8 +53,10 @@ complex_float_float_string(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_float_string(Parser& parser,      ///< [in] パーサー
-		     const AttrKwd& attr) ///< [in] 属性の型
+complex_float_string(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sFloatStrHeader);
 }
@@ -61,8 +67,10 @@ complex_float_string(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_float_vector(Parser& parser,      ///< [in] パーサー
-		     const AttrKwd& attr) ///< [in] 属性の型
+complex_float_vector(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sFloatVectorHeader);
 }
@@ -73,8 +81,10 @@ complex_float_vector(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_int_float(Parser& parser,      ///< [in] パーサー
-		  const AttrKwd& attr) ///< [in] 属性の型
+complex_int_float(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sIntFloatHeader);
 }
@@ -85,8 +95,10 @@ complex_int_float(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_int_string(Parser& parser,      ///< [in] パーサー
-		   const AttrKwd& attr) ///< [in] 属性の型
+complex_int_string(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sIntStrHeader);
 }
@@ -97,8 +109,10 @@ complex_int_string(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_int_float_vector(Parser& parser,      ///< [in] パーサー
-			 const AttrKwd& attr) ///< [in] 属性の型
+complex_int_float_vector(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sIntFloatVectorHeader);
 }
@@ -109,8 +123,10 @@ complex_int_float_vector(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_int_list(Parser& parser,      ///< [in] パーサー
-		 const AttrKwd& attr) ///< [in] 属性の型
+complex_int_list(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sIntListHeader);
 }
@@ -121,8 +137,10 @@ complex_int_list(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_int_vector(Parser& parser,      ///< [in] パーサー
-		   const AttrKwd& attr) ///< [in] 属性の型
+complex_int_vector(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sIntVectorHeader);
 }
@@ -133,8 +151,10 @@ complex_int_vector(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_string(Parser& parser,      ///< [in] パーサー
-	       const AttrKwd& attr) ///< [in] 属性の型
+complex_string(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sStrHeader);
 }
@@ -145,8 +165,10 @@ complex_string(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_string_float(Parser& parser,      ///< [in] パーサー
-		     const AttrKwd& attr) ///< [in] 属性の型
+complex_string_float(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sStrFloatHeader);
 }
@@ -157,8 +179,10 @@ complex_string_float(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_string_int(Parser& parser,      ///< [in] パーサー
-		   const AttrKwd& attr) ///< [in] 属性の型
+complex_string_int(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sStrIntHeader);
 }
@@ -169,8 +193,10 @@ complex_string_int(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_string_list(Parser& parser,      ///< [in] パーサー
-		    const AttrKwd& attr) ///< [in] 属性の型
+complex_string_list(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sStrListHeader);
 }
@@ -181,8 +207,10 @@ complex_string_list(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_string_string(Parser& parser,      ///< [in] パーサー
-		      const AttrKwd& attr) ///< [in] 属性の型
+complex_string_string(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sStrStrHeader);
 }
@@ -193,8 +221,10 @@ complex_string_string(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_string_string_string(Parser& parser,      ///< [in] パーサー
-			     const AttrKwd& attr) ///< [in] 属性の型
+complex_string_string_string(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sStrStrStrHeader);
 }
@@ -205,8 +235,10 @@ complex_string_string_string(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_fanout_length(Parser& parser,      ///< [in] パーサー
-		      const AttrKwd& attr) ///< [in] 属性の型
+complex_fanout_length(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sFanoutLengthHeader);
 }
@@ -217,8 +249,10 @@ complex_fanout_length(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_technology(Parser& parser,      ///< [in] パーサー
-		   const AttrKwd& attr) ///< [in] 属性の型
+complex_technology(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sTechnologyHeader);
 }
@@ -229,8 +263,10 @@ complex_technology(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-complex_values(Parser& parser,      ///< [in] パーサー
-	       const AttrKwd& attr) ///< [in] 属性の型
+complex_values(
+  Parser& parser,     ///< [in] パーサー
+  const AttrKwd& attr ///< [in] 属性の型
+)
 {
   return parser.parse_complex_attribute(attr, Parser::sFloatVectorListHeader);
 }
@@ -251,9 +287,11 @@ complex_values(Parser& parser,      ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_empty(Parser& parser,         ///< [in] パーサー
-	    const AttrKwd& attr,    ///< [in] 属性の型
-	    const char* group_name) ///< [in] 親のグループ名
+group_empty(
+  Parser& parser,        ///< [in] パーサー
+  const AttrKwd& attr,   ///< [in] 属性の型
+  const char* group_name ///< [in] 親のグループ名
+)
 {
   return parser.parse_group_statement(attr, group_name, Parser::sEmptyHeader);
 }
@@ -264,9 +302,11 @@ group_empty(Parser& parser,         ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_string(Parser& parser,         ///< [in] パーサー
-	     const AttrKwd& attr,    ///< [in] 属性の型
-	     const char* group_name) ///< [in] 親のグループ名
+group_string(
+  Parser& parser,        ///< [in] パーサー
+  const AttrKwd& attr,   ///< [in] 属性の型
+  const char* group_name ///< [in] 親のグループ名
+)
 {
   return parser.parse_group_statement(attr, group_name, Parser::sStrHeader);
 }
@@ -277,9 +317,11 @@ group_string(Parser& parser,         ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_string_string(Parser& parser,         ///< [in] パーサー
-		    const AttrKwd& attr,    ///< [in] 属性の型
-		    const char* group_name) ///< [in] 親のグループ名
+group_string_string(
+  Parser& parser,        ///< [in] パーサー
+  const AttrKwd& attr,   ///< [in] 属性の型
+  const char* group_name ///< [in] 親のグループ名
+)
 {
   return parser.parse_group_statement(attr, group_name, Parser::sStrStrHeader);
 }
@@ -290,9 +332,11 @@ group_string_string(Parser& parser,         ///< [in] パーサー
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-group_string_string_int(Parser& parser,         ///< [in] パーサー
-			const AttrKwd& attr,    ///< [in] 属性の型
-			const char* group_name) ///< [in] 親のグループ名
+group_string_string_int(
+  Parser& parser,        ///< [in] パーサー
+  const AttrKwd& attr,   ///< [in] 属性の型
+  const char* group_name ///< [in] 親のグループ名
+)
 {
   return parser.parse_group_statement(attr, group_name, Parser::sStrStrIntHeader);
 }

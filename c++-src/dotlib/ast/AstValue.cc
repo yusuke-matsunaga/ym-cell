@@ -17,8 +17,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 BEGIN_NONAMESPACE
 
 void
-dump_indent(ostream& s,
-	    int ilevel)
+dump_indent(
+  ostream& s,
+  int ilevel
+)
 {
   for ( int i = 0; i < ilevel; ++ i ) {
     s << "  ";
@@ -33,120 +35,150 @@ END_NONAMESPACE
 
 // @brief int 値を作る．
 AstValuePtr
-AstValue::new_int(int value,
-		  const FileRegion& loc)
+AstValue::new_int(
+  int value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstInt(value, loc)};
 }
 
 // @brief float 値を作る．
 AstValuePtr
-AstValue::new_float(double value,
-		    const FileRegion& loc)
+AstValue::new_float(
+  double value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstFloat(value, loc)};
 }
 
 // @brief string 値を作る．
 AstValuePtr
-AstValue::new_string(const ShString& value,
-		     const FileRegion& loc)
+AstValue::new_string(
+  const ShString& value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstString(value, loc)};
 }
 
 // @brief bool 値を作る．
 AstValuePtr
-AstValue::new_bool(bool value,
-		   const FileRegion& loc)
+AstValue::new_bool(
+  bool value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstBool(value, loc)};
 }
 
 // @brief delay_model 値を作る．
 AstValuePtr
-AstValue::new_delay_model(ClibDelayModel value,
-			  const FileRegion& loc)
+AstValue::new_delay_model(
+  ClibDelayModel value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstDelayModel(value, loc)};
 }
 
 // @brief direction 値を作る．
 AstValuePtr
-AstValue::new_direction(ClibDirection value,
-			const FileRegion& loc)
+AstValue::new_direction(
+  ClibDirection value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstDirection(value, loc)};
 }
 
 // @brief technology 値を作る．
 AstValuePtr
-AstValue::new_technology(ClibTechnology value,
-			 const FileRegion& loc)
+AstValue::new_technology(
+  ClibTechnology value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstTechnology(value, loc)};
 }
 
 // @brief timing_sense 値を作る．
 AstValuePtr
-AstValue::new_timing_sense(ClibTimingSense value,
-			   const FileRegion& loc)
+AstValue::new_timing_sense(
+  ClibTimingSense value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstTimingSense(value, loc)};
 }
 
 // @brief timing_type 値を作る．
 AstValuePtr
-AstValue::new_timing_type(ClibTimingType value,
-			  const FileRegion& loc)
+AstValue::new_timing_type(
+  ClibTimingType value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstTimingType(value, loc)};
 }
 
 // @brief vartype 値を作る．
 AstValuePtr
-AstValue::new_vartype(ClibVarType value,
-		      const FileRegion& loc)
+AstValue::new_vartype(
+  ClibVarType value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstVarType(value, loc)};
 }
 
 // @brief expr 値を作る．
 AstValuePtr
-AstValue::new_expr(AstExprPtr&& value)
+AstValue::new_expr(
+  AstExprPtr&& value
+)
 {
   return AstValuePtr{new AstExprValue(std::move(value))};
 }
 
 // @brief int vector 値を作る．
 AstValuePtr
-AstValue::new_int_vector(const vector<int>& value,
-			 const FileRegion& loc)
+AstValue::new_int_vector(
+  const vector<int>& value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstIntVector(value, loc)};
 }
 
 // @brief float vector 値を作る．
 AstValuePtr
-AstValue::new_float_vector(const vector<double>& value,
-			   const FileRegion& loc)
+AstValue::new_float_vector(
+  const vector<double>& value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstFloatVector(value, loc)};
 }
 
 // @brief complex 値を作る．
 AstValuePtr
-AstValue::new_complex(vector<AstValuePtr>& value,
-		      const FileRegion& loc)
+AstValue::new_complex(
+  vector<AstValuePtr>& value,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstComplexValue(value, loc)};
 }
 
 // @brief group 値を作る．
 AstValuePtr
-AstValue::new_group(AstValuePtr&& header,
-		    vector<AstAttrPtr>& child_list,
-		    const FileRegion& loc)
+AstValue::new_group(
+  AstValuePtr&& header,
+  vector<AstAttrPtr>& child_list,
+  const FileRegion& loc
+)
 {
   return AstValuePtr{new AstGroupValue(std::move(header), child_list, loc)};
 }
@@ -160,8 +192,9 @@ AstValue::null_ref()
 }
 
 // @brief コンストラクタ
-AstValue::AstValue(const FileRegion& loc)
-  : mLoc{loc}
+AstValue::AstValue(
+  const FileRegion& loc
+) : mLoc{loc}
 {
 }
 
@@ -303,7 +336,9 @@ AstValue::complex_elem_size() const
 //
 // 異なる型の場合の値は不定
 const AstValue&
-AstValue::complex_elem_value(int pos) const
+AstValue::complex_elem_value(
+  int pos
+) const
 {
   return AstValue::null_ref();
 }
@@ -330,7 +365,9 @@ AstValue::group_elem_size() const
 //
 // 異なる型の場合の値は不定
 const AstAttr&
-AstValue::group_elem_attr(int pos) const
+AstValue::group_elem_attr(
+  int pos
+) const
 {
   static AstAttr dummy;
   return dummy;
@@ -342,15 +379,18 @@ AstValue::group_elem_attr(int pos) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstSimple::AstSimple(const FileRegion& val_loc)
-  : AstValue(val_loc)
+AstSimple::AstSimple(
+  const FileRegion& val_loc
+) : AstValue(val_loc)
 {
 }
 
 // @brief 内容をストリーム出力する．
 void
-AstSimple::dump(ostream& s,
-		int ilevel) const
+AstSimple::dump(
+  ostream& s,
+  int ilevel
+) const
 {
   // ilevel は無視
   s << " : " << decompile() << ";" << endl;
@@ -362,9 +402,10 @@ AstSimple::dump(ostream& s,
 //////////////////////////////////////////////////////////////////////
 
 /// @brief コンストラクタ
-AstInt::AstInt(int value,                   ///< [in] 値
-	       const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
-  : AstSimple(val_loc),
+AstInt::AstInt(
+  int value,                 ///< [in] 値
+  const FileRegion& val_loc  ///< [in] 値のファイル上の位置
+) : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -391,9 +432,10 @@ AstInt::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstFloat::AstFloat(double value,                ///< [in] 値
-		   const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
-  : AstSimple(val_loc),
+AstFloat::AstFloat(
+  double value,             ///< [in] 値
+  const FileRegion& val_loc ///< [in] 値のファイル上の位置
+) : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -420,9 +462,10 @@ AstFloat::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstString::AstString(ShString value,            ///< [in] 値
-		     const FileRegion& val_loc) ///< [in] 値のファイル上の位置
-  : AstSimple(val_loc),
+AstString::AstString(
+  ShString value,           ///< [in] 値
+  const FileRegion& val_loc ///< [in] 値のファイル上の位置
+) : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -464,9 +507,10 @@ AstString::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstBool::AstBool(bool value,                 ///< [in] 値
-		 const FileRegion& val_loc)  ///< [in] 値のファイル上の位置
-  : AstSimple(val_loc),
+AstBool::AstBool(
+  bool value,               ///< [in] 値
+  const FileRegion& val_loc ///< [in] 値のファイル上の位置
+) : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -492,9 +536,10 @@ AstBool::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstDelayModel::AstDelayModel(ClibDelayModel value,
-			     const FileRegion& val_loc)
-  : AstSimple(val_loc),
+AstDelayModel::AstDelayModel(
+  ClibDelayModel value,
+  const FileRegion& val_loc
+) : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -528,9 +573,10 @@ AstDelayModel::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstDirection::AstDirection(ClibDirection value,       ///< [in] 値
-			   const FileRegion& val_loc) ///< [in] 値のファイル上の位置
-  : AstSimple(val_loc),
+AstDirection::AstDirection(
+  ClibDirection value,      ///< [in] 値
+  const FileRegion& val_loc ///< [in] 値のファイル上の位置
+) : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -563,8 +609,9 @@ AstDirection::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstExprValue::AstExprValue(AstExprPtr&& value)
-  : AstSimple(value->loc()),
+AstExprValue::AstExprValue(
+  AstExprPtr&& value
+) : AstSimple(value->loc()),
     mValue{std::move(value)}
 {
 }
@@ -589,9 +636,10 @@ AstExprValue::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstTechnology::AstTechnology(ClibTechnology value,      ///< [in] 値
-			     const FileRegion& val_loc) ///< [in] 値のファイル上の位置
-  : AstSimple(val_loc),
+AstTechnology::AstTechnology(
+  ClibTechnology value,     ///< [in] 値
+  const FileRegion& val_loc ///< [in] 値のファイル上の位置
+) : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -622,9 +670,10 @@ AstTechnology::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 /// @brief コンストラクタ
-AstTimingSense::AstTimingSense(ClibTimingSense value,       ///< [in] 値
-			       const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
-  : AstSimple(val_loc),
+AstTimingSense::AstTimingSense(
+  ClibTimingSense value,    ///< [in] 値
+  const FileRegion& val_loc ///< [in] 値のファイル上の位置
+) : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -656,9 +705,10 @@ AstTimingSense::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstTimingType::AstTimingType(ClibTimingType value,        ///< [in] 値
-			     const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
-  : AstSimple(val_loc),
+AstTimingType::AstTimingType(
+  ClibTimingType value,     ///< [in] 値
+  const FileRegion& val_loc ///< [in] 値のファイル上の位置
+) : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -718,9 +768,10 @@ AstTimingType::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstVarType::AstVarType(ClibVarType value,           ///< [in] 値
-		       const FileRegion& val_loc)   ///< [in] 値のファイル上の位置
-  : AstSimple(val_loc),
+AstVarType::AstVarType(
+  ClibVarType value,        ///< [in] 値
+  const FileRegion& val_loc ///< [in] 値のファイル上の位置
+) : AstSimple(val_loc),
     mValue{value}
 {
 }
@@ -763,9 +814,10 @@ AstVarType::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 /// @brief コンストラクタ
-AstIntVector::AstIntVector(const vector<int>& value,
-			   const FileRegion& loc)
-  : AstSimple(loc),
+AstIntVector::AstIntVector(
+  const vector<int>& value,
+  const FileRegion& loc
+) : AstSimple(loc),
     mBody{value}
 {
 }
@@ -798,9 +850,10 @@ AstIntVector::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstFloatVector::AstFloatVector(const vector<double>& value_list,
-			       const FileRegion& loc)
-  : AstSimple(loc),
+AstFloatVector::AstFloatVector(
+  const vector<double>& value_list,
+  const FileRegion& loc
+) : AstSimple(loc),
     mBody{value_list}
 {
 }
@@ -833,9 +886,10 @@ AstFloatVector::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ(可変引数)
-AstComplexValue::AstComplexValue(vector<AstValuePtr>& value_list,
-				 const FileRegion& loc)
-  : AstValue(loc)
+AstComplexValue::AstComplexValue(
+  vector<AstValuePtr>& value_list,
+  const FileRegion& loc
+) : AstValue(loc)
 {
   for ( auto& ptr: value_list ) {
     mElemList.push_back(std::move(ptr));
@@ -855,7 +909,9 @@ AstComplexValue::complex_elem_size() const
 //
 // 異なる型の場合の値は不定
 const AstValue&
-AstComplexValue::complex_elem_value(int pos) const
+AstComplexValue::complex_elem_value(
+  int pos
+) const
 {
   ASSERT_COND( 0 <= pos && pos < complex_elem_size() );
   return *mElemList[pos];
@@ -863,8 +919,10 @@ AstComplexValue::complex_elem_value(int pos) const
 
 // @brief 内容をストリーム出力する．
 void
-AstComplexValue::dump(ostream& s,
-		      int ilevel) const
+AstComplexValue::dump(
+  ostream& s,
+  int ilevel
+) const
 {
   // ilevel は無視
   s << decompile() << ";" << endl;
@@ -891,10 +949,11 @@ AstComplexValue::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstGroupValue::AstGroupValue(AstValuePtr&& header_value,
-			     vector<AstAttrPtr>& child_list,
-			     const FileRegion& loc)
-  : AstValue(loc),
+AstGroupValue::AstGroupValue(
+  AstValuePtr&& header_value,
+  vector<AstAttrPtr>& child_list,
+  const FileRegion& loc
+) : AstValue(loc),
     mHeader{std::move(header_value)}
 {
   for ( auto& p: child_list ) {
@@ -924,7 +983,9 @@ AstGroupValue::group_elem_size() const
 //
 // 異なる型の場合の値は不定
 const AstAttr&
-AstGroupValue::group_elem_attr(int pos) const
+AstGroupValue::group_elem_attr(
+  int pos
+) const
 {
   ASSERT_COND( 0 <= pos && pos < group_elem_size() );
 
@@ -933,8 +994,10 @@ AstGroupValue::group_elem_attr(int pos) const
 
 // @brief 内容をストリーム出力する．
 void
-AstGroupValue::dump(ostream& s,
-		    int ilevel) const
+AstGroupValue::dump(
+  ostream& s,
+  int ilevel
+) const
 {
   s << group_header_value().decompile()
     << " {" << endl;
@@ -972,8 +1035,10 @@ AstNullValue::is_valid() const
 
 // @brief 内容をストリーム出力する．
 void
-AstNullValue::dump(ostream& s,
-		   int ilevel) const
+AstNullValue::dump(
+  ostream& s,
+  int ilevel
+) const
 {
 }
 
@@ -991,8 +1056,10 @@ AstNullValue::decompile() const
 
 // @brief 内容をストリーム出力する．
 void
-AstAttr::dump(ostream& s,
-	      int ilevel) const
+AstAttr::dump(
+  ostream& s,
+  int ilevel
+) const
 {
   dump_indent(s, ilevel);
   s << attr().name();

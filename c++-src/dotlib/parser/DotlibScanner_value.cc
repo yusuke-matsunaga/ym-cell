@@ -52,10 +52,18 @@ DotlibScanner::read_int()
 AstValuePtr
 DotlibScanner::read_float()
 {
+  bool minus = false;
   auto token = read_token();
+  if ( token.type() == TokenType::MINUS ) {
+    minus = true;
+    token = read_token();
+  }
   auto tmp_str = token.str_value();
   char* end;
   double value = strtod(tmp_str.c_str(), &end);
+  if ( minus ) {
+    value = - value;
+  }
   if ( end[0] == '\0' ) {
     // 全体が float 文字列だった．
     return AstValue::new_float(value, token.loc());
