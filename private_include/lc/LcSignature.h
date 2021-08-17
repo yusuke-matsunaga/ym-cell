@@ -56,6 +56,9 @@ BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 /// - クリア条件を表す論理関数(もしあれば)
 /// - プリセット条件を表す論理関数(もしあれば)
 ///
+/// FFとラッチの場合，入力変数番号0番は内部状態 IQ を表す．
+/// IQN は常に IQ の否定なので変数としては用意しない．
+/// 以降，clock, data, clear, preset が続く．
 //////////////////////////////////////////////////////////////////////
 class LcSignature
 {
@@ -261,15 +264,15 @@ private:
   void
   set_FF()
   {
-    mTypeBits.set(0, 1);
-    mTypeBits.set(1, 0);
+    mTypeBits.set(0, 0);
+    mTypeBits.set(1, 1);
   }
 
   /// @brief Latch タイプにセットする．
   void
   set_Latch()
   {
-    mTypeBits.set(0, 0);
+    mTypeBits.set(0, 1);
     mTypeBits.set(1, 1);
   }
 

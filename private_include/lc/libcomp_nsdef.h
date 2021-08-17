@@ -27,8 +27,8 @@ BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 /// @brief 種類を表す列挙型
 enum class LcType {
   Logic = 0, ///< 組み合わせ論理
-  FF    = 1, ///< FF
-  Latch = 2  ///< ラッチ
+  FF    = 2, ///< FF
+  Latch = 3  ///< ラッチ
 };
 
 class LibComp;

@@ -46,12 +46,53 @@ LcSignature::LcSignature(
   const Expr& expr
 ) : mInputNum{expr.input_size()},
     mOutputNum{1},
-    mOutputBits{0U},
+    mOutputBits{1U},
     mOutputFunc{expr.make_tv()},
     mTristateFunc{TvFunc::make_zero(mInputNum)}
 {
   set_Logic();
 }
+
+BEGIN_NONAMESPACE
+
+// 入力数を計算する関数
+inline
+SizeType
+_input_num(
+  bool has_clear,
+  bool has_preset
+)
+{
+  SizeType ans = 2;
+  if ( has_clear ) {
+    ++ ans;
+  }
+  if ( has_preset ) {
+    ++ ans;
+  }
+  return ans;
+}
+
+// 出力数を計算する関数
+inline
+SizeType
+_output_num(
+  bool has_q,
+  bool has_xq
+)
+{
+  SizeType ans = 0;
+  if ( has_q ) {
+    ++ ans;
+  }
+  if ( has_xq ) {
+    ++ ans;
+  }
+  return ans;
+}
+
+END_NONAMESPACE
+
 
 // @brief 単純なFFセル/ラッチセルのシグネチャを作るコンストラクタ
 LcSignature::LcSignature(
@@ -60,10 +101,11 @@ LcSignature::LcSignature(
   bool has_xq,
   bool has_clear,
   bool has_preset
-) : mOutputNum{has_q ? (has_xq ? 2U : 1U) : (has_xq ? 1U : 0U)},
+) : mInputNum{_input_num(has_clear, has_preset)},
+    mOutputNum{_output_num(has_q, has_xq)},
     mOutputBits(mOutputNum, 0U),
-    mOutputFunc(mOutputNum),
-    mTristateFunc(mOutputNum)
+    mOutputFunc(mOutputNum, TvFunc::make_zero(mInputNum + 1)),
+    mTristateFunc(mOutputNum, TvFunc::make_zero(mInputNum + 1))
 {
   if ( type == LcType::FF ) {
     set_FF();
@@ -76,12 +118,11 @@ LcSignature::LcSignature(
   }
 
   VarId iq_var(0);
-  VarId iqn_var(1);
-  VarId clock_var(2);
-  VarId data_var(3);
+  VarId clock_var(1);
+  VarId data_var(2);
   VarId clear_var;
   VarId preset_var;
-  SizeType ni = 4;
+  SizeType ni = 3;
   if ( has_clear ) {
     clear_var = VarId(ni);
     ++ ni;
@@ -92,7 +133,6 @@ LcSignature::LcSignature(
     ++ ni;
     mTypeBits.set(3, 1);
   }
-  mInputNum = ni - 2; // q と xq の入力を除く
   mClockFunc = TvFunc::make_posi_literal(ni, clock_var);
   mNextStateFunc = TvFunc::make_posi_literal(ni, data_var);
   if ( has_clear ) {
@@ -130,7 +170,7 @@ LcSignature::LcSignature(
     set_Logic();
   }
   else {
-    ni += 2;
+    ni += 1;
     if ( cell->is_ff() ) {
       set_FF();
       mClockFunc = cell->clock_expr().make_tv(ni);
