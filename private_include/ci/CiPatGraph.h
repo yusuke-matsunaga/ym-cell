@@ -23,10 +23,10 @@ class CiPatGraph :
 public:
 
   /// @brief コンストラクタ
-  CiPatGraph();
+  CiPatGraph() = default;
 
   /// @brief デストラクタ
-  ~CiPatGraph();
+  ~CiPatGraph() = default;
 
 
 public:
@@ -35,11 +35,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 代表関数番号を返す．
-  int
+  SizeType
   rep_id() const override;
 
   /// @brief 根のノード番号を返す．
-  int
+  SizeType
   root_id() const override;
 
   /// @brief 根の反転属性を返す．
@@ -47,17 +47,17 @@ public:
   root_inv() const override;
 
   /// @brief 入力数を返す．
-  int
+  SizeType
   input_num() const override;
 
   /// @brief 枝数を返す．
-  int
+  SizeType
   edge_num() const override;
 
   /// @brief 枝(の番号)を返す．
-  int
+  SizeType
   edge(
-    int pos ///< [in] 位置 ( 0 <= pos < edge_num() )
+    SizeType pos ///< [in] 位置 ( 0 <= pos < edge_num() )
   ) const override;
 
 
@@ -87,9 +87,9 @@ public:
   /// @brief 初期化する．
   void
   init(
-    int rep_id,    ///< [in] 代表番号
-    int input_num, ///< [in] 入力数
-    int edge_num   ///< [in] 枝数
+    SizeType rep_id,    ///< [in] 代表番号
+    SizeType input_num, ///< [in] 入力数
+    SizeType edge_num   ///< [in] 枝数
   );
 
   /// @brief 枝のデータを設定する．
@@ -97,8 +97,8 @@ public:
   /// この関数を呼ぶ前に init() が呼ばれている必要がある．
   void
   set_edge(
-    int pos,  ///< [in] 位置番号 ( 0 <= pos < edge_num() )
-    int edge  ///< [in] 枝
+    SizeType pos, ///< [in] 位置番号 ( 0 <= pos < edge_num() )
+    SizeType edge ///< [in] 枝
   );
 
 
@@ -108,16 +108,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 代表関数番号
-  int mRepId;
+  SizeType mRepId{0};
 
   // 入力数 + 根の反転属性
-  ymuint mInputNum;
-
-  // 枝数
-  int mEdgeNum;
+  SizeType mInputNum{0};
 
   // 枝番号の配列
-  int* mEdgeList;
+  vector<SizeType> mEdgeList;
 
 };
 

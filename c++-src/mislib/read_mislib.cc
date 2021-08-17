@@ -3,9 +3,8 @@
 /// @brief read_mislib の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "mislib_nsdef.h"
 #include "ci/CiCellLibrary.h"
@@ -37,9 +36,11 @@ typedef unordered_map<ShString, int> NameMap;
 // param[out] name_list 名前が現れた順に格納されたリスト
 // param[out] name_map 名前をキーにして name_list 中の位置を返す連想配列
 void
-dfs(const MislibExpr* expr,
-    vector<ShString>& name_list,
-    NameMap& name_map)
+dfs(
+  const MislibExpr* expr,
+  vector<ShString>& name_list,
+  NameMap& name_map
+)
 {
   switch ( expr->type() ) {
   case MislibExpr::Const0:
@@ -73,7 +74,7 @@ dfs(const MislibExpr* expr,
   }
 }
 
-CiCell*
+void
 new_gate(
   const MislibGate* gate,
   CiCellLibrary* library
@@ -85,7 +86,7 @@ new_gate(
   ShString opin_name = gate->opin_name()->str();
   const MislibExpr* opin_expr = gate->opin_expr();
 
-  int npin = gate->ipin_num();
+  auto npin = gate->ipin_num();
   const MislibPin* ipin_top = nullptr;
   vector<const MislibPin*> ipin_array;
   vector<ShString> ipin_name_list;
@@ -110,16 +111,16 @@ new_gate(
       // 論理式に現れる順に入力ピンを作る．
       wildcard_pin = true;
       dfs(opin_expr, ipin_name_list, ipin_name_map);
-      for ( int i = 0; i < ipin_name_list.size(); ++ i ) {
+      for ( auto i = 0; i < ipin_name_list.size(); ++ i ) {
 	ipin_array.push_back(ipin_top);
       }
     }
   }
 
   // 入力ピンのリストを作る．
-  int ni = ipin_name_list.size();
+  auto ni = ipin_name_list.size();
   vector<CiInputPin*> input_list(ni);
-  for ( int i = 0; i < ni; ++ i ) {
+  for ( auto i = 0; i < ni; ++ i ) {
     // 入力ピンの設定
     ShString name = ipin_name_list[i];
     const MislibPin* pin = ipin_array[i];
@@ -129,15 +130,15 @@ new_gate(
 
   // 出力ピンを作る．
   Expr function = opin_expr->to_expr(ipin_name_map);
-  CiOutputPin* opin = library->new_cell_output(opin_name,
-					       true, function,
-					       Expr::make_zero(),
-					       ClibCapacitance::infty(),
-					       ClibCapacitance(0.0),
-					       ClibCapacitance::infty(),
-					       ClibCapacitance(0.0),
-					       ClibTime::infty(),
-					       ClibTime(0.0));
+  auto opin = library->new_cell_output(opin_name,
+				       true, function,
+				       Expr::make_zero(),
+				       ClibCapacitance::infty(),
+				       ClibCapacitance(0.0),
+				       ClibCapacitance::infty(),
+				       ClibCapacitance(0.0),
+				       ClibTime::infty(),
+				       ClibTime(0.0));
 
   // タイミング情報の生成
   vector<CiTiming*> timing_list(ni);
@@ -153,12 +154,12 @@ new_gate(
 						   r_i, f_i,
 						   ClibTime(0.0), ClibTime(0.0),
 						   r_r, f_r);
-    for ( int i = 0; i < ni; ++ i ) {
+    for ( auto i = 0; i < ni; ++ i ) {
       timing_list[i] = timing;
     }
   }
   else {
-    for ( int i = 0; i < ni; ++ i ) {
+    for ( auto i = 0; i < ni; ++ i ) {
       const MislibPin* pt_pin = ipin_array[i];
       ClibTime r_i(pt_pin->rise_block_delay()->num());
       ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
@@ -174,23 +175,22 @@ new_gate(
   }
 
   // セルを作る．
-  CiCell* cell = library->new_logic_cell(name, area,
-					 input_list,
-					 vector<CiOutputPin*>(1, opin),
-					 vector<CiInoutPin*>(),
-					 vector<CiBus*>(),
-					 vector<CiBundle*>(),
-					 timing_list);
+  auto cell = library->new_logic_cell(name, area,
+				      input_list,
+				      vector<CiOutputPin*>(1, opin),
+				      vector<CiInoutPin*>(),
+				      vector<CiBus*>(),
+				      vector<CiBundle*>(),
+				      timing_list);
 
   TvFunc tv_function = function.make_tv(ni);
-  for ( int i = 0; i < ni; ++ i ) {
+  for ( SizeType i = 0; i < ni; ++ i ) {
     // タイミング情報の設定
     VarId var(i);
     const MislibPin* pt_pin = ipin_array[i];
     TvFunc p_func = tv_function.cofactor(var, false);
     TvFunc n_func = tv_function.cofactor(var, true);
     ClibTimingSense sense_real = ClibTimingSense::non_unate;
-    bool redundant = false;
     if ( ~p_func && n_func ) {
       if ( ~n_func && p_func ) {
 	sense_real = ClibTimingSense::non_unate;
@@ -199,29 +199,25 @@ new_gate(
 	sense_real = ClibTimingSense::negative_unate;
       }
     }
-    else {
-      if ( ~n_func && p_func ) {
-	sense_real = ClibTimingSense::positive_unate;
-      }
-      else {
-	// つまり p_func == n_func ということ．
-	// つまりこの変数は出力に影響しない．
-	ostringstream buf;
-	buf << "The output function does not depend on the input pin, "
-	    << pt_pin->name()->str() << ".";
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			pt_pin->loc(),
-			MsgType::Warning,
-			"MISLIB_PARSER",
-			buf.str());
-	redundant = true;
-      }
+    else if ( ~n_func && p_func ) {
+      sense_real = ClibTimingSense::positive_unate;
     }
-
-    if ( redundant ) {
+    else {
+      // つまり p_func == n_func ということ．
+      // つまりこの変数は出力に影響しない．
+      ostringstream buf;
+      buf << "The output function does not depend on the input pin, "
+	  << pt_pin->name()->str() << ".";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      pt_pin->loc(),
+		      MsgType::Warning,
+		      "MISLIB_PARSER",
+		      buf.str());
+      // タイミング情報は設定しない．
       continue;
     }
 
+    // 実際の極性情報と記述が合っているか確かめる．
     ClibTimingSense sense = ClibTimingSense::non_unate;
     switch ( pt_pin->phase()->type() ) {
     case MislibPhase::Noninv:  sense = ClibTimingSense::positive_unate; break;
@@ -241,40 +237,13 @@ new_gate(
       sense = sense_real;
     }
     if ( sense == ClibTimingSense::non_unate ) {
-      library->set_timing(cell, i, 0, ClibTimingSense::positive_unate,
-			  vector<CiTiming*>(1, timing_list[i]));
-      library->set_timing(cell, i, 0, ClibTimingSense::negative_unate,
-			  vector<CiTiming*>(1, timing_list[i]));
+      cell->set_timing(i, 0, ClibTimingSense::positive_unate, {i});
+      cell->set_timing(i, 0, ClibTimingSense::negative_unate, {i});
     }
     else {
-      library->set_timing(cell, i, 0, sense,
-			  vector<CiTiming*>(1, timing_list[i]));
+      cell->set_timing(i, 0, sense, {i});
     }
   }
-
-  return cell;
-}
-
-// @brief MislibNode から ClibCellLibrary に設定する．
-// @param[in] lib_name ライブラリ名
-// @param[in] gate_list パース木のルート
-// @param[in] library 設定対象のライブラリ
-void
-set_library(const string& lib_name,
-	    const vector<MislibGatePtr>& gate_list,
-	    CiCellLibrary* library)
-{
-  // 名前の設定
-  library->set_name(lib_name);
-
-  // セルの内容の設定
-  vector<CiCell*> cell_list;
-  for ( auto& gate: gate_list ) {
-    CiCell* cell = new_gate(gate.get(), library);
-    cell_list.push_back(cell);
-  }
-
-  library->set_cell_list(cell_list);
 }
 
 END_NONAMESPACE
@@ -285,11 +254,11 @@ END_NAMESPACE_YM_MISLIB
 BEGIN_NAMESPACE_YM_CLIB
 
 // @brief mislib 形式のファイルを読み込んでライブラリに設定する．
-// @param[in] filename ファイル名
-// @param[in] library 設定対象のライブラリ
 // @return 読み込みが成功したら true を返す．
 bool
-CiCellLibrary::read_mislib(const string& filename)
+CiCellLibrary::read_mislib(
+  const string& filename ///< [in] filename ファイル名
+)
 {
   using namespace nsMislib;
 
@@ -299,7 +268,15 @@ CiCellLibrary::read_mislib(const string& filename)
     return false;
   }
 
-  set_library(filename, gate_list, this);
+  // ファイル名をライブラリ名として登録する．
+  set_name(filename);
+
+  // セルの内容の設定
+  for ( auto& gate: gate_list ) {
+    new_gate(gate.get(), this);
+  }
+
+  compile();
 
   return true;
 }

@@ -23,32 +23,31 @@ CiBundle::name() const
 }
 
 // @brief ピン数の取得
-int
+SizeType
 CiBundle::pin_num() const
 {
-  return mPinList.num();
+  return mPinList.size();
 }
 
 // @brief ピンの取得
-// @param[in] pos 位置番号 ( 0 <= pos < pin_num() )
-const ClibCellPin&
+const ClibPin&
 CiBundle::pin(
-  int pos
+  SizeType pos
 ) const
 {
   ASSERT_COND( 0 <= pos && pos < pin_num() );
-  return mPinList[pos];
+  return *mPinList[pos];
 }
 
 // @brief 内容を初期化する．
 void
 CiBundle::init(
   const ShString& name,
-  const vector<ClibCellPin*>& pin_list
+  vector<const ClibPin*>&& pin_list
 )
 {
   mName = name;
-  mPinList.init(pin_list);
+  mPinList.swap(pin_list);
 }
 
 END_NAMESPACE_YM_CLIB

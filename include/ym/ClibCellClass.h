@@ -37,21 +37,21 @@ public:
   ///
   /// ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
   virtual
-  int
+  SizeType
   id() const = 0;
 
   /// @brief 同位体変換の個数を得る．
   ///
   /// 恒等変換は含まない．
   virtual
-  int
+  SizeType
   idmap_num() const = 0;
 
   /// @brief 同位体変換を得る．
   virtual
   const NpnMapM&
   idmap(
-    int pos ///< [in] 位置番号 ( 0 <= pos < idmap_num() )
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < idmap_num() )
   ) const = 0;
 
 
@@ -60,10 +60,17 @@ public:
   // このクラスに属しているセルグループの情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ClibCellGroup のリストを返す．
+  /// @brief グループ数を返す．
   virtual
-  const ClibCellGroupList&
-  group_list() const = 0;
+  SizeType
+  cell_group_num() const = 0;
+
+  /// @brief グループを返す．
+  virtual
+  const ClibCellGroup&
+  cell_group(
+    SizeType pos ///< [in] インデックス ( 0 <= pos < cell_group_num() )
+  ) const = 0;
 
 
 public:

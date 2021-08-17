@@ -16,21 +16,22 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
+// @param[in] name 名前
+// @param[in] bit_from 開始位置
+// @param[in] bit_to 終了位置
 CiBusType::CiBusType(
   const ShString& name,
-  int bit_from,
-  int bit_to
-) : mName(name),
-    mBitFrom(bit_from),
-    mBitTo(bit_to)
+  SizeType bit_from,
+  SizeType bit_to
+) : mName{name},
+    mBitFrom{bit_from},
+    mBitTo{bit_to}
 {
   if ( bit_from <= bit_to ) {
-    mBitWidth = bit_to - bit_from + 1;
-    mDownTo = false;
+    mBitWidth = (bit_to - bit_from + 1) * 2;
   }
   else {
-    mBitWidth = bit_from - bit_to + 1;
-    mDownTo = true;
+    mBitWidth = (bit_from - bit_to + 1) * 2 + 1;
   }
 }
 
@@ -56,21 +57,21 @@ CiBusType::data_type() const
 }
 
 // @brief ビット幅の取得
-int
+SizeType
 CiBusType::bit_width() const
 {
-  return mBitWidth;
+  return mBitWidth >> 1;
 }
 
 // @brief 開始ビットの取得
-int
+SizeType
 CiBusType::bit_from() const
 {
   return mBitFrom;
 }
 
 // @brief 終了ビットの取得
-int
+SizeType
 CiBusType::bit_to() const
 {
   return mBitTo;
@@ -81,7 +82,7 @@ CiBusType::bit_to() const
 bool
 CiBusType::downto() const
 {
-  return mDownTo;
+  return static_cast<bool>(mBitWidth & 1U);
 }
 
 END_NAMESPACE_YM_CLIB

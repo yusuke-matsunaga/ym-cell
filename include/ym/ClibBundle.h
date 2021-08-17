@@ -39,14 +39,27 @@ public:
 
   /// @brief ピン数の取得
   virtual
-  int
+  SizeType
   pin_num() const = 0;
 
   /// @brief ピンの取得
   virtual
-  const ClibCellPin&
+  const ClibPin&
   pin(
-    int pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
+  ) const = 0;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  virtual
+  void
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
   ) const = 0;
 
 };

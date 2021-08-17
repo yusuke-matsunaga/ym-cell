@@ -10,14 +10,13 @@
 #include "ym/ClibCell.h"
 #include "ym/ClibLut.h"
 #include "ym/ClibLutTemplate.h"
-#include "ym/ClibCellPin.h"
+#include "ym/ClibPin.h"
 #include "ym/ClibTiming.h"
 #include "ym/ClibCellClass.h"
 #include "ym/ClibCellGroup.h"
 #include "ym/ClibPatGraph.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibTime.h"
-#include "ym/ClibObjList.h"
 
 #include "ym/Expr.h"
 #include "ym/NpnMapM.h"
@@ -199,15 +198,15 @@ display_lut(
   }
 
   s << "    " << label << endl;
-  for ( int i: Range(d) ) {
+  for ( auto i: Range(d) ) {
     s << "      Variable_" << (i + 1) << " = " << lut.variable_type(i) << endl;
   }
-  for ( int i: Range(d) ) {
+  for ( auto i: Range(d) ) {
     s << "      Index_" << (i + 1) << "    = ";
-    int n = lut.index_num(i);
+    auto n = lut.index_num(i);
     const char* comma = "";
     s << "(";
-    for ( int j: Range(n) ) {
+    for ( auto j: Range(n) ) {
       s << comma << lut.index(i, j);
       comma = ", ";
     }
@@ -216,10 +215,10 @@ display_lut(
 
   if ( d == 1) {
     s << "      Values = (";
-    int n1 = lut.index_num(0);
-    vector<int> pos_array(1);
+    auto n1 = lut.index_num(0);
+    vector<SizeType> pos_array(1);
     const char* comma = "";
-    for ( int i1: Range(n1) ) {
+    for ( auto i1: Range(n1) ) {
       pos_array[0] = i1;
       s << comma << lut.grid_value(pos_array);
       comma = ", ";
@@ -228,14 +227,14 @@ display_lut(
   }
   else if ( d == 2 ) {
     s << "      Values = (" << endl;
-    int n1 = lut.index_num(0);
-    int n2 = lut.index_num(1);
-    vector<int> pos_array(2);
-    for ( int i1: Range(n1) ) {
+    auto n1 = lut.index_num(0);
+    auto n2 = lut.index_num(1);
+    vector<SizeType> pos_array(2);
+    for ( auto i1: Range(n1) ) {
       s << "                (";
       pos_array[0] = i1;
       const char* comma = "";
-      for ( int i2: Range(n2) ) {
+      for ( auto i2: Range(n2) ) {
 	pos_array[1] = i2;
 	s << comma << lut.grid_value(pos_array);
 	comma = ", ";
@@ -246,19 +245,19 @@ display_lut(
   }
   else if ( d == 3 ) {
     s << "      Values = (" << endl;
-    int n1 = lut.index_num(0);
-    int n2 = lut.index_num(1);
-    int n3 = lut.index_num(2);
-    vector<int> pos_array(3);
-    for ( int i1: Range(n1) ) {
+    auto n1 = lut.index_num(0);
+    auto n2 = lut.index_num(1);
+    auto n3 = lut.index_num(2);
+    vector<SizeType> pos_array(3);
+    for ( auto i1: Range(n1) ) {
       s << "                (";
       pos_array[0] = i1;
       const char* comma2 = "";
-      for ( int i2: Range(n2) ) {
+      for ( auto i2: Range(n2) ) {
 	pos_array[1] = i2;
 	s << comma2 << "(";
 	const char* comma3 = "";
-	for ( int i3: Range(n3) ) {
+	for ( auto i3: Range(n3) ) {
 	  pos_array[2] = i3;
 	  s << comma3 << lut.grid_value(pos_array);
 	  comma3 = ", ";
@@ -277,15 +276,16 @@ void
 display_timing(
   ostream& s,
   const ClibCell& cell,
-  int ipos,
-  int opos,
+  SizeType ipos,
+  SizeType opos,
   ClibTimingSense sense,
   ClibDelayModel delay_model
 )
 {
-  for ( auto& timing : cell.timing_list(ipos, opos, sense) ) {
+  for ( auto id: cell.timing_id_list(ipos, opos, sense) ) {
+    auto& timing = cell.timing(id);
     s << "  Timing:" << endl
-      << "    Type             = " << timing->type() << endl
+      << "    Type             = " << timing.type() << endl
       << "    Input Pin        = " << cell.input(ipos).name() << endl
       << "    Output Pin       = " << cell.output(opos).name() << endl
       << "    Sense            = ";
@@ -299,26 +299,26 @@ display_timing(
       ASSERT_NOT_REACHED;
     }
     s << endl;
-    if ( !timing->timing_cond().is_one() ) {
-      s << "    When             = " << timing->timing_cond() << endl;
+    if ( !timing.timing_cond().is_one() ) {
+      s << "    When             = " << timing.timing_cond() << endl;
     }
 
     switch ( delay_model ) {
     case ClibDelayModel::generic_cmos:
-      s << "    Rise Intrinsic   = " << timing->intrinsic_rise() << endl
-	<< "    Rise Resistance  = " << timing->rise_resistance() << endl
-	<< "    Fall Intrinsic   = " << timing->intrinsic_fall() << endl
-	<< "    Fall Resistance  = " << timing->fall_resistance() << endl;
+      s << "    Rise Intrinsic   = " << timing.intrinsic_rise() << endl
+	<< "    Rise Resistance  = " << timing.rise_resistance() << endl
+	<< "    Fall Intrinsic   = " << timing.intrinsic_fall() << endl
+	<< "    Fall Resistance  = " << timing.fall_resistance() << endl;
       break;
 
     case ClibDelayModel::table_lookup:
-      display_lut(s, "Clib Rise", timing->cell_rise());
-      display_lut(s, "Rise Transition", timing->rise_transition());
-      display_lut(s, "Rise Propagation", timing->rise_propagation());
+      display_lut(s, "Clib Rise", timing.cell_rise());
+      display_lut(s, "Rise Transition", timing.rise_transition());
+      display_lut(s, "Rise Propagation", timing.rise_propagation());
 
-      display_lut(s, "Clib Fall", timing->cell_fall());
-      display_lut(s, "Fall Transition", timing->fall_transition());
-      display_lut(s, "Fall Propagation", timing->fall_propagation());
+      display_lut(s, "Clib Fall", timing.cell_fall());
+      display_lut(s, "Fall Transition", timing.fall_transition());
+      display_lut(s, "Fall Propagation", timing.fall_propagation());
       break;
 
     case ClibDelayModel::piecewise_cmos:
@@ -348,7 +348,7 @@ display_class(
 )
 {
   s << title << endl;
-  int n = cclass.idmap_num();
+  auto n = cclass.idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
     for ( int i: Range(n) ) {
@@ -356,10 +356,12 @@ display_class(
     }
     s << endl;
   }
-  for ( auto& group: cclass.group_list() ) {
+  for ( auto i: Range(cclass.cell_group_num()) ) {
+    auto& group = cclass.cell_group(i);
     s << "  Group: Map = " << group.map() << endl
-      << "         Clib = ";
-    for ( auto& cell: group.cell_list() ) {
+      << "         Cell = ";
+    for ( auto j: Range(group.cell_num()) ) {
+      auto& cell = group.cell(j);
       s << " " << cell.name();
     }
     s << endl;
@@ -371,9 +373,8 @@ void
 display_pos(
   ostream& s,
   const char* title,
-  int pos,
-  int sense
-)
+  SizeType pos,
+  int sense)
 {
   if ( sense > 0 ) {
     s << " " << title << " = ";
@@ -393,15 +394,16 @@ display_ff_class(
 )
 {
   s << title << endl;
-  int n = cclass.idmap_num();
+  auto n = cclass.idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
-    for ( int i: Range(n) ) {
+    for ( auto i: Range(n) ) {
       s << cclass.idmap(i) << endl;
     }
     s << endl;
   }
-  for ( auto& group: cclass.group_list() ) {
+  for ( auto i: Range(cclass.cell_group_num()) ) {
+    auto& group = cclass.cell_group(i);
     s << "  Group:";
     s << " data-pin = " << group.data_pos();
     display_pos(s, "clock-pin", group.clock_pos(), group.clock_sense());
@@ -411,7 +413,8 @@ display_ff_class(
       << " xq-pin = " << group.xq_pos()
       << endl;
     s << "         Clib = ";
-    for ( auto& cell: group.cell_list() ) {
+    for ( auto j: Range(group.cell_num()) ) {
+      auto& cell = group.cell(j);
       s << " " << cell.name();
     }
     s << endl;
@@ -436,7 +439,8 @@ display_latch_class(
     }
     s << endl;
   }
-  for ( auto& group: cclass.group_list() ) {
+  for ( auto i: Range(cclass.cell_group_num()) ) {
+    auto& group = cclass.cell_group(i);
     s << "  Group:";
     display_pos(s, "data-pin",  group.data_pos(), group.has_data() ? 1 : 0);
     display_pos(s, "enable-pin", group.enable_pos(), group.enable_sense());
@@ -445,7 +449,8 @@ display_latch_class(
     s << " q-pin = " << group.q_pos()
       << endl;
     s << "         Clib = ";
-    for ( auto& cell: group.cell_list() ) {
+    for ( auto j: Range(group.cell_num()) ) {
+	auto& cell = group.cell(j);
       s << " " << cell.name();
     }
     s << endl;
@@ -462,8 +467,9 @@ display_group(
 )
 {
   s << title << endl
-    << "  Clib =";
-  for ( auto& cell: group.cell_list() ) {
+    << "  Cell =";
+  for ( auto i: Range(group.cell_num()) ) {
+    auto& cell = group.cell(i);
     s << " " << cell.name();
   }
   s << endl
@@ -474,13 +480,13 @@ void
 display_index(
   ostream& s,
   const ClibLutTemplate& templ,
-  int var
+  SizeType var
 )
 {
-  int n = templ.index_num(var);
+  auto n = templ.index_num(var);
   s << "(";
   const char* comma = "";
-  for ( int i: Range(n) ) {
+  for ( auto i: Range(n) ) {
     s << comma << templ.index(var, i);
     comma = ", ";
   }
@@ -545,13 +551,14 @@ display_library(
   s << endl;
 
   // lu_table_template
-  for ( auto& templ: library.lu_table_template_list() ) {
+  for ( auto id: Range(library.lu_table_template_num()) ) {
+    auto& templ = library.lu_table_template(id);
     s << "  lu_table_template(" << templ.name() << ")" << endl;
-    int d = templ.dimension();
-    for ( int j: Range(d) ) {
+    auto d = templ.dimension();
+    for ( auto j: Range(d) ) {
       s << "    variable_" << (j + 1) << ": " << templ.variable_type(j) << endl;
     }
-    for ( int j: Range(d) ) {
+    for ( auto j: Range(d) ) {
       s << "    index_" << (j + 1) << "   : ";
       display_index(s, templ, j);
       s << endl;
@@ -562,7 +569,9 @@ display_library(
   s << endl;
 
   // セル
-  for ( auto& cell: library.cell_list() ) {
+  for ( auto cell_id: Range(library.cell_num()) ) {
+    auto& cell = library.cell(cell_id);
+
     // セル名とセルの種類を出力
     s << "Clib#" << cell.id() << " (" << cell.name() << ") : ";
     if ( cell.is_logic() ) {
@@ -623,8 +632,9 @@ display_library(
     }
 
     // ピンの情報
-    for ( auto& pin: cell.pin_list() ) {
-      s << "  Pin#" << pin.pin_id() << "[ " << pin.name() << " ]: ";
+    for ( auto i: Range(cell.pin_num()) ) {
+      auto& pin = cell.pin(i);
+      s << "  Pin#" << i << "[ " << pin.name() << " ]: ";
       if ( pin.is_input() ) {
 	// 入力ピン
 	s << "Input#" << pin.input_id() << endl
@@ -634,7 +644,7 @@ display_library(
       }
       else if ( pin.is_output() ) {
 	// 出力ピン
-	int opos = pin.output_id();
+	auto opos = pin.output_id();
 	s << "Output# " << opos << endl;
 	if ( cell.has_logic(opos) ) {
 	  s << "    Logic            = " << cell.logic_expr(opos) << endl;
@@ -651,7 +661,7 @@ display_library(
       }
       else if ( pin.is_inout() ) {
 	// 入出力ピン
-	int opos = pin.output_id();
+	auto opos = pin.output_id();
 	s << "Inout#(" << pin.input_id() << ", " << opos << ")" << endl;
 	if ( cell.has_logic(opos) ) {
 	  s << "    Logic            = " << cell.logic_expr(opos) << endl;
@@ -671,16 +681,16 @@ display_library(
       }
       else if ( pin.is_internal() ) {
 	// 内部ピン
-	int itpos = pin.internal_id();
+	auto itpos = pin.internal_id();
 	s << "Internal#(" << itpos << ")" << endl;
       }
     }
 
     // タイミング情報
-    int ni2 = cell.input_num2();
-    int no2 = cell.output_num2();
-    for ( int ipos: Range(ni2) ) {
-      for ( int opos: Range(no2) ) {
+    auto ni2 = cell.input_num2();
+    auto no2 = cell.output_num2();
+    for ( auto ipos: Range(ni2) ) {
+      for ( auto opos: Range(no2) ) {
 	display_timing(s, cell, ipos, opos, ClibTimingSense::positive_unate, delay_model);
 	display_timing(s, cell, ipos, opos, ClibTimingSense::negative_unate, delay_model);
       }
@@ -688,12 +698,12 @@ display_library(
     s << endl;
   }
 
-  // セルグループの情報
-  s << "Clib Group" << endl;
-  int i = 0;
-  for ( auto& cclass: library.npn_class_list() ) {
+  // セルクラスの情報
+  s << "Clib Class" << endl;
+  for ( auto class_id: Range(library.npn_class_num()) ) {
     ostringstream buf;
-    buf << "Class#" << i; ++ i;
+    buf << "Class#" << class_id;
+    auto& cclass = library.npn_class(class_id);
     display_class(s, buf.str().c_str(), cclass);
   }
 
@@ -717,8 +727,8 @@ display_library(
   s << "==== PatMgr dump start ====" << endl;
 
   // ノードの種類の出力
-  int nn = library.pg_node_num();
-  for ( int i: Range(nn) ) {
+  auto nn = library.pg_node_num();
+  for ( auto i: Range(nn) ) {
     s << "Node#" << i << ": ";
     switch ( library.pg_node_type(i) ) {
     case ClibPatType::Input: s << "INPUT#" << library.pg_input_id(i) ; break;
@@ -731,8 +741,8 @@ display_library(
   s << endl;
 
   // 枝の情報の出力
-  int ne = library.pg_edge_num();
-  for ( int i: Range(ne) ) {
+  auto ne = library.pg_edge_num();
+  for ( auto i: Range(ne) ) {
     s << "Edge#" << i << ": " << library.pg_edge_from(i)
       << " -> " << library.pg_edge_to(i)
       << "(" << library.pg_edge_pos(i) << ")";
@@ -744,8 +754,8 @@ display_library(
   s << endl;
 
   // パタングラフの情報の出力
-  int np = library.pg_pat_num();
-  for ( int i: Range(np) ) {
+  auto np = library.pg_pat_num();
+  for ( auto i: Range(np) ) {
     const ClibPatGraph& pat = library.pg_pat(i);
     s << "Pat#" << i << ": "
       << "Rep#" << pat.rep_id() << ": ";
@@ -753,8 +763,8 @@ display_library(
       s << "[inv]";
     }
     s << "(" << pat.input_num() << "), ";
-    int n = pat.edge_num();
-    for ( int i: Range(n) ) {
+    auto n = pat.edge_num();
+    for ( auto i: Range(n) ) {
       s << " " << pat.edge(i);
     }
     s << endl;

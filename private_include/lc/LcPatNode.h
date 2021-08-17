@@ -27,7 +27,7 @@ public:
 
   /// @brief コンストラクタ
   LcPatNode(
-    int id ///< [in] ID番号
+    SizeType id ///< [in] ID番号
   ) : mId{id},
       mType{0U},
       mFanin{nullptr, nullptr},
@@ -42,7 +42,7 @@ public:
 public:
 
   /// @brief ノード番号を返す．
-  int
+  SizeType
   id() const
   {
     return mId;
@@ -70,33 +70,34 @@ public:
   }
 
   /// @brief 入力の時に入力番号を返す．
-  int
+  SizeType
   input_id() const
   {
     return mType >> 2;
   }
 
   /// @brief AND/XOR の時にファンインのノードを返す．
-  LcPatNode*
+  const LcPatNode&
   fanin(
-    int pos ///< [in] 位置 ( 0 or 1 )
+    SizeType pos ///< [in] 位置 ( 0 or 1 )
   ) const
   {
-    return mFanin[pos];
+    ASSERT_COND( pos == 0 || pos == 1 );
+    return *mFanin[pos];
   }
 
   /// @brief AND/XOR の時にファンイン0のノードを返す．
-  LcPatNode*
+  const LcPatNode&
   fanin0() const
   {
-    return mFanin[0];
+    return *mFanin[0];
   }
 
   /// @brief AND/XOR の時にファンイン1のノードを返す．
-  LcPatNode*
+  const LcPatNode&
   fanin1() const
   {
-    return mFanin[1];
+    return *mFanin[1];
   }
 
   /// @brief AND/XOR の時にファンインの極性を返す．
@@ -104,7 +105,7 @@ public:
   /// @retval false 反転なし
   bool
   fanin_inv(
-    int pos ///< [in] 位置 ( 0 or 1 )
+    SizeType pos ///< [in] 位置 ( 0 or 1 )
   ) const
   {
     return static_cast<bool>((mType >> (pos + 2)) & 1U);
@@ -148,16 +149,16 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ノード番号
-  int mId;
+  SizeType mId;
 
   // ノードの種類 ( 2bit )
   //  + 入力番号 ( 30bit)
   // or
   //  + ファンインの極性 ( 1bit x 2)
-  int mType;
+  SizeType mType;
 
   // ファンインのノード
-  LcPatNode* mFanin[2];
+  const LcPatNode* mFanin[2];
 
   // ハッシュ表中のリンク
   LcPatNode* mLink;

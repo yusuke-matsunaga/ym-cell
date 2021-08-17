@@ -27,10 +27,10 @@ public:
 
   /// @brief コンストラクタ
   LcClass(
-    int id,                    ///< [in] ID番号
+    SizeType id,               ///< [in] ID番号
     const LcSignature& rep_sig ///< [in] 代表シグネチャ
-  ) : mId(id),
-      mRepSig(rep_sig)
+  ) : mId{id},
+      mRepSig{rep_sig}
   {
   }
 
@@ -44,7 +44,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ID番号を返す．
-  int
+  SizeType
   id() const
   {
     return mId;
@@ -90,7 +90,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID番号
-  int mId;
+  SizeType mId;
 
   // 代表シグネチャ
   LcSignature mRepSig;

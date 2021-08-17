@@ -45,13 +45,13 @@ public:
   void
   reg_pat(
     const Expr& expr, ///< [in] パタンの元となる論理式
-    int rep_id        ///< [in] このパタンが属する代表関数番号
+    SizeType rep_id   ///< [in] このパタンが属する代表関数番号
   );
 
   /// @brief 内容を出力する．(デバッグ用)
   void
   display(
-    ostream& s ///<[in] 出力先のストリーム
+    ostream& s ///< [in] 出力先のストリーム
   ) const;
 
 
@@ -61,37 +61,37 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 全ノード数を返す．
-  int
+  SizeType
   node_num() const;
 
   /// @brief ノードを返す．
   const LcPatNode&
   node(
-    int pos ///< [in] ノード番号 ( 0 <= pos < node_num() )
+    SizeType pos ///< [in] ノード番号 ( 0 <= pos < node_num() )
   ) const;
 
   /// @brief パタン数を返す．
-  int
+  SizeType
   pat_num() const;
 
   /// @brief パタンの根のハンドルを返す．
   LcPatHandle
   pat_root(
-    int id ///< [in] パタン番号 ( 0 <= id < pat_num() )
+    SizeType id ///< [in] パタン番号 ( 0 <= id < pat_num() )
   ) const;
 
   /// @brief パタンのノードリストを返す．
   /// @return このパタンの入力数を返す．
-  int
+  SizeType
   pat_node_list(
-    int id,                ///< [in] パタン番号 ( 0 <= id < pat_num() )
-    vector<int>& node_list ///< [in] パタンを DFS 順でたどった時のノード番号のリスト
+    SizeType id,                ///< [in] パタン番号 ( 0 <= id < pat_num() )
+    vector<SizeType>& node_list ///< [in] パタンを DFS 順でたどった時のノード番号のリスト
   ) const;
 
   /// @brief パタンの属している代表関数番号を返す．
-  int
+  SizeType
   rep_id(
-    int id ///< [in] パタン番号 ( 0 <= id < pat_num() )
+    SizeType id ///< [in] パタン番号 ( 0 <= id < pat_num() )
   ) const;
 
 
@@ -120,10 +120,10 @@ private:
   static
   bool
   ceq_sub(
-    LcPatNode* node1,
-    LcPatNode* node2,
-    unordered_map<int, int>& map1,
-    unordered_map<int, int>& map2
+    const LcPatNode& node1,
+    const LcPatNode& node2,
+    unordered_map<SizeType, SizeType>& map1,
+    unordered_map<SizeType, SizeType>& map2
   );
 
   /// @brief パタングラフを生成する再帰関数
@@ -139,7 +139,7 @@ private:
     const Expr& expr,                 ///< [in] 論理式 (演算の種類を表すのに用いる)
     const vector<LcPatHandle>& input, ///< [in] 入力の配列
     int pat[],                        ///< [in] 2分木の形を表す配列
-    int& pos                          ///< [inout] pat[] 中の位置を示す変数
+    SizeType& pos                     ///< [inout] pat[] 中の位置を示す変数
   );
 
   /// @brief 入力ノードを作る．
@@ -178,9 +178,9 @@ private:
   static
   SizeType
   hash_func(
-    int type,          ///< [in] 種類
-    LcPatNode* l_node, ///< [in] 左の子供
-    LcPatNode* r_node  ///< [in] 右の子供
+    SizeType type,           ///< [in] 種類
+    const LcPatNode& l_node, ///< [in] 左の子供
+    const LcPatNode& r_node  ///< [in] 右の子供
   );
 
 
@@ -191,21 +191,21 @@ private:
 
   /// @brief 枝の情報をエンコードする．
   static
-  int
+  SizeType
   encode_edge(
-    LcPatNode* node, ///< [in] 親のノード
-    int fanin_pos    ///< [in] ファンイン番号
+    const LcPatNode& node, ///< [in] 親のノード
+    SizeType fanin_pos     ///< [in] ファンイン番号
   );
 
 
   /// @brief パタングラフを DFS でたどって内容を val_list に入れる．
   /// @return 最大入力番号+1を返す．
   static
-  int
+  SizeType
   dump_dfs(
-    LcPatNode* node,      ///< [in] ノード
-    vector<bool>& vmark,  ///< [in] 訪れたかどうかの情報を持つ配列
-    vector<int>& val_list ///< [in] ノードの情報を格納するリスト
+    const LcPatNode& node,     ///< [in] ノード
+    vector<bool>& vmark,       ///< [in] 訪れたかどうかの情報を持つ配列
+    vector<SizeType>& val_list ///< [in] ノードの情報を格納するリスト
   );
 
 
@@ -220,7 +220,7 @@ private:
   display_edge(
     ostream& s,            ///< [in] 出力先のストリーム
     const LcPatNode& node, ///< [in] 親のノード
-    int fanin_pos          ///< [in] ファンイン番号
+    SizeType fanin_pos     ///< [in] ファンイン番号
   );
 
 
@@ -246,7 +246,7 @@ private:
 
   // パタンの根のハンドルと代表関数番号のペアのリスト
   // 配列のインデックスはパタン番号
-  vector<pair<LcPatHandle, int>> mPatList;
+  vector<pair<LcPatHandle, SizeType>> mPatList;
 
   // 処理済みの論理式を収めたリストの配列
   // 配列のキーは代表関数番号

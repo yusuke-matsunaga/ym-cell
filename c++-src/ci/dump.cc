@@ -3,9 +3,8 @@
 /// @brief CiCellLibrary の実装ファイル(dump()関係)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ci/CiCellLibrary.h"
 #include "ci/CiCellClass.h"
@@ -15,7 +14,9 @@
 #include "ci/CiFFCell.h"
 #include "ci/CiLatchCell.h"
 #include "ci/CiFsmCell.h"
-#include "ci/CiCellPin.h"
+#include "ci/CiPin.h"
+#include "ci/CiBus.h"
+#include "ci/CiBundle.h"
 #include "ci/CiTiming.h"
 #include "ci/CiLutTemplate.h"
 #include "ci/CiLut.h"
@@ -29,8 +30,10 @@ BEGIN_NAMESPACE_YM_CLIB
 BEGIN_NONAMESPACE
 
 void
-dump_lut(ostream& s,
-	 const ClibLut& lut)
+dump_lut(
+  ostream& s,
+  const ClibLut& lut
+)
 {
   if ( lut.dimension() > 0 ) {
     lut.dump(s);
@@ -47,9 +50,10 @@ END_NONAMESPACE
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
-CiCellLibrary::dump(ostream& s) const
+CiCellLibrary::dump(
+  ostream& s
+) const
 {
   // 名前
   s << name();
@@ -94,28 +98,27 @@ CiCellLibrary::dump(ostream& s) const
   s << leakage_power_unit();
 
   // 遅延テーブルのテンプレート
-  s << lu_table_template_list().num();
-  for ( auto& temp: lu_table_template_list() ) {
-    temp.dump(s);
+  s << lu_table_template_num();
+  for ( auto id: Range(lu_table_template_num()) ) {
+    lu_table_template(id).dump(s);
   }
 
-  // セル数
-  s << cell_list().num();
-  for ( auto& cell: cell_list() ) {
-    // セルの内容をダンプ
-    cell.dump(s);
+  // セルの内容をダンプ
+  s << cell_num();
+  for ( auto id: Range(cell_num()) ) {
+    cell(id).dump(s);
   }
 
   // セルグループ情報のダンプ
-  s << group_list().num();
-  for ( auto& group: group_list() ) {
-    group.dump(s);
+  s << cell_group_num();
+  for ( auto id: Range(cell_group_num()) ) {
+    cell_group(id).dump(s);
   }
 
   // セルクラス情報のダンプ
-  s << npn_class_list().num();
-  for ( auto& cclass: npn_class_list() ) {
-    cclass.dump(s);
+  s << npn_class_num();
+  for ( auto id: Range(npn_class_num()) ) {
+    npn_class(id).dump(s);
   }
 
   // 組み込み型の情報のダンプ
@@ -139,9 +142,10 @@ CiCellLibrary::dump(ostream& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
-CiCell::dump(ostream& s) const
+CiCell::dump(
+  ostream& s
+) const
 {
   ymuint8 tid = 0;
   if ( is_logic() ) {
@@ -166,45 +170,59 @@ CiCell::dump(ostream& s) const
     << name()
     << area();
 
-  // input_list(), output_list() は入出力ピンを含むので
-  // そのままでは使えない．
-
   // 入力ピンのダンプ
   s << input_num();
-  for ( int i: Range(input_num()) ) {
+  for ( auto i: Range(input_num()) ) {
     input(i).dump(s);
   }
 
   // 出力ピンのダンプ
   s << output_num();
-  for ( int i: Range(output_num()) ) {
+  for ( auto i: Range(output_num()) ) {
     output(i).dump(s);
   }
 
   // 入出力ピンのダンプ
   s << inout_num();
-  for ( int i: Range(inout_num()) ) {
+  for ( auto i: Range(inout_num()) ) {
     inout(i).dump(s);
   }
 
   // 内部ピンのダンプ
   s << internal_num();
-  for ( int i: Range(internal_num()) ) {
+  for ( auto i: Range(internal_num()) ) {
     internal(i).dump(s);
   }
 
   // バスのダンプ
-  int nbus = bus_num();
-  s << nbus;
+  s << bus_num();
+  for ( auto i: Range(bus_num()) ) {
+    bus(i).dump(s);
+  }
 
   // バンドルのダンプ
-  int nbundle = bundle_num();
-  s << nbundle;
+  s << bundle_num();
+  for ( auto i: Range(bundle_num()) ) {
+    bundle(i).dump(s);
+  }
 
   // タイミング情報のダンプ
-  s << timing_list().num();
-  for ( auto& timing: timing_list() ) {
-    timing.dump(s);
+  s << timing_num();
+  for ( auto i: Range(timing_num()) ) {
+    timing(i).dump(s);
+  }
+
+  // 個別の条件ごとのタイミング情報のダンプ
+  for ( auto ipos: Range(input_num2()) ) {
+    for ( auto opos: Range(output_num2()) ) {
+      for ( auto sense: { ClibTimingSense::positive_unate, ClibTimingSense::negative_unate } ) {
+	auto& timing_id_list1 = timing_id_list(ipos, opos, sense);
+	s << timing_id_list1.size();
+	for ( auto id: timing_id_list1 ) {
+	  s << id;
+	}
+      }
+    }
   }
 
   // セルの付加的な情報のダンプ
@@ -226,22 +244,6 @@ CiCell::dump(ostream& s) const
       << static_cast<ymuint8>(clear_preset_var1())
       << static_cast<ymuint8>(clear_preset_var2());
   }
-
-  // 個別の条件ごとのタイミング情報のダンプ
-  for ( int ipos: Range(input_num2()) ) {
-    for ( int opos: Range(output_num2()) ) {
-      const ClibTimingList& timing_list1 = this->timing_list(ipos, opos, ClibTimingSense::positive_unate);
-      s << timing_list1.num();
-      for ( auto& timing: timing_list1 ) {
-	s << timing.id();
-      }
-      const ClibTimingList& timing_list2 = this->timing_list(ipos, opos, ClibTimingSense::negative_unate);
-      s << timing_list2.num();
-      for ( auto& timing: timing_list2 ) {
-	s << timing.id();
-      }
-    }
-  }
 }
 
 
@@ -251,9 +253,11 @@ CiCell::dump(ostream& s) const
 
 // @brief dump 用の共通情報を出力する．
 void
-CiCellPin::dump_common(ostream& s) const
+CiPin::dump_common(
+  ostream& s
+) const
 {
-  s << name();
+  s << _name();
 }
 
 
@@ -262,9 +266,10 @@ CiCellPin::dump_common(ostream& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
-CiInputPin::dump(ostream& s) const
+CiInputPin::dump(
+  ostream& s
+) const
 {
   dump_common(s);
 
@@ -279,16 +284,14 @@ CiInputPin::dump(ostream& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
-CiOutputPin::dump(ostream& s) const
+CiOutputPin::dump(
+  ostream& s
+) const
 {
   dump_common(s);
 
-  s << has_function()
-    << function()
-    << three_state()
-    << max_fanout()
+  s << max_fanout()
     << min_fanout()
     << max_capacitance()
     << min_capacitance()
@@ -302,16 +305,14 @@ CiOutputPin::dump(ostream& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
-CiInoutPin::dump(ostream& s) const
+CiInoutPin::dump(
+  ostream& s
+) const
 {
   dump_common(s);
 
-  s << has_function()
-    << function()
-    << three_state()
-    << capacitance()
+  s << capacitance()
     << rise_capacitance()
     << fall_capacitance()
     << max_fanout()
@@ -328,9 +329,10 @@ CiInoutPin::dump(ostream& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
-CiInternalPin::dump(ostream& s) const
+CiInternalPin::dump(
+  ostream& s
+) const
 {
   dump_common(s);
 
@@ -339,15 +341,51 @@ CiInternalPin::dump(ostream& s) const
 
 
 //////////////////////////////////////////////////////////////////////
+// クラス CiBus
+//////////////////////////////////////////////////////////////////////
+
+/// @brief 内容をバイナリダンプする．
+void
+CiBus::dump(
+  ostream& s ///< [in] 出力先のストリーム
+) const
+{
+  s << mName;
+  s << pin_num();
+  for ( auto pin: mPinList ) {
+    s << pin->name();
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiBundle
+//////////////////////////////////////////////////////////////////////
+
+/// @brief 内容をバイナリダンプする．
+void
+CiBundle::dump(
+  ostream& s ///< [in] 出力先のストリーム
+) const
+{
+  s << mName;
+  s << pin_num();
+  for ( auto pin: mPinList ) {
+    s << pin->name();
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // クラス CiTiming
 //////////////////////////////////////////////////////////////////////
 
 // @brief 共通な情報をダンプする．
-// @param[in] s 出力先のストリーム
-// @param[in] type_id 型の ID
 void
-CiTiming::dump_common(ostream& s,
-		      ymuint8 type_id) const
+CiTiming::dump_common(
+  ostream& s,
+  ymuint8 type_id
+) const
 {
   s << type_id
     << static_cast<ymuint8>(type())
@@ -360,9 +398,10 @@ CiTiming::dump_common(ostream& s,
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
-CiTimingGeneric::dump(ostream& s) const
+CiTimingGeneric::dump(
+  ostream& s
+) const
 {
   dump_common(s, 0);
 
@@ -380,9 +419,10 @@ CiTimingGeneric::dump(ostream& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
-CiTimingPiecewise::dump(ostream& s) const
+CiTimingPiecewise::dump(
+  ostream& s
+) const
 {
   dump_common(s, 1);
 
@@ -398,9 +438,10 @@ CiTimingPiecewise::dump(ostream& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
-CiTimingLut1::dump(ostream& s) const
+CiTimingLut1::dump(
+  ostream& s
+) const
 {
   dump_common(s, 2);
 
@@ -416,9 +457,10 @@ CiTimingLut1::dump(ostream& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
-CiTimingLut2::dump(ostream& s) const
+CiTimingLut2::dump(
+  ostream& s
+) const
 {
   dump_common(s, 3);
 
@@ -434,29 +476,30 @@ CiTimingLut2::dump(ostream& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
-CiLut::dump(ostream& s) const
+CiLut::dump(
+  ostream& s
+) const
 {
-  s << template_id();
-  int d = dimension();
-  for ( int i: Range(d) ) {
+  s << lut_template().id();
+  auto d = dimension();
+  for ( auto i: Range(d) ) {
     ymuint8 n = index_num(i);
     s << n;
-    for ( int j: Range(n) ) {
+    for ( auto j: Range(n) ) {
       s << index(i, j);
     }
   }
 
-  vector<int> pos_array(d);
-  int n = 1;
-  for ( int i: Range(d) ) {
+  vector<SizeType> pos_array(d);
+  auto n = 1;
+  for ( auto i: Range(d) ) {
     n *= index_num(i);
   }
-  for ( int v: Range(n) ) {
-    int v0 = v;
+  for ( auto v: Range(n) ) {
+    auto v0 = v;
     for ( int j: Range(d) ) {
-      int var = d - j - 1;
+      auto var = d - j - 1;
       pos_array[var] = v0 % index_num(var);
       v0 /= index_num(var);
     }
@@ -471,14 +514,15 @@ CiLut::dump(ostream& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
-CiLutTemplate::dump(ostream& s) const
+CiLutTemplate::dump(
+  ostream& s
+) const
 {
   ymuint8 d = dimension();
   s << name()
     << d;
-  for ( int i: Range(d) ) {
+  for ( auto i: Range(d) ) {
     s << static_cast<ymuint8>(variable_type(i));
     ymuint8 n = index_num(i);
     s << n;
@@ -494,15 +538,16 @@ CiLutTemplate::dump(ostream& s) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief バイナリダンプを行う．
-// @param[in] bos 出力先のストリーム
 void
-CiCellGroup::dump(ostream& bos) const
+CiCellGroup::dump(
+  ostream& bos
+) const
 {
   bos << mMap
       << mPinInfo
-      << mCellList.num();
+      << mCellList.size();
   for ( auto& cell: mCellList ) {
-    bos << cell.id();
+    bos << cell->id();
   }
 }
 
@@ -512,20 +557,21 @@ CiCellGroup::dump(ostream& bos) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief バイナリダンプを行う．
-// @param[in] bos 出力先のストリーム
 void
-CiCellClass::dump(ostream& bos) const
+CiCellClass::dump(
+  ostream& bos
+) const
 {
   // 同位体変換情報のダンプ
-  bos << mIdmapNum;
-  for ( int i: Range(mIdmapNum) ) {
-    bos << mIdmapList[i];
+  bos << mIdmapList.size();
+  for ( auto& map: mIdmapList ) {
+    bos << map;
   }
 
   // グループ情報のダンプ
-  bos << mGroupList.num();
+  bos << mGroupList.size();
   for ( auto& group: mGroupList ) {
-    bos << group.id();
+    bos << group->id();
   }
 }
 
@@ -535,22 +581,23 @@ CiCellClass::dump(ostream& bos) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief バイナリダンプを行う．
-// @param[in] bos 出力先のストリーム
 void
-CiPatMgr::dump(ostream& bos) const
+CiPatMgr::dump(
+  ostream& bos
+) const
 {
   // パタングラフのノード情報のダンプ
-  bos << mNodeNum;
-  for ( int i: Range(mNodeNum) ) {
+  bos << node_num();
+  for ( auto i: Range(node_num()) ) {
     bos << mNodeTypeArray[i]
 	<< mEdgeArray[i * 2 + 0]
 	<< mEdgeArray[i * 2 + 1];
   }
 
   // パタングラフの情報のダンプ
-  bos << mPatNum;
-  for ( int i: Range(mPatNum) ) {
-    mPatArray[i].dump(bos);
+  bos << pat_num();
+  for ( auto& pat: mPatArray ) {
+    pat.dump(bos);
   }
 }
 
@@ -560,15 +607,16 @@ CiPatMgr::dump(ostream& bos) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief バイナリダンプを行う．
-// @param[in] bos 出力先のストリーム
 void
-CiPatGraph::dump(ostream& bos) const
+CiPatGraph::dump(
+  ostream& bos
+) const
 {
   bos << mRepId
       << mInputNum
-      << mEdgeNum;
-  for ( int i: Range(mEdgeNum) ) {
-    bos << mEdgeList[i];
+      << mEdgeList.size();
+  for ( auto e: mEdgeList ) {
+    bos << e;
   }
 }
 

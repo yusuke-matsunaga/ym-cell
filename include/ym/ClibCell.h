@@ -38,7 +38,7 @@ public:
   ///
   /// ここで返される番号は ClibCellLibrary::cell() の引数に対応する．
   virtual
-  int
+  SizeType
   id() const = 0;
 
   /// @brief 名前の取得
@@ -62,25 +62,20 @@ public:
   SizeType
   pin_num() const = 0;
 
-  /// @brief ピンのリストの取得
-  virtual
-  const ClibCellPinList&
-  pin_list() const = 0;
-
   /// @brief ピンの取得
   /// @return ピン情報を返す．
   virtual
-  const ClibCellPin&
+  const ClibPin&
   pin(
-    int pin_id ///< [in] ピン番号 ( 0 <= pin_id < pin_num() )
+    SizeType pin_id ///< [in] ピン番号 ( 0 <= pin_id < pin_num() )
   ) const = 0;
 
   /// @brief 名前からピン番号の取得
   /// @return name という名前のピン番号を返す．
   ///
-  /// なければ -1 を返す．
+  /// なければ CLIB_NULLID を返す．
   virtual
-  int
+  SizeType
   pin_id(
     const string& name ///< [in] ピン名
   ) const = 0;
@@ -88,9 +83,9 @@ public:
   /// @brief 名前からピン番号の取得
   /// @return name という名前のピン番号を返す．
   ///
-  /// なければ -1 を返す．
+  /// なければ CLIB_NULLID を返す．
   virtual
-  int
+  SizeType
   pin_id(
     const char* name ///< [in] ピン名
   ) const = 0;
@@ -126,9 +121,9 @@ public:
   ///
   /// id >= input_num() の場合には入出力ピンが返される．
   virtual
-  const ClibCellPin&
+  const ClibPin&
   input(
-    int id ///< [in] 番号 ( 0 <= id < input_num2() )
+    SizeType id ///< [in] 番号 ( 0 <= id < input_num2() )
   ) const = 0;
 
   /// @brief 出力ピン+入出力ピン数の取得
@@ -142,23 +137,23 @@ public:
   ///
   /// id >= output_num() の場合には入出力ピンが返される．
   virtual
-  const ClibCellPin&
+  const ClibPin&
   output(
-    int id ///< [in] 出力番号 ( 0 <= id < output_num2() )
+    SizeType id ///< [in] 出力番号 ( 0 <= id < output_num2() )
   ) const = 0;
 
   /// @brief 入出力ピンの取得
   virtual
-  const ClibCellPin&
+  const ClibPin&
   inout(
-    int id ///< [in] 番号 ( 0 <= id < inout_num() )
+    SizeType id ///< [in] 番号 ( 0 <= id < inout_num() )
   ) const = 0;
 
   /// @brief 内部ピンの取得
   virtual
-  const ClibCellPin&
+  const ClibPin&
   internal(
-    int id ///< [in] 内部ピン番号 ( 0 <= id < internal_num() )
+    SizeType id ///< [in] 内部ピン番号 ( 0 <= id < internal_num() )
   ) const = 0;
 
   /// @brief バス数の取得
@@ -170,15 +165,15 @@ public:
   virtual
   const ClibBus&
   bus(
-    int pos ///< [in] 位置番号 ( 0 <= pos < bus_num() )
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < bus_num() )
   ) const = 0;
 
   /// @brief 名前からバス番号の取得
   /// @return name という名前のバス番号を返す．
   ///
-  /// なければ -1 を返す．
+  /// なければ CLIB_NULLID を返す．
   virtual
-  int
+  SizeType
   bus_id(
     const string& name ///< [in] バス名
   ) const = 0;
@@ -192,15 +187,15 @@ public:
   virtual
   const ClibBundle&
   bundle(
-    int pos ///< [in] 位置番号 ( 0 <= pos < bundle_num() )
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < bundle_num() )
   ) const = 0;
 
   /// @brief 名前からバンドル番号の取得
   /// @return name という名前のバンドル番号を返す．
   ///
-  /// なければ -1 を返す．
+  /// なければ CLIB_NULLID を返す．
   virtual
-  int
+  SizeType
   bundle_id(
     const string& name ///< [in] バンドル名
   ) const = 0;
@@ -211,17 +206,24 @@ public:
   // タイミング情報の取得
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief タイミング情報のリストを返す．
+  /// @brief タイミング情報の数を返す．
   virtual
-  vector<const ClibTiming*>
-  timing_list() const = 0;
+  SizeType
+  timing_num() const = 0;
 
-  /// @brief 条件に合致するタイミング情報のリストを返す．
+  /// @brief タイミング情報を返す．
   virtual
-  vector<const ClibTiming*>
-  timing_list(
-    int ipos,             ///< [in] 開始ピン番号 ( 0 <= ipos < input_num2() )
-    int opos,             ///< [in] 終了ピン番号 ( 0 <= opos < output_num2() )
+  const ClibTiming&
+  timing(
+    SizeType pos ///< [in] インデックス ( 0 <= pos < timing_num() )
+  ) const = 0;
+
+  /// @brief 条件に合致するタイミング情報のインデックスのリストを返す．
+  virtual
+  const vector<SizeType>&
+  timing_id_list(
+    SizeType ipos,        ///< [in] 開始ピン番号 ( 0 <= ipos < input_num2() )
+    SizeType opos,        ///< [in] 終了ピン番号 ( 0 <= opos < output_num2() )
     ClibTimingSense sense ///< [in] タイミング情報の摘要条件
   ) const = 0;
 
@@ -230,11 +232,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 機能情報の取得
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 属している ClibCellGroup を返す．
-  virtual
-  const ClibCellGroup&
-  cell_group() const = 0;
 
   /// @brief 組み合わせ論理セルの時に true を返す．
   virtual
@@ -260,7 +257,7 @@ public:
   virtual
   bool
   has_logic(
-    int pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
   ) const = 0;
 
   /// @brief 全ての出力が論理式を持っているときに true を返す．
@@ -274,14 +271,14 @@ public:
   virtual
   Expr
   logic_expr(
-    int pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
   ) const = 0;
 
   /// @brief 出力がトライステート条件を持っている時に true を返す．
   virtual
   bool
   has_tristate(
-    int pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
   ) const = 0;
 
   /// @brief トライステートセルの場合にトライステート条件式を返す．
@@ -291,7 +288,7 @@ public:
   virtual
   Expr
   tristate_expr(
-    int pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
   ) const = 0;
 
   /// @brief FFセルの場合にFFのピン情報を得る．
@@ -375,7 +372,7 @@ public:
   ///
   /// FFセルとラッチセルの時に意味を持つ．
   virtual
-  int
+  SizeType
   clear_preset_var1() const = 0;
 
   /// @brief clear_preset_var2 の取得
@@ -384,7 +381,7 @@ public:
   ///
   /// FFセルとラッチセルの時に意味を持つ．
   virtual
-  int
+  SizeType
   clear_preset_var2() const = 0;
 
 

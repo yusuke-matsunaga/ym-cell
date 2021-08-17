@@ -9,7 +9,6 @@
 /// All rights reserved.
 
 #include "ym/ClibCellGroup.h"
-#include "ym/ClibObjList.h"
 #include "ym/NpnMapM.h"
 
 
@@ -35,17 +34,17 @@ public:
   /// pininfo は restore() 時のみ指定する．
   /// それ以外は後で set_ff_info()/set_latch_info() で設定する．
   CiCellGroup(
-    int id,                          ///< [in] 番号
-    const NpnMapM& map,              ///< [in] 変換マップ
-    int pininfo,                     ///< [in] ピン情報
-    const vector<CiCell*>& cell_list ///< [in] セルのリスト
+    SizeType id,                      ///< [in] 番号
+    const NpnMapM& map,               ///< [in] 変換マップ
+    int pininfo,                      ///< [in] ピン情報
+    const vector<CiCell*>& cell_list  ///< [in] セルのリスト
   );
 
   /// @brief エラーオブジェクト用のコンストラクタ
-  CiCellGroup();
+  CiCellGroup() = default;
 
   /// @brief デストラクタ
-  ~CiCellGroup();
+  ~CiCellGroup() = default;
 
 
 public:
@@ -54,9 +53,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ID番号を返す．
-  ///
-  /// ClibCellLibrary::group(id) で返されるオブジェクトの id() は id となる．
-  int
+  SizeType
   id() const override;
 
 
@@ -64,10 +61,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 機能情報を取得する関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 代表クラスを返す．
-  const ClibCellClass&
-  rep_class() const override;
 
   /// @brief 代表クラスに対する変換マップを返す．
   const NpnMapM&
@@ -100,7 +93,7 @@ public:
   has_data() const override;
 
   /// @brief データ入力のピン番号を返す．
-  int
+  SizeType
   data_pos() const override;
 
   /// @brief クロック入力のタイプを返す．
@@ -111,7 +104,7 @@ public:
   clock_sense() const override;
 
   /// @brief クロック入力のピン番号を返す．
-  int
+  SizeType
   clock_pos() const override;
 
   /// @brief イネーブル入力を持つとき true を返す．
@@ -126,7 +119,7 @@ public:
   enable_sense() const override;
 
   /// @brief イネーブル入力のピン番号を返す．
-  int
+  SizeType
   enable_pos() const override;
 
   /// @brief クリア入力を持つタイプの時に true を返す．
@@ -141,9 +134,8 @@ public:
   clear_sense() const override;
 
   /// @brief クリア入力のピン番号を返す．
-  ///
-  /// クリア入力がない場合の値は不定
-  int
+  /// @note クリア入力がない場合の値は不定
+  SizeType
   clear_pos() const override;
 
   /// @brief プリセット入力を持つタイプの時に true を返す．
@@ -158,17 +150,16 @@ public:
   preset_sense() const override;
 
   /// @brief プリセット入力のピン番号を返す．
-  ///
-  /// プリセット入力がない場合の値は不定
-  int
+  /// @note プリセット入力がない場合の値は不定
+  SizeType
   preset_pos() const override;
 
   /// @brief 肯定出力のピン番号を返す．
-  int
+  SizeType
   q_pos() const override;
 
   /// @brief 否定出力のピン番号を返す．
-  int
+  SizeType
   xq_pos() const override;
 
 
@@ -177,9 +168,15 @@ public:
   // このグループに属しているセルの情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セルのリストを返す．
-  const ClibCellList&
-  cell_list() const override;
+  /// @brief セル数を返す．
+  SizeType
+  cell_num() const override;
+
+  /// @brief セルを返す．
+  const ClibCell&
+  cell(
+    SizeType pos ///< [in] インデックス ( 0 <= pos < cell_num() )
+  ) const override;
 
 
 public:
@@ -193,41 +190,35 @@ public:
   /// それ以外は後で set_ff_info()/set_latch_info() で設定する．
   void
   init(
-    int id,                          ///< [in] 番号
-    const NpnMapM& map,              ///< [in] 変換マップ
-    int pininfo,                     ///< [in] ピン情報
-    const vector<CiCell*>& cell_list ///< [in] セルのリスト
+    SizeType id,
+    const NpnMapM& map,
+    int pininfo,
+    const vector<SizeType>& cell_list
   );
 
   /// @brief 親のセルクラスを設定する．
   void
   set_class(
-    CiCellClass* cell_class ///< [in] 親のクラス
+    CiCellClass* cell_class ///< [in]
   );
 
   /// @brief FFのピン情報を設定する．
   void
   set_ff_info(
-    int pos_array[] ///< [in] ピン位置と極性情報の配列
-                    ///< pos_array の意味は以下の通り
-                    ///< - pos_array[0] : データ入力のピン番号     (3bit)
-                    ///< - pos_array[1] : クロック入力のピン番号   (3bit) | 極性情報 (1bit)
-                    ///< - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
-                    ///< - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
-                    ///< - pos_array[4] : 肯定出力のピン番号       (3bit)
-                    ///< - pos_array[5] : 否定出力のピン番号       (3bit) | あるかないか (1bit)
+    SizeType pos_array[]
   );
 
   /// @brief ラッチのピン情報を設定する．
+  /// @param[in] pos_array ピン位置と極性情報の配列
+  /// @note pos_array の意味は以下の通り
+  ///  - pos_array[0] : データ入力のピン番号     (3bit)
+  ///  - pos_array[1] : イネーブル入力のピン番号 (3bit) | 極性情報 (2bit)
+  ///  - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
+  ///  - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
+  ///  - pos_array[4] : 肯定出力のピン番号       (3bit)
   void
   set_latch_info(
-    int pos_array[] ///< [in] ピン位置と極性情報の配列
-                    ///< pos_array の意味は以下の通り
-                    ///< - pos_array[0] : データ入力のピン番号     (3bit)
-                    ///< - pos_array[1] : イネーブル入力のピン番号 (3bit) | 極性情報 (2bit)
-                    ///< - pos_array[2] : クリア入力のピン番号     (3bit) | 極性情報 (2bit)
-                    ///< - pos_array[3] : プリセット入力のピン番号 (3bit) | 極性情報 (2bit)
-                    ///< - pos_array[4] : 肯定出力のピン番号       (3bit)
+    SizeType pos_array[]
   );
 
 
@@ -249,19 +240,19 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID 番号
-  int mId;
+  SizeType mId{CLIB_NULLID};
 
   // 属している ClibCellClass
-  const ClibCellClass* mRepClass;
+  //const ClibCellClass* mRepClass{nullptr};
 
   // ClibCellClass に対する入出力の変換関数
   NpnMapM mMap;
 
   // FF/ラッチのピン情報
-  int mPinInfo;
+  int mPinInfo{0};
 
   // セルのリスト
-  ClibCellList mCellList;
+  vector<CiCell*> mCellList;
 
 };
 

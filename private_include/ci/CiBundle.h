@@ -5,12 +5,10 @@
 /// @brief CiBundle のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/ClibBundle.h"
-#include "ym/ClibObjList.h"
 #include "ym/ShString.h"
 
 
@@ -30,6 +28,9 @@ private:
   /// @brief コンストラクタ
   CiBundle() = default;
 
+
+public:
+
   /// @brief デストラクタ
   ~CiBundle() = default;
 
@@ -43,14 +44,33 @@ public:
   string
   name() const override;
 
+  /// @brief 名前の取得
+  ShString
+  _name() const
+  {
+    return mName;
+  }
+
   /// @brief ピン数の取得
-  int
+  SizeType
   pin_num() const override;
 
   /// @brief ピンの取得
-  const ClibCellPin&
+  const ClibPin&
   pin(
-    int pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
+  ) const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    ostream& s ///< [in] 出力先のストリーム
   ) const override;
 
 
@@ -63,7 +83,7 @@ private:
   void
   init(
     const ShString& name,
-    const vector<ClibCellPin*>& pin_list
+    vector<const ClibPin*>&& pin_list
   );
 
 
@@ -76,7 +96,7 @@ private:
   ShString mName;
 
   // ピンのリスト
-  ClibCellPinList mPinList;
+  vector<const ClibPin*> mPinList;
 
 };
 

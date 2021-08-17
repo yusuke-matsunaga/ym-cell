@@ -9,7 +9,6 @@
 /// All rights reserved.
 
 #include "ym/ClibCellClass.h"
-#include "ym/ClibObjList.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -29,17 +28,24 @@ class CiCellClass :
 public:
 
   /// @brief コンストラクタ
+  /// @param[in] id 番号
+  /// @param[in] idmap_list 同位体変換リスト
+  /// @param[in] group_list グループのリスト
   CiCellClass(
-    int id,                                ///< [in] 番号
-    const vector<NpnMapM>& idmap_list,     ///< [in] 同位体変換リスト
-    const vector<CiCellGroup*>& group_list ///< [in] グループのリスト
-  );
+    SizeType id,
+    const vector<NpnMapM>& idmap_list,
+    const vector<CiCellGroup*>& group_list
+  ) : mId{id},
+      mIdmapList{idmap_list},
+      mGroupList{group_list}
+  {
+  }
 
   /// @brief エラーオブジェクト用のコンストラクタ
-  CiCellClass();
+  CiCellClass() = default;
 
   /// @brief デストラクタ
-  ~CiCellClass();
+  ~CiCellClass() = default;
 
 
 public:
@@ -48,21 +54,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ID番号を返す．
-  ///
-  /// ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
-  int
+  /// @note ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
+  SizeType
   id() const override;
 
   /// @brief 同位体変換の個数を得る．
-  ///
-  /// 恒等変換は含まない．
-  int
+  /// @note 恒等変換は含まない．
+  SizeType
   idmap_num() const override;
 
   /// @brief 同位体変換を得る．
   const NpnMapM&
   idmap(
-    int pos ///< [in] 位置番号 ( 0 <= pos < idmap_num() )
+    SizeType pos
   ) const override;
 
 
@@ -71,9 +75,15 @@ public:
   // このクラスに属しているセルグループの情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セルグループのリストを返す．
-  const ClibCellGroupList&
-  group_list() const override;
+  /// @brief グループ数を返す．
+  SizeType
+  cell_group_num() const override;
+
+  /// @brief グループを返す．
+  const ClibCellGroup&
+  cell_group(
+    SizeType pos ///< [in] インデックス ( 0 <= pos < cell_group_num() )
+  ) const override;
 
 
 public:
@@ -82,7 +92,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief バイナリダンプを行う．
-  /// @param[in] bos
   void
   dump(
     ostream& bos ///< [in] 出力先のストリーム
@@ -95,16 +104,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID番号
-  int mId;
-
-  // 同位体変換の数
-  int mIdmapNum;
+  SizeType mId{CLIB_NULLID};
 
   // 同位体変換の配列
-  NpnMapM* mIdmapList;
+  vector<NpnMapM> mIdmapList;
 
   // セルグループのリスト
-  ClibCellGroupList mGroupList;
+  vector<CiCellGroup*> mGroupList;
 
 };
 

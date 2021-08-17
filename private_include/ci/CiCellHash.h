@@ -44,8 +44,8 @@ public:
   /// @brief セル番号を取り出す．
   /// @return name という名前のセルのセル番号を返す．
   ///
-  /// なければ -1 を返す．
-  int
+  /// なければ CLIB_NULLID を返す．
+  SizeType
   get(
     ShString name ///< [in] 名前
   ) const;
@@ -59,7 +59,7 @@ private:
   /// @brief テーブルの領域を確保する．
   void
   alloc_table(
-    int req_size ///< [in] 要求するサイズ
+    SizeType req_size ///< [in] 要求するサイズ
   );
 
 
@@ -69,16 +69,16 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // テーブルサイズ
-  int mSize;
+  SizeType mSize;
 
   // ハッシュ表
   CiCell** mTable;
 
   // ハッシュ表を拡大するしきい値
-  int mLimit;
+  SizeType mLimit;
 
   // 要素数
-  int mNum;
+  SizeType mNum;
 
 };
 

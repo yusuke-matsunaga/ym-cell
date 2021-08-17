@@ -36,10 +36,19 @@ private:
     const vector<CiBus*>& bus_list,              ///< [in] バスのリスト
     const vector<CiBundle*>& bundle_list,        ///< [in] バンドルのリスト
     const vector<CiTiming*>& timing_list         ///< [in] タイミング情報のリスト
-  );
+  ) : CiCell(library, name, area,
+	     input_list,
+	     output_list,
+	     inout_list,
+	     internal_list,
+	     bus_list,
+	     bundle_list,
+	     timing_list)
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiFsmCell();
+  ~CiFsmCell() = default;
 
 
 public:

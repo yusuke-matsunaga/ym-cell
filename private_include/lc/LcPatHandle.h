@@ -40,10 +40,10 @@ public:
 public:
 
   /// @brief ノードを取り出す．
-  LcPatNode*
+  const LcPatNode&
   node() const
   {
-    return reinterpret_cast<LcPatNode*>(mData & ~1UL);
+    return *reinterpret_cast<LcPatNode*>(mData & ~1UL);
   }
 
   /// @brief 反転属性を取り出す．

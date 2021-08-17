@@ -16,6 +16,8 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiLut;
+
 //////////////////////////////////////////////////////////////////////
 /// @class CiTiming CiTiming.h "CiTiming.h"
 /// @brief 共通の基底クラス
@@ -33,6 +35,9 @@ protected:
     const Expr& cond     ///< [in] タイミング条件を表す式
   );
 
+
+public:
+
   /// @brief デストラクタ
   ~CiTiming();
 
@@ -45,7 +50,7 @@ public:
   /// @brief ID番号の取得
   ///
   /// timing = cell->timing(id); の時，timing->id() = id となる．
-  int
+  SizeType
   id() const override;
 
   /// @brief 型の取得
@@ -166,10 +171,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID
-  int mId;
+  SizeType mId{CLIB_NULLID};
 
   // 型
-  ClibTimingType mType;
+  ClibTimingType mType{ClibTimingType::none};
 
   // タイミング条件
   Expr mCond;
@@ -194,10 +199,16 @@ protected:
     ClibTime intrinsic_fall,    ///< [in] 立ち下がり固有遅延
     ClibTime slope_rise,        ///< [in] 立ち上がりスロープ遅延
     ClibTime slope_fall         ///< [in] 立ち下がりスロープ遅延
-  );
+  ) : CiTiming(timing_type, cond),
+      mIntrinsicRise{intrinsic_rise},
+      mIntrinsicFall{intrinsic_fall},
+      mSlopeRise{slope_rise},
+      mSlopeFall{slope_fall}
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiTimingGP();
+  ~CiTimingGP() = default;
 
 
 public:
@@ -263,10 +274,16 @@ private:
     ClibTime slope_fall,            ///< [in] 立ち下がりスロープ遅延
     ClibResistance rise_resistance, ///< [in] 立ち上がり遷移遅延パラメータ
     ClibResistance fall_resistance  ///< [in] 立ち下がり遷移遅延パラメータ
-  );
+  ) : CiTimingGP(timing_type, cond,
+		 intrinsic_rise, intrinsic_fall,
+		 slope_rise, slope_fall),
+      mRiseResistance(rise_resistance),
+      mFallResistance(fall_resistance)
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiTimingGeneric();
+  ~CiTimingGeneric() = default;
 
 
 public:
@@ -330,10 +347,16 @@ private:
     ClibTime slope_fall,                ///< [in] 立ち下がりスロープ遅延
     ClibResistance rise_pin_resistance, ///< [in] 立ち上がりピン抵抗
     ClibResistance fall_pin_resistance  ///< [in] 立ち下がりピン抵抗
-  );
+  ) : CiTimingGP(timing_type, cond,
+		 intrinsic_rise, intrinsic_fall,
+		 slope_rise, slope_fall),
+      mRisePinResistance{rise_pin_resistance},
+      mFallPinResistance{fall_pin_resistance}
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiTimingPiecewise();
+  ~CiTimingPiecewise() = default;
 
 
 public:
@@ -399,10 +422,10 @@ private:
   CiTimingLut1(
     ClibTimingType timing_type, ///< [in] タイミングの型
     const Expr& cond,           ///< [in] タイミング条件を表す式
-    ClibLut* cell_rise,         ///< [in] 立ち上がりセル遅延テーブル
-    ClibLut* cell_fall,         ///< [in] 立ち下がりセル遅延テーブル
-    ClibLut* rise_transition,   ///< [in] 立ち上がり遷移時間テーブル
-    ClibLut* fall_transition    ///< [in] 立ち下がり遷移時間テーブル
+    CiLut* cell_rise,         ///< [in] 立ち上がりセル遅延テーブル
+    CiLut* cell_fall,         ///< [in] 立ち下がりセル遅延テーブル
+    CiLut* rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
+    CiLut* fall_transition    ///< [in] 立ち下がり遷移遅延テーブル
   );
 
   /// @brief デストラクタ
@@ -449,16 +472,16 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がりセル遅延テーブル
-  const ClibLut* mClibRise;
+  unique_ptr<CiLut> mClibRise;
 
   // 立ち下がりセル遅延テーブル
-  const ClibLut* mClibFall;
+  unique_ptr<CiLut> mClibFall;
 
   // 立ち上がり遷移遅延テーブル
-  const ClibLut* mRiseTransition;
+  unique_ptr<CiLut> mRiseTransition;
 
   // 立ち下がり遷移遅延テーブル
-  const ClibLut* mFallTransition;
+  unique_ptr<CiLut> mFallTransition;
 
 };
 
@@ -478,10 +501,10 @@ private:
   CiTimingLut2(
     ClibTimingType timing_type, ///< [in] タイミングの型
     const Expr& cond,           ///< [in] タイミング条件を表す式
-    ClibLut* rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
-    ClibLut* fall_transition,   ///< [in] 立ち下がり遷移遅延テーブル
-    ClibLut* rise_propagation,  ///< [in] 立ち上がり伝搬遅延テーブル
-    ClibLut* fall_propagation   ///< [in] 立ち下がり伝搬遅延テーブル
+    CiLut* rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
+    CiLut* fall_transition,   ///< [in] 立ち下がり遷移遅延テーブル
+    CiLut* rise_propagation,  ///< [in] 立ち上がり伝搬遅延テーブル
+    CiLut* fall_propagation   ///< [in] 立ち下がり伝搬遅延テーブル
   );
 
   /// @brief デストラクタ
@@ -528,16 +551,16 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がり遷移遅延テーブル
-  const ClibLut* mRiseTransition;
+  unique_ptr<CiLut> mRiseTransition;
 
   // 立ち下がり遷移遅延テーブル
-  const ClibLut* mFallTransition;
+  unique_ptr<CiLut> mFallTransition;
 
   // 立ち上がり伝搬遅延テーブル
-  const ClibLut* mRisePropagation;
+  unique_ptr<CiLut> mRisePropagation;
 
   // 立ち下がり伝搬遅延テーブル
-  const ClibLut* mFallPropagation;
+  unique_ptr<CiLut> mFallPropagation;
 
 };
 

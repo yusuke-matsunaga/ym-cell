@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 /// @ingroup ClibGroup
 /// @class ClibLut ClibLut.h "ym/ClibLut.h"
-/// @brief ルックアップテーブルを表すクラス
+/// @brief ルックアップテーブル(LUT)を表すクラス
 //////////////////////////////////////////////////////////////////////
 class ClibLut
 {
@@ -37,36 +37,31 @@ public:
   const ClibLutTemplate&
   lut_template() const = 0;
 
-  /// @brief テンプレート番号の取得
-  virtual
-  int
-  template_id() const = 0;
-
   /// @brief 次元数の取得
   virtual
-  int
+  SizeType
   dimension() const = 0;
 
   /// @brief 変数型の取得
   virtual
   ClibVarType
   variable_type(
-    int var ///< [in] 変数番号 ( 0 <= var < dimension() )
+    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
   ) const = 0;
 
   /// @brief インデックス数の取得
   virtual
-  int
+  SizeType
   index_num(
-    int var ///< [in] 変数番号 ( 0 <= var < dimension() )
+    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
   ) const = 0;
 
   /// @brief インデックス値の取得
   virtual
   double
   index(
-    int var, ///< [in] 変数番号 ( 0 <= var < dimension() )
-    int pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+    SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
+    SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
   ) const = 0;
 
   /// @brief 格子点の値の取得
@@ -75,7 +70,7 @@ public:
   virtual
   double
   grid_value(
-    const vector<int>& pos_array ///< [in] pos_array 格子点座標
+    const vector<SizeType>& pos_array ///< [in] pos_array 格子点座標
   ) const = 0;
 
   /// @brief 値の取得

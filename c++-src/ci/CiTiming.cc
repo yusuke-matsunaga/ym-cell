@@ -3,13 +3,12 @@
 /// @brief CiTiming の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ci/CiTiming.h"
 #include "ci/CiCellLibrary.h"
-#include "ym/ClibLut.h"
+#include "ci/CiLut.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -19,12 +18,11 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] type タイミング条件の型
-// @param[in] cond タイミング条件を表す式
-CiTiming::CiTiming(ClibTimingType type,
-		   const Expr& cond) :
-  mType{type},
-  mCond{cond}
+CiTiming::CiTiming(
+  ClibTimingType type,
+  const Expr& cond
+) : mType{type},
+    mCond{cond}
 {
 }
 
@@ -34,8 +32,7 @@ CiTiming::~CiTiming()
 }
 
 // @brief ID番号の取得
-// @note timing = cell->timing(id); の時，timing->id() = id となる．
-int
+SizeType
 CiTiming::id() const
 {
   return mId;
@@ -49,7 +46,6 @@ CiTiming::type() const
 }
 
 // @brief タイミング条件式の取得
-// @note ない場合には定数1の式が返される．
 Expr
 CiTiming::timing_cond() const
 {
@@ -173,32 +169,6 @@ CiTiming::cell_fall() const
 // クラス CiTimingGP
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-// @param[in] timing_type タイミングの型
-// @param[in] cond タイミング条件を表す式
-// @param[in] intrinsic_rise 立ち上がり固有遅延
-// @param[in] intrinsic_fall 立ち下がり固有遅延
-// @param[in] slope_rise 立ち上がりスロープ遅延
-// @param[in] slope_fall 立ち下がりスロープ遅延
-CiTimingGP::CiTimingGP(ClibTimingType timing_type,
-		       const Expr& cond,
-		       ClibTime intrinsic_rise,
-		       ClibTime intrinsic_fall,
-		       ClibTime slope_rise,
-		       ClibTime slope_fall) :
-  CiTiming(timing_type, cond),
-  mIntrinsicRise(intrinsic_rise),
-  mIntrinsicFall(intrinsic_fall),
-  mSlopeRise(slope_rise),
-  mSlopeFall(slope_fall)
-{
-}
-
-// @brief デストラクタ
-CiTimingGP::~CiTimingGP()
-{
-}
-
 // @brief 立ち上がり固有遅延の取得
 ClibTime
 CiTimingGP::intrinsic_rise() const
@@ -232,37 +202,6 @@ CiTimingGP::slope_fall() const
 // クラス CiTimingGeneric
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-// @param[in] timing_type タイミングの型
-// @param[in] cond タイミング条件を表す式
-// @param[in] intrinsic_rise 立ち上がり固有遅延
-// @param[in] intrinsic_fall 立ち下がり固有遅延
-// @param[in] slope_rise 立ち上がりスロープ遅延
-// @param[in] slope_fall 立ち下がりスロープ遅延
-// @param[in] rise_resistance 立ち上がり遷移遅延パラメータ
-// @param[in] fall_resistance 立ち下がり遷移遅延パラメータ
-CiTimingGeneric::CiTimingGeneric(ClibTimingType timing_type,
-				 const Expr& cond,
-				 ClibTime intrinsic_rise,
-				 ClibTime intrinsic_fall,
-				 ClibTime slope_rise,
-				 ClibTime slope_fall,
-				 ClibResistance rise_resistance,
-				 ClibResistance fall_resistance) :
-  CiTimingGP(timing_type, cond,
-	     intrinsic_rise, intrinsic_fall,
-	     slope_rise, slope_fall),
-  mRiseResistance(rise_resistance),
-  mFallResistance(fall_resistance)
-{
-}
-
-// @brief デストラクタ
-CiTimingGeneric::~CiTimingGeneric()
-{
-}
-
-
 // @brief 立ち上がり遷移遅延の取得
 ClibResistance
 CiTimingGeneric::rise_resistance() const
@@ -281,34 +220,6 @@ CiTimingGeneric::fall_resistance() const
 //////////////////////////////////////////////////////////////////////
 // クラス CiTimingPiecewise
 //////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] timing_type タイミングの型
-// @param[in] cond タイミング条件を表す式
-// @param[in] intrinsic_rise 立ち上がり固有遅延
-// @param[in] intrinsic_fall 立ち下がり固有遅延
-// @param[in] slope_rise 立ち上がりスロープ遅延
-// @param[in] slope_fall 立ち下がりスロープ遅延
-CiTimingPiecewise::CiTimingPiecewise(ClibTimingType timing_type,
-				     const Expr& cond,
-				     ClibTime intrinsic_rise,
-				     ClibTime intrinsic_fall,
-				     ClibTime slope_rise,
-				     ClibTime slope_fall,
-				     ClibResistance rise_pin_resistance,
-				     ClibResistance fall_pin_resistance) :
-  CiTimingGP(timing_type, cond,
-	     intrinsic_rise, intrinsic_fall,
-	     slope_rise, slope_fall),
-  mRisePinResistance(rise_pin_resistance),
-  mFallPinResistance(fall_pin_resistance)
-{
-}
-
-// @brief デストラクタ
-CiTimingPiecewise::~CiTimingPiecewise()
-{
-}
 
 // @brief 立ち上がり遷移遅延の取得
 ClibResistance
@@ -346,23 +257,18 @@ CiTimingPiecewise::fall_delay_intercept() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] timing_type タイミングの型
-// @param[in] cond タイミング条件を表す式
-// @param[in] cell_rise 立ち上がりセル遅延テーブル
-// @param[in] cell_fall 立ち下がりセル遅延テーブル
-// @param[in] rise_transition 立ち上がり遷移遅延テーブル
-// @param[in] fall_transition 立ち下がり遷移遅延テーブル
-CiTimingLut1::CiTimingLut1(ClibTimingType timing_type,
-			   const Expr& cond,
-			   ClibLut* cell_rise,
-			   ClibLut* cell_fall,
-			   ClibLut* rise_transition,
-			   ClibLut* fall_transition) :
-  CiTiming(timing_type, cond),
-  mClibRise(cell_rise),
-  mClibFall(cell_fall),
-  mRiseTransition(rise_transition),
-  mFallTransition(fall_transition)
+CiTimingLut1::CiTimingLut1(
+  ClibTimingType timing_type, ///< [in] タイミングの型
+  const Expr& cond,           ///< [in] タイミング条件を表す式
+  CiLut* cell_rise,         ///< [in] 立ち上がりセル遅延テーブル
+  CiLut* cell_fall,         ///< [in] 立ち下がりセル遅延テーブル
+  CiLut* rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
+  CiLut* fall_transition    ///< [in] 立ち下がり遷移遅延テーブル
+) : CiTiming(timing_type, cond),
+    mClibRise{unique_ptr<CiLut>{cell_rise}},
+    mClibFall{unique_ptr<CiLut>{cell_fall}},
+    mRiseTransition{unique_ptr<CiLut>{rise_transition}},
+    mFallTransition{unique_ptr<CiLut>{fall_transition}}
 {
 }
 
@@ -405,23 +311,18 @@ CiTimingLut1::fall_transition() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] timing_type タイミングの型
-// @param[in] cond タイミング条件を表す式
-// @param[in] rise_transition 立ち上がり遷移遅延テーブル
-// @param[in] fall_transition 立ち下がり遷移遅延テーブル
-// @param[in] rise_propagation 立ち上がり伝搬遅延テーブル
-// @param[in] fall_propagation 立ち下がり伝搬遅延テーブル
-CiTimingLut2::CiTimingLut2(ClibTimingType timing_type,
-			   const Expr& cond,
-			   ClibLut* rise_transition,
-			   ClibLut* fall_transition,
-			   ClibLut* rise_propagation,
-			   ClibLut* fall_propagation) :
-  CiTiming(timing_type, cond),
-  mRiseTransition(rise_transition),
-  mFallTransition(fall_transition),
-  mRisePropagation(rise_propagation),
-  mFallPropagation(fall_propagation)
+CiTimingLut2::CiTimingLut2(
+  ClibTimingType timing_type, ///< [in] タイミングの型
+  const Expr& cond,           ///< [in] タイミング条件を表す式
+  CiLut* rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
+  CiLut* fall_transition,   ///< [in] 立ち下がり遷移遅延テーブル
+  CiLut* rise_propagation,  ///< [in] 立ち上がり伝搬遅延テーブル
+  CiLut* fall_propagation   ///< [in] 立ち下がり伝搬遅延テーブル
+) : CiTiming(timing_type, cond),
+    mRiseTransition{unique_ptr<CiLut>{rise_transition}},
+    mFallTransition{unique_ptr<CiLut>{fall_transition}},
+    mRisePropagation{unique_ptr<CiLut>{rise_propagation}},
+    mFallPropagation{unique_ptr<CiLut>{fall_propagation}}
 {
 }
 

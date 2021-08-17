@@ -38,10 +38,22 @@ protected:
     const Expr& data_in,                     ///< [in] "data_in" 関数の式
     const Expr& enable,                      ///< [in] "enable" 関数の式
     const Expr& enable_also                  ///< [in] "enable_also" 関数の式
-  );
+  ) : CiCell(library, name, area,
+	     input_list,
+	     output_list,
+	     inout_list,
+	     vector<CiInternalPin*>{},
+	     bus_list,
+	     bundle_list,
+	     timing_list),
+      mDataIn{data_in},
+      mEnable{enable},
+      mEnable2{enable_also}
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiLatchCell();
+  ~CiLatchCell() = default;
 
 
 public:
@@ -52,6 +64,10 @@ public:
   /// @brief ラッチセルの時に true を返す．
   bool
   is_latch() const override;
+
+  /// @brief ラッチセルの場合にFFのピン情報を得る．
+  ClibLatchInfo
+  latch_info() const override;
 
   /// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
   /// @note それ以外の型の場合の返り値は不定
@@ -112,10 +128,22 @@ protected:
     const Expr& enable,			     ///< [in] "enable" 関数の式
     const Expr& enable_also,		     ///< [in] "enable_also" 関数の式
     const Expr& clear                        ///< [in] "clear" 関数の式
-  );
+  ) : CiLatchCell(library, name, area,
+		  input_list,
+		  output_list,
+		  inout_list,
+		  bus_list,
+		  bundle_list,
+		  timing_list,
+		  data_in,
+		  enable,
+		  enable_also),
+      mClear{clear}
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiLatchRCell();
+  ~CiLatchRCell() = default;
 
 
 public:
@@ -169,11 +197,23 @@ protected:
     const Expr& data_in,		     ///< [in] "data_in" 関数の式
     const Expr& enable,			     ///< [in] "enable" 関数の式
     const Expr& enable_also,		     ///< [in] "enable_also" 関数の式
-    const Expr& preset                       ///< [in] "preset" 関数の式
-  );
+    const Expr& preset			     ///< [in] "preset" 関数の式
+  ) : CiLatchCell(library, name, area,
+		  input_list,
+		  output_list,
+		  inout_list,
+		  bus_list,
+		  bundle_list,
+		  timing_list,
+		  data_in,
+		  enable,
+		  enable_also),
+      mPreset{preset}
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiLatchSCell();
+  ~CiLatchSCell() = default;
 
 
 public:
@@ -227,14 +267,31 @@ protected:
     const Expr& data_in,		     ///< [in] "data_in" 関数の式
     const Expr& enable,			     ///< [in] "enable" 関数の式
     const Expr& enable_also,		     ///< [in] "enable_also" 関数の式
-    const Expr& clear,                       ///< [in] "clear" 関数の式
-    const Expr& preset,                      ///< [in] "preset" 関数の式
-    int clear_preset_var1,                   ///< [in] clear と preset が同時にオンになったときの値1
-    int clear_preset_var2                    ///< [in] clear と preset が同時にオンになったときの値1
-  );
+    const Expr& clear,			     ///< [in] "clear" 関数の式
+    const Expr& preset,		             ///< [in] "preset" 関数の式
+    SizeType clear_preset_var1,  ///< [in] clear と preset が同時にオンになったときの値1
+    SizeType clear_preset_var2   ///< [in] clear と preset が同時にオンになったときの値2
+  ) : CiLatchRCell(library, name, area,
+		   input_list,
+		   output_list,
+		   inout_list,
+		   bus_list,
+		   bundle_list,
+		   timing_list,
+		   data_in,
+		   enable,
+		   enable_also,
+		   clear),
+      mPreset{preset},
+      mClearPresetVal{
+	static_cast<ymuint8>(clear_preset_var1),
+	static_cast<ymuint8>(clear_preset_var2)
+      }
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiLatchSRCell();
+  ~CiLatchSRCell() = default;
 
 
 public:
@@ -254,15 +311,17 @@ public:
   /// @brief clear_preset_var1 の取得
   /// @retval 0 "L"
   /// @retval 1 "H"
-  /// @note FFセルとラッチセルの時に意味を持つ．
-  int
+  ///
+  /// FFセルとラッチセルの時に意味を持つ．
+  SizeType
   clear_preset_var1() const override;
 
   /// @brief clear_preset_var2 の取得
   /// @retval 0 "L"
   /// @retval 1 "H"
-  /// @note FFセルとラッチセルの時に意味を持つ．
-  int
+  ///
+  /// FFセルとラッチセルの時に意味を持つ．
+  SizeType
   clear_preset_var2() const override;
 
 

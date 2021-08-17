@@ -32,10 +32,9 @@ public:
 
   /// @brief コンストラクタ
   LcGroup(
-    int id ///< [in] ID番号
-  ) :  mId(id),
-       mParent(nullptr),
-       mCellGroup(nullptr)
+    SizeType id ///< [in] ID番号
+  ) : mId{id},
+      mParent{nullptr}
   {
   }
 
@@ -46,17 +45,17 @@ public:
 public:
 
   /// @brief ID番号を返す．
-  int
+  SizeType
   id() const
   {
     return mId;
   }
 
   /// @brief 親の LcClass を返す．
-  LcClass*
+  LcClass&
   parent() const
   {
-    return mParent;
+    return *mParent;
   }
 
   /// @brief 親のクラスに対する変換マップを返す．
@@ -64,13 +63,6 @@ public:
   map() const
   {
     return mMap;
-  }
-
-  /// @brief 実体を返す．
-  ClibCellGroup*
-  cell_group() const
-  {
-    return mCellGroup;
   }
 
   /// @brief 属しているセルのリストを返す．
@@ -96,16 +88,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ID番号
-  int mId;
+  SizeType mId;
 
   // 親の LcClass
   LcClass* mParent;
 
   // 親のクラスに対する変換マップ
   NpnMapM mMap;
-
-  // 実体のオブジェクト
-  ClibCellGroup* mCellGroup;
 
   // セルのリスト
   vector<CiCell*> mCellList;

@@ -3,13 +3,14 @@
 /// @brief LcSignature の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2017 Yusuke Matsunaga
+/// Copyright (C) 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "lc/LcSignature.h"
 #include "ym/ClibCell.h"
 #include "ym/Expr.h"
+#include "ym/NpnMapM.h"
+#include "ym/NpnMap.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
@@ -21,7 +22,7 @@ BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
 // @brief 変換付きのコピーコンストラクタ
 LcSignature::LcSignature(
   const LcSignature& src,
-  const NpnMapM& xmap
+  const NpnMap& xmap
 ) : mTypeBits{src.mTypeBits},
     mInputNum{src.mInputNum},
     mOutputNum{src.mOutputNum},
@@ -33,8 +34,10 @@ LcSignature::LcSignature(
     mOutputFunc{src.mOutputFunc},
     mTristateFunc{src.mTristateFunc}
 {
-  // あれ？ xmap 使ってない！
-  ASSERT_NOT_REACHED;
+  ASSERT_COND( mOutputNum == 1 &&
+	       src.type() == LcType::Logic &&
+	       !src.is_tristate(0) );
+  mOutputFunc[0] = mOutputFunc[0].xform(xmap);
 }
 
 // @brief 1出力の論理セルのシグネチャを作るコンストラクタ
@@ -43,23 +46,16 @@ LcSignature::LcSignature(
   const Expr& expr
 ) : mInputNum{expr.input_size()},
     mOutputNum{1},
-    mOutputBits(mOutputNum, 0U),
-    mOutputFunc(mOutputNum),
-    mTristateFunc(mOutputNum)
+    mOutputBits{0U},
+    mOutputFunc{expr.make_tv()},
+    mTristateFunc{TvFunc::make_zero(mInputNum)}
 {
   set_Logic();
-  mOutputBits[0] = 1U;
-  mOutputFunc[0] = expr.make_tv();
 }
 
 // @brief 単純なFFセル/ラッチセルのシグネチャを作るコンストラクタ
-// @param[in] type 種類 (Type::FF/Type::Latch)
-// @param[in] has_q Q出力の有無
-// @param[in] has_xq 反転Q出力の有無
-// @param[in] has_clear クリア端子の有無
-// @param[in] has_preset プリセット端子の有無
 LcSignature::LcSignature(
-  Type type,
+  LcType type,
   bool has_q,
   bool has_xq,
   bool has_clear,
@@ -69,10 +65,10 @@ LcSignature::LcSignature(
     mOutputFunc(mOutputNum),
     mTristateFunc(mOutputNum)
 {
-  if ( type == Type::FF ) {
+  if ( type == LcType::FF ) {
     set_FF();
   }
-  else if ( type == Type::Latch ) {
+  else if ( type == LcType::Latch ) {
     set_Latch();
   }
   else {
@@ -85,7 +81,7 @@ LcSignature::LcSignature(
   VarId data_var(3);
   VarId clear_var;
   VarId preset_var;
-  int ni = 4;
+  SizeType ni = 4;
   if ( has_clear ) {
     clear_var = VarId(ni);
     ++ ni;
@@ -96,7 +92,7 @@ LcSignature::LcSignature(
     ++ ni;
     mTypeBits.set(3, 1);
   }
-  mInputNum = ni - 2;
+  mInputNum = ni - 2; // q と xq の入力を除く
   mClockFunc = TvFunc::make_posi_literal(ni, clock_var);
   mNextStateFunc = TvFunc::make_posi_literal(ni, data_var);
   if ( has_clear ) {
@@ -107,19 +103,20 @@ LcSignature::LcSignature(
   }
   int no = 0;
   if ( has_q ) {
-    mOutputBits[no] = 1U;
+    mOutputBits[no][0] = true;
+    mOutputBits[no][1] = false;
     mOutputFunc[no] = TvFunc::make_posi_literal(ni, iq_var);
     ++ no;
   }
   if ( has_xq ) {
-    mOutputBits[no] = 1U;
-    mOutputFunc[no] = TvFunc::make_posi_literal(ni, iqn_var);
+    mOutputBits[no][0] = true;
+    mOutputBits[no][1] = false;
+    mOutputFunc[no] = TvFunc::make_nega_literal(ni, iq_var);
     ++ no;
   }
 }
 
 // @brief コンストラクタ
-// @param[in] cell セル
 LcSignature::LcSignature(
   const ClibCell* cell
 ) : mInputNum{cell->input_num()},
@@ -128,7 +125,7 @@ LcSignature::LcSignature(
     mOutputFunc(mOutputNum),
     mTristateFunc(mOutputNum)
 {
-  int ni = mInputNum;
+  auto ni = mInputNum;
   if ( cell->is_logic() ) {
     set_Logic();
   }
@@ -154,13 +151,13 @@ LcSignature::LcSignature(
     }
   }
 
-  for (int i = 0; i < mOutputNum; ++ i) {
+  for ( auto i = 0; i < mOutputNum; ++ i ) {
     if ( cell->has_logic(i) ) {
-      mOutputBits[i] |= 1U;
+      mOutputBits[i].set(0);
       mOutputFunc[i] = cell->logic_expr(i).make_tv(ni);
     }
     if ( cell->has_tristate(i) ) {
-      mOutputBits[i] |= 2U;
+      mOutputBits[i].set(1);
       mTristateFunc[i] = cell->tristate_expr(i).make_tv(ni);
     }
   }
@@ -175,8 +172,10 @@ tvfunc_to_str(
   ostream& buf
 )
 {
-  int n = f.nblk();
-  for (int i = 0; i < n; ++ i) {
+  // 単純に内部の64ビット符号なし整数を
+  // 16進数で出力する．
+  auto n = f.nblk();
+  for ( auto i = 0; i < n; ++ i ) {
     ymuint64 b = f.raw_data(i);
     buf << hex << b << dec;
   }
@@ -191,7 +190,7 @@ LcSignature::str() const
   ostringstream buf;
   buf << mTypeBits << ":"
       << mInputNum << ":" << mOutputNum << ":";
-  if ( type() != Type::Logic ) {
+  if ( type() != LcType::Logic ) {
     tvfunc_to_str(mClockFunc, buf);
     buf << ":";
     tvfunc_to_str(mNextStateFunc, buf);
@@ -205,7 +204,7 @@ LcSignature::str() const
     }
     buf << ":";
   }
-  for (int i = 0; i < mOutputNum; ++ i) {
+  for ( int i = 0; i < mOutputNum; ++ i ) {
     if ( has_logic(i) ) {
       tvfunc_to_str(mOutputFunc[i], buf);
     }
@@ -250,7 +249,7 @@ LcSignature::operator==(
     return false;
   }
 
-  for (int i = 0; i < mOutputNum; ++ i ) {
+  for ( SizeType i = 0; i < mOutputNum; ++ i ) {
     if ( mOutputBits[i] != right.mOutputBits[i] ) {
       return false;
     }
@@ -264,6 +263,5 @@ LcSignature::operator==(
 
   return true;
 }
-
 
 END_NAMESPACE_YM_CLIB_LIBCOMP

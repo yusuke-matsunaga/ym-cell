@@ -39,7 +39,7 @@ public:
   ///
   /// timing = cell->timing(id); の時，timing->id() = id となる．
   virtual
-  int
+  SizeType
   id() const = 0;
 
   /// @brief 型の取得

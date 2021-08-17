@@ -1,43 +1,46 @@
 ﻿#ifndef CIPIN_H
 #define CIPIN_H
 
-/// @file CiCellPin.h
-/// @brief CiCellPin のヘッダファイル
+/// @file CiPin.h
+/// @brief CiPin のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ClibCellPin.h"
+#include "ym/ClibPin.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibCapacitance.h"
-#include "ym/Expr.h"
 #include "ym/ShString.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
-class CiCell;
-
 //////////////////////////////////////////////////////////////////////
-/// @class ClibCellPinBase CiCellPin.h "CiCellPin.h"
+/// @class ClibCellPinBase CiPin.h "CiPin.h"
 /// @brief ピンの基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiCellPin :
-  public ClibCellPin
+class CiPin :
+  public ClibPin
 {
   friend class CiCell;
-  friend class CiCellPinHash;
+  friend class CiPinHash;
 
 protected:
 
   /// @brief コンストラクタ
-  CiCellPin(
-    const ShString& name ///< [in] ピン名
-  );
+  /// @param[in] name ピン名
+  CiPin(
+    const ShString& name
+  ) : mName{name}
+  {
+  }
+
+
+public:
 
   /// @brief デストラクタ
-  ~CiCellPin();
+  ~CiPin() = default;
 
 
 public:
@@ -45,13 +48,16 @@ public:
   // 共通属性
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ピン番号を返す．
-  int
-  pin_id() const override;
-
   /// @brief ピン名を返す．
   string
   name() const override;
+
+  /// @brief ピン名を返す．
+  ShString
+  _name() const
+  {
+    return mName;
+  }
 
   /// @brief 入力ピンの時に true を返す．
   bool
@@ -76,8 +82,9 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入力ピン番号を返す．
-  /// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-  int
+  ///
+  /// 入力ピンもしくは入出力ピンの時のみ意味を持つ．
+  SizeType
   input_id() const override;
 
   /// @brief 負荷容量を返す．
@@ -99,25 +106,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 出力ピン番号を返す．
-  /// @note 出力ピンもしくは入出力ピンの時のみ意味を持つ．
-  int
+  ///
+  /// 出力ピンもしくは入出力ピンの時のみ意味を持つ．
+  SizeType
   output_id() const override;
-
-  /// @brief 論理式を持っているときに true を返す．
-  bool
-  has_function() const override;
-
-  /// @brief 機能を表す論理式を返す．
-  Expr
-  function() const override;
-
-  /// @brief three_state 属性を持っているときに true を返す．
-  bool
-  has_three_state() const override;
-
-  /// @brief three_state 論理式を返す．
-  Expr
-  three_state() const override;
 
   /// @brief 最大ファンアウト容量を返す．
   ClibCapacitance
@@ -150,8 +142,9 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内部ピン番号を返す．
-  /// @note 内部ピンの時のみ意味を持つ．
-  int
+  ///
+  /// 内部ピンの時のみ意味を持つ．
+  SizeType
   internal_id() const override;
 
 
@@ -163,7 +156,7 @@ protected:
   /// @brief dump 用の共通情報を出力する．
   void
   dump_common(
-    ostream& s ///< [in] 出力ストリーム
+    ostream& s ///< [in] ストリーム
   ) const;
 
 
@@ -172,15 +165,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ハッシュ表のためのリンク
-  CiCellPin* mLink;
-
-  // 親のセル
-  CiCell* mCell;
-
-  // ピン番号
-  int mId;
-
   // 名前
   ShString mName;
 
@@ -188,11 +172,11 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class CiInputPin CiCellPin.h "CiCellPin.h"
+/// @class CiInputPin CiPin.h "CiPin.h"
 /// @brief セルの入力ピンを表すクラス
 //////////////////////////////////////////////////////////////////////
 class CiInputPin :
-  public CiCellPin
+  public CiPin
 {
   friend class CiCell;
   friend class CiCellLibrary;
@@ -205,10 +189,15 @@ private:
     ClibCapacitance capacitance,      ///< [in] 負荷容量
     ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
     ClibCapacitance fall_capacitance  ///< [in] 立ち下がり時の負荷容量
-  );
+  ) : CiPin(name),
+      mCapacitance{capacitance},
+      mRiseCapacitance{rise_capacitance},
+      mFallCapacitance{fall_capacitance}
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiInputPin();
+  ~CiInputPin() = default;
 
 
 public:
@@ -231,8 +220,9 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入力ピン番号を返す．
-  /// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-  int
+  ///
+  /// 入力ピンもしくは入出力ピンの時のみ意味を持つ．
+  SizeType
   input_id() const override;
 
   /// @brief 負荷容量を返す．
@@ -266,7 +256,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 入力ピン番号
-  int mInputId;
+  SizeType mInputId;
 
   // 負荷
   ClibCapacitance mCapacitance;
@@ -281,11 +271,11 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class CiOutputPin CiCellPin.h "CiCellPin.h"
+/// @class CiOutputPin CiPin.h "CiPin.h"
 /// @brief セルの出力ピンと入出力ピンの基底クラス
 //////////////////////////////////////////////////////////////////////
 class CiOutputPinBase :
-  public CiCellPin
+  public CiPin
 {
   friend class CiCell;
 
@@ -294,19 +284,24 @@ protected:
   /// @brief コンストラクタ
   CiOutputPinBase(
     const ShString& name,            ///< [in] ピン名
-    bool has_logic,                  ///< [in] 論理式を持つとき true にするフラグ
-    const Expr& logic_expr,          ///< [in] 論理式
-    const Expr& tristate_expr,       ///< [in] tristate 条件式
     ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
     ClibCapacitance min_fanout,      ///< [in] 最小ファンアウト容量
     ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
     ClibCapacitance min_capacitance, ///< [in] 最小負荷容量
     ClibTime max_transition,         ///< [in] 最大遷移時間
     ClibTime min_transition          ///< [in] 最小遷移時間
-  );
+  ) : CiPin(name),
+      mMaxFanout{max_fanout},
+      mMinFanout{min_fanout},
+      mMaxCapacitance{max_capacitance},
+      mMinCapacitance{min_capacitance},
+      mMaxTransition{max_transition},
+      mMinTransition{min_transition}
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiOutputPinBase();
+  ~CiOutputPinBase() = default;
 
 
 public:
@@ -315,25 +310,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 出力ピン番号を返す．
-  /// @note 出力ピンもしくは入出力ピンの時のみ意味を持つ．
-  int
+  ///
+  /// 出力ピンもしくは入出力ピンの時のみ意味を持つ．
+  SizeType
   output_id() const override;
-
-  /// @brief 論理式を持っているときに true を返す．
-  bool
-  has_function() const override;
-
-  /// @brief 機能を表す論理式を返す．
-  Expr
-  function() const override;
-
-  /// @brief three_state 属性を持っているときに true を返す．
-  bool
-  has_three_state() const override;
-
-  /// @brief three_state 論理式を返す．
-  Expr
-  three_state() const override;
 
   /// @brief 最大ファンアウト容量を返す．
   ClibCapacitance
@@ -366,16 +346,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 出力ピン番号
-  int mOutputId;
-
-  // 論理式を持っているかどうかを表すフラグ
-  ymuint8 mHasFunction;
-
-  // 出力の論理式
-  Expr mFunction;
-
-  // three_state 属性の論理式
-  Expr mThreeState;
+  SizeType mOutputId;
 
   // ファンアウトの負荷
   ClibCapacitance mFanoutLoad;
@@ -402,7 +373,7 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class CiOutputPin CiCellPin.h "CiCellPin.h"
+/// @class CiOutputPin CiPin.h "CiPin.h"
 /// @brief セルの出力ピンを表すクラス
 //////////////////////////////////////////////////////////////////////
 class CiOutputPin :
@@ -416,19 +387,21 @@ private:
   /// @brief コンストラクタ
   CiOutputPin(
     const ShString& name,            ///< [in] ピン名
-    bool has_logic,                  ///< [in] 論理式を持つとき true にするフラグ
-    const Expr& logic_expr,          ///< [in] 論理式
-    const Expr& tristate_expr,       ///< [in] tristate 条件式
     ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
-    ClibCapacitance min_fanout,      ///< [in] 最小ファンアウト容量
+    ClibCapacitance min_fanout,      ///< [in] 最大ファンアウト容量
     ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
-    ClibCapacitance min_capacitance, ///< [in] 最小負荷容量
+    ClibCapacitance min_capacitance, ///< [in] 最大負荷容量
     ClibTime max_transition,         ///< [in] 最大遷移時間
-    ClibTime min_transition          ///< [in] 最小遷移時間
-  );
+    ClibTime min_transition          ///< [in] 最大遷移時間
+  ) : CiOutputPinBase(name,
+		      max_fanout, min_fanout,
+		      max_capacitance, min_capacitance,
+		      max_transition, min_transition)
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiOutputPin();
+  ~CiOutputPin() = default;
 
 
 public:
@@ -460,7 +433,7 @@ public:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class CiInoutPin CiCellPin.h "CiCellPin.h"
+/// @class CiInoutPin CiPin.h "CiPin.h"
 /// @brief セルの入出力ピンを表すクラス
 /// @note 多重継承はオーバーヘッドがかかるので愚直な実装を用いている．
 //////////////////////////////////////////////////////////////////////
@@ -475,22 +448,27 @@ private:
   /// @brief コンストラクタ
   CiInoutPin(
     const ShString& name,             ///< [in] ピン名
-    bool has_logic,                   ///< [in] 論理式を持つとき true にするフラグ
-    const Expr& logic_expr,           ///< [in] 論理式
-    const Expr& tristate_expr,        ///< [in] tristate 条件式
     ClibCapacitance capacitance,      ///< [in] 負荷容量
     ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
-    ClibCapacitance fall_capacitance, ///< [in] 立ち下がり時の負荷容量
-    ClibCapacitance max_fanout,       ///< [in] 最大ファンアウト容量
-    ClibCapacitance min_fanout,       ///< [in] 最小ファンアウト容量
+    ClibCapacitance fall_capacitance, ///< [in] 立ち上がり時の負荷容量
+    ClibCapacitance max_fanout,	      ///< [in] 最大ファンアウト容量
+    ClibCapacitance min_fanout,	      ///< [in] 最大ファンアウト容量
     ClibCapacitance max_capacitance,  ///< [in] 最大負荷容量
-    ClibCapacitance min_capacitance,  ///< [in] 最小負荷容量
-    ClibTime max_transition,          ///< [in] 最大遷移時間
-    ClibTime min_transition           ///< [in] 最小遷移時間
-  );
+    ClibCapacitance min_capacitance,  ///< [in] 最大負荷容量
+    ClibTime max_transition,	      ///< [in] 最大遷移時間
+    ClibTime min_transition	      ///< [in] 最大遷移時間
+  ) : CiOutputPinBase(name,
+		      max_fanout, min_fanout,
+		      max_capacitance, min_capacitance,
+		      max_transition, min_transition),
+      mCapacitance{capacitance},
+      mRiseCapacitance{rise_capacitance},
+      mFallCapacitance{fall_capacitance}
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiInoutPin();
+  ~CiInoutPin() = default;
 
 
 public:
@@ -513,8 +491,9 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入力ピン番号を返す．
-  /// @note 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-  int
+  ///
+  /// 入力ピンもしくは入出力ピンの時のみ意味を持つ．
+  SizeType
   input_id() const override;
 
   /// @brief 負荷容量を返す．
@@ -548,7 +527,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 入力ピン番号
-  int mInputId;
+  SizeType mInputId;
 
   // 負荷
   ClibCapacitance mCapacitance;
@@ -563,11 +542,11 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class CiInternalPin CiCellPin.h "CiCellPin.h"
+/// @class CiInternalPin CiPin.h "CiPin.h"
 /// @brief セルの内部ピンを表すクラス
 //////////////////////////////////////////////////////////////////////
 class CiInternalPin :
-  public CiCellPin
+  public CiPin
 {
   friend class CiCell;
   friend class CiCellLibrary;
@@ -577,10 +556,12 @@ private:
   /// @brief コンストラクタ
   CiInternalPin(
     const ShString& name ///< [in] ピン名
-  );
+  ) : CiPin(name)
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiInternalPin();
+  ~CiInternalPin() = default;
 
 
 public:
@@ -603,8 +584,9 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内部ピン番号を返す．
-  /// @note 内部ピンの時のみ意味を持つ．
-  int
+  ///
+  /// 内部ピンの時のみ意味を持つ．
+  SizeType
   internal_id() const override;
 
 
@@ -626,7 +608,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 内部ピン番号
-  int mInternalId;
+  SizeType mInternalId;
 
 };
 

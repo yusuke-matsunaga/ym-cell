@@ -45,7 +45,7 @@ public:
   /// @brief セルのグループ化，クラス化を行う．
   void
   compile(
-    const vector<CiCell*>& cell_list ///< [in] セルのリスト
+    const vector<unique_ptr<CiCell>>& cell_list ///< [in] セルのリスト
   );
 
   /// @brief パタングラフの情報を取り出す．
@@ -65,23 +65,23 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief セルグループの数を返す．
-  int
+  SizeType
   group_num() const;
 
   /// @brief セルグループを返す．
-  LcGroup*
+  const LcGroup&
   group(
-    int id ///< [in] セルグループ番号 ( 0 <= id < group_num() )
+    SizeType id ///< [in] セルグループ番号 ( 0 <= id < group_num() )
   ) const;
 
   /// @brief NPN同値クラスの数を返す．
-  int
+  SizeType
   npn_class_num() const;
 
   /// @brief NPN同値クラスを返す．
-  LcClass*
+  const LcClass&
   npn_class(
-    int id ///< [in] NPN同値クラス番号 ( 0 <= id < npn_class_num() )
+    SizeType id ///< [in] NPN同値クラス番号 ( 0 <= id < npn_class_num() )
   ) const;
 
   /// @brief 定義済みの論理グループ番号を返す．
@@ -91,15 +91,15 @@ public:
   /// - 1: 定数1
   /// - 2: バッファ
   /// - 3: インバーター
-  int
+  SizeType
   logic_group(
-    int id ///< [in] 番号
+    SizeType id ///< [in] 番号
   ) const;
 
   /// @brief 定義済みのFFクラス番号を返す．
   ///
   /// has_q == false && has_xq == false は不適
-  int
+  SizeType
   ff_class(
     bool has_q,     ///< [in] Q端子の有無
     bool has_xq,    ///< [in] 反転Q端子の有無
@@ -110,7 +110,7 @@ public:
   /// @brief 定義済みのラッチクラス番号を返す．
   ///
   /// has_q == false && has_xq == false は不適
-  int
+  SizeType
   latch_class(
     bool has_q,     ///< [in] Q端子の有無
     bool has_xq,    ///< [in] 反転Q端子の有無
@@ -142,10 +142,16 @@ private:
     CiCell* cell ///< [in] セル
   );
 
+  /// @brief セルに対応する LcGroup を求める．
+  LcGroup&
+  _find_group(
+    CiCell* cell ///< [in] セル
+  );
+
   /// @brief シグネチャに対応する LcGroup を求める．
   ///
   /// なければ新規に作る．
-  LcGroup*
+  LcGroup&
   _find_group(
     const LcSignature& sig ///< [in] シグネチャ
   );
@@ -154,7 +160,7 @@ private:
   ///
   /// こちらは1出力の論理セル用
   /// 内部で _reg_pat() を呼ぶ．
-  LcGroup*
+  LcGroup&
   _find_group(
     const Expr& expr ///< [in] 論理式
   );
@@ -169,24 +175,18 @@ private:
     const LcSignature& rep_sig ///< [in] 代表シグネチャ
   );
 
-  /// @brief 正規変換を求める．
-  /// @return 正規シグネチャへの変換マップを返す．
-  NpnMapM
-  _cannonical_map(
-    const LcSignature& sig ///< [in] シグネチャ
-  );
-
-  /// @brief 同位体変換リストを求める．
-  vector<NpnMapM>
-  _find_idmap_list(
-    const LcSignature& sig ///< [in] シグネチャ
-  );
-
   /// @brief expr から生成されるパタンを登録する．
   void
   _reg_expr(
-    const Expr& expr, ///< [in] 論理式
-    LcGroup* fgroup   ///< [in] expr の属している機能グループ
+    const Expr& expr,     ///< [in] 論理式
+    const LcGroup& fgroup ///< [in] expr の属している機能グループ
+  );
+
+  /// @brief 同位体変換リストを求める．
+  static
+  vector<NpnMapM>
+  _find_idmap_list(
+    const LcSignature& sig ///< [in] シグネチャ
   );
 
 
@@ -210,13 +210,13 @@ private:
   unordered_map<string, int> mClassMap;
 
   // 定義済みの論理グループ
-  int mLogicGroup[4];
+  SizeType mLogicGroup[4];
 
   // 定義済みのFFクラス番号
-  int mFFClass[12];
+  SizeType mFFClass[12];
 
   // 定義済みのラッチクラス番号
-  int mLatchClass[12];
+  SizeType mLatchClass[12];
 
   // パタングラフを管理するオブジェクト
   LcPatMgr mPatMgr;

@@ -3,9 +3,8 @@
 /// @brief CiCellHash の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ci/CiCellHash.h"
 #include "ci/CiCell.h"
@@ -18,11 +17,11 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CiCellHash::CiCellHash() :
-  mSize(0),
-  mTable(nullptr),
-  mLimit(0),
-  mNum(0)
+CiCellHash::CiCellHash(
+) : mSize{0},
+    mTable{nullptr},
+    mLimit{0},
+    mNum{0}
 {
   alloc_table(256);
 }
@@ -34,20 +33,21 @@ CiCellHash::~CiCellHash()
 }
 
 // @brief セルを追加する．
-// @param[in] cell 追加するセル
 void
-CiCellHash::add(CiCell* cell)
+CiCellHash::add(
+  CiCell* cell
+)
 {
   if ( mNum > mLimit ) {
     // テーブルを拡張する．
-    int old_size = mSize;
-    CiCell** old_table = mTable;
+    auto old_size = mSize;
+    auto old_table = mTable;
     alloc_table(old_size << 1);
-    for ( int i = 0; i < old_size; ++ i ) {
-      for ( CiCell* cell = old_table[i]; cell; ) {
-	CiCell* tmp = cell;
+    for ( auto i = 0; i < old_size; ++ i ) {
+      for ( auto cell = old_table[i]; cell; ) {
+	auto tmp = cell;
 	cell = tmp->mLink;
-	int pos = tmp->mName.hash() % mSize;
+	auto pos = tmp->mName.hash() % mSize;
 	tmp->mLink = mTable[pos];
 	mTable[pos] = tmp;
       }
@@ -55,38 +55,37 @@ CiCellHash::add(CiCell* cell)
     delete [] old_table;
   }
 
-  int pos = cell->mName.hash() % mSize;
+  auto pos = cell->mName.hash() % mSize;
   cell->mLink = mTable[pos];
   mTable[pos] = cell;
   ++ mNum;
 }
 
 // @brief セル番号を取り出す．
-// @param[in] name 名前
-// @return name という名前のセルのセル番号を返す．
-//
-// なければ -1 を返す．
-int
-CiCellHash::get(ShString name) const
+SizeType
+CiCellHash::get(
+  ShString name
+) const
 {
-  int pos = name.hash() % mSize;
-  for ( CiCell* cell = mTable[pos]; cell; cell = cell->mLink ) {
+  auto pos = name.hash() % mSize;
+  for ( auto cell = mTable[pos]; cell; cell = cell->mLink ) {
     if ( cell->mName == name ) {
       return cell->mId;
     }
   }
-  return -1;
+  return CLIB_NULLID;
 }
 
 // @brief テーブルの領域を確保する．
-// @param[in] req_size 要求するサイズ
 void
-CiCellHash::alloc_table(int req_size)
+CiCellHash::alloc_table(
+  SizeType req_size
+)
 {
   mSize = req_size;
   mLimit = static_cast<int>(mSize * 1.8);
   mTable = new CiCell*[mSize];
-  for ( int i = 0; i < mSize; ++ i ) {
+  for ( auto i = 0; i < mSize; ++ i ) {
     mTable[i] = nullptr;
   }
 }

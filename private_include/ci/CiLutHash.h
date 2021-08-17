@@ -57,7 +57,7 @@ private:
   /// @brief テーブルの領域を確保する．
   void
   alloc_table(
-    int req_size ///< [in] 要求するサイズ
+    SizeType req_size ///< [in] 要求するサイズ
   );
 
 
@@ -67,16 +67,16 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // テーブルサイズ
-  int mSize;
+  SizeType mSize;
 
   // ハッシュ表
   CiLutTemplate** mTable;
 
   // ハッシュ表を拡大するしきい値
-  int mLimit;
+  SizeType mLimit;
 
   // 要素数
-  int mNum;
+  SizeType mNum;
 
 };
 

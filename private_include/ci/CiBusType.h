@@ -26,10 +26,13 @@ class CiBusType :
 private:
 
   /// @brief コンストラクタ
+  /// @param[in] name 名前
+  /// @param[in] bit_from 開始位置
+  /// @param[in] bit_to 終了位置
   CiBusType(
-    const ShString& name, ///< [in] 名前
-    int bit_from,         ///< [in] 開始位置
-    int bit_to            ///< [in] 終了位置
+    const ShString& name,
+    SizeType bit_from,
+    SizeType bit_to
   );
 
   /// @brief デストラクタ
@@ -54,15 +57,15 @@ public:
   data_type() const override;
 
   /// @brief ビット幅の取得
-  int
+  SizeType
   bit_width() const override;
 
   /// @brief 開始ビットの取得
-  int
+  SizeType
   bit_from() const override;
 
   /// @brief 終了ビットの取得
-  int
+  SizeType
   bit_to() const override;
 
   /// @brief 向きの取得
@@ -79,17 +82,14 @@ private:
   // 名前
   ShString mName;
 
-  // ビット幅
-  int mBitWidth;
+  // ビット幅(最下位ビットは向きを表す)
+  SizeType mBitWidth;
 
   // 開始ビット
-  int mBitFrom;
+  SizeType mBitFrom;
 
   // 終了ビット
-  int mBitTo;
-
-  // 向き
-  bool mDownTo;
+  SizeType mBitTo;
 
 };
 

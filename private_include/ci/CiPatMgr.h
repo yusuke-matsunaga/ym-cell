@@ -34,10 +34,10 @@ class CiPatMgr
 public:
 
   /// @brief コンストラクタ
-  CiPatMgr();
+  CiPatMgr() = default;
 
   /// @brief デストラクタ
-  ~CiPatMgr();
+  ~CiPatMgr() = default;
 
 
 public:
@@ -46,20 +46,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief パタンの最大の入力数を得る．
-  int
+  SizeType
   max_input() const;
 
   /// @brief 総ノード数を返す．
-  int
+  SizeType
   node_num() const
   {
-    return mNodeNum;
+    return mNodeTypeArray.size();
   }
 
   /// @brief ノードの種類を返す．
   ClibPatType
   node_type(
-    int id ///< [in] ノード番号 ( 0 <= id < node_num() )
+    SizeType id ///< [in] ノード番号 ( 0 <= id < node_num() )
   ) const
   {
     ASSERT_COND( 0 <= id && id < node_num() );
@@ -69,9 +69,9 @@ public:
   /// @brief ノードが入力ノードの時に入力番号を返す．
   ///
   /// 入力ノードでない場合の返り値は不定
-  int
+  SizeType
   input_id(
-    int id ///< [in] ノード番号 ( 0 <= id < node_num() )
+    SizeType id ///< [in] ノード番号 ( 0 <= id < node_num() )
   ) const
   {
     ASSERT_COND( 0 <= id && id < node_num() );
@@ -80,25 +80,25 @@ public:
 
   /// @brief 入力のノード番号を返す．
   /// @return input_id の入力に対応するノードのノード番号
-  int
+  SizeType
   input_node(
-    int input_id ///< [in] 入力番号 ( 0 <= input_id < input_num() )
+    SizeType input_id ///< [in] 入力番号 ( 0 <= input_id < input_num() )
   ) const
   {
     return input_id;
   }
 
   /// @brief 総枝数を返す．
-  int
+  SizeType
   edge_num() const
   {
-    return node_num() * 2;
+    return mEdgeArray.size();
   }
 
   /// @brief 枝のファンイン元のノード番号を返す．
-  int
+  SizeType
   edge_from(
-    int id ///< [in] 枝番号 ( 0 <= id < edge_num() )
+    SizeType id ///< [in] 枝番号 ( 0 <= id < edge_num() )
   ) const
   {
     ASSERT_COND( 0 <= id && id < edge_num() );
@@ -106,27 +106,29 @@ public:
   }
 
   /// @brief 枝のファンアウト先のノード番号を返す．
-  int
+  SizeType
   edge_to(
-    int id ///< [in] 枝番号 ( 0 <= id < node_num() * 2 )
+    SizeType id ///< [in] 枝番号 ( 0 <= id < edge_num() )
   ) const
   {
+    ASSERT_COND( 0 <= id && id < edge_num() );
     return (id / 2);
   }
 
   /// @brief 枝のファンアウト先の入力位置( 0 or 1 ) を返す．
-  int
+  SizeType
   edge_pos(
-    int id ///< [in] 枝番号 ( 0 <= id < node_num() * 2 )
+    SizeType id ///< [in] 枝番号 ( 0 <= id < node_num() * 2 )
   ) const
   {
+    ASSERT_COND( 0 <= id && id < edge_num() );
     return (id & 1U);
   }
 
   /// @brief 枝の反転属性を返す．
   bool
   edge_inv(
-    int id ///< [in] 枝番号 ( 0 <= id < node_num() * 2 )
+    SizeType id ///< [in] 枝番号 ( 0 <= id < node_num() * 2 )
   ) const
   {
     ASSERT_COND( 0 <= id && id < edge_num() );
@@ -134,16 +136,13 @@ public:
   }
 
   /// @brief 総パタン数を返す．
-  int
-  pat_num() const
-  {
-    return mPatNum;
-  }
+  SizeType
+  pat_num() const;
 
   /// @brief パタンを返す．
   const ClibPatGraph&
   pat(
-    int id ///< [in] パタン番号 ( 0 <= id < pat_num() )
+    SizeType id ///< [in] パタン番号 ( 0 <= id < pat_num() )
   ) const;
 
   /// @brief バイナリダンプを行う．
@@ -181,13 +180,13 @@ private:
   /// @brief ノード数を設定する．
   void
   set_node_num(
-    int nn ///< [in] ノード数
+    SizeType nn ///< [in] ノード数
   );
 
   /// @brief パタン数を設定する．
   void
   set_pat_num(
-    int np ///< [in] パタン数
+    SizeType np ///< [in] パタン数
   );
 
 
@@ -196,23 +195,17 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ノード数
-  int mNodeNum{0};
-
   // ノードの種類+入力番号を納めた配列
-  // サイズは mNodeNum
-  ymuint* mNodeTypeArray{nullptr};
+  // サイズはノード数
+  vector<SizeType> mNodeTypeArray;
 
   // ファンインのノード番号＋反転属性を納めた配列
-  // サイズは mNodeNum * 2
-  ymuint* mEdgeArray{nullptr};
-
-  // パタン数
-  int mPatNum{0};
+  // サイズはノード数 x 2
+  vector<SizeType> mEdgeArray;
 
   // パタンの配列
-  // サイズは mPatNum
-  CiPatGraph* mPatArray{nullptr};
+  // サイズはパタン数
+  vector<CiPatGraph> mPatArray;
 
 };
 
