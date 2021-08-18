@@ -1,7 +1,7 @@
-﻿#ifndef PARSER_EXT_H
-#define PARSER_EXT_H
+﻿#ifndef PARSE_GROUP_H
+#define PARSE_GROUP_H
 
-/// @file Parser_ext.h
+/// @file parse_group.h
 /// @brief group statement 用のパーサー関数定義
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
@@ -1186,4 +1186,4 @@ group_retaining_rf(
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // PARSER_EXT_H
+#endif // PARSE_GROUP_H

@@ -228,10 +228,10 @@ class HandlerData:
             return True
 
     def print_functions(self, *, fout=sys.stdout):
-        header = """#ifndef PARSER_EXT_H
-#define PARSER_EXT_H
+        header = """#ifndef PARSE_GROUP_H
+#define PARSE_GROUP_H
 
-/// @file Parser_ext.h
+/// @file parse_group.h
 /// @brief group statement 用のパーサー関数定義
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
@@ -275,7 +275,7 @@ group_{0}(
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // PARSER_EXT_H
+#endif // PARSE_GROUP_H
 """
         fout.write(footer)
 
