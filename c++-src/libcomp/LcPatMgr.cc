@@ -11,7 +11,7 @@
 #include "lc/LcPatHandle.h"
 
 #include "ym/Expr.h"
-#include "ym/MFSet.h"
+#include "ym/UnionFindSet.h"
 #include "ym/PermGen.h"
 #include "ym/MultiCombiGen.h"
 #include "ym/MultiSetPermGen.h"
@@ -302,13 +302,13 @@ LcPatMgr::pg_sub(
       }
 
       // tmp_input のなかで同形なパタンを求める．
-      MFSet mfset(n);
+      UnionFindSet ufset(n);
       for ( int i1 = 1; i1 < n; ++ i1 ) {
 	LcPatHandle pat1 = tmp_input[i1];
 	for ( int i2 = 0; i2 < i1; ++ i2 ) {
 	  LcPatHandle pat2 = tmp_input[i2];
 	  if ( check_equivalent(pat1, pat2) ) {
-	    mfset.merge(i1, i2);
+	    ufset.merge(i1, i2);
 	  }
 	}
       }
@@ -316,7 +316,7 @@ LcPatMgr::pg_sub(
       rep_id.reserve(n);
       vector<SizeType> rev_map(n);
       for ( auto i = 0; i < n; ++ i ) {
-	auto x = mfset.find(i);
+	auto x = ufset.find(i);
 	if ( x == i ) {
 	  rev_map[i] = rep_id.size();
 	  rep_id.push_back(x);
@@ -327,12 +327,12 @@ LcPatMgr::pg_sub(
       // group_list[0〜(ng - 1)] に同形なパタンのリストを格納する．
       vector<vector<SizeType> > group_list(ng);
       for ( auto i = 0; i < n; ++ i ) {
-	auto x = mfset.find(i);
+	auto x = ufset.find(i);
 	auto id = rev_map[x];
 	group_list[id].push_back(i);
       }
 
-      vector<int> num_array(ng);
+      vector<SizeType> num_array(ng);
       for ( SizeType g = 0; g < ng; ++ g ) {
 	num_array[g] = group_list[g].size();
       }
