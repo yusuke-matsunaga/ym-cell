@@ -29,39 +29,12 @@
 #include "ym/TvFunc.h"
 #include "ym/MsgMgr.h"
 #include "ym/Range.h"
+#include "ym/split.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 BEGIN_NONAMESPACE
-
-// 文字列を空白で区切る
-// string の定番コード
-// ただし結果は ShString のリストとなる．
-vector<ShString>
-split(
-  const string& src_str,
-  const string& delim = " \t\n"
-)
-{
-  vector<ShString> ans;
-  string::size_type start = 0;
-  for ( ; ; ) {
-    // start 以降で初めて delim とマッチする位置を探す．
-    string::size_type p = src_str.find_first_of(delim, start);
-    if ( p == string::npos ) {
-      // 終端に達した．
-      break;
-    }
-    string::size_type n = p - start;
-    if ( n > 0 ) {
-      string tmp = src_str.substr(start, n);
-      ans.push_back(ShString(tmp));
-    }
-    start = p + 1;
-  }
-  return ans;
-}
 
 #if 0
 // lut を読み込む．
@@ -422,7 +395,7 @@ gen_timing_list(
       // タイミング情報の設定
       if ( ast_timing->related_pin() ) {
 	string tmp_str{ast_timing->related_pin()->string_value()};
-	auto pin_name_list = split(tmp_str);
+	auto pin_name_list = split(tmp_str, " \t\n");
 	for ( auto pin_name: pin_name_list ) {
 	  if ( pin_map.count(pin_name) == 0 ) {
 	    ostringstream buf;
