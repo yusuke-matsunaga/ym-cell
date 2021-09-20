@@ -53,16 +53,22 @@ public:
   // 内容を設定する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
-  /// @return 読み込みが成功したら true を返す．
-  bool
+  /// @brief mislib 形式のファイルを読み込む．
+  /// @return 生成したライブラリを返す．
+  ///
+  /// エラーが起こったら nullptr を返す．
+  static
+  CiCellLibrary*
   read_mislib(
     const string& filename ///< [in] ファイル名
   );
 
-  /// @brief liberty 形式のファイルを読み込んでライブラリに設定する．
-  /// @return 読み込みが成功したら true を返す．
-  bool
+  /// @brief liberty 形式のファイルを読み込む．
+  /// @return 生成したライブラリを返す．
+  ///
+  /// エラーが起こったら nullptr を返す．
+  static
+  CiCellLibrary*
   read_liberty(
     const string& filename ///< [in] ファイル名
   );

@@ -65,37 +65,31 @@ ClibCellLibrary::change_impl(
 }
 
 // @brief mislib 形式のファイルを読み込んでライブラリに設定する．
-bool
+ClibCellLibrary
 ClibCellLibrary::read_mislib(
   const string& filename
 )
 {
-  auto new_impl{new CiCellLibrary()};
-  bool stat = new_impl->read_mislib(filename);
-  if ( stat ) {
-    change_impl(new_impl);
+  ClibCellLibrary lib;
+  auto new_impl = CiCellLibrary::read_mislib(filename);
+  if ( new_impl != nullptr ) {
+    lib.change_impl(new_impl);
   }
-  else {
-    delete new_impl;
-  }
-  return stat;
+  return lib;
 }
 
 // @brief liberty 形式のファイルを読み込んでライブラリに設定する．
-bool
+ClibCellLibrary
 ClibCellLibrary::read_liberty(
   const string& filename
 )
 {
-  auto new_impl{new CiCellLibrary()};
-  bool stat = new_impl->read_liberty(filename);
-  if ( stat ) {
-    change_impl(new_impl);
+  ClibCellLibrary lib;
+  auto new_impl = CiCellLibrary::read_liberty(filename);
+  if ( new_impl != nullptr ) {
+    lib.change_impl(new_impl);
   }
-  else {
-    delete new_impl;
-  }
-  return stat;
+  return lib;
 }
 
 // @brief 名前の取得

@@ -255,7 +255,7 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief mislib 形式のファイルを読み込んでライブラリに設定する．
 // @return 読み込みが成功したら true を返す．
-bool
+CiCellLibrary*
 CiCellLibrary::read_mislib(
   const string& filename ///< [in] filename ファイル名
 )
@@ -265,20 +265,22 @@ CiCellLibrary::read_mislib(
   MislibParser parser;
   vector<MislibGatePtr> gate_list;
   if ( !parser.parse(filename, gate_list) ) {
-    return false;
+    return nullptr;
   }
 
+  auto lib = new CiCellLibrary{};
+
   // ファイル名をライブラリ名として登録する．
-  set_name(filename);
+  lib->set_name(filename);
 
   // セルの内容の設定
   for ( auto& gate: gate_list ) {
-    new_gate(gate.get(), this);
+    new_gate(gate.get(), lib);
   }
 
-  compile();
+  lib->compile();
 
-  return true;
+  return lib;
 }
 
 END_NAMESPACE_YM_CLIB

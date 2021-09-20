@@ -57,20 +57,22 @@ public:
   // 内容を設定する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
-  /// @return 読み込みが成功したら true を返す．
+  /// @brief mislib 形式のファイルを読み込む．
+  /// @return 生成したライブラリを返す．
   ///
-  /// 読み込みが失敗した場合はなにもしないで false を返す．
-  bool
+  /// 読み込みが失敗した場合は空のライブラリを返す．
+  static
+  ClibCellLibrary
   read_mislib(
     const string& filename ///< [in] ファイル名
   );
 
-  /// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
-  /// @return 読み込みが成功したら true を返す．
+  /// @brief mislib 形式のファイルを読み込む．
+  /// @return 生成したライブラリを返す．
   ///
-  /// 読み込みが失敗した場合はなにもしないで false を返す．
-  bool
+  /// 読み込みが失敗した場合は空のライブラリを返す．
+  static
+  ClibCellLibrary
   read_mislib(
     const char* filename ///< [in] ファイル名
   )
@@ -78,20 +80,22 @@ public:
     return read_mislib(string(filename));
   }
 
-  /// @brief liberty 形式のファイルを読み込んでライブラリに設定する．
-  /// @return 読み込みが成功したら true を返す．
+  /// @brief liberty 形式のファイルを読み込む．
+  /// @return 生成したライブラリを返す．
   ///
-  /// 読み込みが失敗した場合はなにもしないで false を返す．
-  bool
+  /// 読み込みが失敗した場合は空のライブラリを返す．
+  static
+  ClibCellLibrary
   read_liberty(
     const string& filename ///< [in] ファイル名
   );
 
   /// @brief liberty 形式のファイルを読み込んでライブラリに設定する．
-  /// @return 読み込みが成功したら true を返す．
+  /// @return 生成したライブラリを返す．
   ///
-  /// 読み込みが失敗した場合はなにもしないで false を返す．
-  bool
+  /// 読み込みが失敗した場合は空のライブラリを返す．
+  static
+  ClibCellLibrary
   read_liberty(
     const char* filename ///< [in] ファイル名
   )
@@ -104,6 +108,13 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 属性の取得
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を持っているときに true を返す．
+  bool
+  is_valid() const
+  {
+    return mImpl != nullptr;
+  }
 
   /// @brief 名前の取得
   string

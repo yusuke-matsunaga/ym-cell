@@ -440,19 +440,29 @@ gen_timing_list(
 }
 
 // @brief AstNode から CiCellLibrary を生成する．
-// @param[in] library_info ライブラリの情報を持つオブジェクト
-// @param[in] library設定対象のライブラリ
-void
+bool
 set_library(
-  const AstLibrary* ast_library,
-  CiCellLibrary* library
+  AstAttrPtr ast_library, ///< [in] ライブラリの情報を持つパース木
+  CiCellLibrary* library  ///< [in] 設定する対象のライブラリ
 )
 {
-  // 'name' の設定
-  library->set_name(ast_library->name()->string_value());
+  ASSERT_COND( ast_library->attr().name() == "library" );
 
-  // 'technology' の設定
-  library->set_technology(ast_library->technology()->technology_value());
+  { // ライブラリ名の設定
+    auto header_val = ast_library->group_header_value();
+    library->set_name(header_val->string_value());
+  }
+
+  // 属性の設定
+  int n = ast_library->group_elem_size();
+  for ( int i = 0; i < n; ++ i ) {
+    auto elem = ast_library->group_elem_attr(i);
+    auto kwd = elem.attr();
+    if ( kwd.name() == "technology" ) {
+      // 'technology' の設定
+      library->set_technology(elem.value().technology_value());
+    }
+  }
 
   // 'delay_model' の設定
   library->set_delay_model(ast_library->delay_model()->delay_model_value());
@@ -785,7 +795,7 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief liberty 形式のファイルを読み込んでライブラリに設定する．
 // @return 読み込みが成功したら true を返す．
-bool
+CiCellLibrary*
 CiCellLibrary::read_liberty(
   const string& filename
 )
@@ -803,22 +813,29 @@ CiCellLibrary::read_liberty(
 		    "DOTLIB_PARSER",
 		    buf.str());
     // ファイルが開けなかった．
-    return false;
+    return nullptr;
   }
 
   // 読み込んでASTを作る．
   Parser parser(fin, {filename}, false);
   auto ast_library{parser.parse()};
-  if ( ast_library == nullptr ) {
+  if ( !ast_library.is_valid() ) {
     // 読み込みに失敗した．
-    return false;
+    return nullptr;
   }
 
-  // AST の内容をライブラリに設定する．
-  // ここではエラーは起こらないはず．
-  //set_library(ast_library, this);
+  auto lib = new CiCellLibrary{};
 
-  return true;
+  // AST の内容をライブラリに設定する．
+  if ( set_library(ast_library, lib) ) {
+    // 成功した．
+    return lib;
+  }
+  else {
+    // 失敗した．
+    delete lib;
+    return nullptr;
+  }
 }
 
 END_NAMESPACE_YM_CLIB
