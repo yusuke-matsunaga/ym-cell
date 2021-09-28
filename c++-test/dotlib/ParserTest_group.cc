@@ -24,7 +24,7 @@ TEST_F(ParserTest, parse_input_voltage1)
   );
   Parser parser{buf, info, false, false};
 
-  auto dst = parse_float_float(parser, attr);
+  auto dst = parse_float_float(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -41,8 +41,7 @@ TEST_F(ParserTest, group_cell0)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"cell", FileRegion{}};
-  auto dst = group_cell(parser, attr);
+  auto dst = group_cell(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -61,8 +60,7 @@ TEST_F(ParserTest, parse_cell_area)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"cell", FileRegion{}};
-  auto dst = group_cell(parser, attr);
+  auto dst = group_cell(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -70,7 +68,7 @@ TEST_F(ParserTest, parse_cell_area)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1 = value.group_elem_attr(0);
 
-  EXPECT_EQ( "area", attr1.attr().name() );
+  EXPECT_EQ( "area", attr1.kwd() );
   EXPECT_EQ( 1.2, attr1.value().float_value() );
 }
 

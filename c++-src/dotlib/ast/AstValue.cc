@@ -1062,7 +1062,7 @@ AstAttr::dump(
 ) const
 {
   dump_indent(s, ilevel);
-  s << attr().name();
+  s << kwd();
   value().dump(s, ilevel);
 }
 

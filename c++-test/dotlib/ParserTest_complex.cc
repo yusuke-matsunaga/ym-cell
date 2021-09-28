@@ -21,7 +21,7 @@ TEST_F(ParserTest, complex_float_float1)
   istringstream buf("( 1.0, 2 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_float(parser, attr);
+  auto dst = complex_float_float(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -39,7 +39,7 @@ TEST_F(ParserTest, complex_float_float2)
   istringstream buf("( 1.0 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_float(parser, attr);
+  auto dst = complex_float_float(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -54,7 +54,7 @@ TEST_F(ParserTest, complex_float_float3)
   istringstream buf("( 1.0, 2.0, 3.0 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_float(parser, attr);
+  auto dst = complex_float_float(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -69,7 +69,7 @@ TEST_F(ParserTest, complex_float_float4)
   istringstream buf("( 1.0f, 2.0 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_float(parser, attr);
+  auto dst = complex_float_float(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -84,7 +84,7 @@ TEST_F(ParserTest, complex_float_float5)
   istringstream buf("( 1.0, false );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_float(parser, attr);
+  auto dst = complex_float_float(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -98,7 +98,7 @@ TEST_F(ParserTest, complex_float_string1)
   istringstream buf("( 1.0, ff );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_string(parser, attr);
+  auto dst = complex_float_string(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -115,7 +115,7 @@ TEST_F(ParserTest, complex_float_string2)
   istringstream buf("( 1.0, \"ff\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_string(parser, attr);
+  auto dst = complex_float_string(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -131,7 +131,7 @@ TEST_F(ParserTest, complex_float_string3)
   istringstream buf("( 1.0 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_string(parser, attr);
+  auto dst = complex_float_string(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -146,7 +146,7 @@ TEST_F(ParserTest, complex_float_string4)
   istringstream buf("( 1.0, ff, 2.0 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_string(parser, attr);
+  auto dst = complex_float_string(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -161,7 +161,7 @@ TEST_F(ParserTest, complex_float_string5)
   istringstream buf("( a1.0, \"ff\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_string(parser, attr);
+  auto dst = complex_float_string(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -175,7 +175,7 @@ TEST_F(ParserTest, complex_float_vector1)
   istringstream buf("( \"1.0, 2.0, 3.0\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_vector(parser, attr);
+  auto dst = complex_float_vector(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -195,7 +195,7 @@ TEST_F(ParserTest, complex_float_vector2)
   istringstream buf("( \"1.0, 2.0a, 3.0\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_vector(parser, attr);
+  auto dst = complex_float_vector(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -210,7 +210,7 @@ TEST_F(ParserTest, complex_float_vector3)
   istringstream buf("(  );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_vector(parser, attr);
+  auto dst = complex_float_vector(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -225,7 +225,7 @@ TEST_F(ParserTest, complex_float_vector4)
   istringstream buf("( \"1.0, 2.0, 3.0\", \"4.0, 5.0\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_float_vector(parser, attr);
+  auto dst = complex_float_vector(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -239,7 +239,7 @@ TEST_F(ParserTest, complex_int_float1)
   istringstream buf("( 1, 2.3 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_int_float(parser, attr);
+  auto dst = complex_int_float(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -256,7 +256,7 @@ TEST_F(ParserTest, complex_int_float2)
   istringstream buf("( 1 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_int_float(parser, attr);
+  auto dst = complex_int_float(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -271,7 +271,7 @@ TEST_F(ParserTest, complex_int_float3)
   istringstream buf("( 1, 2.3, 3.0 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_int_float(parser, attr);
+  auto dst = complex_int_float(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -286,7 +286,7 @@ TEST_F(ParserTest, complex_int_float4)
   istringstream buf("( 1x, 2.3 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_int_float(parser, attr);
+  auto dst = complex_int_float(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -301,7 +301,7 @@ TEST_F(ParserTest, complex_int_float5)
   istringstream buf("( 1, _2.3 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_int_float(parser, attr);
+  auto dst = complex_int_float(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -315,7 +315,7 @@ TEST_F(ParserTest, complex_int_float_vector1)
   istringstream buf("( 1, \"2.3, 4.5\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_int_float_vector(parser, attr);
+  auto dst = complex_int_float_vector(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -335,7 +335,7 @@ TEST_F(ParserTest, complex_int_float_vector2)
   istringstream buf("( 1 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_int_float_vector(parser, attr);
+  auto dst = complex_int_float_vector(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -350,7 +350,7 @@ TEST_F(ParserTest, complex_int_float_vector3)
   istringstream buf("( 1, \"2.3, 4.5\", abc );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_int_float_vector(parser, attr);
+  auto dst = complex_int_float_vector(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -365,7 +365,7 @@ TEST_F(ParserTest, complex_int_float_vector4)
   istringstream buf("( 1a, \"2.3, 4.5\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_int_float_vector(parser, attr);
+  auto dst = complex_int_float_vector(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -379,7 +379,7 @@ TEST_F(ParserTest, complex_int_vector1)
   istringstream buf("( \"1, 2, 3\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_int_vector(parser, attr);
+  auto dst = complex_int_vector(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -399,7 +399,7 @@ TEST_F(ParserTest, complex_int_vector2)
   istringstream buf("(  );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_int_vector(parser, attr);
+  auto dst = complex_int_vector(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -414,7 +414,7 @@ TEST_F(ParserTest, complex_int_vector3)
   istringstream buf("( \"1, 2, 3\", \"4, 5\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_int_vector(parser, attr);
+  auto dst = complex_int_vector(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -428,7 +428,7 @@ TEST_F(ParserTest, complex_string1)
   istringstream buf("( abc );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string(parser, attr);
+  auto dst = complex_string(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -445,7 +445,7 @@ TEST_F(ParserTest, complex_string2)
   istringstream buf("( \"abc\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string(parser, attr);
+  auto dst = complex_string(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -461,7 +461,7 @@ TEST_F(ParserTest, complex_string3)
   istringstream buf("( );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string(parser, attr);
+  auto dst = complex_string(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -476,7 +476,7 @@ TEST_F(ParserTest, complex_string4)
   istringstream buf("( abc, def );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string(parser, attr);
+  auto dst = complex_string(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -490,7 +490,7 @@ TEST_F(ParserTest, complex_string_float1)
   istringstream buf("( abc, 1.2 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_float(parser, attr);
+  auto dst = complex_string_float(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -507,7 +507,7 @@ TEST_F(ParserTest, complex_string_float2)
   istringstream buf("( abc );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_float(parser, attr);
+  auto dst = complex_string_float(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -522,7 +522,7 @@ TEST_F(ParserTest, complex_string_float3)
   istringstream buf("( abc, 1.2, xyz );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_float(parser, attr);
+  auto dst = complex_string_float(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -537,7 +537,7 @@ TEST_F(ParserTest, complex_string_float4)
   istringstream buf("( abc, \"xyz\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_float(parser, attr);
+  auto dst = complex_string_float(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -551,7 +551,7 @@ TEST_F(ParserTest, complex_string_int1)
   istringstream buf("( abc, 1 );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_int(parser, attr);
+  auto dst = complex_string_int(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -568,7 +568,7 @@ TEST_F(ParserTest, complex_string_int2)
   istringstream buf("( abc );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_int(parser, attr);
+  auto dst = complex_string_int(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -583,7 +583,7 @@ TEST_F(ParserTest, complex_string_int3)
   istringstream buf("( abc, 1, xyz );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_int(parser, attr);
+  auto dst = complex_string_int(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -598,7 +598,7 @@ TEST_F(ParserTest, complex_string_int4)
   istringstream buf("( abc, \"cd\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_int(parser, attr);
+  auto dst = complex_string_int(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -612,7 +612,7 @@ TEST_F(ParserTest, complex_string_list1)
   istringstream buf("( abc, def, ghi );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_list(parser, attr);
+  auto dst = complex_string_list(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -629,7 +629,7 @@ TEST_F(ParserTest, complex_string_list2)
   istringstream buf("( \"abc\", def, ghi );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_list(parser, attr);
+  auto dst = complex_string_list(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -647,7 +647,7 @@ TEST_F(ParserTest, complex_string_list3)
   istringstream buf("( );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_list(parser, attr);
+  auto dst = complex_string_list(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -661,7 +661,7 @@ TEST_F(ParserTest, complex_string_string1)
   istringstream buf("( abc, def );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_string(parser, attr);
+  auto dst = complex_string_string(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -677,7 +677,7 @@ TEST_F(ParserTest, complex_string_string2)
   istringstream buf("( abc, \"def\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_string(parser, attr);
+  auto dst = complex_string_string(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -694,7 +694,7 @@ TEST_F(ParserTest, complex_string_string3)
   istringstream buf("( abc );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_string(parser, attr);
+  auto dst = complex_string_string(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -709,7 +709,7 @@ TEST_F(ParserTest, complex_string_string4)
   istringstream buf("( abc, def, xyz );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_string(parser, attr);
+  auto dst = complex_string_string(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -723,7 +723,7 @@ TEST_F(ParserTest, complex_string_string_string1)
   istringstream buf("( abc, \"def\", xyz );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_string_string(parser, attr);
+  auto dst = complex_string_string_string(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -741,7 +741,7 @@ TEST_F(ParserTest, complex_string_string_string2)
   istringstream buf("( abc, \"def\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_string_string(parser, attr);
+  auto dst = complex_string_string_string(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -756,7 +756,7 @@ TEST_F(ParserTest, complex_string_string_string3)
   istringstream buf("( abc, \"def\", xyz, \"012\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_string_string_string(parser, attr);
+  auto dst = complex_string_string_string(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -770,7 +770,7 @@ TEST_F(ParserTest, complex_technology1)
   istringstream buf("( cmos );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_technology(parser, attr);
+  auto dst = complex_technology(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -785,7 +785,7 @@ TEST_F(ParserTest, complex_technology2)
   istringstream buf("( fpga );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_technology(parser, attr);
+  auto dst = complex_technology(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
@@ -801,7 +801,7 @@ TEST_F(ParserTest, complex_technology3)
   istringstream buf("( );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_technology(parser, attr);
+  auto dst = complex_technology(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -816,7 +816,7 @@ TEST_F(ParserTest, complex_technology4)
   istringstream buf("( cmos, fpga );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_technology(parser, attr);
+  auto dst = complex_technology(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -831,7 +831,7 @@ TEST_F(ParserTest, complex_technology5)
   istringstream buf("( abc );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_technology(parser, attr);
+  auto dst = complex_technology(parser, kwd, kwd_loc);
 
   EXPECT_TRUE( dst == nullptr );
   auto msg_list = mh.message_list();
@@ -845,7 +845,7 @@ TEST_F(ParserTest, complex_values1)
   istringstream buf("( \"1.1, 2.2, 3.3\", \"4.4, 5.5, 6.6\" );\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = complex_values(parser, attr);
+  auto dst = complex_values(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();

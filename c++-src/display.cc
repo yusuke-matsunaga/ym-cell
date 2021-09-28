@@ -406,9 +406,11 @@ display_ff_class(
     auto& group = cclass.cell_group(i);
     s << "  Group:";
     s << " data-pin = " << group.data_pos();
+#if 0
     display_pos(s, "clock-pin", group.clock_pos(), group.clock_sense());
     display_pos(s, "clear-pin", group.clear_pos(), group.clear_sense());
     display_pos(s, "preset-pin", group.preset_pos(), group.preset_sense());
+#endif
     s << " q-pin = " << group.q_pos()
       << " xq-pin = " << group.xq_pos()
       << endl;
@@ -442,10 +444,12 @@ display_latch_class(
   for ( auto i: Range(cclass.cell_group_num()) ) {
     auto& group = cclass.cell_group(i);
     s << "  Group:";
+#if 0
     display_pos(s, "data-pin",  group.data_pos(), group.has_data() ? 1 : 0);
     display_pos(s, "enable-pin", group.enable_pos(), group.enable_sense());
     display_pos(s, "clear-pin", group.clear_pos(), group.clear_sense());
     display_pos(s, "preset-pin", group.preset_pos(), group.preset_sense());
+#endif
     s << " q-pin = " << group.q_pos()
       << endl;
     s << "         Clib = ";

@@ -38,7 +38,6 @@ class AstExpr;
 class AstValue;
 
 class Token;
-class AttrKwd;
 
 /// @brief トークンの値
 /// 基本的には dotlib のシンタックスにしたがっているが，
@@ -88,7 +87,7 @@ using AstAttrPtr = unique_ptr<const AstAttr>;
 using SimpleHandler = std::function<AstValuePtr(DotlibScanner&)>;
 
 // group statement の要素を読み込む関数の型定義
-using AttrHandler = std::function<AstAttrPtr(Parser&, const AttrKwd&)>;
+using AttrHandler = std::function<AstAttrPtr(Parser&, const string&, const FileRegion&)>;
 
 
 //////////////////////////////////////////////////////////////////////
@@ -99,15 +98,17 @@ using AttrHandler = std::function<AstAttrPtr(Parser&, const AttrKwd&)>;
 extern
 void
 syntax_error(
-  const AttrKwd& attr ///< [in] 対象の属性
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性の定義されている位置
 );
 
 /// @brief 同じ属性が重複して定義されている時のエラーを出力する．
 extern
 void
 duplicate_error(
-  const AttrKwd& attr,     ///< [in] 属性の型
-  const AstAttr* prev_attr ///< [in] 以前に定義された属性
+  const string& kwd,         ///< [in] 属性名
+  const FileRegion& kwd_loc, ///< [in] 属性の定義されている位置
+  const AstAttr* prev_attr   ///< [in] 以前に定義された属性
 );
 
 END_NAMESPACE_YM_DOTLIB

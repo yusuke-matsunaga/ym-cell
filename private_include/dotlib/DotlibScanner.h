@@ -9,7 +9,6 @@
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
-#include "dotlib/AttrKwd.h"
 #include "dotlib/AstValue.h"
 #include "dotlib/Token.h"
 #include "ym/FileRegion.h"
@@ -47,16 +46,16 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // 属性名(AttrKwd)を読み込む関数
+  // 属性名を読み込む関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 属性を読み込む．
-  /// @return 属性を返す．
+  /// @return 属性を表すトークン返す．
   ///
   /// 具体的には ':' または '(' をエンドマーカーとして
   /// 非空白文字からなる文字列を読み込む．
   /// " によるクォートやエスケープシーケンスはない．
-  AttrKwd
+  Token
   read_attr();
 
 

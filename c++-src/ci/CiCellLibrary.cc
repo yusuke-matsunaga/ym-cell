@@ -10,10 +10,6 @@
 #include "ci/CiCellClass.h"
 #include "ci/CiCellGroup.h"
 #include "ci/CiCell.h"
-#include "ci/CiLogicCell.h"
-#include "ci/CiFFCell.h"
-#include "ci/CiLatchCell.h"
-#include "ci/CiFsmCell.h"
 #include "ci/CiPin.h"
 #include "ci/CiTiming.h"
 #include "ci/CiLutTemplate.h"
@@ -237,6 +233,7 @@ CiCellLibrary::new_lut_template3(
   return tmpl;
 }
 
+#if 0
 // @brief 論理セルを生成する．
 CiCell*
 CiCellLibrary::new_logic_cell(
@@ -466,6 +463,7 @@ CiCellLibrary::new_fsm_cell(
   mCellList.push_back(unique_ptr<CiCell>{cell});
   return cell;
 }
+#endif
 
 // @brief セルの入力ピンの内容を設定する．
 // @param[in] name 入力ピン名

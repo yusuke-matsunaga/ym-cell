@@ -29,24 +29,30 @@ const int PRESET  = 5;
 
 inline
 ymuint
-encode(ymuint val,
-       int idx)
+encode(
+  ymuint val,
+  int idx
+)
 {
   return val << (5 * idx);
 }
 
 inline
 ymuint
-get_sense(ymuint bits,
-	  int idx)
+get_sense(
+  ymuint bits,
+  int idx
+)
 {
   return (bits >> (5 * idx + 3)) & 3U;
 }
 
 inline
 ymuint
-get_pos(ymuint bits,
-	int idx)
+get_pos(
+  ymuint bits,
+  int idx
+)
 {
   return (bits >> (5 * idx)) & 7U;
 }

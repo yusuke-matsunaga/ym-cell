@@ -9,7 +9,6 @@
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
-#include "dotlib/AttrKwd.h"
 #include "dotlib/HeaderHandler.h"
 #include "dotlib/DotlibScanner.h"
 
@@ -62,8 +61,9 @@ public:
   /// エラーが起こったら nullptr を返す．
   AstAttrPtr
   parse_simple_attribute(
-    const AttrKwd& attr,  ///< [in] 属性の型
-    SimpleHandler handler ///< [in] simple 属性ハンドラ
+    const string& kwd,          ///< [in] 属性名
+    const FileRegion& kwd_loc,  ///< [in] 属性名の位置
+    SimpleHandler handler       ///< [in] simple 属性ハンドラ
   );
 
   /// @brief Complex Attribute を読み込む．
@@ -72,8 +72,9 @@ public:
   /// エラーが起こったら nullptr を返す．
   AstAttrPtr
   parse_complex_attribute(
-    const AttrKwd& attr,   ///< [in] 属性の型
-    HeaderHandler& handler ///< [in] ヘッダ読み込みハンドラ
+    const string& kwd,          ///< [in] 属性名
+    const FileRegion& kwd_loc,  ///< [in] 属性名の位置
+    HeaderHandler& handler      ///< [in] ヘッダ読み込みハンドラ
   );
 
   /// @brief Group Statement を読み込む．
@@ -82,7 +83,8 @@ public:
   /// エラーが起こったら nullptr を返す．
   AstAttrPtr
   parse_group_statement(
-    const AttrKwd& attr,          ///< [in] 属性の型
+    const string& kwd,            ///< [in] 属性名
+    const FileRegion& kwd_loc,    ///< [in] 属性名の位置
     const char* group_name,       ///< [in] 親のグループ名
     HeaderHandler& header_handler ///< [in] ヘッダ読み込みハンドラ
   );

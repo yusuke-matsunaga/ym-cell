@@ -16,6 +16,7 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 class CiCellLibrary;
+class CiCellGroup;
 class CiPin;
 class CiInputPin;
 class CiOutputPin;
@@ -406,6 +407,9 @@ private:
 
   // セルライブラリ
   CiCellLibrary* mLibrary{nullptr};
+
+  // このセルが属するセルグループ
+  CiCellGroup* mGroup{nullptr};
 
   // ID番号
   SizeType mId{CLIB_NULLID};

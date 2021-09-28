@@ -20,15 +20,13 @@ cdef class CellLibrary :
     ### @param[in] filename ファイル名
     def read_mislib(CellLibrary self, filename) :
         cdef string c_filename = filename.encode('UTF-8')
-        cdef bool stat = self._this.read_mislib(c_filename)
-        return stat
+        self._this = CXX_ClibCellLibrary.read_mislib(c_filename)
 
     ### @brief dotlib(liberty) からの読み込み
     ### @param[in] filename ファイル名
     def read_liberty(CellLibrary self, filename) :
         cdef string c_filename = filename.encode('UTF-8')
-        cdef bool stat = self._this.read_liberty(c_filename)
-        return stat
+        self._this = CXX_ClibCellLibrary.read_liberty(c_filename)
 
     ### @brief 名前を返す．
     @property

@@ -438,150 +438,68 @@ gen_timing_list(
     }
   }
 }
+#endif
 
-// @brief AstNode から CiCellLibrary を生成する．
-bool
-set_library(
-  AstAttrPtr ast_library, ///< [in] ライブラリの情報を持つパース木
-  CiCellLibrary* library  ///< [in] 設定する対象のライブラリ
+// @brief 属性名をキーにした辞書を作る．
+unordered_map<string, vector<const AstValue*>>
+get_elem(
+  const AstValue& group_val ///< [in] グループ全体を表す値
 )
 {
-  ASSERT_COND( ast_library->attr().name() == "library" );
-
-  { // ライブラリ名の設定
-    auto header_val = ast_library->group_header_value();
-    library->set_name(header_val->string_value());
-  }
-
-  // 属性の設定
-  int n = ast_library->group_elem_size();
+  unordered_map<string, vector<const AstValue*>> ans;
+  int n = group_val.group_elem_size();
   for ( int i = 0; i < n; ++ i ) {
-    auto elem = ast_library->group_elem_attr(i);
-    auto kwd = elem.attr();
-    if ( kwd.name() == "technology" ) {
-      // 'technology' の設定
-      library->set_technology(elem.value().technology_value());
+    auto& elem = group_val.group_elem_attr(i);
+    auto kwd = elem.kwd();
+    auto& val = elem.value();
+    if ( ans.count(kwd) == 0 ) {
+      ans.emplace(kwd, vector<const AstValue*>{&val});
+    }
+    else {
+      ans.at(kwd).push_back(&val);
     }
   }
+  return ans;
+}
 
-  // 'delay_model' の設定
-  library->set_delay_model(ast_library->delay_model()->delay_model_value());
+/// @brief セルを作る．
+CiCell*
+gen_cell(
+  const AstValue& cell_val, ///< [in] セル情報を表すパース木の値
+  CiCellLibrary* library    ///< [in] ライブラリ
+)
+{
+  auto cell_name = cell_val.group_header_value().string_value();
 
-  // 'bus_naming_style' の設定
-  if ( ast_library->bus_naming_style() ) {
-    ShString value = ast_library->bus_naming_style()->string_value();
-    library->set_attr("bus_naming_style", value);
-  }
+  // 属性の辞書を作る．
+  auto elem_dict = get_elem(cell_val);
 
-  // 'comment' の設定
-  if ( ast_library->comment() ) {
-    ShString value = ast_library->comment()->string_value();
-    library->set_attr("comment", value);
-  }
-
-  // 'date' の設定
-  if ( ast_library->date() ) {
-    ShString value = ast_library->date()->string_value();
-    library->set_attr("date", value);
-  }
-
-  // 'revision' の設定
-  if ( ast_library->revision() ) {
-    ShString value = ast_library->revision()->string_value();
-    library->set_attr("revision", value);
-  }
-
-  // 'time_unit' の設定
-  if ( ast_library->time_unit() ) {
-    ShString value = ast_library->time_unit()->string_value();
-    library->set_attr("time_unit", value);
-  }
-
-  // 'voltage_unit' の設定
-  if ( ast_library->voltage_unit() ) {
-    ShString value = ast_library->voltage_unit()->string_value();
-    library->set_attr("voltage_unit", value);
-  }
-
-  // 'current_unit' の設定
-  if ( ast_library->current_unit() ) {
-    ShString value = ast_library->current_unit()->string_value();
-    library->set_attr("current_unit", value);
-  }
-
-  // 'pulling_resistance_unit' の設定
-  if ( ast_library->pulling_resistance_unit() ) {
-    ShString value = ast_library->pulling_resistance_unit()->string_value();
-    library->set_attr("pulling_resistance_unit", value);
-  }
-
-  // 'capacitive_load_unit' の設定
-  if ( ast_library->capacitive_load_unit() ) {
-    double u = ast_library->capacitive_load_unit()->value1()->float_value();
-    ShString ustr = ast_library->capacitive_load_unit()->value2()->string_value();
-    library->set_capacitive_load_unit(u, ustr);
-  }
-
-  // 'leakage_power_unit' の設定
-  if ( ast_library->leakage_power_unit() ) {
-    ShString value = ast_library->leakage_power_unit()->string_value();
-    library->set_attr("leakage_power_unit", value);
-  }
-
-  // 'lu_table_template' の設定
-  vector<CiLutTemplate*> template_list;
-  unordered_map<ShString, const ClibLutTemplate*> template_dict;
-  for ( auto ast_template: ast_library->lut_template_list() ) {
-    CiLutTemplate* tmpl = nullptr;
-    ShString name = ast_template->name()->string_value();
-    int d = ast_template->dimension();
-    switch ( d ) {
-    case 1:
-      tmpl = library->new_lut_template1(name,
-					ast_template->variable_1()->vartype_value(),
-					ast_template->index_1()->float_vector_value());
-      break;
-
-    case 2:
-      tmpl = library->new_lut_template2(name,
-					ast_template->variable_1()->vartype_value(),
-					ast_template->index_1()->float_vector_value(),
-					ast_template->variable_2()->vartype_value(),
-					ast_template->index_2()->float_vector_value());
-      break;
-
-    case 3:
-      tmpl = library->new_lut_template3(name,
-					ast_template->variable_1()->vartype_value(),
-					ast_template->index_1()->float_vector_value(),
-					ast_template->variable_2()->vartype_value(),
-					ast_template->index_2()->float_vector_value(),
-					ast_template->variable_3()->vartype_value(),
-					ast_template->index_3()->float_vector_value());
-      break;
-
-    default:
-      ASSERT_NOT_REACHED;
+  { // 面積
+    if ( elem_dict.count("area") > 0 ) {
+      auto& v = elem_dict.at("area");
+      if ( v.size() == 1 ) {
+	ClibArea area{v[0]->float_value()};
+      }
+      else {
+	// ２回以上指定されている．
+      }
     }
-    template_list.push_back(tmpl);
-    template_dict[name] = tmpl;
+    else {
+      // 指定なし
+    }
   }
-  library->set_lu_table_template_list(template_list);
-
-  // セルの内容の設定
-  vector<CiCell*> cell_list;
-  cell_list.reserve(ast_library->cell_list().size());
-  for ( const AstCell* ast_cell: ast_library->cell_list() ) {
-    ShString cell_name = ast_cell->name()->string_value();
-    ClibArea area(ast_cell->area()->float_value());
-
-    // 各タイプの個数のカウント
-    int ni = 0;
-    int no = 0;
-    int nio = 0;
-    int nit = 0;
-    vector<const AstPin*> dt_pin_list;
-    for ( auto pin_info: ast_cell->pin_list() ) {
+  return nullptr;
+#if 0
+  { // ピン
+    if ( elem_dict.count("pin") > 0 ) {
+      auto& v = elem_dict.at("pin");
+      // 各タイプの個数のカウント
+      int ni = 0;
+      int no = 0;
+      int nio = 0;
+      int nit = 0;
+      for ( auto pin_val: v ) {
+	for ( auto pin_info: ast_cell->pin_list() ) {
       int nn = pin_info->name_list().size();
       switch ( pin_info->direction()->direction_value() ) {
       case ClibDirection::input:    ni += nn; break;
@@ -624,7 +542,7 @@ set_library(
       ASSERT_COND( ipos == ni2 );
       ASSERT_COND( itpos == nit );
     }
-
+      }
     // ff情報の読み出し
     const AstFF* ff_info = ast_cell->ff();
     if ( ff_info != nullptr ) {
@@ -780,11 +698,168 @@ set_library(
 	}
       }
     }
+#endif
+
+}
+
+// @brief AstNode から CiCellLibrary を生成する．
+bool
+set_library(
+  const AstValue& library_val, ///< [in] ライブラリの情報を持つパース木
+  CiCellLibrary* library       ///< [in] 設定する対象のライブラリ
+)
+{
+  { // ライブラリ名の設定
+    auto& header_val = library_val.group_header_value();
+    library->set_name(header_val.string_value());
+  }
+
+  // 属性の設定
+
+  // 属性名をキーにした辞書を作る．
+  // おなじ属性名の要素が複数ある場合もあるので値は vector<const AstValue*>
+  // となる．
+  auto elem_dict = get_elem(library_val);
+
+  { // 'technology' の設定
+    if ( elem_dict.count("technology") > 0 ) {
+      auto& v = elem_dict.at("technology");
+      if ( v.size() == 1 ) {
+	library->set_technology(v[0]->technology_value());
+      }
+      else {
+	// 2回以上指定されている．
+      }
+    }
+    else {
+      // 指定なし．
+    }
+  }
+
+  { // 'delay_model' の設定
+    if ( elem_dict.count("delay_model") > 0 ) {
+      //library->set_delay_model(ast_library->delay_model()->delay_model_value());
+    }
+  }
+
+#if 0
+  // 'bus_naming_style' の設定
+  if ( ast_library->bus_naming_style() ) {
+    ShString value = ast_library->bus_naming_style()->string_value();
+    library->set_attr("bus_naming_style", value);
+  }
+
+  // 'comment' の設定
+  if ( ast_library->comment() ) {
+    ShString value = ast_library->comment()->string_value();
+    library->set_attr("comment", value);
+  }
+
+  // 'date' の設定
+  if ( ast_library->date() ) {
+    ShString value = ast_library->date()->string_value();
+    library->set_attr("date", value);
+  }
+
+  // 'revision' の設定
+  if ( ast_library->revision() ) {
+    ShString value = ast_library->revision()->string_value();
+    library->set_attr("revision", value);
+  }
+
+  // 'time_unit' の設定
+  if ( ast_library->time_unit() ) {
+    ShString value = ast_library->time_unit()->string_value();
+    library->set_attr("time_unit", value);
+  }
+
+  // 'voltage_unit' の設定
+  if ( ast_library->voltage_unit() ) {
+    ShString value = ast_library->voltage_unit()->string_value();
+    library->set_attr("voltage_unit", value);
+  }
+
+  // 'current_unit' の設定
+  if ( ast_library->current_unit() ) {
+    ShString value = ast_library->current_unit()->string_value();
+    library->set_attr("current_unit", value);
+  }
+
+  // 'pulling_resistance_unit' の設定
+  if ( ast_library->pulling_resistance_unit() ) {
+    ShString value = ast_library->pulling_resistance_unit()->string_value();
+    library->set_attr("pulling_resistance_unit", value);
+  }
+
+  // 'capacitive_load_unit' の設定
+  if ( ast_library->capacitive_load_unit() ) {
+    double u = ast_library->capacitive_load_unit()->value1()->float_value();
+    ShString ustr = ast_library->capacitive_load_unit()->value2()->string_value();
+    library->set_capacitive_load_unit(u, ustr);
+  }
+
+  // 'leakage_power_unit' の設定
+  if ( ast_library->leakage_power_unit() ) {
+    ShString value = ast_library->leakage_power_unit()->string_value();
+    library->set_attr("leakage_power_unit", value);
+  }
+
+  // 'lu_table_template' の設定
+  vector<CiLutTemplate*> template_list;
+  unordered_map<ShString, const ClibLutTemplate*> template_dict;
+  for ( auto ast_template: ast_library->lut_template_list() ) {
+    CiLutTemplate* tmpl = nullptr;
+    ShString name = ast_template->name()->string_value();
+    int d = ast_template->dimension();
+    switch ( d ) {
+    case 1:
+      tmpl = library->new_lut_template1(name,
+					ast_template->variable_1()->vartype_value(),
+					ast_template->index_1()->float_vector_value());
+      break;
+
+    case 2:
+      tmpl = library->new_lut_template2(name,
+					ast_template->variable_1()->vartype_value(),
+					ast_template->index_1()->float_vector_value(),
+					ast_template->variable_2()->vartype_value(),
+					ast_template->index_2()->float_vector_value());
+      break;
+
+    case 3:
+      tmpl = library->new_lut_template3(name,
+					ast_template->variable_1()->vartype_value(),
+					ast_template->index_1()->float_vector_value(),
+					ast_template->variable_2()->vartype_value(),
+					ast_template->index_2()->float_vector_value(),
+					ast_template->variable_3()->vartype_value(),
+					ast_template->index_3()->float_vector_value());
+      break;
+
+    default:
+      ASSERT_NOT_REACHED;
+    }
+    template_list.push_back(tmpl);
+    template_dict[name] = tmpl;
+  }
+  library->set_lu_table_template_list(template_list);
+
+  { // セルの内容の設定
+    vector<CiCell*> cell_list;
+    if ( elem_dict.count("cell") > 0 ) {
+      auto& v = elem_dict.at("cell");
+      cell_list.reserve(v.size());
+      for ( auto ast_cell: v ) {
+	ASSERT_COND( ast_cell->attr().name() == "cell" );
+	auto& ast_cell_val = ast_cell->value();
+      }
+    }
   }
 
   library->set_cell_list(cell_list);
-}
 #endif
+  return true;
+}
 
 END_NONAMESPACE
 
@@ -819,15 +894,17 @@ CiCellLibrary::read_liberty(
   // 読み込んでASTを作る．
   Parser parser(fin, {filename}, false);
   auto ast_library{parser.parse()};
-  if ( !ast_library.is_valid() ) {
+  if ( !ast_library->is_valid() ) {
     // 読み込みに失敗した．
     return nullptr;
   }
 
+  ASSERT_COND( ast_library->kwd() == "library" );
+
   auto lib = new CiCellLibrary{};
 
   // AST の内容をライブラリに設定する．
-  if ( set_library(ast_library, lib) ) {
+  if ( set_library(ast_library->value(), lib) ) {
     // 成功した．
     return lib;
   }

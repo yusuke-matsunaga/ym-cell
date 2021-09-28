@@ -28,12 +28,14 @@ CiLogicCell::has_logic(
   SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
 ) const
 {
+  return true;
 }
 
 // @brief 全ての出力が論理式を持っているときに true を返す．
 bool
 CiLogicCell::has_logic() const
 {
+  return true;
 }
 
 // @brief 論理セルの場合に出力の論理式を返す．
@@ -44,6 +46,7 @@ CiLogicCell::logic_expr(
   SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
 ) const
 {
+  return {};
 }
 
 // @brief 出力がトライステート条件を持っている時に true を返す．
@@ -52,6 +55,7 @@ CiLogicCell::has_tristate(
   SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
 ) const
 {
+  return false;
 }
 
 // @brief トライステートセルの場合にトライステート条件式を返す．
@@ -63,6 +67,7 @@ CiLogicCell::tristate_expr(
   SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
 ) const
 {
+  return Expr::make_zero();
 }
 
 END_NAMESPACE_YM_CLIB

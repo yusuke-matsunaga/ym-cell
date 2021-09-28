@@ -14,8 +14,9 @@ ctypedef unsigned int ymuint
 cdef extern from "ym/ClibCellLibrary.h" namespace "nsYm::nsClib" :
 
     # ClibCellLibrary の cython バージョン
-    cdef cppclass ClibCellLibrary :
-
-        bool read_mislib(const string&)
-        bool read_liberty(const string&)
+    cdef cppclass ClibCellLibrary:
+        @staticmethod
+        ClibCellLibrary read_mislib(const string&)
+        @staticmethod
+        ClibCellLibrary read_liberty(const string&)
         string name()

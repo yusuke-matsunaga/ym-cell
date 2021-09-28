@@ -13,7 +13,7 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief 属性を読み込む．
-AttrKwd
+Token
 DotlibScanner::read_attr()
 {
   Token token;
@@ -27,10 +27,10 @@ DotlibScanner::read_attr()
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
 		    "attribute keyword is expected");
-    return AttrKwd{};
+    return Token{};
   }
 
-  return AttrKwd(token.value(), token.loc());
+  return token;
 }
 
 // @brief 次のトークンを調べる．

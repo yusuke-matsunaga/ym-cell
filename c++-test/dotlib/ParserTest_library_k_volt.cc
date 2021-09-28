@@ -16,15 +16,14 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-TEST_F(ParserTest, library_k_volt_cell_fall1)
+TEST_F(ParserTestLibrary, library_k_volt_cell_fall1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_cell_fall: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -38,20 +37,19 @@ TEST_F(ParserTest, library_k_volt_cell_fall1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_cell_fall", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_cell_fall", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_cell_leakage_power1)
+TEST_F(ParserTestLibrary, library_k_volt_cell_leakage_power1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_cell_leakage_power: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -65,20 +63,19 @@ TEST_F(ParserTest, library_k_volt_cell_leakage_power1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_cell_leakage_power", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_cell_leakage_power", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_cell_rise1)
+TEST_F(ParserTestLibrary, library_k_volt_cell_rise1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_cell_rise: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -92,20 +89,19 @@ TEST_F(ParserTest, library_k_volt_cell_rise1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_cell_rise", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_cell_rise", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_drive_current1)
+TEST_F(ParserTestLibrary, library_k_volt_drive_current1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_drive_current: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -119,20 +115,19 @@ TEST_F(ParserTest, library_k_volt_drive_current1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_drive_current", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_drive_current", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_drive_fall1)
+TEST_F(ParserTestLibrary, library_k_volt_drive_fall1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_drive_fall: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -146,20 +141,19 @@ TEST_F(ParserTest, library_k_volt_drive_fall1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_drive_fall", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_drive_fall", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_drive_rise1)
+TEST_F(ParserTestLibrary, library_k_volt_drive_rise1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_drive_rise: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -173,20 +167,19 @@ TEST_F(ParserTest, library_k_volt_drive_rise1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_drive_rise", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_drive_rise", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_fall_delay_intercept1)
+TEST_F(ParserTestLibrary, library_k_volt_fall_delay_intercept1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_fall_delay_intercept: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -200,20 +193,19 @@ TEST_F(ParserTest, library_k_volt_fall_delay_intercept1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_fall_delay_intercept", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_fall_delay_intercept", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_fall_pin_resistance1)
+TEST_F(ParserTestLibrary, library_k_volt_fall_pin_resistance1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_fall_pin_resistance: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -227,20 +219,19 @@ TEST_F(ParserTest, library_k_volt_fall_pin_resistance1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_fall_pin_resistance", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_fall_pin_resistance", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_fall_propagation1)
+TEST_F(ParserTestLibrary, library_k_volt_fall_propagation1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_fall_propagation: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -254,20 +245,19 @@ TEST_F(ParserTest, library_k_volt_fall_propagation1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_fall_propagation", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_fall_propagation", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_fall_transition1)
+TEST_F(ParserTestLibrary, library_k_volt_fall_transition1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_fall_transition: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -281,20 +271,19 @@ TEST_F(ParserTest, library_k_volt_fall_transition1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_fall_transition", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_fall_transition", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_hold_fall1)
+TEST_F(ParserTestLibrary, library_k_volt_hold_fall1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_hold_fall: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -308,20 +297,19 @@ TEST_F(ParserTest, library_k_volt_hold_fall1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_hold_fall", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_hold_fall", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_hold_rise1)
+TEST_F(ParserTestLibrary, library_k_volt_hold_rise1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_hold_rise: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -335,20 +323,19 @@ TEST_F(ParserTest, library_k_volt_hold_rise1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_hold_rise", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_hold_rise", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_internal_power1)
+TEST_F(ParserTestLibrary, library_k_volt_internal_power1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_internal_power: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -362,20 +349,19 @@ TEST_F(ParserTest, library_k_volt_internal_power1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_internal_power", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_internal_power", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_intrinsic_fall1)
+TEST_F(ParserTestLibrary, library_k_volt_intrinsic_fall1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_intrinsic_fall: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -389,20 +375,19 @@ TEST_F(ParserTest, library_k_volt_intrinsic_fall1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_intrinsic_fall", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_intrinsic_fall", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_intrinsic_rise1)
+TEST_F(ParserTestLibrary, library_k_volt_intrinsic_rise1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_intrinsic_rise: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -416,20 +401,19 @@ TEST_F(ParserTest, library_k_volt_intrinsic_rise1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_intrinsic_rise", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_intrinsic_rise", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_min_period1)
+TEST_F(ParserTestLibrary, library_k_volt_min_period1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_min_period: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -443,20 +427,19 @@ TEST_F(ParserTest, library_k_volt_min_period1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_min_period", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_min_period", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_min_pulse_width_high1)
+TEST_F(ParserTestLibrary, library_k_volt_min_pulse_width_high1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_min_pulse_width_high: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -470,20 +453,19 @@ TEST_F(ParserTest, library_k_volt_min_pulse_width_high1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_min_pulse_width_high", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_min_pulse_width_high", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_min_pulse_width_low1)
+TEST_F(ParserTestLibrary, library_k_volt_min_pulse_width_low1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_min_pulse_width_low: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -497,20 +479,19 @@ TEST_F(ParserTest, library_k_volt_min_pulse_width_low1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_min_pulse_width_low", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_min_pulse_width_low", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_nochange_fall1)
+TEST_F(ParserTestLibrary, library_k_volt_nochange_fall1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_nochange_fall: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -524,20 +505,19 @@ TEST_F(ParserTest, library_k_volt_nochange_fall1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_nochange_fall", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_nochange_fall", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_nochange_rise1)
+TEST_F(ParserTestLibrary, library_k_volt_nochange_rise1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_nochange_rise: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -551,20 +531,19 @@ TEST_F(ParserTest, library_k_volt_nochange_rise1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_nochange_rise", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_nochange_rise", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_pin_cap1)
+TEST_F(ParserTestLibrary, library_k_volt_pin_cap1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_pin_cap: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -578,20 +557,19 @@ TEST_F(ParserTest, library_k_volt_pin_cap1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_pin_cap", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_pin_cap", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_recoverry_fall1)
+TEST_F(ParserTestLibrary, library_k_volt_recoverry_fall1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_recovery_fall: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -605,20 +583,19 @@ TEST_F(ParserTest, library_k_volt_recoverry_fall1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_recovery_fall", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_recovery_fall", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_recovery_rise1)
+TEST_F(ParserTestLibrary, library_k_volt_recovery_rise1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_recovery_rise: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -632,20 +609,19 @@ TEST_F(ParserTest, library_k_volt_recovery_rise1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_recovery_rise", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_recovery_rise", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_removal_fall1)
+TEST_F(ParserTestLibrary, library_k_volt_removal_fall1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_removal_fall: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -659,20 +635,19 @@ TEST_F(ParserTest, library_k_volt_removal_fall1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_removal_fall", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_removal_fall", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_removal_rise1)
+TEST_F(ParserTestLibrary, library_k_volt_removal_rise1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_removal_rise: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -686,20 +661,19 @@ TEST_F(ParserTest, library_k_volt_removal_rise1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_removal_rise", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_removal_rise", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_rise_delay_intercept1)
+TEST_F(ParserTestLibrary, library_k_volt_rise_delay_intercept1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_rise_delay_intercept: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -713,20 +687,19 @@ TEST_F(ParserTest, library_k_volt_rise_delay_intercept1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_rise_delay_intercept", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_rise_delay_intercept", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_rise_pin_resistance1)
+TEST_F(ParserTestLibrary, library_k_volt_rise_pin_resistance1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_rise_pin_resistance: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -740,20 +713,19 @@ TEST_F(ParserTest, library_k_volt_rise_pin_resistance1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_rise_pin_resistance", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_rise_pin_resistance", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_rise_propagation1)
+TEST_F(ParserTestLibrary, library_k_volt_rise_propagation1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_rise_propagation: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -767,20 +739,19 @@ TEST_F(ParserTest, library_k_volt_rise_propagation1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_rise_propagation", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_rise_propagation", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_rise_transition1)
+TEST_F(ParserTestLibrary, library_k_volt_rise_transition1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_rise_transition: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -794,20 +765,19 @@ TEST_F(ParserTest, library_k_volt_rise_transition1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_rise_transition", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_rise_transition", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_setup_fall1)
+TEST_F(ParserTestLibrary, library_k_volt_setup_fall1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_setup_fall: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -821,20 +791,19 @@ TEST_F(ParserTest, library_k_volt_setup_fall1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_setup_fall", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_setup_fall", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_setup_rise1)
+TEST_F(ParserTestLibrary, library_k_volt_setup_rise1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_setup_rise: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -848,20 +817,19 @@ TEST_F(ParserTest, library_k_volt_setup_rise1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_setup_rise", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_setup_rise", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_skew_fall1)
+TEST_F(ParserTestLibrary, library_k_volt_skew_fall1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_skew_fall: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -875,20 +843,19 @@ TEST_F(ParserTest, library_k_volt_skew_fall1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_skew_fall", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_skew_fall", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_skew_rise1)
+TEST_F(ParserTestLibrary, library_k_volt_skew_rise1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_skew_rise: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -902,20 +869,19 @@ TEST_F(ParserTest, library_k_volt_skew_rise1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_skew_rise", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_skew_rise", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_slope_fall1)
+TEST_F(ParserTestLibrary, library_k_volt_slope_fall1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_slope_fall: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -929,20 +895,19 @@ TEST_F(ParserTest, library_k_volt_slope_fall1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_slope_fall", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_slope_fall", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_slope_rise1)
+TEST_F(ParserTestLibrary, library_k_volt_slope_rise1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_slope_rise: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -956,20 +921,19 @@ TEST_F(ParserTest, library_k_volt_slope_rise1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_slope_rise", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_slope_rise", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_wire_cap1)
+TEST_F(ParserTestLibrary, library_k_volt_wire_cap1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_wire_cap: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -983,20 +947,19 @@ TEST_F(ParserTest, library_k_volt_wire_cap1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_wire_cap", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_wire_cap", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }
 
-TEST_F(ParserTest, library_k_volt_wire_res1)
+TEST_F(ParserTestLibrary, library_k_volt_wire_res1)
 {
   istringstream buf("( test ) {\n"
 		    "  k_volt_wire_res: 1.0;\n"
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -1010,7 +973,7 @@ TEST_F(ParserTest, library_k_volt_wire_res1)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "k_volt_wire_res", attr1.attr().name() );
+  EXPECT_EQ( "k_volt_wire_res", attr1.kwd() );
   auto& value1{attr1.value()};
   EXPECT_EQ( 1.0, value1.float_value() );
 }

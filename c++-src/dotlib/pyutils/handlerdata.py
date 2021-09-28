@@ -259,11 +259,12 @@ BEGIN_NAMESPACE_YM_DOTLIB
 inline
 AstAttrPtr
 group_{0}(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {{
-  return parser.parse_group_statement(attr, "{0}", Parser::s{1}Header);
+  return parser.parse_group_statement(kwd, kwd_loc, "{0}", Parser::s{1}Header);
 }}
 """
             fout.write(fmt.format(name, header))

@@ -29,17 +29,14 @@ BEGIN_NAMESPACE_YM_MISLIB
 
 BEGIN_NONAMESPACE
 
-typedef unordered_map<ShString, int> NameMap;
+using NameMap = unordered_map<ShString, int>;
 
 // 論理式を表すパース木をスキャンして端子名のリストを作る．
-// param[in] node パース木の根のノード
-// param[out] name_list 名前が現れた順に格納されたリスト
-// param[out] name_map 名前をキーにして name_list 中の位置を返す連想配列
 void
 dfs(
-  const MislibExpr* expr,
-  vector<ShString>& name_list,
-  NameMap& name_map
+  const MislibExpr* expr,      ///< [in] パース木の根のノード
+  vector<ShString>& name_list, ///< [out] 名前が現れた順に格納されたリスト
+  NameMap& name_map            ///< [out] 名前をキーにして name_list 中の位置を返す連想配列
 )
 {
   switch ( expr->type() ) {
@@ -74,17 +71,39 @@ dfs(
   }
 }
 
-void
-new_gate(
-  const MislibGate* gate,
-  CiCellLibrary* library
+// タイミング情報を作る．
+CiTiming*
+new_timing(
+  const MislibPin* pt_pin, // パース木のピン情報
+  CiCellLibrary* library   // ライブラリ
 )
 {
-  ShString name = gate->name()->str();
-  ClibArea area(gate->area()->num());
+  ClibTime       r_i{pt_pin->rise_block_delay()->num()};
+  ClibResistance r_r{pt_pin->rise_fanout_delay()->num()};
+  ClibTime       f_i{pt_pin->fall_block_delay()->num()};
+  ClibResistance f_r{pt_pin->fall_fanout_delay()->num()};
+  auto timing = library->new_timing_generic(
+    ClibTimingType::combinational,
+    Expr::make_one(),
+    r_i, f_i,
+    ClibTime(0.0), ClibTime(0.0),
+    r_r, f_r
+  );
+  return timing;
+}
 
-  ShString opin_name = gate->opin_name()->str();
-  const MislibExpr* opin_expr = gate->opin_expr();
+// セルを作る．
+void
+new_gate(
+  const MislibGate* gate, // パース木のゲート情報
+  CiCellLibrary* library  // ライブラリ
+)
+{
+  auto name = gate->name()->str();
+  ClibArea area{gate->area()->num()};
+
+  auto opin_name = gate->opin_name()->str();
+  auto opin_expr = gate->opin_expr();
 
   auto npin = gate->ipin_num();
   const MislibPin* ipin_top = nullptr;
@@ -122,14 +141,14 @@ new_gate(
   vector<CiInputPin*> input_list(ni);
   for ( auto i = 0; i < ni; ++ i ) {
     // 入力ピンの設定
-    ShString name = ipin_name_list[i];
-    const MislibPin* pin = ipin_array[i];
-    ClibCapacitance load(pin->input_load()->num());
+    auto name = ipin_name_list[i];
+    auto pin = ipin_array[i];
+    ClibCapacitance load{pin->input_load()->num()};
     input_list[i] = library->new_cell_input(name, load, load, load);
   }
 
   // 出力ピンを作る．
-  Expr function = opin_expr->to_expr(ipin_name_map);
+  auto function = opin_expr->to_expr(ipin_name_map);
   auto opin = library->new_cell_output(opin_name,
 				       true, function,
 				       Expr::make_zero(),
@@ -143,34 +162,15 @@ new_gate(
   // タイミング情報の生成
   vector<CiTiming*> timing_list(ni);
   if ( wildcard_pin ) {
-    vector<CiTiming*> timing_list(1);
-    const MislibPin* pt_pin = ipin_top;
-    ClibTime r_i(pt_pin->rise_block_delay()->num());
-    ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
-    ClibTime f_i(pt_pin->fall_block_delay()->num());
-    ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
-    CiTiming* timing = library->new_timing_generic(ClibTimingType::combinational,
-						   Expr::make_one(),
-						   r_i, f_i,
-						   ClibTime(0.0), ClibTime(0.0),
-						   r_r, f_r);
+    // すべてのピンが同一のパラメータを持つ．
+    auto timing = new_timing(ipin_top, library);
     for ( auto i = 0; i < ni; ++ i ) {
       timing_list[i] = timing;
     }
   }
   else {
     for ( auto i = 0; i < ni; ++ i ) {
-      const MislibPin* pt_pin = ipin_array[i];
-      ClibTime r_i(pt_pin->rise_block_delay()->num());
-      ClibResistance r_r(pt_pin->rise_fanout_delay()->num());
-      ClibTime f_i(pt_pin->fall_block_delay()->num());
-      ClibResistance f_r(pt_pin->fall_fanout_delay()->num());
-      CiTiming* timing = library->new_timing_generic(ClibTimingType::combinational,
-						     Expr::make_one(),
-						     r_i, f_i,
-						     ClibTime(0.0), ClibTime(0.0),
-						     r_r, f_r);
-      timing_list[i] = timing;
+      timing_list[i] = new_timing(ipin_array[i], library);
     }
   }
 
@@ -178,19 +178,19 @@ new_gate(
   auto cell = library->new_logic_cell(name, area,
 				      input_list,
 				      vector<CiOutputPin*>(1, opin),
-				      vector<CiInoutPin*>(),
-				      vector<CiBus*>(),
-				      vector<CiBundle*>(),
+				      vector<CiInoutPin*>{},
+				      vector<CiBus*>{},
+				      vector<CiBundle*>{},
 				      timing_list);
 
-  TvFunc tv_function = function.make_tv(ni);
+  auto tv_function = function.make_tv(ni);
   for ( SizeType i = 0; i < ni; ++ i ) {
     // タイミング情報の設定
     VarId var(i);
-    const MislibPin* pt_pin = ipin_array[i];
-    TvFunc p_func = tv_function.cofactor(var, false);
-    TvFunc n_func = tv_function.cofactor(var, true);
-    ClibTimingSense sense_real = ClibTimingSense::non_unate;
+    auto pt_pin = ipin_array[i];
+    auto p_func = tv_function.cofactor(var, false);
+    auto n_func = tv_function.cofactor(var, true);
+    auto sense_real = ClibTimingSense::non_unate;
     if ( ~p_func && n_func ) {
       if ( ~n_func && p_func ) {
 	sense_real = ClibTimingSense::non_unate;
@@ -218,7 +218,7 @@ new_gate(
     }
 
     // 実際の極性情報と記述が合っているか確かめる．
-    ClibTimingSense sense = ClibTimingSense::non_unate;
+    auto sense = ClibTimingSense::non_unate;
     switch ( pt_pin->phase()->type() ) {
     case MislibPhase::Noninv:  sense = ClibTimingSense::positive_unate; break;
     case MislibPhase::Inv:     sense = ClibTimingSense::negative_unate; break;

@@ -41,10 +41,6 @@ set (ci_SOURCES
   c++-src/ci/CiCellGroup.cc
   c++-src/ci/CiCellLibrary.cc
   c++-src/ci/CiPin.cc
-  c++-src/ci/CiFFCell.cc
-  c++-src/ci/CiFsmCell.cc
-  c++-src/ci/CiLatchCell.cc
-  c++-src/ci/CiLogicCell.cc
   c++-src/ci/CiLut.cc
   c++-src/ci/CiLutTemplate.cc
   c++-src/ci/CiPatGraph.cc

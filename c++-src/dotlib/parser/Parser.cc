@@ -120,10 +120,10 @@ AstAttrPtr
 Parser::parse()
 {
   // 先頭(根本)の属性は 'library' でなければならない．
-  auto attr{mScanner.read_attr()};
-  if ( attr.name() != "library" ) {
+  auto token = mScanner.read_attr();
+  if ( token.value() != "library" ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    attr.loc(),
+		    token.loc(),
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "'library' keyword is expected "
@@ -132,7 +132,7 @@ Parser::parse()
   }
 
   // 本体を読み込む．
-  auto library{parse_group_statement(attr, "library", sStrHeader)};
+  auto library = parse_group_statement(token.value(), token.loc(), "library", sStrHeader);
   if ( library == nullptr ) {
     return {};
   }
@@ -163,18 +163,19 @@ Parser::parse()
 // エラーが起こったら nullptr を返す．
 AstAttrPtr
 Parser::parse_simple_attribute(
-  const AttrKwd& attr,
+  const string& kwd,
+  const FileRegion& kwd_loc,
   SimpleHandler handler
 )
 {
   // 属性名の直後は必ず ':' でなければならない．
-  Token token = mScanner.read_and_verify(TokenType::COLON);
+  auto token = mScanner.read_and_verify(TokenType::COLON);
   if ( token.type() != TokenType::COLON ) {
     return {};
   }
 
   // その後の値を読み込む．
-  auto value{handler(mScanner)};
+  auto value = handler(mScanner);
   if ( value == nullptr ) {
     // エラー
     return {};
@@ -187,17 +188,18 @@ Parser::parse_simple_attribute(
   }
 
   // 値を返す．
-  return AstAttrPtr{new AstAttr(attr, std::move(value))};
+  return AstAttrPtr{new AstAttr(kwd, kwd_loc, std::move(value))};
 }
 
 // @brief Complex Attribute を読み込む．
 AstAttrPtr
 Parser::parse_complex_attribute(
-  const AttrKwd& attr,
+  const string& kwd,
+  const FileRegion& kwd_loc,
   HeaderHandler& handler
 )
 {
-  auto value{parse_header(handler)};
+  auto value = parse_header(handler);
   if ( value == nullptr ) {
     return {};
   }
@@ -206,7 +208,7 @@ Parser::parse_complex_attribute(
     return {};
   }
 
-  return AstAttrPtr{new AstAttr(attr, std::move(value))};
+  return AstAttrPtr{new AstAttr(kwd, kwd_loc, std::move(value))};
 }
 
 // @brief Group Statement を読み込む．
@@ -215,13 +217,14 @@ Parser::parse_complex_attribute(
 // エラーが起こったら nullptr を返す．
 AstAttrPtr
 Parser::parse_group_statement(
-  const AttrKwd& attr,
+  const string& kwd,
+  const FileRegion& kwd_loc,
   const char* group_name,
   HeaderHandler& header_handler
 )
 {
   // ヘッダをパースする．
-  auto header_value{parse_header(header_handler)};
+  auto header_value = parse_header(header_handler);
   if ( header_value == nullptr ) {
     // エラー
     return {};
@@ -255,18 +258,18 @@ Parser::parse_group_statement(
       // 値を作る．
       FileRegion loc{lcb_token.loc(), rcb_loc};
       auto group_value{AstValue::new_group(std::move(header_value), child_list, loc)};
-      return AstAttrPtr{new AstAttr(attr, std::move(group_value))};
+      return AstAttrPtr{new AstAttr(kwd, kwd_loc, std::move(group_value))};
     }
 
     // 子供の要素を読み込む．
-    AttrKwd child_attr{mScanner.read_attr()};
-    if ( child_attr.name() == "none" ) {
+    auto child_attr = mScanner.read_attr();
+    if ( child_attr.value() == "" ) {
       return {};
     }
-    string key = string(group_name) + ":" + child_attr.name();
+    string key = string(group_name) + ":" + string(child_attr.value());
     if ( sHandlerDict.count(key) > 0 ) {
       auto handler{sHandlerDict.at(key)};
-      auto child{handler(*this, child_attr)};
+      auto child = handler(*this, child_attr.value(), child_attr.loc());
       if ( child == nullptr ) {
 	return {};
       }
@@ -274,7 +277,7 @@ Parser::parse_group_statement(
     }
     else {
       // 対応するハンドラが登録されていない．
-      syntax_error(child_attr);
+      syntax_error(child_attr.value(), child_attr.loc());
       return {};
     }
   }
@@ -367,13 +370,14 @@ Parser::debug()
 // @param[in] attr 対象の属性
 void
 syntax_error(
-  const AttrKwd& attr
+  const string& kwd,
+  const FileRegion& kwd_loc
 )
 {
   ostringstream buf;
-  buf << "Syntax error. Unexpected keyword: " << attr.name();
+  buf << "Syntax error. Unexpected keyword: " << kwd;
   MsgMgr::put_msg(__FILE__, __LINE__,
-		  attr.loc(),
+		  kwd_loc,
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  buf.str());
@@ -384,15 +388,16 @@ syntax_error(
 // @param[in] prev_node 以前に定義されたノード
 void
 duplicate_error(
-  const AttrKwd& attr,
+  const string& kwd,
+  const FileRegion& kwd_loc,
   const AstAttr* prev_node
 )
 {
   ostringstream buf;
-  buf << attr.name() << " appear more than once."
-      << " Previously appears at " << prev_node->attr().loc();
+  buf << kwd << " appear more than once."
+      << " Previously appears at " << prev_node->kwd_loc();
   MsgMgr::put_msg(__FILE__, __LINE__,
-		  attr.loc(),
+		  kwd_loc,
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  buf.str());

@@ -26,11 +26,12 @@ BEGIN_NAMESPACE_YM_DOTLIB
 inline
 AstAttrPtr
 complex_float_float(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sFloatFloatHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sFloatFloatHeader);
 }
 
 /// @brief ( float, float, string ) の形式の Complex attribute のパースを行う．
@@ -40,11 +41,12 @@ complex_float_float(
 inline
 AstAttrPtr
 complex_float_float_string(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sFloatFloatStrHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sFloatFloatStrHeader);
 }
 
 /// @brief ( float, string ) 型の Complex attribute のパースを行う．
@@ -54,11 +56,12 @@ complex_float_float_string(
 inline
 AstAttrPtr
 complex_float_string(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sFloatStrHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sFloatStrHeader);
 }
 
 /// @brief ( "float, float, ... " ) の形式の Complex attribute のパースを行う．
@@ -68,11 +71,12 @@ complex_float_string(
 inline
 AstAttrPtr
 complex_float_vector(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sFloatVectorHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sFloatVectorHeader);
 }
 
 /// @brief ( integer, float ) の形式の Complex attribute のパースを行う．
@@ -82,11 +86,12 @@ complex_float_vector(
 inline
 AstAttrPtr
 complex_int_float(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sIntFloatHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sIntFloatHeader);
 }
 
 /// @brief ( integer, string ) の形式の Complex attribute のパースを行う．
@@ -96,11 +101,12 @@ complex_int_float(
 inline
 AstAttrPtr
 complex_int_string(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sIntStrHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sIntStrHeader);
 }
 
 /// @brief ( integer, "float, float, ... " ) の形式の Complex attribute のパースを行う．
@@ -110,11 +116,12 @@ complex_int_string(
 inline
 AstAttrPtr
 complex_int_float_vector(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sIntFloatVectorHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sIntFloatVectorHeader);
 }
 
 /// @brief ( integer, integer, ...  ) の形式の Complex attribute のパースを行う．
@@ -124,11 +131,12 @@ complex_int_float_vector(
 inline
 AstAttrPtr
 complex_int_list(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sIntListHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sIntListHeader);
 }
 
 /// @brief ( "integer, integer, ... " ) の形式の Complex attribute のパースを行う．
@@ -138,11 +146,12 @@ complex_int_list(
 inline
 AstAttrPtr
 complex_int_vector(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sIntVectorHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sIntVectorHeader);
 }
 
 /// @brief ( string ) 型の Complex attribute のパースを行う．
@@ -152,11 +161,12 @@ complex_int_vector(
 inline
 AstAttrPtr
 complex_string(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sStrHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sStrHeader);
 }
 
 /// @brief ( string, float ) の形式の Complex attribute のパースを行う．
@@ -166,11 +176,12 @@ complex_string(
 inline
 AstAttrPtr
 complex_string_float(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sStrFloatHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sStrFloatHeader);
 }
 
 /// @brief ( string, integer ) の形式の Complex attribute のパースを行う．
@@ -180,11 +191,12 @@ complex_string_float(
 inline
 AstAttrPtr
 complex_string_int(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sStrIntHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sStrIntHeader);
 }
 
 /// @brief ( string, string, ... ) の形式の Complex attribute のパースを行う．
@@ -194,11 +206,12 @@ complex_string_int(
 inline
 AstAttrPtr
 complex_string_list(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sStrListHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sStrListHeader);
 }
 
 /// @brief ( string, string ) の形式の Complex attribute のパースを行う．
@@ -208,11 +221,12 @@ complex_string_list(
 inline
 AstAttrPtr
 complex_string_string(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sStrStrHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sStrStrHeader);
 }
 
 /// @brief ( string, string, string ) の形式の Complex attribute のパースを行う．
@@ -222,11 +236,12 @@ complex_string_string(
 inline
 AstAttrPtr
 complex_string_string_string(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sStrStrStrHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sStrStrStrHeader);
 }
 
 /// @brief 'fanout_length' Complex Attribute のパースを行う．
@@ -236,11 +251,12 @@ complex_string_string_string(
 inline
 AstAttrPtr
 complex_fanout_length(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sFanoutLengthHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sFanoutLengthHeader);
 }
 
 /// @brief 'Technology' Complex Attribute のパースを行う．
@@ -250,11 +266,12 @@ complex_fanout_length(
 inline
 AstAttrPtr
 complex_technology(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sTechnologyHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sTechnologyHeader);
 }
 
 /// @brief 'values' Complex attribute のパースを行う．
@@ -264,11 +281,12 @@ complex_technology(
 inline
 AstAttrPtr
 complex_values(
-  Parser& parser,     ///< [in] パーサー
-  const AttrKwd& attr ///< [in] 属性の型
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_complex_attribute(attr, Parser::sFloatVectorListHeader);
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sFloatVectorListHeader);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -288,12 +306,13 @@ complex_values(
 inline
 AstAttrPtr
 group_empty(
-  Parser& parser,        ///< [in] パーサー
-  const AttrKwd& attr,   ///< [in] 属性の型
-  const char* group_name ///< [in] 親のグループ名
+  Parser& parser,            ///< [in] パーサー
+  const string& kwd,         ///< [in] 属性名
+  const FileRegion& kwd_loc, ///< [in] 属性名の位置
+  const char* group_name     ///< [in] 親のグループ名
 )
 {
-  return parser.parse_group_statement(attr, group_name, Parser::sEmptyHeader);
+  return parser.parse_group_statement(kwd, kwd_loc, group_name, Parser::sEmptyHeader);
 }
 
 /// @brief ( string ) タイプの group statment のパースを行なう．
@@ -303,12 +322,13 @@ group_empty(
 inline
 AstAttrPtr
 group_string(
-  Parser& parser,        ///< [in] パーサー
-  const AttrKwd& attr,   ///< [in] 属性の型
-  const char* group_name ///< [in] 親のグループ名
+  Parser& parser,            ///< [in] パーサー
+  const string& kwd,         ///< [in] 属性名
+  const FileRegion& kwd_loc, ///< [in] 属性名の位置
+  const char* group_name     ///< [in] 親のグループ名
 )
 {
-  return parser.parse_group_statement(attr, group_name, Parser::sStrHeader);
+  return parser.parse_group_statement(kwd, kwd_loc, group_name, Parser::sStrHeader);
 }
 
 /// @brief ( string, string ) タイプの group statment のパースを行なう．
@@ -318,12 +338,13 @@ group_string(
 inline
 AstAttrPtr
 group_string_string(
-  Parser& parser,        ///< [in] パーサー
-  const AttrKwd& attr,   ///< [in] 属性の型
-  const char* group_name ///< [in] 親のグループ名
+  Parser& parser,            ///< [in] パーサー
+  const string& kwd,         ///< [in] 属性名
+  const FileRegion& kwd_loc, ///< [in] 属性名の位置
+  const char* group_name     ///< [in] 親のグループ名
 )
 {
-  return parser.parse_group_statement(attr, group_name, Parser::sStrStrHeader);
+  return parser.parse_group_statement(kwd, kwd_loc, group_name, Parser::sStrStrHeader);
 }
 
 /// @brief ( string, string, int ) タイプの group statment のパースを行なう．
@@ -333,12 +354,13 @@ group_string_string(
 inline
 AstAttrPtr
 group_string_string_int(
-  Parser& parser,        ///< [in] パーサー
-  const AttrKwd& attr,   ///< [in] 属性の型
-  const char* group_name ///< [in] 親のグループ名
+  Parser& parser,            ///< [in] パーサー
+  const string& kwd,         ///< [in] 属性名
+  const FileRegion& kwd_loc, ///< [in] 属性名の位置
+  const char* group_name     ///< [in] 親のグループ名
 )
 {
-  return parser.parse_group_statement(attr, group_name, Parser::sStrStrIntHeader);
+  return parser.parse_group_statement(kwd, kwd_loc, group_name, Parser::sStrStrIntHeader);
 }
 
 //////////////////////////////////////////////////////////////////////

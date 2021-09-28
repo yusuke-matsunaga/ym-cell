@@ -159,7 +159,7 @@ private:
   );
 
   /// @brief ノードを作る．
-  LcPatNode&
+  LcPatNode*
   new_node();
 
 
@@ -233,7 +233,7 @@ private:
   vector<LcPatNode*> mInputList;
 
   // 全ノードを収める配列
-  vector<LcPatNode> mNodeList;
+  vector<unique_ptr<LcPatNode>> mNodeList;
 
   // AND/XOR ノードのハッシュ表
   LcPatNode** mHashTable;

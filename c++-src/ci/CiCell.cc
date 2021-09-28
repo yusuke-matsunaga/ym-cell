@@ -396,28 +396,28 @@ CiCell::set_timing(
 bool
 CiCell::is_logic() const
 {
-  return false;
+  return mGroup->is_logic();
 }
 
 // @brief FFセルの時に true を返す．
 bool
 CiCell::is_ff() const
 {
-  return false;
+  return mGroup->is_ff();
 }
 
 // @brief ラッチセルの時に true を返す．
 bool
 CiCell::is_latch() const
 {
-  return false;
+  return mGroup->is_latch();
 }
 
 // @brief 順序セル(非FF/非ラッチ)の場合に true を返す．
 bool
 CiCell::is_fsm() const
 {
-  return false;
+  return mGroup->is_fsm();
 }
 
 // @brief 出力の論理式を持っている時に true を返す．
@@ -426,14 +426,14 @@ CiCell::has_logic(
   SizeType pin_id
 ) const
 {
-  return false;
+  return mGroup->has_logic(pin_id);
 }
 
 // @brief 全ての出力が論理式を持っているときに true を返す．
 bool
 CiCell::has_logic() const
 {
-  return false;
+  return mGroup->has_logic();
 }
 
 // @brief 論理セルの場合に出力の論理式を返す．
@@ -442,7 +442,7 @@ CiCell::logic_expr(
   SizeType pin_id
 ) const
 {
-  return Expr::make_zero();
+  return mGroup->logic_expr(pin_id);
 }
 
 // @brief 出力がトライステート条件を持っている時に true を返す．
@@ -451,7 +451,7 @@ CiCell::has_tristate(
   SizeType pin_id
 ) const
 {
-  return false;
+  return mGroup->has_tristate(pin_id);
 }
 
 // @brief トライステートセルの場合にトライステート条件式を返す．
@@ -460,14 +460,14 @@ CiCell::tristate_expr(
   SizeType pin_id
 ) const
 {
-  return Expr::make_zero();
+  return mGroup->tristate_expr(pin_id);
 }
 
 // @brief FFセルの場合にFFのピン情報を得る．
 ClibFFInfo
 CiCell::ff_info() const
 {
-  return ClibFFInfo();
+  return mGroup->ff_info();
 }
 
 // @brief FFセルの場合に次状態関数を表す論理式を返す．
@@ -475,7 +475,7 @@ CiCell::ff_info() const
 Expr
 CiCell::next_state_expr() const
 {
-  return Expr::make_zero();
+  return mGroup->next_state_expr();
 }
 
 // @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
@@ -483,7 +483,7 @@ CiCell::next_state_expr() const
 Expr
 CiCell::clock_expr() const
 {
-  return Expr::make_zero();
+  return mGroup->clock_expr();
 }
 
 // @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
@@ -491,14 +491,14 @@ CiCell::clock_expr() const
 Expr
 CiCell::clock2_expr() const
 {
-  return Expr::make_zero();
+  return mGroup->clock2_expr();
 }
 
 // @brief ラッチセルの場合にFFのピン情報を得る．
 ClibLatchInfo
 CiCell::latch_info() const
 {
-  return ClibLatchInfo();
+  return mGroup->latch_info();
 }
 
 // @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
@@ -506,7 +506,7 @@ CiCell::latch_info() const
 Expr
 CiCell::data_in_expr() const
 {
-  return Expr::make_zero();
+  return mGroup->data_in_expr();
 }
 
 // @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
@@ -514,7 +514,7 @@ CiCell::data_in_expr() const
 Expr
 CiCell::enable_expr() const
 {
-  return Expr::make_zero();
+  return mGroup->enable_expr();
 }
 
 // @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
@@ -522,14 +522,14 @@ CiCell::enable_expr() const
 Expr
 CiCell::enable2_expr() const
 {
-  return Expr::make_zero();
+  return mGroup->enable2_expr();
 }
 
 // @brief FFセル/ラッチセルの場合にクリア端子を持っていたら true を返す．
 bool
 CiCell::has_clear() const
 {
-  return false;
+  return mGroup->has_clear();
 }
 
 // @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
@@ -537,14 +537,14 @@ CiCell::has_clear() const
 Expr
 CiCell::clear_expr() const
 {
-  return Expr::make_zero();
+  return mGroup->clear_expr();
 }
 
 // @brief FFセル/ラッチセルの場合にプリセット端子を持っていたら true を返す．
 bool
 CiCell::has_preset() const
 {
-  return false;
+  return mGroup->has_preset();
 }
 
 // @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
@@ -552,7 +552,7 @@ CiCell::has_preset() const
 Expr
 CiCell::preset_expr() const
 {
-  return Expr::make_zero();
+  return mGroup->preset_expr();
 }
 
 // @brief clear_preset_var1 の取得
@@ -562,7 +562,7 @@ CiCell::preset_expr() const
 SizeType
 CiCell::clear_preset_var1() const
 {
-  return 0;
+  return mGroup->clear_preset_var1();
 }
 
 // @brief clear_preset_var2 の取得
@@ -572,7 +572,7 @@ CiCell::clear_preset_var1() const
 SizeType
 CiCell::clear_preset_var2() const
 {
-  return 0;
+  return mGroup->clear_preset_var2();
 }
 
 END_NAMESPACE_YM_CLIB

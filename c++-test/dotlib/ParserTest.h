@@ -10,7 +10,6 @@
 
 #include "gtest/gtest.h"
 #include "dotlib_nsdef.h"
-#include "AttrKwd.h"
 #include "ym/MsgMgr.h"
 #include "ym/StrListMsgHandler.h"
 #include "ym/StreamMsgHandler.h"
@@ -31,9 +30,22 @@ public:
   }
 
   FileInfo info{"parser_test.lib"};
-  AttrKwd attr;
+  string kwd;
+  FileRegion kwd_loc;
   StrListMsgHandler mh;
   StreamMsgHandler mh2;
+
+};
+
+class ParserTestLibrary :
+  public ParserTest
+{
+public:
+
+  ParserTestLibrary()
+  {
+    kwd = "library";
+  }
 
 };
 

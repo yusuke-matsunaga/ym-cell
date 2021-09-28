@@ -71,7 +71,7 @@ LcPatMgr::node(
 ) const
 {
   ASSERT_COND( 0 <= pos && pos < node_num() );
-  return mNodeList[pos];
+  return *mNodeList[pos];
 }
 
 // @brief パタン数を返す．
@@ -446,12 +446,12 @@ LcPatMgr::make_input(
 {
   auto id = var.val();
   while ( mInputList.size() <= id ) {
-    LcPatNode& node = new_node();
+    auto node = new_node();
     auto input_id = mInputList.size();
-    node.mType = (input_id << 2) | LcPatNode::INPUT;
-    mInputList.push_back(&node);
+    node->mType = (input_id << 2) | LcPatNode::INPUT;
+    mInputList.push_back(node);
   }
-  LcPatNode* node = mInputList[id];
+  auto node = mInputList[id];
   ASSERT_COND( node != nullptr );
 
   return node;
@@ -512,10 +512,10 @@ LcPatMgr::make_node(
   }
 
   // 新しいノードを作る．
-  LcPatNode& node = new_node();
-  node.mType = type;
-  node.mFanin[0] = &l_node;
-  node.mFanin[1] = &r_node;
+  auto node = new_node();
+  node->mType = type;
+  node->mFanin[0] = &l_node;
+  node->mFanin[1] = &r_node;
 
   // ハッシュ表に登録する．
   if ( node_num() >= mNextLimit ) {
@@ -523,19 +523,20 @@ LcPatMgr::make_node(
     // サイズが変わったのでインデックスを再計算する．
     idx = pos % mHashSize;
   }
-  node.mLink = mHashTable[idx];
-  mHashTable[idx] = &node;
+  node->mLink = mHashTable[idx];
+  mHashTable[idx] = node;
 
-  return LcPatHandle(&node, oinv);
+  return LcPatHandle(node, oinv);
 }
 
 // @brief ノードを作る．
-LcPatNode&
+LcPatNode*
 LcPatMgr::new_node()
 {
   auto id = mNodeList.size();
-  mNodeList.push_back({id});
-  return mNodeList.back();
+  auto node = new LcPatNode{id};
+  mNodeList.push_back(unique_ptr<LcPatNode>{node});
+  return node;
 }
 
 // @brief ハッシュ表を確保する．

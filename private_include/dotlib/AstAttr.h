@@ -9,7 +9,6 @@
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
-#include "dotlib/AttrKwd.h"
 #include "dotlib/AstValue.h"
 
 
@@ -20,7 +19,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @brief 属性を表すクラス
 ///
 /// 属性は
-/// - 属性名 (AttrKwd)
+/// - 属性名
+/// - 属性名のファイル上の位置
 /// - 値 (AttrValue)
 /// の組で表されるが，値には様々な種類がある．
 //////////////////////////////////////////////////////////////////////
@@ -35,9 +35,11 @@ public:
 
   /// @brief コンストラクタ
   AstAttr(
-    const AttrKwd& attr,               ///< [in] 属性の型
+    const string& kwd,                 ///< [in] 属性名
+    const FileRegion& kwd_loc,         ///< [in] 属性名の位置
     unique_ptr<const AstValue>&& value ///< [in] 値
-  ) : mAttr{attr},
+  ) : mKwd{kwd},
+      mKwdLoc{kwd_loc},
       mValue{std::move(value)}
   {
   }
@@ -53,11 +55,15 @@ public:
 
   /// @brief 有効な値を表す時 true を返す．
   bool
-  is_valid() const { return mAttr.name() != "none"; }
+  is_valid() const { return mKwd != string{}; }
 
-  /// @brief 属性を得る．
-  const AttrKwd&
-  attr() const { return mAttr; }
+  /// @brief 属性名を返す．
+  string
+  kwd() const { return mKwd; }
+
+  /// @brief 属性名の位置
+  FileRegion
+  kwd_loc() const { return mKwdLoc; }
 
   /// @brief 属性の値を得る．
   const AstValue&
@@ -76,8 +82,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 属性
-  AttrKwd mAttr;
+  // 属性名
+  string mKwd;
+
+  // 属性名の位置
+  FileRegion mKwdLoc;
 
   // 値
   AstValuePtr mValue;

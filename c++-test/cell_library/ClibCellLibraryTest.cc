@@ -18,10 +18,7 @@ TEST(ClibCellLibraryTest, read_mislib)
 {
   try {
     string filename = string(DATA_DIR) + string("/lib2.genlib");
-    ClibCellLibrary library;
-    bool stat = library.read_mislib(filename);
-
-    EXPECT_TRUE( stat );
+    auto library = ClibCellLibrary::read_mislib(filename);
 
     EXPECT_EQ( 29, library.cell_num() );
   }
@@ -37,10 +34,7 @@ TEST(ClibCellLibraryTest, read_liberty)
     StreamMsgHandler handler(cout);
     MsgMgr::attach_handler(&handler);
     string filename = string(DATA_DIR) + string("/HIT018.typ.snp");
-    ClibCellLibrary library;
-    bool stat = library.read_liberty(filename);
-
-    EXPECT_TRUE( stat );
+    auto library = ClibCellLibrary::read_liberty(filename);
 
     EXPECT_EQ( 310, library.cell_num() );
   }
@@ -54,10 +48,7 @@ TEST(ClibCellLibraryTest, dump_restore)
 {
   try {
     string filename = string(DATA_DIR) + string("/HIT018.typ.snp");
-    ClibCellLibrary library;
-    bool stat = library.read_liberty(filename);
-
-    EXPECT_TRUE( stat );
+    auto library = ClibCellLibrary::read_liberty(filename);
 
     EXPECT_EQ( 310, library.cell_num() );
 

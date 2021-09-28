@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // ここでは各グループのヘッダの形式のみチェックを行なう．
 // 各グループの具体的な属性についてはそれぞれの別個にチェックする．
 
-TEST_F(ParserTest, library_cell)
+TEST_F(ParserTestLibrary, library_cell)
 {
   istringstream buf("( test ) {\n"
 		    "  cell ( cell_A ) {\n"
@@ -27,8 +27,7 @@ TEST_F(ParserTest, library_cell)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -42,7 +41,7 @@ TEST_F(ParserTest, library_cell)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "cell", attr1.attr().name() );
+  EXPECT_EQ( "cell", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -51,7 +50,7 @@ TEST_F(ParserTest, library_cell)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_dc_current_template)
+TEST_F(ParserTestLibrary, library_dc_current_template)
 {
   istringstream buf("( test ) {\n"
 		    "  dc_current_template ( temp_A ) {\n"
@@ -59,8 +58,7 @@ TEST_F(ParserTest, library_dc_current_template)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -74,7 +72,7 @@ TEST_F(ParserTest, library_dc_current_template)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "dc_current_template", attr1.attr().name() );
+  EXPECT_EQ( "dc_current_template", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -83,7 +81,7 @@ TEST_F(ParserTest, library_dc_current_template)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_em_lut_template)
+TEST_F(ParserTestLibrary, library_em_lut_template)
 {
   istringstream buf("( test ) {\n"
 		    "  em_lut_template ( temp_A ) {\n"
@@ -91,8 +89,7 @@ TEST_F(ParserTest, library_em_lut_template)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -106,7 +103,7 @@ TEST_F(ParserTest, library_em_lut_template)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "em_lut_template", attr1.attr().name() );
+  EXPECT_EQ( "em_lut_template", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -115,7 +112,7 @@ TEST_F(ParserTest, library_em_lut_template)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_fall_net_delay)
+TEST_F(ParserTestLibrary, library_fall_net_delay)
 {
   istringstream buf("( test ) {\n"
 		    "  fall_net_delay ( temp_A ) {\n"
@@ -123,8 +120,7 @@ TEST_F(ParserTest, library_fall_net_delay)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -138,7 +134,7 @@ TEST_F(ParserTest, library_fall_net_delay)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "fall_net_delay", attr1.attr().name() );
+  EXPECT_EQ( "fall_net_delay", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -147,7 +143,7 @@ TEST_F(ParserTest, library_fall_net_delay)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_fall_transition_degradation)
+TEST_F(ParserTestLibrary, library_fall_transition_degradation)
 {
   istringstream buf("( test ) {\n"
 		    "  fall_transition_degradation ( temp_A ) {\n"
@@ -155,8 +151,7 @@ TEST_F(ParserTest, library_fall_transition_degradation)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -170,7 +165,7 @@ TEST_F(ParserTest, library_fall_transition_degradation)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "fall_transition_degradation", attr1.attr().name() );
+  EXPECT_EQ( "fall_transition_degradation", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -179,7 +174,7 @@ TEST_F(ParserTest, library_fall_transition_degradation)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_faults_lut_template)
+TEST_F(ParserTestLibrary, library_faults_lut_template)
 {
   istringstream buf("( test ) {\n"
 		    "  faults_lut_template ( temp_A ) {\n"
@@ -187,8 +182,7 @@ TEST_F(ParserTest, library_faults_lut_template)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -202,7 +196,7 @@ TEST_F(ParserTest, library_faults_lut_template)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "faults_lut_template", attr1.attr().name() );
+  EXPECT_EQ( "faults_lut_template", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -211,7 +205,7 @@ TEST_F(ParserTest, library_faults_lut_template)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_input_voltage)
+TEST_F(ParserTestLibrary, library_input_voltage)
 {
   istringstream buf("( test ) {\n"
 		    "  input_voltage ( temp_A ) {\n"
@@ -219,8 +213,7 @@ TEST_F(ParserTest, library_input_voltage)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -234,7 +227,7 @@ TEST_F(ParserTest, library_input_voltage)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "input_voltage", attr1.attr().name() );
+  EXPECT_EQ( "input_voltage", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -243,7 +236,7 @@ TEST_F(ParserTest, library_input_voltage)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_iv_lut_template)
+TEST_F(ParserTestLibrary, library_iv_lut_template)
 {
   istringstream buf("( test ) {\n"
 		    "  iv_lut_template ( temp_A ) {\n"
@@ -251,8 +244,7 @@ TEST_F(ParserTest, library_iv_lut_template)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -266,7 +258,7 @@ TEST_F(ParserTest, library_iv_lut_template)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "iv_lut_template", attr1.attr().name() );
+  EXPECT_EQ( "iv_lut_template", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -275,7 +267,7 @@ TEST_F(ParserTest, library_iv_lut_template)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_lu_table_template)
+TEST_F(ParserTestLibrary, library_lu_table_template)
 {
   istringstream buf("( test ) {\n"
 		    "  lu_table_template ( temp_A ) {\n"
@@ -283,8 +275,7 @@ TEST_F(ParserTest, library_lu_table_template)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -298,7 +289,7 @@ TEST_F(ParserTest, library_lu_table_template)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "lu_table_template", attr1.attr().name() );
+  EXPECT_EQ( "lu_table_template", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -307,7 +298,7 @@ TEST_F(ParserTest, library_lu_table_template)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_noise_lut_template)
+TEST_F(ParserTestLibrary, library_noise_lut_template)
 {
   istringstream buf("( test ) {\n"
 		    "  noise_lut_template ( temp_A ) {\n"
@@ -315,8 +306,7 @@ TEST_F(ParserTest, library_noise_lut_template)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -330,7 +320,7 @@ TEST_F(ParserTest, library_noise_lut_template)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "noise_lut_template", attr1.attr().name() );
+  EXPECT_EQ( "noise_lut_template", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -339,7 +329,7 @@ TEST_F(ParserTest, library_noise_lut_template)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_operating_conditions)
+TEST_F(ParserTestLibrary, library_operating_conditions)
 {
   istringstream buf("( test ) {\n"
 		    "  operating_conditions ( temp_A ) {\n"
@@ -347,8 +337,7 @@ TEST_F(ParserTest, library_operating_conditions)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -362,7 +351,7 @@ TEST_F(ParserTest, library_operating_conditions)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "operating_conditions", attr1.attr().name() );
+  EXPECT_EQ( "operating_conditions", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -371,7 +360,7 @@ TEST_F(ParserTest, library_operating_conditions)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_output_voltage)
+TEST_F(ParserTestLibrary, library_output_voltage)
 {
   istringstream buf("( test ) {\n"
 		    "  output_voltage ( temp_A ) {\n"
@@ -379,8 +368,7 @@ TEST_F(ParserTest, library_output_voltage)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -394,7 +382,7 @@ TEST_F(ParserTest, library_output_voltage)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "output_voltage", attr1.attr().name() );
+  EXPECT_EQ( "output_voltage", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -403,7 +391,7 @@ TEST_F(ParserTest, library_output_voltage)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_part)
+TEST_F(ParserTestLibrary, library_part)
 {
   istringstream buf("( test ) {\n"
 		    "  part ( temp_A ) {\n"
@@ -411,8 +399,7 @@ TEST_F(ParserTest, library_part)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -426,7 +413,7 @@ TEST_F(ParserTest, library_part)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "part", attr1.attr().name() );
+  EXPECT_EQ( "part", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -435,7 +422,7 @@ TEST_F(ParserTest, library_part)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_poly_template)
+TEST_F(ParserTestLibrary, library_poly_template)
 {
   istringstream buf("( test ) {\n"
 		    "  poly_template ( temp_A ) {\n"
@@ -443,8 +430,7 @@ TEST_F(ParserTest, library_poly_template)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -458,7 +444,7 @@ TEST_F(ParserTest, library_poly_template)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "poly_template", attr1.attr().name() );
+  EXPECT_EQ( "poly_template", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -467,7 +453,7 @@ TEST_F(ParserTest, library_poly_template)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_power_lut_template)
+TEST_F(ParserTestLibrary, library_power_lut_template)
 {
   istringstream buf("( test ) {\n"
 		    "  power_lut_template ( temp_A ) {\n"
@@ -475,8 +461,7 @@ TEST_F(ParserTest, library_power_lut_template)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -490,7 +475,7 @@ TEST_F(ParserTest, library_power_lut_template)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "power_lut_template", attr1.attr().name() );
+  EXPECT_EQ( "power_lut_template", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -499,7 +484,7 @@ TEST_F(ParserTest, library_power_lut_template)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_power_poly_template)
+TEST_F(ParserTestLibrary, library_power_poly_template)
 {
   istringstream buf("( test ) {\n"
 		    "  power_poly_template ( temp_A ) {\n"
@@ -507,8 +492,7 @@ TEST_F(ParserTest, library_power_poly_template)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -522,7 +506,7 @@ TEST_F(ParserTest, library_power_poly_template)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "power_poly_template", attr1.attr().name() );
+  EXPECT_EQ( "power_poly_template", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -531,7 +515,7 @@ TEST_F(ParserTest, library_power_poly_template)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_power_supply)
+TEST_F(ParserTestLibrary, library_power_supply)
 {
   istringstream buf("( test ) {\n"
 		    "  power_supply ( temp_A ) {\n"
@@ -539,8 +523,7 @@ TEST_F(ParserTest, library_power_supply)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -554,7 +537,7 @@ TEST_F(ParserTest, library_power_supply)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "power_supply", attr1.attr().name() );
+  EXPECT_EQ( "power_supply", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -563,7 +546,7 @@ TEST_F(ParserTest, library_power_supply)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_propagation_lut_template)
+TEST_F(ParserTestLibrary, library_propagation_lut_template)
 {
   istringstream buf("( test ) {\n"
 		    "  propagation_lut_template ( temp_A ) {\n"
@@ -571,8 +554,7 @@ TEST_F(ParserTest, library_propagation_lut_template)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -586,7 +568,7 @@ TEST_F(ParserTest, library_propagation_lut_template)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "propagation_lut_template", attr1.attr().name() );
+  EXPECT_EQ( "propagation_lut_template", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -595,7 +577,7 @@ TEST_F(ParserTest, library_propagation_lut_template)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_rise_net_delay)
+TEST_F(ParserTestLibrary, library_rise_net_delay)
 {
   istringstream buf("( test ) {\n"
 		    "  rise_net_delay ( temp_A ) {\n"
@@ -603,8 +585,7 @@ TEST_F(ParserTest, library_rise_net_delay)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -618,7 +599,7 @@ TEST_F(ParserTest, library_rise_net_delay)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "rise_net_delay", attr1.attr().name() );
+  EXPECT_EQ( "rise_net_delay", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -627,7 +608,7 @@ TEST_F(ParserTest, library_rise_net_delay)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_rise_transition_degradation)
+TEST_F(ParserTestLibrary, library_rise_transition_degradation)
 {
   istringstream buf("( test ) {\n"
 		    "  rise_transition_degradation ( temp_A ) {\n"
@@ -635,8 +616,7 @@ TEST_F(ParserTest, library_rise_transition_degradation)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -650,7 +630,7 @@ TEST_F(ParserTest, library_rise_transition_degradation)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "rise_transition_degradation", attr1.attr().name() );
+  EXPECT_EQ( "rise_transition_degradation", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -659,7 +639,7 @@ TEST_F(ParserTest, library_rise_transition_degradation)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_scaled_cell)
+TEST_F(ParserTestLibrary, library_scaled_cell)
 {
   istringstream buf("( test ) {\n"
 		    "  scaled_cell ( temp_A, cond_B ) {\n"
@@ -667,8 +647,7 @@ TEST_F(ParserTest, library_scaled_cell)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -682,7 +661,7 @@ TEST_F(ParserTest, library_scaled_cell)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "scaled_cell", attr1.attr().name() );
+  EXPECT_EQ( "scaled_cell", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 2, header1.complex_elem_size() );
@@ -693,7 +672,7 @@ TEST_F(ParserTest, library_scaled_cell)
 }
 
 #if 0
-TEST_F(ParserTest, library_scaling_factors)
+TEST_F(ParserTestLibrary, library_scaling_factors)
 {
   istringstream buf("( test ) {\n"
 		    "  scaling_factors ( temp_A ) {\n"
@@ -701,8 +680,7 @@ TEST_F(ParserTest, library_scaling_factors)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -716,7 +694,7 @@ TEST_F(ParserTest, library_scaling_factors)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "scaling_factors", attr1.attr().name() );
+  EXPECT_EQ( "scaling_factors", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -726,7 +704,7 @@ TEST_F(ParserTest, library_scaling_factors)
 }
 #endif
 
-TEST_F(ParserTest, library_timing)
+TEST_F(ParserTestLibrary, library_timing)
 {
   istringstream buf("( test ) {\n"
 		    "  timing ( temp_A ) {\n"
@@ -734,8 +712,7 @@ TEST_F(ParserTest, library_timing)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -749,7 +726,7 @@ TEST_F(ParserTest, library_timing)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "timing", attr1.attr().name() );
+  EXPECT_EQ( "timing", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -758,7 +735,7 @@ TEST_F(ParserTest, library_timing)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_timing_range)
+TEST_F(ParserTestLibrary, library_timing_range)
 {
   istringstream buf("( test ) {\n"
 		    "  timing_range ( temp_A ) {\n"
@@ -766,8 +743,7 @@ TEST_F(ParserTest, library_timing_range)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -781,7 +757,7 @@ TEST_F(ParserTest, library_timing_range)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "timing_range", attr1.attr().name() );
+  EXPECT_EQ( "timing_range", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -790,7 +766,7 @@ TEST_F(ParserTest, library_timing_range)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_type)
+TEST_F(ParserTestLibrary, library_type)
 {
   istringstream buf("( test ) {\n"
 		    "  type ( temp_A ) {\n"
@@ -798,8 +774,7 @@ TEST_F(ParserTest, library_type)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -813,7 +788,7 @@ TEST_F(ParserTest, library_type)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "type", attr1.attr().name() );
+  EXPECT_EQ( "type", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -822,7 +797,7 @@ TEST_F(ParserTest, library_type)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_wire_load)
+TEST_F(ParserTestLibrary, library_wire_load)
 {
   istringstream buf("( test ) {\n"
 		    "  wire_load ( temp_A ) {\n"
@@ -830,8 +805,7 @@ TEST_F(ParserTest, library_wire_load)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -845,7 +819,7 @@ TEST_F(ParserTest, library_wire_load)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "wire_load", attr1.attr().name() );
+  EXPECT_EQ( "wire_load", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -854,7 +828,7 @@ TEST_F(ParserTest, library_wire_load)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_wire_load_selection)
+TEST_F(ParserTestLibrary, library_wire_load_selection)
 {
   istringstream buf("( test ) {\n"
 		    "  wire_load_selection ( temp_A ) {\n"
@@ -862,8 +836,7 @@ TEST_F(ParserTest, library_wire_load_selection)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -877,7 +850,7 @@ TEST_F(ParserTest, library_wire_load_selection)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "wire_load_selection", attr1.attr().name() );
+  EXPECT_EQ( "wire_load_selection", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );
@@ -886,7 +859,7 @@ TEST_F(ParserTest, library_wire_load_selection)
   EXPECT_EQ( 0, value1.group_elem_size() );
 }
 
-TEST_F(ParserTest, library_wire_load_table)
+TEST_F(ParserTestLibrary, library_wire_load_table)
 {
   istringstream buf("( test ) {\n"
 		    "  wire_load_table ( temp_A ) {\n"
@@ -894,8 +867,7 @@ TEST_F(ParserTest, library_wire_load_table)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  AttrKwd attr{"library", FileRegion{}};
-  auto dst = group_library(parser, attr);
+  auto dst = group_library(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value{dst->value()};
@@ -909,7 +881,7 @@ TEST_F(ParserTest, library_wire_load_table)
   EXPECT_EQ( 1, value.group_elem_size() );
   auto& attr1{value.group_elem_attr(0)};
 
-  EXPECT_EQ( "wire_load_table", attr1.attr().name() );
+  EXPECT_EQ( "wire_load_table", attr1.kwd() );
   auto& value1{attr1.value()};
   auto& header1{value1.group_header_value()};
   ASSERT_EQ( 1, header1.complex_elem_size() );

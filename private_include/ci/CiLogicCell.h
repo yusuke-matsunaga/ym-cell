@@ -8,6 +8,7 @@
 /// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
+#include "obsolete"
 #include "CiCell.h"
 
 
