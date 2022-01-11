@@ -3,7 +3,7 @@
 /// @brief ClibCellLibrary の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2017, 2021 Yusuke Matsunaga
+/// Copyright (C) 2017, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibCellLibrary.h"
@@ -308,7 +308,7 @@ ClibCellLibrary::lu_table_template(
 // @brief 遅延テーブルのテンプレート番号の取得
 SizeType
 ClibCellLibrary::lu_table_template_id(
-  const char* name
+  const string& name
 ) const
 {
   if ( mImpl ) {
@@ -326,7 +326,7 @@ ClibCellLibrary::lu_table_template_id(
 // なければ nullptr を返す．
 const ClibBusType&
 ClibCellLibrary::bus_type(
-  const char* name
+  const string& name
 ) const
 {
   if ( mImpl ) {
@@ -369,7 +369,7 @@ ClibCellLibrary::cell(
 // @brief 名前からのセル番号の取得
 SizeType
 ClibCellLibrary::cell_id(
-  const char* name
+  const string& name
 ) const
 {
   if ( mImpl ) {

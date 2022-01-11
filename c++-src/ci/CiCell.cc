@@ -3,7 +3,7 @@
 /// @brief CiCell の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiCell.h"
@@ -181,15 +181,6 @@ CiCell::pin(
 SizeType
 CiCell::pin_id(
   const string& name
-) const
-{
-  return pin_id(ShString(name));
-}
-
-// @brief 名前からピン番号の取得
-SizeType
-CiCell::pin_id(
-  const char* name
 ) const
 {
   return pin_id(ShString(name));
@@ -463,13 +454,6 @@ CiCell::tristate_expr(
   return mGroup->tristate_expr(pin_id);
 }
 
-// @brief FFセルの場合にFFのピン情報を得る．
-ClibFFInfo
-CiCell::ff_info() const
-{
-  return mGroup->ff_info();
-}
-
 // @brief FFセルの場合に次状態関数を表す論理式を返す．
 // @note それ以外の型の場合の返り値は不定
 Expr
@@ -492,13 +476,6 @@ Expr
 CiCell::clock2_expr() const
 {
   return mGroup->clock2_expr();
-}
-
-// @brief ラッチセルの場合にFFのピン情報を得る．
-ClibLatchInfo
-CiCell::latch_info() const
-{
-  return mGroup->latch_info();
 }
 
 // @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．

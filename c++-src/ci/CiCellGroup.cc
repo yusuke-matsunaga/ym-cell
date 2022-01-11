@@ -3,7 +3,7 @@
 /// @brief CiCellGroup の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiCellGroup.h"
@@ -91,44 +91,6 @@ CiCellGroup::map() const
   return mMap;
 }
 
-// @brief FFセルの場合のピン情報を返す．
-// @note FFセル以外の場合には返り値は不定
-ClibFFInfo
-CiCellGroup::ff_info() const
-{
-  // 本当はバイナリレベルでコピーすればOKだけど
-  // キレイにコピーする．
-  int pos_array[6];
-  pos_array[0] = data_pos();
-  pos_array[1] = clock_pos() | (clock_sense() << 3);
-  pos_array[2] = clear_pos() | (clear_sense() << 3);
-  pos_array[3] = preset_pos() | (preset_sense() << 3);
-  pos_array[4] = q_pos();
-  pos_array[5] = xq_pos() | (static_cast<ymuint>(has_xq()) << 3);
-  return ClibFFInfo(pos_array);
-}
-
-// @brief ラッチセルの場合のピン情報を返す．
-// @note ラッチセル以外の場合には返り値は不定
-ClibLatchInfo
-CiCellGroup::latch_info() const
-{
-  // 本当はバイナリレベルでコピーすればOKだけど
-  // キレイにコピーする．
-  int pos_array[6];
-  if ( has_data() ) {
-    pos_array[0] = data_pos() | 8U;
-  }
-  else {
-    pos_array[0] = 0;
-  }
-  pos_array[1] = enable_pos() | (enable_sense() << 3);
-  pos_array[2] = clear_pos() | (clear_sense() << 3);
-  pos_array[3] = preset_pos() | (preset_sense() << 3);
-  pos_array[4] = q_pos();
-  return ClibLatchInfo(pos_array);
-}
-
 // @brief 反転出力を持つ時 true を返す．
 bool
 CiCellGroup::has_xq() const
@@ -150,101 +112,18 @@ CiCellGroup::data_pos() const
   return get_pos(mPinInfo, INPUT);
 }
 
-// @brief クロック入力のタイプを返す．
-// @retval 0 該当しない
-// @retval 1 positive edge
-// @retval 2 negative edge
-int
-CiCellGroup::clock_sense() const
-{
-  return get_sense(mPinInfo, CLOCK);
-}
-
-// @brief クロック入力のピン番号を返す．
-SizeType
-CiCellGroup::clock_pos() const
-{
-  return get_pos(mPinInfo, CLOCK);
-}
-
-// @brief イネーブル入力を持つとき true を返す．
-bool
-CiCellGroup::has_enable() const
-{
-  return enable_sense() != 0;
-}
-
-// @brief イネーブル入力のタイプを返す．
-// @retval 0 なし
-// @retval 1 positive edge
-// @retval 2 negative edge
-int
-CiCellGroup::enable_sense() const
-{
-  return get_sense(mPinInfo, ENABLE);
-}
-
-// @brief イネーブル入力のピン番号を返す．
-SizeType
-CiCellGroup::enable_pos() const
-{
-  return get_pos(mPinInfo, ENABLE);
-}
-
 // @brief クリア入力を持つタイプの時に true を返す．
 bool
 CiCellGroup::has_clear() const
 {
-  return clear_sense() != 0;
-}
-
-// @brief クリア入力のタイプを返す．
-int
-CiCellGroup::clear_sense() const
-{
-  return get_sense(mPinInfo, CLEAR);
-}
-
-// @brief クリア入力のピン番号を返す．
-SizeType
-CiCellGroup::clear_pos() const
-{
-  return get_pos(mPinInfo, CLEAR);
+  //return clear_sense() != 0;
 }
 
 // @brief プリセット入力を持つタイプの時に true を返す．
 bool
 CiCellGroup::has_preset() const
 {
-  return preset_sense() != 0;
-}
-
-// @brief プリセット入力のタイプを返す．
-int
-CiCellGroup::preset_sense() const
-{
-  return get_sense(mPinInfo, PRESET);
-}
-
-// @brief プリセット入力のピン番号を返す．
-SizeType
-CiCellGroup::preset_pos() const
-{
-  return get_pos(mPinInfo, PRESET);
-}
-
-// @brief 肯定出力のピン番号を返す．
-SizeType
-CiCellGroup::q_pos() const
-{
-  return get_pos(mPinInfo, OUTPUT1);
-}
-
-// @brief 否定出力のピン番号を返す．
-SizeType
-CiCellGroup::xq_pos() const
-{
-  return get_pos(mPinInfo, OUTPUT2);
+  //return preset_sense() != 0;
 }
 
 // @brief セル数を返す．
