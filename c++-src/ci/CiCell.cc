@@ -27,6 +27,7 @@ BEGIN_NAMESPACE_YM_CLIB
 // @brief コンストラクタ
 CiCell::CiCell(
   CiCellLibrary* library,
+  CiCellGroup* group,
   const ShString& name,
   ClibArea area,
   const vector<CiInputPin*>& input_list,
@@ -37,6 +38,7 @@ CiCell::CiCell(
   const vector<CiBundle*>& bundle_list,
   const vector<CiTiming*>& timing_list
 ) : mLibrary{library},
+    mGroup{group},
     mName{name},
     mArea{area},
     mInputNum{input_list.size()},
@@ -392,187 +394,12 @@ CiCell::set_timing(
   mTimingMap[base] = timing_list;
 }
 
-// @brief 組み合わせ論理セルの時に true を返す．
-bool
-CiCell::is_logic() const
+// @brief セルグループを返す．
+const ClibCellGroup&
+CiCell::cgroup() const
 {
-  return mGroup->is_logic();
-}
-
-// @brief FFセルの時に true を返す．
-bool
-CiCell::is_ff() const
-{
-  return mGroup->is_ff();
-}
-
-// @brief ラッチセルの時に true を返す．
-bool
-CiCell::is_latch() const
-{
-  return mGroup->is_latch();
-}
-
-// @brief 順序セル(非FF/非ラッチ)の場合に true を返す．
-bool
-CiCell::is_fsm() const
-{
-  return mGroup->is_fsm();
-}
-
-// @brief 出力の論理式を持っている時に true を返す．
-bool
-CiCell::has_logic(
-  SizeType pin_id
-) const
-{
-  return mGroup->has_logic(pin_id);
-}
-
-// @brief 全ての出力が論理式を持っているときに true を返す．
-bool
-CiCell::has_logic() const
-{
-  return mGroup->has_logic();
-}
-
-// @brief 論理セルの場合に出力の論理式を返す．
-Expr
-CiCell::logic_expr(
-  SizeType pin_id
-) const
-{
-  return mGroup->logic_expr(pin_id);
-}
-
-// @brief 出力がトライステート条件を持っている時に true を返す．
-bool
-CiCell::has_tristate(
-  SizeType pin_id
-) const
-{
-  return mGroup->has_tristate(pin_id);
-}
-
-// @brief トライステートセルの場合にトライステート条件式を返す．
-Expr
-CiCell::tristate_expr(
-  SizeType pin_id
-) const
-{
-  return mGroup->tristate_expr(pin_id);
-}
-
-// @brief FFセルの場合にFFのピン情報を得る．
-ClibFFInfo
-CiCell::ff_info() const
-{
-  return mGroup->ff_info();
-}
-
-// @brief FFセルの場合に次状態関数を表す論理式を返す．
-// @note それ以外の型の場合の返り値は不定
-Expr
-CiCell::next_state_expr() const
-{
-  return mGroup->next_state_expr();
-}
-
-// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
-// @note それ以外の型の場合の返り値は不定
-Expr
-CiCell::clock_expr() const
-{
-  return mGroup->clock_expr();
-}
-
-// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
-// @note それ以外の型の場合の返り値は不定
-Expr
-CiCell::clock2_expr() const
-{
-  return mGroup->clock2_expr();
-}
-
-// @brief ラッチセルの場合にFFのピン情報を得る．
-ClibLatchInfo
-CiCell::latch_info() const
-{
-  return mGroup->latch_info();
-}
-
-// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
-// @note それ以外の型の場合の返り値は不定
-Expr
-CiCell::data_in_expr() const
-{
-  return mGroup->data_in_expr();
-}
-
-// @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
-// @note それ以外の型の場合の返り値は不定
-Expr
-CiCell::enable_expr() const
-{
-  return mGroup->enable_expr();
-}
-
-// @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
-// @note それ以外の型の場合の返り値は不定
-Expr
-CiCell::enable2_expr() const
-{
-  return mGroup->enable2_expr();
-}
-
-// @brief FFセル/ラッチセルの場合にクリア端子を持っていたら true を返す．
-bool
-CiCell::has_clear() const
-{
-  return mGroup->has_clear();
-}
-
-// @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
-// @note クリア端子がない場合の返り値は不定
-Expr
-CiCell::clear_expr() const
-{
-  return mGroup->clear_expr();
-}
-
-// @brief FFセル/ラッチセルの場合にプリセット端子を持っていたら true を返す．
-bool
-CiCell::has_preset() const
-{
-  return mGroup->has_preset();
-}
-
-// @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
-// @note プリセット端子がない場合の返り値は不定
-Expr
-CiCell::preset_expr() const
-{
-  return mGroup->preset_expr();
-}
-
-// @brief clear_preset_var1 の取得
-// @retval 0 "L"
-// @retval 1 "H"
-// @note FFセルとラッチセルの時に意味を持つ．
-SizeType
-CiCell::clear_preset_var1() const
-{
-  return mGroup->clear_preset_var1();
-}
-
-// @brief clear_preset_var2 の取得
-// @retval 0 "L"
-// @retval 1 "H"
-// @note FFセルとラッチセルの時に意味を持つ．
-SizeType
-CiCell::clear_preset_var2() const
-{
-  return mGroup->clear_preset_var2();
+  ASSERT_COND( mGroup != nullptr );
+  return *mGroup;
 }
 
 END_NAMESPACE_YM_CLIB

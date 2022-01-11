@@ -40,6 +40,7 @@ protected:
   /// @brief コンストラクタ
   CiCell(
     CiCellLibrary* library,                      ///< [in] 親のセルライブラリ
+    CiCellGroup* group,                          ///< [in] 親のセルグループ
     const ShString& name,                        ///< [in] 名前
     ClibArea area,                               ///< [in] 面積
     const vector<CiInputPin*>& input_list,       ///< [in] 入力ピンのリスト
@@ -243,138 +244,6 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // 機能情報の取得
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 組み合わせ論理セルの時に true を返す．
-  bool
-  is_logic() const override;
-
-  /// @brief FFセルの時に true を返す．
-  bool
-  is_ff() const override;
-
-  /// @brief ラッチセルの時に true を返す．
-  bool
-  is_latch() const override;
-
-  /// @brief 順序セル(非FF/非ラッチ)の場合に true を返す．
-  bool
-  is_fsm() const override;
-
-  /// @brief 出力の論理式を持っている時に true を返す．
-  bool
-  has_logic(
-    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const override;
-
-  /// @brief 全ての出力が論理式を持っているときに true を返す．
-  bool
-  has_logic() const override;
-
-  /// @brief 論理セルの場合に出力の論理式を返す．
-  ///
-  /// 論理式中の変数番号は入力ピン番号に対応する．
-  Expr
-  logic_expr(
-    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const override;
-
-  /// @brief 出力がトライステート条件を持っている時に true を返す．
-  bool
-  has_tristate(
-    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const override;
-
-  /// @brief トライステートセルの場合にトライステート条件式を返す．
-  ///
-  /// - 論理式中の変数番号は入力ピン番号に対応する．
-  /// - 通常の論理セルの場合には定数0を返す．
-  Expr
-  tristate_expr(
-    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const override;
-
-  /// @brief FFセルの場合にFFのピン情報を得る．
-  ClibFFInfo
-  ff_info() const override;
-
-  /// @brief FFセルの場合に次状態関数を表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  Expr
-  next_state_expr() const override;
-
-  /// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  Expr
-  clock_expr() const override;
-
-  /// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
-  /// @note それ以外の型の場合の返り値は不定
-  Expr
-  clock2_expr() const override;
-
-  /// @brief ラッチセルの場合にFFのピン情報を得る．
-  ClibLatchInfo
-  latch_info() const override;
-
-  /// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  Expr
-  data_in_expr() const override;
-
-  /// @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  Expr
-  enable_expr() const override;
-
-  /// @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  Expr
-  enable2_expr() const override;
-
-  /// @brief FFセル/ラッチセルの場合にクリア端子を持っていたら true を返す．
-  bool
-  has_clear() const override;
-
-  /// @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
-  ///
-  /// クリア端子がない場合の返り値は不定
-  Expr
-  clear_expr() const override;
-
-  /// @brief FFセル/ラッチセルの場合にプリセット端子を持っていたら true を返す．
-  bool
-  has_preset() const override;
-
-  /// @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
-  ///
-  /// プリセット端子がない場合の返り値は不定
-  Expr
-  preset_expr() const override;
-
-  /// @brief clear_preset_var1 の取得
-  /// @retval 0 "L"
-  /// @retval 1 "H"
-  /// @note FFセルとラッチセルの時に意味を持つ．
-  SizeType
-  clear_preset_var1() const override;
-
-  /// @brief clear_preset_var2 の取得
-  /// @retval 0 "L"
-  /// @retval 1 "H"
-  /// @note FFセルとラッチセルの時に意味を持つ．
-  SizeType
-  clear_preset_var2() const override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
   // dump/restore 関数
   //////////////////////////////////////////////////////////////////////
 
@@ -398,6 +267,16 @@ public:
     ClibTimingSense timing_sense,       ///< [in] タイミング条件
     const vector<SizeType>& timing_list ///< [in] タイミング番号のリスト
   );
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief セルグループを返す．
+  const ClibCellGroup&
+  cgroup() const override;
 
 
 private:

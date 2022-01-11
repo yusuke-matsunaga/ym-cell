@@ -16,6 +16,8 @@ BEGIN_NAMESPACE_YM_CLIB
 
 class CiCellLibrary;
 class CiCell;
+class CiCellGroup;
+class CiCellClass;
 
 END_NAMESPACE_YM_CLIB
 
@@ -31,10 +33,10 @@ class LibComp
 public:
 
   /// @brief コンストラクタ
-  LibComp() = default;
+  LibComp();
 
   /// @brief デストラクタ
-  ~LibComp() = default;
+  ~LibComp();
 
 
 public:
@@ -42,11 +44,39 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 1出力の論理セルを追加する．
+  void
+  add_cell(
+    CiCell* cell,    ///< [in] 追加するセル
+    const Expr& expr ///< [in] 出力の論理式
+  );
+
+  /// @brief 1出力のtristateセルを追加する．
+  void
+  add_cell(
+    CiCell* cell,        ///< [in] 追加するセル
+    const Expr& expr,    ///< [in] 出力の論理式
+    const Expr& tristate ///< [in] 出力のtristate条件
+  );
+
+  /// @brief 多出力の論理セルを追加する．
+  void
+  add_cell(
+    CiCell* cell,                 ///< [in] 追加するセル
+    const vector<Expr>& expr_list ///< [in] 出力の論理式のリスト
+  );
+
+  /// @brief 多出力のtristateセルを追加する．
+  void
+  add_cell(
+    CiCell* cell,                     ///< [in] 追加するセル
+    const vector<Expr>& expr_list,    ///< [in] 出力の論理式のリスト
+    const vector<Expr>& tristate_list ///< [in] 出力のtristate条件のリスト
+  );
+
   /// @brief セルのグループ化，クラス化を行う．
   void
-  compile(
-    const vector<unique_ptr<CiCell>>& cell_list ///< [in] セルのリスト
-  );
+  compile();
 
   /// @brief パタングラフの情報を取り出す．
   const LcPatMgr&
@@ -69,7 +99,7 @@ public:
   group_num() const;
 
   /// @brief セルグループを返す．
-  const LcGroup&
+  const ClibCellGroup&
   group(
     SizeType id ///< [in] セルグループ番号 ( 0 <= id < group_num() )
   ) const;
@@ -79,7 +109,7 @@ public:
   npn_class_num() const;
 
   /// @brief NPN同値クラスを返す．
-  const LcClass&
+  const ClibCellClass&
   npn_class(
     SizeType id ///< [in] NPN同値クラス番号 ( 0 <= id < npn_class_num() )
   ) const;
@@ -143,7 +173,7 @@ private:
   );
 
   /// @brief セルに対応する LcGroup を求める．
-  LcGroup&
+  CiCellGroup&
   _find_group(
     CiCell* cell ///< [in] セル
   );
@@ -151,7 +181,7 @@ private:
   /// @brief シグネチャに対応する LcGroup を求める．
   ///
   /// なければ新規に作る．
-  LcGroup&
+  CiCellGroup&
   _find_group(
     const LcSignature& sig ///< [in] シグネチャ
   );
@@ -160,26 +190,16 @@ private:
   ///
   /// こちらは1出力の論理セル用
   /// 内部で _reg_pat() を呼ぶ．
-  LcGroup&
+  CiCellGroup&
   _find_group(
     const Expr& expr ///< [in] 論理式
-  );
-
-  /// @brief 新しいグループを作る．
-  LcGroup*
-  _new_group();
-
-  /// @brief 新しいクラスを作る．
-  LcClass*
-  _new_class(
-    const LcSignature& rep_sig ///< [in] 代表シグネチャ
   );
 
   /// @brief expr から生成されるパタンを登録する．
   void
   _reg_expr(
-    const Expr& expr,     ///< [in] 論理式
-    const LcGroup& fgroup ///< [in] expr の属している機能グループ
+    const Expr& expr,           ///< [in] 論理式
+    const ClibCellGroup& fgroup ///< [in] expr の属している機能グループ
   );
 
   /// @brief 同位体変換リストを求める．
@@ -197,19 +217,19 @@ private:
 
   // セルグループのリスト
   // この配列上の位置とグループ番号は一致している．
-  vector<unique_ptr<LcGroup>> mGroupList;
+  vector<CiCellGroup*> mGroupList;
 
   // シグネチャ文字列をキーとしてグループ番号を保持するハッシュ表
-  unordered_map<string, int> mGroupMap;
+  unordered_map<string, SizeType> mGroupDict;
 
   // NPN同値クラスのリスト
   // この配列上の位置とクラス番号は一致している．
-  vector<unique_ptr<LcClass>> mClassList;
+  vector<CiCellClass*> mClassList;
 
   // 代表シグネチャの文字列をキーとしてクラス番号を保持するハッシュ表
-  unordered_map<string, int> mClassMap;
+  unordered_map<string, SizeType> mClassDict;
 
-  // 定義済みの論理グループ
+  // 定義済みの論理グループ番号
   SizeType mLogicGroup[4];
 
   // 定義済みのFFクラス番号

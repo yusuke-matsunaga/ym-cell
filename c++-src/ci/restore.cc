@@ -284,7 +284,6 @@ CiCellLibrary::restore_cell(
 	>> max_t
 	>> min_t;
       output_list[i] = new_cell_output(ShString(name),
-				       has_logic, logic_expr, tristate_expr,
 				       max_f, min_f,
 				       max_c, min_c,
 				       max_t, min_t);
@@ -322,7 +321,6 @@ CiCellLibrary::restore_cell(
 	>> max_t
 	>> min_t;
       inout_list[i] = new_cell_inout(ShString(name),
-				     has_logic, logic_expr, tristate_expr,
 				     cap, r_cap, f_cap,
 				     max_f, min_f,
 				     max_c, min_c,
@@ -469,6 +467,7 @@ CiCellLibrary::restore_cell_group(
   mGroupList.clear();
   mGroupList.reserve(ng);
   for ( auto g: Range(ng) ) {
+#if 0
     NpnMapM npnmap;
     int pininfo;
     SizeType cell_num;
@@ -483,6 +482,8 @@ CiCellLibrary::restore_cell_group(
     }
     auto group = new_cell_group(g, npnmap, pininfo, cell_list);
     mGroupList.push_back(unique_ptr<CiCellGroup>{group});
+#endif
+#warning "TODO: 根本的に作り直す"
   }
 }
 
@@ -496,13 +497,15 @@ CiCellLibrary::restore_cell_class(
   s >> nc;
   mClassList.clear();
   mClassList.reserve(nc);
-  for ( auto c: Range(nc) ) {
+  for ( SizeType c: Range(nc) ) {
     SizeType idmap_num;
     s >> idmap_num;
     vector<NpnMapM> idmap_list(idmap_num);
     for ( auto i: Range(idmap_num) ) {
       idmap_list[i].restore(s);
     }
+    auto cclass = new CiCellClass{c, idmap_list};
+    mClassList.push_back(unique_ptr<CiCellClass>{cclass});
 
     SizeType group_num;
     s >> group_num;
@@ -510,10 +513,8 @@ CiCellLibrary::restore_cell_class(
     for ( auto i: Range(group_num) ) {
       SizeType group_id;
       s >> group_id;
-      group_list[i] = mGroupList[group_id].get();
+      cclass->add_group(mGroupList[group_id].get());
     }
-    auto cclass = new_cell_class(c, idmap_list, group_list);
-    mClassList.push_back(unique_ptr<CiCellClass>{cclass});
   }
 }
 

@@ -23,23 +23,13 @@ class CiCellGroup;
 class CiCellClass :
   public ClibCellClass
 {
-  friend class CiCellLibrary;
-
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] id 番号
-  /// @param[in] idmap_list 同位体変換リスト
-  /// @param[in] group_list グループのリスト
   CiCellClass(
-    SizeType id,
-    const vector<NpnMapM>& idmap_list,
-    const vector<CiCellGroup*>& group_list
-  ) : mId{id},
-      mIdmapList{idmap_list},
-      mGroupList{group_list}
-  {
-  }
+    SizeType id,                      ///< [in] id 番号
+    const vector<NpnMapM>& idmap_list ///< [in] 同位体変換リスト
+  );
 
   /// @brief エラーオブジェクト用のコンストラクタ
   CiCellClass() = default;
@@ -88,6 +78,21 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
+  // 設定用の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief このクラスに属しているセルグループを追加する．
+  void
+  add_group(
+    CiCellGroup* group
+  )
+  {
+    mGroupList.push_back(group);
+  }
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
   // バイナリダンプ用の関数
   //////////////////////////////////////////////////////////////////////
 
@@ -106,7 +111,7 @@ private:
   // ID番号
   SizeType mId{CLIB_NULLID};
 
-  // 同位体変換の配列
+  // 同位体変換のリスト
   vector<NpnMapM> mIdmapList;
 
   // セルグループのリスト

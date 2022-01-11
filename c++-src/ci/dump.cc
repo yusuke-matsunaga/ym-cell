@@ -153,7 +153,7 @@ CiCell::dump(
   else if ( is_latch() ) {
     tid = 2;
   }
-  else if ( is_fsm() ) {
+  else if ( type() == ClibCellType::FSM ) {
     tid = 3;
   }
   else {
@@ -540,7 +540,6 @@ CiCellGroup::dump(
 ) const
 {
   bos << mMap
-      << mPinInfo
       << mCellList.size();
   for ( auto& cell: mCellList ) {
     bos << cell->id();

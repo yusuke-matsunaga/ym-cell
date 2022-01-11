@@ -16,6 +16,15 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiCellClass
 //////////////////////////////////////////////////////////////////////
 
+// @brief コンストラクタ
+CiCellClass::CiCellClass(
+  SizeType id,                      ///< [in] id 番号
+  const vector<NpnMapM>& idmap_list ///< [in] 同位体変換リスト
+) : mId{id},
+    mIdmapList{idmap_list}
+{
+}
+
 // @brief ID番号を返す．
 SizeType
 CiCellClass::id() const

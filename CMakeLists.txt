@@ -48,6 +48,7 @@ set (ci_SOURCES
   c++-src/ci/CiTiming.cc
   c++-src/ci/dump.cc
   c++-src/ci/restore.cc
+  c++-src/ci/CgMgr.cc
   )
 
 set (libcomp_SOURCES
@@ -86,7 +87,7 @@ set (dotlib_SOURCES
 ym_add_object_library ( ym_cell
   ${main_SOURCES}
   ${ci_SOURCES}
-  ${libcomp_SOURCES}
+#  ${libcomp_SOURCES}
   ${mislib_SOURCES}
   ${dotlib_SOURCES}
   )

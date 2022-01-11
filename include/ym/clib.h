@@ -235,6 +235,34 @@ enum class ClibVarType : ymuint8
 
 
 //////////////////////////////////////////////////////////////////////
+/// @brief セルの種類
+//////////////////////////////////////////////////////////////////////
+enum class ClibCellType : ymuint8
+{
+  None    = 0, ///< なし(不正値)
+  Logic   = 1, ///< 組み合わせ論理
+  FF_S    = 2, ///< single-stage FF
+  FF_M    = 3, ///< master-slave FF
+  Latch_S = 4, ///< single-stage latch
+  Latch_M = 5, ///< master-slave latch
+  FSM     = 6, ///< finite state machine
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @brief clear_preset_var の値
+//////////////////////////////////////////////////////////////////////
+enum class ClibCPV : ymuint8
+{
+  L = 0, ///< low(0)
+  H = 1, ///< high(1)
+  N = 2, ///< not change
+  T = 3, ///< toggle
+  X = 4, ///< unknown
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @brief パタングラフのノードの型
 //////////////////////////////////////////////////////////////////////
 enum class ClibPatType : ymuint8
@@ -274,6 +302,14 @@ ostream&
 operator<<(
   ostream& s,                ///< [in] 出力先のストリーム
   ClibTimingType timing_type ///< [in] タイミング条件
+);
+
+/// @brief ClibCPV のストリーム出力演算子
+/// @return s を返す．
+ostream&
+operator<<(
+  ostream& s,  ///< [in] 出力先のストリーム
+  ClibCPV cpv  ///< [in] clear_preset_var の値
 );
 
 /// @brief ClibVarType のストリーム出力演算子

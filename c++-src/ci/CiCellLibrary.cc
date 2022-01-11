@@ -18,8 +18,6 @@
 #include "ci/CiPatGraph.h"
 
 #include "lc/LibComp.h"
-#include "lc/LcClass.h"
-#include "lc/LcGroup.h"
 
 #include "ym/Range.h"
 
@@ -498,9 +496,6 @@ CiCellLibrary::new_cell_input(
 CiOutputPin*
 CiCellLibrary::new_cell_output(
   const ShString& name,
-  bool has_logic,
-  const Expr& logic_expr,
-  const Expr& tristate_expr,
   ClibCapacitance max_fanout,
   ClibCapacitance min_fanout,
   ClibCapacitance max_capacitance,
@@ -510,9 +505,6 @@ CiCellLibrary::new_cell_output(
 )
 {
   auto pin = new CiOutputPin(name,
-#if 0
-			     has_logic, logic_expr, tristate_expr,
-#endif
 			     max_fanout, min_fanout,
 			     max_capacitance, min_capacitance,
 			     max_transition, min_transition);
@@ -522,9 +514,6 @@ CiCellLibrary::new_cell_output(
 
 // @brief セルの入出力ピンの内容を設定する．
 // @param[in] name 入出力ピン名
-// @param[in] has_logic 論理式を持つとき true にするフラグ
-// @param[in] logic_expr 論理式
-// @param[in] tristate_expr tristate 条件式
 // @param[in] capacitance 入力ピンの負荷容量
 // @param[in] rise_capacitance 入力ピンの立ち上がり負荷容量
 // @param[in] fall_capacitance 入力ピンの立ち下がり負荷容量
@@ -537,9 +526,6 @@ CiCellLibrary::new_cell_output(
 CiInoutPin*
 CiCellLibrary::new_cell_inout(
   const ShString& name,
-  bool has_logic,
-  const Expr& logic_expr,
-  const Expr& tristate_expr,
   ClibCapacitance capacitance,
   ClibCapacitance rise_capacitance,
   ClibCapacitance fall_capacitance,
@@ -552,9 +538,6 @@ CiCellLibrary::new_cell_inout(
 )
 {
   auto pin =  new CiInoutPin(name,
-#if 0
-			     has_logic, logic_expr, tristate_expr,
-#endif
 			     capacitance,
 			     rise_capacitance, fall_capacitance,
 			     max_fanout, min_fanout,
@@ -803,15 +786,16 @@ CiCellLibrary::error_patgraph()
   return pat_graph;
 }
 
+#if 0
 // @brief セルのグループ分けを行う．
 //
 // 論理セルのパタングラフも作成する．
 void
-CiCellLibrary::compile()
+CiCellLibrary::compile(
+  LibComp& libcomp
+)
 {
-  LibComp libcomp;
-
-  libcomp.compile(mCellList);
+  libcomp.compile();
 
   // LcGroup から CiCellGroup を作る．
   auto ng = libcomp.group_num();
@@ -820,7 +804,7 @@ CiCellLibrary::compile()
   for ( auto g: Range(ng) ) {
     const LcGroup& src_group = libcomp.group(g);
     const vector<CiCell*>& cell_list = src_group.cell_list();
-    CiCellGroup* group = new_cell_group(g, src_group.map(), 0U, cell_list);
+    CiCellGroup* group = new_cell_group(g, src_group.map(), cell_list);
     mGroupList.push_back(unique_ptr<CiCellGroup>{group});
   }
 
@@ -888,7 +872,8 @@ CiCellLibrary::compile()
 	  // group は const ClibCellGroup* なので
 	  // CiCellGroup* を得るためにちょっと面倒な手順を踏む．
 	  auto gid = group.id();
-	  mGroupList[gid]->set_ff_info(pos_array);
+	  //mGroupList[gid]->set_ff_info(pos_array);
+#warning "TODO: 根本的に考え直す"
 	}
       }
     }
@@ -936,7 +921,8 @@ CiCellLibrary::compile()
 	  // group は const ClibCellGroup* なので
 	  // CiCellGroup* を得るためにちょっと面倒な手順を踏む．
 	  auto gid = group.id();
-	  mGroupList[gid]->set_latch_info(pos_array);
+	  //mGroupList[gid]->set_latch_info(pos_array);
+#warning "TODO: 根本的に考え直す"
 	}
       }
     }
@@ -944,7 +930,9 @@ CiCellLibrary::compile()
 
   mPatMgr.copy(libcomp.pat_mgr());
 }
+#endif
 
+#if 0
 // @brief セルグループを作る．
 // @param[in] id 番号
 // @param[in] map 変換マップ
@@ -953,10 +941,9 @@ CiCellGroup*
 CiCellLibrary::new_cell_group(
   SizeType id,
   const NpnMapM& map,
-  int pininfo,
   const vector<CiCell*>& cell_list)
 {
-  auto group = new CiCellGroup(id, map, pininfo, cell_list);
+  auto group = new CiCellGroup(id, map, cell_list);
 
   return group;
 }
@@ -975,6 +962,7 @@ CiCellLibrary::new_cell_class(
 
   return cell_class;
 }
+#endif
 
 // @brief ピンを登録する．
 void

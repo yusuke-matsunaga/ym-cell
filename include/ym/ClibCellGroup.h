@@ -18,6 +18,27 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @ingroup ClibGroup
 /// @class ClibCellGroup ClibCellGroup.h "ym/ClibCellGroup.h"
 /// @brief 論理的に等価なセルのグループを表すクラス
+///
+/// - 組み合わせ論理タイプ
+///   各出力の論理関数と tristate 条件を表す論理関数を持つ．
+///
+/// - FFタイプ
+///   single-stage, master-slave の区別，
+///   非同期セット・クリアの有無，
+///   リセット状態(セット・リセットの両方がアクティブ)
+///   で区別されるFFコアの周囲の論理関数を持つ．
+///
+/// - latchタイプ
+///   single-stage, master-slave の区別，
+///   非同期セット・クリアの有無，
+///   リセット状態(セット・リセットの両方がアクティブ)
+///   で区別されるlatchコアの周囲の論理関数を持つ．
+///
+/// - fsmタイプ
+///   statetableをコアとして，周囲の論理関数を持つ．
+///
+/// すべてのタイプで用いられる論理関数は入力ピンと入出力ピンをサポート
+/// とする．FFセルの場合には内部ノードも使用可能
 //////////////////////////////////////////////////////////////////////
 class ClibCellGroup
 {
@@ -40,6 +61,31 @@ public:
   SizeType
   id() const = 0;
 
+  /// @brief 親のセルクラスを返す．
+  virtual
+  const ClibCellClass&
+  rep_class() const = 0;
+
+  /// @brief 入力ピン数+入出力ピン数を返す．
+  virtual
+  SizeType
+  input_num() const = 0;
+
+  /// @brief 出力ピン数+入出力ピン数を返す．
+  virtual
+  SizeType
+  output_num() const = 0;
+
+  /// @brief 入出力ピン数を返す．
+  virtual
+  SizeType
+  inout_num() const = 0;
+
+  /// @brief 内部ノード数を返す．
+  virtual
+  SizeType
+  internal_node_num() const = 0;
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -51,37 +97,35 @@ public:
   const NpnMapM&
   map() const = 0;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 組み合わせ論理セルの場合のピンの情報を返す関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 組み合わせ論理セルの時に true を返す．
+  /// @brief セルの種類を返す．
   virtual
-  bool
-  is_logic() const = 0;
+  ClibCellType
+  type() const = 0;
 
-  /// @brief FFセルの時に true を返す．
+  /// @brief FFタイプの時 true を返す．
   virtual
   bool
   is_ff() const = 0;
 
-  /// @brief ラッチセルの時に true を返す．
+  /// @brief ラッチタイプの時 true を返す．
   virtual
   bool
   is_latch() const = 0;
 
-  /// @brief 順序セル(非FF/非ラッチ)の場合に true を返す．
-  virtual
-  bool
-  is_fsm() const = 0;
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 出力ピン(入出力ピン)の情報を返す関数
+  //
+  // 入力として使うことのできるものは入力ピン，入出力ピンと FF タイプの
+  // 場合の内部ノード(番号は input_num() )
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 出力の論理式を持っている時に true を返す．
   virtual
   bool
   has_logic(
-    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
   ) const = 0;
 
   /// @brief 全ての出力が論理式を持っているときに true を返す．
@@ -89,20 +133,20 @@ public:
   bool
   has_logic() const = 0;
 
-  /// @brief 論理セルの場合に出力の論理式を返す．
+  /// @brief 出力の論理式を返す．
   ///
   /// 論理式中の変数番号は入力ピン番号に対応する．
   virtual
   Expr
   logic_expr(
-    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
   ) const = 0;
 
   /// @brief 出力がトライステート条件を持っている時に true を返す．
   virtual
   bool
   has_tristate(
-    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
   ) const = 0;
 
   /// @brief トライステートセルの場合にトライステート条件式を返す．
@@ -112,7 +156,7 @@ public:
   virtual
   Expr
   tristate_expr(
-    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
   ) const = 0;
 
 
@@ -121,62 +165,9 @@ public:
   // FF/ラッチセルの場合にピンの情報を返す関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief FFセルの場合のピン情報を返す．
+  /// @brief 非同期 clear を持つ時 true を返す．
   ///
-  /// FFセル以外の場合には返り値は不定
-  virtual
-  ClibFFInfo
-  ff_info() const = 0;
-
-  /// @brief ラッチセルの場合のピン情報を返す．
-  ///
-  /// ラッチセル以外の場合には返り値は不定
-  virtual
-  ClibLatchInfo
-  latch_info() const = 0;
-
-  /// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  virtual
-  Expr
-  clock_expr() const = 0;
-
-  /// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
-  /// @note それ以外の型の場合の返り値は不定
-  virtual
-  Expr
-  clock2_expr() const = 0;
-
-  /// @brief FFセルの場合に次状態関数を表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  virtual
-  Expr
-  next_state_expr() const = 0;
-
-  /// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  virtual
-  Expr
-  data_in_expr() const = 0;
-
-  /// @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  virtual
-  Expr
-  enable_expr() const = 0;
-
-  /// @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  virtual
-  Expr
-  enable2_expr() const = 0;
-
-  /// @brief FFセル/ラッチセルの場合にクリア端子を持っていたら true を返す．
+  /// FF/ラッチセル以外の場合には返り値は不定
   virtual
   bool
   has_clear() const = 0;
@@ -188,7 +179,9 @@ public:
   Expr
   clear_expr() const = 0;
 
-  /// @brief FFセル/ラッチセルの場合にプリセット端子を持っていたら true を返す．
+  /// @brief 非同期 preset を持つ時 true を返す．
+  ///
+  /// FF/ラッチセル以外の場合には返り値は不定
   virtual
   bool
   has_preset() const = 0;
@@ -200,46 +193,63 @@ public:
   Expr
   preset_expr() const = 0;
 
-  /// @brief clear_preset_var1 の取得
-  /// @retval 0 "L"
-  /// @retval 1 "H"
-  /// @note FFセルとラッチセルの時に意味を持つ．
+  /// @brief clear と preset が同時にアクティブになった時の値1
+  ///
+  /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
+  /// FF/ラッチセル以外の場合には返り値は不定
   virtual
-  SizeType
+  ClibCPV
   clear_preset_var1() const = 0;
 
-  /// @brief clear_preset_var2 の取得
-  /// @retval 0 "L"
-  /// @retval 1 "H"
-  /// @note FFセルとラッチセルの時に意味を持つ．
+  /// @brief clear と preset が同時にアクティブになった時の値1
+  ///
+  /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
+  /// FF/ラッチセル以外の場合には返り値は不定
   virtual
-  SizeType
+  ClibCPV
   clear_preset_var2() const = 0;
 
-  /// @brief 反転出力を持つ時 true を返す．
+  /// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
   virtual
-  bool
-  has_xq() const = 0;
+  Expr
+  clock_expr() const = 0;
 
-  /// @brief データ入力を持つとき true を返す．
+  /// @brief master-slave FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
   virtual
-  bool
-  has_data() const = 0;
+  Expr
+  clock2_expr() const = 0;
 
-  /// @brief データ入力のピン番号を返す．
+  /// @brief FFセルの場合に次状態関数を表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
   virtual
-  SizeType
-  data_pos() const = 0;
+  Expr
+  next_state_expr() const = 0;
 
-  /// @brief 肯定出力のピン番号を返す．
+  /// @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
   virtual
-  SizeType
-  q_pos() const = 0;
+  Expr
+  enable_expr() const = 0;
 
-  /// @brief 否定出力のピン番号を返す．
+  /// @brief master-slave ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
   virtual
-  SizeType
-  xq_pos() const = 0;
+  Expr
+  enable2_expr() const = 0;
+
+  /// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  virtual
+  Expr
+  data_in_expr() const = 0;
 
 
 public:

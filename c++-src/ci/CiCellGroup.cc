@@ -8,57 +8,10 @@
 
 #include "ci/CiCellGroup.h"
 #include "ci/CiCellLibrary.h"
-#include "ci/CiCell.h"
-#include "ci/CiCellClass.h"
-
-#include "ym/ClibFFInfo.h"
-#include "ym/ClibLatchInfo.h"
+#include "CiCellGroup_int.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
-
-BEGIN_NONAMESPACE
-
-const int OUTPUT1 = 0;
-const int OUTPUT2 = 1;
-const int INPUT   = 2;
-const int CLOCK   = 3;
-const int ENABLE  = 3;
-const int CLEAR   = 4;
-const int PRESET  = 5;
-
-inline
-ymuint
-encode(
-  ymuint val,
-  int idx
-)
-{
-  return val << (5 * idx);
-}
-
-inline
-ymuint
-get_sense(
-  ymuint bits,
-  int idx
-)
-{
-  return (bits >> (5 * idx + 3)) & 3U;
-}
-
-inline
-ymuint
-get_pos(
-  ymuint bits,
-  int idx
-)
-{
-  return (bits >> (5 * idx)) & 7U;
-}
-
-END_NONAMESPACE
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellGroup
@@ -67,13 +20,11 @@ END_NONAMESPACE
 // @brief コンストラクタ
 CiCellGroup::CiCellGroup(
   SizeType id,
-  const NpnMapM& map,
-  int pininfo,
-  const vector<CiCell*>& cell_list
+  const ClibCellClass* rep_class,
+  const NpnMapM& map
 ) : mId{id},
-    mMap{map},
-    mPinInfo{pininfo},
-    mCellList{cell_list}
+    mRepClass{rep_class},
+    mMap{map}
 {
 }
 
@@ -84,6 +35,41 @@ CiCellGroup::id() const
   return mId;
 }
 
+// @brief 親のセルクラスを返す．
+const ClibCellClass&
+CiCellGroup::rep_class() const
+{
+  return *mRepClass;
+}
+
+// @brief 入力ピン数+入出力ピン数を返す．
+SizeType
+CiCellGroup::input_num() const
+{
+  return 0;
+}
+
+// @brief 出力ピン数+入出力ピン数を返す．
+SizeType
+CiCellGroup::output_num() const
+{
+  return 0;
+}
+
+// @brief 入出力ピン数を返す．
+SizeType
+CiCellGroup::inout_num() const
+{
+  return 0;
+}
+
+// @brief 内部ノード数を返す．
+SizeType
+CiCellGroup::internal_node_num() const
+{
+  return 0;
+}
+
 // @brief 代表クラスに対する変換マップを返す．
 const NpnMapM&
 CiCellGroup::map() const
@@ -91,160 +77,181 @@ CiCellGroup::map() const
   return mMap;
 }
 
-// @brief FFセルの場合のピン情報を返す．
-// @note FFセル以外の場合には返り値は不定
-ClibFFInfo
-CiCellGroup::ff_info() const
+// @brief セルの種類を返す．
+ClibCellType
+CiCellGroup::type() const
 {
-  // 本当はバイナリレベルでコピーすればOKだけど
-  // キレイにコピーする．
-  int pos_array[6];
-  pos_array[0] = data_pos();
-  pos_array[1] = clock_pos() | (clock_sense() << 3);
-  pos_array[2] = clear_pos() | (clear_sense() << 3);
-  pos_array[3] = preset_pos() | (preset_sense() << 3);
-  pos_array[4] = q_pos();
-  pos_array[5] = xq_pos() | (static_cast<ymuint>(has_xq()) << 3);
-  return ClibFFInfo(pos_array);
+  return ClibCellType::None;
 }
 
-// @brief ラッチセルの場合のピン情報を返す．
-// @note ラッチセル以外の場合には返り値は不定
-ClibLatchInfo
-CiCellGroup::latch_info() const
-{
-  // 本当はバイナリレベルでコピーすればOKだけど
-  // キレイにコピーする．
-  int pos_array[6];
-  if ( has_data() ) {
-    pos_array[0] = data_pos() | 8U;
-  }
-  else {
-    pos_array[0] = 0;
-  }
-  pos_array[1] = enable_pos() | (enable_sense() << 3);
-  pos_array[2] = clear_pos() | (clear_sense() << 3);
-  pos_array[3] = preset_pos() | (preset_sense() << 3);
-  pos_array[4] = q_pos();
-  return ClibLatchInfo(pos_array);
-}
-
-// @brief 反転出力を持つ時 true を返す．
+// s@brief FFセルの時に true を返す．
 bool
-CiCellGroup::has_xq() const
+CiCellGroup::is_ff() const
 {
-  return get_sense(mPinInfo, OUTPUT2) != 0;
+  return type() == ClibCellType::FF_S || type() == ClibCellType::FF_M;
 }
 
-// @brief データ入力を持つとき true を返す．
+// @brief ラッチセルの時に true を返す．
 bool
-CiCellGroup::has_data() const
+CiCellGroup::is_latch() const
 {
-  return get_sense(mPinInfo, INPUT) != 0;
+  return type() == ClibCellType::Latch_S || type() == ClibCellType::Latch_M;
 }
 
-// @brief データ入力のピン番号を返す．
-SizeType
-CiCellGroup::data_pos() const
-{
-  return get_pos(mPinInfo, INPUT);
-}
-
-// @brief クロック入力のタイプを返す．
-// @retval 0 該当しない
-// @retval 1 positive edge
-// @retval 2 negative edge
-int
-CiCellGroup::clock_sense() const
-{
-  return get_sense(mPinInfo, CLOCK);
-}
-
-// @brief クロック入力のピン番号を返す．
-SizeType
-CiCellGroup::clock_pos() const
-{
-  return get_pos(mPinInfo, CLOCK);
-}
-
-// @brief イネーブル入力を持つとき true を返す．
+/// @brief 出力の論理式を持っている時に true を返す．
 bool
-CiCellGroup::has_enable() const
+CiCellGroup::has_logic(
+  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
+) const
 {
-  return enable_sense() != 0;
+  ASSERT_COND( 0 <= pin_id && pin_id < output_num() );
+  return false;
 }
 
-// @brief イネーブル入力のタイプを返す．
-// @retval 0 なし
-// @retval 1 positive edge
-// @retval 2 negative edge
-int
-CiCellGroup::enable_sense() const
+// @brief 全ての出力が論理式を持っているときに true を返す．
+bool
+CiCellGroup::has_logic() const
 {
-  return get_sense(mPinInfo, ENABLE);
+  return false;
 }
 
-// @brief イネーブル入力のピン番号を返す．
-SizeType
-CiCellGroup::enable_pos() const
+// @brief 論理セルの場合に出力の論理式を返す．
+//
+// 論理式中の変数番号は入力ピン番号に対応する．
+Expr
+CiCellGroup::logic_expr(
+  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
+) const
 {
-  return get_pos(mPinInfo, ENABLE);
+  ASSERT_COND( 0 <= pin_id && pin_id < output_num() );
+  return Expr::make_invalid();
 }
 
-// @brief クリア入力を持つタイプの時に true を返す．
+// @brief 出力がトライステート条件を持っている時に true を返す．
+bool
+CiCellGroup::has_tristate(
+  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
+) const
+{
+  ASSERT_COND( 0 <= pin_id && pin_id < output_num() );
+  return false;
+}
+
+// @brief トライステートセルの場合にトライステート条件式を返す．
+//
+// - 論理式中の変数番号は入力ピン番号に対応する．
+// - 通常の論理セルの場合には定数0を返す．
+Expr
+CiCellGroup::tristate_expr(
+  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
+) const
+{
+  ASSERT_COND( 0 <= pin_id && pin_id < output_num() );
+  return Expr::make_invalid();
+}
+
+// @brief FFセル/ラッチセルの場合にクリア端子を持っていたら true を返す．
 bool
 CiCellGroup::has_clear() const
 {
-  return clear_sense() != 0;
+  return false;
 }
 
-// @brief クリア入力のタイプを返す．
-int
-CiCellGroup::clear_sense() const
+// @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
+//
+// クリア端子がない場合の返り値は不定
+Expr
+CiCellGroup::clear_expr() const
 {
-  return get_sense(mPinInfo, CLEAR);
+  return Expr::make_invalid();
 }
 
-// @brief クリア入力のピン番号を返す．
-SizeType
-CiCellGroup::clear_pos() const
-{
-  return get_pos(mPinInfo, CLEAR);
-}
-
-// @brief プリセット入力を持つタイプの時に true を返す．
+// @brief FFセル/ラッチセルの場合にプリセット端子を持っていたら true を返す．
 bool
 CiCellGroup::has_preset() const
 {
-  return preset_sense() != 0;
+  return false;
 }
 
-// @brief プリセット入力のタイプを返す．
-int
-CiCellGroup::preset_sense() const
+// @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
+//
+// プリセット端子がない場合の返り値は不定
+Expr
+CiCellGroup::preset_expr() const
 {
-  return get_sense(mPinInfo, PRESET);
+  return Expr::make_invalid();
 }
 
-// @brief プリセット入力のピン番号を返す．
-SizeType
-CiCellGroup::preset_pos() const
+// @brief clear_preset_var1 の取得
+//
+// FFセルとラッチセルの時に意味を持つ．
+ClibCPV
+CiCellGroup::clear_preset_var1() const
 {
-  return get_pos(mPinInfo, PRESET);
+  return ClibCPV::X;
 }
 
-// @brief 肯定出力のピン番号を返す．
-SizeType
-CiCellGroup::q_pos() const
+// @brief clear_preset_var2 の取得
+//
+// FFセルとラッチセルの時に意味を持つ．
+ClibCPV
+CiCellGroup::clear_preset_var2() const
 {
-  return get_pos(mPinInfo, OUTPUT1);
+  return ClibCPV::X;
 }
 
-// @brief 否定出力のピン番号を返す．
-SizeType
-CiCellGroup::xq_pos() const
+// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
+//
+// それ以外の型の場合の返り値は不定
+Expr
+CiCellGroup::clock_expr() const
 {
-  return get_pos(mPinInfo, OUTPUT2);
+  return Expr::make_invalid();
+}
+
+// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
+//
+// それ以外の型の場合の返り値は不定
+Expr
+CiCellGroup::clock2_expr() const
+{
+  return Expr::make_invalid();
+}
+
+// @brief FFセルの場合に次状態関数を表す論理式を返す．
+//
+// それ以外の型の場合の返り値は不定
+Expr
+CiCellGroup::next_state_expr() const
+{
+  return Expr::make_invalid();
+}
+
+// @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
+//
+// それ以外の型の場合の返り値は不定
+Expr
+CiCellGroup::enable_expr() const
+{
+  return Expr::make_invalid();
+}
+
+// @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
+//
+// それ以外の型の場合の返り値は不定
+Expr
+CiCellGroup::enable2_expr() const
+{
+  return Expr::make_invalid();
+}
+
+// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
+//
+// それ以外の型の場合の返り値は不定
+Expr
+CiCellGroup::data_in_expr() const
+{
+  return Expr::make_invalid();
 }
 
 // @brief セル数を返す．
@@ -264,34 +271,210 @@ CiCellGroup::cell(
   return *mCellList[pos];
 }
 
-// @brief FFのピン情報を設定する．
+// @brief セルを追加する．
 void
-CiCellGroup::set_ff_info(
-  SizeType pos_array[]
+CiCellGroup::add_cell(
+  CiCell* cell
 )
 {
-  mPinInfo = 0U;
-  mPinInfo |= encode(pos_array[0], INPUT);
-  mPinInfo |= encode(pos_array[1], CLOCK);
-  mPinInfo |= encode(pos_array[2], CLEAR);
-  mPinInfo |= encode(pos_array[3], PRESET);
-  mPinInfo |= encode(pos_array[4], OUTPUT1);
-  mPinInfo |= encode(pos_array[5], OUTPUT2);
+  mCellList.push_back(cell);
 }
 
-// @brief ラッチのピン情報を設定する．
-void
-CiCellGroup::set_latch_info(
-  SizeType pos_array[]
-)
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLogic1CellGroup
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+CiLogic1CellGroup::CiLogic1CellGroup(
+  SizeType id,                    ///< [in] 番号
+  const ClibCellClass* rep_class, ///< [in] 親のセルクラス
+  const NpnMapM& map,             ///< [in] 変換マップ
+  SizeType input_num,             ///< [in] 入力数
+  const Expr& expr                ///< [in] 出力の論理式
+) : CiCellGroup{id, rep_class, map},
+    mInputNum{input_num},
+    mExpr{expr}
 {
-  mPinInfo = 0U;
-  mPinInfo |= encode(pos_array[0], INPUT);
-  mPinInfo |= encode(pos_array[1], ENABLE);
-  mPinInfo |= encode(pos_array[2], CLEAR);
-  mPinInfo |= encode(pos_array[3], PRESET);
-  mPinInfo |= encode(pos_array[4], OUTPUT1);
-  mPinInfo |= encode(pos_array[5], OUTPUT2);
 }
+
+// @brief 入力ピン数+入出力ピン数を返す．
+SizeType
+CiLogic1CellGroup::input_num() const
+{
+  return mInputNum;
+}
+
+// @brief 出力ピン数+入出力ピン数を返す．
+SizeType
+CiLogic1CellGroup::output_num() const
+{
+  return 1;
+}
+
+// @brief 入出力ピン数を返す．
+SizeType
+CiLogic1CellGroup::inout_num() const
+{
+  return 0;
+}
+
+// @brief 内部ノード数を返す．
+SizeType
+CiLogic1CellGroup::internal_node_num() const
+{
+  return 0;
+}
+
+// @brief セルの種類を返す．
+ClibCellType
+CiLogic1CellGroup::type() const
+{
+  return ClibCellType::Logic;
+}
+
+// @brief 出力の論理式を持っている時に true を返す．
+bool
+CiLogic1CellGroup::has_logic(
+  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
+) const
+{
+  ASSERT_COND( pin_id == 0 );
+  return true;
+}
+
+// @brief 全ての出力が論理式を持っているときに true を返す．
+bool
+CiLogic1CellGroup::has_logic() const
+{
+  return true;
+}
+
+// @brief 論理セルの場合に出力の論理式を返す．
+//
+// 論理式中の変数番号は入力ピン番号に対応する．
+Expr
+CiLogic1CellGroup::logic_expr(
+  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
+) const
+{
+  ASSERT_COND( pin_id == 0 );
+  return mExpr;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLogicCellGroup
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+CiLogicCellGroup::CiLogicCellGroup(
+  SizeType id,                       ///< [in] 番号
+  const ClibCellClass* rep_class,    ///< [in] 親のセルクラス
+  const NpnMapM& map,                ///< [in] 変換マップ
+  SizeType input_num,                ///< [in] 入力数
+  SizeType output_num,               ///< [in] 出力数
+  SizeType inout_num,                ///< [in] 入出力数
+  const vector<Expr>& expr_array,    ///< [in] 出力の論理式
+  const vector<Expr>& tristate_array ///< [in] 出力の論理式
+) : CiCellGroup{id, rep_class, map},
+    mInputNum{input_num},
+    mOutputNum{output_num},
+    mInoutNum{inout_num},
+    mExprArray{expr_array},
+    mTristateArray{tristate_array}
+{
+}
+
+// @brief 入力ピン数+入出力ピン数を返す．
+SizeType
+CiLogicCellGroup::input_num() const
+{
+  return mInputNum;
+}
+
+// @brief 出力ピン数+入出力ピン数を返す．
+SizeType
+CiLogicCellGroup::output_num() const
+{
+  return mOutputNum;
+}
+
+// @brief 入出力ピン数を返す．
+SizeType
+CiLogicCellGroup::inout_num() const
+{
+  return mInoutNum;
+}
+
+// @brief 内部ノード数を返す．
+SizeType
+CiLogicCellGroup::internal_node_num() const
+{
+  return 0;
+}
+
+// @brief セルの種類を返す．
+ClibCellType
+CiLogicCellGroup::type() const
+{
+  return ClibCellType::Logic;
+}
+
+// @brief 出力の論理式を持っている時に true を返す．
+bool
+CiLogicCellGroup::has_logic(
+  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
+) const
+{
+  return logic_expr(pin_id).is_valid();
+}
+
+// @brief 全ての出力が論理式を持っているときに true を返す．
+bool
+CiLogicCellGroup::has_logic() const
+{
+  for ( int i = 0; i < output_num(); ++ i ) {
+    if ( !has_logic(i) ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// @brief 論理セルの場合に出力の論理式を返す．
+//
+// 論理式中の変数番号は入力ピン番号に対応する．
+Expr
+CiLogicCellGroup::logic_expr(
+  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
+) const
+{
+  ASSERT_COND( 0 <= pin_id && pin_id < output_num() );
+  return mExprArray[pin_id];
+}
+
+// @brief 出力がトライステート条件を持っている時に true を返す．
+bool
+CiLogicCellGroup::has_tristate(
+  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
+) const
+{
+  return !tristate_expr(pin_id).is_zero();
+}
+
+// @brief トライステートセルの場合にトライステート条件式を返す．
+//
+// - 論理式中の変数番号は入力ピン番号に対応する．
+// - 通常の論理セルの場合には定数0を返す．
+Expr
+CiLogicCellGroup::tristate_expr(
+  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+) const
+{
+  ASSERT_COND( 0 <= pin_id && pin_id < output_num() );
+  return mTristateArray[pin_id];
+}
+
 
 END_NAMESPACE_YM_CLIB

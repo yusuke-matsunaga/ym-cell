@@ -10,7 +10,9 @@
 
 #include "ym/clib.h"
 #include "ym/logic.h"
+#include "ym/Expr.h"
 #include "ym/ClibArea.h"
+#include "ym/ClibCellGroup.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -233,156 +235,191 @@ public:
   // 機能情報の取得
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 組み合わせ論理セルの時に true を返す．
-  virtual
-  bool
-  is_logic() const = 0;
+  /// @brief セルの種類を返す．
+  ClibCellType
+  type() const
+  {
+    return cgroup().type();
+  }
 
-  /// @brief FFセルの時に true を返す．
-  virtual
+  /// @brief 組み合わせ論理タイプの時 true を返す．
   bool
-  is_ff() const = 0;
+  is_logic() const
+  {
+    return cgroup().type() == ClibCellType::Logic;
+  }
 
-  /// @brief ラッチセルの時に true を返す．
-  virtual
+  /// @brief FFタイプの時 true を返す．
   bool
-  is_latch() const = 0;
+  is_ff() const
+  {
+    return cgroup().is_ff();
+  }
 
-  /// @brief 順序セル(非FF/非ラッチ)の場合に true を返す．
-  virtual
+  /// @brief ラッチタイプの時 true を返す．
   bool
-  is_fsm() const = 0;
+  is_latch() const
+  {
+    return cgroup().is_latch();
+  }
 
   /// @brief 出力の論理式を持っている時に true を返す．
-  virtual
   bool
   has_logic(
     SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const = 0;
+  ) const
+  {
+    return cgroup().has_logic(pin_id);
+  }
 
   /// @brief 全ての出力が論理式を持っているときに true を返す．
-  virtual
   bool
-  has_logic() const = 0;
+  has_logic() const
+  {
+    return cgroup().has_logic();
+  }
 
   /// @brief 論理セルの場合に出力の論理式を返す．
   ///
   /// 論理式中の変数番号は入力ピン番号に対応する．
-  virtual
   Expr
   logic_expr(
     SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const = 0;
+  ) const
+  {
+    return cgroup().logic_expr(pin_id);
+  }
 
   /// @brief 出力がトライステート条件を持っている時に true を返す．
-  virtual
   bool
   has_tristate(
     SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const = 0;
+  ) const
+  {
+    return cgroup().has_tristate(pin_id);
+  }
 
   /// @brief トライステートセルの場合にトライステート条件式を返す．
   ///
   /// - 論理式中の変数番号は入力ピン番号に対応する．
   /// - 通常の論理セルの場合には定数0を返す．
-  virtual
   Expr
   tristate_expr(
     SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const = 0;
+  ) const
+  {
+    return cgroup().tristate_expr(pin_id);
+  }
 
-  /// @brief FFセルの場合にFFのピン情報を得る．
-  virtual
-  ClibFFInfo
-  ff_info() const = 0;
-
-  /// @brief FFセルの場合に次状態関数を表す論理式を返す．
+  /// @brief 非同期 clear を持つ時 true を返す．
   ///
-  /// それ以外の型の場合の返り値は不定
-  virtual
-  Expr
-  next_state_expr() const = 0;
-
-  /// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  virtual
-  Expr
-  clock_expr() const = 0;
-
-  /// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  virtual
-  Expr
-  clock2_expr() const = 0;
-
-  /// @brief ラッチセルの場合にFFのピン情報を得る．
-  virtual
-  ClibLatchInfo
-  latch_info() const = 0;
-
-  /// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  virtual
-  Expr
-  data_in_expr() const = 0;
-
-  /// @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  virtual
-  Expr
-  enable_expr() const = 0;
-
-  /// @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
-  ///
-  /// それ以外の型の場合の返り値は不定
-  virtual
-  Expr
-  enable2_expr() const = 0;
-
-  /// @brief FFセル/ラッチセルの場合にクリア端子を持っていたら true を返す．
-  virtual
+  /// FF/ラッチセル以外の場合には返り値は不定
   bool
-  has_clear() const = 0;
+  has_clear() const
+  {
+    return cgroup().has_clear();
+  }
 
   /// @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
   ///
   /// クリア端子がない場合の返り値は不定
-  virtual
   Expr
-  clear_expr() const = 0;
+  clear_expr() const
+  {
+    return cgroup().clear_expr();
+  }
 
-  /// @brief FFセル/ラッチセルの場合にプリセット端子を持っていたら true を返す．
-  virtual
+  /// @brief 非同期 preset を持つ時 true を返す．
+  ///
+  /// FF/ラッチセル以外の場合には返り値は不定
   bool
-  has_preset() const = 0;
+  has_preset() const
+  {
+    return cgroup().has_preset();
+  }
 
   /// @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
-  /// @note プリセット端子がない場合の返り値は不定
-  virtual
+  ///
+  /// プリセット端子がない場合の返り値は不定
   Expr
-  preset_expr() const = 0;
+  preset_expr() const
+  {
+    return cgroup().preset_expr();
+  }
 
-  /// @brief clear_preset_var1 の取得
-  /// @retval 0 "L"
-  /// @retval 1 "H"
+  /// @brief clear と preset が同時にアクティブになった時の値1
   ///
-  /// FFセルとラッチセルの時に意味を持つ．
-  virtual
-  SizeType
-  clear_preset_var1() const = 0;
+  /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
+  /// FF/ラッチセル以外の場合には返り値は不定
+  ClibCPV
+  clear_preset_var1() const
+  {
+    return cgroup().clear_preset_var1();
+  }
 
-  /// @brief clear_preset_var2 の取得
-  /// @retval 0 "L"
-  /// @retval 1 "H"
+  /// @brief clear と preset が同時にアクティブになった時の値1
   ///
-  /// FFセルとラッチセルの時に意味を持つ．
-  virtual
-  SizeType
-  clear_preset_var2() const = 0;
+  /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
+  /// FF/ラッチセル以外の場合には返り値は不定
+  ClibCPV
+  clear_preset_var2() const
+  {
+    return cgroup().clear_preset_var2();
+  }
+
+  /// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  Expr
+  clock_expr() const
+  {
+    return cgroup().clock_expr();
+  }
+
+  /// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  Expr
+  clock2_expr() const
+  {
+    return cgroup().clock2_expr();
+  }
+
+  /// @brief FFセルの場合に次状態関数を表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  Expr
+  next_state_expr() const
+  {
+    return cgroup().next_state_expr();
+  }
+
+  /// @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  Expr
+  enable_expr() const
+  {
+    return cgroup().enable_expr();
+  }
+
+  /// @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  Expr
+  enable2_expr() const
+  {
+    return cgroup().enable2_expr();
+  }
+
+  /// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  Expr
+  data_in_expr() const
+  {
+    return cgroup().data_in_expr();
+  }
 
 
 public:
@@ -396,6 +433,17 @@ public:
   dump(
     ostream& s ///< [in] 出力先のストリーム
   ) const = 0;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief セルグループを返す．
+  virtual
+  const ClibCellGroup&
+  cgroup() const = 0;
 
 };
 

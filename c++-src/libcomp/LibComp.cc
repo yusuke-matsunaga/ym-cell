@@ -7,12 +7,12 @@
 /// All rights reserved.
 
 #include "lc/LibComp.h"
-#include "lc/LcClass.h"
-#include "lc/LcGroup.h"
 #include "lc/LcPatNode.h"
 #include "lc/LcPatHandle.h"
 #include "ci/CiCellLibrary.h"
 #include "ci/CiCell.h"
+#include "ci/CiCellGroup.h"
+#include "ci/CiCellClass.h"
 #include "ym/Expr.h"
 #include "ym/NpnMap.h"
 
@@ -115,26 +115,9 @@ END_NONAMESPACE
 // クラス LibComp
 //////////////////////////////////////////////////////////////////////
 
-// @brief パタングラフの情報を取り出す．
-const LcPatMgr&
-LibComp::pat_mgr() const
+// @brief コンストラクタ
+LibComp::LibComp()
 {
-  return mPatMgr;
-}
-
-// @brief セルのグループ化，クラス化を行う．
-// @param[in] cell_list セルのリスト
-void
-LibComp::compile(
-  const vector<unique_ptr<CiCell>>& cell_list
-)
-{
-  mGroupList.clear();
-  mGroupMap.clear();
-
-  mClassList.clear();
-  mClassMap.clear();
-
   // パタンマネージャを初期化
   mPatMgr.init();
 
@@ -147,12 +130,33 @@ LibComp::compile(
   // ラッチの基本タイプを登録
   _latch_init();
 
+#if 0
   // セルを登録する．
   for ( auto& p: cell_list ) {
     auto cell = p.get();
     auto& group = _find_group(cell);
     group.add_cell(cell);
   }
+#endif
+}
+
+// @brief デストラクタ
+LibComp::~LibComp()
+{
+}
+
+// @brief パタングラフの情報を取り出す．
+const LcPatMgr&
+LibComp::pat_mgr() const
+{
+  return mPatMgr;
+}
+
+// @brief セルのグループ化，クラス化を行う．
+// @param[in] cell_list セルのリスト
+void
+LibComp::compile()
+{
 }
 
 // @brief セルグループの数を返す．
@@ -163,8 +167,7 @@ LibComp::group_num() const
 }
 
 // @brief セルグループを返す．
-// @param[in] id グループ番号 ( 0 <= id < group_num() )
-const LcGroup&
+const ClibCellGroup&
 LibComp::group(
   SizeType id
 ) const
@@ -181,8 +184,7 @@ LibComp::npn_class_num() const
 }
 
 // @brief NPN同値クラスを返す．
-// @param[in] id クラス番号 ( 0 <= id < npn_class_num() )
-const LcClass&
+const ClibCellClass&
 LibComp::npn_class(
   SizeType id
 ) const
@@ -249,21 +251,21 @@ void
 LibComp::_logic_init()
 {
   { // 定数0グループの登録
-    LcGroup& func0 = _find_group(Expr::make_zero());
+    auto& func0 = _find_group(Expr::make_zero());
     mLogicGroup[0] = func0.id();
   }
   { // 定数1グループの登録
-    LcGroup& func1 = _find_group(Expr::make_one());
+    auto& func1 = _find_group(Expr::make_one());
     mLogicGroup[1] = func1.id();
   }
   { // バッファグループの登録
     Expr expr = Expr::make_posi_literal(VarId(0));
-    LcGroup& func2 = _find_group(expr);
+    auto& func2 = _find_group(expr);
     mLogicGroup[2] = func2.id();
   }
   { // インバーターグループの登録
     Expr expr = Expr::make_nega_literal(VarId(0));
-    LcGroup& func3 = _find_group(expr);
+    auto& func3 = _find_group(expr);
     mLogicGroup[3] = func3.id();
   }
 
@@ -347,9 +349,9 @@ LibComp::_ff_init()
     bool has_preset;
     decode(i, has_q, has_xq, has_clear, has_preset);
 
-    LcSignature sig(LcType::FF, has_q, has_xq, has_clear, has_preset);
-    LcGroup& group = _find_group(sig);
-    LcClass& cclass = group.parent();
+    LcSignature sig{LcType::FF, has_q, has_xq, has_clear, has_preset};
+    auto& group = _find_group(sig);
+    auto& cclass = group.parent();
     mFFClass[i] = cclass.id();
   }
 }
@@ -365,15 +367,15 @@ LibComp::_latch_init()
     bool has_preset;
     decode(i, has_q, has_xq, has_clear, has_preset);
 
-    LcSignature sig(LcType::Latch, has_q, has_xq, has_clear, has_preset);
-    LcGroup& group = _find_group(sig);
-    LcClass& cclass = group.parent();
+    LcSignature sig{LcType::Latch, has_q, has_xq, has_clear, has_preset};
+    auto& group = _find_group(sig);
+    auto& cclass = group.parent();
     mLatchClass[i] = cclass.id();
   }
 }
 
 // @brief セルに対応する LcGroup を求める．
-LcGroup&
+CiCellGroup&
 LibComp::_find_group(
   CiCell* cell
 )
@@ -409,7 +411,7 @@ LibComp::_find_group(
 // @param[in] sig シグネチャ
 //
 // なければ新規に作る．
-LcGroup&
+ClibCellGroup&
 LibComp::_find_group(
   const LcSignature& sig
 )
@@ -440,7 +442,7 @@ LibComp::_find_group(
     xmap = NpnMapM(xmap1);
   }
   string rep_sig_str = rep_sig.str();
-  LcClass* fclass = nullptr;
+  CiCellClass* fclass{nullptr};
   if ( mClassMap.count(rep_sig_str) > 0 ) {
     auto fcid = mClassMap.at(rep_sig_str);
     // 登録されていた．
@@ -462,13 +464,13 @@ LibComp::_find_group(
 // @param[in] expr 論理式
 //
 // こちらは1出力の論理セル用
-LcGroup&
+CiCellGroup&
 LibComp::_find_group(
   const Expr& expr
 )
 {
   LcSignature sig(expr);
-  LcGroup& fgroup = _find_group(sig);
+  auto& fgroup = _find_group(sig);
 
   // expr からパタングラフを作り登録する．
   _reg_expr(expr, fgroup);
@@ -476,8 +478,9 @@ LibComp::_find_group(
   return fgroup;
 }
 
+#if 0
 // @brief 新しいグループを作る．
-LcGroup*
+CiCellGroup*
 LibComp::_new_group()
 {
   auto new_id = mGroupList.size();
@@ -501,15 +504,16 @@ LibComp::_new_class(
 
   return fclass;
 }
+#endif
 
 // @brief expr から生成されるパタンを登録する．
 void
 LibComp::_reg_expr(
-  const Expr& expr,     ///< [in] 論理式
-  const LcGroup& fgroup ///< [in] expr の属している機能グループ
+  const Expr& expr,           ///< [in] 論理式
+  const ClibCellGroup& fgroup ///< [in] expr の属している機能グループ
 )
 {
-  const LcClass& fclass = fgroup.parent();
+  auto& fclass = fgroup.rep_class();
 
   // fclass->rep_func() を用いる理由は論理式に現れる変数が
   // 真のサポートとは限らないから

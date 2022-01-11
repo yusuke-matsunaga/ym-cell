@@ -28,6 +28,14 @@
 #include "ci/CiLutTemplate.h"
 
 
+#if 0
+BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
+
+class LibComp;
+
+END_NAMESPACE_YM_CLIB_LIBCOMP
+#endif
+
 BEGIN_NAMESPACE_YM_CLIB
 
 class CiBus;
@@ -638,7 +646,14 @@ public:
     const vector<CiLutTemplate*>& template_list
   );
 
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // CiXXX の生成関数
+  //////////////////////////////////////////////////////////////////////
+
   /// @brief 1次元の LUT のテンプレートを作る．
+  static
   CiLutTemplate*
   new_lut_template1(
     const ShString& name,
@@ -647,6 +662,7 @@ public:
   );
 
   /// @brief 2次元の LUT のテンプレートを作る．
+  static
   CiLutTemplate*
   new_lut_template2(
     const ShString& name,
@@ -657,6 +673,7 @@ public:
   );
 
   /// @brief 3次元の LUT のテンプレートを作る．
+  static
   CiLutTemplate*
   new_lut_template3(
     const ShString& name,
@@ -668,7 +685,54 @@ public:
     const vector<double>& index_list3
   );
 
+  /// @brief セルクラスを作る．
+  CiCellClass*
+  new_cell_class(
+    const vector<NpnMapM>& idmap_list ///< [in] 同位体変換のリスト
+  );
+
+  /// @brief 1出力の論理セル用のグループを作る．
+  CiCellGroup*
+  new_logic_group(
+    const ClibCellClass* rep_class, ///< [in] 親のセルクラス
+    const NpnMapM& map,             ///< [in] 変換マップ
+    SizeType input_num,             ///< [in] 入力数
+    const Expr& expr                ///< [in] 出力の論理式
+  );
+
+  /// @brief 一般的な論理セル用のグループを作る．
+  CiCellGroup*
+  new_logic_group(
+    const ClibCellClass* rep_class,    ///< [in] 親のセルクラス
+    const NpnMapM& map,                ///< [in] 変換マップ
+    SizeType input_num,                ///< [in] 入力数
+    SizeType output_num,               ///< [in] 出力数
+    SizeType inout_num,                ///< [in] 入出力数
+    const vector<Expr>& expr_array,    ///< [in] 出力の論理式の配列
+    const vector<Expr>& tristate_array ///< [in] 出力のtristate条件の配列
+  );
+
+  /// @brief FF用のグループを作る．
+  CiCellGroup*
+  new_ff_group(
+    const ClibCellClass* rep_class,     ///< [in] 親のセルクラス
+    const NpnMapM& map,                 ///< [in] 変換マップ
+    SizeType input_num,                 ///< [in] 入力数
+    SizeType output_num,                ///< [in] 出力数
+    SizeType inout_num,                 ///< [in] 入出力数
+    const vector<Expr>& expr_array,     ///< [in] 出力の論理式の配列
+    const vector<Expr>& tristate_array, ///< [in] 出力のtristate条件の配列
+    const Expr& clock,                  ///< [in] マスタークロックの論理式
+    const Expr& clock2,                 ///< [in] スレーブクロックの論理式
+    const Expr& next_state,             ///< [in] 次状態の論理式
+    const Expr& clear,                  ///< [in] クリア条件の論理式
+    const Expr& preset,                 ///< [in] プリセット条件の論理式
+    ClibCPV clear_preset_var1,          ///< [in] クリアとプリセットが同時にアクティブになった時の値1
+    ClibCPV clear_preset_var2           ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+  );
+
   /// @brief 論理セルを生成する．
+  static
   CiCell*
   new_logic_cell(
     const ShString& name,
@@ -682,6 +746,7 @@ public:
   );
 
   /// @brief FFセルを生成する．
+  static
   CiCell*
   new_ff_cell(
     const ShString& name,
@@ -702,6 +767,7 @@ public:
   );
 
   /// @brief ラッチセルを生成する．
+  static
   CiCell*
   new_latch_cell(
     const ShString& name,
@@ -722,6 +788,7 @@ public:
   );
 
   /// @brief FSMセルを生成する．
+  static
   CiCell*
   new_fsm_cell(
     const ShString& name,
@@ -736,6 +803,7 @@ public:
   );
 
   /// @brief セルの入力ピンを生成する．
+  static
   CiInputPin*
   new_cell_input(
     const ShString& name,
@@ -745,12 +813,10 @@ public:
   );
 
   /// @brief セルの出力ピンの内容を設定する．
+  static
   CiOutputPin*
   new_cell_output(
     const ShString& name,
-    bool has_logic,
-    const Expr& logic_expr,
-    const Expr& tristate_expr,
     ClibCapacitance max_fanout,
     ClibCapacitance min_fanout,
     ClibCapacitance max_capacitance,
@@ -760,12 +826,10 @@ public:
   );
 
   /// @brief セルの入出力ピンの内容を設定する．
+  static
   CiInoutPin*
   new_cell_inout(
     const ShString& name,
-    bool has_logic,
-    const Expr& logic_expr,
-    const Expr& tristate_expr,
     ClibCapacitance capacitance,
     ClibCapacitance rise_capacitance,
     ClibCapacitance fall_capacitance,
@@ -778,12 +842,14 @@ public:
   );
 
   /// @brief セルの内部ピンを生成する．
+  static
   CiInternalPin*
   new_cell_internal(
     const ShString& name
   );
 
   /// @brief タイミング情報を作る(ジェネリック遅延モデル)．
+  static
   CiTiming*
   new_timing_generic(
     ClibTimingType type,
@@ -797,6 +863,7 @@ public:
   );
 
   /// @brief タイミング情報を作る(折れ線近似)．
+  static
   CiTiming*
   new_timing_piecewise(
     ClibTimingType timing_type,
@@ -810,6 +877,7 @@ public:
   );
 
   /// @brief タイミング情報を作る(非線形タイプ1)．
+  static
   CiTiming*
   new_timing_lut1(
     ClibTimingType timing_type,
@@ -821,6 +889,7 @@ public:
   );
 
   /// @brief タイミング情報を作る(非線形タイプ2)．
+  static
   CiTiming*
   new_timing_lut2(
     ClibTimingType timing_type,
@@ -832,6 +901,7 @@ public:
   );
 
   /// @brief タイミング情報をセットする．
+  static
   void
   set_timing(
     CiCell* cell,
@@ -845,6 +915,7 @@ public:
   /// @param[in] lut_template テンプレート
   /// @param[in] value_array 値の配列
   /// @param[in] index_array インデックス値のリスト
+  static
   CiLut*
   new_lut1(
     const ClibLutTemplate* lut_template,
@@ -857,6 +928,7 @@ public:
   /// @param[in] value_array 値の配列
   /// @param[in] index_array1 インデックス値のリスト
   /// @param[in] index_array2 インデックス値のリスト
+  static
   CiLut*
   new_lut2(
     const ClibLutTemplate* lut_template,
@@ -871,6 +943,7 @@ public:
   /// @param[in] index_array1 インデックス値のリスト
   /// @param[in] index_array2 インデックス値のリスト
   /// @param[in] index_array3 インデックス値のリスト
+  static
   CiLut*
   new_lut3(
     const ClibLutTemplate* lut_template,
@@ -940,32 +1013,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief セルのグループ分けを行う．
-  ///
-  /// 論理セルのパタングラフも作成する．
-  void
-  compile();
-
-  /// @brief セルグループを作る．
-  ///
-  /// pininfo は restore() 時のみ指定する．
-  /// それ以外は後で set_ff_info()/set_latch_info() で設定する．
-  CiCellGroup*
-  new_cell_group(
-    SizeType id,                     ///< [in] 番号
-    const NpnMapM& map,              ///< [in] 変換マップ
-    int pininfo,                     ///< [in] ピン情報
-    const vector<CiCell*>& cell_list ///< [in] セルのリスト
-  );
-
-  /// @brief セルクラスを作る．
-  CiCellClass*
-  new_cell_class(
-    SizeType id,                           ///< [in] 番号
-    const vector<NpnMapM>& idmap_list,     ///< [in] 同位体変換リスト
-    const vector<CiCellGroup*>& group_list ///< [in] グループのリスト
-  );
 
   /// @brief LUT テンプレートを読み込む．
   void

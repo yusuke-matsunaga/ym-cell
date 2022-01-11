@@ -177,6 +177,25 @@ operator<<(
   return s;
 }
 
+// @brief ClibCPV のストリーム出力演算子
+// @return s を返す．
+ostream&
+operator<<(
+  ostream& s,  ///< [in] 出力先のストリーム
+  ClibCPV cpv  ///< [in] clear_preset_var の値
+)
+{
+  switch ( cpv ) {
+  case ClibCPV::L: s << "L"; break;
+  case ClibCPV::H: s << "H"; break;
+  case ClibCPV::N: s << "N"; break;
+  case ClibCPV::T: s << "T"; break;
+  case ClibCPV::X: s << "X"; break;
+  default:         s << "-"; break;
+  }
+  return s;
+}
+
 END_NAMESPACE_YM
 
 
@@ -370,19 +389,12 @@ display_class(
 }
 
 void
-display_pos(
+display_CPV(
   ostream& s,
   const char* title,
-  SizeType pos,
-  int sense)
+  ClibCPV cpv)
 {
-  if ( sense > 0 ) {
-    s << " " << title << " = ";
-    if ( sense == 2 ) {
-      s << "~";
-    }
-    s << pos;
-  }
+  s << title << " = " << cpv;
 }
 
 // FFセルクラスの情報を出力する．
@@ -405,16 +417,23 @@ display_ff_class(
   for ( auto i: Range(cclass.cell_group_num()) ) {
     auto& group = cclass.cell_group(i);
     s << "  Group:";
-    s << " data-pin = " << group.data_pos();
-#if 0
-    display_pos(s, "clock-pin", group.clock_pos(), group.clock_sense());
-    display_pos(s, "clear-pin", group.clear_pos(), group.clear_sense());
-    display_pos(s, "preset-pin", group.preset_pos(), group.preset_sense());
-#endif
-    s << " q-pin = " << group.q_pos()
-      << " xq-pin = " << group.xq_pos()
-      << endl;
-    s << "         Clib = ";
+    s << " clock = " << group.clock_expr();
+    if ( group.type() == ClibCellType::FF_M ) {
+      s << " clock2 = " << group.clock2_expr();
+    }
+    s << " next_state = " << group.next_state_expr();
+    if ( group.has_clear() ) {
+      s << " clear = " << group.clear_expr();
+    }
+    if ( group.has_preset() ) {
+      s << " preset = " << group.preset_expr();
+    }
+    if ( group.has_clear() && group.has_preset() ) {
+      s << "clear_preset_var1 = " << group.clear_preset_var1();
+      s << "clear_preset_var2 = " << group.clear_preset_var2();
+    }
+    s << endl;
+    s << "         Cell = ";
     for ( auto j: Range(group.cell_num()) ) {
       auto& cell = group.cell(j);
       s << " " << cell.name();
@@ -444,15 +463,23 @@ display_latch_class(
   for ( auto i: Range(cclass.cell_group_num()) ) {
     auto& group = cclass.cell_group(i);
     s << "  Group:";
-#if 0
-    display_pos(s, "data-pin",  group.data_pos(), group.has_data() ? 1 : 0);
-    display_pos(s, "enable-pin", group.enable_pos(), group.enable_sense());
-    display_pos(s, "clear-pin", group.clear_pos(), group.clear_sense());
-    display_pos(s, "preset-pin", group.preset_pos(), group.preset_sense());
-#endif
-    s << " q-pin = " << group.q_pos()
-      << endl;
-    s << "         Clib = ";
+    s << " enable = " << group.enable_expr();
+    if ( group.type() == ClibCellType::Latch_M ) {
+      s << " enable2 = " << group.enable2_expr();
+    }
+    s << " data_in = " << group.data_in_expr();
+    if ( group.has_clear() ) {
+      s << " clear = " << group.clear_expr();
+    }
+    if ( group.has_preset() ) {
+      s << " preset = " << group.preset_expr();
+    }
+    if ( group.has_clear() && group.has_preset() ) {
+      display_CPV(s, "clear_preset_var1", group.clear_preset_var1());
+      display_CPV(s, "clear_preset_var2", group.clear_preset_var2());
+    }
+    s << endl;
+    s << "         Cell = ";
     for ( auto j: Range(group.cell_num()) ) {
 	auto& cell = group.cell(j);
       s << " " << cell.name();
@@ -587,7 +614,7 @@ display_library(
     else if ( cell.is_latch() ) {
       s << "Latch";
     }
-    else if ( cell.is_fsm() ) {
+    else if ( cell.type() == ClibCellType::FSM ) {
       s << "FSM";
     }
     else {
