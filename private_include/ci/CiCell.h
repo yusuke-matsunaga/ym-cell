@@ -5,7 +5,7 @@
 /// @brief CiClib のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibCell.h"
@@ -94,15 +94,6 @@ public:
   const ClibPin&
   pin(
     SizeType pin_id ///< [in] ピン番号 ( 0 <= pin_id < pin_num() )
-  ) const override;
-
-  /// @brief 名前からピン番号の取得
-  /// @return name という名前のピン番号を返す．
-  ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
-  pin_id(
-    const char* name ///< [in] ピン名
   ) const override;
 
   /// @brief 名前からピン番号の取得

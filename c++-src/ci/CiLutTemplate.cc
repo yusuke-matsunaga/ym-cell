@@ -3,7 +3,7 @@
 /// @brief CiLutTemplate の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiLutTemplate.h"
@@ -23,7 +23,7 @@ CiLutTemplate::id() const
 }
 
 // @brief 名前の取得
-const char*
+string
 CiLutTemplate::name() const
 {
   return _name();

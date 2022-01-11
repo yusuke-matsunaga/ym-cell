@@ -46,7 +46,7 @@ public:
   id() const override;
 
   /// @brief 名前の取得
-  const char*
+  string
   name() const override;
 
   /// @brief 名前の取得

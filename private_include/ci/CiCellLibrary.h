@@ -5,7 +5,7 @@
 /// @brief CiCellLibrary のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibArea.h"
@@ -216,17 +216,6 @@ public:
   /// なければ CLIB_NULLID を返す．
   SizeType
   lu_table_template_id(
-    const char* name ///< [in] テンプレート名
-  ) const
-  {
-    return lu_table_template_id(ShString(name));
-  }
-
-  /// @brief ルックアップテーブルのテンプレート番号の取得
-  ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
-  lu_table_template_id(
     const string& name ///< [in] テンプレート名
   ) const
   {
@@ -247,17 +236,6 @@ public:
     else {
       return CLIB_NULLID;
     }
-  }
-
-  /// @brief バスタイプの取得
-  ///
-  /// なければ nullptr を返す．
-  const ClibBusType&
-  bus_type(
-    const char* name ///< [in] バスタイプ名
-  ) const
-  {
-    return bus_type(ShString(name));
   }
 
   /// @brief バスタイプの取得
@@ -301,15 +279,6 @@ public:
   {
     ASSERT_COND( 0 <= cell_id && cell_id < cell_num() );
     return *mCellList[cell_id];
-  }
-
-  /// @brief 名前からのセル番号の取得
-  SizeType
-  cell_id(
-    const char* name
-  ) const
-  {
-    return cell_id(ShString(name));
   }
 
   /// @brief 名前からのセル番号の取得
