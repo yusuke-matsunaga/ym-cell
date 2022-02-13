@@ -8,6 +8,7 @@
 
 #include "ci/CiCellClass.h"
 #include "ci/CiCellGroup.h"
+#include "ym/ClibIOMap.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -18,8 +19,8 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief コンストラクタ
 CiCellClass::CiCellClass(
-  SizeType id,                      ///< [in] id 番号
-  const vector<NpnMapM>& idmap_list ///< [in] 同位体変換リスト
+  SizeType id,                        ///< [in] id 番号
+  const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換リスト
 ) : mId{id},
     mIdmapList{idmap_list}
 {
@@ -42,13 +43,20 @@ CiCellClass::idmap_num() const
 
 // @brief 同位体変換を得る．
 // @param[in] pos 位置番号 ( 0 <= pos < idmap_num() )
-const NpnMapM&
+const ClibIOMap&
 CiCellClass::idmap(
   SizeType pos
 ) const
 {
   ASSERT_COND( pos >= 0 && pos < idmap_num() );
   return mIdmapList[pos];
+}
+
+// @brief 同位体変換のリストを得る．
+const vector<ClibIOMap>&
+CiCellClass::idmap_list() const
+{
+  return mIdmapList;
 }
 
 // @brief グループ数を返す．
@@ -66,6 +74,22 @@ CiCellClass::cell_group(
 {
   ASSERT_COND( 0 <= pos && pos < cell_group_num() );
   return *mGroupList[pos];
+}
+
+// @brief グループのリストを返す．
+ClibCellGroupList
+CiCellClass::cell_group_list() const
+{
+  return mGroupList;
+}
+
+// @brief このクラスに属しているセルグループを追加する．
+void
+CiCellClass::add_group(
+  CiCellGroup* group
+)
+{
+  mGroupList.push_back(group);
 }
 
 END_NAMESPACE_YM_CLIB

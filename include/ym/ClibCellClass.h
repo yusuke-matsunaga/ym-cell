@@ -10,6 +10,9 @@
 
 #include "ym/clib.h"
 #include "ym/logic.h"
+#include "ym/BinDec.h"
+#include "ym/BinEnc.h"
+#include "ym/ClibCellGroupList.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -50,10 +53,15 @@ public:
 
   /// @brief 同位体変換を得る．
   virtual
-  const NpnMapM&
+  const ClibIOMap&
   idmap(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < idmap_num() )
   ) const = 0;
+
+  /// @brief 同位体変換のリストを得る．
+  virtual
+  const vector<ClibIOMap>&
+  idmap_list() const = 0;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -78,6 +86,11 @@ public:
     SizeType pos ///< [in] インデックス ( 0 <= pos < cell_group_num() )
   ) const = 0;
 
+  /// @brief グループのリストを返す．
+  virtual
+  ClibCellGroupList
+  cell_group_list() const = 0;
+
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -93,7 +106,7 @@ public:
   virtual
   void
   dump(
-    ostream& s ///< [in] 出力先のストリーム
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const = 0;
 
   //////////////////////////////////////////////////////////////////////

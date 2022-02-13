@@ -66,8 +66,8 @@ class ClibRestorer;
 
 class ClibCellGroup;
 class ClibCellClass;
-class ClibFFInfo;
-class ClibLatchInfo;
+class ClibIOMap;
+class ClibPinMap;
 class ClibPatGraph;
 
 END_NAMESPACE_YM_CLIB
@@ -99,8 +99,8 @@ using nsClib::ClibRestorer;
 
 using nsClib::ClibCellGroup;
 using nsClib::ClibCellClass;
-using nsClib::ClibFFInfo;
-using nsClib::ClibLatchInfo;
+using nsClib::ClibIOMap;
+using nsClib::ClibPinMap;
 using nsClib::ClibPatGraph;
 
 

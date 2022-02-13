@@ -10,6 +10,11 @@
 
 #include "ym/clib.h"
 #include "ym/logic.h"
+#include "ym/BinDec.h"
+#include "ym/BinEnc.h"
+#include "ym/ClibCellList.h"
+#include "ym/ClibCellGroupList.h"
+#include "ym/ClibCellClassList.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -217,6 +222,10 @@ public:
     SizeType cell_id ///< [in] セル番号 ( 0 <= cell_id < cell_num() )
   ) const;
 
+  /// @brief 全セルのリストの取得
+  ClibCellList
+  cell_list() const;
+
   /// @brief 名前からのセル番号の取得
   /// @return セル番号を返す．
   ///
@@ -236,6 +245,10 @@ public:
     SizeType id ///< [in] グループ番号 ( 0 <= id < cell_group_num() )
   ) const;
 
+  /// @brief セルグループのリストの取得
+  ClibCellGroupList
+  cell_group_list() const;
+
   /// @brief NPN同値クラス数の取得
   SizeType
   npn_class_num() const;
@@ -245,6 +258,10 @@ public:
   npn_class(
     SizeType id ///< [in] 同値クラス番号 ( 0 <= id < npn_class_num() )
   ) const;
+
+  /// @brief NPN同値クラスのリストの取得
+  ClibCellClassList
+  npn_class_list() const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -397,13 +414,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    ostream& s ///< [in] 出力先のストリーム
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const;
 
   /// @brief バイナリダンプされた内容を読み込む．
   void
   restore(
-    istream& s ///< [in] 入力元のストリーム
+    BinDec& s ///< [in] 入力元のストリーム
   );
 
   //////////////////////////////////////////////////////////////////////

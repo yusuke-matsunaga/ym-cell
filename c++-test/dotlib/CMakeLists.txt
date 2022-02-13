@@ -3,7 +3,6 @@
 # インクルードパスの設定
 # ===================================================================
 include_directories(
-  ${GTEST_INCLUDE_DIR}
   ../../private_include/dotlib
   ../../c++-src/dotlib/parser
   )

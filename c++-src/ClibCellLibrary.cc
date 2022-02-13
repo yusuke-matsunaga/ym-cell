@@ -366,6 +366,20 @@ ClibCellLibrary::cell(
   }
 }
 
+// @brief 全セルのリストの取得
+ClibCellList
+ClibCellLibrary::cell_list() const
+{
+  if ( mImpl ) {
+    return mImpl->cell_list();
+  }
+  else {
+    // エラー
+    static vector<const ClibCell*> dummy;
+    return dummy;
+  }
+}
+
 // @brief 名前からのセル番号の取得
 SizeType
 ClibCellLibrary::cell_id(
@@ -407,6 +421,20 @@ ClibCellLibrary::cell_group(
   }
 }
 
+// @brief セルグループのリストの取得
+ClibCellGroupList
+ClibCellLibrary::cell_group_list() const
+{
+  if ( mImpl ) {
+    return mImpl->cell_group_list();
+  }
+  else {
+    // エラー
+    static vector<const ClibCellGroup*> dummy;
+    return dummy;
+  }
+}
+
 // @brief NPN同値クラス数の取得
 SizeType
 ClibCellLibrary::npn_class_num() const
@@ -430,6 +458,20 @@ ClibCellLibrary::npn_class(
   }
   else {
     return CiCellLibrary::error_cell_class();
+  }
+}
+
+// @brief NPN同値クラスのリストの取得
+ClibCellClassList
+ClibCellLibrary::npn_class_list() const
+{
+  if ( mImpl ) {
+    return mImpl->npn_class_list();
+  }
+  else {
+    // エラー
+    static vector<const ClibCellClass*> dummy;
+    return dummy;
   }
 }
 
@@ -701,10 +743,9 @@ ClibCellLibrary::pg_edge_inv(
 }
 
 // @brief 内容をバイナリダンプする．
-// @param[in] s 出力先のストリーム
 void
 ClibCellLibrary::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   if ( mImpl ) {
@@ -713,10 +754,9 @@ ClibCellLibrary::dump(
 }
 
 // @brief バイナリダンプされた内容を読み込む．
-// @param[in] s 入力元のストリーム
 void
 ClibCellLibrary::restore(
-  istream& s
+  BinDec& s
 )
 {
   auto new_impl{new CiCellLibrary()};

@@ -57,14 +57,16 @@ TEST(ClibCellLibraryTest, dump_restore)
     {
       ofstream s(dump_filename);
       ASSERT_TRUE ( s.operator bool() );
-      library.dump(s);
+      BinEnc bs{s};
+      library.dump(bs);
     }
 
     ClibCellLibrary library2;
     {
       ifstream s(dump_filename);
       ASSERT_TRUE ( s.operator bool() );
-      library2.restore(s);
+      BinDec bs{s};
+      library2.restore(bs);
     }
 
     EXPECT_EQ( library.cell_num(), library2.cell_num() );

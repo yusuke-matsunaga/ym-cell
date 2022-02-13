@@ -67,7 +67,7 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    ostream& s ///< [in] 出力先のストリーム
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
 

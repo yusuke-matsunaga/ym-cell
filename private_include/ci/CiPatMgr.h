@@ -9,6 +9,8 @@
 /// All rights reserved.
 
 #include "ym/clib.h"
+#include "ym/BinDec.h"
+#include "ym/BinEnc.h"
 #include "lc/libcomp_nsdef.h"
 
 
@@ -148,7 +150,7 @@ public:
   /// @brief バイナリダンプを行う．
   void
   dump(
-    ostream& bos ///< [in] 出力先のストリーム
+    BinEnc& bos ///< [in] 出力先のストリーム
   ) const;
 
 
@@ -168,7 +170,7 @@ public:
   /// @retval false 読み込みが失敗した．
   bool
   restore(
-    istream& bis ///< [in] 入力元のストリーム
+    BinDec& bis ///< [in] 入力元のストリーム
   );
 
 

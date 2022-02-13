@@ -3,7 +3,7 @@
 /// @brief CiCellLibrary の実装ファイル(dump()関係)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiCellLibrary.h"
@@ -18,6 +18,7 @@
 #include "ci/CiLut.h"
 #include "ci/CiPatMgr.h"
 #include "ci/CiPatGraph.h"
+#include "ym/ClibIOMap.h"
 #include "ym/Range.h"
 
 
@@ -27,7 +28,7 @@ BEGIN_NONAMESPACE
 
 void
 dump_lut(
-  ostream& s,
+  BinEnc& s,
   const ClibLut& lut
 )
 {
@@ -48,7 +49,7 @@ END_NONAMESPACE
 // @brief 内容をバイナリダンプする．
 void
 CiCellLibrary::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   // 名前
@@ -140,7 +141,7 @@ CiCellLibrary::dump(
 // @brief 内容をバイナリダンプする．
 void
 CiCell::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   ymuint8 tid = 0;
@@ -250,7 +251,7 @@ CiCell::dump(
 // @brief dump 用の共通情報を出力する．
 void
 CiPin::dump_common(
-  ostream& s
+  BinEnc& s
 ) const
 {
   s << _name();
@@ -264,7 +265,7 @@ CiPin::dump_common(
 // @brief 内容をバイナリダンプする．
 void
 CiInputPin::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   dump_common(s);
@@ -282,7 +283,7 @@ CiInputPin::dump(
 // @brief 内容をバイナリダンプする．
 void
 CiOutputPin::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   dump_common(s);
@@ -303,7 +304,7 @@ CiOutputPin::dump(
 // @brief 内容をバイナリダンプする．
 void
 CiInoutPin::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   dump_common(s);
@@ -327,7 +328,7 @@ CiInoutPin::dump(
 // @brief 内容をバイナリダンプする．
 void
 CiInternalPin::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   dump_common(s);
@@ -343,7 +344,7 @@ CiInternalPin::dump(
 /// @brief 内容をバイナリダンプする．
 void
 CiBus::dump(
-  ostream& s ///< [in] 出力先のストリーム
+  BinEnc& s ///< [in] 出力先のストリーム
 ) const
 {
   s << mName;
@@ -361,7 +362,7 @@ CiBus::dump(
 /// @brief 内容をバイナリダンプする．
 void
 CiBundle::dump(
-  ostream& s ///< [in] 出力先のストリーム
+  BinEnc& s ///< [in] 出力先のストリーム
 ) const
 {
   s << mName;
@@ -379,7 +380,7 @@ CiBundle::dump(
 // @brief 共通な情報をダンプする．
 void
 CiTiming::dump_common(
-  ostream& s,
+  BinEnc& s,
   ymuint8 type_id
 ) const
 {
@@ -396,7 +397,7 @@ CiTiming::dump_common(
 // @brief 内容をバイナリダンプする．
 void
 CiTimingGeneric::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   dump_common(s, 0);
@@ -417,7 +418,7 @@ CiTimingGeneric::dump(
 // @brief 内容をバイナリダンプする．
 void
 CiTimingPiecewise::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   dump_common(s, 1);
@@ -436,7 +437,7 @@ CiTimingPiecewise::dump(
 // @brief 内容をバイナリダンプする．
 void
 CiTimingLut1::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   dump_common(s, 2);
@@ -455,7 +456,7 @@ CiTimingLut1::dump(
 // @brief 内容をバイナリダンプする．
 void
 CiTimingLut2::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   dump_common(s, 3);
@@ -474,7 +475,7 @@ CiTimingLut2::dump(
 // @brief 内容をバイナリダンプする．
 void
 CiLut::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   s << lut_template().id();
@@ -512,7 +513,7 @@ CiLut::dump(
 // @brief 内容をバイナリダンプする．
 void
 CiLutTemplate::dump(
-  ostream& s
+  BinEnc& s
 ) const
 {
   ymuint8 d = dimension();
@@ -536,11 +537,11 @@ CiLutTemplate::dump(
 // @brief バイナリダンプを行う．
 void
 CiCellGroup::dump(
-  ostream& bos
+  BinEnc& bos
 ) const
 {
-  bos << mMap
-      << mCellList.size();
+  mIomap.dump(bos);
+  bos << mCellList.size();
   for ( auto& cell: mCellList ) {
     bos << cell->id();
   }
@@ -554,13 +555,13 @@ CiCellGroup::dump(
 // @brief バイナリダンプを行う．
 void
 CiCellClass::dump(
-  ostream& bos
+  BinEnc& bos
 ) const
 {
   // 同位体変換情報のダンプ
   bos << mIdmapList.size();
   for ( auto& map: mIdmapList ) {
-    bos << map;
+    map.dump(bos);
   }
 
   // グループ情報のダンプ
@@ -578,7 +579,7 @@ CiCellClass::dump(
 // @brief バイナリダンプを行う．
 void
 CiPatMgr::dump(
-  ostream& bos
+  BinEnc& bos
 ) const
 {
   // パタングラフのノード情報のダンプ
@@ -604,7 +605,7 @@ CiPatMgr::dump(
 // @brief バイナリダンプを行う．
 void
 CiPatGraph::dump(
-  ostream& bos
+  BinEnc& bos
 ) const
 {
   bos << mRepId

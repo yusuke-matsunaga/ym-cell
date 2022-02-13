@@ -5,7 +5,7 @@
 /// @brief CiPin のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibPin.h"
@@ -23,21 +23,14 @@ BEGIN_NAMESPACE_YM_CLIB
 class CiPin :
   public ClibPin
 {
-  friend class CiCell;
-  friend class CiPinHash;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  /// @param[in] name ピン名
   CiPin(
-    const ShString& name
+    const ShString& name ///< [in] ピン名
   ) : mName{name}
   {
   }
-
-
-public:
 
   /// @brief デストラクタ
   ~CiPin() = default;
@@ -156,7 +149,7 @@ protected:
   /// @brief dump 用の共通情報を出力する．
   void
   dump_common(
-    ostream& s ///< [in] ストリーム
+    BinEnc& s ///< [in] ストリーム
   ) const;
 
 
@@ -178,18 +171,17 @@ private:
 class CiInputPin :
   public CiPin
 {
-  friend class CiCell;
-  friend class CiCellLibrary;
-
-private:
+public:
 
   /// @brief コンストラクタ
   CiInputPin(
+    SizeType iid,                     ///< [in] 入力ピン番号
     const ShString& name,             ///< [in] ピン名
     ClibCapacitance capacitance,      ///< [in] 負荷容量
     ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
     ClibCapacitance fall_capacitance  ///< [in] 立ち下がり時の負荷容量
-  ) : CiPin(name),
+  ) : CiPin{name},
+      mInputId{iid},
       mCapacitance{capacitance},
       mRiseCapacitance{rise_capacitance},
       mFallCapacitance{fall_capacitance}
@@ -246,7 +238,7 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    ostream& s ///< [in] 出力先のストリーム
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
 
@@ -277,12 +269,11 @@ private:
 class CiOutputPinBase :
   public CiPin
 {
-  friend class CiCell;
-
-protected:
+public:
 
   /// @brief コンストラクタ
   CiOutputPinBase(
+    SizeType oid,                    ///< [in] 出力ピン番号
     const ShString& name,            ///< [in] ピン名
     ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
     ClibCapacitance min_fanout,      ///< [in] 最小ファンアウト容量
@@ -290,7 +281,8 @@ protected:
     ClibCapacitance min_capacitance, ///< [in] 最小負荷容量
     ClibTime max_transition,         ///< [in] 最大遷移時間
     ClibTime min_transition          ///< [in] 最小遷移時間
-  ) : CiPin(name),
+  ) : CiPin{name},
+      mOutputId{oid},
       mMaxFanout{max_fanout},
       mMinFanout{min_fanout},
       mMaxCapacitance{max_capacitance},
@@ -379,13 +371,11 @@ private:
 class CiOutputPin :
   public CiOutputPinBase
 {
-  friend class CiCell;
-  friend class CiCellLibrary;
-
-private:
+public:
 
   /// @brief コンストラクタ
   CiOutputPin(
+    SizeType oid,                    ///< [in] 出力ピン番号
     const ShString& name,            ///< [in] ピン名
     ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
     ClibCapacitance min_fanout,      ///< [in] 最大ファンアウト容量
@@ -393,10 +383,10 @@ private:
     ClibCapacitance min_capacitance, ///< [in] 最大負荷容量
     ClibTime max_transition,         ///< [in] 最大遷移時間
     ClibTime min_transition          ///< [in] 最大遷移時間
-  ) : CiOutputPinBase(name,
+  ) : CiOutputPinBase{oid, name,
 		      max_fanout, min_fanout,
 		      max_capacitance, min_capacitance,
-		      max_transition, min_transition)
+		      max_transition, min_transition}
   {
   }
 
@@ -426,7 +416,7 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    ostream& s ///< [in] 出力先のストリーム
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
 };
@@ -435,18 +425,18 @@ public:
 //////////////////////////////////////////////////////////////////////
 /// @class CiInoutPin CiPin.h "CiPin.h"
 /// @brief セルの入出力ピンを表すクラス
-/// @note 多重継承はオーバーヘッドがかかるので愚直な実装を用いている．
+///
+/// 多重継承はオーバーヘッドがかかるので愚直な実装を用いている．
 //////////////////////////////////////////////////////////////////////
 class CiInoutPin :
   public CiOutputPinBase
 {
-  friend class CiCell;
-  friend class CiCellLibrary;
-
-private:
+public:
 
   /// @brief コンストラクタ
   CiInoutPin(
+    SizeType iid,                     ///< [in] 入力ピン番号
+    SizeType oid,                     ///< [in] 出力ピン番号
     const ShString& name,             ///< [in] ピン名
     ClibCapacitance capacitance,      ///< [in] 負荷容量
     ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
@@ -457,10 +447,11 @@ private:
     ClibCapacitance min_capacitance,  ///< [in] 最大負荷容量
     ClibTime max_transition,	      ///< [in] 最大遷移時間
     ClibTime min_transition	      ///< [in] 最大遷移時間
-  ) : CiOutputPinBase(name,
+  ) : CiOutputPinBase{oid, name,
 		      max_fanout, min_fanout,
 		      max_capacitance, min_capacitance,
-		      max_transition, min_transition),
+		      max_transition, min_transition},
+      mInputId{iid},
       mCapacitance{capacitance},
       mRiseCapacitance{rise_capacitance},
       mFallCapacitance{fall_capacitance}
@@ -517,7 +508,7 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    ostream& s ///< [in] 出力先のストリーム
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
 
@@ -548,15 +539,14 @@ private:
 class CiInternalPin :
   public CiPin
 {
-  friend class CiCell;
-  friend class CiCellLibrary;
-
-private:
+public:
 
   /// @brief コンストラクタ
   CiInternalPin(
+    SizeType iid,        ///< [in] 内部ピン番号
     const ShString& name ///< [in] ピン名
-  ) : CiPin(name)
+  ) : CiPin{name},
+      mInternalId{iid}
   {
   }
 
@@ -598,7 +588,7 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    ostream& s ///< [in] 出力先のストリーム
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
 

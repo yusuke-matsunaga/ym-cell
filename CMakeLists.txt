@@ -16,10 +16,7 @@ include_directories(
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory ( c++-test/cell_library )
-add_subdirectory ( c++-test/mislib )
-add_subdirectory ( c++-test/dotlib )
-add_subdirectory ( c++-test/libcomp )
+add_subdirectory ( c++-test )
 
 
 # ===================================================================
@@ -27,8 +24,7 @@ add_subdirectory ( c++-test/libcomp )
 # ===================================================================
 set (main_SOURCES
   c++-src/ClibCellLibrary.cc
-  c++-src/ClibFFInfo.cc
-  c++-src/ClibLatchInfo.cc
+  c++-src/ClibIOMap.cc
   c++-src/display.cc
   )
 
@@ -37,6 +33,10 @@ set (ci_SOURCES
   c++-src/ci/CiBus.cc
   c++-src/ci/CiBusType.cc
   c++-src/ci/CiCell.cc
+  c++-src/ci/CiLogicCell.cc
+  c++-src/ci/CiTriLogicCell.cc
+  c++-src/ci/CiGenLogicCell.cc
+  c++-src/ci/CiFFCell.cc
   c++-src/ci/CiCellClass.cc
   c++-src/ci/CiCellGroup.cc
   c++-src/ci/CiCellLibrary.cc
@@ -48,7 +48,11 @@ set (ci_SOURCES
   c++-src/ci/CiTiming.cc
   c++-src/ci/dump.cc
   c++-src/ci/restore.cc
-  c++-src/ci/CgMgr.cc
+  )
+
+set (cg_SOURCES
+  c++-src/cgmgr/CgMgr.cc
+  c++-src/cgmgr/CgLogicSig.cc
   )
 
 set (libcomp_SOURCES
@@ -87,6 +91,7 @@ set (dotlib_SOURCES
 ym_add_object_library ( ym_cell
   ${main_SOURCES}
   ${ci_SOURCES}
+  ${cg_SOURCES}
 #  ${libcomp_SOURCES}
   ${mislib_SOURCES}
   ${dotlib_SOURCES}

@@ -9,6 +9,8 @@
 /// All rights reserved.
 
 #include "ym/clib.h"
+#include "ym/BinDec.h"
+#include "ym/BinEnc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -243,6 +245,32 @@ inline
 istream&
 operator>>(
   istream& s,   ///< [in] 入力元のストリーム
+  ClibTime& val ///< [out] 読み出された値
+)
+{
+  double tmp;
+  s >> tmp;
+  val = ClibTime{tmp};
+  return s;
+}
+
+/// @brief バイトストリーム出力
+inline
+BinEnc&
+operator<<(
+  BinEnc& s,         ///< [in] 出力先のストリーム
+  const ClibTime& val ///< [in] 値
+)
+{
+  return s << val.value();
+}
+
+/// @brief バイナリストリーム入力
+/// @relates ClibTime
+inline
+BinDec&
+operator>>(
+  BinDec& s,   ///< [in] 入力元のストリーム
   ClibTime& val ///< [out] 読み出された値
 )
 {

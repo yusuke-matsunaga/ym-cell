@@ -8,7 +8,7 @@
 
 #include "ci/CiCellGroup.h"
 #include "ci/CiCellLibrary.h"
-#include "CiCellGroup_int.h"
+#include "ym/ClibCellList.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -21,10 +21,10 @@ BEGIN_NAMESPACE_YM_CLIB
 CiCellGroup::CiCellGroup(
   SizeType id,
   const ClibCellClass* rep_class,
-  const NpnMapM& map
+  const ClibIOMap& iomap
 ) : mId{id},
     mRepClass{rep_class},
-    mMap{map}
+    mIomap{iomap}
 {
 }
 
@@ -71,10 +71,10 @@ CiCellGroup::internal_node_num() const
 }
 
 // @brief 代表クラスに対する変換マップを返す．
-const NpnMapM&
-CiCellGroup::map() const
+const ClibIOMap&
+CiCellGroup::iomap() const
 {
-  return mMap;
+  return mIomap;
 }
 
 // @brief セルの種類を返す．
@@ -271,6 +271,13 @@ CiCellGroup::cell(
   return *mCellList[pos];
 }
 
+// @brief セルのリストを返す．
+ClibCellList
+CiCellGroup::cell_list() const
+{
+  return mCellList;
+}
+
 // @brief セルを追加する．
 void
 CiCellGroup::add_cell(
@@ -279,202 +286,5 @@ CiCellGroup::add_cell(
 {
   mCellList.push_back(cell);
 }
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLogic1CellGroup
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-CiLogic1CellGroup::CiLogic1CellGroup(
-  SizeType id,                    ///< [in] 番号
-  const ClibCellClass* rep_class, ///< [in] 親のセルクラス
-  const NpnMapM& map,             ///< [in] 変換マップ
-  SizeType input_num,             ///< [in] 入力数
-  const Expr& expr                ///< [in] 出力の論理式
-) : CiCellGroup{id, rep_class, map},
-    mInputNum{input_num},
-    mExpr{expr}
-{
-}
-
-// @brief 入力ピン数+入出力ピン数を返す．
-SizeType
-CiLogic1CellGroup::input_num() const
-{
-  return mInputNum;
-}
-
-// @brief 出力ピン数+入出力ピン数を返す．
-SizeType
-CiLogic1CellGroup::output_num() const
-{
-  return 1;
-}
-
-// @brief 入出力ピン数を返す．
-SizeType
-CiLogic1CellGroup::inout_num() const
-{
-  return 0;
-}
-
-// @brief 内部ノード数を返す．
-SizeType
-CiLogic1CellGroup::internal_node_num() const
-{
-  return 0;
-}
-
-// @brief セルの種類を返す．
-ClibCellType
-CiLogic1CellGroup::type() const
-{
-  return ClibCellType::Logic;
-}
-
-// @brief 出力の論理式を持っている時に true を返す．
-bool
-CiLogic1CellGroup::has_logic(
-  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
-) const
-{
-  ASSERT_COND( pin_id == 0 );
-  return true;
-}
-
-// @brief 全ての出力が論理式を持っているときに true を返す．
-bool
-CiLogic1CellGroup::has_logic() const
-{
-  return true;
-}
-
-// @brief 論理セルの場合に出力の論理式を返す．
-//
-// 論理式中の変数番号は入力ピン番号に対応する．
-Expr
-CiLogic1CellGroup::logic_expr(
-  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
-) const
-{
-  ASSERT_COND( pin_id == 0 );
-  return mExpr;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLogicCellGroup
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-CiLogicCellGroup::CiLogicCellGroup(
-  SizeType id,                       ///< [in] 番号
-  const ClibCellClass* rep_class,    ///< [in] 親のセルクラス
-  const NpnMapM& map,                ///< [in] 変換マップ
-  SizeType input_num,                ///< [in] 入力数
-  SizeType output_num,               ///< [in] 出力数
-  SizeType inout_num,                ///< [in] 入出力数
-  const vector<Expr>& expr_array,    ///< [in] 出力の論理式
-  const vector<Expr>& tristate_array ///< [in] 出力の論理式
-) : CiCellGroup{id, rep_class, map},
-    mInputNum{input_num},
-    mOutputNum{output_num},
-    mInoutNum{inout_num},
-    mExprArray{expr_array},
-    mTristateArray{tristate_array}
-{
-}
-
-// @brief 入力ピン数+入出力ピン数を返す．
-SizeType
-CiLogicCellGroup::input_num() const
-{
-  return mInputNum;
-}
-
-// @brief 出力ピン数+入出力ピン数を返す．
-SizeType
-CiLogicCellGroup::output_num() const
-{
-  return mOutputNum;
-}
-
-// @brief 入出力ピン数を返す．
-SizeType
-CiLogicCellGroup::inout_num() const
-{
-  return mInoutNum;
-}
-
-// @brief 内部ノード数を返す．
-SizeType
-CiLogicCellGroup::internal_node_num() const
-{
-  return 0;
-}
-
-// @brief セルの種類を返す．
-ClibCellType
-CiLogicCellGroup::type() const
-{
-  return ClibCellType::Logic;
-}
-
-// @brief 出力の論理式を持っている時に true を返す．
-bool
-CiLogicCellGroup::has_logic(
-  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
-) const
-{
-  return logic_expr(pin_id).is_valid();
-}
-
-// @brief 全ての出力が論理式を持っているときに true を返す．
-bool
-CiLogicCellGroup::has_logic() const
-{
-  for ( int i = 0; i < output_num(); ++ i ) {
-    if ( !has_logic(i) ) {
-      return false;
-    }
-  }
-  return true;
-}
-
-// @brief 論理セルの場合に出力の論理式を返す．
-//
-// 論理式中の変数番号は入力ピン番号に対応する．
-Expr
-CiLogicCellGroup::logic_expr(
-  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
-) const
-{
-  ASSERT_COND( 0 <= pin_id && pin_id < output_num() );
-  return mExprArray[pin_id];
-}
-
-// @brief 出力がトライステート条件を持っている時に true を返す．
-bool
-CiLogicCellGroup::has_tristate(
-  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num() )
-) const
-{
-  return !tristate_expr(pin_id).is_zero();
-}
-
-// @brief トライステートセルの場合にトライステート条件式を返す．
-//
-// - 論理式中の変数番号は入力ピン番号に対応する．
-// - 通常の論理セルの場合には定数0を返す．
-Expr
-CiLogicCellGroup::tristate_expr(
-  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-) const
-{
-  ASSERT_COND( 0 <= pin_id && pin_id < output_num() );
-  return mTristateArray[pin_id];
-}
-
 
 END_NAMESPACE_YM_CLIB

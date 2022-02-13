@@ -9,6 +9,8 @@
 /// All rights reserved.
 
 #include "ym/ClibPatGraph.h"
+#include "ym/BinDec.h"
+#include "ym/BinEnc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -69,13 +71,13 @@ public:
   /// @brief バイナリダンプを行う．
   void
   dump(
-    ostream& bos ///< [in] 出力先のストリーム
+    BinEnc& bos ///< [in] 出力先のストリーム
   ) const;
 
   /// @brief バイナリファイルを読み込む．
   void
   restore(
-    istream& bis ///< [in] 入力元のストリーム
+    BinDec& bis ///< [in] 入力元のストリーム
   );
 
 

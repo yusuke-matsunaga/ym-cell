@@ -21,15 +21,10 @@ BEGIN_NAMESPACE_YM_CLIB
 class CiBundle :
   public ClibBundle
 {
-  friend class CiCellLibrary;
-
-private:
+public:
 
   /// @brief コンストラクタ
   CiBundle() = default;
-
-
-public:
 
   /// @brief デストラクタ
   ~CiBundle() = default;
@@ -70,11 +65,11 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    ostream& s ///< [in] 出力先のストリーム
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
 
-private:
+public:
   //////////////////////////////////////////////////////////////////////
   // 設定用の関数
   //////////////////////////////////////////////////////////////////////

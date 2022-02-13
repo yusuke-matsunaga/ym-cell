@@ -17,20 +17,6 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiTiming
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-CiTiming::CiTiming(
-  ClibTimingType type,
-  const Expr& cond
-) : mType{type},
-    mCond{cond}
-{
-}
-
-// @brief デストラクタ
-CiTiming::~CiTiming()
-{
-}
-
 // @brief ID番号の取得
 SizeType
 CiTiming::id() const
@@ -258,22 +244,18 @@ CiTimingPiecewise::fall_delay_intercept() const
 
 // @brief コンストラクタ
 CiTimingLut1::CiTimingLut1(
+  SizeType tid,               ///< [in] タイミング番号
   ClibTimingType timing_type, ///< [in] タイミングの型
   const Expr& cond,           ///< [in] タイミング条件を表す式
-  CiLut* cell_rise,         ///< [in] 立ち上がりセル遅延テーブル
-  CiLut* cell_fall,         ///< [in] 立ち下がりセル遅延テーブル
-  CiLut* rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
-  CiLut* fall_transition    ///< [in] 立ち下がり遷移遅延テーブル
-) : CiTiming(timing_type, cond),
+  CiLut* cell_rise,           ///< [in] 立ち上がりセル遅延テーブル
+  CiLut* cell_fall,           ///< [in] 立ち下がりセル遅延テーブル
+  CiLut* rise_transition,     ///< [in] 立ち上がり遷移遅延テーブル
+  CiLut* fall_transition      ///< [in] 立ち下がり遷移遅延テーブル
+) : CiTiming{tid, timing_type, cond},
     mClibRise{unique_ptr<CiLut>{cell_rise}},
     mClibFall{unique_ptr<CiLut>{cell_fall}},
     mRiseTransition{unique_ptr<CiLut>{rise_transition}},
     mFallTransition{unique_ptr<CiLut>{fall_transition}}
-{
-}
-
-// @brief デストラクタ
-CiTimingLut1::~CiTimingLut1()
 {
 }
 
@@ -312,22 +294,18 @@ CiTimingLut1::fall_transition() const
 
 // @brief コンストラクタ
 CiTimingLut2::CiTimingLut2(
+  SizeType tid,               ///< [in] タイミング番号
   ClibTimingType timing_type, ///< [in] タイミングの型
   const Expr& cond,           ///< [in] タイミング条件を表す式
-  CiLut* rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
-  CiLut* fall_transition,   ///< [in] 立ち下がり遷移遅延テーブル
-  CiLut* rise_propagation,  ///< [in] 立ち上がり伝搬遅延テーブル
-  CiLut* fall_propagation   ///< [in] 立ち下がり伝搬遅延テーブル
-) : CiTiming(timing_type, cond),
+  CiLut* rise_transition,     ///< [in] 立ち上がり遷移遅延テーブル
+  CiLut* fall_transition,     ///< [in] 立ち下がり遷移遅延テーブル
+  CiLut* rise_propagation,    ///< [in] 立ち上がり伝搬遅延テーブル
+  CiLut* fall_propagation     ///< [in] 立ち下がり伝搬遅延テーブル
+) : CiTiming{tid, timing_type, cond},
     mRiseTransition{unique_ptr<CiLut>{rise_transition}},
     mFallTransition{unique_ptr<CiLut>{fall_transition}},
     mRisePropagation{unique_ptr<CiLut>{rise_propagation}},
     mFallPropagation{unique_ptr<CiLut>{fall_propagation}}
-{
-}
-
-// @brief デストラクタ
-CiTimingLut2::~CiTimingLut2()
 {
 }
 

@@ -9,6 +9,8 @@
 /// All rights reserved.
 
 #include "ym/clib.h"
+#include "ym/BinDec.h"
+#include "ym/BinEnc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -59,7 +61,7 @@ public:
   virtual
   void
   dump(
-    ostream& s ///< [in] 出力先のストリーム
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const = 0;
 
 };

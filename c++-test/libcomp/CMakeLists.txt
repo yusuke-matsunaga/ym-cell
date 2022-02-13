@@ -3,8 +3,7 @@
 # インクルードパスの設定
 # ===================================================================
 include_directories(
-  ${GTEST_INCLUDE_DIR}
-  ${PROJECT_SOURCE_DIR}/ym-cell/c++-src/libcomp
+  ../../ym-cell/c++-src/libcomp
   )
 
 

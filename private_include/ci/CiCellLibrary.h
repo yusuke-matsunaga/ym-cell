@@ -8,18 +8,23 @@
 /// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
+#include "ym/BinDec.h"
+#include "ym/BinEnc.h"
 #include "ym/ClibArea.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibResistance.h"
 #include "ym/ClibTiming.h"
 #include "ym/ClibPin.h"
+#include "ym/ClibCellList.h"
+#include "ym/ClibCellGroupList.h"
+#include "ym/ClibCellClassList.h"
 #include "ym/ShString.h"
 #include "ym/Expr.h"
-#include "CiLutHash.h"
-#include "CiCellHash.h"
-#include "CiPatMgr.h"
-#include "CiPinHash.h"
+#include "ci/CiLutHash.h"
+#include "ci/CiCellHash.h"
+#include "ci/CiPatMgr.h"
+#include "ci/CiPinHash.h"
 
 #include "ci/CiCell.h"
 #include "ci/CiCellGroup.h"
@@ -28,18 +33,11 @@
 #include "ci/CiLutTemplate.h"
 
 
-#if 0
-BEGIN_NAMESPACE_YM_CLIB_LIBCOMP
-
-class LibComp;
-
-END_NAMESPACE_YM_CLIB_LIBCOMP
-#endif
-
 BEGIN_NAMESPACE_YM_CLIB
 
 class CiBus;
 class CiBundle;
+class CiInternalPin;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiCellLibrary CiCellLibrary.h "CiCellLibrary.h"
@@ -281,6 +279,13 @@ public:
     return *mCellList[cell_id];
   }
 
+  /// @brief 全セルのリストの取得
+  ClibCellList
+  cell_list() const
+  {
+    return mRefCellList;
+  }
+
   /// @brief 名前からのセル番号の取得
   SizeType
   cell_id(
@@ -316,6 +321,13 @@ public:
     return *mGroupList[id];
   }
 
+  /// @brief セルグループのリストの取得
+  ClibCellGroupList
+  cell_group_list() const
+  {
+    return mRefGroupList;
+  }
+
   /// @brief NPN同値クラス数の取得
   SizeType
   npn_class_num() const
@@ -333,10 +345,17 @@ public:
     return *mClassList[id];
   }
 
+  /// @brief NPN同値クラスのリストの取得
+  ClibCellClassList
+  npn_class_list() const
+  {
+    return mRefClassList;
+  }
+
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // 論理セルの情報の取得
+  // 論理セルグループの情報の取得
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 定数0セルのグループを返す．
@@ -374,7 +393,7 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // FFセルの情報の取得
+  // FFセルクラスの情報の取得
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 単純な型のFFクラスを返す．
@@ -399,7 +418,7 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // ラッチセルの情報の取得
+  // ラッチセルクラスの情報の取得
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 単純な型のラッチクラスを返す．
@@ -542,13 +561,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    ostream& s
+    BinEnc& s
   ) const;
 
   /// @brief バイナリダンプされた内容を読み込む．
   void
   restore(
-    istream& s
+    BinDec& s
   );
 
 
@@ -657,14 +676,22 @@ public:
   /// @brief セルクラスを作る．
   CiCellClass*
   new_cell_class(
-    const vector<NpnMapM>& idmap_list ///< [in] 同位体変換のリスト
+    const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換のリスト
   );
 
+  /// @brief セルグループを作る．
+  CiCellGroup*
+  new_cell_group(
+    const ClibCellClass* rep_class, ///< [in] 親のセルクラス
+    const ClibIOMap& iomap          ///< [in] 変換マップ
+  );
+
+#if 0
   /// @brief 1出力の論理セル用のグループを作る．
   CiCellGroup*
   new_logic_group(
     const ClibCellClass* rep_class, ///< [in] 親のセルクラス
-    const NpnMapM& map,             ///< [in] 変換マップ
+    const ClibIOMap& iomap,         ///< [in] 変換マップ
     SizeType input_num,             ///< [in] 入力数
     const Expr& expr                ///< [in] 出力の論理式
   );
@@ -673,7 +700,7 @@ public:
   CiCellGroup*
   new_logic_group(
     const ClibCellClass* rep_class,    ///< [in] 親のセルクラス
-    const NpnMapM& map,                ///< [in] 変換マップ
+    const ClibIOMap& iomap,            ///< [in] 変換マップ
     SizeType input_num,                ///< [in] 入力数
     SizeType output_num,               ///< [in] 出力数
     SizeType inout_num,                ///< [in] 入出力数
@@ -685,7 +712,7 @@ public:
   CiCellGroup*
   new_ff_group(
     const ClibCellClass* rep_class,     ///< [in] 親のセルクラス
-    const NpnMapM& map,                 ///< [in] 変換マップ
+    const ClibIOMap& iomap,             ///< [in] 変換マップ
     SizeType input_num,                 ///< [in] 入力数
     SizeType output_num,                ///< [in] 出力数
     SizeType inout_num,                 ///< [in] 入出力数
@@ -700,77 +727,131 @@ public:
     ClibCPV clear_preset_var2           ///< [in] クリアとプリセットが同時にアクティブになった時の値2
   );
 
-  /// @brief 論理セルを生成する．
-  static
+  /// @brief ラッチ用のグループを作る．
+  CiCellGroup*
+  new_latch_group(
+    const ClibCellClass* rep_class,     ///< [in] 親のセルクラス
+    const ClibIOMap& iomap,             ///< [in] 変換マップ
+    SizeType input_num,                 ///< [in] 入力数
+    SizeType output_num,                ///< [in] 出力数
+    SizeType inout_num,                 ///< [in] 入出力数
+    const vector<Expr>& expr_array,     ///< [in] 出力の論理式の配列
+    const vector<Expr>& tristate_array, ///< [in] 出力のtristate条件の配列
+    const Expr& enable,                 ///< [in] マスターイネーブルの論理式
+    const Expr& enable2,                ///< [in] スレーブイネーブルの論理式
+    const Expr& data_in,                ///< [in] データ入力の論理式
+    const Expr& clear,                  ///< [in] クリア条件の論理式
+    const Expr& preset,                 ///< [in] プリセット条件の論理式
+    ClibCPV clear_preset_var1,          ///< [in] クリアとプリセットが同時にアクティブになった時の値1
+    ClibCPV clear_preset_var2           ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+  );
+#endif
+
+  /// @brief 1出力の論理セルを作る．
   CiCell*
   new_logic_cell(
-    const ShString& name,
-    ClibArea area,
-    const vector<CiInputPin*>& input_list,
-    const vector<CiOutputPin*>& output_list,
-    const vector<CiInoutPin*>& inout_list,
-    const vector<CiBus*>& bus_list,
-    const vector<CiBundle*>& bundle_list,
-    const vector<CiTiming*>& timing_list
+    const ShString& name,                  ///< [in] 名前
+    ClibArea area,                         ///< [in] 面積
+#if 0
+    const vector<CiInputPin*>& input_list, ///< [in] 入力ピンのリスト
+    CiOutputPin* output,                   ///< [in] 出力ピン
+    const vector<CiTiming*>& timing_list,  ///< [in] タイミング条件のリスト
+#endif
+    const Expr& expr                       ///< [in] 出力の論理式
+  );
+
+  /// @brief 1出力のトライステートセルを作る．
+  CiCell*
+  new_tristate_cell(
+    const ShString& name,                  ///< [in] 名前
+    ClibArea area,                         ///< [in] 面積
+#if 0
+    const vector<CiInputPin*>& input_list, ///< [in] 入力ピンのリスト
+    CiOutputPin* output,                   ///< [in] 出力ピン
+    const vector<CiTiming*>& timing_list,  ///< [in] タイミング条件のリスト
+#endif
+    const Expr& expr,                      ///< [in] 出力の論理式
+    const Expr& tristate_expr              ///< [in] 出力のトライステート条件の論理式
+  );
+
+  /// @brief 一般的な論理セルを生成する．
+  CiCell*
+  new_generic_cell(
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area,                           ///< [in] 面積
+#if 0
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング条件のリスト
+#endif
+    const vector<Expr>& expr_list,           ///< [in] 出力の論理式のリスト
+    const vector<Expr>& tristate_expr_list   ///< [in] 出力のトライステート条件の論理式のリスト
   );
 
   /// @brief FFセルを生成する．
-  static
   CiCell*
   new_ff_cell(
-    const ShString& name,
-    ClibArea area,
-    const vector<CiInputPin*>& input_list,
-    const vector<CiOutputPin*>& output_list,
-    const vector<CiInoutPin*>& inout_list,
-    const vector<CiBus*>& bus_list,
-    const vector<CiBundle*>& bundle_list,
-    const vector<CiTiming*>& timing_list,
-    const Expr& next_state,
-    const Expr& clocked_on,
-    const Expr& clocked_on_also,
-    const Expr& clear,
-    const Expr& preset,
-    int clear_preset_var1,
-    int clear_preset_var2
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area,                           ///< [in] 面積
+#if 0
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング条件のリスト
+#endif
+    const vector<Expr>& expr_list,           ///< [in] 出力の論理式のリスト
+    const Expr& clock,                  ///< [in] マスタークロックの論理式
+    const Expr& clock2,                 ///< [in] スレーブクロックの論理式
+    const Expr& next_state,             ///< [in] 次状態の論理式
+    const Expr& clear,                  ///< [in] クリア条件の論理式
+    const Expr& preset,                 ///< [in] プリセット条件の論理式
+    ClibCPV clear_preset_var1,          ///< [in] クリアとプリセットが同時にアクティブになった時の値1
+    ClibCPV clear_preset_var2           ///< [in] クリアとプリセットが同時にアクティブになった時の値2
   );
 
   /// @brief ラッチセルを生成する．
-  static
   CiCell*
   new_latch_cell(
-    const ShString& name,
-    ClibArea area,
-    const vector<CiInputPin*>& input_list,
-    const vector<CiOutputPin*>& output_list,
-    const vector<CiInoutPin*>& inout_list,
-    const vector<CiBus*>& bus_list,
-    const vector<CiBundle*>& bundle_list,
-    const vector<CiTiming*>& timing_list,
-    const Expr& data_in,
-    const Expr& enable,
-    const Expr& enable_also,
-    const Expr& clear,
-    const Expr& preset,
-    int clear_preset_var1,
-    int clear_preset_var2
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area,                           ///< [in] 面積
+#if 0
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング条件のリスト
+#endif
+    const vector<Expr>& expr_list,           ///< [in] 出力の論理式のリスト
+    const Expr& enable,                 ///< [in] マスターイネーブルの論理式
+    const Expr& enable2,                ///< [in] スレーブイネーブルの論理式
+    const Expr& data_in,                ///< [in] データ入力の論理式
+    const Expr& clear,                  ///< [in] クリア条件の論理式
+    const Expr& preset,                 ///< [in] プリセット条件の論理式
+    ClibCPV clear_preset_var1,          ///< [in] クリアとプリセットが同時にアクティブになった時の値1
+    ClibCPV clear_preset_var2           ///< [in] クリアとプリセットが同時にアクティブになった時の値2
   );
 
-  /// @brief FSMセルを生成する．
-  static
+#if 0
+  /// @brief ラッチセルを生成する．
   CiCell*
-  new_fsm_cell(
-    const ShString& name,
-    ClibArea area,
-    const vector<CiInputPin*>& input_list,
-    const vector<CiOutputPin*>& output_list,
-    const vector<CiInoutPin*>& inout_list,
-    const vector<CiInternalPin*>& internal_list,
-    const vector<CiBus*>& bus_list,
-    const vector<CiBundle*>& bundle_list,
-    const vector<CiTiming*>& timing_list
+  new_latch_cell(
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area,                           ///< [in] 面積
+    const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
+    const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
+    const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
+    const vector<CiTiming*>& timing_list,    ///< [in] タイミング条件のリスト
+    const vector<Expr>& expr_list,           ///< [in] 出力の論理式のリスト
+    const vector<Expr>& tristate_expr_list,  ///< [in] 出力のトライステート条件の論理式のリスト
+    const Expr& enable,                 ///< [in] マスターイネーブルの論理式
+    const Expr& enable2,                ///< [in] スレーブイネーブルの論理式
+    const Expr& data_in,                ///< [in] データ入力の論理式
+    const Expr& clear,                  ///< [in] クリア条件の論理式
+    const Expr& preset,                 ///< [in] プリセット条件の論理式
+    ClibCPV clear_preset_var1,          ///< [in] クリアとプリセットが同時にアクティブになった時の値1
+    ClibCPV clear_preset_var2           ///< [in] クリアとプリセットが同時にアクティブになった時の値2
   );
+#endif
 
+#if 0
   /// @brief セルの入力ピンを生成する．
   static
   CiInputPin*
@@ -816,6 +897,7 @@ public:
   new_cell_internal(
     const ShString& name
   );
+#endif
 
   /// @brief タイミング情報を作る(ジェネリック遅延モデル)．
   static
@@ -986,37 +1068,37 @@ private:
   /// @brief LUT テンプレートを読み込む．
   void
   restore_lut_template(
-    istream& s ///< [in] 入力ストリーム
+    BinDec& s ///< [in] 入力ストリーム
   );
 
   /// @brief セルを読み込む．
   void
   restore_cell(
-    istream& s ///< [in] 入力ストリーム
+    BinDec& s ///< [in] 入力ストリーム
   );
 
   /// @brief セルグループを読み込む．
   void
   restore_cell_group(
-    istream& s  ///< [in] 入力ストリーム
+    BinDec& s  ///< [in] 入力ストリーム
   );
 
   /// @brief セルクラスを読み込む．
   void
   restore_cell_class(
-    istream& s  ///< [in] 入力ストリーム
+    BinDec& s  ///< [in] 入力ストリーム
   );
 
   /// @brief タイミング情報を読み込む．
   vector<CiTiming*>
   restore_timing(
-    istream& s  ///< [in] 入力ストリーム
+    BinDec& s  ///< [in] 入力ストリーム
   );
 
   /// @brief LUT を読み込む．
   CiLut*
   restore_lut(
-    istream& s  ///< [in] 入力ストリーム
+    BinDec& s  ///< [in] 入力ストリーム
   );
 
 
@@ -1079,6 +1161,18 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief セルを登録する．
+  void
+  reg_cell(
+    CiCell* cell ///< [in] セル
+  );
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
@@ -1133,8 +1227,11 @@ private:
   // 名前をキーにした遅延テンプレート番号のハッシュ表
   unordered_map<ShString, SizeType> mLutHash;
 
-  // セルのリスト
+  // セルの所有権管理用のリスト
   vector<unique_ptr<CiCell>> mCellList;
+
+  // 参照用のセルのリスト
+  vector<const ClibCell*> mRefCellList;
 
   // 名前をキーにしたセルのハッシュ表
   unordered_map<ShString, CiCell*> mCellHash;
@@ -1148,11 +1245,17 @@ private:
   // バンドル名をキーにしたバンドル番号のハッシュ表
   CiCellPinHash mBundleHash;
 
-  // セルグループのリスト
+  // セルグループの所有権管理用のリスト
   vector<unique_ptr<CiCellGroup>> mGroupList;
 
-  // NPN同値クラスのリスト
+  // 参照用のセルグループのリスト
+  vector<const ClibCellGroup*> mRefGroupList;
+
+  // NPN同値クラスの所有権管理用のリスト
   vector<unique_ptr<CiCellClass>> mClassList;
+
+  // 参照用のNPN同値類のリスト
+  vector<const ClibCellClass*> mRefClassList;
 
   // 論理セルグループの情報
   // 0: 定数0

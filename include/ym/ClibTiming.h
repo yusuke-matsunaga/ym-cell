@@ -10,6 +10,8 @@
 
 #include "ym/clib.h"
 #include "ym/logic.h"
+#include "ym/BinDec.h"
+#include "ym/BinEnc.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibResistance.h"
 
@@ -168,7 +170,7 @@ public:
   virtual
   void
   dump(
-    ostream& s ///< [in] 出力先のストリーム
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const = 0;
 
 };

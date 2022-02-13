@@ -11,11 +11,14 @@
 #include "ci/CiCellGroup.h"
 #include "ci/CiCell.h"
 #include "ci/CiPin.h"
+#include "ci/CiBus.h"
+#include "ci/CiBundle.h"
 #include "ci/CiTiming.h"
 #include "ci/CiLutTemplate.h"
 #include "ci/CiLut.h"
 #include "ci/CiPatMgr.h"
 #include "ci/CiPatGraph.h"
+#include "ym/ClibIOMap.h"
 #include "ym/Range.h"
 
 
@@ -27,7 +30,7 @@ BEGIN_NAMESPACE_YM_CLIB
 
 void
 CiCellLibrary::restore(
-  istream& s
+  BinDec& s
 )
 {
   string name;
@@ -54,7 +57,6 @@ CiCellLibrary::restore(
   s >> date;
 
   set_attr("date", date);
-
 
   string revision;
   s >> revision;
@@ -135,7 +137,7 @@ BEGIN_NONAMESPACE
 
 ClibVarType
 restore_1dim(
-  istream& s,
+  BinDec& s,
   vector<double>& index_array
 )
 {
@@ -156,7 +158,7 @@ END_NONAMESPACE
 // @brief LUT テンプレートを読み込む．
 void
 CiCellLibrary::restore_lut_template(
-  istream& s
+  BinDec& s
 )
 {
   SizeType lut_num;
@@ -209,7 +211,7 @@ BEGIN_NONAMESPACE
 
 vector<SizeType>
 restore_tid_list(
-  istream& s
+  BinDec& s
 )
 {
   SizeType n;
@@ -226,9 +228,10 @@ END_NONAMESPACE
 // @brief セルを読み込む．
 void
 CiCellLibrary::restore_cell(
-  istream& s
+  BinDec& s
 )
 {
+#if 0
   SizeType nc;
   s >> nc;
   mCellList.resize(nc);
@@ -350,8 +353,14 @@ CiCellLibrary::restore_cell(
     // タイミング情報の読み込み
     vector<CiTiming*> timing_list = restore_timing(s);
 
+    // グループ情報の読み込み
+#warning "TODO"
+    CiCellGroup* group = nullptr;
+
     // セル本体の読み込み
-    CiCell* cell = nullptr;
+#warning "TODO:詳細を検討して実装する必要がある．"
+    CiCell* cell{nullptr};
+#if 0
     switch ( type ) {
     case 0: // kLogic
       cell = new_logic_cell(shname, area,
@@ -440,6 +449,7 @@ CiCellLibrary::restore_cell(
       ASSERT_NOT_REACHED;
       break;
     }
+#endif
     mCellList[cell_id] = unique_ptr<CiCell>{cell};
     mCellHash.emplace(cell->name(), cell);
 
@@ -454,12 +464,13 @@ CiCellLibrary::restore_cell(
       }
     }
   }
+#endif
 }
 
 // @brief セルグループを読み込む．
 void
 CiCellLibrary::restore_cell_group(
-  istream& s
+  BinDec& s
 )
 {
   SizeType ng;
@@ -490,7 +501,7 @@ CiCellLibrary::restore_cell_group(
 // @brief セルクラスを読み込む．
 void
 CiCellLibrary::restore_cell_class(
-  istream& s
+  BinDec& s
 )
 {
   SizeType nc;
@@ -500,7 +511,7 @@ CiCellLibrary::restore_cell_class(
   for ( SizeType c: Range(nc) ) {
     SizeType idmap_num;
     s >> idmap_num;
-    vector<NpnMapM> idmap_list(idmap_num);
+    vector<ClibIOMap> idmap_list(idmap_num);
     for ( auto i: Range(idmap_num) ) {
       idmap_list[i].restore(s);
     }
@@ -521,13 +532,14 @@ CiCellLibrary::restore_cell_class(
 // @brief タイミング情報を読み込む．
 vector<CiTiming*>
 CiCellLibrary::restore_timing(
-  istream& s
+  BinDec& s
 )
 {
   SizeType nt;
   s >> nt;
   vector<CiTiming*> timing_list;
   timing_list.reserve(nt);
+#if 0
   for ( auto tid: Range(nt) ) {
     ymuint8 ttype;
     ymuint8 tmp;
@@ -616,14 +628,14 @@ CiCellLibrary::restore_timing(
     }
     timing_list.push_back(timing);
   }
-
+#endif
   return timing_list;
 }
 
 // @brief LUT を読み込む．
 CiLut*
 CiCellLibrary::restore_lut(
-  istream& s
+  BinDec& s
 )
 {
   SizeType templ_id;
@@ -750,7 +762,7 @@ CiCellLibrary::restore_lut(
 // @brief データを読み込んでセットする．
 bool
 CiPatMgr::restore(
-  istream& bis
+  BinDec& bis
 )
 {
   // ノードと枝の情報を読み込む．
@@ -785,7 +797,7 @@ CiPatMgr::restore(
 // @brief バイナリファイルを読み込む．
 void
 CiPatGraph::restore(
-  istream& bis
+  BinDec& bis
 )
 {
   SizeType ne;

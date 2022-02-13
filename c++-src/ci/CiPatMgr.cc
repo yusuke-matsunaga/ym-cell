@@ -54,6 +54,7 @@ CiPatMgr::pat(
   return mPatArray[id];
 }
 
+#if 0
 // @brief LcPatMgr の情報をコピーする．
 void
 CiPatMgr::copy(
@@ -102,6 +103,7 @@ CiPatMgr::copy(
     }
   }
 }
+#endif
 
 // @brief ノード数を設定する．
 void

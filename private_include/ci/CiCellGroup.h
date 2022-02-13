@@ -5,12 +5,12 @@
 /// @brief CiCellGroup のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibCellGroup.h"
+#include "ym/ClibIOMap.h"
 #include "ym/Expr.h"
-#include "ym/NpnMapM.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -34,7 +34,7 @@ public:
   CiCellGroup(
     SizeType id,                    ///< [in] 番号
     const ClibCellClass* rep_class, ///< [in] 親のセルクラス
-    const NpnMapM& map              ///< [in] 変換マップ
+    const ClibIOMap& iomap          ///< [in] 変換マップ
   );
 
   /// @brief エラーオブジェクト用のコンストラクタ
@@ -80,8 +80,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 代表クラスに対する変換マップを返す．
-  const NpnMapM&
-  map() const override;
+  const ClibIOMap&
+  iomap() const override;
 
   /// @brief セルの種類を返す．
   ClibCellType
@@ -223,6 +223,10 @@ public:
     SizeType pos ///< [in] インデックス ( 0 <= pos < cell_num() )
   ) const override;
 
+  /// @brief セルのリストを返す．
+  ClibCellList
+  cell_list() const override;
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -244,7 +248,7 @@ public:
   /// @brief バイナリダンプを行う．
   void
   dump(
-    ostream& bos ///< [in] 出力先のストリーム
+    BinEnc& bos ///< [in] 出力先のストリーム
   ) const override;
 
 
@@ -260,10 +264,10 @@ private:
   const ClibCellClass* mRepClass{nullptr};
 
   // ClibCellClass に対する入出力の変換関数
-  NpnMapM mMap;
+  ClibIOMap mIomap;
 
   // セルのリスト
-  vector<CiCell*> mCellList;
+  vector<const ClibCell*> mCellList;
 
 };
 

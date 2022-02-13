@@ -3,11 +3,10 @@
 /// @brief CiFFCell の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ci/CiFFCell.h"
-#include "ym/ClibFFInfo.h"
+#include "CiFFCell.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -16,6 +15,13 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiFFCell
 //////////////////////////////////////////////////////////////////////
 
+// @brief セルの種類を返す．
+ClibCellType
+CiFFCell::type() const
+{
+  return ClibCellType::FF_S;
+}
+
 // @brief FFセルの時に true を返す．
 bool
 CiFFCell::is_ff() const
@@ -23,19 +29,26 @@ CiFFCell::is_ff() const
   return true;
 }
 
-// @brief FFセルの場合にFFのピン情報を得る．
-ClibFFInfo
-CiFFCell::ff_info() const
+// @brief 出力の論理式を持っている時に true を返す．
+bool
+CiFFCell::has_logic(
+  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+) const
 {
-  //return cell_group().ff_info();
+  ASSERT_COND( 0 <= pin_id && pin_id < output_num2() );
+  return mExprList[pin_id].is_valid();
 }
 
-// @brief FFセルの場合に次状態関数を表す論理式を返す．
-// @note それ以外の型の場合の返り値は不定
+// @brief 論理セルの場合に出力の論理式を返す．
+//
+// 論理式中の変数番号は入力ピン番号に対応する．
 Expr
-CiFFCell::next_state_expr() const
+CiFFCell::logic_expr(
+  SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+) const
 {
-  return mNextState;
+  ASSERT_COND( 0 <= pin_id && pin_id < output_num2() );
+  return mExprList[pin_id];
 }
 
 // @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
@@ -46,12 +59,12 @@ CiFFCell::clock_expr() const
   return mClock;
 }
 
-// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
+// @brief FFセルの場合に次状態関数を表す論理式を返す．
 // @note それ以外の型の場合の返り値は不定
 Expr
-CiFFCell::clock2_expr() const
+CiFFCell::next_state_expr() const
 {
-  return mClock2;
+  return mNextState;
 }
 
 
@@ -114,17 +127,69 @@ CiFFSRCell::preset_expr() const
 }
 
 // @brief clear_preset_var1 の取得
-SizeType
+ClibCPV
 CiFFSRCell::clear_preset_var1() const
 {
-  return mClearPresetVal[0];
+  return static_cast<ClibCPV>(mCPV[0]);
 }
 
 // @brief clear_preset_var2 の取得
-SizeType
+ClibCPV
 CiFFSRCell::clear_preset_var2() const
 {
-  return mClearPresetVal[1];
+  return static_cast<ClibCPV>(mCPV[1]);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス ClibFFMCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
+// @note それ以外の型の場合の返り値は不定
+Expr
+CiFFMCell::clock2_expr() const
+{
+  return mClock2;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス ClibFFMRCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
+// @note それ以外の型の場合の返り値は不定
+Expr
+CiFFMRCell::clock2_expr() const
+{
+  return mClock2;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス ClibFFMSCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
+// @note それ以外の型の場合の返り値は不定
+Expr
+CiFFMSCell::clock2_expr() const
+{
+  return mClock2;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス ClibFFMSRCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
+// @note それ以外の型の場合の返り値は不定
+Expr
+CiFFMSRCell::clock2_expr() const
+{
+  return mClock2;
 }
 
 END_NAMESPACE_YM_CLIB

@@ -11,24 +11,23 @@
 #include "ym/ClibCell.h"
 #include "ym/Expr.h"
 #include "ym/ShString.h"
+#include "ci/CiPin.h"
+#include "ci/CiTiming.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 class CiCellLibrary;
-class CiCellGroup;
-class CiPin;
 class CiInputPin;
 class CiOutputPin;
 class CiInoutPin;
-class CiInternalPin;
-class CiBus;
-class CiBundle;
 class CiTiming;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiCell CiCell.h "CiCell.h"
 /// @brief ClibCell の実装クラス
+///
+/// このクラスはデフォルトの仮想関数を実装している．
 //////////////////////////////////////////////////////////////////////
 class CiCell :
   public ClibCell
@@ -39,27 +38,19 @@ protected:
 
   /// @brief コンストラクタ
   CiCell(
-    CiCellLibrary* library,                      ///< [in] 親のセルライブラリ
-    CiCellGroup* group,                          ///< [in] 親のセルグループ
-    const ShString& name,                        ///< [in] 名前
-    ClibArea area,                               ///< [in] 面積
-    const vector<CiInputPin*>& input_list,       ///< [in] 入力ピンのリスト
-    const vector<CiOutputPin*>& output_list,     ///< [in] 出力ピンのリスト
-    const vector<CiInoutPin*>& inout_list,       ///< [in] 入出力ピンのリスト
-    const vector<CiInternalPin*>& internal_list, ///< [in] 内部ピンのリスト
-    const vector<CiBus*>& bus_list,              ///< [in] バスのリスト
-    const vector<CiBundle*>& bundle_list,        ///< [in] バンドルのリスト
-    const vector<CiTiming*>& timing_list         ///< [in] タイミング情報のリスト
+    CiCellLibrary* library,                  ///< [in] 親のセルライブラリ
+    const ShString& name,                    ///< [in] 名前
+    ClibArea area                            ///< [in] 面積
   );
 
   /// @brief エラーオブジェクト用のコンストラクタ
-  CiCell();
+  CiCell() = default;
 
 
 public:
 
   /// @brief デストラクタ
-  ~CiCell();
+  ~CiCell() = default;
 
 
 public:
@@ -235,13 +226,147 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
+  /// @name 機能情報の取得
+  /// @{
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief セルの種類を返す．
+  ClibCellType
+  type() const override;
+
+  /// @brief 組み合わせ論理タイプの時 true を返す．
+  bool
+  is_logic() const override;
+
+  /// @brief FFタイプの時 true を返す．
+  bool
+  is_ff() const override;
+
+  /// @brief ラッチタイプの時 true を返す．
+  bool
+  is_latch() const override;
+
+  /// @brief 出力の論理式を持っている時に true を返す．
+  bool
+  has_logic(
+    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+  ) const override;
+
+  /// @brief 全ての出力が論理式を持っているときに true を返す．
+  bool
+  has_logic() const override;
+
+  /// @brief 論理セルの場合に出力の論理式を返す．
+  ///
+  /// 論理式中の変数番号は入力ピン番号に対応する．
+  Expr
+  logic_expr(
+    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+  ) const override;
+
+  /// @brief 出力がトライステート条件を持っている時に true を返す．
+  bool
+  has_tristate(
+    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+  ) const override;
+
+  /// @brief トライステートセルの場合にトライステート条件式を返す．
+  ///
+  /// - 論理式中の変数番号は入力ピン番号に対応する．
+  /// - 通常の論理セルの場合には定数0を返す．
+  Expr
+  tristate_expr(
+    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
+  ) const override;
+
+  /// @brief 非同期 clear を持つ時 true を返す．
+  ///
+  /// FF/ラッチセル以外の場合には返り値は不定
+  bool
+  has_clear() const override;
+
+  /// @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
+  ///
+  /// クリア端子がない場合の返り値は不定
+  Expr
+  clear_expr() const override;
+
+  /// @brief 非同期 preset を持つ時 true を返す．
+  ///
+  /// FF/ラッチセル以外の場合には返り値は不定
+  bool
+  has_preset() const override;
+
+  /// @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
+  ///
+  /// プリセット端子がない場合の返り値は不定
+  Expr
+  preset_expr() const override;
+
+  /// @brief clear と preset が同時にアクティブになった時の値1
+  ///
+  /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
+  /// FF/ラッチセル以外の場合には返り値は不定
+  ClibCPV
+  clear_preset_var1() const override;
+
+  /// @brief clear と preset が同時にアクティブになった時の値1
+  ///
+  /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
+  /// FF/ラッチセル以外の場合には返り値は不定
+  ClibCPV
+  clear_preset_var2() const override;
+
+  /// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  Expr
+  clock_expr() const override;
+
+  /// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  Expr
+  clock2_expr() const override;
+
+  /// @brief FFセルの場合に次状態関数を表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  Expr
+  next_state_expr() const override;
+
+  /// @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  Expr
+  enable_expr() const override;
+
+  /// @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  Expr
+  enable2_expr() const override;
+
+  /// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
+  ///
+  /// それ以外の型の場合の返り値は不定
+  Expr
+  data_in_expr() const override;
+
+  //////////////////////////////////////////////////////////////////////
+  /// @}
+  //////////////////////////////////////////////////////////////////////
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
   // dump/restore 関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    ostream& s ///< [in] 出力先のストリーム
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
 
@@ -250,13 +375,131 @@ public:
   // 設定用の関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief タイミング情報をセットする．
+  /// @brief 入力ピンを追加する．
+  /// @return 生成されたピンを返す．
+  const ClibPin*
+  add_input(
+    const ShString& name,             ///< [in] ピン名
+    ClibCapacitance capacitance,      ///< [in] 負荷容量
+    ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
+    ClibCapacitance fall_capacitance  ///< [in] 立ち下がり時の負荷容量
+  );
+
+  /// @brief 出力ピンを追加する．
+  /// @return 生成されたピンを返す．
+  const ClibPin*
+  add_output(
+    const ShString& name,            ///< [in] ピン名
+    ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
+    ClibCapacitance min_fanout,      ///< [in] 最大ファンアウト容量
+    ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
+    ClibCapacitance min_capacitance, ///< [in] 最大負荷容量
+    ClibTime max_transition,         ///< [in] 最大遷移時間
+    ClibTime min_transition          ///< [in] 最大遷移時間
+  );
+
+  /// @brief 入出力ピンを追加する．
+  /// @return 生成されたピンを返す．
+  const ClibPin*
+  add_inout(
+    const ShString& name,             ///< [in] ピン名
+    ClibCapacitance capacitance,      ///< [in] 負荷容量
+    ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
+    ClibCapacitance fall_capacitance, ///< [in] 立ち上がり時の負荷容量
+    ClibCapacitance max_fanout,	      ///< [in] 最大ファンアウト容量
+    ClibCapacitance min_fanout,	      ///< [in] 最大ファンアウト容量
+    ClibCapacitance max_capacitance,  ///< [in] 最大負荷容量
+    ClibCapacitance min_capacitance,  ///< [in] 最大負荷容量
+    ClibTime max_transition,	      ///< [in] 最大遷移時間
+    ClibTime min_transition	      ///< [in] 最大遷移時間
+  );
+
+  /// @brief 内部ピンを追加する．
+  /// @return 生成されたピンを返す．
+  const ClibPin*
+  add_internal(
+    const ShString& name               ///< [in] 名前
+  );
+
+  /// @brief タイミング情報を作る(ジェネリック遅延モデル)．
+  /// @return 生成されたタイミング情報を返す．
+  const ClibTiming*
+  add_timing_generic(
+    ClibTimingType type,            ///< [in] タイミングの種類
+    const Expr& cond,               ///< [in] 条件式
+    ClibTime intrinsic_rise,        ///< [in] 立ち上がり固有遅延
+    ClibTime intrinsic_fall,        ///< [in] 立ち下がり固有遅延
+    ClibTime slope_rise,            ///< [in] 立ち上がり負荷依存遅延
+    ClibTime slope_fall,            ///< [in] 立ち下がり負荷依存遅延
+    ClibResistance rise_resistance, ///< [in] 立ち上がり抵抗
+    ClibResistance fall_resistance  ///< [in] 立ち下がり抵抗
+  );
+
+  /// @brief タイミング情報を作る(折れ線近似)．
+  /// @return 生成されたタイミング情報を返す．
+  const ClibTiming*
+  add_timing_piecewise(
+    ClibTimingType timing_type,
+    const Expr& cond,
+    ClibTime intrinsic_rise,
+    ClibTime intrinsic_fall,
+    ClibTime slope_rise,
+    ClibTime slope_fall,
+    ClibResistance rise_pin_resistance,
+    ClibResistance fall_pin_resistance
+  );
+
+  /// @brief タイミング情報を作る(非線形タイプ1)．
+  /// @return 生成されたタイミング情報を返す．
+  const ClibTiming*
+  add_timing_lut1(
+    ClibTimingType timing_type,
+    const Expr& cond,
+    CiLut* cell_rise,
+    CiLut* cell_fall,
+    CiLut* rise_transition,
+    CiLut* fall_transition
+  );
+
+  /// @brief タイミング情報を作る(非線形タイプ2)．
+  /// @return 生成されたタイミング情報を返す．
+  const ClibTiming*
+  add_timing_lut2(
+    ClibTimingType timing_type,
+    const Expr& cond,
+    CiLut* rise_transition,
+    CiLut* fall_transition,
+    CiLut* rise_propagation,
+    CiLut* fall_propagation
+  );
+
+  /// @brief タイミング情報用のデータ構造を初期化する．
+  void
+  init_timing_map();
+
+  /// @brief タイミング情報をセットする(単独のタイミング情報)．
+  ///
+  /// この関数を呼ぶ前に init_timing_map() を呼んでおくこと．
   void
   set_timing(
     SizeType ipin_id,                   ///< [in] 入力ピン番号
     SizeType opin_id,                   ///< [in] 出力ピン番号
     ClibTimingSense timing_sense,       ///< [in] タイミング条件
-    const vector<SizeType>& timing_list ///< [in] タイミング番号のリスト
+    SizeType timing_id                  ///< [in] 設定するタイミング番号
+  )
+  {
+    set_timing(ipin_id, opin_id, timing_sense, vector<SizeType>{timing_id});
+  }
+
+  /// @brief タイミング情報をセットする(複数のタイミング情報)．
+  ///
+  /// この関数を呼ぶ前に init_timing_map() を呼んでおくこと．
+  void
+  set_timing(
+    SizeType ipin_id,                   ///< [in] 入力ピン番号
+    SizeType opin_id,                   ///< [in] 出力ピン番号
+    ClibTimingSense timing_sense,       ///< [in] タイミング条件
+    const vector<SizeType>& timing_list ///< [in] 設定するタイミング番号のリスト
   );
 
 
@@ -265,9 +508,11 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セルグループを返す．
-  const ClibCellGroup&
-  cgroup() const override;
+  /// @brief ピンを登録する．
+  void
+  reg_pin(
+    CiPin* pin ///< [in] 登録するピン
+  );
 
 
 private:
@@ -277,9 +522,6 @@ private:
 
   // セルライブラリ
   CiCellLibrary* mLibrary{nullptr};
-
-  // このセルが属するセルグループ
-  CiCellGroup* mGroup{nullptr};
 
   // ID番号
   SizeType mId{CLIB_NULLID};
@@ -297,27 +539,18 @@ private:
   SizeType mOutputNum{0};
 
   // 入出力ピン数
-  SizeType mInOutNum{0};
+  SizeType mInoutNum{0};
 
   // ピンのリスト
   vector<unique_ptr<CiPin>> mPinList;
 
   // 入力ピン+入出力ピンのリスト
-  // サイズ mInputNum + mInOutNum
+  // サイズ mInputNum + mInoutNum
   vector<const ClibPin*> mInputList;
 
   // 出力ピン+入出力ピンのリスト
-  // サイズ mOutputNum + mInOutNum
+  // サイズ mOutputNum + mInoutNum
   vector<const ClibPin*> mOutputList;
-
-  // 内部ピンのリスト
-  vector<const ClibPin*> mInternalList;
-
-  // バスピンのリスト
-  vector<unique_ptr<CiBus>> mBusList;
-
-  // バンドルピンのリスト
-  vector<unique_ptr<CiBundle>> mBundleList;
 
   // 全体のタイミング情報のリスト
   vector<unique_ptr<CiTiming>> mTimingList;

@@ -10,6 +10,9 @@
 
 #include "ym/clib.h"
 #include "ym/logic.h"
+#include "ym/BinDec.h"
+#include "ym/BinEnc.h"
+#include "ym/ClibCellList.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -96,8 +99,8 @@ public:
 
   /// @brief 代表クラスに対する変換マップを返す．
   virtual
-  const NpnMapM&
-  map() const = 0;
+  const ClibIOMap&
+  iomap() const = 0;
 
   /// @brief セルの種類を返す．
   virtual
@@ -277,6 +280,11 @@ public:
     SizeType pos ///< [in] インデックス ( 0 <= pos < cell_num() )
   ) const = 0;
 
+  /// @brief セルのリストを返す．
+  virtual
+  ClibCellList
+  cell_list() const = 0;
+
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -292,7 +300,7 @@ public:
   virtual
   void
   dump(
-    ostream& s ///< [in] 出力先のストリーム
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const = 0;
 
   //////////////////////////////////////////////////////////////////////

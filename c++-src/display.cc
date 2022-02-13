@@ -8,6 +8,7 @@
 
 #include "ym/ClibCellLibrary.h"
 #include "ym/ClibCell.h"
+#include "ym/ClibIOMap.h"
 #include "ym/ClibLut.h"
 #include "ym/ClibLutTemplate.h"
 #include "ym/ClibPin.h"
@@ -370,17 +371,15 @@ display_class(
   auto n = cclass.idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
-    for ( int i: Range(n) ) {
-      s << cclass.idmap(i) << endl;
+    for ( auto& idmap: cclass.idmap_list() ) {
+      s << idmap << endl;
     }
     s << endl;
   }
-  for ( auto i: Range(cclass.cell_group_num()) ) {
-    auto& group = cclass.cell_group(i);
-    s << "  Group: Map = " << group.map() << endl
+  for ( auto& group: cclass.cell_group_list() ) {
+    s << "  Group: Map = " << group.iomap() << endl
       << "         Cell = ";
-    for ( auto j: Range(group.cell_num()) ) {
-      auto& cell = group.cell(j);
+    for ( auto& cell: group.cell_list() ) {
       s << " " << cell.name();
     }
     s << endl;
@@ -409,13 +408,12 @@ display_ff_class(
   auto n = cclass.idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
-    for ( auto i: Range(n) ) {
-      s << cclass.idmap(i) << endl;
+    for ( auto& idmap: cclass.idmap_list() ) {
+      s << idmap << endl;
     }
     s << endl;
   }
-  for ( auto i: Range(cclass.cell_group_num()) ) {
-    auto& group = cclass.cell_group(i);
+  for ( auto& group: cclass.cell_group_list() ) {
     s << "  Group:";
     s << " clock = " << group.clock_expr();
     if ( group.type() == ClibCellType::FF_M ) {
@@ -434,8 +432,7 @@ display_ff_class(
     }
     s << endl;
     s << "         Cell = ";
-    for ( auto j: Range(group.cell_num()) ) {
-      auto& cell = group.cell(j);
+    for ( auto& cell: group.cell_list() ) {
       s << " " << cell.name();
     }
     s << endl;
@@ -455,13 +452,12 @@ display_latch_class(
   int n = cclass.idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
-    for ( int i: Range(n) ) {
-      s << cclass.idmap(i) << endl;
+    for ( auto& idmap: cclass.idmap_list() ) {
+      s << idmap << endl;
     }
     s << endl;
   }
-  for ( auto i: Range(cclass.cell_group_num()) ) {
-    auto& group = cclass.cell_group(i);
+  for ( auto& group: cclass.cell_group_list() ) {
     s << "  Group:";
     s << " enable = " << group.enable_expr();
     if ( group.type() == ClibCellType::Latch_M ) {
@@ -480,8 +476,7 @@ display_latch_class(
     }
     s << endl;
     s << "         Cell = ";
-    for ( auto j: Range(group.cell_num()) ) {
-	auto& cell = group.cell(j);
+    for ( auto& cell: group.cell_list() ) {
       s << " " << cell.name();
     }
     s << endl;
@@ -499,8 +494,7 @@ display_group(
 {
   s << title << endl
     << "  Cell =";
-  for ( auto i: Range(group.cell_num()) ) {
-    auto& cell = group.cell(i);
+  for ( auto& cell: group.cell_list() ) {
     s << " " << cell.name();
   }
   s << endl
@@ -600,9 +594,7 @@ display_library(
   s << endl;
 
   // セル
-  for ( auto cell_id: Range(library.cell_num()) ) {
-    auto& cell = library.cell(cell_id);
-
+  for ( auto& cell: library.cell_list() ) {
     // セル名とセルの種類を出力
     s << "Clib#" << cell.id() << " (" << cell.name() << ") : ";
     if ( cell.is_logic() ) {
