@@ -7,8 +7,8 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/ym-common/include
   ${PROJECT_SOURCE_DIR}/ym-base/include
   ${PROJECT_SOURCE_DIR}/ym-logic/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/private_include
+  include
+  private_include
   )
 
 
@@ -16,71 +16,71 @@ include_directories(
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory ( c++-test )
+add_subdirectory ( tests )
 
 
 # ===================================================================
 #  ソースファイルの設定
 # ===================================================================
 set (main_SOURCES
-  c++-src/ClibCellLibrary.cc
-  c++-src/ClibIOMap.cc
-  c++-src/display.cc
+  c++-srcs/ClibCellLibrary.cc
+  c++-srcs/ClibIOMap.cc
+  c++-srcs/display.cc
   )
 
 set (ci_SOURCES
-  c++-src/ci/CiBundle.cc
-  c++-src/ci/CiBus.cc
-  c++-src/ci/CiBusType.cc
-  c++-src/ci/CiCell.cc
-  c++-src/ci/CiLogicCell.cc
-  c++-src/ci/CiTriLogicCell.cc
-  c++-src/ci/CiGenLogicCell.cc
-  c++-src/ci/CiFFCell.cc
-  c++-src/ci/CiCellClass.cc
-  c++-src/ci/CiCellGroup.cc
-  c++-src/ci/CiCellLibrary.cc
-  c++-src/ci/CiPin.cc
-  c++-src/ci/CiLut.cc
-  c++-src/ci/CiLutTemplate.cc
-  c++-src/ci/CiPatGraph.cc
-  c++-src/ci/CiPatMgr.cc
-  c++-src/ci/CiTiming.cc
-  c++-src/ci/dump.cc
-  c++-src/ci/restore.cc
+  c++-srcs/ci/CiBundle.cc
+  c++-srcs/ci/CiBus.cc
+  c++-srcs/ci/CiBusType.cc
+  c++-srcs/ci/CiCell.cc
+  c++-srcs/ci/CiLogicCell.cc
+  c++-srcs/ci/CiTriLogicCell.cc
+  c++-srcs/ci/CiGenLogicCell.cc
+  c++-srcs/ci/CiFFCell.cc
+  c++-srcs/ci/CiCellClass.cc
+  c++-srcs/ci/CiCellGroup.cc
+  c++-srcs/ci/CiCellLibrary.cc
+  c++-srcs/ci/CiPin.cc
+  c++-srcs/ci/CiLut.cc
+  c++-srcs/ci/CiLutTemplate.cc
+  c++-srcs/ci/CiPatGraph.cc
+  c++-srcs/ci/CiPatMgr.cc
+  c++-srcs/ci/CiTiming.cc
+  c++-srcs/ci/dump.cc
+  c++-srcs/ci/restore.cc
   )
 
 set (cg_SOURCES
-  c++-src/cgmgr/CgMgr.cc
-  c++-src/cgmgr/CgLogicSig.cc
+  c++-srcs/cgmgr/CgMgr.cc
+  c++-srcs/cgmgr/CgLogicSig.cc
   )
 
 set (libcomp_SOURCES
-  c++-src/libcomp/LcPatMgr.cc
-  c++-src/libcomp/LcSignature.cc
-  c++-src/libcomp/LibComp.cc
+  c++-srcs/libcomp/LcPatMgr.cc
+  c++-srcs/libcomp/LcSignature.cc
+  c++-srcs/libcomp/LibComp.cc
   )
 
 set (mislib_SOURCES
-  c++-src/mislib/read_mislib.cc
-  c++-src/mislib/MislibNode.cc
-  c++-src/mislib/MislibParser.cc
-  c++-src/mislib/MislibScanner.cc
+  c++-srcs/mislib/read_mislib.cc
+  c++-srcs/mislib/MislibNode.cc
+  c++-srcs/mislib/MislibParser.cc
+  c++-srcs/mislib/MislibScanner.cc
   )
 
 set (dotlib_SOURCES
-  c++-src/dotlib/read_liberty.cc
+  c++-srcs/dotlib/read_liberty.cc
 
-  c++-src/dotlib/parser/FuncParser.cc
-  c++-src/dotlib/parser/FuncScanner.cc
-  c++-src/dotlib/parser/HeaderHandler.cc
-  c++-src/dotlib/parser/Parser.cc
-  c++-src/dotlib/parser/DotlibScanner.cc
-  c++-src/dotlib/parser/DotlibScanner_value.cc
-  c++-src/dotlib/parser/DotlibScanner_expr.cc
+  c++-srcs/dotlib/parser/FuncParser.cc
+  c++-srcs/dotlib/parser/FuncScanner.cc
+  c++-srcs/dotlib/parser/HeaderHandler.cc
+  c++-srcs/dotlib/parser/Parser.cc
+  c++-srcs/dotlib/parser/DotlibScanner.cc
+  c++-srcs/dotlib/parser/DotlibScanner_value.cc
+  c++-srcs/dotlib/parser/DotlibScanner_expr.cc
 
-  c++-src/dotlib/ast/AstExpr.cc
-  c++-src/dotlib/ast/AstValue.cc
+  c++-srcs/dotlib/ast/AstExpr.cc
+  c++-srcs/dotlib/ast/AstValue.cc
   )
 
 
