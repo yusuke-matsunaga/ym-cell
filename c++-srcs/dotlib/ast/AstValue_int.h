@@ -5,7 +5,7 @@
 /// @brief AstValue の派生クラスの定義ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/AstValue.h"
@@ -23,7 +23,9 @@ class AstSimple :
 public:
 
   /// @brief コンストラクタ
-  AstSimple(const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+  AstSimple(
+    const FileRegion& val_loc ///< [in] 値のファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstSimple() = default;
@@ -36,8 +38,10 @@ public:
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,                 ///< [in] 出力先のストリーム
-       int ilevel) const override; ///< [in] インデントレベル
+  print(
+    ostream& s, ///< [in] 出力先のストリーム
+    int ilevel  ///< [in] インデントレベル
+  ) const override;
 
 };
 
@@ -52,8 +56,10 @@ class AstInt :
 public:
 
   /// @brief コンストラクタ
-  AstInt(int value,                  ///< [in] 値
-	 const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+  AstInt(
+    int value,                ///< [in] 値
+    const FileRegion& val_loc ///< [in] 値のファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstInt() = default;
@@ -94,8 +100,10 @@ class AstFloat :
 public:
 
   /// @brief コンストラクタ
-  AstFloat(double value,               ///< [in] 値
-	   const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+  AstFloat(
+    double value,             ///< [in] 値
+    const FileRegion& val_loc ///< [in] 値のファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstFloat() = default;
@@ -136,8 +144,10 @@ class AstString :
 public:
 
   /// @brief コンストラクタ
-  AstString(ShString value,             ///< [in] 値
-	    const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+  AstString(
+    ShString value,           ///< [in] 値
+    const FileRegion& val_loc ///< [in] 値のファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstString() = default;
@@ -178,8 +188,10 @@ class AstBool :
 public:
 
   /// @brief コンストラクタ
-  AstBool(bool value,                 ///< [in] 値
-	  const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+  AstBool(
+    bool value,               ///< [in] 値
+    const FileRegion& val_loc ///< [in] 値のファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstBool() = default;
@@ -220,8 +232,10 @@ class AstDelayModel :
 public:
 
   /// @brief コンストラクタ
-  AstDelayModel(ClibDelayModel value,       ///< [in] 値
-		const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+  AstDelayModel(
+    ClibDelayModel value,     ///< [in] 値
+    const FileRegion& val_loc ///< [in] 値のファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstDelayModel() = default;
@@ -262,8 +276,10 @@ class AstDirection :
 public:
 
   /// @brief コンストラクタ
-  AstDirection(ClibDirection value,        ///< [in] 値
-	       const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+  AstDirection(
+    ClibDirection value,      ///< [in] 値
+    const FileRegion& val_loc ///< [in] 値のファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstDirection() = default;
@@ -304,8 +320,10 @@ class AstTechnology :
 public:
 
   /// @brief コンストラクタ
-  AstTechnology(ClibTechnology value,       ///< [in] 値
-		const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+  AstTechnology(
+    ClibTechnology value,     ///< [in] 値
+    const FileRegion& val_loc ///< [in] 値のファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstTechnology() = default;
@@ -346,8 +364,10 @@ class AstTimingSense :
 public:
 
   /// @brief コンストラクタ
-  AstTimingSense(ClibTimingSense value,      ///< [in] 値
-		 const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+  AstTimingSense(
+    ClibTimingSense value,    ///< [in] 値
+    const FileRegion& val_loc ///< [in] 値のファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstTimingSense() = default;
@@ -388,8 +408,10 @@ class AstTimingType :
 public:
 
   /// @brief コンストラクタ
-  AstTimingType(ClibTimingType value,       ///< [in] 値
-		const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+  AstTimingType(
+    ClibTimingType value,     ///< [in] 値
+    const FileRegion& val_loc ///< [in] 値のファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstTimingType() = default;
@@ -430,8 +452,10 @@ class AstVarType :
 public:
 
   /// @brief コンストラクタ
-  AstVarType(ClibVarType value,          ///< [in] 値
-	     const FileRegion& val_loc); ///< [in] 値のファイル上の位置
+  AstVarType(
+    ClibVarType value,        ///< [in] 値
+    const FileRegion& val_loc ///< [in] 値のファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstVarType() = default;
@@ -472,8 +496,10 @@ class AstIntVector :
 public:
 
   /// @brief コンストラクタ
-  AstIntVector(const vector<int>& value, ///< [in] 値
-	       const FileRegion& loc);   ///< [in] ファイル上の位置
+  AstIntVector(
+    const vector<int>& value, ///< [in] 値
+    const FileRegion& loc     ///< [in] ファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstIntVector() = default;
@@ -514,8 +540,10 @@ class AstFloatVector :
 public:
 
   /// @brief コンストラクタ
-  AstFloatVector(const vector<double>& value_list, ///< [in] 値のリスト
-		 const FileRegion& loc);           ///< [in] ファイル上の位置
+  AstFloatVector(
+    const vector<double>& value_list, ///< [in] 値のリスト
+    const FileRegion& loc             ///< [in] ファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~AstFloatVector() = default;
@@ -556,7 +584,11 @@ class AstExprValue :
 public:
 
   /// @brief コンストラクタ
-  AstExprValue(AstExprPtr&& value); ///< [in] 値
+  ///
+  /// value はムーブされる．
+  AstExprValue(
+    AstExprPtr&& value ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~AstExprValue() = default;
@@ -597,8 +629,10 @@ class AstComplexValue :
 public:
 
   /// @brief コンストラクタ
-  AstComplexValue(vector<AstValuePtr>& value_list, ///< [in] 値のリスト
-		  const FileRegion& loc);          ///< [in] 位置
+  AstComplexValue(
+    vector<AstValuePtr>& value_list, ///< [in] 値のリスト
+    const FileRegion& loc            ///< [in] 位置
+  );
 
   /// @brief デストラクタ
   ~AstComplexValue() = default;
@@ -612,19 +646,23 @@ public:
   /// @brief complex attribute の場合の要素数を返す．
   ///
   /// 異なる型の場合の値は不定
-  int
+  SizeType
   complex_elem_size() const override;
 
   /// @brief complex attribute の要素を返す．
   ///
   /// 異なる型の場合の値は不定
   const AstValue&
-  complex_elem_value(int pos) const override; ///< [in] 位置番号( 0 <= pos < complex_elem_size )
+  complex_elem_value(
+    SizeType pos ///< [in] 位置番号( 0 <= pos < complex_elem_size )
+  ) const override;
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,                 ///< [in] 出力先のストリーム
-       int ilevel) const override; ///< [in] インデントレベル
+  print(
+    ostream& s, ///< [in] 出力先のストリーム
+    int ilevel  ///< [in] インデントレベル
+  ) const override;
 
   /// @brief 値を表す文字列を返す．
   string
@@ -651,9 +689,11 @@ class AstGroupValue :
 public:
 
   /// @brief コンストラクタ
-  AstGroupValue(AstValuePtr&& header_value,     ///< [in] ヘッダ
-		vector<AstAttrPtr>& child_list, ///< [in] 要素のリスト
-		const FileRegion& loc);         ///< [in] 位置
+  AstGroupValue(
+    AstValuePtr&& header_value,     ///< [in] ヘッダ
+    vector<AstAttrPtr>& child_list, ///< [in] 要素のリスト
+    const FileRegion& loc           ///< [in] 位置
+  );
 
   /// @brief デストラクタ
   ~AstGroupValue() = default;
@@ -673,19 +713,23 @@ public:
   /// @brief group statement の要素数を返す．
   ///
   /// 異なる型の場合の値は不定
-  int
+  SizeType
   group_elem_size() const override;
 
   /// @brief group statement の要素の属性を返す．
   ///
   /// 異なる型の場合の値は不定
   const AstAttr&
-  group_elem_attr(int pos) const override; ///< [in] 位置番号( 0 <= pos < group_elem_size() )
+  group_elem_attr(
+    SizeType pos ///< [in] 位置番号( 0 <= pos < group_elem_size() )
+  ) const override;
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,                 ///< [in] 出力先のストリーム
-       int ilevel) const override; ///< [in] インデントレベル
+  print(
+    ostream& s, ///< [in] 出力先のストリーム
+    int ilevel  ///< [in] インデントレベル
+  ) const override;
 
   /// @brief 値を表す文字列を返す．
   string
@@ -733,8 +777,10 @@ public:
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(ostream& s,                 ///< [in] 出力先のストリーム
-       int ilevel) const override; ///< [in] インデントレベル
+  print(
+    ostream& s, ///< [in] 出力先のストリーム
+    int ilevel  ///< [in] インデントレベル
+  ) const override;
 
   /// @brief 値を表す文字列を返す．
   string

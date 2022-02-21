@@ -46,17 +46,4 @@ CiBus::pin(
   return *mPinList[pos];
 }
 
-// @brief 内容を初期化する．
-void
-CiBus::init(
-  const ShString& name,
-  const ClibBusType* bus_type,
-  vector<const ClibPin*>&& pin_list
-)
-{
-  mName = name;
-  mBusType = bus_type;
-  mPinList.swap(pin_list);
-}
-
 END_NAMESPACE_YM_CLIB

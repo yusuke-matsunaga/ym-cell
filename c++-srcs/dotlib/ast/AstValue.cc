@@ -3,12 +3,13 @@
 /// @brief AstValue の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2021 Yusuke Matsunaga
+/// Copyright (C) 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/AstValue.h"
 #include "dotlib/AstAttr.h"
 #include "dotlib/AstExpr.h"
+#include "dotlib/AstElemDict.h"
 #include "AstValue_int.h"
 
 
@@ -17,7 +18,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 BEGIN_NONAMESPACE
 
 void
-dump_indent(
+print_indent(
   ostream& s,
   int ilevel
 )
@@ -326,7 +327,7 @@ AstValue::float_vector_value() const
 // @brief complex attribute の場合の要素数を返す．
 //
 // 異なる型の場合の値は不定
-int
+SizeType
 AstValue::complex_elem_size() const
 {
   return 0;
@@ -337,7 +338,7 @@ AstValue::complex_elem_size() const
 // 異なる型の場合の値は不定
 const AstValue&
 AstValue::complex_elem_value(
-  int pos
+  SizeType pos
 ) const
 {
   return AstValue::null_ref();
@@ -355,7 +356,7 @@ AstValue::group_header_value() const
 // @brief group statement の要素数を返す．
 //
 // 異なる型の場合の値は不定
-int
+SizeType
 AstValue::group_elem_size() const
 {
   return 0;
@@ -366,11 +367,33 @@ AstValue::group_elem_size() const
 // 異なる型の場合の値は不定
 const AstAttr&
 AstValue::group_elem_attr(
-  int pos
+  SizeType pos
 ) const
 {
   static AstAttr dummy;
   return dummy;
+}
+
+// @brief group statement の要素の辞書を作る．
+//
+// 異なる型の場合の値は不定
+AstElemDict
+AstValue::gen_group_elem_dict() const
+{
+  AstElemDict ans;
+  SizeType n = group_elem_size();
+  for ( SizeType i = 0; i < n; ++ i ) {
+    auto& elem = group_elem_attr(i);
+    auto kwd = elem.kwd();
+    auto val = &elem.value();
+    if ( ans.count(kwd) == 0 ) {
+      ans.emplace(kwd, vector<const AstValue*>{val});
+    }
+    else {
+      ans.at(kwd).push_back(val);
+    }
+  }
+  return ans;
 }
 
 
@@ -387,7 +410,7 @@ AstSimple::AstSimple(
 
 // @brief 内容をストリーム出力する．
 void
-AstSimple::dump(
+AstSimple::print(
   ostream& s,
   int ilevel
 ) const
@@ -899,7 +922,7 @@ AstComplexValue::AstComplexValue(
 // @brief complex attribute の場合の要素数を返す．
 //
 // 異なる型の場合の値は不定
-int
+SizeType
 AstComplexValue::complex_elem_size() const
 {
   return mElemList.size();
@@ -910,7 +933,7 @@ AstComplexValue::complex_elem_size() const
 // 異なる型の場合の値は不定
 const AstValue&
 AstComplexValue::complex_elem_value(
-  int pos
+  SizeType pos
 ) const
 {
   ASSERT_COND( 0 <= pos && pos < complex_elem_size() );
@@ -919,7 +942,7 @@ AstComplexValue::complex_elem_value(
 
 // @brief 内容をストリーム出力する．
 void
-AstComplexValue::dump(
+AstComplexValue::print(
   ostream& s,
   int ilevel
 ) const
@@ -973,7 +996,7 @@ AstGroupValue::group_header_value() const
 // @brief group statement の要素数を返す．
 //
 // 異なる型の場合の値は不定
-int
+SizeType
 AstGroupValue::group_elem_size() const
 {
   return mChildList.size();
@@ -984,7 +1007,7 @@ AstGroupValue::group_elem_size() const
 // 異なる型の場合の値は不定
 const AstAttr&
 AstGroupValue::group_elem_attr(
-  int pos
+  SizeType pos
 ) const
 {
   ASSERT_COND( 0 <= pos && pos < group_elem_size() );
@@ -994,7 +1017,7 @@ AstGroupValue::group_elem_attr(
 
 // @brief 内容をストリーム出力する．
 void
-AstGroupValue::dump(
+AstGroupValue::print(
   ostream& s,
   int ilevel
 ) const
@@ -1002,9 +1025,9 @@ AstGroupValue::dump(
   s << group_header_value().decompile()
     << " {" << endl;
   for ( auto& ptr: mChildList ) {
-    ptr->dump(s, ilevel + 1);
+    ptr->print(s, ilevel + 1);
   }
-  dump_indent(s, ilevel);
+  print_indent(s, ilevel);
   s << "}" << endl;
 }
 
@@ -1035,7 +1058,7 @@ AstNullValue::is_valid() const
 
 // @brief 内容をストリーム出力する．
 void
-AstNullValue::dump(
+AstNullValue::print(
   ostream& s,
   int ilevel
 ) const
@@ -1056,14 +1079,14 @@ AstNullValue::decompile() const
 
 // @brief 内容をストリーム出力する．
 void
-AstAttr::dump(
+AstAttr::print(
   ostream& s,
   int ilevel
 ) const
 {
-  dump_indent(s, ilevel);
+  print_indent(s, ilevel);
   s << kwd();
-  value().dump(s, ilevel);
+  value().print(s, ilevel);
 }
 
 END_NAMESPACE_YM_DOTLIB

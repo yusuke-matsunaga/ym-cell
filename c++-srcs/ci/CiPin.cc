@@ -127,6 +127,20 @@ CiPin::min_transition() const
   return ClibTime(0.0);
 }
 
+// @brief 論理式を返す．
+Expr
+CiPin::function() const
+{
+  return Expr::make_invalid();
+}
+
+// @brief tristate 条件式を返す．
+Expr
+CiPin::tristate() const
+{
+  return Expr::make_zero();
+}
+
 // @brief 内部ピン番号を返す．
 SizeType
 CiPin::internal_id() const
@@ -233,6 +247,20 @@ ClibTime
 CiOutputPinBase::min_transition() const
 {
   return mMinTransition;
+}
+
+// @brief 論理式を返す．
+Expr
+CiOutputPinBase::function() const
+{
+  return mFunction;
+}
+
+// @brief tristate 条件式を返す．
+Expr
+CiOutputPinBase::tristate() const
+{
+  return mTristate;
 }
 
 

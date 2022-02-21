@@ -39,15 +39,4 @@ CiBundle::pin(
   return *mPinList[pos];
 }
 
-// @brief 内容を初期化する．
-void
-CiBundle::init(
-  const ShString& name,
-  vector<const ClibPin*>&& pin_list
-)
-{
-  mName = name;
-  mPinList.swap(pin_list);
-}
-
 END_NAMESPACE_YM_CLIB

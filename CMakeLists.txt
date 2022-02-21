@@ -33,10 +33,9 @@ set (ci_SOURCES
   c++-srcs/ci/CiBus.cc
   c++-srcs/ci/CiBusType.cc
   c++-srcs/ci/CiCell.cc
-  c++-srcs/ci/CiLogicCell.cc
-  c++-srcs/ci/CiTriLogicCell.cc
-  c++-srcs/ci/CiGenLogicCell.cc
   c++-srcs/ci/CiFFCell.cc
+  c++-srcs/ci/CiFLCell.cc
+  c++-srcs/ci/CiLatchCell.cc
   c++-srcs/ci/CiCellClass.cc
   c++-srcs/ci/CiCellGroup.cc
   c++-srcs/ci/CiCellLibrary.cc
@@ -81,6 +80,16 @@ set (dotlib_SOURCES
 
   c++-srcs/dotlib/ast/AstExpr.cc
   c++-srcs/dotlib/ast/AstValue.cc
+  c++-srcs/dotlib/ast/AstElemDict.cc
+  c++-srcs/dotlib/ast/AstCellInfo.cc
+  c++-srcs/dotlib/ast/AstFFInfo.cc
+  c++-srcs/dotlib/ast/AstFLInfo.cc
+  c++-srcs/dotlib/ast/AstFSMInfo.cc
+  c++-srcs/dotlib/ast/AstLatchInfo.cc
+  c++-srcs/dotlib/ast/AstLuTemplInfo.cc
+  c++-srcs/dotlib/ast/AstPinInfo.cc
+  c++-srcs/dotlib/ast/AstTableInfo.cc
+  c++-srcs/dotlib/ast/AstTimingInfo.cc
   )
 
 

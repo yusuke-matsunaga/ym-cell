@@ -178,6 +178,17 @@ protected:
     const FileRegion& loc ///< [in] 位置情報
   );
 
+  /// @brief コピーコンストラクタは削除
+  AstExpr(
+    const AstExpr& src
+  ) = delete;
+
+  /// @brief 代入演算子も削除
+  AstExpr&
+  operator=(
+    const AstExpr& src
+  ) = delete;
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -234,7 +245,7 @@ public:
   virtual
   Expr
   to_expr(
-    const unordered_map<ShString, int>& pin_map ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+    const unordered_map<ShString, SizeType>& pin_map ///< [in] ピン名をキーにしてピン番号を保持する辞書
   ) const = 0;
 
   /// @brief 位置を返す．

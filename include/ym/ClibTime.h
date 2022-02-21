@@ -44,6 +44,14 @@ public:
   {
   }
 
+  /// @brief 無限大の値を作るクラス関数
+  static
+  ClibTime
+  infinity()
+  {
+    return ClibTime{std::numeric_limits<double>::infinity()};
+  }
+
   /// @brief デストラクタ
   ~ClibTime() = default;
 

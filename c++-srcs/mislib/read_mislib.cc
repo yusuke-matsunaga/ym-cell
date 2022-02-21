@@ -72,7 +72,7 @@ dfs(
 }
 
 // タイミング情報を作る．
-const ClibTiming*
+SizeType
 add_timing(
   const MislibPin* pt_pin, // パース木のピン情報
   CiCell* cell             // 対象のセル
@@ -82,14 +82,14 @@ add_timing(
   ClibResistance r_r{pt_pin->rise_fanout_delay()->num()};
   ClibTime       f_i{pt_pin->fall_block_delay()->num()};
   ClibResistance f_r{pt_pin->fall_fanout_delay()->num()};
-  auto timing = cell->add_timing_generic(
+  auto tid = cell->add_timing_generic(
     ClibTimingType::combinational,
     Expr::make_one(),
     r_i, f_i,
     ClibTime(0.0), ClibTime(0.0),
     r_r, f_r
   );
-  return timing;
+  return tid;
 }
 
 // timing 情報をセットする．
@@ -153,12 +153,13 @@ set_timing(
     sense = sense_real;
   }
 
+  vector<SizeType> timing_list{timing_id};
   if ( sense == ClibTimingSense::non_unate ) {
-    cell->set_timing(ipos, opos, ClibTimingSense::positive_unate, timing_id);
-    cell->set_timing(ipos, opos, ClibTimingSense::negative_unate, timing_id);
+    cell->set_timing(ipos, opos, ClibTimingSense::positive_unate, timing_list);
+    cell->set_timing(ipos, opos, ClibTimingSense::negative_unate, timing_list);
   }
   else {
-    cell->set_timing(ipos, opos, sense, timing_id);
+    cell->set_timing(ipos, opos, sense, timing_list);
   }
 }
 
@@ -211,11 +212,8 @@ new_gate(
   // 入力ピン数
   auto ni = ipin_name_list.size();
 
-  // 出力の論理式
-  auto oexpr = opin_expr->to_expr(ipin_name_map);
-
   // セルを作る．
-  auto cell = lib->new_logic_cell(name, area, oexpr);
+  auto cell = lib->add_logic_cell(name, area);
 
   // 入力ピンのリストを作る．
   vector<CiInputPin*> input_list(ni);
@@ -228,6 +226,9 @@ new_gate(
     ASSERT_COND( ipin->input_id() == i );
   }
 
+  // 出力の論理式
+  auto oexpr = opin_expr->to_expr(ipin_name_map);
+
   // 出力ピンを作る．
   auto opin = cell->add_output(opin_name,
 			       ClibCapacitance::infty(),
@@ -235,7 +236,9 @@ new_gate(
 			       ClibCapacitance::infty(),
 			       ClibCapacitance(0.0),
 			       ClibTime::infty(),
-			       ClibTime(0.0));
+			       ClibTime(0.0),
+			       oexpr, Expr::make_zero());
+
   auto opin_id = opin->output_id();
 
   // タイミング情報の生成
@@ -244,17 +247,17 @@ new_gate(
   if ( wildcard_pin ) {
     // すべてのピンが同一のパラメータを持つ．
     auto pt_pin = ipin_top;
-    auto timing = add_timing(ipin_top, cell);
+    auto tid = add_timing(ipin_top, cell);
     for ( SizeType i = 0; i < ni; ++ i ) {
-      set_timing(pt_pin, tv_function, i, opin_id, cell, timing->id());
+      set_timing(pt_pin, tv_function, i, opin_id, cell, tid);
     }
   }
   else {
     // ピンごとに個別のパラメータを持つ．
     for ( SizeType i = 0; i < ni; ++ i ) {
       auto pt_pin = ipin_array[i];
-      auto timing = add_timing(pt_pin, cell);
-      set_timing(pt_pin, tv_function, i, opin_id, cell, timing->id());
+      auto tid = add_timing(pt_pin, cell);
+      set_timing(pt_pin, tv_function, i, opin_id, cell, tid);
     }
   }
 }

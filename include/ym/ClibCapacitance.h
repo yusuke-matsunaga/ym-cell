@@ -43,6 +43,14 @@ public:
   {
   }
 
+  /// @brief 無限大の値を作るクラス関数
+  static
+  ClibCapacitance
+  infinity()
+  {
+    return ClibCapacitance{std::numeric_limits<double>::infinity()};
+  }
+
   /// @brief デストラクタ
   ~ClibCapacitance() = default;
 

@@ -3,7 +3,7 @@
 /// @brief Parser の総合テスト
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2021 Yusuke Matsunaga
+/// Copyright (C) 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ParserTest.h"
@@ -22,11 +22,11 @@ TEST_F(ParserTest, ast1)
   MsgMgr::attach_handler(&handler);
   string filename = string(DATA_DIR) + string("/HIT018.typ.snp");
   ifstream fin{filename};
-  ASSERT_TRUE( fin );
+  ASSERT_TRUE( fin.is_open() );
   Parser parser{fin, FileInfo{filename}, false, true};
 
   auto ast_library{parser.parse()};
-  ast_library->dump(cout);
+  ast_library->print(cout);
 }
 
 END_NAMESPACE_YM_DOTLIB

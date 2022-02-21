@@ -239,6 +239,48 @@ CiTimingPiecewise::fall_delay_intercept() const
 
 
 //////////////////////////////////////////////////////////////////////
+// クラス CiTimingLut
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+CiTimingLut::CiTimingLut(
+  SizeType tid,               ///< [in] タイミング番号
+  ClibTimingType timing_type, ///< [in] タイミングの型
+  const Expr& cond,           ///< [in] タイミング条件を表す式
+  CiLut* rise_transition,     ///< [in] 立ち上がり遷移遅延テーブル
+  CiLut* fall_transition      ///< [in] 立ち下がり遷移遅延テーブル
+) : CiTiming{tid, timing_type, cond},
+    mRiseTransition{unique_ptr<CiLut>{rise_transition}},
+    mFallTransition{unique_ptr<CiLut>{fall_transition}}
+{
+}
+
+// @brief 立ち上がり遷移遅延テーブルの取得
+const ClibLut&
+CiTimingLut::rise_transition() const
+{
+  if ( mRiseTransition == nullptr ) {
+    return CiCellLibrary::error_lut();
+  }
+  else {
+    return *mRiseTransition;
+  }
+}
+
+// @brief 立ち下がり遷移遅延テーブルの取得
+const ClibLut&
+CiTimingLut::fall_transition() const
+{
+  if ( mFallTransition == nullptr ) {
+    return CiCellLibrary::error_lut();
+  }
+  else {
+    return *mFallTransition;
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // クラス CiTimingLut1
 //////////////////////////////////////////////////////////////////////
 
@@ -251,11 +293,9 @@ CiTimingLut1::CiTimingLut1(
   CiLut* cell_fall,           ///< [in] 立ち下がりセル遅延テーブル
   CiLut* rise_transition,     ///< [in] 立ち上がり遷移遅延テーブル
   CiLut* fall_transition      ///< [in] 立ち下がり遷移遅延テーブル
-) : CiTiming{tid, timing_type, cond},
-    mClibRise{unique_ptr<CiLut>{cell_rise}},
-    mClibFall{unique_ptr<CiLut>{cell_fall}},
-    mRiseTransition{unique_ptr<CiLut>{rise_transition}},
-    mFallTransition{unique_ptr<CiLut>{fall_transition}}
+) : CiTimingLut{tid, timing_type, cond, rise_transition, fall_transition},
+    mCellRise{unique_ptr<CiLut>{cell_rise}},
+    mCellFall{unique_ptr<CiLut>{cell_fall}}
 {
 }
 
@@ -263,28 +303,24 @@ CiTimingLut1::CiTimingLut1(
 const ClibLut&
 CiTimingLut1::cell_rise() const
 {
-  return *mClibRise;
+  if ( mCellRise == nullptr ) {
+    return CiCellLibrary::error_lut();
+  }
+  else {
+    return *mCellRise;
+  }
 }
 
 // @brief 立ち下がりセル遅延テーブルの取得
 const ClibLut&
 CiTimingLut1::cell_fall() const
 {
-  return *mClibFall;
-}
-
-// @brief 立ち上がり遷移遅延テーブルの取得
-const ClibLut&
-CiTimingLut1::rise_transition() const
-{
-  return *mRiseTransition;
-}
-
-// @brief 立ち下がり遷移遅延テーブルの取得
-const ClibLut&
-CiTimingLut1::fall_transition() const
-{
-  return *mFallTransition;
+  if ( mCellFall == nullptr ) {
+    return CiCellLibrary::error_lut();
+  }
+  else {
+    return *mCellFall;
+  }
 }
 
 
@@ -301,40 +337,34 @@ CiTimingLut2::CiTimingLut2(
   CiLut* fall_transition,     ///< [in] 立ち下がり遷移遅延テーブル
   CiLut* rise_propagation,    ///< [in] 立ち上がり伝搬遅延テーブル
   CiLut* fall_propagation     ///< [in] 立ち下がり伝搬遅延テーブル
-) : CiTiming{tid, timing_type, cond},
-    mRiseTransition{unique_ptr<CiLut>{rise_transition}},
-    mFallTransition{unique_ptr<CiLut>{fall_transition}},
+) : CiTimingLut{tid, timing_type, cond, rise_transition, fall_transition},
     mRisePropagation{unique_ptr<CiLut>{rise_propagation}},
     mFallPropagation{unique_ptr<CiLut>{fall_propagation}}
 {
-}
-
-// @brief 立ち上がり遷移遅延テーブルの取得
-const ClibLut&
-CiTimingLut2::rise_transition() const
-{
-  return *mRiseTransition;
-}
-
-// @brief 立ち下がり遷移遅延テーブルの取得
-const ClibLut&
-CiTimingLut2::fall_transition() const
-{
-  return *mFallTransition;
 }
 
 // @brief 立ち上がり伝搬遅延テーブルの取得
 const ClibLut&
 CiTimingLut2::rise_propagation() const
 {
-  return *mRisePropagation;
+  if ( mRisePropagation == nullptr ) {
+    return CiCellLibrary::error_lut();
+  }
+  else {
+    return *mRisePropagation;
+  }
 }
 
 // @brief 立ち下がり伝搬遅延テーブルの取得
 const ClibLut&
 CiTimingLut2::fall_propagation() const
 {
-  return *mFallPropagation;
+  if ( mFallPropagation == nullptr ) {
+    return CiCellLibrary::error_lut();
+  }
+  else {
+    return *mFallPropagation;
+  }
 }
 
 END_NAMESPACE_YM_CLIB

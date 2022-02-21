@@ -30,17 +30,19 @@ BEGIN_NAMESPACE_YM_CLIB
 
 void
 CiCellLibrary::restore(
-  BinDec& s
+  istream& is
 )
 {
+  BinDec bs{is};
+
   string name;
-  s >> name;
+  bs >> name;
 
   set_name(name);
 
   ymuint8 tmp1;
   ymuint8 tmp2;
-  s >> tmp1
+  bs >> tmp1
     >> tmp2;
   ClibTechnology technology = static_cast<ClibTechnology>(tmp1);
   ClibDelayModel delay_model = static_cast<ClibDelayModel>(tmp2);
@@ -49,88 +51,88 @@ CiCellLibrary::restore(
   set_delay_model(delay_model);
 
   string bus_naming_style;
-  s >> bus_naming_style;
+  bs >> bus_naming_style;
 
   set_attr("bus_naming_style", bus_naming_style);
 
   string date;
-  s >> date;
+  bs >> date;
 
   set_attr("date", date);
 
   string revision;
-  s >> revision;
+  bs >> revision;
 
   set_attr("revision", revision);
 
   string comment;
-  s >> comment;
+  bs >> comment;
 
   set_attr("comment", comment);
 
   string time_unit;
-  s >> time_unit;
+  bs >> time_unit;
 
   set_attr("time_unit", time_unit);
 
   string voltage_unit;
-  s >> voltage_unit;
+  bs >> voltage_unit;
 
   set_attr("voltage_unit", voltage_unit);
 
   string current_unit;
-  s >> current_unit;
+  bs >> current_unit;
 
   set_attr("current_unit", current_unit);
 
   string pulling_resistance_unit;
-  s >> pulling_resistance_unit;
+  bs >> pulling_resistance_unit;
 
   set_attr("pulling_resistance_unit", pulling_resistance_unit);
 
   double capacitive_unit;
   string capacitive_unit_str;
-  s >> capacitive_unit
-    >> capacitive_unit_str;
+  bs >> capacitive_unit
+     >> capacitive_unit_str;
 
   set_capacitive_load_unit(capacitive_unit, capacitive_unit_str);
 
   string leakage_power_unit;
-  s >> leakage_power_unit;
+  bs >> leakage_power_unit;
 
   set_attr("leakage_power_unit", leakage_power_unit);
 
   // LUTテンプレート情報の読み込み
-  restore_lut_template(s);
+  restore_lut_template(bs);
 
   // セル情報の読み込み
-  restore_cell(s);
+  restore_cell(bs);
 
   // セルグループ情報の読み込み
-  restore_cell_group(s);
+  restore_cell_group(bs);
 
   // セルクラス情報の読み込み
-  restore_cell_class(s);
+  restore_cell_class(bs);
 
   // 組み込み型の設定
   for ( auto i: { 0, 1, 2, 3 } ) {
     SizeType group_id;
-    s >> group_id;
+    bs >> group_id;
     mLogicGroup[i] = mGroupList[group_id].get();
   }
   for ( auto i: { 0, 1, 2, 3 } ) {
     SizeType class_id;
-    s >> class_id;
+    bs >> class_id;
     mFFClass[i] = mClassList[class_id].get();
   }
   for ( auto i: { 0, 1, 2, 3 } ) {
     SizeType class_id;
-    s >> class_id;
+    bs >> class_id;
     mLatchClass[i] = mClassList[class_id].get();
   }
 
   // パタングラフの情報の設定
-  mPatMgr.restore(s);
+  mPatMgr.restore(bs);
 }
 
 BEGIN_NONAMESPACE
@@ -163,7 +165,6 @@ CiCellLibrary::restore_lut_template(
 {
   SizeType lut_num;
   s >> lut_num;
-  vector<CiLutTemplate*> template_list(lut_num);
   for ( auto id: Range(lut_num) ) {
     string name;
     ymuint8 d;
@@ -180,14 +181,14 @@ CiCellLibrary::restore_lut_template(
     switch ( d ) {
     case 1:
       var_type1 = restore_1dim(s, index_array1);
-      tmpl = new_lut_template1(shname,
+      tmpl = add_lut_template1(shname,
 			       var_type1, index_array1);
       break;
 
     case 2:
       var_type1 = restore_1dim(s, index_array1);
       var_type2 = restore_1dim(s, index_array2);
-      tmpl = new_lut_template2(shname,
+      tmpl = add_lut_template2(shname,
 			       var_type1, index_array1,
 			       var_type2, index_array2);
       break;
@@ -196,15 +197,13 @@ CiCellLibrary::restore_lut_template(
       var_type1 = restore_1dim(s, index_array1);
       var_type2 = restore_1dim(s, index_array2);
       var_type3 = restore_1dim(s, index_array3);
-      tmpl = new_lut_template3(shname,
+      tmpl = add_lut_template3(shname,
 			       var_type1, index_array1,
 			       var_type2, index_array2,
 			       var_type3, index_array3);
       break;
     }
-    template_list[id] = tmpl;
   }
-  set_lu_table_template_list(template_list);
 }
 
 BEGIN_NONAMESPACE

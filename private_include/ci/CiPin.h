@@ -11,6 +11,7 @@
 #include "ym/ClibPin.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibCapacitance.h"
+#include "ym/Expr.h"
 #include "ym/ShString.h"
 
 
@@ -127,6 +128,14 @@ public:
   /// @brief 最小遷移時間を返す．
   ClibTime
   min_transition() const override;
+
+  /// @brief 論理式を返す．
+  Expr
+  function() const override;
+
+  /// @brief tristate 条件式を返す．
+  Expr
+  tristate() const override;
 
 
 public:
@@ -280,7 +289,9 @@ public:
     ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
     ClibCapacitance min_capacitance, ///< [in] 最小負荷容量
     ClibTime max_transition,         ///< [in] 最大遷移時間
-    ClibTime min_transition          ///< [in] 最小遷移時間
+    ClibTime min_transition,         ///< [in] 最小遷移時間
+    const Expr& function,            ///< [in] 出力の論理式
+    const Expr& tristate             ///< [in] tristate 条件
   ) : CiPin{name},
       mOutputId{oid},
       mMaxFanout{max_fanout},
@@ -288,7 +299,9 @@ public:
       mMaxCapacitance{max_capacitance},
       mMinCapacitance{min_capacitance},
       mMaxTransition{max_transition},
-      mMinTransition{min_transition}
+      mMinTransition{min_transition},
+      mFunction{function},
+      mTristate{tristate}
   {
   }
 
@@ -331,6 +344,14 @@ public:
   ClibTime
   min_transition() const override;
 
+  /// @brief 論理式を返す．
+  Expr
+  function() const override;
+
+  /// @brief tristate 条件式を返す．
+  Expr
+  tristate() const override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -361,6 +382,12 @@ private:
   // 最小遷移時間
   ClibTime mMinTransition;
 
+  // 論理式
+  Expr mFunction;
+
+  // tristate 条件
+  Expr mTristate;
+
 };
 
 
@@ -382,11 +409,14 @@ public:
     ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
     ClibCapacitance min_capacitance, ///< [in] 最大負荷容量
     ClibTime max_transition,         ///< [in] 最大遷移時間
-    ClibTime min_transition          ///< [in] 最大遷移時間
+    ClibTime min_transition,         ///< [in] 最大遷移時間
+    const Expr& function,            ///< [in] 出力の論理式
+    const Expr& tristate             ///< [in] tristate 条件
   ) : CiOutputPinBase{oid, name,
 		      max_fanout, min_fanout,
 		      max_capacitance, min_capacitance,
-		      max_transition, min_transition}
+		      max_transition, min_transition,
+		      function, tristate}
   {
   }
 
@@ -446,11 +476,14 @@ public:
     ClibCapacitance max_capacitance,  ///< [in] 最大負荷容量
     ClibCapacitance min_capacitance,  ///< [in] 最大負荷容量
     ClibTime max_transition,	      ///< [in] 最大遷移時間
-    ClibTime min_transition	      ///< [in] 最大遷移時間
+    ClibTime min_transition,          ///< [in] 最大遷移時間
+    const Expr& function,             ///< [in] 出力の論理式
+    const Expr& tristate              ///< [in] tristate 条件
   ) : CiOutputPinBase{oid, name,
 		      max_fanout, min_fanout,
 		      max_capacitance, min_capacitance,
-		      max_transition, min_transition},
+		      max_transition, min_transition,
+		      function, tristate},
       mInputId{iid},
       mCapacitance{capacitance},
       mRiseCapacitance{rise_capacitance},

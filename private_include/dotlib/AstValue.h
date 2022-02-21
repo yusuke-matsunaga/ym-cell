@@ -5,7 +5,7 @@
 /// @brief AstValue のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2021 Yusuke Matsunaga
+/// Copyright (C) 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
@@ -14,6 +14,8 @@
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
+
+class AstElemDict;
 
 //////////////////////////////////////////////////////////////////////
 /// @class AstValue AstValue.h "AstValue.h"
@@ -276,7 +278,7 @@ public:
   ///
   /// 異なる型の場合の値は不定
   virtual
-  int
+  SizeType
   complex_elem_size() const;
 
   /// @brief complex attribute の要素を返す．
@@ -285,7 +287,7 @@ public:
   virtual
   const AstValue&
   complex_elem_value(
-    int pos ///< [in] 位置番号( 0 <= pos < complex_elem_size )
+    SizeType pos ///< [in] 位置番号( 0 <= pos < complex_elem_size )
   ) const;
 
   /// @brief group statement のヘッダを返す．
@@ -299,7 +301,7 @@ public:
   ///
   /// 異なる型の場合の値は不定
   virtual
-  int
+  SizeType
   group_elem_size() const;
 
   /// @brief group statement の要素の属性を返す．
@@ -308,8 +310,14 @@ public:
   virtual
   const AstAttr&
   group_elem_attr(
-    int pos ///< [in] 位置番号( 0 <= pos < group_elem_size() )
+    SizeType pos ///< [in] 位置番号( 0 <= pos < group_elem_size() )
   ) const;
+
+  /// @brief group statement の要素の辞書を作る．
+  ///
+  /// 異なる型の場合の値は不定
+  AstElemDict
+  gen_group_elem_dict() const;
 
   /// @brief 値のファイル上の位置を返す．
   FileRegion
@@ -318,7 +326,7 @@ public:
   /// @brief 内容を出力する．
   virtual
   void
-  dump(
+  print(
     ostream& s, ///< [in] 出力先のストリーム
     int ilevel  ///< [in] インデントレベル
   ) const = 0;

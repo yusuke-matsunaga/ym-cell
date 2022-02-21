@@ -19,62 +19,78 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief ブール値を作る．
 AstExprPtr
-AstExpr::new_bool(bool value,
-		  const FileRegion& loc)
+AstExpr::new_bool(
+  bool value,
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstBoolExpr(loc, value)};
 }
 
 // @brief 数値を作る．
 AstExprPtr
-AstExpr::new_float(double value,
-		   const FileRegion& loc)
+AstExpr::new_float(
+  double value,
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstFloatExpr(loc, value)};
 }
 
 // @brief 文字列を作る．
 AstExprPtr
-AstExpr::new_string(const ShString& value,
-		    const FileRegion& loc)
+AstExpr::new_string(
+  const ShString& value,
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstStrExpr(loc, value)};
 }
 
 // @brief VDDシンボルを作る．
 AstExprPtr
-AstExpr::new_vdd(const FileRegion& loc)
+AstExpr::new_vdd(
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstSymbolExpr(loc, AstExpr::VDD)};
 }
 
 /// @brief VSSシンボルを作る．
 AstExprPtr
-AstExpr::new_vss(const FileRegion& loc)
+AstExpr::new_vss(
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstSymbolExpr(loc, AstExpr::VSS)};
 }
 
 // @brief VCCシンボルを作る．
 AstExprPtr
-AstExpr::new_vcc(const FileRegion& loc)
+AstExpr::new_vcc(
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstSymbolExpr(loc, AstExpr::VCC)};
 }
 
 // @brief not 演算子を作る．
 AstExprPtr
-AstExpr::new_not(AstExprPtr&& opr1,
-		 const FileRegion& loc)
+AstExpr::new_not(
+  AstExprPtr&& opr1,
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstNot>{new AstNot(loc, std::move(opr1))};
 }
 
 // @brief plus 演算子を作る．
 AstExprPtr
-AstExpr::new_plus(AstExprPtr&& opr1,
-		  AstExprPtr&& opr2,
-		  const FileRegion& loc)
+AstExpr::new_plus(
+  AstExprPtr&& opr1,
+  AstExprPtr&& opr2,
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstOpr(AstExpr::Plus,
 					std::move(opr1),
@@ -83,9 +99,11 @@ AstExpr::new_plus(AstExprPtr&& opr1,
 
 /// @brief minus 演算子を作る．
 AstExprPtr
-AstExpr::new_minus(AstExprPtr&& opr1,
-		   AstExprPtr&& opr2,
-		   const FileRegion& loc)
+AstExpr::new_minus(
+  AstExprPtr&& opr1,
+  AstExprPtr&& opr2,
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstOpr(AstExpr::Minus,
 					std::move(opr1),
@@ -94,9 +112,11 @@ AstExpr::new_minus(AstExprPtr&& opr1,
 
 // @brief mult 演算子を作る．
 AstExprPtr
-AstExpr::new_mult(AstExprPtr&& opr1,
-		  AstExprPtr&& opr2,
-		  const FileRegion& loc)
+AstExpr::new_mult(
+  AstExprPtr&& opr1,
+  AstExprPtr&& opr2,
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstOpr(AstExpr::Mult,
 					std::move(opr1),
@@ -105,9 +125,11 @@ AstExpr::new_mult(AstExprPtr&& opr1,
 
 // @brief div 演算子を作る．
 AstExprPtr
-AstExpr::new_div(AstExprPtr&& opr1,
-		 AstExprPtr&& opr2,
-		 const FileRegion& loc)
+AstExpr::new_div(
+  AstExprPtr&& opr1,
+  AstExprPtr&& opr2,
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstOpr(AstExpr::Div,
 					std::move(opr1),
@@ -116,9 +138,11 @@ AstExpr::new_div(AstExprPtr&& opr1,
 
 // @brief and 演算子を作る．
 AstExprPtr
-AstExpr::new_and(AstExprPtr&& opr1,
-		 AstExprPtr&& opr2,
-		 const FileRegion& loc)
+AstExpr::new_and(
+  AstExprPtr&& opr1,
+  AstExprPtr&& opr2,
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstOpr(AstExpr::And,
 					std::move(opr1),
@@ -127,9 +151,11 @@ AstExpr::new_and(AstExprPtr&& opr1,
 
 // @brief or 演算子を作る．
 AstExprPtr
-AstExpr::new_or(AstExprPtr&& opr1,
-		AstExprPtr&& opr2,
-		const FileRegion& loc)
+AstExpr::new_or(
+  AstExprPtr&& opr1,
+  AstExprPtr&& opr2,
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstOpr(AstExpr::Or,
 					std::move(opr1),
@@ -138,9 +164,11 @@ AstExpr::new_or(AstExprPtr&& opr1,
 
 // @brief xor 演算子を作る．
 AstExprPtr
-AstExpr::new_xor(AstExprPtr&& opr1,
-		 AstExprPtr&& opr2,
-		 const FileRegion& loc)
+AstExpr::new_xor(
+  AstExprPtr&& opr1,
+  AstExprPtr&& opr2,
+  const FileRegion& loc
+)
 {
   return unique_ptr<AstExpr>{new AstOpr(AstExpr::Xor,
 					std::move(opr1),
@@ -157,8 +185,9 @@ AstExpr::null_ref()
 
 // @brief コンストラクタ
 // @param[in] loc 位置情報
-AstExpr::AstExpr(const FileRegion& loc) :
-  mLoc{loc}
+AstExpr::AstExpr(
+  const FileRegion& loc
+) : mLoc{loc}
 {
 }
 
@@ -230,12 +259,11 @@ AstExpr::opr2() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc 位置情報
-// @param[in] val 値
-AstBoolExpr::AstBoolExpr(const FileRegion& loc,
-			 bool val) :
-  AstExpr(loc),
-  mValue(val)
+AstBoolExpr::AstBoolExpr(
+  const FileRegion& loc,
+  bool val
+) : AstExpr{loc},
+    mValue(val)
 {
 }
 
@@ -256,10 +284,10 @@ AstBoolExpr::bool_value() const
 }
 
 // @brief Expr を作る．
-// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
-// @return 対応する式(Expr)を返す．
 Expr
-AstBoolExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
+AstBoolExpr::to_expr(
+  const unordered_map<ShString, SizeType>& pin_map
+) const
 {
   if ( mValue ) {
     return Expr::make_zero();
@@ -287,12 +315,11 @@ AstBoolExpr::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc 位置情報
-// @param[in] val 値
-AstFloatExpr::AstFloatExpr(const FileRegion& loc,
-			   double val) :
-  AstExpr(loc),
-  mValue{val}
+AstFloatExpr::AstFloatExpr(
+  const FileRegion& loc,
+  double val
+) : AstExpr{loc},
+    mValue{val}
 {
 }
 
@@ -313,10 +340,10 @@ AstFloatExpr::float_value() const
 }
 
 // @brief Expr を作る．
-// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
-// @return 対応する式(Expr)を返す．
 Expr
-AstFloatExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
+AstFloatExpr::to_expr(
+  const unordered_map<ShString, SizeType>& pin_map
+) const
 {
   ASSERT_NOT_REACHED;
   return Expr::make_invalid();
@@ -337,12 +364,11 @@ AstFloatExpr::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc 位置情報
-// @param[in] val 値
-AstStrExpr::AstStrExpr(const FileRegion& loc,
-		       const ShString& val) :
-  AstExpr(loc),
-  mValue{val}
+AstStrExpr::AstStrExpr(
+  const FileRegion& loc,
+  const ShString& val
+) : AstExpr{loc},
+    mValue{val}
 {
 }
 
@@ -363,10 +389,10 @@ AstStrExpr::string_value() const
 }
 
 // @brief Expr を作る．
-// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
-// @return 対応する式(Expr)を返す．
 Expr
-AstStrExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
+AstStrExpr::to_expr(
+  const unordered_map<ShString, SizeType>& pin_map
+) const
 {
   if ( pin_map.count(mValue) == 0 ) {
     ostringstream buf;
@@ -379,7 +405,7 @@ AstStrExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
     return Expr::make_invalid();
   }
 
-  int id = pin_map.at(mValue);
+  SizeType id = pin_map.at(mValue);
   return Expr::make_posi_literal(VarId(id));
 }
 
@@ -396,12 +422,11 @@ AstStrExpr::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc ファイル上の位置
-// @param[in] type シンボルの種類(VDD, VSS, VCC)
-AstSymbolExpr::AstSymbolExpr(const FileRegion& loc,
-			     Type type) :
-  AstExpr(loc),
-  mType{type}
+AstSymbolExpr::AstSymbolExpr(
+  const FileRegion& loc,
+  Type type
+) : AstExpr{loc},
+    mType{type}
 {
 }
 
@@ -413,10 +438,10 @@ AstSymbolExpr::type() const
 }
 
 // @brief Expr を作る．
-// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
-// @return 対応する式(Expr)を返す．
 Expr
-AstSymbolExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
+AstSymbolExpr::to_expr(
+  const unordered_map<ShString, SizeType>& pin_map
+) const
 {
   ASSERT_NOT_REACHED;
   return Expr::make_invalid();
@@ -441,12 +466,11 @@ AstSymbolExpr::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] loc ファイル上の位置
-// @param[in] opr オペランド
-AstNot::AstNot(const FileRegion& loc,
-	       AstExprPtr&& opr) :
-  AstExpr(loc),
-  mOpr1{std::move(opr)}
+AstNot::AstNot(
+  const FileRegion& loc,
+  AstExprPtr&& opr
+) : AstExpr{loc},
+    mOpr1{std::move(opr)}
 {
 }
 
@@ -466,10 +490,10 @@ AstNot::opr1() const
 }
 
 // @brief Expr を作る．
-// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
-// @return 対応する式(Expr)を返す．
 Expr
-AstNot::to_expr(const unordered_map<ShString, int>& pin_map) const
+AstNot::to_expr(
+  const unordered_map<ShString, SizeType>& pin_map
+) const
 {
   Expr expr1 = opr1().to_expr(pin_map);
   return ~expr1;
@@ -490,15 +514,14 @@ AstNot::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 表すコンストラクタ
-// @param[in] type 演算子の型
-// @param[in] opr1, opr2 オペランド
-AstOpr::AstOpr(Type type,
-	       AstExprPtr&& opr1,
-	       AstExprPtr&& opr2) :
-  AstExpr(FileRegion(opr1->loc(), opr2->loc())),
-  mType{type},
-  mOpr1{std::move(opr1)},
-  mOpr2{std::move(opr2)}
+AstOpr::AstOpr(
+  Type type,
+  AstExprPtr&& opr1,
+  AstExprPtr&& opr2
+) : AstExpr{FileRegion(opr1->loc(), opr2->loc())},
+    mType{type},
+    mOpr1{std::move(opr1)},
+    mOpr2{std::move(opr2)}
 {
 }
 
@@ -533,10 +556,10 @@ AstOpr::opr2() const
 }
 
 // @brief Expr を作る．
-// @param[in] pin_map ピン名をキーにしてピン番号を保持するハッシュ表
-// @return 対応する式(Expr)を返す．
 Expr
-AstOpr::to_expr(const unordered_map<ShString, int>& pin_map) const
+AstOpr::to_expr(
+  const unordered_map<ShString, SizeType>& pin_map
+) const
 {
   Expr expr1 = opr1().to_expr(pin_map);
   Expr expr2 = opr2().to_expr(pin_map);
@@ -578,8 +601,8 @@ AstOpr::decompile() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-AstNullExpr::AstNullExpr()
-  : AstExpr(FileRegion{})
+AstNullExpr::AstNullExpr(
+) : AstExpr{FileRegion{}}
 {
 }
 
@@ -591,9 +614,10 @@ AstNullExpr::type() const
 }
 
 // @brief Expr を作る．
-// @return 対応する式(Expr)を返す．
 Expr
-AstNullExpr::to_expr(const unordered_map<ShString, int>& pin_map) const
+AstNullExpr::to_expr(
+  const unordered_map<ShString, SizeType>& pin_map
+) const
 {
   return Expr::make_invalid();
 }

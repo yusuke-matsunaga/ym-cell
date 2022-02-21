@@ -49,88 +49,90 @@ END_NONAMESPACE
 // @brief 内容をバイナリダンプする．
 void
 CiCellLibrary::dump(
-  BinEnc& s
+  ostream& os
 ) const
 {
+  BinEnc bs{os};
+
   // 名前
-  s << name();
+  bs << name();
 
   // テクノロジ
-  s << static_cast<ymuint8>(technology());
+  bs << static_cast<ymuint8>(technology());
 
   // 遅延モデル
-  s << static_cast<ymuint8>(delay_model());
+  bs << static_cast<ymuint8>(delay_model());
 
   // バス命名規則
-  s << bus_naming_style();
+  bs << bus_naming_style();
 
   // 日付情報
-  s << date();
+  bs << date();
 
   // リビジョン情報
-  s << revision();
+  bs << revision();
 
   // コメント
-  s << comment();
+  bs << comment();
 
   // 時間単位
-  s << time_unit();
+  bs << time_unit();
 
   // 電圧単位
-  s << voltage_unit();
+  bs << voltage_unit();
 
   // 電流単位
-  s << current_unit();
+  bs << current_unit();
 
   // 抵抗単位
-  s << pulling_resistance_unit();
+  bs << pulling_resistance_unit();
 
   // 容量単位
-  s << capacitive_load_unit();
+  bs << capacitive_load_unit();
 
   // 容量単位の文字列
-  s << capacitive_load_unit_str();
+  bs << capacitive_load_unit_str();
 
   // 電力単位
-  s << leakage_power_unit();
+  bs << leakage_power_unit();
 
   // 遅延テーブルのテンプレート
-  s << lu_table_template_num();
+  bs << lu_table_template_num();
   for ( auto id: Range(lu_table_template_num()) ) {
-    lu_table_template(id).dump(s);
+    lu_table_template(id).dump(bs);
   }
 
   // セルの内容をダンプ
-  s << cell_num();
+  bs << cell_num();
   for ( auto id: Range(cell_num()) ) {
-    cell(id).dump(s);
+    cell(id).dump(bs);
   }
 
   // セルグループ情報のダンプ
-  s << cell_group_num();
+  bs << cell_group_num();
   for ( auto id: Range(cell_group_num()) ) {
-    cell_group(id).dump(s);
+    cell_group(id).dump(bs);
   }
 
   // セルクラス情報のダンプ
-  s << npn_class_num();
+  bs << npn_class_num();
   for ( auto id: Range(npn_class_num()) ) {
-    npn_class(id).dump(s);
+    npn_class(id).dump(bs);
   }
 
   // 組み込み型の情報のダンプ
   for ( int i: { 0, 1, 2, 3 } ) {
-    s << mLogicGroup[i]->id();
+    bs << mLogicGroup[i]->id();
   }
   for ( int i: { 0, 1, 2, 3 } ) {
-    s << mFFClass[i]->id();
+    bs << mFFClass[i]->id();
   }
   for ( int i: { 0, 1, 2, 3 } ) {
-    s << mLatchClass[i]->id();
+    bs << mLatchClass[i]->id();
   }
 
   // パタングラフの情報のダンプ
-  mPatMgr.dump(s);
+  mPatMgr.dump(bs);
 }
 
 

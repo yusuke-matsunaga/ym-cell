@@ -745,7 +745,7 @@ ClibCellLibrary::pg_edge_inv(
 // @brief 内容をバイナリダンプする．
 void
 ClibCellLibrary::dump(
-  BinEnc& s
+  ostream& s
 ) const
 {
   if ( mImpl ) {
@@ -756,10 +756,10 @@ ClibCellLibrary::dump(
 // @brief バイナリダンプされた内容を読み込む．
 void
 ClibCellLibrary::restore(
-  BinDec& s
+  istream& s
 )
 {
-  auto new_impl{new CiCellLibrary()};
+  auto new_impl = new CiCellLibrary{};
   new_impl->restore(s);
   change_impl(new_impl);
 }

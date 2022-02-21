@@ -19,10 +19,9 @@
 #include "ci/CiBusType.h"
 #include "ci/CiPatGraph.h"
 
-#include "CiLogicCell.h"
-#include "CiTriLogicCell.h"
-#include "CiGenLogicCell.h"
+#include "ci/CiCell.h"
 #include "CiFFCell.h"
+#include "CiLatchCell.h"
 
 #include "ym/Range.h"
 
@@ -176,34 +175,25 @@ CiCellLibrary::set_attr(
   }
 }
 
-// @brief 遅延テーブルのテンプレートのリストを設定する．
-void
-CiCellLibrary::set_lu_table_template_list(
-  const vector<CiLutTemplate*>& template_list
-)
-{
-  for ( auto tmpl: template_list ) {
-    tmpl->mId = mLutTemplateList.size();
-    mLutTemplateList.push_back(tmpl);
-    mLutHash.emplace(tmpl->_name(), tmpl->mId);
-  }
-}
-
 // @brief 1次元の LUT のテンプレートを作る．
 CiLutTemplate*
-CiCellLibrary::new_lut_template1(
+CiCellLibrary::add_lut_template1(
   const ShString& name,
   ClibVarType var_type1,
   const vector<double>& index_list1
 )
 {
-  auto tmpl = new CiLutTemplate1D(name, var_type1, index_list1);
+  SizeType id = mLutTemplateList.size();
+  auto tmpl = new CiLutTemplate1D{id, name,
+                                  var_type1, index_list1};
+  mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
+  mLutHash.emplace(name, id);
   return tmpl;
 }
 
 // @brief 2次元の LUT のテンプレートを作る．
 CiLutTemplate*
-CiCellLibrary::new_lut_template2(
+CiCellLibrary::add_lut_template2(
   const ShString& name,
   ClibVarType var_type1,
   const vector<double>& index_list1,
@@ -211,15 +201,18 @@ CiCellLibrary::new_lut_template2(
   const vector<double>& index_list2
 )
 {
-  auto tmpl = new CiLutTemplate2D(name,
+  SizeType id = mLutTemplateList.size();
+  auto tmpl = new CiLutTemplate2D{id, name,
 				  var_type1, index_list1,
-				  var_type2, index_list2);
+				  var_type2, index_list2};
+  mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
+  mLutHash.emplace(name, id);
   return tmpl;
 }
 
 // @brief 3次元の LUT のテンプレートを作る．
 CiLutTemplate*
-CiCellLibrary::new_lut_template3(
+CiCellLibrary::add_lut_template3(
   const ShString& name,
   ClibVarType var_type1,
   const vector<double>& index_list1,
@@ -229,10 +222,13 @@ CiCellLibrary::new_lut_template3(
   const vector<double>& index_list3
 )
 {
-  auto tmpl = new CiLutTemplate3D(name,
+  SizeType id = mLutTemplateList.size();
+  auto tmpl = new CiLutTemplate3D{id, name,
 				  var_type1, index_list1,
 				  var_type2, index_list2,
-				  var_type3, index_list3);
+				  var_type3, index_list3};
+  mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
+  mLutHash.emplace(name, id);
   return tmpl;
 }
 
@@ -263,98 +259,27 @@ CiCellLibrary::new_cell_group(
   return cg;
 }
 
-// @brief 1出力の論理セルを作る．
+// @brief 論理セルを追加する．
 CiCell*
-CiCellLibrary::new_logic_cell(
-  const ShString& name,                  ///< [in] 名前
-  ClibArea area,                         ///< [in] 面積
-#if 0
-  const vector<CiInputPin*>& input_list, ///< [in] 入力ピンのリスト
-  CiOutputPin* output,                   ///< [in] 出力ピン
-  const vector<CiTiming*>& timing_list,  ///< [in] タイミング条件のリスト
-#endif
-  const Expr& expr                       ///< [in] 出力の論理式
+CiCellLibrary::add_logic_cell(
+  const ShString& name,
+  ClibArea area
 )
 {
-  auto cell = new CiLogicCell{
-    this, name, area,
-#if 0
-    input_list,
-    output,
-    timing_list,
-#endif
-    expr
-  };
-  reg_cell(cell);
-  return cell;
-}
-
-// @brief 1出力のトライステートセルを作る．
-CiCell*
-CiCellLibrary::new_tristate_cell(
-  const ShString& name,                  ///< [in] 名前
-  ClibArea area,                         ///< [in] 面積
-#if 0
-  const vector<CiInputPin*>& input_list, ///< [in] 入力ピンのリスト
-  CiOutputPin* output,                   ///< [in] 出力ピン
-  const vector<CiTiming*>& timing_list,  ///< [in] タイミング条件のリスト
-#endif
-  const Expr& expr,                      ///< [in] 出力の論理式
-  const Expr& tristate_expr              ///< [in] 出力のトライステート条件の論理式
-)
-{
-  auto cell = new CiTriLogicCell(this, name, area,
-#if 0
-				 input_list,
-				 output,
-				 timing_list,
-#endif
-				 expr, tristate_expr);
-  reg_cell(cell);
-  return cell;
-}
-
-// @brief 一般的な論理セルを生成する．
-CiCell*
-CiCellLibrary::new_generic_cell(
-  const ShString& name,                    ///< [in] 名前
-  ClibArea area,                           ///< [in] 面積
-#if 0
-  const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
-  const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
-  const vector<CiInoutPin*>& inout_list,   ///< [in] 入出力ピンのリスト
-  const vector<CiTiming*>& timing_list,    ///< [in] タイミング条件のリスト
-#endif
-  const vector<Expr>& expr_list,           ///< [in] 出力の論理式のリスト
-  const vector<Expr>& tristate_expr_list   ///< [in] 出力のトライステート条件の論理式のリスト
-)
-{
-  auto cell = new CiGenLogicCell(this, name, area,
-#if 0
-				 input_list,
-				 output_list,
-				 inout_list,
-				 timing_list,
-#endif
-				 expr_list,
-				 tristate_expr_list);
+  auto cell = new CiCell(this, name, area);
   reg_cell(cell);
   return cell;
 }
 
 // @brief FFセルを生成する．
 CiCell*
-CiCellLibrary::new_ff_cell(
+CiCellLibrary::add_ff_cell(
   const ShString& name,
   ClibArea area,
-#if 0
-  const vector<CiInputPin*>& input_list,
-  const vector<CiOutputPin*>& output_list,
-  const vector<CiTiming*>& timing_list,
-#endif
-  const vector<Expr>& expr_list,
-  const Expr& clocked_on,
-  const Expr& clocked_on_also,
+  const ShString& var1,
+  const ShString& var2,
+  const Expr& clock,
+  const Expr& clock2,
   const Expr& next_state,
   const Expr& clear,
   const Expr& preset,
@@ -362,280 +287,63 @@ CiCellLibrary::new_ff_cell(
   ClibCPV clear_preset_var2
 )
 {
-  // - slave clock の有無
-  // - クリア端子の有無
-  // - プリセット端子の有無
-  // で８通りのバリエーションがある．
-  bool has_clock2 = clocked_on_also.is_valid();
-  bool has_clear = !clear.is_zero();
-  bool has_preset = !preset.is_zero();
-
-  CiCell* cell = nullptr;
-  if ( has_clear ) {
-    if ( has_preset ) {
-      if ( has_clock2 ) {
-	cell = new CiFFMSRCell(this, name, area,
-#if 0
-			       input_list,
-			       output_list,
-			       timing_list,
-#endif
-			       expr_list,
-			       clocked_on,
-			       clocked_on_also,
-			       next_state,
-			       clear,
-			       preset,
-			       clear_preset_var1,
-			       clear_preset_var2);
-      }
-      else {
-	cell = new CiFFSRCell(this, name, area,
-#if 0
-			      input_list,
-			      output_list,
-			      timing_list,
-#endif
-			      expr_list,
-			      clocked_on,
-			      next_state,
-			      clear,
-			      preset,
-			      clear_preset_var1,
-			      clear_preset_var2);
-      }
-    }
-    else {
-      if ( has_clock2 ) {
-	cell = new CiFFMRCell(this, name, area,
-#if 0
-			      input_list,
-			      output_list,
-			      timing_list,
-#endif
-			      expr_list,
-			      clocked_on,
-			      clocked_on_also,
-			      next_state,
-			      clear);
-      }
-      else {
-	cell = new CiFFRCell(this, name, area,
-#if 0
-			     input_list,
-			     output_list,
-			     timing_list,
-#endif
-			     expr_list,
-			     clocked_on,
-			     next_state,
-			     clear);
-      }
-    }
+  CiCell* cell{nullptr};
+  if ( clock2.is_valid() ) {
+    cell = new CiFF2Cell(this, name, area,
+			 var1, var2,
+			 clock, clock2, next_state,
+			 clear, preset,
+			 clear_preset_var1,
+			 clear_preset_var2);
   }
   else {
-    if ( has_preset ) {
-      if ( has_clock2 ) {
-	cell = new CiFFMSCell(this, name, area,
-#if 0
-			      input_list,
-			      output_list,
-			      timing_list,
-#endif
-			      expr_list,
-			      clocked_on,
-			      clocked_on_also,
-			      next_state,
-			      preset);
-      }
-      else {
-	cell = new CiFFSCell(this, name, area,
-#if 0
-			     input_list,
-			     output_list,
-			     timing_list,
-#endif
-			     expr_list,
-			     clocked_on,
-			     next_state,
-			     preset);
-      }
-    }
-    else {
-      if ( has_clock2 ) {
-	cell = new CiFFMCell(this, name, area,
-#if 0
-			     input_list,
-			     output_list,
-			     timing_list,
-#endif
-			     expr_list,
-			     clocked_on,
-			     clocked_on_also,
-			     next_state);
-      }
-      else {
-	cell = new CiFFCell(this, name, area,
-#if 0
-			    input_list,
-			    output_list,
-			    timing_list,
-#endif
-			    expr_list,
-			    clocked_on,
-			    next_state);
-      }
-    }
+    cell = new CiFFCell(this, name, area,
+			var1, var2,
+			clock,next_state,
+			clear, preset,
+			clear_preset_var1,
+			clear_preset_var2);
   }
   reg_cell(cell);
   return cell;
 }
 
-// @brief ラッチセルを生成する．
+// @brief ラッチセルを追加する．
 CiCell*
-CiCellLibrary::new_latch_cell(
-  const ShString& name,                    ///< [in] 名前
-  ClibArea area,                           ///< [in] 面積
-#if 0
-  const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
-  const vector<CiOutputPin*>& output_list, ///< [in] 出力ピンのリスト
-  const vector<CiTiming*>& timing_list,    ///< [in] タイミング条件のリスト
-#endif
-  const vector<Expr>& expr_list,           ///< [in] 出力の論理式のリスト
-  const Expr& enable,                 ///< [in] マスターイネーブルの論理式
-  const Expr& enable2,                ///< [in] スレーブイネーブルの論理式
-  const Expr& data_in,                ///< [in] データ入力の論理式
-  const Expr& clear,                  ///< [in] クリア条件の論理式
-  const Expr& preset,                 ///< [in] プリセット条件の論理式
-  ClibCPV clear_preset_var1,          ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-  ClibCPV clear_preset_var2           ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-)
-{
-  #warning "TODO: 未完"
-  return nullptr;
-}
-
-#if 0
-// @brief ラッチセルを生成する．
-CiCell*
-CiCellLibrary::new_latch_cell(
+CiCellLibrary::add_latch_cell(
   const ShString& name,
   ClibArea area,
-  const vector<CiInputPin*>& input_list,
-  const vector<CiOutputPin*>& output_list,
-  const vector<CiInoutPin*>& inout_list,
-  const vector<CiBus*>& bus_list,
-  const vector<CiBundle*>& bundle_list,
-  const vector<CiTiming*>& timing_list,
+  const ShString& var1,
+  const ShString& var2,
   const Expr& enable,
-  const Expr& enable_also,
+  const Expr& enable2,
   const Expr& data_in,
   const Expr& clear,
   const Expr& preset,
-  int clear_preset_var1,
-  int clear_preset_var2)
-{
-  bool has_clear = !clear.is_zero();
-  bool has_preset = !preset.is_zero();
-
-  CiCell* cell = nullptr;
-  if ( has_clear ) {
-    if ( has_preset ) {
-      cell = new CiLatchSRCell(this, name, area,
-			       input_list,
-			       output_list,
-			       inout_list,
-			       bus_list,
-			       bundle_list,
-			       timing_list,
-			       data_in,
-			       enable,
-			       enable_also,
-			       clear,
-			       preset,
-			       clear_preset_var1,
-			       clear_preset_var2);
-    }
-    else {
-      cell = new CiLatchRCell(this, name, area,
-			      input_list,
-			      output_list,
-			      inout_list,
-			      bus_list,
-			      bundle_list,
-			      timing_list,
-			      data_in,
-			      enable,
-			      enable_also,
-			      clear);
-    }
-  }
-  else {
-    if ( has_preset ) {
-      cell = new CiLatchSCell(this, name, area,
-			      input_list,
-			      output_list,
-			      inout_list,
-			      bus_list,
-			      bundle_list,
-			      timing_list,
-			      data_in,
-			      enable,
-			      enable_also,
-			      preset);
-    }
-    else {
-      cell = new CiLatchCell(this, name, area,
-			     input_list,
-			     output_list,
-			     inout_list,
-			     bus_list,
-			     bundle_list,
-			     timing_list,
-			     data_in,
-			     enable,
-			     enable_also);
-    }
-  }
-  mCellList.push_back(unique_ptr<CiCell>{cell});
-  return cell;
-}
-
-// @brief FSMセルを生成する．
-// @param[in] name 名前
-// @param[in] area 面積
-// @param[in] input_list 入力ピンのリスト
-// @param[in] output_list 出力ピンのリスト
-// @param[in] inout_list 入出力ピンのリスト
-// @param[in] internal_list 内部ピンのリスト
-// @param[in] bus_list バスのリスト
-// @param[in] bundle_list バンドルのリスト
-// @param[in] timing_list タイミング情報のリスト
-CiCell*
-CiCellLibrary::new_fsm_cell(
-  const ShString& name,
-  ClibArea area,
-  const vector<CiInputPin*>& input_list,
-  const vector<CiOutputPin*>& output_list,
-  const vector<CiInoutPin*>& inout_list,
-  const vector<CiInternalPin*>& internal_list,
-  const vector<CiBus*>& bus_list,
-  const vector<CiBundle*>& bundle_list,
-  const vector<CiTiming*>& timing_list
+  ClibCPV clear_preset_var1,
+  ClibCPV clear_preset_var2
 )
 {
-  auto cell = new CiFsmCell(this, name, area,
-			    input_list,
-			    output_list,
-			    inout_list,
-			    internal_list,
-			    bus_list,
-			    bundle_list,
-			    timing_list);
-  mCellList.push_back(unique_ptr<CiCell>{cell});
+  CiCell* cell{nullptr};
+  if ( enable2.is_valid() ) {
+    cell = new CiLatch2Cell(this, name, area,
+			    var1, var2,
+			    enable, enable2, data_in,
+			    clear, preset,
+			    clear_preset_var1,
+			    clear_preset_var2);
+  }
+  else {
+    cell = new CiLatchCell(this, name, area,
+			   var1, var2,
+			   enable, data_in,
+			   clear, preset,
+			   clear_preset_var1,
+			   clear_preset_var2);
+  }
+  reg_cell(cell);
   return cell;
 }
-#endif
 
 // @brief セルを登録する．
 void
@@ -643,108 +351,10 @@ CiCellLibrary::reg_cell(
   CiCell* cell ///< [in] セル
 )
 {
+  cell->set_id(mRefCellList.size());
   mCellList.push_back(unique_ptr<CiCell>{cell});
   mRefCellList.push_back(cell);
 }
-
-
-#if 0
-// @brief セルの入力ピンの内容を設定する．
-// @param[in] name 入力ピン名
-// @param[in] capacitance 入力ピンの負荷容量
-// @param[in] rise_capacitance 入力ピンの立ち上がり負荷容量
-// @param[in] fall_capacitance 入力ピンの立ち下がり負荷容量
-CiInputPin*
-CiCellLibrary::new_cell_input(
-  const ShString& name,
-  ClibCapacitance capacitance,
-  ClibCapacitance rise_capacitance,
-  ClibCapacitance fall_capacitance
-)
-{
-  auto pin = new CiInputPin(name, capacitance,
-			    rise_capacitance, fall_capacitance);
-
-  return pin;
-}
-
-// @brief セルの出力ピンの内容を設定する．
-// @param[in] name 出力ピン名
-// @param[in] has_logic 論理式を持つとき true にするフラグ
-// @param[in] logic_expr 論理式
-// @param[in] tristate_expr tristate 条件式
-// @param[in] max_fanout 最大ファンアウト容量
-// @param[in] min_fanout 最小ファンアウト容量
-// @param[in] max_capacitance 最大負荷容量
-// @param[in] min_capacitance 最小負荷容量
-// @param[in] max_transition 最大遷移時間
-// @param[in] min_transition 最小遷移時間
-CiOutputPin*
-CiCellLibrary::new_cell_output(
-  const ShString& name,
-  ClibCapacitance max_fanout,
-  ClibCapacitance min_fanout,
-  ClibCapacitance max_capacitance,
-  ClibCapacitance min_capacitance,
-  ClibTime max_transition,
-  ClibTime min_transition
-)
-{
-  auto pin = new CiOutputPin(name,
-			     max_fanout, min_fanout,
-			     max_capacitance, min_capacitance,
-			     max_transition, min_transition);
-
-  return pin;
-}
-
-// @brief セルの入出力ピンの内容を設定する．
-// @param[in] name 入出力ピン名
-// @param[in] capacitance 入力ピンの負荷容量
-// @param[in] rise_capacitance 入力ピンの立ち上がり負荷容量
-// @param[in] fall_capacitance 入力ピンの立ち下がり負荷容量
-// @param[in] max_fanout 最大ファンアウト容量
-// @param[in] min_fanout 最小ファンアウト容量
-// @param[in] max_capacitance 最大負荷容量
-// @param[in] min_capacitance 最小負荷容量
-// @param[in] max_transition 最大遷移時間
-// @param[in] min_transition 最小遷移時間
-CiInoutPin*
-CiCellLibrary::new_cell_inout(
-  const ShString& name,
-  ClibCapacitance capacitance,
-  ClibCapacitance rise_capacitance,
-  ClibCapacitance fall_capacitance,
-  ClibCapacitance max_fanout,
-  ClibCapacitance min_fanout,
-  ClibCapacitance max_capacitance,
-  ClibCapacitance min_capacitance,
-  ClibTime max_transition,
-  ClibTime min_transition
-)
-{
-  auto pin =  new CiInoutPin(name,
-			     capacitance,
-			     rise_capacitance, fall_capacitance,
-			     max_fanout, min_fanout,
-			     max_capacitance, min_capacitance,
-			     max_transition, min_transition);
-
-  return pin;
-}
-
-// @brief セルの内部ピンを生成する．
-// @param[in] name 内部ピン名
-CiInternalPin*
-CiCellLibrary::new_cell_internal(
-  const ShString& name
-)
-{
-  auto pin = new CiInternalPin(name);
-
-  return pin;
-}
-#endif
 
 #if 0
 // @brief タイミング情報を作る(ジェネリック遅延モデル)．
@@ -860,9 +470,6 @@ CiCellLibrary::new_timing_lut2(
 #endif
 
 // @brief 1次元の LUT を作る．
-// @param[in] lut_template テンプレート
-// @param[in] value_array 値の配列
-// @param[in] index_array インデックス値のリスト
 CiLut*
 CiCellLibrary::new_lut1(
   const ClibLutTemplate* lut_template,
@@ -912,6 +519,44 @@ CiCellLibrary::new_lut3(
   return lut;
 }
 
+// @brief 3次元の LUT を作る．
+CiLut*
+CiCellLibrary::new_lut(
+  const ShString& templ_name,
+  const vector<double>& value_array,
+  const vector<double>& index_array1,
+  const vector<double>& index_array2,
+  const vector<double>& index_array3
+)
+{
+  if ( mLutHash.count(templ_name) == 0 ) {
+    // テンプレートが存在しない．
+#warning "TODO: エラーメッセージ"
+    cerr << "lut_template(" << templ_name << ") not found." << endl;
+    abort();
+    return nullptr;
+  }
+  auto lut_template = mLutTemplateList[mLutHash.at(templ_name)].get();
+
+  SizeType d = lut_template->dimension();
+  CiLut* lut{nullptr};
+  switch ( d ) {
+  case 1:
+    lut = new CiLut1D(lut_template, value_array,
+		      index_array1);
+    break;
+  case 2:
+    lut = new CiLut2D(lut_template, value_array,
+		      index_array1, index_array2);
+    break;
+  case 3:
+    lut = new CiLut3D(lut_template, value_array,
+		      index_array1, index_array2, index_array3);
+    break;
+  }
+  return lut;
+}
+
 // @brief デフォルトの BusType を返す．
 const ClibBusType&
 CiCellLibrary::error_bus_type()
@@ -934,7 +579,7 @@ CiCellLibrary::error_lut_template()
 const ClibLut&
 CiCellLibrary::error_lut()
 {
-  static CiLut1D lut(&error_lut_template(), vector<double>());
+  static CiLutBad lut;
 
   return lut;
 }

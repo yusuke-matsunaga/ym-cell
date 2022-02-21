@@ -21,6 +21,8 @@ class CiCellLibrary;
 class CiInputPin;
 class CiOutputPin;
 class CiInoutPin;
+class CiBus;
+class CiBundle;
 class CiTiming;
 
 //////////////////////////////////////////////////////////////////////
@@ -50,13 +52,20 @@ protected:
 public:
 
   /// @brief デストラクタ
-  ~CiCell() = default;
+  ~CiCell();
 
 
 public:
   //////////////////////////////////////////////////////////////////////
   // 基本情報の取得
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief ライブラリの取得
+  CiCellLibrary*
+  library() const
+  {
+    return mLibrary;
+  }
 
   /// @brief ID番号の取得
   SizeType
@@ -279,6 +288,14 @@ public:
     SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
   ) const override;
 
+  /// @brief 内部変数1の名前を返す．
+  string
+  qvar1() const override;
+
+  /// @brief 内部変数1の名前を返す．
+  string
+  qvar2() const override;
+
   /// @brief 非同期 clear を持つ時 true を返す．
   ///
   /// FF/ラッチセル以外の場合には返り値は不定
@@ -375,9 +392,18 @@ public:
   // 設定用の関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief ID を設定する．
+  void
+  set_id(
+    SizeType id
+  )
+  {
+    mId = id;
+  }
+
   /// @brief 入力ピンを追加する．
   /// @return 生成されたピンを返す．
-  const ClibPin*
+  CiInputPin*
   add_input(
     const ShString& name,             ///< [in] ピン名
     ClibCapacitance capacitance,      ///< [in] 負荷容量
@@ -387,7 +413,7 @@ public:
 
   /// @brief 出力ピンを追加する．
   /// @return 生成されたピンを返す．
-  const ClibPin*
+  CiOutputPin*
   add_output(
     const ShString& name,            ///< [in] ピン名
     ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
@@ -395,12 +421,14 @@ public:
     ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
     ClibCapacitance min_capacitance, ///< [in] 最大負荷容量
     ClibTime max_transition,         ///< [in] 最大遷移時間
-    ClibTime min_transition          ///< [in] 最大遷移時間
+    ClibTime min_transition,         ///< [in] 最大遷移時間
+    const Expr& function,            ///< [in] 出力の論理式
+    const Expr& tristate             ///< [in] tristate 条件
   );
 
   /// @brief 入出力ピンを追加する．
   /// @return 生成されたピンを返す．
-  const ClibPin*
+  CiInoutPin*
   add_inout(
     const ShString& name,             ///< [in] ピン名
     ClibCapacitance capacitance,      ///< [in] 負荷容量
@@ -411,19 +439,36 @@ public:
     ClibCapacitance max_capacitance,  ///< [in] 最大負荷容量
     ClibCapacitance min_capacitance,  ///< [in] 最大負荷容量
     ClibTime max_transition,	      ///< [in] 最大遷移時間
-    ClibTime min_transition	      ///< [in] 最大遷移時間
+    ClibTime min_transition,          ///< [in] 最大遷移時間
+    const Expr& function,             ///< [in] 出力の論理式
+    const Expr& tristate              ///< [in] tristate 条件
   );
 
   /// @brief 内部ピンを追加する．
   /// @return 生成されたピンを返す．
-  const ClibPin*
+  CiInternalPin*
   add_internal(
     const ShString& name               ///< [in] 名前
   );
 
+  /// @brief バスを追加する．
+  CiBus*
+  add_bus(
+    const ShString& name,            ///< [in] 名前
+    const ClibBusType* bus_type,     ///< [in] バスタイプ
+    vector<const ClibPin*>& pin_list ///< [in] ピンリスト
+  );
+
+  /// @brief バンドルを追加する．
+  CiBundle*
+  add_bundle(
+    const ShString& name,            ///< [in] 名前
+    vector<const ClibPin*>& pin_list ///< [in] ピンリスト
+  );
+
   /// @brief タイミング情報を作る(ジェネリック遅延モデル)．
-  /// @return 生成されたタイミング情報を返す．
-  const ClibTiming*
+  /// @return 生成されたタイミング番号を返す．
+  SizeType
   add_timing_generic(
     ClibTimingType type,            ///< [in] タイミングの種類
     const Expr& cond,               ///< [in] 条件式
@@ -436,8 +481,8 @@ public:
   );
 
   /// @brief タイミング情報を作る(折れ線近似)．
-  /// @return 生成されたタイミング情報を返す．
-  const ClibTiming*
+  /// @return 生成されたタイミング番号を返す．
+  SizeType
   add_timing_piecewise(
     ClibTimingType timing_type,
     const Expr& cond,
@@ -450,8 +495,8 @@ public:
   );
 
   /// @brief タイミング情報を作る(非線形タイプ1)．
-  /// @return 生成されたタイミング情報を返す．
-  const ClibTiming*
+  /// @return 生成されたタイミング番号を返す．
+  SizeType
   add_timing_lut1(
     ClibTimingType timing_type,
     const Expr& cond,
@@ -462,8 +507,8 @@ public:
   );
 
   /// @brief タイミング情報を作る(非線形タイプ2)．
-  /// @return 生成されたタイミング情報を返す．
-  const ClibTiming*
+  /// @return 生成されたタイミング番号を返す．
+  SizeType
   add_timing_lut2(
     ClibTimingType timing_type,
     const Expr& cond,
@@ -551,6 +596,15 @@ private:
   // 出力ピン+入出力ピンのリスト
   // サイズ mOutputNum + mInoutNum
   vector<const ClibPin*> mOutputList;
+
+  // 内部ピンのリスト
+  vector<const ClibPin*> mInternalList;
+
+  // バスのリスト
+  vector<unique_ptr<CiBus>> mBusList;
+
+  // バンドルのリスト
+  vector<unique_ptr<CiBundle>> mBundleList;
 
   // 全体のタイミング情報のリスト
   vector<unique_ptr<CiTiming>> mTimingList;

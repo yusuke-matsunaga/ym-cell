@@ -23,8 +23,10 @@ class AstBoolExpr :
 public:
 
   /// @brief コンストラクタ
-  AstBoolExpr(const FileRegion& loc, ///< [in] 位置情報
-	      bool val);             ///< [in] 値
+  AstBoolExpr(
+    const FileRegion& loc, ///< [in] 位置情報
+    bool val               ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~AstBoolExpr() = default;
@@ -48,7 +50,9 @@ public:
   /// @brief Expr を作る．
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override; ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+  to_expr(
+    const unordered_map<ShString, SizeType>& pin_map ///< [in] ピン名をキーにしてピン番号を保持する辞書
+  ) const override;
 
   /// @brief 内容を表す文字列を返す．
   string
@@ -76,8 +80,10 @@ class AstFloatExpr :
 public:
 
   /// @brief コンストラクタ
-  AstFloatExpr(const FileRegion& loc, ///< [in] 位置情報
-	       double val);           ///< [in] 値
+  AstFloatExpr(
+    const FileRegion& loc, ///< [in] 位置情報
+    double val             ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~AstFloatExpr() = default;
@@ -101,7 +107,9 @@ public:
   /// @brief Expr を作る．
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override; ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+  to_expr(
+    const unordered_map<ShString, SizeType>& pin_map ///< [in] ピン名をキーにしてピン番号を保持する辞書
+  ) const override;
 
   /// @brief 内容を表す文字列を返す．
   string
@@ -129,8 +137,10 @@ class AstStrExpr :
 public:
 
   /// @brief コンストラクタ
-  AstStrExpr(const FileRegion& loc, ///< [in] 位置情報
-	     const ShString& val);  ///< [in] 値
+  AstStrExpr(
+    const FileRegion& loc, ///< [in] 位置情報
+    const ShString& val    ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~AstStrExpr() = default;
@@ -154,7 +164,9 @@ public:
   /// @brief Expr を作る．
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override; ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+  to_expr(
+    const unordered_map<ShString, SizeType>& pin_map ///< [in] ピン名をキーにしてピン番号を保持する辞書
+  ) const override;
 
   /// @brief 内容を表す文字列を返す．
   string
@@ -181,8 +193,10 @@ class AstSymbolExpr :
 public:
 
   /// @brief コンストラクタ
-  AstSymbolExpr(const FileRegion& loc, ///< [in] ファイル上の位置
-		Type type);            ///< [in] シンボルの種類(VDD, VSS, VCC)
+  AstSymbolExpr(
+    const FileRegion& loc, ///< [in] ファイル上の位置
+    Type type              ///< [in] シンボルの種類(VDD, VSS, VCC)
+  );
 
   /// @brief デストラクタ
   ~AstSymbolExpr() = default;
@@ -200,7 +214,9 @@ public:
   /// @brief Expr を作る．
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override; ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+  to_expr(
+    const unordered_map<ShString, SizeType>& pin_map ///< [in] ピン名をキーにしてピン番号を保持する辞書
+  ) const override;
 
   /// @brief 内容を表す文字列を返す．
   string
@@ -228,8 +244,10 @@ class AstNot :
 public:
 
   /// @brief コンストラクタ
-  AstNot(const FileRegion& loc,            ///< [in] ファイル上の位置
-	 AstExprPtr&& opr); ///< [in] オペランド
+  AstNot(
+    const FileRegion& loc,  ///< [in] ファイル上の位置
+    AstExprPtr&& opr        ///< [in] オペランド
+  );
 
   /// @brief デストラクタ
    ~AstNot() = default;
@@ -253,7 +271,9 @@ public:
   /// @brief Expr を作る．
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override; ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+  to_expr(
+    const unordered_map<ShString, SizeType>& pin_map ///< [in] ピン名をキーにしてピン番号を保持する辞書
+  ) const override;
 
   /// @brief 内容を表す文字列を返す．
   string
@@ -281,9 +301,11 @@ class AstOpr :
 public:
 
   /// @brief コンストラクタ
-  AstOpr(Type type,                         ///< [in] 演算子の型
-	 AstExprPtr&& opr1,  ///< [in] 第1オペランド
-	 AstExprPtr&& opr2); ///< [in] 第2オペランド
+  AstOpr(
+    Type type,         ///< [in] 演算子の型
+    AstExprPtr&& opr1, ///< [in] 第1オペランド
+    AstExprPtr&& opr2  ///< [in] 第2オペランド
+  );
 
   /// @brief デストラクタ
   ~AstOpr() = default;
@@ -317,7 +339,9 @@ public:
   /// @brief Expr を作る．
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override; ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+  to_expr(
+    const unordered_map<ShString, SizeType>& pin_map ///< [in] ピン名をキーにしてピン番号を保持する辞書
+  ) const override;
 
   /// @brief 内容を表す文字列を返す．
   string
@@ -369,7 +393,9 @@ public:
   /// @brief Expr を作る．
   /// @return 対応する式(Expr)を返す．
   Expr
-  to_expr(const unordered_map<ShString, int>& pin_map) const override; ///< [in] ピン名をキーにしてピン番号を保持するハッシュ表
+  to_expr(
+    const unordered_map<ShString, SizeType>& pin_map ///< [in] ピン名をキーにしてピン番号を保持する辞書
+  ) const override;
 
   /// @brief 内容を表す文字列を返す．
   string

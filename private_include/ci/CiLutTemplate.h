@@ -21,14 +21,14 @@ BEGIN_NAMESPACE_YM_CLIB
 class CiLutTemplate :
   public ClibLutTemplate
 {
-  friend class CiCellLibrary;
-
-protected:
+public:
 
   /// @brief コンストラクタ
   CiLutTemplate(
+    SizeType id,  ///< [in] ID番号
     ShString name ///< [in] 名前
-  ) : mName{name}
+  ) : mId{id},
+      mName{name}
   {
   }
 
@@ -90,12 +90,10 @@ private:
 class CiLutTemplateBad :
   public CiLutTemplate
 {
-  friend class CiCellLibrary;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CiLutTemplateBad() : CiLutTemplate(ShString()) { }
+  CiLutTemplateBad() : CiLutTemplate(0, ShString()) { }
 
   /// @brief デストラクタ
   ~CiLutTemplateBad() = default;
@@ -139,16 +137,15 @@ public:
 class CiLutTemplate1D :
   public CiLutTemplate
 {
-  friend class CiCellLibrary;
-
-private:
+public:
 
   /// @brief コンストラクタ
   CiLutTemplate1D(
+    SizeType id,
     ShString name,
     ClibVarType var_type,
     const vector<double>& index_array
-  ) : CiLutTemplate(name),
+  ) : CiLutTemplate{id, name},
       mVarType{var_type},
       mIndexArray{index_array}
   {
@@ -208,18 +205,17 @@ private:
 class CiLutTemplate2D :
   public CiLutTemplate
 {
-  friend class CiCellLibrary;
-
-private:
+public:
 
   /// @brief コンストラクタ
   CiLutTemplate2D(
+    SizeType id,
     ShString name,
     ClibVarType var1,
     const vector<double>& index_array1,
     ClibVarType var2,
     const vector<double>& index_array2
-  ) : CiLutTemplate(name),
+  ) : CiLutTemplate{id, name},
       mVarType{var1, var2},
       mIndexArray{index_array1, index_array2}
   {
@@ -276,12 +272,11 @@ private:
 class CiLutTemplate3D :
   public CiLutTemplate
 {
-  friend class CiCellLibrary;
-
-private:
+public:
 
   /// @brief コンストラクタ
   CiLutTemplate3D(
+    SizeType id,
     ShString name,
     ClibVarType var1,
     const vector<double>& index_array1,
@@ -289,7 +284,7 @@ private:
     const vector<double>& index_array2,
     ClibVarType var3,
     const vector<double>& index_array3
-  ) : CiLutTemplate(name),
+  ) : CiLutTemplate{id, name},
       mVarType{var1, var2, var3},
       mIndexArray{index_array1, index_array2, index_array3}
   {

@@ -5,7 +5,7 @@
 /// @brief AstAttr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2018, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2012, 2014, 2018, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
@@ -35,9 +35,9 @@ public:
 
   /// @brief コンストラクタ
   AstAttr(
-    const string& kwd,                 ///< [in] 属性名
-    const FileRegion& kwd_loc,         ///< [in] 属性名の位置
-    unique_ptr<const AstValue>&& value ///< [in] 値
+    const string& kwd,         ///< [in] 属性名
+    const FileRegion& kwd_loc, ///< [in] 属性名の位置
+    AstValuePtr&& value        ///< [in] 値
   ) : mKwd{kwd},
       mKwdLoc{kwd_loc},
       mValue{std::move(value)}
@@ -71,7 +71,7 @@ public:
 
   /// @brief 内容をストリーム出力する．
   void
-  dump(
+  print(
     ostream& s,    ///< [in] 出力先のストリーム
     int ilevel = 0 ///< [in] インデントレベル
   ) const;

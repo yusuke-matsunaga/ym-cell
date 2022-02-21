@@ -14,6 +14,86 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
+/// @class CiLutBad CiLutBad.h "CiLutBad.h"
+/// @brief エラー状態を表す CiLut の派生クラス
+//////////////////////////////////////////////////////////////////////
+class CiLutBad :
+  public ClibLut
+{
+public:
+
+  /// @brief コンストラクタ
+  CiLutBad() = default;
+
+  /// @brief デストラクタ
+  ~CiLutBad() = default;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief テンプレートの取得
+  const ClibLutTemplate&
+  lut_template() const override;
+
+  /// @brief 次元数の取得
+  SizeType
+  dimension() const override;
+
+  /// @brief 変数型の取得
+  ClibVarType
+  variable_type(
+    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const override;
+
+  /// @brief インデックス数の取得
+  SizeType
+  index_num(
+    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const override;
+
+  /// @brief インデックス値の取得
+  double
+  index(
+    SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
+    SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  ) const override;
+
+  /// @brief 格子点の値の取得
+  ///
+  /// pos_array のサイズは dimension() と同じ
+  double
+  grid_value(
+    const vector<SizeType>& pos_array ///< [in] pos_array 格子点座標
+  ) const override;
+
+  /// @brief 値の取得
+  ///
+  /// @note val_array のサイズは dimension() と同じ
+  double
+  value(
+    const vector<double>& val_array ///< [in] 入力の値の配列
+  ) const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const override;
+
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @class CiLut CiLut.h "CiLut.h"
 /// @brief ルックアップテーブルの実装クラスの基底クラス
 //////////////////////////////////////////////////////////////////////

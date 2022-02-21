@@ -20,6 +20,7 @@
 #include "ym/ClibTime.h"
 
 #include "ym/Expr.h"
+#include "ym/ExprWriter.h"
 #include "ym/NpnMapM.h"
 #include "ym/Range.h"
 
@@ -56,6 +57,7 @@ operator<<(
   case ClibTimingSense::positive_unate: s << "posi_unate"; break;
   case ClibTimingSense::negative_unate: s << "nega_unate"; break;
   case ClibTimingSense::non_unate:      s << "non_unate"; break;
+  case ClibTimingSense::none:           s << "none"; break;
   default: ASSERT_NOT_REACHED;
   }
   return s;
@@ -332,11 +334,11 @@ display_timing(
       break;
 
     case ClibDelayModel::table_lookup:
-      display_lut(s, "Clib Rise", timing.cell_rise());
+      display_lut(s, "Cell Rise", timing.cell_rise());
       display_lut(s, "Rise Transition", timing.rise_transition());
       display_lut(s, "Rise Propagation", timing.rise_propagation());
 
-      display_lut(s, "Clib Fall", timing.cell_fall());
+      display_lut(s, "Cell Fall", timing.cell_fall());
       display_lut(s, "Fall Transition", timing.fall_transition());
       display_lut(s, "Fall Propagation", timing.fall_propagation());
       break;
@@ -518,6 +520,179 @@ display_index(
   s << ")";
 }
 
+void
+display_cell(
+  ostream& s,
+  const ClibCell& cell,
+  ClibDelayModel delay_model
+)
+{
+  // セル名とセルの種類を出力
+  s << "Clib#" << cell.id() << " (" << cell.name() << ") : ";
+  if ( cell.is_logic() ) {
+    s << "Combinational Logic";
+  }
+  else if ( cell.is_ff() ) {
+    s << "Flip-Flop";
+  }
+  else if ( cell.is_latch() ) {
+    s << "Latch";
+  }
+  else if ( cell.type() == ClibCellType::FSM ) {
+    s << "FSM";
+  }
+  else {
+    ASSERT_NOT_REACHED;
+  }
+  s << endl;
+
+  // 面積
+  s << "  area = " << cell.area() << endl;
+
+  // 論理式の出力用にピン名の辞書を作る．
+  unordered_map<VarId, string> var_names;
+  for ( auto i: Range(cell.pin_num()) ) {
+    auto& pin = cell.pin(i);
+    if ( pin.is_input() || pin.is_inout() ) {
+      var_names.emplace(VarId{pin.input_id()}, pin.name());
+    }
+  }
+  ExprWriter ewriter;
+
+  if ( cell.is_ff() ) {
+    // FF の情報
+    var_names.emplace(VarId{cell.input_num2()}, cell.qvar1());
+    s << "  Next State         = "
+      << ewriter.dump_to_string(cell.next_state_expr(), var_names)
+      << endl
+      << "  Clock              = "
+      << ewriter.dump_to_string(cell.clock_expr(), var_names)
+      << endl;
+    if ( cell.clock2_expr().is_valid() ) {
+      s << "  Clock2             = "
+	<< ewriter.dump_to_string(cell.clock2_expr(), var_names)
+	<< endl;
+    }
+    if ( cell.has_clear() ) {
+      s << "  Clear              = "
+	<< ewriter.dump_to_string(cell.clear_expr(), var_names)
+	<< endl;
+    }
+    if ( cell.has_preset() ) {
+      s << "  Preset             = "
+	<< ewriter.dump_to_string(cell.preset_expr(), var_names)
+	<< endl;
+    }
+    if ( cell.has_clear() && cell.has_preset() ) {
+      s << "  Clear Preset Var1  = " << cell.clear_preset_var1() << endl
+	<< "  Clear Preset Var2  = " << cell.clear_preset_var2() << endl;
+    }
+  }
+  if ( cell.is_latch() ) {
+    // ラッチの情報
+    var_names.emplace(VarId{cell.input_num2()}, cell.qvar1());
+    s << "  Data In            = "
+      << ewriter.dump_to_string(cell.data_in_expr(), var_names)
+      << endl
+      << "  Enable             = "
+      << ewriter.dump_to_string(cell.enable_expr(), var_names)
+      << endl;
+    if ( !cell.enable2_expr().is_zero() ) {
+      s << "  Enable2            = "
+	<< ewriter.dump_to_string(cell.enable2_expr(), var_names)
+	<< endl;
+    }
+    if ( cell.has_clear() ) {
+      s << "  Clear              = "
+	<< ewriter.dump_to_string(cell.clear_expr(), var_names)
+	<< endl;
+    }
+    if ( cell.has_preset() ) {
+      s << "  Preset             = "
+	<< ewriter.dump_to_string(cell.preset_expr(), var_names)
+	<< endl;
+    }
+    if ( cell.has_clear() && cell.has_preset() ) {
+      s << "  Clear Preset Var1  = " << cell.clear_preset_var1() << endl
+	<< "  Clear Preset Var2  = " << cell.clear_preset_var2() << endl;
+    }
+  }
+
+  // ピンの情報
+  for ( auto i: Range(cell.pin_num()) ) {
+    auto& pin = cell.pin(i);
+    s << "  Pin#" << i << "[ " << pin.name() << " ]: ";
+    if ( pin.is_input() ) {
+      // 入力ピン
+      s << "Input#" << pin.input_id() << endl
+	<< "    Capacitance      = " << pin.capacitance() << endl
+	<< "    Rise Capacitance = " << pin.rise_capacitance() << endl
+	<< "    Fall Capacitance = " << pin.fall_capacitance() << endl;
+    }
+    else if ( pin.is_output() ) {
+      // 出力ピン
+      auto opos = pin.output_id();
+      s << "Output# " << opos << endl;
+      if ( cell.has_logic(opos) ) {
+	s << "    Logic            = "
+	  << ewriter.dump_to_string(cell.logic_expr(opos), var_names)
+	  << endl;
+	if ( cell.has_tristate(opos) ) {
+	  s << "    Tristate         = "
+	    << ewriter.dump_to_string(cell.tristate_expr(opos), var_names)
+	    << endl;
+	}
+      }
+      s << "    Max Fanout       = " << pin.max_fanout() << endl
+	<< "    Min Fanout       = " << pin.min_fanout() << endl
+	<< "    Max Capacitance  = " << pin.max_capacitance() << endl
+	<< "    Min Capacitance  = " << pin.min_capacitance() << endl
+	<< "    Max Transition   = " << pin.max_transition() << endl
+	<< "    Min Transition   = " << pin.min_transition() << endl;
+    }
+    else if ( pin.is_inout() ) {
+      // 入出力ピン
+      auto opos = pin.output_id();
+      s << "Inout#(" << pin.input_id() << ", " << opos << ")" << endl;
+      if ( cell.has_logic(opos) ) {
+	s << "    Logic            = "
+	  << ewriter.dump_to_string(cell.logic_expr(opos), var_names)
+	  << endl;
+	if ( cell.has_tristate(opos) ) {
+	  s << "    Tristate         = "
+	    << ewriter.dump_to_string(cell.tristate_expr(opos), var_names)
+	    << endl;
+	}
+      }
+      s << "    Capacitance      = " << pin.capacitance() << endl
+	<< "    Rise Capacitance = " << pin.rise_capacitance() << endl
+	<< "    Fall Capacitance = " << pin.fall_capacitance() << endl
+	<< "    Max Fanout       = " << pin.max_fanout() << endl
+	<< "    Min Fanout       = " << pin.min_fanout() << endl
+	<< "    Max Capacitance  = " << pin.max_capacitance() << endl
+	<< "    Min Capacitance  = " << pin.min_capacitance() << endl
+	<< "    Max Transition   = " << pin.max_transition() << endl
+	<< "    Min Transition   = " << pin.min_transition() << endl;
+    }
+    else if ( pin.is_internal() ) {
+      // 内部ピン
+      auto itpos = pin.internal_id();
+      s << "Internal#(" << itpos << ")" << endl;
+    }
+  }
+
+  // タイミング情報
+  auto ni2 = cell.input_num2();
+  auto no2 = cell.output_num2();
+  for ( auto ipos: Range(ni2) ) {
+    for ( auto opos: Range(no2) ) {
+      display_timing(s, cell, ipos, opos, ClibTimingSense::positive_unate, delay_model);
+      display_timing(s, cell, ipos, opos, ClibTimingSense::negative_unate, delay_model);
+    }
+  }
+  s << endl;
+}
+
 END_NONAMESPACE
 
 void
@@ -595,134 +770,12 @@ display_library(
 
   // セル
   for ( auto& cell: library.cell_list() ) {
-    // セル名とセルの種類を出力
-    s << "Clib#" << cell.id() << " (" << cell.name() << ") : ";
-    if ( cell.is_logic() ) {
-      s << "Combinational Logic";
-    }
-    else if ( cell.is_ff() ) {
-      s << "Flip-Flop";
-    }
-    else if ( cell.is_latch() ) {
-      s << "Latch";
-    }
-    else if ( cell.type() == ClibCellType::FSM ) {
-      s << "FSM";
-    }
-    else {
-      ASSERT_NOT_REACHED;
-    }
-    s << endl;
-
-    // 面積
-    s << "  area = " << cell.area() << endl;
-
-    if ( cell.is_ff() ) {
-      // FF の情報
-      s << "  Next State         = " << cell.next_state_expr() << endl
-	<< "  Clock              = " << cell.clock_expr() << endl;
-      if ( !cell.clock2_expr().is_zero() ) {
-	s << "  Clock2             = " << cell.clock2_expr() << endl;
-      }
-      if ( cell.has_clear() ) {
-	s << "  Clear              = " << cell.clear_expr() << endl;
-      }
-      if ( cell.has_preset() ) {
-	s << "  Preset             = " << cell.preset_expr() << endl;
-      }
-      if ( cell.has_clear() && cell.has_preset() ) {
-	s << "  Clear Preset Var1  = " << cell.clear_preset_var1() << endl
-	  << "  Clear Preset Var2  = " << cell.clear_preset_var2() << endl;
-      }
-    }
-    if ( cell.is_latch() ) {
-      // ラッチの情報
-      s << "  Data In            = " << cell.data_in_expr() << endl
-	<< "  Enable             = " << cell.enable_expr() << endl;
-      if ( !cell.enable2_expr().is_zero() ) {
-	s << "  Enable2            = " << cell.enable2_expr() << endl;
-      }
-      if ( cell.has_clear() ) {
-	s << "  Clear              = " << cell.clear_expr() << endl;
-      }
-      if ( cell.has_preset() ) {
-	s << "  Preset             = " << cell.preset_expr() << endl;
-      }
-      if ( cell.has_clear() && cell.has_preset() ) {
-	s << "  Clear Preset Var1  = " << cell.clear_preset_var1() << endl
-	  << "  Clear Preset Var2  = " << cell.clear_preset_var2() << endl;
-      }
-    }
-
-    // ピンの情報
-    for ( auto i: Range(cell.pin_num()) ) {
-      auto& pin = cell.pin(i);
-      s << "  Pin#" << i << "[ " << pin.name() << " ]: ";
-      if ( pin.is_input() ) {
-	// 入力ピン
-	s << "Input#" << pin.input_id() << endl
-	  << "    Capacitance      = " << pin.capacitance() << endl
-	  << "    Rise Capacitance = " << pin.rise_capacitance() << endl
-	  << "    Fall Capacitance = " << pin.fall_capacitance() << endl;
-      }
-      else if ( pin.is_output() ) {
-	// 出力ピン
-	auto opos = pin.output_id();
-	s << "Output# " << opos << endl;
-	if ( cell.has_logic(opos) ) {
-	  s << "    Logic            = " << cell.logic_expr(opos) << endl;
-	  if ( cell.has_tristate(opos) ) {
-	    s << "    Tristate         = " << cell.tristate_expr(opos) << endl;
-	  }
-	}
-	s << "    Max Fanout       = " << pin.max_fanout() << endl
-	  << "    Min Fanout       = " << pin.min_fanout() << endl
-	  << "    Max Capacitance  = " << pin.max_capacitance() << endl
-	  << "    Min Capacitance  = " << pin.min_capacitance() << endl
-	  << "    Max Transition   = " << pin.max_transition() << endl
-	  << "    Min Transition   = " << pin.min_transition() << endl;
-      }
-      else if ( pin.is_inout() ) {
-	// 入出力ピン
-	auto opos = pin.output_id();
-	s << "Inout#(" << pin.input_id() << ", " << opos << ")" << endl;
-	if ( cell.has_logic(opos) ) {
-	  s << "    Logic            = " << cell.logic_expr(opos) << endl;
-	  if ( cell.has_tristate(opos) ) {
-	    s << "    Tristate         = " << cell.tristate_expr(opos) << endl;
-	  }
-	}
-	s << "    Capacitance      = " << pin.capacitance() << endl
-	  << "    Rise Capacitance = " << pin.rise_capacitance() << endl
-	  << "    Fall Capacitance = " << pin.fall_capacitance() << endl
-	  << "    Max Fanout       = " << pin.max_fanout() << endl
-	  << "    Min Fanout       = " << pin.min_fanout() << endl
-	  << "    Max Capacitance  = " << pin.max_capacitance() << endl
-	  << "    Min Capacitance  = " << pin.min_capacitance() << endl
-	  << "    Max Transition   = " << pin.max_transition() << endl
-	  << "    Min Transition   = " << pin.min_transition() << endl;
-      }
-      else if ( pin.is_internal() ) {
-	// 内部ピン
-	auto itpos = pin.internal_id();
-	s << "Internal#(" << itpos << ")" << endl;
-      }
-    }
-
-    // タイミング情報
-    auto ni2 = cell.input_num2();
-    auto no2 = cell.output_num2();
-    for ( auto ipos: Range(ni2) ) {
-      for ( auto opos: Range(no2) ) {
-	display_timing(s, cell, ipos, opos, ClibTimingSense::positive_unate, delay_model);
-	display_timing(s, cell, ipos, opos, ClibTimingSense::negative_unate, delay_model);
-      }
-    }
-    s << endl;
+    display_cell(s, cell, delay_model);
   }
 
+#if 0
   // セルクラスの情報
-  s << "Clib Class" << endl;
+  s << "Cell Class" << endl;
   for ( auto class_id: Range(library.npn_class_num()) ) {
     ostringstream buf;
     buf << "Class#" << class_id;
@@ -794,6 +847,8 @@ display_library(
   }
 
   s << "==== PatMgr dump end ====" << endl;
+#endif
+
 }
 
 END_NAMESPACE_YM_CLIB

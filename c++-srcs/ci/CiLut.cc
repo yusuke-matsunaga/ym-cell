@@ -8,10 +8,89 @@
 
 #include "ci/CiLut.h"
 #include "ci/CiLutTemplate.h"
+#include "ci/CiCellLibrary.h"
 #include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLutBad
+//////////////////////////////////////////////////////////////////////
+
+// @brief テンプレートの取得
+const ClibLutTemplate&
+CiLutBad::lut_template() const
+{
+  return CiCellLibrary::error_lut_template();
+}
+
+// @brief 次元数の取得
+SizeType
+CiLutBad::dimension() const
+{
+  return 0;
+}
+
+// @brief 変数型の取得
+ClibVarType
+CiLutBad::variable_type(
+  SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
+) const
+{
+  return ClibVarType::none;
+}
+
+// @brief インデックス数の取得
+SizeType
+CiLutBad::index_num(
+  SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
+) const
+{
+  return 0;
+}
+
+// @brief インデックス値の取得
+double
+CiLutBad::index(
+  SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
+  SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+) const
+{
+  return 0.0;
+}
+
+// @brief 格子点の値の取得
+//
+// pos_array のサイズは dimension() と同じ
+double
+CiLutBad::grid_value(
+  const vector<SizeType>& pos_array ///< [in] pos_array 格子点座標
+) const
+{
+  return 0.0;
+}
+
+// @brief 値の取得
+//
+// @note val_array のサイズは dimension() と同じ
+double
+CiLutBad::value(
+  const vector<double>& val_array ///< [in] 入力の値の配列
+) const
+{
+  return 0.0;
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiLutBad::dump(
+  BinEnc& s ///< [in] 出力先のストリーム
+) const
+{
+  ; // なにもしない．
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLut

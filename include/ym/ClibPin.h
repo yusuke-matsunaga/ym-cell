@@ -155,6 +155,20 @@ public:
   ClibTime
   min_transition() const = 0;
 
+  /// @brief 論理式を返す．
+  ///
+  /// 定義されていない場合には Expr::is_valid() == false となる式を返す．
+  virtual
+  Expr
+  function() const = 0;
+
+  /// @brief tristate 条件式を返す．
+  ///
+  /// 定義されていない場合には Epxr::is_zero() == true となる式を返す．
+  virtual
+  Expr
+  tristate() const = 0;
+
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////

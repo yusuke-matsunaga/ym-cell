@@ -408,10 +408,60 @@ private:
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiTimingLut1 CiTiming.h "CiTiming.h"
-/// @brief CMOS非線形タイプの ClibTiming の実装クラス
+/// @brief CMOS非線形タイプの ClibTiming の共通の基底クラス
+//////////////////////////////////////////////////////////////////////
+class CiTimingLut :
+  public CiTiming
+{
+public:
+
+  /// @brief コンストラクタ
+  CiTimingLut(
+    SizeType tid,               ///< [in] タイミング番号
+    ClibTimingType timing_type, ///< [in] タイミングの型
+    const Expr& cond,           ///< [in] タイミング条件を表す式
+    CiLut* rise_transition,     ///< [in] 立ち上がり遷移遅延テーブル
+    CiLut* fall_transition      ///< [in] 立ち下がり遷移遅延テーブル
+  );
+
+  /// @brief デストラクタ
+  ~CiTimingLut() = default;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // CMOS非線形遅延モデルの属性
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 立ち上がり遷移遅延テーブルの取得
+  const ClibLut&
+  rise_transition() const override;
+
+  /// @brief 立ち下がり遷移遅延テーブルの取得
+  const ClibLut&
+  fall_transition() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 立ち上がり遷移遅延テーブル
+  unique_ptr<CiLut> mRiseTransition;
+
+  // 立ち下がり遷移遅延テーブル
+  unique_ptr<CiLut> mFallTransition;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class CiTimingLut1 CiTiming.h "CiTiming.h"
+/// @brief CMOS非線形タイプ1の ClibTiming の実装クラス
 //////////////////////////////////////////////////////////////////////
 class CiTimingLut1 :
-  public CiTiming
+  public CiTimingLut
 {
 public:
 
@@ -443,14 +493,6 @@ public:
   const ClibLut&
   cell_fall() const override;
 
-  /// @brief 立ち上がり遷移遅延テーブルの取得
-  const ClibLut&
-  rise_transition() const override;
-
-  /// @brief 立ち下がり遷移遅延テーブルの取得
-  const ClibLut&
-  fall_transition() const override;
-
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -470,26 +512,20 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がりセル遅延テーブル
-  unique_ptr<CiLut> mClibRise;
+  unique_ptr<CiLut> mCellRise;
 
   // 立ち下がりセル遅延テーブル
-  unique_ptr<CiLut> mClibFall;
-
-  // 立ち上がり遷移遅延テーブル
-  unique_ptr<CiLut> mRiseTransition;
-
-  // 立ち下がり遷移遅延テーブル
-  unique_ptr<CiLut> mFallTransition;
+  unique_ptr<CiLut> mCellFall;
 
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiTimingLut2 CiTiming.h "CiTiming.h"
-/// @brief CMOS非線形タイプの ClibTiming の実装クラス
+/// @brief CMOS非線形タイプ2の ClibTiming の実装クラス
 //////////////////////////////////////////////////////////////////////
 class CiTimingLut2 :
-  public CiTiming
+  public CiTimingLut
 {
 public:
 
@@ -512,14 +548,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // CMOS非線形遅延モデルの属性
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 立ち上がり遷移遅延テーブルの取得
-  const ClibLut&
-  rise_transition() const override;
-
-  /// @brief 立ち下がり遷移遅延テーブルの取得
-  const ClibLut&
-  fall_transition() const override;
 
   /// @brief 立ち上がり伝搬遅延テーブルの取得
   const ClibLut&
@@ -546,12 +574,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // 立ち上がり遷移遅延テーブル
-  unique_ptr<CiLut> mRiseTransition;
-
-  // 立ち下がり遷移遅延テーブル
-  unique_ptr<CiLut> mFallTransition;
 
   // 立ち上がり伝搬遅延テーブル
   unique_ptr<CiLut> mRisePropagation;

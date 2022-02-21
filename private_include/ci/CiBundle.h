@@ -24,7 +24,13 @@ class CiBundle :
 public:
 
   /// @brief コンストラクタ
-  CiBundle() = default;
+  CiBundle(
+    const ShString& name,            ///< [in] 名前
+    vector<const ClibPin*>& pin_list ///< [in] ピンリスト
+  ) : mName{name},
+      mPinList{pin_list}
+  {
+  }
 
   /// @brief デストラクタ
   ~CiBundle() = default;
@@ -67,19 +73,6 @@ public:
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 設定用の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 内容を初期化する．
-  void
-  init(
-    const ShString& name,
-    vector<const ClibPin*>&& pin_list
-  );
 
 
 private:

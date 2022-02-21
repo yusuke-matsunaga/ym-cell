@@ -24,7 +24,15 @@ class CiBus :
 public:
 
   /// @brief コンストラクタ
-  CiBus() = default;
+  CiBus(
+    const ShString& name,             ///< [in] 名前
+    const ClibBusType* bus_type,      ///< [in] バスタイプ
+    vector<const ClibPin*>& pin_list  ///< [in] ピンリスト
+  ) : mName{name},
+      mBusType{bus_type},
+      mPinList{pin_list}
+  {
+  }
 
   /// @brief デストラクタ
   ~CiBus() = default;
@@ -71,20 +79,6 @@ public:
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 設定用の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 内容を初期化する．
-  void
-  init(
-    const ShString& name,
-    const ClibBusType* bus_type,
-    vector<const ClibPin*>&& pin_list
-  );
 
 
 private:

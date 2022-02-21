@@ -301,6 +301,16 @@ public:
     SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
   ) const = 0;
 
+  /// @brief 内部変数1の名前を返す．
+  virtual
+  string
+  qvar1() const = 0;
+
+  /// @brief 内部変数1の名前を返す．
+  virtual
+  string
+  qvar2() const = 0;
+
   /// @brief 非同期 clear を持つ時 true を返す．
   ///
   /// FF/ラッチセル以外の場合には返り値は不定
