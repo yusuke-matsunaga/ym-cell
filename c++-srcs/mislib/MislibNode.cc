@@ -173,7 +173,7 @@ MislibNot::opr1() const
 // @brief 対応する論理式を生成する．
 Expr
 MislibNot::to_expr(
-  const unordered_map<ShString, int>& name_map
+  const MislibNameMap& name_map
 ) const
 {
   return ~opr1()->to_expr(name_map);
@@ -229,7 +229,7 @@ MislibAnd::type() const
 // @brief 対応する論理式を生成する．
 Expr
 MislibAnd::to_expr(
-  const unordered_map<ShString, int>& name_map
+  const MislibNameMap& name_map
 ) const
 {
   return opr1()->to_expr(name_map) & opr2()->to_expr(name_map);
@@ -270,7 +270,7 @@ MislibOr::type() const
 // @brief 対応する論理式を生成する．
 Expr
 MislibOr::to_expr(
-  const unordered_map<ShString, int>& name_map
+  const MislibNameMap& name_map
 ) const
 {
   return opr1()->to_expr(name_map) | opr2()->to_expr(name_map);
@@ -311,7 +311,7 @@ MislibXor::type() const
 // @brief 対応する論理式を生成する．
 Expr
 MislibXor::to_expr(
-  const unordered_map<ShString, int>& name_map
+  const MislibNameMap& name_map
 ) const
 {
   return opr1()->to_expr(name_map) ^ opr2()->to_expr(name_map);
@@ -352,7 +352,7 @@ MislibVarName::type() const
 // @brief 対応する論理式を生成する．
 Expr
 MislibVarName::to_expr(
-  const unordered_map<ShString, int>& name_map
+  const MislibNameMap& name_map
 ) const
 {
   int c = name_map.count(varname());
@@ -397,7 +397,7 @@ MislibConst0::type() const
 // @brief 対応する論理式を生成する．
 Expr
 MislibConst0::to_expr(
-  const unordered_map<ShString, int>& name_map
+  const MislibNameMap& name_map
 ) const
 {
   return Expr::make_zero();
@@ -430,7 +430,7 @@ MislibConst1::type() const
 // @param[in] name_map 端子名をキーにして端子番号を取り出す連想配列
 Expr
 MislibConst1::to_expr(
-  const unordered_map<ShString, int>& name_map
+  const MislibNameMap& name_map
 ) const
 {
   return Expr::make_one();

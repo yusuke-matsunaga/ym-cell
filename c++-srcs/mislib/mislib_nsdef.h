@@ -9,6 +9,7 @@
 /// All rights reserved.
 
 #include "ym/clib.h"
+#include "ym/ShString.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -45,6 +46,8 @@ using MislibNumPtr = unique_ptr<const MislibNum>;
 using MislibPhasePtr = unique_ptr<const MislibPhase>;
 using MislibPinPtr = unique_ptr<const MislibPin>;
 using MislibStrPtr = unique_ptr<const MislibStr>;
+
+using MislibNameMap = unordered_map<ShString, SizeType>;
 
 END_NAMESPACE_YM_MISLIB
 

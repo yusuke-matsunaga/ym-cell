@@ -31,7 +31,7 @@ public:
     MislibStrPtr&& opin_name,             ///< [in] 出力品名を表すノード
     MislibExprPtr&& opin_expr,            ///< [in] 出力の論理式を表すノード
     vector<MislibPinPtr>&& ipin_list ///< [in] 入力ピンを表すノードのリスト
-  ) : MislibNode(loc),
+  ) : MislibNode{loc},
       mName{move(name)},
       mArea{move(area)},
       mOpinName{move(opin_name)},
@@ -129,7 +129,7 @@ public:
     MislibNumPtr&& rise_fanout_delay, ///< [in] 立ち上がり負荷依存遅延
     MislibNumPtr&& fall_block_delay,  ///< [in] 立ち下がり固定遅延
     MislibNumPtr&& fall_fanout_delay  ///< [in] 立ち下がり負荷依存遅延
-  ) : MislibNode(loc),
+  ) : MislibNode{loc},
       mName{move(name)},
       mPhase{move(phase)},
       mInputLoad{move(input_load)},

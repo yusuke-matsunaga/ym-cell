@@ -41,7 +41,7 @@ public:
   /// @brief コンストラクタ
   MislibExpr(
     const FileRegion& loc ///< [in] 位置情報
-  ) : MislibNode(loc)
+  ) : MislibNode{loc}
   {
   }
 
@@ -64,7 +64,7 @@ public:
   virtual
   Expr
   to_expr(
-    const unordered_map<ShString, int>& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
+    const MislibNameMap& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
   ) const = 0;
 
   /// @brief 内容を出力する(デバッグ用)．
@@ -123,7 +123,7 @@ public:
   MislibNot(
     const FileRegion& loc, ///< [in] 位置情報
     MislibExprPtr&& opr1   ///< [in] オペランド
-  ) : MislibExpr(loc),
+  ) : MislibExpr{loc},
       mOpr1{move(opr1)}
   {
   }
@@ -148,7 +148,7 @@ public:
   /// @brief 対応する論理式を生成する．
   Expr
   to_expr(
-    const unordered_map<ShString, int>& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
+    const MislibNameMap& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
   ) const override;
 
   /// @brief 内容を出力する．
@@ -183,7 +183,7 @@ public:
     const FileRegion& loc, ///< [in] 位置情報
     MislibExprPtr&& opr1,  ///< [in] 左のオペランド
     MislibExprPtr&& opr2   ///< [in] 右のオペランド
-  ) : MislibExpr(loc),
+  ) : MislibExpr{loc},
       mOpr1{move(opr1)},
       mOpr2{move(opr2)}
   {
@@ -235,7 +235,7 @@ public:
     const FileRegion& loc, ///< [in] 位置情報
     MislibExprPtr&& opr1,  ///< [in] 左のオペランド
     MislibExprPtr&& opr2   ///< [in] 右のオペランド
-  ) : MislibBop(loc, move(opr1), move(opr2))
+  ) : MislibBop{loc, move(opr1), move(opr2)}
   {
   }
 
@@ -255,7 +255,7 @@ public:
   /// @brief 対応する論理式を生成する．
   Expr
   to_expr(
-    const unordered_map<ShString, int>& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
+    const MislibNameMap& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
   ) const override;
 
   /// @brief 内容を出力する．
@@ -281,7 +281,7 @@ public:
     const FileRegion& loc, ///< [in] 位置情報
     MislibExprPtr&& opr1,  ///< [in] 左のオペランド
     MislibExprPtr&& opr2  ///< [in] 右のオペランド
-  ) : MislibBop(loc, move(opr1), move(opr2))
+  ) : MislibBop{loc, move(opr1), move(opr2)}
   {
   }
 
@@ -301,7 +301,7 @@ public:
   /// @brief 対応する論理式を生成する．
   Expr
   to_expr(
-    const unordered_map<ShString, int>& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
+    const MislibNameMap& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
   ) const override;
 
   /// @brief 内容を出力する．
@@ -327,7 +327,7 @@ public:
     const FileRegion& loc, ///< [in] 位置情報
     MislibExprPtr&& opr1,  ///< [in] 左のオペランド
     MislibExprPtr&& opr2   ///< [in] 右のオペランド
-  ) : MislibBop(loc, move(opr1), move(opr2))
+  ) : MislibBop{loc, move(opr1), move(opr2)}
   {
   }
 
@@ -347,7 +347,7 @@ public:
   /// @brief 対応する論理式を生成する．
   Expr
   to_expr(
-    const unordered_map<ShString, int>& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
+    const MislibNameMap& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
   ) const override;
 
   /// @brief 内容を出力する．
@@ -372,7 +372,7 @@ public:
   MislibVarName(
     const FileRegion& loc, ///< [in] 位置情報
     const char* str        ///< [in] 文字列
-  ) : MislibExpr(loc),
+  ) : MislibExpr{loc},
       mVarName{str}
   {
   }
@@ -397,7 +397,7 @@ public:
   /// @brief 対応する論理式を生成する．
   Expr
   to_expr(
-    const unordered_map<ShString, int>& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
+    const MislibNameMap& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
   ) const override;
 
   /// @brief 内容を出力する．
@@ -431,7 +431,7 @@ public:
   explicit
   MislibConst0(
     const FileRegion& loc ///< [in] 位置情報
-  ) : MislibExpr(loc)
+  ) : MislibExpr{loc}
   {
   }
 
@@ -451,7 +451,7 @@ public:
   /// @brief 対応する論理式を生成する．
   Expr
   to_expr(
-    const unordered_map<ShString, int>& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
+    const MislibNameMap& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
   ) const override;
 
   /// @brief 内容を出力する．
@@ -476,7 +476,7 @@ public:
   explicit
   MislibConst1(
     const FileRegion& loc ///< [in] 位置情報
-  ) : MislibExpr(loc)
+  ) : MislibExpr{loc}
   {
   }
 
@@ -496,7 +496,7 @@ public:
   /// @brief 対応する論理式を生成する．
   Expr
   to_expr(
-    const unordered_map<ShString, int>& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
+    const MislibNameMap& name_map ///< [in] 端子名をキーにして端子番号を取り出す連想配列
   ) const override;
 
   /// @brief 内容を出力する．

@@ -84,7 +84,7 @@ public:
   MislibStr(
     const FileRegion& loc, ///< [in] 位置情報
     const char* str        ///< [in] 文字列
-  ) : MislibNode(loc),
+  ) : MislibNode{loc},
       mStr{str}
   {
   }
@@ -130,7 +130,7 @@ public:
   MislibNum(
     const FileRegion& loc, ///< [in] 位置情報
     double num             ///< [in] 数値
-  ) : MislibNode(loc),
+  ) : MislibNode{loc},
       mNum{num}
   {
   }
@@ -186,7 +186,7 @@ public:
   /// @brief コンストラクタ
   MislibPhase(
     const FileRegion& loc ///< [in] 位置情報
-  ) : MislibNode(loc)
+  ) : MislibNode{loc}
   {
   }
 
@@ -229,7 +229,7 @@ public:
   /// @brief コンストラクタ
   MislibNoninv(
     const FileRegion& loc ///< [in] 位置情報
-  ) : MislibPhase(loc)
+  ) : MislibPhase{loc}
   {
   }
 
@@ -267,7 +267,7 @@ public:
   /// @brief コンストラクタ
   MislibInv(
     const FileRegion& loc ///< [in] 位置情報
-  ) : MislibPhase(loc)
+  ) : MislibPhase{loc}
   {
   }
 
@@ -305,7 +305,7 @@ public:
   /// @brief コンストラクタ
   MislibUnknown(
     const FileRegion& loc ///< [in] 位置情報
-  ) : MislibPhase(loc)
+  ) : MislibPhase{loc}
   {
   }
 

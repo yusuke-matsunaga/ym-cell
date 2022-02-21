@@ -29,14 +29,12 @@ BEGIN_NAMESPACE_YM_MISLIB
 
 BEGIN_NONAMESPACE
 
-using NameMap = unordered_map<ShString, int>;
-
 // 論理式を表すパース木をスキャンして端子名のリストを作る．
 void
 dfs(
   const MislibExpr* expr,      ///< [in] パース木の根のノード
   vector<ShString>& name_list, ///< [out] 名前が現れた順に格納されたリスト
-  NameMap& name_map            ///< [out] 名前をキーにして name_list 中の位置を返す連想配列
+  MislibNameMap& name_map      ///< [out] 名前をキーにして name_list 中の位置を返す連想配列
 )
 {
   switch ( expr->type() ) {
@@ -183,7 +181,7 @@ new_gate(
   // 機能情報の取得
   vector<ShString> ipin_name_list;
   bool wildcard_pin = false;
-  NameMap ipin_name_map;
+  MislibNameMap ipin_name_map;
   if ( npin > 0 ) {
     ipin_top = gate->ipin(0);
     if ( ipin_top->name() != nullptr ) {
