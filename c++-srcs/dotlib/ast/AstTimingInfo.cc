@@ -190,11 +190,9 @@ AstTimingInfo::add_timing(
 	auto sense = mTimingSense;
 	if ( p_func && ~n_func ) {
 	  p_unate = true;
-	  cell->set_timing(ipin, opin, ClibTimingSense::positive_unate, tid);
 	}
 	if ( ~p_func && n_func ) {
 	  n_unate = true;
-	  cell->set_timing(ipin, opin, ClibTimingSense::negative_unate, tid);
 	}
       }
       else {

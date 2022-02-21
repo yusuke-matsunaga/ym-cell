@@ -215,16 +215,11 @@ AstCellInfo::add_cell(
 
   ASSERT_COND( cell != nullptr );
 
+  cell->init_timing_map(mInputId, mOutputId);
+
   // ピンを作る．
   for ( auto& pininfo: mPinInfoList ) {
     pininfo.add_pin(cell, mIpinMap);
-  }
-
-  cell->init_timing_map();
-
-  // タイミング情報を作る．
-  for ( const auto& pininfo: mPinInfoList ) {
-    pininfo.add_timing(cell, mIpinMap, mOpinMap);
   }
 
   return true;

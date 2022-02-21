@@ -99,38 +99,54 @@ bool
 AstPinInfo::add_pin(
   CiCell* cell,
   const unordered_map<ShString, SizeType>& ipin_map
-)
+) const
 {
   switch ( mDirection ) {
   case ClibDirection::input:
     for ( auto name: mNameList ) {
       auto pin = cell->add_input(name, mCapacitance,
 				 mRiseCapacitance, mFallCapacitance);
+      ASSERT_COND( pin->input_id() == ipin_map.at(name) );
     }
     break;
   case ClibDirection::output:
     {
-      mFunctionExpr = make_expr(mFunction, ipin_map, Expr::make_invalid());
-      mTristateExpr = make_expr(mTristate, ipin_map, Expr::make_zero());
+      auto function = make_expr(mFunction, ipin_map, Expr::make_invalid());
+      auto tristate = make_expr(mTristate, ipin_map, Expr::make_zero());
+      vector<SizeType> opin_list;
       for ( auto name: mNameList ) {
 	auto pin = cell->add_output(name, mMaxFanout, mMinFanout,
 				    mMaxCapacitance, mMinCapacitance,
 				    mMaxTransition, mMinTransition,
-				    mFunctionExpr, mTristateExpr);
+				    function, tristate);
+	//ASSERT_COND( pin->output_id() == mOpinMap.at(name) );
+	opin_list.push_back(pin->output_id());
+      }
+      SizeType ni = cell->input_num2();
+      for ( auto& timing_info: mTimingInfoList ) {
+	timing_info.add_timing(cell, function, ni, opin_list, ipin_map);
       }
     }
     break;
   case ClibDirection::inout:
     {
-      mFunctionExpr = make_expr(mFunction, ipin_map, Expr::make_invalid());
-      mTristateExpr = make_expr(mTristate, ipin_map, Expr::make_zero());
+      auto function = make_expr(mFunction, ipin_map, Expr::make_invalid());
+      auto tristate = make_expr(mTristate, ipin_map, Expr::make_zero());
+      vector<SizeType> opin_list;
       for ( auto name: mNameList ) {
 	auto pin = cell->add_inout(name, mCapacitance,
 				   mRiseCapacitance, mFallCapacitance,
 				   mMaxFanout, mMinFanout,
 				   mMaxCapacitance, mMinCapacitance,
 				   mMaxTransition, mMinTransition,
-				   mFunctionExpr, mTristateExpr);
+				   function, tristate);
+	ASSERT_COND( pin->input_id() == ipin_map.at(name) );
+	//ASSERT_COND( pin->output_id() == mOpinMap.at(name) );
+	opin_list.push_back(pin->output_id());
+      }
+      SizeType ni = cell->input_num2();
+      for ( auto& timing_info: mTimingInfoList ) {
+	timing_info.add_timing(cell, function, ni, opin_list, ipin_map);
       }
     }
     break;
@@ -140,29 +156,6 @@ AstPinInfo::add_pin(
   }
 
   return true;
-}
-
-// タイミング情報の生成
-void
-AstPinInfo::add_timing(
-  CiCell* cell,
-  const unordered_map<ShString, SizeType>& ipin_map,
-  const unordered_map<ShString, SizeType>& opin_map
-) const
-{
-  if ( mDirection == ClibDirection::output || mDirection == ClibDirection::inout ) {
-    SizeType ni = cell->input_num2();
-    vector<SizeType> opin_list;
-    opin_list.reserve(mNameList.size());
-    for ( auto name: mNameList ) {
-      ASSERT_COND( opin_map.count(name) > 0 );
-      auto id = opin_map.at(name);
-      opin_list.push_back(id);
-    }
-    for ( auto& timing_info: mTimingInfoList ) {
-      timing_info.add_timing(cell, mFunctionExpr, ni, opin_list, ipin_map);
-    }
-  }
 }
 
 // @brief 入力ピン用のパラメータを取り出す．

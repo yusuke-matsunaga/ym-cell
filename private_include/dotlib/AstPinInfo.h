@@ -66,14 +66,6 @@ public:
   add_pin(
     CiCell* cell,
     const unordered_map<ShString, SizeType>& pin_map ///< [in] 入力ピン番号の辞書
-  );
-
-  /// @brief タイミング情報を生成する．
-  void
-  add_timing(
-    CiCell* cell,
-    const unordered_map<ShString, SizeType>& ipin_map, ///< [in] 入力ピン番号の辞書
-    const unordered_map<ShString, SizeType>& opin_map  ///< [in] 出力ピン番号の辞書
   ) const;
 
 
@@ -126,9 +118,7 @@ private:
   ClibTime mMaxTransition;
   ClibTime mMinTransition;
   const AstExpr* mFunction{nullptr};
-  Expr mFunctionExpr;
   const AstExpr* mTristate{nullptr};
-  Expr mTristateExpr;
   vector<AstTimingInfo> mTimingInfoList;
 
 };

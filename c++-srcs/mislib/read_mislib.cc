@@ -242,7 +242,7 @@ new_gate(
   auto opin_id = opin->output_id();
 
   // タイミング情報の生成
-  cell->init_timing_map();
+  cell->init_timing_map(ni, 1);
   auto tv_function = oexpr.make_tv(ni);
   if ( wildcard_pin ) {
     // すべてのピンが同一のパラメータを持つ．

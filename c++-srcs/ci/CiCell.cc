@@ -691,11 +691,14 @@ CiCell::add_timing_lut2(
 
 // @brief タイミング情報用のデータ構造を初期化する．
 void
-CiCell::init_timing_map()
+CiCell::init_timing_map(
+  SizeType input_num,
+  SizeType output_num
+)
 {
+  SizeType map_size = input_num * output_num * 2;
   mTimingMap.clear();
-  mTimingMap.resize((mInputNum + mInoutNum) * (mOutputNum + mInoutNum) * 2,
-		    vector<SizeType>{});
+  mTimingMap.resize(map_size, vector<SizeType>{});
 }
 
 // @brief タイミング情報をセットする．
