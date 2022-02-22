@@ -12,6 +12,7 @@
 #include "ci/CiBus.h"
 #include "ci/CiBundle.h"
 #include "ci/CiTiming.h"
+#include "cgmgr/CgSignature.h"
 #include "ym/ClibCellGroup.h"
 #include "ym/ClibFFInfo.h"
 #include "ym/ClibLatchInfo.h"
@@ -718,6 +719,42 @@ CiCell::set_timing(
     ASSERT_NOT_REACHED;
   }
   mTimingMap[base] = timing_list;
+}
+
+// @brief シグネチャを返す．
+CgSignature
+CiCell::make_signature() const
+{
+  SizeType ni = input_num();
+  SizeType no = output_num();
+  SizeType nb = inout_num();
+  SizeType ni2 = ni + nb;
+  SizeType no2 = no + nb;
+  if ( no == 1 && nb == 0 && has_logic(0) ) {
+    auto expr = logic_expr(0);
+    auto func = expr.make_tv(input_num());
+    if ( has_tristate(0) ) {
+      auto tri_expr = tristate_expr(0);
+      auto tristate = tri_expr.make_tv(input_num());
+      return CgSignature::make_logic_sig(func, tristate);
+    }
+    else {
+      return CgSignature::make_logic_sig(func);
+    }
+  }
+  else {
+    vector<TvFunc> logic_list(no2);
+    vector<TvFunc> tristate_list(no2);
+    for ( SizeType i = 0; i < no2; ++ i ) {
+      if ( has_logic(i) ) {
+	logic_list[i] = logic_expr(i).make_tv(ni2);
+      }
+      if ( has_tristate(i) ) {
+	tristate_list[i] = tristate_expr(i).make_tv(ni2);
+      }
+    }
+    return CgSignature::make_logic_sig(ni, no, nb, logic_list, tristate_list);
+  }
 }
 
 // @brief ピンを登録する．

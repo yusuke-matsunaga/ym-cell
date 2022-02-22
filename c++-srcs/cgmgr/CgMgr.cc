@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 #include "cgmgr/CgMgr.h"
-#include "CgSignature.h"
+#include "cgmgr/CgSignature.h"
 #include "CgLogicSig.h"
 #include "ci/CiCellLibrary.h"
 #include "ym/TvFunc.h"
@@ -27,6 +27,7 @@ CgMgr::CgMgr(
 {
 }
 
+#if 0
 // @brief 1出力の組み合わせ論理用セルグループを得る．
 CiCellGroup*
 CgMgr::find_logic_group(
@@ -71,6 +72,7 @@ CgMgr::find_logic_group(
   }
 #endif
 }
+#endif
 
 #if 0
 // @brief 一般的な組み合わせ論理用セルグループを得る．
@@ -263,13 +265,12 @@ CgMgr::_find_group(
     // 未登録の場合
     // 代表シグネチャに対する変換を求める．
     auto rep_map = sig.rep_map();
-    // 代表シグネチャの文字列を求める．
-    auto rep_str = sig.str(rep_map);
+    // 代表シグネチャを求める．
+    auto rep_sig = sig.xform(rep_map);
     // クラスを求める．
-    auto rep_class = _find_class(rep_str);
-
+    auto rep_class = _find_class(rep_sig);
     // そのクラスに新しいグループを追加する．
-    auto group = mLibrary.new_cell_group(rep_class, rep_map);
+    auto group = mLibrary.add_cell_group(rep_class, rep_map);
 
     // 登録する．
     mGroupDict.emplace(sig_str, group);
@@ -285,19 +286,23 @@ CgMgr::_find_group(
 /// @brief 代表クラスを得る．
 CiCellClass*
 CgMgr::_find_class(
-  const string& rep_sig ///< [in] 代表クラスのシグネチャ
+  const CgSignature& sig
 )
 {
-  if ( mClassDict.count(rep_sig) == 0 ) {
+  // 代表シグネチャの文字列を求める．
+  auto sig_str = sig.str();
+  // このシグネチャを持つクラスを探す．
+  if ( mClassDict.count(sig_str) == 0 ) {
+    // 同位体変換リストを作る．
+    auto idmap_list = sig.idmap_list();
     // 新しいクラスを作って登録する．
-    vector<ClibIOMap> idmap_list;
-    // Todo: 同位体変換リストを作る．
-    auto rep_class = mLibrary.new_cell_class(idmap_list);
-    mClassDict.emplace(rep_sig, rep_class);
+    auto rep_class = mLibrary.add_cell_class(idmap_list);
+    mClassDict.emplace(sig_str, rep_class);
     return rep_class;
   }
   else {
-    auto rep_class = mClassDict.at(rep_sig);
+    // 登録済みのクラスを返す．
+    auto rep_class = mClassDict.at(sig_str);
     return rep_class;
   }
 }

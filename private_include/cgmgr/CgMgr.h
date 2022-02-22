@@ -44,33 +44,19 @@ public:
 
   /// @brief 1出力の組み合わせ論理用セルグループを得る．
   ///
-  /// 通常のテクノロジマッピングで用いられるのはこのグループないのセルのみ．
+  /// 通常のテクノロジマッピングで用いられるのはこのグループ内のセルのみ．
   CiCellGroup*
   find_logic_group(
     SizeType input_num, ///< [in] 入力数
     const Expr& expr    ///< [in] 出力の論理式
   );
 
-  /// @brief 1出力の組み合わせ論理用セルグループを得る．
-  ///
-  /// 通常のテクノロジマッピングで用いられるのはこのグループないのセルのみ．
+  /// @brief 1出力のtristate論理用セルグループを得る．
   CiCellGroup*
   find_logic_group(
     SizeType input_num,  ///< [in] 入力数
     const Expr& expr,    ///< [in] 出力の論理式
     const Expr& tristate ///< [in] トライステート条件式
-  );
-
-  /// @brief 一般的な組み合わせ論理用セルグループを得る．
-  CiCellGroup*
-  find_logic_group(
-    SizeType input_num,                ///< [in] 入力数
-    SizeType output_num,               ///< [in] 出力数
-    SizeType inout_num,                ///< [in] 入出力数
-    const vector<Expr>& expr_array    ///< [in] 出力の論理式の配列
-                                       ///<  - 配列のサイズは output_num + inout_num
-                                       ///<  - 論理式を持たない場合にはinvalid な Expr を持つ
-                                       ///<    (Expr::is_valid() == false)．
   );
 
   /// @brief 一般的な組み合わせ論理用セルグループを得る．
@@ -161,7 +147,7 @@ private:
   /// @brief 代表クラスを得る．
   CiCellClass*
   _find_class(
-    const string& rep_sig ///< [in] 代表クラスのシグネチャ
+    const CgSignature& sig ///< [in] シグネチャ
   );
 
 

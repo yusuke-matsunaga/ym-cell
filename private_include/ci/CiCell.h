@@ -24,6 +24,7 @@ class CiInoutPin;
 class CiBus;
 class CiBundle;
 class CiTiming;
+class CgSignature;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiCell CiCell.h "CiCell.h"
@@ -549,6 +550,11 @@ public:
     ClibTimingSense timing_sense,       ///< [in] タイミング条件
     const vector<SizeType>& timing_list ///< [in] 設定するタイミング番号のリスト
   );
+
+  /// @brief シグネチャを返す．
+  virtual
+  CgSignature
+  make_signature() const;
 
 
 private:

@@ -1,8 +1,8 @@
-#ifndef CGLOGICSIG_H
-#define CGLOGICSIG_H
+#ifndef CGTRILOGICSIG_H
+#define CGTRILOGICSIG_H
 
-/// @file CgLogicSig.h
-/// @brief CgLogicSig のヘッダファイル
+/// @file CgTriLogicSig.h
+/// @brief CgTriLogicSig のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
@@ -15,30 +15,32 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class CgLogicSig CgLogicSig.h "CgLogicSig.h"
-/// @brief 単一出力の論理関数に対するシグネチャ
+/// @class CgTriLogicSig CgTriLogicSig.h "CgTriLogicSig.h"
+/// @brief tristate 条件を持つ1出力論理関数のシグネチャを表すクラス
 //////////////////////////////////////////////////////////////////////
-class CgLogicSig :
+class CgTriLogicSig :
   public CgSigRep
 {
 public:
 
   /// @brief コンストラクタ
-  CgLogicSig(
-    const TvFunc& func ///< [in] 対象の論理関数
+  CgTriLogicSig(
+    const TvFunc& func,    ///< [in] 対象の論理関数
+    const TvFunc& tristate ///< [in] tristate条件
   );
 
   /// @brief デストラクタ
-  ~CgLogicSig() = default;
+  ~CgTriLogicSig() = default;
 
-  /// @brief 単一出力の論理関数用のシグネチャを作る．
+  /// @brief シグネチャを作る．
   static
   unique_ptr<const CgSigRep>
   make_signature(
-    const TvFunc& func ///< [in] 対象の論理関数
+    const TvFunc& func,    ///< [in] 対象の論理関数
+    const TvFunc& tristate ///< [in] tristate条件
   )
   {
-    return unique_ptr<const CgSigRep>{new CgLogicSig{func}};
+    return unique_ptr<const CgSigRep>{new CgTriLogicSig{func, tristate}};
   }
 
 
@@ -74,8 +76,11 @@ private:
   // 論理関数
   TvFunc mFunc;
 
+  // tristate 条件
+  TvFunc mTristate;
+
 };
 
 END_NAMESPACE_YM_CLIB
 
-#endif // CGLOGICSIG_H
+#endif // CGTRILOGICSIG_H

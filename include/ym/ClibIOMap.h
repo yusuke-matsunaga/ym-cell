@@ -29,9 +29,10 @@ public:
   /// @brief 1出力用のコンストラクタ
   explicit
   ClibIOMap(
-    const vector<ClibPinMap>& input_map ///< [in] 入力ピンのマッピング
+    const vector<ClibPinMap>& input_map,   ///< [in] 入力ピンのマッピング
+    ClibPinMap omap = ClibPinMap{0, false} ///< [in] 出力ピンのマッピング
   ) : mInputMap{input_map},
-      mOutputMap{ClibPinMap{0}}
+      mOutputMap{omap}
   {
   }
 

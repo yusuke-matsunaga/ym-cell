@@ -192,5 +192,22 @@ target_include_directories( cell_DotlibParser_test2
 
 
 # ===================================================================
+#  CgLogicSig_test
+# ===================================================================
+ym_add_gtest ( cell_CgLogicSig_test
+  cgmgr/CgLogicSig_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  )
+
+target_include_directories( cell_CgLogicSig_test
+  PRIVATE
+  ../private_include/cgmgr
+  ../c++-srcs/cgmgr
+  )
+
+
+# ===================================================================
 #  インストールターゲットの設定
 # ===================================================================

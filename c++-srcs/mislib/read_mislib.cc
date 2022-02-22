@@ -8,6 +8,7 @@
 
 #include "mislib_nsdef.h"
 #include "ci/CiCellLibrary.h"
+#include "cgmgr/CgMgr.h"
 
 #include "ym/ClibArea.h"
 #include "ym/ClibCapacitance.h"
@@ -291,6 +292,8 @@ CiCellLibrary::read_mislib(
   for ( auto& gate: gate_list ) {
     new_gate(gate.get(), lib);
   }
+
+  CgMgr mgr{*lib};
 
   return lib;
 }

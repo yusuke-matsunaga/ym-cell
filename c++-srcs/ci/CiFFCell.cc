@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "CiFFCell.h"
+#include "cgmgr/CgSignature.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -52,6 +53,13 @@ CiFFCell::next_state_expr() const
   return mNextState;
 }
 
+// @brief シグネチャを返す．
+CgSignature
+CiFFCell::make_signature() const
+{
+  return CgSignature{};
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス ClibFF2Cell
@@ -70,6 +78,13 @@ Expr
 CiFF2Cell::clock2_expr() const
 {
   return mClock2;
+}
+
+// @brief シグネチャを返す．
+CgSignature
+CiFF2Cell::make_signature() const
+{
+  return CgSignature{};
 }
 
 END_NAMESPACE_YM_CLIB

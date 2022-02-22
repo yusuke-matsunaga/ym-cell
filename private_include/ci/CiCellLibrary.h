@@ -624,6 +624,10 @@ public:
     const string& value      ///< [in] 値
   );
 
+  /// @brief セルグループ/セルクラスの設定を行なう．
+  void
+  compile();
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -662,77 +666,16 @@ public:
 
   /// @brief セルクラスを作る．
   CiCellClass*
-  new_cell_class(
+  add_cell_class(
     const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換のリスト
   );
 
   /// @brief セルグループを作る．
   CiCellGroup*
-  new_cell_group(
+  add_cell_group(
     const ClibCellClass* rep_class, ///< [in] 親のセルクラス
     const ClibIOMap& iomap          ///< [in] 変換マップ
   );
-
-#if 0
-  /// @brief 1出力の論理セル用のグループを作る．
-  CiCellGroup*
-  new_logic_group(
-    const ClibCellClass* rep_class, ///< [in] 親のセルクラス
-    const ClibIOMap& iomap,         ///< [in] 変換マップ
-    SizeType input_num,             ///< [in] 入力数
-    const Expr& expr                ///< [in] 出力の論理式
-  );
-
-  /// @brief 一般的な論理セル用のグループを作る．
-  CiCellGroup*
-  new_logic_group(
-    const ClibCellClass* rep_class,    ///< [in] 親のセルクラス
-    const ClibIOMap& iomap,            ///< [in] 変換マップ
-    SizeType input_num,                ///< [in] 入力数
-    SizeType output_num,               ///< [in] 出力数
-    SizeType inout_num,                ///< [in] 入出力数
-    const vector<Expr>& expr_array,    ///< [in] 出力の論理式の配列
-    const vector<Expr>& tristate_array ///< [in] 出力のtristate条件の配列
-  );
-
-  /// @brief FF用のグループを作る．
-  CiCellGroup*
-  new_ff_group(
-    const ClibCellClass* rep_class,     ///< [in] 親のセルクラス
-    const ClibIOMap& iomap,             ///< [in] 変換マップ
-    SizeType input_num,                 ///< [in] 入力数
-    SizeType output_num,                ///< [in] 出力数
-    SizeType inout_num,                 ///< [in] 入出力数
-    const vector<Expr>& expr_array,     ///< [in] 出力の論理式の配列
-    const vector<Expr>& tristate_array, ///< [in] 出力のtristate条件の配列
-    const Expr& clock,                  ///< [in] マスタークロックの論理式
-    const Expr& clock2,                 ///< [in] スレーブクロックの論理式
-    const Expr& next_state,             ///< [in] 次状態の論理式
-    const Expr& clear,                  ///< [in] クリア条件の論理式
-    const Expr& preset,                 ///< [in] プリセット条件の論理式
-    ClibCPV clear_preset_var1,          ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2           ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  );
-
-  /// @brief ラッチ用のグループを作る．
-  CiCellGroup*
-  new_latch_group(
-    const ClibCellClass* rep_class,     ///< [in] 親のセルクラス
-    const ClibIOMap& iomap,             ///< [in] 変換マップ
-    SizeType input_num,                 ///< [in] 入力数
-    SizeType output_num,                ///< [in] 出力数
-    SizeType inout_num,                 ///< [in] 入出力数
-    const vector<Expr>& expr_array,     ///< [in] 出力の論理式の配列
-    const vector<Expr>& tristate_array, ///< [in] 出力のtristate条件の配列
-    const Expr& enable,                 ///< [in] マスターイネーブルの論理式
-    const Expr& enable2,                ///< [in] スレーブイネーブルの論理式
-    const Expr& data_in,                ///< [in] データ入力の論理式
-    const Expr& clear,                  ///< [in] クリア条件の論理式
-    const Expr& preset,                 ///< [in] プリセット条件の論理式
-    ClibCPV clear_preset_var1,          ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2           ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  );
-#endif
 
   /// @brief 論理セルを追加する．
   CiCell*
@@ -779,71 +722,6 @@ public:
     const ShString& name,      ///< [in] 名前
     ClibArea area              ///< [in] 面積
   );
-
-#if 0
-  /// @brief タイミング情報を作る(ジェネリック遅延モデル)．
-  static
-  CiTiming*
-  new_timing_generic(
-    ClibTimingType type,
-    const Expr& cond,
-    ClibTime intrinsic_rise,
-    ClibTime intrinsic_fall,
-    ClibTime slope_rise,
-    ClibTime slope_fall,
-    ClibResistance rise_resistance,
-    ClibResistance fall_resistance
-  );
-
-  /// @brief タイミング情報を作る(折れ線近似)．
-  static
-  CiTiming*
-  new_timing_piecewise(
-    ClibTimingType timing_type,
-    const Expr& cond,
-    ClibTime intrinsic_rise,
-    ClibTime intrinsic_fall,
-    ClibTime slope_rise,
-    ClibTime slope_fall,
-    ClibResistance rise_pin_resistance,
-    ClibResistance fall_pin_resistance
-  );
-
-  /// @brief タイミング情報を作る(非線形タイプ1)．
-  static
-  CiTiming*
-  new_timing_lut1(
-    ClibTimingType timing_type,
-    const Expr& cond,
-    CiLut* cell_rise,
-    CiLut* cell_fall,
-    CiLut* rise_transition,
-    CiLut* fall_transition
-  );
-
-  /// @brief タイミング情報を作る(非線形タイプ2)．
-  static
-  CiTiming*
-  new_timing_lut2(
-    ClibTimingType timing_type,
-    const Expr& cond,
-    CiLut* rise_transition,
-    CiLut* fall_transition,
-    CiLut* rise_propagation,
-    CiLut* fall_propagation
-  );
-
-  /// @brief タイミング情報をセットする．
-  static
-  void
-  set_timing(
-    CiCell* cell,
-    int input_id,
-    int output_id,
-    ClibTimingSense timing_sense,
-    const vector<CiTiming*>& timing_list
-  );
-#endif
 
   /// @brief 1次元の LUT を作る．
   /// @param[in] lut_template テンプレート

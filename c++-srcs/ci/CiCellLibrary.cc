@@ -234,7 +234,7 @@ CiCellLibrary::add_lut_template3(
 
 // @brief セルクラスを作る．
 CiCellClass*
-CiCellLibrary::new_cell_class(
+CiCellLibrary::add_cell_class(
   const vector<ClibIOMap>& idmap_list
 )
 {
@@ -247,7 +247,7 @@ CiCellLibrary::new_cell_class(
 
 // @brief セルグループを作る．
 CiCellGroup*
-CiCellLibrary::new_cell_group(
+CiCellLibrary::add_cell_group(
   const ClibCellClass* rep_class,
   const ClibIOMap& iomap
 )
@@ -355,119 +355,6 @@ CiCellLibrary::reg_cell(
   mCellList.push_back(unique_ptr<CiCell>{cell});
   mRefCellList.push_back(cell);
 }
-
-#if 0
-// @brief タイミング情報を作る(ジェネリック遅延モデル)．
-// @param[in] type タイミングの型
-// @param[in] cond タイミング条件を表す式
-// @param[in] intrinsic_rise 立ち上がり固有遅延
-// @param[in] intrinsic_fall 立ち下がり固有遅延
-// @param[in] slope_rise 立ち上がりスロープ遅延
-// @param[in] slope_fall 立ち下がりスロープ遅延
-// @param[in] rise_resistance 立ち上がり負荷依存係数
-// @param[in] fall_resistance 立ち下がり負荷依存係数
-CiTiming*
-CiCellLibrary::new_timing_generic(
-  ClibTimingType type,
-  const Expr& cond,
-  ClibTime intrinsic_rise,
-  ClibTime intrinsic_fall,
-  ClibTime slope_rise,
-  ClibTime slope_fall,
-  ClibResistance rise_resistance,
-  ClibResistance fall_resistance
-)
-{
-  auto timing = new CiTimingGeneric(type, cond,
-				    intrinsic_rise,
-				    intrinsic_fall,
-				    slope_rise,
-				    slope_fall,
-				    rise_resistance,
-				    fall_resistance);
-
-  return timing;
-}
-
-// @brief タイミング情報を作る(折れ線近似)．
-// @param[in] timing_type タイミングの型
-// @param[in] cond タイミング条件を表す式
-// @param[in] intrinsic_rise 立ち上がり固有遅延
-// @param[in] intrinsic_fall 立ち下がり固有遅延
-// @param[in] slope_rise 立ち上がりスロープ遅延
-// @param[in] slope_fall 立ち下がりスロープ遅延
-CiTiming*
-CiCellLibrary::new_timing_piecewise(
-  ClibTimingType timing_type,
-  const Expr& cond,
-  ClibTime intrinsic_rise,
-  ClibTime intrinsic_fall,
-  ClibTime slope_rise,
-  ClibTime slope_fall,
-  ClibResistance rise_pin_resistance,
-  ClibResistance fall_pin_resistance
-)
-{
-  auto timing = new CiTimingPiecewise(timing_type, cond,
-				      intrinsic_rise,
-				      intrinsic_fall,
-				      slope_rise,
-				      slope_fall,
-				      rise_pin_resistance,
-				      fall_pin_resistance);
-
-  return timing;
-}
-
-// @brief タイミング情報を作る(非線形タイプ1)．
-// @param[in] timing_type タイミングの型
-// @param[in] cond タイミング条件を表す式
-// @param[in] cell_rise 立ち上がりセル遅延テーブル
-// @param[in] cell_fall 立ち下がりセル遅延テーブル
-CiTiming*
-CiCellLibrary::new_timing_lut1(
-  ClibTimingType timing_type,
-  const Expr& cond,
-  CiLut* cell_rise,
-  CiLut* cell_fall,
-  CiLut* rise_transition,
-  CiLut* fall_transition
-)
-{
-  auto timing = new CiTimingLut1(timing_type, cond,
-				 cell_rise,
-				 cell_fall,
-				 rise_transition,
-				 fall_transition);
-
-  return timing;
-}
-
-// @brief タイミング情報を作る(非線形タイプ2)．
-// @param[in] timing_type タイミングの型
-// @param[in] cond タイミング条件を表す式
-// @param[in] rise_transition 立ち上がり遷移遅延テーブル
-// @param[in] fall_transition 立ち下がり遷移遅延テーブル
-// @param[in] rise_propagation 立ち上がり伝搬遅延テーブル
-// @param[in] fall_propagation 立ち下がり伝搬遅延テーブル
-CiTiming*
-CiCellLibrary::new_timing_lut2(
-  ClibTimingType timing_type,
-  const Expr& cond,
-  CiLut* rise_transition,
-  CiLut* fall_transition,
-  CiLut* rise_propagation,
-  CiLut* fall_propagation)
-{
-  CiTiming* timing = new CiTimingLut2(timing_type, cond,
-				      rise_transition,
-				      fall_transition,
-				      rise_propagation,
-				      fall_propagation);
-
-  return timing;
-}
-#endif
 
 // @brief 1次元の LUT を作る．
 CiLut*
@@ -621,16 +508,17 @@ CiCellLibrary::error_patgraph()
 }
 
 #if 0
-// @brief セルのグループ分けを行う．
-//
-// 論理セルのパタングラフも作成する．
+// @brief セルグループ/セルクラスの設定を行なう．
 void
-CiCellLibrary::compile(
-  LibComp& libcomp
-)
+CiCellLibrary::compile()
 {
-  libcomp.compile();
+  CgMgr mgr{this};
 
+  for ( auto cell: mRefCellList ) {
+
+  }
+
+  libcomp.compile();
   // LcGroup から CiCellGroup を作る．
   auto ng = libcomp.group_num();
   mGroupList.clear();
@@ -763,38 +651,7 @@ CiCellLibrary::compile(
   }
 
   mPatMgr.copy(libcomp.pat_mgr());
-}
-#endif
 
-#if 0
-// @brief セルグループを作る．
-// @param[in] id 番号
-// @param[in] map 変換マップ
-// @param[in] cell_list セルのリスト
-CiCellGroup*
-CiCellLibrary::new_cell_group(
-  SizeType id,
-  const ClibIOMap& iomap,
-  const vector<CiCell*>& cell_list)
-{
-  auto group = new CiCellGroup(id, map, cell_list);
-
-  return group;
-}
-
-// @brief セルクラスを作る．
-// @param[in] id 番号
-// @param[in] idmap_list 同位体変換リスト
-// @param[in] group_list グループのリスト
-CiCellClass*
-CiCellLibrary::new_cell_class(
-  SizeType id,
-  const vector<NpnMapM>& idmap_list,
-  const vector<CiCellGroup*>& group_list)
-{
-  auto cell_class = new CiCellClass(id, idmap_list, group_list);
-
-  return cell_class;
 }
 #endif
 

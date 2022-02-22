@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "CiLatchCell.h"
+#include "cgmgr/CgSignature.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -43,6 +44,13 @@ CiLatchCell::enable_expr() const
   return mEnable;
 }
 
+// @brief シグネチャを返す．
+CgSignature
+CiLatchCell::make_signature() const
+{
+  return CgSignature{};
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLatch2Cell
@@ -61,6 +69,13 @@ Expr
 CiLatch2Cell::enable2_expr() const
 {
   return mEnable2;
+}
+
+// @brief シグネチャを返す．
+CgSignature
+CiLatch2Cell::make_signature() const
+{
+  return CgSignature{};
 }
 
 END_NAMESPACE_YM_CLIB

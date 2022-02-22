@@ -1,8 +1,8 @@
-#ifndef CGLOGICSIG_H
-#define CGLOGICSIG_H
+#ifndef CGGENLOGICSIG_H
+#define CGGENLOGICSIG_H
 
-/// @file CgLogicSig.h
-/// @brief CgLogicSig のヘッダファイル
+/// @file CgGenLogicSig.h
+/// @brief CgGenLogicSig のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
@@ -15,30 +15,39 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class CgLogicSig CgLogicSig.h "CgLogicSig.h"
-/// @brief 単一出力の論理関数に対するシグネチャ
+/// @class CgGenLogicSig CgGenLogicSig.h "CgGenLogicSig.h"
+/// @brief 一般的な論理関数のシグネチャを表すクラス
 //////////////////////////////////////////////////////////////////////
-class CgLogicSig :
+class CgGenLogicSig :
   public CgSigRep
 {
 public:
 
   /// @brief コンストラクタ
-  CgLogicSig(
-    const TvFunc& func ///< [in] 対象の論理関数
+  CgGenLogicSig(
+    SizeType ni,                        ///< [in] 入力数
+    SizeType no,                        ///< [in] 出力数
+    SizeType nb,                        ///< [in] 入出力数
+    const vector<TvFunc>& func_list,    ///< [in] 対象の論理関数のリスト
+    const vector<TvFunc>& tristate_list ///< [in] tristate条件のリスト
   );
 
   /// @brief デストラクタ
-  ~CgLogicSig() = default;
+  ~CgGenLogicSig() = default;
 
-  /// @brief 単一出力の論理関数用のシグネチャを作る．
+  /// @brief シグネチャを作る．
   static
   unique_ptr<const CgSigRep>
   make_signature(
-    const TvFunc& func ///< [in] 対象の論理関数
+    SizeType ni,                        ///< [in] 入力数
+    SizeType no,                        ///< [in] 出力数
+    SizeType nb,                        ///< [in] 入出力数
+    const vector<TvFunc>& func_list,    ///< [in] 対象の論理関数のリスト
+    const vector<TvFunc>& tristate_list ///< [in] tristate条件のリスト
   )
   {
-    return unique_ptr<const CgSigRep>{new CgLogicSig{func}};
+    auto ptr = new CgGenLogicSig{ni, no, nb, func_list, tristate_list};
+    return unique_ptr<const CgSigRep>{ptr};
   }
 
 
@@ -71,11 +80,23 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // 入力数
+  SizeType mNi;
+
+  // 出力数
+  SizeType mNo;
+
+  // 入出力数
+  SizeType mNb;
+
   // 論理関数
-  TvFunc mFunc;
+  vector<TvFunc> mFuncList;
+
+  // tristate 条件
+  vector<TvFunc> mTristateList;
 
 };
 
 END_NAMESPACE_YM_CLIB
 
-#endif // CGLOGICSIG_H
+#endif // CGGENLOGICSIG_H
