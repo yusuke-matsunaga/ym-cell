@@ -48,7 +48,31 @@ CiLatchCell::enable_expr() const
 CgSignature
 CiLatchCell::make_signature() const
 {
-  return CgSignature{};
+  SizeType ni = input_num();
+  SizeType no = output_num();
+  SizeType nb = inout_num();
+  SizeType ni2 = ni + nb;
+  SizeType no2 = no + nb;
+  vector<TvFunc> logic_list(no2);
+  vector<TvFunc> tristate_list(no2);
+  for ( SizeType i = 0; i < no2; ++ i ) {
+    if ( has_logic(i) ) {
+      logic_list[i] = logic_expr(i).make_tv(ni2);
+    }
+    if ( has_tristate(i) ) {
+      tristate_list[i] = tristate_expr(i).make_tv(ni2);
+    }
+  }
+  TvFunc enable = enable_expr().make_tv(ni2);
+  TvFunc enable2{TvFunc::make_zero(0)};
+  TvFunc data_in = data_in_expr().make_tv(ni2);
+  TvFunc clear = clear_expr().make_tv(ni2);
+  TvFunc preset = preset_expr().make_tv(ni2);
+  return CgSignature::make_latch_sig(ni, no, nb, logic_list, tristate_list,
+				     enable, enable2, data_in,
+				     clear, preset,
+				     clear_preset_var1(),
+				     clear_preset_var2());
 }
 
 
@@ -75,7 +99,31 @@ CiLatch2Cell::enable2_expr() const
 CgSignature
 CiLatch2Cell::make_signature() const
 {
-  return CgSignature{};
+  SizeType ni = input_num();
+  SizeType no = output_num();
+  SizeType nb = inout_num();
+  SizeType ni2 = ni + nb;
+  SizeType no2 = no + nb;
+  vector<TvFunc> logic_list(no2);
+  vector<TvFunc> tristate_list(no2);
+  for ( SizeType i = 0; i < no2; ++ i ) {
+    if ( has_logic(i) ) {
+      logic_list[i] = logic_expr(i).make_tv(ni2);
+    }
+    if ( has_tristate(i) ) {
+      tristate_list[i] = tristate_expr(i).make_tv(ni2);
+    }
+  }
+  TvFunc enable = enable_expr().make_tv(ni2);
+  TvFunc enable2 = enable2_expr().make_tv(ni2);
+  TvFunc data_in = data_in_expr().make_tv(ni2);
+  TvFunc clear = clear_expr().make_tv(ni2);
+  TvFunc preset = preset_expr().make_tv(ni2);
+  return CgSignature::make_latch_sig(ni, no, nb, logic_list, tristate_list,
+				     enable, enable2, data_in,
+				     clear, preset,
+				     clear_preset_var1(),
+				     clear_preset_var2());
 }
 
 END_NAMESPACE_YM_CLIB

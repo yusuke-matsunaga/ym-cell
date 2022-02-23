@@ -79,6 +79,42 @@ public:
     const vector<TvFunc>& tristate_list ///< [in] 対象のtristate条件のリスト
   );
 
+  /// @brief FF用のシグネチャを作る．
+  static
+  CgSignature
+  make_ff_sig(
+    SizeType ni,                         ///< [in] 入力数
+    SizeType no,                         ///< [in] 出力数
+    SizeType nb,                         ///< [in] 入出力数
+    const vector<TvFunc>& func_list,     ///< [in] 対象の論理関数のリスト
+    const vector<TvFunc>& tristate_list, ///< [in] 対象のtristate条件のリスト
+    const TvFunc& clocked_on,            ///< [in] マスタークロック
+    const TvFunc& clocked_on_also,       ///< [in] スレーブクロック
+    const TvFunc& next_state,            ///< [in] 次状態関数
+    const TvFunc& clear,                 ///< [in] クリア条件
+    const TvFunc& preset,                ///< [in] プリセット条件
+    ClibCPV clear_preset_var1, ///< [in] クリアとプリセットが同時にアクティブになった時の値1
+    ClibCPV clear_preset_var2  ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+  );
+
+  /// @brief ラッチ用のシグネチャを作る．
+  static
+  CgSignature
+  make_latch_sig(
+    SizeType ni,                         ///< [in] 入力数
+    SizeType no,                         ///< [in] 出力数
+    SizeType nb,                         ///< [in] 入出力数
+    const vector<TvFunc>& func_list,     ///< [in] 対象の論理関数のリスト
+    const vector<TvFunc>& tristate_list, ///< [in] 対象のtristate条件のリスト
+    const TvFunc& enable_on,             ///< [in] マスターenable
+    const TvFunc& enable_on_also,        ///< [in] スレーenable
+    const TvFunc& data_in,               ///< [in] データ入力
+    const TvFunc& clear,                 ///< [in] クリア条件
+    const TvFunc& preset,                ///< [in] プリセット条件
+    ClibCPV clear_preset_var1, ///< [in] クリアとプリセットが同時にアクティブになった時の値1
+    ClibCPV clear_preset_var2  ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+  );
+
 
 public:
   //////////////////////////////////////////////////////////////////////

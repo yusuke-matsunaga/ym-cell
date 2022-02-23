@@ -56,6 +56,8 @@ set (cg_SOURCES
   c++-srcs/cgmgr/CgLogicSig.cc
   c++-srcs/cgmgr/CgTriLogicSig.cc
   c++-srcs/cgmgr/CgGenLogicSig.cc
+  c++-srcs/cgmgr/CgFFSig.cc
+  c++-srcs/cgmgr/CgLatchSig.cc
   )
 
 set (libcomp_SOURCES

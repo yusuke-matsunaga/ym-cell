@@ -57,7 +57,31 @@ CiFFCell::next_state_expr() const
 CgSignature
 CiFFCell::make_signature() const
 {
-  return CgSignature{};
+  SizeType ni = input_num();
+  SizeType no = output_num();
+  SizeType nb = inout_num();
+  SizeType ni2 = ni + nb;
+  SizeType no2 = no + nb;
+  vector<TvFunc> logic_list(no2);
+  vector<TvFunc> tristate_list(no2);
+  for ( SizeType i = 0; i < no2; ++ i ) {
+    if ( has_logic(i) ) {
+      logic_list[i] = logic_expr(i).make_tv(ni2);
+    }
+    if ( has_tristate(i) ) {
+      tristate_list[i] = tristate_expr(i).make_tv(ni2);
+    }
+  }
+  TvFunc clock = clock_expr().make_tv(ni2);
+  TvFunc clock2{TvFunc::make_zero(ni2)};
+  TvFunc next = next_state_expr().make_tv(0);
+  TvFunc clear = clear_expr().make_tv(ni2);
+  TvFunc preset = preset_expr().make_tv(ni2);
+  return CgSignature::make_ff_sig(ni, no, nb, logic_list, tristate_list,
+				  clock, clock2, next,
+				  clear, preset,
+				  clear_preset_var1(),
+				  clear_preset_var2());
 }
 
 
@@ -84,7 +108,31 @@ CiFF2Cell::clock2_expr() const
 CgSignature
 CiFF2Cell::make_signature() const
 {
-  return CgSignature{};
+  SizeType ni = input_num();
+  SizeType no = output_num();
+  SizeType nb = inout_num();
+  SizeType ni2 = ni + nb;
+  SizeType no2 = no + nb;
+  vector<TvFunc> logic_list(no2);
+  vector<TvFunc> tristate_list(no2);
+  for ( SizeType i = 0; i < no2; ++ i ) {
+    if ( has_logic(i) ) {
+      logic_list[i] = logic_expr(i).make_tv(ni2);
+    }
+    if ( has_tristate(i) ) {
+      tristate_list[i] = tristate_expr(i).make_tv(ni2);
+    }
+  }
+  TvFunc clock = clock_expr().make_tv(ni2);
+  TvFunc clock2 = clock2_expr().make_tv(ni2);
+  TvFunc next = next_state_expr().make_tv(ni2);
+  TvFunc clear = clear_expr().make_tv(ni2);
+  TvFunc preset = preset_expr().make_tv(ni2);
+  return CgSignature::make_ff_sig(ni, no, nb, logic_list, tristate_list,
+				  clock, clock2, next,
+				  clear, preset,
+				  clear_preset_var1(),
+				  clear_preset_var2());
 }
 
 END_NAMESPACE_YM_CLIB

@@ -113,53 +113,6 @@ CgMgr::latch_init()
 }
 
 #if 0
-// @brief 1出力の組み合わせ論理用セルグループを得る．
-CiCellGroup*
-CgMgr::find_logic_group(
-  SizeType input_num,
-  const Expr& expr
-)
-{
-  // 論理関数を作る．
-  auto func = expr.make_tv(input_num);
-
-  // シグネチャを作る．
-  CgLogicSig sig{func};
-
-  return _find_group(sig);
-#if 0
-  // シグネチャを作る．
-  string sig = make_signature(func);
-
-  // このシグネチャを持つグループを探す．
-  if ( mGroupDict.count(sig) == 0 ) {
-    // 未登録の場合
-    // - このグループの属しているクラスを得る．
-    //   func の代表関数を求める．
-    auto npnmap = func.npn_cannonical_map();
-    auto rep_func = func.xform(npnmap);
-    string rep_sig = make_signature(rep_func);
-    ClibIOMap rep_map = from_npnmap(npnmap);
-
-    auto rep_class = _find_class(rep_sig);
-
-    // - そのクラスに新しいグループを追加する．
-    auto group = mLibrary.new_logic_group(rep_class, rep_map, input_num, expr);
-
-    // 登録する．
-    mGroupDict.emplace(sig, group);
-    return group;
-  }
-  else {
-    // 登録済みのグループを返す．
-    auto group = mGroupDict.at(sig);
-    return group;
-  }
-#endif
-}
-#endif
-
-#if 0
 // @brief 一般的な組み合わせ論理用セルグループを得る．
 CiCellGroup*
 CgMgr::find_logic_group(
