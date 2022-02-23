@@ -530,12 +530,15 @@ ClibCellLibrary::inv_func() const
 // @brief 単純な型のFFクラスを返す．
 const ClibCellClass&
 ClibCellLibrary::simple_ff_class(
+  bool master_slave,
   bool has_clear,
-  bool has_preset
+  bool has_preset,
+  ClibCPV cpv1,
+  ClibCPV cpv2
 ) const
 {
   if ( mImpl ) {
-    return mImpl->simple_ff_class(has_clear, has_preset);
+    return mImpl->simple_ff_class(master_slave, has_clear, has_preset, cpv1, cpv2);
   }
   else {
     // デフォルト値
@@ -546,12 +549,15 @@ ClibCellLibrary::simple_ff_class(
 // @brief 単純な型のラッチクラスを返す．
 const ClibCellClass&
 ClibCellLibrary::simple_latch_class(
+  bool master_slave,
   bool has_clear,
-  bool has_preset
+  bool has_preset,
+  ClibCPV cpv1,
+  ClibCPV cpv2
 ) const
 {
   if ( mImpl ) {
-    return mImpl->simple_latch_class(has_clear, has_preset);
+    return mImpl->simple_latch_class(master_slave, has_clear, has_preset, cpv1, cpv2);
   }
   else {
     // デフォルト値

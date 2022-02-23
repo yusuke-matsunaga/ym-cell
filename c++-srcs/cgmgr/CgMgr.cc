@@ -25,6 +25,22 @@ CgMgr::CgMgr(
   CiCellLibrary& library ///< [in] 対象のセルライブラリ
 ) : mLibrary{library}
 {
+  for ( SizeType i = 0; i < 4; ++ i ) {
+    mLogicGroup[i] = -1;
+  }
+  for ( SizeType i = 0; i < 6; ++ i ) {
+    mSimpleFFClass[i] = -1;
+  }
+  for ( SizeType i = 0; i < 50; ++ i ) {
+    mCpvFFClass[i] = -1;
+  }
+  for ( SizeType i = 0; i < 6; ++ i ) {
+    mSimpleLatchClass[i] = -1;
+  }
+  for ( SizeType i = 0; i < 50; ++ i ) {
+    mCpvLatchClass[i] = -1;
+  }
+
   logic_init();
   ff_init();
   latch_init();
@@ -104,188 +120,61 @@ CgMgr::logic_init()
 void
 CgMgr::ff_init()
 {
+  for ( bool master_slave: { false, true } ) {
+    for ( bool has_clear: { false, true } ) {
+      for ( bool has_preset: { false, true } ) {
+	if ( has_clear && has_preset ) {
+	  for ( auto cpv1: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
+	    for ( auto cpv2: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
+	      SizeType idx;
+	      SizeType sub_idx;
+	      encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2, idx, sub_idx);
+	      auto g = _find_ff_group(master_slave, has_clear, has_preset, cpv1, cpv2);
+	      mCpvFFClass[sub_idx] = g->rep_class().id();
+	    }
+	  }
+	}
+	else {
+	  SizeType idx;
+	  SizeType sub_idx;
+	  encode_attr(master_slave, has_clear, has_preset, ClibCPV::X, ClibCPV::X, idx, sub_idx);
+	  auto g = _find_ff_group(master_slave, has_clear, has_preset, ClibCPV::X, ClibCPV::X);
+	  mSimpleFFClass[idx] = g->rep_class().id();
+	}
+      }
+    }
+  }
 }
 
 // @brief ラッチグループの初期化を行なう．
 void
 CgMgr::latch_init()
 {
-}
-
-#if 0
-// @brief 一般的な組み合わせ論理用セルグループを得る．
-CiCellGroup*
-CgMgr::find_logic_group(
-  SizeType input_num,
-  SizeType output_num,
-  SizeType inout_num,
-  const vector<Expr>& expr_array
-)
-{
-  // 論理式を持つ出力番号のリストを得る．
-  vector<SizeType> true_output_list;
-  true_output_list.reserve(output_num + inout_num);
-  for ( SizeType i = 0; i < output_num + inout_num; ++ i ) {
-    if ( expr_array[i].is_valid() ) {
-      true_output_list.push_back(i);
+  for ( bool master_slave: { false, true } ) {
+    for ( bool has_clear: { false, true } ) {
+      for ( bool has_preset: { false, true } ) {
+	if ( has_clear && has_preset ) {
+	  for ( auto cpv1: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
+	    for ( auto cpv2: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
+	      SizeType idx;
+	      SizeType sub_idx;
+	      encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2, idx, sub_idx);
+	      auto g = _find_latch_group(master_slave, has_clear, has_preset, cpv1, cpv2);
+	      mCpvLatchClass[sub_idx] = g->rep_class().id();
+	    }
+	  }
+	}
+	else {
+	  SizeType idx;
+	  SizeType sub_idx;
+	  encode_attr(master_slave, has_clear, has_preset, ClibCPV::X, ClibCPV::X, idx, sub_idx);
+	  auto g = _find_latch_group(master_slave, has_clear, has_preset, ClibCPV::X, ClibCPV::X);
+	  mSimpleLatchClass[idx] = g->rep_class().id();
+	}
+      }
     }
   }
-  // 出力の論理関数のベクタを作る．
-  SizeType no = true_output_list.size();
-  vector<TvFunc> func_vect(no);
-  for ( SizeType i = 0; i < no; ++ i ) {
-    func_vect[i] = expr_array[true_output_list[i]].make_tv(input_num);
-  }
-
-  // シグネチャを作る．
-  CgGenLogicSig sig{true_output_list, func_vect};
-
-  return _find_group(sig);
-#if 0
-
-  // このシグネチャを持つグループを探す．
-  if ( mGroupDict.count(sig) == 0 ) {
-    // 未登録の場合
-    // - このグループの属しているクラスを得る．
-    //   func_fect の代表関数を求める．
-    string rep_sig;
-    ClibIOMap rep_map;
-
-    auto rep_class = _find_class(rep_sig);
-
-    // 新しいグループを作る．
-    auto group = mLibrary.new_logic_group(rep_class, rep_map,
-					  input_num, output_num, inout_num,
-					  expr_array, tristate_array);
-
-    // 登録する．
-    mGroupDict.emplace(sig, group);
-  }
-
-  auto group = mGroupDict.at(sig);
-  return group;
-#endif
 }
-
-// @brief 一般的な組み合わせ論理用セルグループを得る．
-CiCellGroup*
-CgMgr::find_logic_group(
-  SizeType input_num,
-  SizeType output_num,
-  SizeType inout_num,
-  const vector<Expr>& expr_array,
-  const vector<Expr>& tristate_array
-)
-{
-  // シグネチャを作る．
-  string sig;
-
-  if ( mGroupDict.count(sig) == 0 ) {
-    // このグループの属しているクラスを得る．
-    string rep_sig;
-    ClibIOMap rep_map;
-
-    auto rep_class = _find_class(rep_sig);
-
-    // 新しいグループを作る．
-    auto group = mLibrary.new_logic_group(rep_class, rep_map,
-					  input_num, output_num, inout_num,
-					  expr_array, tristate_array);
-
-    // 登録する．
-    mGroupDict.emplace(sig, group);
-  }
-
-  auto group = mGroupDict.at(sig);
-  return group;
-}
-
-// @brief フリップフロップ用セルグループを得る．
-CiCellGroup*
-CgMgr::find_ff_group(
-  SizeType input_num,
-  SizeType output_num,
-  SizeType inout_num,
-  const vector<Expr>& expr_array,
-  const vector<Expr>& tristate_array,
-  const Expr& clock,
-  const Expr& clock2,
-  const Expr& next_state,
-  const Expr& clear,
-  const Expr& preset,
-  ClibCPV clear_preset_var1,
-  ClibCPV clear_preset_var2
-)
-{
-  // シグネチャを作る．
-  string sig;
-
-  if ( mGroupDict.count(sig) == 0 ) {
-    // このグループの属しているクラスを得る．
-    string rep_sig;
-    ClibIOMap rep_map;
-
-    auto rep_class = _find_class(rep_sig);
-
-    // 新しいグループを作る．
-    auto group = mLibrary.new_ff_group(rep_class, rep_map,
-				       input_num, output_num, inout_num,
-				       expr_array, tristate_array,
-				       clock, clock2, next_state,
-				       clear, preset,
-				       clear_preset_var1, clear_preset_var2);
-
-    // 登録する．
-    mGroupDict.emplace(sig, group);
-  }
-
-  auto group = mGroupDict.at(sig);
-  return group;
-}
-
-// @brief ラッチ用セルグループを得る．
-CiCellGroup*
-CgMgr::find_latch_group(
-  SizeType input_num,
-  SizeType output_num,
-  SizeType inout_num,
-  const vector<Expr>& expr_array,
-  const vector<Expr>& tristate_array,
-  const Expr& enable,
-  const Expr& enable2,
-  const Expr& data_in,
-  const Expr& clear,
-  const Expr& preset,
-  ClibCPV clear_preset_var1,
-  ClibCPV clear_preset_var2
-)
-{
-  // シグネチャを作る．
-  string sig;
-
-  if ( mGroupDict.count(sig) == 0 ) {
-    // このグループの属しているクラスを得る．
-    string rep_sig;
-    ClibIOMap rep_map;
-
-    auto rep_class = _find_class(rep_sig);
-
-    // 新しいグループを作る．
-    auto group = mLibrary.new_latch_group(rep_class, rep_map,
-					  input_num, output_num, inout_num,
-					  expr_array, tristate_array,
-					  enable, enable2, data_in,
-					  clear, preset,
-					  clear_preset_var1, clear_preset_var2);
-
-    // 登録する．
-    mGroupDict.emplace(sig, group);
-  }
-
-  auto group = mGroupDict.at(sig);
-  return group;
-}
-#endif
 
 // @brief セルを対応するグループに登録する．
 CiCellGroup*
@@ -319,6 +208,112 @@ CgMgr::_find_logic_group(
   return _find_group(sig);
 }
 
+// @brief FFのシグネチャに一致するグループを探す．
+CiCellGroup*
+CgMgr::_find_ff_group(
+  bool master_slave,
+  bool has_clear,
+  bool has_preset,
+  ClibCPV cpv1,
+  ClibCPV cpv2
+)
+{
+  SizeType ni = 2; // clockとnext_state
+  SizeType no = 1; // q
+  SizeType nb = 0;
+  if ( master_slave ) {
+    // clock2
+    ++ ni;
+  }
+  if ( has_clear ) {
+    // clear
+    ++ ni;
+  }
+  if ( has_preset ) {
+    // preset
+    ++ ni;
+  }
+  vector<TvFunc> func_list{TvFunc::make_posi_literal(ni + 2, VarId{ni})};
+  vector<TvFunc> tristate_list{TvFunc::make_zero(ni + 2)};
+  SizeType id = 0;
+  TvFunc clock = TvFunc::make_posi_literal(ni + 2, VarId{id});
+  ++ id;
+  TvFunc clock2 = TvFunc::make_zero(0);
+  if ( master_slave ) {
+    clock2 = TvFunc::make_posi_literal(ni + 2, VarId{id});
+    ++ id;
+  }
+  TvFunc next_state = TvFunc::make_posi_literal(ni + 2, VarId{id});
+  ++ id;
+  TvFunc clear = TvFunc::make_zero(0);
+  if ( has_clear ) {
+    clear = TvFunc::make_posi_literal(ni + 2, VarId{id});
+    ++ id;
+  }
+  TvFunc preset = TvFunc::make_zero(0);
+  if ( has_preset ) {
+    preset = TvFunc::make_posi_literal(ni + 2, VarId{id});
+    ++ id;
+  }
+  auto sig = CgSignature::make_ff_sig(ni, no, nb, func_list, tristate_list,
+				      clock, clock2, next_state,
+				      clear, preset, cpv1, cpv2);
+  return _find_group(sig);
+}
+
+// @brief ラッチのシグネチャに一致するグループを探す．
+CiCellGroup*
+CgMgr::_find_latch_group(
+  bool master_slave,
+  bool has_clear,
+  bool has_preset,
+  ClibCPV cpv1,
+  ClibCPV cpv2
+)
+{
+  SizeType ni = 2; // clockとnext_state
+  SizeType no = 1; // q
+  SizeType nb = 0;
+  if ( master_slave ) {
+    // clock2
+    ++ ni;
+  }
+  if ( has_clear ) {
+    // clear
+    ++ ni;
+  }
+  if ( has_preset ) {
+    // preset
+    ++ ni;
+  }
+  vector<TvFunc> func_list{TvFunc::make_posi_literal(ni + 2, VarId{ni})};
+  vector<TvFunc> tristate_list{TvFunc::make_zero(ni + 2)};
+  SizeType id = 0;
+  TvFunc clock = TvFunc::make_posi_literal(ni + 2, VarId{id});
+  ++ id;
+  TvFunc clock2 = TvFunc::make_zero(0);
+  if ( master_slave ) {
+    clock2 = TvFunc::make_posi_literal(ni + 2, VarId{id});
+    ++ id;
+  }
+  TvFunc next_state = TvFunc::make_posi_literal(ni + 2, VarId{id});
+  ++ id;
+  TvFunc clear = TvFunc::make_zero(0);
+  if ( has_clear ) {
+    clear = TvFunc::make_posi_literal(ni + 2, VarId{id});
+    ++ id;
+  }
+  TvFunc preset = TvFunc::make_zero(0);
+  if ( has_preset ) {
+    preset = TvFunc::make_posi_literal(ni + 2, VarId{id});
+    ++ id;
+  }
+  auto sig = CgSignature::make_latch_sig(ni, no, nb, func_list, tristate_list,
+					 clock, clock2, next_state,
+					 clear, preset, cpv1, cpv2);
+  return _find_group(sig);
+}
+
 // @brief シグネチャに一致するグループを探す．
 CiCellGroup*
 CgMgr::_find_group(
@@ -337,8 +332,10 @@ CgMgr::_find_group(
     auto rep_sig = sig.xform(rep_map);
     // クラスを求める．
     auto rep_class = _find_class(rep_sig);
-    // そのクラスに新しいグループを追加する．
+    // グループを作る．
     auto group = mLibrary.add_cell_group(rep_class, rep_map);
+    // そのクラスに新しいグループを追加する．
+    rep_class->add_group(group);
 
     // 登録する．
     mGroupDict.emplace(sig_str, group);
@@ -372,6 +369,38 @@ CgMgr::_find_class(
     // 登録済みのクラスを返す．
     auto rep_class = mClassDict.at(sig_str);
     return rep_class;
+  }
+}
+
+// @brief FF/ラッチの属性をエンコードする．
+void
+CgMgr::encode_attr(
+  bool master_slave,
+  bool has_clear,
+  bool has_preset,
+  ClibCPV cpv1,
+  ClibCPV cpv2,
+  SizeType& idx,
+  SizeType& sub_idx
+)
+{
+  idx = 0;
+  sub_idx = 0;
+  if ( master_slave ) {
+    idx += 1;
+  }
+  if ( has_clear ) {
+    idx += 2;
+  }
+  if ( has_preset ) {
+    idx += 4;
+  }
+  if ( idx >= 6 ) {
+    if ( idx == 6 ) {
+      sub_idx = 25;
+    }
+    sub_idx += static_cast<SizeType>(cpv1) * 5;
+    sub_idx += static_cast<SizeType>(cpv2);
   }
 }
 

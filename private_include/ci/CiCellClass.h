@@ -94,8 +94,11 @@ public:
   /// @brief このクラスに属しているセルグループを追加する．
   void
   add_group(
-    CiCellGroup* group
-  );
+    const ClibCellGroup* group
+  )
+  {
+    mGroupList.push_back(group);
+  }
 
 
 public:

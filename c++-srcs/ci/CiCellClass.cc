@@ -83,13 +83,4 @@ CiCellClass::cell_group_list() const
   return mGroupList;
 }
 
-// @brief このクラスに属しているセルグループを追加する．
-void
-CiCellClass::add_group(
-  CiCellGroup* group
-)
-{
-  mGroupList.push_back(group);
-}
-
 END_NAMESPACE_YM_CLIB

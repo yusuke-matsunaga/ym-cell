@@ -121,14 +121,20 @@ CiCellLibrary::dump(
   }
 
   // 組み込み型の情報のダンプ
-  for ( int i: { 0, 1, 2, 3 } ) {
-    bs << mLogicGroup[i]->id();
+  for ( auto id: Range(4) ) {
+    bs << mLogicGroup[id]->id();
   }
-  for ( int i: { 0, 1, 2, 3 } ) {
-    bs << mFFClass[i]->id();
+  for ( auto id: Range(6) ) {
+    bs << mSimpleFFClass[id]->id();
   }
-  for ( int i: { 0, 1, 2, 3 } ) {
-    bs << mLatchClass[i]->id();
+  for ( auto id: Range(50) ) {
+    bs << mCpvFFClass[id]->id();
+  }
+  for ( auto id: Range(6) ) {
+    bs << mSimpleLatchClass[id]->id();
+  }
+  for ( auto id: Range(60) ) {
+    bs << mCpvFFClass[id]->id();
   }
 
   // パタングラフの情報のダンプ

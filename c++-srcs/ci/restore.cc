@@ -115,20 +115,30 @@ CiCellLibrary::restore(
   restore_cell_class(bs);
 
   // 組み込み型の設定
-  for ( auto i: { 0, 1, 2, 3 } ) {
+  for ( auto id: Range(4) ) {
     SizeType group_id;
     bs >> group_id;
-    mLogicGroup[i] = mGroupList[group_id].get();
+    mLogicGroup[id] = mGroupList[group_id].get();
   }
-  for ( auto i: { 0, 1, 2, 3 } ) {
+  for ( auto id: Range(6) ) {
     SizeType class_id;
     bs >> class_id;
-    mFFClass[i] = mClassList[class_id].get();
+    mSimpleFFClass[id] = mClassList[class_id].get();
   }
-  for ( auto i: { 0, 1, 2, 3 } ) {
+  for ( auto id: Range(50) ) {
     SizeType class_id;
     bs >> class_id;
-    mLatchClass[i] = mClassList[class_id].get();
+    mCpvFFClass[id] = mClassList[class_id].get();
+  }
+  for ( auto id: Range(6) ) {
+    SizeType class_id;
+    bs >> class_id;
+    mSimpleLatchClass[id] = mClassList[class_id].get();
+  }
+  for ( auto id: Range(50) ) {
+    SizeType class_id;
+    bs >> class_id;
+    mCpvLatchClass[id] = mClassList[class_id].get();
   }
 
   // パタングラフの情報の設定

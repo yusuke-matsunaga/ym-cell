@@ -398,22 +398,17 @@ public:
 
   /// @brief 単純な型のFFクラスを返す．
   ///
-  /// 該当するセルがないときでも空のセルクラスが返される．
+  /// - cpv1, cpv2 の値は has_clear, has_preset がともに true
+  ///   の時のみ意味を持つ．
+  /// - 該当するセルがないときでも空のセルクラスが返される．
   const ClibCellClass&
   simple_ff_class(
-    bool has_clear,
-    bool has_preset
-  ) const
-  {
-    SizeType pos = 0;
-    if ( has_clear ) {
-      pos += 1;
-    }
-    if ( has_preset ) {
-      pos += 2;
-    }
-    return *mFFClass[pos];
-  }
+    bool master_slave, ///< [in] master/slave 型の時 true
+    bool has_clear,    ///< [in] clear 端子を持つ時 true
+    bool has_preset,   ///< [in] preset 端子を持つ時 true
+    ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
+    ClibCPV cpv2       ///< [in] clear_preset_var2 の値
+  ) const;
 
 
 public:
@@ -423,22 +418,17 @@ public:
 
   /// @brief 単純な型のラッチクラスを返す．
   ///
-  /// 該当するセルがないときでも空のセルクラスが返される．
+  /// - cpv1, cpv2 の値は has_clear, has_preset がともに true
+  ///   の時のみ意味を持つ．
+  /// - 該当するセルがないときでも空のセルクラスが返される．
   const ClibCellClass&
   simple_latch_class(
-    bool has_clear,
-    bool has_preset
-  ) const
-  {
-    SizeType pos = 0;
-    if ( has_clear ) {
-      pos += 1;
-    }
-    if ( has_preset ) {
-      pos += 2;
-    }
-    return *mLatchClass[pos];
-  }
+    bool master_slave, ///< [in] master/slave 型の時 true
+    bool has_clear,    ///< [in] clear 端子を持つ時 true
+    bool has_preset,   ///< [in] preset 端子を持つ時 true
+    ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
+    ClibCPV cpv2       ///< [in] clear_preset_var2 の値
+  ) const;
 
 
 public:
@@ -943,6 +933,19 @@ private:
     CiCell* cell ///< [in] セル
   );
 
+  /// @brief FF/ラッチの属性をエンコードする．
+  static
+  void
+  encode_attr(
+    bool master_slave, ///< [in] master/slave 型の時 true
+    bool has_clear,    ///< [in] clear 端子を持つ時 true
+    bool has_preset,   ///< [in] preset 端子を持つ時 true
+    ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
+    ClibCPV cpv2,      ///< [in] clear_preset_var2 の値
+    SizeType& idx,     ///< [out] メインインデックス
+    SizeType& sub_idx  ///< [out] サブインデックス
+  );
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -1037,35 +1040,33 @@ private:
   // 3: インバータ
   const ClibCellGroup* mLogicGroup[4];
 
-  // FFクラスの情報
-  //  0:    Q: クリアなし: プリセットなし
-  //  1:    Q: クリアなし: プリセットあり
-  //  2:    Q: クリアあり: プリセットなし
-  //  3:    Q: クリアあり: プリセットあり
-  //  4:   XQ: クリアなし: プリセットなし
-  //  5:   XQ: クリアなし: プリセットあり
-  //  6:   XQ: クリアあり: プリセットなし
-  //  7:   XQ: クリアあり: プリセットあり
-  //  8: Q/XQ: クリアなし: プリセットなし
-  //  9: Q/XQ: クリアなし: プリセットあり
-  // 10: Q/XQ: クリアあり: プリセットなし
-  // 11: Q/XQ: クリアあり: プリセットあり
-  const ClibCellClass* mFFClass[12];
+  // 単純なFFクラスの情報
+  //  0: single       | クリアなし | プリセットなし
+  //  1: master/slave | クリアなし | プリセットなし
+  //  2: single       | クリアあり | プリセットなし
+  //  3: master/slave | クリアあり | プリセットなし
+  //  4: single       | クリアなし | プリセットあり
+  //  5: master/slave | クリアなし | プリセットあり
+  const ClibCellClass* mSimpleFFClass[6];
 
-  // ラッチクラスの情報
-  //  0:    Q: クリアなし: プリセットなし
-  //  1:    Q: クリアなし: プリセットあり
-  //  2:    Q: クリアあり: プリセットなし
-  //  3:    Q: クリアあり: プリセットあり
-  //  4:   XQ: クリアなし: プリセットなし
-  //  5:   XQ: クリアなし: プリセットあり
-  //  6:   XQ: クリアあり: プリセットなし
-  //  7:   XQ: クリアあり: プリセットあり
-  //  8: Q/XQ: クリアなし: プリセットなし
-  //  9: Q/XQ: クリアなし: プリセットあり
-  // 10: Q/XQ: クリアあり: プリセットなし
-  // 11: Q/XQ: クリアあり: プリセットあり
-  const ClibCellClass* mLatchClass[12];
+  // clear/preset ありの単純なFFクラスの情報
+  // 0: L, 1: H, 2: N, 3: T, 4: X
+  // の2乗(clear_preset_var1, clear_preset_var2)
+  const ClibCellClass* mCpvFFClass[50];
+
+  // 単純なラッチクラスの情報
+  //  0: single       | クリアなし | プリセットなし
+  //  1: master/slave | クリアなし | プリセットなし
+  //  2: single       | クリアあり | プリセットなし
+  //  3: master/slave | クリアあり | プリセットなし
+  //  4: single       | クリアなし | プリセットあり
+  //  5: master/slave | クリアなし | プリセットあり
+  const ClibCellClass* mSimpleLatchClass[6];
+
+  // clear/preset ありの単純なラッチクラスの情報
+  // 0: L, 1: H, 2: N, 3: T, 4: X
+  // の2乗(clear_preset_var1, clear_preset_var2)
+  const ClibCellClass* mCpvLatchClass[50];
 
   // パタングラフを管理するクラス
   CiPatMgr mPatMgr;

@@ -66,95 +66,67 @@ public:
     return mLogicGroup[type];
   }
 
-#if 0
-  /// @brief 1出力の組み合わせ論理用セルグループを得る．
-  ///
-  /// 通常のテクノロジマッピングで用いられるのはこのグループ内のセルのみ．
-  CiCellGroup*
-  find_logic_group(
-    SizeType input_num, ///< [in] 入力数
-    const Expr& expr    ///< [in] 出力の論理式
+  /// @brief FFクラス番号を得る．
+  SizeType
+  ff_class(
+    bool master_slave, ///< [in] master/slave 型の時 true
+    bool has_clear,    ///< [in] clear 端子を持つ時 true
+    bool has_preset,   ///< [in] preset 端子を持つ時 true
+    ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
+    ClibCPV cpv2       ///< [in] clear_preset_var2 の値
+  ) const
+  {
+    SizeType idx;
+    SizeType sub_idx;
+    encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2, idx, sub_idx);
+    if ( idx < 6 ) {
+      return mSimpleFFClass[idx];
+    }
+    else if ( idx == 6 ) {
+      return mCpvFFClass[sub_idx];
+    }
+    else {
+      return mCpvFFClass[sub_idx + 25];
+    }
+  }
+
+  /// @brief ラッチクラス番号を得る．
+  SizeType
+  latch_class(
+    bool master_slave, ///< [in] master/slave 型の時 true
+    bool has_clear,    ///< [in] clear 端子を持つ時 true
+    bool has_preset,   ///< [in] preset 端子を持つ時 true
+    ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
+    ClibCPV cpv2       ///< [in] clear_preset_var2 の値
+  ) const
+  {
+    SizeType idx;
+    SizeType sub_idx;
+    encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2, idx, sub_idx);
+    if ( idx < 6 ) {
+      return mSimpleLatchClass[idx];
+    }
+    else if ( idx == 6 ) {
+      return mCpvLatchClass[sub_idx];
+    }
+    else {
+      return mCpvLatchClass[sub_idx + 25];
+    }
+  }
+
+  /// @brief FF/ラッチの属性をエンコードする．
+  static
+  void
+  encode_attr(
+    bool master_slave, ///< [in] master/slave 型の時 true
+    bool has_clear,    ///< [in] clear 端子を持つ時 true
+    bool has_preset,   ///< [in] preset 端子を持つ時 true
+    ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
+    ClibCPV cpv2,      ///< [in] clear_preset_var2 の値
+    SizeType& idx,     ///< [out] メインインデックス
+    SizeType& sub_idx  ///< [out] サブインデックス
   );
 
-  /// @brief 1出力のtristate論理用セルグループを得る．
-  CiCellGroup*
-  find_logic_group(
-    SizeType input_num,  ///< [in] 入力数
-    const Expr& expr,    ///< [in] 出力の論理式
-    const Expr& tristate ///< [in] トライステート条件式
-  );
-
-  /// @brief 一般的な組み合わせ論理用セルグループを得る．
-  CiCellGroup*
-  find_logic_group(
-    SizeType input_num,                ///< [in] 入力数
-    SizeType output_num,               ///< [in] 出力数
-    SizeType inout_num,                ///< [in] 入出力数
-    const vector<Expr>& expr_array,    ///< [in] 出力の論理式の配列
-                                       ///<  - 配列のサイズは output_num + inout_num
-                                       ///<  - 論理式を持たない場合にはinvalid な Expr を持つ
-                                       ///<    (Expr::is_valid() == false)．
-    const vector<Expr>& tristate_array ///< [in] 出力のtristate条件の配列
-                                       ///<  - 配列のサイズは output_num + inout_num
-                                       ///<  - tristate にならない場合は定数0となる．
-  );
-
-  /// @brief フリップフロップ用セルグループを得る．
-  CiCellGroup*
-  find_ff_group(
-    SizeType input_num,                 ///< [in] 入力数
-    SizeType output_num,                ///< [in] 出力数
-    SizeType inout_num,                 ///< [in] 入出力数
-    const vector<Expr>& expr_array,     ///< [in] 出力の論理式の配列
-                                        ///<  - 配列のサイズは output_num + inout_num
-                                        ///<  - 論理式を持たない場合にはinvalid な Expr を持つ
-                                        ///<    (Expr::is_valid() == false)．
-    const vector<Expr>& tristate_array, ///< [in] 出力のtristate条件の配列
-                                        ///<  - 配列のサイズは output_num + inout_num
-                                        ///<  - tristate にならない場合は定数0となる．
-    const Expr& clock,                  ///< [in] マスタークロックの論理式
-    const Expr& clock2,                 ///< [in] スレーブクロックの論理式
-                                        ///<  - single-stage FF の場合は定数0
-    const Expr& next_state,             ///< [in] 次状態の論理式
-                                        ///<  - invalid の場合もある．
-    const Expr& clear,                  ///< [in] クリア条件の論理式
-                                        ///<  - 定数0の場合もある．
-    const Expr& preset,                 ///< [in] プリセット条件の論理式
-                                        ///<  - 定数0の場合もある．
-    ClibCPV clear_preset_var1,          ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-                                        ///<  - clear, preset が非0の時意味を持つ．
-    ClibCPV clear_preset_var2           ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-                                        ///<  - clear, preset が非0の時意味を持つ．
-  );
-
-  /// @brief ラッチ用セルグループを得る．
-  CiCellGroup*
-  find_latch_group(
-    SizeType input_num,                 ///< [in] 入力数
-    SizeType output_num,                ///< [in] 出力数
-    SizeType inout_num,                 ///< [in] 入出力数
-    const vector<Expr>& expr_array,     ///< [in] 出力の論理式の配列
-                                        ///<  - 配列のサイズは output_num + inout_num
-                                        ///<  - 論理式を持たない場合にはinvalid な Expr を持つ
-                                        ///<    (Expr::is_valid() == false)．
-    const vector<Expr>& tristate_array, ///< [in] 出力のtristate条件の配列
-                                        ///<  - 配列のサイズは output_num + inout_num
-                                        ///<  - tristate にならない場合は定数0となる．
-    const Expr& enable,                 ///< [in] マスターイネーブルの論理式
-    const Expr& enable2,                ///< [in] スレーブイネーブルの論理式
-                                        ///<  - single-stage latch の場合は定数0
-    const Expr& data_in,                ///< [in] データ入力の論理式
-                                        ///<  - invalid の場合もある．
-    const Expr& clear,                  ///< [in] クリア条件の論理式
-                                        ///<  - 定数0の場合もある．
-    const Expr& preset,                 ///< [in] プリセット条件の論理式
-                                        ///<  - 定数0の場合もある．
-    ClibCPV clear_preset_var1,          ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-                                        ///<  - clear, preset が非0の時意味を持つ．
-    ClibCPV clear_preset_var2           ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-                                        ///<  - clear, preset が非0の時意味を持つ．
-  );
-#endif
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -180,6 +152,32 @@ private:
   CiCellGroup*
   _find_logic_group(
     const Expr& expr ///< [in] 論理式
+  );
+
+  /// @brief FFのシグネチャに一致するグループを探す．
+  /// @return グループを返す．
+  ///
+  /// なければ作る．
+  CiCellGroup*
+  _find_ff_group(
+    bool master_slave, ///< [in] master/slave 型の時 true
+    bool has_clear,    ///< [in] clear 端子を持つ時 true
+    bool has_preset,   ///< [in] preset 端子を持つ時 true
+    ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
+    ClibCPV cpv2       ///< [in] clear_preset_var2 の値
+  );
+
+  /// @brief ラッチのシグネチャに一致するグループを探す．
+  /// @return グループを返す．
+  ///
+  /// なければ作る．
+  CiCellGroup*
+  _find_latch_group(
+    bool master_slave, ///< [in] master/slave 型の時 true
+    bool has_clear,    ///< [in] clear 端子を持つ時 true
+    bool has_preset,   ///< [in] preset 端子を持つ時 true
+    ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
+    ClibCPV cpv2       ///< [in] clear_preset_var2 の値
   );
 
   /// @brief シグネチャに一致するグループを探す．
@@ -214,6 +212,18 @@ private:
 
   // 論理セルグループ番号のリスト
   SizeType mLogicGroup[4];
+
+  // 単純なFFクラス番号のリスト
+  SizeType mSimpleFFClass[6];
+
+  // clear/preset 付きの単純なFFクラス番号のリスト
+  SizeType mCpvFFClass[50];
+
+  // 単純なラッチクラス番号のリスト
+  SizeType mSimpleLatchClass[6];
+
+  // clear/preset 付きの単純なラッチクラス番号のリスト
+  SizeType mCpvLatchClass[50];
 
 };
 

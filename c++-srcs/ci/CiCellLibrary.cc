@@ -73,6 +73,48 @@ CiCellLibrary::bus_type(
   return error_bus_type();
 }
 
+// @brief 単純な型のFFクラスを返す．
+const ClibCellClass&
+CiCellLibrary::simple_ff_class(
+  bool master_slave,
+  bool has_clear,
+  bool has_preset,
+  ClibCPV cpv1,
+  ClibCPV cpv2
+) const
+{
+  SizeType idx;
+  SizeType sub_idx;
+  CgMgr::encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2, idx, sub_idx);
+  if ( idx < 6 ) {
+    return *mSimpleFFClass[idx];
+  }
+  else {
+    return *mCpvFFClass[sub_idx];
+  }
+}
+
+// @brief 単純な型のラッチクラスを返す．
+const ClibCellClass&
+CiCellLibrary::simple_latch_class(
+  bool master_slave,
+  bool has_clear,
+  bool has_preset,
+  ClibCPV cpv1,
+  ClibCPV cpv2
+) const
+{
+  SizeType idx;
+  SizeType sub_idx;
+  CgMgr::encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2, idx, sub_idx);
+  if ( idx < 6 ) {
+    return *mSimpleLatchClass[idx];
+  }
+  else {
+    return *mCpvLatchClass[sub_idx];
+  }
+}
+
 // @brief 属性を設定する(浮動小数点型)
 void
 CiCellLibrary::set_attr(
@@ -243,7 +285,7 @@ CiCellLibrary::add_cell_class(
   auto cc = new CiCellClass{id, idmap_list};
   mClassList.push_back(unique_ptr<CiCellClass>(cc));
   mRefClassList.push_back(cc);
-  return nullptr;
+  return cc;
 }
 
 // @brief セルグループを作る．
@@ -515,119 +557,74 @@ CiCellLibrary::compile()
   CgMgr mgr{*this};
 
   for ( auto& cell: mCellList ) {
-    //mgr.reg_group(cell.get());
     auto g = mgr.reg_group(cell.get());
-    cout << cell->name() << ": Group#" << g->id() << endl;
   }
 
   for ( int i: { 0, 1, 2, 3 } ) {
     mLogicGroup[i] = mRefGroupList[mgr.logic_group(i)];
   }
 
+  for ( bool master_slave: { false, true } ) {
+    for ( bool has_clear: { false, true } ) {
+      for ( bool has_preset: { false, true } ) {
+	if ( has_clear && has_preset ) {
+	  for ( ClibCPV cpv1: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
+	    for ( ClibCPV cpv2: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
+	      SizeType idx;
+	      SizeType sub_idx;
+	      CgMgr::encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2,
+				 idx, sub_idx);
+	      SizeType id = mgr.ff_class(master_slave, has_clear, has_preset, cpv1, cpv2);
+	      mCpvFFClass[sub_idx] = mRefClassList[id];
+	    }
+	  }
+	}
+	else {
+	  ClibCPV cpv1{ClibCPV::X};
+	  ClibCPV cpv2{ClibCPV::X};
+	  SizeType idx;
+	  SizeType sub_idx;
+	  CgMgr::encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2,
+			     idx, sub_idx);
+	  SizeType id = mgr.ff_class(master_slave, has_clear, has_preset, cpv1, cpv2);
+	  mSimpleFFClass[idx] = mRefClassList[id];
+	}
+      }
+    }
+  }
+
+  for ( bool master_slave: { false, true } ) {
+    for ( bool has_clear: { false, true } ) {
+      for ( bool has_preset: { false, true } ) {
+	if ( has_clear && has_preset ) {
+	  for ( ClibCPV cpv1: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
+	    for ( ClibCPV cpv2: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
+	      SizeType idx;
+	      SizeType sub_idx;
+	      CgMgr::encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2,
+				 idx, sub_idx);
+	      SizeType id = mgr.latch_class(master_slave, has_clear, has_preset, cpv1, cpv2);
+	      mCpvLatchClass[sub_idx] = mRefClassList[id];
+	    }
+	  }
+	}
+	else {
+	  ClibCPV cpv1{ClibCPV::X};
+	  ClibCPV cpv2{ClibCPV::X};
+	  SizeType idx;
+	  SizeType sub_idx;
+	  CgMgr::encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2,
+			     idx, sub_idx);
+	  SizeType id = mgr.latch_class(master_slave, has_clear, has_preset, cpv1, cpv2);
+	  mSimpleLatchClass[idx] = mRefClassList[id];
+	}
+      }
+    }
+  }
+
 #if 0
-  // i の値
-  //  0: Q のみ
-  //  1: XQ のみ
-  //  2: Q/XQ 両方
-  for ( int i: { 0, 1, 2 } ) {
-    bool has_q = (i == 0 || i == 2);
-    bool has_xq = (i == 1 || i == 2);
-
-    // j の値
-    //  0: クリアなし
-    //  1: クリアあり
-    for ( int j: { 0, 1 } ) {
-      bool has_clear = (j == 1);
-
-      // k の値
-      //  0: プリセットなし
-      //  1: プリセットあり
-      for ( int k: { 0, 1 } ) {
-	bool has_preset = (k == 1);
-
-	auto cid = libcomp.ff_class(has_q, has_xq, has_clear, has_preset);
-	ClibCellClass* cclass = mClassList[cid].get();
-	mFFClass[i * 4 + j * 2 + k] = cclass;
-
-	for ( auto id: Range(cclass->cell_group_num()) ) {
-	  auto& group = cclass->cell_group(id);
-	  NpnMapM map = group.map();
-	  SizeType pos_array[6] = { 0, 0, 0, 0, 0, 0 };
-	  auto ni = map.input_num() - 2;
-	  ASSERT_COND( ni <= 4 );
-	  for ( auto i: Range(ni) ) {
-	    NpnVmap imap = map.imap(VarId(i));
-	    if ( !imap.is_invalid() ) {
-	      auto pos = imap.var().val();
-	      auto pol = imap.inv() ? 16U : 8U;
-	      pos_array[pos] = i | pol;
-	    }
-	  }
-#warning "TODO: 反転出力ありと決めつけていいの？"
-	  pos_array[4] = 0;
-	  pos_array[5] = 1 | (1 << 3);
-	  // group は const ClibCellGroup* なので
-	  // CiCellGroup* を得るためにちょっと面倒な手順を踏む．
-	  auto gid = group.id();
-	  //mGroupList[gid]->set_ff_info(pos_array);
-#warning "TODO: 根本的に考え直す"
-	}
-      }
-    }
-  }
-
-  // i の値
-  //  0: Q のみ
-  //  1: XQ のみ
-  //  2: Q/XQ 両方
-  for ( int i: { 0, 1, 2 } ) {
-    bool has_q = (i == 0 || i == 2);
-    bool has_xq = (i == 1 || i == 2);
-
-    // j の値
-    //  0: クリアなし
-    //  1: クリアあり
-    for ( int j: { 0, 1 } ) {
-      bool has_clear = (j == 1);
-
-      // k の値
-      //  0: プリセットなし
-      //  1: プリセットあり
-      for ( int k: { 0, 1 } ) {
-	bool has_preset = (k == 1);
-
-	auto cid = libcomp.latch_class(has_q, has_xq, has_clear, has_preset);
-	ClibCellClass* cclass = mClassList[cid].get();
-	mLatchClass[i * 4 + j * 2 + k] = cclass;
-
-	for ( auto id: Range(cclass->cell_group_num()) ) {
-	  auto& group = cclass->cell_group(id);
-	  NpnMapM map = group.map();
-	  SizeType pos_array[5] = { 0, 0, 0, 0, 0 };
-	  auto ni = map.input_num() - 2;
-	  ASSERT_COND( ni <= 4 );
-	  for ( auto i: Range(ni) ) {
-	    NpnVmap imap = map.imap(VarId(i));
-	    if ( !imap.is_invalid() ) {
-	      auto pos = imap.var().val();
-	      auto pol = imap.inv() ? 16U : 8U;
-	      pos_array[pos] = i | pol;
-	    }
-	  }
-	  pos_array[4] = 0;
-	  // group は const ClibCellGroup* なので
-	  // CiCellGroup* を得るためにちょっと面倒な手順を踏む．
-	  auto gid = group.id();
-	  //mGroupList[gid]->set_latch_info(pos_array);
-#warning "TODO: 根本的に考え直す"
-	}
-      }
-    }
-  }
-
   mPatMgr.copy(libcomp.pat_mgr());
 #endif
-
 }
 
 // @brief ピンを登録する．

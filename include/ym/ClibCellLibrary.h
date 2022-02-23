@@ -305,8 +305,11 @@ public:
   /// 該当するセルがないときでも空のセルクラスが返される．
   const ClibCellClass&
   simple_ff_class(
-    bool has_clear, ///< [in] クリア端子を持つとき true にする．
-    bool has_preset ///< [in] プリセット端子を持つとき true にする．
+    bool master_slave,         ///< [in] master/slave 型の時 true
+    bool has_clear,            ///< [in] clear 端子を持つ時 true
+    bool has_preset,           ///< [in] preset 端子を持つ時 true
+    ClibCPV cpv1 = ClibCPV::X, ///< [in] clear_preset_var1 の値
+    ClibCPV cpv2 = ClibCPV::X  ///< [in] clear_preset_var2 の値
   ) const;
 
 
@@ -320,8 +323,11 @@ public:
   /// 該当するセルがないときでも空のセルクラスが返される．
   const ClibCellClass&
   simple_latch_class(
-    bool has_clear, ///< [in] クリア端子を持つとき true にする．
-    bool has_preset ///< [in] プリセット端子を持つとき true にする．
+    bool master_slave,         ///< [in] master/slave 型の時 true
+    bool has_clear,            ///< [in] clear 端子を持つ時 true
+    bool has_preset,           ///< [in] preset 端子を持つ時 true
+    ClibCPV cpv1 = ClibCPV::X, ///< [in] clear_preset_var1 の値
+    ClibCPV cpv2 = ClibCPV::X  ///< [in] clear_preset_var2 の値
   ) const;
 
 

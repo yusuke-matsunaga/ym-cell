@@ -417,6 +417,7 @@ display_ff_class(
   }
   for ( auto& group: cclass.cell_group_list() ) {
     s << "  Group:";
+#if 0
     s << " clock = " << group.clock_expr();
     if ( group.type() == ClibCellType::FF_M ) {
       s << " clock2 = " << group.clock2_expr();
@@ -433,6 +434,7 @@ display_ff_class(
       s << "clear_preset_var2 = " << group.clear_preset_var2();
     }
     s << endl;
+#endif
     s << "         Cell = ";
     for ( auto& cell: group.cell_list() ) {
       s << " " << cell.name();
@@ -461,6 +463,7 @@ display_latch_class(
   }
   for ( auto& group: cclass.cell_group_list() ) {
     s << "  Group:";
+#if 0
     s << " enable = " << group.enable_expr();
     if ( group.type() == ClibCellType::Latch_M ) {
       s << " enable2 = " << group.enable2_expr();
@@ -477,6 +480,7 @@ display_latch_class(
       display_CPV(s, "clear_preset_var2", group.clear_preset_var2());
     }
     s << endl;
+#endif
     s << "         Cell = ";
     for ( auto& cell: group.cell_list() ) {
       s << " " << cell.name();
@@ -773,7 +777,6 @@ display_library(
     display_cell(s, cell, delay_model);
   }
 
-#if 1
   // セルクラスの情報
   s << "Cell Class" << endl;
   for ( auto class_id: Range(library.npn_class_num()) ) {
@@ -789,16 +792,17 @@ display_library(
   display_group(s, "Buffer Group", library.buf_func());
   display_group(s, "Inverter Group", library.inv_func());
 
-  display_ff_class(s, "DFF Class", library.simple_ff_class(false, false));
-  display_ff_class(s, "DFF_R Class", library.simple_ff_class(true, false));
-  display_ff_class(s, "DFF_S Class", library.simple_ff_class(false, true));
-  display_ff_class(s, "DFF_RS Class", library.simple_ff_class(true, true));
+  display_ff_class(s, "DFF Class", library.simple_ff_class(false, false, false));
+  display_ff_class(s, "DFF_R Class", library.simple_ff_class(false, true, false));
+  display_ff_class(s, "DFF_S Class", library.simple_ff_class(false, false, true));
+  display_ff_class(s, "DFF_RS Class", library.simple_ff_class(false, true, true));
 
-  display_latch_class(s, "Latch Class", library.simple_latch_class(false, false));
-  display_latch_class(s, "Latch_R Class", library.simple_latch_class(true, false));
-  display_latch_class(s, "Latch_S Class", library.simple_latch_class(false, true));
-  display_latch_class(s, "Latch_RS Class", library.simple_latch_class(true, true));
+  display_latch_class(s, "Latch Class", library.simple_latch_class(false, false, false));
+  display_latch_class(s, "Latch_R Class", library.simple_latch_class(false, true, false));
+  display_latch_class(s, "Latch_S Class", library.simple_latch_class(false, false, true));
+  display_latch_class(s, "Latch_RS Class", library.simple_latch_class(false, true, true));
 
+#if 1
   // パタングラフの情報
   s << "==== PatMgr dump start ====" << endl;
 
