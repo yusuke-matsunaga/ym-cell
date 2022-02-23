@@ -17,6 +17,7 @@ BEGIN_NAMESPACE_YM_CLIB
 class CiCellLibrary;
 class CiCellClass;
 class CiCellGroup;
+class CiCell;
 class CgSignature;
 
 //////////////////////////////////////////////////////////////////////
@@ -42,6 +43,30 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief セルをグループに登録する．
+  /// @return セルの所属するグループを返す．
+  ///
+  /// なければ作る．
+  CiCellGroup*
+  reg_group(
+    const CiCell* cell ///< [in] セル
+  );
+
+  /// @brief 論理セルグループ番号を得る．
+  SizeType
+  logic_group(
+    SizeType type ///< [in] グループの種類
+                  ///<  - 0: 定数0
+                  ///<  - 1: 定数1
+                  ///<  - 2: バッファ
+                  ///<  - 3: インバータ
+  ) const
+  {
+    ASSERT_COND( 0 <= type && type < 4 );
+    return mLogicGroup[type];
+  }
+
+#if 0
   /// @brief 1出力の組み合わせ論理用セルグループを得る．
   ///
   /// 通常のテクノロジマッピングで用いられるのはこのグループ内のセルのみ．
@@ -129,14 +154,36 @@ public:
     ClibCPV clear_preset_var2           ///< [in] クリアとプリセットが同時にアクティブになった時の値2
                                         ///<  - clear, preset が非0の時意味を持つ．
   );
-
+#endif
 
 private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief グループを得る．
+  /// @brief 論理セルグループの初期化を行なう．
+  void
+  logic_init();
+
+  /// @brief FFグループの初期化を行なう．
+  void
+  ff_init();
+
+  /// @brief ラッチグループの初期化を行なう．
+  void
+  latch_init();
+
+  /// @brief 論理式から作られるシグネチャに一致するグループを探す．
+  /// @return グループを返す．
+  ///
+  /// なければ作る．
+  CiCellGroup*
+  _find_logic_group(
+    const Expr& expr ///< [in] 論理式
+  );
+
+  /// @brief シグネチャに一致するグループを探す．
+  /// @return グループを返す．
   ///
   /// なければ作る．
   CiCellGroup*
@@ -159,11 +206,14 @@ private:
   // ライブラリ
   CiCellLibrary& mLibrary;
 
-  // シグネチャをキーにしてセルグループを保持する辞書
+  // シグネチャ文字列をキーにしてセルグループを保持する辞書
   unordered_map<string, CiCellGroup*> mGroupDict;
 
-  // シグネチャをキーにしてセルクラスを保持する辞書
+  // シグネチャ文字列をキーにしてセルクラスを保持する辞書
   unordered_map<string, CiCellClass*> mClassDict;
+
+  // 論理セルグループ番号のリスト
+  SizeType mLogicGroup[4];
 
 };
 

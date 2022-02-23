@@ -773,7 +773,7 @@ display_library(
     display_cell(s, cell, delay_model);
   }
 
-#if 0
+#if 1
   // セルクラスの情報
   s << "Cell Class" << endl;
   for ( auto class_id: Range(library.npn_class_num()) ) {

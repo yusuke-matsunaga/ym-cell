@@ -278,13 +278,4 @@ CiCellGroup::cell_list() const
   return mCellList;
 }
 
-// @brief セルを追加する．
-void
-CiCellGroup::add_cell(
-  CiCell* cell
-)
-{
-  mCellList.push_back(cell);
-}
-
 END_NAMESPACE_YM_CLIB

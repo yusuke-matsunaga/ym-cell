@@ -18,8 +18,9 @@
 #include "ci/CiLut.h"
 #include "ci/CiBusType.h"
 #include "ci/CiPatGraph.h"
-
 #include "ci/CiCell.h"
+#include "cgmgr/CgMgr.h"
+
 #include "CiFFCell.h"
 #include "CiLatchCell.h"
 
@@ -507,49 +508,23 @@ CiCellLibrary::error_patgraph()
   return pat_graph;
 }
 
-#if 0
 // @brief セルグループ/セルクラスの設定を行なう．
 void
 CiCellLibrary::compile()
 {
-  CgMgr mgr{this};
+  CgMgr mgr{*this};
 
-  for ( auto cell: mRefCellList ) {
-
-  }
-
-  libcomp.compile();
-  // LcGroup から CiCellGroup を作る．
-  auto ng = libcomp.group_num();
-  mGroupList.clear();
-  mGroupList.reserve(ng);
-  for ( auto g: Range(ng) ) {
-    const LcGroup& src_group = libcomp.group(g);
-    const vector<CiCell*>& cell_list = src_group.cell_list();
-    CiCellGroup* group = new_cell_group(g, src_group.map(), cell_list);
-    mGroupList.push_back(unique_ptr<CiCellGroup>{group});
-  }
-
-  // LcClass から CiCellClass を作る．
-  auto nc = libcomp.npn_class_num();
-  mClassList.clear();
-  mClassList.reserve(nc);
-  for ( auto c: Range(nc) ) {
-    const LcClass& src_class = libcomp.npn_class(c);
-    const vector<LcGroup*>& src_group_list = src_class.group_list();
-    auto n = src_group_list.size();
-    vector<CiCellGroup*> dst_group_list(n);
-    for ( auto i: Range(n) ) {
-      dst_group_list[i] = mGroupList[src_group_list[i]->id()].get();
-    }
-    auto cclass = new_cell_class(c, src_class.idmap_list(), dst_group_list);
-    mClassList.push_back(unique_ptr<CiCellClass>{cclass});
+  for ( auto& cell: mCellList ) {
+    //mgr.reg_group(cell.get());
+    auto g = mgr.reg_group(cell.get());
+    cout << cell->name() << ": Group#" << g->id() << endl;
   }
 
   for ( int i: { 0, 1, 2, 3 } ) {
-    mLogicGroup[i] = mGroupList[libcomp.logic_group(i)].get();
+    mLogicGroup[i] = mRefGroupList[mgr.logic_group(i)];
   }
 
+#if 0
   // i の値
   //  0: Q のみ
   //  1: XQ のみ
@@ -651,9 +626,9 @@ CiCellLibrary::compile()
   }
 
   mPatMgr.copy(libcomp.pat_mgr());
+#endif
 
 }
-#endif
 
 // @brief ピンを登録する．
 void

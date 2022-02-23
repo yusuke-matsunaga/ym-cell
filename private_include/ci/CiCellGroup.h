@@ -236,8 +236,11 @@ public:
   /// @brief セルを追加する．
   void
   add_cell(
-    CiCell* cell
-  );
+    const ClibCell* cell
+  )
+  {
+    mCellList.push_back(cell);
+  }
 
 
 public:

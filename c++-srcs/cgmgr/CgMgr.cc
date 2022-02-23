@@ -25,6 +25,91 @@ CgMgr::CgMgr(
   CiCellLibrary& library ///< [in] 対象のセルライブラリ
 ) : mLibrary{library}
 {
+  logic_init();
+  ff_init();
+  latch_init();
+}
+
+// @brief 論理セルグループの初期化を行なう．
+void
+CgMgr::logic_init()
+{
+  { // 定数0グループの登録
+    auto func0 = _find_logic_group(Expr::make_zero());
+    mLogicGroup[0] = func0->id();
+  }
+  { // 定数1グループの登録
+    auto func1 = _find_logic_group(Expr::make_one());
+    mLogicGroup[1] = func1->id();
+  }
+  { // バッファグループの登録
+    Expr expr = Expr::make_posi_literal(VarId(0));
+    auto func2 = _find_logic_group(expr);
+    mLogicGroup[2] = func2->id();
+  }
+  { // インバーターグループの登録
+    Expr expr = Expr::make_nega_literal(VarId(0));
+    auto func3 = _find_logic_group(expr);
+    mLogicGroup[3] = func3->id();
+  }
+
+  // 以降の処理は必須ではないが，
+  // クラス一覧に現れる順序を統一する効果がある．
+
+  // AND2 〜 AND8 のシグネチャを登録しておく．
+  for ( auto ni: {2, 3, 4, 5, 6, 7, 8} ) {
+    Expr and_expr = Expr::make_posi_literal(VarId(0));
+    for ( auto i = 1; i < ni; ++ i ) {
+      and_expr &= Expr::make_posi_literal(VarId(i));
+    }
+    _find_logic_group(and_expr);
+  }
+
+  // XOR2 〜 XOR4 のシグネチャを登録しておく．
+  for ( auto ni: {2, 3, 4} ) {
+    Expr xor_expr = Expr::make_posi_literal(VarId(0));
+    for ( int i = 1; i < ni; ++ i ) {
+      xor_expr ^= Expr::make_posi_literal(VarId(i));
+    }
+    _find_logic_group(xor_expr);
+  }
+
+  // MUX2 のシグネチャを登録しておく．
+  {
+    Expr lit0 = Expr::make_posi_literal(VarId(0));
+    Expr lit1 = Expr::make_posi_literal(VarId(1));
+    Expr lit2 = Expr::make_posi_literal(VarId(2));
+    Expr mux2_expr = lit0 & ~lit2 | lit1 & lit2;
+    _find_logic_group(mux2_expr);
+  }
+
+  // MUX4 のシグネチャを登録しておく．
+  {
+    Expr lit0 = Expr::make_posi_literal(VarId(0));
+    Expr lit1 = Expr::make_posi_literal(VarId(1));
+    Expr lit2 = Expr::make_posi_literal(VarId(2));
+    Expr lit3 = Expr::make_posi_literal(VarId(3));
+    Expr lit4 = Expr::make_posi_literal(VarId(4));
+    Expr lit5 = Expr::make_posi_literal(VarId(5));
+    Expr mux4_expr =
+      lit0 & ~lit4 & ~lit5 |
+      lit1 &  lit4 & ~lit5 |
+      lit2 & ~lit4 &  lit5 |
+      lit3 &  lit4 &  lit5;
+    _find_logic_group(mux4_expr);
+  }
+}
+
+// @brief FFグループの初期化を行なう．
+void
+CgMgr::ff_init()
+{
+}
+
+// @brief ラッチグループの初期化を行なう．
+void
+CgMgr::latch_init()
+{
 }
 
 #if 0
@@ -249,12 +334,42 @@ CgMgr::find_latch_group(
 }
 #endif
 
-// @brief グループを得る．
+// @brief セルを対応するグループに登録する．
+CiCellGroup*
+CgMgr::reg_group(
+  const CiCell* cell
+)
+{
+  // シグネチャを作る．
+  auto sig = cell->make_signature();
+
+  // sig に対応するグループを求める．
+  auto group = _find_group(sig);
+  // セルを登録する．
+  group->add_cell(cell);
+
+  return group;
+}
+
+// @brief 論理式から作られるシグネチャに一致するグループを探す．
+// @return グループを返す．
 //
 // なければ作る．
 CiCellGroup*
+CgMgr::_find_logic_group(
+  const Expr& expr
+)
+{
+  SizeType ni = expr.input_size();
+  auto f = expr.make_tv(ni);
+  auto sig = CgSignature::make_logic_sig(f);
+  return _find_group(sig);
+}
+
+// @brief シグネチャに一致するグループを探す．
+CiCellGroup*
 CgMgr::_find_group(
-  const CgSignature& sig ///< [in] シグネチャ
+  const CgSignature& sig
 )
 {
   // シグネチャ文字列を作る．

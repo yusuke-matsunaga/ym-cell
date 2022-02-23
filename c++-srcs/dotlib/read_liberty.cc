@@ -275,6 +275,8 @@ set_library(
     }
   }
 
+  library->compile();
+
   return true;
 }
 
