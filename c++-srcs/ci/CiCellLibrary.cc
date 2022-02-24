@@ -397,6 +397,7 @@ CiCellLibrary::reg_cell(
   cell->set_id(mRefCellList.size());
   mCellList.push_back(unique_ptr<CiCell>{cell});
   mRefCellList.push_back(cell);
+  mCellHash.emplace(cell->name(), cell);
 }
 
 // @brief 1次元の LUT を作る．

@@ -853,8 +853,9 @@ private:
   );
 
   /// @brief タイミング情報を読み込む．
-  vector<CiTiming*>
+  void
   restore_timing(
+    CiCell* cell,
     BinDec& s  ///< [in] 入力ストリーム
   );
 

@@ -23,6 +23,21 @@ read_liberty(
 
   display_library(cout, library);
 
+  string dump_filename = "./foo.dump";
+
+  {
+    ofstream s(dump_filename);
+    ASSERT_COND ( s.is_open() );
+    library.dump(s);
+  }
+
+  ClibCellLibrary library2;
+  {
+    ifstream s(dump_filename);
+    ASSERT_COND ( s.is_open() );
+    library2.restore(s);
+  }
+
   return 0;
 }
 

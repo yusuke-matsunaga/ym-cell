@@ -26,6 +26,55 @@ BEGIN_NAMESPACE_YM_CLIB
 
 BEGIN_NONAMESPACE
 
+//////////////////////////////////////////////////////////////////////
+// クラス ClibCellGroup
+//////////////////////////////////////////////////////////////////////
+
+// @brief セルグループの内容をダンプする．
+void
+dump_cell_group(
+  BinEnc& bos,
+  const ClibCellGroup& group
+)
+{
+  bos << group.rep_class().id();
+  group.iomap().dump(bos);
+  bos << group.cell_num();
+  for ( auto& cell: group.cell_list() ) {
+    bos << cell.id();
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス ClibCellClass
+//////////////////////////////////////////////////////////////////////
+
+// セルクラスをダンプする．
+void
+dump_cell_class(
+  BinEnc& bos,
+  const ClibCellClass& npn_class
+)
+{
+  // 同位体変換情報のダンプ
+  bos << npn_class.idmap_num();
+  for ( auto& map: npn_class.idmap_list() ) {
+    map.dump(bos);
+  }
+
+  // グループ情報のダンプ
+  bos << npn_class.cell_group_num();
+  for ( auto& group: npn_class.cell_group_list() ) {
+    bos << group.id();
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス ClibLut
+//////////////////////////////////////////////////////////////////////
+
 void
 dump_lut(
   BinEnc& s,
@@ -41,6 +90,7 @@ dump_lut(
 }
 
 END_NONAMESPACE
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellLibrary
@@ -110,14 +160,14 @@ CiCellLibrary::dump(
 
   // セルグループ情報のダンプ
   bs << cell_group_num();
-  for ( auto id: Range(cell_group_num()) ) {
-    cell_group(id).dump(bs);
+  for ( auto& group: cell_group_list() ) {
+    dump_cell_group(bs, group);
   }
 
   // セルクラス情報のダンプ
   bs << npn_class_num();
-  for ( auto id: Range(npn_class_num()) ) {
-    npn_class(id).dump(bs);
+  for ( auto& cell_class: npn_class_list() ) {
+    dump_cell_class(bs, cell_class);
   }
 
   // 組み込み型の情報のダンプ
@@ -175,6 +225,26 @@ CiCell::dump(
     << name()
     << area();
 
+  // セルの付加的な情報のダンプ
+  if ( is_ff() ) {
+    s << clock_expr()
+      << clock2_expr()
+      << next_state_expr()
+      << clear_expr()
+      << preset_expr()
+      << static_cast<ymuint8>(clear_preset_var1())
+      << static_cast<ymuint8>(clear_preset_var2());
+  }
+  else if ( is_latch() ) {
+    s << enable_expr()
+      << enable2_expr()
+      << data_in_expr()
+      << clear_expr()
+      << preset_expr()
+      << static_cast<ymuint8>(clear_preset_var1())
+      << static_cast<ymuint8>(clear_preset_var2());
+  }
+
   // 入力ピンのダンプ
   s << input_num();
   for ( auto i: Range(input_num()) ) {
@@ -229,26 +299,6 @@ CiCell::dump(
       }
     }
   }
-
-  // セルの付加的な情報のダンプ
-  if ( is_ff() ) {
-    s << next_state_expr()
-      << clock_expr()
-      << clock2_expr()
-      << clear_expr()
-      << preset_expr()
-      << static_cast<ymuint8>(clear_preset_var1())
-      << static_cast<ymuint8>(clear_preset_var2());
-  }
-  else if ( is_latch() ) {
-    s << data_in_expr()
-      << enable_expr()
-      << enable2_expr()
-      << clear_expr()
-      << preset_expr()
-      << static_cast<ymuint8>(clear_preset_var1())
-      << static_cast<ymuint8>(clear_preset_var2());
-  }
 }
 
 
@@ -302,6 +352,8 @@ CiOutputPin::dump(
     << min_capacitance()
     << max_transition()
     << min_transition();
+  function().dump(s);
+  tristate().dump(s);
 }
 
 
@@ -326,6 +378,8 @@ CiInoutPin::dump(
     << min_capacitance()
     << max_transition()
     << min_transition();
+  function().dump(s);
+  tristate().dump(s);
 }
 
 
@@ -536,49 +590,6 @@ CiLutTemplate::dump(
     }
   }
 }
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiCellGroup
-//////////////////////////////////////////////////////////////////////
-
-// @brief バイナリダンプを行う．
-void
-CiCellGroup::dump(
-  BinEnc& bos
-) const
-{
-  mIomap.dump(bos);
-  bos << mCellList.size();
-  for ( auto& cell: mCellList ) {
-    bos << cell->id();
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiCellClass
-//////////////////////////////////////////////////////////////////////
-
-// @brief バイナリダンプを行う．
-void
-CiCellClass::dump(
-  BinEnc& bos
-) const
-{
-  // 同位体変換情報のダンプ
-  bos << mIdmapList.size();
-  for ( auto& map: mIdmapList ) {
-    map.dump(bos);
-  }
-
-  // グループ情報のダンプ
-  bos << mGroupList.size();
-  for ( auto& group: mGroupList ) {
-    bos << group->id();
-  }
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiPatMgr
