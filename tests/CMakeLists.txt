@@ -2,9 +2,6 @@
 # ===================================================================
 # インクルードパスの設定
 # ===================================================================
-include_directories(
-  ${GTEST_INCLUDE_DIR}
-  )
 
 
 # ===================================================================
@@ -25,7 +22,7 @@ add_subdirectory( programs )
 
 # テストデータのパス
 set ( TESTDATA_DIR
-  ${PROJECT_SOURCE_DIR}/ym-cell/tests/testdata
+  ${CMAKE_CURRENT_SOURCE_DIR}/testdata
   )
 
 
