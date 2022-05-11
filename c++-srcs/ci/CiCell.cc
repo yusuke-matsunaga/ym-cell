@@ -374,7 +374,7 @@ CiCell::qvar2() const
 bool
 CiCell::has_clear() const
 {
-  return false;
+  return clear_expr().is_valid();
 }
 
 // @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
@@ -383,7 +383,7 @@ CiCell::has_clear() const
 Expr
 CiCell::clear_expr() const
 {
-  return Expr::make_zero();
+  return Expr::make_invalid();
 }
 
 // @brief 非同期 preset を持つ時 true を返す．
@@ -392,7 +392,7 @@ CiCell::clear_expr() const
 bool
 CiCell::has_preset() const
 {
-  return false;
+  return preset_expr().is_valid();
 }
 
 // @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
@@ -401,7 +401,7 @@ CiCell::has_preset() const
 Expr
 CiCell::preset_expr() const
 {
-  return Expr::make_zero();
+  return Expr::make_invalid();
 }
 
 // @brief clear と preset が同時にアクティブになった時の値1
