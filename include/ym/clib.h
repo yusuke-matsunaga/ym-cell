@@ -241,11 +241,9 @@ enum class ClibCellType : ymuint8
 {
   None    = 0, ///< なし(不正値)
   Logic   = 1, ///< 組み合わせ論理
-  FF_S    = 2, ///< single-stage FF
-  FF_M    = 3, ///< master-slave FF
-  Latch_S = 4, ///< single-stage latch
-  Latch_M = 5, ///< master-slave latch
-  FSM     = 6, ///< finite state machine
+  FF      = 2, ///< master-slave FF
+  Latch   = 3, ///< master-slave latch
+  FSM     = 4, ///< finite state machine
 };
 
 

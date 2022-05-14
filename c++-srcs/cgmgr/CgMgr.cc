@@ -51,21 +51,29 @@ void
 CgMgr::logic_init()
 {
   { // 定数0グループの登録
-    auto func0 = _find_logic_group(Expr::make_zero());
+    //auto func0 = _find_logic_group(Expr::make_zero());
+    auto sig = CgSignature::make_logic_sig(TvFunc::make_zero(0));
+    auto func0 = _find_group(sig);
     mLogicGroup[0] = func0->id();
   }
   { // 定数1グループの登録
-    auto func1 = _find_logic_group(Expr::make_one());
+    //auto func1 = _find_logic_group(Expr::make_one());
+    auto sig = CgSignature::make_logic_sig(TvFunc::make_one(0));
+    auto func1 = _find_group(sig);
     mLogicGroup[1] = func1->id();
   }
   { // バッファグループの登録
-    Expr expr = Expr::make_posi_literal(VarId(0));
-    auto func2 = _find_logic_group(expr);
+    //Expr expr = Expr::make_posi_literal(VarId(0));
+    //auto func2 = _find_logic_group(expr);
+    auto sig = CgSignature::make_logic_sig(TvFunc::make_posi_literal(1, VarId{0}));
+    auto func2 = _find_group(sig);
     mLogicGroup[2] = func2->id();
   }
   { // インバーターグループの登録
-    Expr expr = Expr::make_nega_literal(VarId(0));
-    auto func3 = _find_logic_group(expr);
+    //Expr expr = Expr::make_nega_literal(VarId(0));
+    //auto func3 = _find_logic_group(expr);
+    auto sig = CgSignature::make_logic_sig(TvFunc::make_nega_literal(1, VarId{0}));
+    auto func3= _find_group(sig);
     mLogicGroup[3] = func3->id();
   }
 
@@ -74,45 +82,51 @@ CgMgr::logic_init()
 
   // AND2 〜 AND8 のシグネチャを登録しておく．
   for ( auto ni: {2, 3, 4, 5, 6, 7, 8} ) {
-    Expr and_expr = Expr::make_posi_literal(VarId(0));
-    for ( auto i = 1; i < ni; ++ i ) {
-      and_expr &= Expr::make_posi_literal(VarId(i));
+    auto and_func = TvFunc::make_posi_literal(ni, VarId{0});
+    for ( SizeType i = 1; i < ni; ++ i ) {
+      and_func &= TvFunc::make_posi_literal(ni, VarId{i});
     }
-    _find_logic_group(and_expr);
+    auto sig = CgSignature::make_logic_sig(and_func);
+    _find_group(sig);
   }
 
   // XOR2 〜 XOR4 のシグネチャを登録しておく．
   for ( auto ni: {2, 3, 4} ) {
-    Expr xor_expr = Expr::make_posi_literal(VarId(0));
-    for ( int i = 1; i < ni; ++ i ) {
-      xor_expr ^= Expr::make_posi_literal(VarId(i));
+    auto xor_func = TvFunc::make_posi_literal(ni, VarId{0});
+    for ( SizeType i = 1; i < ni; ++ i ) {
+      xor_func ^= TvFunc::make_posi_literal(ni, VarId{i});
     }
-    _find_logic_group(xor_expr);
+    auto sig = CgSignature::make_logic_sig(xor_func);
+    _find_group(sig);
   }
 
   // MUX2 のシグネチャを登録しておく．
   {
-    Expr lit0 = Expr::make_posi_literal(VarId(0));
-    Expr lit1 = Expr::make_posi_literal(VarId(1));
-    Expr lit2 = Expr::make_posi_literal(VarId(2));
-    Expr mux2_expr = lit0 & ~lit2 | lit1 & lit2;
-    _find_logic_group(mux2_expr);
+    SizeType ni = 3;
+    auto lit0 = TvFunc::make_posi_literal(ni, VarId(0));
+    auto lit1 = TvFunc::make_posi_literal(ni, VarId(1));
+    auto lit2 = TvFunc::make_posi_literal(ni, VarId(2));
+    auto mux2_func = lit0 & ~lit2 | lit1 & lit2;
+    auto sig = CgSignature::make_logic_sig(mux2_func);
+    _find_group(sig);
   }
 
   // MUX4 のシグネチャを登録しておく．
   {
-    Expr lit0 = Expr::make_posi_literal(VarId(0));
-    Expr lit1 = Expr::make_posi_literal(VarId(1));
-    Expr lit2 = Expr::make_posi_literal(VarId(2));
-    Expr lit3 = Expr::make_posi_literal(VarId(3));
-    Expr lit4 = Expr::make_posi_literal(VarId(4));
-    Expr lit5 = Expr::make_posi_literal(VarId(5));
-    Expr mux4_expr =
+    SizeType ni = 6;
+    auto lit0 = TvFunc::make_posi_literal(ni, VarId(0));
+    auto lit1 = TvFunc::make_posi_literal(ni, VarId(1));
+    auto lit2 = TvFunc::make_posi_literal(ni, VarId(2));
+    auto lit3 = TvFunc::make_posi_literal(ni, VarId(3));
+    auto lit4 = TvFunc::make_posi_literal(ni, VarId(4));
+    auto lit5 = TvFunc::make_posi_literal(ni, VarId(5));
+    auto mux4_func =
       lit0 & ~lit4 & ~lit5 |
       lit1 &  lit4 & ~lit5 |
       lit2 & ~lit4 &  lit5 |
       lit3 &  lit4 &  lit5;
-    _find_logic_group(mux4_expr);
+    auto sig = CgSignature::make_logic_sig(mux4_func);
+    _find_group(sig);
   }
 }
 
@@ -121,24 +135,63 @@ void
 CgMgr::ff_init()
 {
   for ( bool master_slave: { false, true } ) {
+    SizeType ni = 4;
     for ( bool has_clear: { false, true } ) {
+      if ( has_clear ) {
+	++ ni;
+      }
       for ( bool has_preset: { false, true } ) {
+	if ( has_preset ) {
+	  ++ ni;
+	}
+	// 入力
+	// 0: data-in
+	// 1: clock
+	// 2: clear (optional)
+	// 3: preset (optional)
+	// 4: q
+	// 5: q~
+	vector<TvFunc> func_list{TvFunc::make_posi_literal(ni, VarId{ni - 2})};
+	vector<TvFunc> tristate_list{TvFunc::make_invalid()};
+	auto clock = TvFunc::make_posi_literal(ni, VarId{1});
+	auto clock2 = master_slave ? TvFunc::make_nega_literal(ni, VarId{1}) : TvFunc::make_invalid();
+	auto next = TvFunc::make_posi_literal(ni, VarId{0});
 	if ( has_clear && has_preset ) {
+	  auto clear = TvFunc::make_posi_literal(ni, VarId{2});
+	  auto preset = TvFunc::make_posi_literal(ni, VarId{3});
 	  for ( auto cpv1: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
 	    for ( auto cpv2: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
 	      SizeType idx;
 	      SizeType sub_idx;
 	      encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2, idx, sub_idx);
-	      auto g = _find_ff_group(master_slave, has_clear, has_preset, cpv1, cpv2);
+	      auto sig = CgSignature::make_ff_sig(ni, 1, 0, func_list, tristate_list,
+						  clock, clock2, next,
+						  clear, preset,
+						  cpv1, cpv2);
+	      auto g = _find_group(sig);
 	      mCpvFFClass[sub_idx] = g->rep_class().id();
 	    }
 	  }
 	}
 	else {
+	  SizeType base = 2;
+	  auto clear = TvFunc::make_invalid();
+	  if ( has_clear ) {
+	    clear = TvFunc::make_posi_literal(ni, VarId{base});
+	    ++ base;
+	  }
+	  auto preset = TvFunc::make_invalid();
+	  if ( has_preset ) {
+	    preset = TvFunc::make_posi_literal(ni, VarId{base});
+	  }
 	  SizeType idx;
 	  SizeType sub_idx;
 	  encode_attr(master_slave, has_clear, has_preset, ClibCPV::X, ClibCPV::X, idx, sub_idx);
-	  auto g = _find_ff_group(master_slave, has_clear, has_preset, ClibCPV::X, ClibCPV::X);
+	  auto sig = CgSignature::make_ff_sig(ni, 1, 0, func_list, tristate_list,
+					      clock, clock2, next,
+					      clear, preset,
+					      ClibCPV::X, ClibCPV::X);
+	  auto g = _find_group(sig);
 	  mSimpleFFClass[idx] = g->rep_class().id();
 	}
       }
@@ -151,24 +204,63 @@ void
 CgMgr::latch_init()
 {
   for ( bool master_slave: { false, true } ) {
+    SizeType ni = 4;
     for ( bool has_clear: { false, true } ) {
+      if ( has_clear ) {
+	++ ni;
+      }
       for ( bool has_preset: { false, true } ) {
+	if ( has_preset ) {
+	  ++ ni;
+	}
+	// 入力
+	// 0: data-in
+	// 1: enable
+	// 2: clear (optional)
+	// 3: preset (optional)
+	// 4: q
+	// 5: q~
+	vector<TvFunc> func_list{TvFunc::make_posi_literal(ni, VarId{ni - 2})};
+	vector<TvFunc> tristate_list{TvFunc::make_invalid()};
+	auto enable = TvFunc::make_posi_literal(ni, VarId{1});
+	auto enable2 = master_slave ? TvFunc::make_nega_literal(ni, VarId{1}) : TvFunc::make_invalid();
+	auto data = TvFunc::make_posi_literal(ni, VarId{0});
 	if ( has_clear && has_preset ) {
+	  auto clear = TvFunc::make_posi_literal(ni, VarId{2});
+	  auto preset = TvFunc::make_posi_literal(ni, VarId{3});
 	  for ( auto cpv1: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
 	    for ( auto cpv2: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
 	      SizeType idx;
 	      SizeType sub_idx;
 	      encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2, idx, sub_idx);
-	      auto g = _find_latch_group(master_slave, has_clear, has_preset, cpv1, cpv2);
+	      auto sig = CgSignature::make_latch_sig(ni, 1, 0, func_list, tristate_list,
+						     enable, enable2, data,
+						     clear, preset,
+						     cpv1, cpv2);
+	      auto g = _find_group(sig);
 	      mCpvLatchClass[sub_idx] = g->rep_class().id();
 	    }
 	  }
 	}
 	else {
+	  SizeType base = 2;
+	  auto clear = TvFunc::make_invalid();
+	  if ( has_clear ) {
+	    clear = TvFunc::make_posi_literal(ni, VarId{base});
+	    ++ base;
+	  }
+	  auto preset = TvFunc::make_invalid();
+	  if ( has_preset ) {
+	    preset = TvFunc::make_posi_literal(ni, VarId{base});
+	  }
 	  SizeType idx;
 	  SizeType sub_idx;
 	  encode_attr(master_slave, has_clear, has_preset, ClibCPV::X, ClibCPV::X, idx, sub_idx);
-	  auto g = _find_latch_group(master_slave, has_clear, has_preset, ClibCPV::X, ClibCPV::X);
+	  auto sig = CgSignature::make_latch_sig(ni, 1, 0, func_list, tristate_list,
+						 enable, enable2, data,
+						 clear, preset,
+						 ClibCPV::X, ClibCPV::X);
+	  auto g = _find_group(sig);
 	  mSimpleLatchClass[idx] = g->rep_class().id();
 	}
       }
@@ -193,6 +285,7 @@ CgMgr::reg_group(
   return group;
 }
 
+#if 0
 // @brief 論理式から作られるシグネチャに一致するグループを探す．
 // @return グループを返す．
 //
@@ -313,6 +406,7 @@ CgMgr::_find_latch_group(
 					 clear, preset, cpv1, cpv2);
   return _find_group(sig);
 }
+#endif
 
 // @brief シグネチャに一致するグループを探す．
 CiCellGroup*

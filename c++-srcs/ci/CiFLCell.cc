@@ -33,7 +33,7 @@ CiFLCell::qvar2() const
 bool
 CiFLCell::has_clear() const
 {
-  return !mClear.is_zero();
+  return mClear.is_valid();
 }
 
 // @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
@@ -47,7 +47,7 @@ CiFLCell::clear_expr() const
 bool
 CiFLCell::has_preset() const
 {
-  return !mPreset.is_zero();
+  return mPreset.is_valid();
 }
 
 // @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．

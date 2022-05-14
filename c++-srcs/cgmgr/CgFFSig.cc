@@ -43,16 +43,16 @@ CgFFSig::xform(
   const ClibIOMap& iomap ///< [in] 変換マップ
 ) const
 {
-  auto npnmap = to_npnmap(iomap);
   SizeType no2 = mNo + mNb;
   vector<TvFunc> xfunc_list(no2);
-  for ( SizeType i = 0; i < no2; ++ i ) {
-    xfunc_list[i] = mFuncList[i].xform(npnmap);
-  }
   vector<TvFunc> xtristate_list(no2);
   for ( SizeType i = 0; i < no2; ++ i ) {
-    xtristate_list[i] = mTristateList[i].xform(npnmap);
+    auto npnmap = to_npnmap(iomap, i);
+    auto pos = iomap.output_map(i).id();
+    xfunc_list[pos] = mFuncList[i].xform(npnmap);
+    xtristate_list[pos] = mTristateList[i].xform(npnmap);
   }
+  auto npnmap = to_npnmap(iomap, -1);
   TvFunc xclock = mClockedOn.xform(npnmap);
   TvFunc xclock2 = mClockedOnAlso.xform(npnmap);
   TvFunc xnext = mNextState.xform(npnmap);

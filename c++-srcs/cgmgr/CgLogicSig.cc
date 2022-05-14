@@ -34,7 +34,7 @@ CgLogicSig::xform(
   const ClibIOMap& iomap
 ) const
 {
-  auto npnmap = to_npnmap(iomap);
+  auto npnmap = to_npnmap(iomap, 0);
   auto xfunc = mFunc.xform(npnmap);
   return make_signature(xfunc);
 }

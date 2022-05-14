@@ -88,14 +88,14 @@ CiCellGroup::type() const
 bool
 CiCellGroup::is_ff() const
 {
-  return type() == ClibCellType::FF_S || type() == ClibCellType::FF_M;
+  return type() == ClibCellType::FF;
 }
 
 // @brief ラッチセルの時に true を返す．
 bool
 CiCellGroup::is_latch() const
 {
-  return type() == ClibCellType::Latch_S || type() == ClibCellType::Latch_M;
+  return type() == ClibCellType::Latch;
 }
 
 /// @brief 出力の論理式を持っている時に true を返す．

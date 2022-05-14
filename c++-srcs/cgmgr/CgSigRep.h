@@ -87,7 +87,9 @@ protected:
   static
   NpnMap
   to_npnmap(
-    const ClibIOMap& iomap
+    const ClibIOMap& iomap, ///< [in] 対象の ClibIOMap
+    SizeType opos           ///< [in] 出力ピン番号
+                            ///<      入出力ピンも含む
   );
 
   /// @brief NpnMap から ClibIOMap を作る．

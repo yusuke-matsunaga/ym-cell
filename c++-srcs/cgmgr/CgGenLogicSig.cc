@@ -37,11 +37,9 @@ CgGenLogicSig::str() const
       << mNb << ":";
   SizeType no2 = mNo + mNb;
   for ( SizeType i = 0; i < no2; ++ i ) {
-    buf << hex_str(mFuncList[i]);
-  }
-  buf << ":";
-  for ( SizeType i = 0; i < no2; ++ i ) {
-    buf << hex_str(mTristateList[i]);
+    buf << hex_str(mFuncList[i])
+	<< ":"
+	<< hex_str(mTristateList[i]);
   }
   return buf.str();
 }
@@ -52,15 +50,21 @@ CgGenLogicSig::xform(
   const ClibIOMap& iomap
 ) const
 {
-  auto npnmap = to_npnmap(iomap);
+  ASSERT_COND( iomap.input_num() == mNi );
+  ASSERT_COND( iomap.output_num() == mNo );
+  ASSERT_COND( iomap.inout_num() == mNb );
+
   SizeType no2 = mNo + mNb;
   vector<TvFunc> xfunc_list(no2);
-  for ( SizeType i = 0; i < no2; ++ i ) {
-    xfunc_list[i] = mFuncList[i].xform(npnmap);
-  }
   vector<TvFunc> xtristate_list(no2);
+  // tristate 用の変換マップ
+  // 出力の反転属性がない．
+  auto npnmap0 = to_npnmap(iomap, -1);
   for ( SizeType i = 0; i < no2; ++ i ) {
-    xtristate_list[i] = mTristateList[i].xform(npnmap);
+    auto npnmap = to_npnmap(iomap, i);
+    auto pos = iomap.output_map(i).id();
+    xfunc_list[pos] = mFuncList[i].xform(npnmap);
+    xtristate_list[pos] = mTristateList[i].xform(npnmap0);
   }
   return make_signature(mNi, mNo, mNb, xfunc_list, xtristate_list);
 }

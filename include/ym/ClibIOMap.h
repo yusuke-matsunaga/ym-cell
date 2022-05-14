@@ -17,7 +17,12 @@ BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class ClibIOMap ClibIOMap.h "ClibIOMap.h"
-/// @brief
+/// @brief セルのピンの割当（変換）方法を表すクラス
+///
+/// 入力ピン，出力ピン，入出力ピンそれぞれの順序および極性の情報を持つ．
+/// ただし，入出力ピンに関しては入力と出力でおなじ順序，極性となる．
+/// 一つのピンに対する順序と極性の情報は ClibPinMap で表す．
+/// @sa ClibPinMap
 //////////////////////////////////////////////////////////////////////
 class ClibIOMap
 {
@@ -27,12 +32,14 @@ public:
   ClibIOMap() = default;
 
   /// @brief 1出力用のコンストラクタ
+  ///
+  /// 出力ピンのマッピングは極性のみが意味を持つ．
   explicit
   ClibIOMap(
     const vector<ClibPinMap>& input_map,   ///< [in] 入力ピンのマッピング
-    ClibPinMap omap = ClibPinMap{0, false} ///< [in] 出力ピンのマッピング
+    bool oinv = false                      ///< [in] 出力ピンの反転属性
   ) : mInputMap{input_map},
-      mOutputMap{omap}
+      mOutputMap{ClibPinMap{0, oinv}}
   {
   }
 
@@ -99,11 +106,16 @@ public:
   /// @brief 入力のマッピングを返す．
   ClibPinMap
   input_map(
-    SizeType pos ///< [in] 位置番号 ( 0 <= pos < input_num() )
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < input_num() + inout_num() )
   ) const
   {
-    ASSERT_COND( 0 <= pos && pos < input_num() );
-    return mInputMap[pos];
+    ASSERT_COND( 0 <= pos && pos < input_num() + inout_num() );
+    if ( pos < input_num() ) {
+      return mInputMap[pos];
+    }
+    else {
+      return mInoutMap[pos - input_num()];
+    }
   }
 
   /// @brief 入力のマッピングのリストを返す．
@@ -123,11 +135,16 @@ public:
   /// @brief 出力のマッピングを返す．
   ClibPinMap
   output_map(
-    SizeType pos ///< [in] 位置番号 ( 0 <= pos < output_num() )
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < output_num() + inout_num() )
   ) const
   {
-    ASSERT_COND( 0 <= pos && pos < output_num() );
-    return mOutputMap[pos];
+    ASSERT_COND( 0 <= pos && pos < output_num() + inout_num() );
+    if ( pos < output_num() ) {
+      return mOutputMap[pos];
+    }
+    else {
+      return mInoutMap[pos - output_num()];
+    }
   }
 
   /// @brief 出力のマッピングのリストを返す．

@@ -236,7 +236,8 @@ new_gate(
 			       ClibCapacitance(0.0),
 			       ClibTime::infty(),
 			       ClibTime(0.0),
-			       oexpr, Expr::make_zero());
+			       oexpr,
+			       Expr::make_invalid());
 
   auto opin_id = opin->output_id();
 

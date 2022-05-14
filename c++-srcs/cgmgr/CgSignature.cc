@@ -67,7 +67,12 @@ CgSignature::make_logic_sig(
   const TvFunc& func
 )
 {
-  return CgSignature{CgLogicSig::make_signature(func)};
+  SizeType ni = func.input_num();
+  SizeType no = 1;
+  SizeType nb = 0;
+  vector<TvFunc> func_list{func};
+  vector<TvFunc> tristate_list{TvFunc::make_invalid()};
+  return make_logic_sig(ni, no, nb, func_list, tristate_list);
 }
 
 // @brief 1出力tristate関数用のシグネチャを作る．
@@ -77,7 +82,12 @@ CgSignature::make_logic_sig(
   const TvFunc& tristate
 )
 {
-  return CgSignature{CgTriLogicSig::make_signature(func, tristate)};
+  SizeType ni = func.input_num();
+  SizeType no = 1;
+  SizeType nb = 0;
+  vector<TvFunc> func_list{func};
+  vector<TvFunc> tristate_list{tristate};
+  return make_logic_sig(ni, no, nb, func_list, tristate_list);
 }
 
 // @brief 一般的な組み合わせ回路用のシグネチャを作る．

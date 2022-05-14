@@ -65,7 +65,8 @@ public:
   has_clear() const override;
 
   /// @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
-  /// @note クリア端子がない場合の返り値は不定
+  ///
+  /// クリア端子がない場合の返り値は不定
   Expr
   clear_expr() const override;
 
@@ -74,7 +75,8 @@ public:
   has_preset() const override;
 
   /// @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
-  /// @note プリセット端子がない場合の返り値は不定
+  ///
+  /// プリセット端子がない場合の返り値は不定
   Expr
   preset_expr() const override;
 

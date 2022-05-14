@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_CLIB
 ClibCellType
 CiFFCell::type() const
 {
-  return ClibCellType::FF_S;
+  return ClibCellType::FF;
 }
 
 // @brief 組み合わせ論理タイプの時 true を返す．
@@ -38,7 +38,6 @@ CiFFCell::is_ff() const
 }
 
 // @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
-// @note それ以外の型の場合の返り値は不定
 Expr
 CiFFCell::clock_expr() const
 {
@@ -46,7 +45,6 @@ CiFFCell::clock_expr() const
 }
 
 // @brief FFセルの場合に次状態関数を表す論理式を返す．
-// @note それ以外の型の場合の返り値は不定
 Expr
 CiFFCell::next_state_expr() const
 {
@@ -60,24 +58,21 @@ CiFFCell::make_signature() const
   SizeType ni = input_num();
   SizeType no = output_num();
   SizeType nb = inout_num();
-  SizeType ni2 = ni + nb;
-  SizeType no2 = no + nb;
+  SizeType ni2 = ni + nb + 2;
+  SizeType no2 = no + nb + 2;
   vector<TvFunc> logic_list(no2);
   vector<TvFunc> tristate_list(no2);
   for ( SizeType i = 0; i < no2; ++ i ) {
-    if ( has_logic(i) ) {
-      logic_list[i] = logic_expr(i).make_tv(ni2);
-    }
-    if ( has_tristate(i) ) {
-      tristate_list[i] = tristate_expr(i).make_tv(ni2);
-    }
+    logic_list[i] = logic_expr(i).make_tv(ni2);
+    tristate_list[i] = tristate_expr(i).make_tv(ni2);
   }
   TvFunc clock = clock_expr().make_tv(ni2);
-  TvFunc clock2{TvFunc::make_zero(ni2)};
-  TvFunc next = next_state_expr().make_tv(0);
+  TvFunc clock2 = clock2_expr().make_tv(ni2);
+  TvFunc next = next_state_expr().make_tv(ni2);
   TvFunc clear = clear_expr().make_tv(ni2);
   TvFunc preset = preset_expr().make_tv(ni2);
-  return CgSignature::make_ff_sig(ni, no, nb, logic_list, tristate_list,
+  return CgSignature::make_ff_sig(ni, no, nb,
+				  logic_list, tristate_list,
 				  clock, clock2, next,
 				  clear, preset,
 				  clear_preset_var1(),
@@ -89,50 +84,12 @@ CiFFCell::make_signature() const
 // クラス ClibFF2Cell
 //////////////////////////////////////////////////////////////////////
 
-// @brief セルの種類を返す．
-ClibCellType
-CiFF2Cell::type() const
-{
-  return ClibCellType::FF_M;
-}
-
 // @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
 // @note それ以外の型の場合の返り値は不定
 Expr
 CiFF2Cell::clock2_expr() const
 {
   return mClock2;
-}
-
-// @brief シグネチャを返す．
-CgSignature
-CiFF2Cell::make_signature() const
-{
-  SizeType ni = input_num();
-  SizeType no = output_num();
-  SizeType nb = inout_num();
-  SizeType ni2 = ni + nb;
-  SizeType no2 = no + nb;
-  vector<TvFunc> logic_list(no2);
-  vector<TvFunc> tristate_list(no2);
-  for ( SizeType i = 0; i < no2; ++ i ) {
-    if ( has_logic(i) ) {
-      logic_list[i] = logic_expr(i).make_tv(ni2);
-    }
-    if ( has_tristate(i) ) {
-      tristate_list[i] = tristate_expr(i).make_tv(ni2);
-    }
-  }
-  TvFunc clock = clock_expr().make_tv(ni2);
-  TvFunc clock2 = clock2_expr().make_tv(ni2);
-  TvFunc next = next_state_expr().make_tv(ni2);
-  TvFunc clear = clear_expr().make_tv(ni2);
-  TvFunc preset = preset_expr().make_tv(ni2);
-  return CgSignature::make_ff_sig(ni, no, nb, logic_list, tristate_list,
-				  clock, clock2, next,
-				  clear, preset,
-				  clear_preset_var1(),
-				  clear_preset_var2());
 }
 
 END_NAMESPACE_YM_CLIB

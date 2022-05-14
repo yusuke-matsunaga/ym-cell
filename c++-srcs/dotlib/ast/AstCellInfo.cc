@@ -239,11 +239,11 @@ AstCellInfo::add_ff_cell(
     clocked_on_also = mFFInfo.clocked_on_also()->to_expr(mIpinMap);
   }
   Expr next_state = mFFInfo.next_state()->to_expr(mIpinMap);
-  Expr clear{Expr::make_zero()};
+  Expr clear{Expr::make_invalid()};
   if ( mFFInfo.clear() != nullptr ) {
     clear = mFFInfo.clear()->to_expr(mIpinMap);
   }
-  Expr preset{Expr::make_zero()};
+  Expr preset{Expr::make_invalid()};
   if ( mFFInfo.preset() != nullptr ) {
     preset = mFFInfo.preset()->to_expr(mIpinMap);
   }

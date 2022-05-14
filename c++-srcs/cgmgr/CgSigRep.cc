@@ -17,6 +17,9 @@ CgSigRep::hex_str(
   const TvFunc& func
 )
 {
+  if ( func.is_invalid() ) {
+    return string{};
+  }
   SizeType ni = func.input_num();
   SizeType nexp = 1U << ni;
   ymuint8 val = 0U;
@@ -40,18 +43,26 @@ CgSigRep::hex_str(
 // ClibIOMap から NpnMap を作る．
 NpnMap
 CgSigRep::to_npnmap(
-  const ClibIOMap& iomap
+  const ClibIOMap& iomap,
+  SizeType opos
 )
 {
-  ASSERT_COND( iomap.output_num() == 1 );
-  ASSERT_COND( iomap.inout_num() == 0 );
   SizeType ni = iomap.input_num();
-  NpnMap npnmap(ni);
+  SizeType no = iomap.output_num();
+  SizeType nb = iomap.inout_num();
+  SizeType ni2 = ni + nb;
+  NpnMap npnmap(ni2);
   for ( SizeType i = 0; i < ni; ++ i ) {
     auto ipinmap = iomap.input_map(i);
     npnmap.set(VarId{i}, VarId{ipinmap.id()}, ipinmap.inv());
   }
-  npnmap.set_oinv(iomap.output_map(0).inv());
+  for ( SizeType i = 0; i < nb; ++ i ) {
+    auto bpinmap = iomap.inout_map(i);
+    npnmap.set(VarId{i + ni}, VarId{bpinmap.id() + ni}, bpinmap.inv());
+  }
+  if ( opos < no ) {
+    npnmap.set_oinv(iomap.output_map(opos).inv());
+  }
   return npnmap;
 }
 
@@ -67,7 +78,7 @@ CgSigRep::from_npnmap(
     auto v = npnmap.imap(VarId{i});
     input_map[i] = ClibPinMap{static_cast<SizeType>(v.var().val()), v.inv()};
   }
-  return ClibIOMap{input_map, ClibPinMap{0, npnmap.oinv()}};
+  return ClibIOMap{input_map, npnmap.oinv()};
 }
 
 END_NAMESPACE_YM_CLIB

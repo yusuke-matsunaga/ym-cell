@@ -746,12 +746,8 @@ CiCell::make_signature() const
     vector<TvFunc> logic_list(no2);
     vector<TvFunc> tristate_list(no2);
     for ( SizeType i = 0; i < no2; ++ i ) {
-      if ( has_logic(i) ) {
-	logic_list[i] = logic_expr(i).make_tv(ni2);
-      }
-      if ( has_tristate(i) ) {
-	tristate_list[i] = tristate_expr(i).make_tv(ni2);
-      }
+      logic_list[i] = logic_expr(i).make_tv(ni2);
+      tristate_list[i] = tristate_expr(i).make_tv(ni2);
     }
     return CgSignature::make_logic_sig(ni, no, nb, logic_list, tristate_list);
   }

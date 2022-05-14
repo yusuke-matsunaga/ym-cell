@@ -20,20 +20,8 @@ CiLogicCell::CiLogicCell(
   CiCellLibrary* library,                  ///< [in] 親のセルライブラリ
   const ShString& name,                    ///< [in] 名前
   ClibArea area,                           ///< [in] 面積
-#if 0
-  const vector<CiInputPin*>& input_list,   ///< [in] 入力ピンのリスト
-  CiOutputPin* output,                     ///< [in] 出力ピン
-  const vector<CiTiming*>& timing_list,    ///< [in] タイミング情報のリスト
-#endif
   const Expr& expr                         ///< [in] 出力の論理式
-) : CiCell{library, name, area,
-#if 0
-	   input_list,
-	   vector<CiOutputPin*>{output},
-	   vector<CiInoutPin*>{},
-	   timing_list
-#endif
-  },
+) : CiCell{library, name, area},
     mExpr{expr}
 {
 }

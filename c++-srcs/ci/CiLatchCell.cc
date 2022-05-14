@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_CLIB
 ClibCellType
 CiLatchCell::type() const
 {
-  return ClibCellType::Latch_S;
+  return ClibCellType::Latch;
 }
 
 // @brief ラッチセルの時に true を返す．
@@ -51,20 +51,16 @@ CiLatchCell::make_signature() const
   SizeType ni = input_num();
   SizeType no = output_num();
   SizeType nb = inout_num();
-  SizeType ni2 = ni + nb;
-  SizeType no2 = no + nb;
+  SizeType ni2 = ni + nb + 2;
+  SizeType no2 = no + nb + 2;
   vector<TvFunc> logic_list(no2);
   vector<TvFunc> tristate_list(no2);
   for ( SizeType i = 0; i < no2; ++ i ) {
-    if ( has_logic(i) ) {
-      logic_list[i] = logic_expr(i).make_tv(ni2);
-    }
-    if ( has_tristate(i) ) {
-      tristate_list[i] = tristate_expr(i).make_tv(ni2);
-    }
+    logic_list[i] = logic_expr(i).make_tv(ni2);
+    tristate_list[i] = tristate_expr(i).make_tv(ni2);
   }
   TvFunc enable = enable_expr().make_tv(ni2);
-  TvFunc enable2{TvFunc::make_zero(0)};
+  TvFunc enable2 = enable2_expr().make_tv(ni2);
   TvFunc data_in = data_in_expr().make_tv(ni2);
   TvFunc clear = clear_expr().make_tv(ni2);
   TvFunc preset = preset_expr().make_tv(ni2);
@@ -80,50 +76,12 @@ CiLatchCell::make_signature() const
 // クラス CiLatch2Cell
 //////////////////////////////////////////////////////////////////////
 
-// @brief セルの種類を返す．
-ClibCellType
-CiLatch2Cell::type() const
-{
-  return ClibCellType::Latch_M;
-}
-
 // @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
 // @note それ以外の型の場合の返り値は不定
 Expr
 CiLatch2Cell::enable2_expr() const
 {
   return mEnable2;
-}
-
-// @brief シグネチャを返す．
-CgSignature
-CiLatch2Cell::make_signature() const
-{
-  SizeType ni = input_num();
-  SizeType no = output_num();
-  SizeType nb = inout_num();
-  SizeType ni2 = ni + nb;
-  SizeType no2 = no + nb;
-  vector<TvFunc> logic_list(no2);
-  vector<TvFunc> tristate_list(no2);
-  for ( SizeType i = 0; i < no2; ++ i ) {
-    if ( has_logic(i) ) {
-      logic_list[i] = logic_expr(i).make_tv(ni2);
-    }
-    if ( has_tristate(i) ) {
-      tristate_list[i] = tristate_expr(i).make_tv(ni2);
-    }
-  }
-  TvFunc enable = enable_expr().make_tv(ni2);
-  TvFunc enable2 = enable2_expr().make_tv(ni2);
-  TvFunc data_in = data_in_expr().make_tv(ni2);
-  TvFunc clear = clear_expr().make_tv(ni2);
-  TvFunc preset = preset_expr().make_tv(ni2);
-  return CgSignature::make_latch_sig(ni, no, nb, logic_list, tristate_list,
-				     enable, enable2, data_in,
-				     clear, preset,
-				     clear_preset_var1(),
-				     clear_preset_var2());
 }
 
 END_NAMESPACE_YM_CLIB

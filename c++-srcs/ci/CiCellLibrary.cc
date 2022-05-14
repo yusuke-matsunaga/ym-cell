@@ -342,7 +342,7 @@ CiCellLibrary::add_ff_cell(
   else {
     cell = new CiFFCell(this, name, area,
 			var1, var2,
-			clock,next_state,
+			clock, next_state,
 			clear, preset,
 			clear_preset_var1,
 			clear_preset_var2);

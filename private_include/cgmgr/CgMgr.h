@@ -145,6 +145,7 @@ private:
   void
   latch_init();
 
+#if 0
   /// @brief 論理式から作られるシグネチャに一致するグループを探す．
   /// @return グループを返す．
   ///
@@ -179,6 +180,7 @@ private:
     ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
     ClibCPV cpv2       ///< [in] clear_preset_var2 の値
   );
+#endif
 
   /// @brief シグネチャに一致するグループを探す．
   /// @return グループを返す．
