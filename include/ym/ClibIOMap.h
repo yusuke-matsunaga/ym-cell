@@ -22,6 +22,14 @@ BEGIN_NAMESPACE_YM_CLIB
 /// 入力ピン，出力ピン，入出力ピンそれぞれの順序および極性の情報を持つ．
 /// ただし，入出力ピンに関しては入力と出力でおなじ順序，極性となる．
 /// 一つのピンに対する順序と極性の情報は ClibPinMap で表す．
+/// ClibPinMap は，変換後のピンに対するもとのピン番号と極性を表している．
+/// これは入力でも出力でも同じなので変換回路として考えると逆向きになる
+/// ことに注意．実際にはこういう定義にしないと入出力ピンの変換を表せない．
+/// 具体的に input_map(0) の結果が {3, false} だった場合，変換後の
+/// 0 番目のピンはもとの 3 番目の入力ピンとなる．
+/// output_map(0) の結果が {4, true} だった場合，変換後の 0 番目の
+/// ピンはもとの 4 番目の出力ピンを反転させたものとなる．
+/// こうすることで，複数の変換に対して結合則が成り立つ．
 /// @sa ClibPinMap
 //////////////////////////////////////////////////////////////////////
 class ClibIOMap
@@ -176,6 +184,43 @@ public:
   inout_map_list() const
   {
     return mInoutMap;
+  }
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 演算の定義
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 合成演算
+  ClibIOMap
+  operator*(
+    const ClibIOMap& right
+  ) const;
+
+  /// @brief 合成演算(intern演算)
+  ClibIOMap&
+  operator*=(
+    const ClibIOMap& right
+  );
+
+  /// @brief 逆写像演算
+  ClibIOMap
+  inverse() const;
+
+  /// @brief 等価比較演算
+  bool
+  operator==(
+    const ClibIOMap& right
+  ) const;
+
+  /// @brief 非等価比較演算
+  bool
+  operator!=(
+    const ClibIOMap& right
+  ) const
+  {
+    return !operator==(right);
   }
 
 

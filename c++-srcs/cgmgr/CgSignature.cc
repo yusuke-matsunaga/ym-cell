@@ -59,8 +59,11 @@ CgSignature::operator=(
 // @brief デストラクタ
 CgSignature::~CgSignature()
 {
+  // CgSigRep の定義をヘッダファイルから隠すために
+  // ヘッダでは定義できない．
 }
 
+#if 0
 // @brief 1出力論理関数用のシグネチャを作る．
 CgSignature
 CgSignature::make_logic_sig(
@@ -89,6 +92,7 @@ CgSignature::make_logic_sig(
   vector<TvFunc> tristate_list{tristate};
   return make_logic_sig(ni, no, nb, func_list, tristate_list);
 }
+#endif
 
 // @brief 一般的な組み合わせ回路用のシグネチャを作る．
 CgSignature

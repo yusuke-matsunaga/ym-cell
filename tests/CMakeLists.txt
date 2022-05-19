@@ -76,6 +76,17 @@ ym_add_gtest ( cell_ClibCellLibrary_test
 
 
 # ===================================================================
+#  ClibIOMap_test
+# ===================================================================
+ym_add_gtest ( cell_ClibIOMap_test
+  cell_library/ClibIOMapTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  )
+
+
+# ===================================================================
 #  MislibScanner_test
 # ===================================================================
 ym_add_gtest ( cell_MislibScanner_test

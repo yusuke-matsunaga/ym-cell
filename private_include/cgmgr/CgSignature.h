@@ -58,7 +58,10 @@ public:
   CgSignature
   make_logic_sig(
     const TvFunc& func ///< [in] 対象の論理関数
-  );
+  )
+  {
+    return make_logic_sig(func, TvFunc::make_invalid());
+  }
 
   /// @brief 1出力tristate関数用のシグネチャを作る．
   static
@@ -66,7 +69,11 @@ public:
   make_logic_sig(
     const TvFunc& func,    ///< [in] 対象の論理関数
     const TvFunc& tristate ///< [in] 対象のtristate条件
-  );
+  )
+  {
+    SizeType ni = func.input_num();
+    return make_logic_sig(ni, 1, 0, {func}, {tristate});
+  }
 
   /// @brief 一般的な組み合わせ回路用のシグネチャを作る．
   static

@@ -9,10 +9,14 @@
 /// All rights reserved.
 
 #include "CgSigRep.h"
+#include "CgPolInfo.h"
+#include "CgSymGroup.h"
 #include "ym/TvFunc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+struct CgPinGroup;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CgGenLogicSig CgGenLogicSig.h "CgGenLogicSig.h"
@@ -73,6 +77,44 @@ public:
   /// @brief 同位体変換のリストを求める．
   vector<ClibIOMap>
   idmap_list() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief Walsh_0 を用いて出力のグループ分けを行う．
+  void
+  w0_refine(
+    vector<SizeType> src_group,  ///< [in] 元となるグループ
+    vector<CgPinGroup>& og_list, ///< [out] 出力のグループのリスト
+    vector<CgPolInfo>& opol_list ///< [out] 出力の反転属性のリスト
+  ) const;
+
+  /// @brief 対称グループを作る．
+  void
+  gen_symgroup(
+    vector<CgSymGroup>& symgroup_list, ///< [out] 対称グループのリスト
+    vector<CgPolInfo>& ipol_list       ///< [out] 入力の反転属性のリスト
+  ) const;
+
+  /// @brief Walsh_1_sum を用いて入力グループの細分化を行う．
+  void
+  w1sum_refine(
+    const vector<CgSymGroup>& symgroup_list,
+    const vector<CgPolInfo>& opol_list,
+    vector<CgPinGroup>& ig_list,
+    vector<CgPolInfo>& ipol_list
+  ) const;
+
+  /// @brief 入力の対称性を調べる．
+  bool
+  check_sym(
+    SizeType i1,
+    SizeType i2,
+    bool inv
+  ) const;
 
 
 private:

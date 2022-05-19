@@ -53,8 +53,6 @@ set (cg_SOURCES
   c++-srcs/cgmgr/CgMgr.cc
   c++-srcs/cgmgr/CgSignature.cc
   c++-srcs/cgmgr/CgSigRep.cc
-  c++-srcs/cgmgr/CgLogicSig.cc
-  c++-srcs/cgmgr/CgTriLogicSig.cc
   c++-srcs/cgmgr/CgGenLogicSig.cc
   c++-srcs/cgmgr/CgFFSig.cc
   c++-srcs/cgmgr/CgLatchSig.cc

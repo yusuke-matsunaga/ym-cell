@@ -8,6 +8,7 @@
 
 #include "gtest/gtest.h"
 #include "cgmgr/CgSignature.h"
+#include "ym/PermGen.h"
 #include "ym/ClibIOMap.h"
 
 
@@ -18,10 +19,9 @@ struct FuncSpec
 {
   TvFunc mFunc;
   TvFunc mTristate;
-  vector<const char*> mSigList;
 };
 
-class Func0Test:
+class FuncTest:
   public ::testing::TestWithParam<FuncSpec>
 {
 public:
@@ -31,257 +31,271 @@ public:
 
 };
 
-void
-Func0Test::check()
-{
-  const auto& spec = GetParam();
 
-  auto sig = CgSignature::make_logic_sig(spec.mFunc, spec.mTristate);
-  EXPECT_EQ( spec.mSigList[0], sig.str() );
-  SizeType base = 1;
-  for ( bool oinv: {false, true} ) {
-    auto xform = ClibIOMap{vector<ClibPinMap>{}, oinv};
-    auto xsig = sig.xform(xform);
-    EXPECT_EQ( spec.mSigList[base], xsig.str() );
-    ++ base;
+BEGIN_NONAMESPACE
+
+// 真理値表を取り出す．
+vector<bool>
+extract_table(
+  const TvFunc& func
+)
+{
+  if ( func.is_invalid() ) {
+    return vector<bool>{};
+  }
+
+  SizeType ni_exp = 1 << func.input_num();
+  vector<bool> ans(ni_exp);
+  for ( SizeType i = 0; i < ni_exp; ++ i ) {
+    ans[i] = func.value(i);
+  }
+  return ans;
+}
+
+void
+dump_hex(
+  ostream& s,
+  SizeType val
+)
+{
+  if ( val < 10 ) {
+    s << val;
+  }
+  else {
+    s << static_cast<char>('A' + val - 10);
   }
 }
 
-TEST_P(Func0Test, xform)
+// 結果のHEX文字列を作る．
+string
+to_hex(
+  const vector<bool>& table ///< [in] 真理値表
+)
 {
-  check();
-}
-
-INSTANTIATE_TEST_SUITE_P(CgLogicSig_test,
-			 Func0Test,
-			 ::testing::Values(
-			   FuncSpec{TvFunc::make_invalid(),
-				    TvFunc::make_invalid(),
-				    {"C:0:1:0::",
-				     "C:0:1:0::", "C:0:1:0::"}},
-			   FuncSpec{TvFunc::make_zero(0),
-				    TvFunc::make_invalid(),
-				    {"C:0:1:0:0:",
-				     "C:0:1:0:0:", "C:0:1:0:1:"}},
-			   FuncSpec{TvFunc::make_one(0),
-				    TvFunc::make_invalid(),
-				    {"C:0:1:0:1:",
-				     "C:0:1:0:1:", "C:0:1:0:0:"}}
-			 ));
-
-class Func1Test:
-  public ::testing::TestWithParam<FuncSpec>
-{
-public:
-
-  void
-  check();
-};
-
-void
-Func1Test::check()
-{
-  const auto& spec = GetParam();
-
-  auto sig = CgSignature::make_logic_sig(spec.mFunc, spec.mTristate);
-  EXPECT_EQ( spec.mSigList[0], sig.str() );
-  SizeType base = 1;
-  for ( bool oinv: {false, true} ) {
-    for ( bool iinv: {false, true} ) {
-      auto xform = ClibIOMap{{ClibPinMap{0, iinv}}, oinv};
-      auto xsig = sig.xform(xform);
-      EXPECT_EQ( spec.mSigList[base], xsig.str() );
-      ++ base;
+  SizeType n = table.size();
+  ostringstream buf;
+  SizeType val = 0;
+  SizeType count = 0;
+  for ( auto v: table ) {
+    val <<= 1;
+    if ( v ) {
+      val |= 1;
+    }
+    ++ count;
+    if ( count == 4 ) {
+      dump_hex(buf, val);
+      val = 0;
+      count = 0;
     }
   }
+  if ( count > 0 ) {
+    dump_hex(buf, val);
+  }
+  return buf.str();
 }
 
-TEST_P(Func1Test, xform)
+// CgSignature::str() の期待値を作る．
+string
+gen_str(
+  SizeType ni,
+  const vector<bool>& func_table,
+  const vector<bool>& tristate_table
+)
 {
-  check();
+  ostringstream buf;
+  buf << "C:" << ni << ":1:0:" << to_hex(func_table)
+      << ":" << to_hex(tristate_table);
+  return buf.str();
 }
 
-INSTANTIATE_TEST_SUITE_P(CgLogicSig_test,
-			 Func1Test,
-			 ::testing::Values(
-			   FuncSpec{TvFunc::make_zero(1),
-				    TvFunc::make_invalid(),
-				    {"C:1:1:0:0:",
-				     "C:1:1:0:0:", "C:1:1:0:0:",
-				     "C:1:1:0:3:", "C:1:1:0:3:"}},
-			   FuncSpec{TvFunc::make_one(1),
-				    TvFunc::make_invalid(),
-				    {"C:1:1:0:3:",
-				     "C:1:1:0:3:", "C:1:1:0:3:",
-				     "C:1:1:0:0:", "C:1:1:0:0:"}},
-			   FuncSpec{TvFunc::make_posi_literal(1, VarId{0}),
-				    TvFunc::make_invalid(),
-				    {"C:1:1:0:1:",
-				     "C:1:1:0:1:", "C:1:1:0:2:",
-				     "C:1:1:0:2:", "C:1:1:0:1:"}},
-			   FuncSpec{TvFunc::make_nega_literal(1, VarId{0}),
-				    TvFunc::make_invalid(),
-				    {"C:1:1:0:2:",
-				     "C:1:1:0:2:", "C:1:1:0:1:",
-				     "C:1:1:0:1:", "C:1:1:0:2:"}}
-			 ));
-
-class Func2Test:
-  public ::testing::TestWithParam<FuncSpec>
+// 真理値表を変換する．
+vector<bool>
+xform_table(
+  const vector<bool>& table,
+  bool oinv,
+  const vector<bool>& iinv,
+  const PermGen& pg
+)
 {
-public:
+  SizeType ni_exp = table.size();
+  if ( ni_exp == 0 ) {
+    return vector<bool>{};
+  }
 
-  void
-  check();
-};
+  SizeType ni = 0;
+  while ( (1 << ni) < ni_exp ) {
+    ++ ni;
+  }
+  vector<bool> ans(ni_exp, false);
+  for ( SizeType bits = 0; bits < ni_exp; ++ bits ) {
+    vector<bool> ival(ni, false);
+    for ( SizeType i = 0; i < ni; ++ i ) {
+      if ( bits & (1 << i) ) {
+	ival[i] = true;
+      }
+    }
+    SizeType xbits = 0;
+    for ( SizeType i = 0; i < ni; ++ i ) {
+      SizeType j = pg(i);
+      if ( ival[i] ^ iinv[i] ) {
+	xbits |= 1 << j;
+      }
+    }
+    if ( table[xbits] ^ oinv ) {
+      ans[bits] = true;
+    }
+  }
+  return ans;
+}
+
+END_NONAMESPACE
 
 void
-Func2Test::check()
+FuncTest::check()
 {
   const auto& spec = GetParam();
 
   auto sig = CgSignature::make_logic_sig(spec.mFunc, spec.mTristate);
-  EXPECT_EQ( spec.mSigList[0], sig.str() );
-  SizeType base = 1;
+
+  SizeType ni = spec.mFunc.input_num();
+  SizeType no = 1;
+  SizeType nb = 0;
+
+  SizeType ni_exp = 1 << ni;
+
+  // mFunc の真理値表を取り出す．
+  auto func_table = extract_table(spec.mFunc);
+  // mTristate の真理値表を取り出す．
+  auto tristate_table = extract_table(spec.mTristate);
+
+  // str() の期待値を作る．
+  auto exp_str = gen_str(ni, func_table, tristate_table);
+  EXPECT_EQ( exp_str, sig.str() );
+
   for ( bool oinv: {false, true} ) {
-    for ( bool i1inv: {false, true} ) {
-      for ( bool i2inv: {false, true} ) {
-	for ( SizeType mask: {0, 1} ) {
-	  SizeType i0 = 0 ^ mask;
-	  SizeType i1 = 1 ^ mask;
-	  auto xform = ClibIOMap{{ClibPinMap{i0, i1inv}, ClibPinMap{i1, i2inv}}, oinv};
-	  auto xsig = sig.xform(xform);
-	  EXPECT_EQ( spec.mSigList[base], xsig.str() );
-	  ++ base;
+    vector<bool> iinv(ni, false);
+    for ( SizeType bits = 0; bits < ni_exp; ++ bits ) {
+      for ( SizeType i = 0; i < ni; ++ i ) {
+	if ( bits & (1 << i) ) {
+	  iinv[i] = true;
+	}
+      }
+      for ( PermGen pg(ni, ni); !pg.is_end(); ++ pg ) {
+	vector<ClibPinMap> ipin_map(ni);
+	for ( SizeType i = 0; i < ni; ++ i ) {
+	  ipin_map[pg(i)] = ClibPinMap(i, iinv[i]);
+	}
+	auto xform = ClibIOMap{ipin_map, oinv};
+	auto xsig = sig.xform(xform);
+
+	// func_table, tristate_table を変換する．
+	auto xfunc_table = xform_table(func_table, oinv, iinv, pg);
+	auto xtristate_table =xform_table(tristate_table, false, iinv, pg);
+	// str() の期待値を作る．
+	auto exp_str = gen_str(ni, xfunc_table, xtristate_table);
+	EXPECT_EQ( exp_str, xsig.str() );
+	if ( exp_str != xsig.str() ) {
+	  cout << "func: " << spec.mFunc << endl
+	       << "tristate: " << spec.mTristate << endl
+	       << "oinv: " << oinv << endl
+	       << "iinv: ";
+	  for ( SizeType i = 0; i < ni; ++ i ) {
+	    cout << " " << iinv[i];
+	  }
+	  cout << endl;
+	  cout << "imap: ";
+	  for ( SizeType i = 0; i < ni; ++ i ) {
+	    cout << " " << pg(i);
+	  }
+	  cout << endl;
+	  cout << "xfunc: " << to_hex(xfunc_table) << endl
+	       << "xtristate: " << to_hex(xtristate_table) << endl;
 	}
       }
     }
   }
 }
 
-TEST_P(Func2Test, xform)
+TEST_P(FuncTest, xform)
 {
   check();
 }
 
-INSTANTIATE_TEST_SUITE_P(CgLogicSig_test,
-			 Func2Test,
+// 0入力関数のテスト
+INSTANTIATE_TEST_SUITE_P(CgLogicSig0_test,
+			 FuncTest,
 			 ::testing::Values(
-			   FuncSpec{TvFunc::make_zero(2),
-				    TvFunc::make_invalid(),
-				    {"C:2:1:0:0:",
-				     "C:2:1:0:0:", "C:2:1:0:0:",
-				     "C:2:1:0:0:", "C:2:1:0:0:",
-				     "C:2:1:0:0:", "C:2:1:0:0:",
-				     "C:2:1:0:0:", "C:2:1:0:0:",
-				     "C:2:1:0:F:", "C:2:1:0:F:",
-				     "C:2:1:0:F:", "C:2:1:0:F:",
-				     "C:2:1:0:F:", "C:2:1:0:F:",
-				     "C:2:1:0:F:", "C:2:1:0:F:"}},
-			   FuncSpec{TvFunc::make_one(2),
-				    TvFunc::make_invalid(),
-				    {"C:2:1:0:F:",
-				     "C:2:1:0:F:", "C:2:1:0:F:",
-				     "C:2:1:0:F:", "C:2:1:0:F:",
-				     "C:2:1:0:F:", "C:2:1:0:F:",
-				     "C:2:1:0:F:", "C:2:1:0:F:",
-				     "C:2:1:0:0:", "C:2:1:0:0:",
-				     "C:2:1:0:0:", "C:2:1:0:0:",
-				     "C:2:1:0:0:", "C:2:1:0:0:",
-				     "C:2:1:0:0:", "C:2:1:0:0:"}},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId{0}),
-				    TvFunc::make_invalid(),
-				    {"C:2:1:0:5:",
-				     "C:2:1:0:5:", "C:2:1:0:3:",
-				     "C:2:1:0:5:", "C:2:1:0:3:",
-				     "C:2:1:0:A:", "C:2:1:0:C:",
-				     "C:2:1:0:A:", "C:2:1:0:C:",
-				     "C:2:1:0:A:", "C:2:1:0:C:",
-				     "C:2:1:0:A:", "C:2:1:0:C:",
-				     "C:2:1:0:5:", "C:2:1:0:3:",
-				     "C:2:1:0:5:", "C:2:1:0:3:"}},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId{1}),
-				    TvFunc::make_invalid(),
-				    {"C:2:1:0:3:",
-				     "C:2:1:0:3:", "C:2:1:0:5:",
-				     "C:2:1:0:C:", "C:2:1:0:A:",
-				     "C:2:1:0:3:", "C:2:1:0:5:",
-				     "C:2:1:0:C:", "C:2:1:0:A:",
-				     "C:2:1:0:C:", "C:2:1:0:A:",
-				     "C:2:1:0:3:", "C:2:1:0:5:",
-				     "C:2:1:0:C:", "C:2:1:0:A:",
-				     "C:2:1:0:3:", "C:2:1:0:5:"}},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId(0)) &
-				    TvFunc::make_posi_literal(2, VarId{1}),
-				    TvFunc::make_invalid(),
-				    {"C:2:1:0:1:",
-				     "C:2:1:0:1:", "C:2:1:0:1:",
-				     "C:2:1:0:4:", "C:2:1:0:2:",
-				     "C:2:1:0:2:", "C:2:1:0:4:",
-				     "C:2:1:0:8:", "C:2:1:0:8:",
-				     "C:2:1:0:E:", "C:2:1:0:E:",
-				     "C:2:1:0:B:", "C:2:1:0:D:",
-				     "C:2:1:0:D:", "C:2:1:0:B:",
-				     "C:2:1:0:7:", "C:2:1:0:7:"}},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId(0)) ^
-				    TvFunc::make_posi_literal(2, VarId{1}),
-				    TvFunc::make_invalid(),
-				    {"C:2:1:0:6:",
-				     "C:2:1:0:6:", "C:2:1:0:6:",
-				     "C:2:1:0:9:", "C:2:1:0:9:",
-				     "C:2:1:0:9:", "C:2:1:0:9:",
-				     "C:2:1:0:6:", "C:2:1:0:6:",
-				     "C:2:1:0:9:", "C:2:1:0:9:",
-				     "C:2:1:0:6:", "C:2:1:0:6:",
-				     "C:2:1:0:6:", "C:2:1:0:6:",
-				     "C:2:1:0:9:", "C:2:1:0:9:"}},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId{0}),
-				    TvFunc::make_posi_literal(2, VarId{1}),
-				    {"C:2:1:0:5:3",
-				     "C:2:1:0:5:3", "C:2:1:0:3:5",
-				     "C:2:1:0:5:C", "C:2:1:0:3:A",
-				     "C:2:1:0:A:3", "C:2:1:0:C:5",
-				     "C:2:1:0:A:C", "C:2:1:0:C:A",
-				     "C:2:1:0:A:3", "C:2:1:0:C:5",
-				     "C:2:1:0:A:C", "C:2:1:0:C:A",
-				     "C:2:1:0:5:3", "C:2:1:0:3:5",
-				     "C:2:1:0:5:C", "C:2:1:0:3:A"}}
+			   FuncSpec{TvFunc::make_invalid(),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_zero(0),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_one(0),
+				    TvFunc::make_invalid()}
 			 ));
 
-TEST(CgLogicSig_test, zero_3)
-{
-  auto f = TvFunc::make_zero(3);
-  auto sig = CgSignature::make_logic_sig(f);
-  auto sig_str = sig.str();
+// 1入力関数のテスト
+INSTANTIATE_TEST_SUITE_P(CgLogicSig1_test,
+			 FuncTest,
+			 ::testing::Values(
+			   FuncSpec{TvFunc::make_zero(1),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_one(1),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_posi_literal(1, VarId{0}),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_nega_literal(1, VarId{0}),
+				    TvFunc::make_invalid()}
+			 ));
 
-  EXPECT_EQ( "C:3:1:0:00:", sig_str );
-}
 
-TEST(CgLogicSig_test, one_3)
-{
-  auto f = TvFunc::make_one(3);
-  auto sig = CgSignature::make_logic_sig(f);
-  auto sig_str = sig.str();
+// 2入力関数のテスト
+INSTANTIATE_TEST_SUITE_P(CgLogicSig2_test,
+			 FuncTest,
+			 ::testing::Values(
+			   FuncSpec{TvFunc::make_zero(2),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_one(2),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_posi_literal(2, VarId{0}),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_posi_literal(2, VarId{1}),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_posi_literal(2, VarId(0)) &
+				    TvFunc::make_posi_literal(2, VarId{1}),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_posi_literal(2, VarId(0)) ^
+				    TvFunc::make_posi_literal(2, VarId{1}),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_posi_literal(2, VarId{0}),
+				    TvFunc::make_posi_literal(2, VarId{1})}
+			 ));
 
-  EXPECT_EQ( "C:3:1:0:FF:", sig_str );
-}
+// 3入力関数のテスト
+INSTANTIATE_TEST_SUITE_P(CgLogicSig3_test,
+			 FuncTest,
+			 ::testing::Values(
+			   FuncSpec{TvFunc::make_zero(3),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_one(3),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_posi_literal(3, VarId{0}) |
+				    (TvFunc::make_posi_literal(3, VarId{1}) &
+				     TvFunc::make_nega_literal(3, VarId{2})),
+				    TvFunc::make_invalid()}
+			 ));
 
-TEST(CgLogicSig_test, zero_4)
-{
-  auto f = TvFunc::make_zero(4);
-  auto sig = CgSignature::make_logic_sig(f);
-  auto sig_str = sig.str();
-
-  EXPECT_EQ( "C:4:1:0:0000:", sig_str );
-}
-
-TEST(CgLogicSig_test, one_4)
-{
-  auto f = TvFunc::make_one(4);
-  auto sig = CgSignature::make_logic_sig(f);
-  auto sig_str = sig.str();
-
-  EXPECT_EQ( "C:4:1:0:FFFF:", sig_str );
-}
+// 4入力関数のテスト
+INSTANTIATE_TEST_SUITE_P(CgLogicSig4_test,
+			 FuncTest,
+			 ::testing::Values(
+			   FuncSpec{TvFunc::make_zero(4),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_one(4),
+				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_posi_literal(4, VarId{0}) |
+				    (TvFunc::make_posi_literal(4, VarId{1}) &
+				     TvFunc::make_nega_literal(4, VarId{2})),
+				    TvFunc::make_posi_literal(4, VarId{3})}
+			 ));
 
 END_NAMESPACE_YM_CLIB
