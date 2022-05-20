@@ -87,14 +87,15 @@ private:
   /// @brief Walsh_0 を用いて出力のグループ分けを行う．
   void
   w0_refine(
-    vector<SizeType> src_group,  ///< [in] 元となるグループ
-    vector<CgPinGroup>& og_list, ///< [out] 出力のグループのリスト
-    vector<CgPolInfo>& opol_list ///< [out] 出力の反転属性のリスト
+    const vector<SizeType>& src_group,  ///< [in] 元となるグループ
+    vector<CgPinGroup>& og_list,        ///< [out] 出力のグループのリスト
+    vector<CgPolInfo>& opol_list        ///< [out] 出力の反転属性のリスト
   ) const;
 
   /// @brief 対称グループを作る．
   void
   gen_symgroup(
+    const vector<SizeType>& src_group, ///< [in] 元となるグループ
     vector<CgSymGroup>& symgroup_list, ///< [out] 対称グループのリスト
     vector<CgPolInfo>& ipol_list       ///< [out] 入力の反転属性のリスト
   ) const;
