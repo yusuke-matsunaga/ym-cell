@@ -79,6 +79,53 @@ struct CgPinGroup
   vector<SizeType> mIdList;
 };
 
+struct CgSymInfo
+{
+  SizeType mRepId{static_cast<SizeType>(-1)};
+  bool mInv{false};
+  bool mBiSym{false};
+};
+
+BEGIN_NONAMESPACE
+
+// @brief 極性の定まっていない番号のリストを作る．
+vector<SizeType>
+gen_floating_list(
+  const vector<CgPolInfo>& pol_list
+)
+{
+  vector<SizeType> floating_list;
+  for ( SizeType i = 0; i < pol_list.size(); ++ i ) {
+    if ( pol_list[i] == CgPolInfo::Both ) {
+      floating_list.push_back(i);
+    }
+  }
+  return floating_list;
+}
+
+// @brief 極性を展開する．
+vector<CgPolInfo>
+expand_pol(
+  SizeType bits,
+  const vector<SizeType>& floating_pos_list,
+  const vector<CgPolInfo>& src_pol_list
+)
+{
+  auto pol_list = src_pol_list;
+  SizeType nf = floating_pos_list.size();
+  for ( SizeType i = 0; i < nf; ++ i ) {
+    if ( bits & (1 << i) ) {
+      pol_list[floating_pos_list[i]] = CgPolInfo::Negative;
+    }
+    else {
+      pol_list[floating_pos_list[i]] = CgPolInfo::Positive;
+    }
+  }
+  return pol_list;
+}
+
+END_NONAMESPACE
+
 
 // @brief 代表シグネチャに対する変換を求める．
 ClibIOMap
@@ -89,44 +136,71 @@ CgGenLogicSig::rep_map() const
 
   // Walsh の0次の係数を用いて出力の極性を正規化する．
   // 同時に出力のグループ分けと順序付けを行う．
+  vector<SizeType> opos_list(mNo);
+  for ( SizeType i = 0; i < mNo; ++ i ) {
+    opos_list[i] = i;
+  }
   vector<CgPinGroup> og_list;
-  vector<CgPolInfo> opol_list(no2, CgPolInfo::Both);
-  {
-    vector<SizeType> src_group(mNo);
-    for ( SizeType i = 0; i < mNo; ++ i ) {
-      src_group[i] = i;
-    }
-    w0_refine(src_group, og_list, opol_list);
+  vector<CgPolInfo> opol_list(mNo, CgPolInfo::Both);
+  w0_refine(opos_list, og_list, opol_list);
+
+  // Walsh の0次の係数を用いて入出力の極性を正規化する．
+  // 同時に出力のグループ分けと順序付けを行う．
+  vector<SizeType> bpos_list(mNo);
+  for ( SizeType i = 0; i < mNb; ++ i ) {
+    bpos_list[i] = i + mNo;
   }
-  {
-    vector<SizeType> src_group(mNb);
-    for ( SizeType i = 0; i < mNb; ++ i ) {
-      src_group[i] = i + mNo;
-    }
-    w0_refine(src_group, og_list, opol_list);
-  }
+  vector<CgPinGroup> bg_list;
+  vector<CgPolInfo> bpol_list(mNb, CgPolInfo::Both);
+  w0_refine(bpos_list, bg_list, bpol_list);
 
   // 入力の対称グループを作る．
-  vector<CgSymGroup> symgroup_list;
-  vector<CgPolInfo> ipol_list(ni2, CgPolInfo::Both);
-  {
-    vector<SizeType> src_group(mNi);
-    for ( SizeType i = 0; i < mNi; ++ i ) {
-      src_group[i] = i;
-    }
-    gen_symgroup(src_group, symgroup_list, ipol_list);
-  }
-  { // 入出力は対称グループを持たない．
-    for ( SizeType i = 0; i < mNb; ++ i ) {
+  vector<CgSymInfo> syminfo_list(mNi);
+  auto symrep_list = gen_symgroup(syminfo_list);
 
-      src_group[i] = i + mNi;
-    }
-    gen_symgroup(src_group, symgroup_list, ipol_list);
-  }
-
-  // Walsh の1次の係数の和を用いて極性と順序を決める．
+  // Walsh_1 の和を用いて入力の極性と順序を決める．
   vector<CgPinGroup> ig_list;
-  w1sum_refine(symgroup_list, opol_list, ig_list, ipol_list);
+  vector<CgPolInfo> ipol_list(mNi, CgPolInfo::Both);
+  w1sum_refine(symrep_list, opol_list, ig_list, ipol_list);
+
+  // Walsh_1 の和を用いて入出力の極性と順序を決める．
+  {
+    vector<CgPinGroup> new_bg_list;
+    for ( const auto& group: bg_list ) {
+      w1sum_refine(group.mIdList, opol_list, new_bg_list, bpol_list);
+    }
+    bg_list.swap(new_bg_list);
+  }
+
+  // 極性の定まっていない入力番号のリスト
+  auto floating_ipos_list = gen_floating_list(ipol_list);
+
+  // 極性の定まっていない出力番号のリスト
+  auto floating_opos_list = gen_floating_list(opol_list);
+
+  // 極性の定まっていない入出力番号のリスト
+  auto floating_bpos_list = gen_floating_list(bpol_list);
+
+  SizeType nfi = floating_ipos_list.size();
+  SizeType nfi_exp = 1U << nfi;
+  SizeType nfo = floating_opos_list.size();
+  SizeType nfo_exp = 1U << nfo;
+  SizeType nfb = floating_bpos_list.size();
+  SizeType nfb_exp = 1U << nfb;
+
+  // 入力極性を展開する．
+  for ( SizeType ibits = 0; ibits < nfi_exp; ++ ibits ) {
+    auto ipol_list1 = expand_pol(ibits, floating_ipos_list, ipol_list);
+    // 出力極性を展開する．
+    for ( SizeType obits = 0; obits < nfo_exp; ++ obits ) {
+      auto opol_list1 = expand_pol(obits, floating_opos_list, opol_list);
+      // 入出力極性を展開する．
+      for ( SizeType bbits = 0; bbits < nfb_exp; ++ bbits ) {
+	auto bpol_list1 = expand_pol(bbits, floating_bpos_list, bpol_list);
+
+      }
+    }
+  }
 
   auto npnmap = mFuncList[0].npn_cannonical_map();
   return from_npnmap(npnmap);
@@ -135,16 +209,16 @@ CgGenLogicSig::rep_map() const
 // @brief Walsh_0 を用いて出力のグループ分けを行う．
 void
 CgGenLogicSig::w0_refine(
-  const vector<SizeType>& src_group,
+  const vector<SizeType>& pos_list,
   vector<CgPinGroup>& og_list,
   vector<CgPolInfo>& opol_list
 ) const
 {
   // Walsh の 0次の係数を用いて出力の極性を正規化する．
-  // 同時に出力のグループ分けと順序付けを行う．
-  SizeType head = og_list.size();
-  for ( auto id: src_group ) {
-    int func_w0 = mFuncList[id].walsh_0();
+  SizeType n = pos_list.size();
+  for ( SizeType id = 0; id < n; ++ id ) {
+    SizeType pos = pos_list[id];
+    int func_w0 = mFuncList[pos].walsh_0();
     if ( func_w0 < 0 ) {
       func_w0 = - func_w0;
       opol_list[id] = CgPolInfo::Negative;
@@ -157,13 +231,13 @@ CgGenLogicSig::w0_refine(
     }
 
     // tristate 関数は反転しない．
-    int tristate_w0 = mTristateList[id].walsh_0();
+    int tristate_w0 = mTristateList[pos].walsh_0();
 
     // (func_w0, tristate_w0) のグループを探す．
     bool done = false;
-    SizeType pos = head;
-    for ( ; pos < og_list.size(); ++ pos ) {
-      auto& og = og_list[pos];
+    SizeType ipos = 0;
+    for ( ; ipos < og_list.size(); ++ ipos ) {
+      auto& og = og_list[ipos];
       if ( og.mFuncW == func_w0 && og.mTristateW == tristate_w0 ) {
 	og.mIdList.push_back(id);
 	done = true;
@@ -175,77 +249,78 @@ CgGenLogicSig::w0_refine(
       }
     }
     if ( !done ) {
-      og_list.insert(og_list.begin() + pos, CgPinGroup{func_w0, tristate_w0, {id}});
+      og_list.insert(og_list.begin() + ipos, CgPinGroup{func_w0, tristate_w0, {id}});
     }
   }
 }
 
 // @brief 対称グループを作る．
-void
+vector<SizeType>
 CgGenLogicSig::gen_symgroup(
-  const vector<SizeType>& src_group,
-  vector<CgSymGroup>& symgroup_list,
-  vector<CgPolInfo>& ipol_list
+  vector<CgSymInfo>& syminfo_list
 ) const
 {
-  SizeType ni2 = mNi + mNb;
   SizeType no2 = mNo + mNb;
-
-  // Walsh_1 の値のリスト
-  vector<vector<int>> w1_list(ni2);
-  for ( SizeType id: src_group ) {
+  // Walsh_1 の値のリストを作る．
+  // Walsh_1 が異なる入力は対称ではない．
+  vector<vector<int>> w1_list(mNi);
+  for ( SizeType id = 0; id < mNi; ++ id ) {
     for ( SizeType oid = 0; oid < no2; ++ oid ) {
       w1_list[id].push_back(mFuncList[oid].walsh_1(VarId{id}));
       w1_list[id].push_back(mTristateList[oid].walsh_1(VarId{id}));
     }
   }
 
-  vector<bool> marks(ni2, false);
-  SizeType n = src_group.size();
-  for ( SizeType i = 0; i < n; ++ i ) {
-    SizeType id1 = src_group[i];
-    if ( marks[id1] ) {
+  // 代表元のリスト
+  vector<SizeType> rep_list;
+  // 各対称グループの要素数
+  // 対称グループの見つかった時に bissymmetry テストを行うために用いる．
+  vector<SizeType> n_list(mNi, 0);
+  for ( SizeType id1 = 0; id1 < mNi; ++ id1 ) {
+    auto& syminfo1 = syminfo_list[id1];
+    if ( syminfo1.mRepId != -1 ) {
       continue;
     }
     // id1 を代表元にする．
-    symgroup_list.push_back(CgSymGroup{{id1}, false});
-    auto& symgroup = symgroup_list.back();
-    for ( SizeType j = i + 1; j < mNi; ++ j ) {
-      SizeType id2 = src_group[j];
-      if ( marks[id2] ) {
+    rep_list.push_back(id1);
+    n_list[id1] = 1;
+    for ( SizeType id2 = id1 + 1; id2 < mNi; ++ id2 ) {
+      auto& syminfo2 = syminfo_list[id2];
+      if ( syminfo2.mRepId != -1 ) {
 	continue;
       }
       if ( w1_list[id1] != w1_list[id2] ) {
 	continue;
       }
       if ( check_sym(id1, id2, false) ) {
-	if ( symgroup.mIdList.size() == 1 && check_sym(id1, id2, true) ) {
-	  symgroup.mBiSym = true;
+	if ( n_list[id1] == 1 && check_sym(id1, id2, true) ) {
+	  syminfo1.mBiSym = true;
 	}
-	symgroup.mIdList.push_back(id2);
-	marks[id2] = true;
+	syminfo2.mRepId = id1;
+	++ n_list[id1];
       }
       else if ( check_sym(id1, id2, true) ) {
-	ipol_list[id2] = CgPolInfo::Negative;
-	symgroup.mIdList.push_back(id2);
-	marks[id2] = true;
+	syminfo2.mRepId = id1;
+	syminfo2.mInv = true;
+	++ n_list[id1];
       }
     }
   }
+
+  return rep_list;
 }
 
 // @brief Walsh_1_sum を用いて入力グループの細分化を行う．
 void
 CgGenLogicSig::w1sum_refine(
-  const vector<CgSymGroup>& symgroup_list,
+  const vector<SizeType>& src_list,
   const vector<CgPolInfo>& opol_list,
   vector<CgPinGroup>& ig_list,
   vector<CgPolInfo>& ipol_list
 ) const
 {
   SizeType no2 = mNo + mNb;
-  for ( auto& symgroup: symgroup_list ) {
-    SizeType i = symgroup.mIdList[0];
+  for ( SizeType i: src_list ) {
     int func_w1sum = 0;
     int tristate_w1sum = 0;
     for ( SizeType j = 0; j < no2; ++ j ) {
@@ -257,19 +332,24 @@ CgGenLogicSig::w1sum_refine(
       int tristate_w1 = mTristateList[j].walsh_1(VarId{i});
       tristate_w1sum += tristate_w1;
     }
-    if ( func_w1sum < 0 ) {
-      for ( SizeType j: symgroup.mIdList ) {
-	if ( ipol_list[j] == CgPolInfo::Negative ) {
-	  ipol_list[j] = CgPolInfo::Positive;
+    if ( ipol_list[i] == CgPolInfo::Both ) {
+      // 極性が未確定なら正規化する．
+      if ( func_w1sum < 0 ) {
+	func_w1sum = - func_w1sum;
+	ipol_list[i] = CgPolInfo::Negative;
+      }
+      else if ( func_w1sum > 0 ) {
+	ipol_list[i] = CgPolInfo::Positive;
+      }
+      else { // func_w1sum == 0
+	if ( tristate_w1sum < 0 ) {
+	  tristate_w1sum = - tristate_w1sum;
+	  ipol_list[i] = CgPolInfo::Negative;
 	}
 	else {
-	  ipol_list[j] = CgPolInfo::Negative;
+	  ipol_list[i] = CgPolInfo::Positive;
 	}
       }
-      func_w1sum = - func_w1sum;
-    }
-    else if ( func_w1sum > 0 ) {
-      ipol_list[i] = CgPolInfo::Positive;
     }
     // (func_w1sum, tristate_w1sum) を ig_list に挿入する．
     bool done = false;

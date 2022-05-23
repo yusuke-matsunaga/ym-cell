@@ -17,6 +17,7 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 struct CgPinGroup;
+struct CgSymInfo;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CgGenLogicSig CgGenLogicSig.h "CgGenLogicSig.h"
@@ -87,23 +88,21 @@ private:
   /// @brief Walsh_0 を用いて出力のグループ分けを行う．
   void
   w0_refine(
-    const vector<SizeType>& src_group,  ///< [in] 元となるグループ
-    vector<CgPinGroup>& og_list,        ///< [out] 出力のグループのリスト
-    vector<CgPolInfo>& opol_list        ///< [out] 出力の反転属性のリスト
+    const vector<SizeType>& pos_list, ///< [in] 出力番号のリスト
+    vector<CgPinGroup>& og_list,      ///< [out] 出力のグループのリスト
+    vector<CgPolInfo>& opol_list      ///< [out] 出力の反転属性のリスト
   ) const;
 
   /// @brief 対称グループを作る．
-  void
+  vector<SizeType>
   gen_symgroup(
-    const vector<SizeType>& src_group, ///< [in] 元となるグループ
-    vector<CgSymGroup>& symgroup_list, ///< [out] 対称グループのリスト
-    vector<CgPolInfo>& ipol_list       ///< [out] 入力の反転属性のリスト
+    vector<CgSymInfo>& syminfo_list ///< [out] 対称グループのリスト
   ) const;
 
   /// @brief Walsh_1_sum を用いて入力グループの細分化を行う．
   void
   w1sum_refine(
-    const vector<CgSymGroup>& symgroup_list,
+    const vector<SizeType>& src_list,
     const vector<CgPolInfo>& opol_list,
     vector<CgPinGroup>& ig_list,
     vector<CgPolInfo>& ipol_list
