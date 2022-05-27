@@ -218,7 +218,26 @@ FuncTest::check(
 	auto xiomap = xsig.rep_map();
 	auto xrep_sig = xsig.xform(xiomap);
 	auto xrep_str = xrep_sig.str();
-	ASSERT_COND( rep_str == xrep_str );
+	if ( rep_str != xrep_str ) {
+	  cout << "Error" << endl
+	       << "func: " << spec.mFunc << endl
+	       << "tristate: " << spec.mTristate << endl
+	       << "oinv: " << oinv << endl
+	       << "iinv: ";
+	  for ( SizeType i = 0; i < ni; ++ i ) {
+	    cout << " " << iinv[i];
+	  }
+	  cout << endl;
+	  cout << "imap: ";
+	  for ( SizeType i = 0; i < ni; ++ i ) {
+	    cout << " " << pg(i);
+	  }
+	  cout << endl;
+	  cout << "xfunc: " << to_hex(xfunc_table) << endl
+	       << "xtristate: " << to_hex(xtristate_table) << endl
+	       << "rep_str: " << rep_str << endl
+	       << "xrep_str: " << xrep_str << endl;
+	}
       }
     }
   }
@@ -230,8 +249,13 @@ foo_test(
   char** argv
 )
 {
+#if 0
   FuncSpec spec{TvFunc::make_zero(1),
 		TvFunc::make_invalid()};
+#else
+  FuncSpec spec{TvFunc::make_posi_literal(2, VarId{0}),
+                TvFunc::make_posi_literal(2, VarId{1})};
+#endif
 
   FuncTest test;
 

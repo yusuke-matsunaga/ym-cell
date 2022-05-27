@@ -456,6 +456,8 @@ CgGenLogicSig::rep_map() const
 	      ClibIOMap iomap{ipin_map, opin_map, bpin_map};
 	      auto sig1 = xform(iomap);
 	      auto sig_str = sig1->str();
+	      cout << "iomap:" << iomap << endl
+		   << "sig_str: " << sig_str << endl;
 	      if ( min_sig_str == string{} || min_sig_str > sig_str ) {
 		min_sig_str = sig_str;
 		min_map = iomap;
@@ -531,7 +533,11 @@ CgGenLogicSig::gen_symgroup(
   vector<vector<int>> w1_list(mNi);
   for ( SizeType id = 0; id < mNi; ++ id ) {
     for ( SizeType oid = 0; oid < no2; ++ oid ) {
-      w1_list[id].push_back(mFuncList[oid].walsh_1(VarId{id}));
+      int w1 = mFuncList[oid].walsh_1(VarId{id});
+      if ( w1 < 0 ) {
+	w1 = - w1;
+      }
+      w1_list[id].push_back(w1);
       w1_list[id].push_back(mTristateList[oid].walsh_1(VarId{id}));
     }
   }

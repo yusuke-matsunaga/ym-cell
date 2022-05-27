@@ -290,6 +290,9 @@ INSTANTIATE_TEST_SUITE_P(CgLogicSig2_test,
 			   FuncSpec{TvFunc::make_posi_literal(2, VarId(0)) &
 				    TvFunc::make_posi_literal(2, VarId{1}),
 				    TvFunc::make_invalid()},
+			   FuncSpec{TvFunc::make_posi_literal(2, VarId(0)) &
+				    TvFunc::make_nega_literal(2, VarId{1}),
+				    TvFunc::make_invalid()},
 			   FuncSpec{TvFunc::make_posi_literal(2, VarId(0)) ^
 				    TvFunc::make_posi_literal(2, VarId{1}),
 				    TvFunc::make_invalid()},
