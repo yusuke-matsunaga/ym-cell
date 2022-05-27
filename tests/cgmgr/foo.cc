@@ -6,7 +6,6 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "gtest/gtest.h"
 #include "cgmgr/CgSignature.h"
 #include "ym/PermGen.h"
 #include "ym/ClibIOMap.h"
@@ -21,13 +20,12 @@ struct FuncSpec
   TvFunc mTristate;
 };
 
-class FuncTest:
-  public ::testing::TestWithParam<FuncSpec>
+class FuncTest
 {
 public:
 
   void
-  check();
+  check(const FuncSpec& spec);
 
 };
 
@@ -151,10 +149,10 @@ xform_table(
 END_NONAMESPACE
 
 void
-FuncTest::check()
+FuncTest::check(
+  const FuncSpec& spec
+)
 {
-  const auto& spec = GetParam();
-
   auto sig = CgSignature::make_logic_sig(spec.mFunc, spec.mTristate);
 
   SizeType ni = spec.mFunc.input_num();
@@ -170,7 +168,7 @@ FuncTest::check()
 
   // str() の期待値を作る．
   auto exp_str = gen_str(ni, func_table, tristate_table);
-  EXPECT_EQ( exp_str, sig.str() );
+  ASSERT_COND( exp_str == sig.str() );
 
   // 代表シグネチャを求める．
   auto iomap = sig.rep_map();
@@ -198,7 +196,7 @@ FuncTest::check()
 	auto xtristate_table =xform_table(tristate_table, false, iinv, pg);
 	// str() の期待値を作る．
 	auto exp_str = gen_str(ni, xfunc_table, xtristate_table);
-	EXPECT_EQ( exp_str, xsig.str() );
+	ASSERT_COND( exp_str == xsig.str() );
 	if ( exp_str != xsig.str() ) {
 	  cout << "func: " << spec.mFunc << endl
 	       << "tristate: " << spec.mTristate << endl
@@ -220,109 +218,36 @@ FuncTest::check()
 	auto xiomap = xsig.rep_map();
 	auto xrep_sig = xsig.xform(xiomap);
 	auto xrep_str = xrep_sig.str();
-	EXPECT_EQ( rep_str, xrep_str );
-	if ( rep_str != xrep_str ) {
-	  cout << "func: " << spec.mFunc << endl
-	       << "tristate: " << spec.mTristate << endl
-	       << "oinv: " << oinv << endl
-	       << "iinv: ";
-	  for ( SizeType i = 0; i < ni; ++ i ) {
-	    cout << " " << iinv[i];
-	  }
-	  cout << endl;
-	  cout << "imap: ";
-	  for ( SizeType i = 0; i < ni; ++ i ) {
-	    cout << " " << pg(i);
-	  }
-	  cout << endl;
-	  cout << "xfunc: " << to_hex(xfunc_table) << endl
-	       << "xtristate: " << to_hex(xtristate_table) << endl;
-	}
+	ASSERT_COND( rep_str == xrep_str );
       }
     }
   }
 }
 
-TEST_P(FuncTest, xform)
+int
+foo_test(
+  int argc,
+  char** argv
+)
 {
-  check();
+  FuncSpec spec{TvFunc::make_zero(1),
+		TvFunc::make_invalid()};
+
+  FuncTest test;
+
+  test.check(spec);
+
+  return 0;
 }
 
-// 0入力関数のテスト
-INSTANTIATE_TEST_SUITE_P(CgLogicSig0_test,
-			 FuncTest,
-			 ::testing::Values(
-			   FuncSpec{TvFunc::make_invalid(),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_zero(0),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_one(0),
-				    TvFunc::make_invalid()}
-			 ));
-
-// 1入力関数のテスト
-INSTANTIATE_TEST_SUITE_P(CgLogicSig1_test,
-			 FuncTest,
-			 ::testing::Values(
-			   FuncSpec{TvFunc::make_zero(1),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_one(1),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(1, VarId{0}),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_nega_literal(1, VarId{0}),
-				    TvFunc::make_invalid()}
-			 ));
-
-
-// 2入力関数のテスト
-INSTANTIATE_TEST_SUITE_P(CgLogicSig2_test,
-			 FuncTest,
-			 ::testing::Values(
-			   FuncSpec{TvFunc::make_zero(2),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_one(2),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId{0}),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId{1}),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId(0)) &
-				    TvFunc::make_posi_literal(2, VarId{1}),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId(0)) ^
-				    TvFunc::make_posi_literal(2, VarId{1}),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId{0}),
-				    TvFunc::make_posi_literal(2, VarId{1})}
-			 ));
-
-// 3入力関数のテスト
-INSTANTIATE_TEST_SUITE_P(CgLogicSig3_test,
-			 FuncTest,
-			 ::testing::Values(
-			   FuncSpec{TvFunc::make_zero(3),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_one(3),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(3, VarId{0}) |
-				    (TvFunc::make_posi_literal(3, VarId{1}) &
-				     TvFunc::make_nega_literal(3, VarId{2})),
-				    TvFunc::make_invalid()}
-			 ));
-
-// 4入力関数のテスト
-INSTANTIATE_TEST_SUITE_P(CgLogicSig4_test,
-			 FuncTest,
-			 ::testing::Values(
-			   FuncSpec{TvFunc::make_zero(4),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_one(4),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(4, VarId{0}) |
-				    (TvFunc::make_posi_literal(4, VarId{1}) &
-				     TvFunc::make_nega_literal(4, VarId{2})),
-				    TvFunc::make_posi_literal(4, VarId{3})}
-			 ));
-
 END_NAMESPACE_YM_CLIB
+
+
+int
+main(
+  int argc,
+  char** argv
+)
+{
+  return nsYm::nsClib::foo_test(argc, argv);
+}

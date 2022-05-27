@@ -9,9 +9,17 @@
 #include "CgGenLogicSig.h"
 #include "CgInputInfo.h"
 #include "CgOutputInfo.h"
+#include "ym/MultiCombiGen.h"
+#include "ym/MultiPermGen.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+BEGIN_NONAMESPACE
+
+bool debug = true;
+
+END_NONAMESPACE
 
 // @brief コンストラクタ
 CgGenLogicSig::CgGenLogicSig(
@@ -81,47 +89,163 @@ struct CgPinGroup
 
 struct CgSymInfo
 {
-  SizeType mRepId{static_cast<SizeType>(-1)};
-  bool mInv{false};
   bool mBiSym{false};
+  vector<SizeType> mIdList;
 };
 
 BEGIN_NONAMESPACE
 
-// @brief 極性の定まっていない番号のリストを作る．
-vector<SizeType>
-gen_floating_list(
+// @brief 極性展開用のジェネレータを作る(入力用)．
+MultiCombiGen
+gen_pol_gen(
+  const vector<SizeType>& rep_list,
   const vector<CgPolInfo>& pol_list
 )
 {
-  vector<SizeType> floating_list;
-  for ( SizeType i = 0; i < pol_list.size(); ++ i ) {
-    if ( pol_list[i] == CgPolInfo::Both ) {
-      floating_list.push_back(i);
+  SizeType n = rep_list.size();
+  vector<pair<int, int>> n_array;
+  n_array.reserve(n);
+  for ( SizeType id: rep_list ) {
+    if ( pol_list[id] == CgPolInfo::Both ) {
+      n_array.push_back(make_pair(2, 1));
+    }
+    else {
+      n_array.push_back(make_pair(1, 1));
     }
   }
-  return floating_list;
+  return MultiCombiGen{n_array};
 }
 
 // @brief 極性を展開する．
-vector<CgPolInfo>
+vector<bool>
 expand_pol(
-  SizeType bits,
-  const vector<SizeType>& floating_pos_list,
+  const MultiCombiGen& mcg,
+  const vector<SizeType>& rep_list,
   const vector<CgPolInfo>& src_pol_list
 )
 {
-  auto pol_list = src_pol_list;
-  SizeType nf = floating_pos_list.size();
-  for ( SizeType i = 0; i < nf; ++ i ) {
-    if ( bits & (1 << i) ) {
-      pol_list[floating_pos_list[i]] = CgPolInfo::Negative;
+  SizeType n = src_pol_list.size();
+  vector<bool> pol_list(n, false);
+  for ( SizeType i = 0; i < rep_list.size(); ++ i ) {
+    SizeType id = rep_list[i];
+    if ( src_pol_list[id] == CgPolInfo::Negative ) {
+      pol_list[id] = true;
     }
-    else {
-      pol_list[floating_pos_list[i]] = CgPolInfo::Positive;
+    else if ( src_pol_list[id] == CgPolInfo::Both && mcg(i, 0) == 1 ) {
+      pol_list[id] = true;
     }
   }
   return pol_list;
+}
+
+// @brief 極性展開用のジェネレータを作る．
+MultiCombiGen
+gen_pol_gen(
+  const vector<CgPolInfo>& pol_list
+)
+{
+  SizeType n = pol_list.size();
+  vector<pair<int, int>> n_array(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    if ( pol_list[i] == CgPolInfo::Both ) {
+      n_array[i] = make_pair(2, 1);
+    }
+    else {
+      n_array[i] = make_pair(1, 1);
+    }
+  }
+  return MultiCombiGen{n_array};
+}
+
+// @brief 極性を展開する．
+vector<bool>
+expand_pol(
+  const MultiCombiGen& mcg,
+  const vector<CgPolInfo>& src_pol_list
+)
+{
+  SizeType n = src_pol_list.size();
+  vector<bool> pol_list(n, false);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    if ( src_pol_list[i] == CgPolInfo::Negative ) {
+      pol_list[i] = true;
+    }
+    else if ( src_pol_list[i] == CgPolInfo::Both && mcg(i, 0) == 1 ) {
+      pol_list[i] = true;
+    }
+  }
+  return pol_list;
+}
+
+// @brief 順番展開用のジェネレータを作る．
+MultiPermGen
+gen_perm_gen(
+  const vector<CgPinGroup>& pg_list
+)
+{
+  vector<pair<int, int>> nk_array;
+  for ( const auto& pg: pg_list ) {
+    SizeType n = pg.mIdList.size();
+    nk_array.push_back(make_pair(n, n));
+  }
+  return MultiPermGen{nk_array};
+}
+
+// @brief ピンの順列を展開する(入力用)．
+vector<ClibPinMap>
+expand_pin(
+  const MultiPermGen& mpg,
+  const vector<CgPinGroup>& pg_list,
+  const vector<bool>& pol_list,
+  const vector<CgSymInfo>& syminfo_list,
+  const vector<bool>& syminv_list
+)
+{
+  vector<ClibPinMap> pin_map;
+  SizeType ng = pg_list.size();
+  for ( SizeType i = 0; i < ng; ++ i ) {
+    const auto& pg = pg_list[i];
+    SizeType n = pg.mIdList.size();
+    for ( SizeType j = 0; j < n; ++ j ) {
+      SizeType id0 = pg.mIdList[mpg(i, j)];
+      const auto& syminfo = syminfo_list[id0];
+      for ( SizeType id: syminfo.mIdList ) {
+	bool inv = pol_list[id0];
+	if ( inv ) {
+	  // bisymmentry かどうかで反転の仕方が変わる．
+	  if ( id != id0 && syminfo.mBiSym ) {
+	    inv = false;
+	  }
+	}
+	if ( syminv_list[id] ) {
+	  inv = !inv;
+	}
+	pin_map.push_back(ClibPinMap{id, inv});
+      }
+    }
+  }
+  return pin_map;
+}
+
+// @brief ピンの順列を展開する．
+vector<ClibPinMap>
+expand_pin(
+  const MultiPermGen& mpg,
+  const vector<CgPinGroup>& pg_list,
+  const vector<bool>& pol_list
+)
+{
+  vector<ClibPinMap> pin_map;
+  SizeType ng = pg_list.size();
+  for ( SizeType i = 0; i < ng; ++ i ) {
+    const auto& pg = pg_list[i];
+    SizeType n = pg.mIdList.size();
+    for ( SizeType j = 0; j < n; ++ j ) {
+      SizeType id = pg.mIdList[mpg(i, j)];
+      pin_map.push_back(ClibPinMap{id, pol_list[id]});
+    }
+  }
+  return pin_map;
 }
 
 END_NONAMESPACE
@@ -131,6 +255,21 @@ END_NONAMESPACE
 ClibIOMap
 CgGenLogicSig::rep_map() const
 {
+  if ( debug ) {
+    cout << endl;
+    cout << "rep_map()" << endl;
+    for ( SizeType i = 0; i < mNo; ++ i ) {
+      cout << "O#" << setw(2) << i << ": " << mFuncList[i] << "|"
+	   << mTristateList[i] << endl;
+    }
+    cout << "---------" << endl;
+    for ( SizeType i = 0; i < mNb; ++ i ) {
+      cout << "B#" << setw(2) << i << ": " << mFuncList[i + mNo] << "|"
+	   << mTristateList[i + mNo] << endl;
+    }
+    cout << "=========" << endl;
+  }
+
   SizeType ni2 = mNi + mNb;
   SizeType no2 = mNo + mNb;
 
@@ -146,7 +285,7 @@ CgGenLogicSig::rep_map() const
 
   // Walsh の0次の係数を用いて入出力の極性を正規化する．
   // 同時に出力のグループ分けと順序付けを行う．
-  vector<SizeType> bpos_list(mNo);
+  vector<SizeType> bpos_list(mNb);
   for ( SizeType i = 0; i < mNb; ++ i ) {
     bpos_list[i] = i + mNo;
   }
@@ -156,7 +295,8 @@ CgGenLogicSig::rep_map() const
 
   // 入力の対称グループを作る．
   vector<CgSymInfo> syminfo_list(mNi);
-  auto symrep_list = gen_symgroup(syminfo_list);
+  vector<bool> syminv_list(mNi, false);
+  auto symrep_list = gen_symgroup(syminfo_list, syminv_list);
 
   // Walsh_1 の和を用いて入力の極性と順序を決める．
   vector<CgPinGroup> ig_list;
@@ -172,38 +312,162 @@ CgGenLogicSig::rep_map() const
     bg_list.swap(new_bg_list);
   }
 
-  // 極性の定まっていない入力番号のリスト
-  auto floating_ipos_list = gen_floating_list(ipol_list);
+  if ( debug ) {
+    for ( SizeType i = 0; i < symrep_list.size(); ++ i ) {
+      cout << "IG#" << i;
+      SizeType id0 = symrep_list[i];
+      const auto& syminfo = syminfo_list[id0];
+      if ( syminfo.mBiSym ) {
+	cout << "*";
+      }
+      cout << ":";
+      for ( SizeType id: syminfo.mIdList ) {
+	cout << " ";
+	if ( syminv_list[id] ) {
+	  cout << "-";
+	}
+	cout << id;
+      }
+      cout << endl;
+    }
+    cout << "Input:";
+    for ( const auto& ig: ig_list ) {
+      cout << " (";
+      for ( SizeType id: ig.mIdList ) {
+	cout << " ";
+	switch ( ipol_list[id] ) {
+	case CgPolInfo::Positive: cout << "P"; break;
+	case CgPolInfo::Negative: cout << "N"; break;
+	case CgPolInfo::Both:     cout << "-"; break;
+	}
+	cout << id;
+      }
+      cout << ")";
+    }
+    cout << endl;
+    cout << "Output:";
+    for ( const auto& og: og_list ) {
+      cout << " (";
+      for ( SizeType id: og.mIdList ) {
+	cout << " ";
+	switch ( opol_list[id] ) {
+	case CgPolInfo::Positive: cout << "P"; break;
+	case CgPolInfo::Negative: cout << "N"; break;
+	case CgPolInfo::Both:     cout << "-"; break;
+	}
+	cout << id;
+      }
+      cout << ")";
+    }
+    cout << endl;
+    cout << "Inout:";
+    for ( const auto& bg: bg_list ) {
+      cout << " (";
+      for ( SizeType id: bg.mIdList ) {
+	cout << " ";
+	switch ( bpol_list[id] ) {
+	case CgPolInfo::Positive: cout << "P"; break;
+	case CgPolInfo::Negative: cout << "N"; break;
+	case CgPolInfo::Both:     cout << "-"; break;
+	}
+	cout << id;
+      }
+      cout << ")";
+    }
+    cout << endl;
+  }
 
-  // 極性の定まっていない出力番号のリスト
-  auto floating_opos_list = gen_floating_list(opol_list);
-
-  // 極性の定まっていない入出力番号のリスト
-  auto floating_bpos_list = gen_floating_list(bpol_list);
-
-  SizeType nfi = floating_ipos_list.size();
-  SizeType nfi_exp = 1U << nfi;
-  SizeType nfo = floating_opos_list.size();
-  SizeType nfo_exp = 1U << nfo;
-  SizeType nfb = floating_bpos_list.size();
-  SizeType nfb_exp = 1U << nfb;
+  string min_sig_str{};
+  ClibIOMap min_map;
 
   // 入力極性を展開する．
-  for ( SizeType ibits = 0; ibits < nfi_exp; ++ ibits ) {
-    auto ipol_list1 = expand_pol(ibits, floating_ipos_list, ipol_list);
+  for ( auto imcg = gen_pol_gen(symrep_list, ipol_list); !imcg.is_end(); ++ imcg) {
+    if ( 0 ) {
+      cout << "imcg:" << endl;
+      for ( SizeType g = 0; g < imcg.group_num(); ++ g ) {
+	for ( SizeType i = 0; i < imcg.k(g); ++ i ) {
+	  cout << " " << imcg(g, i);
+	}
+	cout << endl;
+      }
+    }
+    auto ipol_list1 = expand_pol(imcg, symrep_list, ipol_list);
+    if ( 0 ) {
+      cout << "I:";
+      for ( SizeType id: symrep_list ) {
+	if ( ipol_list1[id] ) {
+	  cout << "N";
+	}
+	else {
+	  cout << "-";
+	}
+      }
+      cout << endl;
+    }
     // 出力極性を展開する．
-    for ( SizeType obits = 0; obits < nfo_exp; ++ obits ) {
-      auto opol_list1 = expand_pol(obits, floating_opos_list, opol_list);
+    for ( auto omcg = gen_pol_gen(opol_list); !omcg.is_end(); ++ omcg ) {
+      auto opol_list1 = expand_pol(omcg, opol_list);
+      if ( 0 ) {
+	cout << "O:";
+	for ( SizeType id = 0; id < mNo; ++ id ) {
+	  if ( opol_list1[id] ) {
+	    cout << "N";
+	  }
+	  else {
+	    cout << "-";
+	  }
+	}
+	cout << endl;
+      }
       // 入出力極性を展開する．
-      for ( SizeType bbits = 0; bbits < nfb_exp; ++ bbits ) {
-	auto bpol_list1 = expand_pol(bbits, floating_bpos_list, bpol_list);
+      for ( auto bmcg = gen_pol_gen(bpol_list); !bmcg.is_end(); ++ bmcg ) {
+	auto bpol_list1 = expand_pol(bmcg, bpol_list);
+	if ( 0 ) {
+	  cout << "B:";
+	  for ( SizeType id = 0; id < mNb; ++ id ) {
+	    if ( bpol_list1[id] ) {
+	      cout << "N";
+	    }
+	    else {
+	      cout << "-";
+	    }
+	  }
+	  cout << endl;
+	}
+	// 入力順序を展開する．
+	for ( auto impg = gen_perm_gen(ig_list); !impg.is_end(); ++ impg ) {
+	  // 入力の変換マップを作る．
+	  auto ipin_map = expand_pin(impg, ig_list, ipol_list1, syminfo_list, syminv_list);
+	  ASSERT_COND( ipin_map.size() == mNi );
 
+	  // 出力順序を展開する．
+	  for ( auto ompg = gen_perm_gen(og_list); !ompg.is_end(); ++ ompg ) {
+	    // 出力の変換マップを作る．
+	    auto opin_map = expand_pin(ompg, og_list, opol_list1);
+	    ASSERT_COND( opin_map.size() == mNo );
+
+	    // 入出力順序を展開する．
+	    for ( auto bmpg = gen_perm_gen(bg_list); !bmpg.is_end(); ++ bmpg ) {
+	      // 入出力の変換マップを作る．
+	      auto bpin_map = expand_pin(bmpg, bg_list, bpol_list1);
+	      ASSERT_COND( bpin_map.size() == mNb );
+
+	      // シグネチャを求める．
+	      ClibIOMap iomap{ipin_map, opin_map, bpin_map};
+	      auto sig1 = xform(iomap);
+	      auto sig_str = sig1->str();
+	      if ( min_sig_str == string{} || min_sig_str > sig_str ) {
+		min_sig_str = sig_str;
+		min_map = iomap;
+	      }
+	    }
+	  }
+	}
       }
     }
   }
 
-  auto npnmap = mFuncList[0].npn_cannonical_map();
-  return from_npnmap(npnmap);
+  return min_map;
 }
 
 // @brief Walsh_0 を用いて出力のグループ分けを行う．
@@ -257,7 +521,8 @@ CgGenLogicSig::w0_refine(
 // @brief 対称グループを作る．
 vector<SizeType>
 CgGenLogicSig::gen_symgroup(
-  vector<CgSymInfo>& syminfo_list
+  vector<CgSymInfo>& syminfo_list,
+  vector<bool>& syminv_list
 ) const
 {
   SizeType no2 = mNo + mNb;
@@ -273,36 +538,35 @@ CgGenLogicSig::gen_symgroup(
 
   // 代表元のリスト
   vector<SizeType> rep_list;
-  // 各対称グループの要素数
-  // 対称グループの見つかった時に bissymmetry テストを行うために用いる．
-  vector<SizeType> n_list(mNi, 0);
+  // 処理済みのマーク
+  vector<bool> marks(mNi, false);
   for ( SizeType id1 = 0; id1 < mNi; ++ id1 ) {
-    auto& syminfo1 = syminfo_list[id1];
-    if ( syminfo1.mRepId != -1 ) {
+    if ( marks[id1] ) {
       continue;
     }
     // id1 を代表元にする．
     rep_list.push_back(id1);
-    n_list[id1] = 1;
+    auto& syminfo1 = syminfo_list[id1];
+    syminfo1.mIdList.push_back(id1);
     for ( SizeType id2 = id1 + 1; id2 < mNi; ++ id2 ) {
-      auto& syminfo2 = syminfo_list[id2];
-      if ( syminfo2.mRepId != -1 ) {
+      if ( marks[id2] ) {
 	continue;
       }
       if ( w1_list[id1] != w1_list[id2] ) {
 	continue;
       }
+      auto& syminfo2 = syminfo_list[id2];
       if ( check_sym(id1, id2, false) ) {
-	if ( n_list[id1] == 1 && check_sym(id1, id2, true) ) {
+	if ( syminfo1.mIdList.size() == 1 && check_sym(id1, id2, true) ) {
 	  syminfo1.mBiSym = true;
 	}
-	syminfo2.mRepId = id1;
-	++ n_list[id1];
+	syminfo1.mIdList.push_back(id2);
+	marks[id2] = true;
       }
       else if ( check_sym(id1, id2, true) ) {
-	syminfo2.mRepId = id1;
-	syminfo2.mInv = true;
-	++ n_list[id1];
+	syminfo1.mIdList.push_back(id2);
+	marks[id2] = true;
+	syminv_list[id2] = true;
       }
     }
   }

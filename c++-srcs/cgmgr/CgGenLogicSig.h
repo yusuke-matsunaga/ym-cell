@@ -96,7 +96,8 @@ private:
   /// @brief 対称グループを作る．
   vector<SizeType>
   gen_symgroup(
-    vector<CgSymInfo>& syminfo_list ///< [out] 対称グループのリスト
+    vector<CgSymInfo>& syminfo_list, ///< [out] 対称グループのリスト
+    vector<bool>& syminv_list        ///< [out] 反転属性のリスト
   ) const;
 
   /// @brief Walsh_1_sum を用いて入力グループの細分化を行う．

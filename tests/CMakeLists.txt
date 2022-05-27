@@ -215,6 +215,27 @@ target_include_directories( cell_CgLogicSig_test
   ../c++-srcs/cgmgr
   )
 
+add_executable( foo_test
+  cgmgr/foo.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  )
+
+target_compile_options ( foo_test
+  PRIVATE "-g" "-fPIC"
+  )
+
+target_link_libraries( foo_test
+  ${YM_LIB_DEPENDS}
+  pthread
+  )
+
+target_include_directories( foo_test
+  PRIVATE
+  ../private_include/cgmgr
+  ../c++-srcs/cgmgr
+  )
 
 # ===================================================================
 #  インストールターゲットの設定
