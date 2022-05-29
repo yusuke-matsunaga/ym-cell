@@ -79,6 +79,28 @@ CgGenLogicSig::xform(
   return make_signature(mNi, mNo, mNb, xfunc_list, xtristate_list);
 }
 
+// @brief 代表シグネチャに対する変換を求める．
+ClibIOMap
+CgGenLogicSig::rep_map() const
+{
+  auto map_list = gen_cannonical_map();
+  return map_list.front();
+}
+
+// @brief 同位体変換のリストを求める．
+vector<ClibIOMap>
+CgGenLogicSig::idmap_list() const
+{
+  auto map_list = gen_cannonical_map();
+  vector<ClibIOMap> ans_list;
+  const auto& map0 = map_list.front();
+  auto invmap = map0.inverse();
+  for ( const auto& map: map_list ) {
+    ans_list.push_back(map * invmap);
+  }
+  return ans_list;
+}
+
 
 struct CgPinGroup
 {
@@ -251,13 +273,13 @@ expand_pin(
 END_NONAMESPACE
 
 
-// @brief 代表シグネチャに対する変換を求める．
-ClibIOMap
-CgGenLogicSig::rep_map() const
+// @brief 正規形への変換を求める．
+vector<ClibIOMap>
+CgGenLogicSig::gen_cannonical_map() const
 {
   if ( debug ) {
     cout << endl;
-    cout << "rep_map()" << endl;
+    cout << "gen_cannonical_map()" << endl;
     for ( SizeType i = 0; i < mNo; ++ i ) {
       cout << "O#" << setw(2) << i << ": " << mFuncList[i] << "|"
 	   << mTristateList[i] << endl;
@@ -378,7 +400,7 @@ CgGenLogicSig::rep_map() const
   }
 
   string min_sig_str{};
-  ClibIOMap min_map;
+  vector<ClibIOMap> min_map_list;
 
   // 入力極性を展開する．
   for ( auto imcg = gen_pol_gen(symrep_list, ipol_list); !imcg.is_end(); ++ imcg) {
@@ -459,7 +481,10 @@ CgGenLogicSig::rep_map() const
 	      auto sig_str = sig1->str();
 	      if ( min_sig_str == string{} || min_sig_str > sig_str ) {
 		min_sig_str = sig_str;
-		min_map = iomap;
+		min_map_list = vector<ClibIOMap>{iomap};
+	      }
+	      else if ( min_sig_str == sig_str ) {
+		min_map_list.push_back(iomap);
 	      }
 	    }
 	  }
@@ -467,8 +492,9 @@ CgGenLogicSig::rep_map() const
       }
     }
   }
+  ASSERT_COND( min_map_list.size() > 0 );
 
-  return min_map;
+  return min_map_list;
 }
 
 // @brief Walsh_0 を用いて出力のグループ分けを行う．
@@ -639,22 +665,6 @@ CgGenLogicSig::w1sum_refine(
       ig_list.insert(ig_list.begin() + pos, CgPinGroup{func_w1sum, tristate_w1sum, {i}});
     }
   }
-}
-
-// @brief 同位体変換のリストを求める．
-vector<ClibIOMap>
-CgGenLogicSig::idmap_list() const
-{
-  auto npnmap0 = mFuncList[0].npn_cannonical_map();
-  auto invmap = inverse(npnmap0);
-  auto npn_idmap_list = mFuncList[0].npn_cannonical_all_map();
-  vector<ClibIOMap> ans;
-  ans.reserve(npn_idmap_list.size());
-  for ( auto npnmap: npn_idmap_list ) {
-    auto npnmap1 = invmap * npnmap;
-    ans.push_back(from_npnmap(npnmap1));
-  }
-  return ans;
 }
 
 // @brief 入力の対称性を調べる．

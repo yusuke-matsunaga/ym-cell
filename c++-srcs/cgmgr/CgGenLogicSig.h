@@ -85,6 +85,10 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 正規形への変換を求める．
+  vector<ClibIOMap>
+  gen_cannonical_map() const;
+
   /// @brief Walsh_0 を用いて出力のグループ分けを行う．
   void
   w0_refine(

@@ -177,6 +177,14 @@ FuncTest::check()
   auto rep_sig = sig.xform(iomap);
   auto rep_str = rep_sig.str();
 
+  // 同位体変換のチェック
+  auto idmap_list = sig.idmap_list();
+  for ( const auto& idmap: idmap_list ) {
+    auto sig1 = sig.xform(idmap);
+    auto sig1_str = sig1.str();
+    EXPECT_EQ( exp_str, sig1_str );
+  }
+
   for ( bool oinv: {false, true} ) {
     vector<bool> iinv(ni, false);
     for ( SizeType bits = 0; bits < ni_exp; ++ bits ) {
