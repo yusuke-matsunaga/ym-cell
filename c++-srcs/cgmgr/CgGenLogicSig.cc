@@ -17,7 +17,7 @@ BEGIN_NAMESPACE_YM_CLIB
 
 BEGIN_NONAMESPACE
 
-bool debug = true;
+bool debug = false;
 
 END_NONAMESPACE
 
@@ -454,10 +454,9 @@ CgGenLogicSig::rep_map() const
 
 	      // シグネチャを求める．
 	      ClibIOMap iomap{ipin_map, opin_map, bpin_map};
+	      iomap = iomap.inverse();
 	      auto sig1 = xform(iomap);
 	      auto sig_str = sig1->str();
-	      cout << "iomap:" << iomap << endl
-		   << "sig_str: " << sig_str << endl;
 	      if ( min_sig_str == string{} || min_sig_str > sig_str ) {
 		min_sig_str = sig_str;
 		min_map = iomap;

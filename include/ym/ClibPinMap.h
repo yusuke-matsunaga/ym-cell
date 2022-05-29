@@ -130,7 +130,7 @@ inline
 ostream&
 operator<<(
   ostream& s, ///< [in] 出力先のストリーム
-  ClibPinMap& pinmap ///< [in] ピンのマッピング
+  const ClibPinMap& pinmap ///< [in] ピンのマッピング
 )
 {
   s << pinmap.id();
