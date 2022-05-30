@@ -46,20 +46,23 @@ public:
   ) const = 0;
 
   /// @brief 代表シグネチャに対する変換を求める．
-  virtual
   ClibIOMap
-  rep_map() const = 0;
+  rep_map() const;
 
   /// @brief 同位体変換のリストを求める．
-  virtual
   vector<ClibIOMap>
-  idmap_list() const = 0;
+  idmap_list() const;
 
 
 protected:
   //////////////////////////////////////////////////////////////////////
   // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 正規形への変換を求める．
+  virtual
+  vector<ClibIOMap>
+  gen_cannonical_map() const = 0;
 
   /// @brief 関数の内容を文字列に変換する．
   static

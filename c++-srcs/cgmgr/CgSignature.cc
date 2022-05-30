@@ -9,8 +9,6 @@
 #include "cgmgr/CgSignature.h"
 #include "ym/ClibIOMap.h"
 #include "CgSigRep.h"
-#include "CgLogicSig.h"
-#include "CgTriLogicSig.h"
 #include "CgGenLogicSig.h"
 #include "CgFFSig.h"
 #include "CgLatchSig.h"
@@ -62,37 +60,6 @@ CgSignature::~CgSignature()
   // CgSigRep の定義をヘッダファイルから隠すために
   // ヘッダでは定義できない．
 }
-
-#if 0
-// @brief 1出力論理関数用のシグネチャを作る．
-CgSignature
-CgSignature::make_logic_sig(
-  const TvFunc& func
-)
-{
-  SizeType ni = func.input_num();
-  SizeType no = 1;
-  SizeType nb = 0;
-  vector<TvFunc> func_list{func};
-  vector<TvFunc> tristate_list{TvFunc::make_invalid()};
-  return make_logic_sig(ni, no, nb, func_list, tristate_list);
-}
-
-// @brief 1出力tristate関数用のシグネチャを作る．
-CgSignature
-CgSignature::make_logic_sig(
-  const TvFunc& func,
-  const TvFunc& tristate
-)
-{
-  SizeType ni = func.input_num();
-  SizeType no = 1;
-  SizeType nb = 0;
-  vector<TvFunc> func_list{func};
-  vector<TvFunc> tristate_list{tristate};
-  return make_logic_sig(ni, no, nb, func_list, tristate_list);
-}
-#endif
 
 // @brief 一般的な組み合わせ回路用のシグネチャを作る．
 CgSignature

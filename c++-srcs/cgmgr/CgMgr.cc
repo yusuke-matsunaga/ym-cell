@@ -8,7 +8,6 @@
 
 #include "cgmgr/CgMgr.h"
 #include "cgmgr/CgSignature.h"
-#include "CgLogicSig.h"
 #include "ci/CiCellLibrary.h"
 #include "ym/TvFunc.h"
 #include "ym/NpnMap.h"

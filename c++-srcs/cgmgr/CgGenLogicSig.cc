@@ -7,8 +7,6 @@
 /// All rights reserved.
 
 #include "CgGenLogicSig.h"
-#include "CgInputInfo.h"
-#include "CgOutputInfo.h"
 #include "ym/MultiCombiGen.h"
 #include "ym/MultiPermGen.h"
 
@@ -77,28 +75,6 @@ CgGenLogicSig::xform(
     xtristate_list[i] = mTristateList[pos].xform(npnmap0);
   }
   return make_signature(mNi, mNo, mNb, xfunc_list, xtristate_list);
-}
-
-// @brief 代表シグネチャに対する変換を求める．
-ClibIOMap
-CgGenLogicSig::rep_map() const
-{
-  auto map_list = gen_cannonical_map();
-  return map_list.front();
-}
-
-// @brief 同位体変換のリストを求める．
-vector<ClibIOMap>
-CgGenLogicSig::idmap_list() const
-{
-  auto map_list = gen_cannonical_map();
-  vector<ClibIOMap> ans_list;
-  const auto& map0 = map_list.front();
-  auto invmap = map0.inverse();
-  for ( const auto& map: map_list ) {
-    ans_list.push_back(map * invmap);
-  }
-  return ans_list;
 }
 
 

@@ -10,7 +10,6 @@
 
 #include "CgSigRep.h"
 #include "CgPolInfo.h"
-#include "CgSymGroup.h"
 #include "ym/TvFunc.h"
 
 
@@ -71,23 +70,21 @@ public:
     const ClibIOMap& iomap ///< [in] 変換マップ
   ) const override;
 
-  /// @brief 代表シグネチャに対する変換を求める．
-  ClibIOMap
-  rep_map() const override;
 
-  /// @brief 同位体変換のリストを求める．
+private:
+  //////////////////////////////////////////////////////////////////////
+  // CgSigRep の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 正規形への変換を求める．
   vector<ClibIOMap>
-  idmap_list() const override;
+  gen_cannonical_map() const override;
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 正規形への変換を求める．
-  vector<ClibIOMap>
-  gen_cannonical_map() const;
 
   /// @brief Walsh_0 を用いて出力のグループ分けを行う．
   void

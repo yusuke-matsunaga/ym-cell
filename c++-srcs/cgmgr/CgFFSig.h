@@ -37,20 +37,7 @@ public:
     const TvFunc& preset,                ///< [in] プリセット条件
     ClibCPV clear_preset_var1, ///< [in] クリアとプリセットが同時にアクティブになった時の値1
     ClibCPV clear_preset_var2  ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  ) : mNi{ni},
-      mNo{no},
-      mNb{nb},
-      mFuncList{func_list},
-      mTristateList{tristate_list},
-      mClockedOn{clocked_on},
-      mClockedOnAlso{clocked_on_also},
-      mNextState{next_state},
-      mClear{clear},
-      mPreset{preset},
-      mCpv1{clear_preset_var1},
-      mCpv2{clear_preset_var2}
-  {
-  }
+  );
 
   /// @brief デストラクタ
   ~CgFFSig() = default;
@@ -95,13 +82,15 @@ public:
     const ClibIOMap& iomap ///< [in] 変換マップ
   ) const override;
 
-  /// @brief 代表シグネチャに対する変換を求める．
-  ClibIOMap
-  rep_map() const override;
 
-  /// @brief 同位体変換のリストを求める．
+private:
+  //////////////////////////////////////////////////////////////////////
+  // CgSigRep の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 正規形への変換を求める．
   vector<ClibIOMap>
-  idmap_list() const override;
+  gen_cannonical_map() const override;
 
 
 private:
