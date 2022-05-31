@@ -237,6 +237,23 @@ target_include_directories( foo_test
   ../c++-srcs/cgmgr
   )
 
+
+# ===================================================================
+#  CgGenLogicSig_test
+# ===================================================================
+ym_add_gtest ( cell_CgGenLogicSig_test
+  cgmgr/CgGenLogicSig_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  )
+
+target_include_directories( cell_CgGenLogicSig_test
+  PRIVATE
+  ../private_include/cgmgr
+  ../c++-srcs/cgmgr
+  )
+
 # ===================================================================
 #  インストールターゲットの設定
 # ===================================================================

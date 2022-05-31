@@ -42,12 +42,11 @@ CgGenLogicSig::str() const
   buf << "C:"
       << mNi << ":"
       << mNo << ":"
-      << mNb << ":";
+      << mNb;
   SizeType no2 = mNo + mNb;
   for ( SizeType i = 0; i < no2; ++ i ) {
-    buf << hex_str(mFuncList[i])
-	<< ":"
-	<< hex_str(mTristateList[i]);
+    buf << ":" << hex_str(mFuncList[i])
+	<< ":"<< hex_str(mTristateList[i]);
   }
   return buf.str();
 }
