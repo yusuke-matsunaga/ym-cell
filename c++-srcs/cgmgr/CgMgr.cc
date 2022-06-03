@@ -9,6 +9,7 @@
 #include "cgmgr/CgMgr.h"
 #include "cgmgr/CgSignature.h"
 #include "ci/CiCellLibrary.h"
+#include "ci/CiSeqInfo.h"
 #include "ym/TvFunc.h"
 #include "ym/NpnMap.h"
 
@@ -22,22 +23,12 @@ BEGIN_NAMESPACE_YM_CLIB
 // @brief コンストラクタ
 CgMgr::CgMgr(
   CiCellLibrary& library ///< [in] 対象のセルライブラリ
-) : mLibrary{library}
+) : mLibrary{library},
+    mSimpleFFClass(CiSeqInfo::max_index(), CLIB_NULLID),
+    mSimpleLatchClass(CiSeqInfo::max_index(), CLIB_NULLID)
 {
   for ( SizeType i = 0; i < 4; ++ i ) {
     mLogicGroup[i] = -1;
-  }
-  for ( SizeType i = 0; i < 6; ++ i ) {
-    mSimpleFFClass[i] = -1;
-  }
-  for ( SizeType i = 0; i < 50; ++ i ) {
-    mCpvFFClass[i] = -1;
-  }
-  for ( SizeType i = 0; i < 6; ++ i ) {
-    mSimpleLatchClass[i] = -1;
-  }
-  for ( SizeType i = 0; i < 50; ++ i ) {
-    mCpvLatchClass[i] = -1;
   }
 
   logic_init();
@@ -134,64 +125,66 @@ void
 CgMgr::ff_init()
 {
   for ( bool master_slave: { false, true } ) {
-    SizeType ni = 4;
     for ( bool has_clear: { false, true } ) {
-      if ( has_clear ) {
-	++ ni;
-      }
       for ( bool has_preset: { false, true } ) {
-	if ( has_preset ) {
-	  ++ ni;
-	}
 	// 入力
 	// 0: data-in
 	// 1: clock
 	// 2: clear (optional)
 	// 3: preset (optional)
 	// 4: q
-	// 5: q~
-	vector<TvFunc> func_list{TvFunc::make_posi_literal(ni, VarId{ni - 2})};
+	// 5: iq
+	SizeType ni = 2;
+	if ( has_clear ) {
+	  ++ ni;
+	}
+	if ( has_preset ) {
+	  ++ ni;
+	}
+	SizeType xni = ni + 2; // IQ, XIQ の分を足す．
+	auto next = TvFunc::make_posi_literal(xni, VarId{0});
+	auto clock = TvFunc::make_posi_literal(xni, VarId{1});
+	auto clock2 = TvFunc::make_invalid();
+	if ( master_slave ) {
+	  clock2 = TvFunc::make_nega_literal(xni, VarId{1});
+	}
+	auto clear = TvFunc::make_invalid();
+	SizeType base = 2;
+	if ( has_clear ) {
+	  clear = TvFunc::make_posi_literal(xni, VarId{base});
+	  ++ base;
+	}
+	auto preset = TvFunc::make_invalid();
+	if ( has_preset ) {
+	  preset = TvFunc::make_posi_literal(xni, VarId{base});
+	  ++ base;
+	}
+	auto qvar = TvFunc::make_posi_literal(xni, VarId{base});
+	vector<TvFunc> func_list{qvar};
 	vector<TvFunc> tristate_list{TvFunc::make_invalid()};
-	auto clock = TvFunc::make_posi_literal(ni, VarId{1});
-	auto clock2 = master_slave ? TvFunc::make_nega_literal(ni, VarId{1}) : TvFunc::make_invalid();
-	auto next = TvFunc::make_posi_literal(ni, VarId{0});
 	if ( has_clear && has_preset ) {
-	  auto clear = TvFunc::make_posi_literal(ni, VarId{2});
-	  auto preset = TvFunc::make_posi_literal(ni, VarId{3});
-	  for ( auto cpv1: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
-	    for ( auto cpv2: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
-	      SizeType idx;
-	      SizeType sub_idx;
-	      encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2, idx, sub_idx);
-	      auto sig = CgSignature::make_ff_sig(ni, 1, 0, func_list, tristate_list,
+	  for ( auto cpv1: CPV_LIST ) {
+	    for ( auto cpv2: CPV_LIST ) {
+	      auto sig = CgSignature::make_ff_sig(ni, 1, 0,
+						  func_list, tristate_list,
 						  clock, clock2, next,
 						  clear, preset,
 						  cpv1, cpv2);
 	      auto g = _find_group(sig);
-	      mCpvFFClass[sub_idx] = g->rep_class().id();
+	      CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
+	      mSimpleFFClass[info.encode_val()] = g->rep_class().id();
 	    }
 	  }
 	}
 	else {
-	  SizeType base = 2;
-	  auto clear = TvFunc::make_invalid();
-	  if ( has_clear ) {
-	    clear = TvFunc::make_posi_literal(ni, VarId{base});
-	    ++ base;
-	  }
-	  auto preset = TvFunc::make_invalid();
-	  if ( has_preset ) {
-	    preset = TvFunc::make_posi_literal(ni, VarId{base});
-	  }
-	  SizeType idx;
-	  SizeType sub_idx;
-	  encode_attr(master_slave, has_clear, has_preset, ClibCPV::X, ClibCPV::X, idx, sub_idx);
-	  auto sig = CgSignature::make_ff_sig(ni, 1, 0, func_list, tristate_list,
+	  auto sig = CgSignature::make_ff_sig(ni, 1, 0,
+					      func_list, tristate_list,
 					      clock, clock2, next,
 					      clear, preset,
 					      ClibCPV::X, ClibCPV::X);
 	  auto g = _find_group(sig);
-	  mSimpleFFClass[idx] = g->rep_class().id();
+	  CiSeqInfo info{master_slave, has_clear, has_preset};
+	  mSimpleFFClass[info.encode_val()] = g->rep_class().id();
 	}
       }
     }
@@ -222,22 +215,23 @@ CgMgr::latch_init()
 	vector<TvFunc> func_list{TvFunc::make_posi_literal(ni, VarId{ni - 2})};
 	vector<TvFunc> tristate_list{TvFunc::make_invalid()};
 	auto enable = TvFunc::make_posi_literal(ni, VarId{1});
-	auto enable2 = master_slave ? TvFunc::make_nega_literal(ni, VarId{1}) : TvFunc::make_invalid();
+	auto enable2 = TvFunc::make_invalid();
+	if ( master_slave ) {
+	  enable2 = TvFunc::make_nega_literal(ni, VarId{1});
+	}
 	auto data = TvFunc::make_posi_literal(ni, VarId{0});
 	if ( has_clear && has_preset ) {
 	  auto clear = TvFunc::make_posi_literal(ni, VarId{2});
 	  auto preset = TvFunc::make_posi_literal(ni, VarId{3});
-	  for ( auto cpv1: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
-	    for ( auto cpv2: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
-	      SizeType idx;
-	      SizeType sub_idx;
-	      encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2, idx, sub_idx);
-	      auto sig = CgSignature::make_latch_sig(ni, 1, 0, func_list, tristate_list,
+	  for ( auto cpv1: CPV_LIST ) {
+	    for ( auto cpv2: CPV_LIST ) {
+	      auto sig = CgSignature::make_latch_sig(ni - 2, 1, 0, func_list, tristate_list,
 						     enable, enable2, data,
 						     clear, preset,
 						     cpv1, cpv2);
 	      auto g = _find_group(sig);
-	      mCpvLatchClass[sub_idx] = g->rep_class().id();
+	      CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
+	      mSimpleLatchClass[info.encode_val()] = g->rep_class().id();
 	    }
 	  }
 	}
@@ -252,15 +246,13 @@ CgMgr::latch_init()
 	  if ( has_preset ) {
 	    preset = TvFunc::make_posi_literal(ni, VarId{base});
 	  }
-	  SizeType idx;
-	  SizeType sub_idx;
-	  encode_attr(master_slave, has_clear, has_preset, ClibCPV::X, ClibCPV::X, idx, sub_idx);
-	  auto sig = CgSignature::make_latch_sig(ni, 1, 0, func_list, tristate_list,
+	  auto sig = CgSignature::make_latch_sig(ni - 2, 1, 0, func_list, tristate_list,
 						 enable, enable2, data,
 						 clear, preset,
 						 ClibCPV::X, ClibCPV::X);
 	  auto g = _find_group(sig);
-	  mSimpleLatchClass[idx] = g->rep_class().id();
+	  CiSeqInfo info{master_slave, has_clear, has_preset};
+	  mSimpleLatchClass[info.encode_val()] = g->rep_class().id();
 	}
       }
     }
@@ -284,128 +276,33 @@ CgMgr::reg_group(
   return group;
 }
 
-#if 0
-// @brief 論理式から作られるシグネチャに一致するグループを探す．
-// @return グループを返す．
-//
-// なければ作る．
-CiCellGroup*
-CgMgr::_find_logic_group(
-  const Expr& expr
-)
-{
-  SizeType ni = expr.input_size();
-  auto f = expr.make_tv(ni);
-  auto sig = CgSignature::make_logic_sig(f);
-  return _find_group(sig);
-}
-
-// @brief FFのシグネチャに一致するグループを探す．
-CiCellGroup*
-CgMgr::_find_ff_group(
+// @brief FFクラス番号を得る．
+SizeType
+CgMgr::ff_class(
   bool master_slave,
   bool has_clear,
   bool has_preset,
   ClibCPV cpv1,
   ClibCPV cpv2
-)
+) const
 {
-  SizeType ni = 2; // clockとnext_state
-  SizeType no = 1; // q
-  SizeType nb = 0;
-  if ( master_slave ) {
-    // clock2
-    ++ ni;
-  }
-  if ( has_clear ) {
-    // clear
-    ++ ni;
-  }
-  if ( has_preset ) {
-    // preset
-    ++ ni;
-  }
-  vector<TvFunc> func_list{TvFunc::make_posi_literal(ni + 2, VarId{ni})};
-  vector<TvFunc> tristate_list{TvFunc::make_zero(ni + 2)};
-  SizeType id = 0;
-  TvFunc clock = TvFunc::make_posi_literal(ni + 2, VarId{id});
-  ++ id;
-  TvFunc clock2 = TvFunc::make_zero(0);
-  if ( master_slave ) {
-    clock2 = TvFunc::make_posi_literal(ni + 2, VarId{id});
-    ++ id;
-  }
-  TvFunc next_state = TvFunc::make_posi_literal(ni + 2, VarId{id});
-  ++ id;
-  TvFunc clear = TvFunc::make_zero(0);
-  if ( has_clear ) {
-    clear = TvFunc::make_posi_literal(ni + 2, VarId{id});
-    ++ id;
-  }
-  TvFunc preset = TvFunc::make_zero(0);
-  if ( has_preset ) {
-    preset = TvFunc::make_posi_literal(ni + 2, VarId{id});
-    ++ id;
-  }
-  auto sig = CgSignature::make_ff_sig(ni, no, nb, func_list, tristate_list,
-				      clock, clock2, next_state,
-				      clear, preset, cpv1, cpv2);
-  return _find_group(sig);
+  CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
+  return mSimpleFFClass[info.encode_val()];
 }
 
-// @brief ラッチのシグネチャに一致するグループを探す．
-CiCellGroup*
-CgMgr::_find_latch_group(
+// @brief ラッチクラス番号を得る．
+SizeType
+CgMgr::latch_class(
   bool master_slave,
   bool has_clear,
   bool has_preset,
   ClibCPV cpv1,
   ClibCPV cpv2
-)
+) const
 {
-  SizeType ni = 2; // clockとnext_state
-  SizeType no = 1; // q
-  SizeType nb = 0;
-  if ( master_slave ) {
-    // clock2
-    ++ ni;
-  }
-  if ( has_clear ) {
-    // clear
-    ++ ni;
-  }
-  if ( has_preset ) {
-    // preset
-    ++ ni;
-  }
-  vector<TvFunc> func_list{TvFunc::make_posi_literal(ni + 2, VarId{ni})};
-  vector<TvFunc> tristate_list{TvFunc::make_zero(ni + 2)};
-  SizeType id = 0;
-  TvFunc clock = TvFunc::make_posi_literal(ni + 2, VarId{id});
-  ++ id;
-  TvFunc clock2 = TvFunc::make_zero(0);
-  if ( master_slave ) {
-    clock2 = TvFunc::make_posi_literal(ni + 2, VarId{id});
-    ++ id;
-  }
-  TvFunc next_state = TvFunc::make_posi_literal(ni + 2, VarId{id});
-  ++ id;
-  TvFunc clear = TvFunc::make_zero(0);
-  if ( has_clear ) {
-    clear = TvFunc::make_posi_literal(ni + 2, VarId{id});
-    ++ id;
-  }
-  TvFunc preset = TvFunc::make_zero(0);
-  if ( has_preset ) {
-    preset = TvFunc::make_posi_literal(ni + 2, VarId{id});
-    ++ id;
-  }
-  auto sig = CgSignature::make_latch_sig(ni, no, nb, func_list, tristate_list,
-					 clock, clock2, next_state,
-					 clear, preset, cpv1, cpv2);
-  return _find_group(sig);
+  CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
+  return mSimpleLatchClass[info.encode_val()];
 }
-#endif
 
 // @brief シグネチャに一致するグループを探す．
 CiCellGroup*
@@ -462,38 +359,6 @@ CgMgr::_find_class(
     // 登録済みのクラスを返す．
     auto rep_class = mClassDict.at(sig_str);
     return rep_class;
-  }
-}
-
-// @brief FF/ラッチの属性をエンコードする．
-void
-CgMgr::encode_attr(
-  bool master_slave,
-  bool has_clear,
-  bool has_preset,
-  ClibCPV cpv1,
-  ClibCPV cpv2,
-  SizeType& idx,
-  SizeType& sub_idx
-)
-{
-  idx = 0;
-  sub_idx = 0;
-  if ( master_slave ) {
-    idx += 1;
-  }
-  if ( has_clear ) {
-    idx += 2;
-  }
-  if ( has_preset ) {
-    idx += 4;
-  }
-  if ( idx >= 6 ) {
-    if ( idx == 6 ) {
-      sub_idx = 25;
-    }
-    sub_idx += static_cast<SizeType>(cpv1) * 5;
-    sub_idx += static_cast<SizeType>(cpv2);
   }
 }
 

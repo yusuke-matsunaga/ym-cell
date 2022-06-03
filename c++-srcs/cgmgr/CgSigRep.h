@@ -11,20 +11,33 @@
 #include "ym/clib.h"
 #include "ym/ClibIOMap.h"
 #include "ym/NpnMap.h"
+#include "CgPolInfo.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
+struct CgPinGroup;
+struct CgSymInfo;
+
 //////////////////////////////////////////////////////////////////////
 /// @class CgSigRep CgSigRep.h "CgSigRep.h"
-/// @brief CgSignature の中身を表す純粋仮想基底クラス
+/// @brief CgSignature の中身を表すクラス
 //////////////////////////////////////////////////////////////////////
 class CgSigRep
 {
 public:
 
+  /// @brief コンストラクタ
+  CgSigRep(
+    const string& prefix,               ///< [in] シグネチャの接頭辞
+    SizeType ni,                        ///< [in] 入力数
+    SizeType no,                        ///< [in] 出力数
+    SizeType nb,                        ///< [in] 入出力数
+    const vector<TvFunc>& func_list,    ///< [in] 対象の論理関数のリスト
+    const vector<TvFunc>& tristate_list ///< [in] tristate条件のリスト
+  );
+
   /// @brief デストラクタ
-  virtual
   ~CgSigRep() = default;
 
 
@@ -34,16 +47,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief シグネチャ文字列を返す．
-  virtual
   string
-  str() const = 0;
+  str() const;
 
   /// @brief 変換を施した後のシグネチャを返す．
-  virtual
   unique_ptr<const CgSigRep>
   xform(
     const ClibIOMap& iomap ///< [in] 変換マップ
-  ) const = 0;
+  ) const;
 
   /// @brief 代表シグネチャに対する変換を求める．
   ClibIOMap
@@ -60,47 +71,70 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 正規形への変換を求める．
-  virtual
   vector<ClibIOMap>
-  gen_cannonical_map() const = 0;
+  gen_cannonical_map() const;
 
-  /// @brief 関数の内容を文字列に変換する．
-  static
-  string
-  hex_str(
-    const TvFunc& func
-  );
 
-  /// @brief 4ビットの整数値を16進数表記の文字に変換する
-  static
-  char
-  to_hex(
-    ymuint8 val
-  )
-  {
-    if ( val < 10 ) {
-      return '0' + val;
-    }
-    else {
-      return 'A' + (val - 10);
-    }
-  }
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
 
-  /// @brief ClibIOMap から NpnMap を作る．
-  static
-  NpnMap
-  to_npnmap(
-    const ClibIOMap& iomap, ///< [in] 対象の ClibIOMap
-    SizeType opos           ///< [in] 出力ピン番号
-                            ///<      入出力ピンも含む
-  );
+  /// @brief Walsh_0 を用いて出力のグループ分けを行う．
+  void
+  w0_refine(
+    const vector<SizeType>& pos_list, ///< [in] 出力番号のリスト
+    vector<CgPinGroup>& og_list,      ///< [out] 出力のグループのリスト
+    vector<CgPolInfo>& opol_list      ///< [out] 出力の反転属性のリスト
+  ) const;
 
-  /// @brief NpnMap から ClibIOMap を作る．
-  static
-  ClibIOMap
-  from_npnmap(
-    const NpnMap& npnmap
-  );
+  /// @brief 対称グループを作る．
+  vector<SizeType>
+  gen_symgroup(
+    vector<CgSymInfo>& syminfo_list, ///< [out] 対称グループのリスト
+    vector<bool>& syminv_list        ///< [out] 反転属性のリスト
+  ) const;
+
+  /// @brief Walsh_1_sum を用いて入力グループの細分化を行う．
+  void
+  w1sum_refine(
+    const vector<SizeType>& src_list,
+    const vector<CgPolInfo>& opol_list,
+    vector<CgPinGroup>& ig_list,
+    vector<CgPolInfo>& ipol_list
+  ) const;
+
+  /// @brief 入力の対称性を調べる．
+  bool
+  check_sym(
+    SizeType i1,
+    SizeType i2,
+    bool inv
+  ) const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 接頭辞
+  string mPrefix;
+
+  // 入力数
+  SizeType mNi;
+
+  // 出力数
+  SizeType mNo;
+
+  // 入出力数
+  SizeType mNb;
+
+  // 論理関数のリスト
+  vector<TvFunc> mFuncList;
+
+  // tristate 条件のリスト
+  vector<TvFunc> mTristateList;
 
 };
 

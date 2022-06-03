@@ -129,6 +129,16 @@ AstCellInfo::set(
 
   // phase-1: 入力ピンの名前と入力ピン番号の辞書を作る．
   // phase-2: 出力ピンの名前と出力ピン番号の辞書を作る．
+  //
+  // 入力ピン番号
+  //   0 - (ni - 1)      : 入力ピン
+  //  ni - (ni + nb - 1) : 入出力ピン
+  //  ni + nb            : Q
+  //  ni + nb + 1        : Qvar
+  //
+  // 出力ピン番号
+  //   0 - (no - 1)      : 出力ピン
+  //  no - (no + nb - 1) : 入出力ピン
   for ( const auto& pininfo: mPinInfoList ) {
     if ( pininfo.direction() == ClibDirection::input ) {
       for ( auto name: pininfo.name_list() ) {
@@ -212,7 +222,6 @@ AstCellInfo::add_cell(
     // 論理タイプ
     cell = library->add_logic_cell(mName, mArea);
   }
-
   ASSERT_COND( cell != nullptr );
 
   cell->init_timing_map(mInputId, mOutputId);

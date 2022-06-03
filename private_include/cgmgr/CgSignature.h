@@ -30,18 +30,18 @@ public:
   /// @brief 内容を指定したコンストラクタ
   explicit
   CgSignature(
-    unique_ptr<const CgSigRep>&& ptr
+    unique_ptr<const CgSigRep>&& ptr ///< [in] ムーブされる CgSigRep のポインタ
   );
 
   /// @brief ムーブコンストラクタ
   CgSignature(
-    CgSignature&& src
+    CgSignature&& src ///< [in] ムーブ元のオブジェクト
   );
 
   /// @brief ムーブ代入演算子
   CgSignature&
   operator=(
-    CgSignature&& src
+    CgSignature&& src ///< [in] ムーブ元のオブジェクト
   );
 
   /// @brief デストラクタ
@@ -152,12 +152,6 @@ public:
   /// @brief 同位体変換のリストを求める．
   vector<ClibIOMap>
   idmap_list() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
 
 
 private:

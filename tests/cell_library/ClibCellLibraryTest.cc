@@ -52,18 +52,16 @@ TEST(ClibCellLibraryTest, dump_restore)
 
     EXPECT_EQ( 310, library.cell_num() );
 
-    string dump_filename = "./foo.dump";
-
+    string dump_buff;
     {
-      ofstream s(dump_filename);
-      ASSERT_TRUE ( s.is_open() );
+      ostringstream s;
       library.dump(s);
+      dump_buff = s.str();
     }
 
     ClibCellLibrary library2;
     {
-      ifstream s(dump_filename);
-      ASSERT_TRUE ( s.is_open() );
+      istringstream s{dump_buff};
       library2.restore(s);
     }
 

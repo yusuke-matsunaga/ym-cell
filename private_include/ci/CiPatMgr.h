@@ -36,7 +36,7 @@ class CiPatMgr
 public:
 
   /// @brief コンストラクタ
-  CiPatMgr() = default;
+  CiPatMgr();
 
   /// @brief デストラクタ
   ~CiPatMgr() = default;
@@ -199,11 +199,11 @@ private:
 
   // ノードの種類+入力番号を納めた配列
   // サイズはノード数
-  vector<SizeType> mNodeTypeArray;
+  vector<SizeType> mNodeTypeArray{};
 
   // ファンインのノード番号＋反転属性を納めた配列
   // サイズはノード数 x 2
-  vector<SizeType> mEdgeArray;
+  vector<SizeType> mEdgeArray{};
 
   // パタンの配列
   // サイズはパタン数

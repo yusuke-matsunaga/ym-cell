@@ -62,12 +62,6 @@ dump_cell_class(
   for ( auto& map: npn_class.idmap_list() ) {
     map.dump(bos);
   }
-
-  // グループ情報のダンプ
-  bos << npn_class.cell_group_num();
-  for ( auto& group: npn_class.cell_group_list() ) {
-    bos << group.id();
-  }
 }
 
 
@@ -85,7 +79,8 @@ dump_lut(
     lut.dump(s);
   }
   else {
-    //s.write_str(string());
+    // 無効なテーブル
+    s << CLIB_NULLID;
   }
 }
 
@@ -158,33 +153,27 @@ CiCellLibrary::dump(
     cell(id).dump(bs);
   }
 
-  // セルグループ情報のダンプ
-  bs << cell_group_num();
-  for ( auto& group: cell_group_list() ) {
-    dump_cell_group(bs, group);
-  }
-
   // セルクラス情報のダンプ
   bs << npn_class_num();
   for ( auto& cell_class: npn_class_list() ) {
     dump_cell_class(bs, cell_class);
   }
 
+  // セルグループ情報のダンプ
+  bs << cell_group_num();
+  for ( auto& group: cell_group_list() ) {
+    dump_cell_group(bs, group);
+  }
+
   // 組み込み型の情報のダンプ
   for ( auto id: Range(4) ) {
     bs << mLogicGroup[id]->id();
   }
-  for ( auto id: Range(6) ) {
-    bs << mSimpleFFClass[id]->id();
+  for ( auto c: mSimpleFFClass ) {
+    bs << c->id();
   }
-  for ( auto id: Range(50) ) {
-    bs << mCpvFFClass[id]->id();
-  }
-  for ( auto id: Range(6) ) {
-    bs << mSimpleLatchClass[id]->id();
-  }
-  for ( auto id: Range(60) ) {
-    bs << mCpvFFClass[id]->id();
+  for ( auto c: mSimpleLatchClass ) {
+    bs << c->id();
   }
 
   // パタングラフの情報のダンプ
@@ -202,32 +191,19 @@ CiCell::dump(
   BinEnc& s
 ) const
 {
-  ymuint8 tid = 0;
-  if ( is_logic() ) {
-    tid = 0;
-  }
-  else if ( is_ff() ) {
-    tid = 1;
-  }
-  else if ( is_latch() ) {
-    tid = 2;
-  }
-  else if ( type() == ClibCellType::FSM ) {
-    tid = 3;
-  }
-  else {
-    // 無視？
-    ASSERT_NOT_REACHED;
-  }
-
   // セルの共通な情報のダンプ
-  s << tid
-    << name()
+  s << name()
     << area();
 
-  // セルの付加的な情報のダンプ
-  if ( is_ff() ) {
-    s << clock_expr()
+  // セルの種類ごとの属性のダンプ
+  if ( is_logic() ) {
+    s << static_cast<ymuint8>(0);
+  }
+  else if ( is_ff() ) {
+    s << static_cast<ymuint8>(1)
+      << qvar1()
+      << qvar2()
+      << clock_expr()
       << clock2_expr()
       << next_state_expr()
       << clear_expr()
@@ -236,13 +212,23 @@ CiCell::dump(
       << static_cast<ymuint8>(clear_preset_var2());
   }
   else if ( is_latch() ) {
-    s << enable_expr()
+    s << static_cast<ymuint8>(2)
+      << qvar1()
+      << qvar2()
+      << enable_expr()
       << enable2_expr()
       << data_in_expr()
       << clear_expr()
       << preset_expr()
       << static_cast<ymuint8>(clear_preset_var1())
       << static_cast<ymuint8>(clear_preset_var2());
+  }
+  else if ( type() == ClibCellType::FSM ) {
+    s << static_cast<ymuint8>(3);
+  }
+  else {
+    // 無視？
+    ASSERT_NOT_REACHED;
   }
 
   // 入力ピンのダンプ

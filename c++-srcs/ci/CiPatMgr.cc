@@ -8,10 +8,11 @@
 
 #include "ci/CiPatMgr.h"
 #include "ci/CiPatGraph.h"
+#if 0
 #include "lc/LcPatMgr.h"
 #include "lc/LcPatNode.h"
 #include "lc/LcPatHandle.h"
-
+#endif
 
 BEGIN_NAMESPACE_YM_CLIB
 
@@ -20,6 +21,10 @@ using namespace nsLibcomp;
 //////////////////////////////////////////////////////////////////////
 // クラス CiPatMgr
 //////////////////////////////////////////////////////////////////////
+
+CiPatMgr::CiPatMgr()
+{
+}
 
 // @brief このセルライブラリに含まれるセルの最大の入力数を得る．
 SizeType
@@ -112,9 +117,11 @@ CiPatMgr::set_node_num(
 )
 {
   mNodeTypeArray.clear();
-  mNodeTypeArray.resize(nn);
   mEdgeArray.clear();
-  mEdgeArray.resize(nn * 2);
+  if ( nn > 0 ) {
+    mNodeTypeArray.resize(nn);
+    mEdgeArray.resize(nn * 2);
+  }
 }
 
 // @brief パタン数を設定する．

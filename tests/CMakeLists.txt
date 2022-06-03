@@ -254,6 +254,39 @@ target_include_directories( cell_CgGenLogicSig_test
   ../c++-srcs/cgmgr
   )
 
+
+# ===================================================================
+#  CgFFSig_test
+# ===================================================================
+ym_add_gtest ( cell_CgFFSig_test
+  cgmgr/CgFFSig_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  )
+
+target_include_directories( cell_CgFFSig_test
+  PRIVATE
+  ../private_include/cgmgr
+  ../c++-srcs/cgmgr
+  )
+
+
+# ===================================================================
+#  CiSeqInfo_test
+# ===================================================================
+ym_add_gtest ( cell_CiSeqInfo_test
+  ci/CiSeqInfo_test.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  )
+
+target_include_directories( cell_CiSeqInfo_test
+  PRIVATE
+  ../private_include/ci
+  )
+
 # ===================================================================
 #  インストールターゲットの設定
 # ===================================================================

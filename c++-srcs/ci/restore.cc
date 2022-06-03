@@ -43,7 +43,7 @@ CiCellLibrary::restore(
   ymuint8 tmp1;
   ymuint8 tmp2;
   bs >> tmp1
-    >> tmp2;
+     >> tmp2;
   ClibTechnology technology = static_cast<ClibTechnology>(tmp1);
   ClibDelayModel delay_model = static_cast<ClibDelayModel>(tmp2);
 
@@ -125,6 +125,17 @@ CiCellLibrary::restore(
     }
   }
 
+  // セルクラス情報の読み込み
+  {
+    SizeType nc;
+    bs >> nc;
+    mClassList.clear();
+    mClassList.reserve(nc);
+    for ( SizeType _: Range(nc) ) {
+      restore_cell_class(bs);
+    }
+  }
+
   // セルグループ情報の読み込み
   {
     SizeType ng;
@@ -136,43 +147,21 @@ CiCellLibrary::restore(
     }
   }
 
-  // セルクラス情報の読み込み
-  {
-    SizeType nc;
-    bs >> nc;
-    mClassList.clear();
-    mClassList.reserve(nc);
-    for ( SizeType _: Range(nc) ) {
-      cout << "  #" << _ << endl;
-      restore_cell_class(bs);
-    }
-  }
-
   // 組み込み型の設定
   for ( auto id: Range(4) ) {
     SizeType group_id;
     bs >> group_id;
     mLogicGroup[id] = mGroupList[group_id].get();
   }
-  for ( auto id: Range(6) ) {
+  for ( SizeType id = 0; id < mSimpleFFClass.size(); ++ id ) {
     SizeType class_id;
     bs >> class_id;
     mSimpleFFClass[id] = mClassList[class_id].get();
   }
-  for ( auto id: Range(50) ) {
-    SizeType class_id;
-    bs >> class_id;
-    mCpvFFClass[id] = mClassList[class_id].get();
-  }
-  for ( auto id: Range(6) ) {
+  for ( SizeType id = 0; id < mSimpleLatchClass.size(); ++ id ) {
     SizeType class_id;
     bs >> class_id;
     mSimpleLatchClass[id] = mClassList[class_id].get();
-  }
-  for ( auto id: Range(50) ) {
-    SizeType class_id;
-    bs >> class_id;
-    mCpvLatchClass[id] = mClassList[class_id].get();
   }
 
   // パタングラフの情報の設定
@@ -252,18 +241,16 @@ CiCellLibrary::restore_cell(
   BinDec& s
 )
 {
-  ymuint8 type;
   string name;
   ClibArea area;
-  s >> type
-    >> name
+  s >> name
     >> area;
 
   ShString shname(name);
 
-  cout << "restore_cell: " << name << endl;
-
   // セル本体の読み込み
+  ymuint8 type;
+  s >> type;
   CiCell* cell{nullptr};
   switch ( type ) {
   case 0:
@@ -498,15 +485,6 @@ CiCellLibrary::restore_cell_class(
     idmap_list[i].restore(s);
   }
   auto cclass = add_cell_class(idmap_list);
-
-  SizeType group_num;
-  s >> group_num;
-  vector<CiCellGroup*> group_list(group_num);
-  for ( auto i: Range(group_num) ) {
-    SizeType group_id;
-    s >> group_id;
-    cclass->add_group(mRefGroupList[group_id]);
-  }
 }
 
 // @brief タイミング情報を読み込む．

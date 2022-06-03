@@ -259,6 +259,21 @@ enum class ClibCPV : ymuint8
   X = 4, ///< unknown
 };
 
+/// @brief ClibCPV の全ての値のリスト
+///
+/// @code
+/// for ( auto cpv: CPV_list ) {
+///    ...
+/// }
+/// のように用いられることを想定している．
+const ClibCPV CPV_LIST[] = {
+  ClibCPV::L,
+  ClibCPV::H,
+  ClibCPV::N,
+  ClibCPV::T,
+  ClibCPV::X
+};
+
 
 //////////////////////////////////////////////////////////////////////
 /// @brief パタングラフのノードの型

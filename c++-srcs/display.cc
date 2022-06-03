@@ -365,7 +365,7 @@ display_timing(
 void
 display_class(
   ostream& s,
-  const char* title,
+  const string& title,
   const ClibCellClass& cclass
 )
 {
@@ -402,11 +402,11 @@ display_CPV(
 void
 display_ff_class(
   ostream& s,
-  const char* title,
+  const string& title,
   const ClibCellClass& cclass
 )
 {
-  s << title << endl;
+  s << title << "( Class#" << cclass.id() << " )" << endl;
   auto n = cclass.idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
@@ -448,7 +448,7 @@ display_ff_class(
 void
 display_latch_class(
   ostream& s,
-  const char* title,
+  const string& title,
   const ClibCellClass& cclass
 )
 {
@@ -783,7 +783,7 @@ display_library(
     ostringstream buf;
     buf << "Class#" << class_id;
     auto& cclass = library.npn_class(class_id);
-    display_class(s, buf.str().c_str(), cclass);
+    display_class(s, buf.str(), cclass);
   }
 
   // 既定セルグループの情報
@@ -795,12 +795,26 @@ display_library(
   display_ff_class(s, "DFF Class", library.simple_ff_class(false, false, false));
   display_ff_class(s, "DFF_R Class", library.simple_ff_class(false, true, false));
   display_ff_class(s, "DFF_S Class", library.simple_ff_class(false, false, true));
-  display_ff_class(s, "DFF_RS Class", library.simple_ff_class(false, true, true));
+  for ( auto cpv1: CPV_LIST ) {
+    for ( auto cpv2: CPV_LIST ) {
+      ostringstream buf;
+      buf << "DFF_RS(" << cpv1 << cpv2 << ") Class";
+      display_class(s, buf.str(),
+		    library.simple_ff_class(false, true, true, cpv1, cpv2));
+    }
+  }
 
   display_latch_class(s, "Latch Class", library.simple_latch_class(false, false, false));
   display_latch_class(s, "Latch_R Class", library.simple_latch_class(false, true, false));
   display_latch_class(s, "Latch_S Class", library.simple_latch_class(false, false, true));
-  display_latch_class(s, "Latch_RS Class", library.simple_latch_class(false, true, true));
+  for ( auto cpv1: CPV_LIST ) {
+    for ( auto cpv2: CPV_LIST ) {
+      ostringstream buf;
+      buf << "Latch_RS(" << cpv1 << cpv2 << ") Class";
+      display_class(s, "Latch_RS Class",
+		    library.simple_latch_class(false, true, true, cpv1, cpv2));
+    }
+  }
 
 #if 1
   // パタングラフの情報

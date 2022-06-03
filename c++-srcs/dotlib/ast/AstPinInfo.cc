@@ -76,20 +76,19 @@ AstPinInfo::set(
 
 BEGIN_NONAMESPACE
 
+// AstExpr を Expr に変換する．
 inline
 Expr
 make_expr(
   const AstExpr* ast_expr,
-  const unordered_map<ShString, SizeType>& pin_map,
-  const Expr& default_expr
+  const unordered_map<ShString, SizeType>& pin_map
 )
 {
-  if ( ast_expr != nullptr ) {
-    return ast_expr->to_expr(pin_map);
+  if ( ast_expr == nullptr ) {
+    // 未定義の場合のフォールバック
+    return Expr::make_invalid();
   }
-  else {
-    return default_expr;
-  }
+  return ast_expr->to_expr(pin_map);
 }
 
 END_NONAMESPACE
@@ -111,8 +110,8 @@ AstPinInfo::add_pin(
     break;
   case ClibDirection::output:
     {
-      auto function = make_expr(mFunction, ipin_map, Expr::make_invalid());
-      auto tristate = make_expr(mTristate, ipin_map, Expr::make_zero());
+      auto function = make_expr(mFunction, ipin_map);
+      auto tristate = make_expr(mTristate, ipin_map);
       vector<SizeType> opin_list;
       for ( auto name: mNameList ) {
 	auto pin = cell->add_output(name, mMaxFanout, mMinFanout,
@@ -130,8 +129,8 @@ AstPinInfo::add_pin(
     break;
   case ClibDirection::inout:
     {
-      auto function = make_expr(mFunction, ipin_map, Expr::make_invalid());
-      auto tristate = make_expr(mTristate, ipin_map, Expr::make_zero());
+      auto function = make_expr(mFunction, ipin_map);
+      auto tristate = make_expr(mTristate, ipin_map);
       vector<SizeType> opin_list;
       for ( auto name: mNameList ) {
 	auto pin = cell->add_inout(name, mCapacitance,

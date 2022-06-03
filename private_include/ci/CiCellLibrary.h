@@ -1042,32 +1042,12 @@ private:
   const ClibCellGroup* mLogicGroup[4];
 
   // 単純なFFクラスの情報
-  //  0: single       | クリアなし | プリセットなし
-  //  1: master/slave | クリアなし | プリセットなし
-  //  2: single       | クリアあり | プリセットなし
-  //  3: master/slave | クリアあり | プリセットなし
-  //  4: single       | クリアなし | プリセットあり
-  //  5: master/slave | クリアなし | プリセットあり
-  const ClibCellClass* mSimpleFFClass[6];
-
-  // clear/preset ありの単純なFFクラスの情報
-  // 0: L, 1: H, 2: N, 3: T, 4: X
-  // の2乗(clear_preset_var1, clear_preset_var2)
-  const ClibCellClass* mCpvFFClass[50];
+  // インデックスは CiSeqInfo で作る．
+  vector<const ClibCellClass*> mSimpleFFClass;
 
   // 単純なラッチクラスの情報
-  //  0: single       | クリアなし | プリセットなし
-  //  1: master/slave | クリアなし | プリセットなし
-  //  2: single       | クリアあり | プリセットなし
-  //  3: master/slave | クリアあり | プリセットなし
-  //  4: single       | クリアなし | プリセットあり
-  //  5: master/slave | クリアなし | プリセットあり
-  const ClibCellClass* mSimpleLatchClass[6];
-
-  // clear/preset ありの単純なラッチクラスの情報
-  // 0: L, 1: H, 2: N, 3: T, 4: X
-  // の2乗(clear_preset_var1, clear_preset_var2)
-  const ClibCellClass* mCpvLatchClass[50];
+  // インデックスは CiSeqInfo で作る．
+  vector<const ClibCellClass*> mSimpleLatchClass;
 
   // パタングラフを管理するクラス
   CiPatMgr mPatMgr;

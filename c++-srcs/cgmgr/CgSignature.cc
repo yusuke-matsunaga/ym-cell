@@ -9,9 +9,6 @@
 #include "cgmgr/CgSignature.h"
 #include "ym/ClibIOMap.h"
 #include "CgSigRep.h"
-#include "CgGenLogicSig.h"
-#include "CgFFSig.h"
-#include "CgLatchSig.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -71,8 +68,31 @@ CgSignature::make_logic_sig(
   const vector<TvFunc>& tristate_list
 )
 {
-  return CgSignature{CgGenLogicSig::make_signature(ni, no, nb, func_list, tristate_list)};
+  string prefix{"C"};
+  auto rep = new CgSigRep{prefix, ni, no, nb, func_list, tristate_list};
+  return CgSignature{unique_ptr<CgSigRep>{rep}};
 }
+
+BEGIN_NONAMESPACE
+
+// clear_preset_var1/var2 の値をエンコードする．
+inline
+string
+encode_cpv(
+  ClibCPV clear_preset_var
+)
+{
+  switch ( clear_preset_var ) {
+  case ClibCPV::L: return "L";
+  case ClibCPV::H: return "H";
+  case ClibCPV::N: return "N";
+  case ClibCPV::T: return "T";
+  case ClibCPV::X: return "X";
+  }
+  return string{};
+}
+
+END_NONAMESPACE
 
 // @brief FF用のシグネチャを作る．
 CgSignature
@@ -91,9 +111,24 @@ CgSignature::make_ff_sig(
   ClibCPV clear_preset_var2
 )
 {
-  return CgSignature{CgFFSig::make_signature(ni, no, nb, func_list, tristate_list,
-					     clocked_on, clocked_on_also, next_state,
-					     clear, preset, clear_preset_var1, clear_preset_var2)};
+  SizeType ni2 = ni + nb;
+  SizeType no2 = no + nb;
+  SizeType ni3 = ni2 + 2;
+  SizeType no3 = no2 + 5;
+  vector<TvFunc> sig_func_list(no3, TvFunc::make_invalid());
+  vector<TvFunc> sig_tristate_list(no3, TvFunc::make_invalid());
+  for ( SizeType i = 0; i < no2; ++ i ) {
+    sig_func_list[i] = func_list[i];
+    sig_tristate_list[i] = tristate_list[i];
+  }
+  sig_func_list[no2 + 0] = clocked_on;
+  sig_func_list[no2 + 1] = clocked_on_also;
+  sig_func_list[no2 + 2] = next_state;
+  sig_func_list[no2 + 3] = clear;
+  sig_func_list[no2 + 4] = preset;
+  auto prefix = string{"F"} + encode_cpv(clear_preset_var1) + encode_cpv(clear_preset_var2);
+  auto rep = new CgSigRep{prefix, ni, no, nb, sig_func_list, sig_tristate_list};
+  return CgSignature{unique_ptr<CgSigRep>{rep}};
 }
 
 // @brief ラッチ用のシグネチャを作る．
@@ -113,10 +148,24 @@ CgSignature::make_latch_sig(
   ClibCPV clear_preset_var2
 )
 {
-  return CgSignature{CgLatchSig::make_signature(ni, no, nb, func_list, tristate_list,
-						enable_on, enable_on_also, data_in,
-						clear, preset,
-						clear_preset_var1, clear_preset_var2)};
+  SizeType ni2 = ni + nb;
+  SizeType no2 = no + nb;
+  SizeType ni3 = ni2 + 2;
+  SizeType no3 = no2 + 5;
+  vector<TvFunc> sig_func_list(no3, TvFunc::make_invalid());
+  vector<TvFunc> sig_tristate_list(no3, TvFunc::make_invalid());
+  for ( SizeType i = 0; i < no2; ++ i ) {
+    sig_func_list[i] = func_list[i];
+    sig_tristate_list[i] = tristate_list[i];
+  }
+  sig_func_list[no2 + 0] = enable_on;
+  sig_func_list[no2 + 1] = enable_on_also;
+  sig_func_list[no2 + 2] = data_in;
+  sig_func_list[no2 + 3] = clear;
+  sig_func_list[no2 + 4] = preset;
+  auto prefix = string{"L"} + encode_cpv(clear_preset_var1) + encode_cpv(clear_preset_var2);
+  auto rep = new CgSigRep{prefix, ni, no, nb, sig_func_list, sig_tristate_list};
+  return CgSignature{unique_ptr<CgSigRep>{rep}};
 }
 
 // @brief シグネチャ文字列を返す．

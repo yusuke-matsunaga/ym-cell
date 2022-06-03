@@ -138,7 +138,7 @@ CiPin::function() const
 Expr
 CiPin::tristate() const
 {
-  return Expr::make_zero();
+  return Expr::make_invalid();
 }
 
 // @brief 内部ピン番号を返す．

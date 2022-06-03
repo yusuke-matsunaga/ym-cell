@@ -59,7 +59,7 @@ CiFFCell::make_signature() const
   SizeType no = output_num();
   SizeType nb = inout_num();
   SizeType ni2 = ni + nb + 2;
-  SizeType no2 = no + nb + 2;
+  SizeType no2 = no + nb;
   vector<TvFunc> logic_list(no2);
   vector<TvFunc> tristate_list(no2);
   for ( SizeType i = 0; i < no2; ++ i ) {

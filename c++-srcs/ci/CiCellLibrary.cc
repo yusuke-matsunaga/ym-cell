@@ -19,6 +19,7 @@
 #include "ci/CiBusType.h"
 #include "ci/CiPatGraph.h"
 #include "ci/CiCell.h"
+#include "ci/CiSeqInfo.h"
 #include "cgmgr/CgMgr.h"
 
 #include "CiFFCell.h"
@@ -36,7 +37,9 @@ using namespace nsLibcomp;
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CiCellLibrary::CiCellLibrary()
+CiCellLibrary::CiCellLibrary() :
+  mSimpleFFClass(CiSeqInfo::max_index()),
+  mSimpleLatchClass(CiSeqInfo::max_index())
 {
 }
 
@@ -83,15 +86,8 @@ CiCellLibrary::simple_ff_class(
   ClibCPV cpv2
 ) const
 {
-  SizeType idx;
-  SizeType sub_idx;
-  CgMgr::encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2, idx, sub_idx);
-  if ( idx < 6 ) {
-    return *mSimpleFFClass[idx];
-  }
-  else {
-    return *mCpvFFClass[sub_idx];
-  }
+  CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
+  return *mSimpleFFClass[info.encode_val()];
 }
 
 // @brief 単純な型のラッチクラスを返す．
@@ -104,15 +100,8 @@ CiCellLibrary::simple_latch_class(
   ClibCPV cpv2
 ) const
 {
-  SizeType idx;
-  SizeType sub_idx;
-  CgMgr::encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2, idx, sub_idx);
-  if ( idx < 6 ) {
-    return *mSimpleLatchClass[idx];
-  }
-  else {
-    return *mCpvLatchClass[sub_idx];
-  }
+  CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
+  return *mSimpleLatchClass[info.encode_val()];
 }
 
 // @brief 属性を設定する(浮動小数点型)
@@ -569,26 +558,20 @@ CiCellLibrary::compile()
     for ( bool has_clear: { false, true } ) {
       for ( bool has_preset: { false, true } ) {
 	if ( has_clear && has_preset ) {
-	  for ( ClibCPV cpv1: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
-	    for ( ClibCPV cpv2: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
-	      SizeType idx;
-	      SizeType sub_idx;
-	      CgMgr::encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2,
-				 idx, sub_idx);
+	  for ( ClibCPV cpv1: CPV_LIST ) {
+	    for ( ClibCPV cpv2: CPV_LIST ) {
+	      CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
 	      SizeType id = mgr.ff_class(master_slave, has_clear, has_preset, cpv1, cpv2);
-	      mCpvFFClass[sub_idx] = mRefClassList[id];
+	      mSimpleFFClass[info.encode_val()] = mRefClassList[id];
 	    }
 	  }
 	}
 	else {
 	  ClibCPV cpv1{ClibCPV::X};
 	  ClibCPV cpv2{ClibCPV::X};
-	  SizeType idx;
-	  SizeType sub_idx;
-	  CgMgr::encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2,
-			     idx, sub_idx);
+	  CiSeqInfo info{master_slave, has_clear, has_preset};
 	  SizeType id = mgr.ff_class(master_slave, has_clear, has_preset, cpv1, cpv2);
-	  mSimpleFFClass[idx] = mRefClassList[id];
+	  mSimpleFFClass[info.encode_val()] = mRefClassList[id];
 	}
       }
     }
@@ -598,26 +581,20 @@ CiCellLibrary::compile()
     for ( bool has_clear: { false, true } ) {
       for ( bool has_preset: { false, true } ) {
 	if ( has_clear && has_preset ) {
-	  for ( ClibCPV cpv1: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
-	    for ( ClibCPV cpv2: { ClibCPV::L, ClibCPV::H, ClibCPV::N, ClibCPV::T, ClibCPV::X } ) {
-	      SizeType idx;
-	      SizeType sub_idx;
-	      CgMgr::encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2,
-				 idx, sub_idx);
+	  for ( ClibCPV cpv1: CPV_LIST ) {
+	    for ( ClibCPV cpv2: CPV_LIST ) {
+	      CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
 	      SizeType id = mgr.latch_class(master_slave, has_clear, has_preset, cpv1, cpv2);
-	      mCpvLatchClass[sub_idx] = mRefClassList[id];
+	      mSimpleLatchClass[info.encode_val()] = mRefClassList[id];
 	    }
 	  }
 	}
 	else {
 	  ClibCPV cpv1{ClibCPV::X};
 	  ClibCPV cpv2{ClibCPV::X};
-	  SizeType idx;
-	  SizeType sub_idx;
-	  CgMgr::encode_attr(master_slave, has_clear, has_preset, cpv1, cpv2,
-			     idx, sub_idx);
+	  CiSeqInfo info{master_slave, has_clear, has_preset};
 	  SizeType id = mgr.latch_class(master_slave, has_clear, has_preset, cpv1, cpv2);
-	  mSimpleLatchClass[idx] = mRefClassList[id];
+	  mSimpleLatchClass[info.encode_val()] = mRefClassList[id];
 	}
       }
     }
