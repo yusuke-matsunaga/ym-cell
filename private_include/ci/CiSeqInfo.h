@@ -102,6 +102,33 @@ public:
     return index;
   }
 
+  /// @brief インデックス値から値を作る．
+  static
+  CiSeqInfo
+  decode_index(
+    SizeType index
+  )
+  {
+    if ( index < 6 ) {
+      bool slave_clock = static_cast<bool>((index >> 0) & 1);
+      bool clear = static_cast<bool>((index >> 1) & 1);
+      bool preset = static_cast<bool>((index >> 2) & 1);
+      auto cpv1 = ClibCPV::X;
+      auto cpv2 = ClibCPV::X;
+      return CiSeqInfo{slave_clock, clear, preset, cpv1, cpv2};
+    }
+    else {
+      bool slave_clock = static_cast<bool>(index & 1);
+      index -= 6;
+      index /= 2;
+      SizeType index1 = index % 5;
+      auto cpv1 = decode_cpv(index1);
+      SizeType index2 = index / 5;
+      auto cpv2 = decode_cpv(index2);
+      return CiSeqInfo{slave_clock, true, true, cpv1, cpv2};
+    }
+  }
+
   /// @brief インデックス値の総数を返す．
   static
   SizeType
@@ -117,10 +144,11 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ClibCPV をエンコードする．
+  static
   SizeType
   encode_cpv(
     ClibCPV cpv
-  ) const
+  )
   {
     switch ( cpv ) {
     case ClibCPV::L: return 0;
@@ -129,9 +157,27 @@ private:
     case ClibCPV::T: return 3;
     case ClibCPV::X: return 4;
     }
+    ASSERT_NOT_REACHED;
     return 0;
   }
 
+  /// @brief 整数値から ClibCPv に変換する．
+  static
+  ClibCPV
+  decode_cpv(
+    SizeType index
+  )
+  {
+    switch ( index ) {
+    case 0: return ClibCPV::L;
+    case 1: return ClibCPV::H;
+    case 2: return ClibCPV::N;
+    case 3: return ClibCPV::T;
+    case 4: return ClibCPV::X;
+    }
+    ASSERT_NOT_REACHED;
+    return ClibCPV::X;
+  }
 
 private:
   //////////////////////////////////////////////////////////////////////

@@ -572,4 +572,12 @@ TEST(cell_CiSeqInfo_test, case7_XX)
   EXPECT_TRUE( info.has_preset() );
 }
 
+TEST(cell_CiSeqInfo_test, enumerate_all)
+{
+  for ( SizeType index = 0; index < CiSeqInfo::max_index(); ++ index ) {
+    auto info = CiSeqInfo::decode_index(index);
+    EXPECT_EQ( index, info.encode_val() );
+  }
+}
+
 END_NAMESPACE_YM_CLIB

@@ -43,15 +43,6 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief セルをグループに登録する．
-  /// @return セルの所属するグループを返す．
-  ///
-  /// なければ作る．
-  CiCellGroup*
-  reg_group(
-    const CiCell* cell ///< [in] セル
-  );
-
   /// @brief 論理セルグループ番号を得る．
   SizeType
   logic_group(
@@ -86,6 +77,15 @@ public:
     ClibCPV cpv2       ///< [in] clear_preset_var2 の値
   ) const;
 
+  /// @brief シグネチャに一致するグループを探す．
+  /// @return グループを返す．
+  ///
+  /// なければ作る．
+  CiCellGroup*
+  find_group(
+    const CgSignature& sig ///< [in] シグネチャ
+  );
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -103,15 +103,6 @@ private:
   /// @brief ラッチグループの初期化を行なう．
   void
   latch_init();
-
-  /// @brief シグネチャに一致するグループを探す．
-  /// @return グループを返す．
-  ///
-  /// なければ作る．
-  CiCellGroup*
-  _find_group(
-    const CgSignature& sig ///< [in] シグネチャ
-  );
 
   /// @brief 代表クラスを得る．
   CiCellClass*

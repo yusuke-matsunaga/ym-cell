@@ -21,6 +21,7 @@
 #include "ci/CiCell.h"
 #include "ci/CiSeqInfo.h"
 #include "cgmgr/CgMgr.h"
+#include "cgmgr/CgSignature.h"
 
 #include "CiFFCell.h"
 #include "CiLatchCell.h"
@@ -544,65 +545,43 @@ CiCellLibrary::error_patgraph()
 void
 CiCellLibrary::compile()
 {
+  // シグネチャを用いてセルグループとセルクラスの設定を行う．
   CgMgr mgr{*this};
-
   for ( auto& cell: mCellList ) {
-    auto g = mgr.reg_group(cell.get());
+    // シグネチャを作る．
+    auto sig = cell->make_signature();
+    // sig に対応するグループを求める．
+    auto group = mgr.find_group(sig);
+    // セルを登録する．
+    group->add_cell(cell.get());
   }
 
-  for ( int i: { 0, 1, 2, 3 } ) {
-    mLogicGroup[i] = mRefGroupList[mgr.logic_group(i)];
+  // CgMgr の情報をコピーする．
+  for ( SizeType index: { 0, 1, 2, 3 } ) {
+    mLogicGroup[index] = mRefGroupList[mgr.logic_group(index)];
+  }
+  for ( SizeType index = 0; index < CiSeqInfo::max_index(); ++ index ) {
+    auto info = CiSeqInfo::decode_index(index);
+    auto master_slave = info.has_slave_clock();
+    auto has_clear = info.has_clear();
+    auto has_preset = info.has_preset();
+    auto cpv1 = info.clear_preset_var1();
+    auto cpv2 = info.clear_preset_var2();
+    SizeType id = mgr.ff_class(master_slave, has_clear, has_preset, cpv1, cpv2);
+    mSimpleFFClass[index] = mRefClassList[id];
+  }
+  for ( SizeType index = 0; index < CiSeqInfo::max_index(); ++ index ) {
+    auto info = CiSeqInfo::decode_index(index);
+    auto master_slave = info.has_slave_clock();
+    auto has_clear = info.has_clear();
+    auto has_preset = info.has_preset();
+    auto cpv1 = info.clear_preset_var1();
+    auto cpv2 = info.clear_preset_var2();
+    SizeType id = mgr.latch_class(master_slave, has_clear, has_preset, cpv1, cpv2);
+    mSimpleLatchClass[info.encode_val()] = mRefClassList[id];
   }
 
-  for ( bool master_slave: { false, true } ) {
-    for ( bool has_clear: { false, true } ) {
-      for ( bool has_preset: { false, true } ) {
-	if ( has_clear && has_preset ) {
-	  for ( ClibCPV cpv1: CPV_LIST ) {
-	    for ( ClibCPV cpv2: CPV_LIST ) {
-	      CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
-	      SizeType id = mgr.ff_class(master_slave, has_clear, has_preset, cpv1, cpv2);
-	      mSimpleFFClass[info.encode_val()] = mRefClassList[id];
-	    }
-	  }
-	}
-	else {
-	  ClibCPV cpv1{ClibCPV::X};
-	  ClibCPV cpv2{ClibCPV::X};
-	  CiSeqInfo info{master_slave, has_clear, has_preset};
-	  SizeType id = mgr.ff_class(master_slave, has_clear, has_preset, cpv1, cpv2);
-	  mSimpleFFClass[info.encode_val()] = mRefClassList[id];
-	}
-      }
-    }
-  }
-
-  for ( bool master_slave: { false, true } ) {
-    for ( bool has_clear: { false, true } ) {
-      for ( bool has_preset: { false, true } ) {
-	if ( has_clear && has_preset ) {
-	  for ( ClibCPV cpv1: CPV_LIST ) {
-	    for ( ClibCPV cpv2: CPV_LIST ) {
-	      CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
-	      SizeType id = mgr.latch_class(master_slave, has_clear, has_preset, cpv1, cpv2);
-	      mSimpleLatchClass[info.encode_val()] = mRefClassList[id];
-	    }
-	  }
-	}
-	else {
-	  ClibCPV cpv1{ClibCPV::X};
-	  ClibCPV cpv2{ClibCPV::X};
-	  CiSeqInfo info{master_slave, has_clear, has_preset};
-	  SizeType id = mgr.latch_class(master_slave, has_clear, has_preset, cpv1, cpv2);
-	  mSimpleLatchClass[info.encode_val()] = mRefClassList[id];
-	}
-      }
-    }
-  }
-
-#if 0
-  mPatMgr.copy(libcomp.pat_mgr());
-#endif
+  //mPatMgr.copy(libcomp.pat_mgr());
 }
 
 // @brief ピンを登録する．
