@@ -732,14 +732,14 @@ CiCell::make_signature() const
   SizeType no2 = no + nb;
   if ( no == 1 && nb == 0 && has_logic(0) ) {
     auto expr = logic_expr(0);
-    auto func = expr.make_tv(input_num());
     if ( has_tristate(0) ) {
+      auto func = expr.make_tv(input_num());
       auto tri_expr = tristate_expr(0);
       auto tristate = tri_expr.make_tv(input_num());
       return CgSignature::make_logic_sig(func, tristate);
     }
     else {
-      return CgSignature::make_logic_sig(func);
+      return CgSignature::make_logic_sig(ni, expr);
     }
   }
   else {

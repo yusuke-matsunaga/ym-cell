@@ -57,6 +57,10 @@ public:
   const ClibCellClass&
   rep_class() const override;
 
+  /// @brief 代表クラスに対する変換マップを返す．
+  const ClibIOMap&
+  iomap() const override;
+
   /// @brief 入力ピン数+入出力ピン数を返す．
   SizeType
   input_num() const override;
@@ -78,10 +82,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 機能情報を取得する関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 代表クラスに対する変換マップを返す．
-  const ClibIOMap&
-  iomap() const override;
 
   /// @brief セルの種類を返す．
   ClibCellType

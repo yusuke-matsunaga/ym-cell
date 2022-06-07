@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "CgSigRep.h"
+#include "ym/Expr.h"
 #include "ym/MultiCombiGen.h"
 #include "ym/MultiPermGen.h"
 
@@ -132,13 +133,15 @@ CgSigRep::CgSigRep(
   SizeType no,
   SizeType nb,
   const vector<TvFunc>& func_list,
-  const vector<TvFunc>& tristate_list
+  const vector<TvFunc>& tristate_list,
+  const Expr& expr
 ) : mPrefix{prefix},
     mNi{ni},
     mNo{no},
     mNb{nb},
     mFuncList{func_list},
-    mTristateList{tristate_list}
+    mTristateList{tristate_list},
+    mExpr{expr}
 {
 }
 
@@ -158,6 +161,41 @@ CgSigRep::str() const
   }
   return buf.str();
 }
+
+// @brief 単一の論理式を持つ場合，その式を返す．
+Expr
+CgSigRep::expr() const
+{
+  return mExpr;
+}
+
+BEGIN_NONAMESPACE
+
+// 論理式の変数を map にしたがって変換する．
+Expr
+xform_expr(
+  const Expr& expr,
+  const NpnMap& map
+)
+{
+  auto ni = map.input_num();
+  unordered_map<VarId, Expr> vlm;
+  for ( auto i = 0; i < ni; ++ i ) {
+    VarId src_var(i);
+    NpnVmap imap = map.imap(src_var);
+    VarId dst_var = imap.var();
+    Expr expr = Expr::make_literal(dst_var, imap.inv());
+    vlm[src_var] = expr;
+  }
+  Expr cexpr = expr.compose(vlm);
+  if ( map.oinv() ) {
+    cexpr = ~cexpr;
+  }
+  return cexpr;
+}
+
+END_NONAMESPACE
+
 
 // @brief 変換を施した後のシグネチャを返す．
 unique_ptr<const CgSigRep>
@@ -190,7 +228,12 @@ CgSigRep::xform(
     xfunc_list[i] = mFuncList[i].xform(npnmap0);
     xtristate_list[i] = mTristateList[i].xform(npnmap0);
   }
-  auto rep = new CgSigRep{mPrefix, mNi, mNo, mNb, xfunc_list, xtristate_list};
+  auto xexpr = Expr::make_invalid();
+  if ( mExpr.is_valid() ) {
+    auto npnmap = to_npnmap(iomap, ni, 0);
+    xexpr = xform_expr(mExpr, npnmap);
+  }
+  auto rep = new CgSigRep{mPrefix, mNi, mNo, mNb, xfunc_list, xtristate_list, xexpr};
   return unique_ptr<CgSigRep>{rep};
 }
 

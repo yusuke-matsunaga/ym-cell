@@ -68,24 +68,16 @@ void
 CiPatGraph::init(
   SizeType rep_id,
   SizeType input_num,
-  SizeType edge_num
+  const vector<SizeType>& edge_list
 )
 {
   mRepId = rep_id;
   mInputNum = input_num;
   mEdgeList.clear();
-  mEdgeList.resize(edge_num);
-}
-
-// @brief 枝のデータを設定する．
-void
-CiPatGraph::set_edge(
-  SizeType pos,
-  SizeType edge
-)
-{
-  ASSERT_COND( 0 <= pos && pos < edge_num() );
-  mEdgeList[pos] = edge;
+  mEdgeList.reserve(edge_list.size());
+  for ( auto edge: edge_list ) {
+    mEdgeList.push_back(edge);
+  }
 }
 
 END_NAMESPACE_YM_CLIB

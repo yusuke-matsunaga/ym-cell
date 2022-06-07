@@ -53,12 +53,7 @@ set (cg_SOURCES
   c++-srcs/cgmgr/CgMgr.cc
   c++-srcs/cgmgr/CgSignature.cc
   c++-srcs/cgmgr/CgSigRep.cc
-  )
-
-set (libcomp_SOURCES
-  c++-srcs/libcomp/LcPatMgr.cc
-  c++-srcs/libcomp/LcSignature.cc
-  c++-srcs/libcomp/LibComp.cc
+  c++-srcs/cgmgr/PatMgr.cc
   )
 
 set (mislib_SOURCES
@@ -102,7 +97,7 @@ ym_add_object_library ( ym_cell
   ${main_SOURCES}
   ${ci_SOURCES}
   ${cg_SOURCES}
-#  ${libcomp_SOURCES}
+  ${patmgr_SOURCES}
   ${mislib_SOURCES}
   ${dotlib_SOURCES}
   )

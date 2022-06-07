@@ -11,7 +11,6 @@
 #include "ym/clib.h"
 #include "ym/BinDec.h"
 #include "ym/BinEnc.h"
-#include "lc/libcomp_nsdef.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -159,10 +158,43 @@ public:
   // 情報設定用の関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief LcPatMgr の情報をコピーする．
+  /// @brief ノード数を設定する．
   void
-  copy(
-    const nsLibcomp::LcPatMgr& src ///< [in] コピー元
+  set_node_num(
+    SizeType nn ///< [in] ノード数
+  );
+
+  /// @brief 入力ノードの情報を設定する．
+  void
+  set_node_info(
+    SizeType pos,     ///< [in] 位置番号
+    SizeType id       ///< [in] 入力番号
+  );
+
+  /// @brief 論理ノードの情報を設定する．
+  void
+  set_node_info(
+    SizeType pos,     ///< [in] 位置番号
+    ClibPatType type, ///< [in] パタンの種類
+    SizeType iid1,    ///< [in] 入力1のID番号
+    bool iinv1,       ///< [in] 入力1の反転属性
+    SizeType iid2,    ///< [in] 入力2のID番号
+    bool iinv2        ///< [in] 入力2の反転属性
+  );
+
+  /// @brief パタン数を設定する．
+  void
+  set_pat_num(
+    SizeType np ///< [in] パタン数
+  );
+
+  /// @brief パタンの情報を設定する．
+  void
+  set_pat_info(
+    SizeType pos,                     ///< [in] パタン番号
+    SizeType rep_id,                  ///< [in] 代表番号
+    SizeType input_num,               ///< [in] 入力数
+    const vector<SizeType>& edge_list ///< [in] 枝情報のリスト
   );
 
   /// @brief データを読み込んでセットする．
@@ -171,24 +203,6 @@ public:
   bool
   restore(
     BinDec& bis ///< [in] 入力元のストリーム
-  );
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief ノード数を設定する．
-  void
-  set_node_num(
-    SizeType nn ///< [in] ノード数
-  );
-
-  /// @brief パタン数を設定する．
-  void
-  set_pat_num(
-    SizeType np ///< [in] パタン数
   );
 
 

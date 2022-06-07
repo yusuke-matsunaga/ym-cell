@@ -65,10 +65,15 @@ public:
   SizeType
   id() const = 0;
 
-  /// @brief 親のセルクラスを返す．
+  /// @brief 代表クラスを返す．
   virtual
   const ClibCellClass&
   rep_class() const = 0;
+
+  /// @brief 代表クラスに対する変換マップを返す．
+  virtual
+  const ClibIOMap&
+  iomap() const = 0;
 
   /// @brief 入力ピン数+入出力ピン数を返す．
   virtual
@@ -96,11 +101,6 @@ public:
   /// @name 機能情報を取得する関数
   /// @{
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 代表クラスに対する変換マップを返す．
-  virtual
-  const ClibIOMap&
-  iomap() const = 0;
 
   /// @brief セルの種類を返す．
   virtual

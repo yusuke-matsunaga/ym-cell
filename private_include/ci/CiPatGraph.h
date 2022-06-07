@@ -5,7 +5,7 @@
 /// @brief CiPatGraph のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibPatGraph.h"
@@ -89,18 +89,9 @@ public:
   /// @brief 初期化する．
   void
   init(
-    SizeType rep_id,    ///< [in] 代表番号
-    SizeType input_num, ///< [in] 入力数
-    SizeType edge_num   ///< [in] 枝数
-  );
-
-  /// @brief 枝のデータを設定する．
-  ///
-  /// この関数を呼ぶ前に init() が呼ばれている必要がある．
-  void
-  set_edge(
-    SizeType pos, ///< [in] 位置番号 ( 0 <= pos < edge_num() )
-    SizeType edge ///< [in] 枝
+    SizeType rep_id,                  ///< [in] 代表番号
+    SizeType input_num,               ///< [in] 入力数
+    const vector<SizeType>& edge_list ///< [in] 枝情報のリスト
   );
 
 

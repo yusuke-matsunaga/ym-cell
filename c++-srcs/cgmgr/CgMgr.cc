@@ -41,23 +41,23 @@ void
 CgMgr::logic_init()
 {
   { // 定数0グループの登録
-    auto sig = CgSignature::make_logic_sig(TvFunc::make_zero(0));
+    auto sig = CgSignature::make_logic_sig(0, Expr::make_zero());
     auto func0 = find_group(sig);
     mLogicGroup[0] = func0->id();
   }
   { // 定数1グループの登録
-    auto sig = CgSignature::make_logic_sig(TvFunc::make_one(0));
+    auto sig = CgSignature::make_logic_sig(0, Expr::make_one());
     auto func1 = find_group(sig);
     mLogicGroup[1] = func1->id();
   }
   { // バッファグループの登録
-    auto sig = CgSignature::make_logic_sig(TvFunc::make_posi_literal(1, VarId{0}));
+    auto sig = CgSignature::make_logic_sig(1, Expr::make_posi_literal(VarId{0}));
     auto func2 = find_group(sig);
     mLogicGroup[2] = func2->id();
   }
   { // インバーターグループの登録
-    auto sig = CgSignature::make_logic_sig(TvFunc::make_nega_literal(1, VarId{0}));
-    auto func3= find_group(sig);
+    auto sig = CgSignature::make_logic_sig(1, Expr::make_nega_literal(VarId{0}));
+    auto func3 = find_group(sig);
     mLogicGroup[3] = func3->id();
   }
 
@@ -66,50 +66,50 @@ CgMgr::logic_init()
 
   // AND2 〜 AND8 のシグネチャを登録しておく．
   for ( auto ni: {2, 3, 4, 5, 6, 7, 8} ) {
-    auto and_func = TvFunc::make_posi_literal(ni, VarId{0});
+    auto and_expr = Expr::make_posi_literal(VarId{0});
     for ( SizeType i = 1; i < ni; ++ i ) {
-      and_func &= TvFunc::make_posi_literal(ni, VarId{i});
+      and_expr &= Expr::make_posi_literal(VarId{i});
     }
-    auto sig = CgSignature::make_logic_sig(and_func);
+    auto sig = CgSignature::make_logic_sig(ni, and_expr);
     find_group(sig);
   }
 
   // XOR2 〜 XOR4 のシグネチャを登録しておく．
   for ( auto ni: {2, 3, 4} ) {
-    auto xor_func = TvFunc::make_posi_literal(ni, VarId{0});
+    auto xor_expr = Expr::make_posi_literal(VarId{0});
     for ( SizeType i = 1; i < ni; ++ i ) {
-      xor_func ^= TvFunc::make_posi_literal(ni, VarId{i});
+      xor_expr ^= Expr::make_posi_literal(VarId{i});
     }
-    auto sig = CgSignature::make_logic_sig(xor_func);
+    auto sig = CgSignature::make_logic_sig(ni, xor_expr);
     find_group(sig);
   }
 
   // MUX2 のシグネチャを登録しておく．
   {
     SizeType ni = 3;
-    auto lit0 = TvFunc::make_posi_literal(ni, VarId(0));
-    auto lit1 = TvFunc::make_posi_literal(ni, VarId(1));
-    auto lit2 = TvFunc::make_posi_literal(ni, VarId(2));
+    auto lit0 = Expr::make_posi_literal(VarId(0));
+    auto lit1 = Expr::make_posi_literal(VarId(1));
+    auto lit2 = Expr::make_posi_literal(VarId(2));
     auto mux2_func = lit0 & ~lit2 | lit1 & lit2;
-    auto sig = CgSignature::make_logic_sig(mux2_func);
+    auto sig = CgSignature::make_logic_sig(ni, mux2_func);
     find_group(sig);
   }
 
   // MUX4 のシグネチャを登録しておく．
   {
     SizeType ni = 6;
-    auto lit0 = TvFunc::make_posi_literal(ni, VarId(0));
-    auto lit1 = TvFunc::make_posi_literal(ni, VarId(1));
-    auto lit2 = TvFunc::make_posi_literal(ni, VarId(2));
-    auto lit3 = TvFunc::make_posi_literal(ni, VarId(3));
-    auto lit4 = TvFunc::make_posi_literal(ni, VarId(4));
-    auto lit5 = TvFunc::make_posi_literal(ni, VarId(5));
+    auto lit0 = Expr::make_posi_literal(VarId(0));
+    auto lit1 = Expr::make_posi_literal(VarId(1));
+    auto lit2 = Expr::make_posi_literal(VarId(2));
+    auto lit3 = Expr::make_posi_literal(VarId(3));
+    auto lit4 = Expr::make_posi_literal(VarId(4));
+    auto lit5 = Expr::make_posi_literal(VarId(5));
     auto mux4_func =
       lit0 & ~lit4 & ~lit5 |
       lit1 &  lit4 & ~lit5 |
       lit2 & ~lit4 &  lit5 |
       lit3 &  lit4 &  lit5;
-    auto sig = CgSignature::make_logic_sig(mux4_func);
+    auto sig = CgSignature::make_logic_sig(ni, mux4_func);
     find_group(sig);
   }
 }
@@ -219,28 +219,18 @@ CgMgr::latch_init()
 // @brief FFクラス番号を得る．
 SizeType
 CgMgr::ff_class(
-  bool master_slave,
-  bool has_clear,
-  bool has_preset,
-  ClibCPV cpv1,
-  ClibCPV cpv2
+  const CiSeqInfo& info
 ) const
 {
-  CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
   return mSimpleFFClass[info.encode_val()];
 }
 
 // @brief ラッチクラス番号を得る．
 SizeType
 CgMgr::latch_class(
-  bool master_slave,
-  bool has_clear,
-  bool has_preset,
-  ClibCPV cpv1,
-  ClibCPV cpv2
+  const CiSeqInfo& info
 ) const
 {
-  CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
   return mSimpleLatchClass[info.encode_val()];
 }
 
@@ -293,6 +283,13 @@ CgMgr::_find_class(
     // 新しいクラスを作って登録する．
     auto rep_class = mLibrary.add_cell_class(idmap_list);
     mClassDict.emplace(sig_str, rep_class);
+
+    // 単純な論理セルの場合，パタングラフを登録する．
+    auto expr = sig.expr();
+    if ( expr.is_valid() && expr.input_size() >= 2 ) {
+      mPatMgr.reg_pat(expr, rep_class->id());
+    }
+
     return rep_class;
   }
   else {
@@ -300,6 +297,41 @@ CgMgr::_find_class(
     auto rep_class = mClassDict.at(sig_str);
     return rep_class;
   }
+}
+
+// @brief 全ノード数を返す．
+SizeType
+CgMgr::pat_node_num() const
+{
+  return mPatMgr.node_num();
+}
+
+// @brief ノードを返す．
+const PatNode&
+CgMgr::pat_node(
+  SizeType pos
+) const
+{
+  return mPatMgr.node(pos);
+}
+
+// @brief パタン数を返す．
+SizeType
+CgMgr::pat_num() const
+{
+  return mPatMgr.pat_num();
+}
+
+// @brief パタンのノードリストを返す．
+void
+CgMgr::get_pat_info(
+  SizeType id,
+  SizeType& rep_id,
+  SizeType& input_num,
+  vector<SizeType>& node_list
+) const
+{
+  return mPatMgr.get_pat_info(id, rep_id, input_num, node_list);
 }
 
 END_NAMESPACE_YM_CLIB

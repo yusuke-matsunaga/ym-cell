@@ -8,15 +8,9 @@
 
 #include "ci/CiPatMgr.h"
 #include "ci/CiPatGraph.h"
-#if 0
-#include "lc/LcPatMgr.h"
-#include "lc/LcPatNode.h"
-#include "lc/LcPatHandle.h"
-#endif
+
 
 BEGIN_NAMESPACE_YM_CLIB
-
-using namespace nsLibcomp;
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiPatMgr
@@ -59,57 +53,6 @@ CiPatMgr::pat(
   return mPatArray[id];
 }
 
-#if 0
-// @brief LcPatMgr の情報をコピーする．
-void
-CiPatMgr::copy(
-  const LcPatMgr& src
-)
-{
-  // ノードの情報をコピーする．
-  auto nn = src.node_num();
-  set_node_num(nn);
-  for ( auto i = 0; i < nn; ++ i ) {
-    auto& src_node = src.node(i);
-    SizeType v = 0U;
-    if ( src_node.is_input() ) {
-      v = static_cast<SizeType>(ClibPatType::Input) | (src_node.input_id() << 2);
-    }
-    else if ( src_node.is_and() ) {
-      v = static_cast<SizeType>(ClibPatType::And);
-    }
-    else if ( src_node.is_xor() ) {
-      v = static_cast<SizeType>(ClibPatType::Xor);
-    }
-    mNodeTypeArray[i] = v;
-    for ( auto j: { 0, 1 } ) {
-      SizeType v = 0U;
-      if ( !src_node.is_input() ) {
-	v = src_node.fanin(j).id() * 2;
-	if ( src_node.fanin_inv(j) ) {
-	  v |= 1U;
-	}
-      }
-      mEdgeArray[i * 2 + j] = v;
-    }
-  }
-
-  // パタンの情報をコピーする．
-  auto np = src.pat_num();
-  set_pat_num(np);
-  for ( auto i = 0; i < np; ++ i ) {
-    vector<SizeType> node_list;
-    auto v = src.pat_node_list(i, node_list);
-    auto ne = node_list.size();
-    CiPatGraph& pg = mPatArray[i];
-    pg.init(src.rep_id(i), v, ne);
-    for ( auto j = 0; j < ne; ++ j ) {
-      pg.set_edge(j, node_list[j]);
-    }
-  }
-}
-#endif
-
 // @brief ノード数を設定する．
 void
 CiPatMgr::set_node_num(
@@ -124,6 +67,42 @@ CiPatMgr::set_node_num(
   }
 }
 
+// @brief 入力ノードの情報を設定する．
+void
+CiPatMgr::set_node_info(
+  SizeType pos,
+  SizeType id
+)
+{
+  SizeType v = static_cast<SizeType>(ClibPatType::Input) | (id << 2);
+  mNodeTypeArray[pos] = v;
+}
+
+// @brief 論理ノードの情報を設定する．
+void
+CiPatMgr::set_node_info(
+  SizeType pos,
+  ClibPatType type,
+  SizeType iid1,
+  bool iinv1,
+  SizeType iid2,
+  bool iinv2
+)
+{
+  SizeType v = static_cast<SizeType>(type);
+  mNodeTypeArray[pos] = v;
+  SizeType fanin_id[] = {iid1, iid2};
+  bool fanin_inv[] = {iinv1, iinv2};
+  for ( auto i: { 0, 1 } ) {
+    SizeType v = 0U;
+    v = fanin_id[i] * 2;
+    if ( fanin_inv[i] ) {
+      v |= 1U;
+    }
+    mEdgeArray[pos * 2 + i] = v;
+  }
+}
+
 // @brief パタン数を設定する．
 void
 CiPatMgr::set_pat_num(
@@ -132,6 +111,19 @@ CiPatMgr::set_pat_num(
 {
   mPatArray.clear();
   mPatArray.resize(np);
+}
+
+// @brief パタンの情報を設定する．
+void
+CiPatMgr::set_pat_info(
+  SizeType pos,
+  SizeType rep_id,
+  SizeType input_num,
+  const vector<SizeType>& edge_list
+)
+{
+  CiPatGraph& pg = mPatArray[pos];
+  pg.init(rep_id, input_num, edge_list);
 }
 
 END_NAMESPACE_YM_CLIB

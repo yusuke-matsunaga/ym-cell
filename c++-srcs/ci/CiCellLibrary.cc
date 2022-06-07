@@ -22,6 +22,8 @@
 #include "ci/CiSeqInfo.h"
 #include "cgmgr/CgMgr.h"
 #include "cgmgr/CgSignature.h"
+#include "cgmgr/PatMgr.h"
+#include "cgmgr/PatNode.h"
 
 #include "CiFFCell.h"
 #include "CiLatchCell.h"
@@ -30,8 +32,6 @@
 
 
 BEGIN_NAMESPACE_YM_CLIB
-
-using namespace nsLibcomp;
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellLibrary
@@ -483,7 +483,6 @@ const ClibBusType&
 CiCellLibrary::error_bus_type()
 {
   static CiBusType bus_type(ShString(), -1, -1);
-
   return bus_type;
 }
 
@@ -492,7 +491,6 @@ const ClibLutTemplate&
 CiCellLibrary::error_lut_template()
 {
   static CiLutTemplateBad lut_template;
-
   return lut_template;
 }
 
@@ -501,7 +499,6 @@ const ClibLut&
 CiCellLibrary::error_lut()
 {
   static CiLutBad lut;
-
   return lut;
 }
 
@@ -510,7 +507,6 @@ const ClibCell&
 CiCellLibrary::error_cell()
 {
   static CiCell cell;
-
   return cell;
 }
 
@@ -519,7 +515,6 @@ const ClibCellGroup&
 CiCellLibrary::error_cell_group()
 {
   static CiCellGroup cell_group;
-
   return cell_group;
 }
 
@@ -528,7 +523,6 @@ const ClibCellClass&
 CiCellLibrary::error_cell_class()
 {
   static CiCellClass cell_class;
-
   return cell_class;
 }
 
@@ -537,7 +531,6 @@ const ClibPatGraph&
 CiCellLibrary::error_patgraph()
 {
   static CiPatGraph pat_graph;
-
   return pat_graph;
 }
 
@@ -546,42 +539,57 @@ void
 CiCellLibrary::compile()
 {
   // シグネチャを用いてセルグループとセルクラスの設定を行う．
-  CgMgr mgr{*this};
+  CgMgr cgmgr{*this};
   for ( auto& cell: mCellList ) {
     // シグネチャを作る．
     auto sig = cell->make_signature();
     // sig に対応するグループを求める．
-    auto group = mgr.find_group(sig);
+    auto group = cgmgr.find_group(sig);
     // セルを登録する．
     group->add_cell(cell.get());
   }
 
-  // CgMgr の情報をコピーする．
+  // セルクラスの情報をコピーする．
   for ( SizeType index: { 0, 1, 2, 3 } ) {
-    mLogicGroup[index] = mRefGroupList[mgr.logic_group(index)];
+    mLogicGroup[index] = mRefGroupList[cgmgr.logic_group(index)];
   }
   for ( SizeType index = 0; index < CiSeqInfo::max_index(); ++ index ) {
     auto info = CiSeqInfo::decode_index(index);
-    auto master_slave = info.has_slave_clock();
-    auto has_clear = info.has_clear();
-    auto has_preset = info.has_preset();
-    auto cpv1 = info.clear_preset_var1();
-    auto cpv2 = info.clear_preset_var2();
-    SizeType id = mgr.ff_class(master_slave, has_clear, has_preset, cpv1, cpv2);
+    SizeType id = cgmgr.ff_class(info);
     mSimpleFFClass[index] = mRefClassList[id];
   }
   for ( SizeType index = 0; index < CiSeqInfo::max_index(); ++ index ) {
     auto info = CiSeqInfo::decode_index(index);
-    auto master_slave = info.has_slave_clock();
-    auto has_clear = info.has_clear();
-    auto has_preset = info.has_preset();
-    auto cpv1 = info.clear_preset_var1();
-    auto cpv2 = info.clear_preset_var2();
-    SizeType id = mgr.latch_class(master_slave, has_clear, has_preset, cpv1, cpv2);
+    SizeType id = cgmgr.latch_class(info);
     mSimpleLatchClass[info.encode_val()] = mRefClassList[id];
   }
 
-  //mPatMgr.copy(libcomp.pat_mgr());
+  // パタングラフの情報をコピーする．
+  SizeType nn = cgmgr.pat_node_num();
+  mPatMgr.set_node_num(nn);
+  for ( SizeType i = 0; i < nn; ++ i ) {
+    const auto& node = cgmgr.pat_node(i);
+    if ( node.is_input() ) {
+      mPatMgr.set_node_info(i, node.input_id());
+    }
+    else {
+      auto type = node.is_and() ? ClibPatType::And : ClibPatType::Xor;
+      SizeType iid1 = node.fanin(0).id();
+      bool iinv1 = node.fanin_inv(0);
+      SizeType iid2 = node.fanin(1).id();
+      bool iinv2 = node.fanin_inv(1);
+      mPatMgr.set_node_info(i, type, iid1, iinv1, iid2, iinv2);
+    }
+  }
+  SizeType np = cgmgr.pat_num();
+  mPatMgr.set_pat_num(np);
+  for ( SizeType i = 0; i < np; ++ i ) {
+    SizeType rep_id;
+    SizeType input_num;
+    vector<SizeType> edge_list;
+    cgmgr.get_pat_info(i, rep_id, input_num, edge_list);
+    mPatMgr.set_pat_info(i, rep_id, input_num, edge_list);
+  }
 }
 
 // @brief ピンを登録する．

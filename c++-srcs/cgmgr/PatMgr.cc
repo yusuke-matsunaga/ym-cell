@@ -3,7 +3,7 @@
 /// @brief PatMgr の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "cgmgr/PatMgr.h"
@@ -620,24 +620,26 @@ dfs(
 END_NONAMESPACE
 
 // @brief パタンのノードリストを返す．
-// @param[in] id パタン番号 ( 0 <= id < pat_num() )
-// @param[out] node_list パタンを DFS 順でたどった時のノード番号のリスト
-// @return このパタンの入力数を返す．
-SizeType
-PatMgr::pat_node_list(
+void
+PatMgr::get_pat_info(
   SizeType id,
-  vector<SizeType>& node_list) const
+  SizeType& rep_id,
+  SizeType& input_num,
+  vector<SizeType>& node_list
+) const
 {
+  ASSERT_COND( id >= 0 && id < pat_num() );
+
   PatHandle root = pat_root(id);
   node_list.clear();
   node_list.reserve(node_num());
   vector<bool> vmark(node_num(), false);
   auto max_input = dfs(root.node(), vmark, node_list);
-  auto v = max_input << 1;
+  input_num = max_input << 1;
   if ( root.inv() ) {
-    v |= 1U;
+    input_num |= 1U;
   }
-  return v;
+  rep_id = mPatList[id].second;
 }
 
 

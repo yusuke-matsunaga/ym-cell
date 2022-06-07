@@ -10,6 +10,7 @@
 
 #include "ym/clib.h"
 #include "ym/ClibIOMap.h"
+#include "ym/Expr.h"
 #include "ym/NpnMap.h"
 #include "CgPolInfo.h"
 
@@ -29,12 +30,13 @@ public:
 
   /// @brief コンストラクタ
   CgSigRep(
-    const string& prefix,               ///< [in] シグネチャの接頭辞
-    SizeType ni,                        ///< [in] 入力数
-    SizeType no,                        ///< [in] 出力数
-    SizeType nb,                        ///< [in] 入出力数
-    const vector<TvFunc>& func_list,    ///< [in] 対象の論理関数のリスト
-    const vector<TvFunc>& tristate_list ///< [in] tristate条件のリスト
+    const string& prefix,                ///< [in] シグネチャの接頭辞
+    SizeType ni,                         ///< [in] 入力数
+    SizeType no,                         ///< [in] 出力数
+    SizeType nb,                         ///< [in] 入出力数
+    const vector<TvFunc>& func_list,     ///< [in] 対象の論理関数のリスト
+    const vector<TvFunc>& tristate_list, ///< [in] tristate条件のリスト
+    const Expr& expr = Expr::make_invalid() ///< [in] 単一の論理式
   );
 
   /// @brief デストラクタ
@@ -49,6 +51,10 @@ public:
   /// @brief シグネチャ文字列を返す．
   string
   str() const;
+
+  /// @brief 単一の論理式を持つ場合，その式を返す．
+  Expr
+  expr() const;
 
   /// @brief 変換を施した後のシグネチャを返す．
   unique_ptr<const CgSigRep>
@@ -135,6 +141,9 @@ private:
 
   // tristate 条件のリスト
   vector<TvFunc> mTristateList;
+
+  // 単純な論理セルの場合の論理式
+  Expr mExpr;
 
 };
 

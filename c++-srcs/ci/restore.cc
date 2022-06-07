@@ -722,9 +722,6 @@ CiPatMgr::restore(
     bis >> mNodeTypeArray[i]
 	>> mEdgeArray[i * 2]
 	>> mEdgeArray[i * 2 + 1];
-    if ( node_type(i) == ClibPatType::Input ) {
-      ASSERT_COND( input_id(i) == i );
-    }
   }
 
   // パタングラフの情報を読み込む．

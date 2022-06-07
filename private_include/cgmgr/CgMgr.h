@@ -10,6 +10,7 @@
 
 #include "ym/clib.h"
 #include "ym/Expr.h"
+#include "cgmgr/PatMgr.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -18,6 +19,7 @@ class CiCellLibrary;
 class CiCellClass;
 class CiCellGroup;
 class CiCell;
+class CiSeqInfo;
 class CgSignature;
 
 //////////////////////////////////////////////////////////////////////
@@ -60,21 +62,13 @@ public:
   /// @brief FFクラス番号を得る．
   SizeType
   ff_class(
-    bool master_slave, ///< [in] master/slave 型の時 true
-    bool has_clear,    ///< [in] clear 端子を持つ時 true
-    bool has_preset,   ///< [in] preset 端子を持つ時 true
-    ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
-    ClibCPV cpv2       ///< [in] clear_preset_var2 の値
+    const CiSeqInfo& info ///< [in] clock/clear/preset 等の情報
   ) const;
 
   /// @brief ラッチクラス番号を得る．
   SizeType
   latch_class(
-    bool master_slave, ///< [in] master/slave 型の時 true
-    bool has_clear,    ///< [in] clear 端子を持つ時 true
-    bool has_preset,   ///< [in] preset 端子を持つ時 true
-    ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
-    ClibCPV cpv2       ///< [in] clear_preset_var2 の値
+    const CiSeqInfo& info ///< [in] clock/clear/preset 等の情報
   ) const;
 
   /// @brief シグネチャに一致するグループを探す．
@@ -85,6 +79,29 @@ public:
   find_group(
     const CgSignature& sig ///< [in] シグネチャ
   );
+
+  /// @brief 全ノード数を返す．
+  SizeType
+  pat_node_num() const;
+
+  /// @brief ノードを返す．
+  const PatNode&
+  pat_node(
+    SizeType pos ///< [in] ノード番号 ( 0 <= pos < node_num() )
+  ) const;
+
+  /// @brief パタン数を返す．
+  SizeType
+  pat_num() const;
+
+  /// @brief パタンのノードリストを返す．
+  void
+  get_pat_info(
+    SizeType id,                ///< [in] パタン番号 ( 0 <= id < pat_num() )
+    SizeType& rep_id,           ///< [out] パタンの表す代表関数番号
+    SizeType& input_num,        ///< [out] パタンの入力数
+    vector<SizeType>& node_list ///< [out] パタンを DFS 順でたどった時のノード番号のリスト
+  ) const;
 
 
 private:
@@ -133,6 +150,9 @@ private:
 
   // 単純なラッチクラス番号のリスト
   vector<SizeType> mSimpleLatchClass;
+
+  // 一時的にパタンを保持するクラス
+  PatMgr mPatMgr;
 
 };
 

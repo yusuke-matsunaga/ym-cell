@@ -57,11 +57,9 @@ public:
   static
   CgSignature
   make_logic_sig(
-    const TvFunc& func ///< [in] 対象の論理関数
-  )
-  {
-    return make_logic_sig(func, TvFunc::make_invalid());
-  }
+    SizeType ni,        ///< [in] 入力数
+    const Expr& expr    ///< [in] 対象の論理式
+  );
 
   /// @brief 1出力tristate関数用のシグネチャを作る．
   static
@@ -138,6 +136,10 @@ public:
   /// @brief シグネチャ文字列を返す．
   string
   str() const;
+
+  /// @brief 単一の論理式を持つ時その式を返す．
+  Expr
+  expr() const;
 
   /// @brief 変換を施したシグネチャを返す．
   CgSignature

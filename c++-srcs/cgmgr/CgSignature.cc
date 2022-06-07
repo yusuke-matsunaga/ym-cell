@@ -8,6 +8,7 @@
 
 #include "cgmgr/CgSignature.h"
 #include "ym/ClibIOMap.h"
+#include "ym/Expr.h"
 #include "CgSigRep.h"
 
 
@@ -56,6 +57,21 @@ CgSignature::~CgSignature()
 {
   // CgSigRep の定義をヘッダファイルから隠すために
   // ヘッダでは定義できない．
+}
+
+// @brief 1出力論理関数用のシグネチャを作る．
+CgSignature
+CgSignature::make_logic_sig(
+  SizeType ni,
+  const Expr& expr
+)
+{
+  string prefix{"C"};
+  SizeType no = 1;
+  SizeType nb = 0;
+  auto func = expr.make_tv(ni);
+  auto rep = new CgSigRep{prefix, ni, no, nb, {func}, {TvFunc::make_invalid()}, expr};
+  return CgSignature{unique_ptr<CgSigRep>{rep}};
 }
 
 // @brief 一般的な組み合わせ回路用のシグネチャを作る．
@@ -177,6 +193,18 @@ CgSignature::str() const
   }
   else {
     return string{};
+  }
+}
+
+// @brief 単一の論理式を持つ時その式を返す．
+Expr
+CgSignature::expr() const
+{
+  if ( is_valid() ) {
+    return mRepPtr->expr();
+  }
+  else {
+    return Expr::make_invalid();
   }
 }
 

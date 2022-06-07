@@ -5,7 +5,7 @@
 /// @brief PatMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
@@ -14,6 +14,9 @@
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class PatNode;
+class PatHandle;
 
 //////////////////////////////////////////////////////////////////////
 /// @class PatMgr PatMgr.h "PatMgr.h"
@@ -80,18 +83,19 @@ public:
     SizeType id ///< [in] パタン番号 ( 0 <= id < pat_num() )
   ) const;
 
-  /// @brief パタンのノードリストを返す．
-  /// @return このパタンの入力数を返す．
-  SizeType
-  pat_node_list(
-    SizeType id,                ///< [in] パタン番号 ( 0 <= id < pat_num() )
-    vector<SizeType>& node_list ///< [in] パタンを DFS 順でたどった時のノード番号のリスト
-  ) const;
-
-  /// @brief パタンの属している代表関数番号を返す．
+  /// @brief パタンの代表関数番号を返す．
   SizeType
   rep_id(
-    SizeType id ///< [in] パタン番号 ( 0 <= id < pat_num() )
+    SizeType id
+  ) const;
+
+  /// @brief パタンのノードリストを返す．
+  void
+  get_pat_info(
+    SizeType id,                ///< [in] パタン番号 ( 0 <= id < pat_num() )
+    SizeType& rep_id,           ///< [out] パタンの表す代表関数番号
+    SizeType& input_num,        ///< [out] パタンの入力数
+    vector<SizeType>& node_list ///< [out] パタンを DFS 順でたどった時のノード番号のリスト
   ) const;
 
 
@@ -136,10 +140,10 @@ private:
   /// @brief テンプレートにしたがって2分木を作る．
   PatHandle
   make_bintree(
-    const Expr& expr,                 ///< [in] 論理式 (演算の種類を表すのに用いる)
-    const vector<LcPatHandle>& input, ///< [in] 入力の配列
-    int pat[],                        ///< [in] 2分木の形を表す配列
-    SizeType& pos                     ///< [inout] pat[] 中の位置を示す変数
+    const Expr& expr,               ///< [in] 論理式 (演算の種類を表すのに用いる)
+    const vector<PatHandle>& input, ///< [in] 入力の配列
+    int pat[],                      ///< [in] 2分木の形を表す配列
+    SizeType& pos                   ///< [inout] pat[] 中の位置を示す変数
   );
 
   /// @brief 入力ノードを作る．
