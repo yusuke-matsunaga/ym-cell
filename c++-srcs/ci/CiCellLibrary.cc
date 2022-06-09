@@ -549,6 +549,9 @@ CiCellLibrary::compile()
     group->add_cell(cell.get());
   }
 
+  // パタングラフを作る．
+  cgmgr.gen_pat();
+
   // セルクラスの情報をコピーする．
   for ( SizeType index: { 0, 1, 2, 3 } ) {
     mLogicGroup[index] = mRefGroupList[cgmgr.logic_group(index)];

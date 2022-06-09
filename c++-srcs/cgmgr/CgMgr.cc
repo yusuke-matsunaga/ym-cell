@@ -284,18 +284,43 @@ CgMgr::_find_class(
     auto rep_class = mLibrary.add_cell_class(idmap_list);
     mClassDict.emplace(sig_str, rep_class);
 
-    // 単純な論理セルの場合，パタングラフを登録する．
-    auto expr = sig.expr();
-    if ( expr.is_valid() && expr.input_size() >= 2 ) {
-      mPatMgr.reg_pat(expr, rep_class->id());
+    while ( mClassExprListArray.size() <= rep_class->id() ) {
+      mClassExprListArray.push_back(ClassExprList{});
     }
-
-    return rep_class;
+    mClassExprListArray[rep_class->id()].mClass = rep_class;
   }
-  else {
-    // 登録済みのクラスを返す．
-    auto rep_class = mClassDict.at(sig_str);
-    return rep_class;
+
+  // 登録済みのクラスを返す．
+  auto rep_class = mClassDict.at(sig_str);
+
+  // 単純な論理セルの場合，パタングラフを登録する．
+  auto expr = sig.expr();
+  if ( expr.is_valid() && expr.input_size() >= 2 ) {
+    mClassExprListArray[rep_class->id()].mExprList.push_back(expr);
+  }
+
+  return rep_class;
+}
+
+// @breif パタングラフを生成する．
+void
+CgMgr::gen_pat()
+{
+  for ( const auto& p: mClassExprListArray ) {
+    auto rep_class = p.mClass;
+    bool has_cell = false;
+    for ( const auto& group: rep_class->cell_group_list() ) {
+      if ( group.cell_num() > 0 ) {
+	has_cell = true;
+	break;
+      }
+    }
+    if ( has_cell ) {
+      const auto& expr_list = p.mExprList;
+      for ( const auto& expr: expr_list ) {
+	mPatMgr.reg_pat(expr, rep_class->id());
+      }
+    }
   }
 }
 

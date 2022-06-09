@@ -80,6 +80,10 @@ public:
     const CgSignature& sig ///< [in] シグネチャ
   );
 
+  /// @breif パタングラフを生成する．
+  void
+  gen_pat();
+
   /// @brief 全ノード数を返す．
   SizeType
   pat_node_num() const;
@@ -141,6 +145,16 @@ private:
 
   // シグネチャ文字列をキーにしてセルクラスを保持する辞書
   unordered_map<string, CiCellClass*> mClassDict;
+
+  // セルクラスと関係する論理式のリスト
+  struct ClassExprList
+  {
+    CiCellClass* mClass;
+    vector<Expr> mExprList;
+  };
+
+  // セルクラス番号をキーにして ClassExprList を保持する配列．
+  vector<ClassExprList> mClassExprListArray;
 
   // 論理セルグループ番号のリスト
   SizeType mLogicGroup[4];

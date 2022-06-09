@@ -3,7 +3,7 @@
 /// @brief ClibCellLibraryTest の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2017 Yusuke Matsunaga
+/// Copyright (C) 2017, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "gtest/gtest.h"
@@ -21,6 +21,24 @@ TEST(ClibCellLibraryTest, read_mislib)
     auto library = ClibCellLibrary::read_mislib(filename);
 
     EXPECT_EQ( 29, library.cell_num() );
+
+    ostringstream s;
+    display_library(s, library);
+
+    string exp_filename = string(DATA_DIR) + string("/lib2.genlib.display");
+    ifstream is1{exp_filename};
+    ASSERT_TRUE( is1 );
+
+    istringstream is2{s.str()};
+    string buff1;
+    string buff2;
+    while ( getline(is1, buff1) ) {
+      getline(is2, buff2);
+      EXPECT_TRUE( is2 );
+      EXPECT_EQ( buff1, buff2 );
+    }
+    getline(is2, buff2);
+    EXPECT_FALSE( is2 );
   }
   catch ( AssertError obj ) {
     cout << obj << endl;
@@ -37,6 +55,24 @@ TEST(ClibCellLibraryTest, read_liberty)
     auto library = ClibCellLibrary::read_liberty(filename);
 
     EXPECT_EQ( 310, library.cell_num() );
+
+    ostringstream s;
+    display_library(s, library);
+
+    string exp_filename = string(DATA_DIR) + string("/HIT018.typ.snp.display");
+    ifstream is1{exp_filename};
+    ASSERT_TRUE( is1 );
+
+    istringstream is2{s.str()};
+    string buff1;
+    string buff2;
+    while ( getline(is1, buff1) ) {
+      getline(is2, buff2);
+      EXPECT_TRUE( is2 );
+      EXPECT_EQ( buff1, buff2 );
+    }
+    getline(is2, buff2);
+    EXPECT_FALSE( is2 );
   }
   catch ( AssertError obj ) {
     cout << obj << endl;
