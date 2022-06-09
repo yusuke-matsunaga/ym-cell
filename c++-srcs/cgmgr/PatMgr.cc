@@ -134,12 +134,6 @@ PatMgr::reg_pat(
   }
 }
 
-// @brief セルを持たないクラスのパタンを削除する．
-void
-PatMgr::reduce()
-{
-}
-
 // @brief 2つの論理式が同形かどうか調べる．
 bool
 PatMgr::check_equivalent(

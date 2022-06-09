@@ -51,10 +51,6 @@ public:
     SizeType rep_id   ///< [in] このパタンが属する代表関数番号
   );
 
-  /// @brief セルを持たないクラスのパタンを削除する．
-  void
-  reduce();
-
   /// @brief 内容を出力する．(デバッグ用)
   void
   display(
