@@ -688,8 +688,10 @@ CgSigRep::w0_refine(
 	done = true;
 	break;
       }
-      if ( og.mFuncW > func_w0 ||
-	   og.mFuncW == func_w0 && og.mTristateW > tristate_w0 ) {
+      if ( og.mFuncW > func_w0 ) {
+	break;
+      }
+      else if ( og.mFuncW == func_w0 && og.mTristateW > tristate_w0 ) {
 	break;
       }
     }
@@ -810,8 +812,10 @@ CgSigRep::w1sum_refine(
 	done = true;
 	break;
       }
-      if ( ig.mFuncW > func_w1sum ||
-	   ig.mFuncW == func_w1sum && ig.mTristateW > tristate_w1sum ) {
+      if ( ig.mFuncW > func_w1sum ) {
+	break;
+      }
+      else if ( ig.mFuncW == func_w1sum && ig.mTristateW > tristate_w1sum ) {
 	break;
       }
     }
