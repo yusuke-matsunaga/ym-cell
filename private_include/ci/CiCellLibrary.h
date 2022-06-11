@@ -987,7 +987,7 @@ private:
   string mPullingResistanceUnit;
 
   // 容量単位
-  double mCapacitiveLoadUnit;
+  double mCapacitiveLoadUnit{0.0};
 
   // 容量単位の文字列
   string mCapacitiveLoadUnitStr;
