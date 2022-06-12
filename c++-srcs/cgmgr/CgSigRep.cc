@@ -33,7 +33,7 @@ struct CgSymInfo
 BEGIN_NONAMESPACE
 
 // デバッグフラグ
-bool debug = false;
+bool debug = true;
 
 // @brief 4ビットの整数値を16進数表記の文字に変換する
 inline

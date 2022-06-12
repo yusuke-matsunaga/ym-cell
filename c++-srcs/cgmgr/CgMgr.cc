@@ -162,6 +162,17 @@ CgMgr::ff_init()
 					clock, clock2, next,
 					clear, preset,
 					cpv1, cpv2);
+    cout << "make_ff_sig(";
+    if ( info.has_slave_clock() ) {
+      cout << " has_slave_clock";
+    }
+    if ( info.has_clear() ) {
+      cout << " has_clear";
+    }
+    if ( info.has_preset() ) {
+      cout << " has_preset";
+    }
+    cout << ")" << endl;
     auto g = find_group(sig);
     mSimpleFFClass[index] = g->rep_class().id();
   }
@@ -256,6 +267,12 @@ CgMgr::find_group(
     auto group = mLibrary.add_cell_group(rep_class, rep_map);
     // そのクラスに新しいグループを追加する．
     rep_class->add_group(group);
+
+    cout << endl
+	 << "rep_class: " << rep_class->id() << endl
+	 << "rep_sig: " << rep_sig.str() << endl
+	 << "rep_map: " << rep_map << endl
+	 << "sig    : " << sig_str << endl;
 
     // 登録する．
     mGroupDict.emplace(sig_str, group);
