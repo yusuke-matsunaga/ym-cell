@@ -24,6 +24,8 @@
 #include "ym/TvFunc.h"
 #include "ym/MsgMgr.h"
 
+#include <libgen.h>
+
 
 BEGIN_NAMESPACE_YM_MISLIB
 
@@ -286,7 +288,8 @@ CiCellLibrary::read_mislib(
   auto lib = new CiCellLibrary{};
 
   // ファイル名をライブラリ名として登録する．
-  lib->set_name(filename);
+  auto name = filename.substr(filename.find_last_of('/') + 1);
+  lib->set_name(name);
 
   // セルを作る．
   for ( auto& gate: gate_list ) {

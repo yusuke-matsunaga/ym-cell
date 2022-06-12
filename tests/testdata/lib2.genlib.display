@@ -1,4 +1,4 @@
-Library(/home/yusuke/var/srcs/magus/ym-cell/tests/testdata/lib2.genlib)
+Library(lib2.genlib)
   technology: cmos
   delay_model: generic_cmos
   bus_naming_style: 
