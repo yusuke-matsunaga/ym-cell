@@ -770,27 +770,12 @@ CgSigRep::w1sum_refine(
   vector<CgPolInfo>& ipol_list
 ) const
 {
-  {
-    cout << "w1sum_refine" << endl;
-    for ( auto pol: opol_list ) {
-      cout << " ";
-      switch ( pol ) {
-      case CgPolInfo::Positive: cout << "P"; break;
-      case CgPolInfo::Negative: cout << "N"; break;
-      case CgPolInfo::Both:     cout << "-"; break;
-      }
-    }
-    cout << endl;
-  }
   SizeType no2 = mFuncList.size();
   for ( SizeType i: src_list ) {
     int func_w1sum = 0;
     int tristate_w1sum = 0;
     for ( SizeType j = 0; j < no2; ++ j ) {
       int w1 = mFuncList[j].walsh_1(VarId{i});
-      {
-	cout << mFuncList[j] << ": " << w1 << endl;
-      }
       if ( opol_list[j] == CgPolInfo::Negative ) {
 	w1 = - w1;
       }
@@ -800,7 +785,6 @@ CgSigRep::w1sum_refine(
     }
     if ( ipol_list[i] == CgPolInfo::Both ) {
       // 極性が未確定なら正規化する．
-      cout << "func_w1sum: " << func_w1sum << endl;
       if ( func_w1sum < 0 ) {
 	func_w1sum = - func_w1sum;
 	ipol_list[i] = CgPolInfo::Negative;

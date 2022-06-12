@@ -162,17 +162,34 @@ CgMgr::ff_init()
 					clock, clock2, next,
 					clear, preset,
 					cpv1, cpv2);
-    cout << "make_ff_sig(";
-    if ( info.has_slave_clock() ) {
-      cout << " has_slave_clock";
+    {
+      cout << endl
+	   << "make_ff_sig(";
+      if ( info.has_slave_clock() ) {
+	cout << " has_slave_clock";
+      }
+      if ( info.has_clear() ) {
+	cout << " has_clear";
+      }
+      if ( info.has_preset() ) {
+	cout << " has_preset";
+      }
+      cout << ")" << endl;
+      for ( const auto& f: func_list ) {
+	cout << f << endl;
+      }
+      cout << "clock: " << clock << endl;
+      if ( info.has_slave_clock() ) {
+	cout << "clock2: " << clock2 << endl;
+      }
+      cout << "next: " << next << endl;
+      if ( info.has_clear() ) {
+	cout << "clear: " << clear << endl;
+      }
+      if ( info.has_preset() ) {
+	cout << "preset: " << preset << endl;
+      }
     }
-    if ( info.has_clear() ) {
-      cout << " has_clear";
-    }
-    if ( info.has_preset() ) {
-      cout << " has_preset";
-    }
-    cout << ")" << endl;
     auto g = find_group(sig);
     mSimpleFFClass[index] = g->rep_class().id();
   }
