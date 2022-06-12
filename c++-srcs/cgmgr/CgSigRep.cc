@@ -33,7 +33,7 @@ struct CgSymInfo
 BEGIN_NONAMESPACE
 
 // デバッグフラグ
-bool debug = true;
+bool debug = false;
 
 // @brief 4ビットの整数値を16進数表記の文字に変換する
 inline
@@ -456,7 +456,10 @@ CgSigRep::gen_cannonical_map() const
     opos_list[i] = i;
   }
   vector<CgPinGroup> og_list;
-  vector<CgPolInfo> opol_list(mNo, CgPolInfo::Both);
+  vector<CgPolInfo> opol_list(no2, CgPolInfo::Both);
+  for ( SizeType i = mNo; i < no2; ++ i ) {
+    opol_list[i] = CgPolInfo::Positive;
+  }
   w0_refine(opos_list, og_list, opol_list);
 
   // Walsh の0次の係数を用いて入出力の極性を正規化する．
