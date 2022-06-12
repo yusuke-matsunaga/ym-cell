@@ -50930,7 +50930,7 @@ Class#25
   Idmap List = 
 Input[ 0 1 2 3], Output[ 0]
 
-  Group: Map = Input[ 3 0 1~ 2], Output[ 0]
+  Group: Map = Input[ 3 0 2 1], Output[ 0]
          Cell = 
 
 Class#26
