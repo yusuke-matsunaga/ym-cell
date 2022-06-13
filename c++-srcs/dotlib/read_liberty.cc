@@ -48,8 +48,8 @@ bool debug = true;
 // @brief AstValue から CiCellLibrary を生成する．
 bool
 set_library(
-  const AstValue& library_val, ///< [in] ライブラリの情報を持つパース木
-  CiCellLibrary* library       ///< [in] 設定する対象のライブラリ
+  const AstValue& library_val,
+  unique_ptr<CiCellLibrary>& library
 )
 {
   { // ライブラリ名の設定
@@ -288,7 +288,6 @@ END_NAMESPACE_YM_DOTLIB
 BEGIN_NAMESPACE_YM_CLIB
 
 // @brief liberty 形式のファイルを読み込んでライブラリに設定する．
-// @return 読み込みが成功したら true を返す．
 CiCellLibrary*
 CiCellLibrary::read_liberty(
   const string& filename
@@ -307,31 +306,23 @@ CiCellLibrary::read_liberty(
 		    "DOTLIB_PARSER",
 		    buf.str());
     // ファイルが開けなかった．
-    return nullptr;
+    throw ClibError{buf.str()};
   }
 
   // 読み込んでASTを作る．
   Parser parser{fin, {filename}, false};
   auto ast_library = parser.parse();
-  if ( !ast_library->is_valid() ) {
-    // 読み込みに失敗した．
-    return nullptr;
-  }
 
   ASSERT_COND( ast_library->kwd() == "library" );
 
-  auto lib = new CiCellLibrary{};
+  unique_ptr<CiCellLibrary> lib{new CiCellLibrary{}};
 
   // AstValue の内容をライブラリに設定する．
-  if ( set_library(ast_library->value(), lib) ) {
-    // 成功した．
-    return lib;
-  }
-  else {
-    // 失敗した．
-    delete lib;
-    return nullptr;
-  }
+  set_library(ast_library->value(), lib);
+
+  auto ans = lib.get();
+  lib.release();
+  return ans;
 }
 
 END_NAMESPACE_YM_CLIB

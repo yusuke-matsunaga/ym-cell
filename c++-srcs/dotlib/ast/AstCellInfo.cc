@@ -202,7 +202,7 @@ AstCellInfo::set(
 // @brief セルを作る．
 bool
 AstCellInfo::add_cell(
-  CiCellLibrary* library
+  unique_ptr<CiCellLibrary>& library
 )
 {
   CiCell* cell{nullptr};
@@ -237,7 +237,7 @@ AstCellInfo::add_cell(
 // @brief FF セルを作る．
 CiCell*
 AstCellInfo::add_ff_cell(
-  CiCellLibrary* library
+  unique_ptr<CiCellLibrary>& library
 ) const
 {
   auto var1 = mFFInfo.var1();
@@ -269,7 +269,7 @@ AstCellInfo::add_ff_cell(
 // @brief ラッチセルを作る．
 CiCell*
 AstCellInfo::add_latch_cell(
-  CiCellLibrary* library
+  unique_ptr<CiCellLibrary>& library
 ) const
 {
   auto var1 = mLatchInfo.var1();
@@ -307,7 +307,7 @@ AstCellInfo::add_latch_cell(
 // @brief FSM セルを作る．
 CiCell*
 AstCellInfo::add_fsm_cell(
-  CiCellLibrary* library
+  unique_ptr<CiCellLibrary>& library
 ) const
 {
 #warning "TODO: 未完"

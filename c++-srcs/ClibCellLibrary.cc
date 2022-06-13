@@ -72,9 +72,7 @@ ClibCellLibrary::read_mislib(
 {
   ClibCellLibrary lib;
   auto new_impl = CiCellLibrary::read_mislib(filename);
-  if ( new_impl != nullptr ) {
-    lib.change_impl(new_impl);
-  }
+  lib.change_impl(new_impl);
   return lib;
 }
 
@@ -86,9 +84,7 @@ ClibCellLibrary::read_liberty(
 {
   ClibCellLibrary lib;
   auto new_impl = CiCellLibrary::read_liberty(filename);
-  if ( new_impl != nullptr ) {
-    lib.change_impl(new_impl);
-  }
+  lib.change_impl(new_impl);
   return lib;
 }
 

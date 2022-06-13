@@ -17,9 +17,7 @@ TEST(MislibParserTest, parser)
 {
   MislibParser parser;
   auto filename = string(DATA_DIR) + "/lib2.genlib";
-  vector<MislibGatePtr> gate_list;
-  bool stat = parser.parse(filename, gate_list);
-  ASSERT_TRUE( stat );
+  vector<MislibGatePtr> gate_list = parser.parse(filename);
   EXPECT_EQ( 29, gate_list.size() );
 }
 

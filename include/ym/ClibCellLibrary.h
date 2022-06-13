@@ -66,7 +66,7 @@ public:
   /// @brief mislib 形式のファイルを読み込む．
   /// @return 生成したライブラリを返す．
   ///
-  /// 読み込みが失敗した場合は空のライブラリを返す．
+  /// 読み込みが失敗した場合は ClibError 例外を送出する．
   static
   ClibCellLibrary
   read_mislib(
@@ -76,7 +76,7 @@ public:
   /// @brief liberty 形式のファイルを読み込む．
   /// @return 生成したライブラリを返す．
   ///
-  /// 読み込みが失敗した場合は空のライブラリを返す．
+  /// 読み込みが失敗した場合は ClibError 例外を送出する．
   static
   ClibCellLibrary
   read_liberty(

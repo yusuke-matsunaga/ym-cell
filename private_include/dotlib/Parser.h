@@ -5,7 +5,7 @@
 /// @brief Parser のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
@@ -45,7 +45,7 @@ public:
   /// @brief パーズする
   /// @return 読み込んだ library のASTを返す．
   ///
-  /// エラーが起きたら nullptr を返す．
+  /// エラーが起きたら ClibError を送出する．
   AstAttrPtr
   parse();
 
@@ -58,7 +58,7 @@ public:
   /// @brief Simple Attribute を読み込む．
   /// @retrun 結果の AstAttr を返す．
   ///
-  /// エラーが起こったら nullptr を返す．
+  /// エラーが起きたら ClibError を送出する．
   AstAttrPtr
   parse_simple_attribute(
     const string& kwd,          ///< [in] 属性名
@@ -69,7 +69,7 @@ public:
   /// @brief Complex Attribute を読み込む．
   /// @retrun 結果の AstAttr を返す．
   ///
-  /// エラーが起こったら nullptr を返す．
+  /// エラーが起きたら ClibError を送出する．
   AstAttrPtr
   parse_complex_attribute(
     const string& kwd,          ///< [in] 属性名
@@ -80,7 +80,7 @@ public:
   /// @brief Group Statement を読み込む．
   /// @retrun 結果の AstAttr を返す．
   ///
-  /// エラーが起こったら nullptr を返す．
+  /// エラーが起きたら ClibError を送出する．
   AstAttrPtr
   parse_group_statement(
     const string& kwd,            ///< [in] 属性名
@@ -102,7 +102,7 @@ private:
   /// @brief Complex Attribute, GroupStatement のヘッダを読み込む．
   /// @retrun 結果の AstAttr を返す．
   ///
-  /// エラーが起こったら nullptr を返す．
+  /// エラーが起きたら ClibError を送出する．
   AstValuePtr
   parse_header(
     HeaderHandler& handler ///< [in] ハンドラ(HeaderHandler の継承クラス)
@@ -113,7 +113,7 @@ private:
   /// 具体的には ';' '/n' を確認する．
   /// ただし， mAllowNoSemi が true の場合には
   /// ';' を無視する．
-  bool
+  void
   read_tail();
 
 

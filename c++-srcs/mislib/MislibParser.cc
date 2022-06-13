@@ -71,15 +71,14 @@ END_NONAMESPACE
 //////////////////////////////////////////////////////////////////////
 
 // @brief ゲートを読み込む．
-bool
+vector<MislibGatePtr>
 MislibParser::parse(
-  const string& filename,
-  vector<MislibGatePtr>& gate_list
+  const string& filename
 )
 {
   ifstream fin{filename};
   if ( !fin ) {
-    // エラー
+    // ファイルが読み込めなかった．
     ostringstream buf;
     buf << filename << " : No such file.";
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -87,13 +86,13 @@ MislibParser::parse(
 		    MsgType::Failure,
 		    "MISLIB_PARSER",
 		    buf.str());
-    return false;
+    throw ClibError{buf.str()};
   }
 
   MislibScanner scanner(fin, {filename});
   mScanner = &scanner;
 
-  gate_list.clear();
+  vector<MislibGatePtr> gate_list;
   for ( ; ; ) {
     MislibToken tok = scan();
     auto type = tok.type();
@@ -103,57 +102,31 @@ MislibParser::parse(
 
     if ( type != MislibToken::GATE ) {
       // シンタックスエラー
-      return false;
+      syntax_error(tok.loc(), "'gate' expected.");
     }
 
     FileRegion loc0 = tok.loc();
 
     // 次は STR
     auto name = read_str();
-    if ( name == nullptr ) {
-      // シンタックスエラー
-      return false;
-    }
 
     // 次は NUM
     auto area = read_num();
-    if ( area == nullptr ) {
-      // シンタックスエラー
-      return false;
-    }
 
     // 次は STR
     auto opin = read_str();
-    if ( opin == nullptr ) {
-      // シンタックスエラー
-      return false;
-    }
 
     // 次は EQ
-    if ( !expect_token(MislibToken::EQ) ) {
-      // シンタックスエラー
-      return false;
-    }
+    expect_token(MislibToken::EQ);
 
     // 次は式
     auto expr = read_expr(MislibToken::SEMI);
-    if ( expr == nullptr ) {
-      // エラー
-      return false;
-    }
 
     // 次は SEMI
-    if ( !expect_token(MislibToken::SEMI) ) {
-      // シンタックスエラー
-      return false;
-    }
+    expect_token(MislibToken::SEMI);
 
     // 次はピンリスト
-    vector<MislibPinPtr> ipin_list;
-    if ( !read_pin_list(ipin_list) ) {
-      // エラー
-      return false;
-    }
+    auto ipin_list = read_pin_list();
 
     // 末尾のノードを位置を loc1 に設定する．
     FileRegion loc1;
@@ -167,11 +140,15 @@ MislibParser::parse(
 			 move(ipin_list));
     gate_list.push_back(move(gate));
   }
-  return check_gate_list(gate_list);
+
+  // 内容が正しいかチェックする．
+  check_gate_list(gate_list);
+
+  return gate_list;
 }
 
 // @brief 読み込んだゲートリストが正しいかチェックする．
-bool
+void
 MislibParser::check_gate_list(
   const vector<MislibGatePtr>& gate_list
 )
@@ -261,57 +238,56 @@ MislibParser::check_gate_list(
 
   if ( MsgMgr::error_num() > prev_errnum ) {
     // 異常終了
-    return false;
+    throw ClibError{"wrong mislib file."};
   }
-  return true;
 }
 
 // @brief 文字列を読み込む．
-// @return 文字列を表す AST のノードを返す．
-//
-// エラーが起きたら nullptr を返す．
 MislibStrPtr
 MislibParser::read_str()
 {
   auto tok = scan();
   if ( tok.type() != MislibToken::STR ) {
     // シンタックスエラー
-    return nullptr;
+    syntax_error(tok.loc(), "a string value expected.");
   }
   auto node = new_str(tok.loc());
   return node;
 }
 
 // @brief 数値を読み込む．
-// @return 数値を表す AST のノードを返す．
-//
-// エラーが起きたら nullptr を返す．
 MislibNumPtr
 MislibParser::read_num()
 {
   auto tok = scan();
   if ( tok.type() != MislibToken::NUM ) {
     // シンタックスエラー
-    return nullptr;
+    syntax_error(tok.loc(), "a number expected.");
   }
   auto node = new_num(tok.loc());
   return node;
 }
 
+void
+MislibParser::expect_token(
+  MislibToken::Type exp_type
+)
+{
+  auto tok = scan();
+  if ( tok.type() != exp_type ) {
+    ostringstream buf;
+    buf	<< exp_type << " is expected.";
+    syntax_error(tok.loc(), buf.str());
+  }
+}
+
 // @brief 式を読み込む．
-// @return 式を表す AST のノードを返す．
-//
-// エラーが起きたら nullptr を返す．
 MislibExprPtr
 MislibParser::read_expr(
   MislibToken::Type end_type
 )
 {
   auto expr1 = read_product();
-  if ( expr1 == nullptr ) {
-    return nullptr;
-  }
-
   for ( ; ; ) {
     auto tok = peek();
     auto type = tok.type();
@@ -320,15 +296,11 @@ MislibParser::read_expr(
     }
     if ( type != MislibToken::PLUS && type != MislibToken::HAT ) {
       // シンタックスエラー
-      cout << "Error in read_expr(): PLUS or HAT is expected" << endl;
-      return nullptr;
+      syntax_error(tok.loc(), "'+' or '^' is expected.");
     }
     skip_token();
 
     auto expr2 = read_product();
-    if ( expr2 == nullptr ) {
-      return nullptr;
-    }
     if ( type == MislibToken::PLUS ) {
       expr1 = new_or(FileRegion(expr1->loc(), expr2->loc()),
 		     move(expr1),
@@ -343,23 +315,14 @@ MislibParser::read_expr(
 }
 
 // @brief 積項を読み込む．
-// @return 式を表す AST のノードを返す．
-//
-// エラーが起きたら nullptr を返す．
 MislibExprPtr
 MislibParser::read_product()
 {
   auto expr1 = read_literal();
-  if ( expr1 == nullptr ) {
-    return nullptr;
-  }
   while ( peek().type() == MislibToken::STAR ) {
     skip_token();
 
     auto expr2 = read_literal();
-    if ( expr2 == nullptr ) {
-      return nullptr;
-    }
     expr1 = new_and(FileRegion(expr1->loc(), expr2->loc()),
 		    move(expr1),
 		    move(expr2));
@@ -368,9 +331,6 @@ MislibParser::read_product()
 }
 
 // @brief リテラルを読み込む．
-// @return 式を表す AST のノードを返す．
-//
-// エラーが起きたら nullptr を返す．
 MislibExprPtr
 MislibParser::read_literal()
 {
@@ -401,19 +361,22 @@ MislibParser::read_literal()
     }
 
   default:
-    break;
+    // シンタックスエラー
+    {
+      ostringstream buf;
+      buf << "wrong token(" << tok.type() << ")";
+      syntax_error(tok.loc(), buf.str());
+    }
   }
-  // シンタックスエラー
-  cout << "Error in read_literal(): STR/CONST0/CONST1/LP/NOT is expected" << endl;
+
   return nullptr;
 }
 
 // @brief ピンリスト記述を読み込む．
-bool
-MislibParser::read_pin_list(
-  vector<MislibPinPtr>& pin_list
-)
+vector<MislibPinPtr>
+MislibParser::read_pin_list()
 {
+  vector<MislibPinPtr> pin_list;
   for ( ; ; ) {
     // 最初は PIN
     auto tok = peek();
@@ -439,7 +402,7 @@ MislibParser::read_pin_list(
     }
     else {
       // シンタックスエラー
-      return false;
+      syntax_error(tok.loc(), "string or '*' is expected.");
     }
 
     // 次は NONINV/INV/UNKNOWN のいずれか
@@ -449,17 +412,14 @@ MislibParser::read_pin_list(
     case MislibToken::NONINV:  phase = new_noninv(tok.loc()); break;
     case MislibToken::INV:     phase = new_inv(tok.loc()); break;
     case MislibToken::UNKNOWN: phase = new_unknown(tok.loc()); break;
-    default: return false;
+    default:
+      syntax_error(tok.loc(), "only 'NONINV'/'INV'/'UNKNOWN' is accepted.");
     }
 
     // あとは 6 個の NUM
     MislibNumPtr val[6];
     for ( int i = 0; i < 6; ++ i ) {
       auto node = read_num();
-      if ( node == nullptr ) {
-	// シンタックスエラー
-	return false;
-      }
       val[i] = move(node);
     }
 
@@ -473,17 +433,19 @@ MislibParser::read_pin_list(
 
   // 名前が nullptr (STAR) のピンがある場合はそれが唯一の要素である場合に限る．
   bool has_star = false;
+  FileRegion star_loc;
   for ( auto& pin: pin_list ) {
     if ( pin->name() == nullptr ) {
       has_star = true;
+      star_loc = pin->loc();
     }
   }
   if ( has_star && pin_list.size() > 1 ) {
     // シンタックスエラー
-    return false;
+    syntax_error(star_loc, "pin name and '*' are mutually exclusive.");
   }
 
-  return true;;
+  return pin_list;
 }
 
 // @brief 次のトークンを盗み見る．
@@ -795,16 +757,18 @@ MislibParser::new_num(
 
 // @brief エラーメッセージを出力する．
 void
-MislibParser::error(
+MislibParser::syntax_error(
   const FileRegion& loc,
-  const char* msg
+  const string& msg
 )
 {
+  auto label = "Syntax error: " + msg;
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  loc,
 		  MsgType::Error,
 		  "MISLIB_PARSER",
-		  msg);
+		  label);
+  throw ClibError{label};
 }
 
 END_NAMESPACE_YM_MISLIB

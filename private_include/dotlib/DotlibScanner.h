@@ -5,7 +5,7 @@
 /// @brief Scanner のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2019, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"

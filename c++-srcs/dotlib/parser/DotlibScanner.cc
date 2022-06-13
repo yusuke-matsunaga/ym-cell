@@ -27,7 +27,7 @@ DotlibScanner::read_attr()
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
 		    "attribute keyword is expected");
-    return Token{};
+    throw ClibError{"Syntax error"};
   }
 
   return token;
@@ -70,44 +70,43 @@ DotlibScanner::read_and_verify(
 )
 {
   auto token{read_token()};
-  if ( token.type() == token_type ) {
-    return token;
+  if ( token.type() != token_type ) {
+    // エラーメッセージを作る．
+    const char* type_str = nullptr;
+    switch ( token_type ) {
+    case TokenType::COLON:      type_str = "':'"; break;
+    case TokenType::SEMI:       type_str = "';'"; break;
+    case TokenType::COMMA:      type_str = "','"; break;
+    case TokenType::PLUS:       type_str = "'+'"; break;
+    case TokenType::MINUS:      type_str = "'-'"; break;
+    case TokenType::MULT:       type_str = "'*'"; break;
+    case TokenType::DIV:        type_str = "'/'"; break;
+    case TokenType::NOT:        type_str = "'!'"; break;
+    case TokenType::AND:        type_str = "'&'"; break;
+    case TokenType::OR:         type_str = "'|'"; break;
+    case TokenType::XOR:        type_str = "'^'"; break;
+    case TokenType::PRIME:      type_str = "'";   break;
+    case TokenType::LP:         type_str = "'('"; break;
+    case TokenType::RP:         type_str = "')'"; break;
+    case TokenType::LCB:        type_str = "'{'"; break;
+    case TokenType::RCB:        type_str = "'}'"; break;
+    case TokenType::SYMBOL:     type_str = "STR"; break;
+    case TokenType::BOOL_0:     type_str = "BOOL_0"; break;
+    case TokenType::BOOL_1:     type_str = "BOOL_1"; break;
+    case TokenType::EXPRESSION: type_str = "EXPRESSION"; break;
+    case TokenType::NL:         type_str = "new-line"; break;
+    default:                    ASSERT_NOT_REACHED;
+    }
+    ostringstream buf;
+    buf << "syntax error. " << type_str << " is expected.";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    token.loc(),
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    buf.str());
+    throw ClibError{"Syntax error"};
   }
-
-  // エラーメッセージを作る．
-  const char* type_str = nullptr;
-  switch ( token_type ) {
-  case TokenType::COLON:      type_str = "':'"; break;
-  case TokenType::SEMI:       type_str = "';'"; break;
-  case TokenType::COMMA:      type_str = "','"; break;
-  case TokenType::PLUS:       type_str = "'+'"; break;
-  case TokenType::MINUS:      type_str = "'-'"; break;
-  case TokenType::MULT:       type_str = "'*'"; break;
-  case TokenType::DIV:        type_str = "'/'"; break;
-  case TokenType::NOT:        type_str = "'!'"; break;
-  case TokenType::AND:        type_str = "'&'"; break;
-  case TokenType::OR:         type_str = "'|'"; break;
-  case TokenType::XOR:        type_str = "'^'"; break;
-  case TokenType::PRIME:      type_str = "'";   break;
-  case TokenType::LP:         type_str = "'('"; break;
-  case TokenType::RP:         type_str = "')'"; break;
-  case TokenType::LCB:        type_str = "'{'"; break;
-  case TokenType::RCB:        type_str = "'}'"; break;
-  case TokenType::SYMBOL:     type_str = "STR"; break;
-  case TokenType::BOOL_0:     type_str = "BOOL_0"; break;
-  case TokenType::BOOL_1:     type_str = "BOOL_1"; break;
-  case TokenType::EXPRESSION: type_str = "EXPRESSION"; break;
-  case TokenType::NL:         type_str = "new-line"; break;
-  default:                    ASSERT_NOT_REACHED;
-  }
-  ostringstream buf;
-  buf << "syntax error. " << type_str << " is expected.";
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  token.loc(),
-		  MsgType::Error,
-		  "DOTLIB_PARSER",
-		  buf.str());
-  return Token{};
+  return token;
 }
 
 // @brief 一文字読み込む．
@@ -231,7 +230,7 @@ DotlibScanner::_scan()
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
 		    buf.str());
-    return TokenType::ERROR;
+    throw ClibError{"Syntax error"};
   }
   if ( c == EOF ) {
     ostringstream buf;
@@ -241,7 +240,7 @@ DotlibScanner::_scan()
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
 		    buf.str());
-    return TokenType::ERROR;
+    throw ClibError{"Syntax error"};
   }
   if ( c == '\\' ) {
     c = get();
@@ -308,6 +307,7 @@ DotlibScanner::_scan()
 		    "DOTLIB_SCANNER",
 		    buf.str());
   }
+  throw ClibError{"Syntax error"};
   return TokenType::ERROR;
 }
 

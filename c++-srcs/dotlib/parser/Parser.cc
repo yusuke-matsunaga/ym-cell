@@ -3,7 +3,7 @@
 /// @brief Parser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/Parser.h"
@@ -113,9 +113,6 @@ Parser::~Parser()
 }
 
 // @brief パーズする
-// @return 読み込んだ AST を返す．
-//
-// エラーが起きたら nullptr を返す．
 AstAttrPtr
 Parser::parse()
 {
@@ -128,18 +125,13 @@ Parser::parse()
 		    "DOTLIB_PARSER",
 		    "'library' keyword is expected "
 		    "on the top of the structure");
-    return {};
+    throw ClibError{"Syntax error"};
   }
 
   // 本体を読み込む．
   auto library = parse_group_statement(token.value(), token.loc(), "library", sStrHeader);
-  if ( library == nullptr ) {
-    return {};
-  }
 
-  if ( !read_tail() ) {
-    return {};
-  }
+  read_tail();
 
   // これより後の内容は無視される．
   for ( ; ; ) {
@@ -170,22 +162,12 @@ Parser::parse_simple_attribute(
 {
   // 属性名の直後は必ず ':' でなければならない．
   auto token = mScanner.read_and_verify(TokenType::COLON);
-  if ( token.type() != TokenType::COLON ) {
-    return {};
-  }
 
   // その後の値を読み込む．
   auto value = handler(mScanner);
-  if ( value == nullptr ) {
-    // エラー
-    return {};
-  }
 
   // 末尾の ';' を確認
-  if ( !read_tail() ) {
-    // エラー
-    return {};
-  }
+  read_tail();
 
   // 値を返す．
   return AstAttrPtr{new AstAttr(kwd, kwd_loc, std::move(value))};
@@ -200,13 +182,8 @@ Parser::parse_complex_attribute(
 )
 {
   auto value = parse_header(handler);
-  if ( value == nullptr ) {
-    return {};
-  }
 
-  if ( !read_tail() ) {
-    return {};
-  }
+  read_tail();
 
   return AstAttrPtr{new AstAttr(kwd, kwd_loc, std::move(value))};
 }
@@ -225,15 +202,11 @@ Parser::parse_group_statement(
 {
   // ヘッダをパースする．
   auto header_value = parse_header(header_handler);
-  if ( header_value == nullptr ) {
-    // エラー
-    return {};
-  }
 
   // グループ本体の始まり
   Token lcb_token = mScanner.read_and_verify(TokenType::LCB);
   if ( lcb_token.type() != TokenType::LCB ) {
-    return {};
+    throw ClibError{"Syntax error"};
   }
 
   vector<AstAttrPtr> child_list;
@@ -251,9 +224,6 @@ Parser::parse_group_statement(
 
       // グループ本体の終わり．
       Token token = mScanner.read_and_verify(TokenType::NL);
-      if ( token.type() != TokenType::NL ) {
-	return {};
-      }
 
       // 値を作る．
       FileRegion loc{lcb_token.loc(), rcb_loc};
@@ -263,16 +233,10 @@ Parser::parse_group_statement(
 
     // 子供の要素を読み込む．
     auto child_attr = mScanner.read_attr();
-    if ( child_attr.value() == "" ) {
-      return {};
-    }
     string key = string(group_name) + ":" + string(child_attr.value());
     if ( sHandlerDict.count(key) > 0 ) {
       auto handler{sHandlerDict.at(key)};
       auto child = handler(*this, child_attr.value(), child_attr.loc());
-      if ( child == nullptr ) {
-	return {};
-      }
       child_list.push_back(std::move(child));
     }
     else {
@@ -291,10 +255,6 @@ Parser::parse_header(
 {
   // まず '(' があるか確認する．
   Token lp_token = mScanner.read_and_verify(TokenType::LP);
-  if ( lp_token.type() != TokenType::LP ) {
-    // エラー
-    return {};
-  }
 
   // complex attribute の始まり
   handler.begin_header(lp_token.loc());
@@ -308,21 +268,15 @@ Parser::parse_header(
     }
     if ( count > 0 ) {
       // 要素と要素の間には ',' が必要
-      Token comma = mScanner.read_and_verify(TokenType::COMMA);
-      if ( comma.type() != TokenType::COMMA ) {
-	// エラー
-	return {};
-      }
+      mScanner.read_and_verify(TokenType::COMMA);
     }
     // ハンドラを用いて値を読み込む．
-    if ( !handler.read_header_value(mScanner, token.loc(), count) ) {
-      return {};
-    }
+    handler.read_header_value(mScanner, token.loc(), count);
   }
 }
 
 // @brief 行末まで読み込む．
-bool
+void
 Parser::read_tail()
 {
   // 通常は ';' '\n' を適正なパタンとみなす．
@@ -339,19 +293,16 @@ Parser::read_tail()
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. Semicolon is expected.");
-    return false;
+    throw ClibError{"Syntax error"};
   }
-  if ( token.type() == TokenType::NL || token.type() == TokenType::END ) {
-    return true;
+  if ( token.type() != TokenType::NL && token.type() != TokenType::END ) {
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    token.loc(),
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    "Syntax error. New-line is expected.");
+    throw ClibError{"Syntax error"};
   }
-
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  token.loc(),
-		  MsgType::Error,
-		  "DOTLIB_PARSER",
-		  "Syntax error. New-line is expected.");
-
-  return false;
 }
 
 // @brief デバッグモードの時 true を返す．
@@ -381,6 +332,7 @@ syntax_error(
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  buf.str());
+  throw ClibError{"Syntax error"};
 }
 
 // @brief 同じ属性が重複して定義されている時のエラーを出力する．

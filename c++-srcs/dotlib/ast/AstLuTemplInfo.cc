@@ -99,7 +99,7 @@ AstLuTemplInfo::set(
 // @brief テンプレートを作る．
 void
 AstLuTemplInfo::add_lu_template(
-  CiCellLibrary* library
+  unique_ptr<CiCellLibrary>& library
 )
 {
   switch ( mDimension ) {

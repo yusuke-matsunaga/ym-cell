@@ -61,8 +61,6 @@ public:
 
   /// @brief mislib 形式のファイルを読み込む．
   /// @return 生成したライブラリを返す．
-  ///
-  /// エラーが起こったら nullptr を返す．
   static
   CiCellLibrary*
   read_mislib(
@@ -71,8 +69,6 @@ public:
 
   /// @brief liberty 形式のファイルを読み込む．
   /// @return 生成したライブラリを返す．
-  ///
-  /// エラーが起こったら nullptr を返す．
   static
   CiCellLibrary*
   read_liberty(

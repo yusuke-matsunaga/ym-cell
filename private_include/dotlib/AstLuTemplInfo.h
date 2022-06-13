@@ -45,7 +45,7 @@ public:
   /// @brief テンプレートを作る．
   void
   add_lu_template(
-    CiCellLibrary* library
+    unique_ptr<CiCellLibrary>& library
   );
 
 

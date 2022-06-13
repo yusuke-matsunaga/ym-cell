@@ -39,11 +39,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief パーズする．
-  /// @return 読み込みが成功したら true を返す．
-  bool
+  /// @return ゲートの AST のリストを返す．
+  ///
+  /// エラーが起きたら ClibError 例外を創出する．
+  vector<MislibGatePtr>
   parse(
-    const string& filename,          ///< [in] ファイル名
-    vector<MislibGatePtr>& gate_list ///< [out] ゲートのASTを格納するリスト
+    const string& filename ///< [in] ファイル名
   );
 
 
@@ -53,7 +54,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 読み込んだゲートリストが正しいかチェックする．
-  bool
+  void
   check_gate_list(
     const vector<MislibGatePtr>& gate_list ///< [in] ゲートのASTを格納するリスト
   );
@@ -61,21 +62,21 @@ private:
   /// @brief 文字列を読み込む．
   /// @return 文字列を表す AST のノードを返す．
   ///
-  /// エラーが起きたら nullptr を返す．
+  /// エラーが起きたら ClibError 例外を創出する．
   MislibStrPtr
   read_str();
 
   /// @brief 数値を読み込む．
   /// @return 数値を表す AST のノードを返す．
   ///
-  /// エラーが起きたら nullptr を返す．
+  /// エラーが起きたら ClibError 例外を創出する．
   MislibNumPtr
   read_num();
 
   /// @brief 式を読み込む．
   /// @return 式を表す AST のノードを返す．
   ///
-  /// エラーが起きたら nullptr を返す．
+  /// エラーが起きたら ClibError 例外を創出する．
   MislibExprPtr
   read_expr(
     MislibToken::Type end_type ///< [in] 終端の種類
@@ -84,26 +85,24 @@ private:
   /// @brief 積項を読み込む．
   /// @return 式を表す AST のノードを返す．
   ///
-  /// エラーが起きたら nullptr を返す．
+  /// エラーが起きたら ClibError 例外を創出する．
   MislibExprPtr
   read_product();
 
   /// @brief リテラルを読み込む．
   /// @return 式を表す AST のノードを返す．
   ///
-  /// エラーが起きたら nullptr を返す．
+  /// エラーが起きたら ClibError 例外を創出する．
   MislibExprPtr
   read_literal();
 
   /// @brief ピンリスト記述を読み込む．
-  /// @retval true 読み込みが成功した．
-  /// @retval false 読み込みが失敗した．
+  /// @return ピンリストを返す．
   ///
-  /// ピン名の代わりに * の場合があるので注意
-  bool
-  read_pin_list(
-    vector<MislibPinPtr>& pin_list ///< [in] 入力ピンを表すノードのリストを格納する変数
-  );
+  /// - エラーが起きたら ClibError 例外を創出する．
+  /// - ピン名の代わりに * の場合があるので注意
+  vector<MislibPinPtr>
+  read_pin_list();
 
 
 private:
@@ -126,15 +125,11 @@ private:
 
   /// @brief 次のトークンを予測する．
   ///
-  /// 予測どおりのトークンでなければ false を返す．
-  bool
+  /// 予測どおりのトークンでなければ ClibError 例外を創出する．
+  void
   expect_token(
     MislibToken::Type exp_type ///< [in] 予測されるトークンの種類
-  )
-  {
-    auto tok = scan();
-    return ( tok.type() == exp_type );
-  }
+  );
 
   /// @brief GATE ノードを生成する．
   MislibGatePtr
@@ -243,9 +238,9 @@ private:
 
   /// @brief エラーメッセージを出力する．
   void
-  error(
+  syntax_error(
     const FileRegion& loc,
-    const char* msg
+    const string& msg
   );
 
 

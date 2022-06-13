@@ -29,6 +29,30 @@ END_NAMESPACE_YM_CLIB
 
 BEGIN_NAMESPACE_YM_MISLIB
 
+
+//////////////////////////////////////////////////////////////////////
+/// @class MislibError MislibError.h "MislibError.h"
+/// @brief mislib ファイルの読み込み時のエラーを表す例外クラス
+//////////////////////////////////////////////////////////////////////
+class MislibError :
+  public ClibError
+
+{
+public:
+
+  /// @brief コンストラクタ
+  MislibError(
+    const string& filename, ///< [in] ファイル名
+    int lineno,             ///< [in] 行番号
+    const string& msg       ///< [in] メッセージ
+  );
+
+  /// @brief デストラクタ
+  ~MislibError() = default;
+
+};
+
+
 // クラス名の前方宣言
 class MislibMgr;
 class MislibParser;

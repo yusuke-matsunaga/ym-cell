@@ -3,7 +3,7 @@
 /// @brief read_mislib の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "mislib_nsdef.h"
@@ -167,7 +167,7 @@ set_timing(
 void
 new_gate(
   const MislibGate* gate, // パース木のゲート情報
-  CiCellLibrary* lib
+  unique_ptr<CiCellLibrary>& lib
 )
 {
   auto name = gate->name()->str();
@@ -270,8 +270,7 @@ END_NAMESPACE_YM_MISLIB
 
 BEGIN_NAMESPACE_YM_CLIB
 
-// @brief mislib 形式のファイルを読み込んでライブラリに設定する．
-// @return 読み込みが成功したら true を返す．
+// @brief mislib 形式のファイルを読み込む．
 CiCellLibrary*
 CiCellLibrary::read_mislib(
   const string& filename ///< [in] filename ファイル名
@@ -280,12 +279,9 @@ CiCellLibrary::read_mislib(
   using namespace nsMislib;
 
   MislibParser parser;
-  vector<MislibGatePtr> gate_list;
-  if ( !parser.parse(filename, gate_list) ) {
-    return nullptr;
-  }
+  auto gate_list = parser.parse(filename);
 
-  auto lib = new CiCellLibrary{};
+  unique_ptr<CiCellLibrary> lib{new CiCellLibrary{}};
 
   // ファイル名をライブラリ名として登録する．
   auto name = filename.substr(filename.find_last_of('/') + 1);
@@ -298,7 +294,9 @@ CiCellLibrary::read_mislib(
 
   lib->compile();
 
-  return lib;
+  auto ans = lib.get();
+  lib.release();
+  return ans;
 }
 
 END_NAMESPACE_YM_CLIB
