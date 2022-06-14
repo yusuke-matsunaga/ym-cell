@@ -26,7 +26,7 @@ public:
     : mh2{cout}
   {
     MsgMgr::attach_handler(&mh);
-    MsgMgr::attach_handler(&mh2);
+    //MsgMgr::attach_handler(&mh2);
   }
 
   FileInfo info{"parser_test.lib"};
