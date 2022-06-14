@@ -81,7 +81,6 @@ Clib#0 (HIT18AND2P005) : Combinational Logic
     Fall Capacitance = 0.004028
   Pin#2[ Y ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 0.962646
     Min Fanout       = 0
     Max Capacitance  = 0.096265
@@ -199,7 +198,6 @@ Clib#1 (HIT18AND2P010) : Combinational Logic
     Fall Capacitance = 0.006892
   Pin#2[ Y ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 2.2019
     Min Fanout       = 0
     Max Capacitance  = 0.22019
@@ -317,7 +315,6 @@ Clib#2 (HIT18AND2P015) : Combinational Logic
     Fall Capacitance = 0.009879
   Pin#2[ Y ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 3.46693
     Min Fanout       = 0
     Max Capacitance  = 0.346693
@@ -435,7 +432,6 @@ Clib#3 (HIT18AND2P020) : Combinational Logic
     Fall Capacitance = 0.010945
   Pin#2[ Y ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 4.71379
     Min Fanout       = 0
     Max Capacitance  = 0.471379
@@ -553,7 +549,6 @@ Clib#4 (HIT18AND2P030) : Combinational Logic
     Fall Capacitance = 0.010924
   Pin#2[ Y ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 7.1553
     Min Fanout       = 0
     Max Capacitance  = 0.71553
@@ -671,7 +666,6 @@ Clib#5 (HIT18AND2P040) : Combinational Logic
     Fall Capacitance = 0.010916
   Pin#2[ Y ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 9.67564
     Min Fanout       = 0
     Max Capacitance  = 0.967564
@@ -789,7 +783,6 @@ Clib#6 (HIT18AND2P040S) : Combinational Logic
     Fall Capacitance = 0.018623
   Pin#2[ Y ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 9.67474
     Min Fanout       = 0
     Max Capacitance  = 0.967474
@@ -907,7 +900,6 @@ Clib#7 (HIT18AND2P060) : Combinational Logic
     Fall Capacitance = 0.018614
   Pin#2[ Y ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 14.4866
     Min Fanout       = 0
     Max Capacitance  = 1.44866
@@ -1025,7 +1017,6 @@ Clib#8 (HIT18AND2P080) : Combinational Logic
     Fall Capacitance = 0.018567
   Pin#2[ Y ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 19.3676
     Min Fanout       = 0
     Max Capacitance  = 1.93676
@@ -1143,7 +1134,6 @@ Clib#9 (HIT18AND2P080S) : Combinational Logic
     Fall Capacitance = 0.029741
   Pin#2[ Y ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 19.7767
     Min Fanout       = 0
     Max Capacitance  = 1.97767
@@ -1265,7 +1255,6 @@ Clib#10 (HIT18AND3P005) : Combinational Logic
     Fall Capacitance = 0.003424
   Pin#3[ Y ]: Output# 0
     Logic            = ( A & B & C )
-    Tristate         = ---
     Max Fanout       = 0.955283
     Min Fanout       = 0
     Max Capacitance  = 0.095528
@@ -1436,7 +1425,6 @@ Clib#11 (HIT18AND3P010) : Combinational Logic
     Fall Capacitance = 0.006236
   Pin#3[ Y ]: Output# 0
     Logic            = ( A & B & C )
-    Tristate         = ---
     Max Fanout       = 2.18252
     Min Fanout       = 0
     Max Capacitance  = 0.218252
@@ -1607,7 +1595,6 @@ Clib#12 (HIT18AND3P015) : Combinational Logic
     Fall Capacitance = 0.009313
   Pin#3[ Y ]: Output# 0
     Logic            = ( A & B & C )
-    Tristate         = ---
     Max Fanout       = 3.40611
     Min Fanout       = 0
     Max Capacitance  = 0.340611
@@ -1778,7 +1765,6 @@ Clib#13 (HIT18AND3P020) : Combinational Logic
     Fall Capacitance = 0.01038
   Pin#3[ Y ]: Output# 0
     Logic            = ( A & B & C )
-    Tristate         = ---
     Max Fanout       = 4.65602
     Min Fanout       = 0
     Max Capacitance  = 0.465602
@@ -1949,7 +1935,6 @@ Clib#14 (HIT18AND3P030) : Combinational Logic
     Fall Capacitance = 0.010407
   Pin#3[ Y ]: Output# 0
     Logic            = ( A & B & C )
-    Tristate         = ---
     Max Fanout       = 7.06976
     Min Fanout       = 0
     Max Capacitance  = 0.706976
@@ -2120,7 +2105,6 @@ Clib#15 (HIT18AND3P040) : Combinational Logic
     Fall Capacitance = 0.010446
   Pin#3[ Y ]: Output# 0
     Logic            = ( A & B & C )
-    Tristate         = ---
     Max Fanout       = 9.48236
     Min Fanout       = 0
     Max Capacitance  = 0.948236
@@ -2291,7 +2275,6 @@ Clib#16 (HIT18AND3P040S) : Combinational Logic
     Fall Capacitance = 0.01873
   Pin#3[ Y ]: Output# 0
     Logic            = ( A & B & C )
-    Tristate         = ---
     Max Fanout       = 9.56212
     Min Fanout       = 0
     Max Capacitance  = 0.956212
@@ -2462,7 +2445,6 @@ Clib#17 (HIT18AND3P060) : Combinational Logic
     Fall Capacitance = 0.018743
   Pin#3[ Y ]: Output# 0
     Logic            = ( A & B & C )
-    Tristate         = ---
     Max Fanout       = 14.2455
     Min Fanout       = 0
     Max Capacitance  = 1.42455
@@ -2633,7 +2615,6 @@ Clib#18 (HIT18AND3P080) : Combinational Logic
     Fall Capacitance = 0.018707
   Pin#3[ Y ]: Output# 0
     Logic            = ( A & B & C )
-    Tristate         = ---
     Max Fanout       = 19.0021
     Min Fanout       = 0
     Max Capacitance  = 1.90021
@@ -2804,7 +2785,6 @@ Clib#19 (HIT18AND3P080S) : Combinational Logic
     Fall Capacitance = 0.027036
   Pin#3[ Y ]: Output# 0
     Logic            = ( A & B & C )
-    Tristate         = ---
     Max Fanout       = 19.3956
     Min Fanout       = 0
     Max Capacitance  = 1.93956
@@ -2979,7 +2959,6 @@ Clib#20 (HIT18AND4P005) : Combinational Logic
     Fall Capacitance = 0.003664
   Pin#4[ Y ]: Output# 0
     Logic            = ( A & B & C & D )
-    Tristate         = ---
     Max Fanout       = 0.944836
     Min Fanout       = 0
     Max Capacitance  = 0.094484
@@ -3203,7 +3182,6 @@ Clib#21 (HIT18AND4P010) : Combinational Logic
     Fall Capacitance = 0.006471
   Pin#4[ Y ]: Output# 0
     Logic            = ( A & B & C & D )
-    Tristate         = ---
     Max Fanout       = 2.1669
     Min Fanout       = 0
     Max Capacitance  = 0.21669
@@ -3427,7 +3405,6 @@ Clib#22 (HIT18AND4P015) : Combinational Logic
     Fall Capacitance = 0.009301
   Pin#4[ Y ]: Output# 0
     Logic            = ( A & B & C & D )
-    Tristate         = ---
     Max Fanout       = 3.3727
     Min Fanout       = 0
     Max Capacitance  = 0.33727
@@ -3651,7 +3628,6 @@ Clib#23 (HIT18AND4P020) : Combinational Logic
     Fall Capacitance = 0.010369
   Pin#4[ Y ]: Output# 0
     Logic            = ( A & B & C & D )
-    Tristate         = ---
     Max Fanout       = 4.63146
     Min Fanout       = 0
     Max Capacitance  = 0.463146
@@ -3875,7 +3851,6 @@ Clib#24 (HIT18AND4P030) : Combinational Logic
     Fall Capacitance = 0.010525
   Pin#4[ Y ]: Output# 0
     Logic            = ( A & B & C & D )
-    Tristate         = ---
     Max Fanout       = 6.99088
     Min Fanout       = 0
     Max Capacitance  = 0.699088
@@ -4099,7 +4074,6 @@ Clib#25 (HIT18AND4P040) : Combinational Logic
     Fall Capacitance = 0.01057
   Pin#4[ Y ]: Output# 0
     Logic            = ( A & B & C & D )
-    Tristate         = ---
     Max Fanout       = 9.38406
     Min Fanout       = 0
     Max Capacitance  = 0.938406
@@ -4323,7 +4297,6 @@ Clib#26 (HIT18AND4P040S) : Combinational Logic
     Fall Capacitance = 0.018701
   Pin#4[ Y ]: Output# 0
     Logic            = ( A & B & C & D )
-    Tristate         = ---
     Max Fanout       = 9.10301
     Min Fanout       = 0
     Max Capacitance  = 0.910301
@@ -4547,7 +4520,6 @@ Clib#27 (HIT18AND4P060) : Combinational Logic
     Fall Capacitance = 0.018717
   Pin#4[ Y ]: Output# 0
     Logic            = ( A & B & C & D )
-    Tristate         = ---
     Max Fanout       = 13.7754
     Min Fanout       = 0
     Max Capacitance  = 1.37754
@@ -4771,7 +4743,6 @@ Clib#28 (HIT18AND4P080) : Combinational Logic
     Fall Capacitance = 0.018787
   Pin#4[ Y ]: Output# 0
     Logic            = ( A & B & C & D )
-    Tristate         = ---
     Max Fanout       = 18.2555
     Min Fanout       = 0
     Max Capacitance  = 1.82555
@@ -4995,7 +4966,6 @@ Clib#29 (HIT18AOI211P005) : Combinational Logic
     Fall Capacitance = 0.004792
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 0.250793
     Min Fanout       = 0
     Max Capacitance  = 0.025079
@@ -5219,7 +5189,6 @@ Clib#30 (HIT18AOI211P010) : Combinational Logic
     Fall Capacitance = 0.009766
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 0.596541
     Min Fanout       = 0
     Max Capacitance  = 0.059654
@@ -5443,7 +5412,6 @@ Clib#31 (HIT18AOI211P015) : Combinational Logic
     Fall Capacitance = 0.015484
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 0.872021
     Min Fanout       = 0
     Max Capacitance  = 0.087202
@@ -5667,7 +5635,6 @@ Clib#32 (HIT18AOI211P020) : Combinational Logic
     Fall Capacitance = 0.020655
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 0.954068
     Min Fanout       = 0
     Max Capacitance  = 0.095407
@@ -5891,7 +5858,6 @@ Clib#33 (HIT18AOI211P030) : Combinational Logic
     Fall Capacitance = 0.005719
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 7.14495
     Min Fanout       = 0
     Max Capacitance  = 0.714495
@@ -6115,7 +6081,6 @@ Clib#34 (HIT18AOI211P030S) : Combinational Logic
     Fall Capacitance = 0.031396
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 1.55332
     Min Fanout       = 0
     Max Capacitance  = 0.155332
@@ -6339,7 +6304,6 @@ Clib#35 (HIT18AOI211P040) : Combinational Logic
     Fall Capacitance = 0.00973
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 9.74233
     Min Fanout       = 0
     Max Capacitance  = 0.974233
@@ -6563,7 +6527,6 @@ Clib#36 (HIT18AOI211P040S) : Combinational Logic
     Fall Capacitance = 0.042121
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 1.92839
     Min Fanout       = 0
     Max Capacitance  = 0.192839
@@ -6787,7 +6750,6 @@ Clib#37 (HIT18AOI211P060) : Combinational Logic
     Fall Capacitance = 0.009726
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 14.6474
     Min Fanout       = 0
     Max Capacitance  = 1.46474
@@ -7011,7 +6973,6 @@ Clib#38 (HIT18AOI211P060S) : Combinational Logic
     Fall Capacitance = 0.063768
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 2.83116
     Min Fanout       = 0
     Max Capacitance  = 0.283116
@@ -7235,7 +7196,6 @@ Clib#39 (HIT18AOI211P080) : Combinational Logic
     Fall Capacitance = 0.009732
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 19.6799
     Min Fanout       = 0
     Max Capacitance  = 1.96799
@@ -7459,7 +7419,6 @@ Clib#40 (HIT18AOI211P080S) : Combinational Logic
     Fall Capacitance = 0.085434
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 3.86433
     Min Fanout       = 0
     Max Capacitance  = 0.386433
@@ -7679,7 +7638,6 @@ Clib#41 (HIT18AOI21P005) : Combinational Logic
     Fall Capacitance = 0.004674
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ( ~B | ~C ) )
-    Tristate         = ---
     Max Fanout       = 0.438808
     Min Fanout       = 0
     Max Capacitance  = 0.043881
@@ -7850,7 +7808,6 @@ Clib#42 (HIT18AOI21P010) : Combinational Logic
     Fall Capacitance = 0.009715
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ( ~B | ~C ) )
-    Tristate         = ---
     Max Fanout       = 1.02196
     Min Fanout       = 0
     Max Capacitance  = 0.102196
@@ -8021,7 +7978,6 @@ Clib#43 (HIT18AOI21P015) : Combinational Logic
     Fall Capacitance = 0.015551
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ( ~B | ~C ) )
-    Tristate         = ---
     Max Fanout       = 1.59254
     Min Fanout       = 0
     Max Capacitance  = 0.159254
@@ -8192,7 +8148,6 @@ Clib#44 (HIT18AOI21P020) : Combinational Logic
     Fall Capacitance = 0.020681
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ( ~B | ~C ) )
-    Tristate         = ---
     Max Fanout       = 2.19597
     Min Fanout       = 0
     Max Capacitance  = 0.219597
@@ -8363,7 +8318,6 @@ Clib#45 (HIT18AOI21P030) : Combinational Logic
     Fall Capacitance = 0.005756
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ( ~B | ~C ) )
-    Tristate         = ---
     Max Fanout       = 7.17544
     Min Fanout       = 0
     Max Capacitance  = 0.717544
@@ -8534,7 +8488,6 @@ Clib#46 (HIT18AOI21P030S) : Combinational Logic
     Fall Capacitance = 0.031523
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ( ~B | ~C ) )
-    Tristate         = ---
     Max Fanout       = 3.33896
     Min Fanout       = 0
     Max Capacitance  = 0.333896
@@ -8705,7 +8658,6 @@ Clib#47 (HIT18AOI21P040) : Combinational Logic
     Fall Capacitance = 0.009714
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ( ~B | ~C ) )
-    Tristate         = ---
     Max Fanout       = 9.78109
     Min Fanout       = 0
     Max Capacitance  = 0.978109
@@ -8876,7 +8828,6 @@ Clib#48 (HIT18AOI21P040S) : Combinational Logic
     Fall Capacitance = 0.042248
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ( ~B | ~C ) )
-    Tristate         = ---
     Max Fanout       = 4.58884
     Min Fanout       = 0
     Max Capacitance  = 0.458884
@@ -9047,7 +8998,6 @@ Clib#49 (HIT18AOI21P060) : Combinational Logic
     Fall Capacitance = 0.009715
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ( ~B | ~C ) )
-    Tristate         = ---
     Max Fanout       = 14.6907
     Min Fanout       = 0
     Max Capacitance  = 1.46907
@@ -9218,7 +9168,6 @@ Clib#50 (HIT18AOI21P060S) : Combinational Logic
     Fall Capacitance = 0.06394
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ( ~B | ~C ) )
-    Tristate         = ---
     Max Fanout       = 6.90994
     Min Fanout       = 0
     Max Capacitance  = 0.690994
@@ -9389,7 +9338,6 @@ Clib#51 (HIT18AOI21P080) : Combinational Logic
     Fall Capacitance = 0.009703
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ( ~B | ~C ) )
-    Tristate         = ---
     Max Fanout       = 19.8002
     Min Fanout       = 0
     Max Capacitance  = 1.98002
@@ -9560,7 +9508,6 @@ Clib#52 (HIT18AOI21P080S) : Combinational Logic
     Fall Capacitance = 0.085491
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ( ~B | ~C ) )
-    Tristate         = ---
     Max Fanout       = 9.36064
     Min Fanout       = 0
     Max Capacitance  = 0.936064
@@ -9735,7 +9682,6 @@ Clib#53 (HIT18AOI22P005) : Combinational Logic
     Fall Capacitance = 0.005871
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~A | ~B ) & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 0.656314
     Min Fanout       = 0
     Max Capacitance  = 0.065631
@@ -9959,7 +9905,6 @@ Clib#54 (HIT18AOI22P010) : Combinational Logic
     Fall Capacitance = 0.009712
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~A | ~B ) & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 0.953809
     Min Fanout       = 0
     Max Capacitance  = 0.095381
@@ -10183,7 +10128,6 @@ Clib#55 (HIT18AOI22P015) : Combinational Logic
     Fall Capacitance = 0.015584
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~A | ~B ) & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 1.48172
     Min Fanout       = 0
     Max Capacitance  = 0.148172
@@ -10407,7 +10351,6 @@ Clib#56 (HIT18AOI22P020) : Combinational Logic
     Fall Capacitance = 0.020702
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~A | ~B ) & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 1.73742
     Min Fanout       = 0
     Max Capacitance  = 0.173742
@@ -10631,7 +10574,6 @@ Clib#57 (HIT18AOI22P030) : Combinational Logic
     Fall Capacitance = 0.006285
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~A | ~B ) & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 7.16588
     Min Fanout       = 0
     Max Capacitance  = 0.716588
@@ -10855,7 +10797,6 @@ Clib#58 (HIT18AOI22P030S) : Combinational Logic
     Fall Capacitance = 0.031504
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~A | ~B ) & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 2.81477
     Min Fanout       = 0
     Max Capacitance  = 0.281477
@@ -11079,7 +11020,6 @@ Clib#59 (HIT18AOI22P040) : Combinational Logic
     Fall Capacitance = 0.009797
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~A | ~B ) & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 9.73814
     Min Fanout       = 0
     Max Capacitance  = 0.973814
@@ -11303,7 +11243,6 @@ Clib#60 (HIT18AOI22P040S) : Combinational Logic
     Fall Capacitance = 0.042377
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~A | ~B ) & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 3.64136
     Min Fanout       = 0
     Max Capacitance  = 0.364136
@@ -11527,7 +11466,6 @@ Clib#61 (HIT18AOI22P060) : Combinational Logic
     Fall Capacitance = 0.009809
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~A | ~B ) & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 14.7026
     Min Fanout       = 0
     Max Capacitance  = 1.47026
@@ -11751,7 +11689,6 @@ Clib#62 (HIT18AOI22P060S) : Combinational Logic
     Fall Capacitance = 0.064052
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~A | ~B ) & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 5.46447
     Min Fanout       = 0
     Max Capacitance  = 0.546447
@@ -11975,7 +11912,6 @@ Clib#63 (HIT18AOI22P080) : Combinational Logic
     Fall Capacitance = 0.009811
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~A | ~B ) & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 19.7454
     Min Fanout       = 0
     Max Capacitance  = 1.97454
@@ -12199,7 +12135,6 @@ Clib#64 (HIT18AOI22P080S) : Combinational Logic
     Fall Capacitance = 0.085813
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~A | ~B ) & ( ~C | ~D ) )
-    Tristate         = ---
     Max Fanout       = 7.43865
     Min Fanout       = 0
     Max Capacitance  = 0.743865
@@ -12411,7 +12346,6 @@ Clib#65 (HIT18BUFP005) : Combinational Logic
     Fall Capacitance = 0.00365
   Pin#1[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
     Max Fanout       = 0.974408
     Min Fanout       = 0
     Max Capacitance  = 0.097441
@@ -12476,7 +12410,6 @@ Clib#66 (HIT18BUFP010) : Combinational Logic
     Fall Capacitance = 0.006491
   Pin#1[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
     Max Fanout       = 2.25373
     Min Fanout       = 0
     Max Capacitance  = 0.225373
@@ -12541,7 +12474,6 @@ Clib#67 (HIT18BUFP015) : Combinational Logic
     Fall Capacitance = 0.009575
   Pin#1[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
     Max Fanout       = 3.52469
     Min Fanout       = 0
     Max Capacitance  = 0.352469
@@ -12606,7 +12538,6 @@ Clib#68 (HIT18BUFP020) : Combinational Logic
     Fall Capacitance = 0.010677
   Pin#1[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
     Max Fanout       = 4.8104
     Min Fanout       = 0
     Max Capacitance  = 0.48104
@@ -12671,7 +12602,6 @@ Clib#69 (HIT18BUFP030) : Combinational Logic
     Fall Capacitance = 0.010658
   Pin#1[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
     Max Fanout       = 7.26582
     Min Fanout       = 0
     Max Capacitance  = 0.726582
@@ -12736,7 +12666,6 @@ Clib#70 (HIT18BUFP040) : Combinational Logic
     Fall Capacitance = 0.021055
   Pin#1[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
     Max Fanout       = 10.0029
     Min Fanout       = 0
     Max Capacitance  = 1.00029
@@ -12801,7 +12730,6 @@ Clib#71 (HIT18BUFP050) : Combinational Logic
     Fall Capacitance = 0.021102
   Pin#1[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
     Max Fanout       = 12.419
     Min Fanout       = 0
     Max Capacitance  = 1.2419
@@ -12866,7 +12794,6 @@ Clib#72 (HIT18BUFP060) : Combinational Logic
     Fall Capacitance = 0.021099
   Pin#1[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
     Max Fanout       = 15.0188
     Min Fanout       = 0
     Max Capacitance  = 1.50188
@@ -12931,7 +12858,6 @@ Clib#73 (HIT18BUFP080) : Combinational Logic
     Fall Capacitance = 0.033041
   Pin#1[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
     Max Fanout       = 20.3159
     Min Fanout       = 0
     Max Capacitance  = 2.03159
@@ -12996,7 +12922,6 @@ Clib#74 (HIT18BUFP120) : Combinational Logic
     Fall Capacitance = 0.043547
   Pin#1[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
     Max Fanout       = 30.4258
     Min Fanout       = 0
     Max Capacitance  = 3.04258
@@ -13061,7 +12986,6 @@ Clib#75 (HIT18BUFP160) : Combinational Logic
     Fall Capacitance = 0.043298
   Pin#1[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
     Max Fanout       = 40.4005
     Min Fanout       = 0
     Max Capacitance  = 4.04005
@@ -13132,7 +13056,6 @@ Clib#76 (HIT18DFNP010) : Flip-Flop
     Fall Capacitance = 0.004308
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 2.23855
     Min Fanout       = 0
     Max Capacitance  = 0.223855
@@ -13154,7 +13077,6 @@ Clib#77 (HIT18DFNP020) : Flip-Flop
     Fall Capacitance = 0.004879
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 4.77342
     Min Fanout       = 0
     Max Capacitance  = 0.477342
@@ -13176,7 +13098,6 @@ Clib#78 (HIT18DFNP040) : Flip-Flop
     Fall Capacitance = 0.004884
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 9.76442
     Min Fanout       = 0
     Max Capacitance  = 0.976442
@@ -13198,7 +13119,6 @@ Clib#79 (HIT18DFNP060) : Flip-Flop
     Fall Capacitance = 0.004305
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 14.9818
     Min Fanout       = 0
     Max Capacitance  = 1.49818
@@ -13220,7 +13140,6 @@ Clib#80 (HIT18DFNP080) : Flip-Flop
     Fall Capacitance = 0.004308
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 19.9047
     Min Fanout       = 0
     Max Capacitance  = 1.99047
@@ -13242,7 +13161,6 @@ Clib#81 (HIT18DFNP120) : Flip-Flop
     Fall Capacitance = 0.004878
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 29.8761
     Min Fanout       = 0
     Max Capacitance  = 2.98761
@@ -13264,7 +13182,6 @@ Clib#82 (HIT18DFNP160) : Flip-Flop
     Fall Capacitance = 0.004745
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 40.7613
     Min Fanout       = 0
     Max Capacitance  = 4.07613
@@ -13287,7 +13204,6 @@ Clib#83 (HIT18DFNRP010) : Flip-Flop
     Fall Capacitance = 0.00431
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 2.19691
     Min Fanout       = 0
     Max Capacitance  = 0.219691
@@ -13341,7 +13257,6 @@ Clib#84 (HIT18DFNRP020) : Flip-Flop
     Fall Capacitance = 0.004608
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 4.69795
     Min Fanout       = 0
     Max Capacitance  = 0.469795
@@ -13395,7 +13310,6 @@ Clib#85 (HIT18DFNRP040) : Flip-Flop
     Fall Capacitance = 0.004612
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 9.33461
     Min Fanout       = 0
     Max Capacitance  = 0.933461
@@ -13449,7 +13363,6 @@ Clib#86 (HIT18DFNRP060) : Flip-Flop
     Fall Capacitance = 0.004313
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 14.8526
     Min Fanout       = 0
     Max Capacitance  = 1.48526
@@ -13503,7 +13416,6 @@ Clib#87 (HIT18DFNRP080) : Flip-Flop
     Fall Capacitance = 0.00432
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 20.029
     Min Fanout       = 0
     Max Capacitance  = 2.0029
@@ -13557,7 +13469,6 @@ Clib#88 (HIT18DFNRP120) : Flip-Flop
     Fall Capacitance = 0.004604
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 30.0118
     Min Fanout       = 0
     Max Capacitance  = 3.00118
@@ -13611,7 +13522,6 @@ Clib#89 (HIT18DFNRP160) : Flip-Flop
     Fall Capacitance = 0.004627
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 40.1593
     Min Fanout       = 0
     Max Capacitance  = 4.01593
@@ -13668,7 +13578,6 @@ Clib#90 (HIT18DFNSRP010) : Flip-Flop
     Fall Capacitance = 0.004318
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 2.14923
     Min Fanout       = 0
     Max Capacitance  = 0.214923
@@ -13756,7 +13665,6 @@ Clib#91 (HIT18DFNSRP020) : Flip-Flop
     Fall Capacitance = 0.004617
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 4.56765
     Min Fanout       = 0
     Max Capacitance  = 0.456765
@@ -13844,7 +13752,6 @@ Clib#92 (HIT18DFNSRP040) : Flip-Flop
     Fall Capacitance = 0.004615
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 9.11436
     Min Fanout       = 0
     Max Capacitance  = 0.911436
@@ -13932,7 +13839,6 @@ Clib#93 (HIT18DFNSRP060) : Flip-Flop
     Fall Capacitance = 0.004319
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 14.7462
     Min Fanout       = 0
     Max Capacitance  = 1.47463
@@ -14020,7 +13926,6 @@ Clib#94 (HIT18DFNSRP080) : Flip-Flop
     Fall Capacitance = 0.004323
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 20.115
     Min Fanout       = 0
     Max Capacitance  = 2.0115
@@ -14108,7 +14013,6 @@ Clib#95 (HIT18DFNSRP120) : Flip-Flop
     Fall Capacitance = 0.004609
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 29.9956
     Min Fanout       = 0
     Max Capacitance  = 2.99956
@@ -14196,7 +14100,6 @@ Clib#96 (HIT18DFNSRP160) : Flip-Flop
     Fall Capacitance = 0.004603
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 40.3576
     Min Fanout       = 0
     Max Capacitance  = 4.03576
@@ -14280,7 +14183,6 @@ Clib#97 (HIT18DFP010) : Flip-Flop
     Fall Capacitance = 0.004728
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 2.23742
     Min Fanout       = 0
     Max Capacitance  = 0.223742
@@ -14302,7 +14204,6 @@ Clib#98 (HIT18DFP020) : Flip-Flop
     Fall Capacitance = 0.00536
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 4.75235
     Min Fanout       = 0
     Max Capacitance  = 0.475235
@@ -14324,7 +14225,6 @@ Clib#99 (HIT18DFP040) : Flip-Flop
     Fall Capacitance = 0.005364
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 9.77382
     Min Fanout       = 0
     Max Capacitance  = 0.977382
@@ -14346,7 +14246,6 @@ Clib#100 (HIT18DFP060) : Flip-Flop
     Fall Capacitance = 0.004729
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 14.9711
     Min Fanout       = 0
     Max Capacitance  = 1.49711
@@ -14368,7 +14267,6 @@ Clib#101 (HIT18DFP080) : Flip-Flop
     Fall Capacitance = 0.004727
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 20.0562
     Min Fanout       = 0
     Max Capacitance  = 2.00562
@@ -14390,7 +14288,6 @@ Clib#102 (HIT18DFP120) : Flip-Flop
     Fall Capacitance = 0.005366
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 30.3123
     Min Fanout       = 0
     Max Capacitance  = 3.03123
@@ -14412,7 +14309,6 @@ Clib#103 (HIT18DFP160) : Flip-Flop
     Fall Capacitance = 0.005361
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 40.7731
     Min Fanout       = 0
     Max Capacitance  = 4.07731
@@ -14435,7 +14331,6 @@ Clib#104 (HIT18DFRP010) : Flip-Flop
     Fall Capacitance = 0.004213
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 2.20344
     Min Fanout       = 0
     Max Capacitance  = 0.220344
@@ -14489,7 +14384,6 @@ Clib#105 (HIT18DFRP020) : Flip-Flop
     Fall Capacitance = 0.004678
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 4.64821
     Min Fanout       = 0
     Max Capacitance  = 0.464821
@@ -14543,7 +14437,6 @@ Clib#106 (HIT18DFRP040) : Flip-Flop
     Fall Capacitance = 0.004669
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 9.36549
     Min Fanout       = 0
     Max Capacitance  = 0.936549
@@ -14597,7 +14490,6 @@ Clib#107 (HIT18DFRP060) : Flip-Flop
     Fall Capacitance = 0.004306
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 14.9064
     Min Fanout       = 0
     Max Capacitance  = 1.49064
@@ -14651,7 +14543,6 @@ Clib#108 (HIT18DFRP080) : Flip-Flop
     Fall Capacitance = 0.004316
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 20.2055
     Min Fanout       = 0
     Max Capacitance  = 2.02055
@@ -14705,7 +14596,6 @@ Clib#109 (HIT18DFRP120) : Flip-Flop
     Fall Capacitance = 0.004609
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 30.2898
     Min Fanout       = 0
     Max Capacitance  = 3.02898
@@ -14759,7 +14649,6 @@ Clib#110 (HIT18DFRP160) : Flip-Flop
     Fall Capacitance = 0.00461
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 40.7277
     Min Fanout       = 0
     Max Capacitance  = 4.07277
@@ -14816,7 +14705,6 @@ Clib#111 (HIT18DFSRP010) : Flip-Flop
     Fall Capacitance = 0.004316
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 2.14781
     Min Fanout       = 0
     Max Capacitance  = 0.214781
@@ -14904,7 +14792,6 @@ Clib#112 (HIT18DFSRP020) : Flip-Flop
     Fall Capacitance = 0.004606
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 4.56646
     Min Fanout       = 0
     Max Capacitance  = 0.456646
@@ -14992,7 +14879,6 @@ Clib#113 (HIT18DFSRP040) : Flip-Flop
     Fall Capacitance = 0.004595
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 9.10594
     Min Fanout       = 0
     Max Capacitance  = 0.910594
@@ -15080,7 +14966,6 @@ Clib#114 (HIT18DFSRP060) : Flip-Flop
     Fall Capacitance = 0.004311
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 14.8234
     Min Fanout       = 0
     Max Capacitance  = 1.48234
@@ -15168,7 +15053,6 @@ Clib#115 (HIT18DFSRP080) : Flip-Flop
     Fall Capacitance = 0.004313
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 19.9641
     Min Fanout       = 0
     Max Capacitance  = 1.99641
@@ -15256,7 +15140,6 @@ Clib#116 (HIT18DFSRP120) : Flip-Flop
     Fall Capacitance = 0.004605
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 29.837
     Min Fanout       = 0
     Max Capacitance  = 2.9837
@@ -15344,7 +15227,6 @@ Clib#117 (HIT18DFSRP160) : Flip-Flop
     Fall Capacitance = 0.004607
   Pin#2[ Q ]: Output# 0
     Logic            = IQ
-    Tristate         = ---
     Max Fanout       = 40.3658
     Min Fanout       = 0
     Max Capacitance  = 4.03658
@@ -15430,7 +15312,6 @@ Clib#118 (HIT18FAD1P010) : Combinational Logic
     Fall Capacitance = 0.015898
   Pin#3[ CO ]: Output# 0
     Logic            = ( ( A & B ) | ( ( A | B ) & CI ) )
-    Tristate         = ---
     Max Fanout       = 2.18019
     Min Fanout       = 0
     Max Capacitance  = 0.218019
@@ -15439,7 +15320,6 @@ Clib#118 (HIT18FAD1P010) : Combinational Logic
     Min Transition   = 0
   Pin#4[ SO ]: Output# 1
     Logic            = ( A ^ B ^ CI )
-    Tristate         = ---
     Max Fanout       = 2.13857
     Min Fanout       = 0
     Max Capacitance  = 0.213857
@@ -15904,7 +15784,6 @@ Clib#119 (HIT18FAD1P020) : Combinational Logic
     Fall Capacitance = 0.01775
   Pin#3[ CO ]: Output# 0
     Logic            = ( ( A & B ) | ( ( A | B ) & CI ) )
-    Tristate         = ---
     Max Fanout       = 4.65222
     Min Fanout       = 0
     Max Capacitance  = 0.465222
@@ -15913,7 +15792,6 @@ Clib#119 (HIT18FAD1P020) : Combinational Logic
     Min Transition   = 0
   Pin#4[ SO ]: Output# 1
     Logic            = ( A ^ B ^ CI )
-    Tristate         = ---
     Max Fanout       = 4.44851
     Min Fanout       = 0
     Max Capacitance  = 0.444851
@@ -16378,7 +16256,6 @@ Clib#120 (HIT18FAD1P030) : Combinational Logic
     Fall Capacitance = 0.017737
   Pin#3[ CO ]: Output# 0
     Logic            = ( ( A & B ) | ( ( A | B ) & CI ) )
-    Tristate         = ---
     Max Fanout       = 6.63191
     Min Fanout       = 0
     Max Capacitance  = 0.663191
@@ -16387,7 +16264,6 @@ Clib#120 (HIT18FAD1P030) : Combinational Logic
     Min Transition   = 0
   Pin#4[ SO ]: Output# 1
     Logic            = ( A ^ B ^ CI )
-    Tristate         = ---
     Max Fanout       = 6.5874
     Min Fanout       = 0
     Max Capacitance  = 0.65874
@@ -16852,7 +16728,6 @@ Clib#121 (HIT18FAD1P040) : Combinational Logic
     Fall Capacitance = 0.017734
   Pin#3[ CO ]: Output# 0
     Logic            = ( ( A & B ) | ( ( A | B ) & CI ) )
-    Tristate         = ---
     Max Fanout       = 9.4313
     Min Fanout       = 0
     Max Capacitance  = 0.94313
@@ -16861,7 +16736,6 @@ Clib#121 (HIT18FAD1P040) : Combinational Logic
     Min Transition   = 0
   Pin#4[ SO ]: Output# 1
     Logic            = ( A ^ B ^ CI )
-    Tristate         = ---
     Max Fanout       = 8.42294
     Min Fanout       = 0
     Max Capacitance  = 0.842294
@@ -17326,7 +17200,6 @@ Clib#122 (HIT18FAD1P060) : Combinational Logic
     Fall Capacitance = 0.01593
   Pin#3[ CO ]: Output# 0
     Logic            = ( ( A & B ) | ( ( A | B ) & CI ) )
-    Tristate         = ---
     Max Fanout       = 14.8358
     Min Fanout       = 0
     Max Capacitance  = 1.48358
@@ -17335,7 +17208,6 @@ Clib#122 (HIT18FAD1P060) : Combinational Logic
     Min Transition   = 0
   Pin#4[ SO ]: Output# 1
     Logic            = ( A ^ B ^ CI )
-    Tristate         = ---
     Max Fanout       = 14.7897
     Min Fanout       = 0
     Max Capacitance  = 1.47897
@@ -17800,7 +17672,6 @@ Clib#123 (HIT18FAD1P080) : Combinational Logic
     Fall Capacitance = 0.015923
   Pin#3[ CO ]: Output# 0
     Logic            = ( ( A & B ) | ( ( A | B ) & CI ) )
-    Tristate         = ---
     Max Fanout       = 20.0075
     Min Fanout       = 0
     Max Capacitance  = 2.00075
@@ -17809,7 +17680,6 @@ Clib#123 (HIT18FAD1P080) : Combinational Logic
     Min Transition   = 0
   Pin#4[ SO ]: Output# 1
     Logic            = ( A ^ B ^ CI )
-    Tristate         = ---
     Max Fanout       = 19.8655
     Min Fanout       = 0
     Max Capacitance  = 1.98655
@@ -18270,7 +18140,6 @@ Clib#124 (HIT18HAD1P010) : Combinational Logic
     Fall Capacitance = 0.011607
   Pin#2[ CO ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 2.22822
     Min Fanout       = 0
     Max Capacitance  = 0.222822
@@ -18279,7 +18148,6 @@ Clib#124 (HIT18HAD1P010) : Combinational Logic
     Min Transition   = 0
   Pin#3[ SO ]: Output# 1
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 2.20346
     Min Fanout       = 0
     Max Capacitance  = 0.220346
@@ -18593,7 +18461,6 @@ Clib#125 (HIT18HAD1P020) : Combinational Logic
     Fall Capacitance = 0.015192
   Pin#2[ CO ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 4.69762
     Min Fanout       = 0
     Max Capacitance  = 0.469762
@@ -18602,7 +18469,6 @@ Clib#125 (HIT18HAD1P020) : Combinational Logic
     Min Transition   = 0
   Pin#3[ SO ]: Output# 1
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 4.68562
     Min Fanout       = 0
     Max Capacitance  = 0.468562
@@ -18916,7 +18782,6 @@ Clib#126 (HIT18HAD1P030) : Combinational Logic
     Fall Capacitance = 0.015173
   Pin#2[ CO ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 7.09444
     Min Fanout       = 0
     Max Capacitance  = 0.709444
@@ -18925,7 +18790,6 @@ Clib#126 (HIT18HAD1P030) : Combinational Logic
     Min Transition   = 0
   Pin#3[ SO ]: Output# 1
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 7.07194
     Min Fanout       = 0
     Max Capacitance  = 0.707194
@@ -19239,7 +19103,6 @@ Clib#127 (HIT18HAD1P040) : Combinational Logic
     Fall Capacitance = 0.015183
   Pin#2[ CO ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 9.55629
     Min Fanout       = 0
     Max Capacitance  = 0.955629
@@ -19248,7 +19111,6 @@ Clib#127 (HIT18HAD1P040) : Combinational Logic
     Min Transition   = 0
   Pin#3[ SO ]: Output# 1
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 9.4864
     Min Fanout       = 0
     Max Capacitance  = 0.94864
@@ -19562,7 +19424,6 @@ Clib#128 (HIT18HAD1P060) : Combinational Logic
     Fall Capacitance = 0.011614
   Pin#2[ CO ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 14.9375
     Min Fanout       = 0
     Max Capacitance  = 1.49375
@@ -19571,7 +19432,6 @@ Clib#128 (HIT18HAD1P060) : Combinational Logic
     Min Transition   = 0
   Pin#3[ SO ]: Output# 1
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 14.8534
     Min Fanout       = 0
     Max Capacitance  = 1.48534
@@ -19885,7 +19745,6 @@ Clib#129 (HIT18HAD1P080) : Combinational Logic
     Fall Capacitance = 0.011611
   Pin#2[ CO ]: Output# 0
     Logic            = ( A & B )
-    Tristate         = ---
     Max Fanout       = 20.1499
     Min Fanout       = 0
     Max Capacitance  = 2.01499
@@ -19894,7 +19753,6 @@ Clib#129 (HIT18HAD1P080) : Combinational Logic
     Min Transition   = 0
   Pin#3[ SO ]: Output# 1
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 19.8707
     Min Fanout       = 0
     Max Capacitance  = 1.98707
@@ -20204,7 +20062,6 @@ Clib#130 (HIT18INVP005) : Combinational Logic
     Fall Capacitance = 0.005087
   Pin#1[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
     Max Fanout       = 0.987689
     Min Fanout       = 0
     Max Capacitance  = 0.098769
@@ -20269,7 +20126,6 @@ Clib#131 (HIT18INVP010) : Combinational Logic
     Fall Capacitance = 0.010242
   Pin#1[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
     Max Fanout       = 2.25951
     Min Fanout       = 0
     Max Capacitance  = 0.225951
@@ -20334,7 +20190,6 @@ Clib#132 (HIT18INVP015) : Combinational Logic
     Fall Capacitance = 0.015778
   Pin#1[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
     Max Fanout       = 3.5438
     Min Fanout       = 0
     Max Capacitance  = 0.35438
@@ -20399,7 +20254,6 @@ Clib#133 (HIT18INVP020) : Combinational Logic
     Fall Capacitance = 0.021019
   Pin#1[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
     Max Fanout       = 4.87682
     Min Fanout       = 0
     Max Capacitance  = 0.487682
@@ -20464,7 +20318,6 @@ Clib#134 (HIT18INVP030) : Combinational Logic
     Fall Capacitance = 0.031991
   Pin#1[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
     Max Fanout       = 7.43133
     Min Fanout       = 0
     Max Capacitance  = 0.743133
@@ -20529,7 +20382,6 @@ Clib#135 (HIT18INVP040) : Combinational Logic
     Fall Capacitance = 0.042915
   Pin#1[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
     Max Fanout       = 10.0851
     Min Fanout       = 0
     Max Capacitance  = 1.00851
@@ -20594,7 +20446,6 @@ Clib#136 (HIT18INVP050) : Combinational Logic
     Fall Capacitance = 0.010648
   Pin#1[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
     Max Fanout       = 12.2626
     Min Fanout       = 0
     Max Capacitance  = 1.22626
@@ -20659,7 +20510,6 @@ Clib#137 (HIT18INVP060) : Combinational Logic
     Fall Capacitance = 0.010658
   Pin#1[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
     Max Fanout       = 14.8449
     Min Fanout       = 0
     Max Capacitance  = 1.48449
@@ -20724,7 +20574,6 @@ Clib#138 (HIT18INVP080) : Combinational Logic
     Fall Capacitance = 0.010624
   Pin#1[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
     Max Fanout       = 20.0087
     Min Fanout       = 0
     Max Capacitance  = 2.00087
@@ -20789,7 +20638,6 @@ Clib#139 (HIT18INVP120) : Combinational Logic
     Fall Capacitance = 0.021106
   Pin#1[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
     Max Fanout       = 30.0489
     Min Fanout       = 0
     Max Capacitance  = 3.00489
@@ -20854,7 +20702,6 @@ Clib#140 (HIT18INVP160) : Combinational Logic
     Fall Capacitance = 0.021145
   Pin#1[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
     Max Fanout       = 40.901
     Min Fanout       = 0
     Max Capacitance  = 4.09009
@@ -20927,7 +20774,6 @@ Clib#141 (HIT18MUX2P010) : Combinational Logic
     Fall Capacitance = 0.009584
   Pin#3[ Y ]: Output# 0
     Logic            = ( ( S & D1 ) | ( ~S & D0 ) )
-    Tristate         = ---
     Max Fanout       = 2.20326
     Min Fanout       = 0
     Max Capacitance  = 0.220326
@@ -21147,7 +20993,6 @@ Clib#142 (HIT18MUX2P020) : Combinational Logic
     Fall Capacitance = 0.009598
   Pin#3[ Y ]: Output# 0
     Logic            = ( ( S & D1 ) | ( ~S & D0 ) )
-    Tristate         = ---
     Max Fanout       = 4.64472
     Min Fanout       = 0
     Max Capacitance  = 0.464472
@@ -21367,7 +21212,6 @@ Clib#143 (HIT18MUX2P030) : Combinational Logic
     Fall Capacitance = 0.009587
   Pin#3[ Y ]: Output# 0
     Logic            = ( ( S & D1 ) | ( ~S & D0 ) )
-    Tristate         = ---
     Max Fanout       = 7.2135
     Min Fanout       = 0
     Max Capacitance  = 0.72135
@@ -21587,7 +21431,6 @@ Clib#144 (HIT18MUX2P040) : Combinational Logic
     Fall Capacitance = 0.009597
   Pin#3[ Y ]: Output# 0
     Logic            = ( ( S & D1 ) | ( ~S & D0 ) )
-    Tristate         = ---
     Max Fanout       = 9.85988
     Min Fanout       = 0
     Max Capacitance  = 0.985988
@@ -21807,7 +21650,6 @@ Clib#145 (HIT18MUX2P060) : Combinational Logic
     Fall Capacitance = 0.0096
   Pin#3[ Y ]: Output# 0
     Logic            = ( ( S & D1 ) | ( ~S & D0 ) )
-    Tristate         = ---
     Max Fanout       = 14.9425
     Min Fanout       = 0
     Max Capacitance  = 1.49425
@@ -22027,7 +21869,6 @@ Clib#146 (HIT18MUX2P080) : Combinational Logic
     Fall Capacitance = 0.009583
   Pin#3[ Y ]: Output# 0
     Logic            = ( ( S & D1 ) | ( ~S & D0 ) )
-    Tristate         = ---
     Max Fanout       = 20.1778
     Min Fanout       = 0
     Max Capacitance  = 2.01778
@@ -22243,7 +22084,6 @@ Clib#147 (HIT18NAND2P005) : Combinational Logic
     Fall Capacitance = 0.004919
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A | ~B )
-    Tristate         = ---
     Max Fanout       = 0.949719
     Min Fanout       = 0
     Max Capacitance  = 0.094972
@@ -22361,7 +22201,6 @@ Clib#148 (HIT18NAND2P010) : Combinational Logic
     Fall Capacitance = 0.009979
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A | ~B )
-    Tristate         = ---
     Max Fanout       = 2.19396
     Min Fanout       = 0
     Max Capacitance  = 0.219396
@@ -22479,7 +22318,6 @@ Clib#149 (HIT18NAND2P015) : Combinational Logic
     Fall Capacitance = 0.01512
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A | ~B )
-    Tristate         = ---
     Max Fanout       = 3.33526
     Min Fanout       = 0
     Max Capacitance  = 0.333526
@@ -22597,7 +22435,6 @@ Clib#150 (HIT18NAND2P020) : Combinational Logic
     Fall Capacitance = 0.018277
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A | ~B )
-    Tristate         = ---
     Max Fanout       = 3.30465
     Min Fanout       = 0
     Max Capacitance  = 0.330465
@@ -22715,7 +22552,6 @@ Clib#151 (HIT18NAND2P030) : Combinational Logic
     Fall Capacitance = 0.006745
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A | ~B )
-    Tristate         = ---
     Max Fanout       = 7.19693
     Min Fanout       = 0
     Max Capacitance  = 0.719693
@@ -22833,7 +22669,6 @@ Clib#152 (HIT18NAND2P030S) : Combinational Logic
     Fall Capacitance = 0.029386
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A | ~B )
-    Tristate         = ---
     Max Fanout       = 5.79026
     Min Fanout       = 0
     Max Capacitance  = 0.579026
@@ -22951,7 +22786,6 @@ Clib#153 (HIT18NAND2P040) : Combinational Logic
     Fall Capacitance = 0.010932
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A | ~B )
-    Tristate         = ---
     Max Fanout       = 9.79222
     Min Fanout       = 0
     Max Capacitance  = 0.979222
@@ -23069,7 +22903,6 @@ Clib#154 (HIT18NAND2P040S) : Combinational Logic
     Fall Capacitance = 0.040049
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A | ~B )
-    Tristate         = ---
     Max Fanout       = 8.30377
     Min Fanout       = 0
     Max Capacitance  = 0.830377
@@ -23187,7 +23020,6 @@ Clib#155 (HIT18NAND2P060) : Combinational Logic
     Fall Capacitance = 0.010955
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A | ~B )
-    Tristate         = ---
     Max Fanout       = 14.8105
     Min Fanout       = 0
     Max Capacitance  = 1.48105
@@ -23305,7 +23137,6 @@ Clib#156 (HIT18NAND2P060S) : Combinational Logic
     Fall Capacitance = 0.062079
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A | ~B )
-    Tristate         = ---
     Max Fanout       = 13.2762
     Min Fanout       = 0
     Max Capacitance  = 1.32762
@@ -23423,7 +23254,6 @@ Clib#157 (HIT18NAND2P080) : Combinational Logic
     Fall Capacitance = 0.010758
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A | ~B )
-    Tristate         = ---
     Max Fanout       = 19.9603
     Min Fanout       = 0
     Max Capacitance  = 1.99603
@@ -23541,7 +23371,6 @@ Clib#158 (HIT18NAND2P080S) : Combinational Logic
     Fall Capacitance = 0.084314
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A | ~B )
-    Tristate         = ---
     Max Fanout       = 18.3221
     Min Fanout       = 0
     Max Capacitance  = 1.83221
@@ -23663,7 +23492,6 @@ Clib#159 (HIT18NAND3P005) : Combinational Logic
     Fall Capacitance = 0.004651
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C )
-    Tristate         = ---
     Max Fanout       = 0.802121
     Min Fanout       = 0
     Max Capacitance  = 0.080212
@@ -23834,7 +23662,6 @@ Clib#160 (HIT18NAND3P010) : Combinational Logic
     Fall Capacitance = 0.009755
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C )
-    Tristate         = ---
     Max Fanout       = 1.70081
     Min Fanout       = 0
     Max Capacitance  = 0.170081
@@ -24005,7 +23832,6 @@ Clib#161 (HIT18NAND3P015) : Combinational Logic
     Fall Capacitance = 0.015532
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C )
-    Tristate         = ---
     Max Fanout       = 2.24556
     Min Fanout       = 0
     Max Capacitance  = 0.224556
@@ -24176,7 +24002,6 @@ Clib#162 (HIT18NAND3P020) : Combinational Logic
     Fall Capacitance = 0.018621
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C )
-    Tristate         = ---
     Max Fanout       = 2.20411
     Min Fanout       = 0
     Max Capacitance  = 0.220411
@@ -24347,7 +24172,6 @@ Clib#163 (HIT18NAND3P030) : Combinational Logic
     Fall Capacitance = 0.006
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C )
-    Tristate         = ---
     Max Fanout       = 7.22015
     Min Fanout       = 0
     Max Capacitance  = 0.722015
@@ -24518,7 +24342,6 @@ Clib#164 (HIT18NAND3P030S) : Combinational Logic
     Fall Capacitance = 0.026935
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C )
-    Tristate         = ---
     Max Fanout       = 3.89354
     Min Fanout       = 0
     Max Capacitance  = 0.389354
@@ -24689,7 +24512,6 @@ Clib#165 (HIT18NAND3P040) : Combinational Logic
     Fall Capacitance = 0.010433
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C )
-    Tristate         = ---
     Max Fanout       = 9.85753
     Min Fanout       = 0
     Max Capacitance  = 0.985753
@@ -24860,7 +24682,6 @@ Clib#166 (HIT18NAND3P040S) : Combinational Logic
     Fall Capacitance = 0.037626
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C )
-    Tristate         = ---
     Max Fanout       = 5.62895
     Min Fanout       = 0
     Max Capacitance  = 0.562895
@@ -25031,7 +24852,6 @@ Clib#167 (HIT18NAND3P060) : Combinational Logic
     Fall Capacitance = 0.010435
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C )
-    Tristate         = ---
     Max Fanout       = 14.7746
     Min Fanout       = 0
     Max Capacitance  = 1.47746
@@ -25202,7 +25022,6 @@ Clib#168 (HIT18NAND3P060S) : Combinational Logic
     Fall Capacitance = 0.056888
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C )
-    Tristate         = ---
     Max Fanout       = 7.7843
     Min Fanout       = 0
     Max Capacitance  = 0.77843
@@ -25373,7 +25192,6 @@ Clib#169 (HIT18NAND3P080) : Combinational Logic
     Fall Capacitance = 0.010123
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C )
-    Tristate         = ---
     Max Fanout       = 19.9106
     Min Fanout       = 0
     Max Capacitance  = 1.99106
@@ -25544,7 +25362,6 @@ Clib#170 (HIT18NAND3P080S) : Combinational Logic
     Fall Capacitance = 0.075923
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C )
-    Tristate         = ---
     Max Fanout       = 11.2419
     Min Fanout       = 0
     Max Capacitance  = 1.12419
@@ -25719,7 +25536,6 @@ Clib#171 (HIT18NAND4P005) : Combinational Logic
     Fall Capacitance = 0.004643
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C | ~D )
-    Tristate         = ---
     Max Fanout       = 0.591252
     Min Fanout       = 0
     Max Capacitance  = 0.059125
@@ -25943,7 +25759,6 @@ Clib#172 (HIT18NAND4P010) : Combinational Logic
     Fall Capacitance = 0.009776
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C | ~D )
-    Tristate         = ---
     Max Fanout       = 1.24992
     Min Fanout       = 0
     Max Capacitance  = 0.124992
@@ -26167,7 +25982,6 @@ Clib#173 (HIT18NAND4P015) : Combinational Logic
     Fall Capacitance = 0.016284
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C | ~D )
-    Tristate         = ---
     Max Fanout       = 1.6726
     Min Fanout       = 0
     Max Capacitance  = 0.16726
@@ -26391,7 +26205,6 @@ Clib#174 (HIT18NAND4P020) : Combinational Logic
     Fall Capacitance = 0.018572
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C | ~D )
-    Tristate         = ---
     Max Fanout       = 1.79446
     Min Fanout       = 0
     Max Capacitance  = 0.179446
@@ -26615,7 +26428,6 @@ Clib#175 (HIT18NAND4P030) : Combinational Logic
     Fall Capacitance = 0.006231
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C | ~D )
-    Tristate         = ---
     Max Fanout       = 7.18146
     Min Fanout       = 0
     Max Capacitance  = 0.718146
@@ -26839,7 +26651,6 @@ Clib#176 (HIT18NAND4P040) : Combinational Logic
     Fall Capacitance = 0.010524
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C | ~D )
-    Tristate         = ---
     Max Fanout       = 9.85397
     Min Fanout       = 0
     Max Capacitance  = 0.985397
@@ -27063,7 +26874,6 @@ Clib#177 (HIT18NAND4P040S) : Combinational Logic
     Fall Capacitance = 0.035134
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C | ~D )
-    Tristate         = ---
     Max Fanout       = 3.40842
     Min Fanout       = 0
     Max Capacitance  = 0.340842
@@ -27287,7 +27097,6 @@ Clib#178 (HIT18NAND4P060) : Combinational Logic
     Fall Capacitance = 0.010529
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C | ~D )
-    Tristate         = ---
     Max Fanout       = 14.7695
     Min Fanout       = 0
     Max Capacitance  = 1.47695
@@ -27511,7 +27320,6 @@ Clib#179 (HIT18NAND4P060S) : Combinational Logic
     Fall Capacitance = 0.051765
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C | ~D )
-    Tristate         = ---
     Max Fanout       = 4.97688
     Min Fanout       = 0
     Max Capacitance  = 0.497688
@@ -27735,7 +27543,6 @@ Clib#180 (HIT18NAND4P080) : Combinational Logic
     Fall Capacitance = 0.010349
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C | ~D )
-    Tristate         = ---
     Max Fanout       = 19.9108
     Min Fanout       = 0
     Max Capacitance  = 1.99108
@@ -27959,7 +27766,6 @@ Clib#181 (HIT18NAND4P080S) : Combinational Logic
     Fall Capacitance = 0.068284
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ~C | ~D )
-    Tristate         = ---
     Max Fanout       = 6.63816
     Min Fanout       = 0
     Max Capacitance  = 0.663816
@@ -28175,7 +27981,6 @@ Clib#182 (HIT18NOR2P005) : Combinational Logic
     Fall Capacitance = 0.00493
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A & ~B )
-    Tristate         = ---
     Max Fanout       = 0.460482
     Min Fanout       = 0
     Max Capacitance  = 0.046048
@@ -28293,7 +28098,6 @@ Clib#183 (HIT18NOR2P010) : Combinational Logic
     Fall Capacitance = 0.00999
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A & ~B )
-    Tristate         = ---
     Max Fanout       = 1.07586
     Min Fanout       = 0
     Max Capacitance  = 0.107586
@@ -28411,7 +28215,6 @@ Clib#184 (HIT18NOR2P015) : Combinational Logic
     Fall Capacitance = 0.015058
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A & ~B )
-    Tristate         = ---
     Max Fanout       = 1.51786
     Min Fanout       = 0
     Max Capacitance  = 0.151786
@@ -28529,7 +28332,6 @@ Clib#185 (HIT18NOR2P020) : Combinational Logic
     Fall Capacitance = 0.0174
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A & ~B )
-    Tristate         = ---
     Max Fanout       = 1.55072
     Min Fanout       = 0
     Max Capacitance  = 0.155072
@@ -28647,7 +28449,6 @@ Clib#186 (HIT18NOR2P030) : Combinational Logic
     Fall Capacitance = 0.006652
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A & ~B )
-    Tristate         = ---
     Max Fanout       = 7.17534
     Min Fanout       = 0
     Max Capacitance  = 0.717534
@@ -28765,7 +28566,6 @@ Clib#187 (HIT18NOR2P030S) : Combinational Logic
     Fall Capacitance = 0.028047
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A & ~B )
-    Tristate         = ---
     Max Fanout       = 2.57084
     Min Fanout       = 0
     Max Capacitance  = 0.257084
@@ -28883,7 +28683,6 @@ Clib#188 (HIT18NOR2P040) : Combinational Logic
     Fall Capacitance = 0.010862
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A & ~B )
-    Tristate         = ---
     Max Fanout       = 9.91394
     Min Fanout       = 0
     Max Capacitance  = 0.991394
@@ -29001,7 +28800,6 @@ Clib#189 (HIT18NOR2P040S) : Combinational Logic
     Fall Capacitance = 0.038195
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A & ~B )
-    Tristate         = ---
     Max Fanout       = 3.69193
     Min Fanout       = 0
     Max Capacitance  = 0.369193
@@ -29119,7 +28917,6 @@ Clib#190 (HIT18NOR2P060) : Combinational Logic
     Fall Capacitance = 0.01086
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A & ~B )
-    Tristate         = ---
     Max Fanout       = 14.7223
     Min Fanout       = 0
     Max Capacitance  = 1.47223
@@ -29237,7 +29034,6 @@ Clib#191 (HIT18NOR2P060S) : Combinational Logic
     Fall Capacitance = 0.059158
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A & ~B )
-    Tristate         = ---
     Max Fanout       = 5.74935
     Min Fanout       = 0
     Max Capacitance  = 0.574935
@@ -29355,7 +29151,6 @@ Clib#192 (HIT18NOR2P080) : Combinational Logic
     Fall Capacitance = 0.010676
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A & ~B )
-    Tristate         = ---
     Max Fanout       = 19.8136
     Min Fanout       = 0
     Max Capacitance  = 1.98137
@@ -29473,7 +29268,6 @@ Clib#193 (HIT18NOR2P080S) : Combinational Logic
     Fall Capacitance = 0.080153
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A & ~B )
-    Tristate         = ---
     Max Fanout       = 7.96209
     Min Fanout       = 0
     Max Capacitance  = 0.796209
@@ -29595,7 +29389,6 @@ Clib#194 (HIT18NOR3P005) : Combinational Logic
     Fall Capacitance = 0.004606
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C )
-    Tristate         = ---
     Max Fanout       = 0.274639
     Min Fanout       = 0
     Max Capacitance  = 0.027464
@@ -29766,7 +29559,6 @@ Clib#195 (HIT18NOR3P010) : Combinational Logic
     Fall Capacitance = 0.009715
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C )
-    Tristate         = ---
     Max Fanout       = 0.649378
     Min Fanout       = 0
     Max Capacitance  = 0.064938
@@ -29937,7 +29729,6 @@ Clib#196 (HIT18NOR3P015) : Combinational Logic
     Fall Capacitance = 0.0156
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C )
-    Tristate         = ---
     Max Fanout       = 0.906102
     Min Fanout       = 0
     Max Capacitance  = 0.09061
@@ -30108,7 +29899,6 @@ Clib#197 (HIT18NOR3P020) : Combinational Logic
     Fall Capacitance = 0.017993
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C )
-    Tristate         = ---
     Max Fanout       = 0.907986
     Min Fanout       = 0
     Max Capacitance  = 0.090799
@@ -30279,7 +30069,6 @@ Clib#198 (HIT18NOR3P030) : Combinational Logic
     Fall Capacitance = 0.005947
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C )
-    Tristate         = ---
     Max Fanout       = 7.14648
     Min Fanout       = 0
     Max Capacitance  = 0.714648
@@ -30450,7 +30239,6 @@ Clib#199 (HIT18NOR3P030S) : Combinational Logic
     Fall Capacitance = 0.025788
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C )
-    Tristate         = ---
     Max Fanout       = 1.5357
     Min Fanout       = 0
     Max Capacitance  = 0.15357
@@ -30621,7 +30409,6 @@ Clib#200 (HIT18NOR3P040) : Combinational Logic
     Fall Capacitance = 0.010355
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C )
-    Tristate         = ---
     Max Fanout       = 9.74184
     Min Fanout       = 0
     Max Capacitance  = 0.974184
@@ -30792,7 +30579,6 @@ Clib#201 (HIT18NOR3P040S) : Combinational Logic
     Fall Capacitance = 0.036056
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C )
-    Tristate         = ---
     Max Fanout       = 2.24568
     Min Fanout       = 0
     Max Capacitance  = 0.224568
@@ -30963,7 +30749,6 @@ Clib#202 (HIT18NOR3P060) : Combinational Logic
     Fall Capacitance = 0.010357
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C )
-    Tristate         = ---
     Max Fanout       = 14.6786
     Min Fanout       = 0
     Max Capacitance  = 1.46786
@@ -31134,7 +30919,6 @@ Clib#203 (HIT18NOR3P060S) : Combinational Logic
     Fall Capacitance = 0.054097
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C )
-    Tristate         = ---
     Max Fanout       = 3.07407
     Min Fanout       = 0
     Max Capacitance  = 0.307407
@@ -31305,7 +31089,6 @@ Clib#204 (HIT18NOR3P080) : Combinational Logic
     Fall Capacitance = 0.010038
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C )
-    Tristate         = ---
     Max Fanout       = 19.7216
     Min Fanout       = 0
     Max Capacitance  = 1.97216
@@ -31476,7 +31259,6 @@ Clib#205 (HIT18NOR3P080S) : Combinational Logic
     Fall Capacitance = 0.072131
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C )
-    Tristate         = ---
     Max Fanout       = 4.47667
     Min Fanout       = 0
     Max Capacitance  = 0.447667
@@ -31651,7 +31433,6 @@ Clib#206 (HIT18NOR4P005) : Combinational Logic
     Fall Capacitance = 0.004642
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C & ~D )
-    Tristate         = ---
     Max Fanout       = 0.173691
     Min Fanout       = 0
     Max Capacitance  = 0.017369
@@ -31875,7 +31656,6 @@ Clib#207 (HIT18NOR4P010) : Combinational Logic
     Fall Capacitance = 0.009718
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C & ~D )
-    Tristate         = ---
     Max Fanout       = 0.41867
     Min Fanout       = 0
     Max Capacitance  = 0.041867
@@ -32099,7 +31879,6 @@ Clib#208 (HIT18NOR4P015) : Combinational Logic
     Fall Capacitance = 0.015284
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C & ~D )
-    Tristate         = ---
     Max Fanout       = 0.582827
     Min Fanout       = 0
     Max Capacitance  = 0.058283
@@ -32323,7 +32102,6 @@ Clib#209 (HIT18NOR4P020) : Combinational Logic
     Fall Capacitance = 0.018264
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C & ~D )
-    Tristate         = ---
     Max Fanout       = 0.669324
     Min Fanout       = 0
     Max Capacitance  = 0.066932
@@ -32547,7 +32325,6 @@ Clib#210 (HIT18NOR4P030) : Combinational Logic
     Fall Capacitance = 0.006211
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C & ~D )
-    Tristate         = ---
     Max Fanout       = 7.10778
     Min Fanout       = 0
     Max Capacitance  = 0.710778
@@ -32771,7 +32548,6 @@ Clib#211 (HIT18NOR4P040) : Combinational Logic
     Fall Capacitance = 0.010461
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C & ~D )
-    Tristate         = ---
     Max Fanout       = 9.72462
     Min Fanout       = 0
     Max Capacitance  = 0.972462
@@ -32995,7 +32771,6 @@ Clib#212 (HIT18NOR4P040S) : Combinational Logic
     Fall Capacitance = 0.033698
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C & ~D )
-    Tristate         = ---
     Max Fanout       = 1.26152
     Min Fanout       = 0
     Max Capacitance  = 0.126152
@@ -33219,7 +32994,6 @@ Clib#213 (HIT18NOR4P060) : Combinational Logic
     Fall Capacitance = 0.01046
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C & ~D )
-    Tristate         = ---
     Max Fanout       = 14.6091
     Min Fanout       = 0
     Max Capacitance  = 1.46091
@@ -33443,7 +33217,6 @@ Clib#214 (HIT18NOR4P060S) : Combinational Logic
     Fall Capacitance = 0.049098
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C & ~D )
-    Tristate         = ---
     Max Fanout       = 1.81029
     Min Fanout       = 0
     Max Capacitance  = 0.181029
@@ -33667,7 +33440,6 @@ Clib#215 (HIT18NOR4P080) : Combinational Logic
     Fall Capacitance = 0.010286
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C & ~D )
-    Tristate         = ---
     Max Fanout       = 19.5978
     Min Fanout       = 0
     Max Capacitance  = 1.95978
@@ -33891,7 +33663,6 @@ Clib#216 (HIT18NOR4P080S) : Combinational Logic
     Fall Capacitance = 0.064554
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A & ~B & ~C & ~D )
-    Tristate         = ---
     Max Fanout       = 2.44734
     Min Fanout       = 0
     Max Capacitance  = 0.244734
@@ -34115,7 +33886,6 @@ Clib#217 (HIT18OAI211P005) : Combinational Logic
     Fall Capacitance = 0.004742
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ( ~C & ~D ) )
-    Tristate         = ---
     Max Fanout       = 0.383678
     Min Fanout       = 0
     Max Capacitance  = 0.038368
@@ -34339,7 +34109,6 @@ Clib#218 (HIT18OAI211P010) : Combinational Logic
     Fall Capacitance = 0.009734
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ( ~C & ~D ) )
-    Tristate         = ---
     Max Fanout       = 0.909999
     Min Fanout       = 0
     Max Capacitance  = 0.091
@@ -34563,7 +34332,6 @@ Clib#219 (HIT18OAI211P015) : Combinational Logic
     Fall Capacitance = 0.014931
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ( ~C & ~D ) )
-    Tristate         = ---
     Max Fanout       = 1.27842
     Min Fanout       = 0
     Max Capacitance  = 0.127842
@@ -34787,7 +34555,6 @@ Clib#220 (HIT18OAI211P020) : Combinational Logic
     Fall Capacitance = 0.020022
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ( ~C & ~D ) )
-    Tristate         = ---
     Max Fanout       = 1.86705
     Min Fanout       = 0
     Max Capacitance  = 0.186705
@@ -35011,7 +34778,6 @@ Clib#221 (HIT18OAI211P030) : Combinational Logic
     Fall Capacitance = 0.00561
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ( ~C & ~D ) )
-    Tristate         = ---
     Max Fanout       = 7.16582
     Min Fanout       = 0
     Max Capacitance  = 0.716582
@@ -35235,7 +35001,6 @@ Clib#222 (HIT18OAI211P030S) : Combinational Logic
     Fall Capacitance = 0.030232
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ( ~C & ~D ) )
-    Tristate         = ---
     Max Fanout       = 2.71312
     Min Fanout       = 0
     Max Capacitance  = 0.271312
@@ -35459,7 +35224,6 @@ Clib#223 (HIT18OAI211P040) : Combinational Logic
     Fall Capacitance = 0.00966
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ( ~C & ~D ) )
-    Tristate         = ---
     Max Fanout       = 9.75861
     Min Fanout       = 0
     Max Capacitance  = 0.975861
@@ -35683,7 +35447,6 @@ Clib#224 (HIT18OAI211P040S) : Combinational Logic
     Fall Capacitance = 0.040363
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ( ~C & ~D ) )
-    Tristate         = ---
     Max Fanout       = 3.71104
     Min Fanout       = 0
     Max Capacitance  = 0.371104
@@ -35907,7 +35670,6 @@ Clib#225 (HIT18OAI211P060) : Combinational Logic
     Fall Capacitance = 0.009657
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ( ~C & ~D ) )
-    Tristate         = ---
     Max Fanout       = 14.7215
     Min Fanout       = 0
     Max Capacitance  = 1.47215
@@ -36131,7 +35893,6 @@ Clib#226 (HIT18OAI211P060S) : Combinational Logic
     Fall Capacitance = 0.060988
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ( ~C & ~D ) )
-    Tristate         = ---
     Max Fanout       = 5.47931
     Min Fanout       = 0
     Max Capacitance  = 0.547931
@@ -36355,7 +36116,6 @@ Clib#227 (HIT18OAI211P080) : Combinational Logic
     Fall Capacitance = 0.009661
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ( ~C & ~D ) )
-    Tristate         = ---
     Max Fanout       = 19.8135
     Min Fanout       = 0
     Max Capacitance  = 1.98135
@@ -36579,7 +36339,6 @@ Clib#228 (HIT18OAI211P080S) : Combinational Logic
     Fall Capacitance = 0.081442
   Pin#4[ Y ]: Output# 0
     Logic            = ( ~A | ~B | ( ~C & ~D ) )
-    Tristate         = ---
     Max Fanout       = 7.40499
     Min Fanout       = 0
     Max Capacitance  = 0.740499
@@ -36799,7 +36558,6 @@ Clib#229 (HIT18OAI21P005) : Combinational Logic
     Fall Capacitance = 0.004761
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ( ~B & ~C ) )
-    Tristate         = ---
     Max Fanout       = 0.421761
     Min Fanout       = 0
     Max Capacitance  = 0.042176
@@ -36970,7 +36728,6 @@ Clib#230 (HIT18OAI21P010) : Combinational Logic
     Fall Capacitance = 0.009776
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ( ~B & ~C ) )
-    Tristate         = ---
     Max Fanout       = 0.978532
     Min Fanout       = 0
     Max Capacitance  = 0.097853
@@ -37141,7 +36898,6 @@ Clib#231 (HIT18OAI21P015) : Combinational Logic
     Fall Capacitance = 0.014939
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ( ~B & ~C ) )
-    Tristate         = ---
     Max Fanout       = 1.38281
     Min Fanout       = 0
     Max Capacitance  = 0.138281
@@ -37312,7 +37068,6 @@ Clib#232 (HIT18OAI21P020) : Combinational Logic
     Fall Capacitance = 0.020072
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ( ~B & ~C ) )
-    Tristate         = ---
     Max Fanout       = 1.98216
     Min Fanout       = 0
     Max Capacitance  = 0.198216
@@ -37483,7 +37238,6 @@ Clib#233 (HIT18OAI21P030) : Combinational Logic
     Fall Capacitance = 0.005739
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ( ~B & ~C ) )
-    Tristate         = ---
     Max Fanout       = 7.17237
     Min Fanout       = 0
     Max Capacitance  = 0.717237
@@ -37654,7 +37408,6 @@ Clib#234 (HIT18OAI21P030S) : Combinational Logic
     Fall Capacitance = 0.030472
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ( ~B & ~C ) )
-    Tristate         = ---
     Max Fanout       = 2.89992
     Min Fanout       = 0
     Max Capacitance  = 0.289992
@@ -37825,7 +37578,6 @@ Clib#235 (HIT18OAI21P040) : Combinational Logic
     Fall Capacitance = 0.00963
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ( ~B & ~C ) )
-    Tristate         = ---
     Max Fanout       = 9.78561
     Min Fanout       = 0
     Max Capacitance  = 0.978561
@@ -37996,7 +37748,6 @@ Clib#236 (HIT18OAI21P040S) : Combinational Logic
     Fall Capacitance = 0.040641
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ( ~B & ~C ) )
-    Tristate         = ---
     Max Fanout       = 3.94438
     Min Fanout       = 0
     Max Capacitance  = 0.394438
@@ -38167,7 +37918,6 @@ Clib#237 (HIT18OAI21P060) : Combinational Logic
     Fall Capacitance = 0.00963
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ( ~B & ~C ) )
-    Tristate         = ---
     Max Fanout       = 14.6868
     Min Fanout       = 0
     Max Capacitance  = 1.46869
@@ -38338,7 +38088,6 @@ Clib#238 (HIT18OAI21P060S) : Combinational Logic
     Fall Capacitance = 0.061262
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ( ~B & ~C ) )
-    Tristate         = ---
     Max Fanout       = 5.8201
     Min Fanout       = 0
     Max Capacitance  = 0.58201
@@ -38509,7 +38258,6 @@ Clib#239 (HIT18OAI21P080) : Combinational Logic
     Fall Capacitance = 0.007329
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ( ~B & ~C ) )
-    Tristate         = ---
     Max Fanout       = 19.7933
     Min Fanout       = 0
     Max Capacitance  = 1.97933
@@ -38680,7 +38428,6 @@ Clib#240 (HIT18OAI21P080S) : Combinational Logic
     Fall Capacitance = 0.081825
   Pin#3[ Y ]: Output# 0
     Logic            = ( ~A | ( ~B & ~C ) )
-    Tristate         = ---
     Max Fanout       = 7.91238
     Min Fanout       = 0
     Max Capacitance  = 0.791238
@@ -38855,7 +38602,6 @@ Clib#241 (HIT18OAI22P005) : Combinational Logic
     Fall Capacitance = 0.006656
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~C & ~D ) | ( ~A & ~B ) )
-    Tristate         = ---
     Max Fanout       = 0.59309
     Min Fanout       = 0
     Max Capacitance  = 0.059309
@@ -39079,7 +38825,6 @@ Clib#242 (HIT18OAI22P010) : Combinational Logic
     Fall Capacitance = 0.009699
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~C & ~D ) | ( ~A & ~B ) )
-    Tristate         = ---
     Max Fanout       = 0.89994
     Min Fanout       = 0
     Max Capacitance  = 0.089994
@@ -39303,7 +39048,6 @@ Clib#243 (HIT18OAI22P015) : Combinational Logic
     Fall Capacitance = 0.01505
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~C & ~D ) | ( ~A & ~B ) )
-    Tristate         = ---
     Max Fanout       = 1.25524
     Min Fanout       = 0
     Max Capacitance  = 0.125524
@@ -39527,7 +39271,6 @@ Clib#244 (HIT18OAI22P020) : Combinational Logic
     Fall Capacitance = 0.02017
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~C & ~D ) | ( ~A & ~B ) )
-    Tristate         = ---
     Max Fanout       = 1.84569
     Min Fanout       = 0
     Max Capacitance  = 0.184569
@@ -39751,7 +39494,6 @@ Clib#245 (HIT18OAI22P030) : Combinational Logic
     Fall Capacitance = 0.006054
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~C & ~D ) | ( ~A & ~B ) )
-    Tristate         = ---
     Max Fanout       = 7.13375
     Min Fanout       = 0
     Max Capacitance  = 0.713375
@@ -39975,7 +39717,6 @@ Clib#246 (HIT18OAI22P030S) : Combinational Logic
     Fall Capacitance = 0.03039
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~C & ~D ) | ( ~A & ~B ) )
-    Tristate         = ---
     Max Fanout       = 2.68509
     Min Fanout       = 0
     Max Capacitance  = 0.268509
@@ -40199,7 +39940,6 @@ Clib#247 (HIT18OAI22P040) : Combinational Logic
     Fall Capacitance = 0.009623
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~C & ~D ) | ( ~A & ~B ) )
-    Tristate         = ---
     Max Fanout       = 9.75176
     Min Fanout       = 0
     Max Capacitance  = 0.975176
@@ -40423,7 +40163,6 @@ Clib#248 (HIT18OAI22P040S) : Combinational Logic
     Fall Capacitance = 0.040715
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~C & ~D ) | ( ~A & ~B ) )
-    Tristate         = ---
     Max Fanout       = 3.68591
     Min Fanout       = 0
     Max Capacitance  = 0.368591
@@ -40647,7 +40386,6 @@ Clib#249 (HIT18OAI22P060) : Combinational Logic
     Fall Capacitance = 0.009625
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~C & ~D ) | ( ~A & ~B ) )
-    Tristate         = ---
     Max Fanout       = 14.6494
     Min Fanout       = 0
     Max Capacitance  = 1.46494
@@ -40871,7 +40609,6 @@ Clib#250 (HIT18OAI22P060S) : Combinational Logic
     Fall Capacitance = 0.061401
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~C & ~D ) | ( ~A & ~B ) )
-    Tristate         = ---
     Max Fanout       = 5.4558
     Min Fanout       = 0
     Max Capacitance  = 0.54558
@@ -41095,7 +40832,6 @@ Clib#251 (HIT18OAI22P080) : Combinational Logic
     Fall Capacitance = 0.009626
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~C & ~D ) | ( ~A & ~B ) )
-    Tristate         = ---
     Max Fanout       = 19.7683
     Min Fanout       = 0
     Max Capacitance  = 1.97683
@@ -41319,7 +41055,6 @@ Clib#252 (HIT18OAI22P080S) : Combinational Logic
     Fall Capacitance = 0.082047
   Pin#4[ Y ]: Output# 0
     Logic            = ( ( ~C & ~D ) | ( ~A & ~B ) )
-    Tristate         = ---
     Max Fanout       = 7.37681
     Min Fanout       = 0
     Max Capacitance  = 0.737681
@@ -41535,7 +41270,6 @@ Clib#253 (HIT18OR2P005) : Combinational Logic
     Fall Capacitance = 0.003953
   Pin#2[ Y ]: Output# 0
     Logic            = ( A | B )
-    Tristate         = ---
     Max Fanout       = 0.977561
     Min Fanout       = 0
     Max Capacitance  = 0.097756
@@ -41653,7 +41387,6 @@ Clib#254 (HIT18OR2P010) : Combinational Logic
     Fall Capacitance = 0.006805
   Pin#2[ Y ]: Output# 0
     Logic            = ( A | B )
-    Tristate         = ---
     Max Fanout       = 2.24501
     Min Fanout       = 0
     Max Capacitance  = 0.224501
@@ -41771,7 +41504,6 @@ Clib#255 (HIT18OR2P015) : Combinational Logic
     Fall Capacitance = 0.009854
   Pin#2[ Y ]: Output# 0
     Logic            = ( A | B )
-    Tristate         = ---
     Max Fanout       = 3.46748
     Min Fanout       = 0
     Max Capacitance  = 0.346748
@@ -41889,7 +41621,6 @@ Clib#256 (HIT18OR2P020) : Combinational Logic
     Fall Capacitance = 0.010847
   Pin#2[ Y ]: Output# 0
     Logic            = ( A | B )
-    Tristate         = ---
     Max Fanout       = 4.75752
     Min Fanout       = 0
     Max Capacitance  = 0.475752
@@ -42007,7 +41738,6 @@ Clib#257 (HIT18OR2P030) : Combinational Logic
     Fall Capacitance = 0.010853
   Pin#2[ Y ]: Output# 0
     Logic            = ( A | B )
-    Tristate         = ---
     Max Fanout       = 7.20264
     Min Fanout       = 0
     Max Capacitance  = 0.720264
@@ -42125,7 +41855,6 @@ Clib#258 (HIT18OR2P040) : Combinational Logic
     Fall Capacitance = 0.010843
   Pin#2[ Y ]: Output# 0
     Logic            = ( A | B )
-    Tristate         = ---
     Max Fanout       = 9.718
     Min Fanout       = 0
     Max Capacitance  = 0.9718
@@ -42243,7 +41972,6 @@ Clib#259 (HIT18OR2P040S) : Combinational Logic
     Fall Capacitance = 0.017781
   Pin#2[ Y ]: Output# 0
     Logic            = ( A | B )
-    Tristate         = ---
     Max Fanout       = 9.98087
     Min Fanout       = 0
     Max Capacitance  = 0.998087
@@ -42361,7 +42089,6 @@ Clib#260 (HIT18OR2P060) : Combinational Logic
     Fall Capacitance = 0.017776
   Pin#2[ Y ]: Output# 0
     Logic            = ( A | B )
-    Tristate         = ---
     Max Fanout       = 14.8416
     Min Fanout       = 0
     Max Capacitance  = 1.48416
@@ -42479,7 +42206,6 @@ Clib#261 (HIT18OR2P080) : Combinational Logic
     Fall Capacitance = 0.017784
   Pin#2[ Y ]: Output# 0
     Logic            = ( A | B )
-    Tristate         = ---
     Max Fanout       = 19.9932
     Min Fanout       = 0
     Max Capacitance  = 1.99932
@@ -42597,7 +42323,6 @@ Clib#262 (HIT18OR2P080S) : Combinational Logic
     Fall Capacitance = 0.028361
   Pin#2[ Y ]: Output# 0
     Logic            = ( A | B )
-    Tristate         = ---
     Max Fanout       = 20.1187
     Min Fanout       = 0
     Max Capacitance  = 2.01187
@@ -42719,7 +42444,6 @@ Clib#263 (HIT18OR3P005) : Combinational Logic
     Fall Capacitance = 0.003462
   Pin#3[ Y ]: Output# 0
     Logic            = ( A | B | C )
-    Tristate         = ---
     Max Fanout       = 0.971407
     Min Fanout       = 0
     Max Capacitance  = 0.097141
@@ -42890,7 +42614,6 @@ Clib#264 (HIT18OR3P010) : Combinational Logic
     Fall Capacitance = 0.006228
   Pin#3[ Y ]: Output# 0
     Logic            = ( A | B | C )
-    Tristate         = ---
     Max Fanout       = 2.2187
     Min Fanout       = 0
     Max Capacitance  = 0.22187
@@ -43061,7 +42784,6 @@ Clib#265 (HIT18OR3P015) : Combinational Logic
     Fall Capacitance = 0.00931
   Pin#3[ Y ]: Output# 0
     Logic            = ( A | B | C )
-    Tristate         = ---
     Max Fanout       = 3.46183
     Min Fanout       = 0
     Max Capacitance  = 0.346183
@@ -43232,7 +42954,6 @@ Clib#266 (HIT18OR3P020) : Combinational Logic
     Fall Capacitance = 0.010357
   Pin#3[ Y ]: Output# 0
     Logic            = ( A | B | C )
-    Tristate         = ---
     Max Fanout       = 4.74563
     Min Fanout       = 0
     Max Capacitance  = 0.474563
@@ -43403,7 +43124,6 @@ Clib#267 (HIT18OR3P030) : Combinational Logic
     Fall Capacitance = 0.010372
   Pin#3[ Y ]: Output# 0
     Logic            = ( A | B | C )
-    Tristate         = ---
     Max Fanout       = 7.21359
     Min Fanout       = 0
     Max Capacitance  = 0.721359
@@ -43574,7 +43294,6 @@ Clib#268 (HIT18OR3P040) : Combinational Logic
     Fall Capacitance = 0.010371
   Pin#3[ Y ]: Output# 0
     Logic            = ( A | B | C )
-    Tristate         = ---
     Max Fanout       = 9.75759
     Min Fanout       = 0
     Max Capacitance  = 0.975759
@@ -43745,7 +43464,6 @@ Clib#269 (HIT18OR3P040S) : Combinational Logic
     Fall Capacitance = 0.017996
   Pin#3[ Y ]: Output# 0
     Logic            = ( A | B | C )
-    Tristate         = ---
     Max Fanout       = 9.93437
     Min Fanout       = 0
     Max Capacitance  = 0.993437
@@ -43916,7 +43634,6 @@ Clib#270 (HIT18OR3P060) : Combinational Logic
     Fall Capacitance = 0.018009
   Pin#3[ Y ]: Output# 0
     Logic            = ( A | B | C )
-    Tristate         = ---
     Max Fanout       = 14.8388
     Min Fanout       = 0
     Max Capacitance  = 1.48388
@@ -44087,7 +43804,6 @@ Clib#271 (HIT18OR3P080) : Combinational Logic
     Fall Capacitance = 0.018092
   Pin#3[ Y ]: Output# 0
     Logic            = ( A | B | C )
-    Tristate         = ---
     Max Fanout       = 19.9495
     Min Fanout       = 0
     Max Capacitance  = 1.99495
@@ -44258,7 +43974,6 @@ Clib#272 (HIT18OR3P080S) : Combinational Logic
     Fall Capacitance = 0.025909
   Pin#3[ Y ]: Output# 0
     Logic            = ( A | B | C )
-    Tristate         = ---
     Max Fanout       = 20.0376
     Min Fanout       = 0
     Max Capacitance  = 2.00376
@@ -44433,7 +44148,6 @@ Clib#273 (HIT18OR4P005) : Combinational Logic
     Fall Capacitance = 0.003536
   Pin#4[ Y ]: Output# 0
     Logic            = ( A | B | C | D )
-    Tristate         = ---
     Max Fanout       = 0.966373
     Min Fanout       = 0
     Max Capacitance  = 0.096637
@@ -44657,7 +44371,6 @@ Clib#274 (HIT18OR4P010) : Combinational Logic
     Fall Capacitance = 0.006333
   Pin#4[ Y ]: Output# 0
     Logic            = ( A | B | C | D )
-    Tristate         = ---
     Max Fanout       = 2.22563
     Min Fanout       = 0
     Max Capacitance  = 0.222563
@@ -44881,7 +44594,6 @@ Clib#275 (HIT18OR4P015) : Combinational Logic
     Fall Capacitance = 0.009382
   Pin#4[ Y ]: Output# 0
     Logic            = ( A | B | C | D )
-    Tristate         = ---
     Max Fanout       = 3.45199
     Min Fanout       = 0
     Max Capacitance  = 0.345199
@@ -45105,7 +44817,6 @@ Clib#276 (HIT18OR4P020) : Combinational Logic
     Fall Capacitance = 0.010478
   Pin#4[ Y ]: Output# 0
     Logic            = ( A | B | C | D )
-    Tristate         = ---
     Max Fanout       = 4.75847
     Min Fanout       = 0
     Max Capacitance  = 0.475847
@@ -45329,7 +45040,6 @@ Clib#277 (HIT18OR4P030) : Combinational Logic
     Fall Capacitance = 0.010453
   Pin#4[ Y ]: Output# 0
     Logic            = ( A | B | C | D )
-    Tristate         = ---
     Max Fanout       = 7.23057
     Min Fanout       = 0
     Max Capacitance  = 0.723057
@@ -45553,7 +45263,6 @@ Clib#278 (HIT18OR4P040) : Combinational Logic
     Fall Capacitance = 0.010472
   Pin#4[ Y ]: Output# 0
     Logic            = ( A | B | C | D )
-    Tristate         = ---
     Max Fanout       = 9.7545
     Min Fanout       = 0
     Max Capacitance  = 0.97545
@@ -45777,7 +45486,6 @@ Clib#279 (HIT18OR4P040S) : Combinational Logic
     Fall Capacitance = 0.018292
   Pin#4[ Y ]: Output# 0
     Logic            = ( A | B | C | D )
-    Tristate         = ---
     Max Fanout       = 9.78063
     Min Fanout       = 0
     Max Capacitance  = 0.978063
@@ -46001,7 +45709,6 @@ Clib#280 (HIT18OR4P060) : Combinational Logic
     Fall Capacitance = 0.018344
   Pin#4[ Y ]: Output# 0
     Logic            = ( A | B | C | D )
-    Tristate         = ---
     Max Fanout       = 14.7348
     Min Fanout       = 0
     Max Capacitance  = 1.47348
@@ -46225,7 +45932,6 @@ Clib#281 (HIT18OR4P080) : Combinational Logic
     Fall Capacitance = 0.018301
   Pin#4[ Y ]: Output# 0
     Logic            = ( A | B | C | D )
-    Tristate         = ---
     Max Fanout       = 19.707
     Min Fanout       = 0
     Max Capacitance  = 1.9707
@@ -46441,7 +46147,7 @@ Clib#282 (HIT18TBUFP010) : Combinational Logic
     Fall Capacitance = 0.006779
   Pin#2[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
+    Tristate         = ~EN
     Max Fanout       = 1.00029
     Min Fanout       = 0
     Max Capacitance  = 0.100029
@@ -46510,7 +46216,7 @@ Clib#283 (HIT18TBUFP020) : Combinational Logic
     Fall Capacitance = 0.0112
   Pin#2[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
+    Tristate         = ~EN
     Max Fanout       = 4.76097
     Min Fanout       = 0
     Max Capacitance  = 0.476097
@@ -46579,7 +46285,7 @@ Clib#284 (HIT18TBUFP030) : Combinational Logic
     Fall Capacitance = 0.011187
   Pin#2[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
+    Tristate         = ~EN
     Max Fanout       = 7.19021
     Min Fanout       = 0
     Max Capacitance  = 0.719021
@@ -46648,7 +46354,7 @@ Clib#285 (HIT18TBUFP040) : Combinational Logic
     Fall Capacitance = 0.011155
   Pin#2[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
+    Tristate         = ~EN
     Max Fanout       = 9.68636
     Min Fanout       = 0
     Max Capacitance  = 0.968636
@@ -46717,7 +46423,7 @@ Clib#286 (HIT18TBUFP060) : Combinational Logic
     Fall Capacitance = 0.011002
   Pin#2[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
+    Tristate         = ~EN
     Max Fanout       = 14.4871
     Min Fanout       = 0
     Max Capacitance  = 1.44871
@@ -46786,7 +46492,7 @@ Clib#287 (HIT18TBUFP080) : Combinational Logic
     Fall Capacitance = 0.011009
   Pin#2[ Y ]: Output# 0
     Logic            = A
-    Tristate         = ---
+    Tristate         = ~EN
     Max Fanout       = 19.3904
     Min Fanout       = 0
     Max Capacitance  = 1.93904
@@ -46855,7 +46561,7 @@ Clib#288 (HIT18TINVP010) : Combinational Logic
     Fall Capacitance = 0.006768
   Pin#2[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
+    Tristate         = ~EN
     Max Fanout       = 1.00469
     Min Fanout       = 0
     Max Capacitance  = 0.100469
@@ -46924,7 +46630,7 @@ Clib#289 (HIT18TINVP020) : Combinational Logic
     Fall Capacitance = 0.011347
   Pin#2[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
+    Tristate         = ~EN
     Max Fanout       = 4.7632
     Min Fanout       = 0
     Max Capacitance  = 0.47632
@@ -46993,7 +46699,7 @@ Clib#290 (HIT18TINVP030) : Combinational Logic
     Fall Capacitance = 0.011342
   Pin#2[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
+    Tristate         = ~EN
     Max Fanout       = 7.16291
     Min Fanout       = 0
     Max Capacitance  = 0.716291
@@ -47062,7 +46768,7 @@ Clib#291 (HIT18TINVP040) : Combinational Logic
     Fall Capacitance = 0.011331
   Pin#2[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
+    Tristate         = ~EN
     Max Fanout       = 9.73757
     Min Fanout       = 0
     Max Capacitance  = 0.973757
@@ -47131,7 +46837,7 @@ Clib#292 (HIT18TINVP060) : Combinational Logic
     Fall Capacitance = 0.011322
   Pin#2[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
+    Tristate         = ~EN
     Max Fanout       = 14.5083
     Min Fanout       = 0
     Max Capacitance  = 1.45083
@@ -47200,7 +46906,7 @@ Clib#293 (HIT18TINVP080) : Combinational Logic
     Fall Capacitance = 0.01135
   Pin#2[ Y ]: Output# 0
     Logic            = ~A
-    Tristate         = ---
+    Tristate         = ~EN
     Max Fanout       = 19.2665
     Min Fanout       = 0
     Max Capacitance  = 1.92665
@@ -47269,7 +46975,6 @@ Clib#294 (HIT18XNOR2P005) : Combinational Logic
     Fall Capacitance = 0.009065
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A ^ B )
-    Tristate         = ---
     Max Fanout       = 0.419856
     Min Fanout       = 0
     Max Capacitance  = 0.041986
@@ -47485,7 +47190,6 @@ Clib#295 (HIT18XNOR2P010) : Combinational Logic
     Fall Capacitance = 0.014715
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A ^ B )
-    Tristate         = ---
     Max Fanout       = 0.719786
     Min Fanout       = 0
     Max Capacitance  = 0.071979
@@ -47701,7 +47405,6 @@ Clib#296 (HIT18XNOR2P015) : Combinational Logic
     Fall Capacitance = 0.014803
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A ^ B )
-    Tristate         = ---
     Max Fanout       = 3.41113
     Min Fanout       = 0
     Max Capacitance  = 0.341113
@@ -47917,7 +47620,6 @@ Clib#297 (HIT18XNOR2P020) : Combinational Logic
     Fall Capacitance = 0.014796
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A ^ B )
-    Tristate         = ---
     Max Fanout       = 4.6735
     Min Fanout       = 0
     Max Capacitance  = 0.46735
@@ -48133,7 +47835,6 @@ Clib#298 (HIT18XNOR2P030) : Combinational Logic
     Fall Capacitance = 0.014805
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A ^ B )
-    Tristate         = ---
     Max Fanout       = 7.07404
     Min Fanout       = 0
     Max Capacitance  = 0.707404
@@ -48349,7 +48050,6 @@ Clib#299 (HIT18XNOR2P040) : Combinational Logic
     Fall Capacitance = 0.01483
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A ^ B )
-    Tristate         = ---
     Max Fanout       = 9.44643
     Min Fanout       = 0
     Max Capacitance  = 0.944643
@@ -48565,7 +48265,6 @@ Clib#300 (HIT18XNOR2P060) : Combinational Logic
     Fall Capacitance = 0.014765
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A ^ B )
-    Tristate         = ---
     Max Fanout       = 14.7459
     Min Fanout       = 0
     Max Capacitance  = 1.47459
@@ -48781,7 +48480,6 @@ Clib#301 (HIT18XNOR2P080) : Combinational Logic
     Fall Capacitance = 0.014778
   Pin#2[ Y ]: Output# 0
     Logic            = ( ~A ^ B )
-    Tristate         = ---
     Max Fanout       = 19.7601
     Min Fanout       = 0
     Max Capacitance  = 1.97601
@@ -48997,7 +48695,6 @@ Clib#302 (HIT18XOR2P005) : Combinational Logic
     Fall Capacitance = 0.008741
   Pin#2[ Y ]: Output# 0
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 0.433245
     Min Fanout       = 0
     Max Capacitance  = 0.043324
@@ -49213,7 +48910,6 @@ Clib#303 (HIT18XOR2P010) : Combinational Logic
     Fall Capacitance = 0.014749
   Pin#2[ Y ]: Output# 0
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 0.736855
     Min Fanout       = 0
     Max Capacitance  = 0.073685
@@ -49429,7 +49125,6 @@ Clib#304 (HIT18XOR2P015) : Combinational Logic
     Fall Capacitance = 0.014757
   Pin#2[ Y ]: Output# 0
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 3.43005
     Min Fanout       = 0
     Max Capacitance  = 0.343005
@@ -49645,7 +49340,6 @@ Clib#305 (HIT18XOR2P020) : Combinational Logic
     Fall Capacitance = 0.014754
   Pin#2[ Y ]: Output# 0
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 4.67468
     Min Fanout       = 0
     Max Capacitance  = 0.467468
@@ -49861,7 +49555,6 @@ Clib#306 (HIT18XOR2P030) : Combinational Logic
     Fall Capacitance = 0.01478
   Pin#2[ Y ]: Output# 0
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 7.08984
     Min Fanout       = 0
     Max Capacitance  = 0.708984
@@ -50077,7 +49770,6 @@ Clib#307 (HIT18XOR2P040) : Combinational Logic
     Fall Capacitance = 0.014776
   Pin#2[ Y ]: Output# 0
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 9.49054
     Min Fanout       = 0
     Max Capacitance  = 0.949054
@@ -50293,7 +49985,6 @@ Clib#308 (HIT18XOR2P060) : Combinational Logic
     Fall Capacitance = 0.014795
   Pin#2[ Y ]: Output# 0
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 14.6913
     Min Fanout       = 0
     Max Capacitance  = 1.46914
@@ -50509,7 +50200,6 @@ Clib#309 (HIT18XOR2P080) : Combinational Logic
     Fall Capacitance = 0.014806
   Pin#2[ Y ]: Output# 0
     Logic            = ( A ^ B )
-    Tristate         = ---
     Max Fanout       = 19.7861
     Min Fanout       = 0
     Max Capacitance  = 1.97862
@@ -51679,9 +51369,9 @@ Class#131
   Idmap List = 
 Input[ 0 1], Output[ 0]
 
-  Group: Map = Input[ 1 0], Output[ 0]
+  Group: Map = Input[ 1 0~], Output[ 0]
          Cell =  HIT18TBUFP010 HIT18TBUFP020 HIT18TBUFP030 HIT18TBUFP040 HIT18TBUFP060 HIT18TBUFP080
-  Group: Map = Input[ 1~ 0], Output[ 0]
+  Group: Map = Input[ 1~ 0~], Output[ 0]
          Cell =  HIT18TINVP010 HIT18TINVP020 HIT18TINVP030 HIT18TINVP040 HIT18TINVP060 HIT18TINVP080
 
 Const0 Group
@@ -52115,6 +51805,18 @@ Node#20: AND
 Node#21: AND
 Node#22: AND
 Node#23: AND
+Node#24: AND
+Node#25: AND
+Node#26: AND
+Node#27: AND
+Node#28: AND
+Node#29: AND
+Node#30: AND
+Node#31: AND
+Node#32: AND
+Node#33: AND
+Node#34: AND
+Node#35: AND
 
 Edge#0: 0 -> 0(0)
 Edge#1: 0 -> 0(1)
@@ -52164,6 +51866,30 @@ Edge#44: 18 -> 22(0) ***
 Edge#45: 19 -> 22(1) ***
 Edge#46: 19 -> 23(0) ***
 Edge#47: 18 -> 23(1) ***
+Edge#48: 0 -> 24(0) ***
+Edge#49: 1 -> 24(1) ***
+Edge#50: 7 -> 25(0)
+Edge#51: 24 -> 25(1) ***
+Edge#52: 3 -> 26(0)
+Edge#53: 25 -> 26(1)
+Edge#54: 8 -> 27(0)
+Edge#55: 24 -> 27(1) ***
+Edge#56: 24 -> 28(0) ***
+Edge#57: 7 -> 28(1)
+Edge#58: 3 -> 29(0)
+Edge#59: 28 -> 29(1)
+Edge#60: 3 -> 30(0)
+Edge#61: 24 -> 30(1) ***
+Edge#62: 30 -> 31(0)
+Edge#63: 7 -> 31(1)
+Edge#64: 24 -> 32(0) ***
+Edge#65: 8 -> 32(1)
+Edge#66: 24 -> 33(0) ***
+Edge#67: 3 -> 33(1)
+Edge#68: 33 -> 34(0)
+Edge#69: 7 -> 34(1)
+Edge#70: 2 -> 35(0) ***
+Edge#71: 8 -> 35(1) ***
 
 Pat#0: Rep#2: (2),  4 5
 Pat#1: Rep#3: (3),  10 11 8 9
@@ -52178,4 +51904,13 @@ Pat#9: Rep#12: [inv](3),  40 34 35 41 38 39
 Pat#10: Rep#12: [inv](3),  42 38 39 43 34 35
 Pat#11: Rep#12: [inv](3),  44 36 37 45 38 39
 Pat#12: Rep#12: [inv](3),  46 38 39 47 36 37
+Pat#13: Rep#126: (4),  52 53 50 51 48 49
+Pat#14: Rep#126: (4),  54 16 17 55 48 49
+Pat#15: Rep#126: (4),  58 59 56 48 49 57
+Pat#16: Rep#126: (4),  62 60 61 48 49 63
+Pat#17: Rep#126: (4),  64 48 49 65 16 17
+Pat#18: Rep#126: (4),  68 66 48 49 67 69
+Pat#19: Rep#127: (3),  60 61 48 49
+Pat#20: Rep#127: (3),  66 48 49 67
+Pat#21: Rep#128: [inv](4),  70 4 5 71 16 17
 ==== PatMgr dump end ====

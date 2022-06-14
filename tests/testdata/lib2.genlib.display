@@ -21,7 +21,6 @@ Clib#0 (inv1x) : Combinational Logic
     Fall Capacitance = 0.0514
   Pin#1[ O ]: Output# 0
     Logic            = ~a
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -46,7 +45,6 @@ Clib#1 (inv2x) : Combinational Logic
     Fall Capacitance = 0.1009
   Pin#1[ O ]: Output# 0
     Logic            = ~a
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -71,7 +69,6 @@ Clib#2 (inv4x) : Combinational Logic
     Fall Capacitance = 0.1897
   Pin#1[ O ]: Output# 0
     Logic            = ~a
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -100,7 +97,6 @@ Clib#3 (xor) : Combinational Logic
     Fall Capacitance = 0.1381
   Pin#2[ O ]: Output# 0
     Logic            = ( ( ~a & b ) | ( a & ~b ) )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -156,7 +152,6 @@ Clib#4 (xnor) : Combinational Logic
     Fall Capacitance = 0.1352
   Pin#2[ O ]: Output# 0
     Logic            = ( ( ~a & ~b ) | ( a & b ) )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -212,7 +207,6 @@ Clib#5 (nand2) : Combinational Logic
     Fall Capacitance = 0.0716
   Pin#2[ O ]: Output# 0
     Logic            = ( ~a | ~b )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -254,7 +248,6 @@ Clib#6 (nand3) : Combinational Logic
     Fall Capacitance = 0.0777
   Pin#3[ O ]: Output# 0
     Logic            = ( ~a | ~b | ~c )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -309,7 +302,6 @@ Clib#7 (nand4) : Combinational Logic
     Fall Capacitance = 0.105
   Pin#4[ O ]: Output# 0
     Logic            = ( ~a | ~b | ~c | ~d )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -365,7 +357,6 @@ Clib#8 (nor2) : Combinational Logic
     Fall Capacitance = 0.0968
   Pin#2[ O ]: Output# 0
     Logic            = ( ~a & ~b )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -407,7 +398,6 @@ Clib#9 (nor3) : Combinational Logic
     Fall Capacitance = 0.0826
   Pin#3[ O ]: Output# 0
     Logic            = ( ~a & ~b & ~c )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -462,7 +452,6 @@ Clib#10 (nor4) : Combinational Logic
     Fall Capacitance = 0.0887
   Pin#4[ O ]: Output# 0
     Logic            = ( ~a & ~b & ~c & ~d )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -522,7 +511,6 @@ Clib#11 (aoi21) : Combinational Logic
     Fall Capacitance = 0.111
   Pin#3[ O ]: Output# 0
     Logic            = ( ( ~a1 | ~a2 ) & ~b )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -577,7 +565,6 @@ Clib#12 (aoi31) : Combinational Logic
     Fall Capacitance = 0.0979
   Pin#4[ O ]: Output# 0
     Logic            = ( ( ~a1 | ~a2 | ~a3 ) & ~b )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -641,7 +628,6 @@ Clib#13 (aoi22) : Combinational Logic
     Fall Capacitance = 0.0988
   Pin#4[ O ]: Output# 0
     Logic            = ( ( ~a1 | ~a2 ) & ( ~b1 | ~b2 ) )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -709,7 +695,6 @@ Clib#14 (aoi32) : Combinational Logic
     Fall Capacitance = 0.1049
   Pin#5[ O ]: Output# 0
     Logic            = ( ( ~a1 | ~a2 | ~a3 ) & ( ~b1 | ~b2 ) )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -790,7 +775,6 @@ Clib#15 (aoi33) : Combinational Logic
     Fall Capacitance = 0.1039
   Pin#6[ O ]: Output# 0
     Logic            = ( ( ~a1 | ~a2 | ~a3 ) & ( ~b1 | ~b2 | ~b3 ) )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -872,7 +856,6 @@ Clib#16 (aoi211) : Combinational Logic
     Fall Capacitance = 0.1008
   Pin#4[ O ]: Output# 0
     Logic            = ( ( ~a1 | ~a2 ) & ~b & ~c )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -940,7 +923,6 @@ Clib#17 (aoi221) : Combinational Logic
     Fall Capacitance = 0.111
   Pin#5[ O ]: Output# 0
     Logic            = ( ( ~a1 | ~a2 ) & ( ~b1 | ~b2 ) & ~c )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -1021,7 +1003,6 @@ Clib#18 (aoi222) : Combinational Logic
     Fall Capacitance = 0.1039
   Pin#6[ O ]: Output# 0
     Logic            = ( ( ~a1 | ~a2 ) & ( ~b1 | ~b2 ) & ( ~c1 | ~c2 ) )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -1099,7 +1080,6 @@ Clib#19 (oai21) : Combinational Logic
     Fall Capacitance = 0.0998
   Pin#3[ O ]: Output# 0
     Logic            = ( ( ~a1 & ~a2 ) | ~b )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -1154,7 +1134,6 @@ Clib#20 (oai31) : Combinational Logic
     Fall Capacitance = 0.1059
   Pin#4[ O ]: Output# 0
     Logic            = ( ( ~a1 & ~a2 & ~a3 ) | ~b )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -1218,7 +1197,6 @@ Clib#21 (oai22) : Combinational Logic
     Fall Capacitance = 0.1039
   Pin#4[ O ]: Output# 0
     Logic            = ( ( ~a1 & ~a2 ) | ( ~b1 & ~b2 ) )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -1286,7 +1264,6 @@ Clib#22 (oai32) : Combinational Logic
     Fall Capacitance = 0.113
   Pin#5[ O ]: Output# 0
     Logic            = ( ( ~a1 & ~a2 & ~a3 ) | ( ~b1 & ~b2 ) )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -1367,7 +1344,6 @@ Clib#23 (oai33) : Combinational Logic
     Fall Capacitance = 0.1109
   Pin#6[ O ]: Output# 0
     Logic            = ( ( ~a1 & ~a2 & ~a3 ) | ( ~b1 & ~b2 & ~b3 ) )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -1449,7 +1425,6 @@ Clib#24 (oai211) : Combinational Logic
     Fall Capacitance = 0.105
   Pin#4[ O ]: Output# 0
     Logic            = ( ( ~a1 & ~a2 ) | ~b | ~c )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -1517,7 +1492,6 @@ Clib#25 (oai221) : Combinational Logic
     Fall Capacitance = 0.1019
   Pin#5[ O ]: Output# 0
     Logic            = ( ( ~a1 & ~a2 ) | ( ~b1 & ~b2 ) | ~c )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -1598,7 +1572,6 @@ Clib#26 (oai222) : Combinational Logic
     Fall Capacitance = 0.114
   Pin#6[ O ]: Output# 0
     Logic            = ( ( ~a1 & ~a2 ) | ( ~b1 & ~b2 ) | ( ~c1 & ~c2 ) )
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -1664,7 +1637,6 @@ Clib#27 (zero) : Combinational Logic
   area = 0
   Pin#0[ O ]: Output# 0
     Logic            = 0
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -1676,7 +1648,6 @@ Clib#28 (one) : Combinational Logic
   area = 0
   Pin#0[ O ]: Output# 0
     Logic            = 1
-    Tristate         = ---
     Max Fanout       = 1.79769e+308
     Min Fanout       = 0
     Max Capacitance  = 1.79769e+308
@@ -3082,6 +3053,59 @@ Node#13: AND
 Node#14: AND
 Node#15: AND
 Node#16: XOR
+Node#17: AND
+Node#18: AND
+Node#19: AND
+Node#20: AND
+Node#21: AND
+Node#22: AND
+Node#23: AND
+Node#24: AND
+Node#25: AND
+Node#26: AND
+Node#27: AND
+Node#28: AND
+Node#29: AND
+Node#30: INPUT#4
+Node#31: AND
+Node#32: AND
+Node#33: AND
+Node#34: AND
+Node#35: AND
+Node#36: INPUT#5
+Node#37: AND
+Node#38: AND
+Node#39: AND
+Node#40: AND
+Node#41: AND
+Node#42: AND
+Node#43: AND
+Node#44: AND
+Node#45: AND
+Node#46: AND
+Node#47: AND
+Node#48: AND
+Node#49: AND
+Node#50: AND
+Node#51: AND
+Node#52: AND
+Node#53: AND
+Node#54: AND
+Node#55: AND
+Node#56: AND
+Node#57: AND
+Node#58: AND
+Node#59: AND
+Node#60: AND
+Node#61: AND
+Node#62: AND
+Node#63: AND
+Node#64: AND
+Node#65: AND
+Node#66: AND
+Node#67: AND
+Node#68: AND
+Node#69: AND
 
 Edge#0: 0 -> 0(0)
 Edge#1: 0 -> 0(1)
@@ -3117,6 +3141,112 @@ Edge#30: 6 -> 15(0)
 Edge#31: 7 -> 15(1)
 Edge#32: 0 -> 16(0)
 Edge#33: 1 -> 16(1)
+Edge#34: 0 -> 17(0) ***
+Edge#35: 1 -> 17(1) ***
+Edge#36: 17 -> 18(0) ***
+Edge#37: 2 -> 18(1) ***
+Edge#38: 2 -> 19(0) ***
+Edge#39: 17 -> 19(1) ***
+Edge#40: 17 -> 20(0) ***
+Edge#41: 3 -> 20(1)
+Edge#42: 3 -> 21(0)
+Edge#43: 17 -> 21(1) ***
+Edge#44: 1 -> 22(0) ***
+Edge#45: 3 -> 22(1) ***
+Edge#46: 0 -> 23(0) ***
+Edge#47: 22 -> 23(1)
+Edge#48: 17 -> 24(0)
+Edge#49: 3 -> 24(1) ***
+Edge#50: 23 -> 25(0) ***
+Edge#51: 7 -> 25(1)
+Edge#52: 7 -> 26(0)
+Edge#53: 23 -> 26(1) ***
+Edge#54: 24 -> 27(0) ***
+Edge#55: 7 -> 27(1)
+Edge#56: 7 -> 28(0)
+Edge#57: 24 -> 28(1) ***
+Edge#58: 2 -> 29(0) ***
+Edge#59: 8 -> 29(1) ***
+Edge#60: 0 -> 30(0)
+Edge#61: 0 -> 30(1)
+Edge#62: 7 -> 31(0)
+Edge#63: 30 -> 31(1)
+Edge#64: 5 -> 32(0) ***
+Edge#65: 31 -> 32(1) ***
+Edge#66: 31 -> 33(0) ***
+Edge#67: 5 -> 33(1) ***
+Edge#68: 6 -> 34(0) ***
+Edge#69: 31 -> 34(1) ***
+Edge#70: 31 -> 35(0) ***
+Edge#71: 6 -> 35(1) ***
+Edge#72: 0 -> 36(0)
+Edge#73: 0 -> 36(1)
+Edge#74: 30 -> 37(0)
+Edge#75: 36 -> 37(1)
+Edge#76: 7 -> 38(0)
+Edge#77: 37 -> 38(1)
+Edge#78: 31 -> 39(0)
+Edge#79: 36 -> 39(1)
+Edge#80: 5 -> 40(0) ***
+Edge#81: 38 -> 40(1) ***
+Edge#82: 5 -> 41(0) ***
+Edge#83: 39 -> 41(1) ***
+Edge#84: 39 -> 42(0) ***
+Edge#85: 5 -> 42(1) ***
+Edge#86: 6 -> 43(0) ***
+Edge#87: 38 -> 43(1) ***
+Edge#88: 38 -> 44(0) ***
+Edge#89: 6 -> 44(1) ***
+Edge#90: 6 -> 45(0) ***
+Edge#91: 39 -> 45(1) ***
+Edge#92: 17 -> 46(0) ***
+Edge#93: 8 -> 46(1)
+Edge#94: 20 -> 47(0)
+Edge#95: 7 -> 47(1)
+Edge#96: 17 -> 48(0) ***
+Edge#97: 7 -> 48(1)
+Edge#98: 3 -> 49(0)
+Edge#99: 48 -> 49(1)
+Edge#100: 21 -> 50(0)
+Edge#101: 7 -> 50(1)
+Edge#102: 7 -> 51(0)
+Edge#103: 17 -> 51(1) ***
+Edge#104: 3 -> 52(0)
+Edge#105: 51 -> 52(1)
+Edge#106: 8 -> 53(0)
+Edge#107: 17 -> 53(1) ***
+Edge#108: 3 -> 54(0) ***
+Edge#109: 7 -> 54(1) ***
+Edge#110: 54 -> 55(0) ***
+Edge#111: 30 -> 55(1)
+Edge#112: 17 -> 56(0) ***
+Edge#113: 55 -> 56(1)
+Edge#114: 17 -> 57(0) ***
+Edge#115: 54 -> 57(1) ***
+Edge#116: 57 -> 58(0)
+Edge#117: 30 -> 58(1)
+Edge#118: 30 -> 59(0)
+Edge#119: 54 -> 59(1) ***
+Edge#120: 17 -> 60(0) ***
+Edge#121: 59 -> 60(1)
+Edge#122: 17 -> 61(0) ***
+Edge#123: 30 -> 61(1)
+Edge#124: 61 -> 62(0)
+Edge#125: 54 -> 62(1) ***
+Edge#126: 30 -> 63(0)
+Edge#127: 57 -> 63(1)
+Edge#128: 30 -> 64(0)
+Edge#129: 17 -> 64(1) ***
+Edge#130: 64 -> 65(0)
+Edge#131: 54 -> 65(1) ***
+Edge#132: 30 -> 66(0) ***
+Edge#133: 36 -> 66(1) ***
+Edge#134: 54 -> 67(0) ***
+Edge#135: 66 -> 67(1) ***
+Edge#136: 17 -> 68(0) ***
+Edge#137: 67 -> 68(1)
+Edge#138: 57 -> 69(0)
+Edge#139: 66 -> 69(1) ***
 
 Pat#0: Rep#2: (2),  4 5
 Pat#1: Rep#3: (3),  10 11 8 9
@@ -3127,4 +3257,37 @@ Pat#5: Rep#4: (4),  26 4 5 27 16 17
 Pat#6: Rep#4: (4),  28 10 11 8 9 29
 Pat#7: Rep#4: (4),  30 12 4 5 13 31
 Pat#8: Rep#9: (2),  32 33
+Pat#9: Rep#9: (2),  36 34 35 37 4 5
+Pat#10: Rep#9: (2),  38 4 5 39 34 35
+Pat#11: Rep#126: (3),  40 34 35 41
+Pat#12: Rep#126: (3),  42 43 34 35
+Pat#13: Rep#127: (4),  50 46 47 44 45 51
+Pat#14: Rep#127: (4),  52 53 46 47 44 45
+Pat#15: Rep#127: (4),  54 48 34 35 49 55
+Pat#16: Rep#127: (4),  56 57 48 34 35 49
+Pat#17: Rep#128: [inv](4),  58 4 5 59 16 17
+Pat#18: Rep#129: [inv](5),  64 10 11 8 9 65 62 63
+Pat#19: Rep#129: [inv](5),  66 62 63 67 10 11 8 9
+Pat#20: Rep#129: [inv](5),  68 12 4 5 13 69 62 63
+Pat#21: Rep#129: [inv](5),  70 62 63 71 12 4 5 13
+Pat#22: Rep#130: [inv](6),  80 10 11 8 9 81 76 77 74 75
+Pat#23: Rep#130: [inv](6),  82 10 11 8 9 83 78 62 63 79
+Pat#24: Rep#130: [inv](6),  84 78 62 63 79 85 10 11 8 9
+Pat#25: Rep#130: [inv](6),  86 12 4 5 13 87 76 77 74 75
+Pat#26: Rep#130: [inv](6),  88 76 77 74 75 89 12 4 5 13
+Pat#27: Rep#130: [inv](6),  90 12 4 5 13 91 78 62 63 79
+Pat#28: Rep#131: (4),  92 34 35 93 16 17
+Pat#29: Rep#131: (4),  94 40 34 35 41 95
+Pat#30: Rep#131: (4),  98 99 96 34 35 97
+Pat#31: Rep#131: (4),  100 42 43 34 35 101
+Pat#32: Rep#131: (4),  104 105 102 103 34 35
+Pat#33: Rep#131: (4),  106 16 17 107 34 35
+Pat#34: Rep#132: (5),  112 34 35 113 110 108 109 111
+Pat#35: Rep#132: (5),  116 114 34 35 115 108 109 117
+Pat#36: Rep#132: (5),  120 34 35 121 118 119 108 109
+Pat#37: Rep#132: (5),  124 122 34 35 123 125 108 109
+Pat#38: Rep#132: (5),  126 127 114 34 35 115 108 109
+Pat#39: Rep#132: (5),  130 128 129 34 35 131 108 109
+Pat#40: Rep#133: (6),  136 34 35 137 134 108 109 135 132 133
+Pat#41: Rep#133: (6),  138 114 34 35 115 108 109 139 132 133
 ==== PatMgr dump end ====
