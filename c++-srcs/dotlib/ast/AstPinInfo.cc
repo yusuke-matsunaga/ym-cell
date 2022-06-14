@@ -295,7 +295,7 @@ AstPinInfo::get_output_params(
     break;
   }
 
-  switch ( elem_dict.get_expr("tristate", mTristate) ) {
+  switch ( elem_dict.get_expr("three_state", mTristate) ) {
   case AstElemDict::OK:
     break;
   case AstElemDict::NOT_FOUND:
