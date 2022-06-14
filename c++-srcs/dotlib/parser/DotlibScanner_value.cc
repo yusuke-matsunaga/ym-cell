@@ -42,6 +42,7 @@ DotlibScanner::read_int()
 		  MsgType::Error,
 		  "DOTLIB_SCANNER",
 		  emsg.str());
+  throw ClibError{"Syntax error"};
   return {};
 }
 
@@ -77,6 +78,7 @@ DotlibScanner::read_float()
 		  MsgType::Error,
 		  "DOTLIB_SCANNER",
 		  emsg.str());
+  throw ClibError{"Syntax error"};
   return {};
 }
 
@@ -97,6 +99,7 @@ DotlibScanner::read_string()
 		  MsgType::Error,
 		  "DOTLIB_SCANNER",
 		  "Syntax error. 'string' value is expected.");
+  throw ClibError{"Syntax error"};
   return {};
 }
 
@@ -124,6 +127,7 @@ DotlibScanner::read_bool()
 		  MsgType::Error,
 		  "DOTLIB_SCANNER",
 		  buf.str());
+  throw ClibError{"Syntax error"};
   return {};
 }
 
@@ -168,6 +172,7 @@ DotlibScanner::read_delay_model()
 		  MsgType::Error,
 		  "DOTLIB_SCANNER",
 		  buf.str());
+  throw ClibError{"Syntax error"};
   return {};
 }
 
@@ -205,6 +210,7 @@ DotlibScanner::read_direction()
 		  MsgType::Error,
 		  "DOTLIB_SCANNER",
 		  buf.str());
+  throw ClibError{"Syntax error"};
   return {};
 }
 
@@ -236,6 +242,7 @@ DotlibScanner::read_technology()
 		  MsgType::Error,
 		  "DOTLIB_SCANNER",
 		  buf.str());
+  throw ClibError{"Syntax error"};
   return {};
 }
 
@@ -270,6 +277,7 @@ DotlibScanner::read_timing_sense()
 		  MsgType::Error,
 		  "DOTLIB_SCANNER",
 		  buf.str());
+  throw ClibError{"Syntax error"};
   return {};
 }
 
@@ -385,6 +393,7 @@ DotlibScanner::read_timing_type()
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
 		    buf.str());
+    throw ClibError{"Syntax error"};
     return {};
   }
 
@@ -452,6 +461,7 @@ DotlibScanner::read_vartype()
 		  MsgType::Error,
 		  "DOTLIB_SCANNER",
 		  buf.str());
+  throw ClibError{"Syntax error"};
   return {};
 }
 
@@ -465,6 +475,7 @@ DotlibScanner::read_int_vector()
   auto token = read_token();
   auto tmp_str = token.str_value();
   if ( tmp_str == string() ) {
+    throw ClibError{"Syntax error"};
     return {};
   }
 
@@ -481,6 +492,7 @@ DotlibScanner::read_int_vector()
 			MsgType::Error,
 			"DOTLIB_SCANNER",
 			"Syntax error: Null element.");
+	throw ClibError{"Syntax error"};
 	return {};
       }
       dst_list.push_back(atoi(buf.c_str()));
@@ -495,6 +507,7 @@ DotlibScanner::read_int_vector()
 		      MsgType::Error,
 		      "DOTLIB_SCANNER",
 		      "Syntax error: Integer value expected.");
+      throw ClibError{"Syntax error"};
       return {};
     }
   }
@@ -521,6 +534,7 @@ DotlibScanner::read_float_vector()
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. 'string' value is expected.");
+    throw ClibError{"Syntax error"};
     return {};
   }
 
@@ -537,6 +551,7 @@ DotlibScanner::read_float_vector()
 			MsgType::Error,
 			"DOTLIB_PARSER",
 			"Syntax error. Null element.");
+	throw ClibError{"Syntax error"};
 	return {};
       }
       char* end;
@@ -550,6 +565,7 @@ DotlibScanner::read_float_vector()
 			MsgType::Error,
 			"DOTLIB_PARSER",
 			emsg.str());
+	throw ClibError{"Syntax error"};
 	return {};
       }
       dst_list.push_back(val);

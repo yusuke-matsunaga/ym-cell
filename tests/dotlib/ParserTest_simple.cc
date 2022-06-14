@@ -50,13 +50,18 @@ TEST_F(ParserTest, simple_bool3)
   istringstream buf{": fals;\n"};
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_bool(parser, kwd, kwd_loc);
-
-  EXPECT_TRUE( dst == nullptr );
-  auto msg_list = mh.message_list();
-  EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: fals: Illegal value for boolean, only 'true' or 'false' are allowed.\n",
-	     msg_list[0]);
+  bool caught{false};
+  try {
+    auto dst = simple_bool(parser, kwd, kwd_loc);
+  }
+  catch ( ClibError& error ) {
+    caught = true;
+    auto msg_list = mh.message_list();
+    EXPECT_EQ( 1, msg_list.size() );
+    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: fals: Illegal value for boolean, only 'true' or 'false' are allowed.\n",
+	       msg_list[0]);
+  }
+  EXPECT_TRUE( caught );
 }
 
 TEST_F(ParserTest, simple_bool4)
@@ -65,13 +70,18 @@ TEST_F(ParserTest, simple_bool4)
   istringstream buf{": true; another_attr"};
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_bool(parser, kwd, kwd_loc);
-
-  EXPECT_TRUE( dst == nullptr );
-  auto msg_list = mh.message_list();
-  EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "parser_test.lib: line 1, column 9 - 20: (ERROR  ) [DOTLIB_PARSER]: Syntax error. New-line is expected.\n",
-	     msg_list[0]);
+  bool caught{false};
+  try {
+    auto dst = simple_bool(parser, kwd, kwd_loc);
+  }
+  catch ( ClibError& error ) {
+    caught = true;
+    auto msg_list = mh.message_list();
+    EXPECT_EQ( 1, msg_list.size() );
+    EXPECT_EQ( "parser_test.lib: line 1, column 9 - 20: (ERROR  ) [DOTLIB_PARSER]: Syntax error. New-line is expected.\n",
+	       msg_list[0]);
+  }
+  EXPECT_TRUE( caught );
 }
 
 TEST_F(ParserTest, simple_bool5)
@@ -80,13 +90,18 @@ TEST_F(ParserTest, simple_bool5)
   istringstream buf{": true\n"};
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_bool(parser, kwd, kwd_loc);
-
-  EXPECT_TRUE( dst == nullptr );
-  auto msg_list = mh.message_list();
-  EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "parser_test.lib: line 1, column 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error. Semicolon is expected.\n",
-	     msg_list[0]);
+  bool caught{false};
+  try {
+    auto dst = simple_bool(parser, kwd, kwd_loc);
+  }
+  catch ( ClibError& error ) {
+    caught = true;
+    auto msg_list = mh.message_list();
+    EXPECT_EQ( 1, msg_list.size() );
+    EXPECT_EQ( "parser_test.lib: line 1, column 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error. Semicolon is expected.\n",
+	       msg_list[0]);
+  }
+  EXPECT_TRUE( caught );
 }
 
 TEST_F(ParserTest, simple_bool6)
@@ -125,13 +140,18 @@ TEST_F(ParserTest, simple_int2)
   istringstream buf(": a123;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_int(parser, kwd, kwd_loc);
-
-  EXPECT_TRUE( dst == nullptr );
-  auto msg_list = mh.message_list();
-  EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: a123: Not an integer value.\n",
-	     msg_list[0]);
+  bool caught{false};
+  try {
+    auto dst = simple_int(parser, kwd, kwd_loc);
+  }
+  catch ( ClibError& error ) {
+    caught = true;
+    auto msg_list = mh.message_list();
+    EXPECT_EQ( 1, msg_list.size() );
+    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: a123: Not an integer value.\n",
+	       msg_list[0]);
+  }
+  EXPECT_TRUE( caught );
 }
 
 TEST_F(ParserTest, simple_float1)
@@ -169,13 +189,18 @@ TEST_F(ParserTest, simple_float3)
   istringstream buf(": f123.456;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_float(parser, kwd, kwd_loc);
-
-  EXPECT_TRUE( dst == nullptr );
-  auto msg_list = mh.message_list();
-  EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 10: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: f123.456: Not a number value.\n",
-	     msg_list[0]);
+  bool caught{false};
+  try {
+    auto dst = simple_float(parser, kwd, kwd_loc);
+  }
+  catch ( ClibError& error ) {
+    caught = true;
+    auto msg_list = mh.message_list();
+    EXPECT_EQ( 1, msg_list.size() );
+    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 10: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: f123.456: Not a number value.\n",
+	       msg_list[0]);
+  }
+  EXPECT_TRUE( caught );
 }
 
 TEST_F(ParserTest, simple_string1)
@@ -313,13 +338,18 @@ TEST_F(ParserTest, simple_delay_model6)
   istringstream buf(": abcdef;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_delay_model(parser, kwd, kwd_loc);
-
-  EXPECT_TRUE( dst == nullptr );
-  auto msg_list = mh.message_list();
-  EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 8: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abcdef: Illegal value for 'delay_model'. 'generic_cmos', 'table_lookup', 'piecewise_cmos', 'cmos2', 'dcm' or 'polynomial' are expected.\n",
-	     msg_list[0]);
+  bool caught{false};
+  try {
+    auto dst = simple_delay_model(parser, kwd, kwd_loc);
+  }
+  catch ( ClibError& error ) {
+    caught = true;
+    auto msg_list = mh.message_list();
+    EXPECT_EQ( 1, msg_list.size() );
+    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 8: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abcdef: Illegal value for 'delay_model'. 'generic_cmos', 'table_lookup', 'piecewise_cmos', 'cmos2', 'dcm' or 'polynomial' are expected.\n",
+	       msg_list[0]);
+  }
+  EXPECT_TRUE( caught );
 }
 
 TEST_F(ParserTest, simple_direction1)
@@ -384,13 +414,18 @@ TEST_F(ParserTest, simple_direction5)
   istringstream buf(": 0.1;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_direction(parser, kwd, kwd_loc);
-
-  EXPECT_TRUE( dst == nullptr );
-  auto msg_list = mh.message_list();
-  EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 0.1: Illegal value for 'direction'. 'input', 'output', 'inout' or 'internal' are expected.\n",
-	     msg_list[0]);
+  bool caught{false};
+  try {
+    auto dst = simple_direction(parser, kwd, kwd_loc);
+  }
+  catch ( ClibError& error ) {
+    caught = true;
+    auto msg_list = mh.message_list();
+    EXPECT_EQ( 1, msg_list.size() );
+    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 0.1: Illegal value for 'direction'. 'input', 'output', 'inout' or 'internal' are expected.\n",
+	       msg_list[0]);
+  }
+  EXPECT_TRUE( caught );
 }
 
 TEST_F(ParserTest, simple_timing_sense1)
@@ -441,13 +476,18 @@ TEST_F(ParserTest, simple_timing_sense4)
   istringstream buf(": unate;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_timing_sense(parser, kwd, kwd_loc);
-
-  EXPECT_TRUE( dst == nullptr );
-  auto msg_list = mh.message_list();
-  EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 7: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: unate: Illegal value for 'timing_sense'. Only 'positive_unate', 'negative_unate', or 'non_unate' are allowed here.\n",
-	     msg_list[0]);
+  bool caught{false};
+  try {
+    auto dst = simple_timing_sense(parser, kwd, kwd_loc);
+  }
+  catch ( ClibError& error ) {
+    caught = true;
+    auto msg_list = mh.message_list();
+    EXPECT_EQ( 1, msg_list.size() );
+    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 7: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: unate: Illegal value for 'timing_sense'. Only 'positive_unate', 'negative_unate', or 'non_unate' are allowed here.\n",
+	       msg_list[0]);
+  }
+  EXPECT_TRUE( caught );
 }
 
 TEST_F(ParserTest, simple_timing_type1)
@@ -890,13 +930,15 @@ TEST_F(ParserTest, simple_timing_type32)
   istringstream buf(": abc;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_timing_type(parser, kwd, kwd_loc);
-
-  EXPECT_TRUE( dst == nullptr );
-  auto msg_list = mh.message_list();
-  EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abc: Illegal value for 'timing_type'.\n",
-	     msg_list[0]);
+  try {
+    auto dst = simple_timing_type(parser, kwd, kwd_loc);
+  }
+  catch ( ClibError& error ) {
+    auto msg_list = mh.message_list();
+    EXPECT_EQ( 1, msg_list.size() );
+    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abc: Illegal value for 'timing_type'.\n",
+	       msg_list[0]);
+  }
 }
 
 TEST_F(ParserTest, simple_vartype1)
@@ -1086,13 +1128,15 @@ TEST_F(ParserTest, simple_vartype15)
   istringstream buf(": abc;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
-
-  EXPECT_TRUE( dst == nullptr );
-  auto msg_list = mh.message_list();
-  EXPECT_EQ( 1, msg_list.size() );
-  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abc: Illegal value for 'variable_type'.\n",
-	     msg_list[0]);
+  try {
+    auto dst = simple_vartype(parser, kwd, kwd_loc);
+  }
+  catch ( ClibError& error ) {
+    auto msg_list = mh.message_list();
+    EXPECT_EQ( 1, msg_list.size() );
+    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abc: Illegal value for 'variable_type'.\n",
+	       msg_list[0]);
+  }
 }
 
 END_NAMESPACE_YM_DOTLIB

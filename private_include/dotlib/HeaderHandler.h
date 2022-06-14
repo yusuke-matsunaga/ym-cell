@@ -119,12 +119,10 @@ private:
   ) = 0;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  /// @retval true 正しく読み込んだ．
-  /// @retval false エラーが起こった．
   ///
   /// - ')' を読み込んだ直後に呼ばれる．
   virtual
-  bool
+  void
   _end_header(
     int count ///< [in] 読み込んだ要素数
   ) = 0;
@@ -178,7 +176,7 @@ private:
   ) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  bool
+  void
   _end_header(
     int count ///< [in] 読み込んだ要素数
   ) override;
@@ -224,7 +222,7 @@ private:
   ) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  bool
+  void
   _end_header(
     int count ///< [in] 読み込んだ要素数
   ) override;
@@ -271,7 +269,7 @@ private:
   /// @brief 読み込みが終了した時の処理を行う．
   /// @retval true 正しく読み込んだ．
   /// @retval false エラーが起きた．
-  bool
+  void
   _end_header(
     int count ///< [in] 読み込んだ要素数
   ) override;
@@ -319,7 +317,7 @@ private:
   ) override;
 
   /// @brief 読み込みが終了した時の処理を行う．
-  bool
+  void
   _end_header(
     int count ///< [in] 読み込んだ要素数
   ) override;

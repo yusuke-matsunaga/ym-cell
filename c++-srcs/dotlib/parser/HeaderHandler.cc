@@ -65,13 +65,9 @@ HeaderHandler::end_header(
 )
 {
   mRpLoc = loc;
-  if ( _end_header(count) ) {
-    FileRegion loc{mLpLoc, mRpLoc};
-    return AstValue::new_complex(mValueList, loc);
-  }
-  else {
-    return {};
-  }
+  _end_header(count);
+  FileRegion loc1{mLpLoc, mRpLoc};
+  return AstValue::new_complex(mValueList, loc1);
 }
 
 // @brief ヘッダの開始処理
@@ -117,12 +113,13 @@ FixedElemHeader::_read_header_value(
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
+    throw ClibError{"Syntax error"};
     return {};
   }
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-bool
+void
 FixedElemHeader::_end_header(
   int count
 )
@@ -137,10 +134,7 @@ FixedElemHeader::_end_header(
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
-    return false;
-  }
-  else {
-    return true;
+    throw ClibError{"Syntax error"};
   }
 }
 
@@ -177,16 +171,16 @@ FanoutLengthHeader::_read_header_value(
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  buf.str());
+  throw ClibError{"Syntax error"};
   return {};
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-bool
+void
 FanoutLengthHeader::_end_header(
   int count
 )
 {
-  return true;
 }
 
 
@@ -213,13 +207,12 @@ ListHeader::_read_header_value(
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-bool
+void
 ListHeader::_end_header(
   int count
 )
 {
   // count は無視
-  return true;
 }
 
 
@@ -253,17 +246,17 @@ OptElemHeader::_read_header_value(
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  buf.str());
+  throw ClibError{"Syntax error"};
   return {};
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-bool
+void
 OptElemHeader::_end_header(
   int count ///< [in] 読み込んだ要素数
 )
 {
   // 0 でも可
-  return true;
 }
 
 END_NAMESPACE_YM_DOTLIB
