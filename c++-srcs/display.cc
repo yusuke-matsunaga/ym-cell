@@ -601,7 +601,7 @@ display_cell(
       << "  Enable             = "
       << ewriter.dump_to_string(cell.enable_expr(), var_names)
       << endl;
-    if ( !cell.enable2_expr().is_zero() ) {
+    if ( cell.enable2_expr().is_valid() ) {
       s << "  Enable2            = "
 	<< ewriter.dump_to_string(cell.enable2_expr(), var_names)
 	<< endl;

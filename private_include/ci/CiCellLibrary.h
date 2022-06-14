@@ -297,7 +297,12 @@ public:
     const ShString& name
   ) const
   {
-    return mCellHash.at(name)->id();
+    if ( mCellHash.count(name) > 0 ) {
+      return mCellHash.at(name)->id();
+    }
+    else {
+      return CLIB_NULLID;
+    }
   }
 
   /// @brief セルグループ数の取得

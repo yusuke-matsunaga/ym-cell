@@ -338,7 +338,7 @@ CiCell::has_tristate(
 ) const
 {
   ASSERT_COND( 0 <= pin_id && pin_id < output_num2() );
-  return !output(pin_id).tristate().is_zero();
+  return output(pin_id).tristate().is_valid();
 }
 
 // @brief トライステートセルの場合にトライステート条件式を返す．
