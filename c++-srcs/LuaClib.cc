@@ -28,7 +28,7 @@ clib_new(
   auto lib = new (p) ClibCellLibrary{};
 
   // ClibCellLibrary 用の metatable を取ってくる．
-  luaL_getmetatable(lua.lua_state(), CLIB_SIGNATURE);
+  lua.L_getmetatable(CLIB_SIGNATURE);
 
   // それを今作った userdata にセットする．
   lua.set_metatable(-2);
@@ -166,7 +166,7 @@ LuaClib::init_Clib(
   set_field(-2, "__gc");
 
   // メソッドテーブルを登録する．
-  luaL_setfuncs(lua_state(), mt, 0);
+  L_setfuncs(mt, 0);
 
   // 生成関数を登録する．
   mylib.push_back({"read_mislib", clib_read_mislib});
@@ -190,7 +190,7 @@ LuaClib::to_clib(
   int idx
 )
 {
-  auto p = luaL_checkudata(lua_state(), idx, CLIB_SIGNATURE);
+  auto p = L_checkudata(idx, CLIB_SIGNATURE);
   return reinterpret_cast<ClibCellLibrary*>(p);
 }
 
