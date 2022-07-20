@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 #include "ym/clib.h"
-#include "ym/Luapp.h"
+#include <lua.hpp>
 
 
 BEGIN_NAMESPACE_YM
@@ -17,63 +17,40 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 /// @class LuaClib LuaClib.h "LuaClib.h"
 /// @brief Clib 用の Luapp 拡張
+///
+/// 実際には static member function の定義のみからなる．
 //////////////////////////////////////////////////////////////////////
-class LuaClib :
-  public Luapp
+class LuaClib
 {
-public:
-
-  /// @brief 空のコンストラクタ
-  LuaClib() = default;
-
-  /// @brief 通常のコンストラクタ
-  LuaClib(
-    lua_Alloc f, ///< [in] アロケーター
-    void* ud      ///< [in] ユーザーデータ
-  ) : Luapp{f, ud}
-  {
-  }
-
-  /// @brief すでに生成済みのインタプリタを用いるコンストラクタ
-  LuaClib(
-    lua_State* L ///< [in] lua インタープリタ
-  ) : Luapp{L}
-  {
-  }
-
-  /// @brief デストラクタ
-  ~LuaClib() = default;
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief ClibCellLibrary 関係の初期化を行う．
+  static
+  void
+  init(
+    lua_State* L,                  ///< [in] lua インタプリタ
+    vector<struct luaL_Reg>& mylib ///< [out] モジュールに登録する関数のリスト
+  );
+
   /// @brief 対象が ClibCellLibrary の時 true を返す．
+  static
   bool
   is_clib(
-    int idx ///< [in] スタック上のインデックス
+    lua_State* L, ///< [in] lua インタプリタ
+    int idx       ///< [in] スタック上のインデックス
   );
 
   /// @brief 対象を ClibCellLibrary として取り出す．
   ///
   /// ClibCellLibrary でない時は nullptr を返す．
+  static
   ClibCellLibrary*
   to_clib(
-    int idx ///< [in] スタック上のインデックス
-  );
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // 継承クラスで用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief ClibCellLibrary 関係の初期化を行う．
-  void
-  init_Clib(
-    vector<struct luaL_Reg>& mylib ///< [out] モジュールに登録する関数のリスト
+    lua_State* L, ///< [in] lua インタプリタ
+    int idx       ///< [in] スタック上のインデックス
   );
 
 };

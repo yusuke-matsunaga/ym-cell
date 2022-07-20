@@ -8,6 +8,7 @@
 
 #include "ym/LuaClib.h"
 #include "ym/ClibCellLibrary.h"
+#include "ym/Luapp.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -15,7 +16,7 @@ BEGIN_NAMESPACE_YM
 BEGIN_NONAMESPACE
 
 // Clib 用のシグネチャ
-const char* CLIB_SIGNATURE{"Druid.Clib"};
+const char* CLIB_SIGNATURE{"Luapp.Clib"};
 
 // ClibCellLibrary を作る．
 ClibCellLibrary*
@@ -42,9 +43,7 @@ clib_gc(
   lua_State* L
 )
 {
-  LuaClib lua{L};
-
-  auto clib = lua.to_clib(1);
+  auto clib = LuaClib::to_clib(L, 1);
   if ( clib ) {
     // デストラクタを明示的に起動する．
     clib->~ClibCellLibrary();
@@ -60,9 +59,7 @@ clib_display(
   lua_State* L
 )
 {
-  LuaClib lua{L};
-
-  auto clib = lua.to_clib(1);
+  auto clib = LuaClib::to_clib(L, 1);
 
   display_library(cout, *clib);
 
@@ -75,7 +72,7 @@ clib_read_mislib(
   lua_State* L
 )
 {
-  LuaClib lua{L};
+  Luapp lua{L};
 
   int n = lua.get_top();
   if ( n != 1 ) {
@@ -101,7 +98,7 @@ clib_read_mislib(
     return 1;
   }
   catch ( ClibError& error ) {
-    return lua.error_end("Error: new_clib(): read failed.");
+    return lua.error_end("Error: read_mislib(): read failed.");
   }
 }
 
@@ -111,16 +108,16 @@ clib_read_liberty(
   lua_State* L
 )
 {
-  LuaClib lua{L};
+  Luapp lua{L};
 
   int n = lua.get_top();
   if ( n != 1 ) {
-    return lua.error_end("Error: read_mislib() expects one argument.");
+    return lua.error_end("Error: read_liberty() expects one argument.");
   }
 
   // 最初の引数はファイル名とみなす．
   if ( !lua.is_string(1) ) {
-    return lua.error_end("Error: read_mislib(): Arg#1 should be a string.");
+    return lua.error_end("Error: read_liberty(): Arg#1 should be a string.");
   }
   string filename = lua.to_string(1);
 
@@ -137,7 +134,7 @@ clib_read_liberty(
     return 1;
   }
   catch ( ClibError& error ) {
-    return lua.error_end("Error: new_clib(): read failed.");
+    return lua.error_end("Error: read_liberty(): read failed.");
   }
 }
 
@@ -145,7 +142,8 @@ END_NONAMESPACE
 
 
 void
-LuaClib::init_Clib(
+LuaClib::init(
+  lua_State* L,
   vector<struct luaL_Reg>& mylib
 )
 {
@@ -154,19 +152,21 @@ LuaClib::init_Clib(
     {nullptr, nullptr}
   };
 
+  Luapp lua{L};
+
   // ClibCellLibrary に対応する Lua の metatable を作る．
-  L_newmetatable(CLIB_SIGNATURE);
+  lua.L_newmetatable(CLIB_SIGNATURE);
 
   // metatable 自身を __index に登録する．
-  push_value(-1);
-  set_field(-2, "__index");
+  lua.push_value(-1);
+  lua.set_field(-2, "__index");
 
   // デストラクタを __gc い登録する．
-  push_cfunction(clib_gc);
-  set_field(-2, "__gc");
+  lua.push_cfunction(clib_gc);
+  lua.set_field(-2, "__gc");
 
   // メソッドテーブルを登録する．
-  L_setfuncs(mt, 0);
+  lua.L_setfuncs(mt, 0);
 
   // 生成関数を登録する．
   mylib.push_back({"read_mislib", clib_read_mislib});
@@ -177,20 +177,23 @@ LuaClib::init_Clib(
 // @brief 対象が ClibCellLibrary の時 true を返す．
 bool
 LuaClib::is_clib(
+  lua_State* L,
   int idx
 )
 {
-  auto clib = to_clib(idx);
+  auto clib = to_clib(L, idx);
   return clib != nullptr;
 }
 
 // @brief 対象を ClibCellLibrary として取り出す．
 ClibCellLibrary*
 LuaClib::to_clib(
+  lua_State* L,
   int idx
 )
 {
-  auto p = L_checkudata(idx, CLIB_SIGNATURE);
+  Luapp lua{L};
+  auto p = lua.L_checkudata(idx, CLIB_SIGNATURE);
   return reinterpret_cast<ClibCellLibrary*>(p);
 }
 
