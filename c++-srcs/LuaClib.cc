@@ -154,35 +154,11 @@ LuaClib::init(
 
   Luapp lua{L};
 
-  // ClibCellLibrary に対応する Lua の metatable を作る．
-  lua.L_newmetatable(CLIB_SIGNATURE);
-
-  // metatable 自身を __index に登録する．
-  lua.push_value(-1);
-  lua.set_field(-2, "__index");
-
-  // デストラクタを __gc い登録する．
-  lua.push_cfunction(clib_gc);
-  lua.set_field(-2, "__gc");
-
-  // メソッドテーブルを登録する．
-  lua.L_setfuncs(mt, 0);
+  lua.reg_metatable(CLIB_SIGNATURE, clib_gc, mt);
 
   // 生成関数を登録する．
   mylib.push_back({"read_mislib", clib_read_mislib});
   mylib.push_back({"read_liberty", clib_read_liberty});
-}
-
-
-// @brief 対象が ClibCellLibrary の時 true を返す．
-bool
-LuaClib::is_clib(
-  lua_State* L,
-  int idx
-)
-{
-  auto clib = to_clib(L, idx);
-  return clib != nullptr;
 }
 
 // @brief 対象を ClibCellLibrary として取り出す．

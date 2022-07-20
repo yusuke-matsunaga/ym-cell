@@ -41,7 +41,11 @@ public:
   is_clib(
     lua_State* L, ///< [in] lua インタプリタ
     int idx       ///< [in] スタック上のインデックス
-  );
+  )
+  {
+    auto obj = to_clib(L, idx);
+    return obj != nullptr;
+  }
 
   /// @brief 対象を ClibCellLibrary として取り出す．
   ///
