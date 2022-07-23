@@ -43,7 +43,9 @@ clib_gc(
   lua_State* L
 )
 {
-  auto clib = LuaClib::to_clib(L, 1);
+  LuaClib lua{L};
+
+  auto clib = lua.to_clib(1);
   if ( clib ) {
     // デストラクタを明示的に起動する．
     clib->~ClibCellLibrary();
@@ -59,7 +61,9 @@ clib_display(
   lua_State* L
 )
 {
-  auto clib = LuaClib::to_clib(L, 1);
+  LuaClib lua{L};
+
+  auto clib = lua.to_clib(1);
 
   display_library(cout, *clib);
 
@@ -72,7 +76,7 @@ clib_read_mislib(
   lua_State* L
 )
 {
-  Luapp lua{L};
+  LuaClib lua{L};
 
   int n = lua.get_top();
   if ( n != 1 ) {
@@ -108,7 +112,7 @@ clib_read_liberty(
   lua_State* L
 )
 {
-  Luapp lua{L};
+  LuaClib lua{L};
 
   int n = lua.get_top();
   if ( n != 1 ) {
@@ -143,7 +147,6 @@ END_NONAMESPACE
 
 void
 LuaClib::init(
-  lua_State* L,
   vector<struct luaL_Reg>& mylib
 )
 {
@@ -152,9 +155,7 @@ LuaClib::init(
     {nullptr, nullptr}
   };
 
-  Luapp lua{L};
-
-  lua.reg_metatable(CLIB_SIGNATURE, clib_gc, mt);
+  reg_metatable(CLIB_SIGNATURE, clib_gc, mt);
 
   // 生成関数を登録する．
   mylib.push_back({"read_mislib", clib_read_mislib});
@@ -164,12 +165,10 @@ LuaClib::init(
 // @brief 対象を ClibCellLibrary として取り出す．
 ClibCellLibrary*
 LuaClib::to_clib(
-  lua_State* L,
   int idx
 )
 {
-  Luapp lua{L};
-  auto p = lua.L_checkudata(idx, CLIB_SIGNATURE);
+  auto p = L_checkudata(idx, CLIB_SIGNATURE);
   return reinterpret_cast<ClibCellLibrary*>(p);
 }
 
