@@ -173,8 +173,8 @@ PatMgr::check_equivalent(
     return false;
   }
 
-  auto n = expr1.child_num();
-  if ( expr2.child_num() != n ) {
+  auto n = expr1.operand_num();
+  if ( expr2.operand_num() != n ) {
     return false;
   }
 
@@ -191,7 +191,7 @@ PatMgr::check_equivalent(
   for ( PermGen pg(n, n); !pg.is_end(); ++ pg ) {
     bool match = true;
     for ( auto i: Range(n) ) {
-      if ( !check_equivalent(expr1.child(i), expr2.child(pg(i))) ) {
+      if ( !check_equivalent(expr1.operand(i), expr2.operand(pg(i))) ) {
 	match = false;
 	break;
       }
@@ -286,12 +286,12 @@ PatMgr::pg_sub(
     pg_list.push_back(PatHandle{node, inv});
   }
   else {
-    auto n = expr.child_num();
+    auto n = expr.operand_num();
     // ファンインの式に対するパタングラフを求める．
     vector<vector<PatHandle>> input_pg_list(n);
     vector<pair<int, int>> nk_array(n);
     for ( auto i = 0; i < n; ++ i ) {
-      pg_sub(expr.child(i), input_pg_list[i]);
+      pg_sub(expr.operand(i), input_pg_list[i]);
       nk_array[i] = make_pair(input_pg_list[i].size(), 1);
     }
 
