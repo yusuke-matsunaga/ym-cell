@@ -147,7 +147,8 @@ END_NONAMESPACE
 
 void
 LuaClib::init(
-  vector<struct luaL_Reg>& mylib
+  const char* parent,
+  const char* name
 )
 {
   static const struct luaL_Reg mt[] = {
@@ -157,9 +158,14 @@ LuaClib::init(
 
   reg_metatable(CLIB_SIGNATURE, clib_gc, mt);
 
-  // 生成関数を登録する．
-  mylib.push_back({"read_mislib", clib_read_mislib});
-  mylib.push_back({"read_liberty", clib_read_liberty});
+  static const struct luaL_Reg func_table[] = {
+    {"read_mislib", clib_read_mislib},
+    {"read_liberty", clib_read_liberty},
+    {nullptr, nullptr}
+  };
+
+  luaL_newlib(lua_state(), func_table);
+  reg_module(parent, name);
 }
 
 // @brief 対象を ClibCellLibrary として取り出す．
