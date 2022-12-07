@@ -1,7 +1,6 @@
 # ===================================================================
 # パッケージの検査
 # ===================================================================
-ym_init_lua()
 
 
 # ===================================================================
@@ -106,25 +105,6 @@ ym_add_object_library ( ym_cell
   ${mislib_SOURCES}
   ${dotlib_SOURCES}
   )
-
-if ( LUA_FOUND )
-  ym_add_object_library ( ym_luaclib
-    c++-srcs/LuaClib.cc
-    )
-
-  target_include_directories ( ym_luaclib_obj
-    PRIVATE ${LUA_INCLUDE_DIR}
-    )
-
-  target_include_directories ( ym_luaclib_obj_d
-    PRIVATE ${LUA_INCLUDE_DIR}
-    )
-
-  target_include_directories ( ym_luaclib_obj_p
-    PRIVATE ${LUA_INCLUDE_DIR}
-    )
-endif ( LUA_FOUND )
-
 
 # ===================================================================
 #  インストールターゲットの設定
