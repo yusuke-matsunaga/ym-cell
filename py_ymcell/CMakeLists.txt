@@ -25,7 +25,7 @@ include_directories(
 #  ターゲットの設定
 # ===================================================================
 
-ym_add_object_library ( py_ym_cell
+ym_add_object_library ( py_ymcell
   ${cell_SOURCES}
   PyClibCellLibrary.cc
   )
