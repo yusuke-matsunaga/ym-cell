@@ -21,7 +21,10 @@ include_directories(
 # ===================================================================
 
 add_subdirectory ( c++-srcs )
-add_subdirectory ( py_ymcell )
+
+if ( Python3_FOUND )
+  add_subdirectory ( py_ymcell )
+endif ( Python3_FOUND )
 add_subdirectory ( tests )
 
 

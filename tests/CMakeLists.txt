@@ -9,7 +9,9 @@
 # ===================================================================
 
 add_subdirectory( programs )
-add_subdirectory( py_ymcell )
+if ( Python3_FOUND )
+  add_subdirectory( py_ymcell )
+endif ( Python3_FOUND )
 
 
 # ===================================================================
