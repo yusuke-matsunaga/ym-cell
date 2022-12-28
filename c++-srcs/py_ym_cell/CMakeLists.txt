@@ -7,12 +7,7 @@
 # インクルードパスの設定
 # ===================================================================
 include_directories(
-  ${PROJECT_BINARY_DIR}/include
-  ${PROJECT_SOURCE_DIR}/ym-common/include
-  ${PROJECT_SOURCE_DIR}/ym-base/include
-  ${PROJECT_SOURCE_DIR}/ym-logic/include
-  include
-  private_include
+  ${Python3_INCLUDE_DIRS}
   )
 
 
@@ -20,13 +15,21 @@ include_directories(
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory ( c++-srcs )
-add_subdirectory ( tests )
+
+# ===================================================================
+#  ソースファイルの設定
+# ===================================================================
 
 
 # ===================================================================
 #  ターゲットの設定
 # ===================================================================
+
+ym_add_object_library ( py_ym_cell
+  ${cell_SOURCES}
+  PyClibCellLibrary.cc
+  )
+
 
 # ===================================================================
 #  インストールターゲットの設定
