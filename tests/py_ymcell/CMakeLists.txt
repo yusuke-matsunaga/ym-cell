@@ -55,7 +55,9 @@ target_link_libraries ( py_ymcell
 add_executable( py_ymcell_d
   ${py_ymcell_SOURCES}
   $<TARGET_OBJECTS:py_ymcell_obj_d>
-  ${YM_SUBMODULE_OBJ_D_LIST}
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_base_obj_d>
   )
 
 target_compile_options( py_ymcell_d
