@@ -14,7 +14,7 @@
 BEGIN_NAMESPACE_YM
 
 extern "C"
-PyObject* PyInit_cell();
+PyObject* PyInit_ymcell();
 
 END_NAMESPACE_YM
 
@@ -24,7 +24,7 @@ main(
   char** argv
 )
 {
-  PyImport_AppendInittab("ym_cell", &YM_NAMESPACE::PyInit_cell);
+  PyImport_AppendInittab("ymcell", &YM_NAMESPACE::PyInit_ymcell);
 
   return Py_BytesMain(argc, argv);
 }

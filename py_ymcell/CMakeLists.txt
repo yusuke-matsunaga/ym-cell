@@ -29,6 +29,24 @@ ym_add_object_library ( py_ymcell
   PyClibCellLibrary.cc
   )
 
+add_library ( py_ymcelllib
+  SHARED
+  ymcell_module.cc
+  $<TARGET_OBJECTS:py_ymcell_obj>
+  $<TARGET_OBJECTS:ym_cell_obj>
+  $<TARGET_OBJECTS:ym_logic_obj>
+  $<TARGET_OBJECTS:ym_base_obj>
+  )
+
+set_target_properties( py_ymcelllib
+  PROPERTIES
+  PREFIX ""
+  OUTPUT_NAME "ymcell"
+  )
+
+target_link_libraries( py_ymcelllib
+  ${YM_LIB_DEPENDS}
+  )
 
 # ===================================================================
 #  インストールターゲットの設定

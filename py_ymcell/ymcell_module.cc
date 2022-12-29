@@ -17,25 +17,25 @@ BEGIN_NAMESPACE_YM
 BEGIN_NONAMESPACE
 
 // メソッド定義構造体
-PyMethodDef cell_methods[] = {
+PyMethodDef ymcell_methods[] = {
   {nullptr, nullptr, 0, nullptr},
 };
 
 // モジュール定義構造体
-PyModuleDef cell_module = {
+PyModuleDef ymcell_module = {
   PyModuleDef_HEAD_INIT,
   "cell",
   PyDoc_STR("Cell: Extension module for cell"),
   -1,
-  cell_methods,
+  ymcell_methods,
 };
 
 END_NONAMESPACE
 
 PyMODINIT_FUNC
-PyInit_cell()
+PyInit_ymcell()
 {
-  auto m = PyModule_Create(&cell_module);
+  auto m = PyModule_Create(&ymcell_module);
   if ( m == nullptr ) {
     return nullptr;
   }

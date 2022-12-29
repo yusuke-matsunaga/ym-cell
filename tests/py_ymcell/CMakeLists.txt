@@ -22,7 +22,7 @@ include_directories(
 # ===================================================================
 
 set ( py_ymcell_SOURCES
-  cell_module.cc
+  ../../py_ymcell/ymcell_module.cc
   py_ymcell.cc
   )
 
@@ -74,16 +74,10 @@ target_link_libraries ( py_ymcell_d
 # テストターゲット
 # ===================================================================
 
-add_test( py_ymcell_read_mislib_test
-  py_ymcell
-  ${CMAKE_CURRENT_SOURCE_DIR}/read_mislib_test.py
-  ${CMAKE_CURRENT_SOURCE_DIR}/../testdata/lib2.genlib
-  ${CMAKE_CURRENT_SOURCE_DIR}/../testdata/lib2.genlib.display
+add_test( py_ymcell_test
+  pytest ${CMAKE_CURRENT_SOURCE_DIR}
   )
 
-add_test( py_ymcell_read_liberty_test
-  py_ymcell
-  ${CMAKE_CURRENT_SOURCE_DIR}/read_liberty_test.py
-  ${CMAKE_CURRENT_SOURCE_DIR}/../testdata/HIT018.typ.snp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../testdata/HIT018.typ.snp.display
+set_property ( TEST py_ymcell_test
+  PROPERTY ENVIRONMENT PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/../../py_ymcell
   )
