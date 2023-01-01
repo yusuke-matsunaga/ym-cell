@@ -75,9 +75,5 @@ target_link_libraries ( py_ymcell_d
 # ===================================================================
 
 add_test( py_ymcell_test
-  pytest ${CMAKE_CURRENT_SOURCE_DIR}
-  )
-
-set_property ( TEST py_ymcell_test
-  PROPERTY ENVIRONMENT PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/../../py_ymcell
+  py_ymcell -m pytest ${CMAKE_CURRENT_SOURCE_DIR}
   )
