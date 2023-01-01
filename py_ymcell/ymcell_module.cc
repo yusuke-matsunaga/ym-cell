@@ -24,8 +24,8 @@ PyMethodDef ymcell_methods[] = {
 // モジュール定義構造体
 PyModuleDef ymcell_module = {
   PyModuleDef_HEAD_INIT,
-  "cell",
-  PyDoc_STR("Cell: Extension module for cell"),
+  "ymcell",
+  PyDoc_STR("ymcell: Extension module for cell"),
   -1,
   ymcell_methods,
 };
