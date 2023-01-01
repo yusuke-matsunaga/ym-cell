@@ -26,12 +26,12 @@ include_directories(
 # ===================================================================
 
 ym_add_object_library ( py_ymcell
+  ymcell_module.cc
   PyClibCellLibrary.cc
   )
 
 add_library ( py_ymcelllib
   SHARED
-  ymcell_module.cc
   $<TARGET_OBJECTS:py_ymcell_obj>
   $<TARGET_OBJECTS:ym_cell_obj>
   $<TARGET_OBJECTS:ym_logic_obj>

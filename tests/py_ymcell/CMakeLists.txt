@@ -22,7 +22,6 @@ include_directories(
 # ===================================================================
 
 set ( py_ymcell_SOURCES
-  ../../py_ymcell/ymcell_module.cc
   py_ymcell.cc
   )
 
