@@ -230,19 +230,6 @@ PyClibCellLibrary::FromPyObject(
   return true;
 }
 
-#if 0
-// @brief ClibCellLibrary を PyObject に変換する．
-PyObject*
-PyClibCellLibrary::ToPyObject(
-  ClibCellLibrary val
-)
-{
-  auto obj = ClibCellLibrary_new(_typeobject(), nullptr, nullptr);
-  _put(obj, val);
-  return obj;
-}
-#endif
-
 // @brief PyObject が ClibCellLibrary タイプか調べる．
 bool
 PyClibCellLibrary::_check(
