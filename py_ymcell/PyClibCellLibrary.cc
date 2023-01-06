@@ -196,15 +196,9 @@ PyClibCellLibrary::init(
   ClibCellLibraryType.tp_doc = PyDoc_STR("ClibCellLibrary objects");
   ClibCellLibraryType.tp_methods = ClibCellLibrary_methods;
   ClibCellLibraryType.tp_new = ClibCellLibrary_new;
-  if ( PyType_Ready(&ClibCellLibraryType) < 0 ) {
-    return false;
-  }
 
   // 型オブジェクトの登録
-  auto type_obj = reinterpret_cast<PyObject*>(&ClibCellLibraryType);
-  Py_INCREF(type_obj);
-  if ( PyModule_AddObject(m, "ClibCellLibrary", type_obj) < 0 ) {
-    Py_DECREF(type_obj);
+  if ( !reg_type(m, "ClibCellLibrary", &ClibCellLibraryType) ) {
     goto error;
   }
 
