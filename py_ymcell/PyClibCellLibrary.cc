@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "ym/PyClibCellLibrary.h"
+#include "ym/PyModule.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -198,7 +199,7 @@ PyClibCellLibrary::init(
   ClibCellLibraryType.tp_new = ClibCellLibrary_new;
 
   // 型オブジェクトの登録
-  if ( !reg_type(m, "ClibCellLibrary", &ClibCellLibraryType) ) {
+  if ( !PyModule::reg_type(m, "ClibCellLibrary", &ClibCellLibraryType) ) {
     goto error;
   }
 

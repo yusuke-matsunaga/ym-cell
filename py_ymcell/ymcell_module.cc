@@ -10,6 +10,7 @@
 #include <Python.h>
 
 #include "ym/PyClibCellLibrary.h"
+#include "ym/PyModule.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -35,7 +36,7 @@ END_NONAMESPACE
 PyMODINIT_FUNC
 PyInit_ymcell()
 {
-  auto m = PyModule_Create(&ymcell_module);
+  auto m = PyModule::init(&ymcell_module);
   if ( m == nullptr ) {
     return nullptr;
   }
