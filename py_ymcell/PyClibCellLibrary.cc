@@ -34,10 +34,8 @@ ClibCellLibrary_new(
   PyObject* Py_UNUSED(kwds)
 )
 {
-  auto self = type->tp_alloc(type, 0);
-  auto clibcelllibrary_obj = reinterpret_cast<ClibCellLibraryObject*>(self);
-  clibcelllibrary_obj->mPtr = new ClibCellLibrary;
-  return self;
+  PyErr_SetString(PyExc_TypeError, "instantiation of 'ClibCellLibrary' is disabled");
+  return nullptr;
 }
 
 // 終了関数
@@ -66,10 +64,9 @@ ClibCellLibrary_mislib(
   try {
     // mislib ファイルを読み込む．
     auto clib = ClibCellLibrary::read_mislib(filename);
-    auto obj = ClibCellLibrary_new(&ClibCellLibraryType, nullptr, nullptr);
-    Py_INCREF(obj);
+    auto obj = ClibCellLibraryType.tp_alloc(&ClibCellLibraryType, 0);
     auto clibcelllibrary_obj = reinterpret_cast<ClibCellLibraryObject*>(obj);
-    *(clibcelllibrary_obj->mPtr) = clib;
+    clibcelllibrary_obj->mPtr = new ClibCellLibrary{clib};
     return obj;
   }
   catch ( ClibError& error ) {
@@ -95,10 +92,9 @@ ClibCellLibrary_liberty(
   try {
     // liberty ファイルを読み込む．
     auto clib = ClibCellLibrary::read_liberty(filename);
-    auto obj = ClibCellLibrary_new(&ClibCellLibraryType, nullptr, nullptr);
-    Py_INCREF(obj);
+    auto obj = ClibCellLibraryType.tp_alloc(&ClibCellLibraryType, 0);
     auto clibcelllibrary_obj = reinterpret_cast<ClibCellLibraryObject*>(obj);
-    *(clibcelllibrary_obj->mPtr) = clib;
+    clibcelllibrary_obj->mPtr = new ClibCellLibrary{clib};
     return obj;
   }
   catch ( ClibError& error ) {
