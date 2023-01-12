@@ -3,7 +3,7 @@
 /// @brief read_liberty の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2018, 201, 2022 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2018, 201, 2022, 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
@@ -306,7 +306,7 @@ CiCellLibrary::read_liberty(
 		    "DOTLIB_PARSER",
 		    buf.str());
     // ファイルが開けなかった．
-    throw ClibError{buf.str()};
+    throw std::invalid_argument{buf.str()};
   }
 
   // 読み込んでASTを作る．

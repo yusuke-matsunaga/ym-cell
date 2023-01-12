@@ -113,7 +113,7 @@ FixedElemHeader::_read_header_value(
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
-    throw ClibError{"Syntax error"};
+    throw std::invalid_argument{"Syntax error"};
     return {};
   }
 }
@@ -134,7 +134,7 @@ FixedElemHeader::_end_header(
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
-    throw ClibError{"Syntax error"};
+    throw std::invalid_argument{"Syntax error"};
   }
 }
 
@@ -171,7 +171,7 @@ FanoutLengthHeader::_read_header_value(
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  buf.str());
-  throw ClibError{"Syntax error"};
+  throw std::invalid_argument{"Syntax error"};
   return {};
 }
 
@@ -246,7 +246,7 @@ OptElemHeader::_read_header_value(
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  buf.str());
-  throw ClibError{"Syntax error"};
+  throw std::invalid_argument{"Syntax error"};
   return {};
 }
 

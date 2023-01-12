@@ -3,9 +3,8 @@
 /// @brief MislibParser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019, 2023 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "MislibParser.h"
 #include "MislibScanner.h"
@@ -86,7 +85,7 @@ MislibParser::parse(
 		    MsgType::Failure,
 		    "MISLIB_PARSER",
 		    buf.str());
-    throw ClibError{buf.str()};
+    throw std::invalid_argument{buf.str()};
   }
 
   MislibScanner scanner(fin, {filename});
@@ -238,7 +237,7 @@ MislibParser::check_gate_list(
 
   if ( MsgMgr::error_num() > prev_errnum ) {
     // 異常終了
-    throw ClibError{"wrong mislib file."};
+    throw std::invalid_argument{"Error in read_mislib()"};
   }
 }
 
@@ -768,7 +767,7 @@ MislibParser::syntax_error(
 		  MsgType::Error,
 		  "MISLIB_PARSER",
 		  label);
-  throw ClibError{label};
+  throw std::invalid_argument{label};
 }
 
 END_NAMESPACE_YM_MISLIB

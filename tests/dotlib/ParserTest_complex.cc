@@ -39,18 +39,13 @@ TEST_F(ParserTest, complex_float_float2)
   istringstream buf("( 1.0 );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_float_float(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_float_float(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_float3)
@@ -59,18 +54,13 @@ TEST_F(ParserTest, complex_float_float3)
   istringstream buf("( 1.0, 2.0, 3.0 );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_float_float(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 11: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_float_float(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 11: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_float4)
@@ -79,18 +69,13 @@ TEST_F(ParserTest, complex_float_float4)
   istringstream buf("( 1.0f, 2.0 );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_float_float(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 1.0f: Not a number value.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_float_float(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 1.0f: Not a number value.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_float5)
@@ -99,18 +84,13 @@ TEST_F(ParserTest, complex_float_float5)
   istringstream buf("( 1.0, false );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_float_float(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 8 - 12: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: false: Not a number value.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_float_float(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 8 - 12: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: false: Not a number value.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_string1)
@@ -151,18 +131,13 @@ TEST_F(ParserTest, complex_float_string3)
   istringstream buf("( 1.0 );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_float_string(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_float_string(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_string4)
@@ -171,18 +146,13 @@ TEST_F(ParserTest, complex_float_string4)
   istringstream buf("( 1.0, ff, 2.0 );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_float_string(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 10: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_float_string(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 10: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_string5)
@@ -191,18 +161,13 @@ TEST_F(ParserTest, complex_float_string5)
   istringstream buf("( a1.0, \"ff\" );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_float_string(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: a1.0: Not a number value.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_float_string(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 6: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: a1.0: Not a number value.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_vector1)
@@ -230,18 +195,13 @@ TEST_F(ParserTest, complex_float_vector2)
   istringstream buf("( \"1.0, 2.0a, 3.0\" );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_float_vector(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    EXPECT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 18: (ERROR  ) [DOTLIB_PARSER]: Syntax error: 2.0a: Could not convert to a number.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_float_vector(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 18: (ERROR  ) [DOTLIB_PARSER]: Syntax error: 2.0a: Could not convert to a number.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_vector3)
@@ -250,18 +210,13 @@ TEST_F(ParserTest, complex_float_vector3)
   istringstream buf("(  );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_float_vector(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    EXPECT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 1.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_float_vector(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_float_vector4)
@@ -270,18 +225,13 @@ TEST_F(ParserTest, complex_float_vector4)
   istringstream buf("( \"1.0, 2.0, 3.0\", \"4.0, 5.0\" );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_float_vector(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    EXPECT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 18: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 1.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_float_vector(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 18: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float1)
@@ -306,18 +256,13 @@ TEST_F(ParserTest, complex_int_float2)
   istringstream buf("( 1 );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_int_float(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    EXPECT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 5: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_int_float(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 5: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float3)
@@ -326,18 +271,13 @@ TEST_F(ParserTest, complex_int_float3)
   istringstream buf("( 1, 2.3, 3.0 );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_int_float(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    EXPECT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 9: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_int_float(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 9: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float4)
@@ -346,18 +286,13 @@ TEST_F(ParserTest, complex_int_float4)
   istringstream buf("( 1x, 2.3 );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_int_float(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 1x: Not an integer value.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_int_float(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 1x: Not an integer value.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float5)
@@ -366,18 +301,13 @@ TEST_F(ParserTest, complex_int_float5)
   istringstream buf("( 1, _2.3 );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_int_float(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 6 - 9: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: _2.3: Not a number value.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_int_float(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 6 - 9: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: _2.3: Not a number value.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float_vector1)
@@ -405,18 +335,13 @@ TEST_F(ParserTest, complex_int_float_vector2)
   istringstream buf("( 1 );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_int_float_vector(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 5: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_int_float_vector(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 5: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float_vector3)
@@ -425,18 +350,13 @@ TEST_F(ParserTest, complex_int_float_vector3)
   istringstream buf("( 1, \"2.3, 4.5\", abc );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_int_float_vector(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 16: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_int_float_vector(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 16: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_float_vector4)
@@ -445,18 +365,13 @@ TEST_F(ParserTest, complex_int_float_vector4)
   istringstream buf("( 1a, \"2.3, 4.5\" );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_int_float_vector(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 1a: Not an integer value.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_int_float_vector(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 4: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: 1a: Not an integer value.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_vector1)
@@ -484,18 +399,13 @@ TEST_F(ParserTest, complex_int_vector2)
   istringstream buf("(  );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_int_vector(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 1.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_int_vector(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 4: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_int_vector3)
@@ -504,18 +414,13 @@ TEST_F(ParserTest, complex_int_vector3)
   istringstream buf("( \"1, 2, 3\", \"4, 5\" );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_int_vector(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 12: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 1.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_int_vector(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 12: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string1)
@@ -556,18 +461,13 @@ TEST_F(ParserTest, complex_string3)
   istringstream buf("( );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_string(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 3: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 1.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_string(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 3: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string4)
@@ -576,18 +476,13 @@ TEST_F(ParserTest, complex_string4)
   istringstream buf("( abc, def );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_string(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 6: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 1.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_string(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 6: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_float1)
@@ -612,18 +507,13 @@ TEST_F(ParserTest, complex_string_float2)
   istringstream buf("( abc );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_string_float(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_string_float(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_float3)
@@ -632,18 +522,13 @@ TEST_F(ParserTest, complex_string_float3)
   istringstream buf("( abc, 1.2, xyz );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_string_float(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 11: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_string_float(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 11: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_float4)
@@ -652,18 +537,13 @@ TEST_F(ParserTest, complex_string_float4)
   istringstream buf("( abc, \"xyz\" );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_string_float(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 8 - 12: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: xyz: Not a number value.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_string_float(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 8 - 12: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: xyz: Not a number value.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_int1)
@@ -688,18 +568,13 @@ TEST_F(ParserTest, complex_string_int2)
   istringstream buf("( abc );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_string_int(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_string_int(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_int3)
@@ -708,18 +583,13 @@ TEST_F(ParserTest, complex_string_int3)
   istringstream buf("( abc, 1, xyz );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_string_int(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 9: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_string_int(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 9: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_int4)
@@ -728,18 +598,13 @@ TEST_F(ParserTest, complex_string_int4)
   istringstream buf("( abc, \"cd\" );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_string_int(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 8 - 11: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: cd: Not an integer value.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_string_int(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 8 - 11: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: cd: Not an integer value.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_list1)
@@ -829,18 +694,13 @@ TEST_F(ParserTest, complex_string_string3)
   istringstream buf("( abc );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_string_string(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_string_string(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_string4)
@@ -849,18 +709,13 @@ TEST_F(ParserTest, complex_string_string4)
   istringstream buf("( abc, def, xyz );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_string_string(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 11: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_string_string(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 11: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 2.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_string_string1)
@@ -886,18 +741,13 @@ TEST_F(ParserTest, complex_string_string_string2)
   istringstream buf("( abc, \"def\" );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_string_string_string(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 14: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 3.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_string_string_string(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 14: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 3.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_string_string_string3)
@@ -906,18 +756,13 @@ TEST_F(ParserTest, complex_string_string_string3)
   istringstream buf("( abc, \"def\", xyz, \"012\" );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_string_string_string(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 18: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 3.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_string_string_string(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 18: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 3.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_technology1)
@@ -956,18 +801,13 @@ TEST_F(ParserTest, complex_technology3)
   istringstream buf("( );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_technology(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 3: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 1.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_technology(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 3: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too few values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_technology4)
@@ -976,18 +816,13 @@ TEST_F(ParserTest, complex_technology4)
   istringstream buf("( cmos, fpga );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_technology(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 1.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_technology(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 1 - 7: (ERROR  ) [DOTLIB_PARSER]: Syntax error: Too many values, expected 1.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_technology5)
@@ -996,18 +831,13 @@ TEST_F(ParserTest, complex_technology5)
   istringstream buf("( abc );\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = complex_technology(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abc: Illegal value for 'technology'. Only 'cmos' or 'fpga' are allowed here.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = complex_technology(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abc: Illegal value for 'technology'. Only 'cmos' or 'fpga' are allowed here.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTest, complex_values1)

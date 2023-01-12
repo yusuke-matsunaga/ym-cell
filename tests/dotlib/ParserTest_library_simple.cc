@@ -276,18 +276,13 @@ TEST_F(ParserTestLibrary, library_delay_model6)
 		    "}\n");
   Parser parser{buf, info, false, false};
 
-  bool caught{false};
-  try {
-    auto dst = group_library(parser, kwd, kwd_loc);
-  }
-  catch ( ClibError& error ) {
-    caught = true;
-    auto msg_list = mh.message_list();
-    ASSERT_EQ( 1, msg_list.size() );
-    EXPECT_EQ( "parser_test.lib: line 2, column 16 - 18: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: xyz: Illegal value for 'delay_model'. 'generic_cmos', 'table_lookup', 'piecewise_cmos', 'cmos2', 'dcm' or 'polynomial' are expected.\n",
-	       msg_list[0]);
-  }
-  EXPECT_TRUE( caught );
+  EXPECT_THROW( {
+      auto dst = group_library(parser, kwd, kwd_loc);
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  ASSERT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "parser_test.lib: line 2, column 16 - 18: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: xyz: Illegal value for 'delay_model'. 'generic_cmos', 'table_lookup', 'piecewise_cmos', 'cmos2', 'dcm' or 'polynomial' are expected.\n",
+	     msg_list[0]);
 }
 
 TEST_F(ParserTestLibrary, library_em_temp_degradation_factor1)

@@ -125,7 +125,7 @@ Parser::parse()
 		    "DOTLIB_PARSER",
 		    "'library' keyword is expected "
 		    "on the top of the structure");
-    throw ClibError{"Syntax error"};
+    throw std::invalid_argument{"Syntax error"};
   }
 
   // 本体を読み込む．
@@ -206,7 +206,7 @@ Parser::parse_group_statement(
   // グループ本体の始まり
   Token lcb_token = mScanner.read_and_verify(TokenType::LCB);
   if ( lcb_token.type() != TokenType::LCB ) {
-    throw ClibError{"Syntax error"};
+    throw std::invalid_argument{"Syntax error"};
   }
 
   vector<AstAttrPtr> child_list;
@@ -293,7 +293,7 @@ Parser::read_tail()
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. Semicolon is expected.");
-    throw ClibError{"Syntax error"};
+    throw std::invalid_argument{"Syntax error"};
   }
   if ( token.type() != TokenType::NL && token.type() != TokenType::END ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -301,7 +301,7 @@ Parser::read_tail()
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error. New-line is expected.");
-    throw ClibError{"Syntax error"};
+    throw std::invalid_argument{"Syntax error"};
   }
 }
 
@@ -332,7 +332,7 @@ syntax_error(
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  buf.str());
-  throw ClibError{"Syntax error"};
+  throw std::invalid_argument{"Syntax error"};
 }
 
 // @brief 同じ属性が重複して定義されている時のエラーを出力する．

@@ -69,7 +69,7 @@ ClibCellLibrary_mislib(
     clibcelllibrary_obj->mPtr = new ClibCellLibrary{clib};
     return obj;
   }
-  catch ( ClibError& error ) {
+  catch ( std::invalid_argument& error ) {
     ostringstream buf;
     buf << "read_mislib(\"" << filename << "\") failed";
     PyErr_SetString(PyExc_ValueError, buf.str().c_str());
@@ -97,7 +97,7 @@ ClibCellLibrary_liberty(
     clibcelllibrary_obj->mPtr = new ClibCellLibrary{clib};
     return obj;
   }
-  catch ( ClibError& error ) {
+  catch ( std::invalid_argument& error ) {
     ostringstream buf;
     buf << "read_liberty(\"" << filename << "\") failed";
     PyErr_SetString(PyExc_ValueError, buf.str().c_str());

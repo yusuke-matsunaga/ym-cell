@@ -27,7 +27,7 @@ DotlibScanner::read_attr()
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
 		    "attribute keyword is expected");
-    throw ClibError{"Syntax error"};
+    throw std::invalid_argument{"Syntax error"};
   }
 
   return token;
@@ -104,7 +104,7 @@ DotlibScanner::read_and_verify(
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
-    throw ClibError{"Syntax error"};
+    throw std::invalid_argument{"Syntax error"};
   }
   return token;
 }
@@ -230,7 +230,7 @@ DotlibScanner::_scan()
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
 		    buf.str());
-    throw ClibError{"Syntax error"};
+    throw std::invalid_argument{"Syntax error"};
   }
   if ( c == EOF ) {
     ostringstream buf;
@@ -240,7 +240,7 @@ DotlibScanner::_scan()
 		    MsgType::Error,
 		    "DOTLIB_SCANNER",
 		    buf.str());
-    throw ClibError{"Syntax error"};
+    throw std::invalid_argument{"Syntax error"};
   }
   if ( c == '\\' ) {
     c = get();
@@ -307,7 +307,7 @@ DotlibScanner::_scan()
 		    "DOTLIB_SCANNER",
 		    buf.str());
   }
-  throw ClibError{"Syntax error"};
+  throw std::invalid_argument{"Syntax error"};
   return TokenType::ERROR;
 }
 
