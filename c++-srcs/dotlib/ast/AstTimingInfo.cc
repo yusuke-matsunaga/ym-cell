@@ -185,8 +185,8 @@ AstTimingInfo::add_timing(
       bool p_unate{false};
       bool n_unate{false};
       if ( mTimingType == ClibTimingType::combinational ) {
-	auto p_func = function.cofactor(VarId{ipin}, false);
-	auto n_func = function.cofactor(VarId{ipin}, true);
+	auto p_func = function.cofactor(ipin, false);
+	auto n_func = function.cofactor(ipin, true);
 	auto sense = mTimingSense;
 	if ( p_func && ~n_func ) {
 	  p_unate = true;

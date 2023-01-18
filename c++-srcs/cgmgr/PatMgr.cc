@@ -443,17 +443,16 @@ PatMgr::make_bintree(
 // @note 既にあるときはそれを返す．
 PatNode*
 PatMgr::make_input(
-  VarId var
+  SizeType var
 )
 {
-  auto id = var.val();
-  while ( mInputList.size() <= id ) {
+  while ( mInputList.size() <= var ) {
     auto node = new_node();
     auto input_id = mInputList.size();
     node->mType = (input_id << 2) | PatNode::INPUT;
     mInputList.push_back(node);
   }
-  auto node = mInputList[id];
+  auto node = mInputList[var];
   ASSERT_COND( node != nullptr );
 
   return node;

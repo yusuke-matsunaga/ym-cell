@@ -391,10 +391,10 @@ TEST(GenFuncTest, base1)
   SizeType ni = 4;
   SizeType no = 2;
   SizeType nb = 0;
-  auto v0 = TvFunc::make_posi_literal(ni + nb, VarId{0});
-  auto v1 = TvFunc::make_posi_literal(ni + nb, VarId{1});
-  auto v2 = TvFunc::make_posi_literal(ni + nb, VarId{2});
-  auto v3 = TvFunc::make_posi_literal(ni + nb, VarId{3});
+  auto v0 = TvFunc::make_posi_literal(ni + nb, 0);
+  auto v1 = TvFunc::make_posi_literal(ni + nb, 1);
+  auto v2 = TvFunc::make_posi_literal(ni + nb, 2);
+  auto v3 = TvFunc::make_posi_literal(ni + nb, 3);
   auto f0 = v0 & v1;
   auto f1 = v2 | v3;
   GenFuncSpec spec{ni, no, nb,
@@ -408,10 +408,10 @@ TEST(GenFuncTest, manual1)
   SizeType ni = 4;
   SizeType no = 2;
   SizeType nb = 0;
-  auto v0 = TvFunc::make_posi_literal(ni + nb, VarId{0});
-  auto v1 = TvFunc::make_posi_literal(ni + nb, VarId{1});
-  auto v2 = TvFunc::make_posi_literal(ni + nb, VarId{2});
-  auto v3 = TvFunc::make_posi_literal(ni + nb, VarId{3});
+  auto v0 = TvFunc::make_posi_literal(ni + nb, 0);
+  auto v1 = TvFunc::make_posi_literal(ni + nb, 1);
+  auto v2 = TvFunc::make_posi_literal(ni + nb, 2);
+  auto v3 = TvFunc::make_posi_literal(ni + nb, 3);
   auto f0 = v0 & v1;
   auto f1 = v2 | v3;
   auto iv = TvFunc::make_invalid();

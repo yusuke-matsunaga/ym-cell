@@ -276,9 +276,9 @@ INSTANTIATE_TEST_SUITE_P(CgLogicSig1_test,
 				    TvFunc::make_invalid()},
 			   FuncSpec{TvFunc::make_one(1),
 				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(1, VarId{0}),
+			   FuncSpec{TvFunc::make_posi_literal(1, 0),
 				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_nega_literal(1, VarId{0}),
+			   FuncSpec{TvFunc::make_nega_literal(1, 0),
 				    TvFunc::make_invalid()}
 			 ));
 
@@ -291,21 +291,21 @@ INSTANTIATE_TEST_SUITE_P(CgLogicSig2_test,
 				    TvFunc::make_invalid()},
 			   FuncSpec{TvFunc::make_one(2),
 				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId{0}),
+			   FuncSpec{TvFunc::make_posi_literal(2, 0),
 				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId{1}),
+			   FuncSpec{TvFunc::make_posi_literal(2, 1),
 				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId(0)) &
-				    TvFunc::make_posi_literal(2, VarId{1}),
+			   FuncSpec{TvFunc::make_posi_literal(2, 0) &
+				    TvFunc::make_posi_literal(2, 1),
 				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId(0)) &
-				    TvFunc::make_nega_literal(2, VarId{1}),
+			   FuncSpec{TvFunc::make_posi_literal(2, 0) &
+				    TvFunc::make_nega_literal(2, 1),
 				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId(0)) ^
-				    TvFunc::make_posi_literal(2, VarId{1}),
+			   FuncSpec{TvFunc::make_posi_literal(2, 0) ^
+				    TvFunc::make_posi_literal(2, 1),
 				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, VarId{0}),
-				    TvFunc::make_posi_literal(2, VarId{1})}
+			   FuncSpec{TvFunc::make_posi_literal(2, 0),
+				    TvFunc::make_posi_literal(2, 1)}
 			 ));
 
 // 3入力関数のテスト
@@ -316,9 +316,9 @@ INSTANTIATE_TEST_SUITE_P(CgLogicSig3_test,
 				    TvFunc::make_invalid()},
 			   FuncSpec{TvFunc::make_one(3),
 				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(3, VarId{0}) |
-				    (TvFunc::make_posi_literal(3, VarId{1}) &
-				     TvFunc::make_nega_literal(3, VarId{2})),
+			   FuncSpec{TvFunc::make_posi_literal(3, 0) |
+				    (TvFunc::make_posi_literal(3, 1) &
+				     TvFunc::make_nega_literal(3, 2)),
 				    TvFunc::make_invalid()}
 			 ));
 
@@ -330,10 +330,10 @@ INSTANTIATE_TEST_SUITE_P(CgLogicSig4_test,
 				    TvFunc::make_invalid()},
 			   FuncSpec{TvFunc::make_one(4),
 				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(4, VarId{0}) |
-				    (TvFunc::make_posi_literal(4, VarId{1}) &
-				     TvFunc::make_nega_literal(4, VarId{2})),
-				    TvFunc::make_posi_literal(4, VarId{3})}
+			   FuncSpec{TvFunc::make_posi_literal(4, 0) |
+				    (TvFunc::make_posi_literal(4, 1) &
+				     TvFunc::make_nega_literal(4, 2)),
+				    TvFunc::make_posi_literal(4, 3)}
 			 ));
 
 END_NAMESPACE_YM_CLIB

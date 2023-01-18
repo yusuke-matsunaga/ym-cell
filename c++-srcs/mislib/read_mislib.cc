@@ -103,9 +103,8 @@ set_timing(
   SizeType timing_id         // タイミング番号
 )
 {
-  VarId var{ipos};
-  auto p_func = tv_function.cofactor(var, false);
-  auto n_func = tv_function.cofactor(var, true);
+  auto p_func = tv_function.cofactor(ipos, false);
+  auto n_func = tv_function.cofactor(ipos, true);
   auto sense_real = ClibTimingSense::none;
   if ( ~p_func && n_func ) {
     if ( ~n_func && p_func ) {

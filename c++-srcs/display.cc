@@ -554,18 +554,18 @@ display_cell(
   s << "  area = " << cell.area() << endl;
 
   // 論理式の出力用にピン名の辞書を作る．
-  unordered_map<VarId, string> var_names;
+  unordered_map<SizeType, string> var_names;
   for ( auto i: Range(cell.pin_num()) ) {
     auto& pin = cell.pin(i);
     if ( pin.is_input() || pin.is_inout() ) {
-      var_names.emplace(VarId{pin.input_id()}, pin.name());
+      var_names.emplace(pin.input_id(), pin.name());
     }
   }
   ExprWriter ewriter;
 
   if ( cell.is_ff() ) {
     // FF の情報
-    var_names.emplace(VarId{cell.input_num2()}, cell.qvar1());
+    var_names.emplace(cell.input_num2(), cell.qvar1());
     s << "  Next State         = "
       << ewriter.dump_to_string(cell.next_state_expr(), var_names)
       << endl
@@ -594,7 +594,7 @@ display_cell(
   }
   if ( cell.is_latch() ) {
     // ラッチの情報
-    var_names.emplace(VarId{cell.input_num2()}, cell.qvar1());
+    var_names.emplace(cell.input_num2(), cell.qvar1());
     s << "  Data In            = "
       << ewriter.dump_to_string(cell.data_in_expr(), var_names)
       << endl

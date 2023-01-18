@@ -406,7 +406,7 @@ AstStrExpr::to_expr(
   }
 
   SizeType id = pin_map.at(mValue);
-  return Expr::make_posi_literal(VarId(id));
+  return Expr::make_posi_literal(id);
 }
 
 // @brief 内容を表す文字列を返す．

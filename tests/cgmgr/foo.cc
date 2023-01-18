@@ -253,8 +253,8 @@ foo_test(
   FuncSpec spec{TvFunc::make_zero(1),
 		TvFunc::make_invalid()};
 #else
-  FuncSpec spec{TvFunc::make_posi_literal(2, VarId{0}),
-                TvFunc::make_posi_literal(2, VarId{1})};
+  FuncSpec spec{TvFunc::make_posi_literal(2, 0),
+                TvFunc::make_posi_literal(2, 1)};
 #endif
 
   FuncTest test;

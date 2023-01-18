@@ -93,14 +93,14 @@ to_npnmap(
   NpnMap npnmap(ni0);
   for ( SizeType i = 0; i < ni; ++ i ) {
     auto ipinmap = iomap.input_map(i);
-    npnmap.set(VarId{i}, VarId{ipinmap.id()}, ipinmap.inv());
+    npnmap.set(i, ipinmap.id(), ipinmap.inv());
   }
   for ( SizeType i = 0; i < nb; ++ i ) {
     auto bpinmap = iomap.inout_map(i);
-    npnmap.set(VarId{i + ni}, VarId{bpinmap.id() + ni}, bpinmap.inv());
+    npnmap.set(i + ni, bpinmap.id() + ni, bpinmap.inv());
   }
   for ( SizeType i = ni + nb; i < ni0; ++ i ) {
-    npnmap.set(VarId{i}, VarId{i}, false);
+    npnmap.set(i, i, false);
   }
   if ( opos < no ) {
     npnmap.set_oinv(iomap.output_map(opos).inv());
@@ -117,8 +117,8 @@ from_npnmap(
   SizeType ni = npnmap.input_num();
   vector<ClibPinMap> input_map(ni);
   for ( SizeType i = 0; i < ni; ++ i ) {
-    auto v = npnmap.imap(VarId{i});
-    input_map[i] = ClibPinMap{static_cast<SizeType>(v.var().val()), v.inv()};
+    auto v = npnmap.imap(i);
+    input_map[i] = ClibPinMap{v.var(), v.inv()};
   }
   return ClibIOMap{input_map, npnmap.oinv()};
 }
@@ -179,12 +179,11 @@ xform_expr(
 )
 {
   auto ni = map.input_num();
-  unordered_map<VarId, Expr> vlm;
-  for ( auto i = 0; i < ni; ++ i ) {
-    VarId src_var(i);
+  unordered_map<SizeType, Expr> vlm;
+  for ( auto src_var = 0; src_var < ni; ++ src_var ) {
     NpnVmap imap = map.imap(src_var);
-    VarId dst_var = imap.var();
-    Expr expr = Expr::make_literal(dst_var, imap.inv());
+    auto dst_var = imap.var();
+    auto expr = Expr::make_literal(dst_var, imap.inv());
     vlm[src_var] = expr;
   }
   Expr cexpr = expr.compose(vlm);
@@ -717,12 +716,12 @@ CgSigRep::gen_symgroup(
   vector<vector<int>> w1_list(mNi);
   for ( SizeType id = 0; id < mNi; ++ id ) {
     for ( SizeType oid = 0; oid < no2; ++ oid ) {
-      int w1 = mFuncList[oid].walsh_1(VarId{id});
+      int w1 = mFuncList[oid].walsh_1(id);
       if ( w1 < 0 ) {
 	w1 = - w1;
       }
       w1_list[id].push_back(w1);
-      w1_list[id].push_back(mTristateList[oid].walsh_1(VarId{id}));
+      w1_list[id].push_back(mTristateList[oid].walsh_1(id));
     }
   }
 
@@ -778,12 +777,12 @@ CgSigRep::w1sum_refine(
     int func_w1sum = 0;
     int tristate_w1sum = 0;
     for ( SizeType j = 0; j < no2; ++ j ) {
-      int w1 = mFuncList[j].walsh_1(VarId{i});
+      int w1 = mFuncList[j].walsh_1(i);
       if ( opol_list[j] == CgPolInfo::Negative ) {
 	w1 = - w1;
       }
       func_w1sum += w1;
-      int tristate_w1 = mTristateList[j].walsh_1(VarId{i});
+      int tristate_w1 = mTristateList[j].walsh_1(i);
       tristate_w1sum += tristate_w1;
     }
     if ( ipol_list[i] == CgPolInfo::Both ) {
@@ -836,15 +835,13 @@ CgSigRep::check_sym(
   bool inv
 ) const
 {
-  VarId v1{i1};
-  VarId v2{i2};
   for ( const auto& f: mFuncList ) {
-    if ( !f.check_sym(v1, v2, inv) ) {
+    if ( !f.check_sym(i1, i2, inv) ) {
       return false;
     }
   }
   for ( const auto& f: mTristateList ) {
-    if ( !f.check_sym(v1, v2, inv) ) {
+    if ( !f.check_sym(i1, i2, inv) ) {
       return false;
     }
   }

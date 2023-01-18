@@ -51,12 +51,12 @@ CgMgr::logic_init()
     mLogicGroup[1] = func1->id();
   }
   { // バッファグループの登録
-    auto sig = CgSignature::make_logic_sig(1, Expr::make_posi_literal(VarId{0}));
+    auto sig = CgSignature::make_logic_sig(1, Expr::make_posi_literal(0));
     auto func2 = find_group(sig);
     mLogicGroup[2] = func2->id();
   }
   { // インバーターグループの登録
-    auto sig = CgSignature::make_logic_sig(1, Expr::make_nega_literal(VarId{0}));
+    auto sig = CgSignature::make_logic_sig(1, Expr::make_nega_literal(0));
     auto func3 = find_group(sig);
     mLogicGroup[3] = func3->id();
   }
@@ -66,9 +66,9 @@ CgMgr::logic_init()
 
   // AND2 〜 AND8 のシグネチャを登録しておく．
   for ( auto ni: {2, 3, 4, 5, 6, 7, 8} ) {
-    auto and_expr = Expr::make_posi_literal(VarId{0});
+    auto and_expr = Expr::make_posi_literal(0);
     for ( SizeType i = 1; i < ni; ++ i ) {
-      and_expr &= Expr::make_posi_literal(VarId{i});
+      and_expr &= Expr::make_posi_literal(i);
     }
     auto sig = CgSignature::make_logic_sig(ni, and_expr);
     find_group(sig);
@@ -76,9 +76,9 @@ CgMgr::logic_init()
 
   // XOR2 〜 XOR4 のシグネチャを登録しておく．
   for ( auto ni: {2, 3, 4} ) {
-    auto xor_expr = Expr::make_posi_literal(VarId{0});
+    auto xor_expr = Expr::make_posi_literal(0);
     for ( SizeType i = 1; i < ni; ++ i ) {
-      xor_expr ^= Expr::make_posi_literal(VarId{i});
+      xor_expr ^= Expr::make_posi_literal(i);
     }
     auto sig = CgSignature::make_logic_sig(ni, xor_expr);
     find_group(sig);
@@ -87,9 +87,9 @@ CgMgr::logic_init()
   // MUX2 のシグネチャを登録しておく．
   {
     SizeType ni = 3;
-    auto lit0 = Expr::make_posi_literal(VarId(0));
-    auto lit1 = Expr::make_posi_literal(VarId(1));
-    auto lit2 = Expr::make_posi_literal(VarId(2));
+    auto lit0 = Expr::make_posi_literal(0);
+    auto lit1 = Expr::make_posi_literal(1);
+    auto lit2 = Expr::make_posi_literal(2);
     auto mux2_func = lit0 & ~lit2 | lit1 & lit2;
     auto sig = CgSignature::make_logic_sig(ni, mux2_func);
     find_group(sig);
@@ -98,12 +98,12 @@ CgMgr::logic_init()
   // MUX4 のシグネチャを登録しておく．
   {
     SizeType ni = 6;
-    auto lit0 = Expr::make_posi_literal(VarId(0));
-    auto lit1 = Expr::make_posi_literal(VarId(1));
-    auto lit2 = Expr::make_posi_literal(VarId(2));
-    auto lit3 = Expr::make_posi_literal(VarId(3));
-    auto lit4 = Expr::make_posi_literal(VarId(4));
-    auto lit5 = Expr::make_posi_literal(VarId(5));
+    auto lit0 = Expr::make_posi_literal(0);
+    auto lit1 = Expr::make_posi_literal(1);
+    auto lit2 = Expr::make_posi_literal(2);
+    auto lit3 = Expr::make_posi_literal(3);
+    auto lit4 = Expr::make_posi_literal(4);
+    auto lit5 = Expr::make_posi_literal(5);
     auto mux4_func =
       lit0 & ~lit4 & ~lit5 |
       lit1 &  lit4 & ~lit5 |
@@ -135,24 +135,24 @@ CgMgr::ff_init()
       ++ ni;
     }
     SizeType xni = ni + 2; // IQ, XIQ の分を足す．
-    auto next = TvFunc::make_posi_literal(xni, VarId{0});
-    auto clock = TvFunc::make_posi_literal(xni, VarId{1});
+    auto next = TvFunc::make_posi_literal(xni, 0);
+    auto clock = TvFunc::make_posi_literal(xni, 1);
     auto clock2 = TvFunc::make_invalid();
     if ( info.has_slave_clock() ) {
-      clock2 = TvFunc::make_nega_literal(xni, VarId{1});
+      clock2 = TvFunc::make_nega_literal(xni, 1);
     }
     auto clear = TvFunc::make_invalid();
     SizeType base = 2;
     if ( info.has_clear() ) {
-      clear = TvFunc::make_posi_literal(xni, VarId{base});
+      clear = TvFunc::make_posi_literal(xni, base);
       ++ base;
     }
     auto preset = TvFunc::make_invalid();
     if ( info.has_preset() ) {
-      preset = TvFunc::make_posi_literal(xni, VarId{base});
+      preset = TvFunc::make_posi_literal(xni, base);
       ++ base;
     }
-    auto qvar = TvFunc::make_posi_literal(xni, VarId{base});
+    auto qvar = TvFunc::make_posi_literal(xni, base);
     vector<TvFunc> func_list{qvar};
     vector<TvFunc> tristate_list{TvFunc::make_invalid()};
     auto cpv1 = info.clear_preset_var1();
@@ -187,23 +187,23 @@ CgMgr::latch_init()
     if ( info.has_preset() ) {
       ++ ni;
     }
-    vector<TvFunc> func_list{TvFunc::make_posi_literal(ni, VarId{ni - 2})};
+    vector<TvFunc> func_list{TvFunc::make_posi_literal(ni, ni - 2)};
     vector<TvFunc> tristate_list{TvFunc::make_invalid()};
-    auto enable = TvFunc::make_posi_literal(ni, VarId{1});
+    auto enable = TvFunc::make_posi_literal(ni, 1);
     auto enable2 = TvFunc::make_invalid();
     if ( info.has_slave_clock() ) {
-      enable2 = TvFunc::make_nega_literal(ni, VarId{1});
+      enable2 = TvFunc::make_nega_literal(ni, 1);
     }
-    auto data = TvFunc::make_posi_literal(ni, VarId{0});
+    auto data = TvFunc::make_posi_literal(ni, 0);
     SizeType base = 2;
     auto clear = TvFunc::make_invalid();
     if ( info.has_clear() ) {
-      clear = TvFunc::make_posi_literal(ni, VarId{base});
+      clear = TvFunc::make_posi_literal(ni, base);
       ++ base;
     }
     auto preset = TvFunc::make_invalid();
     if ( info.has_preset() ) {
-      preset = TvFunc::make_posi_literal(ni, VarId{base});
+      preset = TvFunc::make_posi_literal(ni, base);
     }
     auto cpv1 = info.clear_preset_var1();
     auto cpv2 = info.clear_preset_var2();

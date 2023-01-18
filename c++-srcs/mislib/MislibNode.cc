@@ -358,8 +358,7 @@ MislibVarName::to_expr(
   int c = name_map.count(varname());
   ASSERT_COND( c > 0 );
 
-  int id = name_map.at(varname());
-  VarId var(id);
+  SizeType var = name_map.at(varname());
   return Expr::make_posi_literal(var);
 }
 

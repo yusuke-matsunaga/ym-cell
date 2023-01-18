@@ -10,7 +10,6 @@
 
 #include "ym/clib.h"
 #include "ym/logic.h"
-#include "ym/VarId.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -151,7 +150,7 @@ private:
   /// 既にあるときはそれを返す．
   PatNode*
   make_input(
-    VarId var ///< [in] 入力変数
+    SizeType var ///< [in] 入力変数
   );
 
   /// @brief 論理式の種類に応じてノードを作る．

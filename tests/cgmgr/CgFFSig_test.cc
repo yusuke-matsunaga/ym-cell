@@ -441,11 +441,11 @@ TEST(GenFuncTest, base1)
   SizeType no = 1;
   SizeType nb = 0;
   SizeType ni3 = ni + 2;
-  auto clock_var = TvFunc::make_posi_literal(ni3, VarId{0});
-  auto data_var = TvFunc::make_posi_literal(ni3, VarId{1});
-  auto clear_var = TvFunc::make_posi_literal(ni3, VarId{2});
-  auto preset_var = TvFunc::make_posi_literal(ni3, VarId{3});
-  auto qout_var = TvFunc::make_posi_literal(ni3, VarId{4});
+  auto clock_var = TvFunc::make_posi_literal(ni3, 0);
+  auto data_var = TvFunc::make_posi_literal(ni3, 1);
+  auto clear_var = TvFunc::make_posi_literal(ni3, 2);
+  auto preset_var = TvFunc::make_posi_literal(ni3, 3);
+  auto qout_var = TvFunc::make_posi_literal(ni3, 4);
   FFSpec spec{ni, no, nb,
 	      {qout_var},
 	      {TvFunc::make_invalid()},
@@ -465,10 +465,10 @@ TEST(GenFuncTest, manual1)
   SizeType ni = 4;
   SizeType no = 2;
   SizeType nb = 0;
-  auto v0 = TvFunc::make_posi_literal(ni + nb, VarId{0});
-  auto v1 = TvFunc::make_posi_literal(ni + nb, VarId{1});
-  auto v2 = TvFunc::make_posi_literal(ni + nb, VarId{2});
-  auto v3 = TvFunc::make_posi_literal(ni + nb, VarId{3});
+  auto v0 = TvFunc::make_posi_literal(ni + nb, 0);
+  auto v1 = TvFunc::make_posi_literal(ni + nb, 1);
+  auto v2 = TvFunc::make_posi_literal(ni + nb, 2);
+  auto v3 = TvFunc::make_posi_literal(ni + nb, 3);
   auto f0 = v0 & v1;
   auto f1 = v2 | v3;
   auto iv = TvFunc::make_invalid();
