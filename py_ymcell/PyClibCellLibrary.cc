@@ -6,8 +6,8 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/PyClibCellLibrary.h"
-#include "ym/PyModule.h"
+#include "pym/PyClibCellLibrary.h"
+#include "pym/PyModule.h"
 
 
 BEGIN_NAMESPACE_YM

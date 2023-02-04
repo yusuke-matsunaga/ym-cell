@@ -1,8 +1,8 @@
-#ifndef PY_YMCELL_H
-#define PY_YMCELL_H
+#ifndef PYM_YMCELL_H
+#define PYM_YMCELL_H
 
-/// @file py_ymcell.h
-/// @brief py_ymcell のヘッダファイル
+/// @file ymcell.h
+/// @brief ymcell の初期化関数のエクスポート
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2023 Yusuke Matsunaga

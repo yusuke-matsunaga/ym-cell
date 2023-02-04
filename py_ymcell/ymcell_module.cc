@@ -9,8 +9,8 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "ym/PyClibCellLibrary.h"
-#include "ym/PyModule.h"
+#include "pym/PyClibCellLibrary.h"
+#include "pym/PyModule.h"
 
 
 BEGIN_NAMESPACE_YM
