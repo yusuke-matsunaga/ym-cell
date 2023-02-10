@@ -117,7 +117,7 @@ ClibCellLibrary_display(
     return nullptr;
   }
 
-  auto& lib = PyClibCellLibrary::_get(self);
+  auto& lib = PyClibCellLibrary::Get(self);
   if ( filename == nullptr ) {
     display_library(cout, lib);
   }
@@ -142,7 +142,7 @@ ClibCellLibrary_to_string_list(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& lib = PyClibCellLibrary::_get(self);
+  auto& lib = PyClibCellLibrary::Get(self);
   ostringstream buf;
   display_library(buf, lib);
 
@@ -206,24 +206,9 @@ PyClibCellLibrary::init(
   return false;
 }
 
-// @brief PyObject から ClibCellLibrary を取り出す．
-bool
-PyClibCellLibrary::FromPyObject(
-  PyObject* obj,
-  ClibCellLibrary& val
-)
-{
-  if ( !_check(obj) ) {
-    PyErr_SetString(PyExc_TypeError, "object is not a ClibCellLibrary type");
-    return false;
-  }
-  val = _get(obj);
-  return true;
-}
-
 // @brief PyObject が ClibCellLibrary タイプか調べる．
 bool
-PyClibCellLibrary::_check(
+PyClibCellLibrary::Check(
   PyObject* obj
 )
 {
@@ -232,7 +217,7 @@ PyClibCellLibrary::_check(
 
 // @brief ClibCellLibrary を表す PyObject から ClibCellLibrary を取り出す．
 const ClibCellLibrary&
-PyClibCellLibrary::_get(
+PyClibCellLibrary::Get(
   PyObject* obj
 )
 {

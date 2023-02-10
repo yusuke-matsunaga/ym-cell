@@ -37,31 +37,20 @@ public:
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
 
-  /// @brief ClibCellLibrary を表す PyObject から ClibCellLibrary を取り出す．
-  /// @return 変換が成功したら true を返す．
-  ///
-  /// エラーの場合にはPython例外がセットされる．
-  static
-  bool
-  FromPyObject(
-    PyObject* obj,  ///< [in] ClibCellLibrary を表す PyObject
-    ClibCellLibrary& val ///< [out] 変換された ClibCellLibrary を格納する変数
-  );
-
   /// @brief PyObject が ClibCellLibrary タイプか調べる．
   static
   bool
-  _check(
+  Check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
   /// @brief ClibCellLibrary を表す PyObject から ClibCellLibrary を取り出す．
   /// @return ClibCellLibrary を返す．
   ///
-  /// _check(obj) == true であると仮定している．
+  /// Check(obj) == true であると仮定している．
   static
   const ClibCellLibrary&
-  _get(
+  Get(
     PyObject* obj ///< [in] 変換元の PyObject
   );
 
