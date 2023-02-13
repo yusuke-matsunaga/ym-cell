@@ -46,6 +46,7 @@ set_target_properties( py_ymcelllib
 
 target_link_libraries( py_ymcelllib
   ${YM_LIB_DEPENDS}
+  ${Python3_LIBRARIES}
   )
 
 # ===================================================================
