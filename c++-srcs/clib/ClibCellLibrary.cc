@@ -9,6 +9,8 @@
 #include "ym/ClibCellLibrary.h"
 #include "ym/ClibBusType.h"
 #include "ym/ClibCell.h"
+#include "ym/ClibCellClass.h"
+#include "ym/ClibLutTemplate.h"
 #include "ci/CiCellLibrary.h"
 
 

@@ -9,6 +9,8 @@
 #include "cgmgr/CgMgr.h"
 #include "cgmgr/CgSignature.h"
 #include "ci/CiCellLibrary.h"
+#include "ci/CiCellGroup.h"
+#include "ci/CiCellClass.h"
 #include "ci/CiSeqInfo.h"
 #include "ym/TvFunc.h"
 #include "ym/NpnMap.h"

@@ -8,35 +8,31 @@
 /// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/BinDec.h"
-#include "ym/BinEnc.h"
 #include "ym/ClibArea.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibResistance.h"
-#include "ym/ClibTiming.h"
 #include "ym/ClibPin.h"
 #include "ym/ClibPatGraph.h"
 #include "ym/ClibList.h"
 #include "ym/ShString.h"
-#include "ym/Expr.h"
+#include "ym/logic.h"
 #include "ci/CiPatMgr.h"
 #include "ci/CiCellPinHash.h"
-#include "ci/CiCell.h"
-#include "ci/CiCellGroup.h"
-#include "ci/CiCellClass.h"
 #include "ci/CiPin.h"
 #include "ci/CiBus.h"
 #include "ci/CiBundle.h"
-#include "ci/CiTiming.h"
-#include "ci/CiLutTemplate.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
-class CiBus;
-class CiBundle;
+class CiCell;
+class CiCellClass;
+class CiCellGroup;
 class CiInternalPin;
+class CiLut;
+class CiLutTemplate;
+class CiTiming;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiCellLibrary CiCellLibrary.h "CiCellLibrary.h"

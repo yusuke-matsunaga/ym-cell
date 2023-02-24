@@ -10,6 +10,7 @@
 #include "ym/ClibPin.h"
 #include "ym/ClibBus.h"
 #include "ym/ClibBundle.h"
+#include "ym/ClibTiming.h"
 #include "ci/CiCell.h"
 #include "ci/CiCellLibrary.h"
 

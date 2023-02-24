@@ -10,6 +10,7 @@
 #include "dotlib/AstValue.h"
 #include "dotlib/AstElemDict.h"
 #include "dotlib/AstExpr.h"
+#include "ci/CiCell.h"
 #include "ym/TvFunc.h"
 
 

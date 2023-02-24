@@ -9,6 +9,7 @@
 #include "ym/ClibCellGroup.h"
 #include "ym/ClibCell.h"
 #include "ci/CiCellGroup.h"
+#include "ci/CiCellClass.h"
 #include "ci/CiCellLibrary.h"
 
 

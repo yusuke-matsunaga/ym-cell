@@ -8,6 +8,7 @@
 
 #include "mislib_nsdef.h"
 #include "ci/CiCellLibrary.h"
+#include "ci/CiCell.h"
 
 #include "ym/ClibArea.h"
 #include "ym/ClibCapacitance.h"

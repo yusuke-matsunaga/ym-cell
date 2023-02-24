@@ -8,7 +8,7 @@
 /// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ClibLutTemplate.h"
+#include "ym/clib.h"
 #include "ym/ShString.h"
 
 
@@ -24,8 +24,8 @@ public:
 
   /// @brief コンストラクタ
   CiLutTemplate(
-    SizeType id,  ///< [in] ID番号
-    ShString name ///< [in] 名前
+    SizeType id,         ///< [in] ID番号
+    const ShString& name ///< [in] 名前
   ) : mId{id},
       mName{name}
   {

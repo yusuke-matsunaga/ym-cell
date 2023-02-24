@@ -10,10 +10,9 @@
 
 #include "ym/clib.h"
 #include "ym/ClibArea.h"
-#include "ym/Expr.h"
+#include "ym/logic.h"
 #include "ym/ShString.h"
 #include "ci/CiPin.h"
-#include "ci/CiTiming.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -22,9 +21,6 @@ class CiCellLibrary;
 class CiInputPin;
 class CiOutputPin;
 class CiInoutPin;
-class CiBus;
-class CiBundle;
-class CiTiming;
 class CgSignature;
 
 //////////////////////////////////////////////////////////////////////
