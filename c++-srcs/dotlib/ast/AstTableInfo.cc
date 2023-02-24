@@ -57,18 +57,15 @@ AstTableInfo::set(
   return ok;
 }
 
-CiLut*
+SizeType
 AstTableInfo::gen_lut(
   CiCellLibrary* library
 ) const
 {
   if ( mValues.size() > 0 ) {
-    auto lut = library->new_lut(mName, mValues, mIndex1, mIndex2, mIndex3);
-    return lut;
+    return library->add_lut(mName, mValues, mIndex1, mIndex2, mIndex3);
   }
-  else {
-    return nullptr;
-  }
+  return CLIB_NULLID;
 }
 
 END_NAMESPACE_YM_DOTLIB

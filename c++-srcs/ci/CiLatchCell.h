@@ -13,6 +13,8 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiCellLibrary;
+
 //////////////////////////////////////////////////////////////////////
 /// @class CiLatchCell CiLatchCell.h "CiLatchCell.h"
 /// @brief 単純なsingle-stage ラッチセルを表す CiCell の派生クラス
@@ -24,7 +26,6 @@ public:
 
   /// @brief コンストラクタ
   CiLatchCell(
-    CiCellLibrary* library,      ///< [in] 親のセルライブラリ
     const ShString& name,        ///< [in] 名前
     ClibArea area,               ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -35,7 +36,7 @@ public:
     const Expr& preset,          ///< [in] "preset" 関数の式
     ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
     ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  ) : CiFLCell{library, name, area,
+  ) : CiFLCell{name, area,
                var1, var2,
 	       clear, preset,
 	       clear_preset_var1,
@@ -82,7 +83,9 @@ public:
 
   /// @brief シグネチャを返す．
   CgSignature
-  make_signature() const override;
+  make_signature(
+    const CiCellLibrary* library ///< [in] ライブラリ
+  ) const override;
 
 
 private:
@@ -110,7 +113,6 @@ public:
 
   /// @brief コンストラクタ
   CiLatch2Cell(
-    CiCellLibrary* library,      ///< [in] 親のセルライブラリ
     const ShString& name,	 ///< [in] 名前
     ClibArea area,		 ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -122,7 +124,7 @@ public:
     const Expr& preset,          ///< [in] "preset" 関数の式
     ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
     ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  ) : CiLatchCell{library, name, area,
+  ) : CiLatchCell{name, area,
                   var1, var2,
 		  enable, data_in,
 		  clear, preset,

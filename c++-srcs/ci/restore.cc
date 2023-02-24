@@ -149,19 +149,13 @@ CiCellLibrary::restore(
 
   // 組み込み型の設定
   for ( auto id: Range(4) ) {
-    SizeType group_id;
-    bs >> group_id;
-    mLogicGroup[id] = mGroupList[group_id].get();
+    bs >> mLogicGroup[id];
   }
   for ( SizeType id = 0; id < mSimpleFFClass.size(); ++ id ) {
-    SizeType class_id;
-    bs >> class_id;
-    mSimpleFFClass[id] = mClassList[class_id].get();
+    bs >> mSimpleFFClass[id];
   }
   for ( SizeType id = 0; id < mSimpleLatchClass.size(); ++ id ) {
-    SizeType class_id;
-    bs >> class_id;
-    mSimpleLatchClass[id] = mClassList[class_id].get();
+    bs >> mSimpleLatchClass[id];
   }
 
   // パタングラフの情報の設定
@@ -207,30 +201,29 @@ CiCellLibrary::restore_lut_template(
   vector<double> index_array1;
   vector<double> index_array2;
   vector<double> index_array3;
-  CiLutTemplate* tmpl = nullptr;
   switch ( d ) {
   case 1:
     var_type1 = restore_1dim(s, index_array1);
-    tmpl = add_lut_template1(shname,
-			     var_type1, index_array1);
+    add_lut_template1(shname,
+		      var_type1, index_array1);
     break;
 
   case 2:
     var_type1 = restore_1dim(s, index_array1);
     var_type2 = restore_1dim(s, index_array2);
-    tmpl = add_lut_template2(shname,
-			     var_type1, index_array1,
-			     var_type2, index_array2);
+    add_lut_template2(shname,
+		      var_type1, index_array1,
+		      var_type2, index_array2);
     break;
 
   case 3:
     var_type1 = restore_1dim(s, index_array1);
     var_type2 = restore_1dim(s, index_array2);
     var_type3 = restore_1dim(s, index_array3);
-    tmpl = add_lut_template3(shname,
-			     var_type1, index_array1,
-			     var_type2, index_array2,
-			     var_type3, index_array3);
+    add_lut_template3(shname,
+		      var_type1, index_array1,
+		      var_type2, index_array2,
+		      var_type3, index_array3);
     break;
   }
 }
@@ -251,11 +244,12 @@ CiCellLibrary::restore_cell(
   // セル本体の読み込み
   ymuint8 type;
   s >> type;
-  CiCell* cell{nullptr};
+  SizeType cell_id{CLIB_NULLID};
   switch ( type ) {
   case 0:
-    cell = add_logic_cell(shname, area);
+    cell_id = add_logic_cell(shname, area);
     break;
+
   case 1:
     {
       string var1;
@@ -275,14 +269,15 @@ CiCellLibrary::restore_cell(
       preset.restore(s);
       s >> clear_preset_var1
 	>> clear_preset_var2;
-      cell = add_ff_cell(shname, area,
-			 ShString{var1}, ShString{var2},
-			 clocked_on, clocked_on_also, next_state,
-			 clear, preset,
-			 static_cast<ClibCPV>(clear_preset_var1),
-			 static_cast<ClibCPV>(clear_preset_var2));
+      cell_id = add_ff_cell(shname, area,
+			    ShString{var1}, ShString{var2},
+			    clocked_on, clocked_on_also, next_state,
+			    clear, preset,
+			    static_cast<ClibCPV>(clear_preset_var1),
+			    static_cast<ClibCPV>(clear_preset_var2));
     }
     break;
+
   case 2:
     {
       string var1;
@@ -302,16 +297,18 @@ CiCellLibrary::restore_cell(
       preset.restore(s);
       s >> clear_preset_var1
 	>> clear_preset_var2;
-      cell = add_latch_cell(shname, area,
-			    ShString{var1}, ShString{var2},
-			    enable, enable_also, data_in,
-			    clear, preset,
-			    static_cast<ClibCPV>(clear_preset_var1),
-			    static_cast<ClibCPV>(clear_preset_var2));
+      cell_id = add_latch_cell(shname, area,
+			       ShString{var1}, ShString{var2},
+			       enable, enable_also, data_in,
+			       clear, preset,
+			       static_cast<ClibCPV>(clear_preset_var1),
+			       static_cast<ClibCPV>(clear_preset_var2));
     }
     break;
+
   case 3:
     {
+#warning "TODO: 未完"
     }
     break;
   }
@@ -328,7 +325,8 @@ CiCellLibrary::restore_cell(
       >> cap
       >> r_cap
       >> f_cap;
-    cell->add_input(ShString(name), cap, r_cap, f_cap);
+    add_input(cell_id, ShString(name),
+	      cap, r_cap, f_cap);
   }
 
   // 出力ピンの読み込み
@@ -353,12 +351,12 @@ CiCellLibrary::restore_cell(
       >> min_t;
     logic_expr.restore(s);
     tristate_expr.restore(s);
-    cell->add_output(ShString(name),
-		     max_f, min_f,
-		     max_c, min_c,
-		     max_t, min_t,
-		     logic_expr,
-		     tristate_expr);
+    add_output(cell_id, ShString(name),
+	       max_f, min_f,
+	       max_c, min_c,
+	       max_t, min_t,
+	       logic_expr,
+	       tristate_expr);
   }
 
   // 入出力ピンの読み込み
@@ -389,13 +387,13 @@ CiCellLibrary::restore_cell(
       >> min_t;
     logic_expr.restore(s);
     tristate_expr.restore(s);
-    cell->add_inout(ShString(name),
-		    cap, r_cap, f_cap,
-		    max_f, min_f,
-		    max_c, min_c,
-		    max_t, min_t,
-		    logic_expr,
-		    tristate_expr);
+    add_inout(cell_id, ShString(name),
+	      cap, r_cap, f_cap,
+	      max_f, min_f,
+	      max_c, min_c,
+	      max_t, min_t,
+	      logic_expr,
+	      tristate_expr);
   }
 
   // 内部ピンの読み込み
@@ -404,7 +402,7 @@ CiCellLibrary::restore_cell(
   for ( auto _: Range(nit) ) {
     string name;
     s >> name;
-    cell->add_internal(ShString(name));
+    add_internal(cell_id, ShString(name));
   }
 
   // バスピンの読み込み
@@ -421,7 +419,11 @@ CiCellLibrary::restore_cell(
     ;
   }
 
-  cell->init_timing_map(cell->input_num2(), cell->output_num2());
+  auto cell = mCellList[cell_id].get();
+
+  SizeType ni2 = cell->input2_num();
+  SizeType no2 = cell->output2_num();
+  cell->init_timing_map(ni2, no2);
 
   // タイミング情報の読み込み
   SizeType nt;
@@ -431,9 +433,10 @@ CiCellLibrary::restore_cell(
   }
 
   // 個別の条件ごとのタイミング情報の設定
-  for ( int ipos: Range(ni + nio) ) {
-    for ( int opos: Range(no + nio) ) {
-      for ( auto sense: { ClibTimingSense::positive_unate, ClibTimingSense::negative_unate } ) {
+  for ( int ipos: Range(ni2) ) {
+    for ( int opos: Range(no2) ) {
+      for ( auto sense: { ClibTimingSense::positive_unate,
+			  ClibTimingSense::negative_unate } ) {
 	SizeType nt;
 	s >> nt;
 	vector<SizeType> timing_id_list;
@@ -460,15 +463,15 @@ CiCellLibrary::restore_cell_group(
   ClibIOMap iomap;
   iomap.restore(s);
 
-  auto rep_class = mRefClassList[rep_id];
-  auto group = add_cell_group(rep_class, iomap);
+  auto gid = add_cell_group(rep_id, iomap);
+  auto group = mGroupList[gid].get();
 
   SizeType cell_num;
   s >> cell_num;
   for ( auto _: Range(cell_num) ) {
     SizeType cell_id;
     s >> cell_id;
-    group->add_cell(mRefCellList[cell_id]);
+    group->add_cell(cell_id);
   }
 }
 
@@ -484,7 +487,7 @@ CiCellLibrary::restore_cell_class(
   for ( auto i: Range(idmap_num) ) {
     idmap_list[i].restore(s);
   }
-  auto cclass = add_cell_class(idmap_list);
+  add_cell_class(idmap_list);
 }
 
 // @brief タイミング情報を読み込む．
@@ -503,6 +506,7 @@ CiCellLibrary::restore_timing(
 
   CiTiming* timing = nullptr;
   ClibTimingType timing_type = static_cast<ClibTimingType>(tmp);
+  SizeType tid;
   switch ( ttype ) {
   case 0:
     {
@@ -518,7 +522,7 @@ CiCellLibrary::restore_timing(
 	>> s_f
 	>> r_r
 	>> f_r;
-      cell->add_timing_generic(timing_type,
+      tid = add_timing_generic(timing_type,
 			       cond,
 			       i_r, i_f,
 			       s_r, s_f,
@@ -537,21 +541,25 @@ CiCellLibrary::restore_timing(
 	>> i_f
 	>> s_r
 	>> s_f;
-      timing = new_timing_piecewise(timing_type,
-				    cond,
-				    i_r, i_f,
-				    s_r, s_f);
+      tid = new_timing_piecewise(timing_type,
+				 cond,
+				 i_r, i_f,
+				 s_r, s_f);
 #endif
     }
     break;
 
   case 2:
     {
-      CiLut* cell_rise = restore_lut(s);
-      CiLut* cell_fall = restore_lut(s);
-      CiLut* rise_transition = restore_lut(s);
-      CiLut* fall_transition = restore_lut(s);
-      cell->add_timing_lut1(timing_type,
+      SizeType cell_rise;
+      SizeType cell_fall;
+      SizeType rise_transition;
+      SizeType fall_transition;
+      s >> cell_rise
+	>> cell_fall
+	>> rise_transition
+	>> fall_transition;
+      tid = add_timing_lut1(timing_type,
 			    cond,
 			    cell_rise,
 			    cell_fall,
@@ -562,11 +570,15 @@ CiCellLibrary::restore_timing(
 
   case 3:
     {
-      CiLut* rise_transition = restore_lut(s);
-      CiLut* fall_transition = restore_lut(s);
-      CiLut* rise_propagation = restore_lut(s);
-      CiLut* fall_propagation = restore_lut(s);
-      cell->add_timing_lut2(timing_type,
+      SizeType rise_transition;
+      SizeType fall_transition;
+      SizeType rise_propagation;
+      SizeType fall_propagation;
+      s >> rise_transition
+	>> fall_transition
+	>> rise_propagation
+	>> fall_propagation;
+      tid = add_timing_lut2(timing_type,
 			    cond,
 			    rise_transition,
 			    fall_transition,
@@ -593,9 +605,9 @@ CiCellLibrary::restore_lut(
     return nullptr;
   }
 
-  const ClibLutTemplate& templ = lu_table_template(templ_id);
+  auto templ = mLutTemplateList[templ_id].get();
 
-  SizeType d = templ.dimension();
+  SizeType d = templ->dimension();
   switch ( d ) {
   case 1:
     {
@@ -614,7 +626,7 @@ CiCellLibrary::restore_lut(
 	s >> val;
 	value_array[i] = val;
       }
-      return new_lut1(&templ,
+      return new_lut1(templ,
 		      value_array,
 		      index_array);
     }
@@ -646,7 +658,7 @@ CiCellLibrary::restore_lut(
 	s >> val;
 	value_array[i] = val;
       }
-      return new_lut2(&templ,
+      return new_lut2(templ,
 		      value_array,
 		      index_array1,
 		      index_array2);
@@ -689,7 +701,7 @@ CiCellLibrary::restore_lut(
 	value_array[i] = val;
       }
 
-      return new_lut3(&templ,
+      return new_lut3(templ,
 		      value_array,
 		      index_array1,
 		      index_array2,

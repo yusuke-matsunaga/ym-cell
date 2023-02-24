@@ -3,7 +3,7 @@
 /// @brief CiCellLibrary の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiCellLibrary.h"
@@ -51,14 +51,14 @@ CiCellLibrary::~CiCellLibrary()
 
 // @brief 参照回数を増やす．
 void
-CiCellLibrary::inc_ref()
+CiCellLibrary::inc_ref() const
 {
   ++ mRefCount;
 }
 
 // @brief 参照回数を減らす．
 void
-CiCellLibrary::dec_ref()
+CiCellLibrary::dec_ref() const
 {
   -- mRefCount;
   if ( mRefCount == 0 ) {
@@ -68,17 +68,17 @@ CiCellLibrary::dec_ref()
 }
 
 // @brief バスタイプの取得
-const ClibBusType&
+SizeType
 CiCellLibrary::bus_type(
   const ShString& name
 ) const
 {
 #warning "TODO: 未完"
-  return error_bus_type();
+  return CLIB_NULLID;
 }
 
 // @brief 単純な型のFFクラスを返す．
-const ClibCellClass&
+SizeType
 CiCellLibrary::simple_ff_class(
   bool master_slave,
   bool has_clear,
@@ -88,11 +88,11 @@ CiCellLibrary::simple_ff_class(
 ) const
 {
   CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
-  return *mSimpleFFClass[info.encode_val()];
+  return mSimpleFFClass[info.encode_val()];
 }
 
 // @brief 単純な型のラッチクラスを返す．
-const ClibCellClass&
+SizeType
 CiCellLibrary::simple_latch_class(
   bool master_slave,
   bool has_clear,
@@ -102,7 +102,7 @@ CiCellLibrary::simple_latch_class(
 ) const
 {
   CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
-  return *mSimpleLatchClass[info.encode_val()];
+  return mSimpleLatchClass[info.encode_val()];
 }
 
 // @brief 属性を設定する(浮動小数点型)
@@ -209,7 +209,7 @@ CiCellLibrary::set_attr(
 }
 
 // @brief 1次元の LUT のテンプレートを作る．
-CiLutTemplate*
+SizeType
 CiCellLibrary::add_lut_template1(
   const ShString& name,
   ClibVarType var_type1,
@@ -220,12 +220,13 @@ CiCellLibrary::add_lut_template1(
   auto tmpl = new CiLutTemplate1D{id, name,
                                   var_type1, index_list1};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
+  mRefLutTemplateList.push_back(id);
   mLutHash.emplace(name, id);
-  return tmpl;
+  return id;
 }
 
 // @brief 2次元の LUT のテンプレートを作る．
-CiLutTemplate*
+SizeType
 CiCellLibrary::add_lut_template2(
   const ShString& name,
   ClibVarType var_type1,
@@ -239,12 +240,13 @@ CiCellLibrary::add_lut_template2(
 				  var_type1, index_list1,
 				  var_type2, index_list2};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
+  mRefLutTemplateList.push_back(id);
   mLutHash.emplace(name, id);
-  return tmpl;
+  return id;
 }
 
 // @brief 3次元の LUT のテンプレートを作る．
-CiLutTemplate*
+SizeType
 CiCellLibrary::add_lut_template3(
   const ShString& name,
   ClibVarType var_type1,
@@ -261,51 +263,51 @@ CiCellLibrary::add_lut_template3(
 				  var_type2, index_list2,
 				  var_type3, index_list3};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
+  mRefLutTemplateList.push_back(id);
   mLutHash.emplace(name, id);
-  return tmpl;
+  return id;
 }
 
 // @brief セルクラスを作る．
-CiCellClass*
+SizeType
 CiCellLibrary::add_cell_class(
   const vector<ClibIOMap>& idmap_list
 )
 {
   SizeType id = mClassList.size();
-  auto cc = new CiCellClass{id, idmap_list};
+  auto cc = new CiCellClass{idmap_list};
   mClassList.push_back(unique_ptr<CiCellClass>(cc));
-  mRefClassList.push_back(cc);
-  return cc;
+  mRefClassList.push_back(id);
+  return id;
 }
 
 // @brief セルグループを作る．
-CiCellGroup*
+SizeType
 CiCellLibrary::add_cell_group(
-  const ClibCellClass* rep_class,
+  SizeType rep_class,
   const ClibIOMap& iomap
 )
 {
   SizeType id = mGroupList.size();
-  auto cg = new CiCellGroup{id, rep_class, iomap};
+  auto cg = new CiCellGroup{rep_class, iomap};
   mGroupList.push_back(unique_ptr<CiCellGroup>(cg));
-  mRefGroupList.push_back(cg);
-  return cg;
+  mRefGroupList.push_back(id);
+  return id;
 }
 
 // @brief 論理セルを追加する．
-CiCell*
+SizeType
 CiCellLibrary::add_logic_cell(
   const ShString& name,
   ClibArea area
 )
 {
-  auto cell = new CiCell(this, name, area);
-  reg_cell(cell);
-  return cell;
+  auto cell = new CiCell{name, area};
+  return reg_cell(cell);
 }
 
 // @brief FFセルを生成する．
-CiCell*
+SizeType
 CiCellLibrary::add_ff_cell(
   const ShString& name,
   ClibArea area,
@@ -322,27 +324,26 @@ CiCellLibrary::add_ff_cell(
 {
   CiCell* cell{nullptr};
   if ( clock2.is_valid() ) {
-    cell = new CiFF2Cell(this, name, area,
+    cell = new CiFF2Cell{name, area,
 			 var1, var2,
 			 clock, clock2, next_state,
 			 clear, preset,
 			 clear_preset_var1,
-			 clear_preset_var2);
+			 clear_preset_var2};
   }
   else {
-    cell = new CiFFCell(this, name, area,
+    cell = new CiFFCell{name, area,
 			var1, var2,
 			clock, next_state,
 			clear, preset,
 			clear_preset_var1,
-			clear_preset_var2);
+			clear_preset_var2};
   }
-  reg_cell(cell);
-  return cell;
+  return reg_cell(cell);
 }
 
 // @brief ラッチセルを追加する．
-CiCell*
+SizeType
 CiCellLibrary::add_latch_cell(
   const ShString& name,
   ClibArea area,
@@ -359,90 +360,342 @@ CiCellLibrary::add_latch_cell(
 {
   CiCell* cell{nullptr};
   if ( enable2.is_valid() ) {
-    cell = new CiLatch2Cell(this, name, area,
+    cell = new CiLatch2Cell{name, area,
 			    var1, var2,
 			    enable, enable2, data_in,
 			    clear, preset,
 			    clear_preset_var1,
-			    clear_preset_var2);
+			    clear_preset_var2};
   }
   else {
-    cell = new CiLatchCell(this, name, area,
+    cell = new CiLatchCell{name, area,
 			   var1, var2,
 			   enable, data_in,
 			   clear, preset,
 			   clear_preset_var1,
-			   clear_preset_var2);
+			   clear_preset_var2};
   }
-  reg_cell(cell);
-  return cell;
+  return reg_cell(cell);
 }
 
 // @brief セルを登録する．
-void
+SizeType
 CiCellLibrary::reg_cell(
-  CiCell* cell ///< [in] セル
+  CiCell* cell
 )
 {
-  cell->set_id(mRefCellList.size());
+  SizeType id = mCellList.size();
+  cell->set_id(id);
   mCellList.push_back(unique_ptr<CiCell>{cell});
-  mRefCellList.push_back(cell);
-  mCellHash.emplace(cell->name(), cell);
+  mRefCellList.push_back(id);
+  mCellHash.emplace(cell->name(), id);
+  return id;
+}
+
+// @brief 入力ピンを追加する．
+SizeType
+CiCellLibrary::add_input(
+  SizeType cell_id,
+  const ShString& name,
+  ClibCapacitance capacitance,
+  ClibCapacitance rise_capacitance,
+  ClibCapacitance fall_capacitance
+)
+{
+  auto pin = new CiInputPin{name, capacitance,
+                            rise_capacitance,
+			    fall_capacitance};
+  SizeType id = reg_pin(cell_id, pin);
+  auto cell = mCellList[cell_id].get();
+  cell->add_input(pin, id);
+  return id;
+}
+
+// @brief 出力ピンを追加する．
+SizeType
+CiCellLibrary::add_output(
+  SizeType cell_id,
+  const ShString& name,
+  ClibCapacitance max_fanout,
+  ClibCapacitance min_fanout,
+  ClibCapacitance max_capacitance,
+  ClibCapacitance min_capacitance,
+  ClibTime max_transition,
+  ClibTime min_transition,
+  const Expr& function,
+  const Expr& tristate
+)
+{
+  auto pin = new CiOutputPin{name,
+                             max_fanout,
+			     min_fanout,
+			     max_capacitance,
+			     min_capacitance,
+			     max_transition,
+			     min_transition,
+			     function,
+			     tristate};
+  SizeType id = reg_pin(cell_id, pin);
+  auto cell = mCellList[cell_id].get();
+  cell->add_output(pin, id);
+  return id;
+}
+
+// @brief 入出力ピンを追加する．
+SizeType
+CiCellLibrary::add_inout(
+  SizeType cell_id,
+  const ShString& name,
+  ClibCapacitance capacitance,
+  ClibCapacitance rise_capacitance,
+  ClibCapacitance fall_capacitance,
+  ClibCapacitance max_fanout,
+  ClibCapacitance min_fanout,
+  ClibCapacitance max_capacitance,
+  ClibCapacitance min_capacitance,
+  ClibTime max_transition,
+  ClibTime min_transition,
+  const Expr& function,
+  const Expr& tristate
+)
+{
+  auto pin = new CiInoutPin{name,
+                            capacitance, rise_capacitance, fall_capacitance,
+			    max_fanout, min_fanout,
+			    max_capacitance, min_capacitance,
+			    max_transition, min_transition,
+			    function, tristate};
+  SizeType id = reg_pin(cell_id, pin);
+  auto cell = mCellList[cell_id].get();
+  cell->add_inout(pin, id);
+  return id;
+}
+
+// @brief 内部ピンを追加する．
+SizeType
+CiCellLibrary::add_internal(
+  SizeType cell_id,
+  const ShString& name
+)
+{
+  auto pin = new CiInternalPin{name};
+  SizeType id = reg_pin(cell_id, pin);
+  auto cell = mCellList[cell_id].get();
+  cell->add_internal(pin, id);
+  return id;
+}
+
+// @brief バスを追加する．
+SizeType
+CiCellLibrary::add_bus(
+  SizeType cell_id,
+  const ShString& name,
+  SizeType bus_type,
+  const vector<SizeType>& pin_list
+)
+{
+  auto bus = new CiBus{name, bus_type, pin_list};
+  SizeType id = reg_bus(cell_id, bus);
+  auto cell = mCellList[cell_id].get();
+  cell->add_bus(id);
+  return id;
+}
+
+// @brief バンドルを追加する．
+SizeType
+CiCellLibrary::add_bundle(
+  SizeType cell_id,
+  const ShString& name,
+  const vector<SizeType>& pin_list
+)
+{
+  auto bundle = new CiBundle(name, pin_list);
+  SizeType id = reg_bundle(cell_id, bundle);
+  auto cell = mCellList[cell_id].get();
+  cell->add_bundle(id);
+  return id;
+}
+
+// @brief タイミング情報を作る(ジェネリック遅延モデル)．
+SizeType
+CiCellLibrary::add_timing_generic(
+  ClibTimingType type,
+  const Expr& cond,
+  ClibTime intrinsic_rise,
+  ClibTime intrinsic_fall,
+  ClibTime slope_rise,
+  ClibTime slope_fall,
+  ClibResistance rise_resistance,
+  ClibResistance fall_resistance
+)
+{
+  SizeType tid = mTimingList.size();
+  auto timing = new CiTimingGeneric(tid, type, cond,
+				    intrinsic_rise,
+				    intrinsic_fall,
+				    slope_rise,
+				    slope_fall,
+				    rise_resistance,
+				    fall_resistance);
+  mTimingList.push_back(unique_ptr<CiTiming>{timing});
+  return tid;
+}
+
+// @brief タイミング情報を作る(折れ線近似)．
+SizeType
+CiCellLibrary::add_timing_piecewise(
+  ClibTimingType timing_type,
+  const Expr& cond,
+  ClibTime intrinsic_rise,
+  ClibTime intrinsic_fall,
+  ClibTime slope_rise,
+  ClibTime slope_fall,
+  ClibResistance rise_pin_resistance,
+  ClibResistance fall_pin_resistance
+)
+{
+  SizeType tid = mTimingList.size();
+  auto timing = new CiTimingPiecewise(tid, timing_type, cond,
+				      intrinsic_rise,
+				      intrinsic_fall,
+				      slope_rise,
+				      slope_fall,
+				      rise_pin_resistance,
+				      fall_pin_resistance);
+  mTimingList.push_back(unique_ptr<CiTiming>{timing});
+  return tid;
+}
+
+// @brief タイミング情報を作る(非線形タイプ1)．
+SizeType
+CiCellLibrary::add_timing_lut1(
+  ClibTimingType timing_type,
+  const Expr& cond,
+  SizeType cell_rise,
+  SizeType cell_fall,
+  SizeType rise_transition,
+  SizeType fall_transition
+)
+{
+  SizeType tid = mTimingList.size();
+  auto timing = new CiTimingLut1(tid, timing_type, cond,
+				 cell_rise,
+				 cell_fall,
+				 rise_transition,
+				 fall_transition);
+
+  mTimingList.push_back(unique_ptr<CiTiming>{timing});
+  return tid;
+}
+
+// @brief タイミング情報を作る(非線形タイプ2)．
+SizeType
+CiCellLibrary::add_timing_lut2(
+  ClibTimingType timing_type,
+  const Expr& cond,
+  SizeType rise_transition,
+  SizeType fall_transition,
+  SizeType rise_propagation,
+  SizeType fall_propagation
+)
+{
+  SizeType tid = mTimingList.size();
+  CiTiming* timing = new CiTimingLut2(tid, timing_type, cond,
+				      rise_transition,
+				      fall_transition,
+				      rise_propagation,
+				      fall_propagation);
+
+  mTimingList.push_back(unique_ptr<CiTiming>{timing});
+  return tid;
+}
+
+// @brief タイミング情報用のデータ構造を初期化する．
+void
+CiCellLibrary::init_cell_timing_map(
+  SizeType cell_id,
+  SizeType input_num,
+  SizeType output_num
+)
+{
+  mCellList[cell_id]->init_timing_map(input_num, output_num);
 }
 
 // @brief 1次元の LUT を作る．
 CiLut*
 CiCellLibrary::new_lut1(
-  const ClibLutTemplate* lut_template,
+  const CiLutTemplate* lut_template,
   const vector<double>& value_array,
   const vector<double>& index_array
 )
 {
-  auto lut = new CiLut1D(lut_template, value_array, index_array);
-  return lut;
+  vector<double> tmp_array{index_array};
+  if ( tmp_array.empty() ) {
+    // index_array が空だった場合，テンプレートからコピーする．
+    SizeType n = lut_template->index_num(0);
+    tmp_array.resize(n);
+    for ( auto i: Range(n) ) {
+      tmp_array[i] = lut_template->index(0, i);
+    }
+  }
+
+  return new CiLut1D{lut_template->id(), value_array, tmp_array};
 }
 
 // @brief 2次元の LUT を作る．
-// @param[in] lut_template テンプレート
-// @param[in] value_array 値の配列
-// @param[in] index_array1 インデックス値のリスト
-// @param[in] index_array2 インデックス値のリスト
 CiLut*
 CiCellLibrary::new_lut2(
-  const ClibLutTemplate* lut_template,
+  const CiLutTemplate* lut_template,
   const vector<double>& value_array,
   const vector<double>& index_array1,
   const vector<double>& index_array2
 )
 {
-  auto lut = new CiLut2D(lut_template, value_array,
-			 index_array1, index_array2);
-  return lut;
+  vector<double> tmp_array[2]{index_array1, index_array2};
+  for ( int b = 0; b < 2; ++ b ) {
+    if ( tmp_array[b].empty() ) {
+      // index_array が空だった場合，テンプレートからコピーする．
+      SizeType n1 = lut_template->index_num(b);
+      tmp_array[b].resize(n1);
+      for ( auto i: Range(n1) ) {
+	tmp_array[b][i] = lut_template->index(b, i);
+      }
+    }
+  }
+
+  return new CiLut2D{lut_template->id(), value_array,
+		     tmp_array[0], tmp_array[1]};
 }
 
 // @brief 3次元の LUT を作る．
-// @param[in] lut_template テンプレート
-// @param[in] value_array 値の配列
-// @param[in] index_array1 インデックス値のリスト
-// @param[in] index_array2 インデックス値のリスト
-// @param[in] index_array3 インデックス値のリスト
 CiLut*
 CiCellLibrary::new_lut3(
-  const ClibLutTemplate* lut_template,
+  const CiLutTemplate* lut_template,
   const vector<double>& value_array,
   const vector<double>& index_array1,
   const vector<double>& index_array2,
   const vector<double>& index_array3
 )
 {
-  auto lut = new CiLut3D(lut_template, value_array,
-			 index_array1, index_array2, index_array3);
-  return lut;
+  vector<double> tmp_array[3]{index_array1, index_array2, index_array3};
+  for ( int b = 0; b < 3; ++ b ) {
+    if ( tmp_array[b].empty() ) {
+      // index_array が空だった場合，テンプレートからコピーする．
+      SizeType n1 = lut_template->index_num(b);
+      tmp_array[b].resize(n1);
+      for ( auto i: Range(n1) ) {
+	tmp_array[b][i] = lut_template->index(b, i);
+      }
+    }
+  }
+
+  return new CiLut3D{lut_template->id(), value_array,
+		     tmp_array[0], tmp_array[1], tmp_array[2]};
 }
 
-// @brief 3次元の LUT を作る．
-CiLut*
-CiCellLibrary::new_lut(
+// @brief LUT を作る．
+SizeType
+CiCellLibrary::add_lut(
   const ShString& templ_name,
   const vector<double>& value_array,
   const vector<double>& index_array1,
@@ -455,83 +708,38 @@ CiCellLibrary::new_lut(
 #warning "TODO: エラーメッセージ"
     cerr << "lut_template(" << templ_name << ") not found." << endl;
     abort();
-    return nullptr;
+    return CLIB_NULLID;
   }
-  auto lut_template = mLutTemplateList[mLutHash.at(templ_name)].get();
+  auto templ_id = mLutHash.at(templ_name);
+  auto lut_template = mLutTemplateList[templ_id].get();
 
   SizeType d = lut_template->dimension();
   CiLut* lut{nullptr};
   switch ( d ) {
   case 1:
-    lut = new CiLut1D(lut_template, value_array,
-		      index_array1);
+    lut = new_lut1(lut_template,
+		   value_array,
+		   index_array1);
     break;
+
   case 2:
-    lut = new CiLut2D(lut_template, value_array,
-		      index_array1, index_array2);
+    lut = new_lut2(lut_template,
+		   value_array,
+		   index_array1,
+		   index_array2);
     break;
+
   case 3:
-    lut = new CiLut3D(lut_template, value_array,
-		      index_array1, index_array2, index_array3);
+    lut = new_lut3(lut_template,
+		   value_array,
+		   index_array1,
+		   index_array2,
+		   index_array3);
     break;
   }
-  return lut;
-}
-
-// @brief デフォルトの BusType を返す．
-const ClibBusType&
-CiCellLibrary::error_bus_type()
-{
-  static CiBusType bus_type(ShString(), -1, -1);
-  return bus_type;
-}
-
-// @brief デフォルトの LutTemplate を返す．
-const ClibLutTemplate&
-CiCellLibrary::error_lut_template()
-{
-  static CiLutTemplateBad lut_template;
-  return lut_template;
-}
-
-// @brief デフォルトの Lut を返す．
-const ClibLut&
-CiCellLibrary::error_lut()
-{
-  static CiLutBad lut;
-  return lut;
-}
-
-// @brief デフォルトの Cell を返す．
-const ClibCell&
-CiCellLibrary::error_cell()
-{
-  static CiCell cell;
-  return cell;
-}
-
-// @brief デフォルトの CellGroup を返す．
-const ClibCellGroup&
-CiCellLibrary::error_cell_group()
-{
-  static CiCellGroup cell_group;
-  return cell_group;
-}
-
-// @brief デフォルトの CellClass を返す．
-const ClibCellClass&
-CiCellLibrary::error_cell_class()
-{
-  static CiCellClass cell_class;
-  return cell_class;
-}
-
-// @brief デフォルトの PatGraph を返す．
-const ClibPatGraph&
-CiCellLibrary::error_patgraph()
-{
-  static CiPatGraph pat_graph;
-  return pat_graph;
+  SizeType id = mLutList.size();
+  mLutList.push_back(unique_ptr<CiLut>(lut));
+  return id;
 }
 
 // @brief セルグループ/セルクラスの設定を行なう．
@@ -542,11 +750,12 @@ CiCellLibrary::compile()
   CgMgr cgmgr{*this};
   for ( auto& cell: mCellList ) {
     // シグネチャを作る．
-    auto sig = cell->make_signature();
+    auto sig = cell->make_signature(this);
     // sig に対応するグループを求める．
-    auto group = cgmgr.find_group(sig);
+    auto gid = cgmgr.find_group(sig);
     // セルを登録する．
-    group->add_cell(cell.get());
+    auto group = _cell_group(gid);
+    group->add_cell(cell->id());
   }
 
   // パタングラフを作る．
@@ -554,17 +763,15 @@ CiCellLibrary::compile()
 
   // セルクラスの情報をコピーする．
   for ( SizeType index: { 0, 1, 2, 3 } ) {
-    mLogicGroup[index] = mRefGroupList[cgmgr.logic_group(index)];
+    mLogicGroup[index] = cgmgr.logic_group(index);
   }
   for ( SizeType index = 0; index < CiSeqInfo::max_index(); ++ index ) {
     auto info = CiSeqInfo::decode_index(index);
-    SizeType id = cgmgr.ff_class(info);
-    mSimpleFFClass[index] = mRefClassList[id];
+    mSimpleFFClass[index] = cgmgr.ff_class(info);
   }
   for ( SizeType index = 0; index < CiSeqInfo::max_index(); ++ index ) {
     auto info = CiSeqInfo::decode_index(index);
-    SizeType id = cgmgr.latch_class(info);
-    mSimpleLatchClass[info.encode_val()] = mRefClassList[id];
+    mSimpleLatchClass[info.encode_val()] = cgmgr.latch_class(info);
   }
 
   // パタングラフの情報をコピーする．
@@ -593,69 +800,6 @@ CiCellLibrary::compile()
     cgmgr.get_pat_info(i, rep_id, input_num, edge_list);
     mPatMgr.set_pat_info(i, rep_id, input_num, edge_list);
   }
-}
-
-// @brief ピンを登録する．
-void
-CiCellLibrary::reg_pin(
-  const CiCell* cell,
-  ShString name,
-  SizeType id
-)
-{
-  mPinHash.add(cell->id(), name, id);
-}
-
-// @brief ピン名からピン番号を取り出す．
-SizeType
-CiCellLibrary::get_pin_id(
-  const CiCell* cell,
-  ShString name
-)
-{
-  return mPinHash.get(cell->id(), name);
-}
-
-// @brief バスを登録する．
-void
-CiCellLibrary::reg_bus(
-  const CiCell* cell,
-  ShString name,
-  SizeType id
-)
-{
-  mBusHash.add(cell->id(), name, id);
-}
-
-// @brief バス名からバス番号を取り出す．
-SizeType
-CiCellLibrary::get_bus_id(
-  const CiCell* cell,
-  ShString name
-)
-{
-  return mBusHash.get(cell->id(), name);
-}
-
-// @brief バンドルを登録する．
-void
-CiCellLibrary::reg_bundle(
-  const CiCell* cell,
-  ShString name,
-  SizeType id
-)
-{
-  mBundleHash.add(cell->id(), name, id);
-}
-
-// @brief バンドル名からバンドル番号を取り出す．
-SizeType
-CiCellLibrary::get_bundle_id(
-  const CiCell* cell,
-  ShString name
-)
-{
-  return mBundleHash.get(cell->id(), name);
 }
 
 END_NAMESPACE_YM_CLIB

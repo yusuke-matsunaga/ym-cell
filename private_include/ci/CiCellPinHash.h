@@ -1,8 +1,8 @@
 ﻿#ifndef CICELLPINHASH_H
 #define CICELLPINHASH_H
 
-/// @file CiCellPinHash.h
-/// @brief CiCellPinHash のヘッダファイル
+/// @file CiPinHash.h
+/// @brief CiPinHash のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
@@ -14,24 +14,21 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
-class CiCell;
-class CiCellPin;
-
 //////////////////////////////////////////////////////////////////////
-/// @class CiCellPinHash CiCellPinHash.h "CiCellPinHash.h"
+/// @class CiPinHash CiPinHash.h "CiPinHash.h"
 /// @brief ピン名のハッシュ表
 ///
-/// CiCellPin そのものをハッシュ表中のリンクトリストの要素として用いる．
+/// 実はセル番号と名前をキーに番号を格納する辞書なのでバスやバンドルにも使える．
 //////////////////////////////////////////////////////////////////////
 class CiCellPinHash
 {
 public:
 
   /// @brief コンストラクタ
-  CiCellPinHash();
+  CiCellPinHash() = default;
 
   /// @brief デストラクタ
-  ~CiCellPinHash();
+  ~CiCellPinHash() = default;
 
 
 public:
@@ -39,18 +36,33 @@ public:
   /// @brief ピンを追加する．
   void
   add(
-    CiCellPin* pin ///< [in] 追加するピン
-  );
+    SizeType cell_id, ///< [in] ピンの親のセル番号
+    ShString name,    ///< [in] ピン名
+    SizeType pin_id   ///< [in] ピン番号
+  )
+  {
+    Key key{cell_id, name};
+    mDict.emplace(key, pin_id);
+  }
 
   /// @brief ピンを取り出す．
   /// @return cell の name というピンのピン番号を返す．
   ///
-  /// なければ -1 を返す．
-  int
+  /// なければ CLIB_NULLID を返す．
+  SizeType
   get(
-    const CiCell* cell, ///< [in] セル
-    ShString name       ///< [in] 名前
-  ) const;
+    SizeType cell_id, ///< [in] セル番号
+    ShString name     ///< [in] 名前
+  ) const
+  {
+    Key key{cell_id, name};
+    if ( mDict.count(key) > 0 ) {
+      return mDict.at(key);
+    }
+    else {
+      return CLIB_NULLID;
+    }
+  }
 
 
 private:
@@ -58,18 +70,29 @@ private:
   // 下請け関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief テーブルの領域を確保する．
-  void
-  alloc_table(
-    SizeType req_size ///< [in] 要求するサイズ
-  );
+  struct Key
+  {
+    SizeType mCellId;
+    ShString mName;
 
-  /// @brief 要素をリンクに追加する．
-  void
-  add_pin(
-    SizeType pos,  ///< [in] 追加する位置
-    CiCellPin* pin ///< [in] 追加する要素
-  );
+    bool
+    operator==(const Key& right) const
+    {
+      return mCellId == right.mCellId && mName == right.mName;
+    }
+  };
+
+
+  struct Hash
+  {
+    SizeType
+    operator()(
+      const Key& key
+    ) const
+    {
+      return key.mCellId + key.mName.hash() * 97;
+    }
+  };
 
 
 private:
@@ -77,23 +100,10 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // テーブルサイズ
-  SizeType mSize;
-
   // ハッシュ表
-  CiCellPin** mTable;
-
-  // ハッシュ表を拡大するしきい値
-  SizeType mLimit;
-
-  // 要素数
-  SizeType mNum;
+  unordered_map<Key, SizeType, Hash> mDict;
 
 };
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
 
 END_NAMESPACE_YM_CLIB
 

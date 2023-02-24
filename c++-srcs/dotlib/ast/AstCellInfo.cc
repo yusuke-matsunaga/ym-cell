@@ -202,57 +202,57 @@ AstCellInfo::set(
 // @brief セルを作る．
 bool
 AstCellInfo::add_cell(
-  unique_ptr<CiCellLibrary>& library
-)
+  CiCellLibrary* library
+) const
 {
-  CiCell* cell{nullptr};
+  SizeType cell_id{CLIB_NULLID};
   if ( mHasFF ) {
     // FF タイプ
-    cell = add_ff_cell(library);
+    cell_id = add_ff_cell(library);
   }
   else if ( mHasLatch ) {
     // ラッチタイプ
-    cell = add_latch_cell(library);
+    cell_id = add_latch_cell(library);
   }
   else if ( mHasFSM ) {
     // FSM タイプ
-    cell = add_fsm_cell(library);
+    cell_id = add_fsm_cell(library);
   }
   else {
     // 論理タイプ
-    cell = library->add_logic_cell(mName, mArea);
+    cell_id = library->add_logic_cell(mName, mArea);
   }
-  ASSERT_COND( cell != nullptr );
+  ASSERT_COND( cell_id != CLIB_NULLID );
 
-  cell->init_timing_map(mInputId, mOutputId);
+  library->init_cell_timing_map(cell_id, mInputId, mOutputId);
 
   // ピンを作る．
   for ( auto& pininfo: mPinInfoList ) {
-    pininfo.add_pin(cell, mIpinMap);
+    pininfo.add_pin(library, cell_id, mIpinMap);
   }
 
   return true;
 }
 
 // @brief FF セルを作る．
-CiCell*
+SizeType
 AstCellInfo::add_ff_cell(
-  unique_ptr<CiCellLibrary>& library
+  CiCellLibrary* library
 ) const
 {
   auto var1 = mFFInfo.var1();
   auto var2 = mFFInfo.var2();
-  Expr clocked_on = mFFInfo.clocked_on()->to_expr(mIpinMap);
-  Expr clocked_on_also{Expr::make_invalid()};
+  auto clocked_on = mFFInfo.clocked_on()->to_expr(mIpinMap);
+  auto clocked_on_also = Expr::make_invalid();
   if ( mFFInfo.clocked_on_also() != nullptr ) {
     clocked_on_also = mFFInfo.clocked_on_also()->to_expr(mIpinMap);
   }
-  Expr next_state = mFFInfo.next_state()->to_expr(mIpinMap);
-  Expr clear{Expr::make_invalid()};
+  auto next_state = mFFInfo.next_state()->to_expr(mIpinMap);
+  auto clear = Expr::make_invalid();
   if ( mFFInfo.clear() != nullptr ) {
     clear = mFFInfo.clear()->to_expr(mIpinMap);
   }
-  Expr preset{Expr::make_invalid()};
+  auto preset = Expr::make_invalid();
   if ( mFFInfo.preset() != nullptr ) {
     preset = mFFInfo.preset()->to_expr(mIpinMap);
   }
@@ -267,35 +267,35 @@ AstCellInfo::add_ff_cell(
 }
 
 // @brief ラッチセルを作る．
-CiCell*
+SizeType
 AstCellInfo::add_latch_cell(
-  unique_ptr<CiCellLibrary>& library
+  CiCellLibrary* library
 ) const
 {
   auto var1 = mLatchInfo.var1();
   auto var2 = mLatchInfo.var2();
-  Expr enable_on{Expr::make_invalid()};
+  auto enable_on = Expr::make_invalid();
   if ( mLatchInfo.enable_on() != nullptr ) {
     enable_on = mLatchInfo.enable_on()->to_expr(mIpinMap);
   }
-  Expr enable_on_also{Expr::make_invalid()};
+  auto enable_on_also = Expr::make_invalid();
   if ( mLatchInfo.enable_on_also() != nullptr ) {
     enable_on_also = mLatchInfo.enable_on_also()->to_expr(mIpinMap);
   }
-  Expr data_in{Expr::make_invalid()};
+  auto data_in = Expr::make_invalid();
   if ( mLatchInfo.data_in() != nullptr ) {
     data_in = mLatchInfo.data_in()->to_expr(mIpinMap);
   }
-  Expr clear{Expr::make_invalid()};
+  auto clear = Expr::make_invalid();
   if ( mLatchInfo.clear() != nullptr ) {
     clear = mLatchInfo.clear()->to_expr(mIpinMap);
   }
-  Expr preset{Expr::make_invalid()};
+  auto preset = Expr::make_invalid();
   if ( mLatchInfo.preset() != nullptr ) {
     preset = mLatchInfo.preset()->to_expr(mIpinMap);
   }
-  ClibCPV cpv1 = mLatchInfo.clear_preset_var1();
-  ClibCPV cpv2 = mLatchInfo.clear_preset_var2();
+  auto cpv1 = mLatchInfo.clear_preset_var1();
+  auto cpv2 = mLatchInfo.clear_preset_var2();
   auto cell = library->add_latch_cell(mName, mArea,
 				      var1, var2,
 				      enable_on, enable_on_also,
@@ -305,13 +305,13 @@ AstCellInfo::add_latch_cell(
 }
 
 // @brief FSM セルを作る．
-CiCell*
+SizeType
 AstCellInfo::add_fsm_cell(
-  unique_ptr<CiCellLibrary>& library
+  CiCellLibrary* library
 ) const
 {
 #warning "TODO: 未完"
-  return nullptr;
+  return CLIB_NULLID;
 }
 
 END_NAMESPACE_YM_DOTLIB

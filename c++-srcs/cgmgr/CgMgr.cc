@@ -3,7 +3,7 @@
 /// @brief CgMgr の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "cgmgr/CgMgr.h"
@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief コンストラクタ
 CgMgr::CgMgr(
-  CiCellLibrary& library ///< [in] 対象のセルライブラリ
+  CiCellLibrary& library
 ) : mLibrary{library},
     mSimpleFFClass(CiSeqInfo::max_index(), CLIB_NULLID),
     mSimpleLatchClass(CiSeqInfo::max_index(), CLIB_NULLID)
@@ -43,22 +43,22 @@ CgMgr::logic_init()
   { // 定数0グループの登録
     auto sig = CgSignature::make_logic_sig(0, Expr::make_zero());
     auto func0 = find_group(sig);
-    mLogicGroup[0] = func0->id();
+    mLogicGroup[0] = func0;
   }
   { // 定数1グループの登録
     auto sig = CgSignature::make_logic_sig(0, Expr::make_one());
     auto func1 = find_group(sig);
-    mLogicGroup[1] = func1->id();
+    mLogicGroup[1] = func1;
   }
   { // バッファグループの登録
     auto sig = CgSignature::make_logic_sig(1, Expr::make_posi_literal(0));
     auto func2 = find_group(sig);
-    mLogicGroup[2] = func2->id();
+    mLogicGroup[2] = func2;
   }
   { // インバーターグループの登録
     auto sig = CgSignature::make_logic_sig(1, Expr::make_nega_literal(0));
     auto func3 = find_group(sig);
-    mLogicGroup[3] = func3->id();
+    mLogicGroup[3] = func3;
   }
 
   // 以降の処理は必須ではないが，
@@ -162,8 +162,9 @@ CgMgr::ff_init()
 					clock, clock2, next,
 					clear, preset,
 					cpv1, cpv2);
-    auto g = find_group(sig);
-    mSimpleFFClass[index] = g->rep_class().id();
+    auto gid = find_group(sig);
+    auto group = mLibrary._cell_group(gid);
+    mSimpleFFClass[index] = group->rep_class();
   }
 }
 
@@ -211,8 +212,9 @@ CgMgr::latch_init()
 					   enable, enable2, data,
 					   clear, preset,
 					   cpv1, cpv2);
-    auto g = find_group(sig);
-    mSimpleLatchClass[index] = g->rep_class().id();
+    auto gid = find_group(sig);
+    auto group = mLibrary._cell_group(gid);
+    mSimpleLatchClass[index] = group->rep_class();
   }
 }
 
@@ -235,7 +237,7 @@ CgMgr::latch_class(
 }
 
 // @brief シグネチャに一致するグループを探す．
-CiCellGroup*
+SizeType
 CgMgr::find_group(
   const CgSignature& sig
 )
@@ -251,25 +253,26 @@ CgMgr::find_group(
     // 代表シグネチャを求める．
     auto rep_sig = sig.xform(rep_map);
     // クラスを求める．
-    auto rep_class = _find_class(rep_sig);
+    auto rep_id = _find_class(rep_sig);
     // グループを作る．
-    auto group = mLibrary.add_cell_group(rep_class, rep_map);
+    auto gid = mLibrary.add_cell_group(rep_id, rep_map);
     // そのクラスに新しいグループを追加する．
-    rep_class->add_group(group);
+    auto rep_class = mClassExprListArray[rep_id].mClass;
+    rep_class->add_group(gid);
 
     // 登録する．
-    mGroupDict.emplace(sig_str, group);
-    return group;
+    mGroupDict.emplace(sig_str, gid);
+    return gid;
   }
   else {
     // 登録済みのグループを返す．
-    auto group = mGroupDict.at(sig_str);
-    return group;
+    auto gid = mGroupDict.at(sig_str);
+    return gid;
   }
 }
 
 /// @brief 代表クラスを得る．
-CiCellClass*
+SizeType
 CgMgr::_find_class(
   const CgSignature& sig
 )
@@ -281,44 +284,46 @@ CgMgr::_find_class(
     // 同位体変換リストを作る．
     auto idmap_list = sig.idmap_list();
     // 新しいクラスを作って登録する．
-    auto rep_class = mLibrary.add_cell_class(idmap_list);
-    mClassDict.emplace(sig_str, rep_class);
+    auto rep_id = mLibrary.add_cell_class(idmap_list);
+    mClassDict.emplace(sig_str, rep_id);
 
-    while ( mClassExprListArray.size() <= rep_class->id() ) {
+    while ( mClassExprListArray.size() <= rep_id ) {
       mClassExprListArray.push_back(ClassExprList{});
     }
-    mClassExprListArray[rep_class->id()].mClass = rep_class;
+    auto rep_class = mLibrary._cell_class(rep_id);
+    mClassExprListArray[rep_id].mClass = rep_class;
   }
 
   // 登録済みのクラスを返す．
-  auto rep_class = mClassDict.at(sig_str);
+  auto rep_id = mClassDict.at(sig_str);
 
   // 単純な論理セルの場合，パタングラフを登録する．
   auto expr = sig.expr();
   if ( expr.is_valid() && expr.input_size() >= 2 ) {
-    mClassExprListArray[rep_class->id()].mExprList.push_back(expr);
+    mClassExprListArray[rep_id].mExprList.push_back(expr);
   }
 
-  return rep_class;
+  return rep_id;
 }
 
 // @breif パタングラフを生成する．
 void
 CgMgr::gen_pat()
 {
-  for ( const auto& p: mClassExprListArray ) {
-    auto rep_class = p.mClass;
+  for ( SizeType rep_id = 0; rep_id < mClassExprListArray.size(); ++ rep_id ) {
+    auto rep_class = mLibrary._cell_class(rep_id);
     bool has_cell = false;
-    for ( const auto& group: rep_class->cell_group_list() ) {
-      if ( group.cell_num() > 0 ) {
+    for ( SizeType gid: rep_class->cell_group_list() ) {
+      auto group = mLibrary._cell_group(gid);
+      if ( group->cell_num() > 0 ) {
 	has_cell = true;
 	break;
       }
     }
     if ( has_cell ) {
-      const auto& expr_list = p.mExprList;
+      const auto& expr_list = mClassExprListArray[rep_id].mExprList;
       for ( const auto& expr: expr_list ) {
-	mPatMgr.reg_pat(expr, rep_class->id());
+	mPatMgr.reg_pat(expr, rep_id);
       }
     }
   }

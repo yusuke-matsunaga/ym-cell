@@ -57,13 +57,6 @@ class ClibTiming;
 class ClibLutTemplate;
 class ClibLut;
 
-class ClibReader;
-class ClibMislibReader;
-class ClibDotlibReader;
-
-class ClibDumper;
-class ClibRestorer;
-
 class ClibCellGroup;
 class ClibCellClass;
 class ClibIOMap;
@@ -89,13 +82,6 @@ using nsClib::ClibBundle;
 using nsClib::ClibTiming;
 using nsClib::ClibLutTemplate;
 using nsClib::ClibLut;
-
-using nsClib::ClibReader;
-using nsClib::ClibMislibReader;
-using nsClib::ClibDotlibReader;
-
-using nsClib::ClibDumper;
-using nsClib::ClibRestorer;
 
 using nsClib::ClibCellGroup;
 using nsClib::ClibCellClass;

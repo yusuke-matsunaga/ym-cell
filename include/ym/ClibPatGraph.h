@@ -5,10 +5,10 @@
 /// @brief ClibPatGraph のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/clib.h"
+#include "ym/ClibHandle.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -23,48 +23,58 @@ BEGIN_NAMESPACE_YM_CLIB
 /// 実際には根の反転属性と枝のリストしか持っていない．
 /// その他の情報は ClibPatMgr から補完する．
 //////////////////////////////////////////////////////////////////////
-class ClibPatGraph
+class ClibPatGraph :
+  public ClibHandle
 {
 public:
 
+  /// @brief 空のコンストラクタ
+  ///
+  /// 不正値となる．
+  ClibPatGraph() = default;
+
+  /// @brief 内容を指定したコンストラクタ
+  ClibPatGraph(
+    const ClibLibraryPtr& library, ///< [in] ライブラリ
+    SizeType id                    ///< [in] ID番号
+  ) : ClibHandle{library, id}
+  {
+  }
+
   /// @brief デストラクタ
-  virtual
   ~ClibPatGraph() = default;
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 代表関数番号を返す．
-  virtual
   SizeType
-  rep_id() const = 0;
+  rep_id() const;
 
   /// @brief 根のノード番号を返す．
-  virtual
   SizeType
-  root_id() const = 0;
+  root_id() const;
 
   /// @brief 根の反転属性を返す．
-  virtual
   bool
-  root_inv() const = 0;
+  root_inv() const;
 
   /// @brief 入力数を返す．
-  virtual
   SizeType
-  input_num() const = 0;
+  input_num() const;
 
   /// @brief 枝数を返す．
-  virtual
   SizeType
-  edge_num() const = 0;
+  edge_num() const;
 
   /// @brief 枝(の番号)を返す．
-  virtual
   SizeType
   edge(
     SizeType pos ///< [in] 位置 ( 0 <= pos < edge_num() )
-  ) const = 0;
+  ) const;
 
 };
 

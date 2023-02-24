@@ -3,89 +3,21 @@
 /// @brief CiCellLibrary の実装ファイル(dump()関係)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiCellLibrary.h"
 #include "ci/CiCellClass.h"
 #include "ci/CiCellGroup.h"
 #include "ci/CiCell.h"
-#include "ci/CiPin.h"
-#include "ci/CiBus.h"
-#include "ci/CiBundle.h"
-#include "ci/CiTiming.h"
 #include "ci/CiLutTemplate.h"
 #include "ci/CiLut.h"
-#include "ci/CiPatMgr.h"
-#include "ci/CiPatGraph.h"
+#include "ci/CiTiming.h"
 #include "ym/ClibIOMap.h"
 #include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
-
-BEGIN_NONAMESPACE
-
-//////////////////////////////////////////////////////////////////////
-// クラス ClibCellGroup
-//////////////////////////////////////////////////////////////////////
-
-// @brief セルグループの内容をダンプする．
-void
-dump_cell_group(
-  BinEnc& bos,
-  const ClibCellGroup& group
-)
-{
-  bos << group.rep_class().id();
-  group.iomap().dump(bos);
-  bos << group.cell_num();
-  for ( auto& cell: group.cell_list() ) {
-    bos << cell.id();
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス ClibCellClass
-//////////////////////////////////////////////////////////////////////
-
-// セルクラスをダンプする．
-void
-dump_cell_class(
-  BinEnc& bos,
-  const ClibCellClass& npn_class
-)
-{
-  // 同位体変換情報のダンプ
-  bos << npn_class.idmap_num();
-  for ( auto& map: npn_class.idmap_list() ) {
-    map.dump(bos);
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス ClibLut
-//////////////////////////////////////////////////////////////////////
-
-void
-dump_lut(
-  BinEnc& s,
-  const ClibLut& lut
-)
-{
-  if ( lut.dimension() > 0 ) {
-    lut.dump(s);
-  }
-  else {
-    // 無効なテーブル
-    s << CLIB_NULLID;
-  }
-}
-
-END_NONAMESPACE
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellLibrary
@@ -143,41 +75,115 @@ CiCellLibrary::dump(
 
   // 遅延テーブルのテンプレート
   bs << lu_table_template_num();
-  for ( auto id: Range(lu_table_template_num()) ) {
-    lu_table_template(id).dump(bs);
+  for ( auto& lut_templ: mLutTemplateList ) {
+    lut_templ->dump(bs);
+  }
+
+  // ピンの内容をダンプ
+  bs << mPinList.size();
+  for ( auto& pin: mPinList ) {
+    pin->dump(bs);
   }
 
   // セルの内容をダンプ
   bs << cell_num();
-  for ( auto id: Range(cell_num()) ) {
-    cell(id).dump(bs);
+  for ( auto& cell: mCellList ) {
+    cell->dump(bs);
   }
 
   // セルクラス情報のダンプ
   bs << npn_class_num();
-  for ( auto& cell_class: npn_class_list() ) {
-    dump_cell_class(bs, cell_class);
+  for ( auto& cell_class: mClassList ) {
+    cell_class->dump(bs);
   }
 
   // セルグループ情報のダンプ
   bs << cell_group_num();
-  for ( auto& group: cell_group_list() ) {
-    dump_cell_group(bs, group);
+  for ( auto& group: mGroupList ) {
+    group->dump(bs);
   }
 
   // 組み込み型の情報のダンプ
-  for ( auto id: Range(4) ) {
-    bs << mLogicGroup[id]->id();
+  for ( auto g: mLogicGroup ) {
+    bs << g;
   }
+  bs << mSimpleFFClass.size();
   for ( auto c: mSimpleFFClass ) {
-    bs << c->id();
+    bs << c;
   }
+  bs << mSimpleLatchClass.size();
   for ( auto c: mSimpleLatchClass ) {
-    bs << c->id();
+    bs << c;
   }
 
   // パタングラフの情報のダンプ
   mPatMgr.dump(bs);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLutTemplate
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiLutTemplate::dump(
+  BinEnc& s
+) const
+{
+  ymuint8 d = dimension();
+  s << name()
+    << d;
+  for ( auto i: Range(d) ) {
+    s << static_cast<ymuint8>(variable_type(i));
+    ymuint8 n = index_num(i);
+    s << n;
+    for ( int j: Range(n) ) {
+      s << index(i, j);
+    }
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiCellGroup
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiCellGroup::dump(
+  BinEnc& s
+) const
+{
+  s << mRepClass;
+  mIoMap.dump(s);
+  s << cell_num();
+  for ( auto id: mCellList ) {
+    s << id;
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiCellClass
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiCellClass::dump(
+  BinEnc& s
+) const
+{
+  // 同位体変換情報のダンプ
+  s << idmap_num();
+  for ( auto& map: idmap_list() ) {
+    map.dump(s);
+  }
+  // グループ情報のダンプ
+  s << cell_group_num();
+  for ( auto id: cell_group_list() ) {
+    s << id;
+  }
 }
 
 
@@ -234,52 +240,52 @@ CiCell::dump(
   // 入力ピンのダンプ
   s << input_num();
   for ( auto i: Range(input_num()) ) {
-    input(i).dump(s);
+    s << input(i);
   }
 
   // 出力ピンのダンプ
   s << output_num();
   for ( auto i: Range(output_num()) ) {
-    output(i).dump(s);
+    s << output(i);
   }
 
   // 入出力ピンのダンプ
   s << inout_num();
   for ( auto i: Range(inout_num()) ) {
-    inout(i).dump(s);
+    s << inout(i);
   }
 
   // 内部ピンのダンプ
   s << internal_num();
   for ( auto i: Range(internal_num()) ) {
-    internal(i).dump(s);
+    s << internal(i);
   }
 
   // バスのダンプ
   s << bus_num();
   for ( auto i: Range(bus_num()) ) {
-    bus(i).dump(s);
+    s << bus(i);
   }
 
   // バンドルのダンプ
   s << bundle_num();
   for ( auto i: Range(bundle_num()) ) {
-    bundle(i).dump(s);
+    s << bundle(i);
   }
 
   // タイミング情報のダンプ
   s << timing_num();
   for ( auto i: Range(timing_num()) ) {
-    timing(i).dump(s);
+    s << timing(i);
   }
 
   // 個別の条件ごとのタイミング情報のダンプ
-  for ( auto ipos: Range(input_num2()) ) {
-    for ( auto opos: Range(output_num2()) ) {
+  for ( auto ipos: Range(input2_num()) ) {
+    for ( auto opos: Range(output2_num()) ) {
       for ( auto sense: { ClibTimingSense::positive_unate, ClibTimingSense::negative_unate } ) {
-	auto& timing_id_list1 = timing_id_list(ipos, opos, sense);
-	s << timing_id_list1.size();
-	for ( auto id: timing_id_list1 ) {
+	auto& timing_list1 = timing_list(ipos, opos, sense);
+	s << timing_list1.size();
+	for ( auto id: timing_list1 ) {
 	  s << id;
 	}
       }
@@ -289,7 +295,7 @@ CiCell::dump(
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiCellPin
+// クラス CiPin
 //////////////////////////////////////////////////////////////////////
 
 // @brief dump 用の共通情報を出力する．
@@ -386,42 +392,6 @@ CiInternalPin::dump(
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiBus
-//////////////////////////////////////////////////////////////////////
-
-/// @brief 内容をバイナリダンプする．
-void
-CiBus::dump(
-  BinEnc& s ///< [in] 出力先のストリーム
-) const
-{
-  s << mName;
-  s << pin_num();
-  for ( auto pin: mPinList ) {
-    s << pin->name();
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiBundle
-//////////////////////////////////////////////////////////////////////
-
-/// @brief 内容をバイナリダンプする．
-void
-CiBundle::dump(
-  BinEnc& s ///< [in] 出力先のストリーム
-) const
-{
-  s << mName;
-  s << pin_num();
-  for ( auto pin: mPinList ) {
-    s << pin->name();
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////
 // クラス CiTiming
 //////////////////////////////////////////////////////////////////////
 
@@ -490,10 +460,10 @@ CiTimingLut1::dump(
 {
   dump_common(s, 2);
 
-  dump_lut(s, cell_rise());
-  dump_lut(s, cell_fall());
-  dump_lut(s, rise_transition());
-  dump_lut(s, fall_transition());
+  s << cell_rise()
+    << cell_fall()
+    << rise_transition()
+    << fall_transition();
 }
 
 
@@ -509,25 +479,25 @@ CiTimingLut2::dump(
 {
   dump_common(s, 3);
 
-  dump_lut(s, rise_transition());
-  dump_lut(s, fall_transition());
-  dump_lut(s, rise_propagation());
-  dump_lut(s, fall_propagation());
+  s << rise_transition()
+    << fall_transition()
+    << rise_propagation()
+    << fall_propagation();
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiLut
+// クラス CiLut1D
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
 void
-CiLut::dump(
+CiLut1D::dump(
   BinEnc& s
 ) const
 {
-  s << lut_template().id();
-  auto d = dimension();
+  s << lut_template();
+  auto d = 1;
   for ( auto i: Range(d) ) {
     ymuint8 n = index_num(i);
     s << n;
@@ -555,69 +525,77 @@ CiLut::dump(
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiLutTemplate
+// クラス CiLut2D
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
 void
-CiLutTemplate::dump(
+CiLut2D::dump(
   BinEnc& s
 ) const
 {
-  ymuint8 d = dimension();
-  s << name()
-    << d;
+  s << lut_template();
+  auto d = 2;
   for ( auto i: Range(d) ) {
-    s << static_cast<ymuint8>(variable_type(i));
     ymuint8 n = index_num(i);
     s << n;
-    for ( int j: Range(n) ) {
+    for ( auto j: Range(n) ) {
       s << index(i, j);
     }
   }
-}
 
-//////////////////////////////////////////////////////////////////////
-// クラス CiPatMgr
-//////////////////////////////////////////////////////////////////////
-
-// @brief バイナリダンプを行う．
-void
-CiPatMgr::dump(
-  BinEnc& bos
-) const
-{
-  // パタングラフのノード情報のダンプ
-  bos << node_num();
-  for ( auto i: Range(node_num()) ) {
-    bos << mNodeTypeArray[i]
-	<< mEdgeArray[i * 2 + 0]
-	<< mEdgeArray[i * 2 + 1];
+  vector<SizeType> pos_array(d);
+  auto n = 1;
+  for ( auto i: Range(d) ) {
+    n *= index_num(i);
   }
-
-  // パタングラフの情報のダンプ
-  bos << pat_num();
-  for ( auto& pat: mPatArray ) {
-    pat.dump(bos);
+  for ( auto v: Range(n) ) {
+    auto v0 = v;
+    for ( int j: Range(d) ) {
+      auto var = d - j - 1;
+      pos_array[var] = v0 % index_num(var);
+      v0 /= index_num(var);
+    }
+    double val = grid_value(pos_array);
+    s << val;
   }
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiPatGraph
+// クラス CiLut3D
 //////////////////////////////////////////////////////////////////////
 
-// @brief バイナリダンプを行う．
+// @brief 内容をバイナリダンプする．
 void
-CiPatGraph::dump(
-  BinEnc& bos
+CiLut3D::dump(
+  BinEnc& s
 ) const
 {
-  bos << mRepId
-      << mInputNum
-      << mEdgeList.size();
-  for ( auto e: mEdgeList ) {
-    bos << e;
+  s << lut_template();
+  auto d = 3;
+  for ( auto i: Range(d) ) {
+    ymuint8 n = index_num(i);
+    s << n;
+    for ( auto j: Range(n) ) {
+      s << index(i, j);
+    }
+  }
+
+  vector<SizeType> pos_array(d);
+  auto n = 1;
+  for ( auto i: Range(d) ) {
+    n *= index_num(i);
+  }
+  for ( auto v: Range(n) ) {
+    auto v0 = v;
+    for ( int j: Range(d) ) {
+      auto var = d - j - 1;
+      pos_array[var] = v0 % index_num(var);
+      v0 /= index_num(var);
+    }
+    double val = grid_value(pos_array);
+    s << val;
   }
 }
 

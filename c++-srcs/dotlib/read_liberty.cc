@@ -270,7 +270,7 @@ set_library(
     for ( auto ast_cell: v ) {
       AstCellInfo cell_info;
       if ( cell_info.set(ast_cell, library->delay_model()) ) {
-	cell_info.add_cell(library);
+	cell_info.add_cell(library.get());
       }
     }
   }

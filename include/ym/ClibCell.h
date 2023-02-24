@@ -5,16 +5,14 @@
 /// @brief ClibCell のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2016, 2017, 2021, 2022 Yusuke Matsunaga (松永 裕介)
+/// Copyright (C) 2023 Yusuke Matsunaga (松永 裕介)
 /// All rights reserved.
 
-#include "ym/clib.h"
-#include "ym/logic.h"
-#include "ym/BinDec.h"
-#include "ym/BinEnc.h"
-#include "ym/Expr.h"
+#include "ym/ClibHandle.h"
 #include "ym/ClibArea.h"
 #include "ym/ClibCellGroup.h"
+#include "ym/logic.h"
+//#include "ym/Expr.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -24,12 +22,25 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @class ClibCell ClibCell.h "ym/ClibCell.h"
 /// @brief セル本体のクラス
 //////////////////////////////////////////////////////////////////////
-class ClibCell
+class ClibCell :
+  public ClibHandle
 {
 public:
 
+  /// @brief 空のコンストラクタ
+  ///
+  /// 不正値となる．
+  ClibCell() = default;
+
+  /// @brief 内容を指定したコンストラクタ
+  ClibCell(
+    const ClibLibraryPtr& library, ///< [in] ライブラリ
+    SizeType id                    ///< [in] セル番号
+  ) : ClibHandle{library, id}
+  {
+  }
+
   /// @brief デストラクタ
-  virtual
   ~ClibCell() = default;
 
 
@@ -42,19 +53,16 @@ public:
   /// @brief ID番号の取得
   ///
   /// ここで返される番号は ClibCellLibrary::cell() の引数に対応する．
-  virtual
   SizeType
-  id() const = 0;
+  id() const { return mId; }
 
   /// @brief 名前の取得
-  virtual
   string
-  name() const = 0;
+  name() const;
 
   /// @brief 面積の取得
-  virtual
   ClibArea
-  area() const = 0;
+  area() const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -68,137 +76,158 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ピン数の取得
-  virtual
   SizeType
-  pin_num() const = 0;
+  pin_num() const;
 
   /// @brief ピンの取得
   /// @return ピン情報を返す．
-  virtual
-  const ClibPin&
+  ClibPin
   pin(
-    SizeType pin_id ///< [in] ピン番号 ( 0 <= pin_id < pin_num() )
-  ) const = 0;
+    SizeType pos ///< [in] ピン番号 ( 0 <= pos < pin_num() )
+  ) const;
 
   /// @brief 名前からピン番号の取得
-  /// @return name という名前のピン番号を返す．
+  /// @return name という名前のピンを返す．
   ///
-  /// なければ CLIB_NULLID を返す．
-  virtual
-  SizeType
-  pin_id(
+  /// なければ不正値を返す．
+  ClibPin
+  pin(
     const string& name ///< [in] ピン名
-  ) const = 0;
+  ) const;
+
+  /// @brief ピンのリストを返す．
+  ClibPinList
+  pin_list() const;
 
   /// @brief 入力ピン数の取得
-  virtual
   SizeType
-  input_num() const = 0;
+  input_num() const;
+
+  /// @brief 入力ピンの取得
+  ClibPin
+  input(
+    SizeType pos ///< [in] 番号 ( 0 <= pos < input_num() )
+  ) const;
+
+  /// @brief 入力ピンのリストの取得
+  ClibPinList
+  input_list() const;
 
   /// @brief 出力ピン数の取得
-  virtual
   SizeType
-  output_num() const = 0;
+  output_num() const;
+
+  /// @brief 出力ピンの取得
+  ClibPin
+  output(
+    SizeType pos ///< [in] 番号 ( 0 <= pos < output_num() )
+  ) const;
+
+  /// @brief 出力ピンのリストの取得
+  ClibPinList
+  output_list() const;
 
   /// @brief 入出力ピン数の取得
-  virtual
   SizeType
-  inout_num() const = 0;
+  inout_num() const;
 
-  /// @brief 内部ピン数の取得
-  virtual
-  SizeType
-  internal_num() const = 0;
+  /// @brief 入出力ピンの取得
+  ClibPin
+  inout(
+    SizeType pos ///< [in] 番号 ( 0 <= pos < inout_num() )
+  ) const;
+
+  /// @brief 入出力ピンのリストの取得
+  ClibPinList
+  inout_list() const;
 
   /// @brief 入力ピン+入出力ピン数の取得
   ///
   /// input_num() + inout_num() に等しい．
-  virtual
   SizeType
-  input_num2() const = 0;
+  input2_num() const;
 
   /// @brief 入力ピンの取得
   ///
   /// id >= input_num() の場合には入出力ピンが返される．
-  virtual
-  const ClibPin&
-  input(
-    SizeType id ///< [in] 番号 ( 0 <= id < input_num2() )
-  ) const = 0;
+  ClibPin
+  input2(
+    SizeType pos ///< [in] 番号 ( 0 <= pos < input_num2() )
+  ) const;
 
   /// @brief 出力ピン+入出力ピン数の取得
   ///
   /// output_num() + inout_num() に等しい．
-  virtual
   SizeType
-  output_num2() const = 0;
+  output2_num() const;
 
   /// @brief 出力ピンの取得
   ///
   /// id >= output_num() の場合には入出力ピンが返される．
-  virtual
-  const ClibPin&
-  output(
-    SizeType id ///< [in] 出力番号 ( 0 <= id < output_num2() )
-  ) const = 0;
+  ClibPin
+  output2(
+    SizeType pos ///< [in] 番号 ( 0 <= pos < output_num2() )
+  ) const;
 
-  /// @brief 入出力ピンの取得
-  virtual
-  const ClibPin&
-  inout(
-    SizeType id ///< [in] 番号 ( 0 <= id < inout_num() )
-  ) const = 0;
+  /// @brief 内部ピン数の取得
+  SizeType
+  internal_num() const;
 
   /// @brief 内部ピンの取得
-  virtual
-  const ClibPin&
+  ClibPin
   internal(
-    SizeType id ///< [in] 内部ピン番号 ( 0 <= id < internal_num() )
-  ) const = 0;
+    SizeType pos ///< [in] 内部ピン番号 ( 0 <= pos < internal_num() )
+  ) const;
+
+  /// @brief 内部ピンのリストの取得
+  ClibPinList
+  internal_list() const;
 
   /// @brief バス数の取得
-  virtual
   SizeType
-  bus_num() const = 0;
+  bus_num() const;
 
   /// @brief バスの取得
-  virtual
-  const ClibBus&
+  ClibBus
   bus(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < bus_num() )
-  ) const = 0;
+  ) const;
 
-  /// @brief 名前からバス番号の取得
-  /// @return name という名前のバス番号を返す．
+  /// @brief 名前からバスの取得
+  /// @return name という名前のバスを返す．
   ///
-  /// なければ CLIB_NULLID を返す．
-  virtual
-  SizeType
-  bus_id(
+  /// なければ不正値を返す．
+  ClibBus
+  bus(
     const string& name ///< [in] バス名
-  ) const = 0;
+  ) const;
+
+  /// @brief バスのリストの取得
+  ClibBusList
+  bus_list() const;
 
   /// @brief バンドル数の取得
-  virtual
   SizeType
-  bundle_num() const = 0;
+  bundle_num() const;
 
   /// @brief バンドルの取得
-  virtual
-  const ClibBundle&
+  ClibBundle
   bundle(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < bundle_num() )
-  ) const = 0;
+  ) const;
 
-  /// @brief 名前からバンドル番号の取得
-  /// @return name という名前のバンドル番号を返す．
+  /// @brief 名前からバンドルの取得
+  /// @return name という名前のバンドルを返す．
   ///
-  /// なければ CLIB_NULLID を返す．
-  virtual
-  SizeType
-  bundle_id(
+  /// なければ不正値を返す．
+  ClibBundle
+  bundle(
     const string& name ///< [in] バンドル名
-  ) const = 0;
+  ) const;
+
+  /// @brief バンドルのリストの取得
+  ClibBundleList
+  bundle_list() const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -212,25 +241,26 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief タイミング情報の数を返す．
-  virtual
   SizeType
-  timing_num() const = 0;
+  timing_num() const;
 
   /// @brief タイミング情報を返す．
-  virtual
-  const ClibTiming&
+  ClibTiming
   timing(
     SizeType pos ///< [in] インデックス ( 0 <= pos < timing_num() )
-  ) const = 0;
+  ) const;
 
-  /// @brief 条件に合致するタイミング情報のインデックスのリストを返す．
-  virtual
-  const vector<SizeType>&
-  timing_id_list(
+  /// @brief タイミング情報のリストを返す．
+  ClibTimingList
+  timing_list() const;
+
+  /// @brief 条件に合致するタイミング情報のリストを返す．
+  ClibTimingList
+  timing_list(
     SizeType ipos,        ///< [in] 開始ピン番号 ( 0 <= ipos < input_num2() )
     SizeType opos,        ///< [in] 終了ピン番号 ( 0 <= opos < output_num2() )
     ClibTimingSense sense ///< [in] タイミング情報の摘要条件
-  ) const = 0;
+  ) const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -244,176 +274,139 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief セルの種類を返す．
-  virtual
   ClibCellType
-  type() const = 0;
+  type() const;
 
   /// @brief 組み合わせ論理タイプの時 true を返す．
-  virtual
   bool
-  is_logic() const = 0;
+  is_logic() const;
 
   /// @brief FFタイプの時 true を返す．
-  virtual
   bool
-  is_ff() const = 0;
+  is_ff() const;
 
   /// @brief ラッチタイプの時 true を返す．
-  virtual
   bool
-  is_latch() const = 0;
+  is_latch() const;
 
   /// @brief 出力の論理式を持っている時に true を返す．
-  virtual
   bool
   has_logic(
     SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const = 0;
+  ) const;
 
   /// @brief 全ての出力が論理式を持っているときに true を返す．
-  virtual
   bool
-  has_logic() const = 0;
+  has_logic() const;
 
   /// @brief 論理セルの場合に出力の論理式を返す．
   ///
   /// 論理式中の変数番号は入力ピン番号に対応する．
-  virtual
   Expr
   logic_expr(
     SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const = 0;
+  ) const;
 
   /// @brief 出力がトライステート条件を持っている時に true を返す．
-  virtual
   bool
   has_tristate(
     SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const = 0;
+  ) const;
 
   /// @brief トライステートセルの場合にトライステート条件式を返す．
   ///
   /// - 論理式中の変数番号は入力ピン番号に対応する．
   /// - 通常の論理セルの場合には定数0を返す．
-  virtual
   Expr
   tristate_expr(
     SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const = 0;
+  ) const;
 
   /// @brief 内部変数1の名前を返す．
-  virtual
   string
-  qvar1() const = 0;
+  qvar1() const;
 
   /// @brief 内部変数1の名前を返す．
-  virtual
   string
-  qvar2() const = 0;
+  qvar2() const;
 
   /// @brief 非同期 clear を持つ時 true を返す．
   ///
   /// FF/ラッチセル以外の場合には返り値は不定
-  virtual
   bool
-  has_clear() const = 0;
+  has_clear() const;
 
   /// @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
   ///
   /// クリア端子がない場合の返り値は不定
-  virtual
   Expr
-  clear_expr() const = 0;
+  clear_expr() const;
 
   /// @brief 非同期 preset を持つ時 true を返す．
   ///
   /// FF/ラッチセル以外の場合には返り値は不定
-  virtual
   bool
-  has_preset() const = 0;
+  has_preset() const;
 
   /// @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
   ///
   /// プリセット端子がない場合の返り値は不定
-  virtual
   Expr
-  preset_expr() const = 0;
+  preset_expr() const;
 
   /// @brief clear と preset が同時にアクティブになった時の値1
   ///
   /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
   /// FF/ラッチセル以外の場合には返り値は不定
-  virtual
   ClibCPV
-  clear_preset_var1() const = 0;
+  clear_preset_var1() const;
 
   /// @brief clear と preset が同時にアクティブになった時の値1
   ///
   /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
   /// FF/ラッチセル以外の場合には返り値は不定
-  virtual
   ClibCPV
-  clear_preset_var2() const = 0;
+  clear_preset_var2() const;
 
   /// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
   ///
   /// それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  clock_expr() const = 0;
+  clock_expr() const;
 
   /// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
   ///
   /// それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  clock2_expr() const = 0;
+  clock2_expr() const;
 
   /// @brief FFセルの場合に次状態関数を表す論理式を返す．
   ///
   /// それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  next_state_expr() const = 0;
+  next_state_expr() const;
 
   /// @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
   ///
   /// それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  enable_expr() const = 0;
+  enable_expr() const;
 
   /// @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
   ///
   /// それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  enable2_expr() const = 0;
+  enable2_expr() const;
 
   /// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
   ///
   /// それ以外の型の場合の返り値は不定
-  virtual
   Expr
-  data_in_expr() const = 0;
+  data_in_expr() const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  /// @name dump/restore 関数
-  /// @{
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 内容をバイナリダンプする．
-  virtual
-  void
-  dump(
-    BinEnc& s ///< [in] 出力先のストリーム
-  ) const = 0;
 
 };
 

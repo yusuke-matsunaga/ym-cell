@@ -5,9 +5,10 @@
 /// @brief CiBusType のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
+#include "ym/clib.h"
 #include "ym/ClibBusType.h"
 #include "ym/ShString.h"
 
@@ -18,22 +19,28 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @class CiBusType CiBusType.h "CiBusType.h"
 /// @brief ClibBusType の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiBusType :
-  public ClibBusType
+class CiBusType
 {
   friend class CiCellLibrary;
 
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] name 名前
-  /// @param[in] bit_from 開始位置
-  /// @param[in] bit_to 終了位置
   CiBusType(
-    const ShString& name,
-    SizeType bit_from,
-    SizeType bit_to
-  );
+    const ShString& name, ///< [in] 名前
+    SizeType bit_from,    ///< [in] 開始位置
+    SizeType bit_to       ///< [in] 終了位置
+  ) : mName{name},
+      mBitFrom{bit_from},
+      mBitTo{bit_to}
+  {
+    if ( bit_from <= bit_to ) {
+      mBitWidth = (bit_to - bit_from + 1) * 2;
+    }
+    else {
+      mBitWidth = (bit_from - bit_to + 1) * 2 + 1;
+    }
+  }
 
   /// @brief デストラクタ
   ~CiBusType() = default;
@@ -46,32 +53,53 @@ public:
 
   /// @brief 名前の取得
   string
-  name() const override;
+  name() const
+  {
+    return mName;
+  }
 
   /// @brief base_type の取得
-  BaseType
-  base_type() const override;
+  ClibBusType::BaseType
+  base_type() const
+  {
+    return ClibBusType::ArrayType;
+  }
 
   /// @brief data_type の取得
-  DataType
-  data_type() const override;
+  ClibBusType::DataType
+  data_type() const
+  {
+    return ClibBusType::BitType;
+  }
 
   /// @brief ビット幅の取得
   SizeType
-  bit_width() const override;
+  bit_width() const
+  {
+    return mBitWidth >> 1;
+  }
 
   /// @brief 開始ビットの取得
   SizeType
-  bit_from() const override;
+  bit_from() const
+  {
+    return mBitFrom;
+  }
 
   /// @brief 終了ビットの取得
   SizeType
-  bit_to() const override;
+  bit_to() const
+  {
+    return mBitTo;
+  }
 
   /// @brief 向きの取得
   /// @note true の時，降順を表す．
   bool
-  downto() const override;
+  downto() const
+  {
+    return static_cast<bool>(mBitWidth & 1U);
+  }
 
 
 private:

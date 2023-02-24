@@ -47,6 +47,7 @@ public:
   /// @brief タイミング情報を作る．
   bool
   add_timing(
+    CiCellLibrary* library,
     CiCell* cell,
     const Expr& function_expr,
     SizeType ni,

@@ -91,6 +91,7 @@ AstTimingInfo::set(
 // @brief タイミング情報を作る．
 bool
 AstTimingInfo::add_timing(
+  CiCellLibrary* lib,
   CiCell* cell,
   const Expr& function_expr,
   SizeType ni,
@@ -102,39 +103,38 @@ AstTimingInfo::add_timing(
   if ( mWhen != nullptr ) {
     when = mWhen->to_expr(ipin_map);
   }
-  auto library = cell->library();
 
   SizeType tid;
   switch ( mDelayModel ) {
   case ClibDelayModel::generic_cmos:
-    tid = cell->add_timing_generic(mTimingType, when,
-				   mIntrinsicRise, mIntrinsicFall,
-				   mSlopeRise, mSlopeFall,
-				   mRiseResistance, mFallResistance);
+    tid = lib->add_timing_generic(mTimingType, when,
+				  mIntrinsicRise, mIntrinsicFall,
+				  mSlopeRise, mSlopeFall,
+				  mRiseResistance, mFallResistance);
     break;
 
   case ClibDelayModel::table_lookup:
     switch ( mLutType ) {
     case 1:
       {
-	auto cr_lut = mCellRise.gen_lut(library);
-	auto cf_lut = mCellFall.gen_lut(library);
-	auto rt_lut = mRiseTransition.gen_lut(library);
-	auto ft_lut = mFallTransition.gen_lut(library);
-	tid = cell->add_timing_lut1(mTimingType, when,
-				    cr_lut, cf_lut,
-				    rt_lut, ft_lut);
+	auto cr_lut = mCellRise.gen_lut(lib);
+	auto cf_lut = mCellFall.gen_lut(lib);
+	auto rt_lut = mRiseTransition.gen_lut(lib);
+	auto ft_lut = mFallTransition.gen_lut(lib);
+	tid = lib->add_timing_lut1(mTimingType, when,
+				   cr_lut, cf_lut,
+				   rt_lut, ft_lut);
       }
       break;
     case 2:
       {
-	auto rt_lut = mRiseTransition.gen_lut(library);
-	auto ft_lut = mFallTransition.gen_lut(library);
-	auto rp_lut = mRisePropagation.gen_lut(library);
-	auto fp_lut = mFallPropagation.gen_lut(library);
-	tid = cell->add_timing_lut2(mTimingType, when,
-				    rt_lut, ft_lut,
-				    rp_lut, fp_lut);
+	auto rt_lut = mRiseTransition.gen_lut(lib);
+	auto ft_lut = mFallTransition.gen_lut(lib);
+	auto rp_lut = mRisePropagation.gen_lut(lib);
+	auto fp_lut = mFallPropagation.gen_lut(lib);
+	tid = lib->add_timing_lut2(mTimingType, when,
+				   rt_lut, ft_lut,
+				   rp_lut, fp_lut);
       }
       break;
     default:

@@ -42,7 +42,7 @@ public:
     const AstValue* val
   );
 
-  CiLut*
+  SizeType
   gen_lut(
     CiCellLibrary* library
   ) const;

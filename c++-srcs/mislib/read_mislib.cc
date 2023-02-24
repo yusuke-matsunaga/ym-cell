@@ -24,8 +24,6 @@
 #include "ym/TvFunc.h"
 #include "ym/MsgMgr.h"
 
-#include <libgen.h>
-
 
 BEGIN_NAMESPACE_YM_MISLIB
 
@@ -74,15 +72,15 @@ dfs(
 // タイミング情報を作る．
 SizeType
 add_timing(
-  const MislibPin* pt_pin, // パース木のピン情報
-  CiCell* cell             // 対象のセル
+  const MislibPin* pt_pin,
+  unique_ptr<CiCellLibrary>& lib
 )
 {
   ClibTime       r_i{pt_pin->rise_block_delay()->num()};
   ClibResistance r_r{pt_pin->rise_fanout_delay()->num()};
   ClibTime       f_i{pt_pin->fall_block_delay()->num()};
   ClibResistance f_r{pt_pin->fall_fanout_delay()->num()};
-  auto tid = cell->add_timing_generic(
+  auto tid = lib->add_timing_generic(
     ClibTimingType::combinational,
     Expr::make_one(),
     r_i, f_i,
@@ -188,7 +186,7 @@ new_gate(
     if ( ipin_top->name() != nullptr ) {
       // 通常の入力ピン定義がある場合
       // ipin_list の順に入力ピンを作る．
-      for ( int i = 0; i < npin; ++ i ) {
+      for ( SizeType i = 0; i < npin; ++ i ) {
 	auto pin = gate->ipin(i);
 	ShString name = pin->name()->str();
 	ASSERT_COND( ipin_name_map.count(name) == 0 );
@@ -212,16 +210,16 @@ new_gate(
   auto ni = ipin_name_list.size();
 
   // セルを作る．
-  auto cell = lib->add_logic_cell(name, area);
+  auto cell_id = lib->add_logic_cell(name, area);
 
   // 入力ピンのリストを作る．
-  vector<CiInputPin*> input_list(ni);
   for ( auto i = 0; i < ni; ++ i ) {
     // 入力ピンの設定
     auto name = ipin_name_list[i];
     auto pin = ipin_array[i];
     ClibCapacitance load{pin->input_load()->num()};
-    auto ipin = cell->add_input(name, load, load, load);
+    auto ipin_id = lib->add_input(cell_id, name, load, load, load);
+    auto ipin = lib->_pin(ipin_id);
     ASSERT_COND( ipin->input_id() == i );
   }
 
@@ -229,35 +227,34 @@ new_gate(
   auto oexpr = opin_expr->to_expr(ipin_name_map);
 
   // 出力ピンを作る．
-  auto opin = cell->add_output(opin_name,
-			       ClibCapacitance::infty(),
-			       ClibCapacitance(0.0),
-			       ClibCapacitance::infty(),
-			       ClibCapacitance(0.0),
-			       ClibTime::infty(),
-			       ClibTime(0.0),
-			       oexpr,
-			       Expr::make_invalid());
-
-  auto opin_id = opin->output_id();
+  lib->add_output(cell_id, opin_name,
+		  ClibCapacitance::infty(),
+		  ClibCapacitance{0.0},
+		  ClibCapacitance::infty(),
+		  ClibCapacitance{0.0},
+		  ClibTime::infty(),
+		  ClibTime{0.0},
+		  oexpr,
+		  Expr::make_invalid());
 
   // タイミング情報の生成
+  auto cell = lib->_cell(cell_id);
   cell->init_timing_map(ni, 1);
   auto tv_function = oexpr.make_tv(ni);
   if ( wildcard_pin ) {
     // すべてのピンが同一のパラメータを持つ．
     auto pt_pin = ipin_top;
-    auto tid = add_timing(ipin_top, cell);
+    auto tid = add_timing(ipin_top, lib);
     for ( SizeType i = 0; i < ni; ++ i ) {
-      set_timing(pt_pin, tv_function, i, opin_id, cell, tid);
+      set_timing(pt_pin, tv_function, i, 0, cell, tid);
     }
   }
   else {
     // ピンごとに個別のパラメータを持つ．
     for ( SizeType i = 0; i < ni; ++ i ) {
       auto pt_pin = ipin_array[i];
-      auto tid = add_timing(pt_pin, cell);
-      set_timing(pt_pin, tv_function, i, opin_id, cell, tid);
+      auto tid = add_timing(pt_pin, lib);
+      set_timing(pt_pin, tv_function, i, 0, cell, tid);
     }
   }
 }

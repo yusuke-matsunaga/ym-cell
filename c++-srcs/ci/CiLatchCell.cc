@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "CiLatchCell.h"
+#include "ci/CiCellLibrary.h"
 #include "cgmgr/CgSignature.h"
 
 
@@ -46,7 +47,9 @@ CiLatchCell::enable_expr() const
 
 // @brief シグネチャを返す．
 CgSignature
-CiLatchCell::make_signature() const
+CiLatchCell::make_signature(
+  const CiCellLibrary* library
+) const
 {
   SizeType ni = input_num();
   SizeType no = output_num();
@@ -56,8 +59,9 @@ CiLatchCell::make_signature() const
   vector<TvFunc> logic_list(no2);
   vector<TvFunc> tristate_list(no2);
   for ( SizeType i = 0; i < no2; ++ i ) {
-    logic_list[i] = logic_expr(i).make_tv(ni2);
-    tristate_list[i] = tristate_expr(i).make_tv(ni2);
+    auto opin = library->_pin(output(i));
+    logic_list[i] = opin->function().make_tv(ni2);
+    tristate_list[i] = opin->tristate().make_tv(ni2);
   }
   TvFunc enable = enable_expr().make_tv(ni2);
   TvFunc enable2 = enable2_expr().make_tv(ni2);

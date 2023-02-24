@@ -23,7 +23,7 @@ TEST(ClibCellLibraryTest, read_mislib)
     EXPECT_EQ( 29, library.cell_num() );
 
     ostringstream s;
-    display_library(s, library);
+    library.display(s);
 
     string exp_filename = string(DATA_DIR) + string("/lib2.genlib.display");
     ifstream is1{exp_filename};
@@ -57,7 +57,7 @@ TEST(ClibCellLibraryTest, read_liberty)
     EXPECT_EQ( 310, library.cell_num() );
 
     ostringstream s;
-    display_library(s, library);
+    library.display(s);
 
     string exp_filename = string(DATA_DIR) + string("/HIT018.typ.snp.display");
     ifstream is1{exp_filename};

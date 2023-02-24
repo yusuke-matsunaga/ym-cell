@@ -3,123 +3,18 @@
 /// @brief CiLut の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiLut.h"
-#include "ci/CiLutTemplate.h"
-#include "ci/CiCellLibrary.h"
 #include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiLutBad
-//////////////////////////////////////////////////////////////////////
-
-// @brief テンプレートの取得
-const ClibLutTemplate&
-CiLutBad::lut_template() const
-{
-  return CiCellLibrary::error_lut_template();
-}
-
-// @brief 次元数の取得
-SizeType
-CiLutBad::dimension() const
-{
-  return 0;
-}
-
-// @brief 変数型の取得
-ClibVarType
-CiLutBad::variable_type(
-  SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
-) const
-{
-  return ClibVarType::none;
-}
-
-// @brief インデックス数の取得
-SizeType
-CiLutBad::index_num(
-  SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
-) const
-{
-  return 0;
-}
-
-// @brief インデックス値の取得
-double
-CiLutBad::index(
-  SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
-  SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
-) const
-{
-  return 0.0;
-}
-
-// @brief 格子点の値の取得
-//
-// pos_array のサイズは dimension() と同じ
-double
-CiLutBad::grid_value(
-  const vector<SizeType>& pos_array ///< [in] pos_array 格子点座標
-) const
-{
-  return 0.0;
-}
-
-// @brief 値の取得
-//
-// @note val_array のサイズは dimension() と同じ
-double
-CiLutBad::value(
-  const vector<double>& val_array ///< [in] 入力の値の配列
-) const
-{
-  return 0.0;
-}
-
-// @brief 内容をバイナリダンプする．
-void
-CiLutBad::dump(
-  BinEnc& s ///< [in] 出力先のストリーム
-) const
-{
-  ; // なにもしない．
-}
-
-
-//////////////////////////////////////////////////////////////////////
 // クラス CiLut
 //////////////////////////////////////////////////////////////////////
-
-// @brief テンプレートの取得
-const ClibLutTemplate&
-CiLut::lut_template() const
-{
-  return *mTemplate;
-}
-
-// @brief 変数型の取得
-ClibVarType
-CiLut::variable_type(
-  SizeType var
-) const
-{
-  return lut_template().variable_type(var);
-}
-
-// @brief インデックス数の取得
-SizeType
-CiLut::index_num(
-  SizeType var
-) const
-{
-  return lut_template().index_num(var);
-}
 
 // @brief val に対応する区間を求める．
 SizeType
@@ -154,46 +49,19 @@ CiLut::search(
 
 // @brief コンストラクタ
 CiLut1D::CiLut1D(
-  const ClibLutTemplate* lut_template,
+  SizeType lut_template,
   const vector<double>& value_array,
   const vector<double>& index_array
-) : CiLut(lut_template)
+) : CiLut{lut_template},
+    mValueArray{value_array},
+    mIndexArray{index_array},
+    mIndexWidthArray(index_array.size() - 1)
 {
-  SizeType n = 0;
-  if ( index_array.empty() ) {
-    n = lut_template->index_num(0);
-    mIndexArray.resize(n);
-    for ( auto i: Range(n) ) {
-      mIndexArray[i] = lut_template->index(0, i);
-    }
-  }
-  else {
-    n = index_array.size();
-    mIndexArray.resize(n);
-    for ( auto i: Range(n) ) {
-      mIndexArray[i] = index_array[i];
-    }
-  }
-  ASSERT_COND( n != 0 );
-
-  mIndexWidthArray.resize(n - 1);
+  SizeType n = index_array.size();
+  ASSERT_COND( value_array.size() == n );
   for ( auto i: Range(n - 1) ) {
     mIndexWidthArray[i] = mIndexArray[i + 1] - mIndexArray[i];
   }
-
-  ASSERT_COND( value_array.size() == n );
-
-  mValueArray.resize(n);
-  for ( auto i: Range(n) ) {
-    mValueArray[i] = value_array[i];
-  }
-}
-
-// @brief 次元数の取得
-SizeType
-CiLut1D::dimension() const
-{
-  return 1;
 }
 
 // @brief インデックス数の取得
@@ -202,7 +70,7 @@ CiLut1D::index_num(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
+  ASSERT_COND( 0 <= var && var < 1 );
   return mIndexArray.size();
 }
 
@@ -213,7 +81,7 @@ CiLut1D::index(
   SizeType pos
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
+  ASSERT_COND( 0 <= var && var < 1 );
   ASSERT_COND( 0 <= pos && pos < index_num(var)  );
   return mIndexArray[pos];
 }
@@ -224,7 +92,7 @@ CiLut1D::grid_value(
   const vector<SizeType>& pos_array
 ) const
 {
-  ASSERT_COND( pos_array.size() == dimension() );
+  ASSERT_COND( pos_array.size() == 1 );
   auto pos1 = pos_array[0];
   ASSERT_COND( 0 <= pos1 && pos1 < index_num(0) );
   return mValueArray[pos1];
@@ -236,7 +104,7 @@ CiLut1D::value(
   const vector<double>& val_array
 ) const
 {
-  ASSERT_COND( val_array.size() == dimension() );
+  ASSERT_COND( val_array.size() == 1 );
 
   double val = val_array[0];
 
@@ -259,70 +127,24 @@ CiLut1D::value(
 
 // @brief コンストラクタ
 CiLut2D::CiLut2D(
-  const ClibLutTemplate* lut_template,
+  SizeType lut_template,
   const vector<double>& value_array,
   const vector<double>& index_array1,
   const vector<double>& index_array2
-) : CiLut(lut_template)
+) : CiLut{lut_template},
+    mValueArray{value_array},
+    mIndexArray{index_array1, index_array2}
 {
-  SizeType n1 = 0;
-  if ( index_array1.empty() ) {
-    n1 = lut_template->index_num(0);
-    mIndexArray[0].resize(n1);
-    for ( auto i: Range(n1) ) {
-      mIndexArray[0][i] = lut_template->index(0, i);
+  for ( SizeType b = 0; b < 2; ++ b ) {
+    SizeType n1 = mIndexArray[b].size();
+    mIndexWidthArray[b].resize(n1 - 1);
+    for ( auto i: Range(n1 - 1) ) {
+      mIndexWidthArray[b][i] = mIndexArray[b][i + 1] - mIndexArray[b][i];
     }
   }
-  else {
-    n1 = index_array1.size();
-    mIndexArray[0].resize(n1);
-    for ( auto i: Range(n1) ) {
-      mIndexArray[0][i] = index_array1[i];
-    }
-  }
-  ASSERT_COND( n1 != 0 );
 
-  mIndexWidthArray[0].resize(n1 - 1);
-  for ( auto i: Range(n1 - 1) ) {
-    mIndexWidthArray[0][i] = mIndexArray[0][i + 1] - mIndexArray[0][i];
-  }
-
-  SizeType n2 = 0;
-  if ( index_array2.empty() ) {
-    n2 = lut_template->index_num(1);
-    mIndexArray[1].resize(n2);
-    for ( auto i: Range(n2) ) {
-      mIndexArray[1][i] = lut_template->index(1, i);
-    }
-  }
-  else {
-    n2 = index_array2.size();
-    mIndexArray[1].resize(n2);
-    for ( auto i: Range(n2) ) {
-      mIndexArray[1][i] = index_array2[i];
-    }
-  }
-  ASSERT_COND( n2 != 0 );
-
-  mIndexWidthArray[1].resize(n2 - 1);
-  for ( auto i: Range(n2 - 1) ) {
-    mIndexWidthArray[1][i] = mIndexArray[1][i + 1] - mIndexArray[1][i];
-  }
-
-  SizeType n = n1 * n2;
+  SizeType n = mIndexArray[0].size() * mIndexArray[1].size();
   ASSERT_COND( value_array.size() == n );
-
-  mValueArray.resize(n);
-  for ( auto i: Range(n) ) {
-    mValueArray[i] = value_array[i];
-  }
-}
-
-// @brief 次元数の取得
-SizeType
-CiLut2D::dimension() const
-{
-  return 2;
 }
 
 // @brief インデックス数の取得
@@ -331,7 +153,7 @@ CiLut2D::index_num(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
+  ASSERT_COND( 0 <= var && var < 2 );
   return mIndexArray[var].size();
 }
 
@@ -342,7 +164,7 @@ CiLut2D::index(
   SizeType pos
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
+  ASSERT_COND( 0 <= var && var < 2 );
   ASSERT_COND( 0 <= pos && pos < index_num(var) );
   return mIndexArray[var][pos];
 }
@@ -353,7 +175,7 @@ CiLut2D::grid_value(
   const vector<SizeType>& pos_array
 ) const
 {
-  ASSERT_COND( pos_array.size() == dimension() );
+  ASSERT_COND( pos_array.size() == 2 );
   auto pos1 = pos_array[0];
   auto pos2 = pos_array[1];
   ASSERT_COND( 0 <= pos1 && pos1 < index_num(0) );
@@ -367,7 +189,7 @@ CiLut2D::value(
   const vector<double>& val_array
 ) const
 {
-  ASSERT_COND( val_array.size() == dimension() );
+  ASSERT_COND( val_array.size() == 2 );
 
   double val1 = val_array[0];
   auto idx1_a = search(val1, mIndexArray[0]);
@@ -404,92 +226,25 @@ CiLut2D::value(
 
 // @brief コンストラクタ
 CiLut3D::CiLut3D(
-  const ClibLutTemplate* lut_template,
+  SizeType lut_template,
   const vector<double>& value_array,
   const vector<double>& index_array1,
   const vector<double>& index_array2,
   const vector<double>& index_array3
-) : CiLut(lut_template)
+) : CiLut{lut_template},
+    mValueArray{value_array},
+    mIndexArray{index_array1, index_array2, index_array3}
 {
-  SizeType n1 = 0;
-  if ( index_array1.empty() ) {
-    n1 = lut_template->index_num(0);
-    mIndexArray[0].resize(n1);
-    for ( auto i: Range(n1) ) {
-      mIndexArray[0][i] = lut_template->index(0, i);
+  for ( SizeType b = 0; b < 3; ++ b ) {
+    SizeType n1 = mIndexArray[b].size();
+    mIndexWidthArray[b].resize(n1 - 1);
+    for ( auto i: Range(n1 - 1) ) {
+      mIndexWidthArray[b][i] = mIndexArray[b][i + 1] - mIndexArray[b][i];
     }
   }
-  else {
-    n1 = index_array1.size();
-    mIndexArray[0].resize(n1);
-    for ( auto i: Range(n1) ) {
-      mIndexArray[0][i] = index_array1[i];
-    }
-  }
-  ASSERT_COND( n1 != 0 );
 
-  mIndexWidthArray[0].resize(n1 - 1);
-  for ( auto i: Range(n1 - 1) ) {
-    mIndexWidthArray[0][i] = mIndexArray[0][i + 1] - mIndexArray[0][i];
-  }
-
-  SizeType n2 = 0;
-  if ( index_array2.empty() ) {
-    n2 = lut_template->index_num(1);
-    mIndexArray[1].resize(n2);
-    for ( auto i: Range(n2) ) {
-      mIndexArray[1][i] = lut_template->index(1, i);
-    }
-  }
-  else {
-    n2 = index_array2.size();
-    mIndexArray[1].resize(n2);
-    for ( auto i: Range(n2) ) {
-      mIndexArray[1][i] = index_array2[i];
-    }
-  }
-  ASSERT_COND( n2 != 0 );
-
-  mIndexWidthArray[1].resize(n2 - 1);
-  for ( auto i: Range(n2 - 1) ) {
-    mIndexWidthArray[1][i] = mIndexArray[1][i + 1] - mIndexArray[1][i];
-  }
-
-  SizeType n3 = 0;
-  if ( index_array3.empty() ) {
-    n3 = lut_template->index_num(2);
-    mIndexArray[2].resize(n3);
-    for ( auto i: Range(n3) ) {
-      mIndexArray[2][i] = lut_template->index(2, i);
-    }
-  }
-  else {
-    n3 = index_array3.size();
-    mIndexArray[2].resize(n3);
-    for ( auto i: Range(n3) ) {
-      mIndexArray[2][i] = index_array3[i];
-    }
-  }
-  ASSERT_COND( n3 != 0 );
-
-  mIndexWidthArray[2].resize(n3 - 1);
-  for ( auto i: Range(n3 - 1) ) {
-    mIndexWidthArray[2][i] = mIndexArray[2][i + 1] - mIndexArray[2][i];
-  }
-
-  SizeType n = n1 * n2 * n3;
+  SizeType n = mIndexArray[0].size() * mIndexArray[1].size() * mIndexArray[2].size();;
   ASSERT_COND( value_array.size() == n );
-  mValueArray.resize(n);
-  for ( auto i: Range(n) ) {
-    mValueArray[i] = value_array[i];
-  }
-}
-
-// @brief 次元数の取得
-SizeType
-CiLut3D::dimension() const
-{
-  return 3;
 }
 
 // @brief インデックス数の取得
@@ -498,7 +253,7 @@ CiLut3D::index_num(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
+  ASSERT_COND( 0 <= var && var < 3 );
   return mIndexArray[var].size();
 }
 
@@ -509,7 +264,7 @@ CiLut3D::index(
   SizeType pos
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
+  ASSERT_COND( 0 <= var && var < 3 );
   ASSERT_COND( 0 <= pos && pos < index_num(var) );
   return mIndexArray[var][pos];
 }
@@ -520,7 +275,7 @@ CiLut3D::grid_value(
   const vector<SizeType>& pos_array
 ) const
 {
-  ASSERT_COND( pos_array.size() == dimension() );
+  ASSERT_COND( pos_array.size() == 3 );
   auto pos1 = pos_array[0];
   auto pos2 = pos_array[1];
   auto pos3 = pos_array[2];
@@ -536,7 +291,7 @@ CiLut3D::value(
   const vector<double>& val_array
 ) const
 {
-  ASSERT_COND( val_array.size() == dimension() );
+  ASSERT_COND( val_array.size() == 3 );
   double val1 = val_array[0];
   auto idx1_a = search(val1, mIndexArray[0]);
   auto idx1_b = idx1_a + 1;

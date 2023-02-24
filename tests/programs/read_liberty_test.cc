@@ -21,7 +21,7 @@ read_liberty(
 
   auto library = ClibCellLibrary::read_liberty(filename);
 
-  display_library(cout, library);
+  library.display(cout);
 
   string dump_filename = "./foo.dump";
 

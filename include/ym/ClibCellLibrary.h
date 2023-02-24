@@ -5,16 +5,12 @@
 /// @brief ClibCellLibrary のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
 #include "ym/logic.h"
-#include "ym/BinDec.h"
-#include "ym/BinEnc.h"
-#include "ym/ClibCellList.h"
-#include "ym/ClibCellGroupList.h"
-#include "ym/ClibCellClassList.h"
+#include "ym/ClibList.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -44,17 +40,17 @@ public:
   /// '浅い'コピーを行う．
   ClibCellLibrary(
     const ClibCellLibrary& src ///< [in] コピー元のオブジェクト
-  );
+  ) = default;
 
   /// @brief 代入演算子
   /// @return 代入後の自身への参照を返す．
   ClibCellLibrary&
   operator=(
     const ClibCellLibrary& src ///< [in] コピー元のオブジェクト
-  );
+  ) = default;
 
   /// @brief デストラクタ
-  ~ClibCellLibrary();
+  ~ClibCellLibrary() = default;
 
 
 public:
@@ -96,10 +92,11 @@ public:
 
   /// @brief 内容を持っているときに true を返す．
   bool
-  is_valid() const
-  {
-    return mImpl != nullptr;
-  }
+  is_valid() const { return mImpl != nullptr; }
+
+  /// @brief 不正値の時 true を返す．
+  bool
+  is_invalid() const { return !is_valid(); }
 
   /// @brief 名前の取得
   string
@@ -179,23 +176,27 @@ public:
   lu_table_template_num() const;
 
   /// @brief 遅延テーブルのテンプレートの取得
-  const ClibLutTemplate&
+  ClibLutTemplate
   lu_table_template(
     SizeType table_id ///< [in] テンプレート番号 ( 0 <= table_id < lu_table_template_num() )
   ) const;
 
-  /// @brief 遅延テーブルのテンプレート番号の取得
+  /// @brief 遅延テーブルのテンプレートの取得
   ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
-  lu_table_template_id(
+  /// なければ不正値を返す．
+  ClibLutTemplate
+  lu_table_template(
     const string& name ///< [in] テンプレート名
   ) const;
 
+  /// @brief 遅延テーブルのテンプレートのリストの取得
+  ClibLutTemplateList
+  lu_table_template_list() const;
+
   /// @brief バスタイプの取得
   ///
-  /// なければ nullptr を返す．
-  const ClibBusType&
+  /// なければ不正値を返す．
+  ClibBusType
   bus_type(
     const string& name ///< [in] バスタイプ名
   ) const;
@@ -217,30 +218,30 @@ public:
 
   /// @brief セル情報の取得
   /// @return 該当するセル情報を返す．
-  const ClibCell&
+  ClibCell
   cell(
     SizeType cell_id ///< [in] セル番号 ( 0 <= cell_id < cell_num() )
+  ) const;
+
+  /// @brief 名前からのセルの取得
+  /// @return セルを返す．
+  ///
+  /// なければ不正値を返す．
+  ClibCell
+  cell(
+    const string& name ///< [in] セル名
   ) const;
 
   /// @brief 全セルのリストの取得
   ClibCellList
   cell_list() const;
 
-  /// @brief 名前からのセル番号の取得
-  /// @return セル番号を返す．
-  ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
-  cell_id(
-    const string& name ///< [in] セル名
-  ) const;
-
   /// @brief セルグループ数の取得
   SizeType
   cell_group_num() const;
 
   /// @brief セルグループの取得
-  const ClibCellGroup&
+  ClibCellGroup
   cell_group(
     SizeType id ///< [in] グループ番号 ( 0 <= id < cell_group_num() )
   ) const;
@@ -254,7 +255,7 @@ public:
   npn_class_num() const;
 
   /// @brief NPN同値クラスの取得
-  const ClibCellClass&
+  ClibCellClass
   npn_class(
     SizeType id ///< [in] 同値クラス番号 ( 0 <= id < npn_class_num() )
   ) const;
@@ -275,19 +276,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 定数0セルのグループを返す．
-  const ClibCellGroup&
+  ClibCellGroup
   const0_func() const;
 
   /// @brief 定数1セルのグループを返す．
-  const ClibCellGroup&
+  ClibCellGroup
   const1_func() const;
 
   /// @brief バッファセルのグループを返す．
-  const ClibCellGroup&
+  ClibCellGroup
   buf_func() const;
 
   /// @brief インバータセルのグループを返す．
-  const ClibCellGroup&
+  ClibCellGroup
   inv_func() const;
 
   //////////////////////////////////////////////////////////////////////
@@ -303,7 +304,7 @@ public:
   /// @brief 単純な型のFFクラスを返す．
   ///
   /// 該当するセルがないときでも空のセルクラスが返される．
-  const ClibCellClass&
+  ClibCellClass
   simple_ff_class(
     bool master_slave,         ///< [in] master/slave 型の時 true
     bool has_clear,            ///< [in] clear 端子を持つ時 true
@@ -321,7 +322,7 @@ public:
   /// @brief 単純な型のラッチクラスを返す．
   ///
   /// 該当するセルがないときでも空のセルクラスが返される．
-  const ClibCellClass&
+  ClibCellClass
   simple_latch_class(
     bool master_slave,         ///< [in] master/slave 型の時 true
     bool has_clear,            ///< [in] clear 端子を持つ時 true
@@ -342,7 +343,7 @@ public:
   pg_pat_num() const;
 
   /// @brief パタンを返す．
-  const ClibPatGraph&
+  ClibPatGraph
   pg_pat(
     SizeType id ///< [in] パタン番号 ( 0 <= id < pg_pat_num() )
   ) const;
@@ -429,24 +430,15 @@ public:
     istream& s ///< [in] 入力元のストリーム
   );
 
+  /// @brief 内容を出力する(デバッグ用)．
+  void
+  display(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const;
+
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief mImpl を切り替える．
-  ///
-  /// CiCellLibrary の参照回数を適切に管理する．
-  /// mImpl はこの関数以外では変更しない．
-  void
-  change_impl(
-    CiCellLibrary* new_impl ///< [in] 新しいオブジェクト
-  );
 
 
 private:
@@ -455,17 +447,9 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 実装クラス
-  CiCellLibrary* mImpl{nullptr};
+  ClibLibraryPtr mImpl;
 
 };
-
-/// @relates ClibCellLibrary
-/// @brief 内容を出力する．
-void
-display_library(
-  ostream& s,                    ///< [in] 出力先のストリーム
-  const ClibCellLibrary& library ///< [in] 対象のセルライブラリ
-);
 
 END_NAMESPACE_YM_CLIB
 

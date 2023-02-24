@@ -5,7 +5,7 @@
 /// @brief ClibIOMap のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibPinMap.h"
@@ -262,7 +262,7 @@ private:
 /// @brief ClibIOMap のストリーム出力演算子
 ostream&
 operator<<(
-  ostream& s, ///< [in] 出力先のストリーム
+  ostream& s,            ///< [in] 出力先のストリーム
   const ClibIOMap& iomap ///< [in] 入出力のマッピング
 );
 

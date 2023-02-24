@@ -14,26 +14,20 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
-class CiCellLibrary;
-class CiCellGroup;
-
 //////////////////////////////////////////////////////////////////////
 /// @class CiCellClass CiCellClass.h "CiCellClass.h"
-/// @brief ClibCellClass の実装クラスの基底クラス
+/// @brief ClibCellClass の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiCellClass :
-  public ClibCellClass
+class CiCellClass
 {
 public:
 
   /// @brief コンストラクタ
   CiCellClass(
-    SizeType id,                        ///< [in] id 番号
     const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換リスト
-  );
-
-  /// @brief エラーオブジェクト用のコンストラクタ
-  CiCellClass() = default;
+  ) : mIdMapList{idmap_list}
+  {
+  }
 
   /// @brief デストラクタ
   ~CiCellClass() = default;
@@ -44,26 +38,30 @@ public:
   // 一般的な情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ID番号を返す．
-  /// @note ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
-  SizeType
-  id() const override;
-
   /// @brief 同位体変換の個数を得る．
   /// @note 恒等変換は含まない．
   SizeType
-  idmap_num() const override;
+  idmap_num() const
+  {
+    return mIdMapList.size();
+  }
 
   /// @brief 同位体変換を得る．
   const ClibIOMap&
   idmap(
     SizeType pos
-  ) const override;
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < idmap_num() );
+    return mIdMapList[pos];
+  }
 
   /// @brief 同位体変換のリストを得る．
-  virtual
   const vector<ClibIOMap>&
-  idmap_list() const override;
+  idmap_list() const
+  {
+    return mIdMapList;
+  }
 
 
 public:
@@ -73,17 +71,39 @@ public:
 
   /// @brief グループ数を返す．
   SizeType
-  cell_group_num() const override;
+  cell_group_num() const
+  {
+    return mGroupList.size();
+  }
 
   /// @brief グループを返す．
-  const ClibCellGroup&
+  SizeType
   cell_group(
     SizeType pos ///< [in] インデックス ( 0 <= pos < cell_group_num() )
-  ) const override;
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < cell_group_num() );
+    return mGroupList[pos];
+  }
 
   /// @brief グループのリストを返す．
-  ClibCellGroupList
-  cell_group_list() const override;
+  const vector<SizeType>&
+  cell_group_list() const
+  {
+    return mGroupList;
+  }
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const;
 
 
 public:
@@ -94,10 +114,10 @@ public:
   /// @brief このクラスに属しているセルグループを追加する．
   void
   add_group(
-    const ClibCellGroup* group
+    SizeType id
   )
   {
-    mGroupList.push_back(group);
+    mGroupList.push_back(id);
   }
 
 
@@ -106,14 +126,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ID番号
-  SizeType mId{CLIB_NULLID};
-
   // 同位体変換のリスト
-  vector<ClibIOMap> mIdmapList;
+  vector<ClibIOMap> mIdMapList;
 
-  // セルグループのリスト
-  vector<const ClibCellGroup*> mGroupList;
+  // セルグループ番号のリスト
+  vector<SizeType> mGroupList;
 
 };
 

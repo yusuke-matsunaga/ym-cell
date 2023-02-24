@@ -24,7 +24,6 @@ public:
 
   /// @brief コンストラクタ
   CiFLCell(
-    CiCellLibrary* library,      ///< [in] 親のセルライブラリ
     const ShString& name,        ///< [in] 名前
     ClibArea area,               ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -33,7 +32,7 @@ public:
     const Expr& preset,          ///< [in] "preset" 関数の式
     ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
     ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  ) : CiCell{library, name, area},
+  ) : CiCell{name, area},
       mVar1{var1},
       mVar2{var2},
       mClear{clear},
@@ -60,19 +59,11 @@ public:
   string
   qvar2() const override;
 
-  /// @brief FFセル/ラッチセルの場合にクリア端子を持っていたら true を返す．
-  bool
-  has_clear() const override;
-
   /// @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
   ///
   /// クリア端子がない場合の返り値は不定
   Expr
   clear_expr() const override;
-
-  /// @brief FFセル/ラッチセルの場合にプリセット端子を持っていたら true を返す．
-  bool
-  has_preset() const override;
 
   /// @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
   ///

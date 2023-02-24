@@ -5,14 +5,12 @@
 /// @brief ClibCellClass のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/clib.h"
+#include "ym/ClibHandle.h"
+#include "ym/ClibList.h"
 #include "ym/logic.h"
-#include "ym/BinDec.h"
-#include "ym/BinEnc.h"
-#include "ym/ClibCellGroupList.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -22,12 +20,25 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @class ClibCellClass ClibCellClass.h "ym/ClibCellClass.h"
 /// @brief NPN同値なセルグループの集合を表すクラス
 //////////////////////////////////////////////////////////////////////
-class ClibCellClass
+class ClibCellClass :
+  public ClibHandle
 {
 public:
 
+  /// @brief 空のコンストラクタ
+  ///
+  /// 不正値となる．
+  ClibCellClass() = default;
+
+  /// @brief 内容を指定したコンストラクタ
+  ClibCellClass(
+    const ClibLibraryPtr& library, ///< [in] ライブラリ
+    SizeType id                    ///< [in] ID番号
+  ) : ClibHandle{library, id}
+  {
+  }
+
   /// @brief デストラクタ
-  virtual
   ~ClibCellClass() = default;
 
 
@@ -38,30 +49,24 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ID番号を返す．
-  ///
-  /// ClibCellLibrary::npn_class(id) で返されるオブジェクトの id() は id となる．
-  virtual
   SizeType
-  id() const = 0;
+  id() const { return mId; }
 
   /// @brief 同位体変換の個数を得る．
   ///
   /// 恒等変換は含まない．
-  virtual
   SizeType
-  idmap_num() const = 0;
+  idmap_num() const;
 
   /// @brief 同位体変換を得る．
-  virtual
   const ClibIOMap&
   idmap(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < idmap_num() )
-  ) const = 0;
+  ) const;
 
   /// @brief 同位体変換のリストを得る．
-  virtual
   const vector<ClibIOMap>&
-  idmap_list() const = 0;
+  idmap_list() const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -75,21 +80,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief グループ数を返す．
-  virtual
   SizeType
-  cell_group_num() const = 0;
+  cell_group_num() const;
 
   /// @brief グループを返す．
-  virtual
-  const ClibCellGroup&
+  ClibCellGroup
   cell_group(
     SizeType pos ///< [in] インデックス ( 0 <= pos < cell_group_num() )
-  ) const = 0;
+  ) const;
 
   /// @brief グループのリストを返す．
-  virtual
   ClibCellGroupList
-  cell_group_list() const = 0;
+  cell_group_list() const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}

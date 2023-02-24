@@ -64,7 +64,8 @@ public:
   /// @brief ピンを生成する．
   bool
   add_pin(
-    CiCell* cell,
+    CiCellLibrary* lib,
+    SizeType cell_id,
     const unordered_map<ShString, SizeType>& pin_map ///< [in] 入力ピン番号の辞書
   ) const;
 
@@ -119,6 +120,8 @@ private:
   ClibTime mMinTransition;
   const AstExpr* mFunction{nullptr};
   const AstExpr* mTristate{nullptr};
+
+  // タイミング情報
   vector<AstTimingInfo> mTimingInfoList;
 
 };

@@ -8,7 +8,7 @@
 /// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ClibPin.h"
+#include "ym/clib.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/Expr.h"
@@ -21,8 +21,7 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @class ClibCellPinBase CiPin.h "CiPin.h"
 /// @brief ピンの基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiPin :
-  public ClibPin
+class CiPin
 {
 public:
 
@@ -34,6 +33,7 @@ public:
   }
 
   /// @brief デストラクタ
+  virtual
   ~CiPin() = default;
 
 
@@ -44,7 +44,10 @@ public:
 
   /// @brief ピン名を返す．
   string
-  name() const override;
+  name() const
+  {
+    return mName;
+  }
 
   /// @brief ピン名を返す．
   ShString
@@ -53,21 +56,37 @@ public:
     return mName;
   }
 
+  /// @brief 方向を返す．
+  virtual
+  ClibDirection
+  direction() const = 0;
+
   /// @brief 入力ピンの時に true を返す．
+  virtual
   bool
-  is_input() const override;
+  is_input() const;
 
   /// @brief 出力ピンの時に true を返す．
+  virtual
   bool
-  is_output() const override;
+  is_output() const;
 
   /// @brief 入出力ピンの時に true を返す．
+  virtual
   bool
-  is_inout() const override;
+  is_inout() const;
 
   /// @brief 内部ピンの時に true を返す．
+  virtual
   bool
-  is_internal() const override;
+  is_internal() const;
+
+  /// @brief ピン番号を返す．
+  SizeType
+  pin_id() const
+  {
+    return mPinId;
+  }
 
 
 public:
@@ -78,20 +97,24 @@ public:
   /// @brief 入力ピン番号を返す．
   ///
   /// 入力ピンもしくは入出力ピンの時のみ意味を持つ．
+  virtual
   SizeType
-  input_id() const override;
+  input_id() const;
 
   /// @brief 負荷容量を返す．
+  virtual
   ClibCapacitance
-  capacitance() const override;
+  capacitance() const;
 
   /// @brief 立ち上がり時の負荷容量を返す．
+  virtual
   ClibCapacitance
-  rise_capacitance() const override;
+  rise_capacitance() const;
 
   /// @brief 立ち下がり時の負荷容量を返す．
+  virtual
   ClibCapacitance
-  fall_capacitance() const override;
+  fall_capacitance() const;
 
 
 public:
@@ -102,40 +125,49 @@ public:
   /// @brief 出力ピン番号を返す．
   ///
   /// 出力ピンもしくは入出力ピンの時のみ意味を持つ．
+  virtual
   SizeType
-  output_id() const override;
+  output_id() const;
 
   /// @brief 最大ファンアウト容量を返す．
+  virtual
   ClibCapacitance
-  max_fanout() const override;
+  max_fanout() const;
 
   /// @brief 最小ファンアウト容量を返す．
+  virtual
   ClibCapacitance
-  min_fanout() const override;
+  min_fanout() const;
 
   /// @brief 最大負荷容量を返す．
+  virtual
   ClibCapacitance
-  max_capacitance() const override;
+  max_capacitance() const;
 
   /// @brief 最小負荷容量を返す．
+  virtual
   ClibCapacitance
-  min_capacitance() const override;
+  min_capacitance() const;
 
   /// @brief 最大遷移時間を返す．
+  virtual
   ClibTime
-  max_transition() const override;
+  max_transition() const;
 
   /// @brief 最小遷移時間を返す．
+  virtual
   ClibTime
-  min_transition() const override;
+  min_transition() const;
 
   /// @brief 論理式を返す．
+  virtual
   Expr
-  function() const override;
+  function() const;
 
   /// @brief tristate 条件式を返す．
+  virtual
   Expr
-  tristate() const override;
+  tristate() const;
 
 
 public:
@@ -146,8 +178,37 @@ public:
   /// @brief 内部ピン番号を返す．
   ///
   /// 内部ピンの時のみ意味を持つ．
+  virtual
   SizeType
-  internal_id() const override;
+  internal_id() const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  virtual
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const = 0;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 設定用の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ピン番号を設定する．
+  void
+  set_pin_id(
+    SizeType pid ///< [in] ピン番号
+  )
+  {
+    mPinId = pid;
+  }
 
 
 protected:
@@ -170,6 +231,9 @@ private:
   // 名前
   ShString mName;
 
+  // ピン番号
+  SizeType mPinId{CLIB_NULLID};
+
 };
 
 
@@ -184,13 +248,11 @@ public:
 
   /// @brief コンストラクタ
   CiInputPin(
-    SizeType iid,                     ///< [in] 入力ピン番号
     const ShString& name,             ///< [in] ピン名
     ClibCapacitance capacitance,      ///< [in] 負荷容量
     ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
     ClibCapacitance fall_capacitance  ///< [in] 立ち下がり時の負荷容量
   ) : CiPin{name},
-      mInputId{iid},
       mCapacitance{capacitance},
       mRiseCapacitance{rise_capacitance},
       mFallCapacitance{fall_capacitance}
@@ -251,6 +313,21 @@ public:
   ) const override;
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 設定用の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 入力ピン番号を設定する．
+  void
+  set_input_id(
+    SizeType iid ///< [in] 入力ピン番号
+  )
+  {
+    mInputId = iid;
+  }
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
@@ -282,7 +359,6 @@ public:
 
   /// @brief コンストラクタ
   CiOutputPinBase(
-    SizeType oid,                    ///< [in] 出力ピン番号
     const ShString& name,            ///< [in] ピン名
     ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
     ClibCapacitance min_fanout,      ///< [in] 最小ファンアウト容量
@@ -293,7 +369,6 @@ public:
     const Expr& function,            ///< [in] 出力の論理式
     const Expr& tristate             ///< [in] tristate 条件
   ) : CiPin{name},
-      mOutputId{oid},
       mMaxFanout{max_fanout},
       mMinFanout{min_fanout},
       mMaxCapacitance{max_capacitance},
@@ -353,6 +428,21 @@ public:
   tristate() const override;
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 設定用の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 出力ピン番号を設定する．
+  void
+  set_output_id(
+    SizeType oid ///< [in] 出力ピン番号
+  )
+  {
+    mOutputId = oid;
+  }
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
@@ -402,7 +492,6 @@ public:
 
   /// @brief コンストラクタ
   CiOutputPin(
-    SizeType oid,                    ///< [in] 出力ピン番号
     const ShString& name,            ///< [in] ピン名
     ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
     ClibCapacitance min_fanout,      ///< [in] 最大ファンアウト容量
@@ -412,7 +501,7 @@ public:
     ClibTime min_transition,         ///< [in] 最大遷移時間
     const Expr& function,            ///< [in] 出力の論理式
     const Expr& tristate             ///< [in] tristate 条件
-  ) : CiOutputPinBase{oid, name,
+  ) : CiOutputPinBase{name,
 		      max_fanout, min_fanout,
 		      max_capacitance, min_capacitance,
 		      max_transition, min_transition,
@@ -465,8 +554,6 @@ public:
 
   /// @brief コンストラクタ
   CiInoutPin(
-    SizeType iid,                     ///< [in] 入力ピン番号
-    SizeType oid,                     ///< [in] 出力ピン番号
     const ShString& name,             ///< [in] ピン名
     ClibCapacitance capacitance,      ///< [in] 負荷容量
     ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
@@ -479,12 +566,11 @@ public:
     ClibTime min_transition,          ///< [in] 最大遷移時間
     const Expr& function,             ///< [in] 出力の論理式
     const Expr& tristate              ///< [in] tristate 条件
-  ) : CiOutputPinBase{oid, name,
+  ) : CiOutputPinBase{name,
 		      max_fanout, min_fanout,
 		      max_capacitance, min_capacitance,
 		      max_transition, min_transition,
 		      function, tristate},
-      mInputId{iid},
       mCapacitance{capacitance},
       mRiseCapacitance{rise_capacitance},
       mFallCapacitance{fall_capacitance}
@@ -545,6 +631,21 @@ public:
   ) const override;
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 設定用の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 入力ピン番号を設定する．
+  void
+  set_input_id(
+    SizeType iid ///< [in] 入力ピン番号
+  )
+  {
+    mInputId = iid;
+  }
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
@@ -576,10 +677,8 @@ public:
 
   /// @brief コンストラクタ
   CiInternalPin(
-    SizeType iid,        ///< [in] 内部ピン番号
     const ShString& name ///< [in] ピン名
-  ) : CiPin{name},
-      mInternalId{iid}
+  ) : CiPin{name}
   {
   }
 
@@ -623,6 +722,21 @@ public:
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 設定用の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内部ピン番号を設定する．
+  void
+  set_internal_id(
+    SizeType iid ///< [in] 内部ピン番号
+  )
+  {
+    mInternalId = iid;
+  }
 
 
 private:

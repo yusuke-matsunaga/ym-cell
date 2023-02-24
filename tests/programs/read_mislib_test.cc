@@ -20,7 +20,7 @@ read_mislib(
 
   auto library = ClibCellLibrary::read_mislib(filename);
 
-  display_library(cout, library);
+  library.display(cout);
 
   return 0;
 }

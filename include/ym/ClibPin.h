@@ -5,13 +5,11 @@
 /// @brief ClibPin のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/clib.h"
+#include "ym/ClibHandle.h"
 #include "ym/logic.h"
-#include "ym/BinDec.h"
-#include "ym/BinEnc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -21,12 +19,25 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @class ClibPin ClibPin.h "ym/ClibPin.h"
 /// @brief セルのピンを表すクラス
 //////////////////////////////////////////////////////////////////////
-class ClibPin
+class ClibPin :
+  public ClibHandle
 {
-protected:
+public:
+
+  /// @brief 空のコンストラクタ
+  ///
+  /// 不正値となる．
+  ClibPin() = default;
+
+  /// @brief 内容を指定したコンストラクタ
+  ClibPin(
+    const ClibLibraryPtr& library, ///< [in] ライブラリ
+    SizeType id                    ///< [in] ID番号
+  ) : ClibHandle{library, id}
+  {
+  }
 
   /// @brief デストラクタ
-  virtual
   ~ClibPin() = default;
 
 
@@ -37,42 +48,45 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ピン名を返す．
-  virtual
   string
-  name() const = 0;
+  name() const;
 
   /// @brief 方向を返す．
-  virtual
   ClibDirection
-  direction() const = 0;
+  direction() const;
 
   /// @brief 入力ピンの時に true を返す．
   ///
   /// direction() == ClibDirection::input と等価
-  virtual
   bool
-  is_input() const = 0;
+  is_input() const;
 
   /// @brief 出力ピンの時に true を返す．
   ///
   /// direction() == ClibDirection::output と等価
-  virtual
   bool
-  is_output() const = 0;
+  is_output() const;
 
   /// @brief 入出力ピンの時に true を返す．
   ///
   /// direction() == ClibDirection::inout と等価
-  virtual
   bool
-  is_inout() const = 0;
+  is_inout() const;
 
   /// @brief 内部ピンの時に true を返す．
   ///
   /// direction() == ClibDirection::internal と等価
-  virtual
   bool
-  is_internal() const = 0;
+  is_internal() const;
+
+  /// @brief ピン番号を返す．
+  ///
+  /// このピンを持つセルを cell とすると．
+  /// pin = cell.pin(pin_id);
+  /// pin_id = pin.pin_id()
+  /// が成り立つ．
+  SizeType
+  pin_id() const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -88,24 +102,24 @@ public:
   /// @brief 入力ピン番号を返す．
   ///
   /// 入力ピンもしくは入出力ピンの時のみ意味を持つ．
-  virtual
+  /// このピンを持つセルを cell とすると．
+  /// pin = cell.input(iid);
+  /// iid = pin.input_id()
+  /// が成り立つ．
   SizeType
-  input_id() const = 0;
+  input_id() const;
 
   /// @brief 負荷容量を返す．
-  virtual
   ClibCapacitance
-  capacitance() const = 0;
+  capacitance() const;
 
   /// @brief 立ち上がり時の負荷容量を返す．
-  virtual
   ClibCapacitance
-  rise_capacitance() const = 0;
+  rise_capacitance() const;
 
   /// @brief 立ち下がり時の負荷容量を返す．
-  virtual
   ClibCapacitance
-  fall_capacitance() const = 0;
+  fall_capacitance() const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -121,53 +135,48 @@ public:
   /// @brief 出力ピン番号を返す．
   ///
   /// 出力ピンもしくは入出力ピンの時のみ意味を持つ．
-  virtual
+  /// このピンを持つセルを cell とすると．
+  /// pin = cell.output(oid);
+  /// oid = pin.output_id()
+  /// が成り立つ．
   SizeType
-  output_id() const = 0;
+  output_id() const;
 
   /// @brief 最大ファンアウト容量を返す．
-  virtual
   ClibCapacitance
-  max_fanout() const = 0;
+  max_fanout() const;
 
   /// @brief 最小ファンアウト容量を返す．
-  virtual
   ClibCapacitance
-  min_fanout() const = 0;
+  min_fanout() const;
 
   /// @brief 最大負荷容量を返す．
-  virtual
   ClibCapacitance
-  max_capacitance() const = 0;
+  max_capacitance() const;
 
   /// @brief 最小負荷容量を返す．
-  virtual
   ClibCapacitance
-  min_capacitance() const = 0;
+  min_capacitance() const;
 
   /// @brief 最大遷移時間を返す．
-  virtual
   ClibTime
-  max_transition() const = 0;
+  max_transition() const;
 
   /// @brief 最小遷移時間を返す．
-  virtual
   ClibTime
-  min_transition() const = 0;
+  min_transition() const;
 
   /// @brief 論理式を返す．
   ///
   /// 定義されていない場合には Expr::is_invalid() == true となる式を返す．
-  virtual
   Expr
-  function() const = 0;
+  function() const;
 
   /// @brief tristate 条件式を返す．
   ///
   /// 定義されていない場合には Epxr::is_invalid() == true となる式を返す．
-  virtual
   Expr
-  tristate() const = 0;
+  tristate() const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -183,27 +192,8 @@ public:
   /// @brief 内部ピン番号を返す．
   ///
   /// 内部ピンの時のみ意味を持つ．
-  virtual
   SizeType
-  internal_id() const = 0;
-
-  //////////////////////////////////////////////////////////////////////
-  /// @}
-  //////////////////////////////////////////////////////////////////////
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  /// @name dump/restore 関数
-  /// @{
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 内容をバイナリダンプする．
-  virtual
-  void
-  dump(
-    BinEnc& s ///< [in] 出力先のストリーム
-  ) const = 0;
+  internal_id() const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}

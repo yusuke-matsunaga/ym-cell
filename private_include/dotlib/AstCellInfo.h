@@ -49,8 +49,8 @@ public:
   /// @brief セルを作る．
   bool
   add_cell(
-    unique_ptr<CiCellLibrary>& library
-  );
+    CiCellLibrary* library
+  ) const;
 
 
 private:
@@ -59,21 +59,21 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief FF セルを作る．
-  CiCell*
+  SizeType
   add_ff_cell(
-    unique_ptr<CiCellLibrary>& library
+    CiCellLibrary* library
   ) const;
 
   /// @brief ラッチセルを作る．
-  CiCell*
+  SizeType
   add_latch_cell(
-    unique_ptr<CiCellLibrary>& library
+    CiCellLibrary* library
   ) const;
 
   /// @brief FSM セルを作る．
-  CiCell*
+  SizeType
   add_fsm_cell(
-    unique_ptr<CiCellLibrary>& library
+    CiCellLibrary* library
   ) const;
 
 

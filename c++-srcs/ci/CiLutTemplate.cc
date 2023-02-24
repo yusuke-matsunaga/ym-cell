@@ -3,72 +3,13 @@
 /// @brief CiLutTemplate の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiLutTemplate.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLutTemplate
-//////////////////////////////////////////////////////////////////////
-
-// @brief ID番号の取得
-SizeType
-CiLutTemplate::id() const
-{
-  return mId;
-}
-
-// @brief 名前の取得
-string
-CiLutTemplate::name() const
-{
-  return _name();
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLutTemplateBad
-//////////////////////////////////////////////////////////////////////
-
-// @brief 次元数の取得
-SizeType
-CiLutTemplateBad::dimension() const
-{
-  return 0;
-}
-
-// @brief 変数型の取得
-ClibVarType
-CiLutTemplateBad::variable_type(
-  SizeType var
-) const
-{
-  return ClibVarType::none;
-}
-
-// @brief インデックス数の取得
-SizeType
-CiLutTemplateBad::index_num(
-  SizeType var
-) const
-{
-  return 0;
-}
-
-// @brief デフォルトインデックス値の取得
-double
-CiLutTemplateBad::index(
-  SizeType var,
-  SizeType pos
-) const
-{
-  return 0.0;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLutTemplate1D

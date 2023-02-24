@@ -164,7 +164,7 @@ ClibIOMap::operator==(
 // @brief バイナリダンプを行う．
 void
 ClibIOMap::dump(
-  BinEnc& bos ///< [in] 出力先のストリーム
+  BinEnc& bos
 ) const
 {
   dump_map_list(bos, input_map_list());
@@ -175,7 +175,7 @@ ClibIOMap::dump(
 // @brief バイナリダンプされた内容を読み込む．
 void
 ClibIOMap::restore(
-  BinDec& bis ///< [in] 入力元のストリーム
+  BinDec& bis
 )
 {
   mInputMap = restore_map_list(bis);
@@ -184,11 +184,10 @@ ClibIOMap::restore(
 }
 
 /// @relates ClibIOMap
-/// @brief ClibIOMap のストリーム出力演算子
 ostream&
 operator<<(
-  ostream& s, ///< [in] 出力先のストリーム
-  const ClibIOMap& iomap ///< [in] 入出力のマッピング
+  ostream& s,
+  const ClibIOMap& iomap
 )
 {
   s << "Input[";

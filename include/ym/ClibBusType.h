@@ -5,10 +5,10 @@
 /// @brief ClibBusType のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/clib.h"
+#include "ym/ClibHandle.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -17,7 +17,8 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @class ClibBusType ClibBusType.h "ym/ClibBusType.h"
 /// @brief バスタイプを表すクラス
 //////////////////////////////////////////////////////////////////////
-class ClibBusType
+class ClibBusType :
+  public ClibHandle
 {
 public:
 
@@ -39,8 +40,15 @@ public:
   /// @brief コンストラクタ
   ClibBusType() = default;
 
+  /// @brief 内容を指定したコンストラクタ
+  ClibBusType(
+    const ClibLibraryPtr& library, ///< [in] ライブラリ
+    SizeType id                    ///< [in] ID番号
+  ) : ClibHandle{library, id}
+  {
+  }
+
   /// @brief デストラクタ
-  virtual
   ~ClibBusType() = default;
 
 
@@ -50,41 +58,34 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前の取得
-  virtual
   string
-  name() const = 0;
+  name() const;
 
   /// @brief base_type の取得
-  virtual
   BaseType
-  base_type() const = 0;
+  base_type() const;
 
   /// @brief data_type の取得
-  virtual
   DataType
-  data_type() const = 0;
+  data_type() const;
 
   /// @brief ビット幅の取得
-  virtual
   SizeType
-  bit_width() const = 0;
+  bit_width() const;
 
   /// @brief 開始ビットの取得
-  virtual
   SizeType
-  bit_from() const = 0;
+  bit_from() const;
 
   /// @brief 終了ビットの取得
-  virtual
   SizeType
-  bit_to() const = 0;
+  bit_to() const;
 
   /// @brief 向きの取得
   ///
   /// true の時，降順を表す．
-  virtual
   bool
-  downto() const = 0;
+  downto() const;
 
 };
 

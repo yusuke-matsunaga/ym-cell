@@ -141,7 +141,7 @@ public:
   pat_num() const;
 
   /// @brief パタンを返す．
-  const ClibPatGraph&
+  const CiPatGraph&
   pat(
     SizeType id ///< [in] パタン番号 ( 0 <= id < pat_num() )
   ) const;

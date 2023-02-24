@@ -1,14 +1,15 @@
 ﻿#ifndef CICELL_H
 #define CICELL_H
 
-/// @file CiClibl.h
-/// @brief CiClib のヘッダファイル
+/// @file CiCell.h
+/// @brief CiCell のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ClibCell.h"
+#include "ym/clib.h"
+#include "ym/ClibArea.h"
 #include "ym/Expr.h"
 #include "ym/ShString.h"
 #include "ci/CiPin.h"
@@ -32,28 +33,24 @@ class CgSignature;
 ///
 /// このクラスはデフォルトの仮想関数を実装している．
 //////////////////////////////////////////////////////////////////////
-class CiCell :
-  public ClibCell
+class CiCell
 {
   friend class CiCellLibrary;
 
-protected:
+public:
 
   /// @brief コンストラクタ
   CiCell(
-    CiCellLibrary* library,                  ///< [in] 親のセルライブラリ
-    const ShString& name,                    ///< [in] 名前
-    ClibArea area                            ///< [in] 面積
-  );
-
-  /// @brief エラーオブジェクト用のコンストラクタ
-  CiCell() = default;
-
-
-public:
+    const ShString& name, ///< [in] 名前
+    ClibArea area         ///< [in] 面積
+  ) : mName{name},
+      mArea{area}
+  {
+  }
 
   /// @brief デストラクタ
-  ~CiCell();
+  virtual
+  ~CiCell() = default;
 
 
 public:
@@ -61,24 +58,17 @@ public:
   // 基本情報の取得
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ライブラリの取得
-  CiCellLibrary*
-  library() const
-  {
-    return mLibrary;
-  }
-
   /// @brief ID番号の取得
   SizeType
-  id() const override;
+  id() const { return mId; }
 
   /// @brief 名前の取得
   string
-  name() const override;
+  name() const  { return mName; }
 
   /// @brief 面積の取得
   ClibArea
-  area() const override;
+  area() const { return mArea; }
 
 
 public:
@@ -88,126 +78,192 @@ public:
 
   /// @brief ピン数の取得
   SizeType
-  pin_num() const override;
+  pin_num() const
+  {
+    return mPinList.size();
+  }
 
-  /// @brief ピンの取得
+  /// @brief ピン番号の取得
   /// @return ピン情報を返す．
-  const ClibPin&
+  SizeType
   pin(
-    SizeType pin_id ///< [in] ピン番号 ( 0 <= pin_id < pin_num() )
-  ) const override;
+    SizeType pos ///< [in] ピン番号 ( 0 <= pos < pin_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < pin_num() );
+    return mPinList[pos];
+  }
 
-  /// @brief 名前からピン番号の取得
-  /// @return name という名前のピン番号を返す．
-  ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
-  pin_id(
-    const string& name ///< [in] ピン名
-  ) const override;
-
-  /// @brief 名前からピン番号の取得
-  /// @return name という名前のピン番号を返す．
-  ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
-  pin_id(
-    const ShString& name ///< [in] ピン名
-  ) const;
+  /// @brief ピン番号のリストの取得
+  const vector<SizeType>&
+  pin_list() const
+  {
+    return mPinList;
+  }
 
   /// @brief 入力ピン数の取得
   SizeType
-  input_num() const override;
+  input_num() const
+  {
+    return mInputNum;
+  }
+
+  /// @brief 入力ピンの取得
+  SizeType
+  input(
+    SizeType pos ///< [in] 入力番号 ( 0 <= pos < input2_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < input2_num() );
+    return mInputList[pos];
+  }
+
+  /// @brief 入力ピン番号のリストの取得
+  const vector<SizeType>&
+  input_list() const
+  {
+    return mInputList;
+  }
 
   /// @brief 出力ピン数の取得
   SizeType
-  output_num() const override;
+  output_num() const
+  {
+    return mOutputNum;
+  }
+
+  /// @brief 出力ピンの取得
+  ///
+  /// pos >= output_num() の場合には入出力ピンが返される．
+  SizeType
+  output(
+    SizeType pos ///< [in] 出力番号 ( 0 <= id < output2_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < output2_num() );
+    return mOutputList[pos];
+  }
+
+  /// @brief 出力ピン番号のリスト
+  const vector<SizeType>&
+  output_list() const
+  {
+    return mOutputList;
+  }
 
   /// @brief 入出力ピン数の取得
   SizeType
-  inout_num() const override;
+  inout_num() const
+  {
+    return mInoutNum;
+  }
 
-  /// @brief 内部ピン数の取得
+  /// @brief 入出力ピンの取得
   SizeType
-  internal_num() const override;
+  inout(
+    SizeType id ///< [in] 番号 ( 0 <= id < inout_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= id && id < inout_num() );
+    return mInputList[id + input_num()];
+  }
+
+  /// @brief 入出力ピン番号のリストの先頭
+  vector<SizeType>::const_iterator
+  inout_begin() const
+  {
+    return mInputList.begin() + input_num();
+  }
 
   /// @brief 入力ピン+入出力ピン数の取得
   ///
   /// input_num() + inout_num() に等しい．
   SizeType
-  input_num2() const override;
-
-  /// @brief 入力ピンの取得
-  ///
-  /// id >= input_num() の場合には入出力ピンが返される．
-  const ClibPin&
-  input(
-    SizeType id ///< [in] 入力番号 ( 0 <= id < input_num2() )
-  ) const override;
+  input2_num() const
+  {
+    return mInputList.size();
+  }
 
   /// @brief 出力ピン+入出力ピン数の取得
   ///
   /// output_num() + inout_num() に等しい．
   SizeType
-  output_num2() const override;
+  output2_num() const
+  {
+    return mOutputList.size();
+  }
 
-  /// @brief 出力ピンの取得
-  ///
-  /// id >= output_num() の場合には入出力ピンが返される．
-  const ClibPin&
-  output(
-    SizeType id ///< [in] 出力番号 ( 0 <= id < output_num2() )
-  ) const override;
-
-  /// @brief 入出力ピンの取得
-  const ClibPin&
-  inout(
-    SizeType id ///< [in] 番号 ( 0 <= id < inout_num() )
-  ) const override;
+  /// @brief 内部ピン数の取得
+  SizeType
+  internal_num() const
+  {
+    return mInternalList.size();
+  }
 
   /// @brief 内部ピンの取得
-  const ClibPin&
+  SizeType
   internal(
-    SizeType id ///< [in] 内部ピン番号 ( 0 <= id < internal_num() )
-  ) const override;
+    SizeType pos ///< [in] 内部ピン番号 ( 0 <= pos < internal_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < mInternalList.size() );
+    return mInternalList[pos];
+  }
+
+  /// @brief 内部ピン番号のリスト
+  const vector<SizeType>&
+  internal_list() const
+  {
+    return mInternalList;
+  }
 
   /// @brief バス数の取得
   SizeType
-  bus_num() const override;
+  bus_num() const
+  {
+    return mBusList.size();
+  }
 
   /// @brief バスの取得
-  const ClibBus&
+  SizeType
   bus(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < bus_num() )
-  ) const override;
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < bus_num() );
+    return mBusList[pos];
+  }
 
-  /// @brief 名前からバス番号の取得
-  /// @return name という名前のバス番号を返す．
-  ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
-  bus_id(
-    const string& name ///< [in] バス名
-  ) const override;
+  /// @brief バス番号のリスト
+  const vector<SizeType>&
+  bus_list() const
+  {
+    return mBusList;
+  }
 
   /// @brief バンドル数の取得
   SizeType
-  bundle_num() const override;
+  bundle_num() const
+  {
+    return mBundleList.size();
+  }
 
   /// @brief バンドルの取得
-  const ClibBundle&
+  SizeType
   bundle(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < bundle_num() )
-  ) const override;
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < bundle_num() );
+    return mBundleList[pos];
+  }
 
-  /// @brief 名前からバンドル番号の取得
-  /// @return name という名前のバンドル番号を返す．
-  ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
-  bundle_id(
-    const string& name ///< [in] バンドル名
-  ) const override;
+  /// @brief バンドル番号のリスト
+  const vector<SizeType>&
+  bundle_list() const
+  {
+    return mBundleList;
+  }
 
 
 public:
@@ -217,21 +273,45 @@ public:
 
   /// @brief タイミング情報の数を返す．
   SizeType
-  timing_num() const override;
+  timing_num() const
+  {
+    return mTimingList.size();
+  }
 
   /// @brief タイミング情報を返す．
-  const ClibTiming&
+  SizeType
   timing(
     SizeType pos ///< [in] インデックス ( 0 <= pos < timing_num() )
-  ) const override;
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < timing_num() );
+    return mTimingList[pos];
+  }
+
+  /// @brief タイミングIDのリストを返す．
+  const vector<SizeType>&
+  timing_list() const
+  {
+    return mTimingList;
+  }
 
   /// @brief 条件に合致するタイミング情報のインデックスのリストを返す．
   const vector<SizeType>&
-  timing_id_list(
+  timing_list(
     SizeType ipos,        ///< [in] 開始ピン番号 ( 0 <= ipos < input_num2() )
     SizeType opos,        ///< [in] 終了ピン番号 ( 0 <= opos < output_num2() )
     ClibTimingSense sense ///< [in] タイミング情報の摘要条件
-  ) const override;
+  ) const
+  {
+    SizeType base = (opos * input2_num() + ipos) * 2;
+    switch ( sense ) {
+    case ClibTimingSense::positive_unate: base += 0; break;
+    case ClibTimingSense::negative_unate: base += 1; break;
+    default:
+      ASSERT_NOT_REACHED;
+    }
+    return mTimingMap[base];
+  }
 
 
 public:
@@ -241,135 +321,118 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief セルの種類を返す．
+  virtual
   ClibCellType
-  type() const override;
+  type() const;
 
   /// @brief 組み合わせ論理タイプの時 true を返す．
+  virtual
   bool
-  is_logic() const override;
+  is_logic() const;
 
   /// @brief FFタイプの時 true を返す．
+  virtual
   bool
-  is_ff() const override;
+  is_ff() const;
 
   /// @brief ラッチタイプの時 true を返す．
+  virtual
   bool
-  is_latch() const override;
-
-  /// @brief 出力の論理式を持っている時に true を返す．
-  bool
-  has_logic(
-    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const override;
-
-  /// @brief 全ての出力が論理式を持っているときに true を返す．
-  bool
-  has_logic() const override;
-
-  /// @brief 論理セルの場合に出力の論理式を返す．
-  ///
-  /// 論理式中の変数番号は入力ピン番号に対応する．
-  Expr
-  logic_expr(
-    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const override;
-
-  /// @brief 出力がトライステート条件を持っている時に true を返す．
-  bool
-  has_tristate(
-    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const override;
-
-  /// @brief トライステートセルの場合にトライステート条件式を返す．
-  ///
-  /// - 論理式中の変数番号は入力ピン番号に対応する．
-  /// - 通常の論理セルの場合には定数0を返す．
-  Expr
-  tristate_expr(
-    SizeType pin_id ///< [in] 出力ピン番号 ( 0 <= pin_id < output_num2() )
-  ) const override;
+  is_latch() const;
 
   /// @brief 内部変数1の名前を返す．
+  virtual
   string
-  qvar1() const override;
+  qvar1() const;
 
   /// @brief 内部変数1の名前を返す．
+  virtual
   string
-  qvar2() const override;
+  qvar2() const;
 
   /// @brief 非同期 clear を持つ時 true を返す．
   ///
   /// FF/ラッチセル以外の場合には返り値は不定
   bool
-  has_clear() const override;
+  has_clear() const;
 
   /// @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
   ///
   /// クリア端子がない場合の返り値は不定
+  virtual
   Expr
-  clear_expr() const override;
+  clear_expr() const;
 
   /// @brief 非同期 preset を持つ時 true を返す．
   ///
   /// FF/ラッチセル以外の場合には返り値は不定
   bool
-  has_preset() const override;
+  has_preset() const;
 
   /// @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
   ///
   /// プリセット端子がない場合の返り値は不定
+  virtual
   Expr
-  preset_expr() const override;
+  preset_expr() const;
 
   /// @brief clear と preset が同時にアクティブになった時の値1
   ///
   /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
   /// FF/ラッチセル以外の場合には返り値は不定
+  virtual
   ClibCPV
-  clear_preset_var1() const override;
+  clear_preset_var1() const;
 
   /// @brief clear と preset が同時にアクティブになった時の値1
   ///
   /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
   /// FF/ラッチセル以外の場合には返り値は不定
+  virtual
   ClibCPV
-  clear_preset_var2() const override;
+  clear_preset_var2() const;
 
   /// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
   ///
   /// それ以外の型の場合の返り値は不定
+  virtual
   Expr
-  clock_expr() const override;
+  clock_expr() const;
 
   /// @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
   ///
   /// それ以外の型の場合の返り値は不定
+  virtual
   Expr
-  clock2_expr() const override;
+  clock2_expr() const;
 
   /// @brief FFセルの場合に次状態関数を表す論理式を返す．
   ///
   /// それ以外の型の場合の返り値は不定
+  virtual
   Expr
-  next_state_expr() const override;
+  next_state_expr() const;
 
   /// @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
   ///
   /// それ以外の型の場合の返り値は不定
+  virtual
   Expr
-  enable_expr() const override;
+  enable_expr() const;
 
   /// @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
   ///
   /// それ以外の型の場合の返り値は不定
+  virtual
   Expr
-  enable2_expr() const override;
+  enable2_expr() const;
 
   /// @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
   ///
   /// それ以外の型の場合の返り値は不定
+  virtual
   Expr
-  data_in_expr() const override;
+  data_in_expr() const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -382,10 +445,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
+  virtual
   void
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
-  ) const override;
+  ) const;
 
 
 public:
@@ -403,121 +467,85 @@ public:
   }
 
   /// @brief 入力ピンを追加する．
-  /// @return 生成されたピンを返す．
-  CiInputPin*
+  void
   add_input(
-    const ShString& name,             ///< [in] ピン名
-    ClibCapacitance capacitance,      ///< [in] 負荷容量
-    ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
-    ClibCapacitance fall_capacitance  ///< [in] 立ち下がり時の負荷容量
-  );
+    CiInputPin* pin, ///< [in] ピン
+    SizeType id      ///< [in] ピン番号
+  )
+  {
+    SizeType pid = mPinList.size();
+    pin->set_pin_id(pid);
+    mPinList.push_back(id);
+    SizeType iid = mInputList.size();
+    pin->set_input_id(iid);
+    mInputList.push_back(id);
+    ++ mInputNum;
+  }
 
   /// @brief 出力ピンを追加する．
-  /// @return 生成されたピンを返す．
-  CiOutputPin*
+  void
   add_output(
-    const ShString& name,            ///< [in] ピン名
-    ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
-    ClibCapacitance min_fanout,      ///< [in] 最大ファンアウト容量
-    ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
-    ClibCapacitance min_capacitance, ///< [in] 最大負荷容量
-    ClibTime max_transition,         ///< [in] 最大遷移時間
-    ClibTime min_transition,         ///< [in] 最大遷移時間
-    const Expr& function,            ///< [in] 出力の論理式
-    const Expr& tristate             ///< [in] tristate 条件
-  );
+    CiOutputPin* pin, ///< [in] ピン
+    SizeType id       ///< [in] ピン番号
+  )
+  {
+    SizeType pid = mPinList.size();
+    pin->set_pin_id(pid);
+    mPinList.push_back(id);
+    SizeType oid = mOutputList.size();
+    pin->set_output_id(oid);
+    mOutputList.push_back(id);
+    ++ mOutputNum;
+  }
 
   /// @brief 入出力ピンを追加する．
-  /// @return 生成されたピンを返す．
-  CiInoutPin*
+  void
   add_inout(
-    const ShString& name,             ///< [in] ピン名
-    ClibCapacitance capacitance,      ///< [in] 負荷容量
-    ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
-    ClibCapacitance fall_capacitance, ///< [in] 立ち上がり時の負荷容量
-    ClibCapacitance max_fanout,	      ///< [in] 最大ファンアウト容量
-    ClibCapacitance min_fanout,	      ///< [in] 最大ファンアウト容量
-    ClibCapacitance max_capacitance,  ///< [in] 最大負荷容量
-    ClibCapacitance min_capacitance,  ///< [in] 最大負荷容量
-    ClibTime max_transition,	      ///< [in] 最大遷移時間
-    ClibTime min_transition,          ///< [in] 最大遷移時間
-    const Expr& function,             ///< [in] 出力の論理式
-    const Expr& tristate              ///< [in] tristate 条件
-  );
+    CiInoutPin* pin, ///< [in] ピン
+    SizeType id      ///< [in] ピン番号
+  )
+  {
+    SizeType pid = mPinList.size();
+    pin->set_pin_id(pid);
+    mPinList.push_back(id);
+    SizeType iid = mInputList.size();
+    pin->set_input_id(iid);
+    mInputList.push_back(id);
+    SizeType oid = mOutputList.size();
+    pin->set_output_id(oid);
+    mOutputList.push_back(id);
+    ++ mInoutNum;
+  }
 
   /// @brief 内部ピンを追加する．
-  /// @return 生成されたピンを返す．
-  CiInternalPin*
+  void
   add_internal(
-    const ShString& name               ///< [in] 名前
-  );
+    CiInternalPin* pin, ///< [in] ピン
+    SizeType id         ///< [in] ピン番号
+  )
+  {
+    auto iid = mInternalList.size();
+    pin->set_internal_id(iid);
+    mInternalList.push_back(id);
+  }
 
   /// @brief バスを追加する．
-  CiBus*
+  void
   add_bus(
-    const ShString& name,            ///< [in] 名前
-    const ClibBusType* bus_type,     ///< [in] バスタイプ
-    vector<const ClibPin*>& pin_list ///< [in] ピンリスト
-  );
+    SizeType id ///< [in] バス番号
+  )
+  {
+    mBusList.push_back(id);
+  }
 
   /// @brief バンドルを追加する．
-  CiBundle*
+  void
   add_bundle(
-    const ShString& name,            ///< [in] 名前
-    vector<const ClibPin*>& pin_list ///< [in] ピンリスト
-  );
-
-  /// @brief タイミング情報を作る(ジェネリック遅延モデル)．
-  /// @return 生成されたタイミング番号を返す．
-  SizeType
-  add_timing_generic(
-    ClibTimingType type,            ///< [in] タイミングの種類
-    const Expr& cond,               ///< [in] 条件式
-    ClibTime intrinsic_rise,        ///< [in] 立ち上がり固有遅延
-    ClibTime intrinsic_fall,        ///< [in] 立ち下がり固有遅延
-    ClibTime slope_rise,            ///< [in] 立ち上がり負荷依存遅延
-    ClibTime slope_fall,            ///< [in] 立ち下がり負荷依存遅延
-    ClibResistance rise_resistance, ///< [in] 立ち上がり抵抗
-    ClibResistance fall_resistance  ///< [in] 立ち下がり抵抗
-  );
-
-  /// @brief タイミング情報を作る(折れ線近似)．
-  /// @return 生成されたタイミング番号を返す．
-  SizeType
-  add_timing_piecewise(
-    ClibTimingType timing_type,
-    const Expr& cond,
-    ClibTime intrinsic_rise,
-    ClibTime intrinsic_fall,
-    ClibTime slope_rise,
-    ClibTime slope_fall,
-    ClibResistance rise_pin_resistance,
-    ClibResistance fall_pin_resistance
-  );
-
-  /// @brief タイミング情報を作る(非線形タイプ1)．
-  /// @return 生成されたタイミング番号を返す．
-  SizeType
-  add_timing_lut1(
-    ClibTimingType timing_type,
-    const Expr& cond,
-    CiLut* cell_rise,
-    CiLut* cell_fall,
-    CiLut* rise_transition,
-    CiLut* fall_transition
-  );
-
-  /// @brief タイミング情報を作る(非線形タイプ2)．
-  /// @return 生成されたタイミング番号を返す．
-  SizeType
-  add_timing_lut2(
-    ClibTimingType timing_type,
-    const Expr& cond,
-    CiLut* rise_transition,
-    CiLut* fall_transition,
-    CiLut* rise_propagation,
-    CiLut* fall_propagation
-  );
+    SizeType id ///< [in] バンドル番号
+  )
+  {
+    mBundleList.push_back(id);
+  }
 
   /// @brief タイミング情報用のデータ構造を初期化する．
   void
@@ -554,28 +582,15 @@ public:
   /// @brief シグネチャを返す．
   virtual
   CgSignature
-  make_signature() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief ピンを登録する．
-  void
-  reg_pin(
-    CiPin* pin ///< [in] 登録するピン
-  );
+  make_signature(
+    const CiCellLibrary* library ///< [in] ライブラリ
+  ) const;
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // セルライブラリ
-  CiCellLibrary* mLibrary{nullptr};
 
   // ID番号
   SizeType mId{CLIB_NULLID};
@@ -595,30 +610,30 @@ private:
   // 入出力ピン数
   SizeType mInoutNum{0};
 
-  // ピンのリスト
-  vector<unique_ptr<CiPin>> mPinList;
+  // ピン番号のリスト
+  vector<SizeType> mPinList;
 
-  // 入力ピン+入出力ピンのリスト
+  // 入力ピン+入出力ピンの番号のリスト
   // サイズ mInputNum + mInoutNum
-  vector<const ClibPin*> mInputList;
+  vector<SizeType> mInputList;
 
-  // 出力ピン+入出力ピンのリスト
+  // 出力ピン+入出力ピンの番号のリスト
   // サイズ mOutputNum + mInoutNum
-  vector<const ClibPin*> mOutputList;
+  vector<SizeType> mOutputList;
 
-  // 内部ピンのリスト
-  vector<const ClibPin*> mInternalList;
+  // 内部ピン番号のリスト
+  vector<SizeType> mInternalList;
 
-  // バスのリスト
-  vector<unique_ptr<CiBus>> mBusList;
+  // バス番号のリスト
+  vector<SizeType> mBusList;
 
-  // バンドルのリスト
-  vector<unique_ptr<CiBundle>> mBundleList;
+  // バンドル番号のリスト
+  vector<SizeType> mBundleList;
 
-  // 全体のタイミング情報のリスト
-  vector<unique_ptr<CiTiming>> mTimingList;
+  // 全体のタイミング情報の番号のリスト
+  vector<SizeType> mTimingList;
 
-  // 条件ごとのタイミングIDのリストの配列
+  // 条件ごとのタイミング番号のリストの配列
   // サイズは(入力数＋入出力数) x (出力数+入出力数)  x 2
   vector<vector<SizeType>> mTimingMap;
 

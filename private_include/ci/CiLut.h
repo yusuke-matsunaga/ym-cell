@@ -5,115 +5,34 @@
 /// @brief CiLut のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ClibLut.h"
+#include "ym/clib.h"
+#include "ym/BinEnc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class CiLutBad CiLutBad.h "CiLutBad.h"
-/// @brief エラー状態を表す CiLut の派生クラス
-//////////////////////////////////////////////////////////////////////
-class CiLutBad :
-  public ClibLut
-{
-public:
-
-  /// @brief コンストラクタ
-  CiLutBad() = default;
-
-  /// @brief デストラクタ
-  ~CiLutBad() = default;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief テンプレートの取得
-  const ClibLutTemplate&
-  lut_template() const override;
-
-  /// @brief 次元数の取得
-  SizeType
-  dimension() const override;
-
-  /// @brief 変数型の取得
-  ClibVarType
-  variable_type(
-    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
-  ) const override;
-
-  /// @brief インデックス数の取得
-  SizeType
-  index_num(
-    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
-  ) const override;
-
-  /// @brief インデックス値の取得
-  double
-  index(
-    SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
-    SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
-  ) const override;
-
-  /// @brief 格子点の値の取得
-  ///
-  /// pos_array のサイズは dimension() と同じ
-  double
-  grid_value(
-    const vector<SizeType>& pos_array ///< [in] pos_array 格子点座標
-  ) const override;
-
-  /// @brief 値の取得
-  ///
-  /// @note val_array のサイズは dimension() と同じ
-  double
-  value(
-    const vector<double>& val_array ///< [in] 入力の値の配列
-  ) const override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // dump/restore 関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 内容をバイナリダンプする．
-  void
-  dump(
-    BinEnc& s ///< [in] 出力先のストリーム
-  ) const override;
-
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
 /// @class CiLut CiLut.h "CiLut.h"
 /// @brief ルックアップテーブルの実装クラスの基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiLut :
-  public ClibLut
+class CiLut
 {
   friend class CiCellLibrary;
 
-protected:
+public:
 
   /// @brief コンストラクタ
   CiLut(
-    const ClibLutTemplate* lut_template ///< [in] テンプレート
+    SizeType lut_template ///< [in] テンプレート番号
   ) : mTemplate{lut_template}
   {
   }
 
-public:
-
   /// @brief デストラクタ
+  virtual
   ~CiLut() = default;
 
 
@@ -122,21 +41,43 @@ public:
   // 属性の取得
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief テンプレートの取得
-  const ClibLutTemplate&
-  lut_template() const override;
-
-  /// @brief 変数型の取得
-  ClibVarType
-  variable_type(
-    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
-  ) const override;
+  /// @brief テンプレート番号の取得
+  SizeType
+  lut_template() const
+  {
+    return mTemplate;
+  }
 
   /// @brief インデックス数の取得
+  virtual
   SizeType
   index_num(
     SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
-  ) const override;
+  ) const = 0;
+
+  /// @brief インデックス値の取得
+  virtual
+  double
+  index(
+    SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
+    SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  ) const = 0;
+
+  /// @brief 格子点の値の取得
+  virtual
+  double
+  grid_value(
+    const vector<SizeType>& pos_array ///< [in] 格子点座標
+                                      ///< サイズは dimension() と同じ
+  ) const = 0;
+
+  /// @brief 値の取得
+  virtual
+  double
+  value(
+    const vector<double>& val_array ///< [in] 入力の値の配列
+                                    ///< サイズは dimension() と同じ
+  ) const = 0;
 
 
 public:
@@ -145,10 +86,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
+  virtual
   void
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
-  ) const override;
+  ) const = 0;
 
 
 protected:
@@ -170,8 +112,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // テンプレート
-  const ClibLutTemplate* mTemplate;
+  // テンプレート番号
+  SizeType mTemplate{CLIB_NULLID};
 
 };
 
@@ -185,14 +127,13 @@ class CiLut1D :
 {
   friend class CiCellLibrary;
 
-private:
+public:
 
   /// @brief コンストラクタ
   CiLut1D(
-    const ClibLutTemplate* lut_template, ///< [in] テンプレート
-    const vector<double>& value_array,   ///< [in] 値の配列
-    const vector<double>& index_array    ///< [in] インデックスの配列
-    = vector<double>{}
+    SizeType lut_template,             ///< [in] テンプレート番号
+    const vector<double>& value_array, ///< [in] 値の配列
+    const vector<double>& index_array  ///< [in] インデックスの配列
   );
 
   /// @brief デストラクタ
@@ -203,10 +144,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 属性の取得
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 次元数の取得
-  SizeType
-  dimension() const override;
 
   /// @brief インデックス数の取得
   SizeType
@@ -233,6 +170,18 @@ public:
   value(
     const vector<double>& val_array ///< [in] 入力の値の配列
                                     ///< サイズは dimension() と同じ
+  ) const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
 
@@ -266,12 +215,10 @@ private:
 
   /// @brief コンストラクタ
   CiLut2D(
-    const ClibLutTemplate* lut_template, ///< [in] テンプレート
-    const vector<double>& value_array,   ///< [in] 値の配列
-    const vector<double>& index_array1   ///< [in] 変数1のインデックスの配列
-    = vector<double>{},
-    const vector<double>& index_array2   ///< [in] 変数2のインデックスの配列
-    = vector<double>{}
+    SizeType lut_template,              ///< [in] テンプレート番号
+    const vector<double>& value_array,  ///< [in] 値の配列
+    const vector<double>& index_array1, ///< [in] 変数1のインデックスの配列
+    const vector<double>& index_array2  ///< [in] 変数2のインデックスの配列
   );
 
   /// @brief デストラクタ
@@ -282,10 +229,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 属性の取得
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 次元数の取得
-  SizeType
-  dimension() const override;
 
   /// @brief インデックス数の取得
   SizeType
@@ -315,6 +258,18 @@ public:
   ) const override;
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const override;
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる関数
@@ -335,9 +290,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // テンプレート
-  const ClibLutTemplate* mTemplate;
 
   // インデックスの配列の配列
   vector<double> mIndexArray[2];
@@ -364,14 +316,11 @@ private:
 
   /// @brief コンストラクタ
   CiLut3D(
-    const ClibLutTemplate* lut_template, ///< [in] テンプレート
-    const vector<double>& value_array,   ///< [in] 値の配列
-    const vector<double>& index_array1   ///< [in] 変数1のインデックスの配列
-    = vector<double>{},
-    const vector<double>& index_array2   ///< [in] 変数1のインデックスの配列
-    = vector<double>{},
-    const vector<double>& index_array3   ///< [in] 変数1のインデックスの配列
-    = vector<double>{}
+    SizeType lut_template,              ///< [in] テンプレート番号
+    const vector<double>& value_array,  ///< [in] 値の配列
+    const vector<double>& index_array1, ///< [in] 変数1のインデックスの配列
+    const vector<double>& index_array2, ///< [in] 変数1のインデックスの配列
+    const vector<double>& index_array3  ///< [in] 変数1のインデックスの配列
   );
 
   /// @brief デストラクタ
@@ -382,10 +331,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 属性の取得
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 次元数の取得
-  SizeType
-  dimension() const override;
 
   /// @brief インデックス数の取得
   SizeType
@@ -415,6 +360,18 @@ public:
   ) const override;
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const override;
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる関数
@@ -436,9 +393,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // テンプレート
-  const ClibLutTemplate* mTemplate;
 
   // インデックスの配列の配列
   vector<double> mIndexArray[3];

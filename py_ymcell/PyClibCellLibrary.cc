@@ -119,7 +119,7 @@ ClibCellLibrary_display(
 
   auto& lib = PyClibCellLibrary::Get(self);
   if ( filename == nullptr ) {
-    display_library(cout, lib);
+    lib.display(cout);
   }
   else {
     ofstream fs{filename};
@@ -129,7 +129,7 @@ ClibCellLibrary_display(
       PyErr_SetString(PyExc_ValueError, buf.str().c_str());
       return nullptr;
     }
-    display_library(fs, lib);
+    lib.display(fs);
   }
 
   Py_RETURN_NONE;
@@ -144,7 +144,7 @@ ClibCellLibrary_to_string_list(
 {
   auto& lib = PyClibCellLibrary::Get(self);
   ostringstream buf;
-  display_library(buf, lib);
+  lib.display(buf);
 
   istringstream ibuf{buf.str()};
   string line_buff;

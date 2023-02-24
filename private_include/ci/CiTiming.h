@@ -8,7 +8,7 @@
 /// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ClibTiming.h"
+#include "ym/clib.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibResistance.h"
 #include "ym/Expr.h"
@@ -22,23 +22,23 @@ class CiLut;
 /// @class CiTiming CiTiming.h "CiTiming.h"
 /// @brief 共通の基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiTiming :
-  public ClibTiming
+class CiTiming
 {
 public:
 
   /// @brief コンストラクタ
   CiTiming(
-    SizeType tid,        ///< [in] タイミング番号
+    SizeType id,         ///< [in] タイミング番号
     ClibTimingType type, ///< [in] タイミング条件の型
     const Expr& cond     ///< [in] タイミング条件を表す式
-  ) : mId{tid},
+  ) : mId{id},
       mType{type},
       mCond{cond}
   {
   };
 
   /// @brief デストラクタ
+  virtual
   ~CiTiming() = default;
 
 
@@ -51,17 +51,26 @@ public:
   ///
   /// timing = cell->timing(id); の時，timing->id() = id となる．
   SizeType
-  id() const override;
+  id() const
+  {
+    return mId;
+  }
 
   /// @brief 型の取得
   ClibTimingType
-  type() const override;
+  type() const
+  {
+    return mType;
+  }
 
   /// @brief タイミング条件式の取得
   ///
-  /// ない場合には定数1の式が返される．
+  /// ない場合には不適正な式が返される．
   Expr
-  timing_cond() const override;
+  timing_cond() const
+  {
+    return mCond;
+  }
 
 
 public:
@@ -70,20 +79,24 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり固有遅延の取得
+  virtual
   ClibTime
-  intrinsic_rise() const override;
+  intrinsic_rise() const;
 
   /// @brief 立ち下がり固有遅延の取得
+  virtual
   ClibTime
-  intrinsic_fall() const override;
+  intrinsic_fall() const;
 
   /// @brief 立ち上がりスロープ遅延の取得
+  virtual
   ClibTime
-  slope_rise() const override;
+  slope_rise() const;
 
   /// @brief 立ち下がりスロープ遅延の取得
+  virtual
   ClibTime
-  slope_fall() const override;
+  slope_fall() const;
 
 
 public:
@@ -92,12 +105,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延の取得
+  virtual
   ClibResistance
-  rise_resistance() const override;
+  rise_resistance() const;
 
   /// @brief 立ち下がり遷移遅延の取得
+  virtual
   ClibResistance
-  fall_resistance() const override;
+  fall_resistance() const;
 
 
 public:
@@ -106,20 +121,24 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延の取得
+  virtual
   ClibResistance
-  rise_pin_resistance() const override;
+  rise_pin_resistance() const;
 
   /// @brief 立ち下がり遷移遅延の取得
+  virtual
   ClibResistance
-  fall_pin_resistance() const override;
+  fall_pin_resistance() const;
 
   /// @brief 立ち上がり？？？
+  virtual
   ClibTime
-  rise_delay_intercept() const override;
+  rise_delay_intercept() const;
 
   /// @brief 立ち下がり？？？
+  virtual
   ClibTime
-  fall_delay_intercept() const override;
+  fall_delay_intercept() const;
 
 
 public:
@@ -128,28 +147,47 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延テーブルの取得
-  const ClibLut&
-  rise_transition() const override;
+  virtual
+  SizeType
+  rise_transition() const;
 
   /// @brief 立ち下がり遷移遅延テーブルの取得
-  const ClibLut&
-  fall_transition() const override;
+  virtual
+  SizeType
+  fall_transition() const;
 
   /// @brief 立ち上がり伝搬遅延テーブルの取得
-  const ClibLut&
-  rise_propagation() const override;
+  virtual
+  SizeType
+  rise_propagation() const;
 
   /// @brief 立ち下がり伝搬遅延テーブルの取得
-  const ClibLut&
-  fall_propagation() const override;
+  virtual
+  SizeType
+  fall_propagation() const;
 
   /// @brief 立ち上がりセル遅延テーブルの取得
-  const ClibLut&
-  cell_rise() const override;
+  virtual
+  SizeType
+  cell_rise() const;
 
   /// @brief 立ち下がりセル遅延テーブルの取得
-  const ClibLut&
-  cell_fall() const override;
+  virtual
+  SizeType
+  cell_fall() const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  virtual
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const = 0;
 
 
 protected:
@@ -420,9 +458,14 @@ public:
     SizeType tid,               ///< [in] タイミング番号
     ClibTimingType timing_type, ///< [in] タイミングの型
     const Expr& cond,           ///< [in] タイミング条件を表す式
-    CiLut* rise_transition,     ///< [in] 立ち上がり遷移遅延テーブル
-    CiLut* fall_transition      ///< [in] 立ち下がり遷移遅延テーブル
-  );
+    SizeType rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
+    SizeType fall_transition    ///< [in] 立ち下がり遷移遅延テーブル
+  ) : CiTiming{tid, timing_type, cond},
+      mRiseTransition{rise_transition},
+      mFallTransition{fall_transition}
+  {
+  }
+
 
   /// @brief デストラクタ
   ~CiTimingLut() = default;
@@ -434,11 +477,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延テーブルの取得
-  const ClibLut&
+  SizeType
   rise_transition() const override;
 
   /// @brief 立ち下がり遷移遅延テーブルの取得
-  const ClibLut&
+  SizeType
   fall_transition() const override;
 
 
@@ -448,10 +491,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がり遷移遅延テーブル
-  unique_ptr<CiLut> mRiseTransition;
+  SizeType mRiseTransition;
 
   // 立ち下がり遷移遅延テーブル
-  unique_ptr<CiLut> mFallTransition;
+  SizeType mFallTransition;
 
 };
 
@@ -470,11 +513,16 @@ public:
     SizeType tid,               ///< [in] タイミング番号
     ClibTimingType timing_type, ///< [in] タイミングの型
     const Expr& cond,           ///< [in] タイミング条件を表す式
-    CiLut* cell_rise,           ///< [in] 立ち上がりセル遅延テーブル
-    CiLut* cell_fall,           ///< [in] 立ち下がりセル遅延テーブル
-    CiLut* rise_transition,     ///< [in] 立ち上がり遷移遅延テーブル
-    CiLut* fall_transition      ///< [in] 立ち下がり遷移遅延テーブル
-  );
+    SizeType cell_rise,         ///< [in] 立ち上がりセル遅延テーブル
+    SizeType cell_fall,         ///< [in] 立ち下がりセル遅延テーブル
+    SizeType rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
+    SizeType fall_transition    ///< [in] 立ち下がり遷移遅延テーブル
+  ) : CiTimingLut{tid, timing_type, cond, rise_transition, fall_transition},
+      mCellRise{cell_rise},
+      mCellFall{cell_fall}
+  {
+  }
+
 
   /// @brief デストラクタ
   ~CiTimingLut1() = default;
@@ -486,11 +534,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がりセル遅延テーブルの取得
-  const ClibLut&
+  SizeType
   cell_rise() const override;
 
   /// @brief 立ち下がりセル遅延テーブルの取得
-  const ClibLut&
+  SizeType
   cell_fall() const override;
 
 
@@ -512,10 +560,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がりセル遅延テーブル
-  unique_ptr<CiLut> mCellRise;
+  SizeType mCellRise;
 
   // 立ち下がりセル遅延テーブル
-  unique_ptr<CiLut> mCellFall;
+  SizeType mCellFall;
 
 };
 
@@ -534,11 +582,15 @@ public:
     SizeType tid,               ///< [in] タイミング番号
     ClibTimingType timing_type, ///< [in] タイミングの型
     const Expr& cond,           ///< [in] タイミング条件を表す式
-    CiLut* rise_transition,     ///< [in] 立ち上がり遷移遅延テーブル
-    CiLut* fall_transition,     ///< [in] 立ち下がり遷移遅延テーブル
-    CiLut* rise_propagation,    ///< [in] 立ち上がり伝搬遅延テーブル
-    CiLut* fall_propagation     ///< [in] 立ち下がり伝搬遅延テーブル
-  );
+    SizeType rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
+    SizeType fall_transition,   ///< [in] 立ち下がり遷移遅延テーブル
+    SizeType rise_propagation,  ///< [in] 立ち上がり伝搬遅延テーブル
+    SizeType fall_propagation   ///< [in] 立ち下がり伝搬遅延テーブル
+  ) : CiTimingLut{tid, timing_type, cond, rise_transition, fall_transition},
+    mRisePropagation{rise_propagation},
+    mFallPropagation{fall_propagation}
+  {
+  }
 
   /// @brief デストラクタ
   ~CiTimingLut2() = default;
@@ -550,11 +602,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり伝搬遅延テーブルの取得
-  const ClibLut&
+  SizeType
   rise_propagation() const override;
 
   /// @brief 立ち下がり伝搬遅延テーブルの取得
-  const ClibLut&
+  SizeType
   fall_propagation() const override;
 
 
@@ -576,10 +628,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がり伝搬遅延テーブル
-  unique_ptr<CiLut> mRisePropagation;
+  SizeType mRisePropagation;
 
   // 立ち下がり伝搬遅延テーブル
-  unique_ptr<CiLut> mFallPropagation;
+  SizeType mFallPropagation;
 
 };
 

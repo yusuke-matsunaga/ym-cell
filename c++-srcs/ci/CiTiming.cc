@@ -17,27 +17,6 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiTiming
 //////////////////////////////////////////////////////////////////////
 
-// @brief ID番号の取得
-SizeType
-CiTiming::id() const
-{
-  return mId;
-}
-
-// @brief 型の取得
-ClibTimingType
-CiTiming::type() const
-{
-  return mType;
-}
-
-// @brief タイミング条件式の取得
-Expr
-CiTiming::timing_cond() const
-{
-  return mCond;
-}
-
 // @brief 立ち上がり固有遅延の取得
 ClibTime
 CiTiming::intrinsic_rise() const
@@ -109,45 +88,45 @@ CiTiming::fall_delay_intercept() const
 }
 
 // @brief 立ち上がり遷移遅延テーブルの取得
-const ClibLut&
+SizeType
 CiTiming::rise_transition() const
 {
-  return CiCellLibrary::error_lut();
+  return CLIB_NULLID;
 }
 
 // @brief 立ち下がり遷移遅延テーブルの取得
-const ClibLut&
+SizeType
 CiTiming::fall_transition() const
 {
-  return CiCellLibrary::error_lut();
+  return CLIB_NULLID;
 }
 
 // @brief 立ち上がり伝搬遅延テーブルの取得
-const ClibLut&
+SizeType
 CiTiming::rise_propagation() const
 {
-  return CiCellLibrary::error_lut();
+  return CLIB_NULLID;
 }
 
 // @brief 立ち下がり伝搬遅延テーブルの取得
-const ClibLut&
+SizeType
 CiTiming::fall_propagation() const
 {
-  return CiCellLibrary::error_lut();
+  return CLIB_NULLID;
 }
 
 // @brief 立ち上がりセル遅延テーブルの取得
-const ClibLut&
+SizeType
 CiTiming::cell_rise() const
 {
-  return CiCellLibrary::error_lut();
+  return CLIB_NULLID;
 }
 
 // @brief 立ち下がりセル遅延テーブルの取得
-const ClibLut&
+SizeType
 CiTiming::cell_fall() const
 {
-  return CiCellLibrary::error_lut();
+  return CLIB_NULLID;
 }
 
 
@@ -242,41 +221,18 @@ CiTimingPiecewise::fall_delay_intercept() const
 // クラス CiTimingLut
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-CiTimingLut::CiTimingLut(
-  SizeType tid,               ///< [in] タイミング番号
-  ClibTimingType timing_type, ///< [in] タイミングの型
-  const Expr& cond,           ///< [in] タイミング条件を表す式
-  CiLut* rise_transition,     ///< [in] 立ち上がり遷移遅延テーブル
-  CiLut* fall_transition      ///< [in] 立ち下がり遷移遅延テーブル
-) : CiTiming{tid, timing_type, cond},
-    mRiseTransition{unique_ptr<CiLut>{rise_transition}},
-    mFallTransition{unique_ptr<CiLut>{fall_transition}}
-{
-}
-
 // @brief 立ち上がり遷移遅延テーブルの取得
-const ClibLut&
+SizeType
 CiTimingLut::rise_transition() const
 {
-  if ( mRiseTransition == nullptr ) {
-    return CiCellLibrary::error_lut();
-  }
-  else {
-    return *mRiseTransition;
-  }
+  return mRiseTransition;
 }
 
 // @brief 立ち下がり遷移遅延テーブルの取得
-const ClibLut&
+SizeType
 CiTimingLut::fall_transition() const
 {
-  if ( mFallTransition == nullptr ) {
-    return CiCellLibrary::error_lut();
-  }
-  else {
-    return *mFallTransition;
-  }
+  return mFallTransition;
 }
 
 
@@ -284,43 +240,18 @@ CiTimingLut::fall_transition() const
 // クラス CiTimingLut1
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-CiTimingLut1::CiTimingLut1(
-  SizeType tid,               ///< [in] タイミング番号
-  ClibTimingType timing_type, ///< [in] タイミングの型
-  const Expr& cond,           ///< [in] タイミング条件を表す式
-  CiLut* cell_rise,           ///< [in] 立ち上がりセル遅延テーブル
-  CiLut* cell_fall,           ///< [in] 立ち下がりセル遅延テーブル
-  CiLut* rise_transition,     ///< [in] 立ち上がり遷移遅延テーブル
-  CiLut* fall_transition      ///< [in] 立ち下がり遷移遅延テーブル
-) : CiTimingLut{tid, timing_type, cond, rise_transition, fall_transition},
-    mCellRise{unique_ptr<CiLut>{cell_rise}},
-    mCellFall{unique_ptr<CiLut>{cell_fall}}
-{
-}
-
 // @brief 立ち上がりセル遅延テーブルの取得
-const ClibLut&
+SizeType
 CiTimingLut1::cell_rise() const
 {
-  if ( mCellRise == nullptr ) {
-    return CiCellLibrary::error_lut();
-  }
-  else {
-    return *mCellRise;
-  }
+  return mCellRise;
 }
 
 // @brief 立ち下がりセル遅延テーブルの取得
-const ClibLut&
+SizeType
 CiTimingLut1::cell_fall() const
 {
-  if ( mCellFall == nullptr ) {
-    return CiCellLibrary::error_lut();
-  }
-  else {
-    return *mCellFall;
-  }
+  return mCellFall;
 }
 
 
@@ -328,43 +259,18 @@ CiTimingLut1::cell_fall() const
 // クラス CiTimingLut2
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-CiTimingLut2::CiTimingLut2(
-  SizeType tid,               ///< [in] タイミング番号
-  ClibTimingType timing_type, ///< [in] タイミングの型
-  const Expr& cond,           ///< [in] タイミング条件を表す式
-  CiLut* rise_transition,     ///< [in] 立ち上がり遷移遅延テーブル
-  CiLut* fall_transition,     ///< [in] 立ち下がり遷移遅延テーブル
-  CiLut* rise_propagation,    ///< [in] 立ち上がり伝搬遅延テーブル
-  CiLut* fall_propagation     ///< [in] 立ち下がり伝搬遅延テーブル
-) : CiTimingLut{tid, timing_type, cond, rise_transition, fall_transition},
-    mRisePropagation{unique_ptr<CiLut>{rise_propagation}},
-    mFallPropagation{unique_ptr<CiLut>{fall_propagation}}
-{
-}
-
 // @brief 立ち上がり伝搬遅延テーブルの取得
-const ClibLut&
+SizeType
 CiTimingLut2::rise_propagation() const
 {
-  if ( mRisePropagation == nullptr ) {
-    return CiCellLibrary::error_lut();
-  }
-  else {
-    return *mRisePropagation;
-  }
+  return mRisePropagation;
 }
 
 // @brief 立ち下がり伝搬遅延テーブルの取得
-const ClibLut&
+SizeType
 CiTimingLut2::fall_propagation() const
 {
-  if ( mFallPropagation == nullptr ) {
-    return CiCellLibrary::error_lut();
-  }
-  else {
-    return *mFallPropagation;
-  }
+  return mFallPropagation;
 }
 
 END_NAMESPACE_YM_CLIB

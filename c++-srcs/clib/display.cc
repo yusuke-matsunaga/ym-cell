@@ -214,11 +214,11 @@ display_lut(
   const ClibLut& lut
 )
 {
-  int d = lut.dimension();
-  if ( d == 0 ) {
+  if ( lut.is_invalid() ) {
     return;
   }
 
+  SizeType d = lut.dimension();
   s << "    " << label << endl;
   for ( auto i: Range(d) ) {
     s << "      Variable_" << (i + 1) << " = " << lut.variable_type(i) << endl;
@@ -304,8 +304,7 @@ display_timing(
   ClibDelayModel delay_model
 )
 {
-  for ( auto id: cell.timing_id_list(ipos, opos, sense) ) {
-    auto& timing = cell.timing(id);
+  for ( auto timing: cell.timing_list(ipos, opos, sense) ) {
     s << "  Timing:" << endl
       << "    Type             = " << timing.type() << endl
       << "    Input Pin        = " << cell.input(ipos).name() << endl
@@ -378,10 +377,10 @@ display_class(
     }
     s << endl;
   }
-  for ( auto& group: cclass.cell_group_list() ) {
+  for ( auto group: cclass.cell_group_list() ) {
     s << "  Group: Map = " << group.iomap() << endl
       << "         Cell = ";
-    for ( auto& cell: group.cell_list() ) {
+    for ( auto cell: group.cell_list() ) {
       s << " " << cell.name();
     }
     s << endl;
@@ -415,7 +414,7 @@ display_ff_class(
     }
     s << endl;
   }
-  for ( auto& group: cclass.cell_group_list() ) {
+  for ( auto group: cclass.cell_group_list() ) {
     s << "  Group:";
 #if 0
     s << " clock = " << group.clock_expr();
@@ -436,7 +435,7 @@ display_ff_class(
     s << endl;
 #endif
     s << "         Cell = ";
-    for ( auto& cell: group.cell_list() ) {
+    for ( auto cell: group.cell_list() ) {
       s << " " << cell.name();
     }
     s << endl;
@@ -461,7 +460,7 @@ display_latch_class(
     }
     s << endl;
   }
-  for ( auto& group: cclass.cell_group_list() ) {
+  for ( auto group: cclass.cell_group_list() ) {
     s << "  Group:";
 #if 0
     s << " enable = " << group.enable_expr();
@@ -482,7 +481,7 @@ display_latch_class(
     s << endl;
 #endif
     s << "         Cell = ";
-    for ( auto& cell: group.cell_list() ) {
+    for ( auto cell: group.cell_list() ) {
       s << " " << cell.name();
     }
     s << endl;
@@ -500,7 +499,7 @@ display_group(
 {
   s << title << endl
     << "  Cell =";
-  for ( auto& cell: group.cell_list() ) {
+  for ( auto cell: group.cell_list() ) {
     s << " " << cell.name();
   }
   s << endl
@@ -555,8 +554,7 @@ display_cell(
 
   // 論理式の出力用にピン名の辞書を作る．
   unordered_map<SizeType, string> var_names;
-  for ( auto i: Range(cell.pin_num()) ) {
-    auto& pin = cell.pin(i);
+  for ( auto pin: cell.pin_list() ) {
     if ( pin.is_input() || pin.is_inout() ) {
       var_names.emplace(pin.input_id(), pin.name());
     }
@@ -565,7 +563,7 @@ display_cell(
 
   if ( cell.is_ff() ) {
     // FF の情報
-    var_names.emplace(cell.input_num2(), cell.qvar1());
+    var_names.emplace(cell.input2_num(), cell.qvar1());
     s << "  Next State         = "
       << ewriter.dump_to_string(cell.next_state_expr(), var_names)
       << endl
@@ -594,7 +592,7 @@ display_cell(
   }
   if ( cell.is_latch() ) {
     // ラッチの情報
-    var_names.emplace(cell.input_num2(), cell.qvar1());
+    var_names.emplace(cell.input2_num(), cell.qvar1());
     s << "  Data In            = "
       << ewriter.dump_to_string(cell.data_in_expr(), var_names)
       << endl
@@ -623,9 +621,8 @@ display_cell(
   }
 
   // ピンの情報
-  for ( auto i: Range(cell.pin_num()) ) {
-    auto& pin = cell.pin(i);
-    s << "  Pin#" << i << "[ " << pin.name() << " ]: ";
+  for ( auto pin: cell.pin_list() ) {
+    s << "  Pin#" << pin.pin_id() << "[ " << pin.name() << " ]: ";
     if ( pin.is_input() ) {
       // 入力ピン
       s << "Input#" << pin.input_id() << endl
@@ -686,8 +683,8 @@ display_cell(
   }
 
   // タイミング情報
-  auto ni2 = cell.input_num2();
-  auto no2 = cell.output_num2();
+  auto ni2 = cell.input2_num();
+  auto no2 = cell.output2_num();
   for ( auto ipos: Range(ni2) ) {
     for ( auto opos: Range(no2) ) {
       display_timing(s, cell, ipos, opos, ClibTimingSense::positive_unate, delay_model);
@@ -700,17 +697,16 @@ display_cell(
 END_NONAMESPACE
 
 void
-display_library(
-  ostream& s,
-  const ClibCellLibrary& library
-)
+ClibCellLibrary::display(
+  ostream& s
+) const
 {
   // ライブラリ名
-  s << "Library(" << library.name() << ")" << endl;
+  s << "Library(" << name() << ")" << endl;
 
   // テクノロジ
   s << "  technology: ";
-  switch ( library.technology() ) {
+  switch ( technology() ) {
   case ClibTechnology::cmos: s << "cmos"; break;
   case ClibTechnology::fpga: s << "fpga"; break;
   default: ASSERT_NOT_REACHED; break;
@@ -718,45 +714,43 @@ display_library(
   s << endl;
 
   // 遅延モデル
-  ClibDelayModel delay_model = library.delay_model();
-  s << "  delay_model: " << delay_model << endl;
+  s << "  delay_model: " << delay_model() << endl;
 
   // バス命名規則
-  s << "  bus_naming_style: " << library.bus_naming_style() << endl;
+  s << "  bus_naming_style: " << bus_naming_style() << endl;
 
   // 日付
-  s << "  date: " << library.date() << endl;
+  s << "  date: " << date() << endl;
 
   // リビジョン
-  s << "  revision: " << library.revision() << endl;
+  s << "  revision: " << revision() << endl;
 
   // コメント
-  s << "  comment: " << library.comment() << endl;
+  s << "  comment: " << comment() << endl;
 
   // 時間単位
-  s << "  time_unit: " << library.time_unit() << endl;
+  s << "  time_unit: " << time_unit() << endl;
 
   // 電圧単位
-  s << "  voltage_unit: " << library.voltage_unit() << endl;
+  s << "  voltage_unit: " << voltage_unit() << endl;
 
   // 電流単位
-  s << "  current_unit: " << library.current_unit() << endl;
+  s << "  current_unit: " << current_unit() << endl;
 
   // 抵抗単位
-  s << "  pulling_resistance_unit: " << library.pulling_resistance_unit() << endl;
+  s << "  pulling_resistance_unit: " << pulling_resistance_unit() << endl;
 
   // 容量単位
-  s << "  capacitive_load_unit: " << library.capacitive_load_unit()
-    << library.capacitive_load_unit_str() << endl;
+  s << "  capacitive_load_unit: " << capacitive_load_unit()
+    << capacitive_load_unit_str() << endl;
 
   // 電力単位
-  s << "  leakage_power_unit: " << library.leakage_power_unit() << endl;
+  s << "  leakage_power_unit: " << leakage_power_unit() << endl;
 
   s << endl;
 
   // lu_table_template
-  for ( auto id: Range(library.lu_table_template_num()) ) {
-    auto& templ = library.lu_table_template(id);
+  for ( auto templ: lu_table_template_list() ) {
     s << "  lu_table_template(" << templ.name() << ")" << endl;
     auto d = templ.dimension();
     for ( auto j: Range(d) ) {
@@ -773,46 +767,45 @@ display_library(
   s << endl;
 
   // セル
-  for ( auto& cell: library.cell_list() ) {
-    display_cell(s, cell, delay_model);
+  for ( auto cell: cell_list() ) {
+    display_cell(s, cell, delay_model());
   }
 
   // セルクラスの情報
   s << "Cell Class" << endl;
-  for ( auto class_id: Range(library.npn_class_num()) ) {
+  for ( auto cclass: npn_class_list() ) {
     ostringstream buf;
-    buf << "Class#" << class_id;
-    auto& cclass = library.npn_class(class_id);
+    buf << "Class#" << cclass.id();
     display_class(s, buf.str(), cclass);
   }
 
   // 既定セルグループの情報
-  display_group(s, "Const0 Group", library.const0_func());
-  display_group(s, "Const1 Group", library.const1_func());
-  display_group(s, "Buffer Group", library.buf_func());
-  display_group(s, "Inverter Group", library.inv_func());
+  display_group(s, "Const0 Group", const0_func());
+  display_group(s, "Const1 Group", const1_func());
+  display_group(s, "Buffer Group", buf_func());
+  display_group(s, "Inverter Group", inv_func());
 
-  display_ff_class(s, "DFF Class", library.simple_ff_class(false, false, false));
-  display_ff_class(s, "DFF_R Class", library.simple_ff_class(false, true, false));
-  display_ff_class(s, "DFF_S Class", library.simple_ff_class(false, false, true));
+  display_ff_class(s, "DFF Class", simple_ff_class(false, false, false));
+  display_ff_class(s, "DFF_R Class", simple_ff_class(false, true, false));
+  display_ff_class(s, "DFF_S Class", simple_ff_class(false, false, true));
   for ( auto cpv1: CPV_LIST ) {
     for ( auto cpv2: CPV_LIST ) {
       ostringstream buf;
       buf << "DFF_RS(" << cpv1 << cpv2 << ") Class";
       display_class(s, buf.str(),
-		    library.simple_ff_class(false, true, true, cpv1, cpv2));
+		    simple_ff_class(false, true, true, cpv1, cpv2));
     }
   }
 
-  display_latch_class(s, "Latch Class", library.simple_latch_class(false, false, false));
-  display_latch_class(s, "Latch_R Class", library.simple_latch_class(false, true, false));
-  display_latch_class(s, "Latch_S Class", library.simple_latch_class(false, false, true));
+  display_latch_class(s, "Latch Class", simple_latch_class(false, false, false));
+  display_latch_class(s, "Latch_R Class", simple_latch_class(false, true, false));
+  display_latch_class(s, "Latch_S Class", simple_latch_class(false, false, true));
   for ( auto cpv1: CPV_LIST ) {
     for ( auto cpv2: CPV_LIST ) {
       ostringstream buf;
       buf << "Latch_RS(" << cpv1 << cpv2 << ") Class";
       display_class(s, "Latch_RS Class",
-		    library.simple_latch_class(false, true, true, cpv1, cpv2));
+		    simple_latch_class(false, true, true, cpv1, cpv2));
     }
   }
 
@@ -821,11 +814,11 @@ display_library(
   s << "==== PatMgr dump start ====" << endl;
 
   // ノードの種類の出力
-  auto nn = library.pg_node_num();
+  auto nn = pg_node_num();
   for ( auto i: Range(nn) ) {
     s << "Node#" << i << ": ";
-    switch ( library.pg_node_type(i) ) {
-    case ClibPatType::Input: s << "INPUT#" << library.pg_input_id(i) ; break;
+    switch ( pg_node_type(i) ) {
+    case ClibPatType::Input: s << "INPUT#" << pg_input_id(i) ; break;
     case ClibPatType::And:   s << "AND"; break;
     case ClibPatType::Xor:   s << "XOR"; break;
     default: ASSERT_NOT_REACHED;
@@ -835,12 +828,12 @@ display_library(
   s << endl;
 
   // 枝の情報の出力
-  auto ne = library.pg_edge_num();
+  auto ne = pg_edge_num();
   for ( auto i: Range(ne) ) {
-    s << "Edge#" << i << ": " << library.pg_edge_from(i)
-      << " -> " << library.pg_edge_to(i)
-      << "(" << library.pg_edge_pos(i) << ")";
-    if ( library.pg_edge_inv(i) ) {
+    s << "Edge#" << i << ": " << pg_edge_from(i)
+      << " -> " << pg_edge_to(i)
+      << "(" << pg_edge_pos(i) << ")";
+    if ( pg_edge_inv(i) ) {
       s << " ***";
     }
     s << endl;
@@ -848,9 +841,9 @@ display_library(
   s << endl;
 
   // パタングラフの情報の出力
-  auto np = library.pg_pat_num();
+  auto np = pg_pat_num();
   for ( auto i: Range(np) ) {
-    const ClibPatGraph& pat = library.pg_pat(i);
+    const ClibPatGraph& pat = pg_pat(i);
     s << "Pat#" << i << ": "
       << "Rep#" << pat.rep_id() << ": ";
     if ( pat.root_inv() ) {

@@ -5,12 +5,11 @@
 /// @brief ClibBundle のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/clib.h"
-#include "ym/BinDec.h"
-#include "ym/BinEnc.h"
+#include "ym/ClibHandle.h"
+#include "ym/ClibList.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -20,12 +19,25 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @class ClibBundle ClibBundle.h "ym/ClibBundle.h"
 /// @brief バンドルを表すクラス
 //////////////////////////////////////////////////////////////////////
-class ClibBundle
+class ClibBundle :
+  public ClibHandle
 {
 public:
 
+  /// @brief 空のコンストラクタ
+  ///
+  /// 不正値となる．
+  ClibBundle() = default;
+
+  /// @brief 内容を指定したコンストラクタ
+  ClibBundle(
+    const ClibLibraryPtr& library, ///< [in] ライブラリ
+    SizeType id                    ///< [in] ID番号
+  ) : ClibHandle{library, id}
+  {
+  }
+
   /// @brief デストラクタ
-  virtual
   ~ClibBundle() = default;
 
 
@@ -35,34 +47,22 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前の取得
-  virtual
   string
-  name() const = 0;
+  name() const;
 
   /// @brief ピン数の取得
-  virtual
   SizeType
-  pin_num() const = 0;
+  pin_num() const;
 
   /// @brief ピンの取得
-  virtual
-  const ClibPin&
+  ClibPin
   pin(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
-  ) const = 0;
+  ) const;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // dump/restore 関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 内容をバイナリダンプする．
-  virtual
-  void
-  dump(
-    BinEnc& s ///< [in] 出力先のストリーム
-  ) const = 0;
+  /// @brief ピンのリストの取得
+  ClibPinList
+  pin_list() const;
 
 };
 

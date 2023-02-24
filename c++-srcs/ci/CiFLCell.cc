@@ -29,25 +29,11 @@ CiFLCell::qvar2() const
   return mVar2;
 }
 
-// @brief FFセル/ラッチセルの場合にクリア端子を持っていたら true を返す．
-bool
-CiFLCell::has_clear() const
-{
-  return mClear.is_valid();
-}
-
 // @brief FFセル/ラッチセルの場合にクリア条件を表す論理式を返す．
 Expr
 CiFLCell::clear_expr() const
 {
   return mClear;
-}
-
-// @brief FFセル/ラッチセルの場合にプリセット端子を持っていたら true を返す．
-bool
-CiFLCell::has_preset() const
-{
-  return mPreset.is_valid();
 }
 
 // @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．

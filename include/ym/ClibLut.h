@@ -5,12 +5,10 @@
 /// @brief ClibLut のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/clib.h"
-#include "ym/BinDec.h"
-#include "ym/BinEnc.h"
+#include "ym/ClibHandle.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -20,12 +18,25 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @class ClibLut ClibLut.h "ym/ClibLut.h"
 /// @brief ルックアップテーブル(LUT)を表すクラス
 //////////////////////////////////////////////////////////////////////
-class ClibLut
+class ClibLut :
+  public ClibHandle
 {
-protected:
+public:
+
+  /// @brief 空のコンストラクタ
+  ///
+  /// 不正値となる．
+  ClibLut() = default;
+
+  /// @brief 内容を指定したコンストラクタ
+  ClibLut(
+    const ClibLibraryPtr& library, ///< [in] ライブラリ
+    SizeType id                    ///< [in] ID番号
+  ) : ClibHandle{library, id}
+  {
+  }
 
   /// @brief デストラクタ
-  virtual
   ~ClibLut() = default;
 
 
@@ -36,72 +47,47 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief テンプレートの取得
-  virtual
-  const ClibLutTemplate&
-  lut_template() const = 0;
+  ClibLutTemplate
+  lut_template() const;
 
   /// @brief 次元数の取得
-  virtual
   SizeType
-  dimension() const = 0;
+  dimension() const;
 
   /// @brief 変数型の取得
-  virtual
   ClibVarType
   variable_type(
     SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
-  ) const = 0;
+  ) const;
 
   /// @brief インデックス数の取得
-  virtual
   SizeType
   index_num(
     SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
-  ) const = 0;
+  ) const;
 
   /// @brief インデックス値の取得
-  virtual
   double
   index(
     SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
     SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
-  ) const = 0;
+  ) const;
 
   /// @brief 格子点の値の取得
   ///
   /// pos_array のサイズは dimension() と同じ
-  virtual
   double
   grid_value(
     const vector<SizeType>& pos_array ///< [in] pos_array 格子点座標
-  ) const = 0;
+  ) const;
 
   /// @brief 値の取得
   ///
   /// @note val_array のサイズは dimension() と同じ
-  virtual
   double
   value(
     const vector<double>& val_array ///< [in] 入力の値の配列
-  ) const = 0;
-
-  //////////////////////////////////////////////////////////////////////
-  /// @}
-  //////////////////////////////////////////////////////////////////////
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  /// @name dump/restore 関数
-  /// @{
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 内容をバイナリダンプする．
-  virtual
-  void
-  dump(
-    BinEnc& s ///< [in] 出力先のストリーム
-  ) const = 0;
+  ) const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}

@@ -5,10 +5,10 @@
 /// @brief CiBundle のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ClibBundle.h"
+#include "ym/clib.h"
 #include "ym/ShString.h"
 
 
@@ -18,15 +18,14 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @class CiBundle CiBundle.h "CiBundle.h"
 /// @brief ClibBundle の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiBundle :
-  public ClibBundle
+class CiBundle
 {
 public:
 
   /// @brief コンストラクタ
   CiBundle(
     const ShString& name,            ///< [in] 名前
-    vector<const ClibPin*>& pin_list ///< [in] ピンリスト
+    const vector<SizeType>& pin_list ///< [in] ピンリスト
   ) : mName{name},
       mPinList{pin_list}
   {
@@ -43,7 +42,10 @@ public:
 
   /// @brief 名前の取得
   string
-  name() const override;
+  name() const
+  {
+    return mName;
+  }
 
   /// @brief 名前の取得
   ShString
@@ -54,13 +56,27 @@ public:
 
   /// @brief ピン数の取得
   SizeType
-  pin_num() const override;
+  pin_num() const
+  {
+    return mPinList.size();
+  }
 
   /// @brief ピンの取得
-  const ClibPin&
+  SizeType
   pin(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
-  ) const override;
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < pin_num() );
+    return mPinList[pos];
+  }
+
+  /// @brief ピン番号のリストの取得
+  const vector<SizeType>&
+  pin_list() const
+  {
+    return mPinList;
+  }
 
 
 public:
@@ -72,7 +88,7 @@ public:
   void
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
-  ) const override;
+  ) const;
 
 
 private:
@@ -84,7 +100,7 @@ private:
   ShString mName;
 
   // ピンのリスト
-  vector<const ClibPin*> mPinList;
+  vector<SizeType> mPinList;
 
 };
 

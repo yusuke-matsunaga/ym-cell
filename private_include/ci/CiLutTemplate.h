@@ -5,7 +5,7 @@
 /// @brief CiLutTemplate のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2012, 2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibLutTemplate.h"
@@ -18,8 +18,7 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @class CiLutTemplate CiLutTemplate.h "CiLutTemplate.h"
 /// @brief CiLutTemplateXXX の(擬似)基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiLutTemplate :
-  public ClibLutTemplate
+class CiLutTemplate
 {
 public:
 
@@ -33,6 +32,7 @@ public:
   }
 
   /// @brief デストラクタ
+  virtual
   ~CiLutTemplate() = default;
 
 
@@ -43,11 +43,17 @@ public:
 
   /// @brief ID番号の取得
   SizeType
-  id() const override;
+  id() const
+  {
+    return mId;
+  }
 
   /// @brief 名前の取得
   string
-  name() const override;
+  name() const
+  {
+    return mName;
+  }
 
   /// @brief 名前の取得
   ShString
@@ -56,6 +62,33 @@ public:
     return mName;
   }
 
+  /// @brief 次元数の取得
+  virtual
+  SizeType
+  dimension() const = 0;
+
+  /// @brief 変数型の取得
+  virtual
+  ClibVarType
+  variable_type(
+    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const = 0;
+
+  /// @brief インデックス数の取得
+  virtual
+  SizeType
+  index_num(
+    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
+  ) const = 0;
+
+  /// @brief デフォルトインデックス値の取得
+  virtual
+  double
+  index(
+    SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
+    SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  ) const = 0;
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -63,10 +96,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をバイナリダンプする．
+  virtual
   void
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
-  ) const override;
+  ) const;
 
 
 private:
@@ -79,53 +113,6 @@ private:
 
   // 名前
   ShString mName;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class CiLutTemplateBad CiLutTemplate.h "CiLutTemplate.h"
-/// @brief 不正なオブジェクトを表すクラス
-//////////////////////////////////////////////////////////////////////
-class CiLutTemplateBad :
-  public CiLutTemplate
-{
-public:
-
-  /// @brief コンストラクタ
-  CiLutTemplateBad() : CiLutTemplate(0, ShString()) { }
-
-  /// @brief デストラクタ
-  ~CiLutTemplateBad() = default;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 属性の取得
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 次元数の取得
-  SizeType
-  dimension() const override;
-
-  /// @brief 変数型の取得
-  ClibVarType
-  variable_type(
-    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
-  ) const override;
-
-  /// @brief インデックス数の取得
-  SizeType
-  index_num(
-    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
-  ) const override;
-
-  /// @brief デフォルトインデックス値の取得
-  double
-  index(
-    SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
-    SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
-  ) const override;
 
 };
 

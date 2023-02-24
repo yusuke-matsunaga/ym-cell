@@ -3,11 +3,13 @@
 /// @brief CiPatMgr の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiPatMgr.h"
 #include "ci/CiPatGraph.h"
+#include "ym/BinEnc.h"
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -43,9 +45,9 @@ CiPatMgr::pat_num() const
 }
 
 // @brief パタンを返す．
-const ClibPatGraph&
+const CiPatGraph&
 CiPatMgr::pat(
-  SizeType id ///< [in] パタン番号 ( 0 <= id < pat_num() )
+  SizeType id
 ) const
 {
   // CiPatGraph の定義が必要なのでヘッダファイルに書けない．
@@ -124,6 +126,28 @@ CiPatMgr::set_pat_info(
 {
   CiPatGraph& pg = mPatArray[pos];
   pg.init(rep_id, input_num, edge_list);
+}
+
+// @brief バイナリダンプを行う．
+void
+CiPatMgr::dump(
+  BinEnc& bos
+) const
+{
+  // パタングラフのノード情報のダンプ
+  SizeType n = node_num();
+  bos << n;
+  for ( auto i: Range(n) ) {
+    bos << mNodeTypeArray[i]
+	<< mEdgeArray[i * 2 + 0]
+	<< mEdgeArray[i * 2 + 1];
+  }
+
+  // パタングラフの情報のダンプ
+  bos << pat_num();
+  for ( auto& pat: mPatArray ) {
+    pat.dump(bos);
+  }
 }
 
 END_NAMESPACE_YM_CLIB

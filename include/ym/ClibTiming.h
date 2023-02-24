@@ -5,15 +5,13 @@
 /// @brief ClibTiming のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/clib.h"
-#include "ym/logic.h"
-#include "ym/BinDec.h"
-#include "ym/BinEnc.h"
+#include "ym/ClibHandle.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibResistance.h"
+#include "ym/logic.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -23,12 +21,23 @@ BEGIN_NAMESPACE_YM_CLIB
 /// @class ClibTiming ClibTiming.h "ym/ClibTiming.h"
 /// @brief タイミング情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class ClibTiming
+class ClibTiming :
+  public ClibHandle
 {
 public:
 
+  /// @brief 空のコンストラクタ
+  ClibTiming() = default;
+
+  /// @brief 内容を指定したコンストラクタ
+  ClibTiming(
+    const ClibLibraryPtr& library, ///< [in] ライブラリ
+    SizeType id                    ///< [in] ID番号
+  ) : ClibHandle{library, id}
+  {
+  }
+
   /// @brief デストラクタ
-  virtual
   ~ClibTiming() = default;
 
 
@@ -40,21 +49,18 @@ public:
   /// @brief ID番号の取得
   ///
   /// timing = cell->timing(id); の時，timing->id() = id となる．
-  virtual
   SizeType
-  id() const = 0;
+  id() const;
 
   /// @brief 型の取得
-  virtual
   ClibTimingType
-  type() const = 0;
+  type() const;
 
   /// @brief タイミング条件式の取得
   ///
   /// ない場合には定数1の式が返される．
-  virtual
   Expr
-  timing_cond() const = 0;
+  timing_cond() const;
 
 
 public:
@@ -63,24 +69,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり固有遅延の取得
-  virtual
   ClibTime
-  intrinsic_rise() const = 0;
+  intrinsic_rise() const;
 
   /// @brief 立ち下がり固有遅延の取得
-  virtual
   ClibTime
-  intrinsic_fall() const = 0;
+  intrinsic_fall() const;
 
   /// @brief 立ち上がりスロープ遅延の取得
-  virtual
   ClibTime
-  slope_rise() const = 0;
+  slope_rise() const;
 
   /// @brief 立ち下がりスロープ遅延の取得
-  virtual
   ClibTime
-  slope_fall() const = 0;
+  slope_fall() const;
 
 
 public:
@@ -89,14 +91,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延の取得
-  virtual
   ClibResistance
-  rise_resistance() const = 0;
+  rise_resistance() const;
 
   /// @brief 立ち下がり遷移遅延の取得
-  virtual
   ClibResistance
-  fall_resistance() const = 0;
+  fall_resistance() const;
 
 
 public:
@@ -105,24 +105,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延の取得
-  virtual
   ClibResistance
-  rise_pin_resistance() const = 0;
+  rise_pin_resistance() const;
 
   /// @brief 立ち下がり遷移遅延の取得
-  virtual
   ClibResistance
-  fall_pin_resistance() const = 0;
+  fall_pin_resistance() const;
 
   /// @brief 立ち上がり？？？
-  virtual
   ClibTime
-  rise_delay_intercept() const = 0;
+  rise_delay_intercept() const;
 
   /// @brief 立ち下がり？？？
-  virtual
   ClibTime
-  fall_delay_intercept() const = 0;
+  fall_delay_intercept() const;
 
 
 public:
@@ -131,47 +127,28 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延テーブルの取得
-  virtual
-  const ClibLut&
-  rise_transition() const = 0;
+  ClibLut
+  rise_transition() const;
 
   /// @brief 立ち下がり遷移遅延テーブルの取得
-  virtual
-  const ClibLut&
-  fall_transition() const = 0;
+  ClibLut
+  fall_transition() const;
 
   /// @brief 立ち上がり伝搬遅延テーブルの取得
-  virtual
-  const ClibLut&
-  rise_propagation() const = 0;
+  ClibLut
+  rise_propagation() const;
 
   /// @brief 立ち下がり伝搬遅延テーブルの取得
-  virtual
-  const ClibLut&
-  fall_propagation() const = 0;
+  ClibLut
+  fall_propagation() const;
 
   /// @brief 立ち上がりセル遅延テーブルの取得
-  virtual
-  const ClibLut&
-  cell_rise() const = 0;
+  ClibLut
+  cell_rise() const;
 
   /// @brief 立ち下がりセル遅延テーブルの取得
-  virtual
-  const ClibLut&
-  cell_fall() const = 0;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // dump/restore 関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 内容をバイナリダンプする．
-  virtual
-  void
-  dump(
-    BinEnc& s ///< [in] 出力先のストリーム
-  ) const = 0;
+  ClibLut
+  cell_fall() const;
 
 };
 

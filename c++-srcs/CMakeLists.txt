@@ -18,28 +18,34 @@ include_directories(
 # ===================================================================
 #  ソースファイルの設定
 # ===================================================================
-set (main_SOURCES
-  ClibCellLibrary.cc
-  ClibIOMap.cc
-  display.cc
+set (clib_SOURCES
+  clib/ClibBundle.cc
+  clib/ClibBus.cc
+  clib/ClibCell.cc
+  clib/ClibCellClass.cc
+  clib/ClibCellGroup.cc
+  clib/ClibCellLibrary.cc
+  clib/ClibIOMap.cc
+  clib/ClibLibraryPtr.cc
+  clib/ClibLut.cc
+  clib/ClibLutTemplate.cc
+  clib/ClibPatGraph.cc
+  clib/ClibPin.cc
+  clib/ClibTiming.cc
+  clib/display.cc
   )
 
 set (ci_SOURCES
-  ci/CiBundle.cc
-  ci/CiBus.cc
-  ci/CiBusType.cc
   ci/CiCell.cc
   ci/CiFFCell.cc
   ci/CiFLCell.cc
   ci/CiLatchCell.cc
-  ci/CiCellClass.cc
-  ci/CiCellGroup.cc
   ci/CiCellLibrary.cc
   ci/CiPin.cc
   ci/CiLut.cc
   ci/CiLutTemplate.cc
-  ci/CiPatGraph.cc
   ci/CiPatMgr.cc
+  ci/CiPatGraph.cc
   ci/CiTiming.cc
   ci/dump.cc
   ci/restore.cc
@@ -85,7 +91,7 @@ set (dotlib_SOURCES
   )
 
 set (cell_SOURCES
-  ${main_SOURCES}
+  ${clib_SOURCES}
   ${ci_SOURCES}
   ${cg_SOURCES}
   ${patmgr_SOURCES}

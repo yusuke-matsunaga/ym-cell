@@ -72,10 +72,10 @@ public:
   ) const;
 
   /// @brief シグネチャに一致するグループを探す．
-  /// @return グループを返す．
+  /// @return グループ番号を返す．
   ///
   /// なければ作る．
-  CiCellGroup*
+  SizeType
   find_group(
     const CgSignature& sig ///< [in] シグネチャ
   );
@@ -126,7 +126,7 @@ private:
   latch_init();
 
   /// @brief 代表クラスを得る．
-  CiCellClass*
+  SizeType
   _find_class(
     const CgSignature& sig ///< [in] シグネチャ
   );
@@ -140,11 +140,11 @@ private:
   // ライブラリ
   CiCellLibrary& mLibrary;
 
-  // シグネチャ文字列をキーにしてセルグループを保持する辞書
-  unordered_map<string, CiCellGroup*> mGroupDict;
+  // シグネチャ文字列をキーにしてグループ番号を保持する辞書
+  unordered_map<string, SizeType> mGroupDict;
 
-  // シグネチャ文字列をキーにしてセルクラスを保持する辞書
-  unordered_map<string, CiCellClass*> mClassDict;
+  // シグネチャ文字列をキーにしてセルクラス番号を保持する辞書
+  unordered_map<string, SizeType> mClassDict;
 
   // セルクラスと関係する論理式のリスト
   struct ClassExprList
