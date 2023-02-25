@@ -802,4 +802,40 @@ CiCellLibrary::compile()
   }
 }
 
+// @brief 内容をクリアする．
+void
+CiCellLibrary::clear()
+{
+  mName = {};
+  mBusNamingStyle = {};
+  mDate = {};
+  mRevision = {};
+  mComment = {};
+  mTimeUnit = {};
+  mVoltageUnit = {};
+  mCurrentUnit = {};
+  mPullingResistanceUnit = {};
+  mCapacitiveLoadUnit = 0.0;
+  mCapacitiveLoadUnitStr = {};
+  mLeakagePowerUnit = {};
+  mLutTemplateList.clear();
+  mRefLutTemplateList.clear();
+  mLutHash.clear();
+  mCellList.clear();
+  mRefCellList.clear();
+  mCellHash.clear();
+  mPinList.clear();
+  mPinHash.clear();
+  mBusList.clear();
+  mBusHash.clear();
+  mBundleList.clear();
+  mBundleHash.clear();
+  mGroupList.clear();
+  mRefGroupList.clear();
+  mClassList.clear();
+  mRefClassList.clear();
+  mTimingList.clear();
+  mLutList.clear();
+}
+
 END_NAMESPACE_YM_CLIB

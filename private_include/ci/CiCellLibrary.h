@@ -951,6 +951,77 @@ private:
   // restore で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 名前を読み込む．
+  void
+  restore_name(
+    BinDec& s ///< [in] 入力ストリーム
+  )
+  {
+    string name;
+    s >> name;
+    mName = name;
+  }
+
+  /// @brief 'technology' を読み込む．
+  void
+  restore_technology(
+    BinDec& s ///< [in] 入力ストリーム
+  )
+  {
+    ymuint8 tmp;
+    s >> tmp;
+    mTechnology = static_cast<ClibTechnology>(tmp);
+  }
+
+  /// @brief 遅延モデルを読み込む．
+  void
+  restore_delay_model(
+    BinDec& s ///< [in] 入力ストリーム
+  )
+  {
+    ymuint8 tmp;
+    s >> tmp;
+    mDelayModel = static_cast<ClibDelayModel>(tmp);
+  }
+
+  /// @brief 'capacitive_load_unit' を読み込む．
+  void
+  restore_capacitive_load_unit(
+    BinDec& s ///< [in] 入力ストリーム
+  )
+  {
+    double unit;
+    string ustr;
+    s >> unit
+      >> ustr;
+    mCapacitiveLoadUnit = unit;
+    mCapacitiveLoadUnitStr = ustr;
+  }
+
+  /// @brief 属性を読み込む(浮動小数点型)
+  void
+  restore_double_attr(
+    BinDec& s,              ///< [in] 入力ストリーム
+    const string& attr_name ///< [in] 属性名
+  )
+  {
+    double val;
+    s >> val;
+    set_attr(attr_name, val);
+  }
+
+  /// @brief 属性を読み込む(文字列型)．
+  void
+  restore_str_attr(
+    BinDec& s,              ///< [in] 入力ストリーム
+    const string& attr_name ///< [in] 属性名
+  )
+  {
+    string val;
+    s >> val;
+    set_attr(attr_name, val);
+  }
+
   /// @brief LUT テンプレートを読み込む．
   void
   restore_lut_template(
@@ -963,6 +1034,36 @@ private:
     BinDec& s ///< [in] 入力ストリーム
   );
 
+  /// @brief ピン情報を読み込む．
+  void
+  restore_pin(
+    BinDec& s ///< [in] 入力ストリーム
+  );
+
+  /// @brief バス情報を読み込む．
+  void
+  restore_bus(
+    BinDec& s ///< [in] 入力ストリーム
+  );
+
+  /// @brief バンドル情報を読み込む．
+  void
+  restore_bundle(
+    BinDec& s ///< [in] 入力ストリーム
+  );
+
+  /// @brief タイミング情報を読み込む．
+  void
+  restore_timing(
+    BinDec& s  ///< [in] 入力ストリーム
+  );
+
+  /// @brief LUT を読み込む．
+  void
+  restore_lut(
+    BinDec& s  ///< [in] 入力ストリーム
+  );
+
   /// @brief セルグループを読み込む．
   void
   restore_cell_group(
@@ -972,19 +1073,6 @@ private:
   /// @brief セルクラスを読み込む．
   void
   restore_cell_class(
-    BinDec& s  ///< [in] 入力ストリーム
-  );
-
-  /// @brief タイミング情報を読み込む．
-  void
-  restore_timing(
-    CiCell* cell,
-    BinDec& s  ///< [in] 入力ストリーム
-  );
-
-  /// @brief LUT を読み込む．
-  CiLut*
-  restore_lut(
     BinDec& s  ///< [in] 入力ストリーム
   );
 
@@ -1075,6 +1163,10 @@ private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をクリアする．
+  void
+  clear();
 
   /// @brief セルを登録する．
   /// @return セル番号を返す．
@@ -1184,6 +1276,12 @@ private:
   // バンドル名をキーにしたバンドル番号のハッシュ表
   CiCellPinHash mBundleHash;
 
+  // タイミング情報のリスト
+  vector<unique_ptr<CiTiming>> mTimingList;
+
+  // Lut のリスト
+  vector<unique_ptr<CiLut>> mLutList;
+
   // セルグループの所有権管理用のリスト
   vector<unique_ptr<CiCellGroup>> mGroupList;
 
@@ -1213,12 +1311,6 @@ private:
 
   // パタングラフを管理するクラス
   CiPatMgr mPatMgr;
-
-  // タイミング情報のリスト
-  vector<unique_ptr<CiTiming>> mTimingList;
-
-  // Lut のリスト
-  vector<unique_ptr<CiLut>> mLutList;
 
 };
 

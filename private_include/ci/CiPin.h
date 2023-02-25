@@ -25,6 +25,9 @@ class CiPin
 {
 public:
 
+  /// @brief 空のコンストラクタ(restore用)
+  CiPin() = default;
+
   /// @brief コンストラクタ
   CiPin(
     const ShString& name ///< [in] ピン名
@@ -195,6 +198,32 @@ public:
     BinEnc& s ///< [in] 出力先のストリーム
   ) const = 0;
 
+  /// @brief 内容を読み込む．
+  virtual
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) = 0;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief dump 用の共通情報を出力する．
+  void
+  dump_common(
+    BinEnc& s,  ///< [in] ストリーム
+    ymuint8 sig ///< [in] シグネチャ(0, 1, 2, 3)
+  ) const;
+
+  /// @brief 内容を読み込む．
+  void
+  restore_common(
+    BinDec& s ///< [in] 入力元のストリーム
+  );
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -209,18 +238,6 @@ public:
   {
     mPinId = pid;
   }
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // 下請け関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief dump 用の共通情報を出力する．
-  void
-  dump_common(
-    BinEnc& s ///< [in] ストリーム
-  ) const;
 
 
 private:
@@ -245,6 +262,9 @@ class CiInputPin :
   public CiPin
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiInputPin() = default;
 
   /// @brief コンストラクタ
   CiInputPin(
@@ -312,6 +332,12 @@ public:
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -356,6 +382,9 @@ class CiOutputPinBase :
   public CiPin
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiOutputPinBase() = default;
 
   /// @brief コンストラクタ
   CiOutputPinBase(
@@ -443,6 +472,38 @@ public:
   }
 
 
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump_base(
+    BinEnc& s, ///< [in] 出力先のストリーム
+    ymuint8 sig
+  ) const;
+
+  /// @brief 内容を読み込む．
+  void
+  restore_base(
+    BinDec& s ///< [in] 入力元のストリーム
+  )
+  {
+    restore_common(s);
+    s >> mOutputId
+      >> mFanoutLoad
+      >> mMaxFanout
+      >> mMinFanout
+      >> mMaxCapacitance
+      >> mMinCapacitance
+      >> mMaxTransition
+      >> mMinTransition;
+    mFunction.restore(s);
+    mTristate.restore(s);
+  }
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
@@ -489,6 +550,9 @@ class CiOutputPin :
   public CiOutputPinBase
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiOutputPin() = default;
 
   /// @brief コンストラクタ
   CiOutputPin(
@@ -538,6 +602,12 @@ public:
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
+
 };
 
 
@@ -551,6 +621,9 @@ class CiInoutPin :
   public CiOutputPinBase
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiInoutPin() = default;
 
   /// @brief コンストラクタ
   CiInoutPin(
@@ -630,6 +703,12 @@ public:
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -674,6 +753,9 @@ class CiInternalPin :
   public CiPin
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiInternalPin() = default;
 
   /// @brief コンストラクタ
   CiInternalPin(
@@ -722,6 +804,12 @@ public:
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
 
 
 public:

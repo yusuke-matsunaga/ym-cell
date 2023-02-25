@@ -22,6 +22,9 @@ class CiBundle
 {
 public:
 
+  /// @brief 空のコンストラクタ(restore用)
+  CiBundle() = default;
+
   /// @brief コンストラクタ
   CiBundle(
     const ShString& name,            ///< [in] 名前
@@ -89,6 +92,12 @@ public:
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
   ) const;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  );
 
 
 private:

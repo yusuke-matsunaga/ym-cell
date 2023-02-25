@@ -21,9 +21,10 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 class CiCellGroup
 {
-  friend class CiCellLibrary;
-
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiCellGroup() = default;
 
   /// @brief コンストラクタ
   CiCellGroup(
@@ -98,6 +99,12 @@ public:
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
   ) const;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  );
 
 
 public:

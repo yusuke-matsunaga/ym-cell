@@ -3,7 +3,7 @@
 /// @brief CiCellLibrary の実装ファイル(restore()関係)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2018, 2021 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiCellLibrary.h"
@@ -24,6 +24,42 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+BEGIN_NONAMESPACE
+
+// 番号のベクタの読み込み
+inline
+void
+restore_vector(
+  BinDec& s,
+  vector<SizeType>& vec
+)
+{
+  SizeType n;
+  s >> n;
+  vec.resize(n);
+  for ( SizeType i: Range(n) ) {
+    s >> vec[i];
+  }
+}
+
+// 数値のベクタの読み込み
+inline
+void
+restore_dvector(
+  BinDec& s,
+  vector<double>& vec
+)
+{
+  SizeType n;
+  s >> n;
+  vec.resize(n);
+  for ( SizeType i: Range(n) ) {
+    s >> vec[i];
+  }
+}
+
+END_NONAMESPACE
+
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellLibrary
 //////////////////////////////////////////////////////////////////////
@@ -33,130 +69,82 @@ CiCellLibrary::restore(
   istream& is
 )
 {
+  clear();
+
   BinDec bs{is};
 
-  string name;
-  bs >> name;
+  // 名前
+  restore_name(bs);
 
-  set_name(name);
+  // テクノロジ
+  restore_technology(bs);
 
-  ymuint8 tmp1;
-  ymuint8 tmp2;
-  bs >> tmp1
-     >> tmp2;
-  ClibTechnology technology = static_cast<ClibTechnology>(tmp1);
-  ClibDelayModel delay_model = static_cast<ClibDelayModel>(tmp2);
+  // 遅延モデル
+  restore_delay_model(bs);
 
-  set_technology(technology);
-  set_delay_model(delay_model);
+  // バス命名規則
+  restore_str_attr(bs, "bus_naming_style");
 
-  string bus_naming_style;
-  bs >> bus_naming_style;
+  // 日付情報
+  restore_str_attr(bs, "date");
 
-  set_attr("bus_naming_style", bus_naming_style);
+  // リビジョン情報
+  restore_str_attr(bs, "revision");
 
-  string date;
-  bs >> date;
+  // コメント
+  restore_str_attr(bs, "comment");
 
-  set_attr("date", date);
+  // 時間単位
+  restore_str_attr(bs, "time_unit");
 
-  string revision;
-  bs >> revision;
+  // 電圧単位
+  restore_str_attr(bs, "voltage_unit");
 
-  set_attr("revision", revision);
+  // 電流単位
+  restore_str_attr(bs, "current_unit");
 
-  string comment;
-  bs >> comment;
+  // 抵抗単位
+  restore_str_attr(bs, "pulling_resistance_unit");
 
-  set_attr("comment", comment);
+  // 容量単位
+  restore_capacitive_load_unit(bs);
 
-  string time_unit;
-  bs >> time_unit;
-
-  set_attr("time_unit", time_unit);
-
-  string voltage_unit;
-  bs >> voltage_unit;
-
-  set_attr("voltage_unit", voltage_unit);
-
-  string current_unit;
-  bs >> current_unit;
-
-  set_attr("current_unit", current_unit);
-
-  string pulling_resistance_unit;
-  bs >> pulling_resistance_unit;
-
-  set_attr("pulling_resistance_unit", pulling_resistance_unit);
-
-  double capacitive_unit;
-  string capacitive_unit_str;
-  bs >> capacitive_unit
-     >> capacitive_unit_str;
-
-  set_capacitive_load_unit(capacitive_unit, capacitive_unit_str);
-
-  string leakage_power_unit;
-  bs >> leakage_power_unit;
-
-  set_attr("leakage_power_unit", leakage_power_unit);
+  // 電力単位
+  restore_str_attr(bs, "leakage_power_unit");
 
   // LUTテンプレート情報の読み込み
-  {
-    SizeType lut_num;
-    bs >> lut_num;
-    for ( auto _: Range(lut_num) ) {
-      restore_lut_template(bs);
-    }
-  }
+  restore_lut_template(bs);
 
   // セル情報の読み込み
-  {
-    SizeType nc;
-    bs >> nc;
-    mCellList.clear();
-    mRefCellList.clear();
-    mCellHash.clear();
-    mCellList.reserve(nc);
-    mRefCellList.reserve(nc);
-    for ( auto cell_id: Range(nc) ) {
-      restore_cell(bs);
-    }
-  }
+  restore_cell(bs);
 
-  // セルクラス情報の読み込み
-  {
-    SizeType nc;
-    bs >> nc;
-    mClassList.clear();
-    mClassList.reserve(nc);
-    for ( SizeType _: Range(nc) ) {
-      restore_cell_class(bs);
-    }
-  }
+  // ピン情報の読み込み
+  restore_pin(bs);
+
+  // バス情報の読み込み
+  restore_bus(bs);
+
+  // バンドル情報の読み込み
+  restore_bundle(bs);
+
+  // タイミング情報の読み込み
+  restore_timing(bs);
+
+  // LUT の読み込み
+  restore_lut(bs);
 
   // セルグループ情報の読み込み
-  {
-    SizeType ng;
-    bs >> ng;
-    mGroupList.clear();
-    mGroupList.reserve(ng);
-    for ( auto _: Range(ng) ) {
-      restore_cell_group(bs);
-    }
-  }
+  restore_cell_group(bs);
 
-  // 組み込み型の設定
+  // セルクラス情報の読み込み
+  restore_cell_class(bs);
+
+  // 組み込み型の読み込み
   for ( auto id: Range(4) ) {
     bs >> mLogicGroup[id];
   }
-  for ( SizeType id = 0; id < mSimpleFFClass.size(); ++ id ) {
-    bs >> mSimpleFFClass[id];
-  }
-  for ( SizeType id = 0; id < mSimpleLatchClass.size(); ++ id ) {
-    bs >> mSimpleLatchClass[id];
-  }
+  restore_vector(bs, mSimpleFFClass);
+  restore_vector(bs, mSimpleLatchClass);
 
   // パタングラフの情報の設定
   mPatMgr.restore(bs);
@@ -190,41 +178,46 @@ CiCellLibrary::restore_lut_template(
   BinDec& s
 )
 {
-  string name;
-  ymuint8 d;
-  s >> name
-    >> d;
-  ShString shname(name);
-  ClibVarType var_type1;
-  ClibVarType var_type2;
-  ClibVarType var_type3;
-  vector<double> index_array1;
-  vector<double> index_array2;
-  vector<double> index_array3;
-  switch ( d ) {
-  case 1:
-    var_type1 = restore_1dim(s, index_array1);
-    add_lut_template1(shname,
-		      var_type1, index_array1);
-    break;
+  // 要素数
+  SizeType n;
+  s >> n;
 
-  case 2:
-    var_type1 = restore_1dim(s, index_array1);
-    var_type2 = restore_1dim(s, index_array2);
-    add_lut_template2(shname,
-		      var_type1, index_array1,
-		      var_type2, index_array2);
-    break;
+  for ( auto _: Range(n) ) {
+    ShString name;
+    ymuint8 d;
+    s >> name
+      >> d;
+    ClibVarType var_type1;
+    ClibVarType var_type2;
+    ClibVarType var_type3;
+    vector<double> index_array1;
+    vector<double> index_array2;
+    vector<double> index_array3;
+    switch ( d ) {
+    case 1:
+      var_type1 = restore_1dim(s, index_array1);
+      add_lut_template1(name,
+			var_type1, index_array1);
+      break;
 
-  case 3:
-    var_type1 = restore_1dim(s, index_array1);
-    var_type2 = restore_1dim(s, index_array2);
-    var_type3 = restore_1dim(s, index_array3);
-    add_lut_template3(shname,
-		      var_type1, index_array1,
-		      var_type2, index_array2,
-		      var_type3, index_array3);
-    break;
+    case 2:
+      var_type1 = restore_1dim(s, index_array1);
+      var_type2 = restore_1dim(s, index_array2);
+      add_lut_template2(name,
+			var_type1, index_array1,
+			var_type2, index_array2);
+      break;
+
+    case 3:
+      var_type1 = restore_1dim(s, index_array1);
+      var_type2 = restore_1dim(s, index_array2);
+      var_type3 = restore_1dim(s, index_array3);
+      add_lut_template3(name,
+			var_type1, index_array1,
+			var_type2, index_array2,
+			var_type3, index_array3);
+      break;
+    }
   }
 }
 
@@ -234,221 +227,240 @@ CiCellLibrary::restore_cell(
   BinDec& s
 )
 {
-  string name;
-  ClibArea area;
-  s >> name
-    >> area;
-
-  ShString shname(name);
-
-  // セル本体の読み込み
-  ymuint8 type;
-  s >> type;
-  SizeType cell_id{CLIB_NULLID};
-  switch ( type ) {
-  case 0:
-    cell_id = add_logic_cell(shname, area);
-    break;
-
-  case 1:
-    {
-      string var1;
-      string var2;
-      Expr clocked_on;
-      Expr clocked_on_also;
-      Expr next_state;
-      Expr clear;
-      Expr preset;
-      ymuint8 clear_preset_var1;
-      ymuint8 clear_preset_var2;
-      s >> var1 >> var2;
-      clocked_on.restore(s);
-      clocked_on_also.restore(s);
-      next_state.restore(s);
-      clear.restore(s);
-      preset.restore(s);
-      s >> clear_preset_var1
-	>> clear_preset_var2;
-      cell_id = add_ff_cell(shname, area,
-			    ShString{var1}, ShString{var2},
-			    clocked_on, clocked_on_also, next_state,
-			    clear, preset,
-			    static_cast<ClibCPV>(clear_preset_var1),
-			    static_cast<ClibCPV>(clear_preset_var2));
-    }
-    break;
-
-  case 2:
-    {
-      string var1;
-      string var2;
-      Expr enable;
-      Expr enable_also;
-      Expr data_in;
-      Expr clear;
-      Expr preset;
-      ymuint8 clear_preset_var1;
-      ymuint8 clear_preset_var2;
-      s >> var1 >> var2;
-      enable.restore(s);
-      enable_also.restore(s);
-      data_in.restore(s);
-      clear.restore(s);
-      preset.restore(s);
-      s >> clear_preset_var1
-	>> clear_preset_var2;
-      cell_id = add_latch_cell(shname, area,
-			       ShString{var1}, ShString{var2},
-			       enable, enable_also, data_in,
-			       clear, preset,
-			       static_cast<ClibCPV>(clear_preset_var1),
-			       static_cast<ClibCPV>(clear_preset_var2));
-    }
-    break;
-
-  case 3:
-    {
-#warning "TODO: 未完"
-    }
-    break;
-  }
-
-  // 入力ピンの読み込み
-  SizeType ni;
-  s >> ni;
-  for ( auto _: Range(ni) ) {
-    string name;
-    ClibCapacitance cap;
-    ClibCapacitance r_cap;
-    ClibCapacitance f_cap;
+  // 要素数
+  SizeType nc;
+  s >> nc;
+  mCellList.reserve(nc);
+  mRefCellList.reserve(nc);
+  for ( auto _: Range(nc) ) {
+    ShString name;
+    ClibArea area;
     s >> name
-      >> cap
-      >> r_cap
-      >> f_cap;
-    add_input(cell_id, ShString(name),
-	      cap, r_cap, f_cap);
-  }
+      >> area;
 
-  // 出力ピンの読み込み
-  SizeType no;
-  s >> no;
-  for ( auto _: Range(no) ) {
-    string name;
-    ClibCapacitance max_f;
-    ClibCapacitance min_f;
-    ClibCapacitance max_c;
-    ClibCapacitance min_c;
-    ClibTime max_t;
-    ClibTime min_t;
-    Expr logic_expr;
-    Expr tristate_expr;
-    s >> name
-      >> max_f
-      >> min_f
-      >> max_c
-      >> min_c
-      >> max_t
-      >> min_t;
-    logic_expr.restore(s);
-    tristate_expr.restore(s);
-    add_output(cell_id, ShString(name),
-	       max_f, min_f,
-	       max_c, min_c,
-	       max_t, min_t,
-	       logic_expr,
-	       tristate_expr);
-  }
+    SizeType cell_id{CLIB_NULLID};
 
-  // 入出力ピンの読み込み
-  SizeType nio;
-  s >> nio;
-  for ( auto _: Range(nio) ) {
-    string name;
-    ClibCapacitance cap;
-    ClibCapacitance r_cap;
-    ClibCapacitance f_cap;
-    ClibCapacitance max_f;
-    ClibCapacitance min_f;
-    ClibCapacitance max_c;
-    ClibCapacitance min_c;
-    ClibTime max_t;
-    ClibTime min_t;
-    Expr logic_expr;
-    Expr tristate_expr;
-    s >> name
-      >> cap
-      >> r_cap
-      >> f_cap
-      >> max_f
-      >> min_f
-      >> max_c
-      >> min_c
-      >> max_t
-      >> min_t;
-    logic_expr.restore(s);
-    tristate_expr.restore(s);
-    add_inout(cell_id, ShString(name),
-	      cap, r_cap, f_cap,
-	      max_f, min_f,
-	      max_c, min_c,
-	      max_t, min_t,
-	      logic_expr,
-	      tristate_expr);
-  }
+    // セル本体の読み込み
+    ymuint8 type;
+    s >> type;
+    switch ( type ) {
+    case 0: // logic
+      cell_id = add_logic_cell(name, area);
+      break;
 
-  // 内部ピンの読み込み
-  SizeType nit;
-  s >> nit;
-  for ( auto _: Range(nit) ) {
-    string name;
-    s >> name;
-    add_internal(cell_id, ShString(name));
-  }
-
-  // バスピンの読み込み
-  SizeType nbus;
-  s >> nbus;
-  for ( auto _: Range(nbus) ) {
-    ;
-  }
-
-  // バンドルピンの読み込み
-  SizeType nbundle;
-  s >> nbundle;
-  for ( auto _: Range(nbundle) ) {
-    ;
-  }
-
-  auto cell = mCellList[cell_id].get();
-
-  SizeType ni2 = cell->input2_num();
-  SizeType no2 = cell->output2_num();
-  cell->init_timing_map(ni2, no2);
-
-  // タイミング情報の読み込み
-  SizeType nt;
-  s >> nt;
-  for ( auto tid: Range(nt) ) {
-    restore_timing(cell, s);
-  }
-
-  // 個別の条件ごとのタイミング情報の設定
-  for ( int ipos: Range(ni2) ) {
-    for ( int opos: Range(no2) ) {
-      for ( auto sense: { ClibTimingSense::positive_unate,
-			  ClibTimingSense::negative_unate } ) {
-	SizeType nt;
-	s >> nt;
-	vector<SizeType> timing_id_list;
-	timing_id_list.reserve(nt);
-	for ( auto _: Range(nt) ) {
-	  SizeType id;
-	  s >> id;
-	  timing_id_list.push_back(id);
-	}
-	cell->set_timing(ipos, opos, sense, timing_id_list);
+    case 1: // FF
+      {
+	ShString var1;
+	ShString var2;
+	Expr clocked_on;
+	Expr clocked_on_also;
+	Expr next_state;
+	Expr clear;
+	Expr preset;
+	ymuint8 clear_preset_var1;
+	ymuint8 clear_preset_var2;
+	s >> var1 >> var2;
+	clocked_on.restore(s);
+	clocked_on_also.restore(s);
+	next_state.restore(s);
+	clear.restore(s);
+	preset.restore(s);
+	s >> clear_preset_var1
+	  >> clear_preset_var2;
+	cell_id = add_ff_cell(name, area,
+			      var1, var2,
+			      clocked_on, clocked_on_also, next_state,
+			      clear, preset,
+			      static_cast<ClibCPV>(clear_preset_var1),
+			      static_cast<ClibCPV>(clear_preset_var2));
       }
+      break;
+
+    case 2: // latch
+      {
+	ShString var1;
+	ShString var2;
+	Expr enable;
+	Expr enable_also;
+	Expr data_in;
+	Expr clear;
+	Expr preset;
+	ymuint8 clear_preset_var1;
+	ymuint8 clear_preset_var2;
+	s >> var1 >> var2;
+	enable.restore(s);
+	enable_also.restore(s);
+	data_in.restore(s);
+	clear.restore(s);
+	preset.restore(s);
+	s >> clear_preset_var1
+	  >> clear_preset_var2;
+	cell_id = add_latch_cell(name, area,
+				 var1, var2,
+				 enable, enable_also, data_in,
+				 clear, preset,
+				 static_cast<ClibCPV>(clear_preset_var1),
+				 static_cast<ClibCPV>(clear_preset_var2));
+      }
+      break;
+
+    case 3: // FSM
+      {
+#warning "TODO: 未完"
+      }
+      break;
+
+    default:
+      ASSERT_NOT_REACHED;
     }
+
+    auto& cell = mCellList[cell_id];
+    cell->restore(s);
+  }
+}
+
+// @brief ピン情報を読み込む．
+void
+CiCellLibrary::restore_pin(
+  BinDec& s
+)
+{
+  SizeType n;
+  s >> n;
+  mPinList.reserve(n);
+  for ( SizeType _: Range(n) ) {
+    ymuint8 sig;
+    s >> sig;
+    unique_ptr<CiPin> pin;
+    switch ( sig ) {
+    case 0: // 入力ピン
+      pin = unique_ptr<CiPin>{new CiInputPin};
+      break;
+
+    case 1: // 出力ピン
+      pin = unique_ptr<CiPin>{new CiOutputPin};
+      break;
+
+    case 2: // 入出力ピン
+      pin = unique_ptr<CiPin>{new CiInoutPin};
+      break;
+
+    case 3: // 内部ピン
+      pin = unique_ptr<CiPin>{new CiInternalPin};
+      break;
+
+    default:
+      ASSERT_NOT_REACHED;
+      break;
+    }
+    pin->restore(s);
+    mPinList.push_back(std::move(pin));
+  }
+}
+
+// @brief バス情報を読み込む．
+void
+CiCellLibrary::restore_bus(
+  BinDec& s
+)
+{
+  SizeType n;
+  s >> n;
+  mBusList.reserve(n);
+  for ( SizeType _: Range(n) ) {
+    unique_ptr<CiBus> bus{new CiBus};
+    bus->restore(s);
+    mBusList.push_back(std::move(bus));
+  }
+}
+
+// @brief バンドル情報を読み込む．
+void
+CiCellLibrary::restore_bundle(
+  BinDec& s
+)
+{
+  SizeType n;
+  s >> n;
+  mBundleList.reserve(n);
+  for ( SizeType _: Range(n) ) {
+    unique_ptr<CiBundle> bundle{new CiBundle};
+    bundle->restore(s);
+    mBundleList.push_back(std::move(bundle));
+  }
+}
+
+// @brief タイミング情報を読み込む．
+void
+CiCellLibrary::restore_timing(
+  BinDec& s
+)
+{
+  SizeType n;
+  s >> n;
+  mTimingList.reserve(n);
+  for ( SizeType _: Range(n) ) {
+    ymuint8 ttype;
+    s >> ttype;
+    unique_ptr<CiTiming> timing;
+    switch ( ttype ) {
+    case 0:
+      timing = unique_ptr<CiTiming>{new CiTimingGeneric};
+      break;
+
+    case 1:
+      timing = unique_ptr<CiTiming>{new CiTimingPiecewise};
+      break;
+
+    case 2:
+      timing = unique_ptr<CiTiming>{new CiTimingLut1};
+      break;
+
+    case 3:
+      timing = unique_ptr<CiTiming>{new CiTimingLut2};
+      break;
+
+    default:
+      ASSERT_NOT_REACHED;
+      break;
+    }
+    timing->restore(s);
+    mTimingList.push_back(std::move(timing));
+  }
+}
+
+// @brief LUT を読み込む．
+void
+CiCellLibrary::restore_lut(
+  BinDec& s
+)
+{
+  SizeType n;
+  s >> n;
+  mLutList.reserve(n);
+  for ( SizeType i: Range(n)) {
+    ymuint8 d;
+    s >> d;
+    unique_ptr<CiLut> lut;
+    switch ( d ) {
+    case 1:
+      lut = unique_ptr<CiLut>{new CiLut1D};
+      break;
+
+    case 2:
+      lut = unique_ptr<CiLut>{new CiLut2D};
+      break;
+
+    case 3:
+      lut = unique_ptr<CiLut>{new CiLut3D};
+      break;
+
+    default:
+      ASSERT_NOT_REACHED;
+      break;
+    }
+    lut->restore(s);
+    mLutList.push_back(std::move(lut));
   }
 }
 
@@ -458,20 +470,13 @@ CiCellLibrary::restore_cell_group(
   BinDec& s
 )
 {
-  SizeType rep_id;
-  s >> rep_id;
-  ClibIOMap iomap;
-  iomap.restore(s);
-
-  auto gid = add_cell_group(rep_id, iomap);
-  auto group = mGroupList[gid].get();
-
-  SizeType cell_num;
-  s >> cell_num;
-  for ( auto _: Range(cell_num) ) {
-    SizeType cell_id;
-    s >> cell_id;
-    group->add_cell(cell_id);
+  SizeType ng;
+  s >> ng;
+  mGroupList.reserve(ng);
+  for ( auto _: Range(ng) ) {
+    auto group = unique_ptr<CiCellGroup>{new CiCellGroup};
+    group->restore(s);
+    mGroupList.push_back(std::move(group));
   }
 }
 
@@ -481,238 +486,342 @@ CiCellLibrary::restore_cell_class(
   BinDec& s
 )
 {
-  SizeType idmap_num;
-  s >> idmap_num;
-  vector<ClibIOMap> idmap_list(idmap_num);
-  for ( auto i: Range(idmap_num) ) {
-    idmap_list[i].restore(s);
+  SizeType nc;
+  s >> nc;
+  mClassList.reserve(nc);
+  for ( auto _: Range(nc) ) {
+    auto cc = unique_ptr<CiCellClass>{new CiCellClass};
+    cc->restore(s);
+    mClassList.push_back(std::move(cc));
   }
-  add_cell_class(idmap_list);
 }
 
-// @brief タイミング情報を読み込む．
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
 void
-CiCellLibrary::restore_timing(
-  CiCell* cell,
+CiCell::restore(
   BinDec& s
 )
 {
-  ymuint8 ttype;
-  ymuint8 tmp;
-  Expr cond;
-  s >> ttype
-    >> tmp;
-  cond.restore(s);
+  s >> mInputNum
+    >> mOutputNum
+    >> mInoutNum;
 
-  CiTiming* timing = nullptr;
-  ClibTimingType timing_type = static_cast<ClibTimingType>(tmp);
-  SizeType tid;
-  switch ( ttype ) {
-  case 0:
-    {
-      ClibTime i_r;
-      ClibTime i_f;
-      ClibTime s_r;
-      ClibTime s_f;
-      ClibResistance r_r;
-      ClibResistance f_r;
-      s >> i_r
-	>> i_f
-	>> s_r
-	>> s_f
-	>> r_r
-	>> f_r;
-      tid = add_timing_generic(timing_type,
-			       cond,
-			       i_r, i_f,
-			       s_r, s_f,
-			       r_r, f_r);
-    }
-    break;
+  // ピンリスト
+  restore_vector(s, mPinList);
 
-  case 1:
-    {
-#if 0 // 不明
-      ClibTime i_r;
-      ClibTime i_f;
-      ClibTime s_r;
-      ClibTime s_f;
-      s >> i_r
-	>> i_f
-	>> s_r
-	>> s_f;
-      tid = new_timing_piecewise(timing_type,
-				 cond,
-				 i_r, i_f,
-				 s_r, s_f);
-#endif
-    }
-    break;
+  // 入力ピンリスト
+  restore_vector(s, mInputList);
 
-  case 2:
-    {
-      SizeType cell_rise;
-      SizeType cell_fall;
-      SizeType rise_transition;
-      SizeType fall_transition;
-      s >> cell_rise
-	>> cell_fall
-	>> rise_transition
-	>> fall_transition;
-      tid = add_timing_lut1(timing_type,
-			    cond,
-			    cell_rise,
-			    cell_fall,
-			    rise_transition,
-			    fall_transition);
-    }
-    break;
+  // 出力ピンリスト
+  restore_vector(s, mOutputList);
 
-  case 3:
-    {
-      SizeType rise_transition;
-      SizeType fall_transition;
-      SizeType rise_propagation;
-      SizeType fall_propagation;
-      s >> rise_transition
-	>> fall_transition
-	>> rise_propagation
-	>> fall_propagation;
-      tid = add_timing_lut2(timing_type,
-			    cond,
-			    rise_transition,
-			    fall_transition,
-			    rise_propagation,
-			    fall_propagation);
-    }
-    break;
+  // 内部ピンリスト
+  restore_vector(s, mInternalList);
 
-  default:
-    ASSERT_NOT_REACHED;
-    break;
+  // バス番号のリスト
+  restore_vector(s, mBusList);
+
+  // バンドル番号のリスト
+  restore_vector(s, mBundleList);
+
+  // タイミング番号のリスト
+  restore_vector(s, mTimingList);
+
+  // タイミングマップ
+  SizeType n;
+  s >> n;
+  mTimingMap.resize(n);
+  for ( SizeType i: Range(n) ) {
+    restore_vector(s, mTimingMap[i]);
   }
 }
 
-// @brief LUT を読み込む．
-CiLut*
-CiCellLibrary::restore_lut(
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiPin
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiPin::restore_common(
+  BinDec& s ///< [in] 入力元のストリーム
+)
+{
+  s >> mName
+    >> mPinId;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiInputPin
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiInputPin::restore(
   BinDec& s
 )
 {
-  SizeType templ_id;
-  s >> templ_id;
-  if ( templ_id == CLIB_NULLID ) {
-    return nullptr;
+  restore_common(s);
+  s >> mInputId
+    >> mCapacitance
+    >> mRiseCapacitance
+    >> mFallCapacitance;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiOutputPin
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiOutputPin::restore(
+  BinDec& s
+)
+{
+  restore_base(s);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiInoutPin
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiInoutPin::restore(
+  BinDec& s
+)
+{
+  restore_base(s);
+  s >> mInputId
+    >> mCapacitance
+    >> mRiseCapacitance
+    >> mFallCapacitance;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiInternalPin
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiInternalPin::restore(
+  BinDec& s
+)
+{
+  restore_common(s);
+  s >> mInternalId;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiBus
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiBus::restore(
+  BinDec& s
+)
+{
+  s >> mName
+    >> mBusType;
+  restore_vector(s, mPinList);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiBundle
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiBundle::restore(
+  BinDec& s
+)
+{
+  s >> mName;
+  restore_vector(s, mPinList);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTiming
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiTiming::restore_common(
+  BinDec& s
+)
+{
+  ymuint8 tmp;
+  s >> mId
+    >> tmp;
+  mType = static_cast<ClibTimingType>(tmp);
+  mCond.restore(s);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingGeneric
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiTimingGeneric::restore(
+  BinDec& s
+)
+{
+  restore_GP(s);
+  s >> mRiseResistance
+    >> mFallResistance;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingPiecewise
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiTimingPiecewise::restore(
+  BinDec& s
+)
+{
+  restore_GP(s);
+  s >> mRisePinResistance
+    >> mFallPinResistance;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingLut1
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiTimingLut1::restore(
+  BinDec& s
+)
+{
+  restore_LUT(s);
+  s >> mCellRise
+    >> mCellFall;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingLut2
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiTimingLut2::restore(
+  BinDec& s
+)
+{
+  restore_LUT(s);
+  s >> mRisePropagation
+    >> mFallPropagation;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiCellGroup
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiCellGroup::restore(
+  BinDec& s
+)
+{
+  s >> mRepClass;
+  mIoMap.restore(s);
+  restore_vector(s, mCellList);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiCellclass
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiCellClass::restore(
+  BinDec& s
+)
+{
+  SizeType n;
+  s >> n;
+  mIdMapList.resize(n);
+  for ( auto i: Range(n) ) {
+    mIdMapList[i].restore(s);
   }
+  restore_vector(s, mGroupList);
+}
 
-  auto templ = mLutTemplateList[templ_id].get();
 
-  SizeType d = templ->dimension();
-  switch ( d ) {
-  case 1:
-    {
-      ymuint8 n;
-      s >> n;
-      vector<double> index_array(n);
-      for ( auto i: Range(n) ) {
-	double val;
-	s >> val;
-	index_array[i] = val;
-      }
+//////////////////////////////////////////////////////////////////////
+// クラス CiLut1D
+//////////////////////////////////////////////////////////////////////
 
-      vector<double> value_array(n);
-      for ( auto i: Range(n) ) {
-	double val;
-	s >> val;
-	value_array[i] = val;
-      }
-      return new_lut1(templ,
-		      value_array,
-		      index_array);
-    }
+// @brief 内容を読み込む．
+void
+CiLut1D::restore(
+  BinDec& s
+)
+{
+  restore_common(s);
+  restore_dvector(s, mIndexArray);
+  restore_dvector(s, mValueArray);
+  init();
+}
 
-  case 2:
-    {
-      ymuint8 n1;
-      s >> n1;
-      vector<double> index_array1(n1);
-      for ( auto i: Range(n1) ) {
-	double val;
-	s >> val;
-	index_array1[i] = val;
-      }
 
-      ymuint8 n2;
-      s >> n2;
-      vector<double> index_array2(n2);
-      for ( auto i: Range(n2) ) {
-	double val;
-	s >> val;
-	index_array2[i] = val;
-      }
+//////////////////////////////////////////////////////////////////////
+// クラス CiLut2D
+//////////////////////////////////////////////////////////////////////
 
-      SizeType n = n1 * n2;
-      vector<double> value_array(n);
-      for ( auto i: Range(n) ) {
-	double val;
-	s >> val;
-	value_array[i] = val;
-      }
-      return new_lut2(templ,
-		      value_array,
-		      index_array1,
-		      index_array2);
-    }
+// @brief 内容を読み込む．
+void
+CiLut2D::restore(
+  BinDec& s
+)
+{
+  restore_common(s);
+  restore_dvector(s, mIndexArray[0]);
+  restore_dvector(s, mIndexArray[1]);
+  restore_dvector(s, mValueArray);
+  init();
+}
 
-  case 3:
-    {
-      ymuint8 n1;
-      s >> n1;
-      vector<double> index_array1(n1);
-      for ( auto i: Range(n1) ) {
-	double val;
-	s >> val;
-	index_array1[i] = val;
-      }
 
-      ymuint8 n2;
-      s	>> n2;
-      vector<double> index_array2(n2);
-      for ( auto i: Range(n2) ) {
-	double val;
-	s >> val;
-	index_array2[i] = val;
-      }
+//////////////////////////////////////////////////////////////////////
+// クラス CiLut3D
+//////////////////////////////////////////////////////////////////////
 
-      ymuint8 n3;
-      s >> n3;
-      vector<double> index_array3(n3);
-      for ( auto i: Range(n3) ) {
-	double val;
-	s >> val;
-	index_array3[i] = val;
-      }
-
-      int n = n1 * n2 * n3;
-      vector<double> value_array(n);
-      for ( auto i: Range(n) ) {
-	double val;
-	s >> val;
-	value_array[i] = val;
-      }
-
-      return new_lut3(templ,
-		      value_array,
-		      index_array1,
-		      index_array2,
-		      index_array3);
-    }
-
-  default:
-    ASSERT_NOT_REACHED;
-    break;
-  }
-  return nullptr;
+// @brief 内容を読み込む．
+void
+CiLut3D::restore(
+  BinDec& s
+)
+{
+  restore_common(s);
+  restore_dvector(s, mIndexArray[0]);
+  restore_dvector(s, mIndexArray[1]);
+  restore_dvector(s, mIndexArray[2]);
+  restore_dvector(s, mValueArray);
+  init();
 }
 
 

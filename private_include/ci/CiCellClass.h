@@ -22,6 +22,9 @@ class CiCellClass
 {
 public:
 
+  /// @brief 空のコンストラクタ(restore用)
+  CiCellClass() = default;
+
   /// @brief コンストラクタ
   CiCellClass(
     const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換リスト
@@ -104,6 +107,12 @@ public:
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
   ) const;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  );
 
 
 public:

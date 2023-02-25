@@ -31,8 +31,6 @@ class CgSignature;
 //////////////////////////////////////////////////////////////////////
 class CiCell
 {
-  friend class CiCellLibrary;
-
 public:
 
   /// @brief コンストラクタ
@@ -430,6 +428,13 @@ public:
   Expr
   data_in_expr() const;
 
+  /// @brief シグネチャを返す．
+  virtual
+  CgSignature
+  make_signature(
+    const CiCellLibrary* library ///< [in] ライブラリ
+  ) const;
+
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -446,6 +451,12 @@ public:
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
   ) const;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  );
 
 
 public:
@@ -574,13 +585,6 @@ public:
     ClibTimingSense timing_sense,       ///< [in] タイミング条件
     const vector<SizeType>& timing_list ///< [in] 設定するタイミング番号のリスト
   );
-
-  /// @brief シグネチャを返す．
-  virtual
-  CgSignature
-  make_signature(
-    const CiCellLibrary* library ///< [in] ライブラリ
-  ) const;
 
 
 private:

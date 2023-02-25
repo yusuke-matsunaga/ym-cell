@@ -10,6 +10,7 @@
 
 #include "ym/clib.h"
 #include "ym/BinEnc.h"
+#include "ym/BinDec.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -20,9 +21,10 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 class CiLut
 {
-  friend class CiCellLibrary;
-
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiLut() = default;
 
   /// @brief コンストラクタ
   CiLut(
@@ -92,11 +94,42 @@ public:
     BinEnc& s ///< [in] 出力先のストリーム
   ) const = 0;
 
+  /// @brief 内容を読み込む．
+  virtual
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) = 0;
+
 
 protected:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 実際のダンプを行う関数
+  void
+  dump_common(
+    BinEnc& s, ///< [in] 出力先のストリーム
+    ymuint8 d  ///< [in] 次元数
+  ) const;
+
+  /// @brief 内容を読み込む．
+  void
+  restore_common(
+    BinDec& s ///< [in] 入力元のストリーム
+  )
+  {
+    s >> mTemplate;
+  }
+
+  /// @brief mIndexWidthArray を初期化する．
+  static
+  void
+  init(
+    const vector<double>& index_array,
+    vector<double>& index_width_array
+  );
 
   /// @brief val に対応する区間を求める．
   static
@@ -125,9 +158,10 @@ private:
 class CiLut1D :
   public CiLut
 {
-  friend class CiCellLibrary;
-
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiLut1D() = default;
 
   /// @brief コンストラクタ
   CiLut1D(
@@ -184,6 +218,25 @@ public:
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief mIndexWidthArray を初期化する．
+  void
+  init()
+  {
+    CiLut::init(mIndexArray, mIndexWidthArray);
+  }
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -209,9 +262,10 @@ private:
 class CiLut2D :
   public CiLut
 {
-  friend class CiCellLibrary;
+public:
 
-private:
+  /// @brief 空のコンストラクタ(restore用)
+  CiLut2D() = default;
 
   /// @brief コンストラクタ
   CiLut2D(
@@ -269,11 +323,26 @@ public:
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief mIndexWidthArray を初期化する．
+  void
+  init()
+  {
+    for ( SizeType i = 0; i < 2; ++ i ) {
+      CiLut::init(mIndexArray[i], mIndexWidthArray[i]);
+    }
+  }
 
   /// @brief mValueArray のインデックスを計算する．
   SizeType
@@ -310,9 +379,10 @@ private:
 class CiLut3D :
   public CiLut
 {
-  friend class CiCellLibrary;
+public:
 
-private:
+  /// @brief 空のコンストラクタ(restore用)
+  CiLut3D() = default;
 
   /// @brief コンストラクタ
   CiLut3D(
@@ -371,11 +441,26 @@ public:
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief mIndexWidthArray を初期化する．
+  void
+  init()
+  {
+    for ( SizeType i = 0; i < 3; ++ i ) {
+      CiLut::init(mIndexArray[i], mIndexWidthArray[i]);
+    }
+  }
 
   /// @brief mValueArray のインデックスを計算する．
   SizeType

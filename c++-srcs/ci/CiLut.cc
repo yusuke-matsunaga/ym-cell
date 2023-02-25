@@ -16,6 +16,20 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiLut
 //////////////////////////////////////////////////////////////////////
 
+// @brief mIndexWidthArray を初期化する．
+void
+CiLut::init(
+  const vector<double>& index_array,
+  vector<double>& index_width_array
+)
+{
+  SizeType n = index_array.size();
+  index_width_array.resize(n - 1);
+  for ( SizeType i: Range(n - 1) ) {
+    index_width_array[i] = index_array[i + 1] - index_array[i];
+  }
+}
+
 // @brief val に対応する区間を求める．
 SizeType
 CiLut::search(
@@ -57,11 +71,10 @@ CiLut1D::CiLut1D(
     mIndexArray{index_array},
     mIndexWidthArray(index_array.size() - 1)
 {
+  init();
+
   SizeType n = index_array.size();
   ASSERT_COND( value_array.size() == n );
-  for ( auto i: Range(n - 1) ) {
-    mIndexWidthArray[i] = mIndexArray[i + 1] - mIndexArray[i];
-  }
 }
 
 // @brief インデックス数の取得
@@ -135,13 +148,7 @@ CiLut2D::CiLut2D(
     mValueArray{value_array},
     mIndexArray{index_array1, index_array2}
 {
-  for ( SizeType b = 0; b < 2; ++ b ) {
-    SizeType n1 = mIndexArray[b].size();
-    mIndexWidthArray[b].resize(n1 - 1);
-    for ( auto i: Range(n1 - 1) ) {
-      mIndexWidthArray[b][i] = mIndexArray[b][i + 1] - mIndexArray[b][i];
-    }
-  }
+  init();
 
   SizeType n = mIndexArray[0].size() * mIndexArray[1].size();
   ASSERT_COND( value_array.size() == n );
@@ -235,13 +242,7 @@ CiLut3D::CiLut3D(
     mValueArray{value_array},
     mIndexArray{index_array1, index_array2, index_array3}
 {
-  for ( SizeType b = 0; b < 3; ++ b ) {
-    SizeType n1 = mIndexArray[b].size();
-    mIndexWidthArray[b].resize(n1 - 1);
-    for ( auto i: Range(n1 - 1) ) {
-      mIndexWidthArray[b][i] = mIndexArray[b][i + 1] - mIndexArray[b][i];
-    }
-  }
+  init();
 
   SizeType n = mIndexArray[0].size() * mIndexArray[1].size() * mIndexArray[2].size();;
   ASSERT_COND( value_array.size() == n );

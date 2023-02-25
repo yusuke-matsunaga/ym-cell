@@ -21,8 +21,6 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 class CiBusType
 {
-  friend class CiCellLibrary;
-
 private:
 
   /// @brief コンストラクタ

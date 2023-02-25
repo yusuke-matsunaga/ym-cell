@@ -19,6 +19,39 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+BEGIN_NONAMESPACE
+
+// 番号のベクタをダンプする．
+inline
+void
+dump_vector(
+  BinEnc& s,
+  const vector<SizeType>& vec
+)
+{
+  s << vec.size();
+  for ( auto v: vec ) {
+    s << v;
+  }
+}
+
+// 数値のベクタをダンプする．
+inline
+void
+dump_dvector(
+  BinEnc& s,
+  const vector<double>& vec
+)
+{
+  s << vec.size();
+  for ( auto v: vec ) {
+    s << v;
+  }
+}
+
+END_NONAMESPACE
+
+
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellLibrary
 //////////////////////////////////////////////////////////////////////
@@ -79,42 +112,60 @@ CiCellLibrary::dump(
     lut_templ->dump(bs);
   }
 
-  // ピンの内容をダンプ
-  bs << mPinList.size();
-  for ( auto& pin: mPinList ) {
-    pin->dump(bs);
-  }
-
   // セルの内容をダンプ
   bs << cell_num();
   for ( auto& cell: mCellList ) {
     cell->dump(bs);
   }
 
-  // セルクラス情報のダンプ
-  bs << npn_class_num();
-  for ( auto& cell_class: mClassList ) {
-    cell_class->dump(bs);
+  // ピンの内容をダンプ
+  bs << mPinList.size();
+  for ( auto& pin: mPinList ) {
+    pin->dump(bs);
+  }
+
+  // バスの内容をダンプ
+  bs << mBusList.size();
+  for ( auto& bus: mBusList ) {
+    bus->dump(bs);
+  }
+
+  // バンドルの内容をダンプ
+  bs << mBundleList.size();
+  for ( auto& bundle: mBundleList ) {
+    bundle->dump(bs);
+  }
+
+  // タイミング情報の内容をダンプ
+  bs << mTimingList.size();
+  for ( auto& timing: mTimingList ) {
+    timing->dump(bs);
+  }
+
+  // LUTの内容をダンプ
+  bs << mLutList.size();
+  for ( auto& lut: mLutList ) {
+    lut->dump(bs);
   }
 
   // セルグループ情報のダンプ
-  bs << cell_group_num();
+  bs << mGroupList.size();
   for ( auto& group: mGroupList ) {
     group->dump(bs);
+  }
+
+  // セルクラス情報のダンプ
+  bs << mClassList.size();
+  for ( auto& cell_class: mClassList ) {
+    cell_class->dump(bs);
   }
 
   // 組み込み型の情報のダンプ
   for ( auto g: mLogicGroup ) {
     bs << g;
   }
-  bs << mSimpleFFClass.size();
-  for ( auto c: mSimpleFFClass ) {
-    bs << c;
-  }
-  bs << mSimpleLatchClass.size();
-  for ( auto c: mSimpleLatchClass ) {
-    bs << c;
-  }
+  dump_vector(bs, mSimpleFFClass);
+  dump_vector(bs, mSimpleLatchClass);
 
   // パタングラフの情報のダンプ
   mPatMgr.dump(bs);
@@ -144,47 +195,6 @@ CiLutTemplate::dump(
   }
 }
 
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiCellGroup
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiCellGroup::dump(
-  BinEnc& s
-) const
-{
-  s << mRepClass;
-  mIoMap.dump(s);
-  s << cell_num();
-  for ( auto id: mCellList ) {
-    s << id;
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiCellClass
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiCellClass::dump(
-  BinEnc& s
-) const
-{
-  // 同位体変換情報のダンプ
-  s << idmap_num();
-  for ( auto& map: idmap_list() ) {
-    map.dump(s);
-  }
-  // グループ情報のダンプ
-  s << cell_group_num();
-  for ( auto id: cell_group_list() ) {
-    s << id;
-  }
-}
 
 
 //////////////////////////////////////////////////////////////////////
@@ -237,59 +247,35 @@ CiCell::dump(
     ASSERT_NOT_REACHED;
   }
 
-  // 入力ピンのダンプ
-  s << input_num();
-  for ( auto i: Range(input_num()) ) {
-    s << input(i);
-  }
+  s << mInputNum
+    << mOutputNum
+    << mInoutNum;
 
-  // 出力ピンのダンプ
-  s << output_num();
-  for ( auto i: Range(output_num()) ) {
-    s << output(i);
-  }
+  // ピンリスト
+  dump_vector(s, mPinList);
 
-  // 入出力ピンのダンプ
-  s << inout_num();
-  for ( auto i: Range(inout_num()) ) {
-    s << inout(i);
-  }
+  // 入力ピンリスト
+  dump_vector(s, mInputList);
 
-  // 内部ピンのダンプ
-  s << internal_num();
-  for ( auto i: Range(internal_num()) ) {
-    s << internal(i);
-  }
+  // 出力ピンリスト
+  dump_vector(s, mOutputList);
 
-  // バスのダンプ
-  s << bus_num();
-  for ( auto i: Range(bus_num()) ) {
-    s << bus(i);
-  }
+  // 内部ピンリスト
+  dump_vector(s, mInternalList);
 
-  // バンドルのダンプ
-  s << bundle_num();
-  for ( auto i: Range(bundle_num()) ) {
-    s << bundle(i);
-  }
+  // バス番号のリスト
+  dump_vector(s, mBusList);
 
-  // タイミング情報のダンプ
-  s << timing_num();
-  for ( auto i: Range(timing_num()) ) {
-    s << timing(i);
-  }
+  // バンドル番号のリスト
+  dump_vector(s, mBundleList);
 
-  // 個別の条件ごとのタイミング情報のダンプ
-  for ( auto ipos: Range(input2_num()) ) {
-    for ( auto opos: Range(output2_num()) ) {
-      for ( auto sense: { ClibTimingSense::positive_unate, ClibTimingSense::negative_unate } ) {
-	auto& timing_list1 = timing_list(ipos, opos, sense);
-	s << timing_list1.size();
-	for ( auto id: timing_list1 ) {
-	  s << id;
-	}
-      }
-    }
+  // タイミング番号のリスト
+  dump_vector(s, mTimingList);
+
+  // タイミングマップ
+  s << mTimingMap.size();
+  for ( auto& vec: mTimingMap ) {
+    dump_vector(s, vec);
   }
 }
 
@@ -301,10 +287,13 @@ CiCell::dump(
 // @brief dump 用の共通情報を出力する．
 void
 CiPin::dump_common(
-  BinEnc& s
+  BinEnc& s,
+  ymuint8 sig
 ) const
 {
-  s << _name();
+  s << sig
+    << mName
+    << mPinId;
 }
 
 
@@ -318,11 +307,36 @@ CiInputPin::dump(
   BinEnc& s
 ) const
 {
-  dump_common(s);
+  dump_common(s, 0);
+  s << mInputId
+    << mCapacitance
+    << mRiseCapacitance
+    << mFallCapacitance;
+}
 
-  s << capacitance()
-    << rise_capacitance()
-    << fall_capacitance();
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiOutputPinBase
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiOutputPinBase::dump_base(
+  BinEnc& s,
+  ymuint8 sig
+) const
+{
+  dump_common(s, sig);
+  s << mOutputId
+    << mFanoutLoad
+    << mMaxFanout
+    << mMinFanout
+    << mMaxCapacitance
+    << mMinCapacitance
+    << mMaxTransition
+    << mMinTransition;
+  mFunction.dump(s);
+  mTristate.dump(s);
 }
 
 
@@ -336,16 +350,7 @@ CiOutputPin::dump(
   BinEnc& s
 ) const
 {
-  dump_common(s);
-
-  s << max_fanout()
-    << min_fanout()
-    << max_capacitance()
-    << min_capacitance()
-    << max_transition()
-    << min_transition();
-  function().dump(s);
-  tristate().dump(s);
+  dump_base(s, 1);
 }
 
 
@@ -359,19 +364,11 @@ CiInoutPin::dump(
   BinEnc& s
 ) const
 {
-  dump_common(s);
-
-  s << capacitance()
-    << rise_capacitance()
-    << fall_capacitance()
-    << max_fanout()
-    << min_fanout()
-    << max_capacitance()
-    << min_capacitance()
-    << max_transition()
-    << min_transition();
-  function().dump(s);
-  tristate().dump(s);
+  dump_base(s, 2);
+  s << mInputId
+    << mCapacitance
+    << mRiseCapacitance
+    << mFallCapacitance;
 }
 
 
@@ -385,9 +382,40 @@ CiInternalPin::dump(
   BinEnc& s
 ) const
 {
-  dump_common(s);
+  dump_common(s, 3);
 
   s << internal_id();
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiBus
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiBus::dump(
+  BinEnc& s
+) const
+{
+  s << mName
+    << mBusType;
+  dump_vector(s, mPinList);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiBundle
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiBundle::dump(
+  BinEnc& s
+) const
+{
+  s << mName;
+  dump_vector(s, mPinList);
 }
 
 
@@ -403,6 +431,7 @@ CiTiming::dump_common(
 ) const
 {
   s << type_id
+    << mId
     << static_cast<ymuint8>(type())
     << timing_cond();
 }
@@ -487,6 +516,22 @@ CiTimingLut2::dump(
 
 
 //////////////////////////////////////////////////////////////////////
+// クラス CiLut
+//////////////////////////////////////////////////////////////////////
+
+// @brief 実際のダンプを行う関数
+void
+CiLut::dump_common(
+  BinEnc& s,
+  ymuint8 d
+) const
+{
+  s << d
+    << mTemplate;
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // クラス CiLut1D
 //////////////////////////////////////////////////////////////////////
 
@@ -496,31 +541,9 @@ CiLut1D::dump(
   BinEnc& s
 ) const
 {
-  s << lut_template();
-  auto d = 1;
-  for ( auto i: Range(d) ) {
-    ymuint8 n = index_num(i);
-    s << n;
-    for ( auto j: Range(n) ) {
-      s << index(i, j);
-    }
-  }
-
-  vector<SizeType> pos_array(d);
-  auto n = 1;
-  for ( auto i: Range(d) ) {
-    n *= index_num(i);
-  }
-  for ( auto v: Range(n) ) {
-    auto v0 = v;
-    for ( int j: Range(d) ) {
-      auto var = d - j - 1;
-      pos_array[var] = v0 % index_num(var);
-      v0 /= index_num(var);
-    }
-    double val = grid_value(pos_array);
-    s << val;
-  }
+  dump_common(s, 1);
+  dump_dvector(s, mIndexArray);
+  dump_dvector(s, mValueArray);
 }
 
 
@@ -534,31 +557,10 @@ CiLut2D::dump(
   BinEnc& s
 ) const
 {
-  s << lut_template();
-  auto d = 2;
-  for ( auto i: Range(d) ) {
-    ymuint8 n = index_num(i);
-    s << n;
-    for ( auto j: Range(n) ) {
-      s << index(i, j);
-    }
-  }
-
-  vector<SizeType> pos_array(d);
-  auto n = 1;
-  for ( auto i: Range(d) ) {
-    n *= index_num(i);
-  }
-  for ( auto v: Range(n) ) {
-    auto v0 = v;
-    for ( int j: Range(d) ) {
-      auto var = d - j - 1;
-      pos_array[var] = v0 % index_num(var);
-      v0 /= index_num(var);
-    }
-    double val = grid_value(pos_array);
-    s << val;
-  }
+  dump_common(s, 2);
+  dump_dvector(s, mIndexArray[0]);
+  dump_dvector(s, mIndexArray[1]);
+  dump_dvector(s, mValueArray);
 }
 
 
@@ -572,31 +574,47 @@ CiLut3D::dump(
   BinEnc& s
 ) const
 {
-  s << lut_template();
-  auto d = 3;
-  for ( auto i: Range(d) ) {
-    ymuint8 n = index_num(i);
-    s << n;
-    for ( auto j: Range(n) ) {
-      s << index(i, j);
-    }
-  }
+  dump_common(s, 3);
+  dump_dvector(s, mIndexArray[0]);
+  dump_dvector(s, mIndexArray[1]);
+  dump_dvector(s, mIndexArray[2]);
+  dump_dvector(s, mValueArray);
+}
 
-  vector<SizeType> pos_array(d);
-  auto n = 1;
-  for ( auto i: Range(d) ) {
-    n *= index_num(i);
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiCellGroup
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiCellGroup::dump(
+  BinEnc& s
+) const
+{
+  s << mRepClass;
+  mIoMap.dump(s);
+  dump_vector(s, mCellList);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiCellClass
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiCellClass::dump(
+  BinEnc& s
+) const
+{
+  // 同位体変換情報のダンプ
+  s << idmap_num();
+  for ( auto& map: idmap_list() ) {
+    map.dump(s);
   }
-  for ( auto v: Range(n) ) {
-    auto v0 = v;
-    for ( int j: Range(d) ) {
-      auto var = d - j - 1;
-      pos_array[var] = v0 % index_num(var);
-      v0 /= index_num(var);
-    }
-    double val = grid_value(pos_array);
-    s << val;
-  }
+  // グループ情報のダンプ
+  dump_vector(s, mGroupList);
 }
 
 END_NAMESPACE_YM_CLIB

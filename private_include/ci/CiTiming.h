@@ -26,6 +26,9 @@ class CiTiming
 {
 public:
 
+  /// @brief 空のコンストラクタ(restore用)
+  CiTiming() = default;
+
   /// @brief コンストラクタ
   CiTiming(
     SizeType id,         ///< [in] タイミング番号
@@ -189,18 +192,31 @@ public:
     BinEnc& s ///< [in] 出力先のストリーム
   ) const = 0;
 
+  /// @brief 内容を読み込む．
+  virtual
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) = 0;
+
 
 protected:
   //////////////////////////////////////////////////////////////////////
-  // dump 用の下請け関数
+  // dump/restore 用の下請け関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 共通な情報をダンプする．
   void
   dump_common(
-    BinEnc& s,     ///< [in] 出力先のストリーム
+    BinEnc& s,      ///< [in] 出力先のストリーム
     ymuint8 type_id ///< [in] 型の ID
   ) const;
+
+  /// @brief 内容を読み込む．
+  void
+  restore_common(
+    BinDec& s ///< [in] 入力元のストリーム
+  );
 
 
 private:
@@ -228,6 +244,9 @@ class CiTimingGP :
   public CiTiming
 {
 protected:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiTimingGP() = default;
 
   /// @brief コンストラクタ
   CiTimingGP(
@@ -272,6 +291,25 @@ public:
   slope_fall() const override;
 
 
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を読み込む．
+  void
+  restore_GP(
+    BinDec& s ///< [in] 入力元のストリーム
+  )
+  {
+    restore_common(s);
+    s >> mIntrinsicRise
+      >> mIntrinsicFall
+      >> mSlopeRise
+      >> mSlopeFall;
+  }
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
@@ -300,6 +338,9 @@ class CiTimingGeneric :
   public CiTimingGP
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiTimingGeneric() = default;
 
   /// @brief コンストラクタ
   CiTimingGeneric(
@@ -349,6 +390,12 @@ public:
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -372,6 +419,9 @@ class CiTimingPiecewise :
   public CiTimingGP
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiTimingPiecewise() = default;
 
   /// @brief コンストラクタ
   CiTimingPiecewise(
@@ -429,6 +479,12 @@ public:
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -452,6 +508,9 @@ class CiTimingLut :
   public CiTiming
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiTimingLut() = default;
 
   /// @brief コンストラクタ
   CiTimingLut(
@@ -485,6 +544,23 @@ public:
   fall_transition() const override;
 
 
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を読み込む．
+  void
+  restore_LUT(
+    BinDec& s ///< [in] 入力元のストリーム
+  )
+  {
+    restore_common(s);
+    s >> mRiseTransition
+      >> mFallTransition;
+  }
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
@@ -507,6 +583,9 @@ class CiTimingLut1 :
   public CiTimingLut
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiTimingLut1() = default;
 
   /// @brief コンストラクタ
   CiTimingLut1(
@@ -553,6 +632,12 @@ public:
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
 
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -576,6 +661,9 @@ class CiTimingLut2 :
   public CiTimingLut
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiTimingLut2() = default;
 
   /// @brief コンストラクタ
   CiTimingLut2(
@@ -620,6 +708,12 @@ public:
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
   ) const override;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
 
 
 private:
