@@ -26,6 +26,7 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiBusType;
 class CiCell;
 class CiCellClass;
 class CiCellGroup;
@@ -209,8 +210,8 @@ public:
     const ShString& name ///< [in] テンプレート名
   ) const
   {
-    if ( mLutHash.count(name) > 0 ) {
-      return mLutHash.at(name);
+    if ( mLutDict.count(name) > 0 ) {
+      return mLutDict.at(name);
     }
     return CLIB_NULLID;
   }
@@ -269,8 +270,8 @@ public:
     const ShString& name
   ) const
   {
-    if ( mCellHash.count(name) > 0 ) {
-      return mCellHash.at(name);
+    if ( mCellDict.count(name) > 0 ) {
+      return mCellDict.at(name);
     }
     return CLIB_NULLID;
   }
@@ -1022,6 +1023,12 @@ private:
     set_attr(attr_name, val);
   }
 
+  /// @brief バスタイプを読み込む．
+  void
+  restore_bustype(
+    BinDec& s ///< [in] 入力ストリーム
+  );
+
   /// @brief LUT テンプレートを読み込む．
   void
   restore_lut_template(
@@ -1092,7 +1099,7 @@ public:
   {
     SizeType id = mPinList.size();
     mPinList.push_back(unique_ptr<CiPin>{pin});
-    mPinHash.add(cell_id, pin->_name(), id);
+    mPinDict.add(cell_id, pin->_name(), id);
     return id;
   }
 
@@ -1105,7 +1112,7 @@ public:
     ShString name     ///< [in] ピン名
   ) const
   {
-    return mPinHash.get(cell_id, name);
+    return mPinDict.get(cell_id, name);
   }
 
   /// @brief バスを登録する．
@@ -1117,7 +1124,7 @@ public:
   {
     auto id = mBusList.size();
     mBusList.push_back(unique_ptr<CiBus>(bus));
-    mBusHash.add(cell_id, bus->_name(), id);
+    mBusDict.add(cell_id, bus->_name(), id);
     return id;
   }
 
@@ -1130,7 +1137,7 @@ public:
     ShString name     ///< [in] バス名
   ) const
   {
-    return mBusHash.get(cell_id, name);
+    return mBusDict.get(cell_id, name);
   }
 
   /// @brief バンドルを登録する．
@@ -1142,7 +1149,7 @@ public:
   {
     auto id = mBundleList.size();
     mBundleList.push_back(unique_ptr<CiBundle>(bundle));
-    mBundleHash.add(cell_id, bundle->_name(), id);
+    mBundleDict.add(cell_id, bundle->_name(), id);
     return id;
   }
 
@@ -1155,7 +1162,7 @@ public:
     ShString name     ///< [in] バンドル名
   ) const
   {
-    return mBundleHash.get(cell_id, name);
+    return mBundleDict.get(cell_id, name);
   }
 
 
@@ -1240,14 +1247,20 @@ private:
   // 遅延モデル
   ClibDelayModel mDelayModel{ClibDelayModel::generic_cmos};
 
+  // バスタイプのリスト
+  vector<unique_ptr<CiBusType>> mBusTypeList;
+
+  // 名前をキーにしたバスタイプ番号の辞書
+  unordered_map<ShString, SizeType> mBusTypeDict;
+
   // 遅延テンプレートのリスト
   vector<unique_ptr<CiLutTemplate>> mLutTemplateList;
 
   // テンプレート番号のリスト
   vector<SizeType> mRefLutTemplateList;
 
-  // 名前をキーにした遅延テンプレート番号のハッシュ表
-  unordered_map<ShString, SizeType> mLutHash;
+  // 名前をキーにした遅延テンプレート番号の辞書
+  unordered_map<ShString, SizeType> mLutDict;
 
   // セルの所有権管理用のリスト
   vector<unique_ptr<CiCell>> mCellList;
@@ -1255,26 +1268,26 @@ private:
   // セル番号のリスト
   vector<SizeType> mRefCellList;
 
-  // 名前をキーにしたセル番号のハッシュ表
-  unordered_map<ShString, SizeType> mCellHash;
+  // 名前をキーにしたセル番号の辞書
+  unordered_map<ShString, SizeType> mCellDict;
 
   // ピンの所有権管理用のリスト
   vector<unique_ptr<CiPin>> mPinList;
 
-  // ピン名をキーにしたピン番号のハッシュ表
-  CiCellPinHash mPinHash;
+  // セル番号とピン名をキーにしたピン番号の辞書
+  CiCellPinHash mPinDict;
 
   // バスの所有権管理用のリスト
   vector<unique_ptr<CiBus>> mBusList;
 
-  // バス名をキーにしたバス番号のハッシュ表
-  CiCellPinHash mBusHash;
+  // セル番号とバス名をキーにしたバス番号の辞書
+  CiCellPinHash mBusDict;
 
   // バンドルの所有権管理用のリスト
   vector<unique_ptr<CiBundle>> mBundleList;
 
-  // バンドル名をキーにしたバンドル番号のハッシュ表
-  CiCellPinHash mBundleHash;
+  // セル番号とバンドル名をキーにしたバンドル番号の辞書
+  CiCellPinHash mBundleDict;
 
   // タイミング情報のリスト
   vector<unique_ptr<CiTiming>> mTimingList;

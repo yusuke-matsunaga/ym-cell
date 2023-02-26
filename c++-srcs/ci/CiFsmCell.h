@@ -8,7 +8,7 @@
 /// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "CiCell.h"
+#include "ci/CiCell.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -22,19 +22,14 @@ class CiFsmCell :
 {
 public:
 
+  /// @brief 空のコンストラクタ(restore用)
+  CiFsmCell() = default;
+
   /// @brief コンストラクタ
   CiFsmCell(
-    CiCellLibrary* library,                      ///< [in] 親のセルライブラリ
-    const ShString& name,                        ///< [in] 名前
-    ClibArea area,                               ///< [in] 面積
-    const vector<CiInputPin*>& input_list,       ///< [in] 入力ピンのリスト
-    const vector<CiOutputPin*>& output_list,     ///< [in] 出力ピンのリスト
-    const vector<CiTiming*>& timing_list         ///< [in] タイミング情報のリスト
-  ) : CiCell(library, name, area,
-	     input_list,
-	     output_list,
-	     vector<CiInoutPin*>{},
-	     timing_list)
+    const ShString& name, ///< [in] 名前
+    ClibArea area         ///< [in] 面積
+  ) : CiCell{name, area}
   {
   }
 
@@ -54,6 +49,24 @@ public:
   /// @brief 順序セル(非FF/非ラッチ)の場合に true を返す．
   bool
   is_fsm() const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const override;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
 
 };
 

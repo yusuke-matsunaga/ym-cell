@@ -49,6 +49,13 @@ CiCell::is_latch() const
   return false;
 }
 
+// @brief FSMタイプの時 true を返す．
+bool
+CiCell::is_fsm() const
+{
+  return false;
+}
+
 // @brief 内部変数1の名前を返す．
 string
 CiCell::qvar1() const

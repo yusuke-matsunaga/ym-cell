@@ -24,6 +24,9 @@ class CiFFCell :
 {
 public:
 
+  /// @brief 空のコンストラクタ(restore用)
+  CiFFCell() = default;
+
   /// @brief コンストラクタ
   CiFFCell(
     const ShString& name,        ///< [in] 名前
@@ -92,6 +95,37 @@ public:
   ) const override;
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const override;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore の下請け関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump_FF(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const;
+
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
@@ -114,6 +148,9 @@ class CiFF2Cell :
   public CiFFCell
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiFF2Cell() = default;
 
   /// @brief コンストラクタ
   CiFF2Cell(
@@ -152,6 +189,24 @@ public:
   /// それ以外の型の場合の返り値は不定
   Expr
   clock2_expr() const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const override;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
 
 
 private:

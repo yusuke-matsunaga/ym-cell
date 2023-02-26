@@ -6,7 +6,7 @@
 /// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ci/CiFsmCell.h"
+#include "CiFsmCell.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -14,6 +14,13 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 // クラス CiFsmCell
 //////////////////////////////////////////////////////////////////////
+
+// @brief セルの種類を返す．
+ClibCellType
+CiFsmCell::type() const
+{
+  return ClibCellType::FSM;
+}
 
 // @brief 順序セル(非FF/非ラッチ)の場合に true を返す．
 bool

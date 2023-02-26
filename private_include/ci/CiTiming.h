@@ -197,7 +197,7 @@ public:
   void
   restore(
     BinDec& s ///< [in] 入力元のストリーム
-  ) = 0;
+  );
 
 
 protected:
@@ -211,12 +211,6 @@ protected:
     BinEnc& s,      ///< [in] 出力先のストリーム
     ymuint8 type_id ///< [in] 型の ID
   ) const;
-
-  /// @brief 内容を読み込む．
-  void
-  restore_common(
-    BinDec& s ///< [in] 入力元のストリーム
-  );
 
 
 private:
@@ -298,16 +292,9 @@ protected:
 
   /// @brief 内容を読み込む．
   void
-  restore_GP(
+  restore(
     BinDec& s ///< [in] 入力元のストリーム
-  )
-  {
-    restore_common(s);
-    s >> mIntrinsicRise
-      >> mIntrinsicFall
-      >> mSlopeRise
-      >> mSlopeFall;
-  }
+  ) override;
 
 
 private:
@@ -551,14 +538,9 @@ protected:
 
   /// @brief 内容を読み込む．
   void
-  restore_LUT(
+  restore(
     BinDec& s ///< [in] 入力元のストリーム
-  )
-  {
-    restore_common(s);
-    s >> mRiseTransition
-      >> mFallTransition;
-  }
+  ) override;
 
 
 private:

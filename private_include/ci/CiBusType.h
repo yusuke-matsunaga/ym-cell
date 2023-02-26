@@ -21,7 +21,10 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 class CiBusType
 {
-private:
+public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiBusType() = default;
 
   /// @brief コンストラクタ
   CiBusType(
@@ -98,6 +101,24 @@ public:
   {
     return static_cast<bool>(mBitWidth & 1U);
   }
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  );
 
 
 private:

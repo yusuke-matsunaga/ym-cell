@@ -221,7 +221,7 @@ CiCellLibrary::add_lut_template1(
                                   var_type1, index_list1};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
   mRefLutTemplateList.push_back(id);
-  mLutHash.emplace(name, id);
+  mLutDict.emplace(name, id);
   return id;
 }
 
@@ -241,7 +241,7 @@ CiCellLibrary::add_lut_template2(
 				  var_type2, index_list2};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
   mRefLutTemplateList.push_back(id);
-  mLutHash.emplace(name, id);
+  mLutDict.emplace(name, id);
   return id;
 }
 
@@ -264,7 +264,7 @@ CiCellLibrary::add_lut_template3(
 				  var_type3, index_list3};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
   mRefLutTemplateList.push_back(id);
-  mLutHash.emplace(name, id);
+  mLutDict.emplace(name, id);
   return id;
 }
 
@@ -388,7 +388,7 @@ CiCellLibrary::reg_cell(
   cell->set_id(id);
   mCellList.push_back(unique_ptr<CiCell>{cell});
   mRefCellList.push_back(id);
-  mCellHash.emplace(cell->name(), id);
+  mCellDict.emplace(cell->name(), id);
   return id;
 }
 
@@ -703,14 +703,14 @@ CiCellLibrary::add_lut(
   const vector<double>& index_array3
 )
 {
-  if ( mLutHash.count(templ_name) == 0 ) {
+  if ( mLutDict.count(templ_name) == 0 ) {
     // テンプレートが存在しない．
 #warning "TODO: エラーメッセージ"
     cerr << "lut_template(" << templ_name << ") not found." << endl;
     abort();
     return CLIB_NULLID;
   }
-  auto templ_id = mLutHash.at(templ_name);
+  auto templ_id = mLutDict.at(templ_name);
   auto lut_template = mLutTemplateList[templ_id].get();
 
   SizeType d = lut_template->dimension();
@@ -820,16 +820,16 @@ CiCellLibrary::clear()
   mLeakagePowerUnit = {};
   mLutTemplateList.clear();
   mRefLutTemplateList.clear();
-  mLutHash.clear();
+  mLutDict.clear();
   mCellList.clear();
   mRefCellList.clear();
-  mCellHash.clear();
+  mCellDict.clear();
   mPinList.clear();
-  mPinHash.clear();
+  mPinDict.clear();
   mBusList.clear();
-  mBusHash.clear();
+  mBusDict.clear();
   mBundleList.clear();
-  mBundleHash.clear();
+  mBundleDict.clear();
   mGroupList.clear();
   mRefGroupList.clear();
   mClassList.clear();

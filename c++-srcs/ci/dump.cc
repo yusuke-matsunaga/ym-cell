@@ -10,11 +10,16 @@
 #include "ci/CiCellClass.h"
 #include "ci/CiCellGroup.h"
 #include "ci/CiCell.h"
+#include "ci/CiBusType.h"
 #include "ci/CiLutTemplate.h"
 #include "ci/CiLut.h"
 #include "ci/CiTiming.h"
 #include "ym/ClibIOMap.h"
 #include "ym/Range.h"
+
+#include "CiFFCell.h"
+#include "CiLatchCell.h"
+#include "CiFsmCell.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -68,10 +73,10 @@ CiCellLibrary::dump(
   bs << name();
 
   // テクノロジ
-  bs << static_cast<ymuint8>(technology());
+  bs << technology();
 
   // 遅延モデル
-  bs << static_cast<ymuint8>(delay_model());
+  bs << delay_model();
 
   // バス命名規則
   bs << bus_naming_style();
@@ -106,6 +111,12 @@ CiCellLibrary::dump(
   // 電力単位
   bs << leakage_power_unit();
 
+  // バスタイプ
+  bs << mBusTypeList.size();
+  for ( auto& bustype: mBusTypeList ) {
+    bustype->dump(bs);
+  }
+
   // 遅延テーブルのテンプレート
   bs << lu_table_template_num();
   for ( auto& lut_templ: mLutTemplateList ) {
@@ -113,7 +124,7 @@ CiCellLibrary::dump(
   }
 
   // セルの内容をダンプ
-  bs << cell_num();
+  bs << mCellList.size();
   for ( auto& cell: mCellList ) {
     cell->dump(bs);
   }
@@ -173,33 +184,128 @@ CiCellLibrary::dump(
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiLutTemplate
+// クラス CiBusType
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
 void
-CiLutTemplate::dump(
+CiBusType::dump(
+  BinEnc& s
+) const
+{
+  s << mName
+    << mBitWidth
+    << mBitFrom
+    << mBitTo;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLutTemplate
+//////////////////////////////////////////////////////////////////////
+
+// @brief 共通部分をバイナリダンプする．
+void
+CiLutTemplate::dump_common(
   BinEnc& s
 ) const
 {
   ymuint8 d = dimension();
-  s << name()
-    << d;
-  for ( auto i: Range(d) ) {
-    s << static_cast<ymuint8>(variable_type(i));
-    ymuint8 n = index_num(i);
-    s << n;
-    for ( int j: Range(n) ) {
-      s << index(i, j);
-    }
+  s << d
+    << mId
+    << _name();
+}
+
+// @brief 1つの変数の情報をバイナリダンプする．
+void
+CiLutTemplate::dump_var(
+  BinEnc& s,
+  ClibVarType var_type,
+  const vector<double>& index_array
+)
+{
+  s << var_type;
+  dump_dvector(s, index_array);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLutTemplate1D
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiLutTemplate1D::dump(
+  BinEnc& s
+) const
+{
+  dump_common(s);
+  dump_var(s, mVarType, mIndexArray);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLutTemplate2D
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiLutTemplate2D::dump(
+  BinEnc& s
+) const
+{
+  dump_common(s);
+  for ( SizeType i: Range(2) ) {
+    dump_var(s, mVarType[i], mIndexArray[i]);
   }
 }
 
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLutTemplate3D
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiLutTemplate3D::dump(
+  BinEnc& s
+) const
+{
+  dump_common(s);
+  for ( SizeType i: Range(2) ) {
+    dump_var(s, mVarType[i], mIndexArray[i]);
+  }
+}
 
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiCell
 //////////////////////////////////////////////////////////////////////
+
+// @brief 共通部分のダンプ
+void
+CiCell::dump_common(
+  BinEnc& s
+) const
+{
+  s << mId
+    << mName
+    << mArea
+    << mInputNum
+    << mOutputNum
+    << mInoutNum;
+  dump_vector(s, mPinList);
+  dump_vector(s, mInputList);
+  dump_vector(s, mOutputList);
+  dump_vector(s, mInternalList);
+  dump_vector(s, mBusList);
+  dump_vector(s, mBundleList);
+  dump_vector(s, mTimingList);
+  s << mTimingMap.size();
+  for ( auto& timing_list: mTimingMap ) {
+    dump_vector(s, timing_list);
+  }
+}
 
 // @brief 内容をバイナリダンプする．
 void
@@ -207,76 +313,128 @@ CiCell::dump(
   BinEnc& s
 ) const
 {
-  // セルの共通な情報のダンプ
-  s << name()
-    << area();
+  // シグネチャ
+  s << static_cast<ymuint8>(0);
+  dump_common(s);
+}
 
-  // セルの種類ごとの属性のダンプ
-  if ( is_logic() ) {
-    s << static_cast<ymuint8>(0);
-  }
-  else if ( is_ff() ) {
-    s << static_cast<ymuint8>(1)
-      << qvar1()
-      << qvar2()
-      << clock_expr()
-      << clock2_expr()
-      << next_state_expr()
-      << clear_expr()
-      << preset_expr()
-      << static_cast<ymuint8>(clear_preset_var1())
-      << static_cast<ymuint8>(clear_preset_var2());
-  }
-  else if ( is_latch() ) {
-    s << static_cast<ymuint8>(2)
-      << qvar1()
-      << qvar2()
-      << enable_expr()
-      << enable2_expr()
-      << data_in_expr()
-      << clear_expr()
-      << preset_expr()
-      << static_cast<ymuint8>(clear_preset_var1())
-      << static_cast<ymuint8>(clear_preset_var2());
-  }
-  else if ( type() == ClibCellType::FSM ) {
-    s << static_cast<ymuint8>(3);
-  }
-  else {
-    // 無視？
-    ASSERT_NOT_REACHED;
-  }
 
-  s << mInputNum
-    << mOutputNum
-    << mInoutNum;
+//////////////////////////////////////////////////////////////////////
+// クラス CiFLCell
+//////////////////////////////////////////////////////////////////////
 
-  // ピンリスト
-  dump_vector(s, mPinList);
+// @brief 内容をバイナリダンプする．
+void
+CiFLCell::dump_FL(
+  BinEnc& s
+) const
+{
+  dump_common(s);
+  s << mVar1
+    << mVar2;
+  mClear.dump(s);
+  mPreset.dump(s);
+  s << mCpv1
+    << mCpv2;
+}
 
-  // 入力ピンリスト
-  dump_vector(s, mInputList);
 
-  // 出力ピンリスト
-  dump_vector(s, mOutputList);
+//////////////////////////////////////////////////////////////////////
+// クラス CiFFCell
+//////////////////////////////////////////////////////////////////////
 
-  // 内部ピンリスト
-  dump_vector(s, mInternalList);
+// @brief 内容をバイナリダンプする．
+void
+CiFFCell::dump(
+  BinEnc& s
+) const
+{
+  s << static_cast<ymuint8>(1);
+  dump_FF(s);
+}
 
-  // バス番号のリスト
-  dump_vector(s, mBusList);
+// @brief 内容をバイナリダンプする．
+void
+CiFFCell::dump_FF(
+  BinEnc& s
+) const
+{
+  dump_FL(s);
+  mClock.dump(s);
+  mNextState.dump(s);
+}
 
-  // バンドル番号のリスト
-  dump_vector(s, mBundleList);
 
-  // タイミング番号のリスト
-  dump_vector(s, mTimingList);
+//////////////////////////////////////////////////////////////////////
+// クラス CiFF2Cell
+//////////////////////////////////////////////////////////////////////
 
-  // タイミングマップ
-  s << mTimingMap.size();
-  for ( auto& vec: mTimingMap ) {
-    dump_vector(s, vec);
-  }
+// @brief 内容をバイナリダンプする．
+void
+CiFF2Cell::dump(
+  BinEnc& s
+) const
+{
+  s << static_cast<ymuint8>(2);
+  dump_FF(s);
+  mClock2.dump(s);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLatchCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiLatchCell::dump(
+  BinEnc& s
+) const
+{
+  s << static_cast<ymuint8>(3);
+  dump_Latch(s);
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiLatchCell::dump_Latch(
+  BinEnc& s
+) const
+{
+  dump_FL(s);
+  mEnable.dump(s);
+  mDataIn.dump(s);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLatch2Cell
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiLatch2Cell::dump(
+  BinEnc& s
+) const
+{
+  s << static_cast<ymuint8>(4);
+  dump_Latch(s);
+  mEnable2.dump(s);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiFsmCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiFsmCell::dump(
+  BinEnc& s
+) const
+{
+  s << static_cast<ymuint8>(5);
+  dump_common(s);
 }
 
 
@@ -432,8 +590,8 @@ CiTiming::dump_common(
 {
   s << type_id
     << mId
-    << static_cast<ymuint8>(type())
-    << timing_cond();
+    << mType;
+  mCond.dump(s);
 }
 
 
@@ -448,7 +606,6 @@ CiTimingGeneric::dump(
 ) const
 {
   dump_common(s, 0);
-
   s << intrinsic_rise()
     << intrinsic_fall()
     << slope_rise()
@@ -469,7 +626,6 @@ CiTimingPiecewise::dump(
 ) const
 {
   dump_common(s, 1);
-
   s << intrinsic_rise()
     << intrinsic_fall()
     << slope_rise()
@@ -507,7 +663,6 @@ CiTimingLut2::dump(
 ) const
 {
   dump_common(s, 3);
-
   s << rise_transition()
     << fall_transition()
     << rise_propagation()

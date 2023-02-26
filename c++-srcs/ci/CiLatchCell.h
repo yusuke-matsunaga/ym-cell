@@ -24,6 +24,9 @@ class CiLatchCell :
 {
 public:
 
+  /// @brief 空のコンストラクタ(restore用)
+  CiLatchCell() = default;
+
   /// @brief コンストラクタ
   CiLatchCell(
     const ShString& name,        ///< [in] 名前
@@ -88,6 +91,36 @@ public:
   ) const override;
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const override;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore の下請け関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump_Latch(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const;
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
@@ -103,13 +136,16 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class CiLatchRCell CiLatchCell.h "CiLatchCell.h"
+/// @class CiLatch2Cell CiLatchCell.h "CiLatchCell.h"
 /// @brief 単純なmaster-slave ラッチセルを表す CiCell の派生クラス
 //////////////////////////////////////////////////////////////////////
 class CiLatch2Cell :
   public CiLatchCell
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiLatch2Cell() = default;
 
   /// @brief コンストラクタ
   CiLatch2Cell(
@@ -148,6 +184,24 @@ public:
   /// それ以外の型の場合の返り値は不定
   Expr
   enable2_expr() const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const override;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
 
 
 private:

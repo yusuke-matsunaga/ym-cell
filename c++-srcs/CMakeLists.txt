@@ -40,6 +40,7 @@ set (ci_SOURCES
   ci/CiFFCell.cc
   ci/CiFLCell.cc
   ci/CiLatchCell.cc
+  ci/CiFsmCell.cc
   ci/CiCellLibrary.cc
   ci/CiPin.cc
   ci/CiLut.cc

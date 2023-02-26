@@ -12,6 +12,7 @@
 #include "ci/CiCell.h"
 #include "ci/CiPin.h"
 #include "ci/CiBus.h"
+#include "ci/CiBusType.h"
 #include "ci/CiBundle.h"
 #include "ci/CiTiming.h"
 #include "ci/CiLutTemplate.h"
@@ -21,6 +22,9 @@
 #include "ym/ClibIOMap.h"
 #include "ym/Range.h"
 
+#include "CiFFCell.h"
+#include "CiLatchCell.h"
+#include "CiFsmCell.h"
 
 BEGIN_NAMESPACE_YM_CLIB
 
@@ -59,6 +63,7 @@ restore_dvector(
 }
 
 END_NONAMESPACE
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellLibrary
@@ -112,6 +117,9 @@ CiCellLibrary::restore(
   // 電力単位
   restore_str_attr(bs, "leakage_power_unit");
 
+  // バスタイプ情報の読み込み
+  restore_bustype(bs);
+
   // LUTテンプレート情報の読み込み
   restore_lut_template(bs);
 
@@ -150,27 +158,21 @@ CiCellLibrary::restore(
   mPatMgr.restore(bs);
 }
 
-BEGIN_NONAMESPACE
-
-ClibVarType
-restore_1dim(
-  BinDec& s,
-  vector<double>& index_array
+// @brief バスタイプを読み込む．
+void
+CiCellLibrary::restore_bustype(
+  BinDec& s
 )
 {
-  ymuint8 tmp;
-  s >> tmp;
-  ClibVarType var_type = static_cast<ClibVarType>(tmp);
-  ymuint8 n;
+  SizeType n;
   s >> n;
-  index_array.resize(n);
-  for ( auto i: Range(n) ) {
-    s >> index_array[i];
+  mBusTypeList.reserve(n);
+  for ( SizeType _: Range(n) ) {
+    auto bustype = unique_ptr<CiBusType>{new CiBusType};
+    bustype->restore(s);
+    mBusTypeList.push_back(std::move(bustype));
   }
-  return var_type;
 }
-
-END_NONAMESPACE
 
 // @brief LUT テンプレートを読み込む．
 void
@@ -181,43 +183,24 @@ CiCellLibrary::restore_lut_template(
   // 要素数
   SizeType n;
   s >> n;
-
+  mLutTemplateList.reserve(n);
   for ( auto _: Range(n) ) {
-    ShString name;
     ymuint8 d;
-    s >> name
-      >> d;
-    ClibVarType var_type1;
-    ClibVarType var_type2;
-    ClibVarType var_type3;
-    vector<double> index_array1;
-    vector<double> index_array2;
-    vector<double> index_array3;
+    s >> d;
+    unique_ptr<CiLutTemplate> ptr;
     switch ( d ) {
     case 1:
-      var_type1 = restore_1dim(s, index_array1);
-      add_lut_template1(name,
-			var_type1, index_array1);
+      ptr = unique_ptr<CiLutTemplate>{new CiLutTemplate1D};
       break;
-
     case 2:
-      var_type1 = restore_1dim(s, index_array1);
-      var_type2 = restore_1dim(s, index_array2);
-      add_lut_template2(name,
-			var_type1, index_array1,
-			var_type2, index_array2);
+      ptr = unique_ptr<CiLutTemplate>{new CiLutTemplate2D};
       break;
-
     case 3:
-      var_type1 = restore_1dim(s, index_array1);
-      var_type2 = restore_1dim(s, index_array2);
-      var_type3 = restore_1dim(s, index_array3);
-      add_lut_template3(name,
-			var_type1, index_array1,
-			var_type2, index_array2,
-			var_type3, index_array3);
+      ptr = unique_ptr<CiLutTemplate>{new CiLutTemplate3D};
       break;
     }
+    ptr->restore(s);
+    mLutTemplateList.push_back(std::move(ptr));
   }
 }
 
@@ -233,89 +216,40 @@ CiCellLibrary::restore_cell(
   mCellList.reserve(nc);
   mRefCellList.reserve(nc);
   for ( auto _: Range(nc) ) {
-    ShString name;
-    ClibArea area;
-    s >> name
-      >> area;
-
-    SizeType cell_id{CLIB_NULLID};
-
-    // セル本体の読み込み
     ymuint8 type;
     s >> type;
+    unique_ptr<CiCell> ptr;
     switch ( type ) {
-    case 0: // logic
-      cell_id = add_logic_cell(name, area);
+    case 0:
+      ptr = unique_ptr<CiCell>{new CiCell};
       break;
 
-    case 1: // FF
-      {
-	ShString var1;
-	ShString var2;
-	Expr clocked_on;
-	Expr clocked_on_also;
-	Expr next_state;
-	Expr clear;
-	Expr preset;
-	ymuint8 clear_preset_var1;
-	ymuint8 clear_preset_var2;
-	s >> var1 >> var2;
-	clocked_on.restore(s);
-	clocked_on_also.restore(s);
-	next_state.restore(s);
-	clear.restore(s);
-	preset.restore(s);
-	s >> clear_preset_var1
-	  >> clear_preset_var2;
-	cell_id = add_ff_cell(name, area,
-			      var1, var2,
-			      clocked_on, clocked_on_also, next_state,
-			      clear, preset,
-			      static_cast<ClibCPV>(clear_preset_var1),
-			      static_cast<ClibCPV>(clear_preset_var2));
-      }
+    case 1:
+      ptr = unique_ptr<CiCell>{new CiFFCell};
       break;
 
-    case 2: // latch
-      {
-	ShString var1;
-	ShString var2;
-	Expr enable;
-	Expr enable_also;
-	Expr data_in;
-	Expr clear;
-	Expr preset;
-	ymuint8 clear_preset_var1;
-	ymuint8 clear_preset_var2;
-	s >> var1 >> var2;
-	enable.restore(s);
-	enable_also.restore(s);
-	data_in.restore(s);
-	clear.restore(s);
-	preset.restore(s);
-	s >> clear_preset_var1
-	  >> clear_preset_var2;
-	cell_id = add_latch_cell(name, area,
-				 var1, var2,
-				 enable, enable_also, data_in,
-				 clear, preset,
-				 static_cast<ClibCPV>(clear_preset_var1),
-				 static_cast<ClibCPV>(clear_preset_var2));
-      }
+    case 2:
+      ptr = unique_ptr<CiCell>{new CiFF2Cell};
       break;
 
-    case 3: // FSM
-      {
-#warning "TODO: 未完"
-      }
+    case 3:
+      ptr = unique_ptr<CiCell>{new CiLatchCell};
+      break;
+
+    case 4:
+      ptr = unique_ptr<CiCell>{new CiLatch2Cell};
+      break;
+
+    case 5:
+      ptr = unique_ptr<CiCell>{new CiFsmCell};
       break;
 
     default:
       ASSERT_NOT_REACHED;
+      break;
     }
-
-    auto& cell = mCellList[cell_id];
-    cell->restore(s);
+    ptr->restore(s);
+    mCellList.push_back(std::move(ptr));
   }
 }
 
@@ -498,6 +432,90 @@ CiCellLibrary::restore_cell_class(
 
 
 //////////////////////////////////////////////////////////////////////
+// クラス CiBusType
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiBusType::restore(
+  BinDec& s
+)
+{
+  s >> mName
+    >> mBitWidth
+    >> mBitFrom
+    >> mBitTo;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLutTemplate
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiLutTemplate::restore_common(
+  BinDec& s
+)
+{
+  s >> mId
+    >> mName;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLutTemplate1D
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiLutTemplate1D::restore(
+  BinDec& s
+)
+{
+  restore_common(s);
+  s >> mVarType;
+  restore_dvector(s, mIndexArray);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLutTemplate2D
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiLutTemplate2D::restore(
+  BinDec& s
+)
+{
+  restore_common(s);
+  for ( SizeType i: Range(2) ) {
+    s >> mVarType[i];
+    restore_dvector(s, mIndexArray[i]);
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLutTemplate3D
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiLutTemplate3D::restore(
+  BinDec& s
+)
+{
+  restore_common(s);
+  for ( SizeType i: Range(3) ) {
+    s >> mVarType[i];
+    restore_dvector(s, mIndexArray[i]);
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // クラス CiCell
 //////////////////////////////////////////////////////////////////////
 
@@ -507,7 +525,10 @@ CiCell::restore(
   BinDec& s
 )
 {
-  s >> mInputNum
+  s >> mId
+    >> mName
+    >> mArea
+    >> mInputNum
     >> mOutputNum
     >> mInoutNum;
 
@@ -539,6 +560,102 @@ CiCell::restore(
   for ( SizeType i: Range(n) ) {
     restore_vector(s, mTimingMap[i]);
   }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiFLCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiFLCell::restore(
+  BinDec& s
+)
+{
+  CiCell::restore(s);
+  s >> mVar1
+    >> mVar2;
+  mClear.restore(s);
+  mPreset.restore(s);
+  s >> mCpv1
+    >> mCpv2;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiFFCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiFFCell::restore(
+  BinDec& s
+)
+{
+  CiFLCell::restore(s);
+  mClock.restore(s);
+  mNextState.restore(s);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiFF2Cell
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiFF2Cell::restore(
+  BinDec& s
+)
+{
+  CiFFCell::restore(s);
+  mClock2.restore(s);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLatchCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiLatchCell::restore(
+  BinDec& s
+)
+{
+  CiFLCell::restore(s);
+  mEnable.restore(s);
+  mDataIn.restore(s);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLatch2Cell
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiLatch2Cell::restore(
+  BinDec& s
+)
+{
+  CiLatchCell::restore(s);
+  mEnable2.restore(s);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiFsmCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiFsmCell::restore(
+  BinDec& s
+)
+{
+  CiCell::restore(s);
 }
 
 
@@ -659,15 +776,31 @@ CiBundle::restore(
 
 // @brief 内容を読み込む．
 void
-CiTiming::restore_common(
+CiTiming::restore(
   BinDec& s
 )
 {
-  ymuint8 tmp;
   s >> mId
-    >> tmp;
-  mType = static_cast<ClibTimingType>(tmp);
+    >> mType;
   mCond.restore(s);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingGP
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiTimingGP::restore(
+  BinDec& s
+)
+{
+  CiTiming::restore(s);
+  s >> mIntrinsicRise
+    >> mIntrinsicFall
+    >> mSlopeRise
+    >> mSlopeFall;
 }
 
 
@@ -681,7 +814,7 @@ CiTimingGeneric::restore(
   BinDec& s
 )
 {
-  restore_GP(s);
+  CiTimingGP::restore(s);
   s >> mRiseResistance
     >> mFallResistance;
 }
@@ -697,9 +830,25 @@ CiTimingPiecewise::restore(
   BinDec& s
 )
 {
-  restore_GP(s);
+  CiTimingGP::restore(s);
   s >> mRisePinResistance
     >> mFallPinResistance;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingLut
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiTimingLut::restore(
+  BinDec& s
+)
+{
+  CiTiming::restore(s);
+  s >> mRiseTransition
+    >> mFallTransition;
 }
 
 
@@ -713,7 +862,7 @@ CiTimingLut1::restore(
   BinDec& s
 )
 {
-  restore_LUT(s);
+  CiTimingLut::restore(s);
   s >> mCellRise
     >> mCellFall;
 }
@@ -729,7 +878,7 @@ CiTimingLut2::restore(
   BinDec& s
 )
 {
-  restore_LUT(s);
+  CiTimingLut::restore(s);
   s >> mRisePropagation
     >> mFallPropagation;
 }

@@ -13,6 +13,8 @@
 /// セルライブラリを扱うためのクラスライブラリ
 
 #include "ym_config.h"
+#include "ym/BinEnc.h"
+#include "ym/BinDec.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -318,6 +320,184 @@ operator<<(
   ostream& s,          ///< [in] 出力先のストリーム
   ClibVarType var_type ///< [in] 変数の型
 );
+
+
+//////////////////////////////////////////////////////////////////////
+// バイナリ出力演算子
+//////////////////////////////////////////////////////////////////////
+
+/// @brief ClibTechnology のバイナリ出力演算子
+/// @return s を返す．
+inline
+BinEnc&
+operator<<(
+  BinEnc& s,                ///< [in] 出力先のストリーム
+  ClibTechnology technology ///< [in] テクノロジ
+)
+{
+  s << static_cast<ymuint8>(technology);
+  return s;
+}
+
+/// @brief ClibDelayModel のバイナリ出力演算子
+/// @return s を返す．
+inline
+BinEnc&
+operator<<(
+  BinEnc& s,                 ///< [in] 出力先のストリーム
+  ClibDelayModel delay_model ///< [in] 遅延モデル
+)
+{
+  s << static_cast<ymuint8>(delay_model);
+  return s;
+}
+
+/// @brief ClibTimingSense のバイナリ出力演算子
+/// @return s を返す．
+inline
+BinEnc&
+operator<<(
+  BinEnc& s,                   ///< [in] 出力先のストリーム
+  ClibTimingSense timing_sense ///< [in] タイミングセンス
+)
+{
+  s << static_cast<ymuint8>(timing_sense);
+  return s;
+}
+
+/// @brief ClibTimingType のバイナリ出力演算子
+/// @return s を返す．
+inline
+BinEnc&
+operator<<(
+  BinEnc& s,                 ///< [in] 出力先のストリーム
+  ClibTimingType timing_type ///< [in] タイミング条件
+)
+{
+  s << static_cast<ymuint8>(timing_type);
+  return s;
+}
+
+/// @brief ClibCPV のバイナリ出力演算子
+/// @return s を返す．
+inline
+BinEnc&
+operator<<(
+  BinEnc& s,   ///< [in] 出力先のストリーム
+  ClibCPV cpv  ///< [in] clear_preset_var の値
+)
+{
+  s << static_cast<ymuint8>(cpv);
+  return s;
+}
+
+/// @brief ClibVarType のバイナリ出力演算子
+/// @return s を返す．
+inline
+BinEnc&
+operator<<(
+  BinEnc& s,           ///< [in] 出力先のストリーム
+  ClibVarType var_type ///< [in] 変数の型
+)
+{
+  s << static_cast<ymuint8>(var_type);
+  return s;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// バイナリ入力演算子
+//////////////////////////////////////////////////////////////////////
+
+/// @brief ClibTechnology のバイナリ入力演算子
+/// @return s を返す．
+inline
+BinDec&
+operator>>(
+  BinDec& s,                 ///< [in] 入力元のストリーム
+  ClibTechnology& technology ///< [out] テクノロジ
+)
+{
+  ymuint8 tmp;
+  s >> tmp;
+  technology = static_cast<ClibTechnology>(tmp);
+  return s;
+}
+
+/// @brief ClibDelayModel のバイナリ入力演算子
+/// @return s を返す．
+inline
+BinDec&
+operator>>(
+  BinDec& s,                  ///< [in] 入力元のストリーム
+  ClibDelayModel& delay_model ///< [out] 遅延モデル
+)
+{
+  ymuint8 tmp;
+  s >> tmp;
+  delay_model = static_cast<ClibDelayModel>(tmp);
+  return s;
+}
+
+/// @brief ClibTimingSense のバイナリ入力演算子
+/// @return s を返す．
+inline
+BinDec&
+operator>>(
+  BinDec& s,                    ///< [in] 入力元のストリーム
+  ClibTimingSense& timing_sense ///< [out] タイミングセンス
+)
+{
+  ymuint8 tmp;
+  s >> tmp;
+  timing_sense = static_cast<ClibTimingSense>(tmp);
+  return s;
+}
+
+/// @brief ClibTimingType のバイナリ入力演算子
+/// @return s を返す．
+inline
+BinDec&
+operator>>(
+  BinDec& s,                  ///< [in] 入力元のストリーム
+  ClibTimingType& timing_type ///< [out] タイミング条件
+)
+{
+  ymuint8 tmp;
+  s >> tmp;
+  timing_type = static_cast<ClibTimingType>(tmp);
+  return s;
+}
+
+/// @brief ClibCPV のバイナリ入力演算子
+/// @return s を返す．
+inline
+BinDec&
+operator>>(
+  BinDec& s,    ///< [in] 入力元のストリーム
+  ClibCPV& cpv  ///< [out] clear_preset_var の値
+)
+{
+  ymuint8 tmp;
+  s >> tmp;
+  cpv = static_cast<ClibCPV>(tmp);
+  return s;
+}
+
+/// @brief ClibVarType のバイナリ入力演算子
+/// @return s を返す．
+inline
+BinDec&
+operator>>(
+  BinDec& s,            ///< [in] 入力元のストリーム
+  ClibVarType& var_type ///< [out] 変数の型
+)
+{
+  ymuint8 tmp;
+  s >> tmp;
+  var_type = static_cast<ClibVarType>(tmp);
+  return s;
+}
 
 END_NAMESPACE_YM
 

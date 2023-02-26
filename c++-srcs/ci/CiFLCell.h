@@ -22,6 +22,9 @@ class CiFLCell :
 {
 public:
 
+  /// @brief 空のコンストラクタ(restore用)
+  CiFLCell() = default;
+
   /// @brief コンストラクタ
   CiFLCell(
     const ShString& name,        ///< [in] 名前
@@ -84,6 +87,24 @@ public:
   /// FF/ラッチセル以外の場合には返り値は不定
   ClibCPV
   clear_preset_var2() const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump_FL(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
 
 
 private:

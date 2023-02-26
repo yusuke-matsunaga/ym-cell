@@ -33,6 +33,9 @@ class CiCell
 {
 public:
 
+  /// @brief 空のコンストラクタ(restore用)
+  CiCell() = default;
+
   /// @brief コンストラクタ
   CiCell(
     const ShString& name, ///< [in] 名前
@@ -334,6 +337,11 @@ public:
   bool
   is_latch() const;
 
+  /// @brief FSMタイプの時 true を返す．
+  virtual
+  bool
+  is_fsm() const;
+
   /// @brief 内部変数1の名前を返す．
   virtual
   string
@@ -438,25 +446,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // dump/restore 関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 内容をバイナリダンプする．
-  virtual
-  void
-  dump(
-    BinEnc& s ///< [in] 出力先のストリーム
-  ) const;
-
-  /// @brief 内容を読み込む．
-  void
-  restore(
-    BinDec& s ///< [in] 入力元のストリーム
-  );
 
 
 public:
@@ -585,6 +574,38 @@ public:
     ClibTimingSense timing_sense,       ///< [in] タイミング条件
     const vector<SizeType>& timing_list ///< [in] 設定するタイミング番号のリスト
   );
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  virtual
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const;
+
+  /// @brief 内容を読み込む．
+  virtual
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  );
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore の下請け関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 共通部分のダンプ
+  void
+  dump_common(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const;
 
 
 private:

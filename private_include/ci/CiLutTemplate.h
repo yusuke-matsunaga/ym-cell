@@ -22,6 +22,9 @@ class CiLutTemplate
 {
 public:
 
+  /// @brief 空のコンストラクタ(restore用)
+  CiLutTemplate() = default;
+
   /// @brief コンストラクタ
   CiLutTemplate(
     SizeType id,         ///< [in] ID番号
@@ -100,7 +103,41 @@ public:
   void
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
+  ) const = 0;
+
+  /// @brief 内容を読み込む．
+  virtual
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) = 0;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 共通部分をバイナリダンプする．
+  void
+  dump_common(
+    BinEnc& s ///< [in] 出力先のストリーム
   ) const;
+
+  /// @brief 1つの変数の情報をバイナリダンプする．
+  static
+  void
+  dump_var(
+    BinEnc& s,                        ///< [in] 出力先のストリーム
+    ClibVarType var_type,             ///< [in] 変数のタイプ
+    const vector<double>& index_array ///< [in] インデックスの配列
+  );
+
+  /// @brief 内容を読み込む．
+  void
+  restore_common(
+    BinDec& s ///< [in] 入力元のストリーム
+  );
 
 
 private:
@@ -125,6 +162,9 @@ class CiLutTemplate1D :
   public CiLutTemplate
 {
 public:
+
+  /// @brief 空のコンストラクタ(restore用)
+  CiLutTemplate1D() = default;
 
   /// @brief コンストラクタ
   CiLutTemplate1D(
@@ -171,6 +211,24 @@ public:
   ) const override;
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const override;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
@@ -194,6 +252,9 @@ class CiLutTemplate2D :
 {
 public:
 
+  /// @brief 空のコンストラクタ(restore用)
+  CiLutTemplate2D() = default;
+
   /// @brief コンストラクタ
   CiLutTemplate2D(
     SizeType id,
@@ -213,6 +274,9 @@ public:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 次元数の取得
   SizeType
@@ -236,6 +300,24 @@ public:
     SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
     SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
   ) const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const override;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
 
 
 private:
@@ -261,6 +343,9 @@ class CiLutTemplate3D :
 {
 public:
 
+  /// @brief 空のコンストラクタ(restore用)
+  CiLutTemplate3D() = default;
+
   /// @brief コンストラクタ
   CiLutTemplate3D(
     SizeType id,
@@ -282,6 +367,9 @@ public:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
 
   /// @brief 次元数の取得
   SizeType
@@ -305,6 +393,24 @@ public:
     SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
     SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
   ) const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    BinEnc& s ///< [in] 出力先のストリーム
+  ) const override;
+
+  /// @brief 内容を読み込む．
+  void
+  restore(
+    BinDec& s ///< [in] 入力元のストリーム
+  ) override;
 
 
 private:
