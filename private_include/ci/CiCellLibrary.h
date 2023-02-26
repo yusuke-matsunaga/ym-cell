@@ -1059,6 +1059,10 @@ private:
     BinDec& s ///< [in] 入力ストリーム
   );
 
+  /// @brief セルごとのピン，バス，バンドルの辞書を作る．
+  void
+  construct_cellpin_dict();
+
   /// @brief タイミング情報を読み込む．
   void
   restore_timing(

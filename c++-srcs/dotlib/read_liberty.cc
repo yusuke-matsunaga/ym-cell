@@ -315,14 +315,14 @@ CiCellLibrary::read_liberty(
 
   ASSERT_COND( ast_library->kwd() == "library" );
 
-  unique_ptr<CiCellLibrary> lib{new CiCellLibrary{}};
+  unique_ptr<CiCellLibrary> lib_ptr{new CiCellLibrary{}};
 
   // AstValue の内容をライブラリに設定する．
-  set_library(ast_library->value(), lib);
+  set_library(ast_library->value(), lib_ptr);
 
-  auto ans = lib.get();
-  lib.release();
-  return ans;
+  auto lib = lib_ptr.get();
+  lib_ptr.release();
+  return lib;
 }
 
 END_NAMESPACE_YM_CLIB

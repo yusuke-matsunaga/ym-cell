@@ -27,8 +27,7 @@ ClibCellLibrary::read_mislib(
 )
 {
   ClibCellLibrary lib;
-  auto new_impl = CiCellLibrary::read_mislib(filename);
-  lib.mImpl = new_impl;
+  lib.mImpl = CiCellLibrary::read_mislib(filename);
   return lib;
 }
 
@@ -39,8 +38,7 @@ ClibCellLibrary::read_liberty(
 )
 {
   ClibCellLibrary lib;
-  auto new_impl = CiCellLibrary::read_liberty(filename);
-  lib.mImpl = new_impl;
+  lib.mImpl = CiCellLibrary::read_liberty(filename);
   return lib;
 }
 

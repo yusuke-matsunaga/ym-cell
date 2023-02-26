@@ -250,7 +250,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 字句解析器
-  MislibScanner* mScanner;
+  MislibScanner* mScanner{nullptr};
 
   // 戻したトークン
   MislibToken mUngetToken;

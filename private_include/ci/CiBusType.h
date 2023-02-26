@@ -59,6 +59,13 @@ public:
     return mName;
   }
 
+  /// @brief 名前の取得
+  ShString
+  _name() const
+  {
+    return mName;
+  }
+
   /// @brief base_type の取得
   ClibBusType::BaseType
   base_type() const

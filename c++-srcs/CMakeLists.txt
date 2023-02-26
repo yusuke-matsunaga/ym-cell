@@ -60,10 +60,10 @@ set (cg_SOURCES
   )
 
 set (mislib_SOURCES
-  mislib/read_mislib.cc
   mislib/MislibNode.cc
   mislib/MislibParser.cc
   mislib/MislibScanner.cc
+  mislib/MislibConv.cc
   )
 
 set (dotlib_SOURCES

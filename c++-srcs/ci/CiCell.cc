@@ -140,6 +140,104 @@ CiCell::data_in_expr() const
   return Expr::make_invalid();
 }
 
+// @brief ID を設定する．
+void
+CiCell::set_id(
+  SizeType id
+)
+{
+  mId = id;
+}
+
+// @brief 入力ピンを追加する．
+void
+CiCell::add_input(
+  CiInputPin* pin,
+  SizeType id
+)
+{
+  SizeType pid = mPinList.size();
+  pin->set_pin_id(pid);
+  mPinList.push_back(id);
+
+  SizeType iid = mInputList.size();
+  pin->set_input_id(iid);
+  mInputList.push_back(id);
+
+  ++ mInputNum;
+}
+
+// @brief 出力ピンを追加する．
+void
+CiCell::add_output(
+  CiOutputPin* pin,
+  SizeType id
+)
+{
+  SizeType pid = mPinList.size();
+  pin->set_pin_id(pid);
+  mPinList.push_back(id);
+
+  SizeType oid = mOutputList.size();
+  pin->set_output_id(oid);
+  mOutputList.push_back(id);
+
+  ++ mOutputNum;
+}
+
+// @brief 入出力ピンを追加する．
+void
+CiCell::add_inout(
+  CiInoutPin* pin,
+  SizeType id
+)
+{
+  SizeType pid = mPinList.size();
+  pin->set_pin_id(pid);
+  mPinList.push_back(id);
+
+  SizeType iid = mInputList.size();
+  pin->set_input_id(iid);
+  mInputList.push_back(id);
+
+  SizeType oid = mOutputList.size();
+  pin->set_output_id(oid);
+  mOutputList.push_back(id);
+
+  ++ mInoutNum;
+}
+
+// @brief 内部ピンを追加する．
+void
+CiCell::add_internal(
+  CiInternalPin* pin,
+  SizeType id
+)
+{
+  // mPinList には含まれない．
+  auto iid = mInternalList.size();
+  pin->set_internal_id(iid);
+  mInternalList.push_back(id);
+}
+
+// @brief バスを追加する．
+void
+CiCell::add_bus(
+  SizeType id
+)
+{
+  mBusList.push_back(id);
+}
+
+// @brief バンドルを追加する．
+void
+CiCell::add_bundle(
+  SizeType id
+)
+{
+  mBundleList.push_back(id);
+}
+
 // @brief タイミング情報用のデータ構造を初期化する．
 void
 CiCell::init_timing_map(

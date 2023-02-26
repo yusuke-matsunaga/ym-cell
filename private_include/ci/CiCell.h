@@ -57,15 +57,31 @@ public:
 
   /// @brief ID番号の取得
   SizeType
-  id() const { return mId; }
+  id() const
+  {
+    return mId;
+  }
 
   /// @brief 名前の取得
   string
-  name() const  { return mName; }
+  name() const
+  {
+    return mName;
+  }
+
+  /// @brief 名前の取得
+  ShString
+  _name() const
+  {
+    return mName;
+  }
 
   /// @brief 面積の取得
   ClibArea
-  area() const { return mArea; }
+  area() const
+  {
+    return mArea;
+  }
 
 
 public:
@@ -457,91 +473,47 @@ public:
   void
   set_id(
     SizeType id
-  )
-  {
-    mId = id;
-  }
+  );
 
   /// @brief 入力ピンを追加する．
   void
   add_input(
     CiInputPin* pin, ///< [in] ピン
     SizeType id      ///< [in] ピン番号
-  )
-  {
-    SizeType pid = mPinList.size();
-    pin->set_pin_id(pid);
-    mPinList.push_back(id);
-    SizeType iid = mInputList.size();
-    pin->set_input_id(iid);
-    mInputList.push_back(id);
-    ++ mInputNum;
-  }
+  );
 
   /// @brief 出力ピンを追加する．
   void
   add_output(
     CiOutputPin* pin, ///< [in] ピン
     SizeType id       ///< [in] ピン番号
-  )
-  {
-    SizeType pid = mPinList.size();
-    pin->set_pin_id(pid);
-    mPinList.push_back(id);
-    SizeType oid = mOutputList.size();
-    pin->set_output_id(oid);
-    mOutputList.push_back(id);
-    ++ mOutputNum;
-  }
+  );
 
   /// @brief 入出力ピンを追加する．
   void
   add_inout(
     CiInoutPin* pin, ///< [in] ピン
     SizeType id      ///< [in] ピン番号
-  )
-  {
-    SizeType pid = mPinList.size();
-    pin->set_pin_id(pid);
-    mPinList.push_back(id);
-    SizeType iid = mInputList.size();
-    pin->set_input_id(iid);
-    mInputList.push_back(id);
-    SizeType oid = mOutputList.size();
-    pin->set_output_id(oid);
-    mOutputList.push_back(id);
-    ++ mInoutNum;
-  }
+  );
 
   /// @brief 内部ピンを追加する．
   void
   add_internal(
     CiInternalPin* pin, ///< [in] ピン
     SizeType id         ///< [in] ピン番号
-  )
-  {
-    auto iid = mInternalList.size();
-    pin->set_internal_id(iid);
-    mInternalList.push_back(id);
-  }
+  );
 
   /// @brief バスを追加する．
   void
   add_bus(
     SizeType id ///< [in] バス番号
-  )
-  {
-    mBusList.push_back(id);
-  }
+  );
 
   /// @brief バンドルを追加する．
   void
   add_bundle(
     SizeType id ///< [in] バンドル番号
-  )
-  {
-    mBundleList.push_back(id);
-  }
+  );
 
   /// @brief タイミング情報用のデータ構造を初期化する．
   void

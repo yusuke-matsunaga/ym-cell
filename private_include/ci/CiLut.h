@@ -118,10 +118,7 @@ protected:
   void
   restore_common(
     BinDec& s ///< [in] 入力元のストリーム
-  )
-  {
-    s >> mTemplate;
-  }
+  );
 
   /// @brief mIndexWidthArray を初期化する．
   static

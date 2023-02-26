@@ -135,6 +135,9 @@ CiCellLibrary::restore(
   // バンドル情報の読み込み
   restore_bundle(bs);
 
+  // セルごとのピン，バス，バンドルの辞書を作る．
+  construct_cellpin_dict();
+
   // タイミング情報の読み込み
   restore_timing(bs);
 
@@ -167,9 +170,10 @@ CiCellLibrary::restore_bustype(
   SizeType n;
   s >> n;
   mBusTypeList.reserve(n);
-  for ( SizeType _: Range(n) ) {
+  for ( SizeType id: Range(n) ) {
     auto bustype = unique_ptr<CiBusType>{new CiBusType};
     bustype->restore(s);
+    mBusTypeDict.emplace(bustype->_name(), id);
     mBusTypeList.push_back(std::move(bustype));
   }
 }
@@ -184,7 +188,7 @@ CiCellLibrary::restore_lut_template(
   SizeType n;
   s >> n;
   mLutTemplateList.reserve(n);
-  for ( auto _: Range(n) ) {
+  for ( auto id: Range(n) ) {
     ymuint8 d;
     s >> d;
     unique_ptr<CiLutTemplate> ptr;
@@ -200,7 +204,12 @@ CiCellLibrary::restore_lut_template(
       break;
     }
     ptr->restore(s);
+    mLutDict.emplace(ptr->_name(), id);
     mLutTemplateList.push_back(std::move(ptr));
+  }
+  mRefLutTemplateList.resize(n);
+  for ( SizeType id: Range(n) ) {
+    mRefLutTemplateList[id] = id;
   }
 }
 
@@ -214,8 +223,7 @@ CiCellLibrary::restore_cell(
   SizeType nc;
   s >> nc;
   mCellList.reserve(nc);
-  mRefCellList.reserve(nc);
-  for ( auto _: Range(nc) ) {
+  for ( auto id: Range(nc) ) {
     ymuint8 type;
     s >> type;
     unique_ptr<CiCell> ptr;
@@ -249,7 +257,12 @@ CiCellLibrary::restore_cell(
       break;
     }
     ptr->restore(s);
+    mCellDict.emplace(ptr->_name(), id);
     mCellList.push_back(std::move(ptr));
+  }
+  mRefCellList.resize(nc);
+  for ( SizeType id: Range(nc) ) {
+    mRefCellList[id] = id;
   }
 }
 
@@ -321,6 +334,27 @@ CiCellLibrary::restore_bundle(
     unique_ptr<CiBundle> bundle{new CiBundle};
     bundle->restore(s);
     mBundleList.push_back(std::move(bundle));
+  }
+}
+
+// @brief セルごとのピン，バス，バンドルの辞書を作る．
+void
+CiCellLibrary::construct_cellpin_dict()
+{
+  for ( SizeType cell_id: mRefCellList ) {
+    auto& cell = mCellList[cell_id];
+    for ( auto pin_id: cell->pin_list() ) {
+      auto& pin = mPinList[pin_id];
+      mPinDict.add(cell_id, pin->_name(), pin_id);
+    }
+    for ( auto bus_id: cell->bus_list() ) {
+      auto& bus = mBusList[bus_id];
+      mBusDict.add(cell_id, bus->_name(), bus_id);
+    }
+    for ( auto bundle_id: cell->bundle_list() ) {
+      auto& bundle = mBundleList[bundle_id];
+      mBundleDict.add(cell_id, bundle->_name(), bundle_id);
+    }
   }
 }
 
@@ -412,6 +446,10 @@ CiCellLibrary::restore_cell_group(
     group->restore(s);
     mGroupList.push_back(std::move(group));
   }
+  mRefGroupList.resize(ng);
+  for ( SizeType id: Range(ng) ) {
+    mRefGroupList[id] = id;
+  }
 }
 
 // @brief セルクラスを読み込む．
@@ -427,6 +465,10 @@ CiCellLibrary::restore_cell_class(
     auto cc = unique_ptr<CiCellClass>{new CiCellClass};
     cc->restore(s);
     mClassList.push_back(std::move(cc));
+  }
+  mRefClassList.resize(nc);
+  for ( SizeType id: Range(nc) ) {
+    mRefClassList[id] = id;
   }
 }
 
@@ -666,7 +708,7 @@ CiFsmCell::restore(
 // @brief 内容を読み込む．
 void
 CiPin::restore_common(
-  BinDec& s ///< [in] 入力元のストリーム
+  BinDec& s
 )
 {
   s >> mName
@@ -917,6 +959,20 @@ CiCellClass::restore(
     mIdMapList[i].restore(s);
   }
   restore_vector(s, mGroupList);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLut
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容を読み込む．
+void
+CiLut::restore_common(
+  BinDec& s
+)
+{
+  s >> mTemplate;
 }
 
 
