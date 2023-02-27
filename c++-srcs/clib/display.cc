@@ -10,7 +10,6 @@
 #include "ym/ClibCell.h"
 #include "ym/ClibIOMap.h"
 #include "ym/ClibLut.h"
-#include "ym/ClibLutTemplate.h"
 #include "ym/ClibPin.h"
 #include "ym/ClibTiming.h"
 #include "ym/ClibCellClass.h"
@@ -507,23 +506,6 @@ display_group(
 }
 
 void
-display_index(
-  ostream& s,
-  const ClibLutTemplate& templ,
-  SizeType var
-)
-{
-  auto n = templ.index_num(var);
-  s << "(";
-  const char* comma = "";
-  for ( auto i: Range(n) ) {
-    s << comma << templ.index(var, i);
-    comma = ", ";
-  }
-  s << ")";
-}
-
-void
 display_cell(
   ostream& s,
   const ClibCell& cell,
@@ -746,23 +728,6 @@ ClibCellLibrary::display(
 
   // 電力単位
   s << "  leakage_power_unit: " << leakage_power_unit() << endl;
-
-  s << endl;
-
-  // lu_table_template
-  for ( auto templ: lu_table_template_list() ) {
-    s << "  lu_table_template(" << templ.name() << ")" << endl;
-    auto d = templ.dimension();
-    for ( auto j: Range(d) ) {
-      s << "    variable_" << (j + 1) << ": " << templ.variable_type(j) << endl;
-    }
-    for ( auto j: Range(d) ) {
-      s << "    index_" << (j + 1) << "   : ";
-      display_index(s, templ, j);
-      s << endl;
-    }
-    s << endl;
-  }
 
   s << endl;
 

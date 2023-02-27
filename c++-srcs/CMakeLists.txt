@@ -28,7 +28,6 @@ set (clib_SOURCES
   clib/ClibIOMap.cc
   clib/ClibLibraryPtr.cc
   clib/ClibLut.cc
-  clib/ClibLutTemplate.cc
   clib/ClibPatGraph.cc
   clib/ClibPin.cc
   clib/ClibTiming.cc

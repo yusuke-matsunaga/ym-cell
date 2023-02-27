@@ -46,10 +46,6 @@ public:
   /// @{
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief テンプレートの取得
-  ClibLutTemplate
-  lut_template() const;
-
   /// @brief 次元数の取得
   SizeType
   dimension() const;

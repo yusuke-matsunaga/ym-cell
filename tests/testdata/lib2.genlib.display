@@ -12,7 +12,6 @@ Library(lib2.genlib)
   capacitive_load_unit: 0
   leakage_power_unit: 
 
-
 Clib#0 (inv1x) : Combinational Logic
   area = 928
   Pin#0[ a ]: Input#0

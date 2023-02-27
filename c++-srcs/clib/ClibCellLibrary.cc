@@ -10,7 +10,6 @@
 #include "ym/ClibBusType.h"
 #include "ym/ClibCell.h"
 #include "ym/ClibCellClass.h"
-#include "ym/ClibLutTemplate.h"
 #include "ci/CiCellLibrary.h"
 
 
@@ -196,56 +195,6 @@ ClibCellLibrary::leakage_power_unit() const
     return mImpl->leakage_power_unit();
   }
   // デフォルト値
-  return {};
-}
-
-// @brief 遅延テーブルのテンプレート数の取得
-SizeType
-ClibCellLibrary::lu_table_template_num() const
-{
-  if ( mImpl ) {
-    return mImpl->lu_table_template_num();
-  }
-  // デフォルト値
-  return 0;
-}
-
-// @brief 遅延テーブルのテンプレートの取得
-ClibLutTemplate
-ClibCellLibrary::lu_table_template(
-  SizeType id
-) const
-{
-  if ( mImpl ) {
-    return ClibLutTemplate{mImpl, id};
-  }
-  // デフォルト値
-  return {};
-}
-
-// @brief 遅延テーブルのテンプレートの取得
-ClibLutTemplate
-ClibCellLibrary::lu_table_template(
-  const string& name
-) const
-{
-  if ( mImpl ) {
-    SizeType id = mImpl->lu_table_template(name);
-    if ( id != CLIB_NULLID ) {
-      return ClibLutTemplate{mImpl, id};
-    }
-  }
-  // デフォルト値
-  return {};
-}
-
-// @brief 遅延テーブルのテンプレートのリストの取得
-ClibLutTemplateList
-ClibCellLibrary::lu_table_template_list() const
-{
-  if ( mImpl ) {
-    return ClibLutTemplateList{mImpl, mImpl->lu_table_template_list()};
-  }
   return {};
 }
 

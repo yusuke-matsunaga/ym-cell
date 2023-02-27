@@ -517,10 +517,7 @@ public:
 
   /// @brief タイミング情報用のデータ構造を初期化する．
   void
-  init_timing_map(
-    SizeType input_num, ///< [in] 入力ピン数
-    SizeType output_num ///< [in] 出力ピン数
-  );
+  init_timing_map();
 
   /// @brief タイミング情報をセットする(単独のタイミング情報)．
   ///

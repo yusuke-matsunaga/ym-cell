@@ -184,13 +184,6 @@ public:
     return mLeakagePowerUnit;
   }
 
-  /// @brief 遅延テーブルのテンプレート数の取得
-  SizeType
-  lu_table_template_num() const
-  {
-    return mLutTemplateList.size();
-  }
-
   /// @brief ルックアップテーブルのテンプレート番号の取得
   ///
   /// なければ CLIB_NULLID を返す．
@@ -214,13 +207,6 @@ public:
       return mLutDict.at(name);
     }
     return CLIB_NULLID;
-  }
-
-  /// @brief 遅延テーブルのテンプレート番号のリストの取得
-  const vector<SizeType>&
-  lu_table_template_list() const
-  {
-    return mRefLutTemplateList;
   }
 
   /// @brief バスタイプの取得
@@ -791,9 +777,7 @@ public:
   /// @brief タイミング情報用のデータ構造を初期化する．
   void
   init_cell_timing_map(
-    SizeType cell_id,   ///< [in] セル番号
-    SizeType input_num, ///< [in] 入力ピン数
-    SizeType output_num ///< [in] 出力ピン数
+    SizeType cell_id ///< [in] セル番号
   );
 
   /// @brief 1次元の LUT を作る．

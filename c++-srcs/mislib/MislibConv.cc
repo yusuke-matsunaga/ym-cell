@@ -226,9 +226,9 @@ MislibConv::new_gate(
 		       Expr::make_invalid());
 
   // タイミング情報の生成
-  auto cell = mLibrary->_cell(cell_id);
-  cell->init_timing_map(ni, 1);
+  mLibrary->init_cell_timing_map(cell_id);
   auto tv_function = oexpr.make_tv(ni);
+  auto cell = mLibrary->_cell(cell_id);
   if ( wildcard_pin ) {
     // すべてのピンが同一のパラメータを持つ．
     auto pt_pin = ipin_top;

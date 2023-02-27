@@ -8,6 +8,7 @@
 /// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
+#error "obsolete"
 #include "ym/ClibHandle.h"
 
 

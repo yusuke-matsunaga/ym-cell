@@ -613,12 +613,10 @@ CiCellLibrary::add_timing_lut2(
 // @brief タイミング情報用のデータ構造を初期化する．
 void
 CiCellLibrary::init_cell_timing_map(
-  SizeType cell_id,
-  SizeType input_num,
-  SizeType output_num
+  SizeType cell_id
 )
 {
-  mCellList[cell_id]->init_timing_map(input_num, output_num);
+  mCellList[cell_id]->init_timing_map();
 }
 
 // @brief 1次元の LUT を作る．

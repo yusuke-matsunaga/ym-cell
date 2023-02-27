@@ -20,8 +20,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief 内容を設定する．
 bool
 CellInfo::set(
-  const AstValue* cell_val,
-  ClibDelayModel delay_model
+  const AstValue* cell_val
 )
 {
   // セル名
@@ -111,13 +110,14 @@ CellInfo::set(
     ok = false;
   }
   else {
+    auto delay_model = mLibrary->delay_model();
     auto& vec = elem_dict.at("pin");
     SizeType npin = vec.size();
     mPinInfoList.clear();
     mPinInfoList.resize(npin);
     for ( SizeType i = 0; i < npin; ++ i ) {
       auto pin_val = vec[i];
-      if ( !mPinInfoList[i].set(pin_val, delay_model) ) {
+      if ( !mPinInfoList[i].set(mLibrary, pin_val) ) {
 	cerr << "Error in pin definition" << endl;
 	ok = false;
       }
@@ -201,34 +201,37 @@ CellInfo::set(
 
 // @brief セルを作る．
 bool
-CellInfo::add_cell(
-  CiCellLibrary* library
-) const
+CellInfo::add_cell()
 {
   SizeType cell_id{CLIB_NULLID};
   if ( mHasFF ) {
     // FF タイプ
-    cell_id = add_ff_cell(library);
+    cell_id = add_ff_cell();
   }
   else if ( mHasLatch ) {
     // ラッチタイプ
-    cell_id = add_latch_cell(library);
+    cell_id = add_latch_cell();
   }
   else if ( mHasFSM ) {
     // FSM タイプ
-    cell_id = add_fsm_cell(library);
+    cell_id = add_fsm_cell();
   }
   else {
     // 論理タイプ
-    cell_id = library->add_logic_cell(mName, mArea);
+    cell_id = mLibrary->add_logic_cell(mName, mArea);
   }
   ASSERT_COND( cell_id != CLIB_NULLID );
 
-  library->init_cell_timing_map(cell_id, mInputId, mOutputId);
 
   // ピンを作る．
   for ( auto& pininfo: mPinInfoList ) {
-    pininfo.add_pin(library, cell_id, mIpinMap);
+    pininfo.add_pin(cell_id, mIpinMap);
+  }
+
+  // タイミングを作る．
+  mLibrary->init_cell_timing_map(cell_id);
+  for ( auto& pininfo: mPinInfoList ) {
+    pininfo.add_timing(cell_id, mIpinMap);
   }
 
   return true;
@@ -236,9 +239,7 @@ CellInfo::add_cell(
 
 // @brief FF セルを作る．
 SizeType
-CellInfo::add_ff_cell(
-  CiCellLibrary* library
-) const
+CellInfo::add_ff_cell() const
 {
   auto var1 = mFFInfo.var1();
   auto var2 = mFFInfo.var2();
@@ -258,19 +259,17 @@ CellInfo::add_ff_cell(
   }
   auto cpv1 = mFFInfo.clear_preset_var1();
   auto cpv2 = mFFInfo.clear_preset_var2();
-  auto cell = library->add_ff_cell(mName, mArea,
-				   var1, var2,
-				   clocked_on, clocked_on_also,
-				   next_state, clear, preset,
-				   cpv1, cpv2);
+  auto cell = mLibrary->add_ff_cell(mName, mArea,
+				    var1, var2,
+				    clocked_on, clocked_on_also,
+				    next_state, clear, preset,
+				    cpv1, cpv2);
   return cell;
 }
 
 // @brief ラッチセルを作る．
 SizeType
-CellInfo::add_latch_cell(
-  CiCellLibrary* library
-) const
+CellInfo::add_latch_cell() const
 {
   auto var1 = mLatchInfo.var1();
   auto var2 = mLatchInfo.var2();
@@ -296,19 +295,17 @@ CellInfo::add_latch_cell(
   }
   auto cpv1 = mLatchInfo.clear_preset_var1();
   auto cpv2 = mLatchInfo.clear_preset_var2();
-  auto cell = library->add_latch_cell(mName, mArea,
-				      var1, var2,
-				      enable_on, enable_on_also,
-				      data_in, clear, preset,
-				      cpv1, cpv2);
+  auto cell = mLibrary->add_latch_cell(mName, mArea,
+				       var1, var2,
+				       enable_on, enable_on_also,
+				       data_in, clear, preset,
+				       cpv1, cpv2);
   return cell;
 }
 
 // @brief FSM セルを作る．
 SizeType
-CellInfo::add_fsm_cell(
-  CiCellLibrary* library
-) const
+CellInfo::add_fsm_cell() const
 {
 #warning "TODO: 未完"
   return CLIB_NULLID;

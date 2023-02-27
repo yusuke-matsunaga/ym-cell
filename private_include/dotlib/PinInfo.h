@@ -43,8 +43,8 @@ public:
   /// @brief 内容を設定する．
   bool
   set(
-    const AstValue* pin_val,   ///< [in] ピン情報のパース木
-    ClibDelayModel delay_model ///< [in] ディレイモデル
+    CiCellLibrary* library, ///< [in] ライブラリ
+    const AstValue* pin_val ///< [in] ピン情報のパース木
   );
 
   /// @brief 向きを得る．
@@ -64,8 +64,14 @@ public:
   /// @brief ピンを生成する．
   bool
   add_pin(
-    CiCellLibrary* lib,
-    SizeType cell_id,
+    SizeType cell_id,                                ///< [in] セル番号
+    const unordered_map<ShString, SizeType>& pin_map ///< [in] 入力ピン番号の辞書
+  );
+
+  /// @brief タイミングを生成する．
+  bool
+  add_timing(
+    SizeType cell_id,                                ///< [in] セル番号
     const unordered_map<ShString, SizeType>& pin_map ///< [in] 入力ピン番号の辞書
   ) const;
 
@@ -90,8 +96,7 @@ private:
   /// 現時点ではエラーにならない．
   bool
   get_output_params(
-    const AstElemDict& elem_dict,
-    ClibDelayModel delay_model
+    const AstElemDict& elem_dict
   );
 
 
@@ -99,6 +104,9 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // ライブラリ
+  CiCellLibrary* mLibrary{nullptr};
 
   // 名前のリスト
   vector<ShString> mNameList;
@@ -120,6 +128,8 @@ private:
   ClibTime mMinTransition;
   const AstExpr* mFunction{nullptr};
   const AstExpr* mTristate{nullptr};
+  Expr mFunctionExpr;
+  vector<SizeType> mOpinList;
 
   // タイミング情報
   vector<TimingInfo> mTimingInfoList;

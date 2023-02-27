@@ -92,11 +92,17 @@ public:
 
   /// @brief 内容を持っているときに true を返す．
   bool
-  is_valid() const { return mImpl != nullptr; }
+  is_valid() const
+  {
+    return mImpl != nullptr;
+  }
 
   /// @brief 不正値の時 true を返す．
   bool
-  is_invalid() const { return !is_valid(); }
+  is_invalid() const
+  {
+    return !is_valid();
+  }
 
   /// @brief 名前の取得
   string
@@ -170,28 +176,6 @@ public:
   /// @brief 電力単位の取得
   string
   leakage_power_unit() const;
-
-  /// @brief 遅延テーブルのテンプレート数の取得
-  SizeType
-  lu_table_template_num() const;
-
-  /// @brief 遅延テーブルのテンプレートの取得
-  ClibLutTemplate
-  lu_table_template(
-    SizeType table_id ///< [in] テンプレート番号 ( 0 <= table_id < lu_table_template_num() )
-  ) const;
-
-  /// @brief 遅延テーブルのテンプレートの取得
-  ///
-  /// なければ不正値を返す．
-  ClibLutTemplate
-  lu_table_template(
-    const string& name ///< [in] テンプレート名
-  ) const;
-
-  /// @brief 遅延テーブルのテンプレートのリストの取得
-  ClibLutTemplateList
-  lu_table_template_list() const;
 
   /// @brief バスタイプの取得
   ///

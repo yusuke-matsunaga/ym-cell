@@ -240,12 +240,9 @@ CiCell::add_bundle(
 
 // @brief タイミング情報用のデータ構造を初期化する．
 void
-CiCell::init_timing_map(
-  SizeType input_num,
-  SizeType output_num
-)
+CiCell::init_timing_map()
 {
-  SizeType map_size = input_num * output_num * 2;
+  SizeType map_size = input2_num() * output2_num() * 2;
   mTimingMap.clear();
   mTimingMap.resize(map_size, {});
 }

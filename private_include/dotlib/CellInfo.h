@@ -28,7 +28,11 @@ class CellInfo
 public:
 
   /// @brief コンストラクタ
-  CellInfo() = default;
+  CellInfo(
+    CiCellLibrary* library ///< [in] 対象のライブラリ
+  ) : mLibrary{library}
+  {
+  }
 
   /// @brief デストラクタ
   ~CellInfo() = default;
@@ -42,15 +46,12 @@ public:
   /// @brief 内容を設定する．
   bool
   set(
-    const AstValue* cell_val,  ///< [in] セル情報のパース木
-    ClibDelayModel delay_model ///< [in] ディレイモデル
+    const AstValue* cell_val ///< [in] セル情報のパース木
   );
 
   /// @brief セルを作る．
   bool
-  add_cell(
-    CiCellLibrary* library
-  ) const;
+  add_cell();
 
 
 private:
@@ -60,27 +61,24 @@ private:
 
   /// @brief FF セルを作る．
   SizeType
-  add_ff_cell(
-    CiCellLibrary* library
-  ) const;
+  add_ff_cell() const;
 
   /// @brief ラッチセルを作る．
   SizeType
-  add_latch_cell(
-    CiCellLibrary* library
-  ) const;
+  add_latch_cell() const;
 
   /// @brief FSM セルを作る．
   SizeType
-  add_fsm_cell(
-    CiCellLibrary* library
-  ) const;
+  add_fsm_cell() const;
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // ライブラリ
+  CiCellLibrary* mLibrary{nullptr};
 
   // 名前
   ShString mName;

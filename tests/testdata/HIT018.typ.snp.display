@@ -12,63 +12,6 @@ Library()
   capacitive_load_unit: 1pf
   leakage_power_unit: 
 
-  lu_table_template(DELAY_0)
-    variable_1: input_net_transition
-    index_1   : (0.04, 0.92, 2)
-
-  lu_table_template(DELAY_1)
-    variable_1: total_output_net_capacitance
-    variable_2: input_net_transition
-    index_1   : (0.005, 0.1, 0.28, 0.6)
-    index_2   : (0.04, 0.92, 2)
-
-  lu_table_template(DELAY_2)
-    variable_1: total_output_net_capacitance
-    variable_2: input_net_transition
-    index_1   : (0.005, 0.2, 0.56, 1.2)
-    index_2   : (0.04, 0.92, 2)
-
-  lu_table_template(DELAY_3)
-    variable_1: total_output_net_capacitance
-    variable_2: input_net_transition
-    index_1   : (0.005, 0.4, 1.12, 2.4)
-    index_2   : (0.04, 0.92, 2)
-
-  lu_table_template(DELAY_4)
-    variable_1: total_output_net_capacitance
-    variable_2: input_net_transition
-    index_1   : (0.005, 0.8, 2.24, 4.8)
-    index_2   : (0.04, 0.92, 2)
-
-  lu_table_template(DELAY_5)
-    variable_1: total_output_net_capacitance
-    variable_2: input_net_transition
-    index_1   : (0.005, 1.6, 4.48, 9.6)
-    index_2   : (0.04, 0.92, 2)
-
-  lu_table_template(DELAY_6)
-    variable_1: total_output_net_capacitance
-    variable_2: input_net_transition
-    index_1   : (0.005, 0.05, 0.14, 0.3)
-    index_2   : (0.04, 0.92, 2)
-
-  lu_table_template(CHECK_0)
-    variable_1: constrained_pin_transition
-    index_1   : (0.04, 0.92, 2)
-
-  lu_table_template(CHECK_1)
-    variable_1: constrained_pin_transition
-    variable_2: related_pin_transition
-    index_1   : (0.04, 0.92, 2)
-    index_2   : (0)
-
-  lu_table_template(CHECK_2)
-    variable_1: constrained_pin_transition
-    variable_2: related_pin_transition
-    index_1   : (0.04, 0.92, 2)
-    index_2   : (0.04, 0.92, 2)
-
-
 Clib#0 (HIT18AND2P005) : Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0

@@ -20,7 +20,6 @@
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibLut.h"
-#include "ym/ClibLutTemplate.h"
 
 #include "dotlib/Parser.h"
 #include "dotlib/AstAttr.h"
@@ -266,9 +265,9 @@ set_library(
   if ( elem_dict.count("cell") > 0 ) {
     auto& v = elem_dict.at("cell");
     for ( auto ast_cell: v ) {
-      CellInfo cell_info;
-      if ( cell_info.set(ast_cell, library->delay_model()) ) {
-	cell_info.add_cell(library.get());
+      CellInfo cell_info{library.get()};
+      if ( cell_info.set(ast_cell) ) {
+	cell_info.add_cell();
       }
     }
   }

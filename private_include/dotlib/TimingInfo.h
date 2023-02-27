@@ -40,17 +40,15 @@ public:
   /// @brief 内容を設定する．
   bool
   set(
-    const AstValue* timing_val, ///< [in] タイミング情報のパース木
-    ClibDelayModel delay_model  ///< [in] ディレイモデル
+    CiCellLibrary* mLibrary,   ///< [in] セルライブラリ
+    const AstValue* timing_val ///< [in] タイミング情報のパース木
   );
 
   /// @brief タイミング情報を作る．
   bool
   add_timing(
-    CiCellLibrary* library,
     CiCell* cell,
     const Expr& function_expr,
-    SizeType ni,
     const vector<SizeType>& opin_list,
     const unordered_map<ShString, SizeType>& ipin_map
   ) const;
@@ -84,6 +82,9 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // ライブラリ
+  CiCellLibrary* mLibrary;
 
   // 名前(オプショナル)
   ShString mName;

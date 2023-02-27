@@ -23,11 +23,12 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief 内容を設定する．
 bool
 TimingInfo::set(
-  const AstValue* timing_val,
-  ClibDelayModel delay_model
+  CiCellLibrary* library,
+  const AstValue* timing_val
 )
 {
-  mDelayModel = delay_model;
+  mLibrary = library;
+  mDelayModel = mLibrary->delay_model();
 
   // 名前を得る．
   auto& header = timing_val->group_header_value();
@@ -92,10 +93,8 @@ TimingInfo::set(
 // @brief タイミング情報を作る．
 bool
 TimingInfo::add_timing(
-  CiCellLibrary* lib,
   CiCell* cell,
   const Expr& function_expr,
-  SizeType ni,
   const vector<SizeType>& opin_list,
   const unordered_map<ShString, SizeType>& ipin_map
 ) const
@@ -108,34 +107,34 @@ TimingInfo::add_timing(
   SizeType tid;
   switch ( mDelayModel ) {
   case ClibDelayModel::generic_cmos:
-    tid = lib->add_timing_generic(mTimingType, when,
-				  mIntrinsicRise, mIntrinsicFall,
-				  mSlopeRise, mSlopeFall,
-				  mRiseResistance, mFallResistance);
+    tid = mLibrary->add_timing_generic(mTimingType, when,
+				       mIntrinsicRise, mIntrinsicFall,
+				       mSlopeRise, mSlopeFall,
+				       mRiseResistance, mFallResistance);
     break;
 
   case ClibDelayModel::table_lookup:
     switch ( mLutType ) {
     case 1:
       {
-	auto cr_lut = mCellRise.gen_lut(lib);
-	auto cf_lut = mCellFall.gen_lut(lib);
-	auto rt_lut = mRiseTransition.gen_lut(lib);
-	auto ft_lut = mFallTransition.gen_lut(lib);
-	tid = lib->add_timing_lut1(mTimingType, when,
-				   cr_lut, cf_lut,
-				   rt_lut, ft_lut);
+	auto cr_lut = mCellRise.gen_lut(mLibrary);
+	auto cf_lut = mCellFall.gen_lut(mLibrary);
+	auto rt_lut = mRiseTransition.gen_lut(mLibrary);
+	auto ft_lut = mFallTransition.gen_lut(mLibrary);
+	tid = mLibrary->add_timing_lut1(mTimingType, when,
+					cr_lut, cf_lut,
+					rt_lut, ft_lut);
       }
       break;
     case 2:
       {
-	auto rt_lut = mRiseTransition.gen_lut(lib);
-	auto ft_lut = mFallTransition.gen_lut(lib);
-	auto rp_lut = mRisePropagation.gen_lut(lib);
-	auto fp_lut = mFallPropagation.gen_lut(lib);
-	tid = lib->add_timing_lut2(mTimingType, when,
-				   rt_lut, ft_lut,
-				   rp_lut, fp_lut);
+	auto rt_lut = mRiseTransition.gen_lut(mLibrary);
+	auto ft_lut = mFallTransition.gen_lut(mLibrary);
+	auto rp_lut = mRisePropagation.gen_lut(mLibrary);
+	auto fp_lut = mFallPropagation.gen_lut(mLibrary);
+	tid = mLibrary->add_timing_lut2(mTimingType, when,
+					rt_lut, ft_lut,
+					rp_lut, fp_lut);
       }
       break;
     default:
@@ -167,6 +166,7 @@ TimingInfo::add_timing(
 
   // timing_type が combinational の場合には実際の論理関数を調べて
   // timing_sense を設定する．
+  SizeType ni = cell->input2_num();
   TvFunc function{ni};
   if ( mTimingType == ClibTimingType::combinational ) {
     function = function_expr.make_tv(ni);

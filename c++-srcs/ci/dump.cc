@@ -118,7 +118,7 @@ CiCellLibrary::dump(
   }
 
   // 遅延テーブルのテンプレート
-  bs << lu_table_template_num();
+  bs << mLutTemplateList.size();
   for ( auto& lut_templ: mLutTemplateList ) {
     lut_templ->dump(bs);
   }

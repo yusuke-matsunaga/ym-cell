@@ -17,10 +17,12 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief 内容を設定する．
 bool
 PinInfo::set(
-  const AstValue* pin_val,
-  ClibDelayModel delay_model
+  CiCellLibrary* library,
+  const AstValue* pin_val
 )
 {
+  mLibrary = library;
+
   // ピン名のリストを得る．
   auto& pin_header = pin_val->group_header_value();
   SizeType n = pin_header.complex_elem_size();
@@ -52,7 +54,7 @@ PinInfo::set(
     break;
 
   case ClibDirection::output:
-    if ( !get_output_params(elem_dict, delay_model) ) {
+    if ( !get_output_params(elem_dict) ) {
       cerr << "X2" << endl;
       ok = false;
     }
@@ -63,7 +65,7 @@ PinInfo::set(
       cerr << "X3" << endl;
       ok = false;
     }
-    if ( !get_output_params(elem_dict, delay_model) ) {
+    if ( !get_output_params(elem_dict) ) {
       cerr << "X4" << endl;
       ok = false;
     }
@@ -100,71 +102,98 @@ END_NONAMESPACE
 // @brief ピンを生成する．
 bool
 PinInfo::add_pin(
-  CiCellLibrary* library,
   SizeType cell_id,
   const unordered_map<ShString, SizeType>& ipin_map
-) const
+)
 {
-  auto cell = library->_cell(cell_id);
-
   switch ( mDirection ) {
   case ClibDirection::input:
     for ( auto name: mNameList ) {
-      auto pin_id = library->add_input(cell_id, name,
-				       mCapacitance,
-				       mRiseCapacitance,
-				       mFallCapacitance);
-      auto pin = library->_pin(pin_id);
+      auto pin_id = mLibrary->add_input(cell_id, name,
+					mCapacitance,
+					mRiseCapacitance,
+					mFallCapacitance);
+      auto pin = mLibrary->_pin(pin_id);
       ASSERT_COND( pin->input_id() == ipin_map.at(name) );
     }
     break;
 
   case ClibDirection::output:
     {
-      auto function = make_expr(mFunction, ipin_map);
+      mFunctionExpr = make_expr(mFunction, ipin_map);
       auto tristate = make_expr(mTristate, ipin_map);
-      vector<SizeType> opin_list;
       for ( auto name: mNameList ) {
-	auto pin_id = library->add_output(cell_id, name,
-					  mMaxFanout, mMinFanout,
-					  mMaxCapacitance,
-					  mMinCapacitance,
-					  mMaxTransition,
-					  mMinTransition,
-					  function, tristate);
-	auto pin = library->_pin(pin_id);
-	opin_list.push_back(pin->output_id());
-      }
-      SizeType ni = cell->input2_num();
-      for ( auto& timing_info: mTimingInfoList ) {
-	timing_info.add_timing(library, cell, function, ni, opin_list, ipin_map);
+	auto pin_id = mLibrary->add_output(cell_id, name,
+					   mMaxFanout,
+					   mMinFanout,
+					   mMaxCapacitance,
+					   mMinCapacitance,
+					   mMaxTransition,
+					   mMinTransition,
+					   mFunctionExpr,
+					   tristate);
+	auto pin = mLibrary->_pin(pin_id);
+	mOpinList.push_back(pin->output_id());
       }
     }
     break;
 
   case ClibDirection::inout:
     {
-      auto function = make_expr(mFunction, ipin_map);
+      mFunctionExpr = make_expr(mFunction, ipin_map);
       auto tristate = make_expr(mTristate, ipin_map);
-      vector<SizeType> opin_list;
       for ( auto name: mNameList ) {
-	auto pin_id = library->add_inout(cell_id, name,
-					 mCapacitance,
-					 mRiseCapacitance,
-					 mFallCapacitance,
-					 mMaxFanout, mMinFanout,
-					 mMaxCapacitance,
-					 mMinCapacitance,
-					 mMaxTransition,
-					 mMinTransition,
-					 function, tristate);
-	auto pin = library->_pin(pin_id);
+	auto pin_id = mLibrary->add_inout(cell_id, name,
+					  mCapacitance,
+					  mRiseCapacitance,
+					  mFallCapacitance,
+					  mMaxFanout, mMinFanout,
+					  mMaxCapacitance,
+					  mMinCapacitance,
+					  mMaxTransition,
+					  mMinTransition,
+					  mFunctionExpr,
+					  tristate);
+	auto pin = mLibrary->_pin(pin_id);
 	ASSERT_COND( pin->input_id() == ipin_map.at(name) );
-	opin_list.push_back(pin->output_id());
+	mOpinList.push_back(pin->output_id());
       }
-      SizeType ni = cell->input2_num();
+    }
+    break;
+
+  default:
+    ASSERT_NOT_REACHED;
+    break;
+  }
+
+  return true;
+}
+
+// @brief タイミングを生成する．
+bool
+PinInfo::add_timing(
+  SizeType cell_id,
+  const unordered_map<ShString, SizeType>& ipin_map
+) const
+{
+  auto cell = mLibrary->_cell(cell_id);
+
+  switch ( mDirection ) {
+  case ClibDirection::input:
+    break;
+
+  case ClibDirection::output:
+    {
       for ( auto& timing_info: mTimingInfoList ) {
-	timing_info.add_timing(library, cell, function, ni, opin_list, ipin_map);
+	timing_info.add_timing(cell, mFunctionExpr, mOpinList, ipin_map);
+      }
+    }
+    break;
+
+  case ClibDirection::inout:
+    {
+      for ( auto& timing_info: mTimingInfoList ) {
+	timing_info.add_timing(cell, mFunctionExpr, mOpinList, ipin_map);
       }
     }
     break;
@@ -226,8 +255,7 @@ PinInfo::get_input_params(
 // @brief 出力ピン用のパラメータを取り出す．
 bool
 PinInfo::get_output_params(
-  const AstElemDict& elem_dict,
-  ClibDelayModel delay_model
+  const AstElemDict& elem_dict
 )
 {
   bool ok{true};
@@ -333,7 +361,7 @@ PinInfo::get_output_params(
     mTimingInfoList.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       auto ast_timing = vec[i];
-      if ( !mTimingInfoList[i].set(ast_timing, delay_model) ) {
+      if ( !mTimingInfoList[i].set(mLibrary, ast_timing) ) {
 	cerr << " Error in TimingInfoList[" << i << "].set()" << endl;
 	ok = false;
       }
