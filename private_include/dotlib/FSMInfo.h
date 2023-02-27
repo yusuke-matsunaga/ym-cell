@@ -1,33 +1,33 @@
-#ifndef ASTFSMINFO_H
-#define ASTFSMINFO_H
+#ifndef FSMINFO_H
+#define FSMINFO_H
 
-/// @file AstFSMInfo.h
-/// @brief AstFSMInfo のヘッダファイル
+/// @file FSMInfo.h
+/// @brief FSMInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
-#include "dotlib/AstFLInfo.h"
+#include "dotlib/FLInfo.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class AstFSMInfo AstFSMInfo.h "AstFSMInfo.h"
+/// @class FSMInfo FSMInfo.h "FSMInfo.h"
 /// @brief
 //////////////////////////////////////////////////////////////////////
-class AstFSMInfo :
-  public AstFLInfo
+class FSMInfo :
+  public FLInfo
 {
 public:
 
   /// @brief コンストラクタ
-  AstFSMInfo() = default;
+  FSMInfo() = default;
 
   /// @brief デストラクタ
-  ~AstFSMInfo() = default;
+  ~FSMInfo() = default;
 
 
 public:
@@ -58,4 +58,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTFSMINFO_H
+#endif // FSMINFO_H

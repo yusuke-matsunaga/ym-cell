@@ -1,33 +1,33 @@
-#ifndef ASTLATCHINFO_H
-#define ASTLATCHINFO_H
+#ifndef LATCHINFO_H
+#define LATCHINFO_H
 
-/// @file AstLatchInfo.h
-/// @brief AstLatchInfo のヘッダファイル
+/// @file LatchInfo.h
+/// @brief LatchInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
-#include "dotlib/AstFLInfo.h"
+#include "dotlib/FLInfo.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class AstLatchInfo AstLatchInfo.h "AstLatchInfo.h"
+/// @class LatchInfo LatchInfo.h "LatchInfo.h"
 /// @brief ラッチグループの情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class AstLatchInfo :
-  public AstFLInfo
+class LatchInfo :
+  public FLInfo
 {
 public:
 
   /// @brief コンストラクタ
-  AstLatchInfo() = default;
+  LatchInfo() = default;
 
   /// @brief デストラクタ
-  ~AstLatchInfo() = default;
+  ~LatchInfo() = default;
 
 
 public:
@@ -69,16 +69,16 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // enable_on の値
-  const AstExpr* mEnableOn;
+  const AstExpr* mEnableOn{nullptr};
 
   // enable_on_also の値
-  const AstExpr* mEnableOnAlso;
+  const AstExpr* mEnableOnAlso{nullptr};
 
   // data_in の値
-  const AstExpr* mDataIn;
+  const AstExpr* mDataIn{nullptr};
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTLATCHINFO_H
+#endif // LATCHINFO_H

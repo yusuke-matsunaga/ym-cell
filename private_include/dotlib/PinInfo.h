@@ -1,15 +1,15 @@
-#ifndef ASTPININFO_H
-#define ASTPININFO_H
+#ifndef PININFO_H
+#define PININFO_H
 
-/// @file AstPinInfo.h
-/// @brief AstPinInfo のヘッダファイル
+/// @file PinInfo.h
+/// @brief PinInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
-#include "dotlib/AstTimingInfo.h"
+#include "dotlib/TimingInfo.h"
 #include "ci/CiCell.h"
 #include "ym/Expr.h"
 #include "ym/ShString.h"
@@ -21,18 +21,18 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class AstElemDict;
 
 //////////////////////////////////////////////////////////////////////
-/// @class AstPinInfo AstPinInfo.h "AstPinInfo.h"
+/// @class PinInfo PinInfo.h "PinInfo.h"
 /// @brief ピンのパース情報
 //////////////////////////////////////////////////////////////////////
-class AstPinInfo
+class PinInfo
 {
 public:
 
   /// @brief コンストラクタ
-  AstPinInfo() = default;
+  PinInfo() = default;
 
   /// @brief デストラクタ
-  ~AstPinInfo() = default;
+  ~PinInfo() = default;
 
 
 public:
@@ -122,10 +122,10 @@ private:
   const AstExpr* mTristate{nullptr};
 
   // タイミング情報
-  vector<AstTimingInfo> mTimingInfoList;
+  vector<TimingInfo> mTimingInfoList;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTPININFO_H
+#endif // PININFO_H

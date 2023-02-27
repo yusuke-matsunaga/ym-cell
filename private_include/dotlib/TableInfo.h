@@ -1,8 +1,8 @@
-#ifndef ASTTABLEINFO_H
-#define ASTTABLEINFO_H
+#ifndef TABLEINFO_H
+#define TABLEINFO_H
 
-/// @file AstTableInfo.h
-/// @brief AstTableInfo のヘッダファイル
+/// @file TableInfo.h
+/// @brief TableInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
@@ -17,18 +17,18 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class AstTableInfo AstTableInfo.h "AstTableInfo.h"
+/// @class TableInfo TableInfo.h "TableInfo.h"
 /// @brief テーブルグループのパース情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class AstTableInfo
+class TableInfo
 {
 public:
 
   /// @brief コンストラクタ
-  AstTableInfo() = default;
+  TableInfo() = default;
 
   /// @brief デストラクタ
-  ~AstTableInfo() = default;
+  ~TableInfo() = default;
 
 
 public:
@@ -75,4 +75,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTTABLEINFO_H
+#endif // TABLEINFO_H

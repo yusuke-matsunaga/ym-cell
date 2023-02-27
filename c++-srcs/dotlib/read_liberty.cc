@@ -26,10 +26,8 @@
 #include "dotlib/AstAttr.h"
 #include "dotlib/AstExpr.h"
 #include "dotlib/AstElemDict.h"
-#include "dotlib/AstLuTemplInfo.h"
-#include "dotlib/AstCellInfo.h"
-#include "dotlib/AstPinInfo.h"
-#include "dotlib/AstTimingInfo.h"
+#include "dotlib/LuTemplInfo.h"
+#include "dotlib/CellInfo.h"
 
 #include "ym/Expr.h"
 #include "ym/TvFunc.h"
@@ -257,7 +255,7 @@ set_library(
   if ( elem_dict.count("lu_table_template") > 0 ) {
     auto& vec = elem_dict.at("lu_table_template");
     for ( auto ast_templ: vec ) {
-      AstLuTemplInfo info;
+      LuTemplInfo info;
       if ( info.set(ast_templ) ) {
 	info.add_lu_template(library);
       }
@@ -268,7 +266,7 @@ set_library(
   if ( elem_dict.count("cell") > 0 ) {
     auto& v = elem_dict.at("cell");
     for ( auto ast_cell: v ) {
-      AstCellInfo cell_info;
+      CellInfo cell_info;
       if ( cell_info.set(ast_cell, library->delay_model()) ) {
 	cell_info.add_cell(library.get());
       }

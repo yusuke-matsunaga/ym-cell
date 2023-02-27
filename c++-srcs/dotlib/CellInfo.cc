@@ -1,15 +1,15 @@
 
-/// @file AstCellInfo.cc
-/// @brief AstCellInfo の実装ファイル
+/// @file CellInfo.cc
+/// @brief CellInfo の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/AstCellInfo.h"
+#include "dotlib/CellInfo.h"
+#include "dotlib/PinInfo.h"
+#include "dotlib/TimingInfo.h"
 #include "dotlib/AstElemDict.h"
-#include "dotlib/AstPinInfo.h"
-#include "dotlib/AstTimingInfo.h"
 #include "dotlib/AstExpr.h"
 #include "dotlib/AstValue.h"
 #include "ci/CiCellLibrary.h"
@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief 内容を設定する．
 bool
-AstCellInfo::set(
+CellInfo::set(
   const AstValue* cell_val,
   ClibDelayModel delay_model
 )
@@ -201,7 +201,7 @@ AstCellInfo::set(
 
 // @brief セルを作る．
 bool
-AstCellInfo::add_cell(
+CellInfo::add_cell(
   CiCellLibrary* library
 ) const
 {
@@ -236,7 +236,7 @@ AstCellInfo::add_cell(
 
 // @brief FF セルを作る．
 SizeType
-AstCellInfo::add_ff_cell(
+CellInfo::add_ff_cell(
   CiCellLibrary* library
 ) const
 {
@@ -268,7 +268,7 @@ AstCellInfo::add_ff_cell(
 
 // @brief ラッチセルを作る．
 SizeType
-AstCellInfo::add_latch_cell(
+CellInfo::add_latch_cell(
   CiCellLibrary* library
 ) const
 {
@@ -306,7 +306,7 @@ AstCellInfo::add_latch_cell(
 
 // @brief FSM セルを作る．
 SizeType
-AstCellInfo::add_fsm_cell(
+CellInfo::add_fsm_cell(
   CiCellLibrary* library
 ) const
 {

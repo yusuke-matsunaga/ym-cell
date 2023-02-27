@@ -1,12 +1,12 @@
 
-/// @file AstTableInfo.cc
-/// @brief AstTableInfo の実装ファイル
+/// @file TableInfo.cc
+/// @brief TableInfo の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/AstTableInfo.h"
+#include "dotlib/TableInfo.h"
 #include "dotlib/AstElemDict.h"
 #include "dotlib/AstValue.h"
 
@@ -14,12 +14,12 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス AstTableInfo
+// クラス TableInfo
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をセットする．
 bool
-AstTableInfo::set(
+TableInfo::set(
   const AstValue* val
 )
 {
@@ -58,7 +58,7 @@ AstTableInfo::set(
 }
 
 SizeType
-AstTableInfo::gen_lut(
+TableInfo::gen_lut(
   CiCellLibrary* library
 ) const
 {

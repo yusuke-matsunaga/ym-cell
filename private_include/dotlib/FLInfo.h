@@ -1,8 +1,8 @@
-#ifndef ASTFLINFO_H
-#define ASTFLINFO_H
+#ifndef FLINFO_H
+#define FLINFO_H
 
-/// @file AstFLInfo.h
-/// @brief AstFLInfo のヘッダファイル
+/// @file FLInfo.h
+/// @brief FLInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
@@ -19,18 +19,18 @@ class AstExpr;
 class AstElemDict;
 
 //////////////////////////////////////////////////////////////////////
-/// @class AstFLInfo AstFLInfo.h "AstFLInfo.h"
+/// @class FLInfo FLInfo.h "FLInfo.h"
 /// @brief FF/ラッチに共通なパース情報を持つクラス
 //////////////////////////////////////////////////////////////////////
-class AstFLInfo
+class FLInfo
 {
 public:
 
   /// @brief コンストラクタ
-  AstFLInfo() = default;
+  FLInfo() = default;
 
   /// @brief デストラクタ
-  ~AstFLInfo() = default;
+  ~FLInfo() = default;
 
 
 public:
@@ -115,4 +115,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTFLINFO_H
+#endif // FLINFO_H

@@ -1,12 +1,12 @@
 
-/// @file AstPinInfo.cc
-/// @brief AstPinInfo の実装ファイル
+/// @file PinInfo.cc
+/// @brief PinInfo の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/AstPinInfo.h"
+#include "dotlib/PinInfo.h"
 #include "dotlib/AstValue.h"
 #include "dotlib/AstElemDict.h"
 #include "dotlib/AstExpr.h"
@@ -16,7 +16,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief 内容を設定する．
 bool
-AstPinInfo::set(
+PinInfo::set(
   const AstValue* pin_val,
   ClibDelayModel delay_model
 )
@@ -99,7 +99,7 @@ END_NONAMESPACE
 
 // @brief ピンを生成する．
 bool
-AstPinInfo::add_pin(
+PinInfo::add_pin(
   CiCellLibrary* library,
   SizeType cell_id,
   const unordered_map<ShString, SizeType>& ipin_map
@@ -181,7 +181,7 @@ AstPinInfo::add_pin(
 //
 // エラーの場合には false を返す．
 bool
-AstPinInfo::get_input_params(
+PinInfo::get_input_params(
   const AstElemDict& elem_dict
 )
 {
@@ -225,7 +225,7 @@ AstPinInfo::get_input_params(
 
 // @brief 出力ピン用のパラメータを取り出す．
 bool
-AstPinInfo::get_output_params(
+PinInfo::get_output_params(
   const AstElemDict& elem_dict,
   ClibDelayModel delay_model
 )

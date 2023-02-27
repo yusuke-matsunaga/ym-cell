@@ -1,8 +1,8 @@
-#ifndef ASTLUTEMPLINFO_H
-#define ASTLUTEMPLINFO_H
+#ifndef LUTEMPLINFO_H
+#define LUTEMPLINFO_H
 
-/// @file AstLuTemplInfo.h
-/// @brief AstLuTemplInfo のヘッダファイル
+/// @file LuTemplInfo.h
+/// @brief LuTemplInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
@@ -17,18 +17,18 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class AstLuTemplInfo AstLuTemplInfo.h "AstLuTemplInfo.h"
+/// @class LuTemplInfo LuTemplInfo.h "LuTemplInfo.h"
 /// @brief lu_template のパース情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class AstLuTemplInfo
+class LuTemplInfo
 {
 public:
 
   /// @brief コンストラクタ
-  AstLuTemplInfo() = default;
+  LuTemplInfo() = default;
 
   /// @brief デストラクタ
-  ~AstLuTemplInfo() = default;
+  ~LuTemplInfo() = default;
 
 
 public:
@@ -82,4 +82,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTLUTEMPLINFO_H
+#endif // LUTEMPLINFO_H

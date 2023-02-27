@@ -1,12 +1,12 @@
 
-/// @file AstFLInfo.cc
-/// @brief AstFLInfo の実装ファイル
+/// @file FLInfo.cc
+/// @brief FLInfo の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/AstFLInfo.h"
+#include "dotlib/FLInfo.h"
 #include "dotlib/AstValue.h"
 #include "dotlib/AstElemDict.h"
 
@@ -14,12 +14,12 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス AstFLInfo
+// クラス FLInfo
 //////////////////////////////////////////////////////////////////////
 
 // @brief 情報をセットする．
 bool
-AstFLInfo::set_common(
+FLInfo::set_common(
   const AstValue* val,
   const AstElemDict& elem_dict
 )

@@ -1,12 +1,12 @@
 
-/// @file AstTimingInfo.cc
-/// @brief AstTimingInfo の実装ファイル
+/// @file TimingInfo.cc
+/// @brief TimingInfo の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/AstTimingInfo.h"
+#include "dotlib/TimingInfo.h"
 #include "dotlib/AstValue.h"
 #include "dotlib/AstElemDict.h"
 #include "dotlib/AstExpr.h"
@@ -17,12 +17,12 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス AstTimingInfo
+// クラス TimingInfo
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容を設定する．
 bool
-AstTimingInfo::set(
+TimingInfo::set(
   const AstValue* timing_val,
   ClibDelayModel delay_model
 )
@@ -91,7 +91,7 @@ AstTimingInfo::set(
 
 // @brief タイミング情報を作る．
 bool
-AstTimingInfo::add_timing(
+TimingInfo::add_timing(
   CiCellLibrary* lib,
   CiCell* cell,
   const Expr& function_expr,
@@ -220,7 +220,7 @@ AstTimingInfo::add_timing(
 
 // @brief タイミング情報の共通なパラメータを得る．
 bool
-AstTimingInfo::get_timing_common_params(
+TimingInfo::get_timing_common_params(
   const AstElemDict& elem_dict
 )
 {
@@ -272,7 +272,7 @@ AstTimingInfo::get_timing_common_params(
 
 /// @brief generic タイプのタイミング情報のパラメータを得る．
 bool
-AstTimingInfo::get_timing_generic_params(
+TimingInfo::get_timing_generic_params(
   const AstElemDict& elem_dict
 )
 {
@@ -306,7 +306,7 @@ AstTimingInfo::get_timing_generic_params(
 
 // @brief table-lookup タイプのタイミング情報のパラメータを得る．
 int
-AstTimingInfo::get_timing_table_lookup_params(
+TimingInfo::get_timing_table_lookup_params(
   const AstElemDict& elem_dict
 )
 {

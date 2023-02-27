@@ -1,15 +1,15 @@
-#ifndef ASTTIMINGINFO_H
-#define ASTTIMINGINFO_H
+#ifndef TIMINGINFO_H
+#define TIMINGINFO_H
 
-/// @file AstTimingInfo.h
-/// @brief AstTimingInfo のヘッダファイル
+/// @file TimingInfo.h
+/// @brief TimingInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
-#include "dotlib/AstTableInfo.h"
+#include "dotlib/TableInfo.h"
 #include "ym/clib.h"
 
 
@@ -18,18 +18,18 @@ BEGIN_NAMESPACE_YM_DOTLIB
 class AstElemDict;
 
 //////////////////////////////////////////////////////////////////////
-/// @class AstTimingInfo AstTimingInfo.h "AstTimingInfo.h"
+/// @class TimingInfo TimingInfo.h "TimingInfo.h"
 /// @brief タイミングのパース情報
 //////////////////////////////////////////////////////////////////////
-class AstTimingInfo
+class TimingInfo
 {
 public:
 
   /// @brief コンストラクタ
-  AstTimingInfo() = default;
+  TimingInfo() = default;
 
   /// @brief デストラクタ
-  ~AstTimingInfo() = default;
+  ~TimingInfo() = default;
 
 
 public:
@@ -93,7 +93,7 @@ private:
 
   // 各モデルに共通のパラメータ
   ClibTimingType mTimingType;
-  const AstExpr* mWhen;
+  const AstExpr* mWhen{nullptr};
   ClibTimingSense mTimingSense;
   vector<ShString> mRelatedPin;
 
@@ -107,15 +107,15 @@ private:
 
   // table lookup モデルのパラメータ
   int mLutType;
-  AstTableInfo mCellRise;
-  AstTableInfo mCellFall;
-  AstTableInfo mRiseTransition;
-  AstTableInfo mFallTransition;
-  AstTableInfo mRisePropagation;
-  AstTableInfo mFallPropagation;
+  TableInfo mCellRise;
+  TableInfo mCellFall;
+  TableInfo mRiseTransition;
+  TableInfo mFallTransition;
+  TableInfo mRisePropagation;
+  TableInfo mFallPropagation;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTTIMINGINFO_H
+#endif // TIMINGINFO_H

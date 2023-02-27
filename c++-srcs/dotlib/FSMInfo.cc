@@ -1,12 +1,12 @@
 
-/// @file AstFSMInfo.cc
-/// @brief AstFSMInfo の実装ファイル
+/// @file FSMInfo.cc
+/// @brief FSMInfo の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/AstFSMInfo.h"
+#include "dotlib/FSMInfo.h"
 #include "dotlib/AstValue.h"
 #include "dotlib/AstElemDict.h"
 
@@ -14,12 +14,12 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス AstFSMInfo
+// クラス FSMInfo
 //////////////////////////////////////////////////////////////////////
 
 // @brief 情報をセットする．
 bool
-AstFSMInfo::set(
+FSMInfo::set(
   const AstValue* ast_val
 )
 {

@@ -1,12 +1,12 @@
 
-/// @file AstFFInfo.cc
-/// @brief AstFFInfo の実装ファイル
+/// @file LatchInfo.cc
+/// @brief LatchInfo の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/AstFFInfo.h"
+#include "dotlib/LatchInfo.h"
 #include "dotlib/AstValue.h"
 #include "dotlib/AstElemDict.h"
 
@@ -15,7 +15,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief 情報をセットする．
 bool
-AstFFInfo::set(
+LatchInfo::set(
   const AstValue* ast_val
 )
 {
@@ -27,37 +27,36 @@ AstFFInfo::set(
     ok = false;
   }
 
-  switch ( elem_dict.get_expr("clocked_on", mClockedOn) ) {
+  switch ( elem_dict.get_expr("enable_on", mEnableOn) ) {
   case AstElemDict::OK:
     break;
   case AstElemDict::NOT_FOUND:
-    // FF に clocked_on は必須
-#warning "TODO: エラーメッセージ"
-    ok = false;
+    // ラッチの場合はエラーではない．
+    mEnableOn = nullptr;
     break;
   case AstElemDict::ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict.get_expr("clocked_on_also", mClockedOnAlso) ) {
+  switch ( elem_dict.get_expr("enable_on_also", mEnableOnAlso) ) {
   case AstElemDict::OK:
     break;
   case AstElemDict::NOT_FOUND:
     // これはエラーではない．
-    mClockedOnAlso = nullptr;
+    mEnableOnAlso = nullptr;
     break;
   case AstElemDict::ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict.get_expr("next_state", mNextState) ) {
+  switch ( elem_dict.get_expr("data_in", mDataIn) ) {
   case AstElemDict::OK:
     break;
   case AstElemDict::NOT_FOUND:
-#warning "TODO: エラーメッセージ"
-    ok = false;
+    // これはエラーではない．
+    mDataIn = nullptr;
     break;
   case AstElemDict::ERROR:
     ok = false;

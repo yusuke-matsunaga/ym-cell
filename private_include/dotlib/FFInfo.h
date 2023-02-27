@@ -1,33 +1,33 @@
-#ifndef ASTFFINFO_H
-#define ASTFFINFO_H
+#ifndef FFINFO_H
+#define FFINFO_H
 
-/// @file AstFFInfo.h
-/// @brief AstFFInfo のヘッダファイル
+/// @file FFInfo.h
+/// @brief FFInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
-#include "dotlib/AstFLInfo.h"
+#include "dotlib/FLInfo.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class AstFFInfo AstFFInfo.h "AstFFInfo.h"
+/// @class FFInfo FFInfo.h "FFInfo.h"
 /// @brief FF グループの情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class AstFFInfo :
-  public AstFLInfo
+class FFInfo :
+  public FLInfo
 {
 public:
 
   /// @brief コンストラクタ
-  AstFFInfo() = default;
+  FFInfo() = default;
 
   /// @brief デストラクタ
-  ~AstFFInfo() = default;
+  ~FFInfo() = default;
 
 
 public:
@@ -68,12 +68,14 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  const AstExpr* mClockedOn;
-  const AstExpr* mClockedOnAlso;
-  const AstExpr* mNextState;
+  const AstExpr* mClockedOn{nullptr};
+
+  const AstExpr* mClockedOnAlso{nullptr};
+
+  const AstExpr* mNextState{nullptr};
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTFFINFO_H
+#endif // FFINFO_H

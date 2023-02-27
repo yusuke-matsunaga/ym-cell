@@ -1,24 +1,24 @@
 
-/// @file AstLuTemplInfo.cc
-/// @brief AstLuTemplInfo の実装ファイル
+/// @file LuTemplInfo.cc
+/// @brief LuTemplInfo の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/AstLuTemplInfo.h"
+#include "dotlib/LuTemplInfo.h"
 #include "dotlib/AstValue.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-// クラス AstLuTemplInfo
+// クラス LuTemplInfo
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容を設定する．
 bool
-AstLuTemplInfo::set(
+LuTemplInfo::set(
   const AstValue* lut_val
 )
 {
@@ -98,7 +98,7 @@ AstLuTemplInfo::set(
 
 // @brief テンプレートを作る．
 void
-AstLuTemplInfo::add_lu_template(
+LuTemplInfo::add_lu_template(
   unique_ptr<CiCellLibrary>& library
 )
 {

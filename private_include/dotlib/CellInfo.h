@@ -1,18 +1,18 @@
-#ifndef ASTCELLINFO_H
-#define ASTCELLINFO_H
+#ifndef CELLINFO_H
+#define CELLINFO_H
 
-/// @file AstCellInfo.h
-/// @brief AstCellInfo のヘッダファイル
+/// @file CellInfo.h
+/// @brief CellInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
-#include "dotlib/AstFFInfo.h"
-#include "dotlib/AstLatchInfo.h"
-#include "dotlib/AstFSMInfo.h"
-#include "dotlib/AstPinInfo.h"
+#include "dotlib/FFInfo.h"
+#include "dotlib/LatchInfo.h"
+#include "dotlib/FSMInfo.h"
+#include "dotlib/PinInfo.h"
 #include "ym/ShString.h"
 #include "ym/clib.h"
 
@@ -20,18 +20,18 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class AstCellInfo AstCellInfo.h "AstCellInfo.h"
+/// @class CellInfo CellInfo.h "CellInfo.h"
 /// @brief セルのパース情報
 //////////////////////////////////////////////////////////////////////
-class AstCellInfo
+class CellInfo
 {
 public:
 
   /// @brief コンストラクタ
-  AstCellInfo() = default;
+  CellInfo() = default;
 
   /// @brief デストラクタ
-  ~AstCellInfo() = default;
+  ~CellInfo() = default;
 
 
 public:
@@ -90,18 +90,18 @@ private:
 
   // FF 関係の情報
   bool mHasFF;
-  AstFFInfo mFFInfo;
+  FFInfo mFFInfo;
 
   // ラッチ関係の情報
   bool mHasLatch;
-  AstLatchInfo mLatchInfo;
+  LatchInfo mLatchInfo;
 
   // FSM 関係の情報
   bool mHasFSM;
-  AstFSMInfo mFSMInfo;
+  FSMInfo mFSMInfo;
 
   // ピンの情報
-  vector<AstPinInfo> mPinInfoList;
+  vector<PinInfo> mPinInfoList;
 
   // 割当済みの入力ピン番号
   SizeType mInputId;
@@ -119,4 +119,4 @@ private:
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTCELLINFO_H
+#endif // CELLINFO_H
