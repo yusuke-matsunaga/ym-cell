@@ -184,31 +184,6 @@ public:
     return mLeakagePowerUnit;
   }
 
-  /// @brief ルックアップテーブルのテンプレート番号の取得
-  ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
-  lu_table_template(
-    const string& name ///< [in] テンプレート名
-  ) const
-  {
-    return lu_table_template(ShString(name));
-  }
-
-  /// @brief ルックアップテーブルのテンプレート番号の取得
-  ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
-  lu_table_template(
-    const ShString& name ///< [in] テンプレート名
-  ) const
-  {
-    if ( mLutDict.count(name) > 0 ) {
-      return mLutDict.at(name);
-    }
-    return CLIB_NULLID;
-  }
-
   /// @brief バスタイプの取得
   ///
   /// なければ CLIB_NULLID を返す．
@@ -563,7 +538,7 @@ public:
   /// @brief 1次元の LUT のテンプレートを作る．
   SizeType
   add_lut_template1(
-    const ShString& name,
+    //const ShString& name,
     ClibVarType var_type1,
     const vector<double>& index_list1
   );
@@ -571,7 +546,7 @@ public:
   /// @brief 2次元の LUT のテンプレートを作る．
   SizeType
   add_lut_template2(
-    const ShString& name,
+    //const ShString& name,
     ClibVarType var_type1,
     const vector<double>& index_list1,
     ClibVarType var_type2,
@@ -581,7 +556,7 @@ public:
   /// @brief 3次元の LUT のテンプレートを作る．
   SizeType
   add_lut_template3(
-    const ShString& name,
+    //const ShString& name,
     ClibVarType var_type1,
     const vector<double>& index_list1,
     ClibVarType var_type2,
@@ -810,7 +785,8 @@ public:
   /// @brief LUT を作る．
   SizeType
   add_lut(
-    const ShString& templ_name,        ///< [in] テンプレート名
+    //const ShString& templ_name,        ///< [in] テンプレート名
+    SizeType templ_id,
     const vector<double>& value_array, ///< [in] 値の配列
     const vector<double>& index_array1 ///< [in] インデックス値のリスト1
     = vector<double>{},
@@ -1246,9 +1222,6 @@ private:
 
   // テンプレート番号のリスト
   vector<SizeType> mRefLutTemplateList;
-
-  // 名前をキーにした遅延テンプレート番号の辞書
-  unordered_map<ShString, SizeType> mLutDict;
 
   // セルの所有権管理用のリスト
   vector<unique_ptr<CiCell>> mCellList;

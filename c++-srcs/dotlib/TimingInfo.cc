@@ -8,7 +8,6 @@
 
 #include "dotlib/TimingInfo.h"
 #include "dotlib/AstValue.h"
-#include "dotlib/AstElemDict.h"
 #include "dotlib/AstExpr.h"
 #include "ci/CiCell.h"
 #include "ym/TvFunc.h"
@@ -23,12 +22,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief 内容を設定する．
 bool
 TimingInfo::set(
-  CiCellLibrary* library,
   const AstValue* timing_val
 )
 {
-  mLibrary = library;
-  mDelayModel = mLibrary->delay_model();
+  mDelayModel = library()->delay_model();
 
   // 名前を得る．
   auto& header = timing_val->group_header_value();
@@ -39,24 +36,24 @@ TimingInfo::set(
   }
 
   // 属性の辞書を作る．
-  auto elem_dict = timing_val->gen_group_elem_dict();
+  mElemDict.set(timing_val);
 
   bool ok{true};
 
   // 共通なパラメータの取得
-  if ( !get_timing_common_params(elem_dict) ) {
+  if ( !get_timing_common_params() ) {
     ok = false;
   }
 
   switch ( mDelayModel ) {
   case ClibDelayModel::generic_cmos:
-    if ( !get_timing_generic_params(elem_dict) ) {
+    if ( !get_timing_generic_params() ) {
       ok = false;
     }
     break;
 
   case ClibDelayModel::table_lookup:
-    mLutType = get_timing_table_lookup_params(elem_dict);
+    mLutType = get_timing_table_lookup_params();
     if ( mLutType == 0 ) {
       ok = false;
     }
@@ -99,7 +96,7 @@ TimingInfo::add_timing(
   const unordered_map<ShString, SizeType>& ipin_map
 ) const
 {
-  Expr when{Expr::make_one()};
+  auto when = Expr::make_one();
   if ( mWhen != nullptr ) {
     when = mWhen->to_expr(ipin_map);
   }
@@ -107,7 +104,7 @@ TimingInfo::add_timing(
   SizeType tid;
   switch ( mDelayModel ) {
   case ClibDelayModel::generic_cmos:
-    tid = mLibrary->add_timing_generic(mTimingType, when,
+    tid = library()->add_timing_generic(mTimingType, when,
 				       mIntrinsicRise, mIntrinsicFall,
 				       mSlopeRise, mSlopeFall,
 				       mRiseResistance, mFallResistance);
@@ -117,22 +114,22 @@ TimingInfo::add_timing(
     switch ( mLutType ) {
     case 1:
       {
-	auto cr_lut = mCellRise.gen_lut(mLibrary);
-	auto cf_lut = mCellFall.gen_lut(mLibrary);
-	auto rt_lut = mRiseTransition.gen_lut(mLibrary);
-	auto ft_lut = mFallTransition.gen_lut(mLibrary);
-	tid = mLibrary->add_timing_lut1(mTimingType, when,
+	auto cr_lut = mCellRise.gen_lut();
+	auto cf_lut = mCellFall.gen_lut();
+	auto rt_lut = mRiseTransition.gen_lut();
+	auto ft_lut = mFallTransition.gen_lut();
+	tid = library()->add_timing_lut1(mTimingType, when,
 					cr_lut, cf_lut,
 					rt_lut, ft_lut);
       }
       break;
     case 2:
       {
-	auto rt_lut = mRiseTransition.gen_lut(mLibrary);
-	auto ft_lut = mFallTransition.gen_lut(mLibrary);
-	auto rp_lut = mRisePropagation.gen_lut(mLibrary);
-	auto fp_lut = mFallPropagation.gen_lut(mLibrary);
-	tid = mLibrary->add_timing_lut2(mTimingType, when,
+	auto rt_lut = mRiseTransition.gen_lut();
+	auto ft_lut = mFallTransition.gen_lut();
+	auto rp_lut = mRisePropagation.gen_lut();
+	auto fp_lut = mFallPropagation.gen_lut();
+	tid = library()->add_timing_lut2(mTimingType, when,
 					rt_lut, ft_lut,
 					rp_lut, fp_lut);
       }
@@ -220,45 +217,43 @@ TimingInfo::add_timing(
 
 // @brief タイミング情報の共通なパラメータを得る．
 bool
-TimingInfo::get_timing_common_params(
-  const AstElemDict& elem_dict
-)
+TimingInfo::get_timing_common_params()
 {
   bool ok{true};
-  switch ( elem_dict.get_timing_type("timing_type", mTimingType) ) {
-  case AstElemDict::OK:
+  switch ( mElemDict.get_timing_type("timing_type", mTimingType) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
     // 省略時は combinational を指定する．要確認
     mTimingType = ClibTimingType::combinational;
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict.get_expr("when", mWhen) ) {
-  case AstElemDict::OK:
+  switch ( mElemDict.get_expr("when", mWhen) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
     mWhen = nullptr;
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }
 
-  if ( elem_dict.get_timing_sense("timing_sense", mTimingSense) == AstElemDict::ERROR ) {
+  if ( mElemDict.get_timing_sense("timing_sense", mTimingSense) == ElemDict::ERROR ) {
     ok = false;
   }
 
-  if ( elem_dict.count("related_pin") == 0 ) {
+  if ( mElemDict.count("related_pin") == 0 ) {
 #warning "TODO: エラーメッセージ"
     cerr << "related_pin がない．" << endl;
     ok = false;
   }
   else {
-    auto& vec = elem_dict.at("related_pin");
+    auto& vec = mElemDict.at("related_pin");
     mRelatedPin.clear();
     mRelatedPin.reserve(vec.size());
     for ( auto v: vec ) {
@@ -272,32 +267,30 @@ TimingInfo::get_timing_common_params(
 
 /// @brief generic タイプのタイミング情報のパラメータを得る．
 bool
-TimingInfo::get_timing_generic_params(
-  const AstElemDict& elem_dict
-)
+TimingInfo::get_timing_generic_params()
 {
   bool ok{true};
-  if ( elem_dict.get_time("intrinsic_rise", mIntrinsicRise) != AstElemDict::OK ) {
+  if ( mElemDict.get_time("intrinsic_rise", mIntrinsicRise) != ElemDict::OK ) {
     cerr << "No intrinsic_rise definition" << endl;
     ok = false;
   }
-  if ( elem_dict.get_time("intrinsic_fall", mIntrinsicFall) != AstElemDict::OK ) {
+  if ( mElemDict.get_time("intrinsic_fall", mIntrinsicFall) != ElemDict::OK ) {
     cerr << "No intrinsic_fall definition" << endl;
     ok = false;
   }
-  if ( elem_dict.get_time("slope_rise", mSlopeRise) != AstElemDict::OK ) {
+  if ( mElemDict.get_time("slope_rise", mSlopeRise) != ElemDict::OK ) {
     cerr << "No slope_rise definition" << endl;
     ok = false;
   }
-  if ( elem_dict.get_time("slope_fall", mSlopeFall) != AstElemDict::OK ) {
+  if ( mElemDict.get_time("slope_fall", mSlopeFall) != ElemDict::OK ) {
     cerr << "No slope_fall definition" << endl;
     ok = false;
   }
-  if ( elem_dict.get_resistance("rise_resistance", mRiseResistance) != AstElemDict::OK ) {
+  if ( mElemDict.get_resistance("rise_resistance", mRiseResistance) != ElemDict::OK ) {
     cerr << "No rise_resistance definition" << endl;
     ok = false;
   }
-  if ( elem_dict.get_resistance("fall_resistance", mFallResistance) != AstElemDict::OK ) {
+  if ( mElemDict.get_resistance("fall_resistance", mFallResistance) != ElemDict::OK ) {
     cerr << "No fall_resistance definition" << endl;
     ok = false;
   }
@@ -306,29 +299,27 @@ TimingInfo::get_timing_generic_params(
 
 // @brief table-lookup タイプのタイミング情報のパラメータを得る．
 int
-TimingInfo::get_timing_table_lookup_params(
-  const AstElemDict& elem_dict
-)
+TimingInfo::get_timing_table_lookup_params()
 {
   const AstValue* rt_val;
   const AstValue* ft_val;
-  auto rt_ret = elem_dict.get_value("rise_transition", rt_val);
-  auto ft_ret = elem_dict.get_value("fall_transition", ft_val);
-  if ( rt_ret == AstElemDict::ERROR || ft_ret == AstElemDict::ERROR ) {
+  auto rt_ret = mElemDict.get_value("rise_transition", rt_val);
+  auto ft_ret = mElemDict.get_value("fall_transition", ft_val);
+  if ( rt_ret == ElemDict::ERROR || ft_ret == ElemDict::ERROR ) {
     return 0;
   }
-  if ( rt_ret == AstElemDict::NOT_FOUND && ft_ret == AstElemDict::NOT_FOUND ) {
+  if ( rt_ret == ElemDict::NOT_FOUND && ft_ret == ElemDict::NOT_FOUND ) {
     // rise|fall_transition は必須
 #warning "TODO: メッセージ"
     cerr << "Neigther rise_transition nor fall_transition is not defined." << endl;
     return 0;
   }
-  if ( rt_ret == AstElemDict::OK && !mRiseTransition.set(rt_val) ) {
+  if ( rt_ret == ElemDict::OK && !mRiseTransition.set(rt_val) ) {
 #warning "TODO: メッセージ"
     cerr << "Error in rise_transition" << endl;
     return 0;
   }
-  if ( ft_ret == AstElemDict::OK && !mFallTransition.set(ft_val) ) {
+  if ( ft_ret == ElemDict::OK && !mFallTransition.set(ft_val) ) {
 #warning "TODO: メッセージ"
     cerr << "Error in fall_transition" << endl;
     return 0;
@@ -336,24 +327,24 @@ TimingInfo::get_timing_table_lookup_params(
 
   const AstValue* cr_val;
   const AstValue* cf_val;
-  auto cr_ret = elem_dict.get_value("cell_rise", cr_val);
-  auto cf_ret = elem_dict.get_value("cell_fall", cf_val);
-  if ( cr_ret == AstElemDict::ERROR || cf_ret == AstElemDict::ERROR ) {
+  auto cr_ret = mElemDict.get_value("cell_rise", cr_val);
+  auto cf_ret = mElemDict.get_value("cell_fall", cf_val);
+  if ( cr_ret == ElemDict::ERROR || cf_ret == ElemDict::ERROR ) {
 #warning "TODO: メッセージ"
     return 0;
   }
 
   const AstValue* rp_val;
   const AstValue* fp_val;
-  auto rp_ret = elem_dict.get_value("rise_propagation", rp_val);
-  auto fp_ret = elem_dict.get_value("fall_propagation", fp_val);
-  if ( rp_ret == AstElemDict::ERROR || fp_ret == AstElemDict::ERROR ) {
+  auto rp_ret = mElemDict.get_value("rise_propagation", rp_val);
+  auto fp_ret = mElemDict.get_value("fall_propagation", fp_val);
+  if ( rp_ret == ElemDict::ERROR || fp_ret == ElemDict::ERROR ) {
     return 0;
   }
 
   int type = 0;
-  if ( cr_ret == AstElemDict::OK ) {
-    if ( rp_ret == AstElemDict::OK ) {
+  if ( cr_ret == ElemDict::OK ) {
+    if ( rp_ret == ElemDict::OK ) {
       // cell_rise と rise_propagation は同時に指定できない．
 #warning "TODO: メッセージ"
       cerr << "cell_rise and rise_propagation are mutually exclusive." << endl;
@@ -368,7 +359,7 @@ TimingInfo::get_timing_table_lookup_params(
       type = 1;
     }
   }
-  else if ( rp_ret == AstElemDict::OK ) {
+  else if ( rp_ret == ElemDict::OK ) {
     if ( !mRisePropagation.set(rp_val) ) {
       cerr << "Error in rise_propagation" << endl;
       return 0;
@@ -376,8 +367,8 @@ TimingInfo::get_timing_table_lookup_params(
     type = 2;
   }
 
-  if ( cf_ret == AstElemDict::OK ) {
-    if ( fp_ret == AstElemDict::OK ) {
+  if ( cf_ret == ElemDict::OK ) {
+    if ( fp_ret == ElemDict::OK ) {
       // cell_fall と fall_propagation は同時に指定できない．
 #warning "TODO: メッセージ"
       cerr << "cell_fall and fall_propagation are mutually exclusive." << endl;
@@ -396,7 +387,7 @@ TimingInfo::get_timing_table_lookup_params(
       type = 1;
     }
   }
-  else if ( fp_ret == AstElemDict::OK ) {
+  else if ( fp_ret == ElemDict::OK ) {
     if ( type == 1 ) {
       cerr << "cell_rise and fall_propagation are mutually exclusive." << endl;
       return 0;
@@ -409,6 +400,13 @@ TimingInfo::get_timing_table_lookup_params(
   }
 
   return type;
+}
+
+// @brief ライブラリを取り出す．
+CiCellLibrary*
+TimingInfo::library() const
+{
+  return mLibraryInfo.library();
 }
 
 END_NAMESPACE_YM_DOTLIB

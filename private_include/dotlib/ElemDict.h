@@ -1,5 +1,5 @@
-#ifndef ASTELEMDICT_H
-#define ASTELEMDICT_H
+#ifndef ELEMDICT_H
+#define ELEMDICT_H
 
 /// @file AstElemDict.h
 /// @brief AstElemDict のヘッダファイル
@@ -21,7 +21,7 @@ class AstValue;
 /// @class AstElemDict AstElemDict.h "AstElemDict.h"
 /// @brief キーワードに対応する AstValue* のベクタを格納する辞書
 //////////////////////////////////////////////////////////////////////
-class AstElemDict :
+class ElemDict :
   public unordered_map<string, vector<const AstValue*>>
 {
 public:
@@ -238,8 +238,14 @@ public:
     const AstValue*& val ///< [out] 値を格納する変数
   ) const;
 
+  /// @brief 内容をセットする．
+  void
+  set(
+    const AstValue* ast_value ///< [in] パース木の値
+  );
+
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ASTELEMDICT_H
+#endif // ELEMDICT_H

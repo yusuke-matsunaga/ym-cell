@@ -7,9 +7,9 @@
 /// All rights reserved.
 
 #include "dotlib/CellInfo.h"
+#include "dotlib/LibraryInfo.h"
 #include "dotlib/PinInfo.h"
 #include "dotlib/TimingInfo.h"
-#include "dotlib/AstElemDict.h"
 #include "dotlib/AstExpr.h"
 #include "dotlib/AstValue.h"
 #include "ci/CiCellLibrary.h"
@@ -27,12 +27,12 @@ CellInfo::set(
   mName = cell_val->group_header_value().complex_elem_value(0).string_value();
 
   // セルの属性の辞書を作る．
-  auto elem_dict = cell_val->gen_group_elem_dict();
+  mElemDict.set(cell_val);
 
   bool ok{true};
 
   // 面積
-  if ( elem_dict.get_area("area", mArea) != AstElemDict::OK ) {
+  if ( mElemDict.get_area("area", mArea) != ElemDict::OK ) {
     { // 仮
       cerr << "Error in area: " << endl;
     }
@@ -41,8 +41,8 @@ CellInfo::set(
 
   // FF
   mHasFF = false;
-  if ( elem_dict.count("ff") > 0 ) {
-    auto& vec = elem_dict.at("ff");
+  if ( mElemDict.count("ff") > 0 ) {
+    auto& vec = mElemDict.at("ff");
     if ( vec.size() > 1 ) {
       // "ff" 属性が2回以上現れる．
 #warning "TODO: エラーメッセージ"
@@ -62,8 +62,8 @@ CellInfo::set(
 
   // ラッチ
   mHasLatch = false;
-  if ( elem_dict.count("latch") > 0 ) {
-    auto& vec = elem_dict.at("latch");
+  if ( mElemDict.count("latch") > 0 ) {
+    auto& vec = mElemDict.at("latch");
     if ( vec.size() > 1 ) {
       // "latch" 属性が2回以上現れる．
 #warning "TODO: エラーメッセージ"
@@ -83,8 +83,8 @@ CellInfo::set(
 
   // statetable(FSM)
   mHasFSM = false;
-  if ( elem_dict.count("statetable") > 0 ) {
-    auto& vec = elem_dict.at("statetable");
+  if ( mElemDict.count("statetable") > 0 ) {
+    auto& vec = mElemDict.at("statetable");
     if ( vec.size() > 1 ) {
       // "statetable" 属性が2回以上現れる．
 #warning "TODO: エラーメッセージ"
@@ -103,21 +103,23 @@ CellInfo::set(
   }
 
   // ピンの属性情報を取り出す．
-  if ( elem_dict.count("pin") == 0 ) {
+  if ( mElemDict.count("pin") == 0 ) {
     // pin 情報がないセルはないはず．
 #warning "TODO: エラーメッセージ"
     cerr << "No pin definitions" << endl;
     ok = false;
   }
   else {
-    auto delay_model = mLibrary->delay_model();
-    auto& vec = elem_dict.at("pin");
+    auto delay_model = library()->delay_model();
+    auto& vec = mElemDict.at("pin");
     SizeType npin = vec.size();
     mPinInfoList.clear();
-    mPinInfoList.resize(npin);
+    mPinInfoList.reserve(npin);
     for ( SizeType i = 0; i < npin; ++ i ) {
       auto pin_val = vec[i];
-      if ( !mPinInfoList[i].set(mLibrary, pin_val) ) {
+      mPinInfoList.push_back(PinInfo{mLibraryInfo});
+      auto& pin_info = mPinInfoList.back();
+      if ( !pin_info.set(pin_val) ) {
 	cerr << "Error in pin definition" << endl;
 	ok = false;
       }
@@ -218,7 +220,7 @@ CellInfo::add_cell()
   }
   else {
     // 論理タイプ
-    cell_id = mLibrary->add_logic_cell(mName, mArea);
+    cell_id = library()->add_logic_cell(mName, mArea);
   }
   ASSERT_COND( cell_id != CLIB_NULLID );
 
@@ -229,7 +231,7 @@ CellInfo::add_cell()
   }
 
   // タイミングを作る．
-  mLibrary->init_cell_timing_map(cell_id);
+  library()->init_cell_timing_map(cell_id);
   for ( auto& pininfo: mPinInfoList ) {
     pininfo.add_timing(cell_id, mIpinMap);
   }
@@ -259,7 +261,7 @@ CellInfo::add_ff_cell() const
   }
   auto cpv1 = mFFInfo.clear_preset_var1();
   auto cpv2 = mFFInfo.clear_preset_var2();
-  auto cell = mLibrary->add_ff_cell(mName, mArea,
+  auto cell = library()->add_ff_cell(mName, mArea,
 				    var1, var2,
 				    clocked_on, clocked_on_also,
 				    next_state, clear, preset,
@@ -295,7 +297,7 @@ CellInfo::add_latch_cell() const
   }
   auto cpv1 = mLatchInfo.clear_preset_var1();
   auto cpv2 = mLatchInfo.clear_preset_var2();
-  auto cell = mLibrary->add_latch_cell(mName, mArea,
+  auto cell = library()->add_latch_cell(mName, mArea,
 				       var1, var2,
 				       enable_on, enable_on_also,
 				       data_in, clear, preset,
@@ -309,6 +311,13 @@ CellInfo::add_fsm_cell() const
 {
 #warning "TODO: 未完"
   return CLIB_NULLID;
+}
+
+// @brief ライブラリを取り出す．
+CiCellLibrary*
+CellInfo::library() const
+{
+  return mLibraryInfo.library();
 }
 
 END_NAMESPACE_YM_DOTLIB

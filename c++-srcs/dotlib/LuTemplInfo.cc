@@ -29,26 +29,26 @@ LuTemplInfo::set(
   mName = header.complex_elem_value(0).string_value();
 
   // 属性の辞書を作る．
-  auto elem_dict = lut_val->gen_group_elem_dict();
+  mElemDict.set(lut_val);
 
   bool ok{true};
 
-  if ( elem_dict.get_vartype("variable_1", mVar1) == AstElemDict::ERROR ) {
+  if ( mElemDict.get_vartype("variable_1", mVar1) == ElemDict::ERROR ) {
     ok = false;
   }
-  if ( elem_dict.get_vartype("variable_2", mVar2) == AstElemDict::ERROR ) {
+  if ( mElemDict.get_vartype("variable_2", mVar2) == ElemDict::ERROR ) {
     ok = false;
   }
-  if ( elem_dict.get_vartype("variable_3", mVar3) == AstElemDict::ERROR ) {
+  if ( mElemDict.get_vartype("variable_3", mVar3) == ElemDict::ERROR ) {
     ok = false;
   }
-  if ( elem_dict.get_complex_float_vector("index_1", mIndex1) == AstElemDict::ERROR ) {
+  if ( mElemDict.get_complex_float_vector("index_1", mIndex1) == ElemDict::ERROR ) {
     ok = false;
   }
-  if ( elem_dict.get_complex_float_vector("index_2", mIndex2) == AstElemDict::ERROR ) {
+  if ( mElemDict.get_complex_float_vector("index_2", mIndex2) == ElemDict::ERROR ) {
     ok = false;
   }
-  if ( elem_dict.get_complex_float_vector("index_3", mIndex3) == AstElemDict::ERROR ) {
+  if ( mElemDict.get_complex_float_vector("index_3", mIndex3) == ElemDict::ERROR ) {
     ok = false;
   }
 
@@ -97,22 +97,28 @@ LuTemplInfo::set(
 }
 
 // @brief テンプレートを作る．
-void
-LuTemplInfo::add_lu_template(
-  unique_ptr<CiCellLibrary>& library
-)
+SizeType
+LuTemplInfo::add_lu_template()
 {
+  SizeType tid{CLIB_NULLID};
   switch ( mDimension ) {
   case 1:
-    library->add_lut_template1(mName, mVar1, mIndex1);
+    tid = mLibrary->add_lut_template1(mVar1, mIndex1);
     break;
+
   case 2:
-    library->add_lut_template2(mName, mVar1, mIndex1, mVar2, mIndex2);
+    tid = mLibrary->add_lut_template2(mVar1, mIndex1, mVar2, mIndex2);
     break;
+
   case 3:
-    library->add_lut_template3(mName, mVar1, mIndex1, mVar2, mIndex2, mVar3, mIndex3);
+    tid = mLibrary->add_lut_template3(mVar1, mIndex1, mVar2, mIndex2, mVar3, mIndex3);
+    break;
+
+  default:
+    ASSERT_NOT_REACHED;
     break;
   }
+  return tid;
 }
 
 END_NAMESPACE_YM_DOTLIB

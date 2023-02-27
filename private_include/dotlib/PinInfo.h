@@ -10,6 +10,7 @@
 
 #include "dotlib/dotlib_nsdef.h"
 #include "dotlib/TimingInfo.h"
+#include "dotlib/ElemDict.h"
 #include "ci/CiCell.h"
 #include "ym/Expr.h"
 #include "ym/ShString.h"
@@ -18,6 +19,7 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
+class LibraryInfo;
 class AstElemDict;
 
 //////////////////////////////////////////////////////////////////////
@@ -29,7 +31,11 @@ class PinInfo
 public:
 
   /// @brief コンストラクタ
-  PinInfo() = default;
+  PinInfo(
+    LibraryInfo& library_info ///< [in] ライブラリのパース情報
+  ) : mLibraryInfo{library_info}
+  {
+  }
 
   /// @brief デストラクタ
   ~PinInfo() = default;
@@ -43,7 +49,6 @@ public:
   /// @brief 内容を設定する．
   bool
   set(
-    CiCellLibrary* library, ///< [in] ライブラリ
     const AstValue* pin_val ///< [in] ピン情報のパース木
   );
 
@@ -85,9 +90,7 @@ private:
   ///
   /// エラーの場合には false を返す．
   bool
-  get_input_params(
-    const AstElemDict& elem_dict
-  );
+  get_input_params();
 
   /// @brief 出力ピン用のパラメータを取り出す．
   ///
@@ -95,9 +98,11 @@ private:
   /// エラーの場合には false を返す．
   /// 現時点ではエラーにならない．
   bool
-  get_output_params(
-    const AstElemDict& elem_dict
-  );
+  get_output_params();
+
+  /// @brief ライブラリを取り出す．
+  CiCellLibrary*
+  library() const;
 
 
 private:
@@ -105,8 +110,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ライブラリ
-  CiCellLibrary* mLibrary{nullptr};
+  // ライブラリのパース情報
+  LibraryInfo& mLibraryInfo;
+
+  // 要素の辞書
+  ElemDict mElemDict;
 
   // 名前のリスト
   vector<ShString> mNameList;

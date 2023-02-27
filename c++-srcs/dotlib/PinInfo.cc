@@ -8,7 +8,6 @@
 
 #include "dotlib/PinInfo.h"
 #include "dotlib/AstValue.h"
-#include "dotlib/AstElemDict.h"
 #include "dotlib/AstExpr.h"
 
 
@@ -17,12 +16,9 @@ BEGIN_NAMESPACE_YM_DOTLIB
 // @brief 内容を設定する．
 bool
 PinInfo::set(
-  CiCellLibrary* library,
   const AstValue* pin_val
 )
 {
-  mLibrary = library;
-
   // ピン名のリストを得る．
   auto& pin_header = pin_val->group_header_value();
   SizeType n = pin_header.complex_elem_size();
@@ -33,10 +29,10 @@ PinInfo::set(
   }
 
   // ピンの属性の辞書を作る．
-  auto elem_dict = pin_val->gen_group_elem_dict();
+  mElemDict.set(pin_val);
 
   // direction を取り出す．
-  if ( elem_dict.get_direction("direction", mDirection) == AstElemDict::NOT_FOUND ) {
+  if ( mElemDict.get_direction("direction", mDirection) == ElemDict::NOT_FOUND ) {
     // direction 属性がない．
 #warning "TODO: エラーメッセージ"
     cerr << "'direction' is not defined." << endl;
@@ -47,25 +43,25 @@ PinInfo::set(
 
   switch ( mDirection ) {
   case ClibDirection::input:
-    if ( !get_input_params(elem_dict) ) {
+    if ( !get_input_params() ) {
       cerr << "X1" << endl;
       ok = false;
     }
     break;
 
   case ClibDirection::output:
-    if ( !get_output_params(elem_dict) ) {
+    if ( !get_output_params() ) {
       cerr << "X2" << endl;
       ok = false;
     }
     break;
 
   case ClibDirection::inout:
-    if ( !get_input_params(elem_dict) ) {
+    if ( !get_input_params() ) {
       cerr << "X3" << endl;
       ok = false;
     }
-    if ( !get_output_params(elem_dict) ) {
+    if ( !get_output_params() ) {
       cerr << "X4" << endl;
       ok = false;
     }
@@ -109,11 +105,11 @@ PinInfo::add_pin(
   switch ( mDirection ) {
   case ClibDirection::input:
     for ( auto name: mNameList ) {
-      auto pin_id = mLibrary->add_input(cell_id, name,
+      auto pin_id = library()->add_input(cell_id, name,
 					mCapacitance,
 					mRiseCapacitance,
 					mFallCapacitance);
-      auto pin = mLibrary->_pin(pin_id);
+      auto pin = library()->_pin(pin_id);
       ASSERT_COND( pin->input_id() == ipin_map.at(name) );
     }
     break;
@@ -123,7 +119,7 @@ PinInfo::add_pin(
       mFunctionExpr = make_expr(mFunction, ipin_map);
       auto tristate = make_expr(mTristate, ipin_map);
       for ( auto name: mNameList ) {
-	auto pin_id = mLibrary->add_output(cell_id, name,
+	auto pin_id = library()->add_output(cell_id, name,
 					   mMaxFanout,
 					   mMinFanout,
 					   mMaxCapacitance,
@@ -132,7 +128,7 @@ PinInfo::add_pin(
 					   mMinTransition,
 					   mFunctionExpr,
 					   tristate);
-	auto pin = mLibrary->_pin(pin_id);
+	auto pin = library()->_pin(pin_id);
 	mOpinList.push_back(pin->output_id());
       }
     }
@@ -143,7 +139,7 @@ PinInfo::add_pin(
       mFunctionExpr = make_expr(mFunction, ipin_map);
       auto tristate = make_expr(mTristate, ipin_map);
       for ( auto name: mNameList ) {
-	auto pin_id = mLibrary->add_inout(cell_id, name,
+	auto pin_id = library()->add_inout(cell_id, name,
 					  mCapacitance,
 					  mRiseCapacitance,
 					  mFallCapacitance,
@@ -154,7 +150,7 @@ PinInfo::add_pin(
 					  mMinTransition,
 					  mFunctionExpr,
 					  tristate);
-	auto pin = mLibrary->_pin(pin_id);
+	auto pin = library()->_pin(pin_id);
 	ASSERT_COND( pin->input_id() == ipin_map.at(name) );
 	mOpinList.push_back(pin->output_id());
       }
@@ -176,7 +172,7 @@ PinInfo::add_timing(
   const unordered_map<ShString, SizeType>& ipin_map
 ) const
 {
-  auto cell = mLibrary->_cell(cell_id);
+  auto cell = library()->_cell(cell_id);
 
   switch ( mDirection ) {
   case ClibDirection::input:
@@ -210,40 +206,38 @@ PinInfo::add_timing(
 //
 // エラーの場合には false を返す．
 bool
-PinInfo::get_input_params(
-  const AstElemDict& elem_dict
-)
+PinInfo::get_input_params()
 {
-  auto ret1 = elem_dict.get_capacitance("capacitance", mCapacitance);
-  if ( ret1 == AstElemDict::NOT_FOUND ) {
+  auto ret1 = mElemDict.get_capacitance("capacitance", mCapacitance);
+  if ( ret1 == ElemDict::NOT_FOUND ) {
     // capacitance が定義されていない．
 #warning "TODO: エラーメッセージ"
     cerr << "capacitance が定義されていない．" << endl;
     return false;
   }
 
-  auto ret2 = elem_dict.get_capacitance("rise_capacitance", mRiseCapacitance);
-  if ( ret2 == AstElemDict::ERROR ) {
+  auto ret2 = mElemDict.get_capacitance("rise_capacitance", mRiseCapacitance);
+  if ( ret2 == ElemDict::ERROR ) {
     return false;
   }
-  auto ret3 = elem_dict.get_capacitance("fall_capacitance", mFallCapacitance);
-  if ( ret3 == AstElemDict::ERROR ) {
+  auto ret3 = mElemDict.get_capacitance("fall_capacitance", mFallCapacitance);
+  if ( ret3 == ElemDict::ERROR ) {
     return false;
   }
 
-  if ( ret2 == AstElemDict::OK && ret3 == AstElemDict::NOT_FOUND ) {
+  if ( ret2 == ElemDict::OK && ret3 == ElemDict::NOT_FOUND ) {
     // fall_capacitance だけが定義されていない．
 #warning "TODO: 未完"
     cerr << "fall_capacitance だけが定義されていない．" << endl;
     return false;
   }
-  else if ( ret2 == AstElemDict::NOT_FOUND && ret3 == AstElemDict::OK ) {
+  else if ( ret2 == ElemDict::NOT_FOUND && ret3 == ElemDict::OK ) {
     // rise_capacitance だけが定義されていない．
 #warning "TODO: 未完"
     cerr << "rise_capacitance だけが定義されていない．" << endl;
     return false;
   }
-  else if ( ret2 == AstElemDict::NOT_FOUND && ret3 == AstElemDict::NOT_FOUND ) {
+  else if ( ret2 == ElemDict::NOT_FOUND && ret3 == ElemDict::NOT_FOUND ) {
     // 両方定義されていない場合には capacitance の値を用いる．
     mRiseCapacitance = mCapacitance;
     mFallCapacitance = mCapacitance;
@@ -254,114 +248,114 @@ PinInfo::get_input_params(
 
 // @brief 出力ピン用のパラメータを取り出す．
 bool
-PinInfo::get_output_params(
-  const AstElemDict& elem_dict
-)
+PinInfo::get_output_params()
 {
   bool ok{true};
 
-  switch ( elem_dict.get_capacitance("max_fanout", mMaxFanout) ) {
-  case AstElemDict::OK:
+  switch ( mElemDict.get_capacitance("max_fanout", mMaxFanout) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
 #warning "TODO: 今は無限大を代入している．要確認"
     mMaxFanout = ClibCapacitance::infinity();
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict.get_capacitance("min_fanout", mMinFanout) ) {
-  case AstElemDict::OK:
+  switch ( mElemDict.get_capacitance("min_fanout", mMinFanout) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
 #warning "TODO: 今は0を代入している．要確認"
     mMinFanout = ClibCapacitance{0.0};
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict.get_capacitance("max_capacitance", mMaxCapacitance) ) {
-  case AstElemDict::OK:
+  switch ( mElemDict.get_capacitance("max_capacitance", mMaxCapacitance) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
 #warning "TODO: 今は無限大を代入している．要確認"
     mMaxCapacitance = ClibCapacitance::infinity();
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict.get_capacitance("min_capacitance", mMinCapacitance) ) {
-  case AstElemDict::OK:
+  switch ( mElemDict.get_capacitance("min_capacitance", mMinCapacitance) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
 #warning "TODO: 今は0を代入している．要確認"
     mMinCapacitance = ClibCapacitance{0.0};
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict.get_time("max_transition", mMaxTransition) ) {
-  case AstElemDict::OK:
+  switch ( mElemDict.get_time("max_transition", mMaxTransition) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
 #warning "TODO: 今は無限大を代入している．要確認"
     mMaxTransition = ClibTime::infinity();
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict.get_time("min_transition", mMinTransition) ) {
-  case AstElemDict::OK:
+  switch ( mElemDict.get_time("min_transition", mMinTransition) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
 #warning "TODO: 今は0を代入している．要確認"
     mMinTransition = ClibTime{0.0};
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict.get_expr("function", mFunction) ) {
-  case AstElemDict::OK:
+  switch ( mElemDict.get_expr("function", mFunction) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
     mFunction = nullptr;
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict.get_expr("three_state", mTristate) ) {
-  case AstElemDict::OK:
+  switch ( mElemDict.get_expr("three_state", mTristate) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
     mTristate = nullptr;
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }
 
-  if ( elem_dict.count("timing") > 0 ) {
-    auto& vec = elem_dict.at("timing");
+  if ( mElemDict.count("timing") > 0 ) {
+    auto& vec = mElemDict.at("timing");
     SizeType n = vec.size();
     mTimingInfoList.clear();
-    mTimingInfoList.resize(n);
+    mTimingInfoList.reserve(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       auto ast_timing = vec[i];
-      if ( !mTimingInfoList[i].set(mLibrary, ast_timing) ) {
+      mTimingInfoList.push_back(TimingInfo{mLibraryInfo});
+      auto& timing_info = mTimingInfoList.back();
+      if ( !timing_info.set(ast_timing) ) {
 	cerr << " Error in TimingInfoList[" << i << "].set()" << endl;
 	ok = false;
       }
@@ -369,6 +363,13 @@ PinInfo::get_output_params(
   }
 
   return ok;
+}
+
+// @brief ライブラリを取り出す．
+CiCellLibrary*
+PinInfo::library() const
+{
+  return mLibraryInfo.library();
 }
 
 END_NAMESPACE_YM_DOTLIB

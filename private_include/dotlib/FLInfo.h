@@ -9,6 +9,7 @@
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
+#include "dotlib/ElemDict.h"
 #include "ym/ShString.h"
 #include "ym/clib.h"
 
@@ -16,7 +17,6 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 class AstExpr;
-class AstElemDict;
 
 //////////////////////////////////////////////////////////////////////
 /// @class FLInfo FLInfo.h "FLInfo.h"
@@ -41,8 +41,7 @@ public:
   /// @brief 情報をセットする．
   bool
   set_common(
-    const AstValue* val, ///< [in] パース木の情報
-    const AstElemDict& elem_dict
+    const AstValue* val ///< [in] パース木の情報
   );
 
   /// @brief 変数名1を返す．
@@ -87,11 +86,21 @@ public:
     return mCpv2;
   }
 
+  /// @brief 属性辞書を返す．
+  const ElemDict&
+  elem_dict() const
+  {
+    return mElemDict;
+  }
+
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // 要素の辞書
+  ElemDict mElemDict;
 
   // 状態変数名1
   ShString mVar1;

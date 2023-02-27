@@ -1,14 +1,15 @@
 
-/// @file AstElemDict.cc
-/// @brief AstElemDict の実装ファイル
+/// @file ElemDict.cc
+/// @brief ElemDict の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/AstElemDict.h"
+#include "dotlib/ElemDict.h"
 #include "dotlib/AstExpr.h"
 #include "dotlib/AstValue.h"
+#include "dotlib/AstAttr.h"
 #include "ym/ClibArea.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibResistance.h"
@@ -18,8 +19,8 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief string の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_string(
+ElemDict::RetType
+ElemDict::get_string(
   const char* keyword,
   ShString& val
 ) const
@@ -33,8 +34,8 @@ AstElemDict::get_string(
 }
 
 // @brief area の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_area(
+ElemDict::RetType
+ElemDict::get_area(
   const char* keyword,
   ClibArea& val
 ) const
@@ -48,8 +49,8 @@ AstElemDict::get_area(
 }
 
 // @brief capacitance の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_capacitance(
+ElemDict::RetType
+ElemDict::get_capacitance(
   const char* keyword,
   ClibCapacitance& val
 ) const
@@ -63,8 +64,8 @@ AstElemDict::get_capacitance(
 }
 
 // @brief resistance の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_resistance(
+ElemDict::RetType
+ElemDict::get_resistance(
   const char* keyword,
   ClibResistance& val
 ) const
@@ -78,8 +79,8 @@ AstElemDict::get_resistance(
 }
 
 // @brief technology の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_technology(
+ElemDict::RetType
+ElemDict::get_technology(
   const char* keyword,
   ClibTechnology& val
 ) const
@@ -93,8 +94,8 @@ AstElemDict::get_technology(
 }
 
 // @brief time の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_time(
+ElemDict::RetType
+ElemDict::get_time(
   const char* keyword,
   ClibTime& val
 ) const
@@ -108,8 +109,8 @@ AstElemDict::get_time(
 }
 
 // @brief ClibCPV の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_cpv(
+ElemDict::RetType
+ElemDict::get_cpv(
   const char* keyword,
   ClibCPV& val
 ) const
@@ -142,8 +143,8 @@ AstElemDict::get_cpv(
 }
 
 // @brief ClibVarType の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_vartype(
+ElemDict::RetType
+ElemDict::get_vartype(
   const char* keyword,
   ClibVarType& val
 ) const
@@ -197,8 +198,8 @@ AstElemDict::get_vartype(
 }
 
 // @brief expr の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_expr(
+ElemDict::RetType
+ElemDict::get_expr(
   const char* keyword,
   const AstExpr*& val
 ) const
@@ -212,8 +213,8 @@ AstElemDict::get_expr(
 }
 
 // @brief direction の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_direction(
+ElemDict::RetType
+ElemDict::get_direction(
   const char* keyword,
   ClibDirection& val
 ) const
@@ -227,8 +228,8 @@ AstElemDict::get_direction(
 }
 
 // @brief timing_type の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_timing_type(
+ElemDict::RetType
+ElemDict::get_timing_type(
   const char* keyword,
   ClibTimingType& val
 ) const
@@ -242,8 +243,8 @@ AstElemDict::get_timing_type(
 }
 
 // @brief timing_sense の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_timing_sense(
+ElemDict::RetType
+ElemDict::get_timing_sense(
   const char* keyword,
   ClibTimingSense& val
 ) const
@@ -257,8 +258,8 @@ AstElemDict::get_timing_sense(
 }
 
 // @brief delay_model の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_delay_model(
+ElemDict::RetType
+ElemDict::get_delay_model(
   const char* keyword,
   ClibDelayModel& val
 ) const
@@ -272,8 +273,8 @@ AstElemDict::get_delay_model(
 }
 
 // @brief float_vector の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_float_vector(
+ElemDict::RetType
+ElemDict::get_float_vector(
   const char* keyword,
   vector<double>& val
 ) const
@@ -287,8 +288,8 @@ AstElemDict::get_float_vector(
 }
 
 // @brief complex 形式の float_vector の値を取り出す．
-AstElemDict::RetType
-AstElemDict::get_complex_float_vector(
+ElemDict::RetType
+ElemDict::get_complex_float_vector(
   const char* keyword,
   vector<double>& val
 ) const
@@ -306,8 +307,8 @@ AstElemDict::get_complex_float_vector(
 }
 
 // @brief キーワードの値を返す．
-AstElemDict::RetType
-AstElemDict::get_value(
+ElemDict::RetType
+ElemDict::get_value(
   const char* keyword,
   const AstValue*& val
 ) const
@@ -327,6 +328,26 @@ AstElemDict::get_value(
 
   val = vec[0];
   return OK;
+}
+
+// @brief 内容をセットする．
+void
+ElemDict::set(
+  const AstValue* ast_value
+)
+{
+  SizeType n = ast_value->group_elem_size();
+  for ( SizeType i = 0; i < n; ++ i ) {
+    auto& elem = ast_value->group_elem_attr(i);
+    auto kwd = elem.kwd();
+    auto val = &elem.value();
+    if ( count(kwd) == 0 ) {
+      emplace(kwd, vector<const AstValue*>{val});
+    }
+    else {
+      at(kwd).push_back(val);
+    }
+  }
 }
 
 END_NAMESPACE_YM_DOTLIB

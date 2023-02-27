@@ -9,12 +9,15 @@
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
+#include "dotlib/ElemDict.h"
 #include "ci/CiLut.h"
 #include "ci/CiCellLibrary.h"
 #include "ym/ShString.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
+
+class LibraryInfo;
 
 //////////////////////////////////////////////////////////////////////
 /// @class TableInfo TableInfo.h "TableInfo.h"
@@ -25,7 +28,11 @@ class TableInfo
 public:
 
   /// @brief コンストラクタ
-  TableInfo() = default;
+  TableInfo(
+    LibraryInfo& library_info ///< [in] ライブラリのパース情報
+  ) : mLibraryInfo{library_info}
+  {
+  }
 
   /// @brief デストラクタ
   ~TableInfo() = default;
@@ -43,15 +50,29 @@ public:
   );
 
   SizeType
-  gen_lut(
-    CiCellLibrary* library
-  ) const;
+  gen_lut() const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ライブラリを取り出す．
+  CiCellLibrary*
+  library() const;
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // ライブラリのパース情報
+  LibraryInfo& mLibraryInfo;
+
+  // 要素の辞書
+  ElemDict mElemDict;
 
   // テンプレート名
   ShString mName;

@@ -9,7 +9,6 @@
 #include "dotlib/AstValue.h"
 #include "dotlib/AstAttr.h"
 #include "dotlib/AstExpr.h"
-#include "dotlib/AstElemDict.h"
 #include "AstValue_int.h"
 
 
@@ -372,28 +371,6 @@ AstValue::group_elem_attr(
 {
   static AstAttr dummy;
   return dummy;
-}
-
-// @brief group statement の要素の辞書を作る．
-//
-// 異なる型の場合の値は不定
-AstElemDict
-AstValue::gen_group_elem_dict() const
-{
-  AstElemDict ans;
-  SizeType n = group_elem_size();
-  for ( SizeType i = 0; i < n; ++ i ) {
-    auto& elem = group_elem_attr(i);
-    auto kwd = elem.kwd();
-    auto val = &elem.value();
-    if ( ans.count(kwd) == 0 ) {
-      ans.emplace(kwd, vector<const AstValue*>{val});
-    }
-    else {
-      ans.at(kwd).push_back(val);
-    }
-  }
-  return ans;
 }
 
 

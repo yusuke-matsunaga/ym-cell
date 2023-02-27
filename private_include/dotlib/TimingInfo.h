@@ -9,7 +9,9 @@
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
+#include "dotlib/LibraryInfo.h"
 #include "dotlib/TableInfo.h"
+#include "dotlib/ElemDict.h"
 #include "ym/clib.h"
 
 
@@ -26,7 +28,17 @@ class TimingInfo
 public:
 
   /// @brief コンストラクタ
-  TimingInfo() = default;
+  TimingInfo(
+    LibraryInfo& library_info ///< [in] ライブラリのパース情報
+  ) : mLibraryInfo{library_info},
+      mCellRise{library_info},
+      mCellFall{library_info},
+      mRiseTransition{library_info},
+      mFallTransition{library_info},
+      mRisePropagation{library_info},
+      mFallPropagation{library_info}
+  {
+  }
 
   /// @brief デストラクタ
   ~TimingInfo() = default;
@@ -40,7 +52,6 @@ public:
   /// @brief 内容を設定する．
   bool
   set(
-    CiCellLibrary* mLibrary,   ///< [in] セルライブラリ
     const AstValue* timing_val ///< [in] タイミング情報のパース木
   );
 
@@ -61,21 +72,19 @@ private:
 
   /// @brief タイミング情報の共通なパラメータを得る．
   bool
-  get_timing_common_params(
-    const AstElemDict& elem_dict
-  );
+  get_timing_common_params();
 
   /// @brief generic タイプのタイミング情報のパラメータを得る．
   bool
-  get_timing_generic_params(
-    const AstElemDict& elem_dict
-  );
+  get_timing_generic_params();
 
   /// @brief table-lookup タイプのタイミング情報のパラメータを得る．
   int
-  get_timing_table_lookup_params(
-    const AstElemDict& elem_dict
-  );
+  get_timing_table_lookup_params();
+
+  /// @brief ライブラリを取り出す．
+  CiCellLibrary*
+  library() const;
 
 
 private:
@@ -83,8 +92,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ライブラリ
-  CiCellLibrary* mLibrary;
+  // ライブラリのパース情報
+  LibraryInfo& mLibraryInfo;
+
+  // 要素の辞書
+  ElemDict mElemDict;
 
   // 名前(オプショナル)
   ShString mName;

@@ -8,7 +8,7 @@
 
 #include "dotlib/LatchInfo.h"
 #include "dotlib/AstValue.h"
-#include "dotlib/AstElemDict.h"
+#include "dotlib/ElemDict.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -21,44 +21,42 @@ LatchInfo::set(
 {
   bool ok{true};
 
-  // 属性の辞書を作る．
-  auto elem_dict = ast_val->gen_group_elem_dict();
-  if ( !set_common(ast_val, elem_dict) ) {
+  if ( !set_common(ast_val) ) {
     ok = false;
   }
 
-  switch ( elem_dict.get_expr("enable_on", mEnableOn) ) {
-  case AstElemDict::OK:
+  switch ( elem_dict().get_expr("enable_on", mEnableOn) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
     // ラッチの場合はエラーではない．
     mEnableOn = nullptr;
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict.get_expr("enable_on_also", mEnableOnAlso) ) {
-  case AstElemDict::OK:
+  switch ( elem_dict().get_expr("enable_on_also", mEnableOnAlso) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
     // これはエラーではない．
     mEnableOnAlso = nullptr;
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict.get_expr("data_in", mDataIn) ) {
-  case AstElemDict::OK:
+  switch ( elem_dict().get_expr("data_in", mDataIn) ) {
+  case ElemDict::OK:
     break;
-  case AstElemDict::NOT_FOUND:
+  case ElemDict::NOT_FOUND:
     // これはエラーではない．
     mDataIn = nullptr;
     break;
-  case AstElemDict::ERROR:
+  case ElemDict::ERROR:
     ok = false;
     break;
   }

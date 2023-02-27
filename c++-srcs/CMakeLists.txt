@@ -66,7 +66,7 @@ set (mislib_SOURCES
   )
 
 set (dotlib_SOURCES
-  dotlib/read_liberty.cc
+  dotlib/LibraryInfo.cc
   dotlib/CellInfo.cc
   dotlib/FFInfo.cc
   dotlib/FLInfo.cc
@@ -76,6 +76,7 @@ set (dotlib_SOURCES
   dotlib/PinInfo.cc
   dotlib/TableInfo.cc
   dotlib/TimingInfo.cc
+  dotlib/ElemDict.cc
 
   dotlib/parser/FuncParser.cc
   dotlib/parser/FuncScanner.cc
@@ -87,7 +88,6 @@ set (dotlib_SOURCES
 
   dotlib/ast/AstExpr.cc
   dotlib/ast/AstValue.cc
-  dotlib/ast/AstElemDict.cc
   )
 
 set (cell_SOURCES

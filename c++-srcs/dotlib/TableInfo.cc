@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 #include "dotlib/TableInfo.h"
-#include "dotlib/AstElemDict.h"
+#include "dotlib/LibraryInfo.h"
 #include "dotlib/AstValue.h"
 
 
@@ -30,27 +30,27 @@ TableInfo::set(
   mName = header.complex_elem_value(0).string_value();
 
   // 属性の辞書を作る．
-  auto elem_dict = val->gen_group_elem_dict();
+  mElemDict.set(val);
 
   bool ok{true};
 
-  if ( elem_dict.get_complex_float_vector("index_1", mIndex1) == AstElemDict::ERROR ) {
+  if ( mElemDict.get_complex_float_vector("index_1", mIndex1) == ElemDict::ERROR ) {
     ok = false;
   }
 
-  if ( elem_dict.get_complex_float_vector("index_2", mIndex2) == AstElemDict::ERROR ) {
+  if ( mElemDict.get_complex_float_vector("index_2", mIndex2) == ElemDict::ERROR ) {
     ok = false;
   }
 
-  if ( elem_dict.get_complex_float_vector("index_3", mIndex3) == AstElemDict::ERROR ) {
+  if ( mElemDict.get_complex_float_vector("index_3", mIndex3) == ElemDict::ERROR ) {
     ok = false;
   }
 
-  if ( elem_dict.get_complex_float_vector("values", mValues) != AstElemDict::OK ) {
+  if ( mElemDict.get_complex_float_vector("values", mValues) != ElemDict::OK ) {
     ok = false;
   }
 
-  if ( elem_dict.get_value("domain", mDomain) == AstElemDict::ERROR ) {
+  if ( mElemDict.get_value("domain", mDomain) == ElemDict::ERROR ) {
     ok = false;
   }
 
@@ -58,14 +58,23 @@ TableInfo::set(
 }
 
 SizeType
-TableInfo::gen_lut(
-  CiCellLibrary* library
-) const
+TableInfo::gen_lut() const
 {
   if ( mValues.size() > 0 ) {
-    return library->add_lut(mName, mValues, mIndex1, mIndex2, mIndex3);
+    SizeType templ_id = mLibraryInfo.find_lut(mName);
+    if ( templ_id == CLIB_NULLID ) {
+      return CLIB_NULLID;
+    }
+    return library()->add_lut(templ_id, mValues, mIndex1, mIndex2, mIndex3);
   }
   return CLIB_NULLID;
+}
+
+// @brief ライブラリを取り出す．
+CiCellLibrary*
+TableInfo::library() const
+{
+  return mLibraryInfo.library();
 }
 
 END_NAMESPACE_YM_DOTLIB

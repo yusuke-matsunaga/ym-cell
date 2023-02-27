@@ -211,24 +211,21 @@ CiCellLibrary::set_attr(
 // @brief 1次元の LUT のテンプレートを作る．
 SizeType
 CiCellLibrary::add_lut_template1(
-  const ShString& name,
   ClibVarType var_type1,
   const vector<double>& index_list1
 )
 {
   SizeType id = mLutTemplateList.size();
-  auto tmpl = new CiLutTemplate1D{id, name,
+  auto tmpl = new CiLutTemplate1D{id,
                                   var_type1, index_list1};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
   mRefLutTemplateList.push_back(id);
-  mLutDict.emplace(name, id);
   return id;
 }
 
 // @brief 2次元の LUT のテンプレートを作る．
 SizeType
 CiCellLibrary::add_lut_template2(
-  const ShString& name,
   ClibVarType var_type1,
   const vector<double>& index_list1,
   ClibVarType var_type2,
@@ -236,19 +233,17 @@ CiCellLibrary::add_lut_template2(
 )
 {
   SizeType id = mLutTemplateList.size();
-  auto tmpl = new CiLutTemplate2D{id, name,
+  auto tmpl = new CiLutTemplate2D{id,
 				  var_type1, index_list1,
 				  var_type2, index_list2};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
   mRefLutTemplateList.push_back(id);
-  mLutDict.emplace(name, id);
   return id;
 }
 
 // @brief 3次元の LUT のテンプレートを作る．
 SizeType
 CiCellLibrary::add_lut_template3(
-  const ShString& name,
   ClibVarType var_type1,
   const vector<double>& index_list1,
   ClibVarType var_type2,
@@ -258,13 +253,12 @@ CiCellLibrary::add_lut_template3(
 )
 {
   SizeType id = mLutTemplateList.size();
-  auto tmpl = new CiLutTemplate3D{id, name,
+  auto tmpl = new CiLutTemplate3D{id,
 				  var_type1, index_list1,
 				  var_type2, index_list2,
 				  var_type3, index_list3};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
   mRefLutTemplateList.push_back(id);
-  mLutDict.emplace(name, id);
   return id;
 }
 
@@ -694,13 +688,14 @@ CiCellLibrary::new_lut3(
 // @brief LUT を作る．
 SizeType
 CiCellLibrary::add_lut(
-  const ShString& templ_name,
+  SizeType templ_id,
   const vector<double>& value_array,
   const vector<double>& index_array1,
   const vector<double>& index_array2,
   const vector<double>& index_array3
 )
 {
+#if 0
   if ( mLutDict.count(templ_name) == 0 ) {
     // テンプレートが存在しない．
 #warning "TODO: エラーメッセージ"
@@ -709,6 +704,7 @@ CiCellLibrary::add_lut(
     return CLIB_NULLID;
   }
   auto templ_id = mLutDict.at(templ_name);
+#endif
   auto lut_template = mLutTemplateList[templ_id].get();
 
   SizeType d = lut_template->dimension();
@@ -818,7 +814,6 @@ CiCellLibrary::clear()
   mLeakagePowerUnit = {};
   mLutTemplateList.clear();
   mRefLutTemplateList.clear();
-  mLutDict.clear();
   mCellList.clear();
   mRefCellList.clear();
   mCellDict.clear();

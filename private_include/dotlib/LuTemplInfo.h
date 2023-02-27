@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
-#include "dotlib/AstElemDict.h"
+#include "dotlib/ElemDict.h"
 #include "ym/ShString.h"
 #include "ci/CiCellLibrary.h"
 
@@ -25,7 +25,11 @@ class LuTemplInfo
 public:
 
   /// @brief コンストラクタ
-  LuTemplInfo() = default;
+  LuTemplInfo(
+    CiCellLibrary* library
+  ) : mLibrary{library}
+  {
+  }
 
   /// @brief デストラクタ
   ~LuTemplInfo() = default;
@@ -42,17 +46,28 @@ public:
     const AstValue* lut_val ///< [in] テンプレート情報のパース木
   );
 
+  /// @brief 名前を得る．
+  ShString
+  name() const
+  {
+    return mName;
+  }
+
   /// @brief テンプレートを作る．
-  void
-  add_lu_template(
-    unique_ptr<CiCellLibrary>& library
-  );
+  SizeType
+  add_lu_template();
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // ライブラリ
+  CiCellLibrary* mLibrary{nullptr};
+
+  // 要素の辞書
+  ElemDict mElemDict;
 
   // 名前
   ShString mName;

@@ -204,7 +204,6 @@ CiCellLibrary::restore_lut_template(
       break;
     }
     ptr->restore(s);
-    mLutDict.emplace(ptr->_name(), id);
     mLutTemplateList.push_back(std::move(ptr));
   }
   mRefLutTemplateList.resize(n);
@@ -500,8 +499,10 @@ CiLutTemplate::restore_common(
   BinDec& s
 )
 {
-  s >> mId
-    >> mName;
+  s >> mId;
+#if 0
+  >> mName;
+#endif
 }
 
 

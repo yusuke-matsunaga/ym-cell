@@ -8,7 +8,6 @@
 
 #include "dotlib/FSMInfo.h"
 #include "dotlib/AstValue.h"
-#include "dotlib/AstElemDict.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -26,8 +25,7 @@ FSMInfo::set(
   bool ok{true};
 
   // 属性の辞書を作る．
-  auto elem_dict = ast_val->gen_group_elem_dict();
-  if ( !set_common(ast_val, elem_dict) ) {
+  if ( !set_common(ast_val) ) {
     ok = false;
   }
 

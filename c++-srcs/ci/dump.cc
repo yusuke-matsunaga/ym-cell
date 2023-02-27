@@ -206,14 +206,16 @@ CiBusType::dump(
 
 // @brief 共通部分をバイナリダンプする．
 void
-CiLutTemplate::dump_common(
+CiLutTemplate::dump(
   BinEnc& s
 ) const
 {
   ymuint8 d = dimension();
   s << d
-    << mId
-    << _name();
+    << mId;
+#if 0
+  << _name();
+#endif
 }
 
 // @brief 1つの変数の情報をバイナリダンプする．
@@ -239,7 +241,7 @@ CiLutTemplate1D::dump(
   BinEnc& s
 ) const
 {
-  dump_common(s);
+  CiLutTemplate::dump(s);
   dump_var(s, mVarType, mIndexArray);
 }
 
@@ -254,7 +256,7 @@ CiLutTemplate2D::dump(
   BinEnc& s
 ) const
 {
-  dump_common(s);
+  CiLutTemplate::dump(s);
   for ( SizeType i: Range(2) ) {
     dump_var(s, mVarType[i], mIndexArray[i]);
   }
@@ -271,7 +273,7 @@ CiLutTemplate3D::dump(
   BinEnc& s
 ) const
 {
-  dump_common(s);
+  CiLutTemplate::dump(s);
   for ( SizeType i: Range(2) ) {
     dump_var(s, mVarType[i], mIndexArray[i]);
   }

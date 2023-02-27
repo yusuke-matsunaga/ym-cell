@@ -13,11 +13,14 @@
 #include "dotlib/LatchInfo.h"
 #include "dotlib/FSMInfo.h"
 #include "dotlib/PinInfo.h"
+#include "dotlib/ElemDict.h"
 #include "ym/ShString.h"
 #include "ym/clib.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
+
+class LibraryInfo;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CellInfo CellInfo.h "CellInfo.h"
@@ -29,8 +32,8 @@ public:
 
   /// @brief コンストラクタ
   CellInfo(
-    CiCellLibrary* library ///< [in] 対象のライブラリ
-  ) : mLibrary{library}
+    LibraryInfo& library_info ///< [in] ライブラリのパース情報
+  ) : mLibraryInfo{library_info}
   {
   }
 
@@ -71,14 +74,21 @@ private:
   SizeType
   add_fsm_cell() const;
 
+  /// @brief ライブラリを取り出す．
+  CiCellLibrary*
+  library() const;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ライブラリ
-  CiCellLibrary* mLibrary{nullptr};
+  // ライブラリのパース情報
+  LibraryInfo& mLibraryInfo;
+
+  // 要素の辞書
+  ElemDict mElemDict;
 
   // 名前
   ShString mName;

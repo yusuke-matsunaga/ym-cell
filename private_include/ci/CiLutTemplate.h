@@ -27,10 +27,8 @@ public:
 
   /// @brief コンストラクタ
   CiLutTemplate(
-    SizeType id,         ///< [in] ID番号
-    const ShString& name ///< [in] 名前
-  ) : mId{id},
-      mName{name}
+    SizeType id ///< [in] ID番号
+  ) : mId{id}
   {
   }
 
@@ -49,20 +47,6 @@ public:
   id() const
   {
     return mId;
-  }
-
-  /// @brief 名前の取得
-  string
-  name() const
-  {
-    return mName;
-  }
-
-  /// @brief 名前の取得
-  ShString
-  _name() const
-  {
-    return mName;
   }
 
   /// @brief 次元数の取得
@@ -103,7 +87,7 @@ public:
   void
   dump(
     BinEnc& s ///< [in] 出力先のストリーム
-  ) const = 0;
+  ) const;
 
   /// @brief 内容を読み込む．
   virtual
@@ -117,12 +101,6 @@ protected:
   //////////////////////////////////////////////////////////////////////
   // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 共通部分をバイナリダンプする．
-  void
-  dump_common(
-    BinEnc& s ///< [in] 出力先のストリーム
-  ) const;
 
   /// @brief 1つの変数の情報をバイナリダンプする．
   static
@@ -148,9 +126,6 @@ private:
   // ID番号
   SizeType mId;
 
-  // 名前
-  ShString mName;
-
 };
 
 
@@ -169,10 +144,9 @@ public:
   /// @brief コンストラクタ
   CiLutTemplate1D(
     SizeType id,
-    ShString name,
     ClibVarType var_type,
     const vector<double>& index_array
-  ) : CiLutTemplate{id, name},
+  ) : CiLutTemplate{id/*, name*/},
       mVarType{var_type},
       mIndexArray{index_array}
   {
@@ -258,12 +232,11 @@ public:
   /// @brief コンストラクタ
   CiLutTemplate2D(
     SizeType id,
-    ShString name,
     ClibVarType var1,
     const vector<double>& index_array1,
     ClibVarType var2,
     const vector<double>& index_array2
-  ) : CiLutTemplate{id, name},
+  ) : CiLutTemplate{id/*, name*/},
       mVarType{var1, var2},
       mIndexArray{index_array1, index_array2}
   {
@@ -349,14 +322,13 @@ public:
   /// @brief コンストラクタ
   CiLutTemplate3D(
     SizeType id,
-    ShString name,
     ClibVarType var1,
     const vector<double>& index_array1,
     ClibVarType var2,
     const vector<double>& index_array2,
     ClibVarType var3,
     const vector<double>& index_array3
-  ) : CiLutTemplate{id, name},
+  ) : CiLutTemplate{id/*, name*/},
       mVarType{var1, var2, var3},
       mIndexArray{index_array1, index_array2, index_array3}
   {
