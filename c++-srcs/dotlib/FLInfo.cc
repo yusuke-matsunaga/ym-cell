@@ -22,8 +22,7 @@ FLInfo::set_common(
   const AstValue* val
 )
 {
-  // 属性の辞書を作る．
-  mElemDict.set(val);
+  GroupInfo::set(val);
 
   // ヘッダ中の変数名を取り出す．
   auto& header = val->group_header_value();
@@ -34,41 +33,41 @@ FLInfo::set_common(
 
   bool ok{true};
 
-  switch ( mElemDict.get_expr("clear", mClear) ) {
-  case ElemDict::OK:
+  switch ( get_expr("clear", mClear) ) {
+  case OK:
     break;
-  case ElemDict::NOT_FOUND:
+  case NOT_FOUND:
     mClear = nullptr;
     break;
-  case ElemDict::ERROR:
+  case ERROR:
     ok = false;
     break;
   }
 
-  switch ( mElemDict.get_expr("preset", mPreset) ) {
-  case ElemDict::OK:
+  switch ( get_expr("preset", mPreset) ) {
+  case OK:
     break;
-  case ElemDict::NOT_FOUND:
+  case NOT_FOUND:
     mPreset = nullptr;
     break;
-  case ElemDict::ERROR:
+  case ERROR:
     ok = false;
     break;
   }
 
-  auto ret1 = mElemDict.get_cpv("clear_preset_var1", mCpv1);
-  auto ret2 = mElemDict.get_cpv("clear_preset_var2", mCpv2);
-  if ( ret1 == ElemDict::ERROR || ret2 == ElemDict::ERROR ) {
+  auto ret1 = get_cpv("clear_preset_var1", mCpv1);
+  auto ret2 = get_cpv("clear_preset_var2", mCpv2);
+  if ( ret1 == ERROR || ret2 == ERROR ) {
     ok = false;
   }
-  else if ( ret1 == ElemDict::OK ) {
-    if ( ret2 == ElemDict::NOT_FOUND ) {
+  else if ( ret1 == OK ) {
+    if ( ret2 == NOT_FOUND ) {
       // clear_preset_var1 が定義されているのに clear_preset_var2 が定義されていない．
       ok = false;
     }
   }
   else {
-    if ( ret2 == ElemDict::OK ) {
+    if ( ret2 == OK ) {
       // clear_preset_var2 が定義されているのに clear_preset_var1 が定義されていない．
       ok = false;
     }

@@ -27,6 +27,8 @@ LibraryInfo::set(
   const AstValue& lib_val
 )
 {
+  GroupInfo::set(&lib_val);
+
   { // ライブラリ名の設定
     auto& header_val = lib_val.group_header_value();
     mLibrary->set_name(header_val.string_value());
@@ -36,41 +38,11 @@ LibraryInfo::set(
 
   // 属性の設定
 
-  // 属性名をキーにした辞書を作る．
-  // おなじ属性名の要素が複数ある場合もあるので値は vector<const AstValue*>
-  // となる．
-  mElemDict.set(&lib_val);
+  // 'technology' の設定
+  set_technology();
 
-  { // 'technology' の設定
-    ClibTechnology technology;
-    switch ( mElemDict.get_technology("technology", technology) ) {
-    case ElemDict::OK:
-      mLibrary->set_technology(technology);
-      break;
-    case ElemDict::NOT_FOUND:
-      // デフォルト値
-      mLibrary->set_technology(ClibTechnology::cmos);
-      break;
-    case ElemDict::ERROR:
-#warning "TODO: エラーメッセージ"
-      ok = false;
-      break;
-    }
-  }
-
-  { // 'delay_model' の設定
-    ClibDelayModel delay_model;
-    switch ( mElemDict.get_delay_model("delay_model", delay_model) ) {
-    case ElemDict::OK:
-      mLibrary->set_delay_model(delay_model);
-      break;
-    case ElemDict::NOT_FOUND:
-      break;
-    case ElemDict::ERROR:
-#warning "TODO: エラーメッセージ"
-      ok = false;
-    }
-  }
+  // 'delay_model' の設定
+  set_delay_model();
 
   // 'bus_naming_style' の設定
   if ( !set_str_attr("bus_naming_style") ) {
@@ -123,10 +95,10 @@ LibraryInfo::set(
   }
 
   // lu_table_template の設定
-  if ( mElemDict.count("lu_table_template") > 0 ) {
-    auto& vec = mElemDict.at("lu_table_template");
+  if ( elem_dict().count("lu_table_template") > 0 ) {
+    auto& vec = elem_dict().at("lu_table_template");
     for ( auto ast_templ: vec ) {
-      LuTemplInfo info{mLibrary};
+      LuTemplInfo info{*this};
       if ( info.set(ast_templ) ) {
 	auto tid = info.add_lu_template();
 	mLutDict.emplace(info.name(), tid);
@@ -138,8 +110,8 @@ LibraryInfo::set(
   }
 
   // セルの内容の設定
-  if ( mElemDict.count("cell") > 0 ) {
-    auto& v = mElemDict.at("cell");
+  if ( elem_dict().count("cell") > 0 ) {
+    auto& v = elem_dict().at("cell");
     for ( auto ast_cell: v ) {
       CellInfo cell_info{*this};
       if ( cell_info.set(ast_cell) ) {
@@ -166,16 +138,70 @@ LibraryInfo::set_str_attr(
 {
   bool ok = true;
   ShString tmp_str;
-  switch ( mElemDict.get_string(keyword, tmp_str) ) {
-  case ElemDict::OK:
+  switch ( get_string(keyword, tmp_str) ) {
+  case OK:
     mLibrary->set_attr(keyword, tmp_str);
     break;
 
-  case ElemDict::NOT_FOUND:
+  case NOT_FOUND:
     // 無視
     break;
 
-  case ElemDict::ERROR:
+  case ERROR:
+    ok = false;
+    break;
+  }
+
+  return ok;
+}
+
+// @brief technology の属性をセットする．
+bool
+LibraryInfo::set_technology()
+{
+  const char* keyword{"technology"};
+  ClibTechnology technology;
+  auto ret = get_technology(keyword, technology);
+  switch ( ret ) {
+  case OK:
+    mLibrary->set_technology(technology);
+    break;
+
+  case NOT_FOUND:
+    // デフォルト値
+    mLibrary->set_technology(ClibTechnology::cmos);
+    break;
+
+  case ERROR:
+#warning "TODO: エラーメッセージ"
+    return false;
+    break;
+  }
+
+  return true;
+}
+
+// @brief delay_model の属性をセットする．
+bool
+LibraryInfo::set_delay_model()
+{
+  const char* keyword{"delay_model"};
+  const AstValue* val{nullptr};
+  auto ret = get_value(keyword, val);
+  bool ok = true;
+  switch ( ret ) {
+  case OK:
+    {
+      auto delay_model = val->delay_model_value();
+      mLibrary->set_delay_model(delay_model);
+    }
+    break;
+
+  case NOT_FOUND:
+    break;
+
+  case ERROR:
+#warning "TODO: エラーメッセージ"
     ok = false;
     break;
   }
@@ -188,10 +214,11 @@ bool
 LibraryInfo::set_capacitive_load_unit()
 {
   const char* keyword{"capacitive_load_unit"};
-  const AstValue* val;
+  const AstValue* val{nullptr};
+  auto ret = get_value(keyword, val);
   bool ok = true;
-  switch ( mElemDict.get_value(keyword, val) ) {
-  case ElemDict::OK:
+  switch ( ret ) {
+  case OK:
     {
       ASSERT_COND( val->complex_elem_size() == 2 );
       auto u = val->complex_elem_value(0).float_value();
@@ -200,13 +227,15 @@ LibraryInfo::set_capacitive_load_unit()
     }
     break;
 
-  case ElemDict::NOT_FOUND:
+  case NOT_FOUND:
+    // 無視
     break;
 
-  case ElemDict::ERROR:
+  case ERROR:
     ok = false;
     break;
   }
+
   return ok;
 }
 

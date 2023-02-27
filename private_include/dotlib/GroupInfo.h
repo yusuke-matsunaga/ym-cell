@@ -1,28 +1,25 @@
-#ifndef ELEMDICT_H
-#define ELEMDICT_H
+#ifndef GROUPINFO_H
+#define GROUPINFO_H
 
-/// @file AstElemDict.h
-/// @brief AstElemDict のヘッダファイル
+/// @file GroupInfo.h
+/// @brief GroupInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
-#include "ym/Expr.h"
 #include "ym/ShString.h"
+//#include "ym/clib.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-class AstValue;
-
 //////////////////////////////////////////////////////////////////////
-/// @class AstElemDict AstElemDict.h "AstElemDict.h"
-/// @brief キーワードに対応する AstValue* のベクタを格納する辞書
+/// @class GroupInfo GroupInfo.h "GroupInfo.h"
+/// @brief グループ構造を表すクラス
 //////////////////////////////////////////////////////////////////////
-class ElemDict :
-  public unordered_map<string, vector<const AstValue*>>
+class GroupInfo
 {
 public:
 
@@ -37,9 +34,46 @@ public:
 
 
 public:
+
+  /// @brief コンストラクタ
+  GroupInfo() = default;
+
+  /// @brief デストラクタ
+  ~GroupInfo() = default;
+
+
+public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を設定する．
+  void
+  set(
+    const AstValue* val ///< [in] パース木の値
+  );
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 要素の辞書を返す．
+  const unordered_map<string, vector<const AstValue*>>&
+  elem_dict() const
+  {
+    return mElemDict;
+  }
+
+  /// @brief キーワードの値を返す．
+  ///
+  /// singleton 属性と仮定している．
+  RetType
+  get_value(
+    const char* keyword, ///< [in] キーワード
+    const AstValue*& val ///< [out] 値を格納する変数
+  ) const;
 
   /// @brief string の値を取り出す．
   /// @retval OK 成功
@@ -51,6 +85,18 @@ public:
   get_string(
     const char* keyword, ///< [in] キーワード
     ShString& val        ///< [out] 値を格納する変数
+  ) const;
+
+  /// @brief technology の値を取り出す．
+  /// @retval OK 成功
+  /// @retval NOT_FOUND 定義されていなかった
+  /// @retval ERROR 二回以上定義されていた．
+  ///
+  /// OK以外の場合には val の値は変更されない．
+  RetType
+  get_technology(
+    const char* keyword, ///< [in] キーワード
+    ClibTechnology& val  ///< [out] 値を格納する変数
   ) const;
 
   /// @brief area の値を取り出す．
@@ -87,18 +133,6 @@ public:
   get_resistance(
     const char* keyword, ///< [in] キーワード
     ClibResistance& val  ///< [out] 値を格納する変数
-  ) const;
-
-  /// @brief technology の値を取り出す．
-  /// @retval OK 成功
-  /// @retval NOT_FOUND 定義されていなかった
-  /// @retval ERROR 二回以上定義されていた．
-  ///
-  /// OK以外の場合には val の値は変更されない．
-  RetType
-  get_technology(
-    const char* keyword, ///< [in] キーワード
-    ClibTechnology& val  ///< [out] 値を格納する変数
   ) const;
 
   /// @brief time の値を取り出す．
@@ -143,18 +177,6 @@ public:
   get_vartype(
     const char* keyword, ///< [in] キーワード
     ClibVarType& val     ///< [out] 値を格納する変数
-  ) const;
-
-  /// @brief expr の値を取り出す．
-  /// @retval OK 成功
-  /// @retval NOT_FOUND 定義されていなかった
-  /// @retval ERROR 2回以上定義されていた．
-  ///
-  /// OK以外の場合には val の値は変更されない．
-  RetType
-  get_expr(
-    const char* keyword, ///< [in] キーワード
-    const AstExpr*& val  ///< [out] 値を格納する変数
   ) const;
 
   /// @brief direction の値を取り出す．
@@ -217,6 +239,18 @@ public:
     vector<double>& val	  ///< [out] 値を格納する変数
   ) const;
 
+  /// @brief expr の値を取り出す．
+  /// @retval OK 成功
+  /// @retval NOT_FOUND 定義されていなかった
+  /// @retval ERROR 2回以上定義されていた．
+  ///
+  /// OK以外の場合には val の値は変更されない．
+  RetType
+  get_expr(
+    const char* keyword, ///< [in] キーワード
+    const AstExpr*& val  ///< [out] 値を格納する変数
+  ) const;
+
   /// @brief complex 形式の float_vector の値を取り出す．
   /// @retval OK 成功
   /// @retval NOT_FOUND 定義されていなかった
@@ -229,23 +263,17 @@ public:
     vector<double>& val	  ///< [out] 値を格納する変数
   ) const;
 
-  /// @brief キーワードの値を返す．
-  ///
-  /// singleton 属性と仮定している．
-  RetType
-  get_value(
-    const char* keyword, ///< [in] キーワード
-    const AstValue*& val ///< [out] 値を格納する変数
-  ) const;
 
-  /// @brief 内容をセットする．
-  void
-  set(
-    const AstValue* ast_value ///< [in] パース木の値
-  );
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 要素の辞書
+  unordered_map<string, vector<const AstValue*>> mElemDict;
 
 };
 
 END_NAMESPACE_YM_DOTLIB
 
-#endif // ELEMDICT_H
+#endif // GROUPINFO_H

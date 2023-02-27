@@ -24,7 +24,11 @@ class LatchInfo :
 public:
 
   /// @brief コンストラクタ
-  LatchInfo() = default;
+  LatchInfo(
+    LibraryInfo& library_info
+  ) : FLInfo{library_info}
+  {
+  }
 
   /// @brief デストラクタ
   ~LatchInfo() = default;

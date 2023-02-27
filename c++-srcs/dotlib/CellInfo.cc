@@ -3,13 +3,10 @@
 /// @brief CellInfo の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/CellInfo.h"
-#include "dotlib/LibraryInfo.h"
-#include "dotlib/PinInfo.h"
-#include "dotlib/TimingInfo.h"
 #include "dotlib/AstExpr.h"
 #include "dotlib/AstValue.h"
 #include "ci/CiCellLibrary.h"
@@ -23,107 +20,36 @@ CellInfo::set(
   const AstValue* cell_val
 )
 {
+  GroupInfo::set(cell_val);
+
   // セル名
   mName = cell_val->group_header_value().complex_elem_value(0).string_value();
-
-  // セルの属性の辞書を作る．
-  mElemDict.set(cell_val);
 
   bool ok{true};
 
   // 面積
-  if ( mElemDict.get_area("area", mArea) != ElemDict::OK ) {
-    { // 仮
-      cerr << "Error in area: " << endl;
-    }
+  if ( !set_area() ) {
     ok = false;
   }
 
   // FF
-  mHasFF = false;
-  if ( mElemDict.count("ff") > 0 ) {
-    auto& vec = mElemDict.at("ff");
-    if ( vec.size() > 1 ) {
-      // "ff" 属性が2回以上現れる．
-#warning "TODO: エラーメッセージ"
-      cerr << "ff 属性が2回以上現れる．" << endl;
-      ok = false;
-    }
-    else {
-      auto ff_val = vec[0];
-      if ( mFFInfo.set(ff_val) ) {
-	mHasFF = true;
-      }
-      else {
-	ok = false;
-      }
-    }
+  if ( !set_FF() ) {
+    ok = false;
   }
 
   // ラッチ
-  mHasLatch = false;
-  if ( mElemDict.count("latch") > 0 ) {
-    auto& vec = mElemDict.at("latch");
-    if ( vec.size() > 1 ) {
-      // "latch" 属性が2回以上現れる．
-#warning "TODO: エラーメッセージ"
-      cerr << "latch 属性が2回以上現れる．" << endl;
-      ok = false;
-    }
-    else {
-      auto latch_val = vec[0];
-      if ( mLatchInfo.set(latch_val) ) {
-	mHasLatch = true;
-      }
-      else {
-	ok = false;
-      }
-    }
+  if ( !set_Latch() ) {
+    ok = false;
   }
 
   // statetable(FSM)
-  mHasFSM = false;
-  if ( mElemDict.count("statetable") > 0 ) {
-    auto& vec = mElemDict.at("statetable");
-    if ( vec.size() > 1 ) {
-      // "statetable" 属性が2回以上現れる．
-#warning "TODO: エラーメッセージ"
-      cerr << "statetable 属性が2回以上現れる．" << endl;
-      ok = false;
-    }
-    else {
-      auto fsm_val = vec[0];
-      if ( mFSMInfo.set(fsm_val) ) {
-	mHasFSM = true;
-      }
-      else {
-	ok = false;
-      }
-    }
+  if ( !set_FSM() ) {
+    ok = false;
   }
 
   // ピンの属性情報を取り出す．
-  if ( mElemDict.count("pin") == 0 ) {
-    // pin 情報がないセルはないはず．
-#warning "TODO: エラーメッセージ"
-    cerr << "No pin definitions" << endl;
+  if ( !set_pin() ) {
     ok = false;
-  }
-  else {
-    auto delay_model = library()->delay_model();
-    auto& vec = mElemDict.at("pin");
-    SizeType npin = vec.size();
-    mPinInfoList.clear();
-    mPinInfoList.reserve(npin);
-    for ( SizeType i = 0; i < npin; ++ i ) {
-      auto pin_val = vec[i];
-      mPinInfoList.push_back(PinInfo{mLibraryInfo});
-      auto& pin_info = mPinInfoList.back();
-      if ( !pin_info.set(pin_val) ) {
-	cerr << "Error in pin definition" << endl;
-	ok = false;
-      }
-    }
   }
 
   mInputId = 0;
@@ -262,10 +188,10 @@ CellInfo::add_ff_cell() const
   auto cpv1 = mFFInfo.clear_preset_var1();
   auto cpv2 = mFFInfo.clear_preset_var2();
   auto cell = library()->add_ff_cell(mName, mArea,
-				    var1, var2,
-				    clocked_on, clocked_on_also,
-				    next_state, clear, preset,
-				    cpv1, cpv2);
+				     var1, var2,
+				     clocked_on, clocked_on_also,
+				     next_state, clear, preset,
+				     cpv1, cpv2);
   return cell;
 }
 
@@ -298,10 +224,10 @@ CellInfo::add_latch_cell() const
   auto cpv1 = mLatchInfo.clear_preset_var1();
   auto cpv2 = mLatchInfo.clear_preset_var2();
   auto cell = library()->add_latch_cell(mName, mArea,
-				       var1, var2,
-				       enable_on, enable_on_also,
-				       data_in, clear, preset,
-				       cpv1, cpv2);
+					var1, var2,
+					enable_on, enable_on_also,
+					data_in, clear, preset,
+					cpv1, cpv2);
   return cell;
 }
 
@@ -313,11 +239,128 @@ CellInfo::add_fsm_cell() const
   return CLIB_NULLID;
 }
 
-// @brief ライブラリを取り出す．
-CiCellLibrary*
-CellInfo::library() const
+// @brief 面積を取り出す．
+bool
+CellInfo::set_area()
 {
-  return mLibraryInfo.library();
+  // 面積
+  const char* keyword{"area"};
+  if ( get_area(keyword, mArea) == OK ) {
+    return true;
+  }
+
+  { // 仮
+    cerr << "Error in area: " << endl;
+  }
+  return false;
+}
+
+// @brief FF グループの情報を取り出す．
+bool
+CellInfo::set_FF()
+{
+  const char* keyword{"ff"};
+  mHasFF = false;
+  if ( elem_dict().count(keyword) > 0 ) {
+    auto& vec = elem_dict().at(keyword);
+    if ( vec.size() > 1 ) {
+      // "ff" 属性が2回以上現れる．
+#warning "TODO: エラーメッセージ"
+      cerr << "ff 属性が2回以上現れる．" << endl;
+      return false;
+    }
+
+    auto ff_val = vec[0];
+    if ( mFFInfo.set(ff_val) ) {
+      mHasFF = true;
+    }
+    else {
+      return false;
+    }
+  }
+  return true;
+}
+
+// @brief Latch グループの情報を取り出す．
+bool
+CellInfo::set_Latch()
+{
+  const char* keyword{"latch"};
+  mHasLatch = false;
+  if ( elem_dict().count(keyword) > 0 ) {
+    auto& vec = elem_dict().at(keyword);
+    if ( vec.size() > 1 ) {
+      // "latch" 属性が2回以上現れる．
+#warning "TODO: エラーメッセージ"
+      cerr << "latch 属性が2回以上現れる．" << endl;
+      return false;
+    }
+
+    auto latch_val = vec[0];
+    if ( mLatchInfo.set(latch_val) ) {
+      mHasLatch = true;
+    }
+    else {
+      return false;
+    }
+  }
+  return true;
+}
+
+// @brief FSM グループの情報を取り出す．
+bool
+CellInfo::set_FSM()
+{
+  const char* keyword{"statetable"};
+  mHasFSM = false;
+  if ( elem_dict().count(keyword) > 0 ) {
+    auto& vec = elem_dict().at(keyword);
+    if ( vec.size() > 1 ) {
+      // "statetable" 属性が2回以上現れる．
+#warning "TODO: エラーメッセージ"
+      cerr << "statetable 属性が2回以上現れる．" << endl;
+      return false;
+    }
+
+    auto fsm_val = vec[0];
+    if ( mFSMInfo.set(fsm_val) ) {
+      mHasFSM = true;
+    }
+    else {
+      return false;
+    }
+  }
+  return true;
+}
+
+// @brief pin グループの情報を取り出す．
+bool
+CellInfo::set_pin()
+{
+  const char* keyword{"pin"};
+  if ( elem_dict().count(keyword) == 0 ) {
+    // pin 情報がないセルはないはず．
+#warning "TODO: エラーメッセージ"
+    cerr << "No pin definitions" << endl;
+    return false;
+  }
+
+  auto delay_model = library()->delay_model();
+  auto& vec = elem_dict().at(keyword);
+  SizeType npin = vec.size();
+  mPinInfoList.clear();
+  mPinInfoList.reserve(npin);
+  bool ok = true;
+  for ( SizeType i = 0; i < npin; ++ i ) {
+    auto pin_val = vec[i];
+    mPinInfoList.push_back(PinInfo{library_info()});
+    auto& pin_info = mPinInfoList.back();
+    if ( !pin_info.set(pin_val) ) {
+      cerr << "Error in pin definition" << endl;
+      ok = false;
+    }
+  }
+  return ok;
 }
 
 END_NAMESPACE_YM_DOTLIB

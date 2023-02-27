@@ -8,8 +8,7 @@
 /// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/dotlib_nsdef.h"
-#include "dotlib/ElemDict.h"
+#include "dotlib/GroupInfo.h"
 #include "ci/CiCellLibrary.h"
 
 
@@ -19,7 +18,8 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class LibraryInfo LibraryInfo.h "LibraryInfo.h"
 /// @brief ライブラリのパース情報
 //////////////////////////////////////////////////////////////////////
-class LibraryInfo
+class LibraryInfo :
+  public GroupInfo
 {
 public:
 
@@ -76,6 +76,14 @@ private:
     const char* keyword ///< [in] キーワード
   );
 
+  /// @brief technology の属性をセットする．
+  bool
+  set_technology();
+
+  /// @brief delay_model の属性をセットする．
+  bool
+  set_delay_model();
+
   /// @brief capacitive_load_unit の属性をセットする．
   bool
   set_capacitive_load_unit();
@@ -88,9 +96,6 @@ private:
 
   // ライブラリ
   CiCellLibrary* mLibrary{nullptr};
-
-  // 要素の辞書
-  ElemDict mElemDict;
 
   // 名前をキーにしてLUTテンプレート番号を格納する辞書
   unordered_map<ShString, SizeType> mLutDict;

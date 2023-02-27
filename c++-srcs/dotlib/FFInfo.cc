@@ -7,8 +7,6 @@
 /// All rights reserved.
 
 #include "dotlib/FFInfo.h"
-#include "dotlib/AstValue.h"
-#include "dotlib/ElemDict.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -26,39 +24,39 @@ FFInfo::set(
     ok = false;
   }
 
-  switch ( elem_dict().get_expr("clocked_on", mClockedOn) ) {
-  case ElemDict::OK:
+  switch ( get_expr("clocked_on", mClockedOn) ) {
+  case OK:
     break;
-  case ElemDict::NOT_FOUND:
+  case NOT_FOUND:
     // FF に clocked_on は必須
 #warning "TODO: エラーメッセージ"
     ok = false;
     break;
-  case ElemDict::ERROR:
+  case ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict().get_expr("clocked_on_also", mClockedOnAlso) ) {
-  case ElemDict::OK:
+  switch ( get_expr("clocked_on_also", mClockedOnAlso) ) {
+  case OK:
     break;
-  case ElemDict::NOT_FOUND:
+  case NOT_FOUND:
     // これはエラーではない．
     mClockedOnAlso = nullptr;
     break;
-  case ElemDict::ERROR:
+  case ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict().get_expr("next_state", mNextState) ) {
-  case ElemDict::OK:
+  switch ( get_expr("next_state", mNextState) ) {
+  case OK:
     break;
-  case ElemDict::NOT_FOUND:
+  case NOT_FOUND:
 #warning "TODO: エラーメッセージ"
     ok = false;
     break;
-  case ElemDict::ERROR:
+  case ERROR:
     ok = false;
     break;
   }

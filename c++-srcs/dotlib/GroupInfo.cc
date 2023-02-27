@@ -1,15 +1,14 @@
 
-/// @file ElemDict.cc
-/// @brief ElemDict の実装ファイル
+/// @file GroupInfo.cc
+/// @brief GroupInfo の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/ElemDict.h"
-#include "dotlib/AstExpr.h"
-#include "dotlib/AstValue.h"
+#include "dotlib/GroupInfo.h"
 #include "dotlib/AstAttr.h"
+#include "dotlib/AstValue.h"
 #include "ym/ClibArea.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibResistance.h"
@@ -18,9 +17,37 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
+//////////////////////////////////////////////////////////////////////
+// クラス GroupInfo
+//////////////////////////////////////////////////////////////////////
+
+// @brief キーワードの値を返す．
+GroupInfo::RetType
+GroupInfo::get_value(
+  const char* keyword,
+  const AstValue*& val
+) const
+{
+  if ( mElemDict.count(keyword) == 0 ) {
+    // 指定なし
+    return NOT_FOUND;
+  }
+
+  auto& vec = mElemDict.at(keyword);
+  if ( vec.size() > 1 ) {
+    // 2回以上指定されている．
+#warning "TODO: エラーメッセージ"
+    cerr << keyword << " appears more than once." << endl;
+    return ERROR;
+  }
+
+  val = vec[0];
+  return OK;
+}
+
 // @brief string の値を取り出す．
-ElemDict::RetType
-ElemDict::get_string(
+GroupInfo::RetType
+GroupInfo::get_string(
   const char* keyword,
   ShString& val
 ) const
@@ -33,9 +60,24 @@ ElemDict::get_string(
   return ret;
 }
 
+// @brief technology の値を取り出す．
+GroupInfo::RetType
+GroupInfo::get_technology(
+  const char* keyword,
+  ClibTechnology& val
+) const
+{
+  const AstValue* _val;
+  auto ret = get_value(keyword, _val);
+  if ( ret == OK ) {
+    val = ClibTechnology{_val->technology_value()};
+  }
+  return ret;
+}
+
 // @brief area の値を取り出す．
-ElemDict::RetType
-ElemDict::get_area(
+GroupInfo::RetType
+GroupInfo::get_area(
   const char* keyword,
   ClibArea& val
 ) const
@@ -49,8 +91,8 @@ ElemDict::get_area(
 }
 
 // @brief capacitance の値を取り出す．
-ElemDict::RetType
-ElemDict::get_capacitance(
+GroupInfo::RetType
+GroupInfo::get_capacitance(
   const char* keyword,
   ClibCapacitance& val
 ) const
@@ -64,8 +106,8 @@ ElemDict::get_capacitance(
 }
 
 // @brief resistance の値を取り出す．
-ElemDict::RetType
-ElemDict::get_resistance(
+GroupInfo::RetType
+GroupInfo::get_resistance(
   const char* keyword,
   ClibResistance& val
 ) const
@@ -78,24 +120,9 @@ ElemDict::get_resistance(
   return ret;
 }
 
-// @brief technology の値を取り出す．
-ElemDict::RetType
-ElemDict::get_technology(
-  const char* keyword,
-  ClibTechnology& val
-) const
-{
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
-    val = ClibTechnology{_val->technology_value()};
-  }
-  return ret;
-}
-
 // @brief time の値を取り出す．
-ElemDict::RetType
-ElemDict::get_time(
+GroupInfo::RetType
+GroupInfo::get_time(
   const char* keyword,
   ClibTime& val
 ) const
@@ -109,8 +136,8 @@ ElemDict::get_time(
 }
 
 // @brief ClibCPV の値を取り出す．
-ElemDict::RetType
-ElemDict::get_cpv(
+GroupInfo::RetType
+GroupInfo::get_cpv(
   const char* keyword,
   ClibCPV& val
 ) const
@@ -143,8 +170,8 @@ ElemDict::get_cpv(
 }
 
 // @brief ClibVarType の値を取り出す．
-ElemDict::RetType
-ElemDict::get_vartype(
+GroupInfo::RetType
+GroupInfo::get_vartype(
   const char* keyword,
   ClibVarType& val
 ) const
@@ -198,8 +225,8 @@ ElemDict::get_vartype(
 }
 
 // @brief expr の値を取り出す．
-ElemDict::RetType
-ElemDict::get_expr(
+GroupInfo::RetType
+GroupInfo::get_expr(
   const char* keyword,
   const AstExpr*& val
 ) const
@@ -213,8 +240,8 @@ ElemDict::get_expr(
 }
 
 // @brief direction の値を取り出す．
-ElemDict::RetType
-ElemDict::get_direction(
+GroupInfo::RetType
+GroupInfo::get_direction(
   const char* keyword,
   ClibDirection& val
 ) const
@@ -228,8 +255,8 @@ ElemDict::get_direction(
 }
 
 // @brief timing_type の値を取り出す．
-ElemDict::RetType
-ElemDict::get_timing_type(
+GroupInfo::RetType
+GroupInfo::get_timing_type(
   const char* keyword,
   ClibTimingType& val
 ) const
@@ -243,8 +270,8 @@ ElemDict::get_timing_type(
 }
 
 // @brief timing_sense の値を取り出す．
-ElemDict::RetType
-ElemDict::get_timing_sense(
+GroupInfo::RetType
+GroupInfo::get_timing_sense(
   const char* keyword,
   ClibTimingSense& val
 ) const
@@ -258,8 +285,8 @@ ElemDict::get_timing_sense(
 }
 
 // @brief delay_model の値を取り出す．
-ElemDict::RetType
-ElemDict::get_delay_model(
+GroupInfo::RetType
+GroupInfo::get_delay_model(
   const char* keyword,
   ClibDelayModel& val
 ) const
@@ -273,8 +300,8 @@ ElemDict::get_delay_model(
 }
 
 // @brief float_vector の値を取り出す．
-ElemDict::RetType
-ElemDict::get_float_vector(
+GroupInfo::RetType
+GroupInfo::get_float_vector(
   const char* keyword,
   vector<double>& val
 ) const
@@ -288,8 +315,8 @@ ElemDict::get_float_vector(
 }
 
 // @brief complex 形式の float_vector の値を取り出す．
-ElemDict::RetType
-ElemDict::get_complex_float_vector(
+GroupInfo::RetType
+GroupInfo::get_complex_float_vector(
   const char* keyword,
   vector<double>& val
 ) const
@@ -306,46 +333,22 @@ ElemDict::get_complex_float_vector(
   return ret;
 }
 
-// @brief キーワードの値を返す．
-ElemDict::RetType
-ElemDict::get_value(
-  const char* keyword,
-  const AstValue*& val
-) const
-{
-  if ( count(keyword) == 0 ) {
-    // 指定なし
-    return NOT_FOUND;
-  }
-
-  auto& vec = at(keyword);
-  if ( vec.size() > 1 ) {
-    // 2回以上指定されている．
-#warning "TODO: エラーメッセージ"
-    cerr << keyword << " appears more than once." << endl;
-    return ERROR;
-  }
-
-  val = vec[0];
-  return OK;
-}
-
-// @brief 内容をセットする．
+// @brief 内容を設定する．
 void
-ElemDict::set(
-  const AstValue* ast_value
+GroupInfo::set(
+  const AstValue* val
 )
 {
-  SizeType n = ast_value->group_elem_size();
+  SizeType n = val->group_elem_size();
   for ( SizeType i = 0; i < n; ++ i ) {
-    auto& elem = ast_value->group_elem_attr(i);
+    auto& elem = val->group_elem_attr(i);
     auto kwd = elem.kwd();
     auto val = &elem.value();
-    if ( count(kwd) == 0 ) {
-      emplace(kwd, vector<const AstValue*>{val});
+    if ( mElemDict.count(kwd) == 0 ) {
+      mElemDict.emplace(kwd, vector<const AstValue*>{val});
     }
     else {
-      at(kwd).push_back(val);
+      mElemDict.at(kwd).push_back(val);
     }
   }
 }

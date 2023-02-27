@@ -5,35 +5,37 @@
 /// @brief CellInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/dotlib_nsdef.h"
+#include "dotlib/ElemInfo.h"
 #include "dotlib/FFInfo.h"
 #include "dotlib/LatchInfo.h"
 #include "dotlib/FSMInfo.h"
 #include "dotlib/PinInfo.h"
-#include "dotlib/ElemDict.h"
 #include "ym/ShString.h"
 #include "ym/clib.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-class LibraryInfo;
-
 //////////////////////////////////////////////////////////////////////
 /// @class CellInfo CellInfo.h "CellInfo.h"
 /// @brief セルのパース情報
 //////////////////////////////////////////////////////////////////////
-class CellInfo
+class CellInfo :
+  public ElemInfo
 {
 public:
 
   /// @brief コンストラクタ
   CellInfo(
     LibraryInfo& library_info ///< [in] ライブラリのパース情報
-  ) : mLibraryInfo{library_info}
+  ) : ElemInfo{library_info},
+      mFFInfo{library_info},
+      mLatchInfo{library_info},
+      mFSMInfo{library_info}
   {
   }
 
@@ -62,6 +64,28 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 面積を取り出す．
+  ///
+  /// 値は mArea にセットされる．
+  bool
+  set_area();
+
+  /// @brief FF グループの情報を取り出す．
+  bool
+  set_FF();
+
+  /// @brief Latch グループの情報を取り出す．
+  bool
+  set_Latch();
+
+  /// @brief FSM グループの情報を取り出す．
+  bool
+  set_FSM();
+
+  /// @brief pin グループの情報を取り出す．
+  bool
+  set_pin();
+
   /// @brief FF セルを作る．
   SizeType
   add_ff_cell() const;
@@ -74,21 +98,11 @@ private:
   SizeType
   add_fsm_cell() const;
 
-  /// @brief ライブラリを取り出す．
-  CiCellLibrary*
-  library() const;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // ライブラリのパース情報
-  LibraryInfo& mLibraryInfo;
-
-  // 要素の辞書
-  ElemDict mElemDict;
 
   // 名前
   ShString mName;
@@ -97,15 +111,15 @@ private:
   ClibArea mArea;
 
   // FF 関係の情報
-  bool mHasFF;
+  bool mHasFF{false};
   FFInfo mFFInfo;
 
   // ラッチ関係の情報
-  bool mHasLatch;
+  bool mHasLatch{false};
   LatchInfo mLatchInfo;
 
   // FSM 関係の情報
-  bool mHasFSM;
+  bool mHasFSM{false};
   FSMInfo mFSMInfo;
 
   // ピンの情報

@@ -8,9 +8,8 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/dotlib_nsdef.h"
+#include "dotlib/ElemInfo.h"
 #include "dotlib/TimingInfo.h"
-#include "dotlib/ElemDict.h"
 #include "ci/CiCell.h"
 #include "ym/Expr.h"
 #include "ym/ShString.h"
@@ -19,21 +18,19 @@
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-class LibraryInfo;
-class AstElemDict;
-
 //////////////////////////////////////////////////////////////////////
 /// @class PinInfo PinInfo.h "PinInfo.h"
 /// @brief ピンのパース情報
 //////////////////////////////////////////////////////////////////////
-class PinInfo
+class PinInfo :
+  public ElemInfo
 {
 public:
 
   /// @brief コンストラクタ
   PinInfo(
     LibraryInfo& library_info ///< [in] ライブラリのパース情報
-  ) : mLibraryInfo{library_info}
+  ) : ElemInfo{library_info}
   {
   }
 
@@ -86,11 +83,17 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief direction 属性を取り出す．
+  ///
+  /// 結果は mDirection にセットされる．
+  bool
+  set_direction();
+
   /// @brief 入力ピン用のパラメータを取り出す．
   ///
   /// エラーの場合には false を返す．
   bool
-  get_input_params();
+  set_input_params();
 
   /// @brief 出力ピン用のパラメータを取り出す．
   ///
@@ -98,23 +101,13 @@ private:
   /// エラーの場合には false を返す．
   /// 現時点ではエラーにならない．
   bool
-  get_output_params();
-
-  /// @brief ライブラリを取り出す．
-  CiCellLibrary*
-  library() const;
+  set_output_params();
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // ライブラリのパース情報
-  LibraryInfo& mLibraryInfo;
-
-  // 要素の辞書
-  ElemDict mElemDict;
 
   // 名前のリスト
   vector<ShString> mNameList;

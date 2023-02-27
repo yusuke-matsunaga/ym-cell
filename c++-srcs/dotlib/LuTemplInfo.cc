@@ -22,33 +22,32 @@ LuTemplInfo::set(
   const AstValue* lut_val
 )
 {
+  GroupInfo::set(lut_val);
+
   // 名前を得る．
   auto& header = lut_val->group_header_value();
   SizeType n = header.complex_elem_size();
   ASSERT_COND( n == 1 );
   mName = header.complex_elem_value(0).string_value();
 
-  // 属性の辞書を作る．
-  mElemDict.set(lut_val);
-
   bool ok{true};
 
-  if ( mElemDict.get_vartype("variable_1", mVar1) == ElemDict::ERROR ) {
+  if ( get_vartype("variable_1", mVar1) == ERROR ) {
     ok = false;
   }
-  if ( mElemDict.get_vartype("variable_2", mVar2) == ElemDict::ERROR ) {
+  if ( get_vartype("variable_2", mVar2) == ERROR ) {
     ok = false;
   }
-  if ( mElemDict.get_vartype("variable_3", mVar3) == ElemDict::ERROR ) {
+  if ( get_vartype("variable_3", mVar3) == ERROR ) {
     ok = false;
   }
-  if ( mElemDict.get_complex_float_vector("index_1", mIndex1) == ElemDict::ERROR ) {
+  if ( get_complex_float_vector("index_1", mIndex1) == ERROR ) {
     ok = false;
   }
-  if ( mElemDict.get_complex_float_vector("index_2", mIndex2) == ElemDict::ERROR ) {
+  if ( get_complex_float_vector("index_2", mIndex2) == ERROR ) {
     ok = false;
   }
-  if ( mElemDict.get_complex_float_vector("index_3", mIndex3) == ElemDict::ERROR ) {
+  if ( get_complex_float_vector("index_3", mIndex3) == ERROR ) {
     ok = false;
   }
 
@@ -103,15 +102,15 @@ LuTemplInfo::add_lu_template()
   SizeType tid{CLIB_NULLID};
   switch ( mDimension ) {
   case 1:
-    tid = mLibrary->add_lut_template1(mVar1, mIndex1);
+    tid = library()->add_lut_template1(mVar1, mIndex1);
     break;
 
   case 2:
-    tid = mLibrary->add_lut_template2(mVar1, mIndex1, mVar2, mIndex2);
+    tid = library()->add_lut_template2(mVar1, mIndex1, mVar2, mIndex2);
     break;
 
   case 3:
-    tid = mLibrary->add_lut_template3(mVar1, mIndex1, mVar2, mIndex2, mVar3, mIndex3);
+    tid = library()->add_lut_template3(mVar1, mIndex1, mVar2, mIndex2, mVar3, mIndex3);
     break;
 
   default:

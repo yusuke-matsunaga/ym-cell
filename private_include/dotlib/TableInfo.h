@@ -8,29 +8,27 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/dotlib_nsdef.h"
-#include "dotlib/ElemDict.h"
-#include "ci/CiLut.h"
-#include "ci/CiCellLibrary.h"
-#include "ym/ShString.h"
+#include "dotlib/ElemInfo.h"
+//#include "ci/CiLut.h"
+//#include "ci/CiCellLibrary.h"
+//#include "ym/ShString.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
-
-class LibraryInfo;
 
 //////////////////////////////////////////////////////////////////////
 /// @class TableInfo TableInfo.h "TableInfo.h"
 /// @brief テーブルグループのパース情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class TableInfo
+class TableInfo :
+  public ElemInfo
 {
 public:
 
   /// @brief コンストラクタ
   TableInfo(
     LibraryInfo& library_info ///< [in] ライブラリのパース情報
-  ) : mLibraryInfo{library_info}
+  ) : ElemInfo{library_info}
   {
   }
 
@@ -55,27 +53,11 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief ライブラリを取り出す．
-  CiCellLibrary*
-  library() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ライブラリのパース情報
-  LibraryInfo& mLibraryInfo;
-
-  // 要素の辞書
-  ElemDict mElemDict;
-
-  // テンプレート名
-  ShString mName;
+  // テンプレート番号
+  SizeType mTemplId;
 
   // index_1 の値
   vector<double> mIndex1;

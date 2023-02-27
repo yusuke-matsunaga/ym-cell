@@ -8,8 +8,7 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/dotlib_nsdef.h"
-#include "dotlib/ElemDict.h"
+#include "dotlib/ElemInfo.h"
 #include "ym/ShString.h"
 #include "ym/clib.h"
 
@@ -22,12 +21,17 @@ class AstExpr;
 /// @class FLInfo FLInfo.h "FLInfo.h"
 /// @brief FF/ラッチに共通なパース情報を持つクラス
 //////////////////////////////////////////////////////////////////////
-class FLInfo
+class FLInfo :
+  public ElemInfo
 {
 public:
 
   /// @brief コンストラクタ
-  FLInfo() = default;
+  FLInfo(
+    LibraryInfo& library_info
+  ) : ElemInfo{library_info}
+  {
+  }
 
   /// @brief デストラクタ
   ~FLInfo() = default;
@@ -86,21 +90,11 @@ public:
     return mCpv2;
   }
 
-  /// @brief 属性辞書を返す．
-  const ElemDict&
-  elem_dict() const
-  {
-    return mElemDict;
-  }
-
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // 要素の辞書
-  ElemDict mElemDict;
 
   // 状態変数名1
   ShString mVar1;

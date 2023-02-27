@@ -24,7 +24,11 @@ class FFInfo :
 public:
 
   /// @brief コンストラクタ
-  FFInfo() = default;
+  FFInfo(
+    LibraryInfo& library_info
+  ) : FLInfo{library_info}
+  {
+  }
 
   /// @brief デストラクタ
   ~FFInfo() = default;

@@ -8,8 +8,7 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/dotlib_nsdef.h"
-#include "dotlib/ElemDict.h"
+#include "dotlib/ElemInfo.h"
 #include "ym/ShString.h"
 #include "ci/CiCellLibrary.h"
 
@@ -20,14 +19,15 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class LuTemplInfo LuTemplInfo.h "LuTemplInfo.h"
 /// @brief lu_template のパース情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class LuTemplInfo
+class LuTemplInfo :
+  public ElemInfo
 {
 public:
 
   /// @brief コンストラクタ
   LuTemplInfo(
-    CiCellLibrary* library
-  ) : mLibrary{library}
+    LibraryInfo& library_info
+  ) : ElemInfo{library_info}
   {
   }
 
@@ -62,12 +62,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // ライブラリ
-  CiCellLibrary* mLibrary{nullptr};
-
-  // 要素の辞書
-  ElemDict mElemDict;
 
   // 名前
   ShString mName;

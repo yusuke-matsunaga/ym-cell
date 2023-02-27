@@ -24,7 +24,11 @@ class FSMInfo :
 public:
 
   /// @brief コンストラクタ
-  FSMInfo() = default;
+  FSMInfo(
+    LibraryInfo& library_info
+  ) : FLInfo{library_info}
+  {
+  }
 
   /// @brief デストラクタ
   ~FSMInfo() = default;

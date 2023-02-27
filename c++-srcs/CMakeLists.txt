@@ -66,7 +66,9 @@ set (mislib_SOURCES
   )
 
 set (dotlib_SOURCES
+  dotlib/GroupInfo.cc
   dotlib/LibraryInfo.cc
+  dotlib/ElemInfo.cc
   dotlib/CellInfo.cc
   dotlib/FFInfo.cc
   dotlib/FLInfo.cc
@@ -76,7 +78,6 @@ set (dotlib_SOURCES
   dotlib/PinInfo.cc
   dotlib/TableInfo.cc
   dotlib/TimingInfo.cc
-  dotlib/ElemDict.cc
 
   dotlib/parser/FuncParser.cc
   dotlib/parser/FuncScanner.cc

@@ -7,8 +7,6 @@
 /// All rights reserved.
 
 #include "dotlib/LatchInfo.h"
-#include "dotlib/AstValue.h"
-#include "dotlib/ElemDict.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -25,38 +23,38 @@ LatchInfo::set(
     ok = false;
   }
 
-  switch ( elem_dict().get_expr("enable_on", mEnableOn) ) {
-  case ElemDict::OK:
+  switch ( get_expr("enable_on", mEnableOn) ) {
+  case OK:
     break;
-  case ElemDict::NOT_FOUND:
+  case NOT_FOUND:
     // ラッチの場合はエラーではない．
     mEnableOn = nullptr;
     break;
-  case ElemDict::ERROR:
+  case ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict().get_expr("enable_on_also", mEnableOnAlso) ) {
-  case ElemDict::OK:
+  switch ( get_expr("enable_on_also", mEnableOnAlso) ) {
+  case OK:
     break;
-  case ElemDict::NOT_FOUND:
+  case NOT_FOUND:
     // これはエラーではない．
     mEnableOnAlso = nullptr;
     break;
-  case ElemDict::ERROR:
+  case ERROR:
     ok = false;
     break;
   }
 
-  switch ( elem_dict().get_expr("data_in", mDataIn) ) {
-  case ElemDict::OK:
+  switch ( get_expr("data_in", mDataIn) ) {
+  case OK:
     break;
-  case ElemDict::NOT_FOUND:
+  case NOT_FOUND:
     // これはエラーではない．
     mDataIn = nullptr;
     break;
-  case ElemDict::ERROR:
+  case ERROR:
     ok = false;
     break;
   }

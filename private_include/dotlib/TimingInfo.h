@@ -8,29 +8,26 @@
 /// Copyright (C) 2022 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "dotlib/dotlib_nsdef.h"
-#include "dotlib/LibraryInfo.h"
+#include "dotlib/ElemInfo.h"
 #include "dotlib/TableInfo.h"
-#include "dotlib/ElemDict.h"
 #include "ym/clib.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
-class AstElemDict;
-
 //////////////////////////////////////////////////////////////////////
 /// @class TimingInfo TimingInfo.h "TimingInfo.h"
 /// @brief タイミングのパース情報
 //////////////////////////////////////////////////////////////////////
-class TimingInfo
+class TimingInfo :
+  public ElemInfo
 {
 public:
 
   /// @brief コンストラクタ
   TimingInfo(
     LibraryInfo& library_info ///< [in] ライブラリのパース情報
-  ) : mLibraryInfo{library_info},
+  ) : ElemInfo{library_info},
       mCellRise{library_info},
       mCellFall{library_info},
       mRiseTransition{library_info},
@@ -72,31 +69,21 @@ private:
 
   /// @brief タイミング情報の共通なパラメータを得る．
   bool
-  get_timing_common_params();
+  set_timing_common_params();
 
   /// @brief generic タイプのタイミング情報のパラメータを得る．
   bool
-  get_timing_generic_params();
+  set_timing_generic_params();
 
   /// @brief table-lookup タイプのタイミング情報のパラメータを得る．
   int
-  get_timing_table_lookup_params();
-
-  /// @brief ライブラリを取り出す．
-  CiCellLibrary*
-  library() const;
+  set_timing_table_lookup_params();
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // ライブラリのパース情報
-  LibraryInfo& mLibraryInfo;
-
-  // 要素の辞書
-  ElemDict mElemDict;
 
   // 名前(オプショナル)
   ShString mName;
