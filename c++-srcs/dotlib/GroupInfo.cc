@@ -13,6 +13,7 @@
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibResistance.h"
 #include "ym/ClibTime.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -22,129 +23,133 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief キーワードの値を返す．
-GroupInfo::RetType
+const AstValue*
 GroupInfo::get_value(
-  const char* keyword,
-  const AstValue*& val
+  const char* keyword
 ) const
 {
   if ( mElemDict.count(keyword) == 0 ) {
-    // 指定なし
-    return NOT_FOUND;
+    // なし
+    return nullptr;
   }
 
   auto& vec = mElemDict.at(keyword);
   if ( vec.size() > 1 ) {
     // 2回以上指定されている．
-#warning "TODO: エラーメッセージ"
-    cerr << keyword << " appears more than once." << endl;
-    return ERROR;
+    ostringstream buf;
+    buf << keyword << " apears more than once."
+	<< " previous occurance is " << vec[0]->loc();
+    auto label = buf.str();
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    vec[1]->loc(),
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    label);
+    throw std::invalid_argument{label};
   }
 
-  val = vec[0];
-  return OK;
+  return vec[0];
 }
 
 // @brief string の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_string(
   const char* keyword,
   ShString& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     val = _val->string_value();
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief technology の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_technology(
   const char* keyword,
   ClibTechnology& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     val = ClibTechnology{_val->technology_value()};
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief area の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_area(
   const char* keyword,
   ClibArea& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     val = ClibArea{_val->float_value()};
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief capacitance の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_capacitance(
   const char* keyword,
   ClibCapacitance& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     val = ClibCapacitance{_val->float_value()};
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief resistance の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_resistance(
   const char* keyword,
   ClibResistance& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     val = ClibResistance{_val->float_value()};
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief time の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_time(
   const char* keyword,
   ClibTime& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     val = ClibTime{_val->float_value()};
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief ClibCPV の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_cpv(
   const char* keyword,
   ClibCPV& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     auto tmp_str = _val->string_value();
     if ( tmp_str == "L" || tmp_str == "l" ) {
       val = ClibCPV::L;
@@ -162,175 +167,143 @@ GroupInfo::get_cpv(
       val = ClibCPV::X;
     }
     else {
-#warning "TODO: エラーメッセージ"
-      ret = ERROR;
+      ostringstream buf;
+      buf << tmp_str << ": Illegal string. Only 'H', 'L', 'N', 'T', or 'X' are allowed";
+      auto label = buf.str();
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      _val->loc(),
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      label);
+      throw std::invalid_argument{label};
     }
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief ClibVarType の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_vartype(
   const char* keyword,
   ClibVarType& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
-    auto tmp_str = _val->string_value();
-    if ( tmp_str == "input_net_transition" ) {
-      val = ClibVarType::input_net_transition;
-    }
-    else if ( tmp_str == "total_output_net_capacitance" ) {
-      val = ClibVarType::total_output_net_capacitance;
-    }
-    else if ( tmp_str == "output_net_length" ) {
-      val = ClibVarType::output_net_length;
-    }
-    else if ( tmp_str == "output_net_wire_cap" ) {
-      val = ClibVarType::output_net_wire_cap;
-    }
-    else if ( tmp_str == "output_net_pin_cap" ) {
-      val = ClibVarType::output_net_pin_cap;
-    }
-    else if ( tmp_str == "equal_or_opposite_output_net_capacitance" ) {
-      val = ClibVarType::equal_or_opposite_output_net_capacitance;
-    }
-    else if ( tmp_str == "input_transition_time" ) {
-      val = ClibVarType::input_transition_time;
-    }
-    else if ( tmp_str == "related_out_total_output_net_capacitance" ) {
-      val = ClibVarType::related_out_total_output_net_capacitance;
-    }
-    else if ( tmp_str == "related_out_output_net_length" ) {
-      val = ClibVarType::related_out_output_net_length;
-    }
-    else if ( tmp_str == "related_out_output_net_pin_cap" ) {
-      val = ClibVarType::related_out_output_net_pin_cap;
-    }
-    else if ( tmp_str == "constrained_pin_transition" ) {
-      val = ClibVarType::constrained_pin_transition;
-    }
-    else if ( tmp_str == "related_pin_transition" ) {
-      val = ClibVarType::related_pin_transition;
-    }
-    else {
-#warning "TODO: エラーメッセージ"
-      ret = ERROR;
-    }
+  auto _val= get_value(keyword);
+  if ( _val != nullptr ) {
+    val = _val->vartype_value();
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief expr の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_expr(
   const char* keyword,
   const AstExpr*& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     val = &(_val->expr_value());
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief direction の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_direction(
   const char* keyword,
   ClibDirection& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     val = _val->direction_value();
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief timing_type の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_timing_type(
   const char* keyword,
   ClibTimingType& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     val = _val->timing_type_value();
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief timing_sense の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_timing_sense(
   const char* keyword,
   ClibTimingSense& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     val = _val->timing_sense_value();
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief delay_model の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_delay_model(
   const char* keyword,
   ClibDelayModel& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     val = _val->delay_model_value();
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief float_vector の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_float_vector(
   const char* keyword,
   vector<double>& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     val = _val->float_vector_value();
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief complex 形式の float_vector の値を取り出す．
-GroupInfo::RetType
+bool
 GroupInfo::get_complex_float_vector(
   const char* keyword,
   vector<double>& val
 ) const
 {
-  const AstValue* _val;
-  auto ret = get_value(keyword, _val);
-  if ( ret == OK ) {
+  auto _val = get_value(keyword);
+  if ( _val != nullptr ) {
     SizeType n = _val->complex_elem_size();
     for ( SizeType i = 0; i < n; ++ i ) {
       auto tmp = _val->complex_elem_value(i).float_vector_value();
       val.insert(val.end(), tmp.begin(), tmp.end());
     }
+    return true;
   }
-  return ret;
+  return false;
 }
 
 // @brief 内容を設定する．
@@ -339,6 +312,8 @@ GroupInfo::set(
   const AstValue* val
 )
 {
+  mLoc = val->loc();
+
   SizeType n = val->group_elem_size();
   for ( SizeType i = 0; i < n; ++ i ) {
     auto& elem = val->group_elem_attr(i);

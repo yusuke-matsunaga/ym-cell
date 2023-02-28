@@ -10,12 +10,13 @@
 #include "dotlib/AstExpr.h"
 #include "dotlib/AstValue.h"
 #include "ci/CiCellLibrary.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief 内容を設定する．
-bool
+void
 CellInfo::set(
   const AstValue* cell_val
 )
@@ -23,34 +24,26 @@ CellInfo::set(
   GroupInfo::set(cell_val);
 
   // セル名
-  mName = cell_val->group_header_value().complex_elem_value(0).string_value();
-
-  bool ok{true};
+  {
+    auto& header_val = cell_val->group_header_value();
+    auto& val1 = header_val.complex_elem_value(0);
+    mName = val1.string_value();
+  }
 
   // 面積
-  if ( !set_area() ) {
-    ok = false;
-  }
+  set_area();
 
   // FF
-  if ( !set_FF() ) {
-    ok = false;
-  }
+  set_FF();
 
   // ラッチ
-  if ( !set_Latch() ) {
-    ok = false;
-  }
+  set_Latch();
 
   // statetable(FSM)
-  if ( !set_FSM() ) {
-    ok = false;
-  }
+  set_FSM();
 
   // ピンの属性情報を取り出す．
-  if ( !set_pin() ) {
-    ok = false;
-  }
+  set_pin();
 
   mInputId = 0;
   mOutputId = 0;
@@ -123,12 +116,10 @@ CellInfo::set(
     mIpinMap.emplace(var2, mInputId);
     ++ mInputId;
   }
-
-  return ok;
 }
 
 // @brief セルを作る．
-bool
+void
 CellInfo::add_cell()
 {
   SizeType cell_id{CLIB_NULLID};
@@ -150,7 +141,6 @@ CellInfo::add_cell()
   }
   ASSERT_COND( cell_id != CLIB_NULLID );
 
-
   // ピンを作る．
   for ( auto& pininfo: mPinInfoList ) {
     pininfo.add_pin(cell_id, mIpinMap);
@@ -161,8 +151,6 @@ CellInfo::add_cell()
   for ( auto& pininfo: mPinInfoList ) {
     pininfo.add_timing(cell_id, mIpinMap);
   }
-
-  return true;
 }
 
 // @brief FF セルを作る．
@@ -235,132 +223,92 @@ CellInfo::add_latch_cell() const
 SizeType
 CellInfo::add_fsm_cell() const
 {
-#warning "TODO: 未完"
-  return CLIB_NULLID;
+  auto cell = library()->add_fsm_cell(mName, mArea);
+  return cell;
 }
 
 // @brief 面積を取り出す．
-bool
+void
 CellInfo::set_area()
 {
   // 面積
   const char* keyword{"area"};
-  if ( get_area(keyword, mArea) == OK ) {
-    return true;
+  if ( !get_area(keyword, mArea) ) {
+    auto label = "'area' attribute is missing";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    loc(),
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    label);
+    throw std::invalid_argument{label};
   }
-
-  { // 仮
-    cerr << "Error in area: " << endl;
-  }
-  return false;
 }
 
 // @brief FF グループの情報を取り出す．
-bool
+void
 CellInfo::set_FF()
 {
-  const char* keyword{"ff"};
   mHasFF = false;
-  if ( elem_dict().count(keyword) > 0 ) {
-    auto& vec = elem_dict().at(keyword);
-    if ( vec.size() > 1 ) {
-      // "ff" 属性が2回以上現れる．
-#warning "TODO: エラーメッセージ"
-      cerr << "ff 属性が2回以上現れる．" << endl;
-      return false;
-    }
-
-    auto ff_val = vec[0];
-    if ( mFFInfo.set(ff_val) ) {
-      mHasFF = true;
-    }
-    else {
-      return false;
-    }
+  const char* keyword{"ff"};
+  auto ff_val = get_value(keyword);
+  if ( ff_val ) {
+    mHasFF = true;
+    mFFInfo.set(ff_val);
   }
-  return true;
 }
 
 // @brief Latch グループの情報を取り出す．
-bool
+void
 CellInfo::set_Latch()
 {
-  const char* keyword{"latch"};
   mHasLatch = false;
-  if ( elem_dict().count(keyword) > 0 ) {
-    auto& vec = elem_dict().at(keyword);
-    if ( vec.size() > 1 ) {
-      // "latch" 属性が2回以上現れる．
-#warning "TODO: エラーメッセージ"
-      cerr << "latch 属性が2回以上現れる．" << endl;
-      return false;
-    }
-
-    auto latch_val = vec[0];
-    if ( mLatchInfo.set(latch_val) ) {
-      mHasLatch = true;
-    }
-    else {
-      return false;
-    }
+  const char* keyword{"latch"};
+  auto latch_val = get_value(keyword);
+  if ( latch_val ) {
+    mHasLatch = true;
+    mLatchInfo.set(latch_val);
   }
-  return true;
 }
 
 // @brief FSM グループの情報を取り出す．
-bool
+void
 CellInfo::set_FSM()
 {
-  const char* keyword{"statetable"};
   mHasFSM = false;
-  if ( elem_dict().count(keyword) > 0 ) {
-    auto& vec = elem_dict().at(keyword);
-    if ( vec.size() > 1 ) {
-      // "statetable" 属性が2回以上現れる．
-#warning "TODO: エラーメッセージ"
-      cerr << "statetable 属性が2回以上現れる．" << endl;
-      return false;
-    }
-
-    auto fsm_val = vec[0];
-    if ( mFSMInfo.set(fsm_val) ) {
-      mHasFSM = true;
-    }
-    else {
-      return false;
-    }
+  const char* keyword{"statetable"};
+  auto fsm_val = get_value(keyword);
+  if ( fsm_val ) {
+    mHasFSM = true;
+    mFSMInfo.set(fsm_val);
   }
-  return true;
 }
 
 // @brief pin グループの情報を取り出す．
-bool
+void
 CellInfo::set_pin()
 {
   const char* keyword{"pin"};
   if ( elem_dict().count(keyword) == 0 ) {
     // pin 情報がないセルはないはず．
-#warning "TODO: エラーメッセージ"
-    cerr << "No pin definitions" << endl;
-    return false;
+    auto label = "No 'pin' attributes";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    loc(),
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    label);
+    throw std::invalid_argument{label};
   }
 
-  auto delay_model = library()->delay_model();
   auto& vec = elem_dict().at(keyword);
   SizeType npin = vec.size();
   mPinInfoList.clear();
   mPinInfoList.reserve(npin);
-  bool ok = true;
   for ( SizeType i = 0; i < npin; ++ i ) {
     auto pin_val = vec[i];
     mPinInfoList.push_back(PinInfo{library_info()});
     auto& pin_info = mPinInfoList.back();
-    if ( !pin_info.set(pin_val) ) {
-      cerr << "Error in pin definition" << endl;
-      ok = false;
-    }
+    pin_info.set(pin_val);
   }
-  return ok;
 }
 
 END_NAMESPACE_YM_DOTLIB

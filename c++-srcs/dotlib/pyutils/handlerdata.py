@@ -107,6 +107,7 @@ class HandlerData:
             'values',
             'int_list',
             'string_list',
+            'vartype_list',
         }
 
         # group statement のヘッダ用のハンドラ関数名の辞書
@@ -127,7 +128,6 @@ class HandlerData:
 
         # 他のハンドラから使用されるハンドラのセット
         self._required = set()
-
 
     def add_group_data(self, name, header, *,
                        simple_attrs=(),
@@ -164,7 +164,8 @@ class HandlerData:
         # simple attribute をセットする．
         for pat, handler in simple_attrs:
             if handler not in self._simple_handlers:
-                print('Error: {} is not a valid simple handler({})'.format(handler, pat))
+                print('Error: {} is not a valid simple handler({})'.format(
+                    handler, pat))
                 return False
             shandler = 'simple_' + handler
             key_list = expand(pat)

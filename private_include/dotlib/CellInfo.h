@@ -49,13 +49,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を設定する．
-  bool
+  void
   set(
     const AstValue* cell_val ///< [in] セル情報のパース木
   );
 
   /// @brief セルを作る．
-  bool
+  void
   add_cell();
 
 
@@ -67,23 +67,23 @@ private:
   /// @brief 面積を取り出す．
   ///
   /// 値は mArea にセットされる．
-  bool
+  void
   set_area();
 
   /// @brief FF グループの情報を取り出す．
-  bool
+  void
   set_FF();
 
   /// @brief Latch グループの情報を取り出す．
-  bool
+  void
   set_Latch();
 
   /// @brief FSM グループの情報を取り出す．
-  bool
+  void
   set_FSM();
 
   /// @brief pin グループの情報を取り出す．
-  bool
+  void
   set_pin();
 
   /// @brief FF セルを作る．

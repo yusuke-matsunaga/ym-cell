@@ -1,4 +1,4 @@
-Library()
+Library(HIT018)
   technology: cmos
   delay_model: table_lookup
   bus_naming_style: 

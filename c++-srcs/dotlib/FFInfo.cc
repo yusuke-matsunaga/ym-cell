@@ -24,41 +24,20 @@ FFInfo::set(
     ok = false;
   }
 
-  switch ( get_expr("clocked_on", mClockedOn) ) {
-  case OK:
-    break;
-  case NOT_FOUND:
+  if ( !get_expr("clocked_on", mClockedOn) ) {
     // FF に clocked_on は必須
 #warning "TODO: エラーメッセージ"
     ok = false;
-    break;
-  case ERROR:
-    ok = false;
-    break;
   }
 
-  switch ( get_expr("clocked_on_also", mClockedOnAlso) ) {
-  case OK:
-    break;
-  case NOT_FOUND:
+  if ( !get_expr("clocked_on_also", mClockedOnAlso) ) {
     // これはエラーではない．
     mClockedOnAlso = nullptr;
-    break;
-  case ERROR:
-    ok = false;
-    break;
   }
 
-  switch ( get_expr("next_state", mNextState) ) {
-  case OK:
-    break;
-  case NOT_FOUND:
+  if ( !get_expr("next_state", mNextState) ) {
 #warning "TODO: エラーメッセージ"
     ok = false;
-    break;
-  case ERROR:
-    ok = false;
-    break;
   }
 
   return ok;

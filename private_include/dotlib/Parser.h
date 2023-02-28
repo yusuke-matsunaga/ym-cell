@@ -155,6 +155,7 @@ public:
   static ListHeader sFloatVectorListHeader;
   static ListHeader sIntListHeader;
   static ListHeader sStrListHeader;
+  static ListHeader sVarTypeListHeader;
   static OptElemHeader sOptStrHeader;
 
   // グループハンドラの辞書

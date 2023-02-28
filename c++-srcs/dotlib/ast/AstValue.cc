@@ -3,13 +3,14 @@
 /// @brief AstValue の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2021-2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/AstValue.h"
 #include "dotlib/AstAttr.h"
 #include "dotlib/AstExpr.h"
 #include "AstValue_int.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -211,6 +212,13 @@ AstValue::is_valid() const
 int
 AstValue::int_value() const
 {
+  auto label = "int value is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return 0;
 }
 
@@ -220,6 +228,13 @@ AstValue::int_value() const
 double
 AstValue::float_value() const
 {
+  auto label = "float(double) value is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return 0.0;
 }
 
@@ -229,6 +244,13 @@ AstValue::float_value() const
 ShString
 AstValue::string_value() const
 {
+  auto label = "string value is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return ShString{};
 }
 
@@ -238,6 +260,13 @@ AstValue::string_value() const
 bool
 AstValue::bool_value() const
 {
+  auto label = "boolean value is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return false;
 }
 
@@ -247,6 +276,13 @@ AstValue::bool_value() const
 ClibDelayModel
 AstValue::delay_model_value() const
 {
+  auto label = "'delay model' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return ClibDelayModel::none;
 }
 
@@ -256,6 +292,13 @@ AstValue::delay_model_value() const
 ClibDirection
 AstValue::direction_value() const
 {
+  auto label = "'direction' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return ClibDirection::none;
 }
 
@@ -265,6 +308,13 @@ AstValue::direction_value() const
 ClibTechnology
 AstValue::technology_value() const
 {
+  auto label = "'technology' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return ClibTechnology::none;
 }
 
@@ -274,6 +324,13 @@ AstValue::technology_value() const
 ClibTimingSense
 AstValue::timing_sense_value() const
 {
+  auto label = "'timing sense' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return ClibTimingSense::none;
 }
 
@@ -283,6 +340,13 @@ AstValue::timing_sense_value() const
 ClibTimingType
 AstValue::timing_type_value() const
 {
+  auto label = "'timing type' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return ClibTimingType::none;
 }
 
@@ -292,6 +356,13 @@ AstValue::timing_type_value() const
 ClibVarType
 AstValue::vartype_value() const
 {
+  auto label = "'variable type' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return ClibVarType::none;
 }
 
@@ -301,7 +372,13 @@ AstValue::vartype_value() const
 const AstExpr&
 AstValue::expr_value() const
 {
-  ASSERT_NOT_REACHED;
+  auto label = "'expression' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return AstExpr::null_ref();
 }
 
@@ -311,6 +388,13 @@ AstValue::expr_value() const
 vector<int>
 AstValue::int_vector_value() const
 {
+  auto label = "int vector is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return vector<int>{};
 }
 
@@ -320,6 +404,13 @@ AstValue::int_vector_value() const
 vector<double>
 AstValue::float_vector_value() const
 {
+  auto label = "float(double) vector is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return vector<double>{};
 }
 
@@ -329,6 +420,13 @@ AstValue::float_vector_value() const
 SizeType
 AstValue::complex_elem_size() const
 {
+  auto label = "'complex attribute' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return 0;
 }
 
@@ -340,6 +438,13 @@ AstValue::complex_elem_value(
   SizeType pos
 ) const
 {
+  auto label = "'complex attribute' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return AstValue::null_ref();
 }
 
@@ -349,6 +454,13 @@ AstValue::complex_elem_value(
 const AstValue&
 AstValue::group_header_value() const
 {
+  auto label = "'group attribute' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return AstValue::null_ref();
 }
 
@@ -358,6 +470,13 @@ AstValue::group_header_value() const
 SizeType
 AstValue::group_elem_size() const
 {
+  auto label = "'group attribute' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   return 0;
 }
 
@@ -369,6 +488,13 @@ AstValue::group_elem_attr(
   SizeType pos
 ) const
 {
+  auto label = "'group attribute' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
   static AstAttr dummy;
   return dummy;
 }
@@ -726,37 +852,37 @@ AstTimingType::decompile() const
 {
   const char* tmp = "---";
   switch ( timing_type_value() ) {
-  case ClibTimingType::combinational:         tmp = "combinational"; break;
-  case ClibTimingType::combinational_rise:     tmp = "combinational_rise"; break;
-  case ClibTimingType::combinational_fall:     tmp = "combinational_fall"; break;
-  case ClibTimingType::three_state_enable:      tmp = "three_state_enable"; break;
-  case ClibTimingType::three_state_disable:     tmp = "three_state_disable"; break;
+  case ClibTimingType::combinational:            tmp = "combinational"; break;
+  case ClibTimingType::combinational_rise:       tmp = "combinational_rise"; break;
+  case ClibTimingType::combinational_fall:       tmp = "combinational_fall"; break;
+  case ClibTimingType::three_state_enable:       tmp = "three_state_enable"; break;
+  case ClibTimingType::three_state_disable:      tmp = "three_state_disable"; break;
   case ClibTimingType::three_state_enable_rise:  tmp = "three_state_enable_rise"; break;
   case ClibTimingType::three_state_enable_fall:  tmp = "three_state_enable_fall"; break;
   case ClibTimingType::three_state_disable_rise: tmp = "three_state_disable_rise"; break;
   case ClibTimingType::three_state_disable_fall: tmp = "three_state_disable_fall"; break;
-  case ClibTimingType::rising_edge:            tmp = "rising_edge"; break;
-  case ClibTimingType::falling_edge:           tmp = "falling_edge"; break;
-  case ClibTimingType::preset:                tmp = "preset"; break;
-  case ClibTimingType::clear:                 tmp = "clear"; break;
-  case ClibTimingType::hold_rising:            tmp = "hold_rising"; break;
-  case ClibTimingType::hold_falling:           tmp = "hold_falling"; break;
-  case ClibTimingType::setup_rising:           tmp = "setup_rising"; break;
-  case ClibTimingType::setup_falling:          tmp = "setup_falling"; break;
-  case ClibTimingType::recovery_rising:        tmp = "recovery_rising"; break;
-  case ClibTimingType::recovery_falling:       tmp = "recovery_falling"; break;
-  case ClibTimingType::skew_rising:            tmp = "skew_rising"; break;
-  case ClibTimingType::skew_falling:           tmp = "skew_falling"; break;
-  case ClibTimingType::removal_rising:         tmp = "removal_rising"; break;
-  case ClibTimingType::removal_falling:        tmp = "removal_falling"; break;
+  case ClibTimingType::rising_edge:              tmp = "rising_edge"; break;
+  case ClibTimingType::falling_edge:             tmp = "falling_edge"; break;
+  case ClibTimingType::preset:                   tmp = "preset"; break;
+  case ClibTimingType::clear:                    tmp = "clear"; break;
+  case ClibTimingType::hold_rising:              tmp = "hold_rising"; break;
+  case ClibTimingType::hold_falling:             tmp = "hold_falling"; break;
+  case ClibTimingType::setup_rising:             tmp = "setup_rising"; break;
+  case ClibTimingType::setup_falling:            tmp = "setup_falling"; break;
+  case ClibTimingType::recovery_rising:          tmp = "recovery_rising"; break;
+  case ClibTimingType::recovery_falling:         tmp = "recovery_falling"; break;
+  case ClibTimingType::skew_rising:              tmp = "skew_rising"; break;
+  case ClibTimingType::skew_falling:             tmp = "skew_falling"; break;
+  case ClibTimingType::removal_rising:           tmp = "removal_rising"; break;
+  case ClibTimingType::removal_falling:          tmp = "removal_falling"; break;
   case ClibTimingType::non_seq_setup_rising:     tmp = "non_seq_setup_rising"; break;
   case ClibTimingType::non_seq_setup_falling:    tmp = "non_seq_setup_falling"; break;
   case ClibTimingType::non_seq_hold_rising:      tmp = "non_seq_hold_rising"; break;
   case ClibTimingType::non_seq_hold_falling:     tmp = "non_seq_hold_falling"; break;
-  case ClibTimingType::nochange_high_high:      tmp = "nochange_high_high"; break;
-  case ClibTimingType::nochange_high_low:       tmp = "nochange_high_low"; break;
-  case ClibTimingType::nochange_low_high:       tmp = "nochange_low_high"; break;
-  case ClibTimingType::nochange_low_low:        tmp = "nochange_low_low"; break;
+  case ClibTimingType::nochange_high_high:       tmp = "nochange_high_high"; break;
+  case ClibTimingType::nochange_high_low:        tmp = "nochange_high_low"; break;
+  case ClibTimingType::nochange_low_high:        tmp = "nochange_low_high"; break;
+  case ClibTimingType::nochange_low_low:         tmp = "nochange_low_low"; break;
   default: break;
   }
   return tmp;
@@ -789,20 +915,20 @@ AstVarType::decompile() const
 {
   const char* tmp = "---";
   switch ( vartype_value() ) {
-  case ClibVarType::input_net_transition:                  tmp = "input_net_transition"; break;
-  case ClibVarType::input_transition_time:                 tmp = "input_transition_time"; break;
-  case ClibVarType::total_output_net_capacitance:           tmp = "total_output_net_capacitance"; break;
+  case ClibVarType::input_net_transition:                     tmp = "input_net_transition"; break;
+  case ClibVarType::input_transition_time:                    tmp = "input_transition_time"; break;
+  case ClibVarType::total_output_net_capacitance:             tmp = "total_output_net_capacitance"; break;
   case ClibVarType::equal_or_opposite_output_net_capacitance: tmp = "equal_or_opposite_output_net_capacitance"; break;
-  case ClibVarType::output_net_length:                     tmp = "output_net_length"; break;
-  case ClibVarType::output_net_wire_cap:                    tmp = "output_net_wire_cap"; break;
-  case ClibVarType::output_net_pin_cap:                     tmp = "output_net_pin_cap"; break;
+  case ClibVarType::output_net_length:                        tmp = "output_net_length"; break;
+  case ClibVarType::output_net_wire_cap:                      tmp = "output_net_wire_cap"; break;
+  case ClibVarType::output_net_pin_cap:                       tmp = "output_net_pin_cap"; break;
   case ClibVarType::related_out_total_output_net_capacitance: tmp = "related_out_total_output_net_capacitance"; break;
-  case ClibVarType::related_out_output_net_length:           tmp = "related_out_output_net_length"; break;
+  case ClibVarType::related_out_output_net_length:            tmp = "related_out_output_net_length"; break;
   case ClibVarType::related_out_output_net_wire_cap:          tmp = "related_out_output_net_wire_cap"; break;
   case ClibVarType::related_out_output_net_pin_cap:           tmp = "related_out_output_net_pin_cap"; break;
-  case ClibVarType::constrained_pin_transition:            tmp = "constrained_pin_transition"; break;
-  case ClibVarType::related_pin_transition:                tmp = "related_pin_transition"; break;
-  case ClibVarType::none:                                tmp = "none"; break;
+  case ClibVarType::constrained_pin_transition:               tmp = "constrained_pin_transition"; break;
+  case ClibVarType::related_pin_transition:                   tmp = "related_pin_transition"; break;
+  case ClibVarType::none:                                     tmp = "none"; break;
   default: break;
   }
   return tmp;

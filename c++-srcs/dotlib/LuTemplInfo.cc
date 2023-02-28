@@ -17,7 +17,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容を設定する．
-bool
+void
 LuTemplInfo::set(
   const AstValue* lut_val
 )
@@ -30,35 +30,16 @@ LuTemplInfo::set(
   ASSERT_COND( n == 1 );
   mName = header.complex_elem_value(0).string_value();
 
-  bool ok{true};
-
-  if ( get_vartype("variable_1", mVar1) == ERROR ) {
-    ok = false;
-  }
-  if ( get_vartype("variable_2", mVar2) == ERROR ) {
-    ok = false;
-  }
-  if ( get_vartype("variable_3", mVar3) == ERROR ) {
-    ok = false;
-  }
-  if ( get_complex_float_vector("index_1", mIndex1) == ERROR ) {
-    ok = false;
-  }
-  if ( get_complex_float_vector("index_2", mIndex2) == ERROR ) {
-    ok = false;
-  }
-  if ( get_complex_float_vector("index_3", mIndex3) == ERROR ) {
-    ok = false;
-  }
-
-  if ( !ok ) {
-    return false;
-  }
+  get_vartype("variable_1", mVar1);
+  get_vartype("variable_2", mVar2);
+  get_vartype("variable_3", mVar3);
+  get_complex_float_vector("index_1", mIndex1);
+  get_complex_float_vector("index_2", mIndex2);
+  get_complex_float_vector("index_3", mIndex3);
 
   if ( mVar1 == ClibVarType::none || mIndex1.size() == 0 ) {
     // variable_1 か index_1 が未定義
 #warning "TODO: エラーメッセージ"
-    return false;
   }
 
   mDimension = 1;
@@ -66,14 +47,13 @@ LuTemplInfo::set(
     if ( mIndex2.size() > 0 ) {
       // variable_2 が定義されていないのに index_2 が定義されている．
 #warning "TODO: エラーメッセージ"
-      return false;
     }
-    return true;
+    return;
   }
-  else if ( mIndex2.size() == 0 ) {
+
+  if ( mIndex2.size() == 0 ) {
     // variable_2 が定義されているのに index_2 が未定義
 #warning "TODO: エラーメッセージ"
-    return false;
   }
 
   mDimension = 2;
@@ -81,18 +61,16 @@ LuTemplInfo::set(
     if ( mIndex3.size() > 0 ) {
       // variable_3 が定義されていないのに index_3 が定義されている．
 #warning "TODO: エラーメッセージ"
-      return false;
     }
-    return true;
+    return;
   }
-  else if ( mIndex3.size() == 0 ) {
+
+  if ( mIndex3.size() == 0 ) {
     // variable_3 が定義されているのに index_3 が未定義
 #warning "TODO: エラーメッセージ"
-    return false;
   }
 
   mDimension = 3;
-  return true;
 }
 
 // @brief テンプレートを作る．

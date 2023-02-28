@@ -33,41 +33,24 @@ FLInfo::set_common(
 
   bool ok{true};
 
-  switch ( get_expr("clear", mClear) ) {
-  case OK:
-    break;
-  case NOT_FOUND:
+  if ( !get_expr("clear", mClear) ) {
     mClear = nullptr;
-    break;
-  case ERROR:
-    ok = false;
-    break;
   }
 
-  switch ( get_expr("preset", mPreset) ) {
-  case OK:
-    break;
-  case NOT_FOUND:
+  if ( !get_expr("preset", mPreset) ) {
     mPreset = nullptr;
-    break;
-  case ERROR:
-    ok = false;
-    break;
   }
 
   auto ret1 = get_cpv("clear_preset_var1", mCpv1);
   auto ret2 = get_cpv("clear_preset_var2", mCpv2);
-  if ( ret1 == ERROR || ret2 == ERROR ) {
-    ok = false;
-  }
-  else if ( ret1 == OK ) {
-    if ( ret2 == NOT_FOUND ) {
+  if ( ret1 ) {
+    if ( !ret2 ) {
       // clear_preset_var1 が定義されているのに clear_preset_var2 が定義されていない．
       ok = false;
     }
   }
   else {
-    if ( ret2 == OK ) {
+    if ( ret2 ) {
       // clear_preset_var2 が定義されているのに clear_preset_var1 が定義されていない．
       ok = false;
     }

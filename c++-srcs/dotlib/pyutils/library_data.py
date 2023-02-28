@@ -128,7 +128,7 @@ groups = (
     ('power_supply', 'power_supply'),
     ('propagation_lut_template', 'template'),
     ('scaled_cell', 'scaled_cell'),
-#    ('scaling_factors', 'scaling_factors'), マニュアルに詳細な記述なし．
+    #    ('scaling_factors', 'scaling_factors'), マニュアルに詳細な記述なし．
     ('sensitization', 'sensitization'),
     ('timing', 'timing'),
     ('timing_range', 'timing_range'),
@@ -167,7 +167,7 @@ hd.add_group_data('base_curves', 'string',
 
 simple_attrs = (
     ('base_curves_group', 'string'),
-    ('variable_(1|2|3)', 'string'),
+    ('variable_(1|2|3)', 'vartype'),
 )
 
 complex_attrs = (
@@ -263,7 +263,7 @@ hd.add_group_data('operating_conditions', 'string',
 ####################################################
 
 simple_attrs = (
-    ('default_step_level', 'string' ),
+    ('default_step_level', 'string'),
     ('fpga_isd', 'string'),
     ('num_blockrams', 'int'),
     ('num_cols', 'int'),
@@ -309,7 +309,7 @@ hd.add_group_data('speed_grade', 'string',
 # poly_template
 ####################################################
 complex_attrs = (
-    ('variables', 'string_list'),
+    ('variables', 'vartype_list'),
     ('variable_(1|2|3)_range', 'float_float'),
     ('mapping', 'string_string'),
     ('orders', 'int_vector'),
@@ -380,7 +380,7 @@ hd.add_group_data('table', 'string',
 ####################################################
 
 simple_attrs = (
-    ('variable_(1|2|3)', 'string'),
+    ('variable_(1|2|3)', 'vartype'),
 )
 
 complex_attrs = (

@@ -289,6 +289,21 @@ complex_values(
   return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sFloatVectorListHeader);
 }
 
+/// @brief ( vartype, vartype, ... ) の形式の Complex attribute のパースを行う．
+/// @return パース結果を返す．
+///
+/// エラーの時は nullptr を返す．
+inline
+AstAttrPtr
+complex_vartype_list(
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
+)
+{
+  return parser.parse_complex_attribute(kwd, kwd_loc, Parser::sVarTypeListHeader);
+}
+
 //////////////////////////////////////////////////////////////////////
 /// @}
 //////////////////////////////////////////////////////////////////////

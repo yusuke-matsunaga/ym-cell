@@ -23,40 +23,19 @@ LatchInfo::set(
     ok = false;
   }
 
-  switch ( get_expr("enable_on", mEnableOn) ) {
-  case OK:
-    break;
-  case NOT_FOUND:
+  if ( !get_expr("enable_on", mEnableOn) ) {
     // ラッチの場合はエラーではない．
     mEnableOn = nullptr;
-    break;
-  case ERROR:
-    ok = false;
-    break;
   }
 
-  switch ( get_expr("enable_on_also", mEnableOnAlso) ) {
-  case OK:
-    break;
-  case NOT_FOUND:
+  if ( !get_expr("enable_on_also", mEnableOnAlso) ) {
     // これはエラーではない．
     mEnableOnAlso = nullptr;
-    break;
-  case ERROR:
-    ok = false;
-    break;
   }
 
-  switch ( get_expr("data_in", mDataIn) ) {
-  case OK:
-    break;
-  case NOT_FOUND:
+  if ( !get_expr("data_in", mDataIn) ) {
     // これはエラーではない．
     mDataIn = nullptr;
-    break;
-  case ERROR:
-    ok = false;
-    break;
   }
 
   return ok;

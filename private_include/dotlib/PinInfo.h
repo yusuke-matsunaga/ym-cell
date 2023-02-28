@@ -44,7 +44,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を設定する．
-  bool
+  void
   set(
     const AstValue* pin_val ///< [in] ピン情報のパース木
   );
@@ -64,14 +64,14 @@ public:
   }
 
   /// @brief ピンを生成する．
-  bool
+  void
   add_pin(
     SizeType cell_id,                                ///< [in] セル番号
     const unordered_map<ShString, SizeType>& pin_map ///< [in] 入力ピン番号の辞書
   );
 
   /// @brief タイミングを生成する．
-  bool
+  void
   add_timing(
     SizeType cell_id,                                ///< [in] セル番号
     const unordered_map<ShString, SizeType>& pin_map ///< [in] 入力ピン番号の辞書
@@ -86,13 +86,13 @@ private:
   /// @brief direction 属性を取り出す．
   ///
   /// 結果は mDirection にセットされる．
-  bool
+  void
   set_direction();
 
   /// @brief 入力ピン用のパラメータを取り出す．
   ///
   /// エラーの場合には false を返す．
-  bool
+  void
   set_input_params();
 
   /// @brief 出力ピン用のパラメータを取り出す．
@@ -100,7 +100,7 @@ private:
   /// 指定がない場合にはデフォルト値を入れている．
   /// エラーの場合には false を返す．
   /// 現時点ではエラーにならない．
-  bool
+  void
   set_output_params();
 
 

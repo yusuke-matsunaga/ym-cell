@@ -40,7 +40,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を設定する．
-  bool
+  void
   set(
     const AstValue& lib_val ///< [in] ライブラリ情報のパース木
   );
@@ -71,21 +71,21 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 文字列型の属性をセットする．
-  bool
+  void
   set_str_attr(
     const char* keyword ///< [in] キーワード
   );
 
   /// @brief technology の属性をセットする．
-  bool
+  void
   set_technology();
 
   /// @brief delay_model の属性をセットする．
-  bool
+  void
   set_delay_model();
 
   /// @brief capacitive_load_unit の属性をセットする．
-  bool
+  void
   set_capacitive_load_unit();
 
 

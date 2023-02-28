@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容を設定する．
-bool
+void
 LibraryInfo::set(
   const AstValue& lib_val
 )
@@ -31,10 +31,9 @@ LibraryInfo::set(
 
   { // ライブラリ名の設定
     auto& header_val = lib_val.group_header_value();
-    mLibrary->set_name(header_val.string_value());
+    auto& val1 = header_val.complex_elem_value(0);
+    mLibrary->set_name(val1.string_value());
   }
-
-  bool ok{true};
 
   // 属性の設定
 
@@ -45,67 +44,43 @@ LibraryInfo::set(
   set_delay_model();
 
   // 'bus_naming_style' の設定
-  if ( !set_str_attr("bus_naming_style") ) {
-    ok = false;
-  }
+  set_str_attr("bus_naming_style");
 
   // 'comment' の設定
-  if ( !set_str_attr("comment") ) {
-    ok = false;
-  }
+  set_str_attr("comment");
 
   // 'date' の設定
-  if ( !set_str_attr("date") ) {
-    ok = false;
-  }
+  set_str_attr("date");
 
   // 'revision' の設定
-  if ( !set_str_attr("revision") ) {
-    ok = false;
-  }
+  set_str_attr("revision");
 
   // 'time_unit' の設定
-  if ( !set_str_attr("time_unit") ) {
-    ok = false;
-  }
+  set_str_attr("time_unit");
 
   // 'voltage_unit' の設定
-  if ( !set_str_attr("voltage_unit") ) {
-    ok = false;
-  }
+  set_str_attr("voltage_unit");
 
   // 'current_unit' の設定
-  if ( !set_str_attr("current_unit") ) {
-    ok = false;
-  }
+  set_str_attr("current_unit");
 
   // 'pulling_resistance_unit' の設定
-  if ( !set_str_attr("pulling_resistance_unit") ) {
-    ok = false;
-  }
+  set_str_attr("pulling_resistance_unit");
 
   // 'capacitive_load_unit' の設定
-  if ( !set_capacitive_load_unit() ) {
-    ok = false;
-  }
+  set_capacitive_load_unit();
 
   // 'leakage_power_unit' の設定
-  if ( !set_str_attr("leakage_power_unit") ) {
-    ok = false;
-  }
+  set_str_attr("leakage_power_unit");
 
   // lu_table_template の設定
   if ( elem_dict().count("lu_table_template") > 0 ) {
     auto& vec = elem_dict().at("lu_table_template");
     for ( auto ast_templ: vec ) {
       LuTemplInfo info{*this};
-      if ( info.set(ast_templ) ) {
-	auto tid = info.add_lu_template();
-	mLutDict.emplace(info.name(), tid);
-      }
-      else {
-	ok = false;
-      }
+      info.set(ast_templ);
+      auto tid = info.add_lu_template();
+      mLutDict.emplace(info.name(), tid);
     }
   }
 
@@ -114,129 +89,66 @@ LibraryInfo::set(
     auto& v = elem_dict().at("cell");
     for ( auto ast_cell: v ) {
       CellInfo cell_info{*this};
-      if ( cell_info.set(ast_cell) ) {
-	cell_info.add_cell();
-      }
-      else {
-	ok = false;
-      }
+      cell_info.set(ast_cell);
+      cell_info.add_cell();
     }
   }
 
-  if ( ok ) {
-    mLibrary->compile();
-  }
-
-  return ok;
+  mLibrary->compile();
 }
 
 // 文字列型の属性をセットする．
-bool
+void
 LibraryInfo::set_str_attr(
   const char* keyword
 )
 {
-  bool ok = true;
   ShString tmp_str;
-  switch ( get_string(keyword, tmp_str) ) {
-  case OK:
+  if ( get_string(keyword, tmp_str) ) {
     mLibrary->set_attr(keyword, tmp_str);
-    break;
-
-  case NOT_FOUND:
-    // 無視
-    break;
-
-  case ERROR:
-    ok = false;
-    break;
   }
-
-  return ok;
 }
 
 // @brief technology の属性をセットする．
-bool
+void
 LibraryInfo::set_technology()
 {
   const char* keyword{"technology"};
   ClibTechnology technology;
   auto ret = get_technology(keyword, technology);
-  switch ( ret ) {
-  case OK:
+  if ( ret ) {
     mLibrary->set_technology(technology);
-    break;
-
-  case NOT_FOUND:
+  }
+  else {
     // デフォルト値
     mLibrary->set_technology(ClibTechnology::cmos);
-    break;
-
-  case ERROR:
-#warning "TODO: エラーメッセージ"
-    return false;
-    break;
   }
-
-  return true;
 }
 
 // @brief delay_model の属性をセットする．
-bool
+void
 LibraryInfo::set_delay_model()
 {
   const char* keyword{"delay_model"};
-  const AstValue* val{nullptr};
-  auto ret = get_value(keyword, val);
-  bool ok = true;
-  switch ( ret ) {
-  case OK:
-    {
-      auto delay_model = val->delay_model_value();
-      mLibrary->set_delay_model(delay_model);
-    }
-    break;
-
-  case NOT_FOUND:
-    break;
-
-  case ERROR:
-#warning "TODO: エラーメッセージ"
-    ok = false;
-    break;
+  ClibDelayModel delay_model;
+  auto ret = get_delay_model(keyword, delay_model);
+  if ( ret ) {
+    mLibrary->set_delay_model(delay_model);
   }
-
-  return ok;
 }
 
 // @brief capacitive_load_unit の属性をセットする．
-bool
+void
 LibraryInfo::set_capacitive_load_unit()
 {
   const char* keyword{"capacitive_load_unit"};
-  const AstValue* val{nullptr};
-  auto ret = get_value(keyword, val);
-  bool ok = true;
-  switch ( ret ) {
-  case OK:
-    {
-      ASSERT_COND( val->complex_elem_size() == 2 );
-      auto u = val->complex_elem_value(0).float_value();
-      auto ustr = val->complex_elem_value(1).string_value();
-      mLibrary->set_capacitive_load_unit(u, ustr);
-    }
-    break;
-
-  case NOT_FOUND:
-    // 無視
-    break;
-
-  case ERROR:
-    ok = false;
-    break;
+  auto val = get_value(keyword);
+  if ( val ) {
+    ASSERT_COND( val->complex_elem_size() == 2 );
+    auto u = val->complex_elem_value(0).float_value();
+    auto ustr = val->complex_elem_value(1).string_value();
+    mLibrary->set_capacitive_load_unit(u, ustr);
   }
-
-  return ok;
 }
 
 END_NAMESPACE_YM_DOTLIB

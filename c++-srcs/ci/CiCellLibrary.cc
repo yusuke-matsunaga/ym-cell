@@ -27,6 +27,7 @@
 
 #include "CiFFCell.h"
 #include "CiLatchCell.h"
+#include "CiFsmCell.h"
 
 #include "ym/Range.h"
 
@@ -366,6 +367,17 @@ CiCellLibrary::add_latch_cell(
 			   clear_preset_var1,
 			   clear_preset_var2};
   }
+  return reg_cell(cell);
+}
+
+// @brief FSMセルを追加する．
+SizeType
+CiCellLibrary::add_fsm_cell(
+  const ShString& name,
+  ClibArea area
+)
+{
+  auto cell = new CiFsmCell{name, area};
   return reg_cell(cell);
 }
 

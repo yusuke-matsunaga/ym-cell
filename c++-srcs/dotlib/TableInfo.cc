@@ -3,12 +3,13 @@
 /// @brief TableInfo の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/TableInfo.h"
 #include "dotlib/LibraryInfo.h"
 #include "dotlib/AstValue.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -18,14 +19,12 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief 内容をセットする．
-bool
+void
 TableInfo::set(
   const AstValue* val
 )
 {
   GroupInfo::set(val);
-
-  bool ok{true};
 
   // テンプレート名
   auto& header = val->group_header_value();
@@ -34,30 +33,26 @@ TableInfo::set(
   auto name = header.complex_elem_value(0).string_value();
   mTemplId = library_info().find_lut(name);
   if ( mTemplId == CLIB_NULLID ) {
-    ok = false;
+    ostringstream buf;
+    buf << name << ": No such lu_template";
+    auto label = buf.str();
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    header.complex_elem_value(0).loc(),
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    label);
+    throw std::invalid_argument{label};
   }
 
-  if ( get_complex_float_vector("index_1", mIndex1) == ERROR ) {
-    ok = false;
-  }
+  get_complex_float_vector("index_1", mIndex1);
 
-  if ( get_complex_float_vector("index_2", mIndex2) == ERROR ) {
-    ok = false;
-  }
+  get_complex_float_vector("index_2", mIndex2);
 
-  if ( get_complex_float_vector("index_3", mIndex3) == ERROR ) {
-    ok = false;
-  }
+  get_complex_float_vector("index_3", mIndex3);
 
-  if ( get_complex_float_vector("values", mValues) != OK ) {
-    ok = false;
-  }
+  get_complex_float_vector("values", mValues);
 
-  if ( get_value("domain", mDomain) == ERROR ) {
-    ok = false;
-  }
-
-  return ok;
+  mDomain = get_value("domain");
 }
 
 SizeType

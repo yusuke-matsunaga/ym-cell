@@ -5,13 +5,10 @@
 /// @brief TableInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/ElemInfo.h"
-//#include "ci/CiLut.h"
-//#include "ci/CiCellLibrary.h"
-//#include "ym/ShString.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -42,7 +39,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容をセットする．
-  bool
+  void
   set(
     const AstValue* val
   );

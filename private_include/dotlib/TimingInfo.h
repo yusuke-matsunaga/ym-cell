@@ -47,13 +47,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を設定する．
-  bool
+  void
   set(
     const AstValue* timing_val ///< [in] タイミング情報のパース木
   );
 
   /// @brief タイミング情報を作る．
-  bool
+  void
   add_timing(
     CiCell* cell,
     const Expr& function_expr,
@@ -68,11 +68,11 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief タイミング情報の共通なパラメータを得る．
-  bool
+  void
   set_timing_common_params();
 
   /// @brief generic タイプのタイミング情報のパラメータを得る．
-  bool
+  void
   set_timing_generic_params();
 
   /// @brief table-lookup タイプのタイミング情報のパラメータを得る．
