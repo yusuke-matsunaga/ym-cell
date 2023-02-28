@@ -25,13 +25,6 @@ public:
   /// @brief 空のコンストラクタ(restore用)
   CiLutTemplate() = default;
 
-  /// @brief コンストラクタ
-  CiLutTemplate(
-    SizeType id ///< [in] ID番号
-  ) : mId{id}
-  {
-  }
-
   /// @brief デストラクタ
   virtual
   ~CiLutTemplate() = default;
@@ -41,13 +34,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 属性の取得
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief ID番号の取得
-  SizeType
-  id() const
-  {
-    return mId;
-  }
 
   /// @brief 次元数の取得
   virtual
@@ -68,12 +54,11 @@ public:
     SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
   ) const = 0;
 
-  /// @brief デフォルトインデックス値の取得
+  /// @brief インデックス配列の取得
   virtual
-  double
-  index(
-    SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
-    SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  const vector<double>&
+  index_array(
+    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
   ) const = 0;
 
 
@@ -111,21 +96,6 @@ protected:
     const vector<double>& index_array ///< [in] インデックスの配列
   );
 
-  /// @brief 内容を読み込む．
-  void
-  restore_common(
-    BinDec& s ///< [in] 入力元のストリーム
-  );
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // ID番号
-  SizeType mId;
-
 };
 
 
@@ -143,11 +113,9 @@ public:
 
   /// @brief コンストラクタ
   CiLutTemplate1D(
-    SizeType id,
     ClibVarType var_type,
     const vector<double>& index_array
-  ) : CiLutTemplate{id/*, name*/},
-      mVarType{var_type},
+  ) : mVarType{var_type},
       mIndexArray{index_array}
   {
   }
@@ -177,11 +145,10 @@ public:
     SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
   ) const override;
 
-  /// @brief デフォルトインデックス値の取得
-  double
-  index(
-    SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
-    SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  /// @brief インデックス配列の取得
+  const vector<double>&
+  index_array(
+    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
   ) const override;
 
 
@@ -231,13 +198,11 @@ public:
 
   /// @brief コンストラクタ
   CiLutTemplate2D(
-    SizeType id,
     ClibVarType var1,
     const vector<double>& index_array1,
     ClibVarType var2,
     const vector<double>& index_array2
-  ) : CiLutTemplate{id/*, name*/},
-      mVarType{var1, var2},
+  ) : mVarType{var1, var2},
       mIndexArray{index_array1, index_array2}
   {
   }
@@ -267,11 +232,10 @@ public:
     SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
   ) const override;
 
-  /// @brief デフォルトインデックス値の取得
-  double
-  index(
-    SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
-    SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  /// @brief インデックス配列の取得
+  const vector<double>&
+  index_array(
+    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
   ) const override;
 
 
@@ -321,15 +285,13 @@ public:
 
   /// @brief コンストラクタ
   CiLutTemplate3D(
-    SizeType id,
     ClibVarType var1,
     const vector<double>& index_array1,
     ClibVarType var2,
     const vector<double>& index_array2,
     ClibVarType var3,
     const vector<double>& index_array3
-  ) : CiLutTemplate{id/*, name*/},
-      mVarType{var1, var2, var3},
+  ) : mVarType{var1, var2, var3},
       mIndexArray{index_array1, index_array2, index_array3}
   {
   }
@@ -359,11 +321,10 @@ public:
     SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
   ) const override;
 
-  /// @brief デフォルトインデックス値の取得
-  double
-  index(
-    SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
-    SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
+  /// @brief インデックス配列の取得
+  const vector<double>&
+  index_array(
+    SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
   ) const override;
 
 

@@ -140,15 +140,6 @@ CiCell::data_in_expr() const
   return Expr::make_invalid();
 }
 
-// @brief ID を設定する．
-void
-CiCell::set_id(
-  SizeType id
-)
-{
-  mId = id;
-}
-
 // @brief 入力ピンを追加する．
 void
 CiCell::add_input(

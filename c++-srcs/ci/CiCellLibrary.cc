@@ -215,9 +215,8 @@ CiCellLibrary::add_lut_template1(
   const vector<double>& index_list1
 )
 {
+  auto tmpl = new CiLutTemplate1D{var_type1, index_list1};
   SizeType id = mLutTemplateList.size();
-  auto tmpl = new CiLutTemplate1D{id,
-                                  var_type1, index_list1};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
   mRefLutTemplateList.push_back(id);
   return id;
@@ -232,10 +231,9 @@ CiCellLibrary::add_lut_template2(
   const vector<double>& index_list2
 )
 {
-  SizeType id = mLutTemplateList.size();
-  auto tmpl = new CiLutTemplate2D{id,
-				  var_type1, index_list1,
+  auto tmpl = new CiLutTemplate2D{var_type1, index_list1,
 				  var_type2, index_list2};
+  SizeType id = mLutTemplateList.size();
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
   mRefLutTemplateList.push_back(id);
   return id;
@@ -252,11 +250,10 @@ CiCellLibrary::add_lut_template3(
   const vector<double>& index_list3
 )
 {
-  SizeType id = mLutTemplateList.size();
-  auto tmpl = new CiLutTemplate3D{id,
-				  var_type1, index_list1,
+  auto tmpl = new CiLutTemplate3D{var_type1, index_list1,
 				  var_type2, index_list2,
 				  var_type3, index_list3};
+  SizeType id = mLutTemplateList.size();
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
   mRefLutTemplateList.push_back(id);
   return id;
@@ -379,7 +376,6 @@ CiCellLibrary::reg_cell(
 )
 {
   SizeType id = mCellList.size();
-  cell->set_id(id);
   mCellList.push_back(unique_ptr<CiCell>{cell});
   mRefCellList.push_back(id);
   mCellDict.emplace(cell->name(), id);
@@ -523,14 +519,14 @@ CiCellLibrary::add_timing_generic(
   ClibResistance fall_resistance
 )
 {
-  SizeType tid = mTimingList.size();
-  auto timing = new CiTimingGeneric(tid, type, cond,
+  auto timing = new CiTimingGeneric(type, cond,
 				    intrinsic_rise,
 				    intrinsic_fall,
 				    slope_rise,
 				    slope_fall,
 				    rise_resistance,
 				    fall_resistance);
+  SizeType tid = mTimingList.size();
   mTimingList.push_back(unique_ptr<CiTiming>{timing});
   return tid;
 }
@@ -548,14 +544,14 @@ CiCellLibrary::add_timing_piecewise(
   ClibResistance fall_pin_resistance
 )
 {
-  SizeType tid = mTimingList.size();
-  auto timing = new CiTimingPiecewise(tid, timing_type, cond,
+  auto timing = new CiTimingPiecewise(timing_type, cond,
 				      intrinsic_rise,
 				      intrinsic_fall,
 				      slope_rise,
 				      slope_fall,
 				      rise_pin_resistance,
 				      fall_pin_resistance);
+  SizeType tid = mTimingList.size();
   mTimingList.push_back(unique_ptr<CiTiming>{timing});
   return tid;
 }
@@ -571,13 +567,13 @@ CiCellLibrary::add_timing_lut1(
   SizeType fall_transition
 )
 {
-  SizeType tid = mTimingList.size();
-  auto timing = new CiTimingLut1(tid, timing_type, cond,
+  auto timing = new CiTimingLut1(timing_type, cond,
 				 cell_rise,
 				 cell_fall,
 				 rise_transition,
 				 fall_transition);
 
+  SizeType tid = mTimingList.size();
   mTimingList.push_back(unique_ptr<CiTiming>{timing});
   return tid;
 }
@@ -593,13 +589,13 @@ CiCellLibrary::add_timing_lut2(
   SizeType fall_propagation
 )
 {
-  SizeType tid = mTimingList.size();
-  CiTiming* timing = new CiTimingLut2(tid, timing_type, cond,
+  CiTiming* timing = new CiTimingLut2(timing_type, cond,
 				      rise_transition,
 				      fall_transition,
 				      rise_propagation,
 				      fall_propagation);
 
+  SizeType tid = mTimingList.size();
   mTimingList.push_back(unique_ptr<CiTiming>{timing});
   return tid;
 }
@@ -613,77 +609,23 @@ CiCellLibrary::init_cell_timing_map(
   mCellList[cell_id]->init_timing_map();
 }
 
-// @brief 1次元の LUT を作る．
-CiLut*
-CiCellLibrary::new_lut1(
-  const CiLutTemplate* lut_template,
-  const vector<double>& value_array,
-  const vector<double>& index_array
+BEGIN_NONAMESPACE
+
+inline
+vector<double>
+make_index_array(
+  const vector<double>& src_array,
+  CiLutTemplate* lut_template,
+  SizeType var
 )
 {
-  vector<double> tmp_array{index_array};
-  if ( tmp_array.empty() ) {
-    // index_array が空だった場合，テンプレートからコピーする．
-    SizeType n = lut_template->index_num(0);
-    tmp_array.resize(n);
-    for ( auto i: Range(n) ) {
-      tmp_array[i] = lut_template->index(0, i);
-    }
+  if ( src_array.empty() ) {
+    return lut_template->index_array(var);
   }
-
-  return new CiLut1D{lut_template->id(), value_array, tmp_array};
+  return src_array;
 }
 
-// @brief 2次元の LUT を作る．
-CiLut*
-CiCellLibrary::new_lut2(
-  const CiLutTemplate* lut_template,
-  const vector<double>& value_array,
-  const vector<double>& index_array1,
-  const vector<double>& index_array2
-)
-{
-  vector<double> tmp_array[2]{index_array1, index_array2};
-  for ( int b = 0; b < 2; ++ b ) {
-    if ( tmp_array[b].empty() ) {
-      // index_array が空だった場合，テンプレートからコピーする．
-      SizeType n1 = lut_template->index_num(b);
-      tmp_array[b].resize(n1);
-      for ( auto i: Range(n1) ) {
-	tmp_array[b][i] = lut_template->index(b, i);
-      }
-    }
-  }
-
-  return new CiLut2D{lut_template->id(), value_array,
-		     tmp_array[0], tmp_array[1]};
-}
-
-// @brief 3次元の LUT を作る．
-CiLut*
-CiCellLibrary::new_lut3(
-  const CiLutTemplate* lut_template,
-  const vector<double>& value_array,
-  const vector<double>& index_array1,
-  const vector<double>& index_array2,
-  const vector<double>& index_array3
-)
-{
-  vector<double> tmp_array[3]{index_array1, index_array2, index_array3};
-  for ( int b = 0; b < 3; ++ b ) {
-    if ( tmp_array[b].empty() ) {
-      // index_array が空だった場合，テンプレートからコピーする．
-      SizeType n1 = lut_template->index_num(b);
-      tmp_array[b].resize(n1);
-      for ( auto i: Range(n1) ) {
-	tmp_array[b][i] = lut_template->index(b, i);
-      }
-    }
-  }
-
-  return new CiLut3D{lut_template->id(), value_array,
-		     tmp_array[0], tmp_array[1], tmp_array[2]};
-}
+END_NONAMESPACE
 
 // @brief LUT を作る．
 SizeType
@@ -695,40 +637,29 @@ CiCellLibrary::add_lut(
   const vector<double>& index_array3
 )
 {
-#if 0
-  if ( mLutDict.count(templ_name) == 0 ) {
-    // テンプレートが存在しない．
-#warning "TODO: エラーメッセージ"
-    cerr << "lut_template(" << templ_name << ") not found." << endl;
-    abort();
-    return CLIB_NULLID;
-  }
-  auto templ_id = mLutDict.at(templ_name);
-#endif
   auto lut_template = mLutTemplateList[templ_id].get();
-
   SizeType d = lut_template->dimension();
   CiLut* lut{nullptr};
   switch ( d ) {
   case 1:
-    lut = new_lut1(lut_template,
-		   value_array,
-		   index_array1);
+    lut = new CiLut1D{templ_id,
+		      value_array,
+		      make_index_array(index_array1, lut_template, 0)};
     break;
 
   case 2:
-    lut = new_lut2(lut_template,
-		   value_array,
-		   index_array1,
-		   index_array2);
+    lut = new CiLut2D{templ_id,
+		      value_array,
+		      make_index_array(index_array1, lut_template, 0),
+		      make_index_array(index_array2, lut_template, 1)};
     break;
 
   case 3:
-    lut = new_lut3(lut_template,
-		   value_array,
-		   index_array1,
-		   index_array2,
-		   index_array3);
+    lut = new CiLut3D{templ_id,
+		      value_array,
+		      make_index_array(index_array1, lut_template, 0),
+		      make_index_array(index_array2, lut_template, 1),
+		      make_index_array(index_array3, lut_template, 2)};
     break;
   }
   SizeType id = mLutList.size();
@@ -742,14 +673,15 @@ CiCellLibrary::compile()
 {
   // シグネチャを用いてセルグループとセルクラスの設定を行う．
   CgMgr cgmgr{*this};
-  for ( auto& cell: mCellList ) {
+  for ( SizeType id: mRefCellList ) {
+    auto& cell = mCellList[id];
     // シグネチャを作る．
     auto sig = cell->make_signature(this);
     // sig に対応するグループを求める．
     auto gid = cgmgr.find_group(sig);
     // セルを登録する．
     auto group = _cell_group(gid);
-    group->add_cell(cell->id());
+    group->add_cell(id);
   }
 
   // パタングラフを作る．

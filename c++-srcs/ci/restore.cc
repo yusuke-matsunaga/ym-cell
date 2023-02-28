@@ -490,23 +490,6 @@ CiBusType::restore(
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiLutTemplate
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiLutTemplate::restore_common(
-  BinDec& s
-)
-{
-  s >> mId;
-#if 0
-  >> mName;
-#endif
-}
-
-
-//////////////////////////////////////////////////////////////////////
 // クラス CiLutTemplate1D
 //////////////////////////////////////////////////////////////////////
 
@@ -516,7 +499,6 @@ CiLutTemplate1D::restore(
   BinDec& s
 )
 {
-  restore_common(s);
   s >> mVarType;
   restore_dvector(s, mIndexArray);
 }
@@ -532,7 +514,6 @@ CiLutTemplate2D::restore(
   BinDec& s
 )
 {
-  restore_common(s);
   for ( SizeType i: Range(2) ) {
     s >> mVarType[i];
     restore_dvector(s, mIndexArray[i]);
@@ -550,7 +531,6 @@ CiLutTemplate3D::restore(
   BinDec& s
 )
 {
-  restore_common(s);
   for ( SizeType i: Range(3) ) {
     s >> mVarType[i];
     restore_dvector(s, mIndexArray[i]);
@@ -568,8 +548,7 @@ CiCell::restore(
   BinDec& s
 )
 {
-  s >> mId
-    >> mName
+  s >> mName
     >> mArea
     >> mInputNum
     >> mOutputNum
@@ -823,8 +802,7 @@ CiTiming::restore(
   BinDec& s
 )
 {
-  s >> mId
-    >> mType;
+  s >> mType;
   mCond.restore(s);
 }
 
@@ -990,7 +968,6 @@ CiLut1D::restore(
   restore_common(s);
   restore_dvector(s, mIndexArray);
   restore_dvector(s, mValueArray);
-  init();
 }
 
 
@@ -1008,7 +985,6 @@ CiLut2D::restore(
   restore_dvector(s, mIndexArray[0]);
   restore_dvector(s, mIndexArray[1]);
   restore_dvector(s, mValueArray);
-  init();
 }
 
 
@@ -1027,7 +1003,6 @@ CiLut3D::restore(
   restore_dvector(s, mIndexArray[1]);
   restore_dvector(s, mIndexArray[2]);
   restore_dvector(s, mValueArray);
-  init();
 }
 
 

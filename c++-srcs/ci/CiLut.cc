@@ -16,20 +16,6 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiLut
 //////////////////////////////////////////////////////////////////////
 
-// @brief mIndexWidthArray を初期化する．
-void
-CiLut::init(
-  const vector<double>& index_array,
-  vector<double>& index_width_array
-)
-{
-  SizeType n = index_array.size();
-  index_width_array.resize(n - 1);
-  for ( SizeType i: Range(n - 1) ) {
-    index_width_array[i] = index_array[i + 1] - index_array[i];
-  }
-}
-
 // @brief val に対応する区間を求める．
 SizeType
 CiLut::search(
@@ -68,11 +54,8 @@ CiLut1D::CiLut1D(
   const vector<double>& index_array
 ) : CiLut{lut_template},
     mValueArray{value_array},
-    mIndexArray{index_array},
-    mIndexWidthArray(index_array.size() - 1)
+    mIndexArray{index_array}
 {
-  init();
-
   SizeType n = index_array.size();
   ASSERT_COND( value_array.size() == n );
 }
@@ -107,7 +90,7 @@ CiLut1D::grid_value(
 {
   ASSERT_COND( pos_array.size() == 1 );
   auto pos1 = pos_array[0];
-  ASSERT_COND( 0 <= pos1 && pos1 < index_num(0) );
+  ASSERT_COND( 0 <= pos1 && pos1 < mValueArray.size() );
   return mValueArray[pos1];
 }
 
@@ -125,7 +108,7 @@ CiLut1D::value(
   auto idx_b = idx_a + 1;
   double x0 = mIndexArray[idx_a];
   double x1 = mIndexArray[idx_b];
-  double w  = mIndexWidthArray[idx_a];
+  double w  = x1 - x0;
   double dx0 = (val - x0) / w;
   double dx1 = (x1 - val) / w;
   double val_0 = mValueArray[idx_a];
@@ -148,8 +131,6 @@ CiLut2D::CiLut2D(
     mValueArray{value_array},
     mIndexArray{index_array1, index_array2}
 {
-  init();
-
   SizeType n = mIndexArray[0].size() * mIndexArray[1].size();
   ASSERT_COND( value_array.size() == n );
 }
@@ -211,10 +192,10 @@ CiLut2D::value(
   double y1 = mIndexArray[1][idx2_b];
 
   // 単純な線形補間
-  double wx  = mIndexWidthArray[0][idx1_a];
+  double wx  = x1 - x0;
   double dx0 = (val1 - x0) / wx;
   double dx1 = (x1 - val1) / wx;
-  double wy  = mIndexWidthArray[1][idx2_a];
+  double wy  = y1 - y0;
   double dy0 = (val2 - y0) / wy;
   double dy1 = (y1 - val2) / wy;
   double val_00 = mValueArray[idx(idx1_a, idx2_a)];
@@ -242,8 +223,6 @@ CiLut3D::CiLut3D(
     mValueArray{value_array},
     mIndexArray{index_array1, index_array2, index_array3}
 {
-  init();
-
   SizeType n = mIndexArray[0].size() * mIndexArray[1].size() * mIndexArray[2].size();;
   ASSERT_COND( value_array.size() == n );
 }
@@ -312,13 +291,13 @@ CiLut3D::value(
   double z1 = mIndexArray[2][idx3_b];
 
   // 単純な線形補間
-  double wx  = mIndexWidthArray[0][idx1_a];
+  double wx  = x1 - x0;
   double dx0 = (val1 - x0) / wx;
   double dx1 = (x1 - val1) / wx;
-  double wy  = mIndexWidthArray[1][idx2_a];
+  double wy  = y1 - y0;
   double dy0 = (val2 - y0) / wy;
   double dy1 = (y1 - val2) / wy;
-  double wz  = mIndexWidthArray[2][idx3_a];
+  double wz  = z1 - z0;
   double dz0 = (val3 - z0) / wz;
   double dz1 = (z1 - val3) / wz;
   double val_000 = mValueArray[idx(idx1_a, idx2_a, idx3_a)];

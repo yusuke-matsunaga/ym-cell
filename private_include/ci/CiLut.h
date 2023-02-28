@@ -120,14 +120,6 @@ protected:
     BinDec& s ///< [in] 入力元のストリーム
   );
 
-  /// @brief mIndexWidthArray を初期化する．
-  static
-  void
-  init(
-    const vector<double>& index_array,
-    vector<double>& index_width_array
-  );
-
   /// @brief val に対応する区間を求める．
   static
   SizeType
@@ -224,27 +216,11 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief mIndexWidthArray を初期化する．
-  void
-  init()
-  {
-    CiLut::init(mIndexArray, mIndexWidthArray);
-  }
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
   // インデックスの配列
   vector<double> mIndexArray;
-
-  // インデックスの間隔の配列
-  vector<double> mIndexWidthArray;
 
   // 格子点の値の配列
   vector<double> mValueArray;
@@ -332,15 +308,6 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief mIndexWidthArray を初期化する．
-  void
-  init()
-  {
-    for ( SizeType i = 0; i < 2; ++ i ) {
-      CiLut::init(mIndexArray[i], mIndexWidthArray[i]);
-    }
-  }
-
   /// @brief mValueArray のインデックスを計算する．
   SizeType
   idx(
@@ -359,9 +326,6 @@ private:
 
   // インデックスの配列の配列
   vector<double> mIndexArray[2];
-
-  // インデックスの間隔の配列
-  vector<double> mIndexWidthArray[2];
 
   // 格子点の値の配列
   vector<double> mValueArray;
@@ -450,15 +414,6 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief mIndexWidthArray を初期化する．
-  void
-  init()
-  {
-    for ( SizeType i = 0; i < 3; ++ i ) {
-      CiLut::init(mIndexArray[i], mIndexWidthArray[i]);
-    }
-  }
-
   /// @brief mValueArray のインデックスを計算する．
   SizeType
   idx(
@@ -478,9 +433,6 @@ private:
 
   // インデックスの配列の配列
   vector<double> mIndexArray[3];
-
-  // インデックスの間隔の配列
-  vector<double> mIndexWidthArray[3];
 
   // 格子点の値の配列
   vector<double> mValueArray;

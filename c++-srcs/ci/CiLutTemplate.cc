@@ -42,16 +42,14 @@ CiLutTemplate1D::index_num(
   return mIndexArray.size();
 }
 
-// @brief デフォルトインデックス値の取得
-double
-CiLutTemplate1D::index(
-  SizeType var,
-  SizeType pos
+// @brief インデックス配列の取得
+const vector<double>&
+CiLutTemplate1D::index_array(
+  SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
-  ASSERT_COND( 0 <= pos && pos < index_num(0) );
-  return mIndexArray[pos];
+  ASSERT_COND( var == 0 );
+  return mIndexArray;
 }
 
 
@@ -86,16 +84,14 @@ CiLutTemplate2D::index_num(
   return mIndexArray[var].size();
 }
 
-// @brief デフォルトインデックス値の取得
-double
-CiLutTemplate2D::index(
-  SizeType var,
-  SizeType pos
+// @brief インデックス配列の取得
+const vector<double>&
+CiLutTemplate2D::index_array(
+  SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
-  ASSERT_COND( 0 <= pos && pos < index_num(var) );
-  return mIndexArray[var][pos];
+  ASSERT_COND( var == 0 || var == 1 );
+  return mIndexArray[var];
 }
 
 
@@ -130,16 +126,14 @@ CiLutTemplate3D::index_num(
   return mIndexArray[var].size();
 }
 
-// @brief デフォルトインデックス値の取得
-double
-CiLutTemplate3D::index(
-  SizeType var,
-  SizeType pos
+// @brief インデックス配列の取得
+const vector<double>&
+CiLutTemplate3D::index_array(
+  SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
-  ASSERT_COND( 0 <= pos && pos < index_num(var) );
-  return mIndexArray[var][pos];
+  ASSERT_COND( 0 <= var && var < 3 );
+  return mIndexArray[var];
 }
 
 END_NAMESPACE_YM_CLIB

@@ -192,7 +192,7 @@ public:
     const string& name ///< [in] バスタイプ名
   ) const
   {
-    return bus_type(ShString(name));
+    return bus_type(ShString{name});
   }
 
   /// @brief バスタイプの取得
@@ -222,7 +222,7 @@ public:
     const string& name
   ) const
   {
-    return cell(ShString(name));
+    return cell(ShString{name});
   }
 
   /// @brief 名前からのセル番号の取得
@@ -538,7 +538,6 @@ public:
   /// @brief 1次元の LUT のテンプレートを作る．
   SizeType
   add_lut_template1(
-    //const ShString& name,
     ClibVarType var_type1,
     const vector<double>& index_list1
   );
@@ -546,7 +545,6 @@ public:
   /// @brief 2次元の LUT のテンプレートを作る．
   SizeType
   add_lut_template2(
-    //const ShString& name,
     ClibVarType var_type1,
     const vector<double>& index_list1,
     ClibVarType var_type2,
@@ -556,7 +554,6 @@ public:
   /// @brief 3次元の LUT のテンプレートを作る．
   SizeType
   add_lut_template3(
-    //const ShString& name,
     ClibVarType var_type1,
     const vector<double>& index_list1,
     ClibVarType var_type2,
@@ -785,7 +782,6 @@ public:
   /// @brief LUT を作る．
   SizeType
   add_lut(
-    //const ShString& templ_name,        ///< [in] テンプレート名
     SizeType templ_id,
     const vector<double>& value_array, ///< [in] 値の配列
     const vector<double>& index_array1 ///< [in] インデックス値のリスト1

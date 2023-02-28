@@ -31,11 +31,9 @@ public:
 
   /// @brief コンストラクタ
   CiTiming(
-    SizeType id,         ///< [in] タイミング番号
     ClibTimingType type, ///< [in] タイミング条件の型
     const Expr& cond     ///< [in] タイミング条件を表す式
-  ) : mId{id},
-      mType{type},
+  ) : mType{type},
       mCond{cond}
   {
   };
@@ -49,15 +47,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 共通の属性
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief ID番号の取得
-  ///
-  /// timing = cell->timing(id); の時，timing->id() = id となる．
-  SizeType
-  id() const
-  {
-    return mId;
-  }
 
   /// @brief 型の取得
   ClibTimingType
@@ -218,9 +207,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ID
-  SizeType mId{CLIB_NULLID};
-
   // 型
   ClibTimingType mType{ClibTimingType::none};
 
@@ -244,14 +230,13 @@ protected:
 
   /// @brief コンストラクタ
   CiTimingGP(
-    SizeType tid,               ///< [in] タイミング番号
     ClibTimingType timing_type, ///< [in] タイミングの型
     const Expr& cond,           ///< [in] タイミング条件を表す式
     ClibTime intrinsic_rise,    ///< [in] 立ち上がり固有遅延
     ClibTime intrinsic_fall,    ///< [in] 立ち下がり固有遅延
     ClibTime slope_rise,        ///< [in] 立ち上がりスロープ遅延
     ClibTime slope_fall         ///< [in] 立ち下がりスロープ遅延
-  ) : CiTiming{tid, timing_type, cond},
+  ) : CiTiming{timing_type, cond},
       mIntrinsicRise{intrinsic_rise},
       mIntrinsicFall{intrinsic_fall},
       mSlopeRise{slope_rise},
@@ -331,7 +316,6 @@ public:
 
   /// @brief コンストラクタ
   CiTimingGeneric(
-    SizeType tid,                   ///< [in] タイミング番号
     ClibTimingType timing_type,     ///< [in] タイミングの型
     const Expr& cond,               ///< [in] タイミング条件を表す式
     ClibTime intrinsic_rise,        ///< [in] 立ち上がり固有遅延
@@ -340,7 +324,7 @@ public:
     ClibTime slope_fall,            ///< [in] 立ち下がりスロープ遅延
     ClibResistance rise_resistance, ///< [in] 立ち上がり遷移遅延パラメータ
     ClibResistance fall_resistance  ///< [in] 立ち下がり遷移遅延パラメータ
-  ) : CiTimingGP{tid, timing_type, cond,
+  ) : CiTimingGP{timing_type, cond,
 		 intrinsic_rise, intrinsic_fall,
 		 slope_rise, slope_fall},
       mRiseResistance(rise_resistance),
@@ -412,7 +396,6 @@ public:
 
   /// @brief コンストラクタ
   CiTimingPiecewise(
-    SizeType tid,                       ///< [in] タイミング番号
     ClibTimingType timing_type,         ///< [in] タイミングの型
     const Expr& cond,                   ///< [in] タイミング条件を表す式
     ClibTime intrinsic_rise,            ///< [in] 立ち上がり固有遅延
@@ -421,7 +404,7 @@ public:
     ClibTime slope_fall,                ///< [in] 立ち下がりスロープ遅延
     ClibResistance rise_pin_resistance, ///< [in] 立ち上がりピン抵抗
     ClibResistance fall_pin_resistance  ///< [in] 立ち下がりピン抵抗
-  ) : CiTimingGP{tid, timing_type, cond,
+  ) : CiTimingGP{timing_type, cond,
 		 intrinsic_rise, intrinsic_fall,
 		 slope_rise, slope_fall},
       mRisePinResistance{rise_pin_resistance},
@@ -501,12 +484,11 @@ public:
 
   /// @brief コンストラクタ
   CiTimingLut(
-    SizeType tid,               ///< [in] タイミング番号
     ClibTimingType timing_type, ///< [in] タイミングの型
     const Expr& cond,           ///< [in] タイミング条件を表す式
     SizeType rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
     SizeType fall_transition    ///< [in] 立ち下がり遷移遅延テーブル
-  ) : CiTiming{tid, timing_type, cond},
+  ) : CiTiming{timing_type, cond},
       mRiseTransition{rise_transition},
       mFallTransition{fall_transition}
   {
@@ -571,14 +553,13 @@ public:
 
   /// @brief コンストラクタ
   CiTimingLut1(
-    SizeType tid,               ///< [in] タイミング番号
     ClibTimingType timing_type, ///< [in] タイミングの型
     const Expr& cond,           ///< [in] タイミング条件を表す式
     SizeType cell_rise,         ///< [in] 立ち上がりセル遅延テーブル
     SizeType cell_fall,         ///< [in] 立ち下がりセル遅延テーブル
     SizeType rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
     SizeType fall_transition    ///< [in] 立ち下がり遷移遅延テーブル
-  ) : CiTimingLut{tid, timing_type, cond, rise_transition, fall_transition},
+  ) : CiTimingLut{timing_type, cond, rise_transition, fall_transition},
       mCellRise{cell_rise},
       mCellFall{cell_fall}
   {
@@ -649,14 +630,13 @@ public:
 
   /// @brief コンストラクタ
   CiTimingLut2(
-    SizeType tid,               ///< [in] タイミング番号
     ClibTimingType timing_type, ///< [in] タイミングの型
     const Expr& cond,           ///< [in] タイミング条件を表す式
     SizeType rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
     SizeType fall_transition,   ///< [in] 立ち下がり遷移遅延テーブル
     SizeType rise_propagation,  ///< [in] 立ち上がり伝搬遅延テーブル
     SizeType fall_propagation   ///< [in] 立ち下がり伝搬遅延テーブル
-  ) : CiTimingLut{tid, timing_type, cond, rise_transition, fall_transition},
+  ) : CiTimingLut{timing_type, cond, rise_transition, fall_transition},
     mRisePropagation{rise_propagation},
     mFallPropagation{fall_propagation}
   {

@@ -211,11 +211,7 @@ CiLutTemplate::dump(
 ) const
 {
   ymuint8 d = dimension();
-  s << d
-    << mId;
-#if 0
-  << _name();
-#endif
+  s << d;
 }
 
 // @brief 1つの変数の情報をバイナリダンプする．
@@ -290,8 +286,7 @@ CiCell::dump_common(
   BinEnc& s
 ) const
 {
-  s << mId
-    << mName
+  s << mName
     << mArea
     << mInputNum
     << mOutputNum
@@ -591,7 +586,6 @@ CiTiming::dump_common(
 ) const
 {
   s << type_id
-    << mId
     << mType;
   mCond.dump(s);
 }
