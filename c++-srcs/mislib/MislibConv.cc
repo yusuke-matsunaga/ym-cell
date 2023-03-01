@@ -138,9 +138,22 @@ MislibConv::convert(
   auto name = filename.substr(filename.find_last_of('/') + 1);
   mLibrary->set_name(name);
 
+  SizeType nerrs = 0;
+
   // セルを作る．
   for ( auto& gate: gate_list ) {
-    new_gate(gate.get());
+    try {
+      new_gate(gate.get());
+    }
+    catch ( std::invalid_argument ) {
+      ++ nerrs;
+    }
+  }
+
+  if ( nerrs > 0 ) {
+    ostringstream buf;
+    buf << "Error in reading '" << filename << "'";
+    throw std::invalid_argument{buf.str()};
   }
 
   mLibrary->compile();
