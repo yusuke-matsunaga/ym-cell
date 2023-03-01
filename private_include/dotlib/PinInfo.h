@@ -130,6 +130,8 @@ private:
   const AstExpr* mFunction{nullptr};
   const AstExpr* mTristate{nullptr};
   Expr mFunctionExpr;
+  Expr mTristateExpr;
+
   vector<SizeType> mOpinList;
 
   // タイミング情報

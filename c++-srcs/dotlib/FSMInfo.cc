@@ -17,19 +17,12 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief 情報をセットする．
-bool
+void
 FSMInfo::set(
   const AstValue* ast_val
 )
 {
-  bool ok{true};
-
-  // 属性の辞書を作る．
-  if ( !set_common(ast_val) ) {
-    ok = false;
-  }
-
-  return ok;
+  set_common(ast_val);
 }
 
 END_NAMESPACE_YM_DOTLIB

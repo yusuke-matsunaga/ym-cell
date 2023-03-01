@@ -7,27 +7,29 @@
 /// All rights reserved.
 
 #include "dotlib/FFInfo.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief 情報をセットする．
-bool
+void
 FFInfo::set(
   const AstValue* ast_val
 )
 {
-  bool ok{true};
-
   // 属性の辞書を作る．
-  if ( !set_common(ast_val) ) {
-    ok = false;
-  }
+  set_common(ast_val);
 
   if ( !get_expr("clocked_on", mClockedOn) ) {
     // FF に clocked_on は必須
-#warning "TODO: エラーメッセージ"
-    ok = false;
+    auto label = "No 'clocked_on' attributes";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    loc(),
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    label);
+    throw std::invalid_argument{label};
   }
 
   if ( !get_expr("clocked_on_also", mClockedOnAlso) ) {
@@ -36,11 +38,14 @@ FFInfo::set(
   }
 
   if ( !get_expr("next_state", mNextState) ) {
-#warning "TODO: エラーメッセージ"
-    ok = false;
+    auto label = "No 'next_state' attributes";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    loc(),
+		    MsgType::Error,
+		    "DOTLIB_PARSER",
+		    label);
+    throw std::invalid_argument{label};
   }
-
-  return ok;
 }
 
 END_NAMESPACE_YM_DOTLIB

@@ -12,16 +12,12 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief 情報をセットする．
-bool
+void
 LatchInfo::set(
   const AstValue* ast_val
 )
 {
-  bool ok{true};
-
-  if ( !set_common(ast_val) ) {
-    ok = false;
-  }
+  set_common(ast_val);
 
   if ( !get_expr("enable_on", mEnableOn) ) {
     // ラッチの場合はエラーではない．
@@ -37,8 +33,6 @@ LatchInfo::set(
     // これはエラーではない．
     mDataIn = nullptr;
   }
-
-  return ok;
 }
 
 END_NAMESPACE_YM_DOTLIB

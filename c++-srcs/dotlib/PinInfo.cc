@@ -96,17 +96,17 @@ PinInfo::add_pin(
   case ClibDirection::output:
     {
       mFunctionExpr = make_expr(mFunction, ipin_map);
-      auto tristate = make_expr(mTristate, ipin_map);
+      mTristateExpr = make_expr(mTristate, ipin_map);
       for ( auto name: mNameList ) {
 	auto pin_id = library()->add_output(cell_id, name,
-					   mMaxFanout,
-					   mMinFanout,
-					   mMaxCapacitance,
-					   mMinCapacitance,
-					   mMaxTransition,
-					   mMinTransition,
-					   mFunctionExpr,
-					   tristate);
+					    mMaxFanout,
+					    mMinFanout,
+					    mMaxCapacitance,
+					    mMinCapacitance,
+					    mMaxTransition,
+					    mMinTransition,
+					    mFunctionExpr,
+					    mTristateExpr);
 	auto pin = library()->_pin(pin_id);
 	mOpinList.push_back(pin->output_id());
       }
@@ -116,19 +116,19 @@ PinInfo::add_pin(
   case ClibDirection::inout:
     {
       mFunctionExpr = make_expr(mFunction, ipin_map);
-      auto tristate = make_expr(mTristate, ipin_map);
+      mTristateExpr = make_expr(mTristate, ipin_map);
       for ( auto name: mNameList ) {
 	auto pin_id = library()->add_inout(cell_id, name,
-					  mCapacitance,
-					  mRiseCapacitance,
-					  mFallCapacitance,
-					  mMaxFanout, mMinFanout,
-					  mMaxCapacitance,
-					  mMinCapacitance,
-					  mMaxTransition,
-					  mMinTransition,
-					  mFunctionExpr,
-					  tristate);
+					   mCapacitance,
+					   mRiseCapacitance,
+					   mFallCapacitance,
+					   mMaxFanout, mMinFanout,
+					   mMaxCapacitance,
+					   mMinCapacitance,
+					   mMaxTransition,
+					   mMinTransition,
+					   mFunctionExpr,
+					   mTristateExpr);
 	auto pin = library()->_pin(pin_id);
 	ASSERT_COND( pin->input_id() == ipin_map.at(name) );
 	mOpinList.push_back(pin->output_id());
@@ -156,18 +156,10 @@ PinInfo::add_timing(
     break;
 
   case ClibDirection::output:
-    {
-      for ( auto& timing_info: mTimingInfoList ) {
-	timing_info.add_timing(cell, mFunctionExpr, mOpinList, ipin_map);
-      }
-    }
-    break;
-
   case ClibDirection::inout:
-    {
-      for ( auto& timing_info: mTimingInfoList ) {
-	timing_info.add_timing(cell, mFunctionExpr, mOpinList, ipin_map);
-      }
+    for ( auto& timing_info: mTimingInfoList ) {
+      timing_info.add_timing(cell, mFunctionExpr, mTristateExpr,
+			     mOpinList, ipin_map);
     }
     break;
 
@@ -280,23 +272,20 @@ PinInfo::set_output_params()
     mMinTransition = ClibTime{0.0};
   }
 
-  auto ret7 = get_expr("function", mFunction);
-  if ( !ret7 ) {
+  if ( !get_expr("function", mFunction) ) {
     mFunction = nullptr;
   }
 
-  auto ret8 = get_expr("three_state", mTristate);
-  if ( !ret8 ) {
+  if ( !get_expr("three_state", mTristate) ) {
     mTristate = nullptr;
   }
 
+  mTimingInfoList.clear();
   if ( elem_dict().count("timing") > 0 ) {
     auto& vec = elem_dict().at("timing");
     SizeType n = vec.size();
-    mTimingInfoList.clear();
     mTimingInfoList.reserve(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      auto ast_timing = vec[i];
+    for ( auto& ast_timing: vec ) {
       mTimingInfoList.push_back(TimingInfo{library_info()});
       auto& timing_info = mTimingInfoList.back();
       timing_info.set(ast_timing);

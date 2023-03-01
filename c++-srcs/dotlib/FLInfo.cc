@@ -8,6 +8,7 @@
 
 #include "dotlib/FLInfo.h"
 #include "dotlib/AstValue.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -17,7 +18,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief 情報をセットする．
-bool
+void
 FLInfo::set_common(
   const AstValue* val
 )
@@ -30,8 +31,6 @@ FLInfo::set_common(
 
   mVar1 = header.complex_elem_value(0).string_value();
   mVar2 = header.complex_elem_value(1).string_value();
-
-  bool ok{true};
 
   if ( !get_expr("clear", mClear) ) {
     mClear = nullptr;
@@ -46,13 +45,25 @@ FLInfo::set_common(
   if ( ret1 ) {
     if ( !ret2 ) {
       // clear_preset_var1 が定義されているのに clear_preset_var2 が定義されていない．
-      ok = false;
+      auto label = "No 'clear_preset_var2' attributes";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      loc(),
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      label);
+      throw std::invalid_argument{label};
     }
   }
   else {
     if ( ret2 ) {
       // clear_preset_var2 が定義されているのに clear_preset_var1 が定義されていない．
-      ok = false;
+      auto label = "No 'clear_preset_var1' attributes";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      loc(),
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      label);
+      throw std::invalid_argument{label};
     }
     else {
       // どちらも定義されていないので X を与える．
@@ -60,8 +71,6 @@ FLInfo::set_common(
       mCpv2 = ClibCPV::X;
     }
   }
-
-  return ok;
 }
 
 END_NAMESPACE_YM_DOTLIB

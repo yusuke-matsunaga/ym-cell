@@ -57,6 +57,7 @@ public:
   add_timing(
     CiCell* cell,
     const Expr& function_expr,
+    const Expr& tristate_expr,
     const vector<SizeType>& opin_list,
     const unordered_map<ShString, SizeType>& ipin_map
   ) const;

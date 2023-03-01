@@ -77,6 +77,7 @@ void
 TimingInfo::add_timing(
   CiCell* cell,
   const Expr& function_expr,
+  const Expr& tristate_expr,
   const vector<SizeType>& opin_list,
   const unordered_map<ShString, SizeType>& ipin_map
 ) const
@@ -150,8 +151,31 @@ TimingInfo::add_timing(
   // timing_sense を設定する．
   SizeType ni = cell->input2_num();
   TvFunc function{ni};
-  if ( mTimingType == ClibTimingType::combinational ) {
+  TvFunc tristate{ni};
+  switch ( mTimingType ) {
+  case ClibTimingType::combinational:
+  case ClibTimingType::combinational_rise:
     function = function_expr.make_tv(ni);
+    break;
+
+  case ClibTimingType::combinational_fall:
+    function = ~function_expr.make_tv(ni);
+    break;
+
+  case ClibTimingType::three_state_enable:
+  case ClibTimingType::three_state_enable_rise:
+  case ClibTimingType::three_state_disable:
+  case ClibTimingType::three_state_disable_rise:
+    tristate = tristate_expr.make_tv(ni);
+    break;
+
+  case ClibTimingType::three_state_enable_fall:
+  case ClibTimingType::three_state_disable_fall:
+    tristate = ~tristate_expr.make_tv(ni);
+    break;
+
+  default:
+    break;
   }
 
   // タイミングマップの設定
@@ -163,6 +187,8 @@ TimingInfo::add_timing(
     ipin_list.push_back(id);
   }
 
+  // timing_sense の抽出
+  // TODO: いろいろ確かめる必要がある．
   for ( auto opin: opin_list ) {
     for ( auto ipin: ipin_list ) {
       bool p_unate{false};
@@ -170,6 +196,18 @@ TimingInfo::add_timing(
       if ( mTimingType == ClibTimingType::combinational ) {
 	auto p_func = function.cofactor(ipin, false);
 	auto n_func = function.cofactor(ipin, true);
+	auto sense = mTimingSense;
+	if ( p_func && ~n_func ) {
+	  p_unate = true;
+	}
+	if ( ~p_func && n_func ) {
+	  n_unate = true;
+	}
+      }
+      else if ( mTimingType == ClibTimingType::three_state_enable ||
+		mTimingType == ClibTimingType::three_state_disable ) {
+	auto p_func = tristate.cofactor(ipin, false);
+	auto n_func = tristate.cofactor(ipin, true);
 	auto sense = mTimingSense;
 	if ( p_func && ~n_func ) {
 	  p_unate = true;
