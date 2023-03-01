@@ -100,7 +100,7 @@ FuncScanner::peek_token()
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    "Syntax error");
-    return Token(TokenType::ERROR, cur_loc());
+    throw std::invalid_argument{"syntax error"};
   }
 
  ST_ID: // 文字列モード

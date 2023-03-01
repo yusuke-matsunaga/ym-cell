@@ -46146,6 +46146,27 @@ Clib#282 (HIT18TBUFP010) : Combinational Logic
                 (1.088, 1.089, 1.092)
                 (2.288, 2.288, 2.29)
                )
+  Timing:
+    Type             = three_state_disable
+    Input Pin        = EN
+    Output Pin       = Y
+    Sense            = negative unate
+    Cell Rise
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.012, 0.276, 0.6)
+    Rise Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
+    Cell Fall
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.046961, 0.142, 0.208)
+    Fall Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
 
 Clib#283 (HIT18TBUFP020) : Combinational Logic
   area = 76.8
@@ -46215,6 +46236,27 @@ Clib#283 (HIT18TBUFP020) : Combinational Logic
                 (0.578, 0.586, 0.596)
                 (1.188, 1.191, 1.197)
                )
+  Timing:
+    Type             = three_state_disable
+    Input Pin        = EN
+    Output Pin       = Y
+    Sense            = negative unate
+    Cell Rise
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.076914, 0.152, 0.184)
+    Rise Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
+    Cell Fall
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.050431, 0.128, 0.168)
+    Fall Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
 
 Clib#284 (HIT18TBUFP030) : Combinational Logic
   area = 84.48
@@ -46284,6 +46326,27 @@ Clib#284 (HIT18TBUFP030) : Combinational Logic
                 (0.757, 0.763, 0.775)
                 (1.563, 1.564, 1.569)
                )
+  Timing:
+    Type             = three_state_disable
+    Input Pin        = EN
+    Output Pin       = Y
+    Sense            = negative unate
+    Cell Rise
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.08616, 0.159, 0.194)
+    Rise Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
+    Cell Fall
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.062014, 0.153, 0.201)
+    Fall Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
 
 Clib#285 (HIT18TBUFP040) : Combinational Logic
   area = 92.16
@@ -46353,6 +46416,27 @@ Clib#285 (HIT18TBUFP040) : Combinational Logic
                 (0.597, 0.606, 0.62)
                 (1.186, 1.187, 1.196)
                )
+  Timing:
+    Type             = three_state_disable
+    Input Pin        = EN
+    Output Pin       = Y
+    Sense            = negative unate
+    Cell Rise
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.09208, 0.166, 0.203)
+    Rise Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
+    Cell Fall
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.072008, 0.174, 0.231)
+    Fall Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
 
 Clib#286 (HIT18TBUFP060) : Combinational Logic
   area = 107.52
@@ -46422,6 +46506,27 @@ Clib#286 (HIT18TBUFP060) : Combinational Logic
                 (0.793, 0.796, 0.812)
                 (1.571, 1.573, 1.581)
                )
+  Timing:
+    Type             = three_state_disable
+    Input Pin        = EN
+    Output Pin       = Y
+    Sense            = negative unate
+    Cell Rise
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.1, 0.175, 0.205)
+    Rise Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
+    Cell Fall
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.094675, 0.215, 0.285)
+    Fall Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
 
 Clib#287 (HIT18TBUFP080) : Combinational Logic
   area = 122.88
@@ -46491,6 +46596,27 @@ Clib#287 (HIT18TBUFP080) : Combinational Logic
                 (0.661, 0.664, 0.685)
                 (1.227, 1.229, 1.241)
                )
+  Timing:
+    Type             = three_state_disable
+    Input Pin        = EN
+    Output Pin       = Y
+    Sense            = negative unate
+    Cell Rise
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.112, 0.188, 0.219)
+    Rise Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
+    Cell Fall
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.118, 0.251, 0.333)
+    Fall Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
 
 Clib#288 (HIT18TINVP010) : Combinational Logic
   area = 46.08
@@ -46560,6 +46686,27 @@ Clib#288 (HIT18TINVP010) : Combinational Logic
                 (1.086, 1.108, 1.26)
                 (2.287, 2.286, 2.339)
                )
+  Timing:
+    Type             = three_state_disable
+    Input Pin        = EN
+    Output Pin       = Y
+    Sense            = negative unate
+    Cell Rise
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.012, 0.276, 0.6)
+    Rise Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
+    Cell Fall
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.046917, 0.142, 0.207)
+    Fall Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
 
 Clib#289 (HIT18TINVP020) : Combinational Logic
   area = 84.48
@@ -46629,6 +46776,27 @@ Clib#289 (HIT18TINVP020) : Combinational Logic
                 (0.577, 0.579, 0.58)
                 (1.188, 1.189, 1.188)
                )
+  Timing:
+    Type             = three_state_disable
+    Input Pin        = EN
+    Output Pin       = Y
+    Sense            = negative unate
+    Cell Rise
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.07863, 0.151, 0.186)
+    Rise Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
+    Cell Fall
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.050592, 0.128, 0.168)
+    Fall Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
 
 Clib#290 (HIT18TINVP030) : Combinational Logic
   area = 92.16
@@ -46698,6 +46866,27 @@ Clib#290 (HIT18TINVP030) : Combinational Logic
                 (0.759, 0.758, 0.76)
                 (1.563, 1.563, 1.563)
                )
+  Timing:
+    Type             = three_state_disable
+    Input Pin        = EN
+    Output Pin       = Y
+    Sense            = negative unate
+    Cell Rise
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.087287, 0.161, 0.195)
+    Rise Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
+    Cell Fall
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.060894, 0.153, 0.202)
+    Fall Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
 
 Clib#291 (HIT18TINVP040) : Combinational Logic
   area = 99.84
@@ -46767,6 +46956,27 @@ Clib#291 (HIT18TINVP040) : Combinational Logic
                 (0.599, 0.596, 0.597)
                 (1.186, 1.186, 1.186)
                )
+  Timing:
+    Type             = three_state_disable
+    Input Pin        = EN
+    Output Pin       = Y
+    Sense            = negative unate
+    Cell Rise
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.089686, 0.167, 0.203)
+    Rise Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
+    Cell Fall
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.072215, 0.175, 0.231)
+    Fall Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
 
 Clib#292 (HIT18TINVP060) : Combinational Logic
   area = 115.2
@@ -46836,6 +47046,27 @@ Clib#292 (HIT18TINVP060) : Combinational Logic
                 (0.793, 0.793, 0.793)
                 (1.571, 1.572, 1.572)
                )
+  Timing:
+    Type             = three_state_disable
+    Input Pin        = EN
+    Output Pin       = Y
+    Sense            = negative unate
+    Cell Rise
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.103, 0.183, 0.221)
+    Rise Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
+    Cell Fall
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.094883, 0.216, 0.285)
+    Fall Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
 
 Clib#293 (HIT18TINVP080) : Combinational Logic
   area = 130.56
@@ -46905,6 +47136,27 @@ Clib#293 (HIT18TINVP080) : Combinational Logic
                 (0.661, 0.661, 0.661)
                 (1.227, 1.227, 1.227)
                )
+  Timing:
+    Type             = three_state_disable
+    Input Pin        = EN
+    Output Pin       = Y
+    Sense            = negative unate
+    Cell Rise
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.114, 0.195, 0.237)
+    Rise Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
+    Cell Fall
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0.118, 0.252, 0.334)
+    Fall Transition
+      Variable_1 = input_net_transition
+      Index_1    = (0.04, 0.92, 2)
+      Values = (0, 0, 0)
 
 Clib#294 (HIT18XNOR2P005) : Combinational Logic
   area = 61.44

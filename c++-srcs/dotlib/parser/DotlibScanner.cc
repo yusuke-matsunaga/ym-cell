@@ -34,9 +34,6 @@ DotlibScanner::read_attr()
 }
 
 // @brief 次のトークンを調べる．
-// @return トークンを返す．
-//
-// このトークンは読み込まれない．
 Token
 DotlibScanner::peek_token()
 {

@@ -3,7 +3,7 @@
 /// @brief Scanner の実装ファイル(expr読み込み)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2019, 2021 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "dotlib/DotlibScanner.h"
@@ -15,19 +15,11 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief 式を表す AstValue を生成する．
-// @return 生成した AstValue を返す．
-//
-// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
 DotlibScanner::read_expr()
 {
-  auto expr{_read_expr(TokenType::SEMI)};
-  if ( expr ) {
-    return AstValue::new_expr(std::move(expr));
-  }
-  else {
-    return {};
-  }
+  auto expr = _read_expr(TokenType::SEMI);
+  return AstValue::new_expr(std::move(expr));
 }
 
 // @brief "式" を表す AstValue を生成する．
@@ -47,22 +39,14 @@ DotlibScanner::_read_expr(
   TokenType end_marker
 )
 {
-  auto opr1{_read_product()};
-  if ( opr1 == nullptr ) {
-    return {};
-  }
-
+  auto opr1 = _read_product();
   for ( ; ; ) {
-    Token token = read_token();
+    auto token = read_token();
     if ( token.type() == end_marker ) {
       return opr1;
     }
     if ( token.type() == TokenType::PLUS || token.type() == TokenType::MINUS ) {
-      auto opr2{_read_product()};
-      if ( opr2 == nullptr ) {
-	return {};
-      }
-
+      auto opr2 = _read_product();
       if ( token.type() == TokenType::PLUS ) {
 	opr1 = AstExpr::new_plus(std::move(opr1), std::move(opr2), token.loc());
       }
@@ -76,7 +60,7 @@ DotlibScanner::_read_expr(
 		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error.");
-      return {};
+      throw std::invalid_argument{"Syntax error."};
     }
   }
 }
@@ -85,7 +69,7 @@ DotlibScanner::_read_expr(
 AstExprPtr
 DotlibScanner::_read_primary()
 {
-  Token token = read_token();
+  auto token = read_token();
   switch ( token.type() ) {
   case TokenType::LP:
     return _read_expr(TokenType::RP);
@@ -96,23 +80,22 @@ DotlibScanner::_read_primary()
       if ( name == "VDD" ) {
 	return AstExpr::new_vdd(token.loc());
       }
-      else if ( name == "VSS" ) {
+      if ( name == "VSS" ) {
 	return AstExpr::new_vss(token.loc());
       }
-      else if ( name == "VCC" ) {
+      if ( name == "VCC" ) {
 	return AstExpr::new_vcc(token.loc());
       }
-      else {
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			token.loc(),
-			MsgType::Error,
-			"DOTLIB_PARSER",
-			"Syntax error. "
-			"Only 'VDD', 'VSS', and 'VCC' are allowed.");
-	return {};
-      }
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      token.loc(),
+		      MsgType::Error,
+		      "DOTLIB_PARSER",
+		      "Syntax error. "
+		      "Only 'VDD', 'VSS', and 'VCC' are allowed.");
+      throw std::invalid_argument{"Syntax error."};
     }
     // ここには来ない．
+    break;
 
   default:
     break;
@@ -123,26 +106,19 @@ DotlibScanner::_read_primary()
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  "Syntax error. number is expected.");
-  return {};
+  throw std::invalid_argument{"Syntax error."};
 }
 
 // @brief prudct を読み込む．
 AstExprPtr
 DotlibScanner::_read_product()
 {
-  auto opr1{_read_primary()};
-  if ( opr1 == nullptr ) {
-    return {};
-  }
-
+  auto opr1 = _read_primary();
   for ( ; ; ) {
-    Token token = peek_token();
+    auto token = peek_token();
     if ( token.type() == TokenType::MULT || token.type() == TokenType::DIV ) {
       accept_token();
-      auto opr2{_read_primary()};
-      if ( opr2 == nullptr ) {
-	return {};
-      }
+      auto opr2 = _read_primary();
       if ( token.type() == TokenType::MULT ) {
 	opr1 = AstExpr::new_mult(std::move(opr1), std::move(opr2), token.loc());
       }

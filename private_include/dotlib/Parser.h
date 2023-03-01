@@ -45,7 +45,7 @@ public:
   /// @brief パーズする
   /// @return 読み込んだ library のASTを返す．
   ///
-  /// エラーが起きたら ClibError を送出する．
+  /// エラーが起きたら std::invalid_argument 例外を送出する．
   AstAttrPtr
   parse();
 
@@ -57,8 +57,6 @@ public:
 
   /// @brief Simple Attribute を読み込む．
   /// @retrun 結果の AstAttr を返す．
-  ///
-  /// エラーが起きたら ClibError を送出する．
   AstAttrPtr
   parse_simple_attribute(
     const string& kwd,          ///< [in] 属性名

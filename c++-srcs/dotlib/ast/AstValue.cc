@@ -219,7 +219,6 @@ AstValue::int_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return 0;
 }
 
 // @brief float 型の値を返す．
@@ -235,7 +234,6 @@ AstValue::float_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return 0.0;
 }
 
 // @brief string 型の値を返す．
@@ -251,7 +249,6 @@ AstValue::string_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return ShString{};
 }
 
 // @brief bool 型の値を返す．
@@ -267,7 +264,6 @@ AstValue::bool_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return false;
 }
 
 // @brief delay_model 型の値を返す．
@@ -283,7 +279,6 @@ AstValue::delay_model_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return ClibDelayModel::none;
 }
 
 // @brief direction 型の値を返す．
@@ -299,7 +294,6 @@ AstValue::direction_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return ClibDirection::none;
 }
 
 // @brief technology 型の値を返す．
@@ -315,7 +309,6 @@ AstValue::technology_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return ClibTechnology::none;
 }
 
 // @brief timing_sense 型の値を返す．
@@ -331,7 +324,6 @@ AstValue::timing_sense_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return ClibTimingSense::none;
 }
 
 // @brief timing_type 型の値を返す．
@@ -347,7 +339,6 @@ AstValue::timing_type_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return ClibTimingType::none;
 }
 
 // @brief vartype 型の値を返す．
@@ -363,7 +354,6 @@ AstValue::vartype_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return ClibVarType::none;
 }
 
 // @brief expr 型の値を返す．
@@ -379,7 +369,6 @@ AstValue::expr_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return AstExpr::null_ref();
 }
 
 // @brief int vector 型の値を返す．
@@ -395,7 +384,6 @@ AstValue::int_vector_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return vector<int>{};
 }
 
 // @brief float vector 型の値を返す．
@@ -411,7 +399,6 @@ AstValue::float_vector_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return vector<double>{};
 }
 
 // @brief complex attribute の場合の要素数を返す．
@@ -427,7 +414,6 @@ AstValue::complex_elem_size() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return 0;
 }
 
 // @brief complex attribute の要素を返す．
@@ -445,7 +431,6 @@ AstValue::complex_elem_value(
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return AstValue::null_ref();
 }
 
 // @brief group statement のヘッダを返す．
@@ -461,7 +446,6 @@ AstValue::group_header_value() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return AstValue::null_ref();
 }
 
 // @brief group statement の要素数を返す．
@@ -477,7 +461,6 @@ AstValue::group_elem_size() const
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  return 0;
 }
 
 // @brief group statement の要素の属性を返す．
@@ -495,8 +478,6 @@ AstValue::group_elem_attr(
 		  "DOTLIB_PARSER",
 		  label);
   throw std::invalid_argument{label};
-  static AstAttr dummy;
-  return dummy;
 }
 
 

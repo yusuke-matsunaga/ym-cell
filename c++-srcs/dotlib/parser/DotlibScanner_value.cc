@@ -13,9 +13,6 @@
 BEGIN_NAMESPACE_YM_DOTLIB
 
 // @brief int 型を値を読み込む．
-// @return 生成した AstValue を返す．
-//
-// エラーの時は nullptr を返す．
 AstValuePtr
 DotlibScanner::read_int()
 {
@@ -43,13 +40,9 @@ DotlibScanner::read_int()
 		  "DOTLIB_SCANNER",
 		  emsg.str());
   throw std::invalid_argument{"Syntax error"};
-  return {};
 }
 
 // @brief float 型の値を読み込む．
-// @return 生成した AstValue を返す．
-//
-// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
 DotlibScanner::read_float()
 {
@@ -79,13 +72,9 @@ DotlibScanner::read_float()
 		  "DOTLIB_SCANNER",
 		  emsg.str());
   throw std::invalid_argument{"Syntax error"};
-  return {};
 }
 
 // @brief string 型の値を読み込む．
-// @return 生成した AstValue を返す．
-//
-// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
 DotlibScanner::read_string()
 {
@@ -100,13 +89,9 @@ DotlibScanner::read_string()
 		  "DOTLIB_SCANNER",
 		  "Syntax error. 'string' value is expected.");
   throw std::invalid_argument{"Syntax error"};
-  return {};
 }
 
 // @brief bool 型の値を読み込む．
-// @return 生成した AstValue を返す．
-//
-// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
 DotlibScanner::read_bool()
 {
@@ -128,19 +113,15 @@ DotlibScanner::read_bool()
 		  "DOTLIB_SCANNER",
 		  buf.str());
   throw std::invalid_argument{"Syntax error"};
-  return {};
 }
 
 // @brief delay_model 型の値を読み込む．
-// @param[in] 生成した AstValue を返す．
-//
-// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
 DotlibScanner::read_delay_model()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
-  ClibDelayModel value{ClibDelayModel::none};
+  auto value = ClibDelayModel::none;
   if ( tmp_str == "generic_cmos" ) {
     value = ClibDelayModel::generic_cmos;
   }
@@ -173,13 +154,9 @@ DotlibScanner::read_delay_model()
 		  "DOTLIB_SCANNER",
 		  buf.str());
   throw std::invalid_argument{"Syntax error"};
-  return {};
 }
 
 // @brief direction 型の値を読み込む．
-// @param[in] 生成した AstValue を返す．
-//
-// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
 DotlibScanner::read_direction()
 {

@@ -99,10 +99,10 @@ unordered_map<string, AttrHandler> Parser::sHandlerDict{
 
 // @brief コンストラクタ
 Parser::Parser(
-  istream& s,                ///< [in] 入力ストリーム
-  const FileInfo& file_info, ///< [in] ファイル情報
-  bool debug,                ///< [in] デバッグモード
-  bool allow_no_semi         ///< [in] 行末のセミコロンなしを許すかどうか
+  istream& s,
+  const FileInfo& file_info,
+  bool debug,
+  bool allow_no_semi
 ) : mScanner{s, file_info},
     mDebug{debug},
     mAllowNoSemi{allow_no_semi}
@@ -152,9 +152,6 @@ Parser::parse()
 }
 
 // @brief Simple Attribute を読み込む．
-// @retrun 結果の AstAttr を返す．
-//
-// エラーが起こったら nullptr を返す．
 AstAttrPtr
 Parser::parse_simple_attribute(
   const string& kwd,
@@ -163,7 +160,7 @@ Parser::parse_simple_attribute(
 )
 {
   // 属性名の直後は必ず ':' でなければならない．
-  auto token = mScanner.read_and_verify(TokenType::COLON);
+  auto _ = mScanner.read_and_verify(TokenType::COLON);
 
   // その後の値を読み込む．
   auto value = handler(mScanner);
@@ -191,9 +188,6 @@ Parser::parse_complex_attribute(
 }
 
 // @brief Group Statement を読み込む．
-// @retrun 結果の AstAttr を返す．
-//
-// エラーが起こったら nullptr を返す．
 AstAttrPtr
 Parser::parse_group_statement(
   const string& kwd,
@@ -206,14 +200,11 @@ Parser::parse_group_statement(
   auto header_value = parse_header(header_handler);
 
   // グループ本体の始まり
-  Token lcb_token = mScanner.read_and_verify(TokenType::LCB);
-  if ( lcb_token.type() != TokenType::LCB ) {
-    throw std::invalid_argument{"Syntax error"};
-  }
+  auto lcb_token = mScanner.read_and_verify(TokenType::LCB);
 
   vector<AstAttrPtr> child_list;
   for ( ; ; ) {
-    Token token = mScanner.peek_token();
+    auto token = mScanner.peek_token();
     if ( token.type() == TokenType::NL ) {
       mScanner.accept_token();
       // 改行は読み飛ばす．
@@ -225,11 +216,11 @@ Parser::parse_group_statement(
       mScanner.accept_token();
 
       // グループ本体の終わり．
-      Token token = mScanner.read_and_verify(TokenType::NL);
+      auto token = mScanner.read_and_verify(TokenType::NL);
 
       // 値を作る．
       FileRegion loc{lcb_token.loc(), rcb_loc};
-      auto group_value{AstValue::new_group(std::move(header_value), child_list, loc)};
+      auto group_value = AstValue::new_group(std::move(header_value), child_list, loc);
       return AstAttrPtr{new AstAttr(kwd, kwd_loc, std::move(group_value))};
     }
 
@@ -244,7 +235,6 @@ Parser::parse_group_statement(
     else {
       // 対応するハンドラが登録されていない．
       syntax_error(child_attr.value(), child_attr.loc());
-      return {};
     }
   }
 }
@@ -256,12 +246,12 @@ Parser::parse_header(
 )
 {
   // まず '(' があるか確認する．
-  Token lp_token = mScanner.read_and_verify(TokenType::LP);
+  auto lp_token = mScanner.read_and_verify(TokenType::LP);
 
   // complex attribute の始まり
   handler.begin_header(lp_token.loc());
-  for (int count = 0; ; ++ count) {
-    Token token = mScanner.peek_token();
+  for ( SizeType count = 0; ; ++ count) {
+    auto token = mScanner.peek_token();
     if ( token.type() == TokenType::RP ) {
       // ')' を読み込んだので終わる．
       mScanner.accept_token();
@@ -285,7 +275,7 @@ Parser::read_tail()
   // ただし，mAllowNoSemi が true の場合には
   // ';' がなくてもよい．．
   // またファイルの末尾の場合には改行は不要
-  Token token = mScanner.read_token();
+  auto token = mScanner.read_token();
   if ( token.type() == TokenType::SEMI ) {
     token = mScanner.read_token();
   }
@@ -338,8 +328,6 @@ syntax_error(
 }
 
 // @brief 同じ属性が重複して定義されている時のエラーを出力する．
-// @param[in] attr 属性の型
-// @param[in] prev_node 以前に定義されたノード
 void
 duplicate_error(
   const string& kwd,
@@ -355,6 +343,7 @@ duplicate_error(
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  buf.str());
+  throw std::invalid_argument{"Syntax error"};
 }
 
 

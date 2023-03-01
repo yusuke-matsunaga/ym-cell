@@ -35,6 +35,8 @@ LibraryInfo::set(
     mLibrary->set_name(val1.string_value());
   }
 
+  SizeType nerrs = 0;
+
   // 属性の設定
 
   // 'technology' の設定
@@ -77,10 +79,15 @@ LibraryInfo::set(
   if ( elem_dict().count("lu_table_template") > 0 ) {
     auto& vec = elem_dict().at("lu_table_template");
     for ( auto ast_templ: vec ) {
-      LuTemplInfo info{*this};
-      info.set(ast_templ);
-      auto tid = info.add_lu_template();
-      mLutDict.emplace(info.name(), tid);
+      try {
+	LuTemplInfo info{*this};
+	info.set(ast_templ);
+	auto tid = info.add_lu_template();
+	mLutDict.emplace(info.name(), tid);
+      }
+      catch ( std::invalid_argument ) {
+	++ nerrs;
+      }
     }
   }
 
@@ -88,10 +95,19 @@ LibraryInfo::set(
   if ( elem_dict().count("cell") > 0 ) {
     auto& v = elem_dict().at("cell");
     for ( auto ast_cell: v ) {
-      CellInfo cell_info{*this};
-      cell_info.set(ast_cell);
-      cell_info.add_cell();
+      try {
+	CellInfo cell_info{*this};
+	cell_info.set(ast_cell);
+	cell_info.add_cell();
+      }
+      catch ( std::invalid_argument ) {
+	++ nerrs;
+      }
     }
+  }
+
+  if ( nerrs > 0 ) {
+    throw std::invalid_argument{"syntax error"};
   }
 
   mLibrary->compile();

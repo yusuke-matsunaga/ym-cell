@@ -5,9 +5,10 @@
 /// @brief Scanner のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2019, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
+#include <stdexcept>
 #include "dotlib/dotlib_nsdef.h"
 #include "dotlib/AstValue.h"
 #include "dotlib/Token.h"
@@ -22,10 +23,10 @@ BEGIN_NAMESPACE_YM_DOTLIB
 /// @class Scanner Scanner.h "dotlib/Scanner.h"
 /// @brief dotlib フォーマットの字句解析器
 ///
-/// dotlib では次に読む値の種類が事前に予想できるので，
-/// 個別の値を読み込む関数を用意する．
-///
-/// 結果は AstValue の unique_ptr (AstValuePtr) が返される．
+/// - dotlib では次に読む値の種類が事前に予想できるので，
+///   個別の値を読み込む関数を用意する．
+/// - 結果は AstValue の unique_ptr (AstValuePtr) が返される．
+/// - エラーが起きた場合には std::invalid_argument 例外が送出される．
 //////////////////////////////////////////////////////////////////////
 class DotlibScanner :
   public Scanner
@@ -67,96 +68,72 @@ public:
 
   /// @brief int 型を値を読み込む．
   /// @return 生成した AstValue を返す．
-  ///
-  /// エラーの時は nullptr を返す．
   AstValuePtr
   read_int();
 
   /// @brief float 型の値を読み込む．
   /// @return 生成した AstValue を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstValuePtr
   read_float();
 
   /// @brief string 型の値を読み込む．
   /// @return 生成した AstValue を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstValuePtr
   read_string();
 
   /// @brief bool 型の値を読み込む．
   /// @return 生成した AstValue を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstValuePtr
   read_bool();
 
   /// @brief delay_model 型の値を読み込む．
   /// @param[in] 生成した AstValue を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstValuePtr
   read_delay_model();
 
   /// @brief direction 型の値を読み込む．
   /// @param[in] 生成した AstValue を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstValuePtr
   read_direction();
 
   /// @brief technology 型の値を読み込む．
   /// @param[in] 生成した AstValue を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstValuePtr
   read_technology();
 
   /// @brief timing_sense 型の値を読み込む．
   /// @param[in] 生成した AstValue を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstValuePtr
   read_timing_sense();
 
   /// @brief timing_type 型の値を読み込む．
   /// @param[in] 生成した AstValue を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstValuePtr
   read_timing_type();
 
   /// @brief vartype 型の値を読み込む．
   /// @param[in] 生成した AstValue を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstValuePtr
   read_vartype();
 
   /// @brief int vector 型の値を読み込む．
   /// @return 生成した AstValue を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstValuePtr
   read_int_vector();
 
   /// @brief float vector 型の値を読み込む．
   /// @return 生成した AstValue を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstValuePtr
   read_float_vector();
 
   /// @brief 式を表す AstValue を生成する．
   /// @return 生成した AstValue を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstValuePtr
   read_expr();
 
   /// @brief "式" を表す AstValue を生成する．
+  ///
+  /// read_expr() との違いは対象が文字列の形になっているところ．
   AstValuePtr
   read_function();
 
@@ -195,7 +172,7 @@ public:
   /// @return トークンを返す．
   ///
   /// 期待値と異なっていた場合，エラーメッセージを出力し
-  /// 不正値(TokenType::none)を返す．
+  /// std::invalid_argument 例外を送出する．
   Token
   read_and_verify(
     TokenType exp_type ///< [in] 期待値
@@ -213,8 +190,6 @@ private:
 
   /// @brief expression を読み込む．
   /// @return 生成した AstExpr を返す．
-  ///
-  /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
   AstExprPtr
   _read_expr(
     TokenType end_marker ///< [in] 末尾のトークンのタイプ
@@ -240,7 +215,6 @@ private:
   /// Cスタイルのコメント '/* - */' と
   /// C++スタイルのコメント '//' を認識して
   /// 読み飛ばす．
-  ///
   TokenType
   _scan();
 

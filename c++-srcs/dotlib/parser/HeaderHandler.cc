@@ -52,12 +52,6 @@ HeaderHandler::read_header_value(
 }
 
 // @brief 読み込みが終了した時の処理を行う．
-// @param[in] loc ')' のファイル上の位置
-// @param[in] count 読み込んだ要素数
-// @retval true 正しく読み込んだ．
-// @retval false エラーが起きた．
-//
-// ')' を読み込んだ直後に呼ばれる．
 AstValuePtr
 HeaderHandler::end_header(
   const FileRegion& loc,
@@ -92,7 +86,6 @@ FixedElemHeader::FixedElemHeader(
 }
 
 // @brief 値を読み込む処理
-// @param[in] count read_value() の呼ばれた回数
 AstValuePtr
 FixedElemHeader::_read_header_value(
   DotlibScanner& scanner,
@@ -114,7 +107,6 @@ FixedElemHeader::_read_header_value(
 		    "DOTLIB_PARSER",
 		    buf.str());
     throw std::invalid_argument{"Syntax error"};
-    return {};
   }
 }
 
@@ -172,7 +164,6 @@ FanoutLengthHeader::_read_header_value(
 		  "DOTLIB_PARSER",
 		  buf.str());
   throw std::invalid_argument{"Syntax error"};
-  return {};
 }
 
 // @brief 読み込みが終了した時の処理を行う．
@@ -247,7 +238,6 @@ OptElemHeader::_read_header_value(
 		  "DOTLIB_PARSER",
 		  buf.str());
   throw std::invalid_argument{"Syntax error"};
-  return {};
 }
 
 // @brief 読み込みが終了した時の処理を行う．

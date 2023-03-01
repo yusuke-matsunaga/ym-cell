@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_DOTLIB
 FuncParser::FuncParser(
   const string& str,
   const FileRegion& loc
-) : mScanner(str, loc)
+) : mScanner{str, loc}
 {
 }
 
@@ -31,10 +31,6 @@ AstValuePtr
 FuncParser::operator()()
 {
   auto expr{read_expr(TokenType::END)};
-  if ( expr == nullptr ) {
-    return {};
-  }
-
   return AstValue::new_expr(std::move(expr));
 }
 
@@ -42,14 +38,14 @@ FuncParser::operator()()
 AstExprPtr
 FuncParser::read_primary()
 {
-  Token token = mScanner.read_token();
+  auto token = mScanner.read_token();
   switch ( token.type() ) {
   case TokenType::LP:
     return read_expr(TokenType::RP);
 
   case TokenType::SYMBOL:
     {
-      ShString name(mScanner.cur_string());
+      ShString name{mScanner.cur_string()};
       if ( name == "0" ) {
 	return AstExpr::new_bool(false, token.loc());
       }
@@ -68,7 +64,7 @@ FuncParser::read_primary()
 		  MsgType::Error,
 		  "DOTLIB_PARSER",
 		  "Syntax error. number is expected.");
-  return {};
+  throw std::invalid_argument{"syntax error"};
 }
 
 // @brief プライム付きの primary を読み込む．
@@ -78,18 +74,11 @@ FuncParser::read_primary2()
   Token token = mScanner.peek_token();
   if ( token.type() == TokenType::NOT ) {
     mScanner.accept_token();
-    auto opr{read_primary()};
-    if ( opr == nullptr ) {
-      return {};
-    }
+    auto opr = read_primary();
     return AstExpr::new_not(std::move(opr), opr->loc());
   }
 
-  auto expr{read_primary()};
-  if ( expr == nullptr ) {
-    return {};
-  }
-
+  auto expr = read_primary();
   token = mScanner.peek_token();
   if ( token.type() == TokenType::PRIME ) {
     mScanner.accept_token();
@@ -103,18 +92,14 @@ FuncParser::read_primary2()
 AstExprPtr
 FuncParser::read_product()
 {
-  auto opr1{read_primary2()};
-  if ( opr1 == nullptr ) {
-    return {};
-  }
-
+  auto opr1 = read_primary2();
   for ( ; ; ) {
-    Token token = mScanner.peek_token();
+    auto token = mScanner.peek_token();
     switch ( token.type() ) {
     case TokenType::AND:
       {
 	mScanner.accept_token();
-	auto opr2{read_primary2()};
+	auto opr2 = read_primary2();
 	if ( opr2 == nullptr ) {
 	  return {};
 	}
@@ -126,10 +111,7 @@ FuncParser::read_product()
     case TokenType::LP:
     case TokenType::SYMBOL:
       {
-	auto opr2{read_primary2()};
-	if ( opr2 == nullptr ) {
-	  return {};
-	}
+	auto opr2 = read_primary2();
 	opr1 = AstExpr::new_and(std::move(opr1), std::move(opr2), token.loc());
       }
       break;
@@ -146,22 +128,16 @@ FuncParser::read_expr(
   TokenType end_marker
 )
 {
-  auto opr1{read_product()};
-  if ( opr1 == nullptr ) {
-    return {};
-  }
+  auto opr1 = read_product();
   for ( ; ; ) {
-    Token token = mScanner.read_token();
+    auto token = mScanner.read_token();
     auto type = token.type();
     auto loc = token.loc();
     if ( type == end_marker ) {
       return opr1;
     }
     if ( type == TokenType::OR || type == TokenType::XOR ) {
-      auto opr2{read_product()};
-      if ( opr2 == nullptr ) {
-	return {};
-      }
+      auto opr2 = read_product();
       if ( type == TokenType::XOR ) {
 	opr1 = AstExpr::new_xor(std::move(opr1), std::move(opr2), loc);
       }
@@ -175,7 +151,7 @@ FuncParser::read_expr(
 		      MsgType::Error,
 		      "DOTLIB_PARSER",
 		      "Syntax error.");
-      return {};
+      throw std::invalid_argument{"Syntax error."};
     }
   }
 }
