@@ -215,7 +215,7 @@ protected:
   void
   dump_common(
     BinEnc& s,  ///< [in] ストリーム
-    ymuint8 sig ///< [in] シグネチャ(0, 1, 2, 3)
+    std::uint8_t sig ///< [in] シグネチャ(0, 1, 2, 3)
   ) const;
 
   /// @brief 内容を読み込む．
@@ -481,7 +481,7 @@ protected:
   void
   dump_base(
     BinEnc& s, ///< [in] 出力先のストリーム
-    ymuint8 sig
+    std::uint8_t sig
   ) const;
 
   /// @brief 内容を読み込む．

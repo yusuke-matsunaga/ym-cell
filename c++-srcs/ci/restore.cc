@@ -189,7 +189,7 @@ CiCellLibrary::restore_lut_template(
   s >> n;
   mLutTemplateList.reserve(n);
   for ( auto id: Range(n) ) {
-    ymuint8 d;
+    std::uint8_t d;
     s >> d;
     unique_ptr<CiLutTemplate> ptr;
     switch ( d ) {
@@ -223,7 +223,7 @@ CiCellLibrary::restore_cell(
   s >> nc;
   mCellList.reserve(nc);
   for ( auto id: Range(nc) ) {
-    ymuint8 type;
+    std::uint8_t type;
     s >> type;
     unique_ptr<CiCell> ptr;
     switch ( type ) {
@@ -275,7 +275,7 @@ CiCellLibrary::restore_pin(
   s >> n;
   mPinList.reserve(n);
   for ( SizeType _: Range(n) ) {
-    ymuint8 sig;
+    std::uint8_t sig;
     s >> sig;
     unique_ptr<CiPin> pin;
     switch ( sig ) {
@@ -367,7 +367,7 @@ CiCellLibrary::restore_timing(
   s >> n;
   mTimingList.reserve(n);
   for ( SizeType _: Range(n) ) {
-    ymuint8 ttype;
+    std::uint8_t ttype;
     s >> ttype;
     unique_ptr<CiTiming> timing;
     switch ( ttype ) {
@@ -406,7 +406,7 @@ CiCellLibrary::restore_lut(
   s >> n;
   mLutList.reserve(n);
   for ( SizeType i: Range(n)) {
-    ymuint8 d;
+    std::uint8_t d;
     s >> d;
     unique_ptr<CiLut> lut;
     switch ( d ) {

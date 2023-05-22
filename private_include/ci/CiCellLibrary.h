@@ -925,7 +925,7 @@ private:
     BinDec& s ///< [in] 入力ストリーム
   )
   {
-    ymuint8 tmp;
+    std::uint8_t tmp;
     s >> tmp;
     mTechnology = static_cast<ClibTechnology>(tmp);
   }
@@ -936,7 +936,7 @@ private:
     BinDec& s ///< [in] 入力ストリーム
   )
   {
-    ymuint8 tmp;
+    std::uint8_t tmp;
     s >> tmp;
     mDelayModel = static_cast<ClibDelayModel>(tmp);
   }

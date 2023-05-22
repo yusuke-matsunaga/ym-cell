@@ -39,7 +39,7 @@ bool debug = false;
 inline
 char
 to_hex(
-  ymuint8 val
+  std::uint8_t val
 )
 {
   if ( val < 10 ) {
@@ -61,7 +61,7 @@ hex_str(
   }
   SizeType ni = func.input_num();
   SizeType nexp = 1U << ni;
-  ymuint8 val = 0U;
+  std::uint8_t val = 0U;
   ostringstream buf;
   for ( SizeType i = 0; i < nexp; ++ i ) {
     val <<= 1;

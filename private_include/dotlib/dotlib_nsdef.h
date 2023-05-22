@@ -43,7 +43,7 @@ class Token;
 /// 基本的には dotlib のシンタックスにしたがっているが，
 /// 一部，function 属性の文字列の中身をパーズする時のみ現れるシンボルがある．
 /// AND, OR, XOR, PRIME がそれ．
-enum class TokenType : ymuint8 {
+enum class TokenType : std::uint8_t {
   COLON,      ///< コロン(:)
   SEMI,       ///< セミコロン(;)
   COMMA,      ///< コンマ(,)

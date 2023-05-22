@@ -61,7 +61,7 @@ public:
   )
   {
     // bool に対する & 1UL は不必要だが念のため．
-    mData = reinterpret_cast<ympuint>(node) | (static_cast<ympuint>(inv) & 1UL);
+    mData = reinterpret_cast<PtrIntType>(node) | (static_cast<PtrIntType>(inv) & 1UL);
   }
 
 
@@ -71,7 +71,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ポインタと反転属性を合わせたもの
-  ympuint mData;
+  PtrIntType mData;
 
 };
 

@@ -210,7 +210,7 @@ CiLutTemplate::dump(
   BinEnc& s
 ) const
 {
-  ymuint8 d = dimension();
+  std::uint8_t d = dimension();
   s << d;
 }
 
@@ -311,7 +311,7 @@ CiCell::dump(
 ) const
 {
   // シグネチャ
-  s << static_cast<ymuint8>(0);
+  s << static_cast<std::uint8_t>(0);
   dump_common(s);
 }
 
@@ -346,7 +346,7 @@ CiFFCell::dump(
   BinEnc& s
 ) const
 {
-  s << static_cast<ymuint8>(1);
+  s << static_cast<std::uint8_t>(1);
   dump_FF(s);
 }
 
@@ -372,7 +372,7 @@ CiFF2Cell::dump(
   BinEnc& s
 ) const
 {
-  s << static_cast<ymuint8>(2);
+  s << static_cast<std::uint8_t>(2);
   dump_FF(s);
   mClock2.dump(s);
 }
@@ -388,7 +388,7 @@ CiLatchCell::dump(
   BinEnc& s
 ) const
 {
-  s << static_cast<ymuint8>(3);
+  s << static_cast<std::uint8_t>(3);
   dump_Latch(s);
 }
 
@@ -414,7 +414,7 @@ CiLatch2Cell::dump(
   BinEnc& s
 ) const
 {
-  s << static_cast<ymuint8>(4);
+  s << static_cast<std::uint8_t>(4);
   dump_Latch(s);
   mEnable2.dump(s);
 }
@@ -430,7 +430,7 @@ CiFsmCell::dump(
   BinEnc& s
 ) const
 {
-  s << static_cast<ymuint8>(5);
+  s << static_cast<std::uint8_t>(5);
   dump_common(s);
 }
 
@@ -443,7 +443,7 @@ CiFsmCell::dump(
 void
 CiPin::dump_common(
   BinEnc& s,
-  ymuint8 sig
+  std::uint8_t sig
 ) const
 {
   s << sig
@@ -478,7 +478,7 @@ CiInputPin::dump(
 void
 CiOutputPinBase::dump_base(
   BinEnc& s,
-  ymuint8 sig
+  std::uint8_t sig
 ) const
 {
   dump_common(s, sig);
@@ -582,7 +582,7 @@ CiBundle::dump(
 void
 CiTiming::dump_common(
   BinEnc& s,
-  ymuint8 type_id
+  std::uint8_t type_id
 ) const
 {
   s << type_id
@@ -674,7 +674,7 @@ CiTimingLut2::dump(
 void
 CiLut::dump_common(
   BinEnc& s,
-  ymuint8 d
+  std::uint8_t d
 ) const
 {
   s << d

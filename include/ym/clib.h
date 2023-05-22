@@ -95,7 +95,7 @@ using nsClib::ClibPatGraph;
 //////////////////////////////////////////////////////////////////////
 /// @brief テクノロジを表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum class ClibTechnology : ymuint8
+enum class ClibTechnology : std::uint8_t
 {
   cmos,
   fpga,
@@ -106,7 +106,7 @@ enum class ClibTechnology : ymuint8
 //////////////////////////////////////////////////////////////////////
 /// @brief 遅延モデルを表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum class ClibDelayModel : ymuint8
+enum class ClibDelayModel : std::uint8_t
 {
   generic_cmos,
   table_lookup,
@@ -121,7 +121,7 @@ enum class ClibDelayModel : ymuint8
 //////////////////////////////////////////////////////////////////////
 /// @brief ピンの方向を表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum class ClibDirection : ymuint8
+enum class ClibDirection : std::uint8_t
 {
   input,
   output,
@@ -134,7 +134,7 @@ enum class ClibDirection : ymuint8
 //////////////////////////////////////////////////////////////////////
 /// @brief タイミングの条件を表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum class ClibTimingSense : ymuint8
+enum class ClibTimingSense : std::uint8_t
 {
   positive_unate = 1,
   negative_unate = 2,
@@ -146,7 +146,7 @@ enum class ClibTimingSense : ymuint8
 /////////////////////////////////////////////////////////////////////
 /// @brief タイミング情報の型を表す列挙型
 //////////////////////////////////////////////////////////////////////
-enum class ClibTimingType : ymuint8
+enum class ClibTimingType : std::uint8_t
 {
   combinational            = 0,
   combinational_rise       = 1,
@@ -197,7 +197,7 @@ enum class ClibTimingType : ymuint8
 //////////////////////////////////////////////////////////////////////
 /// @brief ルックアップテーブルの変数の型
 //////////////////////////////////////////////////////////////////////
-enum class ClibVarType : ymuint8
+enum class ClibVarType : std::uint8_t
 {
   input_net_transition,
 
@@ -225,7 +225,7 @@ enum class ClibVarType : ymuint8
 //////////////////////////////////////////////////////////////////////
 /// @brief セルの種類
 //////////////////////////////////////////////////////////////////////
-enum class ClibCellType : ymuint8
+enum class ClibCellType : std::uint8_t
 {
   None    = 0, ///< なし(不正値)
   Logic   = 1, ///< 組み合わせ論理
@@ -238,7 +238,7 @@ enum class ClibCellType : ymuint8
 //////////////////////////////////////////////////////////////////////
 /// @brief clear_preset_var の値
 //////////////////////////////////////////////////////////////////////
-enum class ClibCPV : ymuint8
+enum class ClibCPV : std::uint8_t
 {
   L = 0, ///< low(0)
   H = 1, ///< high(1)
@@ -266,7 +266,7 @@ const ClibCPV CPV_LIST[] = {
 //////////////////////////////////////////////////////////////////////
 /// @brief パタングラフのノードの型
 //////////////////////////////////////////////////////////////////////
-enum class ClibPatType : ymuint8
+enum class ClibPatType : std::uint8_t
 {
   Input = 0,
   And   = 2,
@@ -335,7 +335,7 @@ operator<<(
   ClibTechnology technology ///< [in] テクノロジ
 )
 {
-  s << static_cast<ymuint8>(technology);
+  s << static_cast<std::uint8_t>(technology);
   return s;
 }
 
@@ -348,7 +348,7 @@ operator<<(
   ClibDelayModel delay_model ///< [in] 遅延モデル
 )
 {
-  s << static_cast<ymuint8>(delay_model);
+  s << static_cast<std::uint8_t>(delay_model);
   return s;
 }
 
@@ -361,7 +361,7 @@ operator<<(
   ClibTimingSense timing_sense ///< [in] タイミングセンス
 )
 {
-  s << static_cast<ymuint8>(timing_sense);
+  s << static_cast<std::uint8_t>(timing_sense);
   return s;
 }
 
@@ -374,7 +374,7 @@ operator<<(
   ClibTimingType timing_type ///< [in] タイミング条件
 )
 {
-  s << static_cast<ymuint8>(timing_type);
+  s << static_cast<std::uint8_t>(timing_type);
   return s;
 }
 
@@ -387,7 +387,7 @@ operator<<(
   ClibCPV cpv  ///< [in] clear_preset_var の値
 )
 {
-  s << static_cast<ymuint8>(cpv);
+  s << static_cast<std::uint8_t>(cpv);
   return s;
 }
 
@@ -400,7 +400,7 @@ operator<<(
   ClibVarType var_type ///< [in] 変数の型
 )
 {
-  s << static_cast<ymuint8>(var_type);
+  s << static_cast<std::uint8_t>(var_type);
   return s;
 }
 
@@ -418,7 +418,7 @@ operator>>(
   ClibTechnology& technology ///< [out] テクノロジ
 )
 {
-  ymuint8 tmp;
+  std::uint8_t tmp;
   s >> tmp;
   technology = static_cast<ClibTechnology>(tmp);
   return s;
@@ -433,7 +433,7 @@ operator>>(
   ClibDelayModel& delay_model ///< [out] 遅延モデル
 )
 {
-  ymuint8 tmp;
+  std::uint8_t tmp;
   s >> tmp;
   delay_model = static_cast<ClibDelayModel>(tmp);
   return s;
@@ -448,7 +448,7 @@ operator>>(
   ClibTimingSense& timing_sense ///< [out] タイミングセンス
 )
 {
-  ymuint8 tmp;
+  std::uint8_t tmp;
   s >> tmp;
   timing_sense = static_cast<ClibTimingSense>(tmp);
   return s;
@@ -463,7 +463,7 @@ operator>>(
   ClibTimingType& timing_type ///< [out] タイミング条件
 )
 {
-  ymuint8 tmp;
+  std::uint8_t tmp;
   s >> tmp;
   timing_type = static_cast<ClibTimingType>(tmp);
   return s;
@@ -478,7 +478,7 @@ operator>>(
   ClibCPV& cpv  ///< [out] clear_preset_var の値
 )
 {
-  ymuint8 tmp;
+  std::uint8_t tmp;
   s >> tmp;
   cpv = static_cast<ClibCPV>(tmp);
   return s;
@@ -493,7 +493,7 @@ operator>>(
   ClibVarType& var_type ///< [out] 変数の型
 )
 {
-  ymuint8 tmp;
+  std::uint8_t tmp;
   s >> tmp;
   var_type = static_cast<ClibVarType>(tmp);
   return s;

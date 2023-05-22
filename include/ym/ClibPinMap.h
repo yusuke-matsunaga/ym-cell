@@ -35,7 +35,7 @@ public:
     bool inv = false ///< [in] 反転フラグ
   )
   {
-    mBody = static_cast<ymuint8>(id) << 1 | static_cast<ymuint8>(inv);
+    mBody = static_cast<std::uint8_t>(id) << 1 | static_cast<std::uint8_t>(inv);
   }
 
   /// @brief デストラクタ
@@ -120,7 +120,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 番号と反転属性をパックしたもの
-  ymuint8 mBody{0xFFU}; // 不正な値で初期化する．
+  std::uint8_t mBody{0xFFU}; // 不正な値で初期化する．
 
 };
 

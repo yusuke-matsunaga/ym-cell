@@ -198,7 +198,7 @@ protected:
   void
   dump_common(
     BinEnc& s,      ///< [in] 出力先のストリーム
-    ymuint8 type_id ///< [in] 型の ID
+    std::uint8_t type_id ///< [in] 型の ID
   ) const;
 
 

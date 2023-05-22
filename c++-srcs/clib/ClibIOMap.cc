@@ -19,7 +19,7 @@ dump_map_list(
   const vector<ClibPinMap>& map_list
 )
 {
-  ymuint8 n = map_list.size();
+  std::uint8_t n = map_list.size();
   s << n;
   for ( auto map: map_list ) {
     map.dump(s);
@@ -31,7 +31,7 @@ restore_map_list(
   BinDec& s
 )
 {
-  ymuint8 n;
+  std::uint8_t n;
   s >> n;
   vector<ClibPinMap> tmp_list;
   for ( SizeType i = 0; i < n; ++ i ) {

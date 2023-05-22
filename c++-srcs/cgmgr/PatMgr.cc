@@ -581,8 +581,8 @@ PatMgr::hash_func(
   const PatNode& l_node,
   const PatNode& r_node)
 {
-  ympuint l = reinterpret_cast<ympuint>(&l_node);
-  ympuint r = reinterpret_cast<ympuint>(&r_node);
+  PtrIntType l = reinterpret_cast<PtrIntType>(&l_node);
+  PtrIntType r = reinterpret_cast<PtrIntType>(&r_node);
 
   return type + l * 5 + r;
 }
