@@ -34,9 +34,9 @@ dump_vector(
   const vector<SizeType>& vec
 )
 {
-  s << vec.size();
+  s << static_cast<std::uint64_t>(vec.size());
   for ( auto v: vec ) {
-    s << v;
+    s << static_cast<std::uint64_t>(v);
   }
 }
 
@@ -48,7 +48,7 @@ dump_dvector(
   const vector<double>& vec
 )
 {
-  s << vec.size();
+  s << static_cast<std::uint64_t>(vec.size());
   for ( auto v: vec ) {
     s << v;
   }
@@ -112,68 +112,68 @@ CiCellLibrary::dump(
   bs << leakage_power_unit();
 
   // バスタイプ
-  bs << mBusTypeList.size();
+  bs << static_cast<std::uint64_t>(mBusTypeList.size());
   for ( auto& bustype: mBusTypeList ) {
     bustype->dump(bs);
   }
 
   // 遅延テーブルのテンプレート
-  bs << mLutTemplateList.size();
+  bs << static_cast<std::uint64_t>(mLutTemplateList.size());
   for ( auto& lut_templ: mLutTemplateList ) {
     lut_templ->dump(bs);
   }
 
   // セルの内容をダンプ
-  bs << mCellList.size();
+  bs << static_cast<std::uint64_t>(mCellList.size());
   for ( auto& cell: mCellList ) {
     cell->dump(bs);
   }
 
   // ピンの内容をダンプ
-  bs << mPinList.size();
+  bs << static_cast<std::uint64_t>(mPinList.size());
   for ( auto& pin: mPinList ) {
     pin->dump(bs);
   }
 
   // バスの内容をダンプ
-  bs << mBusList.size();
+  bs << static_cast<std::uint64_t>(mBusList.size());
   for ( auto& bus: mBusList ) {
     bus->dump(bs);
   }
 
   // バンドルの内容をダンプ
-  bs << mBundleList.size();
+  bs << static_cast<std::uint64_t>(mBundleList.size());
   for ( auto& bundle: mBundleList ) {
     bundle->dump(bs);
   }
 
   // タイミング情報の内容をダンプ
-  bs << mTimingList.size();
+  bs << static_cast<std::uint64_t>(mTimingList.size());
   for ( auto& timing: mTimingList ) {
     timing->dump(bs);
   }
 
   // LUTの内容をダンプ
-  bs << mLutList.size();
+  bs << static_cast<std::uint64_t>(mLutList.size());
   for ( auto& lut: mLutList ) {
     lut->dump(bs);
   }
 
   // セルグループ情報のダンプ
-  bs << mGroupList.size();
+  bs << static_cast<std::uint64_t>(mGroupList.size());
   for ( auto& group: mGroupList ) {
     group->dump(bs);
   }
 
   // セルクラス情報のダンプ
-  bs << mClassList.size();
+  bs << static_cast<std::uint64_t>(mClassList.size());
   for ( auto& cell_class: mClassList ) {
     cell_class->dump(bs);
   }
 
   // 組み込み型の情報のダンプ
   for ( auto g: mLogicGroup ) {
-    bs << g;
+    bs << static_cast<std::uint64_t>(g);
   }
   dump_vector(bs, mSimpleFFClass);
   dump_vector(bs, mSimpleLatchClass);
@@ -194,9 +194,8 @@ CiBusType::dump(
 ) const
 {
   s << mName
-    << mBitWidth
-    << mBitFrom
-    << mBitTo;
+    << static_cast<std::uint64_t>(mBitFrom)
+    << static_cast<std::uint64_t>(mBitTo);
 }
 
 
@@ -288,9 +287,9 @@ CiCell::dump_common(
 {
   s << mName
     << mArea
-    << mInputNum
-    << mOutputNum
-    << mInoutNum;
+    << static_cast<std::uint64_t>(mInputNum)
+    << static_cast<std::uint64_t>(mOutputNum)
+    << static_cast<std::uint64_t>(mInoutNum);
   dump_vector(s, mPinList);
   dump_vector(s, mInputList);
   dump_vector(s, mOutputList);
@@ -298,7 +297,7 @@ CiCell::dump_common(
   dump_vector(s, mBusList);
   dump_vector(s, mBundleList);
   dump_vector(s, mTimingList);
-  s << mTimingMap.size();
+  s << static_cast<std::uint64_t>(mTimingMap.size());
   for ( auto& timing_list: mTimingMap ) {
     dump_vector(s, timing_list);
   }
@@ -448,7 +447,7 @@ CiPin::dump_common(
 {
   s << sig
     << mName
-    << mPinId;
+    << static_cast<std::uint64_t>(mPinId);
 }
 
 
@@ -463,7 +462,7 @@ CiInputPin::dump(
 ) const
 {
   dump_common(s, 0);
-  s << mInputId
+  s << static_cast<std::uint64_t>(mInputId)
     << mCapacitance
     << mRiseCapacitance
     << mFallCapacitance;
@@ -482,7 +481,7 @@ CiOutputPinBase::dump_base(
 ) const
 {
   dump_common(s, sig);
-  s << mOutputId
+  s << static_cast<std::uint64_t>(mOutputId)
     << mFanoutLoad
     << mMaxFanout
     << mMinFanout
@@ -520,7 +519,7 @@ CiInoutPin::dump(
 ) const
 {
   dump_base(s, 2);
-  s << mInputId
+  s << static_cast<std::uint64_t>(mInputId)
     << mCapacitance
     << mRiseCapacitance
     << mFallCapacitance;
@@ -539,7 +538,7 @@ CiInternalPin::dump(
 {
   dump_common(s, 3);
 
-  s << internal_id();
+  s << static_cast<std::uint64_t>(internal_id());
 }
 
 
@@ -554,7 +553,7 @@ CiBus::dump(
 ) const
 {
   s << mName
-    << mBusType;
+    << static_cast<std::uint64_t>(mBusType);
   dump_vector(s, mPinList);
 }
 
@@ -641,10 +640,10 @@ CiTimingLut1::dump(
 {
   dump_common(s, 2);
 
-  s << cell_rise()
-    << cell_fall()
-    << rise_transition()
-    << fall_transition();
+  s << static_cast<std::uint64_t>(cell_rise())
+    << static_cast<std::uint64_t>(cell_fall())
+    << static_cast<std::uint64_t>(rise_transition())
+    << static_cast<std::uint64_t>(fall_transition());
 }
 
 
@@ -659,10 +658,10 @@ CiTimingLut2::dump(
 ) const
 {
   dump_common(s, 3);
-  s << rise_transition()
-    << fall_transition()
-    << rise_propagation()
-    << fall_propagation();
+  s << static_cast<std::uint64_t>(rise_transition())
+    << static_cast<std::uint64_t>(fall_transition())
+    << static_cast<std::uint64_t>(rise_propagation())
+    << static_cast<std::uint64_t>(fall_propagation());
 }
 
 
@@ -678,7 +677,7 @@ CiLut::dump_common(
 ) const
 {
   s << d
-    << mTemplate;
+    << static_cast<std::uint64_t>(mTemplate);
 }
 
 
@@ -743,7 +742,7 @@ CiCellGroup::dump(
   BinEnc& s
 ) const
 {
-  s << mRepClass;
+  s << static_cast<std::uint64_t>(mRepClass);
   mIoMap.dump(s);
   dump_vector(s, mCellList);
 }
@@ -760,7 +759,7 @@ CiCellClass::dump(
 ) const
 {
   // 同位体変換情報のダンプ
-  s << idmap_num();
+  s << static_cast<std::uint64_t>(idmap_num());
   for ( auto& map: idmap_list() ) {
     map.dump(s);
   }

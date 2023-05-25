@@ -510,7 +510,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 出力ピン番号
-  SizeType mOutputId;
+  std::uint64_t mOutputId;
 
   // ファンアウトの負荷
   ClibCapacitance mFanoutLoad;

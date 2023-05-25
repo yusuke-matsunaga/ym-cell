@@ -135,7 +135,7 @@ CiPatMgr::dump(
 ) const
 {
   // パタングラフのノード情報のダンプ
-  SizeType n = node_num();
+  std::uint64_t n = node_num();
   bos << n;
   for ( auto i: Range(n) ) {
     bos << mNodeTypeArray[i]
@@ -144,7 +144,7 @@ CiPatMgr::dump(
   }
 
   // パタングラフの情報のダンプ
-  bos << pat_num();
+  bos << static_cast<std::uint64_t>(pat_num());
   for ( auto& pat: mPatArray ) {
     pat.dump(bos);
   }

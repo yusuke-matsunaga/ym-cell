@@ -35,12 +35,7 @@ public:
       mBitFrom{bit_from},
       mBitTo{bit_to}
   {
-    if ( bit_from <= bit_to ) {
-      mBitWidth = (bit_to - bit_from + 1) * 2;
-    }
-    else {
-      mBitWidth = (bit_from - bit_to + 1) * 2 + 1;
-    }
+    set_bit_width();
   }
 
   /// @brief デストラクタ
@@ -126,6 +121,24 @@ public:
   restore(
     BinDec& s ///< [in] 入力元のストリーム
   );
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief mBitWidth の計算を行う．
+  void
+  set_bit_width()
+  {
+    if ( mBitFrom <= mBitTo ) {
+      mBitWidth = (mBitTo - mBitFrom + 1) * 2;
+    }
+    else {
+      mBitWidth = (mBitFrom - mBitTo + 1) * 2 + 1;
+    }
+  }
 
 
 private:

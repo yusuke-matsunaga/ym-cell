@@ -22,11 +22,11 @@ CiPatGraph::dump(
   BinEnc& bos
 ) const
 {
-  bos << mRepId
-      << mInputNum
-      << mEdgeList.size();
+  bos.write_64(mRepId);
+  bos.write_64(mInputNum);
+  bos.write_64(mEdgeList.size());
   for ( auto e: mEdgeList ) {
-    bos << e;
+    bos.write_64(e);
   }
 }
 

@@ -38,11 +38,10 @@ restore_vector(
   vector<SizeType>& vec
 )
 {
-  SizeType n;
-  s >> n;
+  SizeType n = s.read_64();
   vec.resize(n);
   for ( SizeType i: Range(n) ) {
-    s >> vec[i];
+    vec[i] = s.read_64();
   }
 }
 
@@ -54,8 +53,7 @@ restore_dvector(
   vector<double>& vec
 )
 {
-  SizeType n;
-  s >> n;
+  SizeType n = s.read_64();
   vec.resize(n);
   for ( SizeType i: Range(n) ) {
     s >> vec[i];
@@ -152,7 +150,7 @@ CiCellLibrary::restore(
 
   // 組み込み型の読み込み
   for ( auto id: Range(4) ) {
-    bs >> mLogicGroup[id];
+    mLogicGroup[id] = bs.read_64();
   }
   restore_vector(bs, mSimpleFFClass);
   restore_vector(bs, mSimpleLatchClass);
@@ -167,8 +165,7 @@ CiCellLibrary::restore_bustype(
   BinDec& s
 )
 {
-  SizeType n;
-  s >> n;
+  SizeType n = s.read_64();
   mBusTypeList.reserve(n);
   for ( SizeType id: Range(n) ) {
     auto bustype = unique_ptr<CiBusType>{new CiBusType};
@@ -185,12 +182,10 @@ CiCellLibrary::restore_lut_template(
 )
 {
   // 要素数
-  SizeType n;
-  s >> n;
+  SizeType n = s.read_64();
   mLutTemplateList.reserve(n);
   for ( auto id: Range(n) ) {
-    std::uint8_t d;
-    s >> d;
+    auto d = s.read_8();
     unique_ptr<CiLutTemplate> ptr;
     switch ( d ) {
     case 1:
@@ -219,12 +214,10 @@ CiCellLibrary::restore_cell(
 )
 {
   // 要素数
-  SizeType nc;
-  s >> nc;
+  SizeType nc = s.read_64();
   mCellList.reserve(nc);
   for ( auto id: Range(nc) ) {
-    std::uint8_t type;
-    s >> type;
+    auto type = s.read_8();
     unique_ptr<CiCell> ptr;
     switch ( type ) {
     case 0:
@@ -271,12 +264,10 @@ CiCellLibrary::restore_pin(
   BinDec& s
 )
 {
-  SizeType n;
-  s >> n;
+  SizeType n = s.read_64();
   mPinList.reserve(n);
   for ( SizeType _: Range(n) ) {
-    std::uint8_t sig;
-    s >> sig;
+    auto sig = s.read_8();
     unique_ptr<CiPin> pin;
     switch ( sig ) {
     case 0: // 入力ピン
@@ -310,8 +301,7 @@ CiCellLibrary::restore_bus(
   BinDec& s
 )
 {
-  SizeType n;
-  s >> n;
+  SizeType n = s.read_64();
   mBusList.reserve(n);
   for ( SizeType _: Range(n) ) {
     unique_ptr<CiBus> bus{new CiBus};
@@ -326,8 +316,7 @@ CiCellLibrary::restore_bundle(
   BinDec& s
 )
 {
-  SizeType n;
-  s >> n;
+  SizeType n = s.read_64();
   mBundleList.reserve(n);
   for ( SizeType _: Range(n) ) {
     unique_ptr<CiBundle> bundle{new CiBundle};
@@ -363,12 +352,10 @@ CiCellLibrary::restore_timing(
   BinDec& s
 )
 {
-  SizeType n;
-  s >> n;
+  SizeType n = s.read_64();
   mTimingList.reserve(n);
   for ( SizeType _: Range(n) ) {
-    std::uint8_t ttype;
-    s >> ttype;
+    auto ttype = s.read_8();
     unique_ptr<CiTiming> timing;
     switch ( ttype ) {
     case 0:
@@ -402,12 +389,10 @@ CiCellLibrary::restore_lut(
   BinDec& s
 )
 {
-  SizeType n;
-  s >> n;
+  SizeType n = s.read_64();
   mLutList.reserve(n);
   for ( SizeType i: Range(n)) {
-    std::uint8_t d;
-    s >> d;
+    auto d = s.read_8();
     unique_ptr<CiLut> lut;
     switch ( d ) {
     case 1:
@@ -437,8 +422,7 @@ CiCellLibrary::restore_cell_group(
   BinDec& s
 )
 {
-  SizeType ng;
-  s >> ng;
+  SizeType ng = s.read_64();
   mGroupList.reserve(ng);
   for ( auto _: Range(ng) ) {
     auto group = unique_ptr<CiCellGroup>{new CiCellGroup};
@@ -457,8 +441,7 @@ CiCellLibrary::restore_cell_class(
   BinDec& s
 )
 {
-  SizeType nc;
-  s >> nc;
+  SizeType nc = s.read_64();
   mClassList.reserve(nc);
   for ( auto _: Range(nc) ) {
     auto cc = unique_ptr<CiCellClass>{new CiCellClass};
@@ -482,10 +465,10 @@ CiBusType::restore(
   BinDec& s
 )
 {
-  s >> mName
-    >> mBitWidth
-    >> mBitFrom
-    >> mBitTo;
+  s >> mName;
+  mBitFrom = s.read_64();
+  mBitTo = s.read_64();
+  set_bit_width();
 }
 
 
@@ -549,10 +532,10 @@ CiCell::restore(
 )
 {
   s >> mName
-    >> mArea
-    >> mInputNum
-    >> mOutputNum
-    >> mInoutNum;
+    >> mArea;
+  mInputNum = s.read_64();
+  mOutputNum = s.read_64();
+  mInoutNum = s.read_64();
 
   // ピンリスト
   restore_vector(s, mPinList);
@@ -576,8 +559,7 @@ CiCell::restore(
   restore_vector(s, mTimingList);
 
   // タイミングマップ
-  SizeType n;
-  s >> n;
+  SizeType n = s.read_64();
   mTimingMap.resize(n);
   for ( SizeType i: Range(n) ) {
     restore_vector(s, mTimingMap[i]);
@@ -691,8 +673,8 @@ CiPin::restore_common(
   BinDec& s
 )
 {
-  s >> mName
-    >> mPinId;
+  s >> mName;
+  mPinId = s.read_64();
 }
 
 
@@ -707,8 +689,8 @@ CiInputPin::restore(
 )
 {
   restore_common(s);
-  s >> mInputId
-    >> mCapacitance
+  mInputId = s.read_64();
+  s >> mCapacitance
     >> mRiseCapacitance
     >> mFallCapacitance;
 }
@@ -739,8 +721,8 @@ CiInoutPin::restore(
 )
 {
   restore_base(s);
-  s >> mInputId
-    >> mCapacitance
+  mInputId = s.read_64();
+  s >> mCapacitance
     >> mRiseCapacitance
     >> mFallCapacitance;
 }
@@ -757,7 +739,7 @@ CiInternalPin::restore(
 )
 {
   restore_common(s);
-  s >> mInternalId;
+  mInternalId = s.read_64();
 }
 
 
@@ -771,8 +753,8 @@ CiBus::restore(
   BinDec& s
 )
 {
-  s >> mName
-    >> mBusType;
+  s >> mName;
+  mBusType = s.read_64();
   restore_vector(s, mPinList);
 }
 
@@ -868,8 +850,8 @@ CiTimingLut::restore(
 )
 {
   CiTiming::restore(s);
-  s >> mRiseTransition
-    >> mFallTransition;
+  mRiseTransition = s.read_64();
+  mFallTransition = s.read_64();
 }
 
 
@@ -884,8 +866,8 @@ CiTimingLut1::restore(
 )
 {
   CiTimingLut::restore(s);
-  s >> mCellRise
-    >> mCellFall;
+  mCellRise = s.read_64();
+  mCellFall = s.read_64();
 }
 
 
@@ -900,8 +882,8 @@ CiTimingLut2::restore(
 )
 {
   CiTimingLut::restore(s);
-  s >> mRisePropagation
-    >> mFallPropagation;
+  mRisePropagation = s.read_64();
+  mFallPropagation = s.read_64();
 }
 
 
@@ -915,7 +897,7 @@ CiCellGroup::restore(
   BinDec& s
 )
 {
-  s >> mRepClass;
+  mRepClass = s.read_64();
   mIoMap.restore(s);
   restore_vector(s, mCellList);
 }
@@ -931,8 +913,7 @@ CiCellClass::restore(
   BinDec& s
 )
 {
-  SizeType n;
-  s >> n;
+  SizeType n = s.read_64();
   mIdMapList.resize(n);
   for ( auto i: Range(n) ) {
     mIdMapList[i].restore(s);
@@ -951,7 +932,7 @@ CiLut::restore_common(
   BinDec& s
 )
 {
-  s >> mTemplate;
+  mTemplate = s.read_64();
 }
 
 
@@ -1017,8 +998,7 @@ CiPatMgr::restore(
 )
 {
   // ノードと枝の情報を読み込む．
-  SizeType nn;
-  bis >> nn;
+  SizeType nn = bis.read_64();
   set_node_num(nn);
   for ( auto i: Range(node_num()) ) {
     bis >> mNodeTypeArray[i]
@@ -1027,8 +1007,7 @@ CiPatMgr::restore(
   }
 
   // パタングラフの情報を読み込む．
-  SizeType np;
-  bis >> np;
+  SizeType np = bis.read_64();
   set_pat_num(np);
   for ( auto id: Range(pat_num()) ) {
     mPatArray[id].restore(bis);
@@ -1048,15 +1027,13 @@ CiPatGraph::restore(
   BinDec& bis
 )
 {
-  SizeType ne;
-
-  bis >> mRepId
-      >> mInputNum
-      >> ne;
+  mRepId = bis.read_64();
+  mInputNum = bis.read_64();
+  SizeType ne = bis.read_64();
   mEdgeList.clear();
   mEdgeList.resize(ne);
   for ( auto i: Range(ne) ) {
-    bis >> mEdgeList[i];
+    mEdgeList[i] = bis.read_64();
   }
 }
 

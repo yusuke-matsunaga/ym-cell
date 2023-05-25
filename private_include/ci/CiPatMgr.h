@@ -213,11 +213,11 @@ private:
 
   // ノードの種類+入力番号を納めた配列
   // サイズはノード数
-  vector<SizeType> mNodeTypeArray{};
+  vector<std::uint64_t> mNodeTypeArray{};
 
   // ファンインのノード番号＋反転属性を納めた配列
   // サイズはノード数 x 2
-  vector<SizeType> mEdgeArray{};
+  vector<std::uint64_t> mEdgeArray{};
 
   // パタンの配列
   // サイズはパタン数
