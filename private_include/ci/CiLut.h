@@ -111,7 +111,7 @@ protected:
   void
   dump_common(
     BinEnc& s, ///< [in] 出力先のストリーム
-    std::uint8_t d  ///< [in] 次元数
+    int d      ///< [in] 次元数
   ) const;
 
   /// @brief 内容を読み込む．

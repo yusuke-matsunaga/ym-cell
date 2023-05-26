@@ -214,8 +214,8 @@ protected:
   /// @brief dump 用の共通情報を出力する．
   void
   dump_common(
-    BinEnc& s,  ///< [in] ストリーム
-    std::uint8_t sig ///< [in] シグネチャ(0, 1, 2, 3)
+    BinEnc& s, ///< [in] ストリーム
+    int sig    ///< [in] シグネチャ(0, 1, 2, 3)
   ) const;
 
   /// @brief 内容を読み込む．
@@ -481,7 +481,7 @@ protected:
   void
   dump_base(
     BinEnc& s, ///< [in] 出力先のストリーム
-    std::uint8_t sig
+    int sig    ///< [in] シグネチャ
   ) const;
 
   /// @brief 内容を読み込む．
@@ -491,8 +491,8 @@ protected:
   )
   {
     restore_common(s);
-    s >> mOutputId
-      >> mFanoutLoad
+    mOutputId = s.read_64();
+    s >> mFanoutLoad
       >> mMaxFanout
       >> mMinFanout
       >> mMaxCapacitance
@@ -510,7 +510,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 出力ピン番号
-  std::uint64_t mOutputId;
+  SizeType mOutputId;
 
   // ファンアウトの負荷
   ClibCapacitance mFanoutLoad;

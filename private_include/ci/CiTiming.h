@@ -197,8 +197,8 @@ protected:
   /// @brief 共通な情報をダンプする．
   void
   dump_common(
-    BinEnc& s,      ///< [in] 出力先のストリーム
-    std::uint8_t type_id ///< [in] 型の ID
+    BinEnc& s,  ///< [in] 出力先のストリーム
+    int type_id ///< [in] ClibTimingType を表すシグネチャ
   ) const;
 
 
