@@ -14,10 +14,10 @@ set ( TESTDATA_DIR
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory( gtests )
+add_subdirectory( gtest )
 add_subdirectory( programs )
 if ( Python3_FOUND )
-  add_subdirectory( pytests )
+  add_subdirectory( pytest )
 endif ( Python3_FOUND )
 
 
