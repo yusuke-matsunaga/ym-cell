@@ -73,6 +73,6 @@ target_link_libraries ( py_ymcell_d
 # テストターゲット
 # ===================================================================
 
-add_test( py_ymcell_test
+add_test( cell_py_ymcell_test
   py_ymcell -m pytest ${CMAKE_CURRENT_SOURCE_DIR}
   )
