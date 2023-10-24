@@ -134,10 +134,10 @@ MislibParser::parse(
     }
 
     auto gate = new_gate(FileRegion(loc0, loc1),
-			 move(name), move(area),
-			 move(opin), move(expr),
-			 move(ipin_list));
-    gate_list.push_back(move(gate));
+			 std::move(name), std::move(area),
+			 std::move(opin), std::move(expr),
+			 std::move(ipin_list));
+    gate_list.push_back(std::move(gate));
   }
 
   // 内容が正しいかチェックする．
@@ -302,13 +302,13 @@ MislibParser::read_expr(
     auto expr2 = read_product();
     if ( type == MislibToken::PLUS ) {
       expr1 = new_or(FileRegion(expr1->loc(), expr2->loc()),
-		     move(expr1),
-		     move(expr2));
+		     std::move(expr1),
+		     std::move(expr2));
     }
     else {
       expr1 = new_xor(FileRegion(expr1->loc(), expr2->loc()),
-		      move(expr1),
-		      move(expr2));
+		      std::move(expr1),
+		      std::move(expr2));
     }
   }
 }
@@ -323,8 +323,8 @@ MislibParser::read_product()
 
     auto expr2 = read_literal();
     expr1 = new_and(FileRegion(expr1->loc(), expr2->loc()),
-		    move(expr1),
-		    move(expr2));
+		    std::move(expr1),
+		    std::move(expr2));
   }
   return expr1;
 }
@@ -356,7 +356,7 @@ MislibParser::read_literal()
     {
       auto expr = read_literal();
       return new_not(FileRegion(tok.loc(), expr->loc()),
-		     move(expr));
+		     std::move(expr));
     }
 
   default:
@@ -419,15 +419,15 @@ MislibParser::read_pin_list()
     MislibNumPtr val[6];
     for ( int i = 0; i < 6; ++ i ) {
       auto node = read_num();
-      val[i] = move(node);
+      val[i] = std::move(node);
     }
 
     auto pin = new_pin(FileRegion(pin_loc, val[5]->loc()),
-		       move(name),  move(phase),
-		       move(val[0]), move(val[1]),
-		       move(val[2]), move(val[3]),
-		       move(val[4]), move(val[5]));
-    pin_list.push_back(move(pin));
+		       std::move(name),  std::move(phase),
+		       std::move(val[0]), std::move(val[1]),
+		       std::move(val[2]), std::move(val[3]),
+		       std::move(val[4]), std::move(val[5]));
+    pin_list.push_back(std::move(pin));
   }
 
   // 名前が nullptr (STAR) のピンがある場合はそれが唯一の要素である場合に限る．
@@ -586,11 +586,11 @@ MislibParser::new_gate(
   ASSERT_COND( expr != nullptr );
 
   auto node = new MislibGate(loc,
-			     move(name),
-			     move(area),
-			     move(oname),
-			     move(expr),
-			     move(ipin_list));
+			     std::move(name),
+			     std::move(area),
+			     std::move(oname),
+			     std::move(expr),
+			     std::move(ipin_list));
   return MislibGatePtr{node};
 }
 
@@ -609,14 +609,14 @@ MislibParser::new_pin(
 )
 {
   auto node = new MislibPin(loc,
-			    move(name),
-			    move(phase),
-			    move(input_load),
-			    move(max_load),
-			    move(rise_block_delay),
-			    move(rise_fanout_delay),
-			    move(fall_block_delay),
-			    move(fall_fanout_delay));
+			    std::move(name),
+			    std::move(phase),
+			    std::move(input_load),
+			    std::move(max_load),
+			    std::move(rise_block_delay),
+			    std::move(rise_fanout_delay),
+			    std::move(fall_block_delay),
+			    std::move(fall_fanout_delay));
   return MislibPinPtr{node};
 }
 
@@ -677,7 +677,7 @@ MislibParser::new_not(
   MislibExprPtr&& opr1
 )
 {
-  auto node = new MislibNot(loc, move(opr1));
+  auto node = new MislibNot(loc, std::move(opr1));
   return MislibExprPtr{node};
 }
 
@@ -690,8 +690,8 @@ MislibParser::new_and(
 )
 {
   auto node = new MislibAnd(loc,
-			    move(opr1),
-			    move(opr2));
+			    std::move(opr1),
+			    std::move(opr2));
   return MislibExprPtr{node};
 }
 
@@ -704,8 +704,8 @@ MislibParser::new_or(
 )
 {
   auto node = new MislibOr(loc,
-			   move(opr1),
-			   move(opr2));
+			   std::move(opr1),
+			   std::move(opr2));
   return MislibExprPtr{node};
 }
 
@@ -718,8 +718,8 @@ MislibParser::new_xor(
 )
 {
   auto node = new MislibXor(loc,
-			    move(opr1),
-			    move(opr2));
+			    std::move(opr1),
+			    std::move(opr2));
   return MislibExprPtr{node};
 }
 

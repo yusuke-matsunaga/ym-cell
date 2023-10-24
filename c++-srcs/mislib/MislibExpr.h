@@ -124,7 +124,7 @@ public:
     const FileRegion& loc, ///< [in] 位置情報
     MislibExprPtr&& opr1   ///< [in] オペランド
   ) : MislibExpr{loc},
-      mOpr1{move(opr1)}
+      mOpr1{std::move(opr1)}
   {
   }
 
@@ -184,8 +184,8 @@ public:
     MislibExprPtr&& opr1,  ///< [in] 左のオペランド
     MislibExprPtr&& opr2   ///< [in] 右のオペランド
   ) : MislibExpr{loc},
-      mOpr1{move(opr1)},
-      mOpr2{move(opr2)}
+      mOpr1{std::move(opr1)},
+      mOpr2{std::move(opr2)}
   {
   }
 
@@ -235,7 +235,7 @@ public:
     const FileRegion& loc, ///< [in] 位置情報
     MislibExprPtr&& opr1,  ///< [in] 左のオペランド
     MislibExprPtr&& opr2   ///< [in] 右のオペランド
-  ) : MislibBop{loc, move(opr1), move(opr2)}
+  ) : MislibBop{loc, std::move(opr1), std::move(opr2)}
   {
   }
 
@@ -281,7 +281,7 @@ public:
     const FileRegion& loc, ///< [in] 位置情報
     MislibExprPtr&& opr1,  ///< [in] 左のオペランド
     MislibExprPtr&& opr2  ///< [in] 右のオペランド
-  ) : MislibBop{loc, move(opr1), move(opr2)}
+  ) : MislibBop{loc, std::move(opr1), std::move(opr2)}
   {
   }
 
@@ -327,7 +327,7 @@ public:
     const FileRegion& loc, ///< [in] 位置情報
     MislibExprPtr&& opr1,  ///< [in] 左のオペランド
     MislibExprPtr&& opr2   ///< [in] 右のオペランド
-  ) : MislibBop{loc, move(opr1), move(opr2)}
+  ) : MislibBop{loc, std::move(opr1), std::move(opr2)}
   {
   }
 

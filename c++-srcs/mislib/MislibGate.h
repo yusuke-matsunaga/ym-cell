@@ -32,11 +32,11 @@ public:
     MislibExprPtr&& opin_expr,            ///< [in] 出力の論理式を表すノード
     vector<MislibPinPtr>&& ipin_list ///< [in] 入力ピンを表すノードのリスト
   ) : MislibNode{loc},
-      mName{move(name)},
-      mArea{move(area)},
-      mOpinName{move(opin_name)},
-      mOpinExpr{move(opin_expr)},
-      mIpinList{move(ipin_list)}
+      mName{std::move(name)},
+      mArea{std::move(area)},
+      mOpinName{std::move(opin_name)},
+      mOpinExpr{std::move(opin_expr)},
+      mIpinList{std::move(ipin_list)}
   {
   }
 
@@ -130,14 +130,14 @@ public:
     MislibNumPtr&& fall_block_delay,  ///< [in] 立ち下がり固定遅延
     MislibNumPtr&& fall_fanout_delay  ///< [in] 立ち下がり負荷依存遅延
   ) : MislibNode{loc},
-      mName{move(name)},
-      mPhase{move(phase)},
-      mInputLoad{move(input_load)},
-      mMaxLoad{move(max_load)},
-      mRiseBlockDelay{move(rise_block_delay)},
-      mRiseFanoutDelay{move(rise_fanout_delay)},
-      mFallBlockDelay{move(fall_block_delay)},
-      mFallFanoutDelay{move(fall_fanout_delay)}
+      mName{std::move(name)},
+      mPhase{std::move(phase)},
+      mInputLoad{std::move(input_load)},
+      mMaxLoad{std::move(max_load)},
+      mRiseBlockDelay{std::move(rise_block_delay)},
+      mRiseFanoutDelay{std::move(rise_fanout_delay)},
+      mFallBlockDelay{std::move(fall_block_delay)},
+      mFallFanoutDelay{std::move(fall_fanout_delay)}
   {
   }
 
