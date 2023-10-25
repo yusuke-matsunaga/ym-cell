@@ -71,6 +71,24 @@ public:
     return ClibCellLibrary{mLibrary};
   }
 
+  /// @brief 等価比較
+  bool
+  operator==(
+    ClibHandle right
+  ) const
+  {
+    return mLibrary == right.mLibrary && mId == right.mId;
+  }
+
+  /// @brief 非等価比較
+  bool
+  operator!=(
+    ClibHandle right
+  )
+  {
+    return !operator==(right);
+  }
+
 
 protected:
   //////////////////////////////////////////////////////////////////////
