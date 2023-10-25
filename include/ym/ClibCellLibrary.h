@@ -10,6 +10,7 @@
 
 #include "ym/clib.h"
 #include "ym/logic.h"
+#include "ym/ClibLibraryPtr.h"
 #include "ym/ClibList.h"
 
 
@@ -34,6 +35,13 @@ public:
   ///
   /// 空の状態で初期化される．
   ClibCellLibrary() = default;
+
+  /// @brief 実体のポインタを引数にしたコンストラクタ
+  ClibCellLibrary(
+    ClibLibraryPtr ptr
+  ) : mImpl{ptr}
+  {
+  }
 
   /// @brief コピーコンストラクタ
   ///
@@ -423,6 +431,31 @@ public:
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 等価比較
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 等価比較
+  bool
+  operator==(
+    ClibCellLibrary right ///< [in] オペランド
+  ) const
+  {
+    return mImpl == right.mImpl;
+  }
+
+  /// @brief 非等価比較
+  bool
+  operator!=(
+    ClibCellLibrary right ///< [in] オペランド
+  )
+  {
+    return !operator==(right);
+  }
+
 
 
 private:

@@ -10,6 +10,7 @@
 
 #include "ym/clib.h"
 #include "ym/ClibLibraryPtr.h"
+#include "ym/ClibCellLibrary.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -61,6 +62,13 @@ public:
   is_invalid() const
   {
     return !is_valid();
+  }
+
+  /// @brief セルライブラリを返す．
+  ClibCellLibrary
+  library() const
+  {
+    return ClibCellLibrary{mLibrary};
   }
 
 
