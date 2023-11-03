@@ -28,6 +28,7 @@ include_directories(
 ym_add_object_library ( py_ymcell
   ymcell_module.cc
   PyClibCellLibrary.cc
+  PyClibCell.cc
   )
 
 add_library ( py_ymcelllib

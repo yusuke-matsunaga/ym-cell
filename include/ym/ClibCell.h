@@ -12,7 +12,6 @@
 #include "ym/ClibArea.h"
 #include "ym/ClibCellGroup.h"
 #include "ym/logic.h"
-//#include "ym/Expr.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
