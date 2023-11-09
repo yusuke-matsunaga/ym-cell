@@ -105,6 +105,17 @@ ClibCellLibrary_liberty(
   }
 }
 
+PyObject*
+ClibCellLibrary_is_valid(
+  PyObject* self,
+  PyObject* Py_UNUSED(args)
+)
+{
+  auto& lib = PyClibCellLibrary::Get(self);
+  auto val = lib.is_valid();
+  return PyBool_FromLong(val);
+}
+
 // 内容を表示する．
 PyObject*
 ClibCellLibrary_display(
@@ -169,6 +180,8 @@ PyMethodDef ClibCellLibrary_methods[] = {
    PyDoc_STR("read mislib file")},
   {"read_liberty", ClibCellLibrary_liberty, METH_VARARGS | METH_STATIC,
    PyDoc_STR("read liberty(.lib) file")},
+  {"is_valid", ClibCellLibrary_is_valid, METH_NOARGS,
+   PyDoc_STR("check if valid")},
   {"display", ClibCellLibrary_display, METH_VARARGS,
    PyDoc_STR("display the contents of the cell library")},
   {"to_string_list", ClibCellLibrary_to_string_list, METH_NOARGS,
@@ -178,6 +191,27 @@ PyMethodDef ClibCellLibrary_methods[] = {
 
 END_NONAMESPACE
 
+// 比較関数
+PyObject*
+ClibCellLibrary_richcompfunc(
+  PyObject* self,
+  PyObject* other,
+  int op
+)
+{
+  if ( PyClibCellLibrary::Check(self) &&
+       PyClibCellLibrary::Check(other) ) {
+    auto& val1 = PyClibCellLibrary::Get(self);
+    auto& val2 = PyClibCellLibrary::Get(other);
+    if ( op == Py_EQ ) {
+      return PyBool_FromLong(val1 == val2);
+    }
+    if ( op == Py_NE ) {
+      return PyBool_FromLong(val1 != val2);
+    }
+  }
+  Py_RETURN_NOTIMPLEMENTED;
+}
 
 // @brief 'ClibCellLibrary' オブジェクトを使用可能にする．
 bool
@@ -191,6 +225,7 @@ PyClibCellLibrary::init(
   ClibCellLibraryType.tp_dealloc = ClibCellLibrary_dealloc;
   ClibCellLibraryType.tp_flags = Py_TPFLAGS_DEFAULT;
   ClibCellLibraryType.tp_doc = PyDoc_STR("ClibCellLibrary objects");
+  ClibCellLibraryType.tp_richcompare = ClibCellLibrary_richcompfunc;
   ClibCellLibraryType.tp_methods = ClibCellLibrary_methods;
   ClibCellLibraryType.tp_new = ClibCellLibrary_new;
 
@@ -204,6 +239,18 @@ PyClibCellLibrary::init(
  error:
 
   return false;
+}
+
+// @brief ClibCellLibrary を PyObject に変換する．
+PyObject*
+PyClibCellLibrary::ToPyObject(
+  const ClibCellLibrary& val
+)
+{
+  auto obj = ClibCellLibraryType.tp_alloc(&ClibCellLibraryType, 0);
+  auto lib_obj = reinterpret_cast<ClibCellLibraryObject*>(obj);
+  lib_obj->mPtr = new ClibCellLibrary{val};
+  return obj;
 }
 
 // @brief PyObject が ClibCellLibrary タイプか調べる．

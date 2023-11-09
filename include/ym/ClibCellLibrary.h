@@ -105,13 +105,6 @@ public:
     return mImpl != nullptr;
   }
 
-  /// @brief 不正値の時 true を返す．
-  bool
-  is_invalid() const
-  {
-    return !is_valid();
-  }
-
   /// @brief 名前の取得
   string
   name() const;
@@ -451,7 +444,7 @@ public:
   bool
   operator!=(
     ClibCellLibrary right ///< [in] オペランド
-  )
+  ) const
   {
     return !operator==(right);
   }

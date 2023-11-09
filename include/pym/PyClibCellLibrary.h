@@ -37,6 +37,16 @@ public:
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
 
+  /// @brief ClibCellLibrary を表す PyObject を作る．
+  /// @return 生成した PyObject を返す．
+  ///
+  /// 返り値は新しい参照が返される．
+  static
+  PyObject*
+  ToPyObject(
+    const ClibCellLibrary& val ///< [in] 値
+  );
+
   /// @brief PyObject が ClibCellLibrary タイプか調べる．
   static
   bool
