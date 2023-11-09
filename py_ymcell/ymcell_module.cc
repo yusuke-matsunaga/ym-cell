@@ -10,6 +10,7 @@
 #include <Python.h>
 
 #include "pym/PyClibCellLibrary.h"
+#include "pym/ymlogic.h"
 #include "pym/PyModule.h"
 
 
@@ -39,6 +40,10 @@ PyInit_ymcell()
   auto m = PyModule::init(&ymcell_module);
   if ( m == nullptr ) {
     return nullptr;
+  }
+
+  if ( !PyModule::reg_submodule(m, "ymlogic", PyInit_ymlogic()) ) {
+    goto error;
   }
 
   if ( !PyClibCellLibrary::init(m) ) {
