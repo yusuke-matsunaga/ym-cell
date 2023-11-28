@@ -1020,7 +1020,9 @@ AstComplexValue::complex_elem_value(
   SizeType pos
 ) const
 {
-  ASSERT_COND( 0 <= pos && pos < complex_elem_size() );
+  if ( pos < 0 || complex_elem_size() <= pos ) {
+    throw std::out_of_range{"pos is out of range"};
+  }
   return *mElemList[pos];
 }
 
@@ -1094,7 +1096,9 @@ AstGroupValue::group_elem_attr(
   SizeType pos
 ) const
 {
-  ASSERT_COND( 0 <= pos && pos < group_elem_size() );
+  if ( pos < 0 || group_elem_size() <= pos ) {
+    throw std::out_of_range{"pos is out of range"};
+  }
 
   return *mChildList[pos];
 }

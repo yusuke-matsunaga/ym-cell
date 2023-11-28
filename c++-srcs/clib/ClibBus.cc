@@ -23,7 +23,7 @@ BEGIN_NAMESPACE_YM_CLIB
 string
 ClibBus::name() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bus = mLibrary->_bus(mId);
   return bus->name();
 }
@@ -32,7 +32,7 @@ ClibBus::name() const
 ClibBusType
 ClibBus::bus_type() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bus = mLibrary->_bus(mId);
   SizeType id = bus->bus_type();
   return ClibBusType{mLibrary, id};
@@ -42,7 +42,7 @@ ClibBus::bus_type() const
 SizeType
 ClibBus::pin_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bus = mLibrary->_bus(mId);
   return bus->pin_num();
 }
@@ -53,7 +53,7 @@ ClibBus::pin(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bus = mLibrary->_bus(mId);
   SizeType pin_id = bus->pin(pos);
   return ClibPin{mLibrary, pin_id};
@@ -63,7 +63,7 @@ ClibBus::pin(
 ClibPinList
 ClibBus::pin_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bus = mLibrary->_bus(mId);
   auto& id_list = bus->pin_list();
   return ClibPinList{mLibrary, id_list};

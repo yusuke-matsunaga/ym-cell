@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_CLIB
 SizeType
 ClibPatGraph::rep_id() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto& pg = mLibrary->_pat_graph(mId);
   return pg.rep_id();
 }
@@ -30,7 +30,7 @@ ClibPatGraph::rep_id() const
 SizeType
 ClibPatGraph::root_id() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto& pg = mLibrary->_pat_graph(mId);
   return pg.root_id();
 }
@@ -39,7 +39,7 @@ ClibPatGraph::root_id() const
 bool
 ClibPatGraph::root_inv() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto& pg = mLibrary->_pat_graph(mId);
   return pg.root_inv();
 }
@@ -48,7 +48,7 @@ ClibPatGraph::root_inv() const
 SizeType
 ClibPatGraph::input_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto& pg = mLibrary->_pat_graph(mId);
   return pg.input_num();
 }
@@ -57,7 +57,7 @@ ClibPatGraph::input_num() const
 SizeType
 ClibPatGraph::edge_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto& pg = mLibrary->_pat_graph(mId);
   return pg.edge_num();
 }
@@ -68,7 +68,7 @@ ClibPatGraph::edge(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto& pg = mLibrary->_pat_graph(mId);
   return pg.edge(pos);
 }

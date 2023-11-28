@@ -56,8 +56,9 @@ CiLut1D::CiLut1D(
     mValueArray{value_array},
     mIndexArray{index_array}
 {
-  SizeType n = index_array.size();
-  ASSERT_COND( value_array.size() == n );
+  if ( value_array.size() != index_array.size() ) {
+    throw std::invalid_argument{"value_array.size() != index_array.size()"};
+  }
 }
 
 // @brief インデックス数の取得
@@ -66,7 +67,9 @@ CiLut1D::index_num(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < 1 );
+  if ( var != 0 ) {
+    throw std::out_of_range{"var should be 0"};
+  }
   return mIndexArray.size();
 }
 
@@ -77,8 +80,12 @@ CiLut1D::index(
   SizeType pos
 ) const
 {
-  ASSERT_COND( 0 <= var && var < 1 );
-  ASSERT_COND( 0 <= pos && pos < index_num(var)  );
+  if ( var != 0 ) {
+    throw std::out_of_range{"var should be 0"};
+  }
+  if ( pos < 0 || index_num(var) <= pos ) {
+    throw std::out_of_range{"pos is out of range"};
+  }
   return mIndexArray[pos];
 }
 
@@ -88,9 +95,13 @@ CiLut1D::grid_value(
   const vector<SizeType>& pos_array
 ) const
 {
-  ASSERT_COND( pos_array.size() == 1 );
+  if ( pos_array.size() != 1 ) {
+    throw std::invalid_argument{"pos_array.size() should be 1"};
+  }
   auto pos1 = pos_array[0];
-  ASSERT_COND( 0 <= pos1 && pos1 < mValueArray.size() );
+  if ( pos1 < 0 || mValueArray.size() <= pos1 ) {
+    throw std::out_of_range{"pos_array[0] is out of range"};
+  }
   return mValueArray[pos1];
 }
 
@@ -100,7 +111,9 @@ CiLut1D::value(
   const vector<double>& val_array
 ) const
 {
-  ASSERT_COND( val_array.size() == 1 );
+  if ( val_array.size() != 1 ) {
+    throw std::invalid_argument{"val_array.size() should be 1"};
+  }
 
   double val = val_array[0];
 
@@ -132,7 +145,9 @@ CiLut2D::CiLut2D(
     mIndexArray{index_array1, index_array2}
 {
   SizeType n = mIndexArray[0].size() * mIndexArray[1].size();
-  ASSERT_COND( value_array.size() == n );
+  if ( value_array.size() != n ) {
+    throw std::invalid_argument{"value_array.size() is not consistent with index_array1.size() and index_arary2.size()"};
+  }
 }
 
 // @brief インデックス数の取得
@@ -141,7 +156,9 @@ CiLut2D::index_num(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < 2 );
+  if ( var < 0 || 2 <= var ) {
+    throw std::invalid_argument{"var should 0 or 1"};
+  }
   return mIndexArray[var].size();
 }
 
@@ -152,8 +169,12 @@ CiLut2D::index(
   SizeType pos
 ) const
 {
-  ASSERT_COND( 0 <= var && var < 2 );
-  ASSERT_COND( 0 <= pos && pos < index_num(var) );
+  if ( var < 0 || 2 <= var ) {
+    throw std::invalid_argument{"var should 0 or 1"};
+  }
+  if ( pos < 0 || index_num(var) <= pos ) {
+    throw std::out_of_range{"pos is out of range"};
+  }
   return mIndexArray[var][pos];
 }
 
@@ -163,11 +184,17 @@ CiLut2D::grid_value(
   const vector<SizeType>& pos_array
 ) const
 {
-  ASSERT_COND( pos_array.size() == 2 );
+  if ( pos_array.size() != 2 ) {
+    throw std::invalid_argument{"pos_array.size() should be 2"};
+  }
   auto pos1 = pos_array[0];
   auto pos2 = pos_array[1];
-  ASSERT_COND( 0 <= pos1 && pos1 < index_num(0) );
-  ASSERT_COND( 0 <= pos2 && pos2 < index_num(1) );
+  if ( pos1 < 0 || index_num(0) <= pos1 ) {
+    throw std::out_of_range{"pos_array[0] is out of range"};
+  }
+  if ( pos2 < 0 || index_num(1) <= pos2 ) {
+    throw std::out_of_range{"pos_array[1] is out of range"};
+  }
   return mValueArray[idx(pos1, pos2)];
 }
 
@@ -177,7 +204,9 @@ CiLut2D::value(
   const vector<double>& val_array
 ) const
 {
-  ASSERT_COND( val_array.size() == 2 );
+  if ( val_array.size() != 2 ) {
+    throw std::invalid_argument{"val_array.size() should be 2"};
+  }
 
   double val1 = val_array[0];
   auto idx1_a = search(val1, mIndexArray[0]);
@@ -224,7 +253,9 @@ CiLut3D::CiLut3D(
     mIndexArray{index_array1, index_array2, index_array3}
 {
   SizeType n = mIndexArray[0].size() * mIndexArray[1].size() * mIndexArray[2].size();;
-  ASSERT_COND( value_array.size() == n );
+  if ( value_array.size() != n ) {
+    throw std::invalid_argument{"value_array.size() is not consistent with index1_array.size(), index2_array.size() and index3_array.size()"};
+  }
 }
 
 // @brief インデックス数の取得
@@ -233,7 +264,9 @@ CiLut3D::index_num(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < 3 );
+  if ( var < 0 || 3 <= var ) {
+    throw std::invalid_argument{"var should be 0, 1, or 2"};
+  }
   return mIndexArray[var].size();
 }
 
@@ -244,8 +277,12 @@ CiLut3D::index(
   SizeType pos
 ) const
 {
-  ASSERT_COND( 0 <= var && var < 3 );
-  ASSERT_COND( 0 <= pos && pos < index_num(var) );
+  if ( var < 0 || 3 <= var ) {
+    throw std::invalid_argument{"var should be 0, 1, or 2"};
+  }
+  if ( pos < 0 || index_num(var) <= pos ) {
+    throw std::out_of_range{"pos is out of range"};
+  }
   return mIndexArray[var][pos];
 }
 
@@ -255,13 +292,21 @@ CiLut3D::grid_value(
   const vector<SizeType>& pos_array
 ) const
 {
-  ASSERT_COND( pos_array.size() == 3 );
+  if ( pos_array.size() != 3 ) {
+    throw std::invalid_argument{"pos_array.size() should be 3"};
+  }
   auto pos1 = pos_array[0];
   auto pos2 = pos_array[1];
   auto pos3 = pos_array[2];
-  ASSERT_COND( 0 <= pos1 && pos1 < index_num(0) );
-  ASSERT_COND( 0 <= pos2 && pos2 < index_num(1) );
-  ASSERT_COND( 0 <= pos3 && pos3 < index_num(2) );
+  if ( pos1 < 0 || index_num(0) <= pos1 ) {
+    throw std::out_of_range{"pos1 is out of range"};
+  }
+  if ( pos2 < 0 || index_num(1) <= pos2 ) {
+    throw std::out_of_range{"pos2 is out of range"};
+  }
+  if ( pos3 < 0 || index_num(2) <= pos3 ) {
+    throw std::out_of_range{"pos3 is out of range"};
+  }
   return mValueArray[idx(pos1, pos2, pos3)];
 }
 
@@ -271,7 +316,9 @@ CiLut3D::value(
   const vector<double>& val_array
 ) const
 {
-  ASSERT_COND( val_array.size() == 3 );
+  if ( val_array.size() != 3 ) {
+    throw std::invalid_argument{"val_array.size() should be 3"};
+  }
   double val1 = val_array[0];
   auto idx1_a = search(val1, mIndexArray[0]);
   auto idx1_b = idx1_a + 1;

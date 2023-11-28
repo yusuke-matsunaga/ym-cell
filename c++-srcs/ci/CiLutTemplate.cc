@@ -28,7 +28,9 @@ CiLutTemplate1D::variable_type(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
+  if ( var < 0 || 1 <= var ) {
+    throw std::out_of_range{"var is out of range"};
+  }
   return mVarType;
 }
 
@@ -38,7 +40,9 @@ CiLutTemplate1D::index_num(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
+  if ( var < 0 || 1 <= var ) {
+    throw std::out_of_range{"var is out of range"};
+  }
   return mIndexArray.size();
 }
 
@@ -48,7 +52,9 @@ CiLutTemplate1D::index_array(
   SizeType var
 ) const
 {
-  ASSERT_COND( var == 0 );
+  if ( var < 0 || 1 <= var ) {
+    throw std::out_of_range{"var is out of range"};
+  }
   return mIndexArray;
 }
 
@@ -70,7 +76,9 @@ CiLutTemplate2D::variable_type(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
+  if ( var < 0 || 2 <= var ) {
+    throw std::out_of_range{"var is out of range"};
+  }
   return mVarType[var];
 }
 
@@ -80,7 +88,9 @@ CiLutTemplate2D::index_num(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
+  if ( var < 0 || 2 <= var ) {
+    throw std::out_of_range{"var is out of range"};
+  }
   return mIndexArray[var].size();
 }
 
@@ -90,7 +100,9 @@ CiLutTemplate2D::index_array(
   SizeType var
 ) const
 {
-  ASSERT_COND( var == 0 || var == 1 );
+  if ( var < 0 || 2 <= var ) {
+    throw std::out_of_range{"var is out of range"};
+  }
   return mIndexArray[var];
 }
 
@@ -112,7 +124,9 @@ CiLutTemplate3D::variable_type(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
+  if ( var < 0 || 3 <= var ) {
+    throw std::out_of_range{"var is out of range"};
+  }
   return mVarType[var];
 }
 
@@ -122,7 +136,9 @@ CiLutTemplate3D::index_num(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < dimension() );
+  if ( var < 0 || 3 <= var ) {
+    throw std::out_of_range{"var is out of range"};
+  }
   return mIndexArray[var].size();
 }
 
@@ -132,7 +148,9 @@ CiLutTemplate3D::index_array(
   SizeType var
 ) const
 {
-  ASSERT_COND( 0 <= var && var < 3 );
+  if ( var < 0 || 3 <= var ) {
+    throw std::out_of_range{"var is out of range"};
+  }
   return mIndexArray[var];
 }
 

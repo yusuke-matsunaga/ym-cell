@@ -80,9 +80,15 @@ ClibIOMap::operator*=(
   SizeType ni = input_num();
   SizeType no = output_num();
   SizeType nb = inout_num();
-  ASSERT_COND( right.input_num() == ni );
-  ASSERT_COND( right.output_num() == no );
-  ASSERT_COND( right.inout_num() == nb );
+  if ( right.input_num() != ni ) {
+    throw std::invalid_argument{"input_num() mismatch"};
+  }
+  if ( right.output_num() != no ) {
+    throw std::invalid_argument{"output_num() mismatch"};
+  }
+  if ( right.inout_num() != nb ) {
+    throw std::invalid_argument{"inout_num() mismatch"};
+  }
   vector<ClibPinMap> input_map(ni);
   vector<ClibPinMap> output_map(no);
   vector<ClibPinMap> inout_map(nb);

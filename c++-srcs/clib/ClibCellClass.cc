@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_CLIB
 SizeType
 ClibCellClass::idmap_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cc = mLibrary->_cell_class(mId);
   return cc->idmap_num();
 }
@@ -33,7 +33,7 @@ ClibCellClass::idmap(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cc = mLibrary->_cell_class(mId);
   return cc->idmap(pos);
 }
@@ -42,7 +42,7 @@ ClibCellClass::idmap(
 const vector<ClibIOMap>&
 ClibCellClass::idmap_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cc = mLibrary->_cell_class(mId);
   return cc->idmap_list();
 }
@@ -51,7 +51,7 @@ ClibCellClass::idmap_list() const
 SizeType
 ClibCellClass::cell_group_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cc = mLibrary->_cell_class(mId);
   return cc->cell_group_num();
 }
@@ -62,7 +62,7 @@ ClibCellClass::cell_group(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cc = mLibrary->_cell_class(mId);
   SizeType id = cc->cell_group(pos);
   return ClibCellGroup{mLibrary, id};
@@ -72,7 +72,7 @@ ClibCellClass::cell_group(
 ClibCellGroupList
 ClibCellClass::cell_group_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cc = mLibrary->_cell_class(mId);
   return ClibCellGroupList{mLibrary, cc->cell_group_list()};
 }

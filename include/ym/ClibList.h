@@ -151,7 +151,9 @@ public:
     SizeType pos
   ) const
   {
-    ASSERT_COND( 0 <= pos && pos < size() );
+    if ( pos < 0 || size() <= pos ) {
+      throw std::out_of_range("out of range");
+    }
     return T{mLibrary, *(mBegin + pos)};
   }
 

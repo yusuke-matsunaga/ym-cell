@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_CLIB
 string
 ClibPin::name() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->name();
 }
@@ -30,7 +30,7 @@ ClibPin::name() const
 ClibDirection
 ClibPin::direction() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->direction();
 }
@@ -39,7 +39,7 @@ ClibPin::direction() const
 bool
 ClibPin::is_input() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->is_input();
 }
@@ -48,7 +48,7 @@ ClibPin::is_input() const
 bool
 ClibPin::is_output() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->is_output();
 }
@@ -57,7 +57,7 @@ ClibPin::is_output() const
 bool
 ClibPin::is_inout() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->is_inout();
 }
@@ -66,7 +66,7 @@ ClibPin::is_inout() const
 bool
 ClibPin::is_internal() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->is_internal();
 }
@@ -75,7 +75,7 @@ ClibPin::is_internal() const
 SizeType
 ClibPin::pin_id() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->pin_id();
 }
@@ -84,7 +84,7 @@ ClibPin::pin_id() const
 SizeType
 ClibPin::input_id() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->input_id();
 }
@@ -93,7 +93,7 @@ ClibPin::input_id() const
 ClibCapacitance
 ClibPin::capacitance() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->capacitance();
 }
@@ -102,7 +102,7 @@ ClibPin::capacitance() const
 ClibCapacitance
 ClibPin::rise_capacitance() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->rise_capacitance();
 }
@@ -111,7 +111,7 @@ ClibPin::rise_capacitance() const
 ClibCapacitance
 ClibPin::fall_capacitance() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->fall_capacitance();
 }
@@ -120,7 +120,7 @@ ClibPin::fall_capacitance() const
 SizeType
 ClibPin::output_id() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->output_id();
 }
@@ -129,7 +129,7 @@ ClibPin::output_id() const
 ClibCapacitance
 ClibPin::max_fanout() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->max_fanout();
 }
@@ -138,7 +138,7 @@ ClibPin::max_fanout() const
 ClibCapacitance
 ClibPin::min_fanout() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->min_fanout();
 }
@@ -147,7 +147,7 @@ ClibPin::min_fanout() const
 ClibCapacitance
 ClibPin::max_capacitance() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->max_capacitance();
 }
@@ -156,7 +156,7 @@ ClibPin::max_capacitance() const
 ClibCapacitance
 ClibPin::min_capacitance() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->min_capacitance();
 }
@@ -165,7 +165,7 @@ ClibPin::min_capacitance() const
 ClibTime
 ClibPin::max_transition() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->max_transition();
 }
@@ -174,7 +174,7 @@ ClibPin::max_transition() const
 ClibTime
 ClibPin::min_transition() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->min_transition();
 }
@@ -183,7 +183,7 @@ ClibPin::min_transition() const
 Expr
 ClibPin::function() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->function();
 }
@@ -192,7 +192,7 @@ ClibPin::function() const
 Expr
 ClibPin::tristate() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->tristate();
 }
@@ -201,7 +201,7 @@ ClibPin::tristate() const
 SizeType
 ClibPin::internal_id() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = mLibrary->_pin(mId);
   return pin->internal_id();
 }

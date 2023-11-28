@@ -89,6 +89,15 @@ public:
     return !operator==(right);
   }
 
+  /// @brief 適正な値を持っているかチェックする．
+  void
+  _check_valid() const
+  {
+    if ( !is_valid() ) {
+      throw std::invalid_argument{"not a valid data"};
+    }
+  }
+
 
 protected:
   //////////////////////////////////////////////////////////////////////

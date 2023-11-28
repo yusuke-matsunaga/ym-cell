@@ -51,7 +51,9 @@ CiPatMgr::pat(
 ) const
 {
   // CiPatGraph の定義が必要なのでヘッダファイルに書けない．
-  ASSERT_COND( 0 <= id && id < pat_num() );
+  if ( id < 0 || pat_num() <= id ) {
+    throw std::out_of_range{"id is out of range"};
+  }
   return mPatArray[id];
 }
 

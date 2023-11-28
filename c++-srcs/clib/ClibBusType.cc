@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_CLIB
 string
 ClibBusType::name() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bustype = mLibrary->_bustype(mId);
   return bustype->name();
 }
@@ -29,7 +29,7 @@ ClibBusType::name() const
 ClibBusType::BaseType
 ClibBusType::base_type() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bustype = mLibrary->_bustype(mId);
   return bustype->base_type();
 }
@@ -38,7 +38,7 @@ ClibBusType::base_type() const
 ClibBusType::DataType
 ClibBusType::data_type() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bustype = mLibrary->_bustype(mId);
   return bustype->data_type();
 }
@@ -47,7 +47,7 @@ ClibBusType::data_type() const
 SizeType
 ClibBusType::bit_width() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bustype = mLibrary->_bustype(mId);
   return bustype->bit_width();
 }
@@ -56,7 +56,7 @@ ClibBusType::bit_width() const
 SizeType
 ClibBusType::bit_from() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bustype = mLibrary->_bustype(mId);
   return bustype->bit_from();
 }
@@ -65,7 +65,7 @@ ClibBusType::bit_from() const
 SizeType
 ClibBusType::bit_to() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bustype = mLibrary->_bustype(mId);
   return bustype->bit_to();
 }
@@ -74,7 +74,7 @@ ClibBusType::bit_to() const
 bool
 ClibBusType::downto() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bustype = mLibrary->_bustype(mId);
   return bustype->downto();
 }

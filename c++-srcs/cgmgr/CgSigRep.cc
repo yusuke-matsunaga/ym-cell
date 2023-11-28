@@ -202,9 +202,15 @@ CgSigRep::xform(
   const ClibIOMap& iomap ///< [in] 変換マップ
 ) const
 {
-  ASSERT_COND( iomap.input_num() == mNi );
-  ASSERT_COND( iomap.output_num() == mNo );
-  ASSERT_COND( iomap.inout_num() == mNb );
+  if ( iomap.input_num() != mNi ) {
+    throw std::invalid_argument{"input_num() mismatch"};
+  }
+  if ( iomap.output_num() != mNo ) {
+    throw std::invalid_argument{"output_num() mismatch"};
+  }
+  if ( iomap.inout_num() != mNb ) {
+    throw std::invalid_argument{"inout_num() mismatch"};
+  }
 
   SizeType n = mFuncList.size();
   vector<TvFunc> xfunc_list(n);

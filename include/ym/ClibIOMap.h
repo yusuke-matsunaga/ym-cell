@@ -117,7 +117,9 @@ public:
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < input_num() + inout_num() )
   ) const
   {
-    ASSERT_COND( 0 <= pos && pos < input_num() + inout_num() );
+    if ( pos < 0 || input_num() + inout_num() <= pos ) {
+      throw std::out_of_range("out of range");
+    }
     if ( pos < input_num() ) {
       return mInputMap[pos];
     }
@@ -146,7 +148,9 @@ public:
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < output_num() + inout_num() )
   ) const
   {
-    ASSERT_COND( 0 <= pos && pos < output_num() + inout_num() );
+    if ( pos < 0 || output_num() + inout_num() <= pos ) {
+      throw std::out_of_range("out of range");
+    }
     if ( pos < output_num() ) {
       return mOutputMap[pos];
     }
@@ -175,7 +179,9 @@ public:
     SizeType pos ///< [in] 位置番号 ( 0 <= pos && pos < inout_num() )
   ) const
   {
-    ASSERT_COND( 0 <= pos && pos < inout_num() );
+    if ( pos < 0 || inout_num() <= pos ) {
+      throw std::out_of_range("out of range");
+    }
     return mInoutMap[pos];
   }
 

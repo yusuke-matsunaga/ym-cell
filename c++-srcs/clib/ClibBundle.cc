@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_CLIB
 string
 ClibBundle::name() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bundle = mLibrary->_bundle(mId);
   return bundle->name();
 }
@@ -31,7 +31,7 @@ ClibBundle::name() const
 SizeType
 ClibBundle::pin_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bundle = mLibrary->_bundle(mId);
   return bundle->pin_num();
 }
@@ -42,7 +42,7 @@ ClibBundle::pin(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bundle = mLibrary->_bundle(mId);
   SizeType id = bundle->pin(pos);
   return ClibPin{mLibrary, id};
@@ -52,7 +52,7 @@ ClibBundle::pin(
 ClibPinList
 ClibBundle::pin_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto bundle = mLibrary->_bundle(mId);
   auto& id_list = bundle->pin_list();
   return ClibPinList{mLibrary, id_list};

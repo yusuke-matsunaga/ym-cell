@@ -25,7 +25,7 @@ BEGIN_NAMESPACE_YM_CLIB
 string
 ClibCell::name() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->name();
 }
@@ -34,7 +34,7 @@ ClibCell::name() const
 ClibArea
 ClibCell::area() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->area();
 }
@@ -43,7 +43,7 @@ ClibCell::area() const
 SizeType
 ClibCell::pin_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->pin_num();
 }
@@ -54,7 +54,7 @@ ClibCell::pin(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   SizeType pin_id = cell->pin(pos);
   return ClibPin{mLibrary, pin_id};
@@ -66,7 +66,7 @@ ClibCell::pin(
   const string& name
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   SizeType pin_id = mLibrary->get_pin_id(mId, ShString{name});
   return ClibPin{mLibrary, pin_id};
 }
@@ -75,7 +75,7 @@ ClibCell::pin(
 ClibPinList
 ClibCell::pin_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return ClibPinList{mLibrary, cell->pin_list()};
 }
@@ -84,7 +84,7 @@ ClibCell::pin_list() const
 SizeType
 ClibCell::input_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->input_num();
 }
@@ -95,7 +95,7 @@ ClibCell::input(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   SizeType id = cell->input(pos);
   return ClibPin{mLibrary, id};
@@ -105,7 +105,7 @@ ClibCell::input(
 ClibPinList
 ClibCell::input_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return ClibPinList{mLibrary, cell->input_list()};
 }
@@ -114,7 +114,7 @@ ClibCell::input_list() const
 SizeType
 ClibCell::output_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->output_num();
 }
@@ -125,7 +125,7 @@ ClibCell::output(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   SizeType id = cell->output(pos);
   return ClibPin{mLibrary, id};
@@ -135,7 +135,7 @@ ClibCell::output(
 ClibPinList
 ClibCell::output_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return ClibPinList{mLibrary, cell->output_list()};
 }
@@ -144,7 +144,7 @@ ClibCell::output_list() const
 SizeType
 ClibCell::inout_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->inout_num();
 }
@@ -155,7 +155,7 @@ ClibCell::inout(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   SizeType id = cell->inout(pos);
   return ClibPin{mLibrary, id};
@@ -165,7 +165,7 @@ ClibCell::inout(
 ClibPinList
 ClibCell::inout_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return ClibPinList{mLibrary, cell->inout_begin(), cell->input_list().end()};
 }
@@ -174,7 +174,7 @@ ClibCell::inout_list() const
 SizeType
 ClibCell::input2_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->input2_num();
 }
@@ -185,7 +185,7 @@ ClibCell::input2(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   SizeType id = cell->input(pos);
   return ClibPin{mLibrary, id};
@@ -195,7 +195,7 @@ ClibCell::input2(
 SizeType
 ClibCell::output2_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->output2_num();
 }
@@ -206,7 +206,7 @@ ClibCell::output2(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   SizeType id = cell->output(pos);
   return ClibPin{mLibrary, id};
@@ -216,7 +216,7 @@ ClibCell::output2(
 SizeType
 ClibCell::internal_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->internal_num();
 }
@@ -227,7 +227,7 @@ ClibCell::internal(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   SizeType id = cell->internal(pos);
   return ClibPin{mLibrary, id};
@@ -237,7 +237,7 @@ ClibCell::internal(
 ClibPinList
 ClibCell::internal_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return ClibPinList{mLibrary, cell->internal_list()};
 }
@@ -246,7 +246,7 @@ ClibCell::internal_list() const
 SizeType
 ClibCell::bus_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->bus_num();
 }
@@ -257,7 +257,7 @@ ClibCell::bus(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   SizeType id = cell->bus(pos);
   return ClibBus{mLibrary, id};
@@ -269,7 +269,7 @@ ClibCell::bus(
   const string& name
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto id = mLibrary->get_bus_id(mId, ShString{name});
   return ClibBus{mLibrary, id};
 }
@@ -278,7 +278,7 @@ ClibCell::bus(
 ClibBusList
 ClibCell::bus_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return ClibBusList{mLibrary, cell->bus_list()};
 }
@@ -287,7 +287,7 @@ ClibCell::bus_list() const
 SizeType
 ClibCell::bundle_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->bundle_num();
 }
@@ -298,7 +298,7 @@ ClibCell::bundle(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   SizeType id = cell->bundle(pos);
   return ClibBundle{mLibrary, id};
@@ -310,7 +310,7 @@ ClibCell::bundle(
   const string& name
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   SizeType id = mLibrary->get_bundle_id(mId, ShString{name});
   return ClibBundle{mLibrary, id};
 }
@@ -319,7 +319,7 @@ ClibCell::bundle(
 ClibBundleList
 ClibCell::bundle_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return ClibBundleList{mLibrary, cell->bundle_list()};
 }
@@ -328,7 +328,7 @@ ClibCell::bundle_list() const
 SizeType
 ClibCell::timing_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->timing_num();
 }
@@ -339,7 +339,7 @@ ClibCell::timing(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   SizeType id = cell->timing(pos);
   return ClibTiming{mLibrary, id};
@@ -349,7 +349,7 @@ ClibCell::timing(
 ClibTimingList
 ClibCell::timing_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return ClibTimingList{mLibrary, cell->timing_list()};
 }
@@ -362,7 +362,7 @@ ClibCell::timing_list(
   ClibTimingSense sense
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return ClibTimingList{mLibrary, cell->timing_list(ipos, opos, sense)};
 }
@@ -371,7 +371,7 @@ ClibCell::timing_list(
 ClibCellType
 ClibCell::type() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->type();
 }
@@ -380,7 +380,7 @@ ClibCell::type() const
 bool
 ClibCell::is_logic() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->is_logic();
 }
@@ -389,7 +389,7 @@ ClibCell::is_logic() const
 bool
 ClibCell::is_ff() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->is_ff();
 }
@@ -398,7 +398,7 @@ ClibCell::is_ff() const
 bool
 ClibCell::is_latch() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->is_latch();
 }
@@ -416,7 +416,7 @@ ClibCell::has_logic(
 bool
 ClibCell::has_logic() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   for ( auto pin: output_list() ) {
     if ( !pin.function().is_valid() ) {
       return false;
@@ -431,7 +431,7 @@ ClibCell::logic_expr(
   SizeType pin_id
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = output(pin_id);
   return pin.function();
 }
@@ -451,7 +451,7 @@ ClibCell::tristate_expr(
   SizeType pin_id
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto pin = output(pin_id);
   return pin.tristate();
 }
@@ -460,7 +460,7 @@ ClibCell::tristate_expr(
 string
 ClibCell::qvar1() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->qvar1();
 }
@@ -469,7 +469,7 @@ ClibCell::qvar1() const
 string
 ClibCell::qvar2() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->qvar2();
 }
@@ -485,7 +485,7 @@ ClibCell::has_clear() const
 Expr
 ClibCell::clear_expr() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->clear_expr();
 }
@@ -501,7 +501,7 @@ ClibCell::has_preset() const
 Expr
 ClibCell::preset_expr() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->preset_expr();
 }
@@ -510,7 +510,7 @@ ClibCell::preset_expr() const
 ClibCPV
 ClibCell::clear_preset_var1() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->clear_preset_var1();
 }
@@ -519,7 +519,7 @@ ClibCell::clear_preset_var1() const
 ClibCPV
 ClibCell::clear_preset_var2() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->clear_preset_var2();
 }
@@ -528,7 +528,7 @@ ClibCell::clear_preset_var2() const
 Expr
 ClibCell::clock_expr() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->clock_expr();
 }
@@ -537,7 +537,7 @@ ClibCell::clock_expr() const
 Expr
 ClibCell::clock2_expr() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->clock2_expr();
 }
@@ -546,7 +546,7 @@ ClibCell::clock2_expr() const
 Expr
 ClibCell::next_state_expr() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->next_state_expr();
 }
@@ -555,7 +555,7 @@ ClibCell::next_state_expr() const
 Expr
 ClibCell::enable_expr() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->enable_expr();
 }
@@ -564,7 +564,7 @@ ClibCell::enable_expr() const
 Expr
 ClibCell::enable2_expr() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->enable2_expr();
 }
@@ -573,7 +573,7 @@ ClibCell::enable2_expr() const
 Expr
 ClibCell::data_in_expr() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cell = mLibrary->_cell(mId);
   return cell->data_in_expr();
 }

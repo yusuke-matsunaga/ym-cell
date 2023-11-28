@@ -23,7 +23,7 @@ BEGIN_NAMESPACE_YM_CLIB
 ClibCellClass
 ClibCellGroup::rep_class() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cg = mLibrary->_cell_group(mId);
   SizeType id = cg->rep_class();
   return ClibCellClass{mLibrary, id};
@@ -33,7 +33,7 @@ ClibCellGroup::rep_class() const
 const ClibIOMap&
 ClibCellGroup::iomap() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cg = mLibrary->_cell_group(mId);
   return cg->iomap();
 }
@@ -42,7 +42,7 @@ ClibCellGroup::iomap() const
 SizeType
 ClibCellGroup::cell_num() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cg = mLibrary->_cell_group(mId);
   return cg->cell_num();
 }
@@ -53,7 +53,7 @@ ClibCellGroup::cell(
   SizeType pos
 ) const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cg = mLibrary->_cell_group(mId);
   SizeType id = cg->cell(pos);
   return ClibCell{mLibrary, id};
@@ -63,7 +63,7 @@ ClibCellGroup::cell(
 ClibCellList
 ClibCellGroup::cell_list() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto cg = mLibrary->_cell_group(mId);
   return ClibCellList{mLibrary, cg->cell_list()};
 }

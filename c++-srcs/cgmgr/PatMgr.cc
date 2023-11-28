@@ -66,13 +66,14 @@ PatMgr::node_num() const
 }
 
 // @brief ノードを返す．
-// @param[in] pos ノード番号 ( 0 <= pos < node_num() )
 const PatNode&
 PatMgr::node(
   SizeType pos
 ) const
 {
-  ASSERT_COND( 0 <= pos && pos < node_num() );
+  if ( pos < 0 || node_num() <= pos ) {
+    throw std::out_of_range{"pos is out of range"};
+  }
   return *mNodeList[pos];
 }
 
@@ -89,7 +90,9 @@ PatMgr::pat_root(
   SizeType id
 ) const
 {
-  ASSERT_COND( id >= 0 && id < pat_num() );
+  if ( id < 0 || pat_num() <= id ) {
+    throw std::out_of_range{"id is out of range"};
+  }
   return mPatList[id].first;
 }
 
@@ -99,7 +102,9 @@ PatMgr::rep_id(
   SizeType id
 ) const
 {
-  ASSERT_COND( id >= 0 && id < pat_num() );
+  if ( id < 0 || pat_num() <= id ) {
+    throw std::out_of_range{"id is out of range"};
+  }
   return mPatList[id].second;
 }
 
@@ -110,8 +115,6 @@ PatMgr::reg_pat(
   SizeType rep_id
 )
 {
-  ASSERT_COND( 0 <= rep_id );
-
   if ( mExprList.size() <= rep_id ) {
     mExprList.resize(rep_id + 1, {});
   }
@@ -413,16 +416,13 @@ PatMgr::pg_sub(
 }
 
 // @brief テンプレートにしたがって2分木を作る．
-// @param[in] expr 論理式 (演算の種類を表すのに用いる)
-// @param[in] input 入力の配列
-// @param[in] pat 2分木の形を表す配列
-// @param[inout] pos pat[] 中の位置を示す変数
 PatHandle
 PatMgr::make_bintree(
   const Expr& expr,
   const vector<PatHandle>& input,
   int pat[],
-  SizeType& pos)
+  SizeType& pos
+)
 {
   int p = pat[pos];
   ++ pos;
@@ -439,8 +439,6 @@ PatMgr::make_bintree(
 }
 
 // @brief 入力ノードを作る．
-// @param[in] var 入力変数
-// @note 既にあるときはそれを返す．
 PatNode*
 PatMgr::make_input(
   SizeType var
@@ -459,8 +457,6 @@ PatMgr::make_input(
 }
 
 // @brief 論理式の種類に応じてノードを作る．
-// @param[in] expr 論理式 (演算の種類を表すのに用いる)
-// @param[in] l_handle, r_handle 左右の子供のパタン
 PatHandle
 PatMgr::make_node(
   const Expr& expr,
@@ -627,7 +623,9 @@ PatMgr::get_pat_info(
   vector<SizeType>& node_list
 ) const
 {
-  ASSERT_COND( id >= 0 && id < pat_num() );
+  if ( id < 0 || pat_num() <= id ) {
+    throw std::out_of_range{"id is out of range"};
+  }
 
   PatHandle root = pat_root(id);
   node_list.clear();

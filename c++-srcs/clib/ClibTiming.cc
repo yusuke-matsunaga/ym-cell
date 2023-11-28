@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_CLIB
 ClibTimingType
 ClibTiming::type() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   return timing->type();
 }
@@ -31,7 +31,7 @@ ClibTiming::type() const
 Expr
 ClibTiming::timing_cond() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   return timing->timing_cond();
 }
@@ -40,7 +40,7 @@ ClibTiming::timing_cond() const
 ClibTime
 ClibTiming::intrinsic_rise() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   return timing->intrinsic_rise();
 }
@@ -49,7 +49,7 @@ ClibTiming::intrinsic_rise() const
 ClibTime
 ClibTiming::intrinsic_fall() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   return timing->intrinsic_fall();
 }
@@ -58,7 +58,7 @@ ClibTiming::intrinsic_fall() const
 ClibTime
 ClibTiming::slope_rise() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   return timing->slope_rise();
 }
@@ -67,7 +67,7 @@ ClibTiming::slope_rise() const
 ClibTime
 ClibTiming::slope_fall() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   return timing->slope_fall();
 }
@@ -76,7 +76,7 @@ ClibTiming::slope_fall() const
 ClibResistance
 ClibTiming::rise_resistance() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   return timing->rise_resistance();
 }
@@ -85,7 +85,7 @@ ClibTiming::rise_resistance() const
 ClibResistance
 ClibTiming::fall_resistance() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   return timing->fall_resistance();
 }
@@ -94,7 +94,7 @@ ClibTiming::fall_resistance() const
 ClibResistance
 ClibTiming::rise_pin_resistance() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   return timing->rise_pin_resistance();
 }
@@ -103,7 +103,7 @@ ClibTiming::rise_pin_resistance() const
 ClibResistance
 ClibTiming::fall_pin_resistance() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   return timing->fall_pin_resistance();
 }
@@ -112,7 +112,7 @@ ClibTiming::fall_pin_resistance() const
 ClibTime
 ClibTiming::rise_delay_intercept() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   return timing->rise_delay_intercept();
 }
@@ -121,7 +121,7 @@ ClibTiming::rise_delay_intercept() const
 ClibTime
 ClibTiming::fall_delay_intercept() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   return timing->fall_delay_intercept();
 }
@@ -130,7 +130,7 @@ ClibTiming::fall_delay_intercept() const
 ClibLut
 ClibTiming::rise_transition() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   auto id = timing->rise_transition();
   return ClibLut{mLibrary, id};
@@ -140,7 +140,7 @@ ClibTiming::rise_transition() const
 ClibLut
 ClibTiming::fall_transition() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   auto id = timing->fall_transition();
   return ClibLut{mLibrary, id};
@@ -150,7 +150,7 @@ ClibTiming::fall_transition() const
 ClibLut
 ClibTiming::rise_propagation() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   auto id = timing->rise_propagation();
   return ClibLut{mLibrary, id};
@@ -160,7 +160,7 @@ ClibTiming::rise_propagation() const
 ClibLut
 ClibTiming::fall_propagation() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   auto id = timing->fall_propagation();
   return ClibLut{mLibrary, id};
@@ -170,7 +170,7 @@ ClibTiming::fall_propagation() const
 ClibLut
 ClibTiming::cell_rise() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   auto id = timing->cell_rise();
   return ClibLut{mLibrary, id};
@@ -180,7 +180,7 @@ ClibTiming::cell_rise() const
 ClibLut
 ClibTiming::cell_fall() const
 {
-  ASSERT_COND( is_valid() );
+  _check_valid();
   auto timing = mLibrary->_timing(mId);
   auto id = timing->cell_fall();
   return ClibLut{mLibrary, id};
