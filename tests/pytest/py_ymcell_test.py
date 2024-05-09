@@ -37,6 +37,9 @@ def test_read_liberty():
     lib_filename = os.path.join(data_dir, 'testdata', 'HIT018.typ.snp')
     exp_filename = os.path.join(data_dir, 'testdata', 'HIT018.typ.snp.display')
     lib = ymcell.ClibCellLibrary.read_liberty(lib_filename)
+
+    assert lib.is_valid()
+    
     lines = lib.to_string_list()
     n = len(lines)
     

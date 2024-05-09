@@ -216,6 +216,12 @@ TimingInfo::add_timing(
 	  n_unate = true;
 	}
       }
+      else if ( mTimingType == ClibTimingType::rising_edge ||
+		mTimingType == ClibTimingType::falling_edge ) {
+	// クロックと出力値の rise/fall は無関係
+	p_unate = true;
+	n_unate = true;
+      }
       else {
 	if ( mTimingSense == ClibTimingSense::positive_unate ||
 	     mTimingSense == ClibTimingSense::non_unate ) {
@@ -249,7 +255,9 @@ TimingInfo::set_timing_common_params()
     mWhen = nullptr;
   }
 
-  get_timing_sense("timing_sense", mTimingSense);
+  if ( !get_timing_sense("timing_sense", mTimingSense) ) {
+    mTimingSense = ClibTimingSense::none;
+  }
 
   const char* keyword{"related_pin"};
   if ( elem_dict().count(keyword) == 0 ) {
