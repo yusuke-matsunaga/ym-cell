@@ -59,7 +59,7 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  const ClibCellLibrary&
+  ClibCellLibrary
   Get(
     PyObject* obj ///< [in] 変換元の PyObject
   );

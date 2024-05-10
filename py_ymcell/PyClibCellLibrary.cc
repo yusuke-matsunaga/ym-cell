@@ -3,11 +3,13 @@
 /// @brief Python ClibCellLibrary の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2022, 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "pym/PyClibCellLibrary.h"
 #include "pym/PyModule.h"
+#include "ym/ClibLibraryPtr.h"
+#include "ci/CiCellLibrary.h"
 
 
 BEGIN_NAMESPACE_YM
@@ -18,7 +20,7 @@ BEGIN_NONAMESPACE
 struct ClibCellLibraryObject
 {
   PyObject_HEAD
-  ClibCellLibrary* mPtr;
+  const nsClib::CiCellLibrary* mPtr;
 };
 
 // Python 用のタイプ定義
@@ -45,7 +47,10 @@ ClibCellLibrary_dealloc(
 )
 {
   auto clibcelllibrary_obj = reinterpret_cast<ClibCellLibraryObject*>(self);
-  delete clibcelllibrary_obj->mPtr;
+  auto ptr = clibcelllibrary_obj->mPtr;
+  if ( ptr != nullptr ) {
+    ptr->dec_ref();
+  }
   Py_TYPE(self)->tp_free(self);
 }
 
@@ -64,10 +69,7 @@ ClibCellLibrary_mislib(
   try {
     // mislib ファイルを読み込む．
     auto clib = ClibCellLibrary::read_mislib(filename);
-    auto obj = ClibCellLibraryType.tp_alloc(&ClibCellLibraryType, 0);
-    auto clibcelllibrary_obj = reinterpret_cast<ClibCellLibraryObject*>(obj);
-    clibcelllibrary_obj->mPtr = new ClibCellLibrary{clib};
-    return obj;
+    return PyClibCellLibrary::ToPyObject(clib);
   }
   catch ( std::invalid_argument& error ) {
     ostringstream buf;
@@ -92,10 +94,7 @@ ClibCellLibrary_liberty(
   try {
     // liberty ファイルを読み込む．
     auto clib = ClibCellLibrary::read_liberty(filename);
-    auto obj = ClibCellLibraryType.tp_alloc(&ClibCellLibraryType, 0);
-    auto clibcelllibrary_obj = reinterpret_cast<ClibCellLibraryObject*>(obj);
-    clibcelllibrary_obj->mPtr = new ClibCellLibrary{clib};
-    return obj;
+    return PyClibCellLibrary::ToPyObject(clib);
   }
   catch ( std::invalid_argument& error ) {
     ostringstream buf;
@@ -111,10 +110,27 @@ ClibCellLibrary_is_valid(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& lib = PyClibCellLibrary::Get(self);
+  auto lib = PyClibCellLibrary::Get(self);
   auto val = lib.is_valid();
   return PyBool_FromLong(val);
 }
+
+#if 0
+PyObject*
+ClibCellLibrary_bus_type(
+  PyObject* self,
+  PyObject* args
+)
+{
+  const char* name = nullptr;
+  if ( !PyArg_ParseTuple(args, "s", &name) ) {
+    return nullptr;
+  }
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.bus_type(name);
+  return PyClibBusType::ToPyObject(val);
+}
+#endif
 
 // 内容を表示する．
 PyObject*
@@ -128,7 +144,7 @@ ClibCellLibrary_display(
     return nullptr;
   }
 
-  auto& lib = PyClibCellLibrary::Get(self);
+  auto lib = PyClibCellLibrary::Get(self);
   if ( filename == nullptr ) {
     lib.display(cout);
   }
@@ -153,7 +169,7 @@ ClibCellLibrary_to_string_list(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto& lib = PyClibCellLibrary::Get(self);
+  auto lib = PyClibCellLibrary::Get(self);
   ostringstream buf;
   lib.display(buf);
 
@@ -189,6 +205,184 @@ PyMethodDef ClibCellLibrary_methods[] = {
   {nullptr, nullptr, 0, nullptr}
 };
 
+PyObject*
+ClibCellLibrary_name(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.name();
+  return Py_BuildValue("s", val.c_str());
+}
+
+PyObject*
+ClibCellLibrary_technology(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.technology();
+  Py_RETURN_NONE;
+}
+
+PyObject*
+ClibCellLibrary_bus_naming_style(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.bus_naming_style();
+  return Py_BuildValue("s", val.c_str());
+}
+
+PyObject*
+ClibCellLibrary_date(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.date();
+  return Py_BuildValue("s", val.c_str());
+}
+
+PyObject*
+ClibCellLibrary_revision(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.revision();
+  return Py_BuildValue("s", val.c_str());
+}
+
+PyObject*
+ClibCellLibrary_comment(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.comment();
+  return Py_BuildValue("s", val.c_str());
+}
+
+PyObject*
+ClibCellLibrary_time_unit(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.time_unit();
+  return Py_BuildValue("s", val.c_str());
+}
+
+PyObject*
+ClibCellLibrary_voltage_unit(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.voltage_unit();
+  return Py_BuildValue("s", val.c_str());
+}
+
+PyObject*
+ClibCellLibrary_current_unit(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.current_unit();
+  return Py_BuildValue("s", val.c_str());
+}
+
+PyObject*
+ClibCellLibrary_pulling_resistance_unit(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.pulling_resistance_unit();
+  return Py_BuildValue("s", val.c_str());
+}
+
+PyObject*
+ClibCellLibrary_capacitive_load_unit(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.capacitive_load_unit();
+  return Py_BuildValue("d", val);
+}
+
+PyObject*
+ClibCellLibrary_capacitive_load_unit_str(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.capacitive_load_unit_str();
+  return Py_BuildValue("s", val.c_str());
+}
+
+PyObject*
+ClibCellLibrary_leakage_power_unit(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.leakage_power_unit();
+  return Py_BuildValue("s", val.c_str());
+}
+
+// getter/setter 関数テーブル
+PyGetSetDef ClibCellLibrary_getsetters[] = {
+  {"name", ClibCellLibrary_name, nullptr,
+   PyDoc_STR("name"), nullptr},
+#if 0
+  {"technology", ClibCellLibrary_technology, nullptr,
+   PyDoc_STR("technology"), nullptr},
+  {"delay_model", ClibCellLibrary_delay_model, nullptr,
+   PyDoc_STR("delay_model"), nullptr},
+#endif
+  {"bus_naming_style", ClibCellLibrary_bus_naming_style, nullptr,
+   PyDoc_STR("bus_naming_style"), nullptr},
+  {"date", ClibCellLibrary_date, nullptr,
+   PyDoc_STR("date"), nullptr},
+  {"revision", ClibCellLibrary_revision, nullptr,
+   PyDoc_STR("revision"), nullptr},
+  {"comment", ClibCellLibrary_comment, nullptr,
+   PyDoc_STR("comment"), nullptr},
+  {"time_unit", ClibCellLibrary_time_unit, nullptr,
+   PyDoc_STR("time_unit"), nullptr},
+  {"voltage_unit", ClibCellLibrary_voltage_unit, nullptr,
+   PyDoc_STR("voltage_unit"), nullptr},
+  {"current_unit", ClibCellLibrary_current_unit, nullptr,
+   PyDoc_STR("current_unit"), nullptr},
+  {"pulling_resistance_unit", ClibCellLibrary_pulling_resistance_unit, nullptr,
+   PyDoc_STR("pulling_resistance_unit"), nullptr},
+  {"capacitive_load_unit", ClibCellLibrary_capacitive_load_unit, nullptr,
+   PyDoc_STR("capacitive_load_unit"), nullptr},
+  {"capacitive_load_unit_str", ClibCellLibrary_capacitive_load_unit_str, nullptr,
+   PyDoc_STR("capacitive_load_unit_str"), nullptr},
+  {"leakage_power_unit", ClibCellLibrary_leakage_power_unit, nullptr,
+   PyDoc_STR("leakage_power_unit"), nullptr},
+  {nullptr, nullptr, nullptr, nullptr}
+};
+
 END_NONAMESPACE
 
 // 比較関数
@@ -201,8 +395,8 @@ ClibCellLibrary_richcompfunc(
 {
   if ( PyClibCellLibrary::Check(self) &&
        PyClibCellLibrary::Check(other) ) {
-    auto& val1 = PyClibCellLibrary::Get(self);
-    auto& val2 = PyClibCellLibrary::Get(other);
+    auto val1 = PyClibCellLibrary::Get(self);
+    auto val2 = PyClibCellLibrary::Get(other);
     if ( op == Py_EQ ) {
       return PyBool_FromLong(val1 == val2);
     }
@@ -227,6 +421,7 @@ PyClibCellLibrary::init(
   ClibCellLibraryType.tp_doc = PyDoc_STR("ClibCellLibrary objects");
   ClibCellLibraryType.tp_richcompare = ClibCellLibrary_richcompfunc;
   ClibCellLibraryType.tp_methods = ClibCellLibrary_methods;
+  ClibCellLibraryType.tp_getset = ClibCellLibrary_getsetters;
   ClibCellLibraryType.tp_new = ClibCellLibrary_new;
 
   // 型オブジェクトの登録
@@ -248,8 +443,12 @@ PyClibCellLibrary::ToPyObject(
 )
 {
   auto obj = ClibCellLibraryType.tp_alloc(&ClibCellLibraryType, 0);
-  auto lib_obj = reinterpret_cast<ClibCellLibraryObject*>(obj);
-  lib_obj->mPtr = new ClibCellLibrary{val};
+  auto clibcelllibrary_obj = reinterpret_cast<ClibCellLibraryObject*>(obj);
+  auto ptr = val.ptr();
+  clibcelllibrary_obj->mPtr = ptr;
+  if ( ptr != nullptr ) {
+    ptr->inc_ref();
+  }
   return obj;
 }
 
@@ -263,13 +462,13 @@ PyClibCellLibrary::Check(
 }
 
 // @brief ClibCellLibrary を表す PyObject から ClibCellLibrary を取り出す．
-const ClibCellLibrary&
+ClibCellLibrary
 PyClibCellLibrary::Get(
   PyObject* obj
 )
 {
   auto clibcelllibrary_obj = reinterpret_cast<ClibCellLibraryObject*>(obj);
-  return *clibcelllibrary_obj->mPtr;
+  return ClibCellLibrary{nsClib::ClibLibraryPtr{clibcelllibrary_obj->mPtr}};
 }
 
 // @brief ClibCellLibrary を表すオブジェクトの型定義を返す．

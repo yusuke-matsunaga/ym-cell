@@ -590,4 +590,11 @@ ClibCellLibrary::restore(
   mImpl = new_impl;
 }
 
+// @brief ポインタを取り出す．
+const CiCellLibrary*
+ClibCellLibrary::ptr() const
+{
+  return mImpl.ptr();
+}
+
 END_NAMESPACE_YM_CLIB

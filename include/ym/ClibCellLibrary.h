@@ -5,7 +5,7 @@
 /// @brief ClibCellLibrary のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2023, 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
@@ -449,6 +449,16 @@ public:
     return !operator==(right);
   }
 
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // Python インターフェイス用の関数
+  // 通常の使用は禁止
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ポインタを取り出す．
+  const CiCellLibrary*
+  ptr() const;
 
 
 private:

@@ -57,6 +57,10 @@ public:
   const CiCellLibrary*
   operator->() const { return mPtr; }
 
+  /// @brief ->() の別名
+  const CiCellLibrary*
+  ptr() const { return mPtr; }
+
   /// @brief 適正な値を持っている時 true を返す．
   bool
   is_valid() const { return mPtr != nullptr; }
