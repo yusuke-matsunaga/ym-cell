@@ -9,6 +9,13 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
+#include "pym/PyClibTechnology.h"
+#include "pym/PyClibDelayModel.h"
+#include "pym/PyClibDirection.h"
+#include "pym/PyClibTimingSense.h"
+#include "pym/PyClibTimingType.h"
+#include "pym/PyClibCellType.h"
+#include "pym/PyClibCPV.h"
 #include "pym/PyClibCellLibrary.h"
 #include "pym/ymlogic.h"
 #include "pym/PyModule.h"
@@ -43,6 +50,34 @@ PyInit_ymcell()
   }
 
   if ( !PyModule::reg_submodule(m, "ymlogic", PyInit_ymlogic()) ) {
+    goto error;
+  }
+
+  if ( !PyClibTechnology::init(m) ) {
+    goto error;
+  }
+
+  if ( !PyClibDelayModel::init(m) ) {
+    goto error;
+  }
+
+  if ( !PyClibDirection::init(m) ) {
+    goto error;
+  }
+
+  if ( !PyClibTimingSense::init(m) ) {
+    goto error;
+  }
+
+  if ( !PyClibTimingType::init(m) ) {
+    goto error;
+  }
+
+  if ( !PyClibCellType::init(m) ) {
+    goto error;
+  }
+
+  if ( !PyClibCPV::init(m) ) {
     goto error;
   }
 

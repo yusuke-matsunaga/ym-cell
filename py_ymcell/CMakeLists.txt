@@ -27,6 +27,13 @@ include_directories(
 
 ym_add_object_library ( py_ymcell
   ymcell_module.cc
+  PyClibTechnology.cc
+  PyClibDelayModel.cc
+  PyClibDirection.cc
+  PyClibTimingSense.cc
+  PyClibTimingType.cc
+  PyClibCellType.cc
+  PyClibCPV.cc
   PyClibCellLibrary.cc
   PyClibCell.cc
   )

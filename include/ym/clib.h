@@ -227,7 +227,7 @@ enum class ClibVarType : std::uint8_t
 //////////////////////////////////////////////////////////////////////
 enum class ClibCellType : std::uint8_t
 {
-  None    = 0, ///< なし(不正値)
+  none    = 0, ///< なし(不正値)
   Logic   = 1, ///< 組み合わせ論理
   FF      = 2, ///< master-slave FF
   Latch   = 3, ///< master-slave latch
