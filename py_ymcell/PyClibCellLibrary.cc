@@ -7,6 +7,8 @@
 /// All rights reserved.
 
 #include "pym/PyClibCellLibrary.h"
+#include "pym/PyClibTechnology.h"
+#include "pym/PyClibDelayModel.h"
 #include "pym/PyModule.h"
 #include "ym/ClibLibraryPtr.h"
 #include "ci/CiCellLibrary.h"
@@ -224,7 +226,18 @@ ClibCellLibrary_technology(
 {
   auto lib = PyClibCellLibrary::Get(self);
   auto val = lib.technology();
-  Py_RETURN_NONE;
+  return PyClibTechnology::ToPyObject(val);
+}
+
+PyObject*
+ClibCellLibrary_delay_model(
+  PyObject* self,
+  void* Py_UNUSED(closure)
+)
+{
+  auto lib = PyClibCellLibrary::Get(self);
+  auto val = lib.delay_model();
+  return PyClibDelayModel::ToPyObject(val);
 }
 
 PyObject*
@@ -352,12 +365,10 @@ ClibCellLibrary_leakage_power_unit(
 PyGetSetDef ClibCellLibrary_getsetters[] = {
   {"name", ClibCellLibrary_name, nullptr,
    PyDoc_STR("name"), nullptr},
-#if 0
   {"technology", ClibCellLibrary_technology, nullptr,
    PyDoc_STR("technology"), nullptr},
   {"delay_model", ClibCellLibrary_delay_model, nullptr,
    PyDoc_STR("delay_model"), nullptr},
-#endif
   {"bus_naming_style", ClibCellLibrary_bus_naming_style, nullptr,
    PyDoc_STR("bus_naming_style"), nullptr},
   {"date", ClibCellLibrary_date, nullptr,
