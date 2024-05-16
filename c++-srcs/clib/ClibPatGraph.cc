@@ -22,8 +22,7 @@ SizeType
 ClibPatGraph::rep_id() const
 {
   _check_valid();
-  auto& pg = mLibrary->_pat_graph(mId);
-  return pg.rep_id();
+  return mImpl->rep_id();
 }
 
 // @brief 根のノード番号を返す．
@@ -31,8 +30,7 @@ SizeType
 ClibPatGraph::root_id() const
 {
   _check_valid();
-  auto& pg = mLibrary->_pat_graph(mId);
-  return pg.root_id();
+  return mImpl->root_id();
 }
 
 // @brief 根の反転属性を返す．
@@ -40,8 +38,7 @@ bool
 ClibPatGraph::root_inv() const
 {
   _check_valid();
-  auto& pg = mLibrary->_pat_graph(mId);
-  return pg.root_inv();
+  return mImpl->root_inv();
 }
 
 // @brief 入力数を返す．
@@ -49,8 +46,7 @@ SizeType
 ClibPatGraph::input_num() const
 {
   _check_valid();
-  auto& pg = mLibrary->_pat_graph(mId);
-  return pg.input_num();
+  return mImpl->input_num();
 }
 
 // @brief 枝数を返す．
@@ -58,8 +54,7 @@ SizeType
 ClibPatGraph::edge_num() const
 {
   _check_valid();
-  auto& pg = mLibrary->_pat_graph(mId);
-  return pg.edge_num();
+  return mImpl->edge_num();
 }
 
 // @brief 枝(の番号)を返す．
@@ -69,8 +64,7 @@ ClibPatGraph::edge(
 ) const
 {
   _check_valid();
-  auto& pg = mLibrary->_pat_graph(mId);
-  return pg.edge(pos);
+  return mImpl->edge(pos);
 }
 
 END_NAMESPACE_YM_CLIB

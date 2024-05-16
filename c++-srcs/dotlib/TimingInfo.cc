@@ -87,13 +87,13 @@ TimingInfo::add_timing(
     when = mWhen->to_expr(ipin_map);
   }
 
-  SizeType tid;
+  CiTiming* timing;
   switch ( mDelayModel ) {
   case ClibDelayModel::generic_cmos:
-    tid = library()->add_timing_generic(mTimingType, when,
-				       mIntrinsicRise, mIntrinsicFall,
-				       mSlopeRise, mSlopeFall,
-				       mRiseResistance, mFallResistance);
+    timing = library()->add_timing_generic(mTimingType, when,
+					   mIntrinsicRise, mIntrinsicFall,
+					   mSlopeRise, mSlopeFall,
+					   mRiseResistance, mFallResistance);
     break;
 
   case ClibDelayModel::table_lookup:
@@ -104,9 +104,9 @@ TimingInfo::add_timing(
 	auto cf_lut = mCellFall.gen_lut();
 	auto rt_lut = mRiseTransition.gen_lut();
 	auto ft_lut = mFallTransition.gen_lut();
-	tid = library()->add_timing_lut1(mTimingType, when,
-					cr_lut, cf_lut,
-					rt_lut, ft_lut);
+	timing = library()->add_timing_lut1(mTimingType, when,
+					    cr_lut, cf_lut,
+					    rt_lut, ft_lut);
       }
       break;
     case 2:
@@ -115,9 +115,9 @@ TimingInfo::add_timing(
 	auto ft_lut = mFallTransition.gen_lut();
 	auto rp_lut = mRisePropagation.gen_lut();
 	auto fp_lut = mFallPropagation.gen_lut();
-	tid = library()->add_timing_lut2(mTimingType, when,
-					rt_lut, ft_lut,
-					rp_lut, fp_lut);
+	timing = library()->add_timing_lut2(mTimingType, when,
+					    rt_lut, ft_lut,
+					    rp_lut, fp_lut);
       }
       break;
     default:
@@ -233,10 +233,10 @@ TimingInfo::add_timing(
 	}
       }
       if ( p_unate ) {
-	cell->set_timing(ipin, opin, ClibTimingSense::positive_unate, tid);
+	cell->set_timing(ipin, opin, ClibTimingSense::positive_unate, timing);
       }
       if ( n_unate ) {
-	cell->set_timing(ipin, opin, ClibTimingSense::negative_unate, tid);
+	cell->set_timing(ipin, opin, ClibTimingSense::negative_unate, timing);
       }
     }
   }

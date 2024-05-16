@@ -10,20 +10,28 @@
 
 #include "ym/clib.h"
 #include "ym/ShString.h"
+#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class Serializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiLutTemplate CiLutTemplate.h "CiLutTemplate.h"
 /// @brief CiLutTemplateXXX の(擬似)基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiLutTemplate
+class CiLutTemplate :
+  public CiLibObj
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiLutTemplate() = default;
+  /// @brief コンストラクタ
+  CiLutTemplate(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiLibObj{lib}
+  {
+  }
 
   /// @brief デストラクタ
   virtual
@@ -71,15 +79,8 @@ public:
   virtual
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
-
-  /// @brief 内容を読み込む．
-  virtual
-  void
-  restore(
-    BinDec& s ///< [in] 入力元のストリーム
-  ) = 0;
 
 
 protected:
@@ -91,7 +92,7 @@ protected:
   static
   void
   dump_var(
-    BinEnc& s,                        ///< [in] 出力先のストリーム
+    Serializer& s,                    ///< [in] シリアライザ
     ClibVarType var_type,             ///< [in] 変数のタイプ
     const vector<double>& index_array ///< [in] インデックスの配列
   );
@@ -108,14 +109,13 @@ class CiLutTemplate1D :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiLutTemplate1D() = default;
-
   /// @brief コンストラクタ
   CiLutTemplate1D(
+    const CiCellLibrary* lib,
     ClibVarType var_type,
     const vector<double>& index_array
-  ) : mVarType{var_type},
+  ) : CiLutTemplate{lib},
+      mVarType{var_type},
       mIndexArray{index_array}
   {
   }
@@ -160,14 +160,8 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
-
-  /// @brief 内容を読み込む．
-  void
-  restore(
-    BinDec& s ///< [in] 入力元のストリーム
-  ) override;
 
 
 private:
@@ -193,16 +187,15 @@ class CiLutTemplate2D :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiLutTemplate2D() = default;
-
   /// @brief コンストラクタ
   CiLutTemplate2D(
+    const CiCellLibrary* lib,
     ClibVarType var1,
     const vector<double>& index_array1,
     ClibVarType var2,
     const vector<double>& index_array2
-  ) : mVarType{var1, var2},
+  ) : CiLutTemplate{lib},
+      mVarType{var1, var2},
       mIndexArray{index_array1, index_array2}
   {
   }
@@ -247,14 +240,8 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
-
-  /// @brief 内容を読み込む．
-  void
-  restore(
-    BinDec& s ///< [in] 入力元のストリーム
-  ) override;
 
 
 private:
@@ -280,18 +267,17 @@ class CiLutTemplate3D :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiLutTemplate3D() = default;
-
   /// @brief コンストラクタ
   CiLutTemplate3D(
+    const CiCellLibrary* lib,
     ClibVarType var1,
     const vector<double>& index_array1,
     ClibVarType var2,
     const vector<double>& index_array2,
     ClibVarType var3,
     const vector<double>& index_array3
-  ) : mVarType{var1, var2, var3},
+  ) : CiLutTemplate{lib},
+      mVarType{var1, var2, var3},
       mIndexArray{index_array1, index_array2, index_array3}
   {
   }
@@ -336,14 +322,8 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
-
-  /// @brief 内容を読み込む．
-  void
-  restore(
-    BinDec& s ///< [in] 入力元のストリーム
-  ) override;
 
 
 private:

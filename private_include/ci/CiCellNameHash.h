@@ -1,11 +1,11 @@
-﻿#ifndef CICELLPINHASH_H
-#define CICELLPINHASH_H
+﻿#ifndef CICELLNAMEHASH_H
+#define CICELLNAMEHASH_H
 
-/// @file CiPinHash.h
-/// @brief CiPinHash のヘッダファイル
+/// @file CiNameHash.h
+/// @brief CiNameHash のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
@@ -15,20 +15,21 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class CiPinHash CiPinHash.h "CiPinHash.h"
-/// @brief ピン名のハッシュ表
+/// @class CiNameHash CiNameHash.h "CiNameHash.h"
+/// @brief セルと要素名をキーにしたハッシュ表
 ///
-/// 実はセル番号と名前をキーに番号を格納する辞書なのでバスやバンドルにも使える．
+/// 要素はピン，バス，バンドルを仮定している．
 //////////////////////////////////////////////////////////////////////
-class CiCellPinHash
+template<class T>
+class CiCellNameHash
 {
 public:
 
   /// @brief コンストラクタ
-  CiCellPinHash() = default;
+  CiCellNameHash() = default;
 
   /// @brief デストラクタ
-  ~CiCellPinHash() = default;
+  ~CiCellNameHash() = default;
 
 
 public:
@@ -43,34 +44,34 @@ public:
     mDict.clear();
   }
 
-  /// @brief ピンを追加する．
+  /// @brief 要素を追加する．
   void
   add(
-    SizeType cell_id, ///< [in] ピンの親のセル番号
-    ShString name,    ///< [in] ピン名
-    SizeType pin_id   ///< [in] ピン番号
+    const CiCell* cell, ///< [in] 親のセル
+    ShString name,      ///< [in] 名前
+    const T* elem       ///< [in] 登録する要素
   )
   {
-    Key key{cell_id, name};
-    mDict.emplace(key, pin_id);
+    Key key{cell, name};
+    mDict.emplace(key, elem);
   }
 
-  /// @brief ピンを取り出す．
-  /// @return cell の name というピンのピン番号を返す．
+  /// @brief 要素を取り出す．
+  /// @return cell の name という要素を返す．
   ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
+  /// なければ nullptr を返す．
+  const T*
   get(
-    SizeType cell_id, ///< [in] セル番号
-    ShString name     ///< [in] 名前
+    const CiCell* cell, ///< [in] ピンの親のセル
+    ShString name       ///< [in] 名前
   ) const
   {
-    Key key{cell_id, name};
+    Key key{cell, name};
     if ( mDict.count(key) > 0 ) {
       return mDict.at(key);
     }
     else {
-      return CLIB_NULLID;
+      return nullptr;
     }
   }
 
@@ -82,13 +83,13 @@ private:
 
   struct Key
   {
-    SizeType mCellId;
+    const CiCell* mCell;
     ShString mName;
 
     bool
     operator==(const Key& right) const
     {
-      return mCellId == right.mCellId && mName == right.mName;
+      return mCell == right.mCell && mName == right.mName;
     }
   };
 
@@ -100,7 +101,7 @@ private:
       const Key& key
     ) const
     {
-      return key.mCellId + key.mName.hash() * 97;
+      return reinterpret_cast<SizeType>(key.mCell) + key.mName.hash() * 97;
     }
   };
 
@@ -111,10 +112,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ハッシュ表
-  unordered_map<Key, SizeType, Hash> mDict;
+  unordered_map<Key, const T*, Hash> mDict;
 
 };
 
 END_NAMESPACE_YM_CLIB
 
-#endif // CICELLPINHASH_H
+#endif // CICELLNAMEHASH_H

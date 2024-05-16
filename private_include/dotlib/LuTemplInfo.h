@@ -54,7 +54,7 @@ public:
   }
 
   /// @brief テンプレートを作る．
-  SizeType
+  const CiLutTemplate*
   add_lu_template();
 
 

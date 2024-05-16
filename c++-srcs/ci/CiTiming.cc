@@ -88,45 +88,45 @@ CiTiming::fall_delay_intercept() const
 }
 
 // @brief 立ち上がり遷移遅延テーブルの取得
-SizeType
+const CiLut*
 CiTiming::rise_transition() const
 {
-  return CLIB_NULLID;
+  return nullptr;
 }
 
 // @brief 立ち下がり遷移遅延テーブルの取得
-SizeType
+const CiLut*
 CiTiming::fall_transition() const
 {
-  return CLIB_NULLID;
+  return nullptr;
 }
 
 // @brief 立ち上がり伝搬遅延テーブルの取得
-SizeType
+const CiLut*
 CiTiming::rise_propagation() const
 {
-  return CLIB_NULLID;
+  return nullptr;
 }
 
 // @brief 立ち下がり伝搬遅延テーブルの取得
-SizeType
+const CiLut*
 CiTiming::fall_propagation() const
 {
-  return CLIB_NULLID;
+  return nullptr;
 }
 
 // @brief 立ち上がりセル遅延テーブルの取得
-SizeType
+const CiLut*
 CiTiming::cell_rise() const
 {
-  return CLIB_NULLID;
+  return nullptr;
 }
 
 // @brief 立ち下がりセル遅延テーブルの取得
-SizeType
+const CiLut*
 CiTiming::cell_fall() const
 {
-  return CLIB_NULLID;
+  return nullptr;
 }
 
 
@@ -222,14 +222,14 @@ CiTimingPiecewise::fall_delay_intercept() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 立ち上がり遷移遅延テーブルの取得
-SizeType
+const CiLut*
 CiTimingLut::rise_transition() const
 {
   return mRiseTransition;
 }
 
 // @brief 立ち下がり遷移遅延テーブルの取得
-SizeType
+const CiLut*
 CiTimingLut::fall_transition() const
 {
   return mFallTransition;
@@ -241,14 +241,14 @@ CiTimingLut::fall_transition() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 立ち上がりセル遅延テーブルの取得
-SizeType
+const CiLut*
 CiTimingLut1::cell_rise() const
 {
   return mCellRise;
 }
 
 // @brief 立ち下がりセル遅延テーブルの取得
-SizeType
+const CiLut*
 CiTimingLut1::cell_fall() const
 {
   return mCellFall;
@@ -260,14 +260,14 @@ CiTimingLut1::cell_fall() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief 立ち上がり伝搬遅延テーブルの取得
-SizeType
+const CiLut*
 CiTimingLut2::rise_propagation() const
 {
   return mRisePropagation;
 }
 
 // @brief 立ち下がり伝搬遅延テーブルの取得
-SizeType
+const CiLut*
 CiTimingLut2::fall_propagation() const
 {
   return mFallPropagation;

@@ -66,14 +66,14 @@ public:
   /// @brief ピンを生成する．
   void
   add_pin(
-    SizeType cell_id,                                ///< [in] セル番号
+    CiCell* cell,                                    ///< [in] セル番号
     const unordered_map<ShString, SizeType>& pin_map ///< [in] 入力ピン番号の辞書
   );
 
   /// @brief タイミングを生成する．
   void
   add_timing(
-    SizeType cell_id,                                ///< [in] セル番号
+    CiCell* cell,                                    ///< [in] セル番号
     const unordered_map<ShString, SizeType>& pin_map ///< [in] 入力ピン番号の辞書
   ) const;
 

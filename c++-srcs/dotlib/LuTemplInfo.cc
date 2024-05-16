@@ -74,28 +74,31 @@ LuTemplInfo::set(
 }
 
 // @brief テンプレートを作る．
-SizeType
+const CiLutTemplate*
 LuTemplInfo::add_lu_template()
 {
-  SizeType tid{CLIB_NULLID};
+  const CiLutTemplate* templ{nullptr};
   switch ( mDimension ) {
   case 1:
-    tid = library()->add_lut_template1(mVar1, mIndex1);
+    templ = library()->add_lut_template1(mVar1, mIndex1);
     break;
 
   case 2:
-    tid = library()->add_lut_template2(mVar1, mIndex1, mVar2, mIndex2);
+    templ = library()->add_lut_template2(mVar1, mIndex1,
+					 mVar2, mIndex2);
     break;
 
   case 3:
-    tid = library()->add_lut_template3(mVar1, mIndex1, mVar2, mIndex2, mVar3, mIndex3);
+    templ = library()->add_lut_template3(mVar1, mIndex1,
+					 mVar2, mIndex2,
+					 mVar3, mIndex3);
     break;
 
   default:
     ASSERT_NOT_REACHED;
     break;
   }
-  return tid;
+  return templ;
 }
 
 END_NAMESPACE_YM_DOTLIB

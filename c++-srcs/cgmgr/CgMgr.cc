@@ -26,11 +26,11 @@ BEGIN_NAMESPACE_YM_CLIB
 CgMgr::CgMgr(
   CiCellLibrary& library
 ) : mLibrary{library},
-    mSimpleFFClass(CiSeqInfo::max_index(), CLIB_NULLID),
-    mSimpleLatchClass(CiSeqInfo::max_index(), CLIB_NULLID)
+    mSimpleFFClass(CiSeqInfo::max_index(), nullptr),
+    mSimpleLatchClass(CiSeqInfo::max_index(), nullptr)
 {
   for ( SizeType i = 0; i < 4; ++ i ) {
-    mLogicGroup[i] = -1;
+    mLogicGroup[i] = nullptr;
   }
 
   logic_init();
@@ -164,8 +164,7 @@ CgMgr::ff_init()
 					clock, clock2, next,
 					clear, preset,
 					cpv1, cpv2);
-    auto gid = find_group(sig);
-    auto group = mLibrary._cell_group(gid);
+    auto group = find_group(sig);
     mSimpleFFClass[index] = group->rep_class();
   }
 }
@@ -214,14 +213,13 @@ CgMgr::latch_init()
 					   enable, enable2, data,
 					   clear, preset,
 					   cpv1, cpv2);
-    auto gid = find_group(sig);
-    auto group = mLibrary._cell_group(gid);
+    auto group = find_group(sig);
     mSimpleLatchClass[index] = group->rep_class();
   }
 }
 
-// @brief FFクラス番号を得る．
-SizeType
+// @brief FFクラスを得る．
+const CiCellClass*
 CgMgr::ff_class(
   const CiSeqInfo& info
 ) const
@@ -229,8 +227,8 @@ CgMgr::ff_class(
   return mSimpleFFClass[info.encode_val()];
 }
 
-// @brief ラッチクラス番号を得る．
-SizeType
+// @brief ラッチクラスを得る．
+const CiCellClass*
 CgMgr::latch_class(
   const CiSeqInfo& info
 ) const
@@ -239,7 +237,7 @@ CgMgr::latch_class(
 }
 
 // @brief シグネチャに一致するグループを探す．
-SizeType
+CiCellGroup*
 CgMgr::find_group(
   const CgSignature& sig
 )
@@ -255,26 +253,25 @@ CgMgr::find_group(
     // 代表シグネチャを求める．
     auto rep_sig = sig.xform(rep_map);
     // クラスを求める．
-    auto rep_id = _find_class(rep_sig);
+    auto rep_class = _find_class(rep_sig);
     // グループを作る．
-    auto gid = mLibrary.add_cell_group(rep_id, rep_map);
+    auto group = mLibrary.add_cell_group(rep_class, rep_map);
     // そのクラスに新しいグループを追加する．
-    auto rep_class = mClassExprListArray[rep_id].mClass;
-    rep_class->add_group(gid);
+    rep_class->add_group(group);
 
     // 登録する．
-    mGroupDict.emplace(sig_str, gid);
-    return gid;
+    mGroupDict.emplace(sig_str, group);
+    return group;
   }
   else {
     // 登録済みのグループを返す．
-    auto gid = mGroupDict.at(sig_str);
-    return gid;
+    auto group = mGroupDict.at(sig_str);
+    return group;
   }
 }
 
 /// @brief 代表クラスを得る．
-SizeType
+CiCellClass*
 CgMgr::_find_class(
   const CgSignature& sig
 )
@@ -286,18 +283,17 @@ CgMgr::_find_class(
     // 同位体変換リストを作る．
     auto idmap_list = sig.idmap_list();
     // 新しいクラスを作って登録する．
-    auto rep_id = mLibrary.add_cell_class(idmap_list);
-    mClassDict.emplace(sig_str, rep_id);
+    auto rep_class = mLibrary.add_cell_class(idmap_list);
+    mClassDict.emplace(sig_str, rep_class);
 
     while ( mClassExprListArray.size() <= rep_id ) {
       mClassExprListArray.push_back(ClassExprList{});
     }
-    auto rep_class = mLibrary._cell_class(rep_id);
     mClassExprListArray[rep_id].mClass = rep_class;
   }
 
   // 登録済みのクラスを返す．
-  auto rep_id = mClassDict.at(sig_str);
+  auto rep_class = mClassDict.at(sig_str);
 
   // 単純な論理セルの場合，パタングラフを登録する．
   auto expr = sig.expr();
@@ -305,7 +301,7 @@ CgMgr::_find_class(
     mClassExprListArray[rep_id].mExprList.push_back(expr);
   }
 
-  return rep_id;
+  return rep_class;
 }
 
 // @breif パタングラフを生成する．
@@ -315,8 +311,7 @@ CgMgr::gen_pat()
   for ( SizeType rep_id = 0; rep_id < mClassExprListArray.size(); ++ rep_id ) {
     auto rep_class = mLibrary._cell_class(rep_id);
     bool has_cell = false;
-    for ( SizeType gid: rep_class->cell_group_list() ) {
-      auto group = mLibrary._cell_group(gid);
+    for ( auto group: rep_class->cell_group_list() ) {
       if ( group->cell_num() > 0 ) {
 	has_cell = true;
 	break;

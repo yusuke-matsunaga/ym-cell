@@ -10,7 +10,6 @@
 #include "ym/ClibBusType.h"
 #include "ym/ClibPin.h"
 #include "ci/CiBus.h"
-#include "ci/CiCellLibrary.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -19,13 +18,24 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス ClibBus
 //////////////////////////////////////////////////////////////////////
 
+// @brief 内容を指定したコンストラクタ
+ClibBus::ClibBus(
+  const CiBus* impl
+) : ClibHandle<CiBus>{impl}
+{
+}
+
+// @brief デストラクタ
+ClibBus::~ClibBus()
+{
+}
+
 // @brief 名前の取得
 string
 ClibBus::name() const
 {
   _check_valid();
-  auto bus = mLibrary->_bus(mId);
-  return bus->name();
+  return mImpl->name();
 }
 
 // @brief バスの型の取得
@@ -33,9 +43,8 @@ ClibBusType
 ClibBus::bus_type() const
 {
   _check_valid();
-  auto bus = mLibrary->_bus(mId);
-  SizeType id = bus->bus_type();
-  return ClibBusType{mLibrary, id};
+  auto bus_type = mImpl->bus_type();
+  return ClibBusType{bus_type};
 }
 
 // @brief ピン数の取得
@@ -43,8 +52,7 @@ SizeType
 ClibBus::pin_num() const
 {
   _check_valid();
-  auto bus = mLibrary->_bus(mId);
-  return bus->pin_num();
+  return mImpl->pin_num();
 }
 
 // @brief ピンの取得
@@ -54,9 +62,8 @@ ClibBus::pin(
 ) const
 {
   _check_valid();
-  auto bus = mLibrary->_bus(mId);
-  SizeType pin_id = bus->pin(pos);
-  return ClibPin{mLibrary, pin_id};
+  auto pin = mImpl->pin(pos);
+  return ClibPin{pin};
 }
 
 // @brief ピンのリストの取得
@@ -64,9 +71,8 @@ ClibPinList
 ClibBus::pin_list() const
 {
   _check_valid();
-  auto bus = mLibrary->_bus(mId);
-  auto& id_list = bus->pin_list();
-  return ClibPinList{mLibrary, id_list};
+  auto& pin_list = mImpl->pin_list();
+  return ClibPinList{pin_list};
 }
 
 END_NAMESPACE_YM_CLIB

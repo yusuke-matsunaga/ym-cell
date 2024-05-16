@@ -5,7 +5,7 @@
 /// @brief CiPin のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2017, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
@@ -13,25 +13,36 @@
 #include "ym/ClibCapacitance.h"
 #include "ym/Expr.h"
 #include "ym/ShString.h"
+#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class Serializer;
+class Deserializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class ClibCellPinBase CiPin.h "CiPin.h"
 /// @brief ピンの基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiPin
+class CiPin :
+  public CiLibObj
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiPin() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiPin(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiLibObj{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiPin(
-    const ShString& name ///< [in] ピン名
-  ) : mName{name}
+    const CiCellLibrary* lib, ///< [in] 親のライブラリ
+    const ShString& name      ///< [in] ピン名
+  ) : CiLibObj{lib},
+      mName{name}
   {
   }
 
@@ -195,14 +206,14 @@ public:
   virtual
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const = 0;
 
   /// @brief 内容を読み込む．
   virtual
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) = 0;
 
 
@@ -214,14 +225,14 @@ protected:
   /// @brief dump 用の共通情報を出力する．
   void
   dump_common(
-    BinEnc& s, ///< [in] ストリーム
-    int sig    ///< [in] シグネチャ(0, 1, 2, 3)
+    Serializer& s, ///< [in] シリアライザ
+    int sig        ///< [in] シグネチャ(0, 1, 2, 3)
   ) const;
 
   /// @brief 内容を読み込む．
   void
   restore_common(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 
@@ -263,16 +274,21 @@ class CiInputPin :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiInputPin() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiInputPin(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiPin{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiInputPin(
+    const CiCellLibrary* lib,         ///< [in] 親のライブラリ
     const ShString& name,             ///< [in] ピン名
     ClibCapacitance capacitance,      ///< [in] 負荷容量
     ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
     ClibCapacitance fall_capacitance  ///< [in] 立ち下がり時の負荷容量
-  ) : CiPin{name},
+  ) : CiPin{lib, name},
       mCapacitance{capacitance},
       mRiseCapacitance{rise_capacitance},
       mFallCapacitance{fall_capacitance}
@@ -329,13 +345,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 
@@ -383,11 +399,16 @@ class CiOutputPinBase :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiOutputPinBase() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiOutputPinBase(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiPin{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiOutputPinBase(
+    const CiCellLibrary* lib,        ///< [in] 親のライブラリ
     const ShString& name,            ///< [in] ピン名
     ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
     ClibCapacitance min_fanout,      ///< [in] 最小ファンアウト容量
@@ -397,7 +418,7 @@ public:
     ClibTime min_transition,         ///< [in] 最小遷移時間
     const Expr& function,            ///< [in] 出力の論理式
     const Expr& tristate             ///< [in] tristate 条件
-  ) : CiPin{name},
+  ) : CiPin{lib, name},
       mMaxFanout{max_fanout},
       mMinFanout{min_fanout},
       mMaxCapacitance{max_capacitance},
@@ -480,28 +501,15 @@ protected:
   /// @brief 内容をバイナリダンプする．
   void
   dump_base(
-    BinEnc& s, ///< [in] 出力先のストリーム
-    int sig    ///< [in] シグネチャ
+    Serializer& s, ///< [in] シリアライザ
+    int sig        ///< [in] シグネチャ
   ) const;
 
   /// @brief 内容を読み込む．
   void
   restore_base(
-    BinDec& s ///< [in] 入力元のストリーム
-  )
-  {
-    restore_common(s);
-    mOutputId = s.read_64();
-    s >> mFanoutLoad
-      >> mMaxFanout
-      >> mMinFanout
-      >> mMaxCapacitance
-      >> mMinCapacitance
-      >> mMaxTransition
-      >> mMinTransition;
-    mFunction.restore(s);
-    mTristate.restore(s);
-  }
+    Deserializer& s ///< [in] デシリアライザ
+  );
 
 
 private:
@@ -551,11 +559,16 @@ class CiOutputPin :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiOutputPin() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiOutputPin(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiOutputPinBase{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiOutputPin(
+    const CiCellLibrary* lib,        ///< [in] 親のライブラリ
     const ShString& name,            ///< [in] ピン名
     ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
     ClibCapacitance min_fanout,      ///< [in] 最大ファンアウト容量
@@ -565,7 +578,7 @@ public:
     ClibTime min_transition,         ///< [in] 最大遷移時間
     const Expr& function,            ///< [in] 出力の論理式
     const Expr& tristate             ///< [in] tristate 条件
-  ) : CiOutputPinBase{name,
+  ) : CiOutputPinBase{lib, name,
 		      max_fanout, min_fanout,
 		      max_capacitance, min_capacitance,
 		      max_transition, min_transition,
@@ -599,13 +612,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 };
@@ -622,11 +635,16 @@ class CiInoutPin :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiInoutPin() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiInoutPin(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiOutputPinBase{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiInoutPin(
+    const CiCellLibrary* lib,         ///< [in] 親のライブラリ
     const ShString& name,             ///< [in] ピン名
     ClibCapacitance capacitance,      ///< [in] 負荷容量
     ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
@@ -639,7 +657,7 @@ public:
     ClibTime min_transition,          ///< [in] 最大遷移時間
     const Expr& function,             ///< [in] 出力の論理式
     const Expr& tristate              ///< [in] tristate 条件
-  ) : CiOutputPinBase{name,
+  ) : CiOutputPinBase{lib, name,
 		      max_fanout, min_fanout,
 		      max_capacitance, min_capacitance,
 		      max_transition, min_transition,
@@ -700,13 +718,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 
@@ -754,13 +772,18 @@ class CiInternalPin :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiInternalPin() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiInternalPin(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiPin{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiInternalPin(
-    const ShString& name ///< [in] ピン名
-  ) : CiPin{name}
+    const CiCellLibrary* lib, ///< [in] 親のライブラリ
+    const ShString& name      ///< [in] ピン名
+  ) : CiPin{lib, name}
   {
   }
 
@@ -802,13 +825,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 

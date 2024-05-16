@@ -8,6 +8,7 @@
 
 #include "ym/ClibCellGroup.h"
 #include "ym/ClibCell.h"
+#include "ym/ClibCellClass.h"
 #include "ci/CiCellGroup.h"
 #include "ci/CiCellClass.h"
 #include "ci/CiCellLibrary.h"
@@ -19,14 +20,31 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス ClibCellGroup
 //////////////////////////////////////////////////////////////////////
 
+// @brief 内容を指定したコンストラクタ
+ClibCellGroup::ClibCellGroup(
+  const CiCellGroup* impl
+) : mImpl{impl}
+{
+  if ( mImpl != nullptr ) {
+    mImpl->inc_ref();
+  }
+}
+
+// @brief デストラクタ
+ClibCellGroup::~ClibCellGroup()
+{
+  if ( mImpl != nullptr ) {
+    mImpl->dec_ref();
+  }
+}
+
 // @brief 代表クラスを返す．
 ClibCellClass
 ClibCellGroup::rep_class() const
 {
   _check_valid();
-  auto cg = mLibrary->_cell_group(mId);
-  SizeType id = cg->rep_class();
-  return ClibCellClass{mLibrary, id};
+  auto rep = mImpl->rep_class();
+  return ClibCellClass{rep};
 }
 
 // @brief 代表クラスに対する変換マップを返す．
@@ -34,8 +52,7 @@ const ClibIOMap&
 ClibCellGroup::iomap() const
 {
   _check_valid();
-  auto cg = mLibrary->_cell_group(mId);
-  return cg->iomap();
+  return mImpl->iomap();
 }
 
 // @brief セル数を返す．
@@ -43,8 +60,7 @@ SizeType
 ClibCellGroup::cell_num() const
 {
   _check_valid();
-  auto cg = mLibrary->_cell_group(mId);
-  return cg->cell_num();
+  return mImpl->cell_num();
 }
 
 // @brief セルを返す．
@@ -54,9 +70,8 @@ ClibCellGroup::cell(
 ) const
 {
   _check_valid();
-  auto cg = mLibrary->_cell_group(mId);
-  SizeType id = cg->cell(pos);
-  return ClibCell{mLibrary, id};
+  auto cell = mImpl->cell(pos);
+  return ClibCell{cell};
 }
 
 // @brief セルのリストを返す．
@@ -64,8 +79,8 @@ ClibCellList
 ClibCellGroup::cell_list() const
 {
   _check_valid();
-  auto cg = mLibrary->_cell_group(mId);
-  return ClibCellList{mLibrary, cg->cell_list()};
+  auto& cell_list = mImpl->cell_list();
+  return ClibCellList{cell_list};
 }
 
 END_NAMESPACE_YM_CLIB

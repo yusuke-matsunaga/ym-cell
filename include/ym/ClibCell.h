@@ -5,24 +5,25 @@
 /// @brief ClibCell のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga (松永 裕介)
+/// Copyright (C) 2024 Yusuke Matsunaga (松永 裕介)
 /// All rights reserved.
 
-#include "ym/ClibHandle.h"
+#include "ym/clib.h"
 #include "ym/ClibArea.h"
-#include "ym/ClibCellGroup.h"
+#include "ym/ClibList.h"
 #include "ym/logic.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class CiCell;
 
 //////////////////////////////////////////////////////////////////////
 /// @ingroup ClibGroup
 /// @class ClibCell ClibCell.h "ym/ClibCell.h"
 /// @brief セル本体のクラス
 //////////////////////////////////////////////////////////////////////
-class ClibCell :
-  public ClibHandle
+class ClibCell
 {
 public:
 
@@ -33,14 +34,11 @@ public:
 
   /// @brief 内容を指定したコンストラクタ
   ClibCell(
-    const ClibLibraryPtr& library, ///< [in] ライブラリ
-    SizeType id                    ///< [in] セル番号
-  ) : ClibHandle{library, id}
-  {
-  }
+    const CiCell* impl ///< [in] 本体
+  );
 
   /// @brief デストラクタ
-  ~ClibCell() = default;
+  ~ClibCell();
 
 
 public:
@@ -49,11 +47,17 @@ public:
   /// @{
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 親のセルライブラリの取得
+  ClibCellLibrary
+  library() const;
+
+#if 0
   /// @brief ID番号の取得
   ///
   /// ここで返される番号は ClibCellLibrary::cell() の引数に対応する．
   SizeType
-  id() const { return mId; }
+  id() const;
+#endif
 
   /// @brief 名前の取得
   string
@@ -406,6 +410,62 @@ public:
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // mImpl に関する関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 適正な値を持っている時 true を返す．
+  bool
+  is_valid() const
+  {
+    return mImpl != nullptr;
+  }
+
+  /// @brief 不正値の時 true を返す．
+  bool
+  is_invalid() const
+  {
+    return !is_valid();
+  }
+
+  /// @brief 等価比較
+  bool
+  operator==(
+    const ClibCell& right
+  ) const
+  {
+    return mImpl == right.mImpl;
+  }
+
+  /// @brief 非等価比較
+  bool
+  operator!=(
+    const ClibCell& right
+  ) const
+  {
+    return !operator==(right);
+  }
+
+  /// @brief 適正な値を持っているかチェックする．
+  void
+  _check_valid() const
+  {
+    if ( !is_valid() ) {
+      throw std::invalid_argument{"not having a valid data"};
+    }
+  }
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 実装
+  const CiCell* mImpl;
 
 };
 

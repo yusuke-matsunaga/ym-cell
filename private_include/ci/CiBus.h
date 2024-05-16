@@ -5,32 +5,37 @@
 /// @brief CiBus のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2023, 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
 #include "ym/ShString.h"
+#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class CiBusType;
+class Serializer;
+class Deserializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiBus CiBus.h "CiBus.h"
 /// @brief ClibBus の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiBus
+class CiBus :
+  public CiLibObj
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiBus() = default;
-
   /// @brief コンストラクタ
   CiBus(
-    const ShString& name,            ///< [in] 名前
-    SizeType bus_type,               ///< [in] バスタイプ
-    const vector<SizeType>& pin_list ///< [in] ピンリスト
-  ) : mName{name},
+    const CiCellLibrary* lib,            ///< [in] 親のライブラリ
+    const ShString& name,                ///< [in] 名前
+    const CiBusType* bus_type,           ///< [in] バスタイプ
+    const vector<const CiPin*>& pin_list ///< [in] ピンリスト
+  ) : CiLibObj{lib},
+      mName{name},
       mBusType{bus_type},
       mPinList{pin_list}
   {
@@ -60,7 +65,7 @@ public:
   }
 
   /// @brief バスの型の取得
-  SizeType
+  const CiBusType*
   bus_type() const
   {
     return mBusType;
@@ -74,7 +79,7 @@ public:
   }
 
   /// @brief ピンの取得
-  SizeType
+  const CiPin*
   pin(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
   ) const
@@ -83,8 +88,8 @@ public:
     return mPinList[pos];
   }
 
-  /// @brief ピン番号のリストの取得
-  const vector<SizeType>&
+  /// @brief ピンのリストの取得
+  const vector<const CiPin*>&
   pin_list() const
   {
     return mPinList;
@@ -99,13 +104,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 
@@ -118,10 +123,10 @@ private:
   ShString mName;
 
   // バスの型
-  SizeType mBusType{CLIB_NULLID};
+  const CiBusType* mBusType{nullptr};
 
-  // ピン番号のリスト
-  vector<SizeType> mPinList;
+  // ピンのリスト
+  vector<const CiPin*> mPinList;
 
 };
 

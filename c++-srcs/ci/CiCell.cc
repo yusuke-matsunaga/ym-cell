@@ -143,17 +143,16 @@ CiCell::data_in_expr() const
 // @brief 入力ピンを追加する．
 void
 CiCell::add_input(
-  CiInputPin* pin,
-  SizeType id
+  CiInputPin* pin
 )
 {
   SizeType pid = mPinList.size();
   pin->set_pin_id(pid);
-  mPinList.push_back(id);
+  mPinList.push_back(pin);
 
   SizeType iid = mInputList.size();
   pin->set_input_id(iid);
-  mInputList.push_back(id);
+  mInputList.push_back(pin);
 
   ++ mInputNum;
 }
@@ -161,17 +160,16 @@ CiCell::add_input(
 // @brief 出力ピンを追加する．
 void
 CiCell::add_output(
-  CiOutputPin* pin,
-  SizeType id
+  CiOutputPin* pin
 )
 {
   SizeType pid = mPinList.size();
   pin->set_pin_id(pid);
-  mPinList.push_back(id);
+  mPinList.push_back(pin);
 
   SizeType oid = mOutputList.size();
   pin->set_output_id(oid);
-  mOutputList.push_back(id);
+  mOutputList.push_back(pin);
 
   ++ mOutputNum;
 }
@@ -179,21 +177,20 @@ CiCell::add_output(
 // @brief 入出力ピンを追加する．
 void
 CiCell::add_inout(
-  CiInoutPin* pin,
-  SizeType id
+  CiInoutPin* pin
 )
 {
   SizeType pid = mPinList.size();
   pin->set_pin_id(pid);
-  mPinList.push_back(id);
+  mPinList.push_back(pin);
 
   SizeType iid = mInputList.size();
   pin->set_input_id(iid);
-  mInputList.push_back(id);
+  mInputList.push_back(pin);
 
   SizeType oid = mOutputList.size();
   pin->set_output_id(oid);
-  mOutputList.push_back(id);
+  mOutputList.push_back(pin);
 
   ++ mInoutNum;
 }
@@ -201,32 +198,31 @@ CiCell::add_inout(
 // @brief 内部ピンを追加する．
 void
 CiCell::add_internal(
-  CiInternalPin* pin,
-  SizeType id
+  CiInternalPin* pin
 )
 {
   // mPinList には含まれない．
   auto iid = mInternalList.size();
   pin->set_internal_id(iid);
-  mInternalList.push_back(id);
+  mInternalList.push_back(pin);
 }
 
 // @brief バスを追加する．
 void
 CiCell::add_bus(
-  SizeType id
+  const CiBus* bus
 )
 {
-  mBusList.push_back(id);
+  mBusList.push_back(bus);
 }
 
 // @brief バンドルを追加する．
 void
 CiCell::add_bundle(
-  SizeType id
+  const CiBundle* bundle
 )
 {
-  mBundleList.push_back(id);
+  mBundleList.push_back(bundle);
 }
 
 // @brief タイミング情報用のデータ構造を初期化する．
@@ -244,7 +240,7 @@ CiCell::set_timing(
   SizeType ipin_id,
   SizeType opin_id,
   ClibTimingSense timing_sense,
-  const vector<SizeType>& timing_list
+  const vector<const CiTiming*>& timing_list
 )
 {
   SizeType base = (opin_id * input2_num() + ipin_id) * 2;
@@ -268,7 +264,7 @@ CiCell::make_signature(
   SizeType ni2 = ni + nb;
   SizeType no2 = no + nb;
   if ( no == 1 && nb == 0 ) {
-    auto opin = library->_pin(output(0));
+    auto opin = output(0);
     auto expr = opin->function();
     if ( expr.is_valid() ) {
       // 1出力，双方向なし
@@ -286,7 +282,7 @@ CiCell::make_signature(
   vector<TvFunc> logic_list(no2);
   vector<TvFunc> tristate_list(no2);
   for ( SizeType i = 0; i < no2; ++ i ) {
-    auto opin = library->_pin(output(i));
+    auto opin = output(i);
     logic_list[i] = opin->function().make_tv(ni2);
     tristate_list[i] = opin->tristate().make_tv(ni2);
   }

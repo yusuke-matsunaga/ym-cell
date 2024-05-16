@@ -122,39 +122,39 @@ CellInfo::set(
 void
 CellInfo::add_cell()
 {
-  SizeType cell_id{CLIB_NULLID};
+  CiCell* cell{nullptr};
   if ( mHasFF ) {
     // FF タイプ
-    cell_id = add_ff_cell();
+    cell = add_ff_cell();
   }
   else if ( mHasLatch ) {
     // ラッチタイプ
-    cell_id = add_latch_cell();
+    cell = add_latch_cell();
   }
   else if ( mHasFSM ) {
     // FSM タイプ
-    cell_id = add_fsm_cell();
+    cell = add_fsm_cell();
   }
   else {
     // 論理タイプ
-    cell_id = library()->add_logic_cell(mName, mArea);
+    cell = library()->add_logic_cell(mName, mArea);
   }
-  ASSERT_COND( cell_id != CLIB_NULLID );
+  ASSERT_COND( cell != nullptr );
 
   // ピンを作る．
   for ( auto& pininfo: mPinInfoList ) {
-    pininfo.add_pin(cell_id, mIpinMap);
+    pininfo.add_pin(cell, mIpinMap);
   }
 
   // タイミングを作る．
-  library()->init_cell_timing_map(cell_id);
+  cell->init_timing_map();
   for ( auto& pininfo: mPinInfoList ) {
-    pininfo.add_timing(cell_id, mIpinMap);
+    pininfo.add_timing(cell, mIpinMap);
   }
 }
 
 // @brief FF セルを作る．
-SizeType
+CiCell*
 CellInfo::add_ff_cell() const
 {
   auto var1 = mFFInfo.var1();
@@ -184,7 +184,7 @@ CellInfo::add_ff_cell() const
 }
 
 // @brief ラッチセルを作る．
-SizeType
+CiCell*
 CellInfo::add_latch_cell() const
 {
   auto var1 = mLatchInfo.var1();
@@ -220,7 +220,7 @@ CellInfo::add_latch_cell() const
 }
 
 // @brief FSM セルを作る．
-SizeType
+CiCell*
 CellInfo::add_fsm_cell() const
 {
   auto cell = library()->add_fsm_cell(mName, mArea);

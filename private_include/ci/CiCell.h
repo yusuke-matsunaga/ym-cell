@@ -5,13 +5,14 @@
 /// @brief CiCell のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
 #include "ym/ClibArea.h"
 #include "ym/logic.h"
 #include "ym/ShString.h"
+#include "ci/CiLibObj.h"
 #include "ci/CiPin.h"
 
 
@@ -21,7 +22,12 @@ class CiCellLibrary;
 class CiInputPin;
 class CiOutputPin;
 class CiInoutPin;
+class CiBundle;
+class CiBus;
+class CiTiming;
 class CgSignature;
+class Serializer;
+class Deserializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiCell CiCell.h "CiCell.h"
@@ -29,18 +35,25 @@ class CgSignature;
 ///
 /// このクラスはデフォルトの仮想関数を実装している．
 //////////////////////////////////////////////////////////////////////
-class CiCell
+class CiCell :
+  public CiLibObj
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiCell() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiCell(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiLibObj{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiCell(
-    const ShString& name, ///< [in] 名前
-    ClibArea area         ///< [in] 面積
-  ) : mName{name},
+    const CiCellLibrary* lib, ///< [in] 親のライブラリ
+    const ShString& name,     ///< [in] 名前
+    ClibArea area             ///< [in] 面積
+  ) : CiLibObj{lib},
+      mName{name},
       mArea{area}
   {
   }
@@ -89,9 +102,8 @@ public:
     return mPinList.size();
   }
 
-  /// @brief ピン番号の取得
-  /// @return ピン情報を返す．
-  SizeType
+  /// @brief ピンの取得
+  const CiPin*
   pin(
     SizeType pos ///< [in] ピン番号 ( 0 <= pos < pin_num() )
   ) const
@@ -100,8 +112,16 @@ public:
     return mPinList[pos];
   }
 
-  /// @brief ピン番号のリストの取得
-  const vector<SizeType>&
+  /// @brief 名前からピンの取得
+  ///
+  /// なければ nullptr を返す．
+  const CiPin*
+  find_pin(
+    const ShString& name ///< [in] ピン名
+  ) const;
+
+  /// @brief ピンのリストの取得
+  const vector<const CiPin*>&
   pin_list() const
   {
     return mPinList;
@@ -115,7 +135,7 @@ public:
   }
 
   /// @brief 入力ピンの取得
-  SizeType
+  const CiPin*
   input(
     SizeType pos ///< [in] 入力番号 ( 0 <= pos < input2_num() )
   ) const
@@ -124,8 +144,8 @@ public:
     return mInputList[pos];
   }
 
-  /// @brief 入力ピン番号のリストの取得
-  const vector<SizeType>&
+  /// @brief 入力ピンのリストの取得
+  const vector<const CiPin*>&
   input_list() const
   {
     return mInputList;
@@ -141,7 +161,7 @@ public:
   /// @brief 出力ピンの取得
   ///
   /// pos >= output_num() の場合には入出力ピンが返される．
-  SizeType
+  const CiPin*
   output(
     SizeType pos ///< [in] 出力番号 ( 0 <= id < output2_num() )
   ) const
@@ -150,8 +170,8 @@ public:
     return mOutputList[pos];
   }
 
-  /// @brief 出力ピン番号のリスト
-  const vector<SizeType>&
+  /// @brief 出力ピンのリスト
+  const vector<const CiPin*>&
   output_list() const
   {
     return mOutputList;
@@ -165,7 +185,7 @@ public:
   }
 
   /// @brief 入出力ピンの取得
-  SizeType
+  const CiPin*
   inout(
     SizeType id ///< [in] 番号 ( 0 <= id < inout_num() )
   ) const
@@ -175,7 +195,7 @@ public:
   }
 
   /// @brief 入出力ピン番号のリストの先頭
-  vector<SizeType>::const_iterator
+  vector<const CiPin*>::const_iterator
   inout_begin() const
   {
     return mInputList.begin() + input_num();
@@ -207,7 +227,7 @@ public:
   }
 
   /// @brief 内部ピンの取得
-  SizeType
+  const CiPin*
   internal(
     SizeType pos ///< [in] 内部ピン番号 ( 0 <= pos < internal_num() )
   ) const
@@ -216,8 +236,8 @@ public:
     return mInternalList[pos];
   }
 
-  /// @brief 内部ピン番号のリスト
-  const vector<SizeType>&
+  /// @brief 内部ピンのリスト
+  const vector<const CiPin*>&
   internal_list() const
   {
     return mInternalList;
@@ -231,7 +251,7 @@ public:
   }
 
   /// @brief バスの取得
-  SizeType
+  const CiBus*
   bus(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < bus_num() )
   ) const
@@ -240,8 +260,14 @@ public:
     return mBusList[pos];
   }
 
-  /// @brief バス番号のリスト
-  const vector<SizeType>&
+  /// @brief 名前からバスの取得
+  const CiBus*
+  find_bus(
+    const ShString& name ///< [in] 名前
+  ) const;
+
+  /// @brief バスのリスト
+  const vector<const CiBus*>&
   bus_list() const
   {
     return mBusList;
@@ -255,7 +281,7 @@ public:
   }
 
   /// @brief バンドルの取得
-  SizeType
+  const CiBundle*
   bundle(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < bundle_num() )
   ) const
@@ -264,8 +290,14 @@ public:
     return mBundleList[pos];
   }
 
-  /// @brief バンドル番号のリスト
-  const vector<SizeType>&
+  /// @brief 名前からバスの取得
+  const CiBundle*
+  find_bundle(
+    const ShString& name ///< [in] 名前
+  ) const;
+
+  /// @brief バンドルのリスト
+  const vector<const CiBundle*>&
   bundle_list() const
   {
     return mBundleList;
@@ -285,7 +317,7 @@ public:
   }
 
   /// @brief タイミング情報を返す．
-  SizeType
+  const CiTiming*
   timing(
     SizeType pos ///< [in] インデックス ( 0 <= pos < timing_num() )
   ) const
@@ -294,15 +326,15 @@ public:
     return mTimingList[pos];
   }
 
-  /// @brief タイミングIDのリストを返す．
-  const vector<SizeType>&
+  /// @brief タイミングのリストを返す．
+  const vector<const CiTiming*>&
   timing_list() const
   {
     return mTimingList;
   }
 
   /// @brief 条件に合致するタイミング情報のインデックスのリストを返す．
-  const vector<SizeType>&
+  const vector<const CiTiming*>&
   timing_list(
     SizeType ipos,        ///< [in] 開始ピン番号 ( 0 <= ipos < input_num2() )
     SizeType opos,        ///< [in] 終了ピン番号 ( 0 <= opos < output_num2() )
@@ -465,41 +497,37 @@ public:
   /// @brief 入力ピンを追加する．
   void
   add_input(
-    CiInputPin* pin, ///< [in] ピン
-    SizeType id      ///< [in] ピン番号
+    CiInputPin* pin ///< [in] ピン
   );
 
   /// @brief 出力ピンを追加する．
   void
   add_output(
-    CiOutputPin* pin, ///< [in] ピン
-    SizeType id       ///< [in] ピン番号
+    CiOutputPin* pin ///< [in] ピン
   );
 
   /// @brief 入出力ピンを追加する．
   void
   add_inout(
-    CiInoutPin* pin, ///< [in] ピン
-    SizeType id      ///< [in] ピン番号
+    CiInoutPin* pin ///< [in] ピン
   );
 
   /// @brief 内部ピンを追加する．
   void
   add_internal(
-    CiInternalPin* pin, ///< [in] ピン
-    SizeType id         ///< [in] ピン番号
+    CiInternalPin* pin ///< [in] ピン
   );
 
   /// @brief バスを追加する．
   void
   add_bus(
-    SizeType id ///< [in] バス番号
+    const CiBus* bus ///< [in] バス
   );
 
   /// @brief バンドルを追加する．
   void
   add_bundle(
-    SizeType id ///< [in] バンドル番号
+    const CiBundle* bundle ///< [in] バンドル
   );
 
   /// @brief タイミング情報用のデータ構造を初期化する．
@@ -514,10 +542,11 @@ public:
     SizeType ipin_id,                   ///< [in] 入力ピン番号
     SizeType opin_id,                   ///< [in] 出力ピン番号
     ClibTimingSense timing_sense,       ///< [in] タイミング条件
-    SizeType timing_id                  ///< [in] 設定するタイミング番号
+    const CiTiming* timing              ///< [in] 設定するタイミング
   )
   {
-    set_timing(ipin_id, opin_id, timing_sense, vector<SizeType>{timing_id});
+    set_timing(ipin_id, opin_id, timing_sense,
+	       vector<const CiTiming*>{timing});
   }
 
   /// @brief タイミング情報をセットする(複数のタイミング情報)．
@@ -525,10 +554,10 @@ public:
   /// この関数を呼ぶ前に init_timing_map() を呼んでおくこと．
   void
   set_timing(
-    SizeType ipin_id,                   ///< [in] 入力ピン番号
-    SizeType opin_id,                   ///< [in] 出力ピン番号
-    ClibTimingSense timing_sense,       ///< [in] タイミング条件
-    const vector<SizeType>& timing_list ///< [in] 設定するタイミング番号のリスト
+    SizeType ipin_id,                          ///< [in] 入力ピン番号
+    SizeType opin_id,                          ///< [in] 出力ピン番号
+    ClibTimingSense timing_sense,              ///< [in] タイミング条件
+    const vector<const CiTiming*>& timing_list ///< [in] 設定するタイミング番号のリスト
   );
 
 
@@ -541,14 +570,14 @@ public:
   virtual
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
 
   /// @brief 内容を読み込む．
   virtual
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 
@@ -560,7 +589,7 @@ protected:
   /// @brief 共通部分のダンプ
   void
   dump_common(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
 
 
@@ -568,6 +597,9 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // ID番号
+  SizeType mId;
 
   // 名前
   ShString mName;
@@ -584,32 +616,32 @@ private:
   // 入出力ピン数
   SizeType mInoutNum{0};
 
-  // ピン番号のリスト
-  vector<SizeType> mPinList;
+  // ピンのリスト
+  vector<const CiPin*> mPinList;
 
-  // 入力ピン+入出力ピンの番号のリスト
+  // 入力ピン+入出力ピンのリスト
   // サイズ mInputNum + mInoutNum
-  vector<SizeType> mInputList;
+  vector<const CiPin*> mInputList;
 
-  // 出力ピン+入出力ピンの番号のリスト
+  // 出力ピン+入出力ピンのリスト
   // サイズ mOutputNum + mInoutNum
-  vector<SizeType> mOutputList;
+  vector<const CiPin*> mOutputList;
 
-  // 内部ピン番号のリスト
-  vector<SizeType> mInternalList;
+  // 内部ピンのリスト
+  vector<const CiPin*> mInternalList;
 
-  // バス番号のリスト
-  vector<SizeType> mBusList;
+  // バスのリスト
+  vector<const CiBus*> mBusList;
 
-  // バンドル番号のリスト
-  vector<SizeType> mBundleList;
+  // バンドルのリスト
+  vector<const CiBundle*> mBundleList;
 
   // 全体のタイミング情報の番号のリスト
-  vector<SizeType> mTimingList;
+  vector<const CiTiming*> mTimingList;
 
-  // 条件ごとのタイミング番号のリストの配列
+  // 条件ごとのタイミングのリストの配列
   // サイズは(入力数＋入出力数) x (出力数+入出力数)  x 2
-  vector<vector<SizeType>> mTimingMap;
+  vector<vector<const CiTiming*>> mTimingMap;
 
 };
 

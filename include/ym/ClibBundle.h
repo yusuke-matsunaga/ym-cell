@@ -5,7 +5,7 @@
 /// @brief ClibBundle のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibHandle.h"
@@ -14,31 +14,28 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiBundle;
+
 //////////////////////////////////////////////////////////////////////
 /// @ingroup ClibGroup
 /// @class ClibBundle ClibBundle.h "ym/ClibBundle.h"
 /// @brief バンドルを表すクラス
 //////////////////////////////////////////////////////////////////////
 class ClibBundle :
-  public ClibHandle
+  public ClibHandle<CiBundle>
 {
 public:
 
   /// @brief 空のコンストラクタ
-  ///
-  /// 不正値となる．
   ClibBundle() = default;
 
   /// @brief 内容を指定したコンストラクタ
   ClibBundle(
-    const ClibLibraryPtr& library, ///< [in] ライブラリ
-    SizeType id                    ///< [in] ID番号
-  ) : ClibHandle{library, id}
-  {
-  }
+    const CiBundle* impl ///< [in] 本体
+  );
 
   /// @brief デストラクタ
-  ~ClibBundle() = default;
+  ~ClibBundle();
 
 
 public:

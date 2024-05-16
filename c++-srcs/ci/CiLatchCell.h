@@ -24,11 +24,16 @@ class CiLatchCell :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiLatchCell() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiLatchCell(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiFLCell{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiLatchCell(
+    const CiCellLibrary* lib,    ///< [in] 親のライブラリ
     const ShString& name,        ///< [in] 名前
     ClibArea area,               ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -39,7 +44,7 @@ public:
     const Expr& preset,          ///< [in] "preset" 関数の式
     ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
     ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  ) : CiFLCell{name, area,
+  ) : CiFLCell{lib, name, area,
                var1, var2,
 	       clear, preset,
 	       clear_preset_var1,
@@ -99,13 +104,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 
@@ -117,7 +122,7 @@ protected:
   /// @brief 内容をバイナリダンプする．
   void
   dump_Latch(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
 
 
@@ -144,11 +149,16 @@ class CiLatch2Cell :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiLatch2Cell() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiLatch2Cell(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiLatchCell{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiLatch2Cell(
+    const CiCellLibrary* lib,    ///< [in] 親のライブラリ
     const ShString& name,	 ///< [in] 名前
     ClibArea area,		 ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -160,7 +170,7 @@ public:
     const Expr& preset,          ///< [in] "preset" 関数の式
     ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
     ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  ) : CiLatchCell{name, area,
+  ) : CiLatchCell{lib, name, area,
                   var1, var2,
 		  enable, data_in,
 		  clear, preset,
@@ -194,13 +204,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 

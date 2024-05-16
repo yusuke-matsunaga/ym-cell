@@ -22,14 +22,19 @@ class CiFsmCell :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiFsmCell() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiFsmCell(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiCell{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiFsmCell(
-    const ShString& name, ///< [in] 名前
-    ClibArea area         ///< [in] 面積
-  ) : CiCell{name, area}
+    const CiCellLibrary* lib, ///< [in] 親のライブラリ
+    const ShString& name,     ///< [in] 名前
+    ClibArea area             ///< [in] 面積
+  ) : CiCell{lib, name, area}
   {
   }
 
@@ -59,13 +64,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 };

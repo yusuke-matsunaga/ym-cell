@@ -59,7 +59,7 @@ CiLatchCell::make_signature(
   vector<TvFunc> logic_list(no2);
   vector<TvFunc> tristate_list(no2);
   for ( SizeType i = 0; i < no2; ++ i ) {
-    auto opin = library->_pin(output(i));
+    auto opin = output(i);
     logic_list[i] = opin->function().make_tv(ni2);
     tristate_list[i] = opin->tristate().make_tv(ni2);
   }

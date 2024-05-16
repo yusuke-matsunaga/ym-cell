@@ -10,26 +10,29 @@
 
 #include "ym/clib.h"
 #include "ym/ShString.h"
+#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class Serializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiBundle CiBundle.h "CiBundle.h"
 /// @brief ClibBundle の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiBundle
+class CiBundle :
+  public CiLibObj
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiBundle() = default;
-
   /// @brief コンストラクタ
   CiBundle(
-    const ShString& name,            ///< [in] 名前
-    const vector<SizeType>& pin_list ///< [in] ピンリスト
-  ) : mName{name},
+    const CiCellLibrary* lib,            ///< [in] 親のライブラリ
+    const ShString& name,                ///< [in] 名前
+    const vector<const CiPin*>& pin_list ///< [in] ピンリスト
+  ) : CiLibObj{lib},
+      mName{name},
       mPinList{pin_list}
   {
   }
@@ -65,7 +68,7 @@ public:
   }
 
   /// @brief ピンの取得
-  SizeType
+  const CiPin*
   pin(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < pin_num() )
   ) const
@@ -74,8 +77,8 @@ public:
     return mPinList[pos];
   }
 
-  /// @brief ピン番号のリストの取得
-  const vector<SizeType>&
+  /// @brief ピンのリストの取得
+  const vector<const CiPin*>&
   pin_list() const
   {
     return mPinList;
@@ -90,14 +93,8 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
-
-  /// @brief 内容を読み込む．
-  void
-  restore(
-    BinDec& s ///< [in] 入力元のストリーム
-  );
 
 
 private:
@@ -109,7 +106,7 @@ private:
   ShString mName;
 
   // ピンのリスト
-  vector<SizeType> mPinList;
+  vector<const CiPin*> mPinList;
 
 };
 

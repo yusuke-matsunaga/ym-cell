@@ -3,10 +3,11 @@
 /// @brief ClibCell の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibCell.h"
+#include "ym/ClibCellLibrary.h"
 #include "ym/ClibPin.h"
 #include "ym/ClibBus.h"
 #include "ym/ClibBundle.h"
@@ -21,13 +22,37 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス ClibCell
 //////////////////////////////////////////////////////////////////////
 
+// @brief 内容を指定したコンストラクタ
+ClibCell::ClibCell(
+  const CiCell* impl
+) : mImpl{impl}
+{
+  if ( mImpl != nullptr ) {
+    mImpl->inc_ref();
+  }
+}
+
+// @brief デストラクタ
+ClibCell::~ClibCell()
+{
+  if ( mImpl != nullptr ) {
+    mImpl->dec_ref();
+  }
+}
+
+// @brief 親のセルライブラリの取得
+ClibCellLibrary
+ClibCell::library() const
+{
+  return ClibCellLibrary{mImpl->parent()};
+}
+
 // @brief 名前の取得
 string
 ClibCell::name() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->name();
+  return mImpl->name();
 }
 
 // @brief 面積の取得
@@ -35,8 +60,7 @@ ClibArea
 ClibCell::area() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->area();
+  return mImpl->area();
 }
 
 // @brief ピン数の取得
@@ -44,8 +68,7 @@ SizeType
 ClibCell::pin_num() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->pin_num();
+  return mImpl->pin_num();
 }
 
 // @brief ピンの取得
@@ -55,9 +78,8 @@ ClibCell::pin(
 ) const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  SizeType pin_id = cell->pin(pos);
-  return ClibPin{mLibrary, pin_id};
+  auto pin = mImpl->pin(pos);
+  return ClibPin{pin};
 }
 
 // @brief 名前からピンの取得
@@ -67,8 +89,8 @@ ClibCell::pin(
 ) const
 {
   _check_valid();
-  SizeType pin_id = mLibrary->get_pin_id(mId, ShString{name});
-  return ClibPin{mLibrary, pin_id};
+  auto pin = mImpl->find_pin(ShString{name});
+  return ClibPin{pin};
 }
 
 // @brief ピンのリストを返す．
@@ -76,8 +98,8 @@ ClibPinList
 ClibCell::pin_list() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return ClibPinList{mLibrary, cell->pin_list()};
+  auto& pin_list = mImpl->pin_list();
+  return ClibPinList{pin_list};
 }
 
 // @brief 入力ピン数の取得
@@ -85,8 +107,7 @@ SizeType
 ClibCell::input_num() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->input_num();
+  return mImpl->input_num();
 }
 
 // @brief 入力ピンの取得
@@ -96,9 +117,8 @@ ClibCell::input(
 ) const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  SizeType id = cell->input(pos);
-  return ClibPin{mLibrary, id};
+  auto pin = mImpl->input(pos);
+  return ClibPin{pin};
 }
 
 // @brief 入力ピンのリストの取得
@@ -106,8 +126,8 @@ ClibPinList
 ClibCell::input_list() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return ClibPinList{mLibrary, cell->input_list()};
+  auto& pin_list = mImpl->input_list();
+  return ClibPinList{pin_list};
 }
 
 // @brief 出力ピン数の取得
@@ -115,8 +135,7 @@ SizeType
 ClibCell::output_num() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->output_num();
+  return mImpl->output_num();
 }
 
 // @brief 出力ピンの取得
@@ -126,9 +145,8 @@ ClibCell::output(
 ) const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  SizeType id = cell->output(pos);
-  return ClibPin{mLibrary, id};
+  auto pin = mImpl->output(pos);
+  return ClibPin{pin};
 }
 
 // @brief 出力ピンのリストの取得
@@ -136,8 +154,8 @@ ClibPinList
 ClibCell::output_list() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return ClibPinList{mLibrary, cell->output_list()};
+  auto& pin_list = mImpl->output_list();
+  return ClibPinList{pin_list};
 }
 
 // @brief 入出力ピン数の取得
@@ -145,8 +163,7 @@ SizeType
 ClibCell::inout_num() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->inout_num();
+  return mImpl->inout_num();
 }
 
 // @brief 入出力ピンの取得
@@ -156,9 +173,8 @@ ClibCell::inout(
 ) const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  SizeType id = cell->inout(pos);
-  return ClibPin{mLibrary, id};
+  auto pin = mImpl->inout(pos);
+  return ClibPin{pin};
 }
 
 // @brief 入出力ピンのリストの取得
@@ -166,8 +182,7 @@ ClibPinList
 ClibCell::inout_list() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return ClibPinList{mLibrary, cell->inout_begin(), cell->input_list().end()};
+  return ClibPinList{mImpl->inout_begin(), mImpl->input_list().end()};
 }
 
 // @brief 入力ピン+入出力ピン数の取得
@@ -175,8 +190,7 @@ SizeType
 ClibCell::input2_num() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->input2_num();
+  return mImpl->input2_num();
 }
 
 // @brief 入力ピンの取得
@@ -186,9 +200,8 @@ ClibCell::input2(
 ) const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  SizeType id = cell->input(pos);
-  return ClibPin{mLibrary, id};
+  auto pin = mImpl->input(pos);
+  return ClibPin{pin};
 }
 
 // @brief 出力ピン+入出力ピン数の取得
@@ -196,8 +209,7 @@ SizeType
 ClibCell::output2_num() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->output2_num();
+  return mImpl->output2_num();
 }
 
 // @brief 出力ピンの取得
@@ -207,9 +219,8 @@ ClibCell::output2(
 ) const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  SizeType id = cell->output(pos);
-  return ClibPin{mLibrary, id};
+  auto pin = mImpl->output(pos);
+  return ClibPin{pin};
 }
 
 // @brief 内部ピン数の取得
@@ -217,8 +228,7 @@ SizeType
 ClibCell::internal_num() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->internal_num();
+  return mImpl->internal_num();
 }
 
 // @brief 内部ピンの取得
@@ -228,9 +238,8 @@ ClibCell::internal(
 ) const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  SizeType id = cell->internal(pos);
-  return ClibPin{mLibrary, id};
+  auto pin = mImpl->internal(pos);
+  return ClibPin{pin};
 }
 
 // @brief 内部ピンのリストの取得
@@ -238,8 +247,8 @@ ClibPinList
 ClibCell::internal_list() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return ClibPinList{mLibrary, cell->internal_list()};
+  auto& pin_list = mImpl->internal_list();
+  return ClibPinList{pin_list};
 }
 
 // @brief バス数の取得
@@ -247,8 +256,7 @@ SizeType
 ClibCell::bus_num() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->bus_num();
+  return mImpl->bus_num();
 }
 
 // @brief バスの取得
@@ -258,9 +266,8 @@ ClibCell::bus(
 ) const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  SizeType id = cell->bus(pos);
-  return ClibBus{mLibrary, id};
+  auto pin = mImpl->bus(pos);
+  return ClibBus{pin};
 }
 
 // @brief 名前からバスの取得
@@ -270,8 +277,8 @@ ClibCell::bus(
 ) const
 {
   _check_valid();
-  auto id = mLibrary->get_bus_id(mId, ShString{name});
-  return ClibBus{mLibrary, id};
+  auto bus = mImpl->find_bus(ShString{name});
+  return ClibBus{bus};
 }
 
 // @brief バスのリストの取得
@@ -279,8 +286,8 @@ ClibBusList
 ClibCell::bus_list() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return ClibBusList{mLibrary, cell->bus_list()};
+  auto& bus_list = mImpl->bus_list();
+  return ClibBusList{bus_list};
 }
 
 // @brief バンドル数の取得
@@ -288,8 +295,7 @@ SizeType
 ClibCell::bundle_num() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->bundle_num();
+  return mImpl->bundle_num();
 }
 
 // @brief バンドルの取得
@@ -299,9 +305,8 @@ ClibCell::bundle(
 ) const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  SizeType id = cell->bundle(pos);
-  return ClibBundle{mLibrary, id};
+  auto bundle = mImpl->bundle(pos);
+  return ClibBundle{bundle};
 }
 
 // @brief 名前からバンドルの取得
@@ -311,8 +316,8 @@ ClibCell::bundle(
 ) const
 {
   _check_valid();
-  SizeType id = mLibrary->get_bundle_id(mId, ShString{name});
-  return ClibBundle{mLibrary, id};
+  auto bundle = mImpl->find_bundle(ShString{name});
+  return ClibBundle{bundle};
 }
 
 // @brief バンドルのリストの取得
@@ -320,8 +325,8 @@ ClibBundleList
 ClibCell::bundle_list() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return ClibBundleList{mLibrary, cell->bundle_list()};
+  auto& bundle_list = mImpl->bundle_list();
+  return ClibBundleList{bundle_list};
 }
 
 // @brief タイミング情報の数を返す．
@@ -329,8 +334,7 @@ SizeType
 ClibCell::timing_num() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->timing_num();
+  return mImpl->timing_num();
 }
 
 // @brief タイミング情報を返す．
@@ -340,9 +344,8 @@ ClibCell::timing(
 ) const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  SizeType id = cell->timing(pos);
-  return ClibTiming{mLibrary, id};
+  auto timing = mImpl->timing(pos);
+  return ClibTiming{timing};
 }
 
 // @brief タイミング情報のリストを返す．
@@ -350,8 +353,8 @@ ClibTimingList
 ClibCell::timing_list() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return ClibTimingList{mLibrary, cell->timing_list()};
+  auto& timing_list = mImpl->timing_list();
+  return ClibTimingList{timing_list};
 }
 
 // @brief 条件に合致するタイミング情報のリストを返す．
@@ -363,8 +366,8 @@ ClibCell::timing_list(
 ) const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return ClibTimingList{mLibrary, cell->timing_list(ipos, opos, sense)};
+  auto& timing_list = mImpl->timing_list(ipos, opos, sense);
+  return ClibTimingList{timing_list};
 }
 
 // @brief セルの種類を返す．
@@ -372,8 +375,7 @@ ClibCellType
 ClibCell::type() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->type();
+  return mImpl->type();
 }
 
 // @brief 組み合わせ論理タイプの時 true を返す．
@@ -381,8 +383,7 @@ bool
 ClibCell::is_logic() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->is_logic();
+  return mImpl->is_logic();
 }
 
 // @brief FFタイプの時 true を返す．
@@ -390,8 +391,7 @@ bool
 ClibCell::is_ff() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->is_ff();
+  return mImpl->is_ff();
 }
 
 // @brief ラッチタイプの時 true を返す．
@@ -399,8 +399,7 @@ bool
 ClibCell::is_latch() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->is_latch();
+  return mImpl->is_latch();
 }
 
 // @brief 出力の論理式を持っている時に true を返す．
@@ -461,8 +460,7 @@ string
 ClibCell::qvar1() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->qvar1();
+  return mImpl->qvar1();
 }
 
 // @brief 内部変数1の名前を返す．
@@ -470,8 +468,7 @@ string
 ClibCell::qvar2() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->qvar2();
+  return mImpl->qvar2();
 }
 
 // @brief 非同期 clear を持つ時 true を返す．
@@ -486,8 +483,7 @@ Expr
 ClibCell::clear_expr() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->clear_expr();
+  return mImpl->clear_expr();
 }
 
 // @brief 非同期 preset を持つ時 true を返す．
@@ -502,8 +498,7 @@ Expr
 ClibCell::preset_expr() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->preset_expr();
+  return mImpl->preset_expr();
 }
 
 // @brief clear と preset が同時にアクティブになった時の値1
@@ -511,8 +506,7 @@ ClibCPV
 ClibCell::clear_preset_var1() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->clear_preset_var1();
+  return mImpl->clear_preset_var1();
 }
 
 // @brief clear と preset が同時にアクティブになった時の値1
@@ -520,8 +514,7 @@ ClibCPV
 ClibCell::clear_preset_var2() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->clear_preset_var2();
+  return mImpl->clear_preset_var2();
 }
 
 // @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
@@ -529,8 +522,7 @@ Expr
 ClibCell::clock_expr() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->clock_expr();
+  return mImpl->clock_expr();
 }
 
 // @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
@@ -538,8 +530,7 @@ Expr
 ClibCell::clock2_expr() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->clock2_expr();
+  return mImpl->clock2_expr();
 }
 
 // @brief FFセルの場合に次状態関数を表す論理式を返す．
@@ -547,8 +538,7 @@ Expr
 ClibCell::next_state_expr() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->next_state_expr();
+  return mImpl->next_state_expr();
 }
 
 // @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
@@ -556,8 +546,7 @@ Expr
 ClibCell::enable_expr() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->enable_expr();
+  return mImpl->enable_expr();
 }
 
 // @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
@@ -565,8 +554,7 @@ Expr
 ClibCell::enable2_expr() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->enable2_expr();
+  return mImpl->enable2_expr();
 }
 
 // @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
@@ -574,8 +562,7 @@ Expr
 ClibCell::data_in_expr() const
 {
   _check_valid();
-  auto cell = mLibrary->_cell(mId);
-  return cell->data_in_expr();
+  return mImpl->data_in_expr();
 }
 
 END_NAMESPACE_YM_CLIB

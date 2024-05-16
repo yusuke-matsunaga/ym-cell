@@ -54,7 +54,7 @@ private:
   );
 
   /// @brief タイミング情報を作る．
-  SizeType
+  const CiTiming*
   add_timing(
     const MislibPin* pin ///< [in] ピン記述
   );
@@ -67,7 +67,7 @@ private:
     SizeType ipos,             // 入力ピン番号
     SizeType opos,             // 出力ピン番号(常に0だけど念の為)
     CiCell* cell,              // 対象のセル
-    SizeType timing_id         // タイミング番号
+    const CiTiming* timing     // タイミング
   );
 
 

@@ -18,7 +18,7 @@
 #include "ym/ShString.h"
 #include "ym/logic.h"
 #include "ci/CiPatMgr.h"
-#include "ci/CiCellPinHash.h"
+#include "ci/CiCellNameHash.h"
 #include "ci/CiPin.h"
 #include "ci/CiBus.h"
 #include "ci/CiBundle.h"
@@ -38,6 +38,10 @@ class CiTiming;
 //////////////////////////////////////////////////////////////////////
 /// @class CiCellLibrary CiCellLibrary.h "CiCellLibrary.h"
 /// @brief ClibCellLibrary の実装クラス
+///
+/// 本来はライブラリ -> セル -> ピン という風に階層構造を持つが，
+/// 個々のオブジェクトの所有権的にはすべてライブラリに属していると考える．
+/// 逆にすべての要素に対する参照は親のライブラリに対する参照とみなす．
 //////////////////////////////////////////////////////////////////////
 class CiCellLibrary
 {
@@ -186,8 +190,8 @@ public:
 
   /// @brief バスタイプの取得
   ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
+  /// なければ nullptr を返す．
+  const CiBusType*
   bus_type(
     const string& name ///< [in] バスタイプ名
   ) const
@@ -197,9 +201,17 @@ public:
 
   /// @brief バスタイプの取得
   ///
+  /// なければ nullptr を返す．
+  const CiBusType*
+  bus_type(
+    const ShString& name ///< [in] バスタイプ名
+  ) const;
+
+  /// @brief バスタイプ番号の取得
+  ///
   /// なければ CLIB_NULLID を返す．
   SizeType
-  bus_type(
+  bus_type_id(
     const ShString& name ///< [in] バスタイプ名
   ) const;
 
@@ -216,8 +228,8 @@ public:
     return mCellList.size();
   }
 
-  /// @brief 名前からのセル番号の取得
-  SizeType
+  /// @brief 名前からのセルの取得
+  const CiCell*
   cell(
     const string& name
   ) const
@@ -225,8 +237,8 @@ public:
     return cell(ShString{name});
   }
 
-  /// @brief 名前からのセル番号の取得
-  SizeType
+  /// @brief 名前からのセルの取得
+  const CiCell*
   cell(
     const ShString& name
   ) const
@@ -234,11 +246,11 @@ public:
     if ( mCellDict.count(name) > 0 ) {
       return mCellDict.at(name);
     }
-    return CLIB_NULLID;
+    return nullptr;
   }
 
-  /// @brief セル番号のリストの取得
-  const vector<SizeType>&
+  /// @brief セルのリストの取得
+  const vector<const CiCell*>&
   cell_list() const
   {
     return mRefCellList;
@@ -251,8 +263,8 @@ public:
     return mGroupList.size();
   }
 
-  /// @brief セルグループ番号のリストの取得
-  const vector<SizeType>&
+  /// @brief セルグループのリストの取得
+  const vector<const CiCellGroup*>&
   cell_group_list() const
   {
     return mRefGroupList;
@@ -266,7 +278,7 @@ public:
   }
 
   /// @brief NPN同値クラス番号のリストの取得
-  const vector<SizeType>&
+  const vector<const CiCellClass*>&
   npn_class_list() const
   {
     return mRefClassList;
@@ -279,7 +291,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 定数0セルのグループを返す．
-  SizeType
+  const CiCellGroup*
   const0_func() const
   {
     // 決め打ち
@@ -287,7 +299,7 @@ public:
   }
 
   /// @brief 定数1セルのグループを返す．
-  SizeType
+  const CiCellGroup*
   const1_func() const
   {
     // 決め打ち
@@ -295,7 +307,7 @@ public:
   }
 
   /// @brief バッファセルのグループを返す．
-  SizeType
+  const CiCellGroup*
   buf_func() const
   {
     // 決め打ち
@@ -303,7 +315,7 @@ public:
   }
 
   /// @brief インバータセルのグループを返す．
-  SizeType
+  const CiCellGroup*
   inv_func() const
   {
     // 決め打ち
@@ -321,7 +333,7 @@ public:
   /// - cpv1, cpv2 の値は has_clear, has_preset がともに true
   ///   の時のみ意味を持つ．
   /// - 該当するセルがないときでも空のセルクラスが返される．
-  SizeType
+  const CiCellClass*
   simple_ff_class(
     bool master_slave, ///< [in] master/slave 型の時 true
     bool has_clear,    ///< [in] clear 端子を持つ時 true
@@ -341,7 +353,7 @@ public:
   /// - cpv1, cpv2 の値は has_clear, has_preset がともに true
   ///   の時のみ意味を持つ．
   /// - 該当するセルがないときでも空のセルクラスが返される．
-  SizeType
+  const CiCellClass*
   simple_latch_class(
     bool master_slave, ///< [in] master/slave 型の時 true
     bool has_clear,    ///< [in] clear 端子を持つ時 true
@@ -536,14 +548,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 1次元の LUT のテンプレートを作る．
-  SizeType
+  CiLutTemplate*
   add_lut_template1(
     ClibVarType var_type1,
     const vector<double>& index_list1
   );
 
   /// @brief 2次元の LUT のテンプレートを作る．
-  SizeType
+  CiLutTemplate*
   add_lut_template2(
     ClibVarType var_type1,
     const vector<double>& index_list1,
@@ -552,7 +564,7 @@ public:
   );
 
   /// @brief 3次元の LUT のテンプレートを作る．
-  SizeType
+  CiLutTemplate*
   add_lut_template3(
     ClibVarType var_type1,
     const vector<double>& index_list1,
@@ -563,27 +575,27 @@ public:
   );
 
   /// @brief セルクラスを作る．
-  SizeType
+  CiCellClass*
   add_cell_class(
     const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換のリスト
   );
 
   /// @brief セルグループを作る．
-  SizeType
+  CiCellGroup*
   add_cell_group(
-    SizeType rep_class,    ///< [in] 親のセルクラス
-    const ClibIOMap& iomap ///< [in] 変換マップ
+    const CiCellClass* rep_class, ///< [in] 親のセルクラス
+    const ClibIOMap& iomap        ///< [in] 変換マップ
   );
 
   /// @brief 論理セルを追加する．
-  SizeType
+  CiCell*
   add_logic_cell(
     const ShString& name,     ///< [in] 名前
     ClibArea area             ///< [in] 面積
   );
 
   /// @brief FFセルを追加する．
-  SizeType
+  CiCell*
   add_ff_cell(
     const ShString& name,      ///< [in] 名前
     ClibArea area,             ///< [in] 面積
@@ -599,7 +611,7 @@ public:
   );
 
   /// @brief ラッチセルを追加する．
-  SizeType
+  CiCell*
   add_latch_cell(
     const ShString& name,      ///< [in] 名前
     ClibArea area,             ///< [in] 面積
@@ -615,7 +627,7 @@ public:
   );
 
   /// @brief FSMセルを追加する．
-  SizeType
+  CiCell*
   add_fsm_cell(
     const ShString& name,      ///< [in] 名前
     ClibArea area              ///< [in] 面積
@@ -623,9 +635,9 @@ public:
 
   /// @brief 入力ピンを追加する．
   /// @return 生成されたピン番号を返す．
-  SizeType
+  CiPin*
   add_input(
-    SizeType cell_id,                 ///< [in] セル番号
+    CiCell* cell,                     ///< [in] セル
     const ShString& name,             ///< [in] ピン名
     ClibCapacitance capacitance,      ///< [in] 負荷容量
     ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
@@ -634,9 +646,9 @@ public:
 
   /// @brief 出力ピンを追加する．
   /// @return 生成されたピン番号を返す．
-  SizeType
+  CiPin*
   add_output(
-    SizeType cell_id,                ///< [in] セル番号
+    CiCell* cell,                    ///< [in] セル
     const ShString& name,            ///< [in] ピン名
     ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
     ClibCapacitance min_fanout,      ///< [in] 最大ファンアウト容量
@@ -650,9 +662,9 @@ public:
 
   /// @brief 入出力ピンを追加する．
   /// @return 生成されたピン番号を返す．
-  SizeType
+  CiPin*
   add_inout(
-    SizeType cell_id,                 ///< [in] セル番号
+    CiCell* cell,                     ///< [in] セル
     const ShString& name,             ///< [in] ピン名
     ClibCapacitance capacitance,      ///< [in] 負荷容量
     ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
@@ -669,34 +681,34 @@ public:
 
   /// @brief 内部ピンを追加する．
   /// @return 生成されたピン番号を返す．
-  SizeType
+  CiPin*
   add_internal(
-    SizeType cell_id,    ///< [in] セル番号
+    CiCell* cell,        ///< [in] セル
     const ShString& name ///< [in] 名前
   );
 
   /// @brief バスを追加する．
   /// @return 生成されｔバス番号を返す．
-  SizeType
+  CiBus*
   add_bus(
-    SizeType cell_id,                ///< [in] セル番号
-    const ShString& name,            ///< [in] 名前
-    SizeType bus_type,               ///< [in] バスタイプ
-    const vector<SizeType>& pin_list ///< [in] ピンリスト
+    CiCell* cell,                        ///< [in] セル
+    const ShString& name,                ///< [in] 名前
+    const CiBusType* bus_type,           ///< [in] バスタイプ
+    const vector<const CiPin*>& pin_list ///< [in] ピンリスト
   );
 
   /// @brief バンドルを追加する．
   /// @return 生成されたバンドル番号を返す．
-  SizeType
+  CiBundle*
   add_bundle(
-    SizeType cell_id,                ///< [in] セル番号
-    const ShString& name,            ///< [in] 名前
-    const vector<SizeType>& pin_list ///< [in] ピンリスト
+    CiCell* cell,                        ///< [in] セル
+    const ShString& name,                ///< [in] 名前
+    const vector<const CiPin*>& pin_list ///< [in] ピンリスト
   );
 
   /// @brief タイミング情報を作る(ジェネリック遅延モデル)．
   /// @return 生成されたタイミング番号を返す．
-  SizeType
+  CiTiming*
   add_timing_generic(
     ClibTimingType type,            ///< [in] タイミングの種類
     const Expr& cond,               ///< [in] 条件式
@@ -710,7 +722,7 @@ public:
 
   /// @brief タイミング情報を作る(折れ線近似)．
   /// @return 生成されたタイミング番号を返す．
-  SizeType
+  CiTiming*
   add_timing_piecewise(
     ClibTimingType timing_type,
     const Expr& cond,
@@ -724,32 +736,26 @@ public:
 
   /// @brief タイミング情報を作る(非線形タイプ1)．
   /// @return 生成されたタイミング番号を返す．
-  SizeType
+  CiTiming*
   add_timing_lut1(
     ClibTimingType timing_type,
     const Expr& cond,
-    SizeType cell_rise,
-    SizeType cell_fall,
-    SizeType rise_transition,
-    SizeType fall_transition
+    const CiLut* cell_rise,
+    const CiLut* cell_fall,
+    const CiLut* rise_transition,
+    const CiLut* fall_transition
   );
 
   /// @brief タイミング情報を作る(非線形タイプ2)．
   /// @return 生成されたタイミング番号を返す．
-  SizeType
+  CiTiming*
   add_timing_lut2(
     ClibTimingType timing_type,
     const Expr& cond,
-    SizeType rise_transition,
-    SizeType fall_transition,
-    SizeType rise_propagation,
-    SizeType fall_propagation
-  );
-
-  /// @brief タイミング情報用のデータ構造を初期化する．
-  void
-  init_cell_timing_map(
-    SizeType cell_id ///< [in] セル番号
+    const CiLut* rise_transition,
+    const CiLut* fall_transition,
+    const CiLut* rise_propagation,
+    const CiLut* fall_propagation
   );
 
   /// @brief 1次元の LUT を作る．
@@ -780,9 +786,9 @@ public:
   );
 
   /// @brief LUT を作る．
-  SizeType
+  CiLut*
   add_lut(
-    SizeType templ_id,
+    const CiLutTemplate* lut_template,  ///< [in] テンプレート
     const vector<double>& value_array, ///< [in] 値の配列
     const vector<double>& index_array1 ///< [in] インデックス値のリスト1
     = vector<double>{},
@@ -894,12 +900,12 @@ public:
   }
 
   /// @brief パタンを得る．
-  const CiPatGraph&
+  const CiPatGraph*
   _pat_graph(
     SizeType id ///< [in] ID番号
   ) const
   {
-    return mPatMgr.pat(id);
+    return &mPatMgr.pat(id);
   }
 
 
@@ -911,106 +917,75 @@ private:
   /// @brief 名前を読み込む．
   void
   restore_name(
-    BinDec& s ///< [in] 入力ストリーム
-  )
-  {
-    string name;
-    s >> name;
-    mName = name;
-  }
+    Deserializer& s ///< [in] デシリアライザ
+  );
 
   /// @brief 'technology' を読み込む．
   void
   restore_technology(
-    BinDec& s ///< [in] 入力ストリーム
-  )
-  {
-    auto tmp = s.read_8();
-    mTechnology = static_cast<ClibTechnology>(tmp);
-  }
+    Deserializer& s ///< [in] デシリアライザ
+  );
 
   /// @brief 遅延モデルを読み込む．
   void
   restore_delay_model(
-    BinDec& s ///< [in] 入力ストリーム
-  )
-  {
-    auto tmp = s.read_8();
-    mDelayModel = static_cast<ClibDelayModel>(tmp);
-  }
+    Deserializer& s ///< [in] デシリアライザ
+  );
 
   /// @brief 'capacitive_load_unit' を読み込む．
   void
   restore_capacitive_load_unit(
-    BinDec& s ///< [in] 入力ストリーム
-  )
-  {
-    double unit;
-    string ustr;
-    s >> unit
-      >> ustr;
-    mCapacitiveLoadUnit = unit;
-    mCapacitiveLoadUnitStr = ustr;
-  }
+    Deserializer& s ///< [in] デシリアライザ
+  );
 
   /// @brief 属性を読み込む(浮動小数点型)
   void
   restore_double_attr(
-    BinDec& s,              ///< [in] 入力ストリーム
+    Deserializer& s,        ///< [in] デシリアライザ
     const string& attr_name ///< [in] 属性名
-  )
-  {
-    double val;
-    s >> val;
-    set_attr(attr_name, val);
-  }
+  );
 
   /// @brief 属性を読み込む(文字列型)．
   void
   restore_str_attr(
-    BinDec& s,              ///< [in] 入力ストリーム
+    Deserializer& s,        ///< [in] デシリアライザ
     const string& attr_name ///< [in] 属性名
-  )
-  {
-    string val;
-    s >> val;
-    set_attr(attr_name, val);
-  }
+  );
 
   /// @brief バスタイプを読み込む．
   void
   restore_bustype(
-    BinDec& s ///< [in] 入力ストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
   /// @brief LUT テンプレートを読み込む．
   void
   restore_lut_template(
-    BinDec& s ///< [in] 入力ストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
   /// @brief セルを読み込む．
   void
   restore_cell(
-    BinDec& s ///< [in] 入力ストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
   /// @brief ピン情報を読み込む．
   void
   restore_pin(
-    BinDec& s ///< [in] 入力ストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
   /// @brief バス情報を読み込む．
   void
   restore_bus(
-    BinDec& s ///< [in] 入力ストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
   /// @brief バンドル情報を読み込む．
   void
   restore_bundle(
-    BinDec& s ///< [in] 入力ストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
   /// @brief セルごとのピン，バス，バンドルの辞書を作る．
@@ -1020,25 +995,25 @@ private:
   /// @brief タイミング情報を読み込む．
   void
   restore_timing(
-    BinDec& s  ///< [in] 入力ストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
   /// @brief LUT を読み込む．
   void
   restore_lut(
-    BinDec& s  ///< [in] 入力ストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
   /// @brief セルグループを読み込む．
   void
   restore_cell_group(
-    BinDec& s  ///< [in] 入力ストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
   /// @brief セルクラスを読み込む．
   void
   restore_cell_class(
-    BinDec& s  ///< [in] 入力ストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 
@@ -1048,79 +1023,72 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ピンを登録する．
-  /// @return ピン番号を返す．
-  SizeType
+  void
   reg_pin(
-    SizeType cell_id, ///< [in] セル番号
-    CiPin* pin        ///< [in] ピン
+    const CiCell* cell, ///< [in] セル
+    CiPin* pin          ///< [in] ピン
   )
   {
-    SizeType id = mPinList.size();
     mPinList.push_back(unique_ptr<CiPin>{pin});
-    mPinDict.add(cell_id, pin->_name(), id);
-    return id;
+    mPinDict.add(cell, pin->_name(), pin);
   }
 
-  /// @brief ピン名からピン番号を取り出す．
+  /// @brief ピン名からピンを取り出す．
   ///
-  /// 見つからない場合は CLIB_NULLID を返す．
-  SizeType
-  get_pin_id(
-    SizeType cell_id, ///< [in] セル番号
-    ShString name     ///< [in] ピン名
+  /// 見つからない場合は nullptr を返す．
+  const CiPin*
+  get_pin(
+    const CiCell* cell, ///< [in] セル
+    ShString name       ///< [in] ピン名
   ) const
   {
-    return mPinDict.get(cell_id, name);
+    return mPinDict.get(cell, name);
   }
 
   /// @brief バスを登録する．
-  SizeType
+  void
   reg_bus(
-    SizeType cell_id, ///< [in] セル番号
-    CiBus* bus        ///< [in] バス
+    const CiCell* cell, ///< [in] セル
+    CiBus* bus          ///< [in] バス
   )
   {
-    auto id = mBusList.size();
     mBusList.push_back(unique_ptr<CiBus>(bus));
-    mBusDict.add(cell_id, bus->_name(), id);
-    return id;
+    mBusDict.add(cell, bus->_name(), bus);
   }
 
-  /// @brief バス名からバス番号を取り出す．
+  /// @brief バス名からバスを取り出す．
   ///
-  /// 見つからない場合は CLIB_NULLID を返す．
-  SizeType
-  get_bus_id(
-    SizeType cell_id, ///< [in] セル番号
-    ShString name     ///< [in] バス名
+  /// 見つからない場合は nullptr を返す．
+  const CiBus*
+  get_bus(
+    const CiCell* cell, ///< [in] セル
+    ShString name       ///< [in] バス名
   ) const
   {
-    return mBusDict.get(cell_id, name);
+    return mBusDict.get(cell, name);
   }
 
   /// @brief バンドルを登録する．
-  SizeType
+  void
   reg_bundle(
-    SizeType cell_id, ///< [in] セル番号
-    CiBundle* bundle  ///< [in] バンドル
+    const CiCell* cell, ///< [in] セル番号
+    CiBundle* bundle    ///< [in] バンドル
   )
   {
-    auto id = mBundleList.size();
     mBundleList.push_back(unique_ptr<CiBundle>(bundle));
-    mBundleDict.add(cell_id, bundle->_name(), id);
-    return id;
+    mBundleDict.add(cell, bundle->_name(), bundle);
   }
 
   /// @brief バンドル名からバンドル番号を取り出す．
   ///
-  /// 見つからない場合は CLIB_NULLID を返す．
-  SizeType
-  get_bundle_id(
-    SizeType cell_id, ///< [in] セル番号
-    ShString name     ///< [in] バンドル名
+  /// 見つからない場合は nullptr を返す．
+  const CiBundle*
+  get_bundle(
+    const CiCell* cell, ///< [in] セル番号
+    ShString name       ///< [in] バンドル名
   ) const
   {
-    return mBundleDict.get(cell_id, name);
+    return mBundleDict.get(cell, name);
   }
 
 
@@ -1134,8 +1102,8 @@ private:
   clear();
 
   /// @brief セルを登録する．
-  /// @return セル番号を返す．
-  SizeType
+  /// @return セルを返す．
+  CiCell*
   reg_cell(
     CiCell* cell ///< [in] セル
   );
@@ -1208,41 +1176,41 @@ private:
   // バスタイプのリスト
   vector<unique_ptr<CiBusType>> mBusTypeList;
 
-  // 名前をキーにしたバスタイプ番号の辞書
-  unordered_map<ShString, SizeType> mBusTypeDict;
+  // 名前をキーにしたバスタイプの辞書
+  unordered_map<ShString, const CiBusType*> mBusTypeDict;
 
-  // 遅延テンプレートのリスト
+  // 遅延テンプレートの実体のリスト
   vector<unique_ptr<CiLutTemplate>> mLutTemplateList;
 
-  // テンプレート番号のリスト
-  vector<SizeType> mRefLutTemplateList;
+  // テンプレートのリスト
+  vector<const CiLutTemplate*> mRefLutTemplateList;
 
   // セルの所有権管理用のリスト
   vector<unique_ptr<CiCell>> mCellList;
 
-  // セル番号のリスト
-  vector<SizeType> mRefCellList;
+  // セルのリスト
+  vector<const CiCell*> mRefCellList;
 
-  // 名前をキーにしたセル番号の辞書
-  unordered_map<ShString, SizeType> mCellDict;
+  // 名前をキーにしたセルの辞書
+  unordered_map<ShString, const CiCell*> mCellDict;
 
   // ピンの所有権管理用のリスト
   vector<unique_ptr<CiPin>> mPinList;
 
-  // セル番号とピン名をキーにしたピン番号の辞書
-  CiCellPinHash mPinDict;
+  // セルとピン名をキーにしたピンの辞書
+  CiCellNameHash<CiPin> mPinDict;
 
   // バスの所有権管理用のリスト
   vector<unique_ptr<CiBus>> mBusList;
 
-  // セル番号とバス名をキーにしたバス番号の辞書
-  CiCellPinHash mBusDict;
+  // セルとバス名をキーにしたバスの辞書
+  CiCellNameHash<CiBus> mBusDict;
 
   // バンドルの所有権管理用のリスト
   vector<unique_ptr<CiBundle>> mBundleList;
 
-  // セル番号とバンドル名をキーにしたバンドル番号の辞書
-  CiCellPinHash mBundleDict;
+  // セルとバンドル名をキーにしたバンドルの辞書
+  CiCellNameHash<CiBundle> mBundleDict;
 
   // タイミング情報のリスト
   vector<unique_ptr<CiTiming>> mTimingList;
@@ -1253,29 +1221,29 @@ private:
   // セルグループの所有権管理用のリスト
   vector<unique_ptr<CiCellGroup>> mGroupList;
 
-  // セルグループ番号のリスト
-  vector<SizeType> mRefGroupList;
+  // セルグループのリスト
+  vector<const CiCellGroup*> mRefGroupList;
 
   // NPN同値クラスの所有権管理用のリスト
   vector<unique_ptr<CiCellClass>> mClassList;
 
-  // NPN同値類番号のリスト
-  vector<SizeType> mRefClassList;
+  // NPN同値類のリスト
+  vector<const CiCellClass*> mRefClassList;
 
   // 論理セルグループの情報
   // 0: 定数0
   // 1: 定数1
   // 2: バッファ
   // 3: インバータ
-  SizeType mLogicGroup[4];
+  const CiCellGroup* mLogicGroup[4];
 
   // 単純なFFクラスの情報
   // インデックスは CiSeqInfo で作る．
-  vector<SizeType> mSimpleFFClass;
+  vector<const CiCellClass*> mSimpleFFClass;
 
   // 単純なラッチクラスの情報
   // インデックスは CiSeqInfo で作る．
-  vector<SizeType> mSimpleLatchClass;
+  vector<const CiCellClass*> mSimpleLatchClass;
 
   // パタングラフを管理するクラス
   CiPatMgr mPatMgr;

@@ -24,22 +24,27 @@ class CiFFCell :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiFFCell() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiFFCell(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiFLCell{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiFFCell(
-    const ShString& name,        ///< [in] 名前
-    ClibArea area,               ///< [in] 面積
-    const ShString& var1,        ///< [in] 内部変数1の名前
-    const ShString& var2,        ///< [in] 内部変数2の名前
-    const Expr& clocked_on,      ///< [in] "clocked_on" 関数の式
-    const Expr& next_state,      ///< [in] "next_state" 関数の式
-    const Expr& clear,           ///< [in] "clear" 関数の式
-    const Expr& preset,          ///< [in] "preset" 関数の式
-    ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  ) : CiFLCell{name, area,
+    const CiCellLibrary* lib,  ///< [in] 親のライブラリ
+    const ShString& name,      ///< [in] 名前
+    ClibArea area,             ///< [in] 面積
+    const ShString& var1,      ///< [in] 内部変数1の名前
+    const ShString& var2,      ///< [in] 内部変数2の名前
+    const Expr& clocked_on,    ///< [in] "clocked_on" 関数の式
+    const Expr& next_state,    ///< [in] "next_state" 関数の式
+    const Expr& clear,         ///< [in] "clear" 関数の式
+    const Expr& preset,        ///< [in] "preset" 関数の式
+    ClibCPV clear_preset_var1, ///< [in] クリアとプリセットが同時にアクティブになった時の値1
+    ClibCPV clear_preset_var2  ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+  ) : CiFLCell{lib, name, area,
                var1, var2,
                clear, preset,
 	       clear_preset_var1,
@@ -103,13 +108,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 
@@ -121,7 +126,7 @@ protected:
   /// @brief 内容をバイナリダンプする．
   void
   dump_FF(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
 
 
@@ -149,11 +154,16 @@ class CiFF2Cell :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiFF2Cell() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiFF2Cell(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiFFCell{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiFF2Cell(
+    const CiCellLibrary* lib,    ///< [in] 親のライブラリ
     const ShString& name,        ///< [in] 名前
     ClibArea area,               ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -165,7 +175,7 @@ public:
     const Expr& preset,          ///< [in] "preset" 関数の式
     ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
     ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  ) : CiFFCell{name, area,
+  ) : CiFFCell{lib, name, area,
                var1, var2,
                clocked_on, next_state,
 	       clear, preset,
@@ -199,13 +209,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 

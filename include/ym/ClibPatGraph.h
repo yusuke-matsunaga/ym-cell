@@ -8,10 +8,12 @@
 /// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ClibHandle.h"
+#include "ym/clib.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class CiPatGraph;
 
 //////////////////////////////////////////////////////////////////////
 /// @ingroup ClibGroup
@@ -23,8 +25,7 @@ BEGIN_NAMESPACE_YM_CLIB
 /// 実際には根の反転属性と枝のリストしか持っていない．
 /// その他の情報は ClibPatMgr から補完する．
 //////////////////////////////////////////////////////////////////////
-class ClibPatGraph :
-  public ClibHandle
+class ClibPatGraph
 {
 public:
 
@@ -35,14 +36,11 @@ public:
 
   /// @brief 内容を指定したコンストラクタ
   ClibPatGraph(
-    const ClibLibraryPtr& library, ///< [in] ライブラリ
-    SizeType id                    ///< [in] ID番号
-  ) : ClibHandle{library, id}
-  {
-  }
+    const CiPatGraph* impl ///< [in] 実装本体
+  );
 
   /// @brief デストラクタ
-  ~ClibPatGraph() = default;
+  ~ClibPatGraph();
 
 
 public:
@@ -75,6 +73,62 @@ public:
   edge(
     SizeType pos ///< [in] 位置 ( 0 <= pos < edge_num() )
   ) const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // mImpl に関する関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 適正な値を持っている時 true を返す．
+  bool
+  is_valid() const
+  {
+    return mImpl != nullptr;
+  }
+
+  /// @brief 不正値の時 true を返す．
+  bool
+  is_invalid() const
+  {
+    return !is_valid();
+  }
+
+  /// @brief 等価比較
+  bool
+  operator==(
+    const ClibPatGraph& right
+  ) const
+  {
+    return mImpl == right.mImpl;
+  }
+
+  /// @brief 非等価比較
+  bool
+  operator!=(
+    const ClibPatGraph& right
+  ) const
+  {
+    return !operator==(right);
+  }
+
+  /// @brief 適正な値を持っているかチェックする．
+  void
+  _check_valid() const
+  {
+    if ( !is_valid() ) {
+      throw std::invalid_argument{"not having a valid data"};
+    }
+  }
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 実装
+  const CiPatGraph* mImpl;
 
 };
 

@@ -87,15 +87,15 @@ private:
   set_pin();
 
   /// @brief FF セルを作る．
-  SizeType
+  CiCell*
   add_ff_cell() const;
 
   /// @brief ラッチセルを作る．
-  SizeType
+  CiCell*
   add_latch_cell() const;
 
   /// @brief FSM セルを作る．
-  SizeType
+  CiCell*
   add_fsm_cell() const;
 
 

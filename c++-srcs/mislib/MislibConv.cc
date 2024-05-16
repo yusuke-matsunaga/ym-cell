@@ -208,7 +208,7 @@ MislibConv::new_gate(
   }
 
   // セルを作る．
-  auto cell_id = mLibrary->add_logic_cell(name, area);
+  auto cell = mLibrary->add_logic_cell(name, area);
 
   // 入力ピンのリストを作る．
   auto ni = ipin_name_list.size();
@@ -217,18 +217,15 @@ MislibConv::new_gate(
     auto name = ipin_name_list[i];
     auto pin = ipin_array[i];
     ClibCapacitance load{pin->input_load()->num()};
-    auto ipin_id = mLibrary->add_input(cell_id, name, load, load, load);
-    {
-      auto ipin = mLibrary->_pin(ipin_id);
-      ASSERT_COND( ipin->input_id() == i );
-    }
+    auto ipin = mLibrary->add_input(cell, name, load, load, load);
+    ASSERT_COND( ipin->input_id() == i );
   }
 
   // 出力の論理式
   auto oexpr = opin_expr->to_expr(ipin_name_map);
 
   // 出力ピンを作る．
-  mLibrary->add_output(cell_id, opin_name,
+  mLibrary->add_output(cell, opin_name,
 		       ClibCapacitance::infty(),
 		       ClibCapacitance{0.0},
 		       ClibCapacitance::infty(),
@@ -239,29 +236,28 @@ MislibConv::new_gate(
 		       Expr::make_invalid());
 
   // タイミング情報の生成
-  mLibrary->init_cell_timing_map(cell_id);
+  cell->init_timing_map();
   auto tv_function = oexpr.make_tv(ni);
-  auto cell = mLibrary->_cell(cell_id);
   if ( wildcard_pin ) {
     // すべてのピンが同一のパラメータを持つ．
     auto pt_pin = ipin_top;
-    auto tid = add_timing(pt_pin);
+    auto timing = add_timing(pt_pin);
     for ( SizeType i: Range(ni) ) {
-      set_timing(pt_pin, tv_function, i, 0, cell, tid);
+      set_timing(pt_pin, tv_function, i, 0, cell, timing);
     }
   }
   else {
     // ピンごとに個別のパラメータを持つ．
     for ( SizeType i: Range(ni) ) {
       auto pt_pin = ipin_array[i];
-      auto tid = add_timing(pt_pin);
-      set_timing(pt_pin, tv_function, i, 0, cell, tid);
+      auto timing = add_timing(pt_pin);
+      set_timing(pt_pin, tv_function, i, 0, cell, timing);
     }
   }
 }
 
 // @brief タイミング情報を作る．
-SizeType
+const CiTiming*
 MislibConv::add_timing(
   const MislibPin* pin
 )
@@ -270,14 +266,14 @@ MislibConv::add_timing(
   ClibResistance r_r{pin->rise_fanout_delay()->num()};
   ClibTime       f_i{pin->fall_block_delay()->num()};
   ClibResistance f_r{pin->fall_fanout_delay()->num()};
-  auto tid = mLibrary->add_timing_generic(
+  auto timing = mLibrary->add_timing_generic(
     ClibTimingType::combinational,
     Expr::make_one(),
     r_i, f_i,
     ClibTime{0.0}, ClibTime{0.0},
     r_r, f_r
   );
-  return tid;
+  return timing;
 }
 
 // タイミング情報をセットする．
@@ -288,7 +284,7 @@ MislibConv::set_timing(
   SizeType ipos,
   SizeType opos,
   CiCell* cell,
-  SizeType timing_id
+  const CiTiming* timing
 )
 {
   auto p_func = tv_function.cofactor(ipos, false);
@@ -340,7 +336,7 @@ MislibConv::set_timing(
     sense = sense_real;
   }
 
-  vector<SizeType> timing_list{timing_id};
+  vector<const CiTiming*> timing_list{timing};
   if ( sense == ClibTimingSense::non_unate ) {
     cell->set_timing(ipos, opos, ClibTimingSense::positive_unate, timing_list);
     cell->set_timing(ipos, opos, ClibTimingSense::negative_unate, timing_list);

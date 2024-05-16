@@ -5,35 +5,45 @@
 /// @brief ClibTiming の実装クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021, 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibResistance.h"
 #include "ym/Expr.h"
+#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 class CiLut;
+class Serializer;
+class Deserializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiTiming CiTiming.h "CiTiming.h"
 /// @brief 共通の基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiTiming
+class CiTiming :
+  public CiLibObj
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiTiming() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiTiming(
+    const CiCellLibrary* lib ///< [in] 親のセルライブラリ
+  ) : CiLibObj{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiTiming(
-    ClibTimingType type, ///< [in] タイミング条件の型
-    const Expr& cond     ///< [in] タイミング条件を表す式
-  ) : mType{type},
+    const CiCellLibrary* lib, ///< [in] 親のセルライブラリ
+    ClibTimingType type,      ///< [in] タイミング条件の型
+    const Expr& cond          ///< [in] タイミング条件を表す式
+  ) : CiLibObj{lib},
+      mType{type},
       mCond{cond}
   {
   };
@@ -140,32 +150,32 @@ public:
 
   /// @brief 立ち上がり遷移遅延テーブルの取得
   virtual
-  SizeType
+  const CiLut*
   rise_transition() const;
 
   /// @brief 立ち下がり遷移遅延テーブルの取得
   virtual
-  SizeType
+  const CiLut*
   fall_transition() const;
 
   /// @brief 立ち上がり伝搬遅延テーブルの取得
   virtual
-  SizeType
+  const CiLut*
   rise_propagation() const;
 
   /// @brief 立ち下がり伝搬遅延テーブルの取得
   virtual
-  SizeType
+  const CiLut*
   fall_propagation() const;
 
   /// @brief 立ち上がりセル遅延テーブルの取得
   virtual
-  SizeType
+  const CiLut*
   cell_rise() const;
 
   /// @brief 立ち下がりセル遅延テーブルの取得
   virtual
-  SizeType
+  const CiLut*
   cell_fall() const;
 
 
@@ -178,14 +188,14 @@ public:
   virtual
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
-  ) const = 0;
+    Serializer& s ///< [in] シリアライザ
+ ) const = 0;
 
   /// @brief 内容を読み込む．
   virtual
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 
@@ -197,8 +207,8 @@ protected:
   /// @brief 共通な情報をダンプする．
   void
   dump_common(
-    BinEnc& s,  ///< [in] 出力先のストリーム
-    int type_id ///< [in] ClibTimingType を表すシグネチャ
+    Serializer& s, ///< [in] シリアライザ
+    int type_id    ///< [in] ClibTimingType を表すシグネチャ
   ) const;
 
 
@@ -225,18 +235,23 @@ class CiTimingGP :
 {
 protected:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiTimingGP() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiTimingGP(
+    const CiCellLibrary* lib ///< [in] 親のセルライブラリ
+  ) : CiTiming{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiTimingGP(
+    const CiCellLibrary* lib,   ///< [in] 親のセルライブラリ
     ClibTimingType timing_type, ///< [in] タイミングの型
     const Expr& cond,           ///< [in] タイミング条件を表す式
     ClibTime intrinsic_rise,    ///< [in] 立ち上がり固有遅延
     ClibTime intrinsic_fall,    ///< [in] 立ち下がり固有遅延
     ClibTime slope_rise,        ///< [in] 立ち上がりスロープ遅延
     ClibTime slope_fall         ///< [in] 立ち下がりスロープ遅延
-  ) : CiTiming{timing_type, cond},
+  ) : CiTiming{lib, timing_type, cond},
       mIntrinsicRise{intrinsic_rise},
       mIntrinsicFall{intrinsic_fall},
       mSlopeRise{slope_rise},
@@ -278,7 +293,7 @@ protected:
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 
@@ -311,11 +326,16 @@ class CiTimingGeneric :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiTimingGeneric() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiTimingGeneric(
+    const CiCellLibrary* lib ///< [in] 親のセルライブラリ
+  ) : CiTimingGP{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiTimingGeneric(
+    const CiCellLibrary* lib,       ///< [in] 親のセルライブラリ
     ClibTimingType timing_type,     ///< [in] タイミングの型
     const Expr& cond,               ///< [in] タイミング条件を表す式
     ClibTime intrinsic_rise,        ///< [in] 立ち上がり固有遅延
@@ -324,7 +344,7 @@ public:
     ClibTime slope_fall,            ///< [in] 立ち下がりスロープ遅延
     ClibResistance rise_resistance, ///< [in] 立ち上がり遷移遅延パラメータ
     ClibResistance fall_resistance  ///< [in] 立ち下がり遷移遅延パラメータ
-  ) : CiTimingGP{timing_type, cond,
+  ) : CiTimingGP{lib, timing_type, cond,
 		 intrinsic_rise, intrinsic_fall,
 		 slope_rise, slope_fall},
       mRiseResistance(rise_resistance),
@@ -358,13 +378,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 
@@ -391,11 +411,16 @@ class CiTimingPiecewise :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiTimingPiecewise() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiTimingPiecewise(
+    const CiCellLibrary* lib ///< [in] 親のセルライブラリ
+  ) : CiTimingGP{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiTimingPiecewise(
+    const CiCellLibrary* lib,           ///< [in] 親のセルライブラリ
     ClibTimingType timing_type,         ///< [in] タイミングの型
     const Expr& cond,                   ///< [in] タイミング条件を表す式
     ClibTime intrinsic_rise,            ///< [in] 立ち上がり固有遅延
@@ -404,7 +429,7 @@ public:
     ClibTime slope_fall,                ///< [in] 立ち下がりスロープ遅延
     ClibResistance rise_pin_resistance, ///< [in] 立ち上がりピン抵抗
     ClibResistance fall_pin_resistance  ///< [in] 立ち下がりピン抵抗
-  ) : CiTimingGP{timing_type, cond,
+  ) : CiTimingGP{lib, timing_type, cond,
 		 intrinsic_rise, intrinsic_fall,
 		 slope_rise, slope_fall},
       mRisePinResistance{rise_pin_resistance},
@@ -446,13 +471,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 
@@ -479,16 +504,21 @@ class CiTimingLut :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiTimingLut() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiTimingLut(
+    const CiCellLibrary* lib ///< [in] 親のセルライブラリ
+  ) : CiTiming{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiTimingLut(
-    ClibTimingType timing_type, ///< [in] タイミングの型
-    const Expr& cond,           ///< [in] タイミング条件を表す式
-    SizeType rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
-    SizeType fall_transition    ///< [in] 立ち下がり遷移遅延テーブル
-  ) : CiTiming{timing_type, cond},
+    const CiCellLibrary* lib,     ///< [in] 親のセルライブラリ
+    ClibTimingType timing_type,   ///< [in] タイミングの型
+    const Expr& cond,             ///< [in] タイミング条件を表す式
+    const CiLut* rise_transition, ///< [in] 立ち上がり遷移遅延テーブル
+    const CiLut* fall_transition  ///< [in] 立ち下がり遷移遅延テーブル
+  ) : CiTiming{lib, timing_type, cond},
       mRiseTransition{rise_transition},
       mFallTransition{fall_transition}
   {
@@ -505,11 +535,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり遷移遅延テーブルの取得
-  SizeType
+  const CiLut*
   rise_transition() const override;
 
   /// @brief 立ち下がり遷移遅延テーブルの取得
-  SizeType
+  const CiLut*
   fall_transition() const override;
 
 
@@ -521,7 +551,7 @@ protected:
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 
@@ -531,10 +561,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がり遷移遅延テーブル
-  SizeType mRiseTransition;
+  const CiLut* mRiseTransition;
 
   // 立ち下がり遷移遅延テーブル
-  SizeType mFallTransition;
+  const CiLut* mFallTransition;
 
 };
 
@@ -548,18 +578,24 @@ class CiTimingLut1 :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiTimingLut1() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiTimingLut1(
+    const CiCellLibrary* lib ///< [in] 親のセルライブラリ
+  ) : CiTimingLut{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiTimingLut1(
-    ClibTimingType timing_type, ///< [in] タイミングの型
-    const Expr& cond,           ///< [in] タイミング条件を表す式
-    SizeType cell_rise,         ///< [in] 立ち上がりセル遅延テーブル
-    SizeType cell_fall,         ///< [in] 立ち下がりセル遅延テーブル
-    SizeType rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
-    SizeType fall_transition    ///< [in] 立ち下がり遷移遅延テーブル
-  ) : CiTimingLut{timing_type, cond, rise_transition, fall_transition},
+    const CiCellLibrary* lib,     ///< [in] 親のセルライブラリ
+    ClibTimingType timing_type,   ///< [in] タイミングの型
+    const Expr& cond,             ///< [in] タイミング条件を表す式
+    const CiLut* cell_rise,       ///< [in] 立ち上がりセル遅延テーブル
+    const CiLut* cell_fall,       ///< [in] 立ち下がりセル遅延テーブル
+    const CiLut* rise_transition, ///< [in] 立ち上がり遷移遅延テーブル
+    const CiLut* fall_transition  ///< [in] 立ち下がり遷移遅延テーブル
+  ) : CiTimingLut{lib, timing_type, cond,
+		  rise_transition, fall_transition},
       mCellRise{cell_rise},
       mCellFall{cell_fall}
   {
@@ -576,11 +612,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がりセル遅延テーブルの取得
-  SizeType
+  const CiLut*
   cell_rise() const override;
 
   /// @brief 立ち下がりセル遅延テーブルの取得
-  SizeType
+  const CiLut*
   cell_fall() const override;
 
 
@@ -592,13 +628,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 
@@ -608,10 +644,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がりセル遅延テーブル
-  SizeType mCellRise;
+  const CiLut* mCellRise;
 
   // 立ち下がりセル遅延テーブル
-  SizeType mCellFall;
+  const CiLut* mCellFall;
 
 };
 
@@ -625,18 +661,24 @@ class CiTimingLut2 :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiTimingLut2() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiTimingLut2(
+    const CiCellLibrary* lib ///< [in] 親のセルライブラリ
+  ) : CiTimingLut{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiTimingLut2(
-    ClibTimingType timing_type, ///< [in] タイミングの型
-    const Expr& cond,           ///< [in] タイミング条件を表す式
-    SizeType rise_transition,   ///< [in] 立ち上がり遷移遅延テーブル
-    SizeType fall_transition,   ///< [in] 立ち下がり遷移遅延テーブル
-    SizeType rise_propagation,  ///< [in] 立ち上がり伝搬遅延テーブル
-    SizeType fall_propagation   ///< [in] 立ち下がり伝搬遅延テーブル
-  ) : CiTimingLut{timing_type, cond, rise_transition, fall_transition},
+    const CiCellLibrary* lib,      ///< [in] 親のセルライブラリ
+    ClibTimingType timing_type,    ///< [in] タイミングの型
+    const Expr& cond,              ///< [in] タイミング条件を表す式
+    const CiLut* rise_transition,  ///< [in] 立ち上がり遷移遅延テーブル
+    const CiLut* fall_transition,  ///< [in] 立ち下がり遷移遅延テーブル
+    const CiLut* rise_propagation, ///< [in] 立ち上がり伝搬遅延テーブル
+    const CiLut* fall_propagation  ///< [in] 立ち下がり伝搬遅延テーブル
+  ) : CiTimingLut{lib, timing_type, cond,
+		  rise_transition, fall_transition},
     mRisePropagation{rise_propagation},
     mFallPropagation{fall_propagation}
   {
@@ -652,11 +694,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 立ち上がり伝搬遅延テーブルの取得
-  SizeType
+  const CiLut*
   rise_propagation() const override;
 
   /// @brief 立ち下がり伝搬遅延テーブルの取得
-  SizeType
+  const CiLut*
   fall_propagation() const override;
 
 
@@ -668,13 +710,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 
@@ -684,10 +726,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 立ち上がり伝搬遅延テーブル
-  SizeType mRisePropagation;
+  const CiLut* mRisePropagation;
 
   // 立ち下がり伝搬遅延テーブル
-  SizeType mFallPropagation;
+  const CiLut* mFallPropagation;
 
 };
 

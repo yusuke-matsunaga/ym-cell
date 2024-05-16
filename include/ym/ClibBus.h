@@ -5,7 +5,7 @@
 /// @brief ClibBus のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibHandle.h"
@@ -14,13 +14,15 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiBus;
+
 //////////////////////////////////////////////////////////////////////
 /// @ingroup ClibGroupn
 /// @class ClibBus ClibBus.h "ym/ClibBus.h"
 /// @brief バスを表すクラス
 //////////////////////////////////////////////////////////////////////
 class ClibBus :
-  public ClibHandle
+  public ClibHandle<CiBus>
 {
 public:
 
@@ -31,14 +33,11 @@ public:
 
   /// @brief 内容を指定したコンストラクタ
   ClibBus(
-    const ClibLibraryPtr& library, ///< [in] ライブラリ
-    SizeType id                    ///< [in] ID番号
-  ) : ClibHandle{library, id}
-  {
-  }
+    const CiBus* impl ///< [in] 本体
+  );
 
   /// @brief デストラクタ
-  ~ClibBus() = default;
+  ~ClibBus();
 
 
 public:

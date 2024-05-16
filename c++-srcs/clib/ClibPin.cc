@@ -3,12 +3,11 @@
 /// @brief ClibPin の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibPin.h"
 #include "ci/CiPin.h"
-#include "ci/CiCellLibrary.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -17,13 +16,24 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス ClibPin
 //////////////////////////////////////////////////////////////////////
 
+// @brief 内容を指定したコンストラクタ
+ClibPin::ClibPin(
+  const CiPin* impl
+) : ClibHandle<CiPin>{impl}
+{
+}
+
+// @brief デストラクタ
+ClibPin::~ClibPin()
+{
+}
+
 // @brief ピン名を返す．
 string
 ClibPin::name() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->name();
+  return mImpl->name();
 }
 
 // @brief 方向を返す．
@@ -31,8 +41,7 @@ ClibDirection
 ClibPin::direction() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->direction();
+  return mImpl->direction();
 }
 
 // @brief 入力ピンの時に true を返す．
@@ -40,8 +49,7 @@ bool
 ClibPin::is_input() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->is_input();
+  return mImpl->is_input();
 }
 
 // @brief 出力ピンの時に true を返す．
@@ -49,8 +57,7 @@ bool
 ClibPin::is_output() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->is_output();
+  return mImpl->is_output();
 }
 
 // @brief 入出力ピンの時に true を返す．
@@ -58,8 +65,7 @@ bool
 ClibPin::is_inout() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->is_inout();
+  return mImpl->is_inout();
 }
 
 // @brief 内部ピンの時に true を返す．
@@ -67,8 +73,7 @@ bool
 ClibPin::is_internal() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->is_internal();
+  return mImpl->is_internal();
 }
 
 // @brief ピン番号を返す．
@@ -76,8 +81,7 @@ SizeType
 ClibPin::pin_id() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->pin_id();
+  return mImpl->pin_id();
 }
 
 // @brief 入力ピン番号を返す．
@@ -85,8 +89,7 @@ SizeType
 ClibPin::input_id() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->input_id();
+  return mImpl->input_id();
 }
 
 // @brief 負荷容量を返す．
@@ -94,8 +97,7 @@ ClibCapacitance
 ClibPin::capacitance() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->capacitance();
+  return mImpl->capacitance();
 }
 
 // @brief 立ち上がり時の負荷容量を返す．
@@ -103,8 +105,7 @@ ClibCapacitance
 ClibPin::rise_capacitance() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->rise_capacitance();
+  return mImpl->rise_capacitance();
 }
 
 // @brief 立ち下がり時の負荷容量を返す．
@@ -112,8 +113,7 @@ ClibCapacitance
 ClibPin::fall_capacitance() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->fall_capacitance();
+  return mImpl->fall_capacitance();
 }
 
 // @brief 出力ピン番号を返す．
@@ -121,8 +121,7 @@ SizeType
 ClibPin::output_id() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->output_id();
+  return mImpl->output_id();
 }
 
 // @brief 最大ファンアウト容量を返す．
@@ -130,8 +129,7 @@ ClibCapacitance
 ClibPin::max_fanout() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->max_fanout();
+  return mImpl->max_fanout();
 }
 
 // @brief 最小ファンアウト容量を返す．
@@ -139,8 +137,7 @@ ClibCapacitance
 ClibPin::min_fanout() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->min_fanout();
+  return mImpl->min_fanout();
 }
 
 // @brief 最大負荷容量を返す．
@@ -148,8 +145,7 @@ ClibCapacitance
 ClibPin::max_capacitance() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->max_capacitance();
+  return mImpl->max_capacitance();
 }
 
 // @brief 最小負荷容量を返す．
@@ -157,8 +153,7 @@ ClibCapacitance
 ClibPin::min_capacitance() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->min_capacitance();
+  return mImpl->min_capacitance();
 }
 
 // @brief 最大遷移時間を返す．
@@ -166,8 +161,7 @@ ClibTime
 ClibPin::max_transition() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->max_transition();
+  return mImpl->max_transition();
 }
 
 // @brief 最小遷移時間を返す．
@@ -175,8 +169,7 @@ ClibTime
 ClibPin::min_transition() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->min_transition();
+  return mImpl->min_transition();
 }
 
 // @brief 論理式を返す．
@@ -184,8 +177,7 @@ Expr
 ClibPin::function() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->function();
+  return mImpl->function();
 }
 
 // @brief tristate 条件式を返す．
@@ -193,8 +185,7 @@ Expr
 ClibPin::tristate() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->tristate();
+  return mImpl->tristate();
 }
 
 // @brief 内部ピン番号を返す．
@@ -202,8 +193,7 @@ SizeType
 ClibPin::internal_id() const
 {
   _check_valid();
-  auto pin = mLibrary->_pin(mId);
-  return pin->internal_id();
+  return mImpl->internal_id();
 }
 
 END_NAMESPACE_YM_CLIB

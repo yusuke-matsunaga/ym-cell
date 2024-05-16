@@ -404,7 +404,7 @@ display_ff_class(
   const ClibCellClass& cclass
 )
 {
-  s << title << "( Class#" << cclass.id() << " )" << endl;
+  s << title << endl;
   auto n = cclass.idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
@@ -513,7 +513,7 @@ display_cell(
 )
 {
   // セル名とセルの種類を出力
-  s << "Clib#" << cell.id() << " (" << cell.name() << ") : ";
+  s << cell.name() << ": ";
   if ( cell.is_logic() ) {
     s << "Combinational Logic";
   }
@@ -738,10 +738,13 @@ ClibCellLibrary::display(
 
   // セルクラスの情報
   s << "Cell Class" << endl;
-  for ( auto cclass: npn_class_list() ) {
-    ostringstream buf;
-    buf << "Class#" << cclass.id();
-    display_class(s, buf.str(), cclass);
+  {
+    SizeType id = 0;
+    for ( auto cclass: npn_class_list() ) {
+      ostringstream buf;
+      buf << "Class#" << id; ++ id;
+      display_class(s, buf.str(), cclass);
+    }
   }
 
   // 既定セルグループの情報

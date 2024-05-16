@@ -15,6 +15,8 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiCellGroup;
+
 //////////////////////////////////////////////////////////////////////
 /// @ingroup ClibGroup
 /// @class ClibCellGroup ClibCellGroup.h "ym/ClibCellGroup.h"
@@ -41,8 +43,7 @@ BEGIN_NAMESPACE_YM_CLIB
 /// すべてのタイプで用いられる論理関数は入力ピンと入出力ピンをサポート
 /// とする．FFセルの場合には内部ノードも使用可能
 //////////////////////////////////////////////////////////////////////
-class ClibCellGroup :
-  public ClibHandle
+class ClibCellGroup
 {
 public:
 
@@ -53,14 +54,11 @@ public:
 
   /// @brief 内容を指定したコンストラクタ
   ClibCellGroup(
-    const ClibLibraryPtr& library, ///< [in] ライブラリ
-    SizeType id                    ///< [in] ID番号
-  ) : ClibHandle{library, id}
-  {
-  }
+    const CiCellGroup* impl ///< [in] 本体
+  );
 
   /// @brief デストラクタ
-  ~ClibCellGroup() = default;
+  ~ClibCellGroup();
 
 
 public:
@@ -101,6 +99,62 @@ public:
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // mImpl に関する関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 適正な値を持っている時 true を返す．
+  bool
+  is_valid() const
+  {
+    return mImpl != nullptr;
+  }
+
+  /// @brief 不正値の時 true を返す．
+  bool
+  is_invalid() const
+  {
+    return !is_valid();
+  }
+
+  /// @brief 等価比較
+  bool
+  operator==(
+    const ClibCellGroup& right
+  ) const
+  {
+    return mImpl == right.mImpl;
+  }
+
+  /// @brief 非等価比較
+  bool
+  operator!=(
+    const ClibCellGroup& right
+  ) const
+  {
+    return !operator==(right);
+  }
+
+  /// @brief 適正な値を持っているかチェックする．
+  void
+  _check_valid() const
+  {
+    if ( !is_valid() ) {
+      throw std::invalid_argument{"not having a valid data"};
+    }
+  }
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 実装
+  const CiCellGroup* mImpl;
 
 };
 

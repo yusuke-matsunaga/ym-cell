@@ -77,18 +77,17 @@ END_NONAMESPACE
 // @brief ピンを生成する．
 void
 PinInfo::add_pin(
-  SizeType cell_id,
+  CiCell* cell,
   const unordered_map<ShString, SizeType>& ipin_map
 )
 {
   switch ( mDirection ) {
   case ClibDirection::input:
     for ( auto name: mNameList ) {
-      auto pin_id = library()->add_input(cell_id, name,
-					mCapacitance,
-					mRiseCapacitance,
-					mFallCapacitance);
-      auto pin = library()->_pin(pin_id);
+      auto pin = library()->add_input(cell, name,
+				      mCapacitance,
+				      mRiseCapacitance,
+				      mFallCapacitance);
       ASSERT_COND( pin->input_id() == ipin_map.at(name) );
     }
     break;
@@ -98,16 +97,15 @@ PinInfo::add_pin(
       mFunctionExpr = make_expr(mFunction, ipin_map);
       mTristateExpr = make_expr(mTristate, ipin_map);
       for ( auto name: mNameList ) {
-	auto pin_id = library()->add_output(cell_id, name,
-					    mMaxFanout,
-					    mMinFanout,
-					    mMaxCapacitance,
-					    mMinCapacitance,
-					    mMaxTransition,
-					    mMinTransition,
-					    mFunctionExpr,
-					    mTristateExpr);
-	auto pin = library()->_pin(pin_id);
+	auto pin = library()->add_output(cell, name,
+					 mMaxFanout,
+					 mMinFanout,
+					 mMaxCapacitance,
+					 mMinCapacitance,
+					 mMaxTransition,
+					 mMinTransition,
+					 mFunctionExpr,
+					 mTristateExpr);
 	mOpinList.push_back(pin->output_id());
       }
     }
@@ -118,18 +116,17 @@ PinInfo::add_pin(
       mFunctionExpr = make_expr(mFunction, ipin_map);
       mTristateExpr = make_expr(mTristate, ipin_map);
       for ( auto name: mNameList ) {
-	auto pin_id = library()->add_inout(cell_id, name,
-					   mCapacitance,
-					   mRiseCapacitance,
-					   mFallCapacitance,
-					   mMaxFanout, mMinFanout,
-					   mMaxCapacitance,
-					   mMinCapacitance,
-					   mMaxTransition,
-					   mMinTransition,
-					   mFunctionExpr,
-					   mTristateExpr);
-	auto pin = library()->_pin(pin_id);
+	auto pin = library()->add_inout(cell, name,
+					mCapacitance,
+					mRiseCapacitance,
+					mFallCapacitance,
+					mMaxFanout, mMinFanout,
+					mMaxCapacitance,
+					mMinCapacitance,
+					mMaxTransition,
+					mMinTransition,
+					mFunctionExpr,
+					mTristateExpr);
 	ASSERT_COND( pin->input_id() == ipin_map.at(name) );
 	mOpinList.push_back(pin->output_id());
       }
@@ -145,12 +142,10 @@ PinInfo::add_pin(
 // @brief タイミングを生成する．
 void
 PinInfo::add_timing(
-  SizeType cell_id,
+  CiCell* cell,
   const unordered_map<ShString, SizeType>& ipin_map
 ) const
 {
-  auto cell = library()->_cell(cell_id);
-
   switch ( mDirection ) {
   case ClibDirection::input:
     break;

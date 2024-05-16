@@ -49,10 +49,11 @@ CiLut::search(
 
 // @brief コンストラクタ
 CiLut1D::CiLut1D(
-  SizeType lut_template,
+  const CiCellLibrary* lib,
+  const CiLutTemplate* lut_template,
   const vector<double>& value_array,
   const vector<double>& index_array
-) : CiLut{lut_template},
+) : CiLut{lib, lut_template},
     mValueArray{value_array},
     mIndexArray{index_array}
 {
@@ -136,11 +137,12 @@ CiLut1D::value(
 
 // @brief コンストラクタ
 CiLut2D::CiLut2D(
-  SizeType lut_template,
+  const CiCellLibrary* lib,
+  const CiLutTemplate* lut_template,
   const vector<double>& value_array,
   const vector<double>& index_array1,
   const vector<double>& index_array2
-) : CiLut{lut_template},
+) : CiLut{lib, lut_template},
     mValueArray{value_array},
     mIndexArray{index_array1, index_array2}
 {
@@ -243,12 +245,13 @@ CiLut2D::value(
 
 // @brief コンストラクタ
 CiLut3D::CiLut3D(
-  SizeType lut_template,
+  const CiCellLibrary* lib,
+  const CiLutTemplate* lut_template,
   const vector<double>& value_array,
   const vector<double>& index_array1,
   const vector<double>& index_array2,
   const vector<double>& index_array3
-) : CiLut{lut_template},
+) : CiLut{lib, lut_template},
     mValueArray{value_array},
     mIndexArray{index_array1, index_array2, index_array3}
 {

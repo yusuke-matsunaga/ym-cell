@@ -31,8 +31,8 @@ TableInfo::set(
   SizeType n = header.complex_elem_size();
   ASSERT_COND( n == 1 );
   auto name = header.complex_elem_value(0).string_value();
-  mTemplId = library_info().find_lut(name);
-  if ( mTemplId == CLIB_NULLID ) {
+  mTemplate = library_info().find_lut(name);
+  if ( mTemplate == nullptr ) {
     ostringstream buf;
     buf << name << ": No such lu_template";
     auto label = buf.str();
@@ -55,13 +55,13 @@ TableInfo::set(
   mDomain = get_value("domain");
 }
 
-SizeType
+const CiLut*
 TableInfo::gen_lut() const
 {
   if ( mValues.size() > 0 ) {
-    return library()->add_lut(mTemplId, mValues, mIndex1, mIndex2, mIndex3);
+    return library()->add_lut(mTemplate, mValues, mIndex1, mIndex2, mIndex3);
   }
-  return CLIB_NULLID;
+  return nullptr;
 }
 
 END_NAMESPACE_YM_DOTLIB

@@ -44,7 +44,7 @@ public:
     const AstValue* val
   );
 
-  SizeType
+  const CiLut*
   gen_lut() const;
 
 
@@ -53,8 +53,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // テンプレート番号
-  SizeType mTemplId;
+  // テンプレート
+  const CiLutTemplate* mTemplate;
 
   // index_1 の値
   vector<double> mIndex1;

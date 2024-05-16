@@ -10,6 +10,7 @@
 #include "ym/ClibBusType.h"
 #include "ym/ClibCell.h"
 #include "ym/ClibCellClass.h"
+#include "ym/ClibCellGroup.h"
 #include "ci/CiCellLibrary.h"
 
 
@@ -205,10 +206,8 @@ ClibCellLibrary::bus_type(
 ) const
 {
   if ( mImpl ) {
-    SizeType id = mImpl->bus_type(name);
-    if ( id != CLIB_NULLID ) {
-      return ClibBusType{mImpl, id};
-    }
+    auto bus_type = mImpl->bus_type(name);
+    return ClibBusType{bus_type};
   }
   // デフォルト値
   return {};
@@ -232,7 +231,8 @@ ClibCellLibrary::cell(
 ) const
 {
   if ( mImpl ) {
-    return ClibCell{mImpl, cell_id};
+    auto cell = mImpl->cell_list()[cell_id];
+    return ClibCell{cell};
   }
   // デフォルト値
   return {};
@@ -245,10 +245,8 @@ ClibCellLibrary::cell(
 ) const
 {
   if ( mImpl ) {
-    SizeType id = mImpl->cell(name);
-    if ( id != CLIB_NULLID ) {
-      return ClibCell{mImpl, id};
-    }
+    auto cell = mImpl->cell(name);
+    return ClibCell{cell};
   }
   // デフォルト値
   return {};
@@ -259,7 +257,7 @@ ClibCellList
 ClibCellLibrary::cell_list() const
 {
   if ( mImpl ) {
-    return ClibCellList{mImpl, mImpl->cell_list()};
+    return ClibCellList{mImpl->cell_list()};
   }
   // エラー
   return {};
@@ -282,7 +280,8 @@ ClibCellLibrary::cell_group(
 ) const
 {
   if ( mImpl ) {
-    return ClibCellGroup{mImpl, id};
+    auto cg = mImpl->cell_group_list()[id];
+    return ClibCellGroup{cg};
   }
   return {};
 }
@@ -292,7 +291,7 @@ ClibCellGroupList
 ClibCellLibrary::cell_group_list() const
 {
   if ( mImpl ) {
-    return ClibCellGroupList{mImpl, mImpl->cell_group_list()};
+    return ClibCellGroupList{mImpl->cell_group_list()};
   }
   // エラー
   return {};
@@ -315,7 +314,8 @@ ClibCellLibrary::npn_class(
 ) const
 {
   if ( mImpl ) {
-    return ClibCellClass{mImpl, id};
+    auto cc = mImpl->npn_class_list()[id];
+    return ClibCellClass{cc};
   }
   return {};
 }
@@ -325,7 +325,7 @@ ClibCellClassList
 ClibCellLibrary::npn_class_list() const
 {
   if ( mImpl ) {
-    return ClibCellClassList{mImpl, mImpl->npn_class_list()};
+    return ClibCellClassList{mImpl->npn_class_list()};
   }
   // エラー
   return {};
@@ -336,7 +336,7 @@ ClibCellGroup
 ClibCellLibrary::const0_func() const
 {
   if ( mImpl ) {
-    return ClibCellGroup{mImpl, mImpl->const0_func()};
+    return ClibCellGroup{mImpl->const0_func()};
   }
   // デフォルト値
   return {};
@@ -347,7 +347,7 @@ ClibCellGroup
 ClibCellLibrary::const1_func() const
 {
   if ( mImpl ) {
-    return ClibCellGroup{mImpl, mImpl->const1_func()};
+    return ClibCellGroup{mImpl->const1_func()};
   }
   // デフォルト値
   return {};
@@ -358,7 +358,7 @@ ClibCellGroup
 ClibCellLibrary::buf_func() const
 {
   if ( mImpl ) {
-    return ClibCellGroup{mImpl, mImpl->buf_func()};
+    return ClibCellGroup{mImpl->buf_func()};
   }
   // デフォルト値
   return {};
@@ -369,7 +369,7 @@ ClibCellGroup
 ClibCellLibrary::inv_func() const
 {
   if ( mImpl ) {
-    return ClibCellGroup{mImpl, mImpl->inv_func()};
+    return ClibCellGroup{mImpl->inv_func()};
   }
   // デフォルト値
   return {};
@@ -386,12 +386,10 @@ ClibCellLibrary::simple_ff_class(
 ) const
 {
   if ( mImpl ) {
-    SizeType id = mImpl->simple_ff_class(master_slave,
-					 has_clear, has_preset,
-					 cpv1, cpv2);
-    if ( id != CLIB_NULLID ) {
-      return ClibCellClass{mImpl, id};
-    }
+    auto cc = mImpl->simple_ff_class(master_slave,
+				     has_clear, has_preset,
+				     cpv1, cpv2);
+    return ClibCellClass{cc};
   }
   // デフォルト値
   return {};
@@ -408,12 +406,10 @@ ClibCellLibrary::simple_latch_class(
 ) const
 {
   if ( mImpl ) {
-    SizeType id = mImpl->simple_latch_class(master_slave,
-					    has_clear, has_preset,
-					    cpv1, cpv2);
-    if ( id != CLIB_NULLID ) {
-      return ClibCellClass{mImpl, id};
-    }
+    auto cc = mImpl->simple_latch_class(master_slave,
+					has_clear, has_preset,
+					cpv1, cpv2);
+    return ClibCellClass{cc};
   }
   // デフォルト値
   return {};
@@ -437,7 +433,8 @@ ClibCellLibrary::pg_pat(
 ) const
 {
   if ( mImpl ) {
-    return ClibPatGraph{mImpl, id};
+    auto pg = mImpl->_pat_graph(id);
+    return ClibPatGraph{pg};
   }
   // デフォルト値
   return {};

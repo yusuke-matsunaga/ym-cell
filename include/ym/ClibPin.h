@@ -14,13 +14,15 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiPin;
+
 //////////////////////////////////////////////////////////////////////
 /// @ingroup ClibGroup
 /// @class ClibPin ClibPin.h "ym/ClibPin.h"
 /// @brief セルのピンを表すクラス
 //////////////////////////////////////////////////////////////////////
 class ClibPin :
-  public ClibHandle
+  public ClibHandle<CiPin>
 {
 public:
 
@@ -31,14 +33,11 @@ public:
 
   /// @brief 内容を指定したコンストラクタ
   ClibPin(
-    const ClibLibraryPtr& library, ///< [in] ライブラリ
-    SizeType id                    ///< [in] ID番号
-  ) : ClibHandle{library, id}
-  {
-  }
+    const CiPin* impl ///< [in] 本体
+  );
 
   /// @brief デストラクタ
-  ~ClibPin() = default;
+  ~ClibPin();
 
 
 public:

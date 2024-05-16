@@ -16,13 +16,24 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス ClibBusType
 //////////////////////////////////////////////////////////////////////
 
+// @brief 内容を指定したコンストラクタ
+ClibBusType::ClibBusType(
+  const CiBusType* impl
+) : ClibHandle<CiBusType>{impl}
+{
+}
+
+// @brief デストラクタ
+ClibBusType::~ClibBusType()
+{
+}
+
 // @brief 名前の取得
 string
 ClibBusType::name() const
 {
   _check_valid();
-  auto bustype = mLibrary->_bustype(mId);
-  return bustype->name();
+  return mImpl->name();
 }
 
 // @brief base_type の取得
@@ -30,8 +41,7 @@ ClibBusType::BaseType
 ClibBusType::base_type() const
 {
   _check_valid();
-  auto bustype = mLibrary->_bustype(mId);
-  return bustype->base_type();
+  return mImpl->base_type();
 }
 
 // @brief data_type の取得
@@ -39,8 +49,7 @@ ClibBusType::DataType
 ClibBusType::data_type() const
 {
   _check_valid();
-  auto bustype = mLibrary->_bustype(mId);
-  return bustype->data_type();
+  return mImpl->data_type();
 }
 
 // @brief ビット幅の取得
@@ -48,8 +57,7 @@ SizeType
 ClibBusType::bit_width() const
 {
   _check_valid();
-  auto bustype = mLibrary->_bustype(mId);
-  return bustype->bit_width();
+  return mImpl->bit_width();
 }
 
 // @brief 開始ビットの取得
@@ -57,8 +65,7 @@ SizeType
 ClibBusType::bit_from() const
 {
   _check_valid();
-  auto bustype = mLibrary->_bustype(mId);
-  return bustype->bit_from();
+  return mImpl->bit_from();
 }
 
 // @brief 終了ビットの取得
@@ -66,8 +73,7 @@ SizeType
 ClibBusType::bit_to() const
 {
   _check_valid();
-  auto bustype = mLibrary->_bustype(mId);
-  return bustype->bit_to();
+  return mImpl->bit_to();
 }
 
 /// @brief 向きの取得
@@ -75,8 +81,7 @@ bool
 ClibBusType::downto() const
 {
   _check_valid();
-  auto bustype = mLibrary->_bustype(mId);
-  return bustype->downto();
+  return mImpl->downto();
 }
 
 END_NAMESPACE_YM_CLIB

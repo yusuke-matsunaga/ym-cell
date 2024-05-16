@@ -11,25 +11,37 @@
 #include "ym/clib.h"
 #include "ym/BinEnc.h"
 #include "ym/BinDec.h"
+#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class CiLutTemplate;
+class Serializer;
+class Deserializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiLut CiLut.h "CiLut.h"
 /// @brief ルックアップテーブルの実装クラスの基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiLut
+class CiLut :
+  public CiLibObj
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiLut() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiLut(
+    const CiCellLibrary* lib         ///< [in] 親のセルライブラリ
+  ) : CiLibObj{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiLut(
-    SizeType lut_template ///< [in] テンプレート番号
-  ) : mTemplate{lut_template}
+    const CiCellLibrary* lib,         ///< [in] 親のセルライブラリ
+    const CiLutTemplate* lut_template ///< [in] テンプレート番号
+  ) : CiLibObj{lib},
+      mTemplate{lut_template}
   {
   }
 
@@ -43,8 +55,8 @@ public:
   // 属性の取得
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief テンプレート番号の取得
-  SizeType
+  /// @brief テンプレートの取得
+  const CiLutTemplate*
   lut_template() const
   {
     return mTemplate;
@@ -91,14 +103,14 @@ public:
   virtual
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const = 0;
 
   /// @brief 内容を読み込む．
   virtual
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) = 0;
 
 
@@ -110,14 +122,14 @@ protected:
   /// @brief 実際のダンプを行う関数
   void
   dump_common(
-    BinEnc& s, ///< [in] 出力先のストリーム
-    int d      ///< [in] 次元数
+    Serializer& s, ///< [in] シリアライザ
+    int d          ///< [in] 次元数
   ) const;
 
   /// @brief 内容を読み込む．
   void
   restore_common(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
   /// @brief val に対応する区間を求める．
@@ -134,8 +146,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // テンプレート番号
-  SizeType mTemplate{CLIB_NULLID};
+  // テンプレート
+  const CiLutTemplate* mTemplate{nullptr};
 
 };
 
@@ -149,12 +161,17 @@ class CiLut1D :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiLut1D() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiLut1D(
+    const CiCellLibrary* lib          ///< [in] 親のセルライブラリ
+  ) : CiLut{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiLut1D(
-    SizeType lut_template,             ///< [in] テンプレート番号
+    const CiCellLibrary* lib,          ///< [in] 親のセルライブラリ
+    const CiLutTemplate* lut_template, ///< [in] テンプレート
     const vector<double>& value_array, ///< [in] 値の配列
     const vector<double>& index_array  ///< [in] インデックスの配列
   );
@@ -204,13 +221,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 
@@ -237,12 +254,17 @@ class CiLut2D :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiLut2D() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiLut2D(
+    const CiCellLibrary* lib          ///< [in] 親のセルライブラリ
+  ) : CiLut{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiLut2D(
-    SizeType lut_template,              ///< [in] テンプレート番号
+    const CiCellLibrary* lib,           ///< [in] 親のセルライブラリ
+    const CiLutTemplate* lut_template,  ///< [in] テンプレート
     const vector<double>& value_array,  ///< [in] 値の配列
     const vector<double>& index_array1, ///< [in] 変数1のインデックスの配列
     const vector<double>& index_array2  ///< [in] 変数2のインデックスの配列
@@ -293,13 +315,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 
@@ -342,12 +364,17 @@ class CiLut3D :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiLut3D() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiLut3D(
+    const CiCellLibrary* lib          ///< [in] 親のセルライブラリ
+  ) : CiLut{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiLut3D(
-    SizeType lut_template,              ///< [in] テンプレート番号
+    const CiCellLibrary* lib,           ///< [in] 親のセルライブラリ
+    const CiLutTemplate* lut_template,  ///< [in] テンプレート
     const vector<double>& value_array,  ///< [in] 値の配列
     const vector<double>& index_array1, ///< [in] 変数1のインデックスの配列
     const vector<double>& index_array2, ///< [in] 変数1のインデックスの配列
@@ -399,13 +426,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const override;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 

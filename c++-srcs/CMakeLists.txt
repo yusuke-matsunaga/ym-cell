@@ -21,6 +21,7 @@ include_directories(
 set (clib_SOURCES
   clib/ClibBundle.cc
   clib/ClibBus.cc
+  clib/ClibBusType.cc
   clib/ClibCell.cc
   clib/ClibCellClass.cc
   clib/ClibCellGroup.cc
@@ -41,11 +42,12 @@ set (ci_SOURCES
   ci/CiLatchCell.cc
   ci/CiFsmCell.cc
   ci/CiCellLibrary.cc
-  ci/CiPin.cc
+  ci/CiLibObj.cc
   ci/CiLut.cc
   ci/CiLutTemplate.cc
   ci/CiPatMgr.cc
   ci/CiPatGraph.cc
+  ci/CiPin.cc
   ci/CiTiming.cc
   ci/dump.cc
   ci/restore.cc

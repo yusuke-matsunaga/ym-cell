@@ -5,12 +5,10 @@
 /// @brief ClibHandle のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
-#include "ym/ClibLibraryPtr.h"
-#include "ym/ClibCellLibrary.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -18,7 +16,11 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 /// @class ClibHandle ClibHandle.h "ClibHandle.h"
 /// @brief Clib の要素を表す基底クラス
+///
+/// - 実体を現す実装クラスのスマートポインタ
+/// - 実装クラスは inc_ref(), dec_ref() を実装しているものと仮定している．
 //////////////////////////////////////////////////////////////////////
+template<class T>
 class ClibHandle
 {
 public:
@@ -30,19 +32,21 @@ public:
 
   /// @brief 内容を指定したコンストラクタ
   ClibHandle(
-    const ClibLibraryPtr& library, ///< [in] ライブラリ
-    SizeType id                    ///< [in] ID番号
-  ) : mLibrary{library},
-      mId{id}
+    const T* impl ///< [in] 実体
+  ) : mImpl{impl}
   {
-    if ( id == CLIB_NULLID ) {
-      // 不正値にしておく．
-      mLibrary = nullptr;
+    if ( mImpl != nullptr ) {
+      mImpl->inc_ref();
     }
   }
 
   /// @brief デストラクタ
-  ~ClibHandle() = default;
+  ~ClibHandle()
+  {
+    if ( mImpl != nullptr ) {
+      mImpl->dec_ref();
+    }
+  }
 
 
 public:
@@ -54,7 +58,7 @@ public:
   bool
   is_valid() const
   {
-    return mLibrary.is_valid();
+    return mImpl != nullptr;
   }
 
   /// @brief 不正値の時 true を返す．
@@ -64,20 +68,13 @@ public:
     return !is_valid();
   }
 
-  /// @brief セルライブラリを返す．
-  ClibCellLibrary
-  library() const
-  {
-    return ClibCellLibrary{mLibrary};
-  }
-
   /// @brief 等価比較
   bool
   operator==(
     ClibHandle right
   ) const
   {
-    return mLibrary == right.mLibrary && mId == right.mId;
+    return mImpl == right.mImpl;
   }
 
   /// @brief 非等価比較
@@ -94,7 +91,7 @@ public:
   _check_valid() const
   {
     if ( !is_valid() ) {
-      throw std::invalid_argument{"not a valid data"};
+      throw std::invalid_argument{"not having a valid data"};
     }
   }
 
@@ -104,11 +101,8 @@ protected:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // セルライブラリ
-  ClibLibraryPtr mLibrary;
-
-  // ID番号
-  SizeType mId{CLIB_NULLID};
+  // 実体
+  const T* mImpl;
 
 };
 

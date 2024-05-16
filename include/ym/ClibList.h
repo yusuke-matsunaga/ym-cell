@@ -17,18 +17,21 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 /// @class ClibListIter ClibList.h "ClibList.h"
 /// @brief ClibList の反復子
+///
+/// T1 が実装の本体で T2 がそのスマートポインタクラス
+/// T2{T1} の形のコンストラクタが定義されていると仮定する．
 //////////////////////////////////////////////////////////////////////
-template<class T>
+template<class T1, class T2>
 class ClibListIter
 {
+  using impl_iter = typename vector<const T1*>::const_iterator;
+
 public:
 
   /// @brief コンストラクタ
   ClibListIter(
-    const ClibLibraryPtr& library,        ///< [in] ライブラリ
-    vector<SizeType>::const_iterator iter ///< [in] セル番号のリストの反復子
-  ) : mLibrary{library},
-      mIter{iter}
+    impl_iter iter ///< [in] 実体のリストの反復子
+  ) : mIter{iter}
   {
   }
 
@@ -42,10 +45,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を取り出す．
-  T
+  T2
   operator*() const
   {
-    return T{mLibrary, *mIter};
+    return T2{*mIter};
   }
 
   /// @brief 一つ進める．
@@ -62,7 +65,7 @@ public:
     const ClibListIter& right
   ) const
   {
-    return mLibrary == right.mLibrary && mIter == right.mIter;
+    return mIter == right.mIter;
   }
 
   /// @brief 非等価比較演算子
@@ -80,11 +83,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 親のライブラリ
-  ClibLibraryPtr mLibrary;
-
-  // セル番号のリストの反復子
-  vector<SizeType>::const_iterator mIter;
+  // 実体のリストの反復子
+  impl_iter mIter;
 
 };
 
@@ -93,15 +93,16 @@ private:
 /// @class ClibList ClibList.h "ClibList.h"
 /// @brief ClibXXX のリストを表すクラス
 ///
-/// コンストラクタが ClibXXX(const CiCellLibrary*, SizeType) であると
-/// 仮定している．
+/// T1 が実装の本体で T2 がそのスマートポインタクラス
+/// T2{T1} の形のコンストラクタが定義されていると仮定する．
 //////////////////////////////////////////////////////////////////////
-template<class T>
+template<class T1, class T2>
 class ClibList
 {
 public:
 
-  using iterator = ClibListIter<T>;
+  using impl_iter = typename vector<const T1*>::const_iterator;
+  using iterator = ClibListIter<T1, T2>;
 
 public:
 
@@ -110,22 +111,18 @@ public:
 
   /// @brief コンストラクタ
   ClibList(
-    const ClibLibraryPtr& library,          ///< [in] ライブラリ
-    vector<SizeType>::const_iterator begin, ///< [in] 番号のリストの先頭
-    vector<SizeType>::const_iterator end    ///< [in] 番号のリストの末尾
-  ) : mLibrary{library},
-      mBegin{begin},
+    impl_iter begin, ///< [in] リストの先頭
+    impl_iter end    ///< [in] リストの末尾
+  ) : mBegin{begin},
       mEnd{end}
   {
   }
 
   /// @brief コンストラクタ
   ClibList(
-    const ClibLibraryPtr& library,  ///< [in] ライブラリ
-    const vector<SizeType>& id_list ///< [in] 番号のリスト
-  ) : mLibrary{library},
-      mBegin{id_list.begin()},
-      mEnd{id_list.end()}
+    const vector<const T1*>& impl_list ///< [in] 実体のリスト
+  ) : mBegin{impl_list.begin()},
+      mEnd{impl_list.end()}
   {
   }
 
@@ -146,7 +143,7 @@ public:
   }
 
   /// @brief 要素を返す．
-  T
+  T2
   operator[](
     SizeType pos
   ) const
@@ -154,21 +151,21 @@ public:
     if ( pos < 0 || size() <= pos ) {
       throw std::out_of_range("out of range");
     }
-    return T{mLibrary, *(mBegin + pos)};
+    return T2{*(mBegin + pos)};
   }
 
   /// @brief 先頭の反復子を返す．
   iterator
   begin() const
   {
-    return iterator{mLibrary, mBegin};
+    return iterator{mBegin};
   }
 
   /// @brief 末尾の反復子を返す．
   iterator
   end() const
   {
-    return iterator{mLibrary, mEnd};
+    return iterator{mEnd};
   }
 
 
@@ -177,14 +174,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 親のライブラリ
-  ClibLibraryPtr mLibrary;
+  // 実体のリストの先頭
+  impl_iter mBegin;
 
-  // 番号のリストの先頭
-  vector<SizeType>::const_iterator mBegin;
-
-  // 番号のリストの末尾
-  vector<SizeType>::const_iterator mEnd;
+  // 実体のリストの末尾
+  impl_iter mEnd;
 
 };
 
@@ -193,15 +187,24 @@ private:
 // ClibList を用いたリスト型
 //////////////////////////////////////////////////////////////////////
 
-using ClibCellList = ClibList<ClibCell>;
-using ClibCellGroupList = ClibList<ClibCellGroup>;
-using ClibCellClassList = ClibList<ClibCellClass>;
-using ClibPinList = ClibList<ClibPin>;
-using ClibBusList = ClibList<ClibBus>;
-using ClibBundleList = ClibList<ClibBundle>;
-using ClibTimingList = ClibList<ClibTiming>;
-using ClibLutList = ClibList<ClibLut>;
-using ClibLutTemplateList = ClibList<ClibLutTemplate>;
+class CiCell;
+using ClibCellList = ClibList<CiCell, ClibCell>;
+class CiCellGroup;
+using ClibCellGroupList = ClibList<CiCellGroup, ClibCellGroup>;
+class CiCellClass;
+using ClibCellClassList = ClibList<CiCellClass, ClibCellClass>;
+class CiPin;
+using ClibPinList = ClibList<CiPin, ClibPin>;
+class CiBus;
+using ClibBusList = ClibList<CiBus, ClibBus>;
+class CiBundle;
+using ClibBundleList = ClibList<CiBundle, ClibBundle>;
+class CiTiming;
+using ClibTimingList = ClibList<CiTiming, ClibTiming>;
+class CiLut;
+using ClibLutList = ClibList<CiLut, ClibLut>;
+class CiLutTemplate;
+using ClibLutTemplateList = ClibList<CiLutTemplate, ClibLutTemplate>;
 
 END_NAMESPACE_YM_CLIB
 

@@ -45,8 +45,8 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 論理セルグループ番号を得る．
-  SizeType
+  /// @brief 論理セルグループを得る．
+  const CiCellGroup*
   logic_group(
     SizeType type ///< [in] グループの種類
                   ///<  - 0: 定数0
@@ -59,23 +59,23 @@ public:
     return mLogicGroup[type];
   }
 
-  /// @brief FFクラス番号を得る．
-  SizeType
+  /// @brief FFクラスを得る．
+  const CiCellClass*
   ff_class(
     const CiSeqInfo& info ///< [in] clock/clear/preset 等の情報
   ) const;
 
-  /// @brief ラッチクラス番号を得る．
-  SizeType
+  /// @brief ラッチクラスを得る．
+  const CiCellClass*
   latch_class(
     const CiSeqInfo& info ///< [in] clock/clear/preset 等の情報
   ) const;
 
   /// @brief シグネチャに一致するグループを探す．
-  /// @return グループ番号を返す．
+  /// @return グループを返す．
   ///
   /// なければ作る．
-  SizeType
+  CiCellGroup*
   find_group(
     const CgSignature& sig ///< [in] シグネチャ
   );
@@ -126,7 +126,7 @@ private:
   latch_init();
 
   /// @brief 代表クラスを得る．
-  SizeType
+  CiCellClass*
   _find_class(
     const CgSignature& sig ///< [in] シグネチャ
   );
@@ -140,11 +140,11 @@ private:
   // ライブラリ
   CiCellLibrary& mLibrary;
 
-  // シグネチャ文字列をキーにしてグループ番号を保持する辞書
-  unordered_map<string, SizeType> mGroupDict;
+  // シグネチャ文字列をキーにしてグループを保持する辞書
+  unordered_map<string, CiCellGroup*> mGroupDict;
 
-  // シグネチャ文字列をキーにしてセルクラス番号を保持する辞書
-  unordered_map<string, SizeType> mClassDict;
+  // シグネチャ文字列をキーにしてセルクラスを保持する辞書
+  unordered_map<string, CiCellClass*> mClassDict;
 
   // セルクラスと関係する論理式のリスト
   struct ClassExprList
@@ -156,14 +156,14 @@ private:
   // セルクラス番号をキーにして ClassExprList を保持する配列．
   vector<ClassExprList> mClassExprListArray;
 
-  // 論理セルグループ番号のリスト
-  SizeType mLogicGroup[4];
+  // 論理セルグループのリスト
+  const CiCellGroup* mLogicGroup[4];
 
-  // 単純なFFクラス番号のリスト
-  vector<SizeType> mSimpleFFClass;
+  // 単純なFFクラスのリスト
+  vector<const CiCellClass*> mSimpleFFClass;
 
   // 単純なラッチクラス番号のリスト
-  vector<SizeType> mSimpleLatchClass;
+  vector<const CiCellClass*> mSimpleLatchClass;
 
   // 一時的にパタンを保持するクラス
   PatMgr mPatMgr;

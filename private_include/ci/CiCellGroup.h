@@ -5,32 +5,44 @@
 /// @brief CiCellGroup のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibCellGroup.h"
 #include "ym/ClibIOMap.h"
 #include "ym/logic.h"
+#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class CiCellClass;
+class Serializer;
+class Deserializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiCellGroup CiCellGroup.h "CiCellGroup.h"
 /// @brief ClibCellGroup の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiCellGroup
+class CiCellGroup :
+  public CiLibObj
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiCellGroup() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiCellGroup(
+    const CiCellLibrary* lib     ///< [in] 親のセルライブラリ
+  ) : CiLibObj{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiCellGroup(
-    SizeType rep_class,    ///< [in] 親のセルクラス
-    const ClibIOMap& iomap ///< [in] 変換マップ
-  ) : mRepClass{rep_class},
+    const CiCellLibrary* lib,     ///< [in] 親のセルライブラリ
+    const CiCellClass* rep_class, ///< [in] 親のセルクラス
+    const ClibIOMap& iomap        ///< [in] 変換マップ
+  ) : CiLibObj{lib},
+      mRepClass{rep_class},
       mIoMap{iomap}
   {
   }
@@ -45,7 +57,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のセルクラスを返す．
-  SizeType
+  const CiCellClass*
   rep_class() const
   {
     return mRepClass;
@@ -72,7 +84,7 @@ public:
   }
 
   /// @brief セルを返す．
-  SizeType
+  const CiCell*
   cell(
     SizeType pos ///< [in] インデックス ( 0 <= pos < cell_num() )
   ) const
@@ -82,7 +94,7 @@ public:
   }
 
   /// @brief セルのリストを返す．
-  const vector<SizeType>&
+  const vector<const CiCell*>&
   cell_list() const
   {
     return mCellList;
@@ -97,13 +109,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 
@@ -115,10 +127,10 @@ public:
   /// @brief セルを追加する．
   void
   add_cell(
-    SizeType id
+    const CiCell* cell
   )
   {
-    mCellList.push_back(id);
+    mCellList.push_back(cell);
   }
 
 
@@ -128,13 +140,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 属している ClibCellClass
-  SizeType mRepClass{CLIB_NULLID};
+  const CiCellClass* mRepClass{nullptr};
 
   // ClibCellClass に対する入出力の変換関数
   ClibIOMap mIoMap;
 
   // セルのリスト
-  vector<SizeType> mCellList;
+  vector<const CiCell*> mCellList;
 
 };
 

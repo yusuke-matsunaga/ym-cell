@@ -18,13 +18,30 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス ClibCellClass
 //////////////////////////////////////////////////////////////////////
 
+// @brief 内容を指定したコンストラクタ
+ClibCellClass::ClibCellClass(
+  const CiCellClass* impl
+) : mImpl{impl}
+{
+  if ( mImpl != nullptr ) {
+    mImpl->inc_ref();
+  }
+}
+
+// @brief デストラクタ
+ClibCellClass::~ClibCellClass()
+{
+  if ( mImpl != nullptr ) {
+    mImpl->dec_ref();
+  }
+}
+
 // @brief 同位体変換の個数を得る．
 SizeType
 ClibCellClass::idmap_num() const
 {
   _check_valid();
-  auto cc = mLibrary->_cell_class(mId);
-  return cc->idmap_num();
+  return mImpl->idmap_num();
 }
 
 // @brief 同位体変換を得る．
@@ -34,8 +51,7 @@ ClibCellClass::idmap(
 ) const
 {
   _check_valid();
-  auto cc = mLibrary->_cell_class(mId);
-  return cc->idmap(pos);
+  return mImpl->idmap(pos);
 }
 
 // @brief 同位体変換のリストを得る．
@@ -43,8 +59,7 @@ const vector<ClibIOMap>&
 ClibCellClass::idmap_list() const
 {
   _check_valid();
-  auto cc = mLibrary->_cell_class(mId);
-  return cc->idmap_list();
+  return mImpl->idmap_list();
 }
 
 // @brief グループ数を返す．
@@ -52,8 +67,7 @@ SizeType
 ClibCellClass::cell_group_num() const
 {
   _check_valid();
-  auto cc = mLibrary->_cell_class(mId);
-  return cc->cell_group_num();
+  return mImpl->cell_group_num();
 }
 
 // @brief グループを返す．
@@ -63,9 +77,8 @@ ClibCellClass::cell_group(
 ) const
 {
   _check_valid();
-  auto cc = mLibrary->_cell_class(mId);
-  SizeType id = cc->cell_group(pos);
-  return ClibCellGroup{mLibrary, id};
+  auto group = mImpl->cell_group(pos);
+  return ClibCellGroup{group};
 }
 
 // @brief グループのリストを返す．
@@ -73,8 +86,8 @@ ClibCellGroupList
 ClibCellClass::cell_group_list() const
 {
   _check_valid();
-  auto cc = mLibrary->_cell_class(mId);
-  return ClibCellGroupList{mLibrary, cc->cell_group_list()};
+  auto& group_list = mImpl->cell_group_list();
+  return ClibCellGroupList{group_list};
 }
 
 END_NAMESPACE_YM_CLIB

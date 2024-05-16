@@ -5,30 +5,42 @@
 /// @brief CiCellClass のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ClibCellClass.h"
+#include "ym/clib.h"
 #include "ym/ClibIOMap.h"
+#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class CiCellGroup;
+class Serializer;
+class Deserializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiCellClass CiCellClass.h "CiCellClass.h"
 /// @brief ClibCellClass の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiCellClass
+class CiCellClass :
+  public CiLibObj
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiCellClass() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiCellClass(
+    const CiCellLibrary* lib           ///< [in] 親のセルライブラリ
+  ) : CiLibObj{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiCellClass(
+    const CiCellLibrary* lib,           ///< [in] 親のセルライブラリ
     const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換リスト
-  ) : mIdMapList{idmap_list}
+  ) : CiLibObj{lib},
+      mIdMapList{idmap_list}
   {
   }
 
@@ -80,7 +92,7 @@ public:
   }
 
   /// @brief グループを返す．
-  SizeType
+  const CiCellGroup*
   cell_group(
     SizeType pos ///< [in] インデックス ( 0 <= pos < cell_group_num() )
   ) const
@@ -90,7 +102,7 @@ public:
   }
 
   /// @brief グループのリストを返す．
-  const vector<SizeType>&
+  const vector<const CiCellGroup*>&
   cell_group_list() const
   {
     return mGroupList;
@@ -105,13 +117,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 
@@ -123,10 +135,10 @@ public:
   /// @brief このクラスに属しているセルグループを追加する．
   void
   add_group(
-    SizeType id
+    const CiCellGroup* group
   )
   {
-    mGroupList.push_back(id);
+    mGroupList.push_back(group);
   }
 
 
@@ -138,8 +150,8 @@ private:
   // 同位体変換のリスト
   vector<ClibIOMap> mIdMapList;
 
-  // セルグループ番号のリスト
-  vector<SizeType> mGroupList;
+  // セルグループのリスト
+  vector<const CiCellGroup*> mGroupList;
 
 };
 

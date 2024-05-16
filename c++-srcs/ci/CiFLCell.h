@@ -5,7 +5,7 @@
 /// @brief CiLFCell のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiCell.h"
@@ -22,20 +22,25 @@ class CiFLCell :
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiFLCell() = default;
+  /// @brief restore() 用のコンストラクタ
+  CiFLCell(
+    const CiCellLibrary* lib ///< [in] 親のライブラリ
+  ) : CiCell{lib}
+  {
+  }
 
   /// @brief コンストラクタ
   CiFLCell(
-    const ShString& name,        ///< [in] 名前
-    ClibArea area,               ///< [in] 面積
-    const ShString& var1,        ///< [in] 内部変数1の名前
-    const ShString& var2,        ///< [in] 内部変数2の名前
-    const Expr& clear,           ///< [in] "clear" 関数の式
-    const Expr& preset,          ///< [in] "preset" 関数の式
-    ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  ) : CiCell{name, area},
+    const CiCellLibrary* lib,  ///< [in] 親のライブラリ
+    const ShString& name,      ///< [in] 名前
+    ClibArea area,             ///< [in] 面積
+    const ShString& var1,      ///< [in] 内部変数1の名前
+    const ShString& var2,      ///< [in] 内部変数2の名前
+    const Expr& clear,         ///< [in] "clear" 関数の式
+    const Expr& preset,        ///< [in] "preset" 関数の式
+    ClibCPV clear_preset_var1, ///< [in] クリアとプリセットが同時にアクティブになった時の値1
+    ClibCPV clear_preset_var2  ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+  ) : CiCell{lib, name, area},
       mVar1{var1},
       mVar2{var2},
       mClear{clear},
@@ -97,13 +102,13 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump_FL(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
 
   /// @brief 内容を読み込む．
   void
   restore(
-    BinDec& s ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   ) override;
 
 

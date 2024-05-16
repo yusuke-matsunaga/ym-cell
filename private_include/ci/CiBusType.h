@@ -11,27 +11,30 @@
 #include "ym/clib.h"
 #include "ym/ClibBusType.h"
 #include "ym/ShString.h"
+#include "CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class Serializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiBusType CiBusType.h "CiBusType.h"
 /// @brief ClibBusType の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiBusType
+class CiBusType :
+  public CiLibObj
 {
 public:
 
-  /// @brief 空のコンストラクタ(restore用)
-  CiBusType() = default;
-
-  /// @brief コンストラクタ
+  /// @brief 要素を指定したコンストラクタ
   CiBusType(
-    const ShString& name, ///< [in] 名前
-    SizeType bit_from,    ///< [in] 開始位置
-    SizeType bit_to       ///< [in] 終了位置
-  ) : mName{name},
+    const CiCellLibrary* lib, ///< [in] 親のライブラリオブジェクト
+    const ShString& name,     ///< [in] 名前
+    SizeType bit_from,        ///< [in] 開始位置
+    SizeType bit_to           ///< [in] 終了位置
+  ) : CiLibObj{lib},
+      mName{name},
       mBitFrom{bit_from},
       mBitTo{bit_to}
   {
@@ -48,7 +51,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前の取得
-  string
+  ShString
   name() const
   {
     return mName;
@@ -113,14 +116,8 @@ public:
   /// @brief 内容をバイナリダンプする．
   void
   dump(
-    BinEnc& s ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
-
-  /// @brief 内容を読み込む．
-  void
-  restore(
-    BinDec& s ///< [in] 入力元のストリーム
-  );
 
 
 private:

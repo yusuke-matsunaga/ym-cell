@@ -52,8 +52,8 @@ public:
     return mLibrary;
   }
 
-  /// @brief LUTテンプレート番号を取り出す．
-  SizeType
+  /// @brief LUTテンプレートを取り出す．
+  const CiLutTemplate*
   find_lut(
     const ShString& name ///< [in] テンプレート名
   )
@@ -61,7 +61,7 @@ public:
     if ( mLutDict.count(name) > 0 ) {
       return mLutDict.at(name);
     }
-    return CLIB_NULLID;
+    return nullptr;
   }
 
 
@@ -97,8 +97,8 @@ private:
   // ライブラリ
   CiCellLibrary* mLibrary{nullptr};
 
-  // 名前をキーにしてLUTテンプレート番号を格納する辞書
-  unordered_map<ShString, SizeType> mLutDict;
+  // 名前をキーにしてLUTテンプレートを格納する辞書
+  unordered_map<ShString, const CiLutTemplate*> mLutDict;
 
 };
 
