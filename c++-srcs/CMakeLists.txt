@@ -46,7 +46,6 @@ set (ci_SOURCES
   ci/CiLut.cc
   ci/CiLutTemplate.cc
   ci/CiPatMgr.cc
-  ci/CiPatGraph.cc
   ci/CiPin.cc
   ci/CiTiming.cc
   ci/dump.cc

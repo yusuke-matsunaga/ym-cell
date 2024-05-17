@@ -9,11 +9,13 @@
 /// All rights reserved.
 
 #include "ym/clib.h"
-#include "ym/BinDec.h"
-#include "ym/BinEnc.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+class CiCellClass;
+class Serializer;
+class Deserializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiPatGraph CiPatGraph.h "CiPatGraph.h"
@@ -35,11 +37,11 @@ public:
   // ClibPatGraph の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 代表関数番号を返す．
-  SizeType
-  rep_id() const
+  /// @brief 代表クラスを返す．
+  const CiCellClass*
+  rep_class() const
   {
-    return mRepId;
+    return mRepClass;
   }
 
   /// @brief 根のノード番号を返す．
@@ -92,13 +94,13 @@ public:
   /// @brief バイナリダンプを行う．
   void
   dump(
-    BinEnc& bos ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
 
   /// @brief バイナリファイルを読み込む．
   void
   restore(
-    BinDec& bis ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 
@@ -110,12 +112,12 @@ public:
   /// @brief 初期化する．
   void
   init(
-    SizeType rep_id,                  ///< [in] 代表番号
+    const CiCellClass* rep_class,     ///< [in] 代表クラス
     SizeType input_num,               ///< [in] 入力数
     const vector<SizeType>& edge_list ///< [in] 枝情報のリスト
   )
   {
-    mRepId = rep_id;
+    mRepClass = rep_class;
     mInputNum = input_num;
     mEdgeList.clear();
     mEdgeList.reserve(edge_list.size());
@@ -130,8 +132,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 代表関数番号
-  SizeType mRepId{0};
+  // 代表クラス
+  const CiCellClass* mRepClass{nullptr};
 
   // 入力数 + 根の反転属性
   SizeType mInputNum{0};

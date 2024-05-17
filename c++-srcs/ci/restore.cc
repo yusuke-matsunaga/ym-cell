@@ -256,7 +256,7 @@ CiCellLibrary::restore(
   s.restore(mSimpleLatchClass);
 
   // パタングラフの情報の設定
-  mPatMgr.restore(s.in());
+  mPatMgr.restore(s);
 }
 
 // @brief 名前を読み込む．
@@ -1137,23 +1137,25 @@ CiLut3D::restore(
 // @brief データを読み込んでセットする．
 bool
 CiPatMgr::restore(
-  BinDec& bis
+  Deserializer& s
 )
 {
   // ノードと枝の情報を読み込む．
-  SizeType nn = bis.read_64();
+  SizeType nn;
+  s.restore(nn);
   set_node_num(nn);
-  for ( auto i: Range(node_num()) ) {
-    bis >> mNodeTypeArray[i]
-	>> mEdgeArray[i * 2]
-	>> mEdgeArray[i * 2 + 1];
+  for ( auto i: Range(nn) ) {
+    s.restore(mNodeTypeArray[i]);
+    s.restore(mEdgeArray[i * 2]);
+    s.restore(mEdgeArray[i * 2 + 1]);
   }
 
   // パタングラフの情報を読み込む．
-  SizeType np = bis.read_64();
+  SizeType np;
+  s.restore(np);
   set_pat_num(np);
-  for ( auto id: Range(pat_num()) ) {
-    mPatArray[id].restore(bis);
+  for ( auto id: Range(np) ) {
+    mPatArray[id].restore(s);
   }
 
   return true;
@@ -1167,17 +1169,12 @@ CiPatMgr::restore(
 // @brief バイナリファイルを読み込む．
 void
 CiPatGraph::restore(
-  BinDec& bis
+  Deserializer& s
 )
 {
-  mRepId = bis.read_64();
-  mInputNum = bis.read_64();
-  SizeType ne = bis.read_64();
-  mEdgeList.clear();
-  mEdgeList.resize(ne);
-  for ( auto i: Range(ne) ) {
-    mEdgeList[i] = bis.read_64();
-  }
+  s.restore(mRepClass);
+  s.restore(mInputNum);
+  s.restore(mEdgeList);
 }
 
 END_NAMESPACE_YM_CLIB

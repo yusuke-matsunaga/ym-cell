@@ -1037,7 +1037,7 @@ public:
   ///
   /// 見つからない場合は nullptr を返す．
   const CiPin*
-  get_pin(
+  find_pin(
     const CiCell* cell, ///< [in] セル
     ShString name       ///< [in] ピン名
   ) const
@@ -1060,7 +1060,7 @@ public:
   ///
   /// 見つからない場合は nullptr を返す．
   const CiBus*
-  get_bus(
+  find_bus(
     const CiCell* cell, ///< [in] セル
     ShString name       ///< [in] バス名
   ) const
@@ -1083,7 +1083,7 @@ public:
   ///
   /// 見つからない場合は nullptr を返す．
   const CiBundle*
-  get_bundle(
+  find_bundle(
     const CiCell* cell, ///< [in] セル番号
     ShString name       ///< [in] バンドル名
   ) const

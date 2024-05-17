@@ -9,11 +9,12 @@
 /// All rights reserved.
 
 #include "ym/clib.h"
+#include "ym/ClibLibraryPtr.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
-class CiPatGraph;
+class CiCellLibrary;
 
 //////////////////////////////////////////////////////////////////////
 /// @ingroup ClibGroup
@@ -21,9 +22,6 @@ class CiPatGraph;
 /// @brief パタングラフを表すクラス
 ///
 /// このクラスは実装を隠すためにインターフェイスの定義のみとなっている．
-///
-/// 実際には根の反転属性と枝のリストしか持っていない．
-/// その他の情報は ClibPatMgr から補完する．
 //////////////////////////////////////////////////////////////////////
 class ClibPatGraph
 {
@@ -36,11 +34,15 @@ public:
 
   /// @brief 内容を指定したコンストラクタ
   ClibPatGraph(
-    const CiPatGraph* impl ///< [in] 実装本体
-  );
+    ClibLibraryPtr lib, ///< [in] 親のライブラリ
+    SizeType id         ///< [in] ID番号
+  ) : mLibrary{lib},
+      mId{id}
+  {
+  }
 
   /// @brief デストラクタ
-  ~ClibPatGraph();
+  ~ClibPatGraph() = default;
 
 
 public:
@@ -48,9 +50,9 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 代表関数番号を返す．
-  SizeType
-  rep_id() const;
+  /// @brief 代表クラスを返す．
+  ClibCellClass
+  rep_class() const;
 
   /// @brief 根のノード番号を返す．
   SizeType
@@ -84,7 +86,7 @@ public:
   bool
   is_valid() const
   {
-    return mImpl != nullptr;
+    return mLibrary != nullptr;
   }
 
   /// @brief 不正値の時 true を返す．
@@ -100,7 +102,7 @@ public:
     const ClibPatGraph& right
   ) const
   {
-    return mImpl == right.mImpl;
+    return mLibrary == right.mLibrary && mId == right.mId;
   }
 
   /// @brief 非等価比較
@@ -127,8 +129,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 実装
-  const CiPatGraph* mImpl;
+  // 親のライブラリ
+  ClibLibraryPtr mLibrary;
+
+  // ID番号
+  SizeType mId{CLIB_NULLID};
 
 };
 

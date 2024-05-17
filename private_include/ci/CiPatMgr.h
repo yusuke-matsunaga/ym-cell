@@ -15,7 +15,10 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiCellClass;
 class CiPatGraph;
+class Serializer;
+class Deserializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiPatMgr CiPatMgr.h "CiPatMgr.h"
@@ -149,7 +152,7 @@ public:
   /// @brief バイナリダンプを行う．
   void
   dump(
-    BinEnc& bos ///< [in] 出力先のストリーム
+    Serializer& s ///< [in] シリアライザ
   ) const;
 
 
@@ -192,7 +195,7 @@ public:
   void
   set_pat_info(
     SizeType pos,                     ///< [in] パタン番号
-    SizeType rep_id,                  ///< [in] 代表番号
+    const CiCellClass* rep_class,     ///< [in] 代表クラス
     SizeType input_num,               ///< [in] 入力数
     const vector<SizeType>& edge_list ///< [in] 枝情報のリスト
   );
@@ -202,7 +205,7 @@ public:
   /// @retval false 読み込みが失敗した．
   bool
   restore(
-    BinDec& bis ///< [in] 入力元のストリーム
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 

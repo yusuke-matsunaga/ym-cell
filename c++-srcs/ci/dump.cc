@@ -14,6 +14,7 @@
 #include "ci/CiLutTemplate.h"
 #include "ci/CiLut.h"
 #include "ci/CiTiming.h"
+#include "ci/CiPatGraph.h"
 #include "ci/Serializer.h"
 #include "ym/ClibIOMap.h"
 #include "ym/Range.h"
@@ -313,7 +314,7 @@ CiCellLibrary::dump(
   s.dump(mSimpleLatchClass);
 
   // パタングラフの情報のダンプ
-  mPatMgr.dump(s.out());
+  mPatMgr.dump(s);
 }
 
 
@@ -348,6 +349,20 @@ CiBus::dump(
   s.dump(pin_list());
 }
 
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiBundle
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiBundle::dump(
+  Serializer& s
+) const
+{
+  s.out() << _name();
+  s.dump(pin_list());
+}
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLutTemplate
@@ -882,6 +897,48 @@ CiCellClass::dump(
   }
   // グループ情報のダンプ
   s.dump(mGroupList);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiPatMgr
+//////////////////////////////////////////////////////////////////////
+
+// @brief バイナリダンプを行う．
+void
+CiPatMgr::dump(
+  Serializer& s
+) const
+{
+  // パタングラフのノード情報のダンプ
+  s.dump(node_num());
+  for ( auto i: Range(node_num()) ) {
+    s.dump(mNodeTypeArray[i]);
+    s.dump(mEdgeArray[i * 2 + 0]);
+    s.dump(mEdgeArray[i * 2 + 1]);
+  }
+
+  // パタングラフの情報のダンプ
+  s.dump(pat_num());
+  for ( auto& pat: mPatArray ) {
+    pat.dump(s);
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiPatGraph
+//////////////////////////////////////////////////////////////////////
+
+// @brief バイナリダンプを行う．
+void
+CiPatGraph::dump(
+  Serializer& s
+) const
+{
+  s.dump(mRepClass);
+  s.dump(mInputNum);
+  s.dump(mEdgeList);
 }
 
 END_NAMESPACE_YM_CLIB

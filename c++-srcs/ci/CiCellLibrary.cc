@@ -709,11 +709,11 @@ CiCellLibrary::compile()
   SizeType np = cgmgr.pat_num();
   mPatMgr.set_pat_num(np);
   for ( SizeType i = 0; i < np; ++ i ) {
-    SizeType rep_id;
+    const CiCellClass* rep_class;
     SizeType input_num;
     vector<SizeType> edge_list;
-    cgmgr.get_pat_info(i, rep_id, input_num, edge_list);
-    mPatMgr.set_pat_info(i, rep_id, input_num, edge_list);
+    cgmgr.get_pat_info(i, rep_class, input_num, edge_list);
+    mPatMgr.set_pat_info(i, rep_class, input_num, edge_list);
   }
 }
 

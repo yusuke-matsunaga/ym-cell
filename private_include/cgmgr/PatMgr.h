@@ -5,7 +5,7 @@
 /// @brief PatMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
@@ -14,6 +14,7 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiCellClass;
 class PatNode;
 class PatHandle;
 
@@ -46,8 +47,8 @@ public:
   /// @brief 論理式から生成されるパタンを登録する．
   void
   reg_pat(
-    const Expr& expr, ///< [in] パタンの元となる論理式
-    SizeType rep_id   ///< [in] このパタンが属する代表関数番号
+    const Expr& expr,            ///< [in] パタンの元となる論理式
+    const CiCellClass* rep_class ///< [in] このパタンが属する代表クラス
   );
 
   /// @brief 内容を出力する．(デバッグ用)
@@ -82,17 +83,16 @@ public:
     SizeType id ///< [in] パタン番号 ( 0 <= id < pat_num() )
   ) const;
 
-  /// @brief パタンの代表関数番号を返す．
-  SizeType
-  rep_id(
-    SizeType id
+  /// @brief パタンの代表クラスを返す．
+  const CiCellClass*
+  rep_class(
+    SizeType id                ///< [in] パタン番号 ( 0 <= id < pat_num() )
   ) const;
 
   /// @brief パタンのノードリストを返す．
   void
   get_pat_info(
     SizeType id,                ///< [in] パタン番号 ( 0 <= id < pat_num() )
-    SizeType& rep_id,           ///< [out] パタンの表す代表関数番号
     SizeType& input_num,        ///< [out] パタンの入力数
     vector<SizeType>& node_list ///< [out] パタンを DFS 順でたどった時のノード番号のリスト
   ) const;
@@ -247,13 +247,17 @@ private:
   // ハッシュ表を拡大する目安
   SizeType mNextLimit;
 
-  // パタンの根のハンドルと代表関数番号のペアのリスト
+  // 代表クラスのリスト
   // 配列のインデックスはパタン番号
-  vector<pair<PatHandle, SizeType>> mPatList;
+  vector<const CiCellClass*> mClassList;
 
-  // 処理済みの論理式を収めたリストの配列
-  // 配列のキーは代表関数番号
-  vector<vector<Expr>> mExprList;
+  // パタンの根のハンドルのリスト
+  // 配列のインデックスはパタン番号
+  vector<PatHandle> mPatList;
+
+  // 処理済みの論理式を収めたリストの配列の辞書
+  // キーは代表クラス
+  unordered_map<const CiCellClass*, vector<Expr>> mExprListDict;
 
 };
 

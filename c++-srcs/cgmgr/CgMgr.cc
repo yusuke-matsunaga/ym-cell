@@ -279,26 +279,23 @@ CgMgr::_find_class(
   // 代表シグネチャの文字列を求める．
   auto sig_str = sig.str();
   // このシグネチャを持つクラスを探す．
+  CiCellClass* rep_class = nullptr;
   if ( mClassDict.count(sig_str) == 0 ) {
     // 同位体変換リストを作る．
     auto idmap_list = sig.idmap_list();
     // 新しいクラスを作って登録する．
-    auto rep_class = mLibrary.add_cell_class(idmap_list);
+    rep_class = mLibrary.add_cell_class(idmap_list);
     mClassDict.emplace(sig_str, rep_class);
-
-    while ( mClassExprListArray.size() <= rep_id ) {
-      mClassExprListArray.push_back(ClassExprList{});
-    }
-    mClassExprListArray[rep_id].mClass = rep_class;
+    mExprListDict.emplace(rep_class, vector<Expr>{});
+  }
+  else {
+    rep_class = mClassDict.at(sig_str);
   }
 
-  // 登録済みのクラスを返す．
-  auto rep_class = mClassDict.at(sig_str);
-
-  // 単純な論理セルの場合，パタングラフを登録する．
+  // 単純な論理セルの場合，パタングラフ用の論理式を登録する．
   auto expr = sig.expr();
   if ( expr.is_valid() && expr.input_size() >= 2 ) {
-    mClassExprListArray[rep_id].mExprList.push_back(expr);
+    mExprListDict.at(rep_class).push_back(expr);
   }
 
   return rep_class;
@@ -308,8 +305,10 @@ CgMgr::_find_class(
 void
 CgMgr::gen_pat()
 {
-  for ( SizeType rep_id = 0; rep_id < mClassExprListArray.size(); ++ rep_id ) {
-    auto rep_class = mLibrary._cell_class(rep_id);
+#if 0
+  for ( auto& p: mClassExprListDict ) {
+    auto& data = p.second;
+    auto rep_class = data.mClass;
     bool has_cell = false;
     for ( auto group: rep_class->cell_group_list() ) {
       if ( group->cell_num() > 0 ) {
@@ -318,12 +317,29 @@ CgMgr::gen_pat()
       }
     }
     if ( has_cell ) {
-      const auto& expr_list = mClassExprListArray[rep_id].mExprList;
+      const auto& expr_list = data.mExprList;
       for ( const auto& expr: expr_list ) {
-	mPatMgr.reg_pat(expr, rep_id);
+	mPatMgr.reg_pat(expr, rep_class);
       }
     }
   }
+#else
+  for ( auto rep_class: mLibrary.npn_class_list() ) {
+    bool has_cell = false;
+    for ( auto group: rep_class->cell_group_list() ) {
+      if ( group->cell_num() > 0 ) {
+	has_cell = true;
+	break;
+      }
+    }
+    if ( has_cell ) {
+      const auto& expr_list = mExprListDict.at(rep_class);
+      for ( const auto& expr: expr_list ) {
+	mPatMgr.reg_pat(expr, rep_class);
+      }
+    }
+  }
+#endif
 }
 
 // @brief 全ノード数を返す．
@@ -353,12 +369,13 @@ CgMgr::pat_num() const
 void
 CgMgr::get_pat_info(
   SizeType id,
-  SizeType& rep_id,
+  const CiCellClass*& rep_class,
   SizeType& input_num,
   vector<SizeType>& node_list
 ) const
 {
-  return mPatMgr.get_pat_info(id, rep_id, input_num, node_list);
+  rep_class = mPatMgr.rep_class(id);
+  mPatMgr.get_pat_info(id, input_num, node_list);
 }
 
 END_NAMESPACE_YM_CLIB

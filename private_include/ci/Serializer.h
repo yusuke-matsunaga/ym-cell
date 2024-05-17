@@ -186,7 +186,16 @@ public:
     }
   }
 
-  /// @brief 番号のベクタをダンプする．
+  /// @brief 整数をダンプする．
+  void
+  dump(
+    SizeType val
+  )
+  {
+    out().write_64(val);
+  }
+
+  /// @brief 整数のベクタをダンプする．
   void
   dump(
     const vector<SizeType>& vec

@@ -401,10 +401,12 @@ void
 display_ff_class(
   ostream& s,
   const string& title,
-  const ClibCellClass& cclass
+  const ClibCellClass& cclass,
+  const unordered_map<SizeType, SizeType>& class_map
 )
 {
-  s << title << endl;
+  auto id = class_map.at(cclass.key());
+  s << title << "( Class#" << id << " )" << endl;
   auto n = cclass.idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
@@ -509,11 +511,12 @@ void
 display_cell(
   ostream& s,
   const ClibCell& cell,
+  SizeType id,
   ClibDelayModel delay_model
 )
 {
   // セル名とセルの種類を出力
-  s << cell.name() << ": ";
+  s << "Clib#" << id << " (" << cell.name() << ") : ";
   if ( cell.is_logic() ) {
     s << "Combinational Logic";
   }
@@ -732,15 +735,21 @@ ClibCellLibrary::display(
   s << endl;
 
   // セル
-  for ( auto cell: cell_list() ) {
-    display_cell(s, cell, delay_model());
+  {
+    SizeType id = 0;
+    for ( auto cell: cell_list() ) {
+      display_cell(s, cell, id, delay_model());
+      ++ id;
+    }
   }
 
   // セルクラスの情報
   s << "Cell Class" << endl;
+  unordered_map<SizeType, SizeType> class_map;
   {
     SizeType id = 0;
     for ( auto cclass: npn_class_list() ) {
+      class_map.emplace(cclass.key(), id);
       ostringstream buf;
       buf << "Class#" << id; ++ id;
       display_class(s, buf.str(), cclass);
@@ -753,9 +762,9 @@ ClibCellLibrary::display(
   display_group(s, "Buffer Group", buf_func());
   display_group(s, "Inverter Group", inv_func());
 
-  display_ff_class(s, "DFF Class", simple_ff_class(false, false, false));
-  display_ff_class(s, "DFF_R Class", simple_ff_class(false, true, false));
-  display_ff_class(s, "DFF_S Class", simple_ff_class(false, false, true));
+  display_ff_class(s, "DFF Class", simple_ff_class(false, false, false), class_map);
+  display_ff_class(s, "DFF_R Class", simple_ff_class(false, true, false), class_map);
+  display_ff_class(s, "DFF_S Class", simple_ff_class(false, false, true), class_map);
   for ( auto cpv1: CPV_LIST ) {
     for ( auto cpv2: CPV_LIST ) {
       ostringstream buf;
@@ -777,7 +786,6 @@ ClibCellLibrary::display(
     }
   }
 
-#if 1
   // パタングラフの情報
   s << "==== PatMgr dump start ====" << endl;
 
@@ -812,8 +820,10 @@ ClibCellLibrary::display(
   auto np = pg_pat_num();
   for ( auto i: Range(np) ) {
     const ClibPatGraph& pat = pg_pat(i);
+    auto rep = pat.rep_class();
+    auto rep_id = class_map.at(rep.key());
     s << "Pat#" << i << ": "
-      << "Rep#" << pat.rep_id() << ": ";
+      << "Rep#" << rep_id << ": ";
     if ( pat.root_inv() ) {
       s << "[inv]";
     }
@@ -826,7 +836,6 @@ ClibCellLibrary::display(
   }
 
   s << "==== PatMgr dump end ====" << endl;
-#endif
 
 }
 

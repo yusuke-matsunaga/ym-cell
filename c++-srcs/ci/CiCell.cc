@@ -140,6 +140,33 @@ CiCell::data_in_expr() const
   return Expr::make_invalid();
 }
 
+// @brief 名前からピンの取得
+const CiPin*
+CiCell::find_pin(
+  const ShString& name
+) const
+{
+  return parent()->find_pin(this, name);
+}
+
+// @brief 名前からバスの取得
+const CiBus*
+CiCell::find_bus(
+  const ShString& name
+) const
+{
+  return parent()->find_bus(this, name);
+}
+
+// @brief 名前からバスの取得
+const CiBundle*
+CiCell::find_bundle(
+  const ShString& name
+) const
+{
+  return parent()->find_bundle(this, name);
+}
+
 // @brief 入力ピンを追加する．
 void
 CiCell::add_input(

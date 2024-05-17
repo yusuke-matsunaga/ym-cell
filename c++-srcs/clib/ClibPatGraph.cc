@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "ym/ClibPatGraph.h"
+#include "ym/ClibCellClass.h"
 #include "ci/CiPatGraph.h"
 #include "ci/CiCellLibrary.h"
 
@@ -17,12 +18,13 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス ClibPatGraph
 //////////////////////////////////////////////////////////////////////
 
-// @brief 代表関数番号を返す．
-SizeType
-ClibPatGraph::rep_id() const
+// @brief 代表クラスを返す．
+ClibCellClass
+ClibPatGraph::rep_class() const
 {
   _check_valid();
-  return mImpl->rep_id();
+  auto pg = mLibrary->_pat_graph(mId);
+  return ClibCellClass{pg->rep_class()};
 }
 
 // @brief 根のノード番号を返す．
@@ -30,7 +32,8 @@ SizeType
 ClibPatGraph::root_id() const
 {
   _check_valid();
-  return mImpl->root_id();
+  auto pg = mLibrary->_pat_graph(mId);
+  return pg->root_id();
 }
 
 // @brief 根の反転属性を返す．
@@ -38,7 +41,8 @@ bool
 ClibPatGraph::root_inv() const
 {
   _check_valid();
-  return mImpl->root_inv();
+  auto pg = mLibrary->_pat_graph(mId);
+  return pg->root_inv();
 }
 
 // @brief 入力数を返す．
@@ -46,7 +50,8 @@ SizeType
 ClibPatGraph::input_num() const
 {
   _check_valid();
-  return mImpl->input_num();
+  auto pg = mLibrary->_pat_graph(mId);
+  return pg->input_num();
 }
 
 // @brief 枝数を返す．
@@ -54,7 +59,8 @@ SizeType
 ClibPatGraph::edge_num() const
 {
   _check_valid();
-  return mImpl->edge_num();
+  auto pg = mLibrary->_pat_graph(mId);
+  return pg->edge_num();
 }
 
 // @brief 枝(の番号)を返す．
@@ -64,7 +70,8 @@ ClibPatGraph::edge(
 ) const
 {
   _check_valid();
-  return mImpl->edge(pos);
+  auto pg = mLibrary->_pat_graph(mId);
+  return pg->edge(pos);
 }
 
 END_NAMESPACE_YM_CLIB

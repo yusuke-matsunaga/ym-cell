@@ -101,10 +101,10 @@ public:
   /// @brief パタンのノードリストを返す．
   void
   get_pat_info(
-    SizeType id,                ///< [in] パタン番号 ( 0 <= id < pat_num() )
-    SizeType& rep_id,           ///< [out] パタンの表す代表関数番号
-    SizeType& input_num,        ///< [out] パタンの入力数
-    vector<SizeType>& node_list ///< [out] パタンを DFS 順でたどった時のノード番号のリスト
+    SizeType id,                   ///< [in] パタン番号 ( 0 <= id < pat_num() )
+    const CiCellClass*& rep_class, ///< [out] パタンの表す代表関数番号
+    SizeType& input_num,           ///< [out] パタンの入力数
+    vector<SizeType>& node_list    ///< [out] パタンを DFS 順でたどった時のノード番号のリスト
   ) const;
 
 
@@ -137,6 +137,13 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // セルクラスと関係する論理式のリスト
+  struct ClassExprList
+  {
+    CiCellClass* mClass;
+    vector<Expr> mExprList;
+  };
+
   // ライブラリ
   CiCellLibrary& mLibrary;
 
@@ -146,15 +153,8 @@ private:
   // シグネチャ文字列をキーにしてセルクラスを保持する辞書
   unordered_map<string, CiCellClass*> mClassDict;
 
-  // セルクラスと関係する論理式のリスト
-  struct ClassExprList
-  {
-    CiCellClass* mClass;
-    vector<Expr> mExprList;
-  };
-
-  // セルクラス番号をキーにして ClassExprList を保持する配列．
-  vector<ClassExprList> mClassExprListArray;
+  // セルクラスをキーにして論理式のリストを保持する辞書
+  unordered_map<const CiCellClass*, vector<Expr>> mExprListDict;
 
   // 論理セルグループのリスト
   const CiCellGroup* mLogicGroup[4];

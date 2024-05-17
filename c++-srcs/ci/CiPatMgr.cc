@@ -121,35 +121,13 @@ CiPatMgr::set_pat_num(
 void
 CiPatMgr::set_pat_info(
   SizeType pos,
-  SizeType rep_id,
+  const CiCellClass* rep_class,
   SizeType input_num,
   const vector<SizeType>& edge_list
 )
 {
   CiPatGraph& pg = mPatArray[pos];
-  pg.init(rep_id, input_num, edge_list);
-}
-
-// @brief バイナリダンプを行う．
-void
-CiPatMgr::dump(
-  BinEnc& bos
-) const
-{
-  // パタングラフのノード情報のダンプ
-  SizeType n = node_num();
-  bos.write_64(n);
-  for ( auto i: Range(n) ) {
-    bos.write_64(mNodeTypeArray[i]);
-    bos.write_64(mEdgeArray[i * 2 + 0]);
-    bos.write_64(mEdgeArray[i * 2 + 1]);
-  }
-
-  // パタングラフの情報のダンプ
-  bos.write_64(pat_num());
-  for ( auto& pat: mPatArray ) {
-    pat.dump(bos);
-  }
+  pg.init(rep_class, input_num, edge_list);
 }
 
 END_NAMESPACE_YM_CLIB

@@ -433,8 +433,7 @@ ClibCellLibrary::pg_pat(
 ) const
 {
   if ( mImpl ) {
-    auto pg = mImpl->_pat_graph(id);
-    return ClibPatGraph{pg};
+    return ClibPatGraph{mImpl, id};
   }
   // デフォルト値
   return {};

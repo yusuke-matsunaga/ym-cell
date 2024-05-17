@@ -3,7 +3,7 @@
 /// @brief PatMgr の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "cgmgr/PatMgr.h"
@@ -55,6 +55,7 @@ PatMgr::init()
   mHashTable = nullptr;
   mHashSize = 0;
   alloc_table(1024);
+  mClassList.clear();
   mPatList.clear();
 }
 
@@ -93,47 +94,49 @@ PatMgr::pat_root(
   if ( id < 0 || pat_num() <= id ) {
     throw std::out_of_range{"id is out of range"};
   }
-  return mPatList[id].first;
+  return mPatList[id];
 }
 
-// @brief パタンの属している代表関数番号を返す．
-SizeType
-PatMgr::rep_id(
+// @brief パタンの属している代表クラスを返す．
+const CiCellClass*
+PatMgr::rep_class(
   SizeType id
 ) const
 {
   if ( id < 0 || pat_num() <= id ) {
     throw std::out_of_range{"id is out of range"};
   }
-  return mPatList[id].second;
+  return mClassList[id];
 }
 
 // @brief 論理式から生成されるパタンを登録する．
 void
 PatMgr::reg_pat(
   const Expr& expr,
-  SizeType rep_id
+  const CiCellClass* rep_class
 )
 {
-  if ( mExprList.size() <= rep_id ) {
-    mExprList.resize(rep_id + 1, {});
-  }
-
-  { // 同じ論理式を処理済みならなにもしない．
-    for ( auto expr1: mExprList[rep_id] ) {
+  if ( mExprListDict.count(rep_class) > 0 ) {
+    // 同じ論理式を処理済みならなにもしない．
+    auto& expr_list = mExprListDict.at(rep_class);
+    for ( auto expr1: expr_list ) {
       if ( check_equivalent(expr, expr1) ) {
 	return;
       }
     }
     // 論理式を登録しておく．
-    mExprList[rep_id].push_back(expr);
+    expr_list.push_back(expr);
+  }
+  else {
+    mExprListDict.emplace(rep_class, vector<Expr>{expr});
   }
 
   vector<PatHandle> tmp_pat_list;
   pg_sub(expr, tmp_pat_list);
 
   for ( auto pat1: tmp_pat_list ) {
-    mPatList.push_back({pat1, rep_id});
+    mClassList.push_back(rep_class);
+    mPatList.push_back(pat1);
   }
 }
 
@@ -618,7 +621,6 @@ END_NONAMESPACE
 void
 PatMgr::get_pat_info(
   SizeType id,
-  SizeType& rep_id,
   SizeType& input_num,
   vector<SizeType>& node_list
 ) const
@@ -636,7 +638,6 @@ PatMgr::get_pat_info(
   if ( root.inv() ) {
     input_num |= 1U;
   }
-  rep_id = mPatList[id].second;
 }
 
 
@@ -681,6 +682,8 @@ PatMgr::display(
   }
   s << endl;
 
+  unordered_map<const CiCellClass*, SizeType> class_map;
+  SizeType class_id = 0;
   s << "*** PATTERN SECTION ***" << endl;
   auto np = pat_num();
   for ( SizeType i = 0; i < np; ++ i ) {
@@ -689,8 +692,13 @@ PatMgr::display(
     if ( root.inv() ) {
       s << "~";
     }
+    auto rep = rep_class(i);
+    if ( class_map.count(rep) == 0 ) {
+      class_map.emplace(rep, class_id);
+      ++ class_id;
+  }
     s << "Node#" << root.node().id()
-      << " --> Rep#" << rep_id(i)
+      << " --> Rep#" << class_map.at(rep)
       << endl;
   }
   s << "*** PatMgr END ***" << endl;
