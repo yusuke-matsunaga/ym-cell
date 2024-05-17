@@ -135,6 +135,15 @@ public:
     mCellClassList.push_back(obj);
   }
 
+  /// @brief 文字列の読み込み
+  void
+  restore(
+    string& dst
+  )
+  {
+    mS >> dst;
+  }
+
   /// @brief SizeType の読み込み
   void
   restore(
@@ -187,7 +196,13 @@ public:
   {
     SizeType id;
     mS >> id;
-    dst = mBusTypeList[id];
+    if ( id == NULL_ID ) {
+      // 例外
+      dst = nullptr;
+    }
+    else {
+      dst = mBusTypeList[id];
+    }
   }
 
   /// @brief ピンの読み込み
@@ -198,7 +213,13 @@ public:
   {
     SizeType id;
     mS >> id;
-    dst = mPinList[id];
+    if ( id == NULL_ID ) {
+      // 例外
+      dst = nullptr;
+    }
+    else {
+      dst = mPinList[id];
+    }
   }
 
   /// @brief ピンのリストの読み込み
@@ -222,7 +243,13 @@ public:
   {
     SizeType id;
     mS >> id;
-    dst = mBusList[id];
+    if ( id == NULL_ID ) {
+      // 例外
+      dst = nullptr;
+    }
+    else {
+      dst = mBusList[id];
+    }
   }
 
   /// @brief バスのリストの読み込み
@@ -246,7 +273,13 @@ public:
   {
     SizeType id;
     mS >> id;
-    dst = mBundleList[id];
+    if ( id == NULL_ID ) {
+      // 例外
+      dst = nullptr;
+    }
+    else {
+      dst = mBundleList[id];
+    }
   }
 
   /// @brief バンドルのリストの読み込み
@@ -270,7 +303,13 @@ public:
   {
     SizeType id;
     mS >> id;
-    dst = mTimingList[id];
+    if ( id == NULL_ID ) {
+      // 例外
+      dst = nullptr;
+    }
+    else {
+      dst = mTimingList[id];
+    }
   }
 
   /// @brief タイミングのリストの読み込み
@@ -294,7 +333,13 @@ public:
   {
     SizeType id;
     mS >> id;
-    dst = mLutTemplateList[id];
+    if ( id == NULL_ID ) {
+      // 例外
+      dst = nullptr;
+    }
+    else {
+      dst = mLutTemplateList[id];
+    }
   }
 
   /// @brief LUTテンプレートのリストの読み込み
@@ -318,7 +363,13 @@ public:
   {
     SizeType id;
     mS >> id;
-    dst = mLutList[id];
+    if ( id == NULL_ID ) {
+      // 例外
+      dst = nullptr;
+    }
+    else {
+      dst = mLutList[id];
+    }
   }
 
   /// @brief LUTのリストの読み込み
@@ -342,7 +393,13 @@ public:
   {
     SizeType id;
     mS >> id;
-    dst = mCellList[id];
+    if ( id == NULL_ID ) {
+      // 例外
+      dst = nullptr;
+    }
+    else {
+      dst = mCellList[id];
+    }
   }
 
   /// @brief セルのリストの読み込み
@@ -366,7 +423,13 @@ public:
   {
     SizeType id;
     mS >> id;
-    dst = mCellGroupList[id];
+    if ( id == NULL_ID ) {
+      // 例外
+      dst = nullptr;
+    }
+    else {
+      dst = mCellGroupList[id];
+    }
   }
 
   /// @brief セルグループのリストの読み込み
@@ -390,7 +453,13 @@ public:
   {
     SizeType id;
     mS >> id;
-    dst = mCellClassList[id];
+    if ( id == NULL_ID ) {
+      // 例外
+      dst = nullptr;
+    }
+    else {
+      dst = mCellClassList[id];
+    }
   }
 
   /// @brief セルクラスのリストの読み込み
@@ -409,14 +478,12 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // nullptr 用の定数
+  static
+  const SizeType NULL_ID = static_cast<SizeType>(-1);
 
   // バイナリデコーダ
   BinDec mS;

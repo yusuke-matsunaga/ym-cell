@@ -221,8 +221,11 @@ CiCellLibrary::restore(
   // LUTテンプレート情報の読み込み
   restore_lut_template(s);
 
-  // セル情報の読み込み
-  restore_cell(s);
+  // LUT の読み込み
+  restore_lut(s);
+
+  // タイミング情報の読み込み
+  restore_timing(s);
 
   // ピン情報の読み込み
   restore_pin(s);
@@ -233,14 +236,11 @@ CiCellLibrary::restore(
   // バンドル情報の読み込み
   restore_bundle(s);
 
+  // セル情報の読み込み
+  restore_cell(s);
+
   // セルごとのピン，バス，バンドルの辞書を作る．
   construct_cellpin_dict();
-
-  // タイミング情報の読み込み
-  restore_timing(s);
-
-  // LUT の読み込み
-  restore_lut(s);
 
   // セルグループ情報の読み込み
   restore_cell_group(s);

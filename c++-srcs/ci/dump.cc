@@ -3,7 +3,7 @@
 /// @brief CiCellLibrary の実装ファイル(dump()関係)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiCellLibrary.h"
@@ -26,160 +26,6 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
-BEGIN_NONAMESPACE
-
-#if 0
-// 番号のベクタをダンプする．
-inline
-void
-dump_vector(
-  BinEnc& s,
-  const vector<SizeType>& vec
-)
-{
-  s.write_64(vec.size());
-  for ( auto v: vec ) {
-    s.write_64(v);
-  }
-}
-
-// 数値のベクタをダンプする．
-inline
-void
-dump_dvector(
-  BinEnc& s,
-  const vector<double>& vec
-)
-{
-  s.write_64(vec.size());
-  for ( auto v: vec ) {
-    s << v;
-  }
-}
-
-// セルクラスのリストをダンプする．
-void
-dump_class_list(
-  BinEnc& s,
-  const vector<const CiCellClass*>& class_list,
-  const unordered_map<const CiCellClass*, SizeType>& class_map
-)
-{
-  s.write_64(class_list.size());
-  for ( auto cell_class: class_list ) {
-    auto id = class_map.at(cell_class);
-    s.write_64(id);
-  }
-}
-
-// ピンのリストをダンプする．
-void
-dump_pin_list(
-  BinEnc& s,
-  const vector<const CiPin*>& pin_list,
-  const unordered_map<const CiPin*, SizeType>& pin_map
-)
-{
-  SizeType n = pin_list.size();
-  s.write_64(n);
-  for ( auto pin: pin_list ) {
-    auto id = pin_map.at(pin);
-    s.write_64(id);
-  }
-}
-
-// バスのリストをダンプする．
-void
-dump_bus_list(
-  BinEnc& s,
-  const vector<const CiBus*>& bus_list,
-  const unordered_map<const CiBus*, SizeType>& bus_map
-)
-{
-  SizeType n = bus_list.size();
-  s.write_64(n);
-  for ( auto bus: bus_list ) {
-    auto id = bus_map.at(bus);
-    s.write_64(id);
-  }
-}
-
-// バンドルのリストをダンプする．
-void
-dump_bundle_list(
-  BinEnc& s,
-  const vector<const CiBundle*>& bundle_list,
-  const unordered_map<const CiBundle*, SizeType>& bundle_map
-)
-{
-  SizeType n = bundle_list.size();
-  s.write_64(n);
-  for ( auto bundle: bundle_list ) {
-    auto id = bundle_map.at(bundle);
-    s.write_64(id);
-  }
-}
-
-// タイミングのリストをダンプする．
-void
-dump_timing_list(
-  BinEnc& s,
-  const vector<const CiTiming*>& timing_list,
-  const unordered_map<const CiTiming*, SizeType>& timing_map
-)
-{
-  SizeType n = timing_list.size();
-  s.write_64(n);
-  for ( auto timing: timing_list ) {
-    auto id = timing_map.at(timing);
-    s.write_64(id);
-  }
-}
-
-// LUT 番号をダンプする．
-inline
-void
-dump_lut(
-  BinEnc& s,
-  const CiLut* lut,
-  const unordered_map<const CiLut*, SizeType>& lut_map
-)
-{
-  auto id = lut_map.at(lut);
-  s.write_64(id);
-}
-
-// @brief CiBus の内容をバイナリダンプする．
-void
-dump_bus(
-  BinEnc& s,
-  const CiBus* bus,
-  const CiCellLibrary* lib,
-  const unordered_map<const CiPin*, SizeType>& pin_map
-)
-{
-  s << bus->name();
-  auto id = lib->bus_type_id(bus->bus_type()->_name());
-  s.write_64(id);
-  dump_pin_list(s, bus->pin_list(), pin_map);
-}
-
-// @brief 内容をバイナリダンプする．
-void
-dump_bundle(
-  BinEnc& s,
-  const CiBundle* bundle,
-  const unordered_map<const CiPin*, SizeType>& pin_map
-)
-{
-  s << bundle->_name();
-  dump_pin_list(s, bundle->pin_list(), pin_map);
-}
-#endif
-
-END_NONAMESPACE
-
-
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellLibrary
 //////////////////////////////////////////////////////////////////////
@@ -194,18 +40,18 @@ CiCellLibrary::dump(
 
   // 番号の辞書を作る．
   s.reg_bustype(mBusTypeList);
+  s.reg_luttemplate(mLutTemplateList);
+  s.reg_lut(mLutList);
+  s.reg_timing(mTimingList);
   s.reg_pin(mPinList);
   s.reg_bus(mBusList);
   s.reg_bundle(mBundleList);
-  s.reg_timing(mTimingList);
-  s.reg_luttemplate(mLutTemplateList);
-  s.reg_lut(mLutList);
   s.reg_cell(mCellList);
   s.reg_cellgroup(mGroupList);
   s.reg_cellclass(mClassList);
 
   // 名前
-  s.out() << name();
+  s.dump(name());
 
   // テクノロジ
   s.out() << technology();
@@ -253,55 +99,55 @@ CiCellLibrary::dump(
   }
 
   // 遅延テーブルのテンプレートの内容をダンプ
-  s.out().write_64(mLutTemplateList.size());
+  s.dump(mLutTemplateList.size());
   for ( auto& lut_templ: mLutTemplateList ) {
     lut_templ->dump(s);
   }
 
-  // セルの内容をダンプ
-  s.out().write_64(mCellList.size());
-  for ( auto& cell: mCellList ) {
-    cell->dump(s);
+  // LUTの内容をダンプ
+  s.dump(mLutList.size());
+  for ( auto& lut: mLutList ) {
+    lut->dump(s);
+  }
+
+  // タイミング情報の内容をダンプ
+  s.dump(mTimingList.size());
+  for ( auto& timing: mTimingList ) {
+    timing->dump(s);
   }
 
   // ピンの内容をダンプ
-  s.out().write_64(mPinList.size());
+  s.dump(mPinList.size());
   for ( auto& pin: mPinList ) {
     pin->dump(s);
   }
 
   // バスの内容をダンプ
-  s.out().write_64(mBusList.size());
+  s.dump(mBusList.size());
   for ( auto& bus: mBusList ) {
     bus->dump(s);
   }
 
   // バンドルの内容をダンプ
-  s.out().write_64(mBundleList.size());
+  s.dump(mBundleList.size());
   for ( auto& bundle: mBundleList ) {
     bundle->dump(s);
   }
 
-  // タイミング情報の内容をダンプ
-  s.out().write_64(mTimingList.size());
-  for ( auto& timing: mTimingList ) {
-    timing->dump(s);
-  }
-
-  // LUTの内容をダンプ
-  s.out().write_64(mLutList.size());
-  for ( auto& lut: mLutList ) {
-    lut->dump(s);
+  // セルの内容をダンプ
+  s.dump(mCellList.size());
+  for ( auto& cell: mCellList ) {
+    cell->dump(s);
   }
 
   // セルグループ情報のダンプ
-  s.out().write_64(mGroupList.size());
+  s.dump(mGroupList.size());
   for ( auto& group: mGroupList ) {
     group->dump(s);
   }
 
   // セルクラス情報のダンプ
-  s.out().write_64(mClassList.size());
+  s.dump(mClassList.size());
   for ( auto& cell_class: mClassList ) {
     cell_class->dump(s);
   }
@@ -328,41 +174,11 @@ CiBusType::dump(
   Serializer& s
 ) const
 {
-  s.out() << name();
-  s.out().write_64(bit_from());
-  s.out().write_64(bit_to());
+  s.dump(name());
+  s.dump(bit_from());
+  s.dump(bit_to());
 }
 
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiBus
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiBus::dump(
-  Serializer& s
-) const
-{
-  s.out() << name();
-  s.dump(bus_type());
-  s.dump(pin_list());
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiBundle
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiBundle::dump(
-  Serializer& s
-) const
-{
-  s.out() << _name();
-  s.dump(pin_list());
-}
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLutTemplate
@@ -436,6 +252,303 @@ CiLutTemplate3D::dump(
   for ( SizeType i: Range(2) ) {
     dump_var(s, mVarType[i], mIndexArray[i]);
   }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLut
+//////////////////////////////////////////////////////////////////////
+
+// @brief 実際のダンプを行う関数
+void
+CiLut::dump_common(
+  Serializer& s,
+  int d
+) const
+{
+  s.out().write_8(d);
+  s.dump(mTemplate);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLut1D
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiLut1D::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 1);
+  s.dump(mIndexArray);
+  s.dump(mValueArray);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLut2D
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiLut2D::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 2);
+  s.dump(mIndexArray[0]);
+  s.dump(mIndexArray[1]);
+  s.dump(mValueArray);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLut3D
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiLut3D::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 3);
+  s.dump(mIndexArray[0]);
+  s.dump(mIndexArray[1]);
+  s.dump(mIndexArray[2]);
+  s.dump(mValueArray);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTiming
+//////////////////////////////////////////////////////////////////////
+
+// @brief 共通な情報をダンプする．
+void
+CiTiming::dump_common(
+  Serializer& s,
+  int type_id
+) const
+{
+  s.out().write_8(type_id);
+  s.out() << mType;
+  mCond.dump(s.out());
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingGeneric
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiTimingGeneric::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 0);
+  s.out() << intrinsic_rise()
+	  << intrinsic_fall()
+	  << slope_rise()
+	  << slope_fall()
+	  << rise_resistance()
+	  << fall_resistance();
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingPiecewise
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiTimingPiecewise::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 1);
+  s.out() << intrinsic_rise()
+	  << intrinsic_fall()
+	  << slope_rise()
+	  << slope_fall();
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingLut1
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiTimingLut1::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 2);
+
+  s.dump(cell_rise());
+  s.dump(cell_fall());
+  s.dump(rise_transition());
+  s.dump(fall_transition());
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingLut2
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiTimingLut2::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 3);
+  s.dump(rise_transition());
+  s.dump(fall_transition());
+  s.dump(rise_propagation());
+  s.dump(fall_propagation());
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiPin
+//////////////////////////////////////////////////////////////////////
+
+// @brief dump 用の共通情報を出力する．
+void
+CiPin::dump_common(
+  Serializer& s,
+  int sig
+) const
+{
+  s.out().write_8(sig);
+  s.out() << mName;
+  s.out().write_64(mPinId);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiInputPin
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiInputPin::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 0);
+  s.out().write_64(mInputId);
+  s.out() << mCapacitance
+	  << mRiseCapacitance
+	  << mFallCapacitance;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiOutputPinBase
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiOutputPinBase::dump_base(
+  Serializer& s,
+  int sig
+) const
+{
+  dump_common(s, sig);
+  s.out().write_64(mOutputId);
+  s.out() << mFanoutLoad
+	  << mMaxFanout
+	  << mMinFanout
+	  << mMaxCapacitance
+	  << mMinCapacitance
+	  << mMaxTransition
+	  << mMinTransition;
+  mFunction.dump(s.out());
+  mTristate.dump(s.out());
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiOutputPin
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiOutputPin::dump(
+  Serializer& s
+) const
+{
+  dump_base(s, 1);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiInoutPin
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiInoutPin::dump(
+  Serializer& s
+) const
+{
+  dump_base(s, 2);
+  s.out().write_64(mInputId);
+  s.out() << mCapacitance
+	  << mRiseCapacitance
+	  << mFallCapacitance;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiInternalPin
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiInternalPin::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 3);
+  s.out().write_64(internal_id());
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiBus
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiBus::dump(
+  Serializer& s
+) const
+{
+  s.out() << name();
+  s.dump(bus_type());
+  s.dump(pin_list());
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiBundle
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をバイナリダンプする．
+void
+CiBundle::dump(
+  Serializer& s
+) const
+{
+  s.out() << _name();
+  s.dump(pin_list());
 }
 
 
@@ -599,272 +712,6 @@ CiFsmCell::dump(
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiPin
-//////////////////////////////////////////////////////////////////////
-
-// @brief dump 用の共通情報を出力する．
-void
-CiPin::dump_common(
-  Serializer& s,
-  int sig
-) const
-{
-  s.out().write_8(sig);
-  s.out() << mName;
-  s.out().write_64(mPinId);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiInputPin
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiInputPin::dump(
-  Serializer& s
-) const
-{
-  dump_common(s, 0);
-  s.out().write_64(mInputId);
-  s.out() << mCapacitance
-	  << mRiseCapacitance
-	  << mFallCapacitance;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiOutputPinBase
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiOutputPinBase::dump_base(
-  Serializer& s,
-  int sig
-) const
-{
-  dump_common(s, sig);
-  s.out().write_64(mOutputId);
-  s.out() << mFanoutLoad
-	  << mMaxFanout
-	  << mMinFanout
-	  << mMaxCapacitance
-	  << mMinCapacitance
-	  << mMaxTransition
-	  << mMinTransition;
-  mFunction.dump(s.out());
-  mTristate.dump(s.out());
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiOutputPin
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiOutputPin::dump(
-  Serializer& s
-) const
-{
-  dump_base(s, 1);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiInoutPin
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiInoutPin::dump(
-  Serializer& s
-) const
-{
-  dump_base(s, 2);
-  s.out().write_64(mInputId);
-  s.out() << mCapacitance
-	  << mRiseCapacitance
-	  << mFallCapacitance;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiInternalPin
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiInternalPin::dump(
-  Serializer& s
-) const
-{
-  dump_common(s, 3);
-  s.out().write_64(internal_id());
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiTiming
-//////////////////////////////////////////////////////////////////////
-
-// @brief 共通な情報をダンプする．
-void
-CiTiming::dump_common(
-  Serializer& s,
-  int type_id
-) const
-{
-  s.out().write_8(type_id);
-  s.out() << mType;
-  mCond.dump(s.out());
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiTimingGeneric
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiTimingGeneric::dump(
-  Serializer& s
-) const
-{
-  dump_common(s, 0);
-  s.out() << intrinsic_rise()
-	  << intrinsic_fall()
-	  << slope_rise()
-	  << slope_fall()
-	  << rise_resistance()
-	  << fall_resistance();
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiTimingPiecewise
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiTimingPiecewise::dump(
-  Serializer& s
-) const
-{
-  dump_common(s, 1);
-  s.out() << intrinsic_rise()
-	  << intrinsic_fall()
-	  << slope_rise()
-	  << slope_fall();
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiTimingLut1
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiTimingLut1::dump(
-  Serializer& s
-) const
-{
-  dump_common(s, 2);
-
-  s.dump(cell_rise());
-  s.dump(cell_fall());
-  s.dump(rise_transition());
-  s.dump(fall_transition());
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiTimingLut2
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiTimingLut2::dump(
-  Serializer& s
-) const
-{
-  dump_common(s, 3);
-  s.dump(rise_transition());
-  s.dump(fall_transition());
-  s.dump(rise_propagation());
-  s.dump(fall_propagation());
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLut
-//////////////////////////////////////////////////////////////////////
-
-// @brief 実際のダンプを行う関数
-void
-CiLut::dump_common(
-  Serializer& s,
-  int d
-) const
-{
-  s.out().write_8(d);
-  s.dump(mTemplate);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLut1D
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiLut1D::dump(
-  Serializer& s
-) const
-{
-  dump_common(s, 1);
-  s.dump(mIndexArray);
-  s.dump(mValueArray);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLut2D
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiLut2D::dump(
-  Serializer& s
-) const
-{
-  dump_common(s, 2);
-  s.dump(mIndexArray[0]);
-  s.dump(mIndexArray[1]);
-  s.dump(mValueArray);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLut3D
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容をバイナリダンプする．
-void
-CiLut3D::dump(
-  Serializer& s
-) const
-{
-  dump_common(s, 3);
-  s.dump(mIndexArray[0]);
-  s.dump(mIndexArray[1]);
-  s.dump(mIndexArray[2]);
-  s.dump(mValueArray);
-}
-
-
-//////////////////////////////////////////////////////////////////////
 // クラス CiCellGroup
 //////////////////////////////////////////////////////////////////////
 
@@ -874,7 +721,6 @@ CiCellGroup::dump(
   Serializer& s
 ) const
 {
-  s.dump(mRepClass);
   mIoMap.dump(s.out());
   s.dump(mCellList);
 }
@@ -891,7 +737,7 @@ CiCellClass::dump(
 ) const
 {
   // 同位体変換情報のダンプ
-  s.out().write_64(idmap_num());
+  s.dump(idmap_num());
   for ( auto& map: idmap_list() ) {
     map.dump(s.out());
   }

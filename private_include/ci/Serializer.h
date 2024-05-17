@@ -38,6 +38,18 @@ public:
     ostream& s ///< [in] 出力ストリーム
   ) : mS{s}
   {
+    // 各辞書に nullptr 用のエントリを追加しておく．
+    const SizeType NULL_ID = static_cast<SizeType>(-1);
+    mBusTypeMap.emplace(nullptr, NULL_ID);
+    mPinMap.emplace(nullptr, NULL_ID);
+    mBusMap.emplace(nullptr, NULL_ID);
+    mBundleMap.emplace(nullptr, NULL_ID);
+    mTimingMap.emplace(nullptr, NULL_ID);
+    mLutTemplateMap.emplace(nullptr, NULL_ID);
+    mLutMap.emplace(nullptr, NULL_ID);
+    mCellMap.emplace(nullptr, NULL_ID);
+    mCellGroupMap.emplace(nullptr, NULL_ID);
+    mCellClassMap.emplace(nullptr, NULL_ID);
   }
 
   /// @brief デストラクタ
@@ -184,6 +196,15 @@ public:
       mCellClassMap.emplace(obj.get(), id);
       ++ id;
     }
+  }
+
+  /// @brief 文字列をダンプする．
+  void
+  dump(
+    const string& val
+  )
+  {
+    out() << val;
   }
 
   /// @brief 整数をダンプする．
