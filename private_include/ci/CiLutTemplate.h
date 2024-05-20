@@ -75,12 +75,18 @@ public:
   // dump/restore 関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 内容をシリアライズする．
+  void
+  serialize(
+    Serializer& s ///< [in] シリアライザ
+  ) const;
+
   /// @brief 内容をバイナリダンプする．
   virtual
   void
   dump(
     Serializer& s ///< [in] シリアライザ
-  ) const;
+  ) const = 0;
 
 
 protected:

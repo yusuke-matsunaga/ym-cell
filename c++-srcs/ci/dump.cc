@@ -163,10 +163,33 @@ CiCellLibrary::dump(
   mPatMgr.dump(s);
 }
 
+// @brief 要素をシリアライズする．
+void
+CiCellLibrary::serialize(
+  Serializer& s
+)
+{
+  for ( auto& bustype: mBusTypeList ) {
+    bustype->serialize(s);
+  }
+  for ( auto& templ: mLutTemplateList ) {
+    templ->serialize(s);
+  }
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiBusType
 //////////////////////////////////////////////////////////////////////
+
+// @brief 内容をシリアライズする．
+void
+CiBusType::serialize(
+  Serializer& s
+) const
+{
+  s.reg_obj(this);
+}
 
 // @brief 内容をバイナリダンプする．
 void
@@ -184,13 +207,13 @@ CiBusType::dump(
 // クラス CiLutTemplate
 //////////////////////////////////////////////////////////////////////
 
-// @brief 共通部分をバイナリダンプする．
+// @brief 内容をシリアライズする．
 void
-CiLutTemplate::dump(
+CiLutTemplate::serialize(
   Serializer& s
 ) const
 {
-  s.out().write_8(dimension());
+  s.reg_obj(this);
 }
 
 // @brief 1つの変数の情報をバイナリダンプする．
@@ -216,7 +239,7 @@ CiLutTemplate1D::dump(
   Serializer& s
 ) const
 {
-  CiLutTemplate::dump(s);
+  s.out().write_8(1);
   dump_var(s, mVarType, mIndexArray);
 }
 
@@ -231,7 +254,7 @@ CiLutTemplate2D::dump(
   Serializer& s
 ) const
 {
-  CiLutTemplate::dump(s);
+  s.out().write_8(2);
   for ( SizeType i: Range(2) ) {
     dump_var(s, mVarType[i], mIndexArray[i]);
   }
@@ -248,7 +271,7 @@ CiLutTemplate3D::dump(
   Serializer& s
 ) const
 {
-  CiLutTemplate::dump(s);
+  s.out().write_8(3);
   for ( SizeType i: Range(2) ) {
     dump_var(s, mVarType[i], mIndexArray[i]);
   }

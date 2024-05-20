@@ -38,18 +38,6 @@ public:
     ostream& s ///< [in] 出力ストリーム
   ) : mS{s}
   {
-    // 各辞書に nullptr 用のエントリを追加しておく．
-    const SizeType NULL_ID = static_cast<SizeType>(-1);
-    mBusTypeMap.emplace(nullptr, NULL_ID);
-    mPinMap.emplace(nullptr, NULL_ID);
-    mBusMap.emplace(nullptr, NULL_ID);
-    mBundleMap.emplace(nullptr, NULL_ID);
-    mTimingMap.emplace(nullptr, NULL_ID);
-    mLutTemplateMap.emplace(nullptr, NULL_ID);
-    mLutMap.emplace(nullptr, NULL_ID);
-    mCellMap.emplace(nullptr, NULL_ID);
-    mCellGroupMap.emplace(nullptr, NULL_ID);
-    mCellClassMap.emplace(nullptr, NULL_ID);
   }
 
   /// @brief デストラクタ
@@ -68,134 +56,94 @@ public:
     return mS;
   }
 
-  /// @brief バスタイプの辞書を作る．
+  /// @brief バスタイプを追加する．
   void
-  reg_bustype(
-    const vector<unique_ptr<CiBusType>>& obj_list
+  reg_obj(
+    const CiBusType* obj
   )
   {
-    SizeType id = 0;
-    for ( auto& obj: obj_list ) {
-      mBusTypeMap.emplace(obj.get(), id);
-      ++ id;
-    }
+    mBusTypeList.put(obj);
   }
 
-  /// @brief ピンの辞書を作る．
+  /// @brief ピンを追加する．
   void
-  reg_pin(
-    const vector<unique_ptr<CiPin>>& obj_list
+  reg_obj(
+    const CiPin* obj
   )
   {
-    SizeType id = 0;
-    for ( auto& obj: obj_list ) {
-      mPinMap.emplace(obj.get(), id);
-      ++ id;
-    }
+    mPinList.put(obj);
   }
 
-  /// @brief バスの辞書を作る．
+  /// @brief バスを追加する．
   void
-  reg_bus(
-    const vector<unique_ptr<CiBus>>& obj_list
+  reg_obj(
+    const CiBus* obj
   )
   {
-    SizeType id = 0;
-    for ( auto& obj: obj_list ) {
-      mBusMap.emplace(obj.get(), id);
-      ++ id;
-    }
+    mBusList.put(obj);
   }
 
-  /// @brief バンドルの辞書を作る．
+  /// @brief バンドルを追加する．
   void
-  reg_bundle(
-    const vector<unique_ptr<CiBundle>>& obj_list
+  reg_obj(
+    const CiBundle* obj
   )
   {
-    SizeType id = 0;
-    for ( auto& obj: obj_list ) {
-      mBundleMap.emplace(obj.get(), id);
-      ++ id;
-    }
+    mBundleList.put(obj);
   }
 
-  /// @brief タイミングの辞書を作る．
+  /// @brief タイミングを追加する．
   void
-  reg_timing(
-    const vector<unique_ptr<CiTiming>>& obj_list
+  reg_obj(
+    const CiTiming* obj
   )
   {
-    SizeType id = 0;
-    for ( auto& obj: obj_list ) {
-      mTimingMap.emplace(obj.get(), id);
-      ++ id;
-    }
+    mTimingList.put(obj);
   }
 
-  /// @brief LUTテンプレートの辞書を作る．
+  /// @brief LUTテンプレートを追加する．
   void
-  reg_luttemplate(
-    const vector<unique_ptr<CiLutTemplate>>& obj_list
+  reg_obj(
+    const CiLutTemplate* obj
   )
   {
-    SizeType id = 0;
-    for ( auto& obj: obj_list ) {
-      mLutTemplateMap.emplace(obj.get(), id);
-      ++ id;
-    }
+    mLutTemplateList.put(obj);
   }
 
-  /// @brief LUTの辞書を作る．
+  /// @brief LUTを追加する．
   void
-  reg_lut(
-    const vector<unique_ptr<CiLut>>& obj_list
+  reg_obj(
+    const CiLut* obj
   )
   {
-    SizeType id = 0;
-    for ( auto& obj: obj_list ) {
-      mLutMap.emplace(obj.get(), id);
-      ++ id;
-    }
+    mLutList.put(obj);
   }
 
-  /// @brief セルの辞書を作る．
+  /// @brief セルを追加する．
   void
-  reg_cell(
-    const vector<unique_ptr<CiCell>>& obj_list
+  reg_obj(
+    const CiCell* obj
   )
   {
-    SizeType id = 0;
-    for ( auto& obj: obj_list ) {
-      mCellMap.emplace(obj.get(), id);
-      ++ id;
-    }
+    mCellList.put(obj);
   }
 
-  /// @brief セルグループの辞書を作る．
+  /// @brief セルグループを追加する．
   void
-  reg_cellgroup(
-    const vector<unique_ptr<CiCellGroup>>& obj_list
+  reg_obj(
+    const CiCellGroup* obj
   )
   {
-    SizeType id = 0;
-    for ( auto& obj: obj_list ) {
-      mCellGroupMap.emplace(obj.get(), id);
-      ++ id;
-    }
+    mCellGroupList.put(obj);
   }
 
-  /// @brief セルクラスの辞書を作る．
+  /// @brief セルクラスを追加する．
   void
-  reg_cellclass(
-    const vector<unique_ptr<CiCellClass>>& obj_list
+  reg_obj(
+    const CiCellClass* obj
   )
   {
-    SizeType id = 0;
-    for ( auto& obj: obj_list ) {
-      mCellClassMap.emplace(obj.get(), id);
-      ++ id;
-    }
+    mCellClassList.put(obj);
   }
 
   /// @brief 文字列をダンプする．
@@ -246,7 +194,7 @@ public:
     const CiBusType* obj
   )
   {
-    auto id = mBusTypeMap.at(obj);
+    auto id = mBusTypeList.get_id(obj);
     out().write_64(id);
   }
 
@@ -256,7 +204,7 @@ public:
     const CiPin* obj
   )
   {
-    auto id = mPinMap.at(obj);
+    auto id = mPinList.get_id(obj);
     out().write_64(id);
   }
 
@@ -279,7 +227,7 @@ public:
     const CiBus* obj
   )
   {
-    auto id = mBusMap.at(obj);
+    auto id = mBusList.get_id(obj);
     out().write_64(id);
   }
 
@@ -302,7 +250,7 @@ public:
     const CiBundle* obj
   )
   {
-    auto id = mBundleMap.at(obj);
+    auto id = mBundleList.get_id(obj);
     out().write_64(id);
   }
 
@@ -325,7 +273,7 @@ public:
     const CiTiming* obj
   )
   {
-    auto id = mTimingMap.at(obj);
+    auto id = mTimingList.get_id(obj);
     out().write_64(id);
   }
 
@@ -348,7 +296,7 @@ public:
     const CiLutTemplate* obj
   )
   {
-    auto id = mLutTemplateMap.at(obj);
+    auto id = mLutTemplateList.get_id(obj);
     out().write_64(id);
   }
 
@@ -358,7 +306,7 @@ public:
     const CiLut* obj
   )
   {
-    auto id = mLutMap.at(obj);
+    auto id = mLutList.get_id(obj);
     out().write_64(id);
   }
 
@@ -368,7 +316,7 @@ public:
     const CiCell* obj
   )
   {
-    auto id = mCellMap.at(obj);
+    auto id = mCellList.get_id(obj);
     out().write_64(id);
   }
 
@@ -391,7 +339,7 @@ public:
     const CiCellGroup* obj
   )
   {
-    auto id = mCellGroupMap.at(obj);
+    auto id = mCellGroupList.get_id(obj);
     out().write_64(id);
   }
 
@@ -414,7 +362,7 @@ public:
     const CiCellClass* obj
   )
   {
-    auto id = mCellClassMap.at(obj);
+    auto id = mCellClassList.get_id(obj);
     out().write_64(id);
   }
 
@@ -437,38 +385,96 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // 要素のリストと辞書
+  template<class T>
+  class ListMap
+  {
+  public:
+
+    /// @brief コンストラクタ
+    ListMap()
+    {
+      // nullptr を 0 番目の要素とする．
+      mList.push_back(nullptr);
+      mIdMap.emplace(nullptr, 0);
+    }
+
+    /// @brief デストラクタ
+    ~ListMap() = default;
+
+    /// @brief 要素を追加する．
+    void
+    put(
+      const T* obj
+    )
+    {
+      auto id = mList.size();
+      mList.push_back(obj);
+      mIdMap.emplace(obj, id);
+    }
+
+    /// @brief ID番号を得る．
+    SizeType
+    get_id(
+      const T* obj
+    ) const
+    {
+      return mIdMap.at(obj);
+    }
+
+    /// @brief 要素のリストを得る．
+    const vector<const T*>&
+    obj_list() const
+    {
+      return mList;
+    }
+
+
+  private:
+    //////////////////////////////////////////////////////////////////////
+    // データメンバ
+    //////////////////////////////////////////////////////////////////////
+
+    // 要素のリスト
+    vector<const T*> mList;
+
+    // 要素番号の辞書
+    unordered_map<const T*, SizeType> mIdMap;
+
+  };
+
   // バイナリエンコーダ
   BinEnc mS;
 
-  // バスタイプ番号の辞書
-  unordered_map<const CiBusType*, SizeType> mBusTypeMap;
+  // バスタイプのリスト
+  ListMap<CiBusType> mBusTypeList;
 
-  // ピン番号の辞書
-  unordered_map<const CiPin*, SizeType> mPinMap;
+  // ピンのリスト
+  ListMap<CiPin> mPinList;
 
-  // バス番号の辞書
-  unordered_map<const CiBus*, SizeType> mBusMap;
+  // バスのリスト
+  ListMap<CiBus> mBusList;
 
-  // バンドル番号の辞書
-  unordered_map<const CiBundle*, SizeType> mBundleMap;
+  // バンドルのリスト
+  ListMap<CiBundle> mBundleList;
 
-  // タイミング番号の辞書
-  unordered_map<const CiTiming*, SizeType> mTimingMap;
+  // タイミングのリスト
+  ListMap<CiTiming> mTimingList;
 
-  // テンプレート番号の辞書
-  unordered_map<const CiLutTemplate*, SizeType> mLutTemplateMap;
+  // テンプレートのリスト
+  ListMap<CiLutTemplate> mLutTemplateList;
 
-  // LUT番号の辞書
-  unordered_map<const CiLut*, SizeType> mLutMap;
+  // LUTのリスト
+  ListMap<CiLut> mLutList;
 
-  // セル番号の辞書
-  unordered_map<const CiCell*, SizeType> mCellMap;
+  // セルのリスト
+  ListMap<CiCell> mCellList;
 
-  // セルグループ番号の辞書
-  unordered_map<const CiCellGroup*, SizeType> mCellGroupMap;
+  // セルグループのリスト
+  ListMap<CiCellGroup> mCellGroupList;
 
-  // セルクラス番号の辞書
-  unordered_map<const CiCellClass*, SizeType> mCellClassMap;
+  // セルクラスのリスト
+  ListMap<CiCellClass> mCellClassList;
 
 };
 
