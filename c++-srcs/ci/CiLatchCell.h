@@ -107,12 +107,6 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
-  void
-  restore(
-    Deserializer& s ///< [in] デシリアライザ
-  ) override;
-
 
 protected:
   //////////////////////////////////////////////////////////////////////
@@ -124,6 +118,12 @@ protected:
   dump_Latch(
     Serializer& s ///< [in] シリアライザ
   ) const;
+
+  /// @brief restore() の下請け関数
+  void
+  _restore(
+    Deserializer& s ///< [in] デシリアライザ
+  ) override;
 
 
 private:
@@ -207,9 +207,9 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
+  /// @brief restore() の下請け関数
   void
-  restore(
+  _restore(
     Deserializer& s ///< [in] デシリアライザ
   ) override;
 

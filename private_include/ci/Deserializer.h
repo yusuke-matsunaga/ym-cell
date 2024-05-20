@@ -27,6 +27,17 @@ public:
     istream& s ///< [in] 入力ストリーム
   ) : mS{s}
   {
+    // 各要素の0番目は nullptr
+    mBusTypeList.push_back(nullptr);
+    mPinList.push_back(nullptr);
+    mBusList.push_back(nullptr);
+    mBundleList.push_back(nullptr);
+    mTimingList.push_back(nullptr);
+    mLutTemplateList.push_back(nullptr);
+    mLutList.push_back(nullptr);
+    mCellClassList.push_back(nullptr);
+    mCellGroupList.push_back(nullptr);
+    mCellList.push_back(nullptr);
   }
 
   /// @brief デストラクタ
@@ -45,94 +56,102 @@ public:
     return mS;
   }
 
-  /// @brief バスタイプの登録
+  /// @brief 要素のデシリアライズを行う．
   void
-  reg_obj(
-    const CiBusType* obj
+  deserialize(
+    CiCellLibrary* lib ///< [in] 親のセルライブラリ
   )
   {
-    mBusTypeList.push_back(obj);
-  }
-
-  /// @brief LUTテンプレートの登録
-  void
-  reg_obj(
-    const CiLutTemplate* obj
-  )
-  {
-    mLutTemplateList.push_back(obj);
-  }
-
-  /// @brief LUTの登録
-  void
-  reg_obj(
-    const CiLut* obj
-  )
-  {
-    mLutList.push_back(obj);
-  }
-
-  /// @brief ピンの登録
-  void
-  reg_obj(
-    const CiPin* obj
-  )
-  {
-    mPinList.push_back(obj);
-  }
-
-  /// @brief バスの登録
-  void
-  reg_obj(
-    const CiBus* obj
-  )
-  {
-    mBusList.push_back(obj);
-  }
-
-  /// @brief バンドルの登録
-  void
-  reg_obj(
-    const CiBundle* obj
-  )
-  {
-    mBundleList.push_back(obj);
-  }
-
-  /// @brief タイミングの登録
-  void
-  reg_obj(
-    const CiTiming* obj
-  )
-  {
-    mTimingList.push_back(obj);
-  }
-
-  /// @brief セルの登録
-  void
-  reg_obj(
-    const CiCell* obj
-  )
-  {
-    mCellList.push_back(obj);
-  }
-
-  /// @brief セルグループの登録
-  void
-  reg_obj(
-    const CiCellGroup* obj
-  )
-  {
-    mCellGroupList.push_back(obj);
-  }
-
-  /// @brief セルクラスの登録
-  void
-  reg_obj(
-    const CiCellClass* obj
-  )
-  {
-    mCellClassList.push_back(obj);
+    {
+      SizeType n;
+      restore(n);
+      cout << "# of BusType: " << n << endl;
+      for ( SizeType i = 0; i < n; ++ i ) {
+	auto ptr = CiBusType::restore(*this, lib);
+	mBusTypeList.push_back(ptr);
+      }
+    }
+    {
+      SizeType n;
+      restore(n);
+      cout << "# of LutTemplate: " << n << endl;
+      for ( SizeType i = 0; i < n; ++ i ) {
+	auto ptr = CiLutTemplate::restore(*this, lib);
+	mLutTemplateList.push_back(ptr);
+      }
+    }
+    {
+      SizeType n;
+      restore(n);
+      cout << "# of Lut: " << n << endl;
+      for ( SizeType i = 0; i < n; ++ i ) {
+	auto ptr = CiLut::restore(*this, lib);
+	mLutList.push_back(ptr);
+      }
+    }
+    {
+      SizeType n;
+      restore(n);
+      cout << "# of Pin: " << n << endl;
+      for ( SizeType i = 0; i < n; ++ i ) {
+	auto ptr = CiPin::restore(*this, lib);
+	mPinList.push_back(ptr);
+      }
+    }
+    {
+      SizeType n;
+      restore(n);
+      cout << "# of Bus: " << n << endl;
+      for ( SizeType i = 0; i < n; ++ i ) {
+	auto ptr = CiBus::restore(*this, lib);
+	mBusList.push_back(ptr);
+      }
+    }
+    {
+      SizeType n;
+      restore(n);
+      cout << "# of Bundle: " << n << endl;
+      for ( SizeType i = 0; i < n; ++ i ) {
+	auto ptr = CiBundle::restore(*this, lib);
+	mBundleList.push_back(ptr);
+      }
+    }
+    {
+      SizeType n;
+      restore(n);
+      cout << "# of Timing: " << n << endl;
+      for ( SizeType i = 0; i < n; ++ i ) {
+	auto ptr = CiTiming::restore(*this, lib);
+	mTimingList.push_back(ptr);
+      }
+    }
+    {
+      SizeType n;
+      restore(n);
+      cout << "# of CellClass: " << n << endl;
+      for ( SizeType i = 0; i < n; ++ i ) {
+	auto ptr = CiCellClass::restore(*this, lib);
+	mCellClassList.push_back(ptr);
+      }
+    }
+    {
+      SizeType n;
+      restore(n);
+      cout << "# of CellGroup: " << n << endl;
+      for ( SizeType i = 0; i < n; ++ i ) {
+	auto ptr = CiCellGroup::restore(*this, lib);
+	mCellGroupList.push_back(ptr);
+      }
+    }
+    {
+      SizeType n;
+      restore(n);
+      cout << "# of Cell: " << n << endl;
+      for ( SizeType i = 0; i < n; ++ i ) {
+	auto ptr = CiCell::restore(*this, lib);
+	mCellList.push_back(ptr);
+      }
+    }
   }
 
   /// @brief 文字列の読み込み
@@ -144,6 +163,42 @@ public:
     mS >> dst;
   }
 
+  /// @brief std::uint8_t の読み込み
+  void
+  restore(
+    std::uint8_t& dst
+  )
+  {
+    dst = mS.read_8();
+  }
+
+  /// @brief std::uint16_t の読み込み
+  void
+  restore(
+    std::uint16_t& dst
+  )
+  {
+    dst = mS.read_16();
+  }
+
+  /// @brief std::uint32_t の読み込み
+  void
+  restore(
+    std::uint32_t& dst
+  )
+  {
+    dst = mS.read_32();
+  }
+
+  /// @brief std::uint64_t の読み込み
+  void
+  restore(
+    std::uint64_t& dst
+  )
+  {
+    dst = mS.read_64();
+  }
+
   /// @brief SizeType の読み込み
   void
   restore(
@@ -153,20 +208,7 @@ public:
     dst = mS.read_64();
   }
 
-  /// @brief 番号のベクタの読み込み
-  void
-  restore(
-    vector<SizeType>& dst
-  )
-  {
-    SizeType n = mS.read_64();
-    dst.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      restore(dst[i]);
-    }
-  }
-
-  /// @brief 数値の読み込み
+  /// @brief doubleの読み込み
   void
   restore(
     double& dst
@@ -175,297 +217,202 @@ public:
     mS >> dst;
   }
 
-  /// @brief 数値のベクタの読み込み
-  void
-  restore(
-    vector<double>& dst
-  )
+  /// @brief バスタイプの読み込み
+  CiBusType*
+  restore_bustype()
   {
-    SizeType n = mS.read_64();
-    dst.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      restore(dst[i]);
-    }
+    SizeType id;
+    restore(id);
+    return mBusTypeList[id];
   }
 
   /// @brief バスタイプの読み込み
   void
   restore(
-    const CiBusType*& dst
+    CiBusType*& dst
   )
   {
+    dst = restore_bustype();
+  }
+
+  /// @brief ピンの読み込み
+  CiPin*
+  restore_pin()
+  {
     SizeType id;
-    mS >> id;
-    if ( id == NULL_ID ) {
-      // 例外
-      dst = nullptr;
-    }
-    else {
-      dst = mBusTypeList[id];
-    }
+    restore(id);
+    return mPinList[id];
   }
 
   /// @brief ピンの読み込み
   void
   restore(
-    const CiPin*& dst
+    CiPin*& dst
   )
   {
-    SizeType id;
-    mS >> id;
-    if ( id == NULL_ID ) {
-      // 例外
-      dst = nullptr;
-    }
-    else {
-      dst = mPinList[id];
-    }
-  }
-
-  /// @brief ピンのリストの読み込み
-  void
-  restore(
-    vector<const CiPin*>& dst
-  )
-  {
-    SizeType n = mS.read_64();
-    dst.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      restore(dst[i]);
-    }
+    dst = restore_pin();
   }
 
   /// @brief バスの読み込み
-  void
-  restore(
-    const CiBus*& dst
-  )
+  CiBus*
+  restore_bus()
   {
     SizeType id;
-    mS >> id;
-    if ( id == NULL_ID ) {
-      // 例外
-      dst = nullptr;
-    }
-    else {
-      dst = mBusList[id];
-    }
+    restore(id);
+    return mBusList[id];
   }
-
-  /// @brief バスのリストの読み込み
+  /// @brief バスの読み込み
   void
   restore(
-    vector<const CiBus*>& dst
+    CiBus*& dst
   )
   {
-    SizeType n = mS.read_64();
-    dst.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      restore(dst[i]);
-    }
+    dst = restore_bus();
+  }
+
+  /// @brief バンドルの読み込み
+  CiBundle*
+  restore_bundle()
+  {
+    SizeType id;
+    restore(id);
+    return mBundleList[id];
   }
 
   /// @brief バンドルの読み込み
   void
   restore(
-    const CiBundle*& dst
+    CiBundle*& dst
   )
   {
-    SizeType id;
-    mS >> id;
-    if ( id == NULL_ID ) {
-      // 例外
-      dst = nullptr;
-    }
-    else {
-      dst = mBundleList[id];
-    }
+    dst = restore_bundle();
   }
 
-  /// @brief バンドルのリストの読み込み
-  void
-  restore(
-    vector<const CiBundle*>& dst
-  )
+  /// @brief タイミングの読み込み
+  CiTiming*
+  restore_timing()
   {
-    SizeType n = mS.read_64();
-    dst.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      restore(dst[i]);
-    }
+    SizeType id;
+    restore(id);
+    return mTimingList[id];
   }
 
   /// @brief タイミングの読み込み
   void
   restore(
-    const CiTiming*& dst
+    CiTiming*& dst
   )
   {
-    SizeType id;
-    mS >> id;
-    if ( id == NULL_ID ) {
-      // 例外
-      dst = nullptr;
-    }
-    else {
-      dst = mTimingList[id];
-    }
+    dst = restore_timing();
   }
 
-  /// @brief タイミングのリストの読み込み
-  void
-  restore(
-    vector<const CiTiming*>& dst
-  )
+  /// @brief LUTテンプレートの読み込み
+  CiLutTemplate*
+  restore_luttemplate()
   {
-    SizeType n = mS.read_64();
-    dst.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      restore(dst[i]);
-    }
+    SizeType id;
+    restore(id);
+    return mLutTemplateList[id];
   }
 
   /// @brief LUTテンプレートの読み込み
   void
   restore(
-    const CiLutTemplate*& dst
+    CiLutTemplate*& dst
   )
   {
-    SizeType id;
-    mS >> id;
-    if ( id == NULL_ID ) {
-      // 例外
-      dst = nullptr;
-    }
-    else {
-      dst = mLutTemplateList[id];
-    }
+    dst = restore_luttemplate();
   }
 
-  /// @brief LUTテンプレートのリストの読み込み
-  void
-  restore(
-    vector<const CiLutTemplate*>& dst
-  )
+  /// @brief LUTの読み込み
+  CiLut*
+  restore_lut()
   {
-    SizeType n = mS.read_64();
-    dst.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      restore(dst[i]);
-    }
+    SizeType id;
+    restore(id);
+    return mLutList[id];
   }
 
   /// @brief LUTの読み込み
   void
   restore(
-    const CiLut*& dst
+    CiLut*& dst
   )
   {
-    SizeType id;
-    mS >> id;
-    if ( id == NULL_ID ) {
-      // 例外
-      dst = nullptr;
-    }
-    else {
-      dst = mLutList[id];
-    }
+    dst = restore_lut();
   }
 
-  /// @brief LUTのリストの読み込み
-  void
-  restore(
-    vector<const CiLut*>& dst
-  )
+  /// @brief セルの読み込み
+  CiCell*
+  restore_cell()
   {
-    SizeType n = mS.read_64();
-    dst.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      restore(dst[i]);
-    }
+    SizeType id;
+    restore(id);
+    return mCellList[id];
   }
 
   /// @brief セルの読み込み
   void
   restore(
-    const CiCell*& dst
+    CiCell*& dst
   )
   {
-    SizeType id;
-    mS >> id;
-    if ( id == NULL_ID ) {
-      // 例外
-      dst = nullptr;
-    }
-    else {
-      dst = mCellList[id];
-    }
+    dst = restore_cell();
   }
 
-  /// @brief セルのリストの読み込み
-  void
-  restore(
-    vector<const CiCell*>& dst
-  )
+  /// @brief セルグループの読み込み
+  CiCellGroup*
+  restore_cellgroup()
   {
-    SizeType n = mS.read_64();
-    dst.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      restore(dst[i]);
-    }
+    SizeType id;
+    restore(id);
+    return mCellGroupList[id];
   }
 
   /// @brief セルグループの読み込み
   void
   restore(
-    const CiCellGroup*& dst
+    CiCellGroup*& dst
   )
   {
-    SizeType id;
-    mS >> id;
-    if ( id == NULL_ID ) {
-      // 例外
-      dst = nullptr;
-    }
-    else {
-      dst = mCellGroupList[id];
-    }
+    dst = restore_cellgroup();
   }
 
-  /// @brief セルグループのリストの読み込み
-  void
-  restore(
-    vector<const CiCellGroup*>& dst
-  )
+  /// @brief セルクラスの読み込み
+  CiCellClass*
+  restore_cellclass()
   {
-    SizeType n = mS.read_64();
-    dst.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      restore(dst[i]);
-    }
+    SizeType id;
+    restore(id);
+    return mCellClassList[id];
   }
 
   /// @brief セルクラスの読み込み
   void
   restore(
-    const CiCellClass*& dst
+    CiCellClass*& dst
   )
   {
-    SizeType id;
-    mS >> id;
-    if ( id == NULL_ID ) {
-      // 例外
-      dst = nullptr;
-    }
-    else {
-      dst = mCellClassList[id];
-    }
+    dst = restore_cellclass();
   }
 
-  /// @brief セルクラスのリストの読み込み
+  /// @brief const 型の要素の読み込み
+  template<class T>
   void
   restore(
-    vector<const CiCellClass*>& dst
+    const T*& dst
+  )
+  {
+    T* tmp_dst;
+    restore(tmp_dst);
+    dst = tmp_dst;
+  }
+
+  /// @brief 要素のリストの読み込み
+  template<class T>
+  void
+  restore(
+    vector<T>& dst
   )
   {
     SizeType n = mS.read_64();
@@ -481,42 +428,38 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // nullptr 用の定数
-  static
-  const SizeType NULL_ID = static_cast<SizeType>(-1);
-
   // バイナリデコーダ
   BinDec mS;
 
   // バスタイプのリスト
-  vector<const CiBusType*> mBusTypeList;
-
-  // ピンのリスト
-  vector<const CiPin*> mPinList;
-
-  // バスのリスト
-  vector<const CiBus*> mBusList;
-
-  // バンドルのリスト
-  vector<const CiBundle*> mBundleList;
-
-  // タイミングのリスト
-  vector<const CiTiming*> mTimingList;
+  vector<CiBusType*> mBusTypeList;
 
   // LUTテンプレートのリスト
-  vector<const CiLutTemplate*> mLutTemplateList;
+  vector<CiLutTemplate*> mLutTemplateList;
 
   // LUTのリスト
-  vector<const CiLut*> mLutList;
+  vector<CiLut*> mLutList;
+
+  // ピンのリスト
+  vector<CiPin*> mPinList;
+
+  // バスのリスト
+  vector<CiBus*> mBusList;
+
+  // バンドルのリスト
+  vector<CiBundle*> mBundleList;
+
+  // タイミングのリスト
+  vector<CiTiming*> mTimingList;
 
   // セルのリスト
-  vector<const CiCell*> mCellList;
-
-  // セルグループのリスト
-  vector<const CiCellGroup*> mCellGroupList;
+  vector<CiCell*> mCellList;
 
   // セルクラスのリスト
-  vector<const CiCellClass*> mCellClassList;
+  vector<CiCellClass*> mCellClassList;
+
+  // セルグループのリスト
+  vector<CiCellGroup*> mCellGroupList;
 
 };
 

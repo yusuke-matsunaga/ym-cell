@@ -17,6 +17,7 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 class Serializer;
+class Deserializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiBusType CiBusType.h "CiBusType.h"
@@ -124,6 +125,14 @@ public:
   dump(
     Serializer& s ///< [in] シリアライザ
   ) const;
+
+  /// @brief 内容を復元する．
+  static
+  CiBusType*
+  restore(
+    Deserializer& s,   ///< [in] デシリアライザ
+    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+  );
 
 
 private:

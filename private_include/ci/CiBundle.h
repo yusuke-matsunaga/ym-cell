@@ -16,6 +16,7 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 class Serializer;
+class Deserializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiBundle CiBundle.h "CiBundle.h"
@@ -90,11 +91,25 @@ public:
   // dump/restore 関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 内容をシリアライズする．
+  void
+  serialize(
+    Serializer& s ///< [in] シリアライザ
+  ) const;
+
   /// @brief 内容をバイナリダンプする．
   void
   dump(
     Serializer& s ///< [in] シリアライザ
   ) const;
+
+  /// @brief 内容を復元する．
+  static
+  CiBundle*
+  restore(
+    Deserializer& s,   ///< [in] デシリアライザ
+    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+  );
 
 
 private:

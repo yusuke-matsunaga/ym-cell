@@ -146,6 +146,62 @@ public:
     mCellClassList.put(obj);
   }
 
+  /// @brief 登録された要素の内容をダンプする．
+  void
+  dump_obj()
+  {
+    dump(mBusTypeList.obj_list().size());
+    cout << "# of BusType: " << mBusTypeList.obj_list().size() << endl;
+    for ( auto obj: mBusTypeList.obj_list() ) {
+      obj->dump(*this);
+    }
+    dump(mLutTemplateList.obj_list().size());
+    cout << "# of LutTemplate: " << mLutTemplateList.obj_list().size() << endl;
+    for ( auto obj: mLutTemplateList.obj_list() ) {
+      obj->dump(*this);
+    }
+    dump(mLutList.obj_list().size());
+    cout << "# of Lut: " << mLutList.obj_list().size() << endl;
+    for ( auto obj: mLutList.obj_list() ) {
+      obj->dump(*this);
+    }
+    dump(mPinList.obj_list().size());
+    cout << "# of Pin: " << mPinList.obj_list().size() << endl;
+    for ( auto obj: mPinList.obj_list() ) {
+      obj->dump(*this);
+    }
+    dump(mBusList.obj_list().size());
+    cout << "# of Bus: " << mBusList.obj_list().size() << endl;
+    for ( auto obj: mBusList.obj_list() ) {
+      obj->dump(*this);
+    }
+    dump(mBundleList.obj_list().size());
+    cout << "# of Bundle: " << mBundleList.obj_list().size() << endl;
+    for ( auto obj: mBundleList.obj_list() ) {
+      obj->dump(*this);
+    }
+    dump(mTimingList.obj_list().size());
+    cout << "# of Timing: " << mTimingList.obj_list().size() << endl;
+    for ( auto obj: mTimingList.obj_list() ) {
+      obj->dump(*this);
+    }
+    dump(mCellClassList.obj_list().size());
+    cout << "# of CellClass: " << mCellClassList.obj_list().size() << endl;
+    for ( auto obj: mCellClassList.obj_list() ) {
+      obj->dump(*this);
+    }
+    dump(mCellGroupList.obj_list().size());
+    cout << "# of CellGroup: " << mCellGroupList.obj_list().size() << endl;
+    for ( auto obj: mCellGroupList.obj_list() ) {
+      obj->dump(*this);
+    }
+    dump(mCellList.obj_list().size());
+    cout << "# of Cell: " << mCellList.obj_list().size() << endl;
+    for ( auto obj: mCellList.obj_list() ) {
+      obj->dump(*this);
+    }
+  }
+
   /// @brief 文字列をダンプする．
   void
   dump(
@@ -153,6 +209,42 @@ public:
   )
   {
     out() << val;
+  }
+
+  /// @brief std::uint8_tをダンプする．
+  void
+  dump(
+    std::uint8_t val
+  )
+  {
+    out().write_8(val);
+  }
+
+  /// @brief std::uint16_tをダンプする．
+  void
+  dump(
+    std::uint16_t val
+  )
+  {
+    out().write_16(val);
+  }
+
+  /// @brief std::uint32_tをダンプする．
+  void
+  dump(
+    std::uint32_t val
+  )
+  {
+    out().write_32(val);
+  }
+
+  /// @brief std::uint64_tをダンプする．
+  void
+  dump(
+    std::uint64_t val
+  )
+  {
+    out().write_64(val);
   }
 
   /// @brief 整数をダンプする．
@@ -170,10 +262,19 @@ public:
     const vector<SizeType>& vec
   )
   {
-    out().write_64(vec.size());
+    dump(vec.size());
     for ( auto v: vec ) {
-      out().write_64(v);
+      dump(v);
     }
+  }
+
+  /// @brief 数値をダンプする．
+  void
+  dump(
+    double val
+  )
+  {
+    out() << val;
   }
 
   /// @brief 数値のベクタをダンプする．
@@ -182,9 +283,9 @@ public:
     const vector<double>& vec
   )
   {
-    out().write_64(vec.size());
+    dump(vec.size());
     for ( auto v: vec ) {
-      out() << v;
+      dump(v);
     }
   }
 
@@ -195,7 +296,7 @@ public:
   )
   {
     auto id = mBusTypeList.get_id(obj);
-    out().write_64(id);
+    dump(id);
   }
 
   /// @brief ピン番号を出力する．
@@ -205,7 +306,7 @@ public:
   )
   {
     auto id = mPinList.get_id(obj);
-    out().write_64(id);
+    dump(id);
   }
 
   /// @brief ピン番号のリストを出力する．
@@ -215,7 +316,7 @@ public:
   )
   {
     SizeType n = obj_list.size();
-    out().write_64(n);
+    dump(n);
     for ( auto obj: obj_list ) {
       dump(obj);
     }
@@ -228,7 +329,7 @@ public:
   )
   {
     auto id = mBusList.get_id(obj);
-    out().write_64(id);
+    dump(id);
   }
 
   /// @brief バス番号のリストを出力する．
@@ -238,7 +339,7 @@ public:
   )
   {
     SizeType n = obj_list.size();
-    out().write_64(n);
+    dump(n);
     for ( auto obj: obj_list ) {
       dump(obj);
     }
@@ -251,7 +352,7 @@ public:
   )
   {
     auto id = mBundleList.get_id(obj);
-    out().write_64(id);
+    dump(id);
   }
 
   /// @brief バンドル番号のリストを出力する．
@@ -261,7 +362,7 @@ public:
   )
   {
     SizeType n = obj_list.size();
-    out().write_64(n);
+    dump(n);
     for ( auto obj: obj_list ) {
       dump(obj);
     }
@@ -274,7 +375,7 @@ public:
   )
   {
     auto id = mTimingList.get_id(obj);
-    out().write_64(id);
+    dump(id);
   }
 
   /// @brief タイミング番号のリストを出力する．
@@ -284,7 +385,7 @@ public:
   )
   {
     SizeType n = obj_list.size();
-    out().write_64(n);
+    dump(n);
     for ( auto obj: obj_list ) {
       dump(obj);
     }
@@ -297,7 +398,7 @@ public:
   )
   {
     auto id = mLutTemplateList.get_id(obj);
-    out().write_64(id);
+    dump(id);
   }
 
   /// @brief LUT番号を出力する．
@@ -307,7 +408,7 @@ public:
   )
   {
     auto id = mLutList.get_id(obj);
-    out().write_64(id);
+    dump(id);
   }
 
   /// @brief セル番号を出力する．
@@ -317,7 +418,7 @@ public:
   )
   {
     auto id = mCellList.get_id(obj);
-    out().write_64(id);
+    dump(id);
   }
 
   /// @brief セル番号のリストを出力する．
@@ -327,7 +428,7 @@ public:
   )
   {
     SizeType n = obj_list.size();
-    out().write_64(n);
+    dump(n);
     for ( auto obj: obj_list ) {
       dump(obj);
     }
@@ -340,7 +441,7 @@ public:
   )
   {
     auto id = mCellGroupList.get_id(obj);
-    out().write_64(id);
+    dump(id);
   }
 
   /// @brief セルグループ番号のリストを出力する．
@@ -350,7 +451,7 @@ public:
   )
   {
     SizeType n = obj_list.size();
-    out().write_64(n);
+    dump(n);
     for ( auto obj: obj_list ) {
       dump(obj);
     }
@@ -363,7 +464,7 @@ public:
   )
   {
     auto id = mCellClassList.get_id(obj);
-    out().write_64(id);
+    dump(id);
   }
 
   /// @brief セルクラス番号のリストを出力する．
@@ -373,7 +474,7 @@ public:
   )
   {
     SizeType n = obj_list.size();
-    out().write_64(n);
+    dump(n);
     for ( auto obj: obj_list ) {
       dump(obj);
     }
@@ -395,7 +496,7 @@ private:
     ListMap()
     {
       // nullptr を 0 番目の要素とする．
-      mList.push_back(nullptr);
+      // ただし，実際には mList には入れない
       mIdMap.emplace(nullptr, 0);
     }
 
@@ -408,9 +509,12 @@ private:
       const T* obj
     )
     {
-      auto id = mList.size();
-      mList.push_back(obj);
-      mIdMap.emplace(obj, id);
+      if ( mIdMap.count(obj) == 0 ) {
+	// nullptr の分を足しておく．
+	auto id = mList.size() + 1;
+	mList.push_back(obj);
+	mIdMap.emplace(obj, id);
+      }
     }
 
     /// @brief ID番号を得る．
@@ -419,6 +523,9 @@ private:
       const T* obj
     ) const
     {
+      if ( mIdMap.count(obj) == 0 ) {
+	abort();
+      }
       return mIdMap.at(obj);
     }
 
@@ -449,6 +556,12 @@ private:
   // バスタイプのリスト
   ListMap<CiBusType> mBusTypeList;
 
+  // テンプレートのリスト
+  ListMap<CiLutTemplate> mLutTemplateList;
+
+  // LUTのリスト
+  ListMap<CiLut> mLutList;
+
   // ピンのリスト
   ListMap<CiPin> mPinList;
 
@@ -461,20 +574,14 @@ private:
   // タイミングのリスト
   ListMap<CiTiming> mTimingList;
 
-  // テンプレートのリスト
-  ListMap<CiLutTemplate> mLutTemplateList;
-
-  // LUTのリスト
-  ListMap<CiLut> mLutList;
-
-  // セルのリスト
-  ListMap<CiCell> mCellList;
+  // セルクラスのリスト
+  ListMap<CiCellClass> mCellClassList;
 
   // セルグループのリスト
   ListMap<CiCellGroup> mCellGroupList;
 
-  // セルクラスのリスト
-  ListMap<CiCellClass> mCellClassList;
+  // セルのリスト
+  ListMap<CiCell> mCellList;
 
 };
 

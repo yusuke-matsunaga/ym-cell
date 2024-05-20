@@ -105,11 +105,11 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const;
 
-  /// @brief 内容を読み込む．
+  /// @brief restore() の下請け関数
   void
-  restore(
+  restore_FL(
     Deserializer& s ///< [in] デシリアライザ
-  ) override;
+  );
 
 
 private:

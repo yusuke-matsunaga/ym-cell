@@ -67,9 +67,9 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
+  /// @brief restore() の下請け関数
   void
-  restore(
+  _restore(
     Deserializer& s ///< [in] デシリアライザ
   ) override;
 

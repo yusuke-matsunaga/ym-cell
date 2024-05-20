@@ -38,17 +38,11 @@ CiCellLibrary::dump(
 {
   Serializer s{os};
 
-  // 番号の辞書を作る．
-  s.reg_bustype(mBusTypeList);
-  s.reg_luttemplate(mLutTemplateList);
-  s.reg_lut(mLutList);
-  s.reg_timing(mTimingList);
-  s.reg_pin(mPinList);
-  s.reg_bus(mBusList);
-  s.reg_bundle(mBundleList);
-  s.reg_cell(mCellList);
-  s.reg_cellgroup(mGroupList);
-  s.reg_cellclass(mClassList);
+  // 要素のシリアライズを行う．
+  serialize(s);
+
+  // シリアライズで登録された要素の内容をダンプする．
+  s.dump_obj();
 
   // 名前
   s.dump(name());
@@ -92,64 +86,34 @@ CiCellLibrary::dump(
   // 電力単位
   s.out() << leakage_power_unit();
 
-  // バスタイプの内容をダンプ
-  s.out().write_64(mBusTypeList.size());
+  // バスタイプのリスト
+  s.dump(mBusTypeList.size());
   for ( auto& bustype: mBusTypeList ) {
-    bustype->dump(s);
+    s.dump(bustype.get());
   }
 
-  // 遅延テーブルのテンプレートの内容をダンプ
+  // 遅延テーブルのテンプレートのリスト
   s.dump(mLutTemplateList.size());
   for ( auto& lut_templ: mLutTemplateList ) {
-    lut_templ->dump(s);
+    s.dump(lut_templ.get());
   }
 
-  // LUTの内容をダンプ
-  s.dump(mLutList.size());
-  for ( auto& lut: mLutList ) {
-    lut->dump(s);
-  }
-
-  // タイミング情報の内容をダンプ
-  s.dump(mTimingList.size());
-  for ( auto& timing: mTimingList ) {
-    timing->dump(s);
-  }
-
-  // ピンの内容をダンプ
-  s.dump(mPinList.size());
-  for ( auto& pin: mPinList ) {
-    pin->dump(s);
-  }
-
-  // バスの内容をダンプ
-  s.dump(mBusList.size());
-  for ( auto& bus: mBusList ) {
-    bus->dump(s);
-  }
-
-  // バンドルの内容をダンプ
-  s.dump(mBundleList.size());
-  for ( auto& bundle: mBundleList ) {
-    bundle->dump(s);
-  }
-
-  // セルの内容をダンプ
+  // セルのリスト
   s.dump(mCellList.size());
   for ( auto& cell: mCellList ) {
-    cell->dump(s);
+    s.dump(cell.get());
   }
 
-  // セルグループ情報のダンプ
+  // セルグループ情報のリスト
   s.dump(mGroupList.size());
   for ( auto& group: mGroupList ) {
-    group->dump(s);
+    s.dump(group.get());
   }
 
-  // セルクラス情報のダンプ
+  // セルクラス情報のリスト
   s.dump(mClassList.size());
   for ( auto& cell_class: mClassList ) {
-    cell_class->dump(s);
+    s.dump(cell_class.get());
   }
 
   // 組み込み型の情報のダンプ
@@ -167,13 +131,22 @@ CiCellLibrary::dump(
 void
 CiCellLibrary::serialize(
   Serializer& s
-)
+) const
 {
   for ( auto& bustype: mBusTypeList ) {
     bustype->serialize(s);
   }
   for ( auto& templ: mLutTemplateList ) {
     templ->serialize(s);
+  }
+  for ( auto& cell: mCellList ) {
+    cell->serialize(s);
+  }
+  for ( auto& cgroup: mGroupList ) {
+    cgroup->serialize(s);
+  }
+  for ( auto& cclass: mClassList ) {
+    cclass->serialize(s);
   }
 }
 
@@ -282,6 +255,15 @@ CiLutTemplate3D::dump(
 // クラス CiLut
 //////////////////////////////////////////////////////////////////////
 
+// @brief 内容をシリアライズする．
+void
+CiLut::serialize(
+  Serializer& s
+) const
+{
+  s.reg_obj(this);
+}
+
 // @brief 実際のダンプを行う関数
 void
 CiLut::dump_common(
@@ -348,6 +330,21 @@ CiLut3D::dump(
 //////////////////////////////////////////////////////////////////////
 // クラス CiTiming
 //////////////////////////////////////////////////////////////////////
+
+// @brief 内容をシリアライズする．
+void
+CiTiming::serialize(
+  Serializer& s ///< [in] シリアライザ
+) const
+{
+  s.reg_obj(this);
+  rise_transition()->serialize(s);
+  fall_transition()->serialize(s);
+  rise_propagation()->serialize(s);
+  fall_propagation()->serialize(s);
+  cell_rise()->serialize(s);
+  cell_fall()->serialize(s);
+}
 
 // @brief 共通な情報をダンプする．
 void
@@ -440,6 +437,15 @@ CiTimingLut2::dump(
 //////////////////////////////////////////////////////////////////////
 // クラス CiPin
 //////////////////////////////////////////////////////////////////////
+
+// @brief 内容をシリアライズする．
+void
+CiPin::serialize(
+  Serializer& s
+) const
+{
+  s.reg_obj(this);
+}
 
 // @brief dump 用の共通情報を出力する．
 void
@@ -548,6 +554,15 @@ CiInternalPin::dump(
 // クラス CiBus
 //////////////////////////////////////////////////////////////////////
 
+// @brief 内容をシリアライズする．
+void
+CiBus::serialize(
+  Serializer& s
+) const
+{
+  s.reg_obj(this);
+}
+
 // @brief 内容をバイナリダンプする．
 void
 CiBus::dump(
@@ -564,6 +579,15 @@ CiBus::dump(
 // クラス CiBundle
 //////////////////////////////////////////////////////////////////////
 
+// @brief 内容をシリアライズする．
+void
+CiBundle::serialize(
+  Serializer& s
+) const
+{
+  s.reg_obj(this);
+}
+
 // @brief 内容をバイナリダンプする．
 void
 CiBundle::dump(
@@ -579,17 +603,43 @@ CiBundle::dump(
 // クラス CiCell
 //////////////////////////////////////////////////////////////////////
 
+// @brief 内容をシリアライズする．
+void
+CiCell::serialize(
+  Serializer& s
+) const
+{
+  s.reg_obj(this);
+  for ( auto pin: mPinList ) {
+    pin->serialize(s);
+  }
+  for ( auto bus: mBusList ) {
+    bus->serialize(s);
+  }
+  for ( auto bundle: mBundleList ) {
+    bundle->serialize(s);
+  }
+  for ( auto timing: mTimingList ) {
+    timing->serialize(s);
+  }
+  for ( auto& timing_list: mTimingMap ) {
+    for ( auto timing: timing_list ) {
+      timing->serialize(s);
+    }
+  }
+}
+
 // @brief 共通部分のダンプ
 void
 CiCell::dump_common(
   Serializer& s
 ) const
 {
-  s.out() << mName
-	  << mArea;
-  s.out().write_64(mInputNum);
-  s.out().write_64(mOutputNum);
-  s.out().write_64(mInoutNum);
+  s.dump(mName);
+  s.out() << mArea;
+  s.dump(mInputNum);
+  s.dump(mOutputNum);
+  s.dump(mInoutNum);
   s.dump(mPinList);
   s.dump(mInputList);
   s.dump(mOutputList);
@@ -597,7 +647,7 @@ CiCell::dump_common(
   s.dump(mBusList);
   s.dump(mBundleList);
   s.dump(mTimingList);
-  s.out().write_64(mTimingMap.size());
+  s.dump(mTimingMap.size());
   for ( auto& timing_list: mTimingMap ) {
     s.dump(timing_list);
   }
@@ -735,23 +785,17 @@ CiFsmCell::dump(
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiCellGroup
+// クラス CiCellClass
 //////////////////////////////////////////////////////////////////////
 
-// @brief 内容をバイナリダンプする．
+// @brief 内容をシリアライズする．
 void
-CiCellGroup::dump(
+CiCellClass::serialize(
   Serializer& s
 ) const
 {
-  mIoMap.dump(s.out());
-  s.dump(mCellList);
+  s.reg_obj(this);
 }
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiCellClass
-//////////////////////////////////////////////////////////////////////
 
 // @brief 内容をバイナリダンプする．
 void
@@ -764,8 +808,30 @@ CiCellClass::dump(
   for ( auto& map: idmap_list() ) {
     map.dump(s.out());
   }
-  // グループ情報のダンプ
-  s.dump(mGroupList);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiCellGroup
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をシリアライズする．
+void
+CiCellGroup::serialize(
+  Serializer& s
+) const
+{
+  s.reg_obj(this);
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiCellGroup::dump(
+  Serializer& s
+) const
+{
+  mIoMap.dump(s.out());
+  s.dump(mCellList);
 }
 
 

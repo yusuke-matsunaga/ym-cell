@@ -16,6 +16,7 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 class Serializer;
+class Deserializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiLutTemplate CiLutTemplate.h "CiLutTemplate.h"
@@ -87,6 +88,14 @@ public:
   dump(
     Serializer& s ///< [in] シリアライザ
   ) const = 0;
+
+  /// @brief 内容を復元する．
+  static
+  CiLutTemplate*
+  restore(
+    Deserializer& s,   ///< [in] デシリアライザ
+    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+  );
 
 
 protected:

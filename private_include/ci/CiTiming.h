@@ -184,6 +184,12 @@ public:
   // dump/restore 関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 内容をシリアライズする．
+  void
+  serialize(
+    Serializer& s ///< [in] シリアライザ
+  ) const;
+
   /// @brief 内容をバイナリダンプする．
   virtual
   void
@@ -192,10 +198,11 @@ public:
  ) const = 0;
 
   /// @brief 内容を読み込む．
-  virtual
-  void
+  static
+  CiTiming*
   restore(
-    Deserializer& s ///< [in] デシリアライザ
+    Deserializer& s,   ///< [in] デシリアライザ
+    CiCellLibrary* lib ///< [in] 親のセルライブラリ
   );
 
 
@@ -210,6 +217,13 @@ protected:
     Serializer& s, ///< [in] シリアライザ
     int type_id    ///< [in] ClibTimingType を表すシグネチャ
   ) const;
+
+  /// @brief 内容を復元する．
+  virtual
+  void
+  _restore(
+    Deserializer& s  ///< [in] デシリアライザ
+  );
 
 
 private:
@@ -290,11 +304,10 @@ protected:
   // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 内容を読み込む．
   void
-  restore(
+  restore_GP(
     Deserializer& s ///< [in] デシリアライザ
-  ) override;
+  );
 
 
 private:
@@ -381,10 +394,16 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を復元する．
   void
-  restore(
-    Deserializer& s ///< [in] デシリアライザ
+  _restore(
+    Deserializer& s  ///< [in] デシリアライザ
   ) override;
 
 
@@ -474,10 +493,16 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を復元する．
   void
-  restore(
-    Deserializer& s ///< [in] デシリアライザ
+  _restore(
+    Deserializer& s  ///< [in] デシリアライザ
   ) override;
 
 
@@ -548,11 +573,10 @@ protected:
   // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 内容を読み込む．
   void
-  restore(
+  restore_LUT(
     Deserializer& s ///< [in] デシリアライザ
-  ) override;
+  );
 
 
 private:
@@ -631,10 +655,16 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を復元する．
   void
-  restore(
-    Deserializer& s ///< [in] デシリアライザ
+  _restore(
+    Deserializer& s  ///< [in] デシリアライザ
   ) override;
 
 
@@ -713,10 +743,16 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を復元する．
   void
-  restore(
-    Deserializer& s ///< [in] デシリアライザ
+  _restore(
+    Deserializer& s  ///< [in] デシリアライザ
   ) override;
 
 

@@ -202,6 +202,12 @@ public:
   // dump/restore 関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 内容をシリアライズする．
+  void
+  serialize(
+    Serializer& s ///< [in] シリアライザ
+  ) const;
+
   /// @brief 内容をバイナリダンプする．
   virtual
   void
@@ -209,12 +215,13 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const = 0;
 
-  /// @brief 内容を読み込む．
-  virtual
-  void
+  /// @brief 内容を復元する．
+  static
+  CiPin*
   restore(
-    Deserializer& s ///< [in] デシリアライザ
-  ) = 0;
+    Deserializer& s,   ///< [in] デシリアライザ
+    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+  );
 
 
 protected:
@@ -228,6 +235,13 @@ protected:
     Serializer& s, ///< [in] シリアライザ
     int sig        ///< [in] シグネチャ(0, 1, 2, 3)
   ) const;
+
+  /// @brief restore() の下請け関数
+  virtual
+  void
+  _restore(
+    Deserializer& s ///< [in] デシリアライザ
+  ) = 0;
 
   /// @brief 内容を読み込む．
   void
@@ -348,12 +362,6 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
-  void
-  restore(
-    Deserializer& s ///< [in] デシリアライザ
-  ) override;
-
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -368,6 +376,18 @@ public:
   {
     mInputId = iid;
   }
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore の下請け関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief restore() の下請け関数
+  void
+  _restore(
+    Deserializer& s ///< [in] デシリアライザ
+  ) override;
 
 
 private:
@@ -615,9 +635,15 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore の下請け関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief restore() の下請け関数
   void
-  restore(
+  _restore(
     Deserializer& s ///< [in] デシリアライザ
   ) override;
 
@@ -721,12 +747,6 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
-  void
-  restore(
-    Deserializer& s ///< [in] デシリアライザ
-  ) override;
-
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -741,6 +761,18 @@ public:
   {
     mInputId = iid;
   }
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore の下請け関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief restore() の下請け関数
+  void
+  _restore(
+    Deserializer& s ///< [in] デシリアライザ
+  ) override;
 
 
 private:
@@ -828,12 +860,6 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
-  void
-  restore(
-    Deserializer& s ///< [in] デシリアライザ
-  ) override;
-
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -848,6 +874,18 @@ public:
   {
     mInternalId = iid;
   }
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore の下請け関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief restore() の下請け関数
+  void
+  _restore(
+    Deserializer& s ///< [in] デシリアライザ
+  ) override;
 
 
 private:

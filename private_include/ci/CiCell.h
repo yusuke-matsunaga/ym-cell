@@ -566,6 +566,12 @@ public:
   // dump/restore 関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 内容をシリアライズする．
+  void
+  serialize(
+    Serializer& s ///< [in] シリアライザ
+  ) const;
+
   /// @brief 内容をバイナリダンプする．
   virtual
   void
@@ -574,10 +580,11 @@ public:
   ) const;
 
   /// @brief 内容を読み込む．
-  virtual
-  void
+  static
+  CiCell*
   restore(
-    Deserializer& s ///< [in] デシリアライザ
+    Deserializer& s,   ///< [in] デシリアライザ
+    CiCellLibrary* lib ///< [in] 親のセルライブラリ
   );
 
 
@@ -591,6 +598,13 @@ protected:
   dump_common(
     Serializer& s ///< [in] シリアライザ
   ) const;
+
+  /// @brief restore() の下請け関数
+  virtual
+  void
+  _restore(
+    Deserializer& s ///< [in] デシリアライザ
+  );
 
 
 private:

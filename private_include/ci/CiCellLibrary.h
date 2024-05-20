@@ -34,6 +34,7 @@ class CiInternalPin;
 class CiLut;
 class CiLutTemplate;
 class CiTiming;
+class Serializer;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CiCellLibrary CiCellLibrary.h "CiCellLibrary.h"
@@ -918,7 +919,7 @@ private:
   void
   serialize(
     Serializer& s ///< [in] シリアライザ
-  );
+  ) const;
 
 
 private:

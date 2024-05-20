@@ -99,6 +99,12 @@ public:
   // dump/restore 関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 内容をシリアライズする．
+  void
+  serialize(
+    Serializer& s ///< [in] シリアライザ
+  ) const;
+
   /// @brief 内容をバイナリダンプする．
   virtual
   void
@@ -106,12 +112,13 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const = 0;
 
-  /// @brief 内容を読み込む．
-  virtual
-  void
+  /// @brief 内容を復元する．
+  static
+  CiLut*
   restore(
-    Deserializer& s ///< [in] デシリアライザ
-  ) = 0;
+    Deserializer& s,   ///< [in] デシリアライザ
+    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+  );
 
 
 protected:
@@ -139,6 +146,19 @@ protected:
     double val,
     const vector<double>& index_array
   );
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief restore() の下請け関数
+  virtual
+  void
+  _restore(
+    Deserializer& s ///< [in] デシリアライザ
+  ) = 0;
 
 
 private:
@@ -224,9 +244,15 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief restore() の下請け関数
   void
-  restore(
+  _restore(
     Deserializer& s ///< [in] デシリアライザ
   ) override;
 
@@ -318,12 +344,6 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
-  void
-  restore(
-    Deserializer& s ///< [in] デシリアライザ
-  ) override;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -339,6 +359,12 @@ private:
   {
     return idx1 * index_num(1) + idx2;
   }
+
+  /// @brief restore() の下請け関数
+  void
+  _restore(
+    Deserializer& s ///< [in] デシリアライザ
+  ) override;
 
 
 private:
@@ -429,12 +455,6 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
-  /// @brief 内容を読み込む．
-  void
-  restore(
-    Deserializer& s ///< [in] デシリアライザ
-  ) override;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -451,6 +471,12 @@ private:
   {
     return ((idx1 * index_num(1) + idx2) * index_num(2)) + idx3;
   }
+
+  /// @brief restore() の下請け関数
+  void
+  _restore(
+    Deserializer& s ///< [in] デシリアライザ
+  ) override;
 
 
 private:
