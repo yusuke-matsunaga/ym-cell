@@ -14,6 +14,9 @@
 #include "ci/CiTiming.h"
 #include "cgmgr/CgSignature.h"
 
+#include "CiPin_sub.h"
+#include "CiTiming_sub.h"
+
 
 BEGIN_NAMESPACE_YM_CLIB
 

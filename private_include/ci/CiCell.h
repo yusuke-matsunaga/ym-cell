@@ -22,6 +22,7 @@ class CiCellLibrary;
 class CiInputPin;
 class CiOutputPin;
 class CiInoutPin;
+class CiInternalPin;
 class CiBundle;
 class CiBus;
 class CiTiming;

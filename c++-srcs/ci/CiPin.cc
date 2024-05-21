@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 #include "ci/CiPin.h"
-
+#include "CiPin_sub.h"
 
 BEGIN_NAMESPACE_YM_CLIB
 

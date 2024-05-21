@@ -8,6 +8,7 @@
 
 #include "ci/CiLut.h"
 #include "ym/Range.h"
+#include "CiLut_sub.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB

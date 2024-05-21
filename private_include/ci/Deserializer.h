@@ -199,15 +199,6 @@ public:
     dst = mS.read_64();
   }
 
-  /// @brief SizeType の読み込み
-  void
-  restore(
-    SizeType& dst
-  )
-  {
-    dst = mS.read_64();
-  }
-
   /// @brief doubleの読み込み
   void
   restore(

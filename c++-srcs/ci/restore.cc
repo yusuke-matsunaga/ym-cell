@@ -26,6 +26,11 @@
 #include "CiFFCell.h"
 #include "CiLatchCell.h"
 #include "CiFsmCell.h"
+#include "CiPin_sub.h"
+#include "CiTiming_sub.h"
+#include "CiLutTemplate_sub.h"
+#include "CiLut_sub.h"
+
 
 BEGIN_NAMESPACE_YM_CLIB
 

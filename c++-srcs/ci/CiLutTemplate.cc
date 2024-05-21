@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "ci/CiLutTemplate.h"
+#include "CiLutTemplate_sub.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB

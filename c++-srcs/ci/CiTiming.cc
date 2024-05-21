@@ -9,7 +9,8 @@
 #include "ci/CiTiming.h"
 #include "ci/CiCellLibrary.h"
 #include "ci/CiLut.h"
-
+#include "CiTiming_sub.h"
+#include "CiLut_sub.h"
 
 BEGIN_NAMESPACE_YM_CLIB
 
