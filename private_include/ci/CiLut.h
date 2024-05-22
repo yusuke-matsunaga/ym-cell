@@ -23,6 +23,19 @@ class Deserializer;
 //////////////////////////////////////////////////////////////////////
 class CiLut
 {
+protected:
+
+  /// @brief restore() 用のコンストラクタ
+  CiLut() = default;
+
+  /// @brief コンストラクタ
+  CiLut(
+    const CiLutTemplate* lut_template ///< [in] テンプレート番号
+  ) : mTemplate{lut_template}
+  {
+  }
+
+
 public:
 
   /// @brief インスタンスを生成するクラスメソッド
@@ -38,16 +51,6 @@ public:
     const vector<double>& index_array3 ///< [in] インデックス値のリスト3
     = vector<double>{}
   );
-
-  /// @brief restore() 用のコンストラクタ
-  CiLut() = default;
-
-  /// @brief コンストラクタ
-  CiLut(
-    const CiLutTemplate* lut_template ///< [in] テンプレート番号
-  ) : mTemplate{lut_template}
-  {
-  }
 
   /// @brief デストラクタ
   virtual

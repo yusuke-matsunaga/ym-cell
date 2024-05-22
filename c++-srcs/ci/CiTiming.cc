@@ -10,7 +10,6 @@
 #include "ci/CiCellLibrary.h"
 #include "ci/CiLut.h"
 #include "CiTiming_sub.h"
-#include "CiLut_sub.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
 
@@ -20,6 +19,92 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 // クラス CiTiming
 //////////////////////////////////////////////////////////////////////
+
+// @brief CMOSジェネリックタイプのインスタンスを生成する．
+unique_ptr<CiTiming>
+CiTiming::new_Generic(
+  ClibTimingType timing_type,
+  const Expr& cond,
+  ClibTime intrinsic_rise,
+  ClibTime intrinsic_fall,
+  ClibTime slope_rise,
+  ClibTime slope_fall,
+  ClibResistance rise_resistance,
+  ClibResistance fall_resistance
+)
+{
+  auto ptr = new CiTimingGeneric{
+    timing_type, cond,
+    intrinsic_rise, intrinsic_fall,
+    slope_rise, slope_fall,
+    rise_resistance, fall_resistance
+  };
+  return unique_ptr<CiTiming>{ptr};
+}
+
+// @brief CMOS折れ線近似タイプのインスタンスを生成する．
+unique_ptr<CiTiming>
+CiTiming::new_Piecewise(
+  ClibTimingType timing_type,
+  const Expr& cond,
+  ClibTime intrinsic_rise,
+  ClibTime intrinsic_fall,
+  ClibTime slope_rise,
+  ClibTime slope_fall,
+  ClibResistance rise_pin_resistance,
+  ClibResistance fall_pin_resistance
+)
+{
+  auto ptr = new CiTimingPiecewise{
+    timing_type, cond,
+    intrinsic_rise, intrinsic_fall,
+    slope_rise, slope_fall,
+    rise_pin_resistance, fall_pin_resistance
+  };
+  return unique_ptr<CiTiming>{ptr};
+}
+
+// @brief CMOS非線形タイプ1のインスタンスを生成する．
+unique_ptr<CiTiming>
+CiTiming::new_Lut1(
+  ClibTimingType timing_type,
+  const Expr& cond,
+  unique_ptr<CiLut>&& cell_rise,
+  unique_ptr<CiLut>&& cell_fall,
+  unique_ptr<CiLut>&& rise_transition,
+  unique_ptr<CiLut>&& fall_transition
+)
+{
+  auto ptr = new CiTimingLut1{
+    timing_type, cond,
+    std::move(cell_rise),
+    std::move(cell_fall),
+    std::move(rise_transition),
+    std::move(fall_transition)
+  };
+  return unique_ptr<CiTiming>{ptr};
+}
+
+// @brief CMOS非線形タイプ2のインスタンスを生成する．
+unique_ptr<CiTiming>
+CiTiming::new_Lut2(
+  ClibTimingType timing_type,
+  const Expr& cond,
+  unique_ptr<CiLut>&& rise_transition,
+  unique_ptr<CiLut>&& fall_transition,
+  unique_ptr<CiLut>&& rise_propagation,
+  unique_ptr<CiLut>&& fall_propagation
+)
+{
+  auto ptr = new CiTimingLut2{
+    timing_type, cond,
+    std::move(rise_transition),
+    std::move(fall_transition),
+    std::move(rise_propagation),
+    std::move(fall_propagation)
+  };
+  return unique_ptr<CiTiming>{ptr};
+}
 
 // @brief 立ち上がり固有遅延の取得
 ClibTime
@@ -221,6 +306,18 @@ CiTimingGP::slope_fall() const
   return mSlopeFall;
 }
 
+// @brief 内容をバイナリダンプする．
+void
+CiTimingGP::dump_GP(
+  Serializer& s
+) const
+{
+  s.out() << intrinsic_rise()
+	  << intrinsic_fall()
+	  << slope_rise()
+	  << slope_fall();
+}
+
 // @brief 内容を読み込む．
 void
 CiTimingGP::restore_GP(
@@ -260,11 +357,8 @@ CiTimingGeneric::dump(
 ) const
 {
   dump_common(s, 0);
-  s.out() << intrinsic_rise()
-	  << intrinsic_fall()
-	  << slope_rise()
-	  << slope_fall()
-	  << rise_resistance()
+  dump_GP(s);
+  s.out() << rise_resistance()
 	  << fall_resistance();
 }
 
@@ -321,10 +415,9 @@ CiTimingPiecewise::dump(
 ) const
 {
   dump_common(s, 1);
-  s.out() << intrinsic_rise()
-	  << intrinsic_fall()
-	  << slope_rise()
-	  << slope_fall();
+  dump_GP(s);
+  s.out() << rise_pin_resistance()
+	  << fall_pin_resistance();
 }
 
 // @brief 内容を読み込む．
@@ -355,6 +448,16 @@ const CiLut*
 CiTimingLut::fall_transition() const
 {
   return mFallTransition.get();
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiTimingLut::dump_LUT(
+  Serializer& s
+) const
+{
+  s.dump(rise_transition());
+  s.dump(fall_transition());
 }
 
 // @brief 内容を読み込む．
@@ -394,11 +497,9 @@ CiTimingLut1::dump(
 ) const
 {
   dump_common(s, 2);
-
+  dump_LUT(s);
   s.dump(cell_rise());
   s.dump(cell_fall());
-  s.dump(rise_transition());
-  s.dump(fall_transition());
 }
 
 // @brief 内容を読み込む．
@@ -438,8 +539,7 @@ CiTimingLut2::dump(
 ) const
 {
   dump_common(s, 3);
-  s.dump(rise_transition());
-  s.dump(fall_transition());
+  dump_LUT(s);
   s.dump(rise_propagation());
   s.dump(fall_propagation());
 }

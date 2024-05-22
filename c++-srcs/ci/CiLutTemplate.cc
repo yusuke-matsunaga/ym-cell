@@ -19,6 +19,54 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiLutTemplate
 //////////////////////////////////////////////////////////////////////
 
+// @brief 1次元のテンプレートを生成するクラスメソッド
+unique_ptr<CiLutTemplate>
+CiLutTemplate::new_1D(
+  ClibVarType var_type,
+  const vector<double>& index_array
+)
+{
+  auto ptr = new CiLutTemplate1D{
+    var_type, index_array
+  };
+  return unique_ptr<CiLutTemplate>{ptr};
+}
+
+// @brief 2次元のテンプレートを生成するクラスメソッド
+unique_ptr<CiLutTemplate>
+CiLutTemplate::new_2D(
+  ClibVarType var1,
+  const vector<double>& index_array1,
+  ClibVarType var2,
+  const vector<double>& index_array2
+)
+{
+  auto ptr = new CiLutTemplate2D{
+    var1, index_array1,
+    var2, index_array2
+  };
+  return unique_ptr<CiLutTemplate>{ptr};
+}
+
+// @brief 3次元のテンプレートを生成するクラスメソッド
+unique_ptr<CiLutTemplate>
+CiLutTemplate::new_3D(
+  ClibVarType var1,
+  const vector<double>& index_array1,
+  ClibVarType var2,
+  const vector<double>& index_array2,
+  ClibVarType var3,
+  const vector<double>& index_array3
+)
+{
+  auto ptr = new CiLutTemplate3D{
+    var1, index_array1,
+    var2, index_array2,
+    var3, index_array3
+  };
+  return unique_ptr<CiLutTemplate>{ptr};
+}
+
 // @brief 内容をシリアライズする．
 void
 CiLutTemplate::serialize(

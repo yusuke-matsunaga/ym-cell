@@ -23,10 +23,43 @@ class Deserializer;
 //////////////////////////////////////////////////////////////////////
 class CiLutTemplate
 {
-public:
+protected:
 
   /// @brief コンストラクタ
   CiLutTemplate() = default;
+
+
+public:
+
+  /// @brief 1次元のテンプレートを生成するクラスメソッド
+  static
+  unique_ptr<CiLutTemplate>
+  new_1D(
+    ClibVarType var_type,
+    const vector<double>& index_array
+  );
+
+  /// @brief 2次元のテンプレートを生成するクラスメソッド
+  static
+  unique_ptr<CiLutTemplate>
+  new_2D(
+    ClibVarType var1,
+    const vector<double>& index_array1,
+    ClibVarType var2,
+    const vector<double>& index_array2
+  );
+
+  /// @brief 3次元のテンプレートを生成するクラスメソッド
+  static
+  unique_ptr<CiLutTemplate>
+  new_3D(
+    ClibVarType var1,
+    const vector<double>& index_array1,
+    ClibVarType var2,
+    const vector<double>& index_array2,
+    ClibVarType var3,
+    const vector<double>& index_array3
+  );
 
   /// @brief デストラクタ
   virtual

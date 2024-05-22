@@ -72,6 +72,13 @@ protected:
   // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump_GP(
+    Serializer& s ///< [in] シリアライザ
+  ) const;
+
+  /// @brief 内容を復元する．
   void
   restore_GP(
     Deserializer& s ///< [in] デシリアライザ
@@ -325,6 +332,13 @@ protected:
   // 継承クラスから用いられる関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump_LUT(
+    Serializer& s ///< [in] シリアライザ
+  ) const;
+
+  /// @brief 内容を復元する．
   void
   restore_LUT(
     Deserializer& s ///< [in] デシリアライザ

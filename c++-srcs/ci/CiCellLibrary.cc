@@ -24,14 +24,6 @@
 #include "cgmgr/CgSignature.h"
 #include "cgmgr/PatMgr.h"
 #include "cgmgr/PatNode.h"
-
-#include "CiFFCell.h"
-#include "CiLatchCell.h"
-#include "CiFsmCell.h"
-#include "CiPin_sub.h"
-#include "CiTiming_sub.h"
-#include "CiLutTemplate_sub.h"
-#include "CiLut_sub.h"
 #include "ym/Range.h"
 
 
@@ -223,8 +215,9 @@ CiCellLibrary::add_lut_template1(
   const vector<double>& index_list1
 )
 {
-  auto tmpl = new CiLutTemplate1D{var_type1, index_list1};
-  mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
+  auto ptr = CiLutTemplate::new_1D(var_type1, index_list1);
+  auto tmpl = ptr.get();
+  mLutTemplateList.push_back(std::move(ptr));
   return tmpl;
 }
 
@@ -237,9 +230,10 @@ CiCellLibrary::add_lut_template2(
   const vector<double>& index_list2
 )
 {
-  auto tmpl = new CiLutTemplate2D{var_type1, index_list1,
-				  var_type2, index_list2};
-  mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
+  auto ptr = CiLutTemplate::new_2D(var_type1, index_list1,
+				   var_type2, index_list2);
+  auto tmpl = ptr.get();
+  mLutTemplateList.push_back(std::move(ptr));
   return tmpl;
 }
 
@@ -254,10 +248,11 @@ CiCellLibrary::add_lut_template3(
   const vector<double>& index_list3
 )
 {
-  auto tmpl = new CiLutTemplate3D{var_type1, index_list1,
-				  var_type2, index_list2,
-				  var_type3, index_list3};
-  mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
+  auto ptr = CiLutTemplate::new_3D(var_type1, index_list1,
+				   var_type2, index_list2,
+				   var_type3, index_list3);
+  auto tmpl = ptr.get();
+  mLutTemplateList.push_back(std::move(ptr));
   return tmpl;
 }
 
@@ -291,8 +286,8 @@ CiCellLibrary::add_logic_cell(
   ClibArea area
 )
 {
-  auto cell = new CiCell{this, name, area};
-  return reg_cell(cell);
+  auto ptr = CiCell::new_Logic(this, name, area);
+  return reg_cell(ptr);
 }
 
 // @brief FFセルを生成する．
@@ -311,24 +306,14 @@ CiCellLibrary::add_ff_cell(
   ClibCPV clear_preset_var2
 )
 {
-  CiCell* cell{nullptr};
-  if ( clock2.is_valid() ) {
-    cell = new CiFF2Cell{this, name, area,
-			 var1, var2,
-			 clock, clock2, next_state,
-			 clear, preset,
-			 clear_preset_var1,
-			 clear_preset_var2};
-  }
-  else {
-    cell = new CiFFCell{this, name, area,
-			var1, var2,
-			clock, next_state,
-			clear, preset,
-			clear_preset_var1,
-			clear_preset_var2};
-  }
-  return reg_cell(cell);
+  auto ptr = CiCell::new_FF(this, name, area,
+			    var1, var2,
+			    clock, clock2,
+			    next_state,
+			    clear, preset,
+			    clear_preset_var1,
+			    clear_preset_var2);
+  return reg_cell(ptr);
 }
 
 // @brief ラッチセルを追加する．
@@ -347,24 +332,14 @@ CiCellLibrary::add_latch_cell(
   ClibCPV clear_preset_var2
 )
 {
-  CiCell* cell{nullptr};
-  if ( enable2.is_valid() ) {
-    cell = new CiLatch2Cell{this, name, area,
-			    var1, var2,
-			    enable, enable2, data_in,
-			    clear, preset,
-			    clear_preset_var1,
-			    clear_preset_var2};
-  }
-  else {
-    cell = new CiLatchCell{this, name, area,
-			   var1, var2,
-			   enable, data_in,
-			   clear, preset,
-			   clear_preset_var1,
-			   clear_preset_var2};
-  }
-  return reg_cell(cell);
+  auto ptr = CiCell::new_Latch(this, name, area,
+			       var1, var2,
+			       enable, enable2,
+			       data_in,
+			       clear, preset,
+			       clear_preset_var1,
+			       clear_preset_var2);
+  return reg_cell(ptr);
 }
 
 // @brief FSMセルを追加する．
@@ -374,17 +349,18 @@ CiCellLibrary::add_fsm_cell(
   ClibArea area
 )
 {
-  auto cell = new CiFsmCell{this, name, area};
-  return reg_cell(cell);
+  auto ptr = CiCell::new_FSM(this, name, area);
+  return reg_cell(ptr);
 }
 
 // @brief セルを登録する．
 CiCell*
 CiCellLibrary::reg_cell(
-  CiCell* cell
+  unique_ptr<CiCell>& ptr
 )
 {
-  mCellList.push_back(unique_ptr<CiCell>{cell});
+  auto cell = ptr.get();
+  mCellList.push_back(std::move(ptr));
   mCellDict.emplace(cell->name(), cell);
   return cell;
 }
@@ -497,98 +473,6 @@ CiCellLibrary::add_bundle(
   reg_bundle(cell, bundle);
   return bundle;
 }
-
-#if 0
-// @brief タイミング情報を作る(ジェネリック遅延モデル)．
-CiTiming*
-CiCellLibrary::add_timing_generic(
-  ClibTimingType type,
-  const Expr& cond,
-  ClibTime intrinsic_rise,
-  ClibTime intrinsic_fall,
-  ClibTime slope_rise,
-  ClibTime slope_fall,
-  ClibResistance rise_resistance,
-  ClibResistance fall_resistance
-)
-{
-  auto timing = new CiTimingGeneric{this, type, cond,
-				    intrinsic_rise,
-				    intrinsic_fall,
-				    slope_rise,
-				    slope_fall,
-				    rise_resistance,
-				    fall_resistance};
-  mTimingList.push_back(unique_ptr<CiTiming>{timing});
-  return timing;
-}
-
-// @brief タイミング情報を作る(折れ線近似)．
-CiTiming*
-CiCellLibrary::add_timing_piecewise(
-  ClibTimingType timing_type,
-  const Expr& cond,
-  ClibTime intrinsic_rise,
-  ClibTime intrinsic_fall,
-  ClibTime slope_rise,
-  ClibTime slope_fall,
-  ClibResistance rise_pin_resistance,
-  ClibResistance fall_pin_resistance
-)
-{
-  auto timing = new CiTimingPiecewise{this, timing_type, cond,
-				      intrinsic_rise,
-				      intrinsic_fall,
-				      slope_rise,
-				      slope_fall,
-				      rise_pin_resistance,
-				      fall_pin_resistance};
-  mTimingList.push_back(unique_ptr<CiTiming>{timing});
-  return timing;
-}
-
-// @brief タイミング情報を作る(非線形タイプ1)．
-CiTiming*
-CiCellLibrary::add_timing_lut1(
-  ClibTimingType timing_type,
-  const Expr& cond,
-  const CiLut* cell_rise,
-  const CiLut* cell_fall,
-  const CiLut* rise_transition,
-  const CiLut* fall_transition
-)
-{
-  auto timing = new CiTimingLut1{this, timing_type, cond,
-				 cell_rise,
-				 cell_fall,
-				 rise_transition,
-				 fall_transition};
-
-  mTimingList.push_back(unique_ptr<CiTiming>{timing});
-  return timing;
-}
-
-// @brief タイミング情報を作る(非線形タイプ2)．
-CiTiming*
-CiCellLibrary::add_timing_lut2(
-  ClibTimingType timing_type,
-  const Expr& cond,
-  const CiLut* rise_transition,
-  const CiLut* fall_transition,
-  const CiLut* rise_propagation,
-  const CiLut* fall_propagation
-)
-{
-  CiTiming* timing = new CiTimingLut2{this, timing_type, cond,
-				      rise_transition,
-				      fall_transition,
-				      rise_propagation,
-				      fall_propagation};
-
-  mTimingList.push_back(unique_ptr<CiTiming>{timing});
-  return timing;
-}
-#endif
 
 #if 0
 // @brief LUT を作る．

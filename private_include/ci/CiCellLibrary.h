@@ -739,102 +739,6 @@ public:
     const vector<const CiPin*>& pin_list ///< [in] ピンリスト
   );
 
-#if 0
-  /// @brief タイミング情報を作る(ジェネリック遅延モデル)．
-  /// @return 生成されたタイミング番号を返す．
-  CiTiming*
-  add_timing_generic(
-    ClibTimingType type,            ///< [in] タイミングの種類
-    const Expr& cond,               ///< [in] 条件式
-    ClibTime intrinsic_rise,        ///< [in] 立ち上がり固有遅延
-    ClibTime intrinsic_fall,        ///< [in] 立ち下がり固有遅延
-    ClibTime slope_rise,            ///< [in] 立ち上がり負荷依存遅延
-    ClibTime slope_fall,            ///< [in] 立ち下がり負荷依存遅延
-    ClibResistance rise_resistance, ///< [in] 立ち上がり抵抗
-    ClibResistance fall_resistance  ///< [in] 立ち下がり抵抗
-  );
-
-  /// @brief タイミング情報を作る(折れ線近似)．
-  /// @return 生成されたタイミング番号を返す．
-  CiTiming*
-  add_timing_piecewise(
-    ClibTimingType timing_type,
-    const Expr& cond,
-    ClibTime intrinsic_rise,
-    ClibTime intrinsic_fall,
-    ClibTime slope_rise,
-    ClibTime slope_fall,
-    ClibResistance rise_pin_resistance,
-    ClibResistance fall_pin_resistance
-  );
-
-  /// @brief タイミング情報を作る(非線形タイプ1)．
-  /// @return 生成されたタイミング番号を返す．
-  CiTiming*
-  add_timing_lut1(
-    ClibTimingType timing_type,
-    const Expr& cond,
-    const CiLut* cell_rise,
-    const CiLut* cell_fall,
-    const CiLut* rise_transition,
-    const CiLut* fall_transition
-  );
-
-  /// @brief タイミング情報を作る(非線形タイプ2)．
-  /// @return 生成されたタイミング番号を返す．
-  CiTiming*
-  add_timing_lut2(
-    ClibTimingType timing_type,
-    const Expr& cond,
-    const CiLut* rise_transition,
-    const CiLut* fall_transition,
-    const CiLut* rise_propagation,
-    const CiLut* fall_propagation
-  );
-#endif
-
-#if 0
-  /// @brief 1次元の LUT を作る．
-  CiLut*
-  new_lut1(
-    const CiLutTemplate* lut_template, ///< [in] テンプレート
-    const vector<double>& value_array, ///< [in] 値の配列
-    const vector<double>& index_array  ///< [in] インデックス値のリスト
-  );
-
-  /// @brief 2次元の LUT を作る．
-  CiLut*
-  new_lut2(
-    const CiLutTemplate* lut_template,  ///< [in] テンプレート
-    const vector<double>& value_array,  ///< [in] 値の配列
-    const vector<double>& index_array1, ///< [in] インデックス値のリスト1
-    const vector<double>& index_array2  ///< [in] インデックス値のリスト2
-  );
-
-  /// @brief 3次元の LUT を作る．
-  CiLut*
-  new_lut3(
-    const CiLutTemplate* lut_template,  ///< [in] テンプレート
-    const vector<double>& value_array,  ///< [in] 値の配列
-    const vector<double>& index_array1, ///< [in] インデックス値のリスト1
-    const vector<double>& index_array2, ///< [in] インデックス値のリスト2
-    const vector<double>& index_array3  ///< [in] インデックス値のリスト3
-  );
-
-  /// @brief LUT を作る．
-  CiLut*
-  add_lut(
-    const CiLutTemplate* lut_template,  ///< [in] テンプレート
-    const vector<double>& value_array, ///< [in] 値の配列
-    const vector<double>& index_array1 ///< [in] インデックス値のリスト1
-    = vector<double>{},
-    const vector<double>& index_array2 ///< [in] インデックス値のリスト2
-    = vector<double>{},
-    const vector<double>& index_array3 ///< [in] インデックス値のリスト3
-    = vector<double>{}
-  );
-#endif
-
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -1156,7 +1060,7 @@ private:
   /// @return セルを返す．
   CiCell*
   reg_cell(
-    CiCell* cell ///< [in] セル
+    unique_ptr<CiCell>& ptr ///< [in] セルへのポインタ
   );
 
   /// @brief FF/ラッチの属性をエンコードする．

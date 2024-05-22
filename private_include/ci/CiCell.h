@@ -38,7 +38,7 @@ class Deserializer;
 class CiCell :
   public CiLibObj
 {
-public:
+protected:
 
   /// @brief restore() 用のコンストラクタ
   CiCell(
@@ -57,6 +57,69 @@ public:
       mArea{area}
   {
   }
+
+
+public:
+
+  /// @brief 論理セルを生成するクラスメソッド
+  static
+  unique_ptr<CiCell>
+  new_Logic(
+    const CiCellLibrary* lib, ///< [in] 親のライブラリ
+    const ShString& name,     ///< [in] 名前
+    ClibArea area             ///< [in] 面積
+  );
+
+  /// @brief FFセルを生成するクラスメソッド
+  ///
+  /// clocked_on_also が空の場合には single-stage 型になる．
+  static
+  unique_ptr<CiCell>
+  new_FF(
+    const CiCellLibrary* lib,    ///< [in] 親のライブラリ
+    const ShString& name,        ///< [in] 名前
+    ClibArea area,               ///< [in] 面積
+    const ShString& var1,        ///< [in] 内部変数1の名前
+    const ShString& var2,        ///< [in] 内部変数2の名前
+    const Expr& clocked_on,      ///< [in] "clocked_on" 関数の式
+    const Expr& clocked_on_also, ///< [in] "clocked_on_also" 関数の式
+    const Expr& next_state,      ///< [in] "next_state" 関数の式
+    const Expr& clear,           ///< [in] "clear" 関数の式
+    const Expr& preset,          ///< [in] "preset" 関数の式
+    ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時に
+                                 ///<      アクティブになった時の値1
+    ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時に
+                                 ///<      アクティブになった時の値2
+  );
+
+  /// @brief single-stage 型のラッチセルを生成するクラスメソッド
+  static
+  unique_ptr<CiCell>
+  new_Latch(
+    const CiCellLibrary* lib,    ///< [in] 親のライブラリ
+    const ShString& name,        ///< [in] 名前
+    ClibArea area,               ///< [in] 面積
+    const ShString& var1,        ///< [in] 内部変数1の名前
+    const ShString& var2,        ///< [in] 内部変数2の名前
+    const Expr& enable,          ///< [in] "enable" 関数の式
+    const Expr& enable_also,	 ///< [in] "enable_also" 関数の式
+    const Expr& data_in,         ///< [in] "data_in" 関数の式
+    const Expr& clear,           ///< [in] "clear" 関数の式
+    const Expr& preset,          ///< [in] "preset" 関数の式
+    ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時に
+                                 ///<      アクティブになった時の値1
+    ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時に
+                                 ///<      アクティブになった時の値2
+  );
+
+  /// @brief FSM型の順序セルを生成するクラスメソッド
+  static
+  unique_ptr<CiCell>
+  new_FSM(
+    const CiCellLibrary* lib, ///< [in] 親のライブラリ
+    const ShString& name,     ///< [in] 名前
+    ClibArea area             ///< [in] 面積
+  );
 
   /// @brief デストラクタ
   virtual

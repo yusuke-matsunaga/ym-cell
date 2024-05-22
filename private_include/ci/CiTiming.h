@@ -27,7 +27,7 @@ class Deserializer;
 //////////////////////////////////////////////////////////////////////
 class CiTiming
 {
-public:
+protected:
 
   /// @brief restore() 用のコンストラクタ
   CiTiming() = default;
@@ -40,6 +40,61 @@ public:
       mCond{cond}
   {
   };
+
+
+public:
+
+  /// @brief CMOSジェネリックタイプのインスタンスを生成する．
+  static
+  unique_ptr<CiTiming>
+  new_Generic(
+    ClibTimingType timing_type,     ///< [in] タイミングの型
+    const Expr& cond,               ///< [in] タイミング条件を表す式
+    ClibTime intrinsic_rise,        ///< [in] 立ち上がり固有遅延
+    ClibTime intrinsic_fall,        ///< [in] 立ち下がり固有遅延
+    ClibTime slope_rise,            ///< [in] 立ち上がりスロープ遅延
+    ClibTime slope_fall,            ///< [in] 立ち下がりスロープ遅延
+    ClibResistance rise_resistance, ///< [in] 立ち上がり遷移遅延パラメータ
+    ClibResistance fall_resistance  ///< [in] 立ち下がり遷移遅延パラメータ
+  );
+
+  /// @brief CMOS折れ線近似タイプのインスタンスを生成する．
+  static
+  unique_ptr<CiTiming>
+  new_Piecewise(
+    ClibTimingType timing_type,         ///< [in] タイミングの型
+    const Expr& cond,                   ///< [in] タイミング条件を表す式
+    ClibTime intrinsic_rise,            ///< [in] 立ち上がり固有遅延
+    ClibTime intrinsic_fall,            ///< [in] 立ち下がり固有遅延
+    ClibTime slope_rise,                ///< [in] 立ち上がりスロープ遅延
+    ClibTime slope_fall,                ///< [in] 立ち下がりスロープ遅延
+    ClibResistance rise_pin_resistance, ///< [in] 立ち上がりピン抵抗
+    ClibResistance fall_pin_resistance  ///< [in] 立ち下がりピン抵抗
+  );
+
+  /// @brief CMOS非線形タイプ1のインスタンスを生成する．
+  static
+  unique_ptr<CiTiming>
+  new_Lut1(
+    ClibTimingType timing_type,          ///< [in] タイミングの型
+    const Expr& cond,                    ///< [in] タイミング条件を表す式
+    unique_ptr<CiLut>&& cell_rise,       ///< [in] 立ち上がりセル遅延テーブル
+    unique_ptr<CiLut>&& cell_fall,       ///< [in] 立ち下がりセル遅延テーブル
+    unique_ptr<CiLut>&& rise_transition, ///< [in] 立ち上がり遷移遅延テーブル
+    unique_ptr<CiLut>&& fall_transition  ///< [in] 立ち下がり遷移遅延テーブル
+  );
+
+  /// @brief CMOS非線形タイプ2のインスタンスを生成する．
+  static
+  unique_ptr<CiTiming>
+  new_Lut2(
+    ClibTimingType timing_type,           ///< [in] タイミングの型
+    const Expr& cond,                     ///< [in] タイミング条件を表す式
+    unique_ptr<CiLut>&& rise_transition,  ///< [in] 立ち上がり遷移遅延テーブル
+    unique_ptr<CiLut>&& fall_transition,  ///< [in] 立ち下がり遷移遅延テーブル
+    unique_ptr<CiLut>&& rise_propagation, ///< [in] 立ち上がり伝搬遅延テーブル
+    unique_ptr<CiLut>&& fall_propagation  ///< [in] 立ち下がり伝搬遅延テーブル
+  );
 
   /// @brief デストラクタ
   virtual

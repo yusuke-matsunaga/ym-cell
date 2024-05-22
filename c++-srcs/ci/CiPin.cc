@@ -3,10 +3,9 @@
 /// @brief CiPin の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ci/CiPin.h"
 #include "CiPin_sub.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
@@ -17,6 +16,98 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 // クラス CiPin
 //////////////////////////////////////////////////////////////////////
+
+// @brief 入力ピンを生成するクラスメソッド
+unique_ptr<CiPin>
+CiPin::new_Input(
+  SizeType pin_id,
+  SizeType input_id,
+  const ShString& name,
+  ClibCapacitance capacitance,
+  ClibCapacitance rise_capacitance,
+  ClibCapacitance fall_capacitance
+)
+{
+  auto ptr = new CiInputPin{
+    pin_id, input_id, name,
+    capacitance,
+    rise_capacitance,
+    fall_capacitance
+  };
+  return unique_ptr<CiPin>{ptr};
+}
+
+// @brief 出力ピンを生成するクラスメソッド
+unique_ptr<CiPin>
+CiPin::new_Output(
+  SizeType pin_id,
+  SizeType output_id,
+  const ShString& name,
+  ClibCapacitance max_fanout,
+  ClibCapacitance min_fanout,
+  ClibCapacitance max_capacitance,
+  ClibCapacitance min_capacitance,
+  ClibTime max_transition,
+  ClibTime min_transition,
+  const Expr& function,
+  const Expr& tristate
+)
+{
+  auto ptr = new CiOutputPin{
+    pin_id, output_id, name,
+    max_fanout, min_fanout,
+    max_capacitance, min_capacitance,
+    max_transition, min_transition,
+    function, tristate
+  };
+  return unique_ptr<CiPin>{ptr};
+}
+
+// @brief 入出力ピンを生成するクラスメソッド
+unique_ptr<CiPin>
+CiPin::new_Inout(
+  SizeType pin_id,
+  SizeType input_id,
+  SizeType output_id,
+  const ShString& name,
+  ClibCapacitance capacitance,
+  ClibCapacitance rise_capacitance,
+  ClibCapacitance fall_capacitance,
+  ClibCapacitance max_fanout,
+  ClibCapacitance min_fanout,
+  ClibCapacitance max_capacitance,
+  ClibCapacitance min_capacitance,
+  ClibTime max_transition,
+  ClibTime min_transition,
+  const Expr& function,
+  const Expr& tristate
+)
+{
+  auto ptr = new CiInoutPin{
+    pin_id, input_id, output_id, name,
+    capacitance,
+    rise_capacitance,
+    fall_capacitance,
+    max_fanout, min_fanout,
+    max_capacitance, min_capacitance,
+    max_transition, min_transition,
+    function, tristate
+  };
+  return unique_ptr<CiPin>{ptr};
+}
+
+// @brief 内部ピンを生成するクラスメソッド
+unique_ptr<CiPin>
+CiPin::new_Internal(
+  SizeType internal_id,
+  const ShString& name
+)
+{
+  auto ptr = new CiInternalPin{
+    internal_id, name
+  };
+  return unique_ptr<CiPin>{ptr};
+}
 
 // @brief 入力ピンの時に true を返す．
 bool

@@ -13,8 +13,6 @@
 #include "ci/CiBundle.h"
 #include "ci/CiTiming.h"
 #include "cgmgr/CgSignature.h"
-#include "CiPin_sub.h"
-#include "CiTiming_sub.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
 #include "CiFFCell.h"
@@ -28,6 +26,116 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 // クラス CiCell
 //////////////////////////////////////////////////////////////////////
+
+// @brief 論理セルを生成するクラスメソッド
+unique_ptr<CiCell>
+CiCell::new_Logic(
+  const CiCellLibrary* lib,
+  const ShString& name,
+  ClibArea area
+)
+{
+  auto ptr = new CiCell{lib, name, area};
+  return unique_ptr<CiCell>{ptr};
+}
+
+// @brief master/slave型のFFセルを生成するクラスメソッド
+unique_ptr<CiCell>
+CiCell::new_FF(
+  const CiCellLibrary* lib,
+  const ShString& name,
+  ClibArea area,
+  const ShString& var1,
+  const ShString& var2,
+  const Expr& clocked_on,
+  const Expr& clocked_on_also,
+  const Expr& next_state,
+  const Expr& clear,
+  const Expr& preset,
+  ClibCPV clear_preset_var1,
+  ClibCPV clear_preset_var2
+)
+{
+  CiCell* ptr = nullptr;
+  if ( clocked_on_also.is_valid() ) {
+    ptr = new CiFF2Cell{
+      lib, name, area,
+      var1, var2,
+      clocked_on, clocked_on_also,
+      next_state,
+      clear, preset,
+      clear_preset_var1,
+      clear_preset_var2
+    };
+  }
+  else {
+    ptr = new CiFFCell{
+      lib, name, area,
+      var1, var2,
+      clocked_on,
+      next_state,
+      clear, preset,
+      clear_preset_var1,
+      clear_preset_var2
+    };
+  }
+  return unique_ptr<CiCell>{ptr};
+}
+
+// @brief single-stage 型のラッチセルを生成するクラスメソッド
+unique_ptr<CiCell>
+CiCell::new_Latch(
+  const CiCellLibrary* lib,
+  const ShString& name,
+  ClibArea area,
+  const ShString& var1,
+  const ShString& var2,
+  const Expr& enable,
+  const Expr& enable_also,
+  const Expr& data_in,
+  const Expr& clear,
+  const Expr& preset,
+  ClibCPV clear_preset_var1,
+  ClibCPV clear_preset_var2
+)
+{
+  CiCell* ptr = nullptr;
+  if ( enable_also.is_valid() ) {
+    ptr = new CiLatch2Cell{
+      lib, name, area,
+      var1, var2,
+      enable, enable_also,
+      data_in,
+      clear, preset,
+      clear_preset_var1,
+      clear_preset_var2
+    };
+  }
+  else {
+    ptr = new CiLatchCell{
+      lib, name, area,
+      var1, var2,
+      enable,
+      data_in,
+      clear, preset,
+      clear_preset_var1,
+      clear_preset_var2
+    };
+  }
+  return unique_ptr<CiCell>{ptr};
+}
+
+// @brief FSM型の順序セルを生成するクラスメソッド
+unique_ptr<CiCell>
+CiCell::new_FSM(
+  const CiCellLibrary* lib,
+  const ShString& name,
+  ClibArea area
+)
+{
+  auto ptr = new CiFsmCell{lib, name, area};
+  return unique_ptr<CiCell>{ptr};
+}
 
 // @brief セルの種類を返す．
 ClibCellType
@@ -186,11 +294,12 @@ CiCell::add_input(
 {
   SizeType pid = mPinList.size();
   SizeType iid = mInputList.size();
-  auto pin = new CiInputPin{pid, iid, name,
-			    capacitance,
-                            rise_capacitance,
-			    fall_capacitance};
-  mPinList.push_back(unique_ptr<CiPin>{pin});
+  auto ptr = CiPin::new_Input(pid, iid, name,
+			      capacitance,
+			      rise_capacitance,
+			      fall_capacitance);
+  auto pin = ptr.get();
+  mPinList.push_back(std::move(ptr));
   mInputList.push_back(pin);
   ++ mInputNum;
   return pin;
@@ -212,12 +321,13 @@ CiCell::add_output(
 {
   SizeType pid = mPinList.size();
   SizeType oid = mOutputList.size();
-  auto pin = new CiOutputPin{pid, oid, name,
-			     max_fanout, min_fanout,
-			     max_capacitance, min_capacitance,
-			     max_transition, min_transition,
-			     function, tristate};
-  mPinList.push_back(unique_ptr<CiPin>{pin});
+  auto ptr = CiPin::new_Output(pid, oid, name,
+			       max_fanout, min_fanout,
+			       max_capacitance, min_capacitance,
+			       max_transition, min_transition,
+			       function, tristate);
+  auto pin = ptr.get();
+  mPinList.push_back(std::move(ptr));
   mOutputList.push_back(pin);
   ++ mOutputNum;
   return pin;
@@ -243,15 +353,16 @@ CiCell::add_inout(
   SizeType pid = mPinList.size();
   SizeType iid = mInputList.size();
   SizeType oid = mOutputList.size();
-  auto pin = new CiInoutPin{pid, iid, oid, name,
-                            capacitance,
-			    rise_capacitance,
-			    fall_capacitance,
-			    max_fanout, min_fanout,
-			    max_capacitance, min_capacitance,
-			    max_transition, min_transition,
-			    function, tristate};
-  mPinList.push_back(unique_ptr<CiPin>{pin});
+  auto ptr = CiPin::new_Inout(pid, iid, oid, name,
+			      capacitance,
+			      rise_capacitance,
+			      fall_capacitance,
+			      max_fanout, min_fanout,
+			      max_capacitance, min_capacitance,
+			      max_transition, min_transition,
+			      function, tristate);
+  auto pin = ptr.get();
+  mPinList.push_back(std::move(ptr));
   mInputList.push_back(pin);
   mOutputList.push_back(pin);
   ++ mInoutNum;
@@ -266,8 +377,9 @@ CiCell::add_internal(
 {
   // mPinList には含まれない．
   auto iid = mInternalList.size();
-  auto pin = new CiInternalPin{iid, name};
-  mInternalList.push_back(unique_ptr<CiPin>{pin});
+  auto ptr = CiPin::new_Internal(iid, name);
+  auto pin = ptr.get();
+  mInternalList.push_back(std::move(ptr));
   return pin;
 }
 
@@ -309,14 +421,15 @@ CiCell::add_timing_generic(
   ClibResistance fall_resistance
 )
 {
-  auto timing = new CiTimingGeneric{type, cond,
-				    intrinsic_rise,
-				    intrinsic_fall,
-				    slope_rise,
-				    slope_fall,
-				    rise_resistance,
-				    fall_resistance};
-  mTimingList.push_back(unique_ptr<CiTiming>{timing});
+  auto ptr = CiTiming::new_Generic(type, cond,
+				   intrinsic_rise,
+				   intrinsic_fall,
+				   slope_rise,
+				   slope_fall,
+				   rise_resistance,
+				   fall_resistance);
+  auto timing = ptr.get();
+  mTimingList.push_back(std::move(ptr));
   return timing;
 }
 
@@ -333,14 +446,15 @@ CiCell::add_timing_piecewise(
   ClibResistance fall_pin_resistance
 )
 {
-  auto timing = new CiTimingPiecewise{timing_type, cond,
-				      intrinsic_rise,
-				      intrinsic_fall,
-				      slope_rise,
-				      slope_fall,
-				      rise_pin_resistance,
-				      fall_pin_resistance};
-  mTimingList.push_back(unique_ptr<CiTiming>{timing});
+  auto ptr = CiTiming::new_Piecewise(timing_type, cond,
+				     intrinsic_rise,
+				     intrinsic_fall,
+				     slope_rise,
+				     slope_fall,
+				     rise_pin_resistance,
+				     fall_pin_resistance);
+  auto timing = ptr.get();
+  mTimingList.push_back(std::move(ptr));
   return timing;
 }
 
@@ -355,13 +469,13 @@ CiCell::add_timing_lut1(
   unique_ptr<CiLut>&& fall_transition
 )
 {
-  auto timing = new CiTimingLut1{timing_type, cond,
-				 std::move(cell_rise),
-				 std::move(cell_fall),
-				 std::move(rise_transition),
-				 std::move(fall_transition)};
-
-  mTimingList.push_back(unique_ptr<CiTiming>{timing});
+  auto ptr = CiTiming::new_Lut1(timing_type, cond,
+				std::move(cell_rise),
+				std::move(cell_fall),
+				std::move(rise_transition),
+				std::move(fall_transition));
+  auto timing = ptr.get();
+  mTimingList.push_back(std::move(ptr));
   return timing;
 }
 
@@ -376,13 +490,13 @@ CiCell::add_timing_lut2(
   unique_ptr<CiLut>&& fall_propagation
 )
 {
-  CiTiming* timing = new CiTimingLut2{timing_type, cond,
-				      std::move(rise_transition),
-				      std::move(fall_transition),
-				      std::move(rise_propagation),
-				      std::move(fall_propagation)};
-
-  mTimingList.push_back(unique_ptr<CiTiming>{timing});
+  auto ptr = CiTiming::new_Lut2(timing_type, cond,
+				std::move(rise_transition),
+				std::move(fall_transition),
+				std::move(rise_propagation),
+				std::move(fall_propagation));
+  auto timing = ptr.get();
+  mTimingList.push_back(std::move(ptr));
   return timing;
 }
 

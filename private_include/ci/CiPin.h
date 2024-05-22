@@ -26,7 +26,7 @@ class Deserializer;
 //////////////////////////////////////////////////////////////////////
 class CiPin
 {
-public:
+protected:
 
   /// @brief restore() 用のコンストラクタ
   CiPin() = default;
@@ -39,6 +39,67 @@ public:
       mName{name}
   {
   }
+
+
+public:
+
+  /// @brief 入力ピンを生成するクラスメソッド
+  static
+  unique_ptr<CiPin>
+  new_Input(
+    SizeType pin_id,                  ///< [in] ピン番号
+    SizeType input_id,                ///< [in] 入力番号
+    const ShString& name,             ///< [in] ピン名
+    ClibCapacitance capacitance,      ///< [in] 負荷容量
+    ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
+    ClibCapacitance fall_capacitance  ///< [in] 立ち下がり時の負荷容量
+  );
+
+  /// @brief 出力ピンを生成するクラスメソッド
+  static
+  unique_ptr<CiPin>
+  new_Output(
+    SizeType pin_id,                 ///< [in] ピン番号
+    SizeType output_id,              ///< [in] 出力番号
+    const ShString& name,            ///< [in] ピン名
+    ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
+    ClibCapacitance min_fanout,      ///< [in] 最大ファンアウト容量
+    ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
+    ClibCapacitance min_capacitance, ///< [in] 最大負荷容量
+    ClibTime max_transition,         ///< [in] 最大遷移時間
+    ClibTime min_transition,         ///< [in] 最大遷移時間
+    const Expr& function,            ///< [in] 出力の論理式
+    const Expr& tristate             ///< [in] tristate 条件
+  );
+
+  /// @brief 入出力ピンを生成するクラスメソッド
+  static
+  unique_ptr<CiPin>
+  new_Inout(
+    SizeType pin_id,                  ///< [in] ピン番号
+    SizeType input_id,                ///< [in] 入力番号
+    SizeType output_id,               ///< [in] 出力番号
+    const ShString& name,             ///< [in] ピン名
+    ClibCapacitance capacitance,      ///< [in] 負荷容量
+    ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
+    ClibCapacitance fall_capacitance, ///< [in] 立ち上がり時の負荷容量
+    ClibCapacitance max_fanout,	      ///< [in] 最大ファンアウト容量
+    ClibCapacitance min_fanout,	      ///< [in] 最大ファンアウト容量
+    ClibCapacitance max_capacitance,  ///< [in] 最大負荷容量
+    ClibCapacitance min_capacitance,  ///< [in] 最大負荷容量
+    ClibTime max_transition,	      ///< [in] 最大遷移時間
+    ClibTime min_transition,          ///< [in] 最大遷移時間
+    const Expr& function,             ///< [in] 出力の論理式
+    const Expr& tristate              ///< [in] tristate 条件
+  );
+
+  /// @brief 内部ピンを生成するクラスメソッド
+  static
+  unique_ptr<CiPin>
+  new_Internal(
+    SizeType internal_id,     ///< [in] 内部ピン番号
+    const ShString& name      ///< [in] ピン名
+  );
 
   /// @brief デストラクタ
   virtual
