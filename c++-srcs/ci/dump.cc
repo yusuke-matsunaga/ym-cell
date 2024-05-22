@@ -92,34 +92,19 @@ CiCellLibrary::dump(
   s.out() << leakage_power_unit();
 
   // バスタイプのリスト
-  s.dump(mBusTypeList.size());
-  for ( auto& bustype: mBusTypeList ) {
-    s.dump(bustype.get());
-  }
+  s.dump(mBusTypeList);
 
   // 遅延テーブルのテンプレートのリスト
-  s.dump(mLutTemplateList.size());
-  for ( auto& lut_templ: mLutTemplateList ) {
-    s.dump(lut_templ.get());
-  }
+  s.dump(mLutTemplateList);
 
   // セルのリスト
-  s.dump(mCellList.size());
-  for ( auto& cell: mCellList ) {
-    s.dump(cell.get());
-  }
+  s.dump(mCellList);
 
   // セルグループ情報のリスト
-  s.dump(mGroupList.size());
-  for ( auto& group: mGroupList ) {
-    s.dump(group.get());
-  }
+  s.dump(mCellGroupList);
 
   // セルクラス情報のリスト
-  s.dump(mClassList.size());
-  for ( auto& cell_class: mClassList ) {
-    s.dump(cell_class.get());
-  }
+  s.dump(mCellClassList);
 
   // 組み込み型の情報のダンプ
   for ( auto g: mLogicGroup ) {
@@ -147,11 +132,11 @@ CiCellLibrary::serialize(
   for ( auto& cell: mCellList ) {
     cell->serialize(s);
   }
-  for ( auto& cclass: mClassList ) {
-    cclass->serialize(s);
-  }
-  for ( auto& cgroup: mGroupList ) {
+  for ( auto& cgroup: mCellGroupList ) {
     cgroup->serialize(s);
+  }
+  for ( auto& cclass: mCellClassList ) {
+    cclass->serialize(s);
   }
 }
 

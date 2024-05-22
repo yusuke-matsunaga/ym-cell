@@ -23,150 +23,16 @@
 #include "ym/ClibIOMap.h"
 #include "ym/Range.h"
 
-#include "CiFFCell.h"
-#include "CiLatchCell.h"
-#include "CiFsmCell.h"
-#include "CiPin_sub.h"
-#include "CiTiming_sub.h"
-#include "CiLutTemplate_sub.h"
-#include "CiLut_sub.h"
+//#include "CiFFCell.h"
+//#include "CiLatchCell.h"
+//#include "CiFsmCell.h"
+//#include "CiPin_sub.h"
+//#include "CiTiming_sub.h"
+//#include "CiLutTemplate_sub.h"
+//#include "CiLut_sub.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
-
-BEGIN_NONAMESPACE
-
-#if 0
-// 番号のベクタの読み込み
-inline
-void
-restore_vector(
-  BinDec& s,
-  vector<SizeType>& vec
-)
-{
-  SizeType n = s.read_64();
-  vec.resize(n);
-  for ( SizeType i: Range(n) ) {
-    vec[i] = s.read_64();
-  }
-}
-
-// 数値のベクタの読み込み
-inline
-void
-restore_dvector(
-  BinDec& s,
-  vector<double>& vec
-)
-{
-  SizeType n = s.read_64();
-  vec.resize(n);
-  for ( SizeType i: Range(n) ) {
-    s >> vec[i];
-  }
-}
-
-// セルクラスのリストの読み込み
-void
-restore_class_list(
-  BinDec& s,
-  vector<const CiCellClass*>& dst_list,
-  const vector<const CiCellClass*>& class_list
-)
-{
-  SizeType n = s.read_64();
-  dst_list.resize(n);
-  for ( SizeType i: Range(n) ) {
-    SizeType id;
-    s >> id;
-    dst_list[i] = class_list[id];
-  }
-}
-
-// ピンのリストの読み込み
-void
-restore_pin_list(
-  BinDec& s,
-  vector<const CiPin*>& dst_list,
-  const vector<unique_ptr<CiPin>>& src_list
-)
-{
-  SizeType n = s.read_64();
-  dst_list.resize(n);
-  for ( SizeType i: Range(n) ) {
-    SizeType id;
-    s >> id;
-    dst_list[i] = src_list[id].get();
-  }
-}
-
-// バスのリストの読み込み
-void
-restore_bus_list(
-  BinDec& s,
-  vector<const CiBus*>& dst_list,
-  const vector<unique_ptr<CiBus>>& src_list
-)
-{
-  SizeType n = s.read_64();
-  dst_list.resize(n);
-  for ( SizeType i: Range(n) ) {
-    SizeType id;
-    s >> id;
-    dst_list[i] = src_list[id].get();
-  }
-}
-
-// バンドルのリストの読み込み
-void
-restore_bundle_list(
-  BinDec& s,
-  vector<const CiBundle*>& dst_list,
-  const vector<unique_ptr<CiBundle>>& src_list
-)
-{
-  SizeType n = s.read_64();
-  dst_list.resize(n);
-  for ( SizeType i: Range(n) ) {
-    SizeType id;
-    s >> id;
-    dst_list[i] = src_list[id].get();
-  }
-}
-
-// タイミングのリストの読み込み
-void
-restore_timing_list(
-  BinDec& s,
-  vector<const CiTiming*>& dst_list,
-  const vector<unique_ptr<CiTiming>>& src_list
-)
-{
-  SizeType n = s.read_64();
-  dst_list.resize(n);
-  for ( SizeType i: Range(n) ) {
-    SizeType id;
-    s >> id;
-    dst_list[i] = src_list[id].get();
-  }
-}
-
-// LUTの読み込み
-const CiLut*
-restore_lut(
-  BinDec& s,
-  const vector<unique_ptr<CiLut>>& src_list
-)
-{
-  SizeType id;
-  s >> id;
-  return src_list[id].get();
-}
-#endif
-
-END_NONAMESPACE
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellLibrary
@@ -224,15 +90,8 @@ CiCellLibrary::restore(
   restore_str_attr(s, "leakage_power_unit");
 
   // バスタイプのリスト
-  {
-    SizeType n;
-    s.restore(n);
-    mBusTypeList.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      s.restore(mBusTypeList[i]);
-    }
-  }
-#if 0
+  s.restore(mBusTypeList);
+
   // LUTテンプレートのリスト
   s.restore(mLutTemplateList);
 
@@ -244,28 +103,13 @@ CiCellLibrary::restore(
 
   // セルクラスのリスト
   s.restore(mCellClassList);
-#endif
 
   // 組み込み型の読み込み
   for ( auto id: Range(4) ) {
     s.restore(mLogicGroup[id]);
   }
-  {
-    SizeType n;
-    s.restore(n);
-    mSimpleFFClass.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      s.restore(mSimpleFFClass[i]);
-    }
-  }
-  {
-    SizeType n;
-    s.restore(n);
-    mSimpleLatchClass.resize(n);
-    for ( SizeType i = 0; i < n; ++ i ) {
-      s.restore(mSimpleLatchClass[i]);
-    }
-  }
+  s.restore(mSimpleFFClass);
+  s.restore(mSimpleLatchClass);
 
   // パタングラフの情報の設定
   mPatMgr.restore(s);
@@ -635,54 +479,6 @@ CiCellLibrary::restore_cell_class(
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiPatMgr
-//////////////////////////////////////////////////////////////////////
-
-// @brief データを読み込んでセットする．
-bool
-CiPatMgr::restore(
-  Deserializer& s
-)
-{
-  // ノードと枝の情報を読み込む．
-  SizeType nn;
-  s.restore(nn);
-  set_node_num(nn);
-  for ( auto i: Range(nn) ) {
-    s.restore(mNodeTypeArray[i]);
-    s.restore(mEdgeArray[i * 2]);
-    s.restore(mEdgeArray[i * 2 + 1]);
-  }
-
-  // パタングラフの情報を読み込む．
-  SizeType np;
-  s.restore(np);
-  set_pat_num(np);
-  for ( auto id: Range(np) ) {
-    mPatArray[id].restore(s);
-  }
-
-  return true;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiPatGraph
-//////////////////////////////////////////////////////////////////////
-
-// @brief バイナリファイルを読み込む．
-void
-CiPatGraph::restore(
-  Deserializer& s
-)
-{
-  s.restore(mRepClass);
-  s.restore(mInputNum);
-  s.restore(mEdgeList);
-}
-
-
-//////////////////////////////////////////////////////////////////////
 // クラス Deserializer
 //////////////////////////////////////////////////////////////////////
 
@@ -693,15 +489,25 @@ Deserializer::Deserializer(
 {
   // 各要素の0番目は nullptr
   mBusTypeList.push_back(nullptr);
+  mBusTypeTable.push_back(nullptr);
   mPinList.push_back(nullptr);
+  mPinTable.push_back(nullptr);
   mBusList.push_back(nullptr);
+  mBusTable.push_back(nullptr);
   mBundleList.push_back(nullptr);
+  mBundleTable.push_back(nullptr);
   mTimingList.push_back(nullptr);
+  mTimingTable.push_back(nullptr);
   mLutTemplateList.push_back(nullptr);
+  mLutTemplateTable.push_back(nullptr);
   mLutList.push_back(nullptr);
-  mCellClassList.push_back(nullptr);
-  mCellGroupList.push_back(nullptr);
+  mLutTable.push_back(nullptr);
   mCellList.push_back(nullptr);
+  mCellTable.push_back(nullptr);
+  mCellGroupList.push_back(nullptr);
+  mCellGroupTable.push_back(nullptr);
+  mCellClassList.push_back(nullptr);
+  mCellClassTable.push_back(nullptr);
 }
 
 // @brief 要素のデシリアライズを行う．
@@ -715,8 +521,10 @@ Deserializer::deserialize(
     restore(n);
     cout << "# of BusType: " << n << endl;
     mBusTypeList.resize(n);
+    mBusTypeTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       mBusTypeList[i] = CiBusType::restore(*this);
+      mBusTypeTable[i] = mBusTypeList[i].get();
     }
   }
   {
@@ -724,8 +532,10 @@ Deserializer::deserialize(
     restore(n);
     cout << "# of LutTemplate: " << n << endl;
     mLutTemplateList.resize(n);
+    mLutTemplateTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       mLutTemplateList[i] = CiLutTemplate::restore(*this);
+      mLutTemplateTable[i] = mLutTemplateList[i].get();
     }
   }
   {
@@ -733,8 +543,10 @@ Deserializer::deserialize(
     restore(n);
     cout << "# of Lut: " << n << endl;
     mLutList.resize(n);
+    mLutTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       mLutList[i] = CiLut::restore(*this);
+      mLutTable[i] = mLutList[i].get();
     }
   }
   {
@@ -742,8 +554,10 @@ Deserializer::deserialize(
     restore(n);
     cout << "# of Pin: " << n << endl;
     mPinList.resize(n);
+    mPinTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       mPinList[i] = CiPin::restore(*this);
+      mPinTable[i] = mPinList[i].get();
     }
   }
   {
@@ -751,8 +565,10 @@ Deserializer::deserialize(
     restore(n);
     cout << "# of Bus: " << n << endl;
     mBusList.resize(n);
+    mBusTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       mBusList[i] = CiBus::restore(*this);
+      mBusTable[i] = mBusList[i].get();
     }
   }
   {
@@ -760,8 +576,10 @@ Deserializer::deserialize(
     restore(n);
     cout << "# of Bundle: " << n << endl;
     mBundleList.resize(n);
+    mBundleTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       mBundleList[i] = CiBundle::restore(*this);
+      mBundleTable[i] = mBundleList[i].get();
     }
   }
   {
@@ -769,8 +587,10 @@ Deserializer::deserialize(
     restore(n);
     cout << "# of Timing: " << n << endl;
     mTimingList.resize(n);
+    mTimingTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       mTimingList[i] = CiTiming::restore(*this);
+      mTimingTable[i] = mTimingList[i].get();
     }
   }
   {
@@ -778,8 +598,10 @@ Deserializer::deserialize(
     restore(n);
     cout << "# of Cell: " << n << endl;
     mCellList.resize(n);
+    mCellTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       mCellList[i] = CiCell::restore(*this, lib);
+      mCellTable[i] = mCellList[i].get();
     }
   }
   {
@@ -787,8 +609,10 @@ Deserializer::deserialize(
     restore(n);
     cout << "# of CellGroup: " << n << endl;
     mCellGroupList.resize(n);
+    mCellGroupTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       mCellGroupList[i] = CiCellGroup::restore(*this, lib);
+      mCellGroupTable[i] = mCellGroupList[i].get();
     }
   }
   {
@@ -796,8 +620,10 @@ Deserializer::deserialize(
     restore(n);
     cout << "# of CellClass: " << n << endl;
     mCellClassList.resize(n);
+    mCellClassTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       mCellClassList[i] = CiCellClass::restore(*this, lib);
+      mCellClassTable[i] = mCellClassList[i].get();
     }
   }
 }

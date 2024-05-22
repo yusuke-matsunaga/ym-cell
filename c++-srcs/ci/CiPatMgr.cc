@@ -153,4 +153,31 @@ CiPatMgr::dump(
   }
 }
 
+// @brief データを読み込んでセットする．
+bool
+CiPatMgr::restore(
+  Deserializer& s
+)
+{
+  // ノードと枝の情報を読み込む．
+  std::uint64_t nn;
+  s.restore(nn);
+  set_node_num(nn);
+  for ( auto i: Range(nn) ) {
+    s.restore(mNodeTypeArray[i]);
+    s.restore(mEdgeArray[i * 2]);
+    s.restore(mEdgeArray[i * 2 + 1]);
+  }
+
+  // パタングラフの情報を読み込む．
+  SizeType np;
+  s.restore(np);
+  set_pat_num(np);
+  for ( auto id: Range(np) ) {
+    mPatArray[id].restore(s);
+  }
+
+  return true;
+}
+
 END_NAMESPACE_YM_CLIB

@@ -24,8 +24,19 @@ CiPatGraph::dump(
 ) const
 {
   s.dump(mRepClass);
-  s.dump(mInputNum);
+  s.dump(std::uint64_t(mInputNum));
   s.dump(mEdgeList);
+}
+
+// @brief バイナリファイルを読み込む．
+void
+CiPatGraph::restore(
+  Deserializer& s
+)
+{
+  s.restore(mRepClass);
+  s.restore(mInputNum);
+  s.restore(mEdgeList);
 }
 
 END_NAMESPACE_YM_CLIB

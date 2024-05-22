@@ -273,7 +273,7 @@ public:
   SizeType
   cell_group_num() const
   {
-    return mGroupList.size();
+    return mCellGroupList.size();
   }
 
   /// @brief セルグループの取得
@@ -283,21 +283,21 @@ public:
   ) const
   {
     ASSERT_COND( 0 <= pos && pos < cell_group_num() );
-    return mGroupList[pos].get();
+    return mCellGroupList[pos].get();
   }
 
   /// @brief セルグループのリストの取得
   vector<const CiCellGroup*>
   cell_group_list() const
   {
-    return conv_list(mGroupList);
+    return conv_list(mCellGroupList);
   }
 
   /// @brief NPN同値クラス数の取得
   SizeType
   npn_class_num() const
   {
-    return mClassList.size();
+    return mCellClassList.size();
   }
 
   /// @brief NPN同値クラスの取得
@@ -307,14 +307,14 @@ public:
   ) const
   {
     ASSERT_COND( 0 <= pos && pos < npn_class_num() );
-    return mClassList[pos].get();
+    return mCellClassList[pos].get();
   }
 
   /// @brief NPN同値クラス番号のリストの取得
   vector<const CiCellClass*>
   npn_class_list() const
   {
-    return conv_list(mClassList);
+    return conv_list(mCellClassList);
   }
 
 
@@ -870,7 +870,7 @@ public:
     SizeType id ///< [in] ID番号
   ) const
   {
-    return mClassList[id].get();
+    return mCellClassList[id].get();
   }
 
   /// @brief セルグループを得る．
@@ -879,7 +879,7 @@ public:
     SizeType id ///< [in] ID番号
   ) const
   {
-    return mGroupList[id].get();
+    return mCellGroupList[id].get();
   }
 
   /// @brief セルを得る．
@@ -1227,77 +1227,29 @@ private:
   // バスタイプのリスト
   vector<unique_ptr<CiBusType>> mBusTypeList;
 
-#if 0
-  // 名前をキーにしたバスタイプの辞書
-  unordered_map<ShString, const CiBusType*> mBusTypeDict;
-#endif
-
   // 遅延テンプレートの実体のリスト
   vector<unique_ptr<CiLutTemplate>> mLutTemplateList;
-
-#if 0
-  // テンプレートのリスト
-  vector<const CiLutTemplate*> mRefLutTemplateList;
-#endif
 
   // セルの所有権管理用のリスト
   vector<unique_ptr<CiCell>> mCellList;
 
-#if 0
-  // セルのリスト
-  vector<const CiCell*> mRefCellList;
-#endif
-
   // 名前をキーにしたセルの辞書
   unordered_map<ShString, const CiCell*> mCellDict;
-
-#if 0
-  // ピンの所有権管理用のリスト
-  vector<unique_ptr<CiPin>> mPinList;
-#endif
 
   // セルとピン名をキーにしたピンの辞書
   CiCellNameHash<CiPin> mPinDict;
 
-#if 0
-  // バスの所有権管理用のリスト
-  vector<unique_ptr<CiBus>> mBusList;
-#endif
-
   // セルとバス名をキーにしたバスの辞書
   CiCellNameHash<CiBus> mBusDict;
-
-#if 0
-  // バンドルの所有権管理用のリスト
-  vector<unique_ptr<CiBundle>> mBundleList;
-#endif
 
   // セルとバンドル名をキーにしたバンドルの辞書
   CiCellNameHash<CiBundle> mBundleDict;
 
-#if 0
-  // タイミング情報のリスト
-  vector<unique_ptr<CiTiming>> mTimingList;
-
-  // Lut のリスト
-  vector<unique_ptr<CiLut>> mLutList;
-#endif
-
   // セルグループの所有権管理用のリスト
-  vector<unique_ptr<CiCellGroup>> mGroupList;
-
-#if 0
-  // セルグループのリスト
-  vector<const CiCellGroup*> mRefGroupList;
-#endif
+  vector<unique_ptr<CiCellGroup>> mCellGroupList;
 
   // NPN同値クラスの所有権管理用のリスト
-  vector<unique_ptr<CiCellClass>> mClassList;
-
-#if 0
-  // NPN同値類のリスト
-  vector<const CiCellClass*> mRefClassList;
-#endif
+  vector<unique_ptr<CiCellClass>> mCellClassList;
 
   // 論理セルグループの情報
   // 0: 定数0

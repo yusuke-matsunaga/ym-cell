@@ -225,7 +225,6 @@ CiCellLibrary::add_lut_template1(
 {
   auto tmpl = new CiLutTemplate1D{var_type1, index_list1};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
-  //mRefLutTemplateList.push_back(tmpl);
   return tmpl;
 }
 
@@ -241,7 +240,6 @@ CiCellLibrary::add_lut_template2(
   auto tmpl = new CiLutTemplate2D{var_type1, index_list1,
 				  var_type2, index_list2};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
-  //mRefLutTemplateList.push_back(tmpl);
   return tmpl;
 }
 
@@ -260,7 +258,6 @@ CiCellLibrary::add_lut_template3(
 				  var_type2, index_list2,
 				  var_type3, index_list3};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
-  //mRefLutTemplateList.push_back(tmpl);
   return tmpl;
 }
 
@@ -271,8 +268,7 @@ CiCellLibrary::add_cell_class(
 )
 {
   auto cc = new CiCellClass{this, idmap_list};
-  mClassList.push_back(unique_ptr<CiCellClass>(cc));
-  //mRefClassList.push_back(cc);
+  mCellClassList.push_back(unique_ptr<CiCellClass>(cc));
   return cc;
 }
 
@@ -284,8 +280,7 @@ CiCellLibrary::add_cell_group(
 )
 {
   auto cg = new CiCellGroup{this, rep_class, iomap};
-  mGroupList.push_back(unique_ptr<CiCellGroup>(cg));
-  //mRefGroupList.push_back(cg);
+  mCellGroupList.push_back(unique_ptr<CiCellGroup>(cg));
   return cg;
 }
 
@@ -390,7 +385,6 @@ CiCellLibrary::reg_cell(
 )
 {
   mCellList.push_back(unique_ptr<CiCell>{cell});
-  //mRefCellList.push_back(cell);
   mCellDict.emplace(cell->name(), cell);
   return cell;
 }
@@ -712,22 +706,13 @@ CiCellLibrary::clear()
   mCapacitiveLoadUnitStr = {};
   mLeakagePowerUnit = {};
   mLutTemplateList.clear();
-  //mRefLutTemplateList.clear();
   mCellList.clear();
-  //mRefCellList.clear();
   mCellDict.clear();
-  //mPinList.clear();
   mPinDict.clear();
-  //mBusList.clear();
   mBusDict.clear();
-  //mBundleList.clear();
   mBundleDict.clear();
-  mGroupList.clear();
-  //mRefGroupList.clear();
-  mClassList.clear();
-  //mRefClassList.clear();
-  //mTimingList.clear();
-  //mLutList.clear();
+  mCellGroupList.clear();
+  mCellClassList.clear();
 }
 
 END_NAMESPACE_YM_CLIB

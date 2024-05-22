@@ -195,19 +195,16 @@ public:
     out().write_64(val);
   }
 
-  /// @brief 整数のベクタをダンプする．
+  /// @brief SizeType をダンプする．
   void
   dump(
-    const vector<SizeType>& vec
+    SizeType val
   )
   {
-    dump(vec.size());
-    for ( auto v: vec ) {
-      dump(v);
-    }
+    out().write_64(val);
   }
 
-  /// @brief 数値をダンプする．
+  /// @brief double をダンプする．
   void
   dump(
     double val
@@ -216,25 +213,13 @@ public:
     out() << val;
   }
 
-  /// @brief 数値のベクタをダンプする．
-  void
-  dump(
-    const vector<double>& vec
-  )
-  {
-    dump(vec.size());
-    for ( auto v: vec ) {
-      dump(v);
-    }
-  }
-
   /// @brief バスタイプ番号を出力する．
   void
   dump(
     const CiBusType* obj
   )
   {
-    auto id = mBusTypeList.get_id(obj);
+    SizeType id = mBusTypeList.get_id(obj);
     dump(id);
   }
 
@@ -244,24 +229,9 @@ public:
     const CiPin* obj
   )
   {
-    auto id = mPinList.get_id(obj);
+    SizeType id = mPinList.get_id(obj);
     dump(id);
   }
-
-#if 0
-  /// @brief ピン番号のリストを出力する．
-  void
-  dump(
-    const vector<const CiPin*>& obj_list
-  )
-  {
-    SizeType n = obj_list.size();
-    dump(n);
-    for ( auto obj: obj_list ) {
-      dump(obj);
-    }
-  }
-#endif
 
   /// @brief バス番号を出力する．
   void
@@ -269,24 +239,9 @@ public:
     const CiBus* obj
   )
   {
-    auto id = mBusList.get_id(obj);
+    SizeType id = mBusList.get_id(obj);
     dump(id);
   }
-
-#if 0
-  /// @brief バス番号のリストを出力する．
-  void
-  dump(
-    const vector<const CiBus*>& obj_list
-  )
-  {
-    SizeType n = obj_list.size();
-    dump(n);
-    for ( auto obj: obj_list ) {
-      dump(obj);
-    }
-  }
-#endif
 
   /// @brief バンドル番号を出力する．
   void
@@ -294,24 +249,9 @@ public:
     const CiBundle* obj
   )
   {
-    auto id = mBundleList.get_id(obj);
+    SizeType id = mBundleList.get_id(obj);
     dump(id);
   }
-
-#if 0
-  /// @brief バンドル番号のリストを出力する．
-  void
-  dump(
-    const vector<const CiBundle*>& obj_list
-  )
-  {
-    SizeType n = obj_list.size();
-    dump(n);
-    for ( auto obj: obj_list ) {
-      dump(obj);
-    }
-  }
-#endif
 
   /// @brief タイミング番号を出力する．
   void
@@ -319,24 +259,9 @@ public:
     const CiTiming* obj
   )
   {
-    auto id = mTimingList.get_id(obj);
+    SizeType id = mTimingList.get_id(obj);
     dump(id);
   }
-
-#if 0
-  /// @brief タイミング番号のリストを出力する．
-  void
-  dump(
-    const vector<const CiTiming*>& obj_list
-  )
-  {
-    SizeType n = obj_list.size();
-    dump(n);
-    for ( auto obj: obj_list ) {
-      dump(obj);
-    }
-  }
-#endif
 
   /// @brief LUTテンプレート番号を出力する．
   void
@@ -344,7 +269,7 @@ public:
     const CiLutTemplate* obj
   )
   {
-    auto id = mLutTemplateList.get_id(obj);
+    SizeType id = mLutTemplateList.get_id(obj);
     dump(id);
   }
 
@@ -354,7 +279,7 @@ public:
     const CiLut* obj
   )
   {
-    auto id = mLutList.get_id(obj);
+    SizeType id = mLutList.get_id(obj);
     dump(id);
   }
 
@@ -364,24 +289,9 @@ public:
     const CiCell* obj
   )
   {
-    auto id = mCellList.get_id(obj);
+    SizeType id = mCellList.get_id(obj);
     dump(id);
   }
-
-#if 0
-  /// @brief セル番号のリストを出力する．
-  void
-  dump(
-    const vector<const CiCell*>& obj_list
-  )
-  {
-    SizeType n = obj_list.size();
-    dump(n);
-    for ( auto obj: obj_list ) {
-      dump(obj);
-    }
-  }
-#endif
 
   /// @brief セルグループ番号を出力する．
   void
@@ -389,24 +299,9 @@ public:
     const CiCellGroup* obj
   )
   {
-    auto id = mCellGroupList.get_id(obj);
+    SizeType id = mCellGroupList.get_id(obj);
     dump(id);
   }
-
-#if 0
-  /// @brief セルグループ番号のリストを出力する．
-  void
-  dump(
-    const vector<const CiCellGroup*>& obj_list
-  )
-  {
-    SizeType n = obj_list.size();
-    dump(n);
-    for ( auto obj: obj_list ) {
-      dump(obj);
-    }
-  }
-#endif
 
   /// @brief セルクラス番号を出力する．
   void
@@ -414,15 +309,14 @@ public:
     const CiCellClass* obj
   )
   {
-    auto id = mCellClassList.get_id(obj);
+    SizeType id = mCellClassList.get_id(obj);
     dump(id);
   }
 
-#if 0
-  /// @brief セルクラス番号のリストを出力する．
+  template<class T>
   void
   dump(
-    const vector<const CiCellClass*>& obj_list
+    const vector<T>& obj_list
   )
   {
     SizeType n = obj_list.size();
@@ -431,7 +325,6 @@ public:
       dump(obj);
     }
   }
-#endif
 
   template<class T>
   void

@@ -472,11 +472,6 @@ CiCell::serialize(
   for ( auto& timing: mTimingList ) {
     timing->serialize(s);
   }
-  for ( auto& timing_list: mTimingMap ) {
-    for ( auto timing: timing_list ) {
-      timing->serialize(s);
-    }
-  }
 }
 
 // @brief 共通部分のダンプ
@@ -572,11 +567,15 @@ CiCell::_restore(
   s.restore(mTimingList);
 
   // タイミングマップ
+#if 0
   SizeType n = s.in().read_64();
   mTimingMap.resize(n);
   for ( SizeType i: Range(n) ) {
     s.restore(mTimingMap[i]);
   }
+#else
+  s.restore(mTimingMap);
+#endif
 }
 
 END_NAMESPACE_YM_CLIB

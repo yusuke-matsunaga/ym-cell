@@ -34,8 +34,8 @@ CiBusType::dump(
 ) const
 {
   s.dump(name());
-  s.dump(bit_from());
-  s.dump(bit_to());
+  s.dump(std::uint64_t(bit_from()));
+  s.dump(std::uint64_t(bit_to()));
 }
 
 // @brief バスタイプを読み込む．
