@@ -24,7 +24,7 @@ CiPatGraph::dump(
 ) const
 {
   s.dump(mRepClass);
-  s.dump(std::uint64_t(mInputNum));
+  s.dump(mInputNum);
   s.dump(mEdgeList);
 }
 
