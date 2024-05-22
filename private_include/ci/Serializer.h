@@ -168,33 +168,6 @@ public:
     out().write_8(val);
   }
 
-  /// @brief std::uint16_tをダンプする．
-  void
-  dump(
-    std::uint16_t val
-  )
-  {
-    out().write_16(val);
-  }
-
-  /// @brief std::uint32_tをダンプする．
-  void
-  dump(
-    std::uint32_t val
-  )
-  {
-    out().write_32(val);
-  }
-
-  /// @brief std::uint64_tをダンプする．
-  void
-  dump(
-    std::uint64_t val
-  )
-  {
-    out().write_64(val);
-  }
-
   /// @brief SizeType をダンプする．
   void
   dump(

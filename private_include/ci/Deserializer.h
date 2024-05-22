@@ -86,33 +86,6 @@ public:
     dst = mS.read_8();
   }
 
-  /// @brief std::uint16_t の読み込み
-  void
-  restore(
-    std::uint16_t& dst
-  )
-  {
-    dst = mS.read_16();
-  }
-
-  /// @brief std::uint32_t の読み込み
-  void
-  restore(
-    std::uint32_t& dst
-  )
-  {
-    dst = mS.read_32();
-  }
-
-  /// @brief std::uint64_t の読み込み
-  void
-  restore(
-    std::uint64_t& dst
-  )
-  {
-    dst = mS.read_64();
-  }
-
   /// @brief SizeType の読み込み
   void
   restore(
