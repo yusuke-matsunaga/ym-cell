@@ -1,16 +1,15 @@
 ﻿#ifndef CILUTTEMPLATE_H
 #define CILUTTEMPLATE_H
 
-/// @file　CiLutTemplate.h
+/// @file CiLutTemplate.h
 /// @brief CiLutTemplate のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
 #include "ym/ShString.h"
-#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -22,17 +21,12 @@ class Deserializer;
 /// @class CiLutTemplate CiLutTemplate.h "CiLutTemplate.h"
 /// @brief CiLutTemplateXXX の(擬似)基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiLutTemplate :
-  public CiLibObj
+class CiLutTemplate
 {
 public:
 
   /// @brief コンストラクタ
-  CiLutTemplate(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
-  ) : CiLibObj{lib}
-  {
-  }
+  CiLutTemplate() = default;
 
   /// @brief デストラクタ
   virtual
@@ -91,10 +85,9 @@ public:
 
   /// @brief 内容を復元する．
   static
-  CiLutTemplate*
+  unique_ptr<CiLutTemplate>
   restore(
-    Deserializer& s,   ///< [in] デシリアライザ
-    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 

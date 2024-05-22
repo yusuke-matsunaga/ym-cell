@@ -8,7 +8,7 @@
 /// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/clib.h"
+#include "ym/ClibCellElem.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibResistance.h"
 #include "ym/logic.h"
@@ -23,7 +23,8 @@ class CiTiming;
 /// @class ClibTiming ClibTiming.h "ym/ClibTiming.h"
 /// @brief タイミング情報を表すクラス
 //////////////////////////////////////////////////////////////////////
-class ClibTiming
+class ClibTiming :
+  public ClibCellElem<CiTiming>
 {
 public:
 
@@ -32,23 +33,20 @@ public:
 
   /// @brief 内容を指定したコンストラクタ
   ClibTiming(
+    const CiCell* cell,  ///< [in] 親のセル
     const CiTiming* impl ///< [in] 本体
-  );
+  ) : ClibCellElem{cell, impl}
+  {
+  }
 
   /// @brief デストラクタ
-  ~ClibTiming();
+  ~ClibTiming() = default;
 
 
 public:
   //////////////////////////////////////////////////////////////////////
   // 共通の属性
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief ID番号の取得
-  ///
-  /// timing = cell->timing(id); の時，timing->id() = id となる．
-  SizeType
-  id() const;
 
   /// @brief 型の取得
   ClibTimingType
@@ -147,62 +145,6 @@ public:
   /// @brief 立ち下がりセル遅延テーブルの取得
   ClibLut
   cell_fall() const;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // mImpl に関する関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 適正な値を持っている時 true を返す．
-  bool
-  is_valid() const
-  {
-    return mImpl != nullptr;
-  }
-
-  /// @brief 不正値の時 true を返す．
-  bool
-  is_invalid() const
-  {
-    return !is_valid();
-  }
-
-  /// @brief 等価比較
-  bool
-  operator==(
-    const ClibTiming& right
-  ) const
-  {
-    return mImpl == right.mImpl;
-  }
-
-  /// @brief 非等価比較
-  bool
-  operator!=(
-    const ClibTiming& right
-  ) const
-  {
-    return !operator==(right);
-  }
-
-  /// @brief 適正な値を持っているかチェックする．
-  void
-  _check_valid() const
-  {
-    if ( !is_valid() ) {
-      throw std::invalid_argument{"not having a valid data"};
-    }
-  }
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 実装
-  const CiTiming* mImpl;
 
 };
 

@@ -9,7 +9,6 @@
 #include "ym/ClibLut.h"
 #include "ci/CiLut.h"
 #include "ci/CiLutTemplate.h"
-#include "ci/CiCellLibrary.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -23,17 +22,11 @@ ClibLut::ClibLut(
   const CiLut* impl
 ) : mImpl{impl}
 {
-  if ( mImpl != nullptr ) {
-    mImpl->inc_ref();
-  }
 }
 
 // @brief デストラクタ
 ClibLut::~ClibLut()
 {
-  if ( mImpl != nullptr ) {
-    mImpl->dec_ref();
-  }
 }
 
 // @brief 次元数の取得

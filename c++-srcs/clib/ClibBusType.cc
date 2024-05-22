@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_CLIB
 // @brief 内容を指定したコンストラクタ
 ClibBusType::ClibBusType(
   const CiBusType* impl
-) : ClibHandle<CiBusType>{impl}
+) : mImpl{impl}
 {
 }
 

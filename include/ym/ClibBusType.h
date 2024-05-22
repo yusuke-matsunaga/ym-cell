@@ -19,8 +19,7 @@ class CiBusType;
 /// @class ClibBusType ClibBusType.h "ym/ClibBusType.h"
 /// @brief バスタイプを表すクラス
 //////////////////////////////////////////////////////////////////////
-class ClibBusType :
-  public ClibHandle<CiBusType>
+class ClibBusType
 {
 public:
 
@@ -85,6 +84,62 @@ public:
   /// true の時，降順を表す．
   bool
   downto() const;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // mImpl に関する関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 適正な値を持っている時 true を返す．
+  bool
+  is_valid() const
+  {
+    return mImpl != nullptr;
+  }
+
+  /// @brief 不正値の時 true を返す．
+  bool
+  is_invalid() const
+  {
+    return !is_valid();
+  }
+
+  /// @brief 等価比較
+  bool
+  operator==(
+    const ClibBusType& right
+  ) const
+  {
+    return mImpl == right.mImpl;
+  }
+
+  /// @brief 非等価比較
+  bool
+  operator!=(
+    const ClibBusType& right
+  ) const
+  {
+    return !operator==(right);
+  }
+
+  /// @brief 適正な値を持っているかチェックする．
+  void
+  _check_valid() const
+  {
+    if ( !is_valid() ) {
+      throw std::invalid_argument{"not having a valid data"};
+    }
+  }
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 本体
+  const CiBusType* mImpl{nullptr};
 
 };
 

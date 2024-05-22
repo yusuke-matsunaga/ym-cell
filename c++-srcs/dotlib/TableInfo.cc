@@ -9,6 +9,7 @@
 #include "dotlib/TableInfo.h"
 #include "dotlib/LibraryInfo.h"
 #include "dotlib/AstValue.h"
+#include "ci/CiLut.h"
 #include "ym/MsgMgr.h"
 
 
@@ -55,13 +56,13 @@ TableInfo::set(
   mDomain = get_value("domain");
 }
 
-const CiLut*
+unique_ptr<CiLut>
 TableInfo::gen_lut() const
 {
   if ( mValues.size() > 0 ) {
-    return library()->add_lut(mTemplate, mValues, mIndex1, mIndex2, mIndex3);
+    return CiLut::new_lut(mTemplate, mValues, mIndex1, mIndex2, mIndex3);
   }
-  return nullptr;
+  return {};
 }
 
 END_NAMESPACE_YM_DOTLIB

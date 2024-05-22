@@ -199,6 +199,7 @@ ClibCellLibrary::leakage_power_unit() const
   return {};
 }
 
+#if 0
 // @brief バスタイプの取得
 ClibBusType
 ClibCellLibrary::bus_type(
@@ -212,6 +213,7 @@ ClibCellLibrary::bus_type(
   // デフォルト値
   return {};
 }
+#endif
 
 // @brief このライブラリの持つセル数の取得
 SizeType
@@ -231,7 +233,7 @@ ClibCellLibrary::cell(
 ) const
 {
   if ( mImpl ) {
-    auto cell = mImpl->cell_list()[cell_id];
+    auto cell = mImpl->cell(cell_id);
     return ClibCell{cell};
   }
   // デフォルト値
@@ -280,7 +282,7 @@ ClibCellLibrary::cell_group(
 ) const
 {
   if ( mImpl ) {
-    auto cg = mImpl->cell_group_list()[id];
+    auto cg = mImpl->cell_group(id);
     return ClibCellGroup{cg};
   }
   return {};
@@ -314,7 +316,7 @@ ClibCellLibrary::npn_class(
 ) const
 {
   if ( mImpl ) {
-    auto cc = mImpl->npn_class_list()[id];
+    auto cc = mImpl->npn_class(id);
     return ClibCellClass{cc};
   }
   return {};

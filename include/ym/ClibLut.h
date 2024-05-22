@@ -143,7 +143,6 @@ private:
   // 実装
   const CiLut* mImpl;
 
-
 };
 
 END_NAMESPACE_YM_CLIB

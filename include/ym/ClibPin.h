@@ -8,7 +8,7 @@
 /// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ClibHandle.h"
+#include "ym/ClibCellElem.h"
 #include "ym/logic.h"
 
 
@@ -22,7 +22,7 @@ class CiPin;
 /// @brief セルのピンを表すクラス
 //////////////////////////////////////////////////////////////////////
 class ClibPin :
-  public ClibHandle<CiPin>
+  public ClibCellElem<CiPin>
 {
 public:
 
@@ -33,11 +33,14 @@ public:
 
   /// @brief 内容を指定したコンストラクタ
   ClibPin(
-    const CiPin* impl ///< [in] 本体
-  );
+    const CiCell* cell, ///< [in] 親のセル
+    const CiPin* impl   ///< [in] 本体
+  ) : ClibCellElem{cell, impl}
+  {
+  }
 
   /// @brief デストラクタ
-  ~ClibPin();
+  ~ClibPin() = default;
 
 
 public:

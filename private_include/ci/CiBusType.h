@@ -11,7 +11,6 @@
 #include "ym/clib.h"
 #include "ym/ClibBusType.h"
 #include "ym/ShString.h"
-#include "CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -23,19 +22,16 @@ class Deserializer;
 /// @class CiBusType CiBusType.h "CiBusType.h"
 /// @brief ClibBusType の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiBusType :
-  public CiLibObj
+class CiBusType
 {
 public:
 
   /// @brief 要素を指定したコンストラクタ
   CiBusType(
-    const CiCellLibrary* lib, ///< [in] 親のライブラリオブジェクト
     const ShString& name,     ///< [in] 名前
     SizeType bit_from,        ///< [in] 開始位置
     SizeType bit_to           ///< [in] 終了位置
-  ) : CiLibObj{lib},
-      mName{name},
+  ) : mName{name},
       mBitFrom{bit_from},
       mBitTo{bit_to}
   {
@@ -128,10 +124,9 @@ public:
 
   /// @brief 内容を復元する．
   static
-  CiBusType*
+  unique_ptr<CiBusType>
   restore(
-    Deserializer& s,   ///< [in] デシリアライザ
-    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+    Deserializer& s   ///< [in] デシリアライザ
   );
 
 

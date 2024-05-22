@@ -23,20 +23,18 @@ class CiInputPin :
 public:
 
   /// @brief restore() 用のコンストラクタ
-  CiInputPin(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
-  ) : CiPin{lib}
-  {
-  }
+  CiInputPin() = default;
 
   /// @brief コンストラクタ
   CiInputPin(
-    const CiCellLibrary* lib,         ///< [in] 親のライブラリ
+    SizeType pin_id,                  ///< [in] ピン番号
+    SizeType input_id,                ///< [in] 入力番号
     const ShString& name,             ///< [in] ピン名
     ClibCapacitance capacitance,      ///< [in] 負荷容量
     ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
     ClibCapacitance fall_capacitance  ///< [in] 立ち下がり時の負荷容量
-  ) : CiPin{lib, name},
+  ) : CiPin{pin_id, name},
+      mInputId{input_id},
       mCapacitance{capacitance},
       mRiseCapacitance{rise_capacitance},
       mFallCapacitance{fall_capacitance}
@@ -97,21 +95,6 @@ public:
   ) const override;
 
 
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 設定用の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 入力ピン番号を設定する．
-  void
-  set_input_id(
-    SizeType iid ///< [in] 入力ピン番号
-  )
-  {
-    mInputId = iid;
-  }
-
-
 private:
   //////////////////////////////////////////////////////////////////////
   // dump/restore の下請け関数
@@ -154,15 +137,12 @@ class CiOutputPinBase :
 public:
 
   /// @brief restore() 用のコンストラクタ
-  CiOutputPinBase(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
-  ) : CiPin{lib}
-  {
-  }
+  CiOutputPinBase() = default;
 
   /// @brief コンストラクタ
   CiOutputPinBase(
-    const CiCellLibrary* lib,        ///< [in] 親のライブラリ
+    SizeType pin_id,                 ///< [in] ピン番号
+    SizeType output_id,              ///< [in] 出力番号
     const ShString& name,            ///< [in] ピン名
     ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
     ClibCapacitance min_fanout,      ///< [in] 最小ファンアウト容量
@@ -172,7 +152,8 @@ public:
     ClibTime min_transition,         ///< [in] 最小遷移時間
     const Expr& function,            ///< [in] 出力の論理式
     const Expr& tristate             ///< [in] tristate 条件
-  ) : CiPin{lib, name},
+  ) : CiPin{pin_id, name},
+      mOutputId{output_id},
       mMaxFanout{max_fanout},
       mMinFanout{min_fanout},
       mMaxCapacitance{max_capacitance},
@@ -230,21 +211,6 @@ public:
   /// @brief tristate 条件式を返す．
   Expr
   tristate() const override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 設定用の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 出力ピン番号を設定する．
-  void
-  set_output_id(
-    SizeType oid ///< [in] 出力ピン番号
-  )
-  {
-    mOutputId = oid;
-  }
 
 
 protected:
@@ -314,15 +280,12 @@ class CiOutputPin :
 public:
 
   /// @brief restore() 用のコンストラクタ
-  CiOutputPin(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
-  ) : CiOutputPinBase{lib}
-  {
-  }
+  CiOutputPin() = default;
 
   /// @brief コンストラクタ
   CiOutputPin(
-    const CiCellLibrary* lib,        ///< [in] 親のライブラリ
+    SizeType pin_id,                 ///< [in] ピン番号
+    SizeType output_id,              ///< [in] 出力番号
     const ShString& name,            ///< [in] ピン名
     ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
     ClibCapacitance min_fanout,      ///< [in] 最大ファンアウト容量
@@ -332,7 +295,7 @@ public:
     ClibTime min_transition,         ///< [in] 最大遷移時間
     const Expr& function,            ///< [in] 出力の論理式
     const Expr& tristate             ///< [in] tristate 条件
-  ) : CiOutputPinBase{lib, name,
+  ) : CiOutputPinBase{pin_id, output_id, name,
 		      max_fanout, min_fanout,
 		      max_capacitance, min_capacitance,
 		      max_transition, min_transition,
@@ -396,15 +359,13 @@ class CiInoutPin :
 public:
 
   /// @brief restore() 用のコンストラクタ
-  CiInoutPin(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
-  ) : CiOutputPinBase{lib}
-  {
-  }
+  CiInoutPin() = default;
 
   /// @brief コンストラクタ
   CiInoutPin(
-    const CiCellLibrary* lib,         ///< [in] 親のライブラリ
+    SizeType pin_id,                  ///< [in] ピン番号
+    SizeType input_id,                ///< [in] 入力番号
+    SizeType output_id,               ///< [in] 出力番号
     const ShString& name,             ///< [in] ピン名
     ClibCapacitance capacitance,      ///< [in] 負荷容量
     ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
@@ -417,11 +378,12 @@ public:
     ClibTime min_transition,          ///< [in] 最大遷移時間
     const Expr& function,             ///< [in] 出力の論理式
     const Expr& tristate              ///< [in] tristate 条件
-  ) : CiOutputPinBase{lib, name,
+  ) : CiOutputPinBase{pin_id, output_id, name,
 		      max_fanout, min_fanout,
 		      max_capacitance, min_capacitance,
 		      max_transition, min_transition,
 		      function, tristate},
+      mInputId{input_id},
       mCapacitance{capacitance},
       mRiseCapacitance{rise_capacitance},
       mFallCapacitance{fall_capacitance}
@@ -482,21 +444,6 @@ public:
   ) const override;
 
 
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 設定用の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 入力ピン番号を設定する．
-  void
-  set_input_id(
-    SizeType iid ///< [in] 入力ピン番号
-  )
-  {
-    mInputId = iid;
-  }
-
-
 private:
   //////////////////////////////////////////////////////////////////////
   // dump/restore の下請け関数
@@ -539,17 +486,14 @@ class CiInternalPin :
 public:
 
   /// @brief restore() 用のコンストラクタ
-  CiInternalPin(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
-  ) : CiPin{lib}
-  {
-  }
+  CiInternalPin() = default;
 
   /// @brief コンストラクタ
   CiInternalPin(
-    const CiCellLibrary* lib, ///< [in] 親のライブラリ
+    SizeType internal_id,     ///< [in] 内部ピン番号
     const ShString& name      ///< [in] ピン名
-  ) : CiPin{lib, name}
+  ) : CiPin{CLIB_NULLID, name},
+      mInternalId{internal_id}
   {
   }
 
@@ -593,21 +537,6 @@ public:
   dump(
     Serializer& s ///< [in] シリアライザ
   ) const override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 設定用の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 内部ピン番号を設定する．
-  void
-  set_internal_id(
-    SizeType iid ///< [in] 内部ピン番号
-  )
-  {
-    mInternalId = iid;
-  }
 
 
 private:

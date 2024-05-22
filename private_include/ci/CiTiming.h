@@ -13,11 +13,11 @@
 #include "ym/ClibResistance.h"
 #include "ym/Expr.h"
 #include "ci/CiLibObj.h"
+#include "ci/CiLut.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
-class CiLut;
 class Serializer;
 class Deserializer;
 
@@ -25,25 +25,18 @@ class Deserializer;
 /// @class CiTiming CiTiming.h "CiTiming.h"
 /// @brief 共通の基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiTiming :
-  public CiLibObj
+class CiTiming
 {
 public:
 
   /// @brief restore() 用のコンストラクタ
-  CiTiming(
-    const CiCellLibrary* lib ///< [in] 親のセルライブラリ
-  ) : CiLibObj{lib}
-  {
-  }
+  CiTiming() = default;
 
   /// @brief コンストラクタ
   CiTiming(
-    const CiCellLibrary* lib, ///< [in] 親のセルライブラリ
     ClibTimingType type,      ///< [in] タイミング条件の型
     const Expr& cond          ///< [in] タイミング条件を表す式
-  ) : CiLibObj{lib},
-      mType{type},
+  ) : mType{type},
       mCond{cond}
   {
   };
@@ -199,10 +192,9 @@ public:
 
   /// @brief 内容を読み込む．
   static
-  CiTiming*
+  unique_ptr<CiTiming>
   restore(
-    Deserializer& s,   ///< [in] デシリアライザ
-    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 

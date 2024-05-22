@@ -148,59 +148,7 @@ public:
 
   /// @brief 登録された要素の内容をダンプする．
   void
-  dump_obj()
-  {
-    dump(mBusTypeList.obj_list().size());
-    cout << "# of BusType: " << mBusTypeList.obj_list().size() << endl;
-    for ( auto obj: mBusTypeList.obj_list() ) {
-      obj->dump(*this);
-    }
-    dump(mLutTemplateList.obj_list().size());
-    cout << "# of LutTemplate: " << mLutTemplateList.obj_list().size() << endl;
-    for ( auto obj: mLutTemplateList.obj_list() ) {
-      obj->dump(*this);
-    }
-    dump(mLutList.obj_list().size());
-    cout << "# of Lut: " << mLutList.obj_list().size() << endl;
-    for ( auto obj: mLutList.obj_list() ) {
-      obj->dump(*this);
-    }
-    dump(mPinList.obj_list().size());
-    cout << "# of Pin: " << mPinList.obj_list().size() << endl;
-    for ( auto obj: mPinList.obj_list() ) {
-      obj->dump(*this);
-    }
-    dump(mBusList.obj_list().size());
-    cout << "# of Bus: " << mBusList.obj_list().size() << endl;
-    for ( auto obj: mBusList.obj_list() ) {
-      obj->dump(*this);
-    }
-    dump(mBundleList.obj_list().size());
-    cout << "# of Bundle: " << mBundleList.obj_list().size() << endl;
-    for ( auto obj: mBundleList.obj_list() ) {
-      obj->dump(*this);
-    }
-    dump(mTimingList.obj_list().size());
-    cout << "# of Timing: " << mTimingList.obj_list().size() << endl;
-    for ( auto obj: mTimingList.obj_list() ) {
-      obj->dump(*this);
-    }
-    dump(mCellClassList.obj_list().size());
-    cout << "# of CellClass: " << mCellClassList.obj_list().size() << endl;
-    for ( auto obj: mCellClassList.obj_list() ) {
-      obj->dump(*this);
-    }
-    dump(mCellGroupList.obj_list().size());
-    cout << "# of CellGroup: " << mCellGroupList.obj_list().size() << endl;
-    for ( auto obj: mCellGroupList.obj_list() ) {
-      obj->dump(*this);
-    }
-    dump(mCellList.obj_list().size());
-    cout << "# of Cell: " << mCellList.obj_list().size() << endl;
-    for ( auto obj: mCellList.obj_list() ) {
-      obj->dump(*this);
-    }
-  }
+  dump_obj();
 
   /// @brief 文字列をダンプする．
   void
@@ -300,6 +248,7 @@ public:
     dump(id);
   }
 
+#if 0
   /// @brief ピン番号のリストを出力する．
   void
   dump(
@@ -312,6 +261,7 @@ public:
       dump(obj);
     }
   }
+#endif
 
   /// @brief バス番号を出力する．
   void
@@ -323,6 +273,7 @@ public:
     dump(id);
   }
 
+#if 0
   /// @brief バス番号のリストを出力する．
   void
   dump(
@@ -335,6 +286,7 @@ public:
       dump(obj);
     }
   }
+#endif
 
   /// @brief バンドル番号を出力する．
   void
@@ -346,6 +298,7 @@ public:
     dump(id);
   }
 
+#if 0
   /// @brief バンドル番号のリストを出力する．
   void
   dump(
@@ -358,6 +311,7 @@ public:
       dump(obj);
     }
   }
+#endif
 
   /// @brief タイミング番号を出力する．
   void
@@ -369,6 +323,7 @@ public:
     dump(id);
   }
 
+#if 0
   /// @brief タイミング番号のリストを出力する．
   void
   dump(
@@ -381,6 +336,7 @@ public:
       dump(obj);
     }
   }
+#endif
 
   /// @brief LUTテンプレート番号を出力する．
   void
@@ -412,6 +368,7 @@ public:
     dump(id);
   }
 
+#if 0
   /// @brief セル番号のリストを出力する．
   void
   dump(
@@ -424,6 +381,7 @@ public:
       dump(obj);
     }
   }
+#endif
 
   /// @brief セルグループ番号を出力する．
   void
@@ -435,6 +393,7 @@ public:
     dump(id);
   }
 
+#if 0
   /// @brief セルグループ番号のリストを出力する．
   void
   dump(
@@ -447,6 +406,7 @@ public:
       dump(obj);
     }
   }
+#endif
 
   /// @brief セルクラス番号を出力する．
   void
@@ -458,6 +418,7 @@ public:
     dump(id);
   }
 
+#if 0
   /// @brief セルクラス番号のリストを出力する．
   void
   dump(
@@ -468,6 +429,33 @@ public:
     dump(n);
     for ( auto obj: obj_list ) {
       dump(obj);
+    }
+  }
+#endif
+
+  template<class T>
+  void
+  dump(
+    const vector<const T*>& obj_list
+  )
+  {
+    SizeType n = obj_list.size();
+    dump(n);
+    for ( auto obj: obj_list ) {
+      dump(obj);
+    }
+  }
+
+  template<class T>
+  void
+  dump(
+    const vector<unique_ptr<T>>& obj_list
+  )
+  {
+    SizeType n = obj_list.size();
+    dump(n);
+    for ( auto& obj: obj_list ) {
+      dump(obj.get());
     }
   }
 

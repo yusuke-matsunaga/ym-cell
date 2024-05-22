@@ -9,9 +9,6 @@
 /// All rights reserved.
 
 #include "ym/clib.h"
-#include "ym/BinEnc.h"
-#include "ym/BinDec.h"
-#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -24,24 +21,31 @@ class Deserializer;
 /// @class CiLut CiLut.h "CiLut.h"
 /// @brief ルックアップテーブルの実装クラスの基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiLut :
-  public CiLibObj
+class CiLut
 {
 public:
 
+  /// @brief インスタンスを生成するクラスメソッド
+  static
+  unique_ptr<CiLut>
+  new_lut(
+    const CiLutTemplate* lut_template, ///< [in] テンプレート
+    const vector<double>& value_array, ///< [in] 値の配列
+    const vector<double>& index_array1 ///< [in] インデックス値のリスト1
+    = vector<double>{},
+    const vector<double>& index_array2 ///< [in] インデックス値のリスト2
+    = vector<double>{},
+    const vector<double>& index_array3 ///< [in] インデックス値のリスト3
+    = vector<double>{}
+  );
+
   /// @brief restore() 用のコンストラクタ
-  CiLut(
-    const CiCellLibrary* lib         ///< [in] 親のセルライブラリ
-  ) : CiLibObj{lib}
-  {
-  }
+  CiLut() = default;
 
   /// @brief コンストラクタ
   CiLut(
-    const CiCellLibrary* lib,         ///< [in] 親のセルライブラリ
     const CiLutTemplate* lut_template ///< [in] テンプレート番号
-  ) : CiLibObj{lib},
-      mTemplate{lut_template}
+  ) : mTemplate{lut_template}
   {
   }
 
@@ -114,10 +118,9 @@ public:
 
   /// @brief 内容を復元する．
   static
-  CiLut*
+  unique_ptr<CiLut>
   restore(
-    Deserializer& s,   ///< [in] デシリアライザ
-    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+    Deserializer& s   ///< [in] デシリアライザ
   );
 
 

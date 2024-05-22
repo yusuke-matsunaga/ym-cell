@@ -7,7 +7,8 @@
 /// All rights reserved.
 
 #include "ci/CiPatGraph.h"
-#include "ym/BinEnc.h"
+#include "ci/Serializer.h"
+#include "ci/Deserializer.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -19,15 +20,12 @@ BEGIN_NAMESPACE_YM_CLIB
 // @brief バイナリダンプを行う．
 void
 CiPatGraph::dump(
-  BinEnc& bos
+  Serializer& s
 ) const
 {
-  bos.write_64(mRepId);
-  bos.write_64(mInputNum);
-  bos.write_64(mEdgeList.size());
-  for ( auto e: mEdgeList ) {
-    bos.write_64(e);
-  }
+  s.dump(mRepClass);
+  s.dump(mInputNum);
+  s.dump(mEdgeList);
 }
 
 END_NAMESPACE_YM_CLIB

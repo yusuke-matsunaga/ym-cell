@@ -36,15 +36,21 @@ set (clib_SOURCES
   )
 
 set (ci_SOURCES
+  ci/CiBundle.cc
+  ci/CiBus.cc
+  ci/CiBusType.cc
   ci/CiCell.cc
   ci/CiFFCell.cc
   ci/CiFLCell.cc
   ci/CiLatchCell.cc
   ci/CiFsmCell.cc
+  ci/CiCellClass.cc
+  ci/CiCellGroup.cc
   ci/CiCellLibrary.cc
   ci/CiLibObj.cc
   ci/CiLut.cc
   ci/CiLutTemplate.cc
+  ci/CiPatGraph.cc
   ci/CiPatMgr.cc
   ci/CiPin.cc
   ci/CiTiming.cc

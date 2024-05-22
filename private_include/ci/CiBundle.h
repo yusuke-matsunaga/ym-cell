@@ -5,16 +5,16 @@
 /// @brief CiBundle のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
 #include "ym/ShString.h"
-#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiPin;
 class Serializer;
 class Deserializer;
 
@@ -22,18 +22,15 @@ class Deserializer;
 /// @class CiBundle CiBundle.h "CiBundle.h"
 /// @brief ClibBundle の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiBundle :
-  public CiLibObj
+class CiBundle
 {
 public:
 
   /// @brief コンストラクタ
   CiBundle(
-    const CiCellLibrary* lib,            ///< [in] 親のライブラリ
     const ShString& name,                ///< [in] 名前
     const vector<const CiPin*>& pin_list ///< [in] ピンリスト
-  ) : CiLibObj{lib},
-      mName{name},
+  ) : mName{name},
       mPinList{pin_list}
   {
   }
@@ -105,10 +102,9 @@ public:
 
   /// @brief 内容を復元する．
   static
-  CiBundle*
+  unique_ptr<CiBundle>
   restore(
-    Deserializer& s,   ///< [in] デシリアライザ
-    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 

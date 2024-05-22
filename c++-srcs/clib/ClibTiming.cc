@@ -18,30 +18,12 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス ClibTiming
 //////////////////////////////////////////////////////////////////////
 
-// @brief 内容を指定したコンストラクタ
-ClibTiming::ClibTiming(
-  const CiTiming* impl
-) : mImpl{impl}
-{
-  if ( mImpl != nullptr ) {
-    mImpl->inc_ref();
-  }
-}
-
-// @brief デストラクタ
-ClibTiming::~ClibTiming()
-{
-  if ( mImpl != nullptr ) {
-    mImpl->dec_ref();
-  }
-}
-
 // @brief 型の取得
 ClibTimingType
 ClibTiming::type() const
 {
   _check_valid();
-  return mImpl->type();
+  return _impl()->type();
 }
 
 // @brief タイミング条件式の取得
@@ -49,7 +31,7 @@ Expr
 ClibTiming::timing_cond() const
 {
   _check_valid();
-  return mImpl->timing_cond();
+  return _impl()->timing_cond();
 }
 
 // @brief 立ち上がり固有遅延の取得
@@ -57,7 +39,7 @@ ClibTime
 ClibTiming::intrinsic_rise() const
 {
   _check_valid();
-  return mImpl->intrinsic_rise();
+  return _impl()->intrinsic_rise();
 }
 
 // @brief 立ち下がり固有遅延の取得
@@ -65,7 +47,7 @@ ClibTime
 ClibTiming::intrinsic_fall() const
 {
   _check_valid();
-  return mImpl->intrinsic_fall();
+  return _impl()->intrinsic_fall();
 }
 
 // @brief 立ち上がりスロープ遅延の取得
@@ -73,7 +55,7 @@ ClibTime
 ClibTiming::slope_rise() const
 {
   _check_valid();
-  return mImpl->slope_rise();
+  return _impl()->slope_rise();
 }
 
 // @brief 立ち下がりスロープ遅延の取得
@@ -81,7 +63,7 @@ ClibTime
 ClibTiming::slope_fall() const
 {
   _check_valid();
-  return mImpl->slope_fall();
+  return _impl()->slope_fall();
 }
 
 // @brief 立ち上がり遷移遅延の取得
@@ -89,7 +71,7 @@ ClibResistance
 ClibTiming::rise_resistance() const
 {
   _check_valid();
-  return mImpl->rise_resistance();
+  return _impl()->rise_resistance();
 }
 
 // @brief 立ち下がり遷移遅延の取得
@@ -97,7 +79,7 @@ ClibResistance
 ClibTiming::fall_resistance() const
 {
   _check_valid();
-  return mImpl->fall_resistance();
+  return _impl()->fall_resistance();
 }
 
 // @brief 立ち上がり遷移遅延の取得
@@ -105,7 +87,7 @@ ClibResistance
 ClibTiming::rise_pin_resistance() const
 {
   _check_valid();
-  return mImpl->rise_pin_resistance();
+  return _impl()->rise_pin_resistance();
 }
 
 // @brief 立ち下がり遷移遅延の取得
@@ -113,7 +95,7 @@ ClibResistance
 ClibTiming::fall_pin_resistance() const
 {
   _check_valid();
-  return mImpl->fall_pin_resistance();
+  return _impl()->fall_pin_resistance();
 }
 
 // @brief 立ち上がり？？？
@@ -121,7 +103,7 @@ ClibTime
 ClibTiming::rise_delay_intercept() const
 {
   _check_valid();
-  return mImpl->rise_delay_intercept();
+  return _impl()->rise_delay_intercept();
 }
 
 // @brief 立ち下がり？？？
@@ -129,7 +111,7 @@ ClibTime
 ClibTiming::fall_delay_intercept() const
 {
   _check_valid();
-  return mImpl->fall_delay_intercept();
+  return _impl()->fall_delay_intercept();
 }
 
 // @brief 立ち上がり遷移遅延テーブルの取得
@@ -137,7 +119,7 @@ ClibLut
 ClibTiming::rise_transition() const
 {
   _check_valid();
-  auto lut = mImpl->rise_transition();
+  auto lut = _impl()->rise_transition();
   return ClibLut{lut};
 }
 
@@ -146,7 +128,7 @@ ClibLut
 ClibTiming::fall_transition() const
 {
   _check_valid();
-  auto lut = mImpl->fall_transition();
+  auto lut = _impl()->fall_transition();
   return ClibLut{lut};
 }
 
@@ -155,7 +137,7 @@ ClibLut
 ClibTiming::rise_propagation() const
 {
   _check_valid();
-  auto lut = mImpl->rise_propagation();
+  auto lut = _impl()->rise_propagation();
   return ClibLut{lut};
 }
 
@@ -164,7 +146,7 @@ ClibLut
 ClibTiming::fall_propagation() const
 {
   _check_valid();
-  auto lut = mImpl->fall_propagation();
+  auto lut = _impl()->fall_propagation();
   return ClibLut{lut};
 }
 
@@ -173,7 +155,7 @@ ClibLut
 ClibTiming::cell_rise() const
 {
   _check_valid();
-  auto lut = mImpl->cell_rise();
+  auto lut = _impl()->cell_rise();
   return ClibLut{lut};
 }
 
@@ -182,7 +164,7 @@ ClibLut
 ClibTiming::cell_fall() const
 {
   _check_valid();
-  auto lut = mImpl->cell_fall();
+  auto lut = _impl()->cell_fall();
   return ClibLut{lut};
 }
 

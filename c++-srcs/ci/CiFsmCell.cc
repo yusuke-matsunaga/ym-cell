@@ -7,6 +7,8 @@
 /// All rights reserved.
 
 #include "CiFsmCell.h"
+#include "ci/Serializer.h"
+#include "ci/Deserializer.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -27,6 +29,25 @@ bool
 CiFsmCell::is_fsm() const
 {
   return true;
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiFsmCell::dump(
+  Serializer& s
+) const
+{
+  s.out().write_8(5);
+  dump_common(s);
+}
+
+// @brief 内容を読み込む．
+void
+CiFsmCell::_restore(
+  Deserializer& s
+)
+{
+  CiCell::_restore(s);
 }
 
 END_NAMESPACE_YM_CLIB

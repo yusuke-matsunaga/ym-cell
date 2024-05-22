@@ -9,6 +9,8 @@
 #include "CiLatchCell.h"
 #include "ci/CiCellLibrary.h"
 #include "cgmgr/CgSignature.h"
+#include "ci/Serializer.h"
+#include "ci/Deserializer.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -75,6 +77,38 @@ CiLatchCell::make_signature(
 				     clear_preset_var2());
 }
 
+// @brief 内容をバイナリダンプする．
+void
+CiLatchCell::dump(
+  Serializer& s
+) const
+{
+  s.out().write_8(3);
+  dump_Latch(s);
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiLatchCell::dump_Latch(
+  Serializer& s
+) const
+{
+  dump_FL(s);
+  mEnable.dump(s.out());
+  mDataIn.dump(s.out());
+}
+
+// @brief 内容を読み込む．
+void
+CiLatchCell::_restore(
+  Deserializer& s
+)
+{
+  restore_FL(s);
+  mEnable.restore(s.in());
+  mDataIn.restore(s.in());
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLatch2Cell
@@ -86,6 +120,27 @@ Expr
 CiLatch2Cell::enable2_expr() const
 {
   return mEnable2;
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiLatch2Cell::dump(
+  Serializer& s
+) const
+{
+  s.out().write_8(4);
+  dump_Latch(s);
+  mEnable2.dump(s.out());
+}
+
+// @brief 内容を読み込む．
+void
+CiLatch2Cell::_restore(
+  Deserializer& s
+)
+{
+  CiLatchCell::_restore(s);
+  mEnable2.restore(s.in());
 }
 
 END_NAMESPACE_YM_CLIB

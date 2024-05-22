@@ -227,10 +227,9 @@ CiCellLibrary::restore(
   {
     SizeType n;
     s.restore(n);
-    mBusTypeList.reserve(n);
+    mBusTypeList.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
-      auto obj = s.restore_bustype();
-      mBusTypeList.push_back(unique_ptr<CiBusType>{obj});
+      s.restore(mBusTypeList[i]);
     }
   }
 #if 0
@@ -249,24 +248,22 @@ CiCellLibrary::restore(
 
   // 組み込み型の読み込み
   for ( auto id: Range(4) ) {
-    mLogicGroup[id] = s.restore_cellgroup();
+    s.restore(mLogicGroup[id]);
   }
   {
     SizeType n;
     s.restore(n);
-    mSimpleFFClass.reserve(n);
+    mSimpleFFClass.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
-      auto cclass = s.restore_cellclass();
-      mSimpleFFClass.push_back(cclass);
+      s.restore(mSimpleFFClass[i]);
     }
   }
   {
     SizeType n;
     s.restore(n);
-    mSimpleLatchClass.reserve(n);
+    mSimpleLatchClass.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
-      auto cclass = s.restore_cellclass();
-      mSimpleLatchClass.push_back(cclass);
+      s.restore(mSimpleLatchClass[i]);
     }
   }
 
@@ -638,683 +635,6 @@ CiCellLibrary::restore_cell_class(
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiBussType
-//////////////////////////////////////////////////////////////////////
-
-// @brief バスタイプを読み込む．
-CiBusType*
-CiBusType::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
-)
-{
-  ShString name;
-  s.in() >> name;
-  auto bit_from = s.in().read_64();
-  auto bit_to = s.in().read_64();
-  auto ptr = new CiBusType{lib, name, bit_from, bit_to};
-  return ptr;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiCellclass
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-CiCellClass*
-CiCellClass::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
-)
-{
-  SizeType n = s.in().read_64();
-  vector<ClibIOMap> idmap_list(n);
-  for ( auto i: Range(n) ) {
-    idmap_list[i].restore(s.in());
-  }
-  auto cclass = new CiCellClass{lib, idmap_list};
-  return cclass;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiCellGroup
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-CiCellGroup*
-CiCellGroup::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
-)
-{
-  CiCellClass* rep_class;
-  ClibIOMap iomap;
-  s.restore(rep_class);
-  iomap.restore(s.in());
-  auto cellgroup = new CiCellGroup{lib, rep_class, iomap};
-  rep_class->add_group(cellgroup);
-  return cellgroup;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiCell
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-CiCell*
-CiCell::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
-)
-{
-  auto type = s.in().read_8();
-  CiCell* cell = nullptr;
-  switch ( type ) {
-  case 0: cell = new CiCell{lib}; break;
-  case 1: cell = new CiFFCell{lib}; break;
-  case 2: cell = new CiFF2Cell{lib}; break;
-  case 3: cell = new CiLatchCell{lib}; break;
-  case 4: cell = new CiLatch2Cell{lib}; break;
-  case 5: cell = new CiFsmCell{lib}; break;
-  default:
-    ASSERT_NOT_REACHED;
-    break;
-  }
-  cell->_restore(s);
-  return cell;
-}
-
-// logic タイプのセルの復元
-void
-CiCell::_restore(
-  Deserializer& s
-)
-{
-  s.in() >> mName
-	 >> mArea;
-  s.restore(mInputNum);
-  s.restore(mOutputNum);
-  s.restore(mInoutNum);
-
-  // ピンリスト
-  s.restore(mPinList);
-
-  // 入力ピンリスト
-  s.restore(mInputList);
-
-  // 出力ピンリスト
-  s.restore(mOutputList);
-
-  // 内部ピンリスト
-  s.restore(mInternalList);
-
-  // バスのリスト
-  s.restore(mBusList);
-
-  // バンドルのリスト
-  s.restore(mBundleList);
-
-  // タイミングのリスト
-  s.restore(mTimingList);
-
-  // タイミングマップ
-  SizeType n = s.in().read_64();
-  mTimingMap.resize(n);
-  for ( SizeType i: Range(n) ) {
-    s.restore(mTimingMap[i]);
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiFLCell
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiFLCell::restore_FL(
-  Deserializer& s
-)
-{
-  CiCell::_restore(s);
-  s.in() >> mVar1
-	 >> mVar2;
-  mClear.restore(s.in());
-  mPreset.restore(s.in());
-  s.in() >> mCpv1
-	 >> mCpv2;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiFFCell
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiFFCell::_restore(
-  Deserializer& s
-)
-{
-  restore_FL(s);
-  mClock.restore(s.in());
-  mNextState.restore(s.in());
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiFF2Cell
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiFF2Cell::_restore(
-  Deserializer& s
-)
-{
-  CiFFCell::_restore(s);
-  mClock2.restore(s.in());
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLatchCell
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiLatchCell::_restore(
-  Deserializer& s
-)
-{
-  restore_FL(s);
-  mEnable.restore(s.in());
-  mDataIn.restore(s.in());
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLatch2Cell
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiLatch2Cell::_restore(
-  Deserializer& s
-)
-{
-  CiLatchCell::_restore(s);
-  mEnable2.restore(s.in());
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiFsmCell
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiFsmCell::_restore(
-  Deserializer& s
-)
-{
-  CiCell::_restore(s);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiPin
-//////////////////////////////////////////////////////////////////////
-
-// @brief ピン情報を復元する．
-CiPin*
-CiPin::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
-)
-{
-  auto sig = s.in().read_8();
-  CiPin* pin = nullptr;
-  switch ( sig ) {
-  case 0: // 入力ピン
-    pin = new CiInputPin{lib}; break;
-  case 1: // 出力ピン
-    pin = new CiOutputPin{lib}; break;
-  case 2: // 入出力ピン
-    pin = new CiInoutPin{lib}; break;
-  case 3: // 内部ピン
-    pin = new CiInternalPin{lib}; break;
-  default:
-    ASSERT_NOT_REACHED;
-    break;
-  }
-  pin->_restore(s);
-  return pin;
-}
-
-// @brief 内容を読み込む．
-void
-CiPin::restore_common(
-  Deserializer& s
-)
-{
-  s.in() >> mName;
-  s.restore(mPinId);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiInputPin
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiInputPin::_restore(
-  Deserializer& s
-)
-{
-  restore_common(s);
-  s.restore(mInputId);
-  s.in() >> mCapacitance
-	 >> mRiseCapacitance
-	 >> mFallCapacitance;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiOutputPinBase
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiOutputPinBase::restore_base(
-  Deserializer& s
-)
-{
-  restore_common(s);
-  s.restore(mOutputId);
-  s.in() >> mFanoutLoad
-	 >> mMaxFanout
-	 >> mMinFanout
-	 >> mMaxCapacitance
-	 >> mMinCapacitance
-	 >> mMaxTransition
-	 >> mMinTransition;
-  mFunction.restore(s.in());
-  mTristate.restore(s.in());
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiOutputPin
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiOutputPin::_restore(
-  Deserializer& s
-)
-{
-  restore_base(s);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiInoutPin
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiInoutPin::_restore(
-  Deserializer& s
-)
-{
-  restore_base(s);
-  s.restore(mInputId);
-  s.in() >> mCapacitance
-	 >> mRiseCapacitance
-	 >> mFallCapacitance;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiInternalPin
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiInternalPin::_restore(
-  Deserializer& s
-)
-{
-  restore_common(s);
-  s.restore(mInternalId);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiBus
-//////////////////////////////////////////////////////////////////////
-
-CiBus*
-CiBus::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
-)
-{
-  ShString name;
-  s.in() >> name;
-  const CiBusType* bus_type;
-  s.restore(bus_type);
-  vector<const CiPin*> pin_list;
-  s.restore(pin_list);
-  return new CiBus{lib, name, bus_type, pin_list};
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiBundle
-//////////////////////////////////////////////////////////////////////
-
-CiBundle*
-CiBundle::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
-)
-{
-  ShString name;
-  s.in() >> name;
-  vector<const CiPin*> pin_list;
-  s.restore(pin_list);
-  return new CiBundle{lib, name, pin_list};
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiTiming
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-CiTiming*
-CiTiming::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
-)
-{
-  auto ttype = s.in().read_8();
-  CiTiming* timing = nullptr;
-  switch ( ttype ) {
-  case 0: timing = new CiTimingGeneric{lib}; break;
-  case 1: timing = new CiTimingPiecewise{lib}; break;
-  case 2: timing = new CiTimingLut1{lib}; break;
-  case 3: timing = new CiTimingLut2{lib}; break;
-  default: ASSERT_NOT_REACHED; break;
-  }
-  timing->_restore(s);
-  return timing;
-}
-
-void
-CiTiming::_restore(
-  Deserializer& s
-)
-{
-  s.in() >> mType;
-  mCond.restore(s.in());
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiTimingGP
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiTimingGP::restore_GP(
-  Deserializer& s
-)
-{
-  CiTiming::_restore(s);
-  s.in() >> mIntrinsicRise
-	 >> mIntrinsicFall
-	 >> mSlopeRise
-	 >> mSlopeFall;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiTimingGeneric
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiTimingGeneric::_restore(
-  Deserializer& s
-)
-{
-  restore_GP(s);
-  s.in() >> mRiseResistance
-	 >> mFallResistance;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiTimingPiecewise
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiTimingPiecewise::_restore(
-  Deserializer& s
-)
-{
-  restore_GP(s);
-  s.in() >> mRisePinResistance
-	 >> mFallPinResistance;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiTimingLut
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiTimingLut::restore_LUT(
-  Deserializer& s
-)
-{
-  CiTiming::_restore(s);
-  s.restore(mRiseTransition);
-  s.restore(mFallTransition);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiTimingLut1
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiTimingLut1::_restore(
-  Deserializer& s
-)
-{
-  restore_LUT(s);
-  s.restore(mCellRise);
-  s.restore(mCellFall);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiTimingLut2
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiTimingLut2::_restore(
-  Deserializer& s
-)
-{
-  restore_LUT(s);
-  s.restore(mRisePropagation);
-  s.restore(mFallPropagation);
-}
-
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス LutTemplate
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を復元する．
-CiLutTemplate*
-CiLutTemplate::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
-)
-{
-  auto d = s.in().read_8();
-  unique_ptr<CiLutTemplate> ptr;
-  switch ( d ) {
-  case 1:
-    {
-      ClibVarType var_type;
-      s.in() >> var_type;
-      vector<double> index_array;
-      s.restore(index_array);
-      return new CiLutTemplate1D{lib,
-				 var_type, index_array};
-    }
-  case 2:
-    {
-      ClibVarType var_type1;
-      s.in() >> var_type1;
-      vector<double> index_array1;
-      s.restore(index_array1);
-      ClibVarType var_type2;
-      s.in() >> var_type2;
-      vector<double> index_array2;
-      s.restore(index_array2);
-      return new CiLutTemplate2D{lib,
-				 var_type1, index_array1,
-				 var_type2, index_array2};
-    }
-  case 3:
-    {
-      ClibVarType var_type1;
-      s.in() >> var_type1;
-      vector<double> index_array1;
-      s.restore(index_array1);
-      ClibVarType var_type2;
-      s.in() >> var_type2;
-      vector<double> index_array2;
-      s.restore(index_array2);
-      ClibVarType var_type3;
-      s.in() >> var_type3;
-      vector<double> index_array3;
-      s.restore(index_array3);
-      return new CiLutTemplate3D{lib,
-				 var_type1, index_array1,
-				 var_type2, index_array2,
-				 var_type3, index_array3};
-    }
-  default:
-    ASSERT_NOT_REACHED;
-  }
-  // ダミー
-  return nullptr;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLut
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を復元する．
-CiLut*
-CiLut::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
-)
-{
-  auto d = s.in().read_8();
-  CiLut* lut = nullptr;
-  switch ( d ) {
-  case 1: lut = new CiLut1D{lib}; break;
-  case 2: lut = new CiLut2D{lib}; break;
-  case 3: lut = new CiLut3D{lib}; break;
-  default: ASSERT_NOT_REACHED; break;
-  }
-  lut->_restore(s);
-  return lut;
-}
-
-// @brief 内容を読み込む．
-void
-CiLut::restore_common(
-  Deserializer& s
-)
-{
-  s.restore(mTemplate);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLut1D
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiLut1D::_restore(
-  Deserializer& s
-)
-{
-  restore_common(s);
-  s.restore(mIndexArray);
-  s.restore(mValueArray);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLut2D
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiLut2D::_restore(
-  Deserializer& s
-)
-{
-  restore_common(s);
-  s.restore(mIndexArray[0]);
-  s.restore(mIndexArray[1]);
-  s.restore(mValueArray);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス CiLut3D
-//////////////////////////////////////////////////////////////////////
-
-// @brief 内容を読み込む．
-void
-CiLut3D::_restore(
-  Deserializer& s
-)
-{
-  restore_common(s);
-  s.restore(mIndexArray[0]);
-  s.restore(mIndexArray[1]);
-  s.restore(mIndexArray[2]);
-  s.restore(mValueArray);
-}
-
-
-//////////////////////////////////////////////////////////////////////
 // クラス CiPatMgr
 //////////////////////////////////////////////////////////////////////
 
@@ -1359,6 +679,127 @@ CiPatGraph::restore(
   s.restore(mRepClass);
   s.restore(mInputNum);
   s.restore(mEdgeList);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス Deserializer
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+Deserializer::Deserializer(
+  istream& s
+) : mS{s}
+{
+  // 各要素の0番目は nullptr
+  mBusTypeList.push_back(nullptr);
+  mPinList.push_back(nullptr);
+  mBusList.push_back(nullptr);
+  mBundleList.push_back(nullptr);
+  mTimingList.push_back(nullptr);
+  mLutTemplateList.push_back(nullptr);
+  mLutList.push_back(nullptr);
+  mCellClassList.push_back(nullptr);
+  mCellGroupList.push_back(nullptr);
+  mCellList.push_back(nullptr);
+}
+
+// @brief 要素のデシリアライズを行う．
+void
+Deserializer::deserialize(
+  CiCellLibrary* lib
+)
+{
+  {
+    SizeType n;
+    restore(n);
+    cout << "# of BusType: " << n << endl;
+    mBusTypeList.resize(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      mBusTypeList[i] = CiBusType::restore(*this);
+    }
+  }
+  {
+    SizeType n;
+    restore(n);
+    cout << "# of LutTemplate: " << n << endl;
+    mLutTemplateList.resize(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      mLutTemplateList[i] = CiLutTemplate::restore(*this);
+    }
+  }
+  {
+    SizeType n;
+    restore(n);
+    cout << "# of Lut: " << n << endl;
+    mLutList.resize(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      mLutList[i] = CiLut::restore(*this);
+    }
+  }
+  {
+    SizeType n;
+    restore(n);
+    cout << "# of Pin: " << n << endl;
+    mPinList.resize(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      mPinList[i] = CiPin::restore(*this);
+    }
+  }
+  {
+    SizeType n;
+    restore(n);
+    cout << "# of Bus: " << n << endl;
+    mBusList.resize(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      mBusList[i] = CiBus::restore(*this);
+    }
+  }
+  {
+    SizeType n;
+    restore(n);
+    cout << "# of Bundle: " << n << endl;
+    mBundleList.resize(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      mBundleList[i] = CiBundle::restore(*this);
+    }
+  }
+  {
+    SizeType n;
+    restore(n);
+    cout << "# of Timing: " << n << endl;
+    mTimingList.resize(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      mTimingList[i] = CiTiming::restore(*this);
+    }
+  }
+  {
+    SizeType n;
+    restore(n);
+    cout << "# of Cell: " << n << endl;
+    mCellList.resize(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      mCellList[i] = CiCell::restore(*this, lib);
+    }
+  }
+  {
+    SizeType n;
+    restore(n);
+    cout << "# of CellGroup: " << n << endl;
+    mCellGroupList.resize(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      mCellGroupList[i] = CiCellGroup::restore(*this, lib);
+    }
+  }
+  {
+    SizeType n;
+    restore(n);
+    cout << "# of CellClass: " << n << endl;
+    mCellClassList.resize(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      mCellClassList[i] = CiCellClass::restore(*this, lib);
+    }
+  }
 }
 
 END_NAMESPACE_YM_CLIB

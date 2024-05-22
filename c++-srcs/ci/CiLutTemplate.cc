@@ -7,10 +7,93 @@
 /// All rights reserved.
 
 #include "ci/CiLutTemplate.h"
+#include "ci/Serializer.h"
+#include "ci/Deserializer.h"
 #include "CiLutTemplate_sub.h"
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiLutTemplate
+//////////////////////////////////////////////////////////////////////
+
+// @brief 内容をシリアライズする．
+void
+CiLutTemplate::serialize(
+  Serializer& s
+) const
+{
+  s.reg_obj(this);
+}
+
+// @brief 1つの変数の情報をバイナリダンプする．
+void
+CiLutTemplate::dump_var(
+  Serializer& s,
+  ClibVarType var_type,
+  const vector<double>& index_array
+)
+{
+  s.out() << var_type;
+  s.dump(index_array);
+}
+
+
+// @brief 内容を復元する．
+unique_ptr<CiLutTemplate>
+CiLutTemplate::restore(
+  Deserializer& s
+)
+{
+  auto d = s.in().read_8();
+  switch ( d ) {
+  case 1:
+    {
+      ClibVarType var_type;
+      s.in() >> var_type;
+      vector<double> index_array;
+      s.restore(index_array);
+      return unique_ptr<CiLutTemplate>{new CiLutTemplate1D{var_type, index_array}};
+    }
+  case 2:
+    {
+      ClibVarType var_type1;
+      s.in() >> var_type1;
+      vector<double> index_array1;
+      s.restore(index_array1);
+      ClibVarType var_type2;
+      s.in() >> var_type2;
+      vector<double> index_array2;
+      s.restore(index_array2);
+      return unique_ptr<CiLutTemplate>{new CiLutTemplate2D{var_type1, index_array1,
+							   var_type2, index_array2}};
+    }
+  case 3:
+    {
+      ClibVarType var_type1;
+      s.in() >> var_type1;
+      vector<double> index_array1;
+      s.restore(index_array1);
+      ClibVarType var_type2;
+      s.in() >> var_type2;
+      vector<double> index_array2;
+      s.restore(index_array2);
+      ClibVarType var_type3;
+      s.in() >> var_type3;
+      vector<double> index_array3;
+      s.restore(index_array3);
+      return unique_ptr<CiLutTemplate>{new CiLutTemplate3D{var_type1, index_array1,
+							   var_type2, index_array2,
+							   var_type3, index_array3}};
+    }
+  default:
+    ASSERT_NOT_REACHED;
+  }
+  // ダミー
+  return {};
+}
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLutTemplate1D
@@ -57,6 +140,16 @@ CiLutTemplate1D::index_array(
     throw std::out_of_range{"var is out of range"};
   }
   return mIndexArray;
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiLutTemplate1D::dump(
+  Serializer& s
+) const
+{
+  s.out().write_8(1);
+  dump_var(s, mVarType, mIndexArray);
 }
 
 
@@ -107,6 +200,18 @@ CiLutTemplate2D::index_array(
   return mIndexArray[var];
 }
 
+// @brief 内容をバイナリダンプする．
+void
+CiLutTemplate2D::dump(
+  Serializer& s
+) const
+{
+  s.out().write_8(2);
+  for ( SizeType i: Range(2) ) {
+    dump_var(s, mVarType[i], mIndexArray[i]);
+  }
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLutTemplate3D
@@ -153,6 +258,18 @@ CiLutTemplate3D::index_array(
     throw std::out_of_range{"var is out of range"};
   }
   return mIndexArray[var];
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiLutTemplate3D::dump(
+  Serializer& s
+) const
+{
+  s.out().write_8(3);
+  for ( SizeType i: Range(2) ) {
+    dump_var(s, mVarType[i], mIndexArray[i]);
+  }
 }
 
 END_NAMESPACE_YM_CLIB

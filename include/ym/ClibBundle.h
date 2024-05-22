@@ -8,8 +8,8 @@
 /// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ClibHandle.h"
-#include "ym/ClibList.h"
+#include "ym/ClibCellElem.h"
+#include "ym/ClibList2.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -22,7 +22,7 @@ class CiBundle;
 /// @brief バンドルを表すクラス
 //////////////////////////////////////////////////////////////////////
 class ClibBundle :
-  public ClibHandle<CiBundle>
+  public ClibCellElem<CiBundle>
 {
 public:
 
@@ -31,8 +31,11 @@ public:
 
   /// @brief 内容を指定したコンストラクタ
   ClibBundle(
+    const CiCell* cell,  ///< [in] 親のセル
     const CiBundle* impl ///< [in] 本体
-  );
+  ) : ClibCellElem{cell, impl}
+  {
+  }
 
   /// @brief デストラクタ
   ~ClibBundle();

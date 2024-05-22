@@ -24,11 +24,9 @@ public:
 
   /// @brief コンストラクタ
   CiLutTemplate1D(
-    const CiCellLibrary* lib,
     ClibVarType var_type,
     const vector<double>& index_array
-  ) : CiLutTemplate{lib},
-      mVarType{var_type},
+  ) : mVarType{var_type},
       mIndexArray{index_array}
   {
   }
@@ -102,13 +100,11 @@ public:
 
   /// @brief コンストラクタ
   CiLutTemplate2D(
-    const CiCellLibrary* lib,
     ClibVarType var1,
     const vector<double>& index_array1,
     ClibVarType var2,
     const vector<double>& index_array2
-  ) : CiLutTemplate{lib},
-      mVarType{var1, var2},
+  ) : mVarType{var1, var2},
       mIndexArray{index_array1, index_array2}
   {
   }
@@ -182,15 +178,13 @@ public:
 
   /// @brief コンストラクタ
   CiLutTemplate3D(
-    const CiCellLibrary* lib,
     ClibVarType var1,
     const vector<double>& index_array1,
     ClibVarType var2,
     const vector<double>& index_array2,
     ClibVarType var3,
     const vector<double>& index_array3
-  ) : CiLutTemplate{lib},
-      mVarType{var1, var2, var3},
+  ) : mVarType{var1, var2, var3},
       mIndexArray{index_array1, index_array2, index_array3}
   {
   }

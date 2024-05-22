@@ -56,6 +56,7 @@ private:
   /// @brief タイミング情報を作る．
   const CiTiming*
   add_timing(
+    CiCell* cell,        ///< [in] セル
     const MislibPin* pin ///< [in] ピン記述
   );
 

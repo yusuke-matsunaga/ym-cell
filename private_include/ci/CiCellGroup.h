@@ -27,12 +27,18 @@ class Deserializer;
 class CiCellGroup :
   public CiLibObj
 {
+  friend class CiCellClass;
+
 public:
 
   /// @brief restore() 用のコンストラクタ
   CiCellGroup(
-    const CiCellLibrary* lib     ///< [in] 親のセルライブラリ
-  ) : CiLibObj{lib}
+    const CiCellLibrary* lib,              ///< [in] 親のセルライブラリ
+    const ClibIOMap& iomap,                ///< [in] 変換マップ
+    const vector<const CiCell*>& cell_list ///< [in] セルのリスト
+  ) : CiLibObj{lib},
+      mIoMap{iomap},
+      mCellList{cell_list}
   {
   }
 
@@ -120,7 +126,7 @@ public:
 
   /// @brief 内容を読み込む．
   static
-  CiCellGroup*
+  unique_ptr<CiCellGroup>
   restore(
     Deserializer& s,   ///< [in] デシリアライザ
     CiCellLibrary* lib ///< [in] 親のセルライブラリ

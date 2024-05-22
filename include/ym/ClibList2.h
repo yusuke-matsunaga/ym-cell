@@ -1,41 +1,44 @@
-#ifndef CLIBLIST_H
-#define CLIBLIST_H
+#ifndef CLIBLIST2_H
+#define CLIBLIST2_H
 
-/// @file ClibList.h
-/// @brief ClibList のヘッダファイル
+/// @file ClibList2.h
+/// @brief ClibList2 のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/clib.h"
+#include "ym/ClibCellElem.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class ClibListIter ClibList.h "ClibList.h"
-/// @brief ClibList の反復子
+/// @class ClibList2Iter ClibList2.h "ClibList2.h"
+/// @brief ClibList2 の反復子
 ///
 /// T1 が実装の本体で T2 がそのスマートポインタクラス
 /// T2{T1} の形のコンストラクタが定義されていると仮定する．
 //////////////////////////////////////////////////////////////////////
 template<class T1, class T2>
-class ClibListIter
+class ClibList2Iter :
+  private ClibCellPtr
 {
   using impl_iter = typename vector<const T1*>::const_iterator;
 
 public:
 
   /// @brief コンストラクタ
-  ClibListIter(
-    impl_iter iter ///< [in] 実体のリストの反復子
-  ) : mIter{iter}
+  ClibList2Iter(
+    const CiCell* cell, ///< [in] 親のセル
+    impl_iter iter      ///< [in] 実体のリストの反復子
+  ) : ClibCellPtr{cell},
+      mIter{iter}
   {
   }
 
   /// @brief デストラクタ
-  ~ClibListIter() = default;
+  ~ClibList2Iter() = default;
 
 
 public:
@@ -47,11 +50,11 @@ public:
   T2
   operator*() const
   {
-    return T2{*mIter};
+    return T2{ClibCellPtr::_impl(), *mIter};
   }
 
   /// @brief 一つ進める．
-  ClibListIter&
+  ClibList2Iter&
   operator++()
   {
     ++ mIter;
@@ -61,7 +64,7 @@ public:
   /// @brief 等価比較演算子
   bool
   operator==(
-    const ClibListIter& right
+    const ClibList2Iter& right
   ) const
   {
     return mIter == right.mIter;
@@ -70,7 +73,7 @@ public:
   /// @brief 非等価比較演算子
   bool
   operator!=(
-    const ClibListIter& right
+    const ClibList2Iter& right
   ) const
   {
     return !operator==(right);
@@ -89,42 +92,47 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class ClibList ClibList.h "ClibList.h"
+/// @class ClibList2 ClibList2.h "ClibList2.h"
 /// @brief ClibXXX のリストを表すクラス
 ///
 /// T1 が実装の本体で T2 がそのスマートポインタクラス
-/// T2{T1} の形のコンストラクタが定義されていると仮定する．
+/// T2{const CiCell*, T1} の形のコンストラクタが定義されていると仮定する．
 //////////////////////////////////////////////////////////////////////
 template<class T1, class T2>
-class ClibList
+class ClibList2 :
+  private ClibCellPtr
 {
 public:
 
   using impl_iter = typename vector<const T1*>::const_iterator;
-  using iterator = ClibListIter<T1, T2>;
+  using iterator = ClibList2Iter<T1, T2>;
 
 public:
 
   /// @brief 空のコンストラクタ
-  ClibList() = default;
+  ClibList2() = default;
 
   /// @brief コンストラクタ
-  ClibList(
-    impl_iter begin, ///< [in] リストの先頭
-    impl_iter end    ///< [in] リストの末尾
-  ) : mList{begin, end}
+  ClibList2(
+    const CiCell* cell, ///< [in] 親のセル
+    impl_iter begin,    ///< [in] リストの先頭
+    impl_iter end       ///< [in] リストの末尾
+  ) : ClibCellPtr{cell},
+      mList{begin, end}
   {
   }
 
   /// @brief コンストラクタ
-  ClibList(
+  ClibList2(
+    const CiCell* cell,                ///< [in] 親のセル
     const vector<const T1*>& impl_list ///< [in] 実体のリスト
-  ) : mList{impl_list}
+  ) : ClibCellPtr{cell},
+      mList{impl_list}
   {
   }
 
   /// @brief デストラクタ
-  ~ClibList() = default;
+  ~ClibList2() = default;
 
 
 public:
@@ -149,21 +157,21 @@ public:
       throw std::out_of_range("out of range");
     }
     auto ptr = mList[pos];
-    return T2{ptr};
+    return T2{ClibCellPtr::_impl(), ptr};
   }
 
   /// @brief 先頭の反復子を返す．
   iterator
   begin() const
   {
-    return iterator{mList.begin()};
+    return iterator{ClibCellPtr::_impl(), mList.begin()};
   }
 
   /// @brief 末尾の反復子を返す．
   iterator
   end() const
   {
-    return iterator{mList.end()};
+    return iterator{ClibCellPtr::_impl(), mList.end()};
   }
 
 
@@ -182,27 +190,24 @@ private:
 // ClibList を用いたリスト型
 //////////////////////////////////////////////////////////////////////
 
-class CiCell;
-using ClibCellList = ClibList<CiCell, ClibCell>;
-class CiCellGroup;
-using ClibCellGroupList = ClibList<CiCellGroup, ClibCellGroup>;
-class CiCellClass;
-using ClibCellClassList = ClibList<CiCellClass, ClibCellClass>;
-class CiLut;
-using ClibLutList = ClibList<CiLut, ClibLut>;
-class CiLutTemplate;
-using ClibLutTemplateList = ClibList<CiLutTemplate, ClibLutTemplate>;
+class CiPin;
+using ClibPinList = ClibList2<CiPin, ClibPin>;
+class CiBus;
+using ClibBusList = ClibList2<CiBus, ClibBus>;
+class CiBundle;
+using ClibBundleList = ClibList2<CiBundle, ClibBundle>;
+class CiTiming;
+using ClibTimingList = ClibList2<CiTiming, ClibTiming>;
 
 END_NAMESPACE_YM_CLIB
 
 BEGIN_NAMESPACE_YM
 
-using nsClib::ClibCellList;
-using nsClib::ClibCellGroupList;
-using nsClib::ClibCellClassList;
-using nsClib::ClibLutList;
-using nsClib::ClibLutTemplateList;
+using nsClib::ClibPinList;
+using nsClib::ClibBusList;
+using nsClib::ClibBundleList;
+using nsClib::ClibTimingList;
 
 END_NAMESPACE_YM
 
-#endif // CLIBLIST_H
+#endif // CLIBLIST2_H

@@ -13,7 +13,6 @@
 #include "ym/ClibCapacitance.h"
 #include "ym/Expr.h"
 #include "ym/ShString.h"
-#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -25,23 +24,18 @@ class Deserializer;
 /// @class ClibCellPinBase CiPin.h "CiPin.h"
 /// @brief ピンの基底クラス
 //////////////////////////////////////////////////////////////////////
-class CiPin :
-  public CiLibObj
+class CiPin
 {
 public:
 
   /// @brief restore() 用のコンストラクタ
-  CiPin(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
-  ) : CiLibObj{lib}
-  {
-  }
+  CiPin() = default;
 
   /// @brief コンストラクタ
   CiPin(
-    const CiCellLibrary* lib, ///< [in] 親のライブラリ
+    SizeType pin_id,          ///< [in] ピン番号
     const ShString& name      ///< [in] ピン名
-  ) : CiLibObj{lib},
+  ) : mPinId{pin_id},
       mName{name}
   {
   }
@@ -217,10 +211,9 @@ public:
 
   /// @brief 内容を復元する．
   static
-  CiPin*
+  unique_ptr<CiPin>
   restore(
-    Deserializer& s,   ///< [in] デシリアライザ
-    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 
@@ -248,21 +241,6 @@ protected:
   restore_common(
     Deserializer& s ///< [in] デシリアライザ
   );
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 設定用の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief ピン番号を設定する．
-  void
-  set_pin_id(
-    SizeType pid ///< [in] ピン番号
-  )
-  {
-    mPinId = pid;
-  }
 
 
 private:

@@ -10,12 +10,12 @@
 
 #include "ym/clib.h"
 #include "ym/ShString.h"
-#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 class CiBusType;
+class CiPin;
 class Serializer;
 class Deserializer;
 
@@ -23,19 +23,16 @@ class Deserializer;
 /// @class CiBus CiBus.h "CiBus.h"
 /// @brief ClibBus の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiBus :
-  public CiLibObj
+class CiBus
 {
 public:
 
   /// @brief コンストラクタ
   CiBus(
-    const CiCellLibrary* lib,            ///< [in] 親のライブラリ
     const ShString& name,                ///< [in] 名前
     const CiBusType* bus_type,           ///< [in] バスタイプ
     const vector<const CiPin*>& pin_list ///< [in] ピンリスト
-  ) : CiLibObj{lib},
-      mName{name},
+  ) : mName{name},
       mBusType{bus_type},
       mPinList{pin_list}
   {
@@ -115,10 +112,9 @@ public:
 
   /// @brief 内容を読み込む．
   static
-  CiBus*
+  unique_ptr<CiBus>
   restore(
-    Deserializer& s,   ///< [in] デシリアライザ
-    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 

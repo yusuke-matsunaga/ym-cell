@@ -8,8 +8,8 @@
 /// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ClibHandle.h"
-#include "ym/ClibList.h"
+#include "ym/ClibCellElem.h"
+#include "ym/ClibList2.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -22,7 +22,7 @@ class CiBus;
 /// @brief バスを表すクラス
 //////////////////////////////////////////////////////////////////////
 class ClibBus :
-  public ClibHandle<CiBus>
+  public ClibCellElem<CiBus>
 {
 public:
 
@@ -33,11 +33,14 @@ public:
 
   /// @brief 内容を指定したコンストラクタ
   ClibBus(
-    const CiBus* impl ///< [in] 本体
-  );
+    const CiCell* cell, ///< [in] 親のセル
+    const CiBus* impl   ///< [in] 本体
+  ) : ClibCellElem{cell, impl}
+  {
+  }
 
   /// @brief デストラクタ
-  ~ClibBus();
+  ~ClibBus() = default;
 
 
 public:

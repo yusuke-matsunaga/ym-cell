@@ -128,7 +128,7 @@ public:
 
   /// @brief 内容を読み込む．
   static
-  CiCellClass*
+  unique_ptr<CiCellClass>
   restore(
     Deserializer& s, ///< [in] デシリアライザ
     CiCellLibrary* lib ///< [in] 親のセルライブラリ

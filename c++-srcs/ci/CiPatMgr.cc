@@ -8,6 +8,8 @@
 
 #include "ci/CiPatMgr.h"
 #include "ci/CiPatGraph.h"
+#include "ci/Serializer.h"
+#include "ci/Deserializer.h"
 #include "ym/BinEnc.h"
 #include "ym/Range.h"
 
@@ -128,6 +130,27 @@ CiPatMgr::set_pat_info(
 {
   CiPatGraph& pg = mPatArray[pos];
   pg.init(rep_class, input_num, edge_list);
+}
+
+// @brief バイナリダンプを行う．
+void
+CiPatMgr::dump(
+  Serializer& s
+) const
+{
+  // パタングラフのノード情報のダンプ
+  s.dump(node_num());
+  for ( auto i: Range(node_num()) ) {
+    s.dump(mNodeTypeArray[i]);
+    s.dump(mEdgeArray[i * 2 + 0]);
+    s.dump(mEdgeArray[i * 2 + 1]);
+  }
+
+  // パタングラフの情報のダンプ
+  s.dump(pat_num());
+  for ( auto& pat: mPatArray ) {
+    pat.dump(s);
+  }
 }
 
 END_NAMESPACE_YM_CLIB

@@ -9,21 +9,21 @@
 /// All rights reserved.
 
 #include "ym/clib.h"
+#include "ym/ClibCellPtr.h"
 #include "ym/ClibArea.h"
-#include "ym/ClibList.h"
+#include "ym/ClibList2.h"
 #include "ym/logic.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
-
-class CiCell;
 
 //////////////////////////////////////////////////////////////////////
 /// @ingroup ClibGroup
 /// @class ClibCell ClibCell.h "ym/ClibCell.h"
 /// @brief セル本体のクラス
 //////////////////////////////////////////////////////////////////////
-class ClibCell
+class ClibCell :
+  public ClibCellPtr
 {
 public:
 
@@ -35,10 +35,12 @@ public:
   /// @brief 内容を指定したコンストラクタ
   ClibCell(
     const CiCell* impl ///< [in] 本体
-  );
+  ) : ClibCellPtr{impl}
+  {
+  }
 
   /// @brief デストラクタ
-  ~ClibCell();
+  ~ClibCell() = default;
 
 
 public:
@@ -50,14 +52,6 @@ public:
   /// @brief 親のセルライブラリの取得
   ClibCellLibrary
   library() const;
-
-#if 0
-  /// @brief ID番号の取得
-  ///
-  /// ここで返される番号は ClibCellLibrary::cell() の引数に対応する．
-  SizeType
-  id() const;
-#endif
 
   /// @brief 名前の取得
   string
@@ -243,20 +237,6 @@ public:
   /// @{
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief タイミング情報の数を返す．
-  SizeType
-  timing_num() const;
-
-  /// @brief タイミング情報を返す．
-  ClibTiming
-  timing(
-    SizeType pos ///< [in] インデックス ( 0 <= pos < timing_num() )
-  ) const;
-
-  /// @brief タイミング情報のリストを返す．
-  ClibTimingList
-  timing_list() const;
-
   /// @brief 条件に合致するタイミング情報のリストを返す．
   ClibTimingList
   timing_list(
@@ -410,62 +390,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // mImpl に関する関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 適正な値を持っている時 true を返す．
-  bool
-  is_valid() const
-  {
-    return mImpl != nullptr;
-  }
-
-  /// @brief 不正値の時 true を返す．
-  bool
-  is_invalid() const
-  {
-    return !is_valid();
-  }
-
-  /// @brief 等価比較
-  bool
-  operator==(
-    const ClibCell& right
-  ) const
-  {
-    return mImpl == right.mImpl;
-  }
-
-  /// @brief 非等価比較
-  bool
-  operator!=(
-    const ClibCell& right
-  ) const
-  {
-    return !operator==(right);
-  }
-
-  /// @brief 適正な値を持っているかチェックする．
-  void
-  _check_valid() const
-  {
-    if ( !is_valid() ) {
-      throw std::invalid_argument{"not having a valid data"};
-    }
-  }
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 実装
-  const CiCell* mImpl;
 
 };
 

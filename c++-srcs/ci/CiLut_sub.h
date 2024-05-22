@@ -23,15 +23,10 @@ class CiLut1D :
 public:
 
   /// @brief restore() 用のコンストラクタ
-  CiLut1D(
-    const CiCellLibrary* lib          ///< [in] 親のセルライブラリ
-  ) : CiLut{lib}
-  {
-  }
+  CiLut1D() = default;
 
   /// @brief コンストラクタ
   CiLut1D(
-    const CiCellLibrary* lib,          ///< [in] 親のセルライブラリ
     const CiLutTemplate* lut_template, ///< [in] テンプレート
     const vector<double>& value_array, ///< [in] 値の配列
     const vector<double>& index_array  ///< [in] インデックスの配列
@@ -122,15 +117,10 @@ class CiLut2D :
 public:
 
   /// @brief restore() 用のコンストラクタ
-  CiLut2D(
-    const CiCellLibrary* lib          ///< [in] 親のセルライブラリ
-  ) : CiLut{lib}
-  {
-  }
+  CiLut2D() = default;
 
   /// @brief コンストラクタ
   CiLut2D(
-    const CiCellLibrary* lib,           ///< [in] 親のセルライブラリ
     const CiLutTemplate* lut_template,  ///< [in] テンプレート
     const vector<double>& value_array,  ///< [in] 値の配列
     const vector<double>& index_array1, ///< [in] 変数1のインデックスの配列
@@ -232,15 +222,10 @@ class CiLut3D :
 public:
 
   /// @brief restore() 用のコンストラクタ
-  CiLut3D(
-    const CiCellLibrary* lib          ///< [in] 親のセルライブラリ
-  ) : CiLut{lib}
-  {
-  }
+  CiLut3D() = default;
 
   /// @brief コンストラクタ
   CiLut3D(
-    const CiCellLibrary* lib,           ///< [in] 親のセルライブラリ
     const CiLutTemplate* lut_template,  ///< [in] テンプレート
     const vector<double>& value_array,  ///< [in] 値の配列
     const vector<double>& index_array1, ///< [in] 変数1のインデックスの配列

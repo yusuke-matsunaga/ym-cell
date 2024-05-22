@@ -7,6 +7,8 @@
 /// All rights reserved.
 
 #include "CiFLCell.h"
+#include "ci/Serializer.h"
+#include "ci/Deserializer.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -55,6 +57,36 @@ ClibCPV
 CiFLCell::clear_preset_var2() const
 {
   return mCpv2;
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiFLCell::dump_FL(
+  Serializer& s
+) const
+{
+  dump_common(s);
+  s.out() << mVar1
+	  << mVar2;
+  mClear.dump(s.out());
+  mPreset.dump(s.out());
+  s.out() << mCpv1
+	  << mCpv2;
+}
+
+// @brief 内容を読み込む．
+void
+CiFLCell::restore_FL(
+  Deserializer& s
+)
+{
+  CiCell::_restore(s);
+  s.in() >> mVar1
+	 >> mVar2;
+  mClear.restore(s.in());
+  mPreset.restore(s.in());
+  s.in() >> mCpv1
+	 >> mCpv2;
 }
 
 END_NAMESPACE_YM_CLIB

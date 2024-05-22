@@ -8,6 +8,9 @@
 
 #include "ci/CiPin.h"
 #include "CiPin_sub.h"
+#include "ci/Serializer.h"
+#include "ci/Deserializer.h"
+
 
 BEGIN_NAMESPACE_YM_CLIB
 
@@ -141,6 +144,56 @@ CiPin::internal_id() const
   return 0;
 }
 
+// @brief 内容をシリアライズする．
+void
+CiPin::serialize(
+  Serializer& s
+) const
+{
+  s.reg_obj(this);
+}
+
+// @brief dump 用の共通情報を出力する．
+void
+CiPin::dump_common(
+  Serializer& s,
+  int sig
+) const
+{
+  s.out().write_8(sig);
+  s.out() << mName;
+  s.out().write_64(mPinId);
+}
+
+// @brief ピン情報を復元する．
+unique_ptr<CiPin>
+CiPin::restore(
+  Deserializer& s
+)
+{
+  auto sig = s.in().read_8();
+  unique_ptr<CiPin> pin;
+  switch ( sig ) {
+  case 0: pin = unique_ptr<CiPin>{new CiInputPin{}}; break;
+  case 1: pin = unique_ptr<CiPin>{new CiOutputPin{}}; break;
+  case 2: pin = unique_ptr<CiPin>{new CiInoutPin{}}; break;
+  case 3: pin = unique_ptr<CiPin>{new CiInternalPin{}}; break;
+  default: ASSERT_NOT_REACHED; break;
+  }
+  pin->_restore(s);
+  return pin;
+}
+
+// @brief 内容を読み込む．
+void
+CiPin::restore_common(
+  Deserializer& s
+)
+{
+  s.in() >> mName;
+  s.restore(mPinId);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiInputPin
@@ -186,6 +239,32 @@ ClibCapacitance
 CiInputPin::fall_capacitance() const
 {
   return mFallCapacitance;
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiInputPin::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 0);
+  s.out().write_64(mInputId);
+  s.out() << mCapacitance
+	  << mRiseCapacitance
+	  << mFallCapacitance;
+}
+
+// @brief 内容を読み込む．
+void
+CiInputPin::_restore(
+  Deserializer& s
+)
+{
+  restore_common(s);
+  s.restore(mInputId);
+  s.in() >> mCapacitance
+	 >> mRiseCapacitance
+	 >> mFallCapacitance;
 }
 
 
@@ -256,6 +335,45 @@ CiOutputPinBase::tristate() const
   return mTristate;
 }
 
+// @brief 内容をバイナリダンプする．
+void
+CiOutputPinBase::dump_base(
+  Serializer& s,
+  int sig
+) const
+{
+  dump_common(s, sig);
+  s.out().write_64(mOutputId);
+  s.out() << mFanoutLoad
+	  << mMaxFanout
+	  << mMinFanout
+	  << mMaxCapacitance
+	  << mMinCapacitance
+	  << mMaxTransition
+	  << mMinTransition;
+  mFunction.dump(s.out());
+  mTristate.dump(s.out());
+}
+
+// @brief 内容を読み込む．
+void
+CiOutputPinBase::restore_base(
+  Deserializer& s
+)
+{
+  restore_common(s);
+  s.restore(mOutputId);
+  s.in() >> mFanoutLoad
+	 >> mMaxFanout
+	 >> mMinFanout
+	 >> mMaxCapacitance
+	 >> mMinCapacitance
+	 >> mMaxTransition
+	 >> mMinTransition;
+  mFunction.restore(s.in());
+  mTristate.restore(s.in());
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiOutputPin
@@ -273,6 +391,24 @@ bool
 CiOutputPin::is_output() const
 {
   return true;
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiOutputPin::dump(
+  Serializer& s
+) const
+{
+  dump_base(s, 1);
+}
+
+// @brief 内容を読み込む．
+void
+CiOutputPin::_restore(
+  Deserializer& s
+)
+{
+  restore_base(s);
 }
 
 
@@ -322,6 +458,32 @@ CiInoutPin::fall_capacitance() const
   return mFallCapacitance;
 }
 
+// @brief 内容をバイナリダンプする．
+void
+CiInoutPin::dump(
+  Serializer& s
+) const
+{
+  dump_base(s, 2);
+  s.out().write_64(mInputId);
+  s.out() << mCapacitance
+	  << mRiseCapacitance
+	  << mFallCapacitance;
+}
+
+// @brief 内容を読み込む．
+void
+CiInoutPin::_restore(
+  Deserializer& s
+)
+{
+  restore_base(s);
+  s.restore(mInputId);
+  s.in() >> mCapacitance
+	 >> mRiseCapacitance
+	 >> mFallCapacitance;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiInternalPin
@@ -346,6 +508,26 @@ SizeType
 CiInternalPin::internal_id() const
 {
   return mInternalId;
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiInternalPin::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 3);
+  s.out().write_64(internal_id());
+}
+
+// @brief 内容を読み込む．
+void
+CiInternalPin::_restore(
+  Deserializer& s
+)
+{
+  restore_common(s);
+  s.restore(mInternalId);
 }
 
 END_NAMESPACE_YM_CLIB

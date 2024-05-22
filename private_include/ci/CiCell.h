@@ -14,18 +14,17 @@
 #include "ym/ShString.h"
 #include "ci/CiLibObj.h"
 #include "ci/CiPin.h"
+#include "ci/CiBus.h"
+#include "ci/CiBundle.h"
+#include "ci/CiTiming.h"
+#include "ci/conv_list.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 class CiCellLibrary;
-class CiInputPin;
-class CiOutputPin;
-class CiInoutPin;
-class CiInternalPin;
-class CiBundle;
-class CiBus;
-class CiTiming;
+class CiBusType;
+class CiLut;
 class CgSignature;
 class Serializer;
 class Deserializer;
@@ -110,7 +109,7 @@ public:
   ) const
   {
     ASSERT_COND( 0 <= pos && pos < pin_num() );
-    return mPinList[pos];
+    return mPinList[pos].get();
   }
 
   /// @brief 名前からピンの取得
@@ -122,10 +121,10 @@ public:
   ) const;
 
   /// @brief ピンのリストの取得
-  const vector<const CiPin*>&
+  vector<const CiPin*>
   pin_list() const
   {
-    return mPinList;
+    return conv_list(mPinList);
   }
 
   /// @brief 入力ピン数の取得
@@ -234,14 +233,14 @@ public:
   ) const
   {
     ASSERT_COND( 0 <= pos && pos < mInternalList.size() );
-    return mInternalList[pos];
+    return mInternalList[pos].get();
   }
 
   /// @brief 内部ピンのリスト
-  const vector<const CiPin*>&
+  vector<const CiPin*>
   internal_list() const
   {
-    return mInternalList;
+    return conv_list(mInternalList);
   }
 
   /// @brief バス数の取得
@@ -258,7 +257,7 @@ public:
   ) const
   {
     ASSERT_COND( 0 <= pos && pos < bus_num() );
-    return mBusList[pos];
+    return mBusList[pos].get();
   }
 
   /// @brief 名前からバスの取得
@@ -268,10 +267,10 @@ public:
   ) const;
 
   /// @brief バスのリスト
-  const vector<const CiBus*>&
+  vector<const CiBus*>
   bus_list() const
   {
-    return mBusList;
+    return conv_list(mBusList);
   }
 
   /// @brief バンドル数の取得
@@ -288,7 +287,7 @@ public:
   ) const
   {
     ASSERT_COND( 0 <= pos && pos < bundle_num() );
-    return mBundleList[pos];
+    return mBundleList[pos].get();
   }
 
   /// @brief 名前からバスの取得
@@ -298,10 +297,10 @@ public:
   ) const;
 
   /// @brief バンドルのリスト
-  const vector<const CiBundle*>&
+  vector<const CiBundle*>
   bundle_list() const
   {
-    return mBundleList;
+    return conv_list(mBundleList);
   }
 
 
@@ -310,6 +309,7 @@ public:
   // タイミング情報の取得
   //////////////////////////////////////////////////////////////////////
 
+#if 0
   /// @brief タイミング情報の数を返す．
   SizeType
   timing_num() const
@@ -324,15 +324,16 @@ public:
   ) const
   {
     ASSERT_COND( 0 <= pos && pos < timing_num() );
-    return mTimingList[pos];
+    return mTimingList[pos].get();
   }
 
   /// @brief タイミングのリストを返す．
-  const vector<const CiTiming*>&
+  vector<const CiTiming*>
   timing_list() const
   {
-    return mTimingList;
+    return conv_list(mTimingList);
   }
+#endif
 
   /// @brief 条件に合致するタイミング情報のインデックスのリストを返す．
   const vector<const CiTiming*>&
@@ -496,39 +497,116 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入力ピンを追加する．
-  void
+  CiPin*
   add_input(
-    CiInputPin* pin ///< [in] ピン
+    const ShString& name,             ///< [in] ピン名
+    ClibCapacitance capacitance,      ///< [in] 負荷容量
+    ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
+    ClibCapacitance fall_capacitance  ///< [in] 立ち下がり時の負荷容量
   );
 
   /// @brief 出力ピンを追加する．
-  void
+  CiPin*
   add_output(
-    CiOutputPin* pin ///< [in] ピン
+    const ShString& name,            ///< [in] ピン名
+    ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
+    ClibCapacitance min_fanout,      ///< [in] 最大ファンアウト容量
+    ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
+    ClibCapacitance min_capacitance, ///< [in] 最大負荷容量
+    ClibTime max_transition,         ///< [in] 最大遷移時間
+    ClibTime min_transition,         ///< [in] 最大遷移時間
+    const Expr& function,            ///< [in] 出力の論理式
+    const Expr& tristate             ///< [in] tristate 条件
   );
 
   /// @brief 入出力ピンを追加する．
-  void
+  CiPin*
   add_inout(
-    CiInoutPin* pin ///< [in] ピン
+    const ShString& name,             ///< [in] ピン名
+    ClibCapacitance capacitance,      ///< [in] 負荷容量
+    ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
+    ClibCapacitance fall_capacitance, ///< [in] 立ち上がり時の負荷容量
+    ClibCapacitance max_fanout,	      ///< [in] 最大ファンアウト容量
+    ClibCapacitance min_fanout,	      ///< [in] 最大ファンアウト容量
+    ClibCapacitance max_capacitance,  ///< [in] 最大負荷容量
+    ClibCapacitance min_capacitance,  ///< [in] 最大負荷容量
+    ClibTime max_transition,	      ///< [in] 最大遷移時間
+    ClibTime min_transition,          ///< [in] 最大遷移時間
+    const Expr& function,             ///< [in] 出力の論理式
+    const Expr& tristate              ///< [in] tristate 条件
   );
 
   /// @brief 内部ピンを追加する．
-  void
+  CiPin*
   add_internal(
-    CiInternalPin* pin ///< [in] ピン
+    const ShString& name ///< [in] 名前
   );
 
   /// @brief バスを追加する．
-  void
+  CiBus*
   add_bus(
-    const CiBus* bus ///< [in] バス
+    const ShString& name,                ///< [in] 名前
+    const CiBusType* bus_type,           ///< [in] バスタイプ
+    const vector<const CiPin*>& pin_list ///< [in] ピンリスト
   );
 
   /// @brief バンドルを追加する．
-  void
+  CiBundle*
   add_bundle(
-    const CiBundle* bundle ///< [in] バンドル
+    const ShString& name,                ///< [in] 名前
+    const vector<const CiPin*>& pin_list ///< [in] ピンリスト
+  );
+
+  /// @brief タイミング情報を作る(ジェネリック遅延モデル)．
+  /// @return 生成されたタイミングを返す．
+  CiTiming*
+  add_timing_generic(
+    ClibTimingType type,            ///< [in] タイミングの種類
+    const Expr& cond,               ///< [in] 条件式
+    ClibTime intrinsic_rise,        ///< [in] 立ち上がり固有遅延
+    ClibTime intrinsic_fall,        ///< [in] 立ち下がり固有遅延
+    ClibTime slope_rise,            ///< [in] 立ち上がり負荷依存遅延
+    ClibTime slope_fall,            ///< [in] 立ち下がり負荷依存遅延
+    ClibResistance rise_resistance, ///< [in] 立ち上がり抵抗
+    ClibResistance fall_resistance  ///< [in] 立ち下がり抵抗
+  );
+
+  /// @brief タイミング情報を作る(折れ線近似)．
+  /// @return 生成されたタイミングを返す．
+  CiTiming*
+  add_timing_piecewise(
+    ClibTimingType timing_type,
+    const Expr& cond,
+    ClibTime intrinsic_rise,
+    ClibTime intrinsic_fall,
+    ClibTime slope_rise,
+    ClibTime slope_fall,
+    ClibResistance rise_pin_resistance,
+    ClibResistance fall_pin_resistance
+  );
+
+  /// @brief タイミング情報を作る(非線形タイプ1)．
+  /// @return 生成されたタイミングを返す．
+  CiTiming*
+  add_timing_lut1(
+    ClibTimingType timing_type,
+    const Expr& cond,
+    unique_ptr<CiLut>&& cell_rise,
+    unique_ptr<CiLut>&& cell_fall,
+    unique_ptr<CiLut>&& rise_transition,
+    unique_ptr<CiLut>&& fall_transition
+  );
+
+  /// @brief タイミング情報を作る(非線形タイプ2)．
+  /// @return 生成されたタイミングを返す．
+  CiTiming*
+  add_timing_lut2(
+    ClibTimingType timing_type,
+    const Expr& cond,
+    unique_ptr<CiLut>&& rise_transition,
+    unique_ptr<CiLut>&& fall_transition,
+    unique_ptr<CiLut>&& rise_propagation,
+    unique_ptr<CiLut>&& fall_propagation
   );
 
   /// @brief タイミング情報用のデータ構造を初期化する．
@@ -582,7 +660,7 @@ public:
 
   /// @brief 内容を読み込む．
   static
-  CiCell*
+  unique_ptr<CiCell>
   restore(
     Deserializer& s,   ///< [in] デシリアライザ
     CiCellLibrary* lib ///< [in] 親のセルライブラリ
@@ -632,7 +710,7 @@ private:
   SizeType mInoutNum{0};
 
   // ピンのリスト
-  vector<const CiPin*> mPinList;
+  vector<unique_ptr<CiPin>> mPinList;
 
   // 入力ピン+入出力ピンのリスト
   // サイズ mInputNum + mInoutNum
@@ -643,16 +721,16 @@ private:
   vector<const CiPin*> mOutputList;
 
   // 内部ピンのリスト
-  vector<const CiPin*> mInternalList;
+  vector<unique_ptr<CiPin>> mInternalList;
 
   // バスのリスト
-  vector<const CiBus*> mBusList;
+  vector<unique_ptr<CiBus>> mBusList;
 
   // バンドルのリスト
-  vector<const CiBundle*> mBundleList;
+  vector<unique_ptr<CiBundle>> mBundleList;
 
-  // 全体のタイミング情報の番号のリスト
-  vector<const CiTiming*> mTimingList;
+  // 全体のタイミング情報のリスト
+  vector<unique_ptr<CiTiming>> mTimingList;
 
   // 条件ごとのタイミングのリストの配列
   // サイズは(入力数＋入出力数) x (出力数+入出力数)  x 2

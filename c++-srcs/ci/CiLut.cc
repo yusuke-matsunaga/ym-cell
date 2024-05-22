@@ -7,15 +7,70 @@
 /// All rights reserved.
 
 #include "ci/CiLut.h"
+#include "ci/CiLutTemplate.h"
+#include "ci/Serializer.h"
+#include "ci/Deserializer.h"
 #include "ym/Range.h"
 #include "CiLut_sub.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
+BEGIN_NONAMESPACE
+
+inline
+vector<double>
+make_index_array(
+  const vector<double>& src_array,
+  const CiLutTemplate* lut_template,
+  SizeType var
+)
+{
+  if ( src_array.empty() ) {
+    return lut_template->index_array(var);
+  }
+  return src_array;
+}
+
+END_NONAMESPACE
+
 //////////////////////////////////////////////////////////////////////
 // クラス CiLut
 //////////////////////////////////////////////////////////////////////
+
+// @brief インスタンスを生成するクラスメソッド
+unique_ptr<CiLut>
+CiLut::new_lut(
+  const CiLutTemplate* lut_template,
+  const vector<double>& value_array,
+  const vector<double>& index_array1,
+  const vector<double>& index_array2,
+  const vector<double>& index_array3
+)
+{
+  SizeType d = lut_template->dimension();
+  CiLut* lut = nullptr;
+  switch ( d ) {
+  case 1:
+    lut = new CiLut1D{lut_template, value_array,
+		      make_index_array(index_array1, lut_template, 0)};
+    break;
+
+  case 2:
+    lut = new CiLut2D{lut_template, value_array,
+		      make_index_array(index_array1, lut_template, 0),
+		      make_index_array(index_array2, lut_template, 1)};
+    break;
+
+  case 3:
+    lut = new CiLut3D{lut_template, value_array,
+		      make_index_array(index_array1, lut_template, 0),
+		      make_index_array(index_array2, lut_template, 1),
+		      make_index_array(index_array3, lut_template, 2)};
+    break;
+  }
+  return unique_ptr<CiLut>{lut};
+}
 
 // @brief val に対応する区間を求める．
 SizeType
@@ -43,6 +98,53 @@ CiLut::search(
   return 0;
 }
 
+// @brief 内容をシリアライズする．
+void
+CiLut::serialize(
+  Serializer& s
+) const
+{
+  s.reg_obj(this);
+}
+
+// @brief 実際のダンプを行う関数
+void
+CiLut::dump_common(
+  Serializer& s,
+  int d
+) const
+{
+  s.out().write_8(d);
+  s.dump(mTemplate);
+}
+
+// @brief 内容を復元する．
+unique_ptr<CiLut>
+CiLut::restore(
+  Deserializer& s
+)
+{
+  auto d = s.in().read_8();
+  unique_ptr<CiLut> lut;
+  switch ( d ) {
+  case 1: lut = unique_ptr<CiLut>{new CiLut1D{}}; break;
+  case 2: lut = unique_ptr<CiLut>{new CiLut2D{}}; break;
+  case 3: lut = unique_ptr<CiLut>{new CiLut3D{}}; break;
+  default: ASSERT_NOT_REACHED; break;
+  }
+  lut->_restore(s);
+  return lut;
+}
+
+// @brief 内容を読み込む．
+void
+CiLut::restore_common(
+  Deserializer& s
+)
+{
+  s.restore(mTemplate);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLut1D
@@ -50,11 +152,10 @@ CiLut::search(
 
 // @brief コンストラクタ
 CiLut1D::CiLut1D(
-  const CiCellLibrary* lib,
   const CiLutTemplate* lut_template,
   const vector<double>& value_array,
   const vector<double>& index_array
-) : CiLut{lib, lut_template},
+) : CiLut{lut_template},
     mValueArray{value_array},
     mIndexArray{index_array}
 {
@@ -131,6 +232,28 @@ CiLut1D::value(
   return val_0 * dx1 + val_1 * dx0;
 }
 
+// @brief 内容をバイナリダンプする．
+void
+CiLut1D::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 1);
+  s.dump(mIndexArray);
+  s.dump(mValueArray);
+}
+
+// @brief 内容を読み込む．
+void
+CiLut1D::_restore(
+  Deserializer& s
+)
+{
+  restore_common(s);
+  s.restore(mIndexArray);
+  s.restore(mValueArray);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLut2D
@@ -138,12 +261,11 @@ CiLut1D::value(
 
 // @brief コンストラクタ
 CiLut2D::CiLut2D(
-  const CiCellLibrary* lib,
   const CiLutTemplate* lut_template,
   const vector<double>& value_array,
   const vector<double>& index_array1,
   const vector<double>& index_array2
-) : CiLut{lib, lut_template},
+) : CiLut{lut_template},
     mValueArray{value_array},
     mIndexArray{index_array1, index_array2}
 {
@@ -239,6 +361,30 @@ CiLut2D::value(
          dx0 * (dy1 * val_10 + dy0 * val_11);
 }
 
+// @brief 内容をバイナリダンプする．
+void
+CiLut2D::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 2);
+  s.dump(mIndexArray[0]);
+  s.dump(mIndexArray[1]);
+  s.dump(mValueArray);
+}
+
+// @brief 内容を読み込む．
+void
+CiLut2D::_restore(
+  Deserializer& s
+)
+{
+  restore_common(s);
+  s.restore(mIndexArray[0]);
+  s.restore(mIndexArray[1]);
+  s.restore(mValueArray);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLut3D
@@ -246,13 +392,12 @@ CiLut2D::value(
 
 // @brief コンストラクタ
 CiLut3D::CiLut3D(
-  const CiCellLibrary* lib,
   const CiLutTemplate* lut_template,
   const vector<double>& value_array,
   const vector<double>& index_array1,
   const vector<double>& index_array2,
   const vector<double>& index_array3
-) : CiLut{lib, lut_template},
+) : CiLut{lut_template},
     mValueArray{value_array},
     mIndexArray{index_array1, index_array2, index_array3}
 {
@@ -364,6 +509,32 @@ CiLut3D::value(
 		dy0 * (dz1 * val_010 + dz0 * val_011)) +
          dx0 * (dy1 * (dz1 * val_100 + dz0 * val_101) +
 		dy0 * (dz1 * val_110 + dz0 * val_111));
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiLut3D::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 3);
+  s.dump(mIndexArray[0]);
+  s.dump(mIndexArray[1]);
+  s.dump(mIndexArray[2]);
+  s.dump(mValueArray);
+}
+
+// @brief 内容を読み込む．
+void
+CiLut3D::_restore(
+  Deserializer& s
+)
+{
+  restore_common(s);
+  s.restore(mIndexArray[0]);
+  s.restore(mIndexArray[1]);
+  s.restore(mIndexArray[2]);
+  s.restore(mValueArray);
 }
 
 END_NAMESPACE_YM_CLIB

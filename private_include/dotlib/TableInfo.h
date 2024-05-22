@@ -44,7 +44,7 @@ public:
     const AstValue* val
   );
 
-  const CiLut*
+  unique_ptr<CiLut>
   gen_lut() const;
 
 

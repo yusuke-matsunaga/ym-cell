@@ -22,6 +22,7 @@
 #include "ci/CiPin.h"
 #include "ci/CiBus.h"
 #include "ci/CiBundle.h"
+#include "ci/conv_list.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -189,6 +190,7 @@ public:
     return mLeakagePowerUnit;
   }
 
+#if 0
   /// @brief バスタイプの取得
   ///
   /// なければ nullptr を返す．
@@ -215,7 +217,7 @@ public:
   bus_type_id(
     const ShString& name ///< [in] バスタイプ名
   ) const;
-
+#endif
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -227,6 +229,16 @@ public:
   cell_num() const
   {
     return mCellList.size();
+  }
+
+  /// @brief 位置からセルの取得
+  const CiCell*
+  cell(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < cell_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < cell_num() );
+    return mCellList[pos].get();
   }
 
   /// @brief 名前からのセルの取得
@@ -251,10 +263,10 @@ public:
   }
 
   /// @brief セルのリストの取得
-  const vector<const CiCell*>&
+  vector<const CiCell*>
   cell_list() const
   {
-    return mRefCellList;
+    return conv_list(mCellList);
   }
 
   /// @brief セルグループ数の取得
@@ -264,11 +276,21 @@ public:
     return mGroupList.size();
   }
 
+  /// @brief セルグループの取得
+  const CiCellGroup*
+  cell_group(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < cell_group_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < cell_group_num() );
+    return mGroupList[pos].get();
+  }
+
   /// @brief セルグループのリストの取得
-  const vector<const CiCellGroup*>&
+  vector<const CiCellGroup*>
   cell_group_list() const
   {
-    return mRefGroupList;
+    return conv_list(mGroupList);
   }
 
   /// @brief NPN同値クラス数の取得
@@ -278,11 +300,21 @@ public:
     return mClassList.size();
   }
 
+  /// @brief NPN同値クラスの取得
+  const CiCellClass*
+  npn_class(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < npn_class_num() )
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < npn_class_num() );
+    return mClassList[pos].get();
+  }
+
   /// @brief NPN同値クラス番号のリストの取得
-  const vector<const CiCellClass*>&
+  vector<const CiCellClass*>
   npn_class_list() const
   {
-    return mRefClassList;
+    return conv_list(mClassList);
   }
 
 
@@ -635,7 +667,7 @@ public:
   );
 
   /// @brief 入力ピンを追加する．
-  /// @return 生成されたピン番号を返す．
+  /// @return 生成されたピンを返す．
   CiPin*
   add_input(
     CiCell* cell,                     ///< [in] セル
@@ -646,7 +678,7 @@ public:
   );
 
   /// @brief 出力ピンを追加する．
-  /// @return 生成されたピン番号を返す．
+  /// @return 生成されたピンを返す．
   CiPin*
   add_output(
     CiCell* cell,                    ///< [in] セル
@@ -662,7 +694,7 @@ public:
   );
 
   /// @brief 入出力ピンを追加する．
-  /// @return 生成されたピン番号を返す．
+  /// @return 生成されたピンを返す．
   CiPin*
   add_inout(
     CiCell* cell,                     ///< [in] セル
@@ -681,7 +713,7 @@ public:
   );
 
   /// @brief 内部ピンを追加する．
-  /// @return 生成されたピン番号を返す．
+  /// @return 生成されたピンを返す．
   CiPin*
   add_internal(
     CiCell* cell,        ///< [in] セル
@@ -689,7 +721,7 @@ public:
   );
 
   /// @brief バスを追加する．
-  /// @return 生成されｔバス番号を返す．
+  /// @return 生成されたバスを返す．
   CiBus*
   add_bus(
     CiCell* cell,                        ///< [in] セル
@@ -699,7 +731,7 @@ public:
   );
 
   /// @brief バンドルを追加する．
-  /// @return 生成されたバンドル番号を返す．
+  /// @return 生成されたバンドルを返す．
   CiBundle*
   add_bundle(
     CiCell* cell,                        ///< [in] セル
@@ -707,6 +739,7 @@ public:
     const vector<const CiPin*>& pin_list ///< [in] ピンリスト
   );
 
+#if 0
   /// @brief タイミング情報を作る(ジェネリック遅延モデル)．
   /// @return 生成されたタイミング番号を返す．
   CiTiming*
@@ -758,7 +791,9 @@ public:
     const CiLut* rise_propagation,
     const CiLut* fall_propagation
   );
+#endif
 
+#if 0
   /// @brief 1次元の LUT を作る．
   CiLut*
   new_lut1(
@@ -798,6 +833,7 @@ public:
     const vector<double>& index_array3 ///< [in] インデックス値のリスト3
     = vector<double>{}
   );
+#endif
 
 
 public:
@@ -855,6 +891,7 @@ public:
     return mCellList[id].get();
   }
 
+#if 0
   /// @brief ピンを得る．
   CiPin*
   _pin(
@@ -899,6 +936,7 @@ public:
   {
     return mLutList[id].get();
   }
+#endif
 
   /// @brief パタンを得る．
   const CiPatGraph*
@@ -1042,7 +1080,7 @@ public:
     CiPin* pin          ///< [in] ピン
   )
   {
-    mPinList.push_back(unique_ptr<CiPin>{pin});
+    //mPinList.push_back(unique_ptr<CiPin>{pin});
     mPinDict.add(cell, pin->_name(), pin);
   }
 
@@ -1065,7 +1103,7 @@ public:
     CiBus* bus          ///< [in] バス
   )
   {
-    mBusList.push_back(unique_ptr<CiBus>(bus));
+    //mBusList.push_back(unique_ptr<CiBus>(bus));
     mBusDict.add(cell, bus->_name(), bus);
   }
 
@@ -1088,7 +1126,7 @@ public:
     CiBundle* bundle    ///< [in] バンドル
   )
   {
-    mBundleList.push_back(unique_ptr<CiBundle>(bundle));
+    //mBundleList.push_back(unique_ptr<CiBundle>(bundle));
     mBundleDict.add(cell, bundle->_name(), bundle);
   }
 
@@ -1189,59 +1227,77 @@ private:
   // バスタイプのリスト
   vector<unique_ptr<CiBusType>> mBusTypeList;
 
+#if 0
   // 名前をキーにしたバスタイプの辞書
   unordered_map<ShString, const CiBusType*> mBusTypeDict;
+#endif
 
   // 遅延テンプレートの実体のリスト
   vector<unique_ptr<CiLutTemplate>> mLutTemplateList;
 
+#if 0
   // テンプレートのリスト
   vector<const CiLutTemplate*> mRefLutTemplateList;
+#endif
 
   // セルの所有権管理用のリスト
   vector<unique_ptr<CiCell>> mCellList;
 
+#if 0
   // セルのリスト
   vector<const CiCell*> mRefCellList;
+#endif
 
   // 名前をキーにしたセルの辞書
   unordered_map<ShString, const CiCell*> mCellDict;
 
+#if 0
   // ピンの所有権管理用のリスト
   vector<unique_ptr<CiPin>> mPinList;
+#endif
 
   // セルとピン名をキーにしたピンの辞書
   CiCellNameHash<CiPin> mPinDict;
 
+#if 0
   // バスの所有権管理用のリスト
   vector<unique_ptr<CiBus>> mBusList;
+#endif
 
   // セルとバス名をキーにしたバスの辞書
   CiCellNameHash<CiBus> mBusDict;
 
+#if 0
   // バンドルの所有権管理用のリスト
   vector<unique_ptr<CiBundle>> mBundleList;
+#endif
 
   // セルとバンドル名をキーにしたバンドルの辞書
   CiCellNameHash<CiBundle> mBundleDict;
 
+#if 0
   // タイミング情報のリスト
   vector<unique_ptr<CiTiming>> mTimingList;
 
   // Lut のリスト
   vector<unique_ptr<CiLut>> mLutList;
+#endif
 
   // セルグループの所有権管理用のリスト
   vector<unique_ptr<CiCellGroup>> mGroupList;
 
+#if 0
   // セルグループのリスト
   vector<const CiCellGroup*> mRefGroupList;
+#endif
 
   // NPN同値クラスの所有権管理用のリスト
   vector<unique_ptr<CiCellClass>> mClassList;
 
+#if 0
   // NPN同値類のリスト
   vector<const CiCellClass*> mRefClassList;
+#endif
 
   // 論理セルグループの情報
   // 0: 定数0

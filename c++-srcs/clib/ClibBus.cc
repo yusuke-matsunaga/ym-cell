@@ -18,24 +18,12 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス ClibBus
 //////////////////////////////////////////////////////////////////////
 
-// @brief 内容を指定したコンストラクタ
-ClibBus::ClibBus(
-  const CiBus* impl
-) : ClibHandle<CiBus>{impl}
-{
-}
-
-// @brief デストラクタ
-ClibBus::~ClibBus()
-{
-}
-
 // @brief 名前の取得
 string
 ClibBus::name() const
 {
   _check_valid();
-  return mImpl->name();
+  return _impl()->name();
 }
 
 // @brief バスの型の取得
@@ -43,7 +31,7 @@ ClibBusType
 ClibBus::bus_type() const
 {
   _check_valid();
-  auto bus_type = mImpl->bus_type();
+  auto bus_type = _impl()->bus_type();
   return ClibBusType{bus_type};
 }
 
@@ -52,7 +40,7 @@ SizeType
 ClibBus::pin_num() const
 {
   _check_valid();
-  return mImpl->pin_num();
+  return _impl()->pin_num();
 }
 
 // @brief ピンの取得
@@ -62,8 +50,8 @@ ClibBus::pin(
 ) const
 {
   _check_valid();
-  auto pin = mImpl->pin(pos);
-  return ClibPin{pin};
+  auto pin = _impl()->pin(pos);
+  return ClibPin{_cell(), pin};
 }
 
 // @brief ピンのリストの取得
@@ -71,8 +59,7 @@ ClibPinList
 ClibBus::pin_list() const
 {
   _check_valid();
-  auto& pin_list = mImpl->pin_list();
-  return ClibPinList{pin_list};
+  return ClibPinList{_cell(), _impl()->pin_list()};
 }
 
 END_NAMESPACE_YM_CLIB

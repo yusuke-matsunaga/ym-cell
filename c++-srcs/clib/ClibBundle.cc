@@ -18,24 +18,12 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス ClibBundle
 //////////////////////////////////////////////////////////////////////
 
-// @brief 内容を指定したコンストラクタ
-ClibBundle::ClibBundle(
-  const CiBundle* impl ///< [in] 本体
-) : ClibHandle<CiBundle>{impl}
-{
-}
-
-// @brief デストラクタ
-ClibBundle::~ClibBundle()
-{
-}
-
 // @brief 名前の取得
 string
 ClibBundle::name() const
 {
   _check_valid();
-  return mImpl->name();
+  return _impl()->name();
 }
 
 // @brief ピン数の取得
@@ -43,7 +31,7 @@ SizeType
 ClibBundle::pin_num() const
 {
   _check_valid();
-  return mImpl->pin_num();
+  return _impl()->pin_num();
 }
 
 // @brief ピンの取得
@@ -53,8 +41,8 @@ ClibBundle::pin(
 ) const
 {
   _check_valid();
-  auto pin = mImpl->pin(pos);
-  return ClibPin{pin};
+  auto pin = _impl()->pin(pos);
+  return ClibPin{_cell(), pin};
 }
 
 // @brief ピンのリストの取得
@@ -62,8 +50,7 @@ ClibPinList
 ClibBundle::pin_list() const
 {
   _check_valid();
-  auto& pin_list = mImpl->pin_list();
-  return ClibPinList{pin_list};
+  return ClibPinList{_cell(), _impl()->pin_list()};
 }
 
 END_NAMESPACE_YM_CLIB

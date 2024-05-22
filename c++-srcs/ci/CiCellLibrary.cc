@@ -71,6 +71,7 @@ CiCellLibrary::dec_ref() const
   }
 }
 
+#if 0
 // @brief バスタイプの取得
 const CiBusType*
 CiCellLibrary::bus_type(
@@ -82,6 +83,7 @@ CiCellLibrary::bus_type(
   }
   return nullptr;
 }
+#endif
 
 // @brief 単純な型のFFクラスを返す．
 const CiCellClass*
@@ -221,10 +223,9 @@ CiCellLibrary::add_lut_template1(
   const vector<double>& index_list1
 )
 {
-  auto tmpl = new CiLutTemplate1D{this,
-				  var_type1, index_list1};
+  auto tmpl = new CiLutTemplate1D{var_type1, index_list1};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
-  mRefLutTemplateList.push_back(tmpl);
+  //mRefLutTemplateList.push_back(tmpl);
   return tmpl;
 }
 
@@ -237,11 +238,10 @@ CiCellLibrary::add_lut_template2(
   const vector<double>& index_list2
 )
 {
-  auto tmpl = new CiLutTemplate2D{this,
-				  var_type1, index_list1,
+  auto tmpl = new CiLutTemplate2D{var_type1, index_list1,
 				  var_type2, index_list2};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
-  mRefLutTemplateList.push_back(tmpl);
+  //mRefLutTemplateList.push_back(tmpl);
   return tmpl;
 }
 
@@ -256,12 +256,11 @@ CiCellLibrary::add_lut_template3(
   const vector<double>& index_list3
 )
 {
-  auto tmpl = new CiLutTemplate3D{this,
-				  var_type1, index_list1,
+  auto tmpl = new CiLutTemplate3D{var_type1, index_list1,
 				  var_type2, index_list2,
 				  var_type3, index_list3};
   mLutTemplateList.push_back(unique_ptr<CiLutTemplate>(tmpl));
-  mRefLutTemplateList.push_back(tmpl);
+  //mRefLutTemplateList.push_back(tmpl);
   return tmpl;
 }
 
@@ -273,7 +272,7 @@ CiCellLibrary::add_cell_class(
 {
   auto cc = new CiCellClass{this, idmap_list};
   mClassList.push_back(unique_ptr<CiCellClass>(cc));
-  mRefClassList.push_back(cc);
+  //mRefClassList.push_back(cc);
   return cc;
 }
 
@@ -286,7 +285,7 @@ CiCellLibrary::add_cell_group(
 {
   auto cg = new CiCellGroup{this, rep_class, iomap};
   mGroupList.push_back(unique_ptr<CiCellGroup>(cg));
-  mRefGroupList.push_back(cg);
+  //mRefGroupList.push_back(cg);
   return cg;
 }
 
@@ -391,7 +390,7 @@ CiCellLibrary::reg_cell(
 )
 {
   mCellList.push_back(unique_ptr<CiCell>{cell});
-  mRefCellList.push_back(cell);
+  //mRefCellList.push_back(cell);
   mCellDict.emplace(cell->name(), cell);
   return cell;
 }
@@ -406,12 +405,10 @@ CiCellLibrary::add_input(
   ClibCapacitance fall_capacitance
 )
 {
-  auto pin = new CiInputPin{this, name,
-			    capacitance,
-                            rise_capacitance,
-			    fall_capacitance};
+  auto pin = cell->add_input(name,
+			     capacitance,
+			     rise_capacitance, fall_capacitance);
   reg_pin(cell, pin);
-  cell->add_input(pin);
   return pin;
 }
 
@@ -430,17 +427,12 @@ CiCellLibrary::add_output(
   const Expr& tristate
 )
 {
-  auto pin = new CiOutputPin{this, name,
-                             max_fanout,
-			     min_fanout,
-			     max_capacitance,
-			     min_capacitance,
-			     max_transition,
-			     min_transition,
-			     function,
-			     tristate};
+  auto pin = cell->add_output(name,
+			      max_fanout, min_fanout,
+			      max_capacitance, min_capacitance,
+			      max_transition, min_transition,
+			      function, tristate);
   reg_pin(cell, pin);
-  cell->add_output(pin);
   return pin;
 }
 
@@ -462,14 +454,14 @@ CiCellLibrary::add_inout(
   const Expr& tristate
 )
 {
-  auto pin = new CiInoutPin{this, name,
-                            capacitance, rise_capacitance, fall_capacitance,
-			    max_fanout, min_fanout,
-			    max_capacitance, min_capacitance,
-			    max_transition, min_transition,
-			    function, tristate};
+  auto pin = cell->add_inout(name,
+			     capacitance,
+			     rise_capacitance, fall_capacitance,
+			     max_fanout, min_fanout,
+			     max_capacitance, min_capacitance,
+			     max_transition, min_transition,
+			     function, tristate);
   reg_pin(cell, pin);
-  cell->add_inout(pin);
   return pin;
 }
 
@@ -480,9 +472,8 @@ CiCellLibrary::add_internal(
   const ShString& name
 )
 {
-  auto pin = new CiInternalPin{this, name};
+  auto pin = cell->add_internal(name);
   reg_pin(cell, pin);
-  cell->add_internal(pin);
   return pin;
 }
 
@@ -495,9 +486,8 @@ CiCellLibrary::add_bus(
   const vector<const CiPin*>& pin_list
 )
 {
-  auto bus = new CiBus{this, name, bus_type, pin_list};
+  auto bus = cell->add_bus(name, bus_type, pin_list);
   reg_bus(cell, bus);
-  cell->add_bus(bus);
   return bus;
 }
 
@@ -509,12 +499,12 @@ CiCellLibrary::add_bundle(
   const vector<const CiPin*>& pin_list
 )
 {
-  auto bundle = new CiBundle{this, name, pin_list};
+  auto bundle = cell->add_bundle(name, pin_list);
   reg_bundle(cell, bundle);
-  cell->add_bundle(bundle);
   return bundle;
 }
 
+#if 0
 // @brief タイミング情報を作る(ジェネリック遅延モデル)．
 CiTiming*
 CiCellLibrary::add_timing_generic(
@@ -604,25 +594,9 @@ CiCellLibrary::add_timing_lut2(
   mTimingList.push_back(unique_ptr<CiTiming>{timing});
   return timing;
 }
+#endif
 
-BEGIN_NONAMESPACE
-
-inline
-vector<double>
-make_index_array(
-  const vector<double>& src_array,
-  const CiLutTemplate* lut_template,
-  SizeType var
-)
-{
-  if ( src_array.empty() ) {
-    return lut_template->index_array(var);
-  }
-  return src_array;
-}
-
-END_NONAMESPACE
-
+#if 0
 // @brief LUT を作る．
 CiLut*
 CiCellLibrary::add_lut(
@@ -660,6 +634,7 @@ CiCellLibrary::add_lut(
   mLutList.push_back(unique_ptr<CiLut>(lut));
   return lut;
 }
+#endif
 
 // @brief セルグループ/セルクラスの設定を行なう．
 void
@@ -737,22 +712,22 @@ CiCellLibrary::clear()
   mCapacitiveLoadUnitStr = {};
   mLeakagePowerUnit = {};
   mLutTemplateList.clear();
-  mRefLutTemplateList.clear();
+  //mRefLutTemplateList.clear();
   mCellList.clear();
-  mRefCellList.clear();
+  //mRefCellList.clear();
   mCellDict.clear();
-  mPinList.clear();
+  //mPinList.clear();
   mPinDict.clear();
-  mBusList.clear();
+  //mBusList.clear();
   mBusDict.clear();
-  mBundleList.clear();
+  //mBundleList.clear();
   mBundleDict.clear();
   mGroupList.clear();
-  mRefGroupList.clear();
+  //mRefGroupList.clear();
   mClassList.clear();
-  mRefClassList.clear();
-  mTimingList.clear();
-  mLutList.clear();
+  //mRefClassList.clear();
+  //mTimingList.clear();
+  //mLutList.clear();
 }
 
 END_NAMESPACE_YM_CLIB
