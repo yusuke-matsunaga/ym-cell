@@ -10,6 +10,7 @@
 
 #include "ym/clib.h"
 #include "ym/BinEnc.h"
+#include "ci/CiCell.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -126,6 +127,9 @@ public:
   )
   {
     mCellList.put(obj);
+    if ( obj != nullptr ) {
+      auto id = mCellList.get_id(obj);
+    }
   }
 
   /// @brief セルグループを追加する．
@@ -148,7 +152,19 @@ public:
 
   /// @brief 登録された要素の内容をダンプする．
   void
-  dump_obj();
+  dump_obj()
+  {
+    mBusTypeList.dump(*this);
+    mLutTemplateList.dump(*this);
+    mLutList.dump(*this);
+    mPinList.dump(*this);
+    mBusList.dump(*this);
+    mBundleList.dump(*this);
+    mTimingList.dump(*this);
+    mCellList.dump(*this);
+    mCellGroupList.dump(*this);
+    mCellClassList.dump(*this);
+  }
 
   /// @brief 文字列をダンプする．
   void
@@ -184,6 +200,51 @@ public:
   )
   {
     out() << val;
+  }
+
+  /// @brief ClibTechnology をダンプする．
+  void
+  dump(
+    ClibTechnology val
+  )
+  {
+    out().write_8(static_cast<std::uint8_t>(val));
+  }
+
+  /// @brief ClibDelayModel をダンプする．
+  void
+  dump(
+    ClibDelayModel val
+  )
+  {
+    out().write_8(static_cast<std::uint8_t>(val));
+  }
+
+  /// @brief ClibTimingSense をダンプする．
+  void
+  dump(
+    ClibTimingSense val
+  )
+  {
+    out().write_8(static_cast<std::uint8_t>(val));
+  }
+
+  /// @brief ClibTimingType をダンプする．
+  void
+  dump(
+    ClibTimingType val
+  )
+  {
+    out().write_8(static_cast<std::uint8_t>(val));
+  }
+
+  /// @brief ClibTechnology をダンプする．
+  void
+  dump(
+    ClibVarType val
+  )
+  {
+    out().write_8(static_cast<std::uint8_t>(val));
   }
 
   /// @brief バスタイプ番号を出力する．
@@ -379,6 +440,18 @@ private:
     obj_list() const
     {
       return mList;
+    }
+
+    /// @brief 内容をバイナリダンプする．
+    void
+    dump(
+      Serializer& s
+    ) const
+    {
+      s.dump(mList.size());
+      for ( auto obj: mList ) {
+	obj->dump(s);
+      }
     }
 
 

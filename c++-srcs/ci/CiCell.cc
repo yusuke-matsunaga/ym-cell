@@ -201,7 +201,6 @@ CiCell::add_input(
   auto pin = ptr.get();
   mPinList.push_back(std::move(ptr));
   mInputList.push_back(pin);
-  //_parent()->reg_pin(this, pin);
   ++ mInputNum;
   return pin;
 }
@@ -230,7 +229,6 @@ CiCell::add_output(
   auto pin = ptr.get();
   mPinList.push_back(std::move(ptr));
   mOutputList.push_back(pin);
-  //_parent()->reg_pin(this, pin);
   ++ mOutputNum;
   return pin;
 }
@@ -267,7 +265,6 @@ CiCell::add_inout(
   mPinList.push_back(std::move(ptr));
   mInputList.push_back(pin);
   mOutputList.push_back(pin);
-  //_parent()->reg_pin(this, pin);
   ++ mInoutNum;
   return pin;
 }
@@ -296,7 +293,6 @@ CiCell::add_bus(
 {
   auto bus = new CiBus{name, bus_type, pin_list};
   mBusList.push_back(unique_ptr<CiBus>{bus});
-  //_parent()->reg_bus(this, bus);
   return bus;
 }
 
@@ -309,7 +305,6 @@ CiCell::add_bundle(
 {
   auto bundle = new CiBundle{name, pin_list};
   mBundleList.push_back(unique_ptr<CiBundle>{bundle});
-  //_parent()->reg_bundle(this, bundle);
   return bundle;
 }
 

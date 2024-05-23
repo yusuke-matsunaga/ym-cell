@@ -44,43 +44,43 @@ CiCellLibrary::dump(
   s.dump(name());
 
   // テクノロジ
-  s.out() << technology();
+  s.dump(technology());
 
   // 遅延モデル
-  s.out() << delay_model();
+  s.dump(delay_model());
 
   // バス命名規則
-  s.out() << bus_naming_style();
+  s.dump(bus_naming_style());
 
   // 日付情報
-  s.out() << date();
+  s.dump(date());
 
   // リビジョン情報
-  s.out() << revision();
+  s.dump(revision());
 
   // コメント
-  s.out() << comment();
+  s.dump(comment());
 
   // 時間単位
-  s.out() << time_unit();
+  s.dump(time_unit());
 
   // 電圧単位
-  s.out() << voltage_unit();
+  s.dump(voltage_unit());
 
   // 電流単位
-  s.out() << current_unit();
+  s.dump(current_unit());
 
   // 抵抗単位
-  s.out() << pulling_resistance_unit();
+  s.dump(pulling_resistance_unit());
 
   // 容量単位
-  s.out() << capacitive_load_unit();
+  s.dump(capacitive_load_unit());
 
   // 容量単位の文字列
-  s.out() << capacitive_load_unit_str();
+  s.dump(capacitive_load_unit_str());
 
   // 電力単位
-  s.out() << leakage_power_unit();
+  s.dump(leakage_power_unit());
 
   // バスタイプのリスト
   s.dump(mBusTypeList);
@@ -128,67 +128,6 @@ CiCellLibrary::serialize(
   }
   for ( auto& cclass: mCellClassList ) {
     cclass->serialize(s);
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス Serializer
-//////////////////////////////////////////////////////////////////////
-
-// @brief 登録された要素の内容をダンプする．
-void
-Serializer::dump_obj()
-{
-  dump(mBusTypeList.obj_list().size());
-  cout << "# of BusType: " << mBusTypeList.obj_list().size() << endl;
-  for ( auto obj: mBusTypeList.obj_list() ) {
-    obj->dump(*this);
-  }
-  dump(mLutTemplateList.obj_list().size());
-  cout << "# of LutTemplate: " << mLutTemplateList.obj_list().size() << endl;
-  for ( auto obj: mLutTemplateList.obj_list() ) {
-    obj->dump(*this);
-  }
-  dump(mLutList.obj_list().size());
-  cout << "# of Lut: " << mLutList.obj_list().size() << endl;
-  for ( auto obj: mLutList.obj_list() ) {
-    obj->dump(*this);
-  }
-  dump(mPinList.obj_list().size());
-  cout << "# of Pin: " << mPinList.obj_list().size() << endl;
-  for ( auto obj: mPinList.obj_list() ) {
-    obj->dump(*this);
-  }
-  dump(mBusList.obj_list().size());
-  cout << "# of Bus: " << mBusList.obj_list().size() << endl;
-  for ( auto obj: mBusList.obj_list() ) {
-    obj->dump(*this);
-  }
-  dump(mBundleList.obj_list().size());
-  cout << "# of Bundle: " << mBundleList.obj_list().size() << endl;
-  for ( auto obj: mBundleList.obj_list() ) {
-    obj->dump(*this);
-  }
-  dump(mTimingList.obj_list().size());
-  cout << "# of Timing: " << mTimingList.obj_list().size() << endl;
-  for ( auto obj: mTimingList.obj_list() ) {
-    obj->dump(*this);
-  }
-  dump(mCellClassList.obj_list().size());
-  cout << "# of CellClass: " << mCellClassList.obj_list().size() << endl;
-  for ( auto obj: mCellClassList.obj_list() ) {
-    obj->dump(*this);
-  }
-  dump(mCellGroupList.obj_list().size());
-  cout << "# of CellGroup: " << mCellGroupList.obj_list().size() << endl;
-  for ( auto obj: mCellGroupList.obj_list() ) {
-    obj->dump(*this);
-  }
-  dump(mCellList.obj_list().size());
-  cout << "# of Cell: " << mCellList.obj_list().size() << endl;
-  for ( auto obj: mCellList.obj_list() ) {
-    obj->dump(*this);
   }
 }
 

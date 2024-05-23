@@ -84,7 +84,7 @@ CiLutTemplate::dump_var(
   const vector<double>& index_array
 )
 {
-  s.out() << var_type;
+  s.dump(var_type);
   s.dump(index_array);
 }
 
@@ -96,52 +96,56 @@ CiLutTemplate::restore(
 )
 {
   auto d = s.in().read_8();
+  CiLutTemplate* tmpl = nullptr;
   switch ( d ) {
   case 1:
     {
       ClibVarType var_type;
-      s.in() >> var_type;
+      s.restore(var_type);
       vector<double> index_array;
       s.restore(index_array);
-      return unique_ptr<CiLutTemplate>{new CiLutTemplate1D{var_type, index_array}};
+      tmpl = new CiLutTemplate1D{var_type, index_array};
     }
+    break;
   case 2:
     {
       ClibVarType var_type1;
-      s.in() >> var_type1;
+      s.restore(var_type1);
       vector<double> index_array1;
       s.restore(index_array1);
       ClibVarType var_type2;
-      s.in() >> var_type2;
+      s.restore(var_type2);
       vector<double> index_array2;
       s.restore(index_array2);
-      return unique_ptr<CiLutTemplate>{new CiLutTemplate2D{var_type1, index_array1,
-							   var_type2, index_array2}};
+      tmpl = new CiLutTemplate2D{var_type1, index_array1,
+				 var_type2, index_array2};
     }
+    break;
   case 3:
     {
       ClibVarType var_type1;
-      s.in() >> var_type1;
+      s.restore(var_type1);
       vector<double> index_array1;
       s.restore(index_array1);
       ClibVarType var_type2;
-      s.in() >> var_type2;
+      s.restore(var_type2);
       vector<double> index_array2;
       s.restore(index_array2);
       ClibVarType var_type3;
-      s.in() >> var_type3;
+      s.restore(var_type3);
       vector<double> index_array3;
       s.restore(index_array3);
-      return unique_ptr<CiLutTemplate>{new CiLutTemplate3D{var_type1, index_array1,
-							   var_type2, index_array2,
-							   var_type3, index_array3}};
+      tmp = new CiLutTemplate3D{var_type1, index_array1,
+				var_type2, index_array2,
+				var_type3, index_array3};
     }
+    break;
   default:
     ASSERT_NOT_REACHED;
   }
-  // ダミー
-  return {};
+  return unique_ptr<CiLutTemplate>{tmpl};
 }
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLutTemplate1D

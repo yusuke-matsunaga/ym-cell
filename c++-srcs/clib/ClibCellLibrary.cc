@@ -11,6 +11,7 @@
 #include "ym/ClibCell.h"
 #include "ym/ClibCellClass.h"
 #include "ym/ClibCellGroup.h"
+#include "ym/ClibPatGraph.h"
 #include "ci/CiCellLibrary.h"
 
 
@@ -198,22 +199,6 @@ ClibCellLibrary::leakage_power_unit() const
   // デフォルト値
   return {};
 }
-
-#if 0
-// @brief バスタイプの取得
-ClibBusType
-ClibCellLibrary::bus_type(
-  const string& name
-) const
-{
-  if ( mImpl ) {
-    auto bus_type = mImpl->bus_type(name);
-    return ClibBusType{bus_type};
-  }
-  // デフォルト値
-  return {};
-}
-#endif
 
 // @brief このライブラリの持つセル数の取得
 SizeType

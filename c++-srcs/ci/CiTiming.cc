@@ -3,7 +3,7 @@
 /// @brief CiTiming の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ci/CiTiming.h"
@@ -241,7 +241,7 @@ CiTiming::dump_common(
 ) const
 {
   s.out().write_8(type_id);
-  s.out() << mType;
+  s.dump(mType);
   mCond.dump(s.out());
 }
 
@@ -269,7 +269,7 @@ CiTiming::_restore(
   Deserializer& s
 )
 {
-  s.in() >> mType;
+  s.restore(mType);
   mCond.restore(s.in());
 }
 

@@ -19,32 +19,6 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiCellClass
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-CiCellClass::CiCellClass(
-  CiCellLibrary* lib,
-  const vector<ClibIOMap>& idmap_list,
-  const vector<const CiCellGroup*>& group_list
-) : CiLibObj{lib},
-    mIdMapList{idmap_list},
-    mGroupList{group_list}
-{
-#if 0
-  for ( auto group: mGroupList ) {
-    group->mRepClass = this;
-  }
-#endif
-}
-
-// @brief このクラスに属しているセルグループを追加する．
-void
-CiCellClass::add_group(
-  const CiCellGroup* group
-)
-{
-  mGroupList.push_back(group);
-  //group->mRepClass = this;
-}
-
 // @brief 内容をシリアライズする．
 void
 CiCellClass::serialize(
@@ -72,8 +46,7 @@ CiCellClass::dump(
 // @brief 内容を読み込む．
 unique_ptr<CiCellClass>
 CiCellClass::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
+  Deserializer& s
 )
 {
   SizeType n = s.in().read_64();
@@ -81,9 +54,14 @@ CiCellClass::restore(
   for ( auto i: Range(n) ) {
     idmap_list[i].restore(s.in());
   }
-  vector<const CiCellGroup*> group_list;
+  auto cclass = new CiCellClass{nullptr, idmap_list};
+  auto ptr = unique_ptr<CiCellClass>{cclass};
+  vector<CiCellGroup*> group_list;
   s.restore(group_list);
-  auto ptr = unique_ptr<CiCellClass>{new CiCellClass{lib, idmap_list, group_list}};
+  for ( auto group: group_list ) {
+    cclass->add_group(group);
+    group->set_rep_class(cclass);
+  }
   return ptr;
 }
 

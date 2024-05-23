@@ -335,36 +335,6 @@ ClibCell::bundle_list() const
   return ClibBundleList{_impl(), _impl()->bundle_list()};
 }
 
-#if 0
-// @brief タイミング情報の数を返す．
-SizeType
-ClibCell::timing_num() const
-{
-  _check_valid();
-  return _impl()->timing_num();
-}
-
-// @brief タイミング情報を返す．
-ClibTiming
-ClibCell::timing(
-  SizeType pos
-) const
-{
-  _check_valid();
-  auto timing = _impl()->timing(pos);
-  return ClibTiming{timing};
-}
-
-// @brief タイミング情報のリストを返す．
-ClibTimingList
-ClibCell::timing_list() const
-{
-  _check_valid();
-  auto& timing_list = ;
-  return ClibTimingList{_impl()->timing_list()};
-}
-#endif
-
 // @brief 条件に合致するタイミング情報のリストを返す．
 ClibTimingList
 ClibCell::timing_list(

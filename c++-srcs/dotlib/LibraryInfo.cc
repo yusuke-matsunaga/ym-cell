@@ -111,6 +111,7 @@ LibraryInfo::set(
   }
 
   mLibrary->compile();
+  mLibrary->wrap_up();
 }
 
 // 文字列型の属性をセットする．

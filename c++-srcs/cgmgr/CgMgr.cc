@@ -305,25 +305,6 @@ CgMgr::_find_class(
 void
 CgMgr::gen_pat()
 {
-#if 0
-  for ( auto& p: mClassExprListDict ) {
-    auto& data = p.second;
-    auto rep_class = data.mClass;
-    bool has_cell = false;
-    for ( auto group: rep_class->cell_group_list() ) {
-      if ( group->cell_num() > 0 ) {
-	has_cell = true;
-	break;
-      }
-    }
-    if ( has_cell ) {
-      const auto& expr_list = data.mExprList;
-      for ( const auto& expr: expr_list ) {
-	mPatMgr.reg_pat(expr, rep_class);
-      }
-    }
-  }
-#else
   for ( auto rep_class: mLibrary.npn_class_list() ) {
     bool has_cell = false;
     for ( auto group: rep_class->cell_group_list() ) {
@@ -339,7 +320,6 @@ CgMgr::gen_pat()
       }
     }
   }
-#endif
 }
 
 // @brief 全ノード数を返す．

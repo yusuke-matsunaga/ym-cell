@@ -351,6 +351,29 @@ CiCellLibrary::reg_cell(
   return cell;
 }
 
+// @brief 設定後の最終処理を行う．
+void
+CiCellLibrary::wrap_up()
+{
+  // ピン名の辞書を作る．
+  for ( auto& cell: mCellList ) {
+    for ( auto& pin: cell->_pin_list() ) {
+      mPinDict.add(cell.get(), pin->_name(), pin.get());
+    }
+    for ( auto& bus: cell->_bus_list() ) {
+      mBusDict.add(cell.get(), bus->_name(), bus.get());
+    }
+    for ( auto& bundle: cell->_bundle_list() ) {
+      mBundleDict.add(cell.get(), bundle->_name(), bundle.get());
+    }
+  }
+
+  // クラスに親のライブラリを設定する．
+  for ( auto& cclass: mCellClassList ) {
+    cclass->set_parent(this);
+  }
+}
+
 // @brief セルグループ/セルクラスの設定を行なう．
 void
 CiCellLibrary::compile()
@@ -364,6 +387,7 @@ CiCellLibrary::compile()
     auto group = cgmgr.find_group(sig);
     // セルを登録する．
     group->add_cell(cell.get());
+    cell->set_group(group);
   }
 
   // パタングラフを作る．

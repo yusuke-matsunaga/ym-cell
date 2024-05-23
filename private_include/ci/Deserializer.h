@@ -10,19 +10,21 @@
 
 #include "ym/clib.h"
 #include "ym/BinDec.h"
+#include "ci/CiBusType.h"
+#include "ci/CiLutTemplate.h"
+#include "ci/CiLut.h"
+#include "ci/CiPin.h"
+#include "ci/CiBus.h"
+#include "ci/CiBundle.h"
+#include "ci/CiTiming.h"
+#include "ci/CiCell.h"
+#include "ci/CiCellGroup.h"
+#include "ci/CiCellClass.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
 class CiCellLibrary;
-class CiBusType;
-class CiLutTemplate;
-class CiLut;
-class CiTiming;
-class CiPin;
-class CiCell;
-class CiCellGroup;
-class CiCellClass;
 
 //////////////////////////////////////////////////////////////////////
 /// @class Deserializer Deserializer.h "Deserializer.h"
@@ -44,7 +46,9 @@ public:
   /// @brief コンストラクタ
   Deserializer(
     istream& s ///< [in] 入力ストリーム
-  );
+  ) : mS{s}
+  {
+  }
 
   /// @brief デストラクタ
   ~Deserializer() = default;
@@ -64,9 +68,19 @@ public:
 
   /// @brief 要素のデシリアライズを行う．
   void
-  deserialize(
-    CiCellLibrary* lib ///< [in] 親のセルライブラリ
-  );
+  deserialize()
+  {
+    mBusTypeList.restore(*this);
+    mLutTemplateList.restore(*this);
+    mLutList.restore(*this);
+    mPinList.restore(*this);
+    mBusList.restore(*this);
+    mBundleList.restore(*this);
+    mTimingList.restore(*this);
+    mCellList.restore(*this);
+    mCellGroupList.restore(*this);
+    mCellClassList.restore(*this);
+  }
 
   /// @brief 文字列の読み込み
   void
@@ -104,15 +118,58 @@ public:
     mS >> dst;
   }
 
+  /// @brief ClibTechnology の読み込み
+  void
+  restore(
+    ClibTechnology& dst
+  )
+  {
+    dst = static_cast<ClibTechnology>(mS.read_8());
+  }
+
+  /// @brief ClibDelayModel の読み込み
+  void
+  restore(
+    ClibDelayModel& dst
+  )
+  {
+    dst = static_cast<ClibDelayModel>(mS.read_8());
+  }
+
+  /// @brief ClibTimingSense の読み込み
+  void
+  restore(
+    ClibTimingSense& dst
+  )
+  {
+    dst = static_cast<ClibTimingSense>(mS.read_8());
+  }
+
+  /// @brief ClibTimingType の読み込み
+  void
+  restore(
+    ClibTimingType& dst
+  )
+  {
+    dst = static_cast<ClibTimingType>(mS.read_8());
+  }
+
+  /// @brief ClibVarType の読み込み
+  void
+  restore(
+    ClibVarType& dst
+  )
+  {
+    dst = static_cast<ClibVarType>(mS.read_8());
+  }
+
   /// @brief バスタイプの読み込み
   void
   restore(
     CiBusType*& dst
   )
   {
-    SizeType id;
-    restore(id);
-    dst = mBusTypeTable[id];
+    dst = mBusTypeList.restore_ref(*this);
   }
 
   /// @brief バスタイプの読み込み
@@ -121,9 +178,7 @@ public:
     unique_ptr<CiBusType>& dst
   )
   {
-    SizeType id;
-    restore(id);
-    std::swap(dst, mBusTypeList[id]);
+    std::swap(dst, mBusTypeList.restore_ptr(*this));
   }
 
   /// @brief ピンの読み込み
@@ -132,9 +187,7 @@ public:
     CiPin*& dst
   )
   {
-    SizeType id;
-    restore(id);
-    dst = mPinTable[id];
+    dst = mPinList.restore_ref(*this);
   }
 
   /// @brief ピンの読み込み
@@ -143,9 +196,7 @@ public:
     unique_ptr<CiPin>& dst
   )
   {
-    SizeType id;
-    restore(id);
-    std::swap(dst, mPinList[id]);
+    std::swap(dst, mPinList.restore_ptr(*this));
   }
 
   /// @brief バスの読み込み
@@ -154,9 +205,7 @@ public:
     CiBus*& dst
   )
   {
-    SizeType id;
-    restore(id);
-    dst = mBusTable[id];
+    dst = mBusList.restore_ref(*this);
   }
 
   /// @brief バスの読み込み
@@ -165,9 +214,7 @@ public:
     unique_ptr<CiBus>& dst
   )
   {
-    SizeType id;
-    restore(id);
-    std::swap(dst, mBusList[id]);
+    std::swap(dst, mBusList.restore_ptr(*this));
   }
 
   /// @brief バンドルの読み込み
@@ -176,9 +223,7 @@ public:
     CiBundle*& dst
   )
   {
-    SizeType id;
-    restore(id);
-    dst = mBundleTable[id];
+    dst = mBundleList.restore_ref(*this);
   }
 
   /// @brief バンドルの読み込み
@@ -187,9 +232,7 @@ public:
     unique_ptr<CiBundle>& dst
   )
   {
-    SizeType id;
-    restore(id);
-    std::swap(dst, mBundleList[id]);
+    std::swap(dst, mBundleList.restore_ptr(*this));
   }
 
   /// @brief タイミングの読み込み
@@ -198,9 +241,7 @@ public:
     CiTiming*& dst
   )
   {
-    SizeType id;
-    restore(id);
-    dst = mTimingTable[id];
+    dst = mTimingList.restore_ref(*this);
   }
 
   /// @brief タイミングの読み込み
@@ -209,9 +250,7 @@ public:
     unique_ptr<CiTiming>& dst
   )
   {
-    SizeType id;
-    restore(id);
-    std::swap(dst, mTimingList[id]);
+    std::swap(dst, mTimingList.restore_ptr(*this));
   }
 
   /// @brief LUTテンプレートの読み込み
@@ -220,9 +259,7 @@ public:
     CiLutTemplate*& dst
   )
   {
-    SizeType id;
-    restore(id);
-    dst = mLutTemplateTable[id];
+    dst = mLutTemplateList.restore_ref(*this);
   }
 
   /// @brief LUTテンプレートの読み込み
@@ -231,9 +268,7 @@ public:
     unique_ptr<CiLutTemplate>& dst
   )
   {
-    SizeType id;
-    restore(id);
-    std::swap(dst, mLutTemplateList[id]);
+    std::swap(dst, mLutTemplateList.restore_ptr(*this));
   }
 
   /// @brief LUTの読み込み
@@ -242,9 +277,7 @@ public:
     CiLut*& dst
   )
   {
-    SizeType id;
-    restore(id);
-    dst = mLutTable[id];
+    dst = mLutList.restore_ref(*this);
   }
 
   /// @brief LUTの読み込み
@@ -253,9 +286,7 @@ public:
     unique_ptr<CiLut>& dst
   )
   {
-    SizeType id;
-    restore(id);
-    std::swap(dst, mLutList[id]);
+    std::swap(dst, mLutList.restore_ptr(*this));
   }
 
   /// @brief セルの読み込み
@@ -264,9 +295,7 @@ public:
     CiCell*& dst
   )
   {
-    SizeType id;
-    restore(id);
-    dst = mCellTable[id];
+    dst = mCellList.restore_ref(*this);
   }
 
   /// @brief セルの読み込み
@@ -275,9 +304,7 @@ public:
     unique_ptr<CiCell>& dst
   )
   {
-    SizeType id;
-    restore(id);
-    std::swap(dst, mCellList[id]);
+    std::swap(dst, mCellList.restore_ptr(*this));
   }
 
   /// @brief セルグループの読み込み
@@ -286,9 +313,7 @@ public:
     CiCellGroup*& dst
   )
   {
-    SizeType id;
-    restore(id);
-    dst = mCellGroupTable[id];
+    dst = mCellGroupList.restore_ref(*this);
   }
 
   /// @brief セルグループの読み込み
@@ -297,9 +322,7 @@ public:
     unique_ptr<CiCellGroup>& dst
   )
   {
-    SizeType id;
-    restore(id);
-    std::swap(dst, mCellGroupList[id]);
+    std::swap(dst, mCellGroupList.restore_ptr(*this));
   }
 
   /// @brief セルクラスの読み込み
@@ -308,9 +331,7 @@ public:
     CiCellClass*& dst
   )
   {
-    SizeType id;
-    restore(id);
-    dst = mCellClassTable[id];
+    dst = mCellClassList.restore_ref(*this);
   }
 
   /// @brief セルクラスの読み込み
@@ -319,9 +340,7 @@ public:
     unique_ptr<CiCellClass>& dst
   )
   {
-    SizeType id;
-    restore(id);
-    std::swap(dst, mCellClassList[id]);
+    std::swap(dst, mCellClassList.restore_ptr(*this));
   }
 
   /// @brief const 型の要素の読み込み
@@ -356,68 +375,88 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // 要素のリスト
+  template<class T>
+  struct ObjList
+  {
+    vector<unique_ptr<T>> mObjList;
+    vector<T*> mObjRefList;
+
+    // 内容を復元する．
+    void
+    restore(
+      Deserializer& s
+    )
+    {
+      SizeType n;
+      s.restore(n);
+      mObjList.resize(n + 1);
+      mObjRefList.resize(n + 1);
+      // 先頭に nullptr を追加しておく．
+      mObjList[0] = {};
+      mObjRefList[0] = nullptr;
+      for ( SizeType i = 0; i < n; ++ i ) {
+	auto ptr = T::restore(s);
+	mObjRefList[i + 1] = ptr.get();
+	mObjList[i + 1] = std::move(ptr);
+      }
+    }
+
+    // 参照を復元する．
+    T*
+    restore_ref(
+      Deserializer& s
+    )
+    {
+      SizeType id;
+      s.restore(id);
+      return mObjRefList[id];
+    }
+
+    // ポインタを復元する．
+    unique_ptr<T>&
+    restore_ptr(
+      Deserializer& s
+    )
+    {
+      SizeType id;
+      s.restore(id);
+      return mObjList[id];
+    }
+  };
+
   // バイナリデコーダ
   BinDec mS;
 
-  // バスタイプのリスト(所有権あり)
-  vector<unique_ptr<CiBusType>> mBusTypeList;
+  // バスタイプのリスト
+  ObjList<CiBusType> mBusTypeList;
 
-  // LUTテンプレートのリスト(所有権あり)
-  vector<unique_ptr<CiLutTemplate>> mLutTemplateList;
+  // LUTテンプレートのリスト
+  ObjList<CiLutTemplate> mLutTemplateList;
 
-  // LUTのリスト(所有権あり)
-  vector<unique_ptr<CiLut>> mLutList;
+  // LUTのリスト
+  ObjList<CiLut> mLutList;
 
-  // ピンのリスト(所有権あり)
-  vector<unique_ptr<CiPin>> mPinList;
+  // ピンのリスト
+  ObjList<CiPin> mPinList;
 
-  // バスのリスト(所有権あり)
-  vector<unique_ptr<CiBus>> mBusList;
+  // バスのリスト
+  ObjList<CiBus> mBusList;
 
-  // バンドルのリスト(所有権あり)
-  vector<unique_ptr<CiBundle>> mBundleList;
+  // バンドルのリスト
+  ObjList<CiBundle> mBundleList;
 
-  // タイミングのリスト(所有権あり)
-  vector<unique_ptr<CiTiming>> mTimingList;
+  // タイミングのリスト
+  ObjList<CiTiming> mTimingList;
 
-  // セルのリスト(所有権あり)
-  vector<unique_ptr<CiCell>> mCellList;
+  // セルのリスト
+  ObjList<CiCell> mCellList;
 
-  // セルグループのリスト(所有権あり)
-  vector<unique_ptr<CiCellGroup>> mCellGroupList;
+  // セルグループのリスト
+  ObjList<CiCellGroup> mCellGroupList;
 
-  // セルクラスのリスト(所有権あり)
-  vector<unique_ptr<CiCellClass>> mCellClassList;
-
-  // バスタイプの変換テーブル
-  vector<CiBusType*> mBusTypeTable;
-
-  // LUTテンプレートの変換テーブル
-  vector<CiLutTemplate*> mLutTemplateTable;
-
-  // LUTの変換テーブル
-  vector<CiLut*> mLutTable;
-
-  // ピンの変換テーブル
-  vector<CiPin*> mPinTable;
-
-  // バスの変換テーブル
-  vector<CiBus*> mBusTable;
-
-  // バンドルの変換テーブル
-  vector<CiBundle*> mBundleTable;
-
-  // タイミングの変換テーブル
-  vector<CiTiming*> mTimingTable;
-
-  // セルの変換テーブル
-  vector<CiCell*> mCellTable;
-
-  // セルグループの変換テーブル
-  vector<CiCellGroup*> mCellGroupTable;
-
-  // セルクラスの変換テーブル
-  vector<CiCellClass*> mCellClassTable;
+  // セルクラスのリスト
+  ObjList<CiCellClass> mCellClassList;
 
 };
 

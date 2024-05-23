@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "ci/CiCellGroup.h"
+#include "ci/CiCell.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
 
@@ -32,7 +33,6 @@ CiCellGroup::dump(
   Serializer& s
 ) const
 {
-  s.dump(rep_class());
   mIoMap.dump(s.out());
   s.dump(mCellList);
 }
@@ -43,15 +43,15 @@ CiCellGroup::restore(
   Deserializer& s
 )
 {
-  CiCellClass* rep_class;
-  s.restore(rep_class);
   ClibIOMap iomap;
   iomap.restore(s.in());
-  auto ptr = unique_ptr<CiCellGroup>{new CiCellGroup{rep_class, iomap}};
-  vector<const CiCell*> cell_list;
+  vector<CiCell*> cell_list;
   s.restore(cell_list);
+  auto group = new CiCellGroup{nullptr, iomap};
+  auto ptr = unique_ptr<CiCellGroup>{group};
   for ( auto cell: cell_list ) {
-    ptr->add_cell(cell);
+    group->add_cell(cell);
+    cell->set_group(group);
   }
   return ptr;
 }

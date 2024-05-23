@@ -30,11 +30,12 @@ public:
 
   /// @brief コンストラクタ
   CiCellClass(
-    CiCellLibrary* lib,                          ///< [in] 親のセルライブラリ
-    const vector<ClibIOMap>& idmap_list,         ///< [in] 同位体変換リスト
-    const vector<const CiCellGroup*>& group_list ///< [in] 所属するセルグループのリスト
-    = vector<const CiCellGroup*>{}
-  );
+    CiCellLibrary* lib,                 ///< [in] 親のセルライブラリ
+    const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換リスト
+  ): CiLibObj{lib},
+     mIdMapList{idmap_list}
+  {
+  }
 
   /// @brief デストラクタ
   ~CiCellClass() = default;
@@ -122,8 +123,7 @@ public:
   static
   unique_ptr<CiCellClass>
   restore(
-    Deserializer& s, ///< [in] デシリアライザ
-    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 
@@ -136,7 +136,10 @@ public:
   void
   add_group(
     const CiCellGroup* group
-  );
+  )
+  {
+    mGroupList.push_back(group);
+  }
 
 
 private:

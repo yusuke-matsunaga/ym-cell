@@ -190,6 +190,13 @@ public:
     return conv_list(mPinList);
   }
 
+  /// @brief ピンのリストの取得
+  const vector<unique_ptr<CiPin>>&
+  _pin_list() const
+  {
+    return mPinList;
+  }
+
   /// @brief 入力ピン数の取得
   SizeType
   input_num() const
@@ -336,6 +343,13 @@ public:
     return conv_list(mBusList);
   }
 
+  /// @brief バスのリスト
+  const vector<unique_ptr<CiBus>>&
+  _bus_list() const
+  {
+    return mBusList;
+  }
+
   /// @brief バンドル数の取得
   SizeType
   bundle_num() const
@@ -364,6 +378,13 @@ public:
   bundle_list() const
   {
     return conv_list(mBundleList);
+  }
+
+  /// @brief バンドルのリスト
+  const vector<unique_ptr<CiBundle>>&
+  _bundle_list() const
+  {
+    return mBundleList;
   }
 
 

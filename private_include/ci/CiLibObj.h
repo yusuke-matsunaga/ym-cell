@@ -54,6 +54,15 @@ public:
   void
   dec_ref() const;
 
+  /// @brief 親のライブラリオブジェクトを設定する．
+  void
+  set_parent(
+    CiCellLibrary* parent
+  )
+  {
+    mParent = parent;
+  }
+
 
 protected:
   //////////////////////////////////////////////////////////////////////

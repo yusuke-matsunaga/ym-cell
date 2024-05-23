@@ -12,9 +12,6 @@
 #include "ym/ClibTime.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibResistance.h"
-#include "ym/ClibPin.h"
-#include "ym/ClibPatGraph.h"
-#include "ym/ClibList.h"
 #include "ym/ShString.h"
 #include "ym/logic.h"
 #include "ci/CiPatMgr.h"
@@ -190,34 +187,6 @@ public:
     return mLeakagePowerUnit;
   }
 
-#if 0
-  /// @brief バスタイプの取得
-  ///
-  /// なければ nullptr を返す．
-  const CiBusType*
-  bus_type(
-    const string& name ///< [in] バスタイプ名
-  ) const
-  {
-    return bus_type(ShString{name});
-  }
-
-  /// @brief バスタイプの取得
-  ///
-  /// なければ nullptr を返す．
-  const CiBusType*
-  bus_type(
-    const ShString& name ///< [in] バスタイプ名
-  ) const;
-
-  /// @brief バスタイプ番号の取得
-  ///
-  /// なければ CLIB_NULLID を返す．
-  SizeType
-  bus_type_id(
-    const ShString& name ///< [in] バスタイプ名
-  ) const;
-#endif
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -570,6 +539,10 @@ public:
     const string& value      ///< [in] 値
   );
 
+  /// @brief 設定後の最終処理を行う．
+  void
+  wrap_up();
+
   /// @brief セルグループ/セルクラスの設定を行なう．
   void
   compile();
@@ -666,80 +639,6 @@ public:
     ClibArea area              ///< [in] 面積
   );
 
-#if 0
-  /// @brief 入力ピンを追加する．
-  /// @return 生成されたピンを返す．
-  CiPin*
-  add_input(
-    CiCell* cell,                     ///< [in] セル
-    const ShString& name,             ///< [in] ピン名
-    ClibCapacitance capacitance,      ///< [in] 負荷容量
-    ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
-    ClibCapacitance fall_capacitance  ///< [in] 立ち下がり時の負荷容量
-  );
-
-  /// @brief 出力ピンを追加する．
-  /// @return 生成されたピンを返す．
-  CiPin*
-  add_output(
-    CiCell* cell,                    ///< [in] セル
-    const ShString& name,            ///< [in] ピン名
-    ClibCapacitance max_fanout,      ///< [in] 最大ファンアウト容量
-    ClibCapacitance min_fanout,      ///< [in] 最大ファンアウト容量
-    ClibCapacitance max_capacitance, ///< [in] 最大負荷容量
-    ClibCapacitance min_capacitance, ///< [in] 最大負荷容量
-    ClibTime max_transition,         ///< [in] 最大遷移時間
-    ClibTime min_transition,         ///< [in] 最大遷移時間
-    const Expr& function,            ///< [in] 出力の論理式
-    const Expr& tristate             ///< [in] tristate 条件
-  );
-
-  /// @brief 入出力ピンを追加する．
-  /// @return 生成されたピンを返す．
-  CiPin*
-  add_inout(
-    CiCell* cell,                     ///< [in] セル
-    const ShString& name,             ///< [in] ピン名
-    ClibCapacitance capacitance,      ///< [in] 負荷容量
-    ClibCapacitance rise_capacitance, ///< [in] 立ち上がり時の負荷容量
-    ClibCapacitance fall_capacitance, ///< [in] 立ち上がり時の負荷容量
-    ClibCapacitance max_fanout,	      ///< [in] 最大ファンアウト容量
-    ClibCapacitance min_fanout,	      ///< [in] 最大ファンアウト容量
-    ClibCapacitance max_capacitance,  ///< [in] 最大負荷容量
-    ClibCapacitance min_capacitance,  ///< [in] 最大負荷容量
-    ClibTime max_transition,	      ///< [in] 最大遷移時間
-    ClibTime min_transition,          ///< [in] 最大遷移時間
-    const Expr& function,             ///< [in] 出力の論理式
-    const Expr& tristate              ///< [in] tristate 条件
-  );
-
-  /// @brief 内部ピンを追加する．
-  /// @return 生成されたピンを返す．
-  CiPin*
-  add_internal(
-    CiCell* cell,        ///< [in] セル
-    const ShString& name ///< [in] 名前
-  );
-
-  /// @brief バスを追加する．
-  /// @return 生成されたバスを返す．
-  CiBus*
-  add_bus(
-    CiCell* cell,                        ///< [in] セル
-    const ShString& name,                ///< [in] 名前
-    const CiBusType* bus_type,           ///< [in] バスタイプ
-    const vector<const CiPin*>& pin_list ///< [in] ピンリスト
-  );
-
-  /// @brief バンドルを追加する．
-  /// @return 生成されたバンドルを返す．
-  CiBundle*
-  add_bundle(
-    CiCell* cell,                        ///< [in] セル
-    const ShString& name,                ///< [in] 名前
-    const vector<const CiPin*>& pin_list ///< [in] ピンリスト
-  );
-#endif
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -796,53 +695,6 @@ public:
     return mCellList[id].get();
   }
 
-#if 0
-  /// @brief ピンを得る．
-  CiPin*
-  _pin(
-    SizeType id ///< [in] ID番号
-  ) const
-  {
-    return mPinList[id].get();
-  }
-
-  /// @brief バスを得る．
-  CiBus*
-  _bus(
-    SizeType id ///< [in] ID番号
-  ) const
-  {
-    return mBusList[id].get();
-  }
-
-  /// @brief バンドルを得る．
-  CiBundle*
-  _bundle(
-    SizeType id ///< [in] ID番号
-  ) const
-  {
-    return mBundleList[id].get();
-  }
-
-  /// @brief タイミング情報を得る．
-  CiTiming*
-  _timing(
-    SizeType id ///< [in] ID番号
-  ) const
-  {
-    return mTimingList[id].get();
-  }
-
-  /// @brief LUTを得る．
-  CiLut*
-  _lut(
-    SizeType id ///< [in] ID番号
-  ) const
-  {
-    return mLutList[id].get();
-  }
-#endif
-
   /// @brief パタンを得る．
   const CiPatGraph*
   _pat_graph(
@@ -870,105 +722,9 @@ private:
   // restore で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 名前を読み込む．
-  void
-  restore_name(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief 'technology' を読み込む．
-  void
-  restore_technology(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief 遅延モデルを読み込む．
-  void
-  restore_delay_model(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
   /// @brief 'capacitive_load_unit' を読み込む．
   void
   restore_capacitive_load_unit(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief 属性を読み込む(浮動小数点型)
-  void
-  restore_double_attr(
-    Deserializer& s,        ///< [in] デシリアライザ
-    const string& attr_name ///< [in] 属性名
-  );
-
-  /// @brief 属性を読み込む(文字列型)．
-  void
-  restore_str_attr(
-    Deserializer& s,        ///< [in] デシリアライザ
-    const string& attr_name ///< [in] 属性名
-  );
-
-  /// @brief バスタイプを読み込む．
-  void
-  restore_bustype(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief LUT テンプレートを読み込む．
-  void
-  restore_lut_template(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief セルを読み込む．
-  void
-  restore_cell(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief ピン情報を読み込む．
-  void
-  restore_pin(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief バス情報を読み込む．
-  void
-  restore_bus(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief バンドル情報を読み込む．
-  void
-  restore_bundle(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief セルごとのピン，バス，バンドルの辞書を作る．
-  void
-  construct_cellpin_dict();
-
-  /// @brief タイミング情報を読み込む．
-  void
-  restore_timing(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief LUT を読み込む．
-  void
-  restore_lut(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief セルグループを読み込む．
-  void
-  restore_cell_group(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief セルクラスを読み込む．
-  void
-  restore_cell_class(
     Deserializer& s ///< [in] デシリアライザ
   );
 
@@ -977,17 +733,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // ピンハッシュ用の関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief ピンを登録する．
-  void
-  reg_pin(
-    const CiCell* cell, ///< [in] セル
-    CiPin* pin          ///< [in] ピン
-  )
-  {
-    //mPinList.push_back(unique_ptr<CiPin>{pin});
-    mPinDict.add(cell, pin->_name(), pin);
-  }
 
   /// @brief ピン名からピンを取り出す．
   ///
@@ -1001,17 +746,6 @@ public:
     return mPinDict.get(cell, name);
   }
 
-  /// @brief バスを登録する．
-  void
-  reg_bus(
-    const CiCell* cell, ///< [in] セル
-    CiBus* bus          ///< [in] バス
-  )
-  {
-    //mBusList.push_back(unique_ptr<CiBus>(bus));
-    mBusDict.add(cell, bus->_name(), bus);
-  }
-
   /// @brief バス名からバスを取り出す．
   ///
   /// 見つからない場合は nullptr を返す．
@@ -1022,17 +756,6 @@ public:
   ) const
   {
     return mBusDict.get(cell, name);
-  }
-
-  /// @brief バンドルを登録する．
-  void
-  reg_bundle(
-    const CiCell* cell, ///< [in] セル番号
-    CiBundle* bundle    ///< [in] バンドル
-  )
-  {
-    //mBundleList.push_back(unique_ptr<CiBundle>(bundle));
-    mBundleDict.add(cell, bundle->_name(), bundle);
   }
 
   /// @brief バンドル名からバンドル番号を取り出す．

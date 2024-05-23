@@ -157,6 +157,7 @@ MislibConv::convert(
   }
 
   mLibrary->compile();
+  mLibrary->wrap_up();
 
   return std::move(mLibrary);
 }

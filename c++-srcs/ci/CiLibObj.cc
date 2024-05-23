@@ -21,13 +21,11 @@ CiLibObj::CiLibObj(
   CiCellLibrary* lib
 ) : mParent{lib}
 {
-  inc_ref();
 }
 
 // @brief デストラクタ
 CiLibObj::~CiLibObj()
 {
-  dec_ref();
 }
 
 // @brief 参照数を増やす

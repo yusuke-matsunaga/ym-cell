@@ -14,6 +14,8 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiCell;
+
 //////////////////////////////////////////////////////////////////////
 /// @class CiNameHash CiNameHash.h "CiNameHash.h"
 /// @brief セルと要素名をキーにしたハッシュ表

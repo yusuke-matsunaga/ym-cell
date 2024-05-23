@@ -26,8 +26,6 @@ class Deserializer;
 //////////////////////////////////////////////////////////////////////
 class CiCellGroup
 {
-  friend class CiCellClass;
-
 public:
 
   /// @brief コンストラクタ
@@ -122,6 +120,15 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 情報を設定する関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 親のセルクラスを設定する．
+  void
+  set_rep_class(
+    const CiCellClass* rep_class
+  )
+  {
+    mRepClass = rep_class;
+  }
 
   /// @brief セルを追加する．
   void

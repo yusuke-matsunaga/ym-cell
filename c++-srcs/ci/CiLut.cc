@@ -127,9 +127,9 @@ CiLut::restore(
   auto d = s.in().read_8();
   unique_ptr<CiLut> lut;
   switch ( d ) {
-  case 1: lut = unique_ptr<CiLut>{new CiLut1D{}}; break;
-  case 2: lut = unique_ptr<CiLut>{new CiLut2D{}}; break;
-  case 3: lut = unique_ptr<CiLut>{new CiLut3D{}}; break;
+  case 1: lut = unique_ptr<CiLut>{new CiLut1D}; break;
+  case 2: lut = unique_ptr<CiLut>{new CiLut2D}; break;
+  case 3: lut = unique_ptr<CiLut>{new CiLut3D}; break;
   default: ASSERT_NOT_REACHED; break;
   }
   lut->_restore(s);
