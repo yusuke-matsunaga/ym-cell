@@ -24,31 +24,17 @@ class Deserializer;
 /// @class CiCellGroup CiCellGroup.h "CiCellGroup.h"
 /// @brief ClibCellGroup の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiCellGroup :
-  public CiLibObj
+class CiCellGroup
 {
   friend class CiCellClass;
 
 public:
 
-  /// @brief restore() 用のコンストラクタ
-  CiCellGroup(
-    CiCellLibrary* lib,                    ///< [in] 親のセルライブラリ
-    const ClibIOMap& iomap,                ///< [in] 変換マップ
-    const vector<const CiCell*>& cell_list ///< [in] セルのリスト
-  ) : CiLibObj{lib},
-      mIoMap{iomap},
-      mCellList{cell_list}
-  {
-  }
-
   /// @brief コンストラクタ
   CiCellGroup(
-    CiCellLibrary* lib,           ///< [in] 親のセルライブラリ
-    const CiCellClass* rep_class, ///< [in] 親のセルクラス
+    const CiCellClass* rep_class, ///< [in] 親の同値類クラス
     const ClibIOMap& iomap        ///< [in] 変換マップ
-  ) : CiLibObj{lib},
-      mRepClass{rep_class},
+  ) : mRepClass{rep_class},
       mIoMap{iomap}
   {
   }
@@ -128,8 +114,7 @@ public:
   static
   unique_ptr<CiCellGroup>
   restore(
-    Deserializer& s,   ///< [in] デシリアライザ
-    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+    Deserializer& s   ///< [in] デシリアライザ
   );
 
 

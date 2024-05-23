@@ -7,6 +7,8 @@
 /// All rights reserved.
 
 #include "ci/CiCell.h"
+#include "ci/CiCellGroup.h"
+#include "ci/CiCellClass.h"
 #include "ci/CiCellLibrary.h"
 #include "ci/CiPin.h"
 #include "ci/CiBus.h"
@@ -15,10 +17,11 @@
 #include "cgmgr/CgSignature.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
+#include "ym/Range.h"
+#include "CiLogicCell.h"
 #include "CiFFCell.h"
 #include "CiLatchCell.h"
 #include "CiFsmCell.h"
-#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -27,114 +30,11 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiCell
 //////////////////////////////////////////////////////////////////////
 
-// @brief 論理セルを生成するクラスメソッド
-unique_ptr<CiCell>
-CiCell::new_Logic(
-  CiCellLibrary* lib,
-  const ShString& name,
-  ClibArea area
-)
+// @brief 親のライブラリを返す．
+const CiCellLibrary*
+CiCell::parent() const
 {
-  auto ptr = new CiCell{lib, name, area};
-  return unique_ptr<CiCell>{ptr};
-}
-
-// @brief master/slave型のFFセルを生成するクラスメソッド
-unique_ptr<CiCell>
-CiCell::new_FF(
-  CiCellLibrary* lib,
-  const ShString& name,
-  ClibArea area,
-  const ShString& var1,
-  const ShString& var2,
-  const Expr& clocked_on,
-  const Expr& clocked_on_also,
-  const Expr& next_state,
-  const Expr& clear,
-  const Expr& preset,
-  ClibCPV clear_preset_var1,
-  ClibCPV clear_preset_var2
-)
-{
-  CiCell* ptr = nullptr;
-  if ( clocked_on_also.is_valid() ) {
-    ptr = new CiFF2Cell{
-      lib, name, area,
-      var1, var2,
-      clocked_on, clocked_on_also,
-      next_state,
-      clear, preset,
-      clear_preset_var1,
-      clear_preset_var2
-    };
-  }
-  else {
-    ptr = new CiFFCell{
-      lib, name, area,
-      var1, var2,
-      clocked_on,
-      next_state,
-      clear, preset,
-      clear_preset_var1,
-      clear_preset_var2
-    };
-  }
-  return unique_ptr<CiCell>{ptr};
-}
-
-// @brief single-stage 型のラッチセルを生成するクラスメソッド
-unique_ptr<CiCell>
-CiCell::new_Latch(
-  CiCellLibrary* lib,
-  const ShString& name,
-  ClibArea area,
-  const ShString& var1,
-  const ShString& var2,
-  const Expr& enable,
-  const Expr& enable_also,
-  const Expr& data_in,
-  const Expr& clear,
-  const Expr& preset,
-  ClibCPV clear_preset_var1,
-  ClibCPV clear_preset_var2
-)
-{
-  CiCell* ptr = nullptr;
-  if ( enable_also.is_valid() ) {
-    ptr = new CiLatch2Cell{
-      lib, name, area,
-      var1, var2,
-      enable, enable_also,
-      data_in,
-      clear, preset,
-      clear_preset_var1,
-      clear_preset_var2
-    };
-  }
-  else {
-    ptr = new CiLatchCell{
-      lib, name, area,
-      var1, var2,
-      enable,
-      data_in,
-      clear, preset,
-      clear_preset_var1,
-      clear_preset_var2
-    };
-  }
-  return unique_ptr<CiCell>{ptr};
-}
-
-// @brief FSM型の順序セルを生成するクラスメソッド
-unique_ptr<CiCell>
-CiCell::new_FSM(
-  CiCellLibrary* lib,
-  const ShString& name,
-  ClibArea area
-)
-{
-  auto ptr = new CiFsmCell{lib, name, area};
-  return unique_ptr<CiCell>{ptr};
+  return group()->rep_class()->parent();
 }
 
 // @brief セルの種類を返す．
@@ -301,7 +201,7 @@ CiCell::add_input(
   auto pin = ptr.get();
   mPinList.push_back(std::move(ptr));
   mInputList.push_back(pin);
-  _parent()->reg_pin(this, pin);
+  //_parent()->reg_pin(this, pin);
   ++ mInputNum;
   return pin;
 }
@@ -330,7 +230,7 @@ CiCell::add_output(
   auto pin = ptr.get();
   mPinList.push_back(std::move(ptr));
   mOutputList.push_back(pin);
-  _parent()->reg_pin(this, pin);
+  //_parent()->reg_pin(this, pin);
   ++ mOutputNum;
   return pin;
 }
@@ -367,7 +267,7 @@ CiCell::add_inout(
   mPinList.push_back(std::move(ptr));
   mInputList.push_back(pin);
   mOutputList.push_back(pin);
-  _parent()->reg_pin(this, pin);
+  //_parent()->reg_pin(this, pin);
   ++ mInoutNum;
   return pin;
 }
@@ -396,7 +296,7 @@ CiCell::add_bus(
 {
   auto bus = new CiBus{name, bus_type, pin_list};
   mBusList.push_back(unique_ptr<CiBus>{bus});
-  _parent()->reg_bus(this, bus);
+  //_parent()->reg_bus(this, bus);
   return bus;
 }
 
@@ -409,7 +309,7 @@ CiCell::add_bundle(
 {
   auto bundle = new CiBundle{name, pin_list};
   mBundleList.push_back(unique_ptr<CiBundle>{bundle});
-  _parent()->reg_bundle(this, bundle);
+  //_parent()->reg_bundle(this, bundle);
   return bundle;
 }
 
@@ -534,9 +434,7 @@ CiCell::set_timing(
 
 // @brief シグネチャを返す．
 CgSignature
-CiCell::make_signature(
-  const CiCellLibrary* library
-) const
+CiCell::make_signature() const
 {
   SizeType ni = input_num();
   SizeType no = output_num();
@@ -617,44 +515,30 @@ CiCell::dump_common(
   }
 }
 
-// @brief 内容をバイナリダンプする．
-void
-CiCell::dump(
-  Serializer& s
-) const
-{
-  // シグネチャ
-  s.out().write_8(0);
-  dump_common(s);
-}
-
 // @brief 内容を読み込む．
 unique_ptr<CiCell>
 CiCell::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
+  Deserializer& s
 )
 {
   auto type = s.in().read_8();
-  unique_ptr<CiCell> cell;
+  CiCell* cell = nullptr;
   switch ( type ) {
-  case 0: cell = unique_ptr<CiCell>{new CiCell{lib}}; break;
-  case 1: cell = unique_ptr<CiCell>{new CiFFCell{lib}}; break;
-  case 2: cell = unique_ptr<CiCell>{new CiFF2Cell{lib}}; break;
-  case 3: cell = unique_ptr<CiCell>{new CiLatchCell{lib}}; break;
-  case 4: cell = unique_ptr<CiCell>{new CiLatch2Cell{lib}}; break;
-  case 5: cell = unique_ptr<CiCell>{new CiFsmCell{lib}}; break;
-  default:
-    ASSERT_NOT_REACHED;
-    break;
+  case 0: cell = new CiLogicCell; break;
+  case 1: cell = new CiFFCell; break;
+  case 2: cell = new CiFF2Cell; break;
+  case 3: cell = new CiLatchCell; break;
+  case 4: cell = new CiLatch2Cell; break;
+  case 5: cell = new CiFsmCell; break;
+  default: ASSERT_NOT_REACHED; break;
   }
   cell->_restore(s);
-  return cell;
+  return unique_ptr<CiCell>{cell};
 }
 
-// logic タイプのセルの復元
+// @brief _restore() の共通部分
 void
-CiCell::_restore(
+CiCell::restore_common(
   Deserializer& s
 )
 {
@@ -686,15 +570,7 @@ CiCell::_restore(
   s.restore(mTimingList);
 
   // タイミングマップ
-#if 0
-  SizeType n = s.in().read_64();
-  mTimingMap.resize(n);
-  for ( SizeType i: Range(n) ) {
-    s.restore(mTimingMap[i]);
-  }
-#else
   s.restore(mTimingMap);
-#endif
 }
 
 END_NAMESPACE_YM_CLIB

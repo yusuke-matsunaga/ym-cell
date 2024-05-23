@@ -3,17 +3,62 @@
 /// @brief CiFFCell の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "CiFFCell.h"
-#include "ci/CiCellLibrary.h"
 #include "cgmgr/CgSignature.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief master/slave型のFFセルを生成するクラスメソッド
+unique_ptr<CiCell>
+CiCell::new_FF(
+  const ShString& name,
+  ClibArea area,
+  const ShString& var1,
+  const ShString& var2,
+  const Expr& clocked_on,
+  const Expr& clocked_on_also,
+  const Expr& next_state,
+  const Expr& clear,
+  const Expr& preset,
+  ClibCPV clear_preset_var1,
+  ClibCPV clear_preset_var2
+)
+{
+  CiCell* ptr = nullptr;
+  if ( clocked_on_also.is_valid() ) {
+    ptr = new CiFF2Cell{
+      name, area,
+      var1, var2,
+      clocked_on, clocked_on_also,
+      next_state,
+      clear, preset,
+      clear_preset_var1,
+      clear_preset_var2
+    };
+  }
+  else {
+    ptr = new CiFFCell{
+      name, area,
+      var1, var2,
+      clocked_on,
+      next_state,
+      clear, preset,
+      clear_preset_var1,
+      clear_preset_var2
+    };
+  }
+  return unique_ptr<CiCell>{ptr};
+}
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiFFCell
@@ -56,9 +101,7 @@ CiFFCell::next_state_expr() const
 
 // @brief シグネチャを返す．
 CgSignature
-CiFFCell::make_signature(
-  const CiCellLibrary* library
-) const
+CiFFCell::make_signature() const
 {
   SizeType ni = input_num();
   SizeType no = output_num();
@@ -106,9 +149,18 @@ CiFFCell::dump_FF(
   mNextState.dump(s.out());
 }
 
-// @brief 内容を読み込む．
+// @brief 内容を復元する．
 void
 CiFFCell::_restore(
+  Deserializer& s
+)
+{
+  restore_FF(s);
+}
+
+// @brief 内容を復元する．
+void
+CiFFCell::restore_FF(
   Deserializer& s
 )
 {
@@ -141,13 +193,13 @@ CiFF2Cell::dump(
   mClock2.dump(s.out());
 }
 
-// @brief 内容を読み込む．
+// @brief 内容を復元する．
 void
 CiFF2Cell::_restore(
   Deserializer& s
 )
 {
-  CiFFCell::_restore(s);
+  restore_FF(s);
   mClock2.restore(s.in());
 }
 

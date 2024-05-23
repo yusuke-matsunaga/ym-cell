@@ -7,6 +7,7 @@
 /// All rights reserved.
 
 #include "ci/CiCellClass.h"
+#include "ci/CiCellGroup.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
 #include "ym/Range.h"
@@ -17,6 +18,32 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellClass
 //////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+CiCellClass::CiCellClass(
+  CiCellLibrary* lib,
+  const vector<ClibIOMap>& idmap_list,
+  const vector<const CiCellGroup*>& group_list
+) : CiLibObj{lib},
+    mIdMapList{idmap_list},
+    mGroupList{group_list}
+{
+#if 0
+  for ( auto group: mGroupList ) {
+    group->mRepClass = this;
+  }
+#endif
+}
+
+// @brief このクラスに属しているセルグループを追加する．
+void
+CiCellClass::add_group(
+  const CiCellGroup* group
+)
+{
+  mGroupList.push_back(group);
+  //group->mRepClass = this;
+}
 
 // @brief 内容をシリアライズする．
 void
@@ -38,6 +65,8 @@ CiCellClass::dump(
   for ( auto& map: idmap_list() ) {
     map.dump(s.out());
   }
+  // セルグループのダンプ
+  s.dump(cell_group_list());
 }
 
 // @brief 内容を読み込む．
@@ -52,7 +81,9 @@ CiCellClass::restore(
   for ( auto i: Range(n) ) {
     idmap_list[i].restore(s.in());
   }
-  auto ptr = unique_ptr<CiCellClass>{new CiCellClass{lib, idmap_list}};
+  vector<const CiCellGroup*> group_list;
+  s.restore(group_list);
+  auto ptr = unique_ptr<CiCellClass>{new CiCellClass{lib, idmap_list, group_list}};
   return ptr;
 }
 

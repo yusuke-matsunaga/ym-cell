@@ -588,12 +588,12 @@ Deserializer::deserialize(
   {
     SizeType n;
     restore(n);
-    cout << "# of Cell: " << n << endl;
-    mCellList.resize(n);
-    mCellTable.resize(n);
+    cout << "# of CellClass: " << n << endl;
+    mCellClassList.resize(n);
+    mCellClassTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
-      mCellList[i] = CiCell::restore(*this, lib);
-      mCellTable[i] = mCellList[i].get();
+      mCellClassList[i] = CiCellClass::restore(*this, lib);
+      mCellClassTable[i] = mCellClassList[i].get();
     }
   }
   {
@@ -603,19 +603,19 @@ Deserializer::deserialize(
     mCellGroupList.resize(n);
     mCellGroupTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
-      mCellGroupList[i] = CiCellGroup::restore(*this, lib);
+      mCellGroupList[i] = CiCellGroup::restore(*this);
       mCellGroupTable[i] = mCellGroupList[i].get();
     }
   }
   {
     SizeType n;
     restore(n);
-    cout << "# of CellClass: " << n << endl;
-    mCellClassList.resize(n);
-    mCellClassTable.resize(n);
+    cout << "# of Cell: " << n << endl;
+    mCellList.resize(n);
+    mCellTable.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
-      mCellClassList[i] = CiCellClass::restore(*this, lib);
-      mCellClassTable[i] = mCellClassList[i].get();
+      mCellList[i] = CiCell::restore(*this);
+      mCellTable[i] = mCellList[i].get();
     }
   }
 }

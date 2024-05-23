@@ -28,21 +28,13 @@ class CiCellClass :
 {
 public:
 
-  /// @brief restore() 用のコンストラクタ
-  CiCellClass(
-    CiCellLibrary* lib           ///< [in] 親のセルライブラリ
-  ) : CiLibObj{lib}
-  {
-  }
-
   /// @brief コンストラクタ
   CiCellClass(
-    CiCellLibrary* lib,                 ///< [in] 親のセルライブラリ
-    const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換リスト
-  ) : CiLibObj{lib},
-      mIdMapList{idmap_list}
-  {
-  }
+    CiCellLibrary* lib,                          ///< [in] 親のセルライブラリ
+    const vector<ClibIOMap>& idmap_list,         ///< [in] 同位体変換リスト
+    const vector<const CiCellGroup*>& group_list ///< [in] 所属するセルグループのリスト
+    = vector<const CiCellGroup*>{}
+  );
 
   /// @brief デストラクタ
   ~CiCellClass() = default;
@@ -144,10 +136,7 @@ public:
   void
   add_group(
     const CiCellGroup* group
-  )
-  {
-    mGroupList.push_back(group);
-  }
+  );
 
 
 private:

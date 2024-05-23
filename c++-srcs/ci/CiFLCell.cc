@@ -80,7 +80,7 @@ CiFLCell::restore_FL(
   Deserializer& s
 )
 {
-  CiCell::_restore(s);
+  CiCell::restore_common(s);
   s.in() >> mVar1
 	 >> mVar2;
   mClear.restore(s.in());

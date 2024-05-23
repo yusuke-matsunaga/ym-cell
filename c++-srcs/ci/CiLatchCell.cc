@@ -3,17 +3,63 @@
 /// @brief CiLatchCell の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "CiLatchCell.h"
-#include "ci/CiCellLibrary.h"
 #include "cgmgr/CgSignature.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief single-stage 型のラッチセルを生成するクラスメソッド
+unique_ptr<CiCell>
+CiCell::new_Latch(
+  const ShString& name,
+  ClibArea area,
+  const ShString& var1,
+  const ShString& var2,
+  const Expr& enable,
+  const Expr& enable_also,
+  const Expr& data_in,
+  const Expr& clear,
+  const Expr& preset,
+  ClibCPV clear_preset_var1,
+  ClibCPV clear_preset_var2
+)
+{
+  CiCell* ptr = nullptr;
+  if ( enable_also.is_valid() ) {
+    ptr = new CiLatch2Cell{
+      name, area,
+      var1, var2,
+      enable, enable_also,
+      data_in,
+      clear, preset,
+      clear_preset_var1,
+      clear_preset_var2
+    };
+  }
+  else {
+    ptr = new CiLatchCell{
+      name, area,
+      var1, var2,
+      enable,
+      data_in,
+      clear, preset,
+      clear_preset_var1,
+      clear_preset_var2
+    };
+  }
+  return unique_ptr<CiCell>{ptr};
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス CiLatchCell
@@ -49,9 +95,7 @@ CiLatchCell::enable_expr() const
 
 // @brief シグネチャを返す．
 CgSignature
-CiLatchCell::make_signature(
-  const CiCellLibrary* library
-) const
+CiLatchCell::make_signature() const
 {
   SizeType ni = input_num();
   SizeType no = output_num();
@@ -98,9 +142,18 @@ CiLatchCell::dump_Latch(
   mDataIn.dump(s.out());
 }
 
-// @brief 内容を読み込む．
+// @brief 内容を復元する．
 void
 CiLatchCell::_restore(
+  Deserializer& s
+)
+{
+  restore_Latch(s);
+}
+
+// @brief 内容を読み込む．
+void
+CiLatchCell::restore_Latch(
   Deserializer& s
 )
 {
@@ -133,13 +186,13 @@ CiLatch2Cell::dump(
   mEnable2.dump(s.out());
 }
 
-// @brief 内容を読み込む．
+// @brief 内容を復元する．
 void
 CiLatch2Cell::_restore(
   Deserializer& s
 )
 {
-  CiLatchCell::_restore(s);
+  restore_Latch(s);
   mEnable2.restore(s.in());
 }
 

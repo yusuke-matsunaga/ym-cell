@@ -14,6 +14,22 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
+// クラス CiCell
+//////////////////////////////////////////////////////////////////////
+
+// @brief FSM型の順序セルを生成するクラスメソッド
+unique_ptr<CiCell>
+CiCell::new_FSM(
+  const ShString& name,
+  ClibArea area
+)
+{
+  auto ptr = new CiFsmCell{name, area};
+  return unique_ptr<CiCell>{ptr};
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // クラス CiFsmCell
 //////////////////////////////////////////////////////////////////////
 
@@ -41,13 +57,13 @@ CiFsmCell::dump(
   dump_common(s);
 }
 
-// @brief 内容を読み込む．
+// @brief 内容を復元する．
 void
 CiFsmCell::_restore(
   Deserializer& s
 )
 {
-  CiCell::_restore(s);
+  restore_common(s);
 }
 
 END_NAMESPACE_YM_CLIB

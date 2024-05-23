@@ -13,6 +13,8 @@
 #include "ym/ClibBundle.h"
 #include "ym/ClibTiming.h"
 #include "ci/CiCell.h"
+#include "ci/CiCellGroup.h"
+#include "ci/CiCellClass.h"
 #include "ci/CiCellLibrary.h"
 
 
@@ -29,7 +31,7 @@ ClibCellPtr::ClibCellPtr(
 ) : mImpl{impl}
 {
   if ( mImpl != nullptr ) {
-    mImpl->inc_ref();
+    mImpl->group()->rep_class()->inc_ref();
   }
 }
 
@@ -37,7 +39,7 @@ ClibCellPtr::ClibCellPtr(
 ClibCellPtr::~ClibCellPtr()
 {
   if ( mImpl != nullptr ) {
-    mImpl->dec_ref();
+    mImpl->group()->rep_class()->dec_ref();
   }
 }
 
@@ -50,7 +52,7 @@ ClibCellPtr::~ClibCellPtr()
 ClibCellLibrary
 ClibCell::library() const
 {
-  return ClibCellLibrary{_impl()->parent()};
+  return ClibCellLibrary{_impl()->group()->rep_class()->parent()};
 }
 
 // @brief 名前の取得

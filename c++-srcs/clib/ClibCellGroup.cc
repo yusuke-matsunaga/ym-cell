@@ -26,7 +26,7 @@ ClibCellGroup::ClibCellGroup(
 ) : mImpl{impl}
 {
   if ( mImpl != nullptr ) {
-    mImpl->inc_ref();
+    mImpl->rep_class()->inc_ref();
   }
 }
 
@@ -34,7 +34,7 @@ ClibCellGroup::ClibCellGroup(
 ClibCellGroup::~ClibCellGroup()
 {
   if ( mImpl != nullptr ) {
-    mImpl->dec_ref();
+    mImpl->rep_class()->dec_ref();
   }
 }
 

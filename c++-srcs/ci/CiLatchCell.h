@@ -24,16 +24,11 @@ class CiLatchCell :
 {
 public:
 
-  /// @brief restore() 用のコンストラクタ
-  CiLatchCell(
-    CiCellLibrary* lib ///< [in] 親のライブラリ
-  ) : CiFLCell{lib}
-  {
-  }
+  /// @brief 空のコンストラクタ
+  CiLatchCell() = default;
 
   /// @brief コンストラクタ
   CiLatchCell(
-    CiCellLibrary* lib,          ///< [in] 親のライブラリ
     const ShString& name,        ///< [in] 名前
     ClibArea area,               ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -44,7 +39,7 @@ public:
     const Expr& preset,          ///< [in] "preset" 関数の式
     ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
     ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  ) : CiFLCell{lib, name, area,
+  ) : CiFLCell{name, area,
                var1, var2,
 	       clear, preset,
 	       clear_preset_var1,
@@ -91,9 +86,7 @@ public:
 
   /// @brief シグネチャを返す．
   CgSignature
-  make_signature(
-    const CiCellLibrary* library ///< [in] ライブラリ
-  ) const override;
+  make_signature() const override;
 
 
 public:
@@ -107,6 +100,12 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
+  /// @brief 内容を復元する．
+  void
+  _restore(
+    Deserializer& s ///< [in] デシリアライザ
+  ) override;
+
 
 protected:
   //////////////////////////////////////////////////////////////////////
@@ -119,11 +118,11 @@ protected:
     Serializer& s ///< [in] シリアライザ
   ) const;
 
-  /// @brief restore() の下請け関数
+  /// @brief 内容を復元する．
   void
-  _restore(
+  restore_Latch(
     Deserializer& s ///< [in] デシリアライザ
-  ) override;
+  );
 
 
 private:
@@ -149,16 +148,11 @@ class CiLatch2Cell :
 {
 public:
 
-  /// @brief restore() 用のコンストラクタ
-  CiLatch2Cell(
-    CiCellLibrary* lib ///< [in] 親のライブラリ
-  ) : CiLatchCell{lib}
-  {
-  }
+  /// @brief 空のコンストラクタ
+  CiLatch2Cell() = default;
 
   /// @brief コンストラクタ
   CiLatch2Cell(
-    CiCellLibrary* lib,          ///< [in] 親のライブラリ
     const ShString& name,	 ///< [in] 名前
     ClibArea area,		 ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -170,7 +164,7 @@ public:
     const Expr& preset,          ///< [in] "preset" 関数の式
     ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
     ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  ) : CiLatchCell{lib, name, area,
+  ) : CiLatchCell{name, area,
                   var1, var2,
 		  enable, data_in,
 		  clear, preset,

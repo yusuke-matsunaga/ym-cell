@@ -32,6 +32,7 @@ CiCellGroup::dump(
   Serializer& s
 ) const
 {
+  s.dump(rep_class());
   mIoMap.dump(s.out());
   s.dump(mCellList);
 }
@@ -39,17 +40,19 @@ CiCellGroup::dump(
 // @brief 内容を読み込む．
 unique_ptr<CiCellGroup>
 CiCellGroup::restore(
-  Deserializer& s,
-  CiCellLibrary* lib
+  Deserializer& s
 )
 {
-  //CiCellClass* rep_class;
-  //s.restore(rep_class);
+  CiCellClass* rep_class;
+  s.restore(rep_class);
   ClibIOMap iomap;
   iomap.restore(s.in());
+  auto ptr = unique_ptr<CiCellGroup>{new CiCellGroup{rep_class, iomap}};
   vector<const CiCell*> cell_list;
   s.restore(cell_list);
-  auto ptr = unique_ptr<CiCellGroup>{new CiCellGroup{lib, iomap, cell_list}};
+  for ( auto cell: cell_list ) {
+    ptr->add_cell(cell);
+  }
   return ptr;
 }
 

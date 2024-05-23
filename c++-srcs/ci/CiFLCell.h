@@ -22,16 +22,11 @@ class CiFLCell :
 {
 public:
 
-  /// @brief restore() 用のコンストラクタ
-  CiFLCell(
-    CiCellLibrary* lib ///< [in] 親のライブラリ
-  ) : CiCell{lib}
-  {
-  }
+  /// @brief 空のコンストラクタ
+  CiFLCell() = default;
 
   /// @brief コンストラクタ
   CiFLCell(
-    CiCellLibrary* lib,        ///< [in] 親のライブラリ
     const ShString& name,      ///< [in] 名前
     ClibArea area,             ///< [in] 面積
     const ShString& var1,      ///< [in] 内部変数1の名前
@@ -40,7 +35,7 @@ public:
     const Expr& preset,        ///< [in] "preset" 関数の式
     ClibCPV clear_preset_var1, ///< [in] クリアとプリセットが同時にアクティブになった時の値1
     ClibCPV clear_preset_var2  ///< [in] クリアとプリセットが同時にアクティブになった時の値2
-  ) : CiCell{lib, name, area},
+  ) : CiCell{name, area},
       mVar1{var1},
       mVar2{var2},
       mClear{clear},

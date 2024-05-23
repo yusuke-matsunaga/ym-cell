@@ -12,7 +12,6 @@
 #include "ym/ClibArea.h"
 #include "ym/logic.h"
 #include "ym/ShString.h"
-#include "ci/CiLibObj.h"
 #include "ci/CiPin.h"
 #include "ci/CiBus.h"
 #include "ci/CiBundle.h"
@@ -23,6 +22,7 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 class CiCellLibrary;
+class CiCellGroup;
 class CiBusType;
 class CiLut;
 class CgSignature;
@@ -35,25 +35,18 @@ class Deserializer;
 ///
 /// このクラスはデフォルトの仮想関数を実装している．
 //////////////////////////////////////////////////////////////////////
-class CiCell :
-  public CiLibObj
+class CiCell
 {
 protected:
 
-  /// @brief restore() 用のコンストラクタ
-  CiCell(
-    CiCellLibrary* lib ///< [in] 親のライブラリ
-  ) : CiLibObj{lib}
-  {
-  }
+  /// @brief 空のコンストラクタ
+  CiCell() = default;
 
   /// @brief コンストラクタ
   CiCell(
-    CiCellLibrary* lib,   ///< [in] 親のライブラリ
     const ShString& name, ///< [in] 名前
     ClibArea area         ///< [in] 面積
-  ) : CiLibObj{lib},
-      mName{name},
+  ) : mName{name},
       mArea{area}
   {
   }
@@ -65,7 +58,6 @@ public:
   static
   unique_ptr<CiCell>
   new_Logic(
-    CiCellLibrary* lib,   ///< [in] 親のライブラリ
     const ShString& name, ///< [in] 名前
     ClibArea area         ///< [in] 面積
   );
@@ -76,7 +68,6 @@ public:
   static
   unique_ptr<CiCell>
   new_FF(
-    CiCellLibrary* lib,          ///< [in] 親のライブラリ
     const ShString& name,        ///< [in] 名前
     ClibArea area,               ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -96,7 +87,6 @@ public:
   static
   unique_ptr<CiCell>
   new_Latch(
-    CiCellLibrary* lib,          ///< [in] 親のライブラリ
     const ShString& name,        ///< [in] 名前
     ClibArea area,               ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -116,7 +106,6 @@ public:
   static
   unique_ptr<CiCell>
   new_FSM(
-    CiCellLibrary* lib,       ///< [in] 親のライブラリ
     const ShString& name,     ///< [in] 名前
     ClibArea area             ///< [in] 面積
   );
@@ -130,6 +119,17 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 基本情報の取得
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 親のライブラリを返す．
+  const CiCellLibrary*
+  parent() const;
+
+  /// @brief 親のグループの取得
+  const CiCellGroup*
+  group() const
+  {
+    return mGroup;
+  }
 
   /// @brief 名前の取得
   string
@@ -372,32 +372,6 @@ public:
   // タイミング情報の取得
   //////////////////////////////////////////////////////////////////////
 
-#if 0
-  /// @brief タイミング情報の数を返す．
-  SizeType
-  timing_num() const
-  {
-    return mTimingList.size();
-  }
-
-  /// @brief タイミング情報を返す．
-  const CiTiming*
-  timing(
-    SizeType pos ///< [in] インデックス ( 0 <= pos < timing_num() )
-  ) const
-  {
-    ASSERT_COND( 0 <= pos && pos < timing_num() );
-    return mTimingList[pos].get();
-  }
-
-  /// @brief タイミングのリストを返す．
-  vector<const CiTiming*>
-  timing_list() const
-  {
-    return conv_list(mTimingList);
-  }
-#endif
-
   /// @brief 条件に合致するタイミング情報のインデックスのリストを返す．
   const vector<const CiTiming*>&
   timing_list(
@@ -545,9 +519,7 @@ public:
   /// @brief シグネチャを返す．
   virtual
   CgSignature
-  make_signature(
-    const CiCellLibrary* library ///< [in] ライブラリ
-  ) const;
+  make_signature() const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -558,6 +530,15 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 設定用の関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 親のグループを設定する．
+  void
+  set_group(
+    const CiCellGroup* group ///< [in] 親のグループ
+  )
+  {
+    mGroup = group;
+  }
 
   /// @brief 入力ピンを追加する．
   CiPin*
@@ -719,14 +700,13 @@ public:
   void
   dump(
     Serializer& s ///< [in] シリアライザ
-  ) const;
+  ) const = 0;
 
   /// @brief 内容を読み込む．
   static
   unique_ptr<CiCell>
   restore(
-    Deserializer& s,   ///< [in] デシリアライザ
-    CiCellLibrary* lib ///< [in] 親のセルライブラリ
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 
@@ -746,6 +726,12 @@ protected:
   void
   _restore(
     Deserializer& s ///< [in] デシリアライザ
+  ) = 0;
+
+  /// @brief restore() の共通部分
+  void
+  restore_common(
+    Deserializer& s ///< [in] デシリアライザ
   );
 
 
@@ -754,8 +740,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ID番号
-  SizeType mId;
+  // 親のグループ
+  const CiCellGroup* mGroup{nullptr};
 
   // 名前
   ShString mName;

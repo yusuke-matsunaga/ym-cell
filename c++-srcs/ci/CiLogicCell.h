@@ -1,8 +1,8 @@
-﻿#ifndef CIFSMCELL_H
-#define CIFSMCELL_H
+﻿#ifndef CILOGICCELL_H
+#define CILOGICCELL_H
 
-/// @file CiFsmCell.h
-/// @brief CiFsmCell のヘッダファイル
+/// @file CiLogicCell.h
+/// @brief CiLogicCell のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2024 Yusuke Matsunaga
@@ -14,41 +14,27 @@
 BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class CiFsmCell CiFsmCell.h "CiFsmCell.h"
-/// @brief 単純なFSMセルを表す CiCell の派生クラス
+/// @class CiLogicCell CiLogicCell.h "CiLogicCell.h"
+/// @brief 論理セルを表すクラス
 //////////////////////////////////////////////////////////////////////
-class CiFsmCell :
+class CiLogicCell :
   public CiCell
 {
 public:
 
   /// @brief 空のコンストラクタ
-  CiFsmCell() = default;
+  CiLogicCell() = default;
 
   /// @brief コンストラクタ
-  CiFsmCell(
-    const ShString& name,     ///< [in] 名前
-    ClibArea area             ///< [in] 面積
+  CiLogicCell(
+    const ShString& name, ///< [in] 名前
+    ClibArea area         ///< [in] 面積
   ) : CiCell{name, area}
   {
   }
 
   /// @brief デストラクタ
-  ~CiFsmCell() = default;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 機能情報の取得
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief セルの種類を返す．
-  ClibCellType
-  type() const override;
-
-  /// @brief 順序セル(非FF/非ラッチ)の場合に true を返す．
-  bool
-  is_fsm() const override;
+  ~CiLogicCell() = default;
 
 
 public:
@@ -72,4 +58,4 @@ public:
 
 END_NAMESPACE_YM_CLIB
 
-#endif // CIFSMCELL_H
+#endif // CILOGICCELL_H
