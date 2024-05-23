@@ -30,14 +30,14 @@ public:
 
   /// @brief restore() 用のコンストラクタ
   CiCellClass(
-    const CiCellLibrary* lib           ///< [in] 親のセルライブラリ
+    CiCellLibrary* lib           ///< [in] 親のセルライブラリ
   ) : CiLibObj{lib}
   {
   }
 
   /// @brief コンストラクタ
   CiCellClass(
-    const CiCellLibrary* lib,           ///< [in] 親のセルライブラリ
+    CiCellLibrary* lib,                 ///< [in] 親のセルライブラリ
     const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換リスト
   ) : CiLibObj{lib},
       mIdMapList{idmap_list}

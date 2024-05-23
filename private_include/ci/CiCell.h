@@ -42,16 +42,16 @@ protected:
 
   /// @brief restore() 用のコンストラクタ
   CiCell(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
+    CiCellLibrary* lib ///< [in] 親のライブラリ
   ) : CiLibObj{lib}
   {
   }
 
   /// @brief コンストラクタ
   CiCell(
-    const CiCellLibrary* lib, ///< [in] 親のライブラリ
-    const ShString& name,     ///< [in] 名前
-    ClibArea area             ///< [in] 面積
+    CiCellLibrary* lib,   ///< [in] 親のライブラリ
+    const ShString& name, ///< [in] 名前
+    ClibArea area         ///< [in] 面積
   ) : CiLibObj{lib},
       mName{name},
       mArea{area}
@@ -65,9 +65,9 @@ public:
   static
   unique_ptr<CiCell>
   new_Logic(
-    const CiCellLibrary* lib, ///< [in] 親のライブラリ
-    const ShString& name,     ///< [in] 名前
-    ClibArea area             ///< [in] 面積
+    CiCellLibrary* lib,   ///< [in] 親のライブラリ
+    const ShString& name, ///< [in] 名前
+    ClibArea area         ///< [in] 面積
   );
 
   /// @brief FFセルを生成するクラスメソッド
@@ -76,7 +76,7 @@ public:
   static
   unique_ptr<CiCell>
   new_FF(
-    const CiCellLibrary* lib,    ///< [in] 親のライブラリ
+    CiCellLibrary* lib,          ///< [in] 親のライブラリ
     const ShString& name,        ///< [in] 名前
     ClibArea area,               ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -96,7 +96,7 @@ public:
   static
   unique_ptr<CiCell>
   new_Latch(
-    const CiCellLibrary* lib,    ///< [in] 親のライブラリ
+    CiCellLibrary* lib,          ///< [in] 親のライブラリ
     const ShString& name,        ///< [in] 名前
     ClibArea area,               ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -116,7 +116,7 @@ public:
   static
   unique_ptr<CiCell>
   new_FSM(
-    const CiCellLibrary* lib, ///< [in] 親のライブラリ
+    CiCellLibrary* lib,       ///< [in] 親のライブラリ
     const ShString& name,     ///< [in] 名前
     ClibArea area             ///< [in] 面積
   );

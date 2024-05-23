@@ -12,7 +12,6 @@
 #include "ym/ClibTime.h"
 #include "ym/ClibResistance.h"
 #include "ym/Expr.h"
-#include "ci/CiLibObj.h"
 #include "ci/CiLut.h"
 
 

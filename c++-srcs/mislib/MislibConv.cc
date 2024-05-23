@@ -217,22 +217,22 @@ MislibConv::new_gate(
     auto name = ipin_name_list[i];
     auto pin = ipin_array[i];
     ClibCapacitance load{pin->input_load()->num()};
-    mLibrary->add_input(cell, name, load, load, load);
+    cell->add_input(name, load, load, load);
   }
 
   // 出力の論理式
   auto oexpr = opin_expr->to_expr(ipin_name_map);
 
   // 出力ピンを作る．
-  mLibrary->add_output(cell, opin_name,
-		       ClibCapacitance::infty(),
-		       ClibCapacitance{0.0},
-		       ClibCapacitance::infty(),
-		       ClibCapacitance{0.0},
-		       ClibTime::infty(),
-		       ClibTime{0.0},
-		       oexpr,
-		       Expr::make_invalid());
+  cell->add_output(opin_name,
+		   ClibCapacitance::infty(),
+		   ClibCapacitance{0.0},
+		   ClibCapacitance::infty(),
+		   ClibCapacitance{0.0},
+		   ClibTime::infty(),
+		   ClibTime{0.0},
+		   oexpr,
+		   Expr::make_invalid());
 
   // タイミング情報の生成
   cell->init_timing_map();

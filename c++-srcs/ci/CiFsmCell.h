@@ -24,14 +24,14 @@ public:
 
   /// @brief restore() 用のコンストラクタ
   CiFsmCell(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
+    CiCellLibrary* lib ///< [in] 親のライブラリ
   ) : CiCell{lib}
   {
   }
 
   /// @brief コンストラクタ
   CiFsmCell(
-    const CiCellLibrary* lib, ///< [in] 親のライブラリ
+    CiCellLibrary* lib,       ///< [in] 親のライブラリ
     const ShString& name,     ///< [in] 名前
     ClibArea area             ///< [in] 面積
   ) : CiCell{lib, name, area}

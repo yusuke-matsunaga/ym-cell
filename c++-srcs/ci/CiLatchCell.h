@@ -26,14 +26,14 @@ public:
 
   /// @brief restore() 用のコンストラクタ
   CiLatchCell(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
+    CiCellLibrary* lib ///< [in] 親のライブラリ
   ) : CiFLCell{lib}
   {
   }
 
   /// @brief コンストラクタ
   CiLatchCell(
-    const CiCellLibrary* lib,    ///< [in] 親のライブラリ
+    CiCellLibrary* lib,          ///< [in] 親のライブラリ
     const ShString& name,        ///< [in] 名前
     ClibArea area,               ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前
@@ -151,14 +151,14 @@ public:
 
   /// @brief restore() 用のコンストラクタ
   CiLatch2Cell(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
+    CiCellLibrary* lib ///< [in] 親のライブラリ
   ) : CiLatchCell{lib}
   {
   }
 
   /// @brief コンストラクタ
   CiLatch2Cell(
-    const CiCellLibrary* lib,    ///< [in] 親のライブラリ
+    CiCellLibrary* lib,          ///< [in] 親のライブラリ
     const ShString& name,	 ///< [in] 名前
     ClibArea area,		 ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前

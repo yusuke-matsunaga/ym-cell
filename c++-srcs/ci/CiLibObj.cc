@@ -18,7 +18,7 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief コンストラクタ
 CiLibObj::CiLibObj(
-  const CiCellLibrary* lib
+  CiCellLibrary* lib
 ) : mParent{lib}
 {
   inc_ref();

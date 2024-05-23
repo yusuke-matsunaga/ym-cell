@@ -30,7 +30,7 @@ BEGIN_NAMESPACE_YM_CLIB
 // @brief 論理セルを生成するクラスメソッド
 unique_ptr<CiCell>
 CiCell::new_Logic(
-  const CiCellLibrary* lib,
+  CiCellLibrary* lib,
   const ShString& name,
   ClibArea area
 )
@@ -42,7 +42,7 @@ CiCell::new_Logic(
 // @brief master/slave型のFFセルを生成するクラスメソッド
 unique_ptr<CiCell>
 CiCell::new_FF(
-  const CiCellLibrary* lib,
+  CiCellLibrary* lib,
   const ShString& name,
   ClibArea area,
   const ShString& var1,
@@ -85,7 +85,7 @@ CiCell::new_FF(
 // @brief single-stage 型のラッチセルを生成するクラスメソッド
 unique_ptr<CiCell>
 CiCell::new_Latch(
-  const CiCellLibrary* lib,
+  CiCellLibrary* lib,
   const ShString& name,
   ClibArea area,
   const ShString& var1,
@@ -128,7 +128,7 @@ CiCell::new_Latch(
 // @brief FSM型の順序セルを生成するクラスメソッド
 unique_ptr<CiCell>
 CiCell::new_FSM(
-  const CiCellLibrary* lib,
+  CiCellLibrary* lib,
   const ShString& name,
   ClibArea area
 )
@@ -301,6 +301,7 @@ CiCell::add_input(
   auto pin = ptr.get();
   mPinList.push_back(std::move(ptr));
   mInputList.push_back(pin);
+  _parent()->reg_pin(this, pin);
   ++ mInputNum;
   return pin;
 }
@@ -329,6 +330,7 @@ CiCell::add_output(
   auto pin = ptr.get();
   mPinList.push_back(std::move(ptr));
   mOutputList.push_back(pin);
+  _parent()->reg_pin(this, pin);
   ++ mOutputNum;
   return pin;
 }
@@ -365,6 +367,7 @@ CiCell::add_inout(
   mPinList.push_back(std::move(ptr));
   mInputList.push_back(pin);
   mOutputList.push_back(pin);
+  _parent()->reg_pin(this, pin);
   ++ mInoutNum;
   return pin;
 }
@@ -393,6 +396,7 @@ CiCell::add_bus(
 {
   auto bus = new CiBus{name, bus_type, pin_list};
   mBusList.push_back(unique_ptr<CiBus>{bus});
+  _parent()->reg_bus(this, bus);
   return bus;
 }
 
@@ -405,6 +409,7 @@ CiCell::add_bundle(
 {
   auto bundle = new CiBundle{name, pin_list};
   mBundleList.push_back(unique_ptr<CiBundle>{bundle});
+  _parent()->reg_bundle(this, bundle);
   return bundle;
 }
 

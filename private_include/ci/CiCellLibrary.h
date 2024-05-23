@@ -666,6 +666,7 @@ public:
     ClibArea area              ///< [in] 面積
   );
 
+#if 0
   /// @brief 入力ピンを追加する．
   /// @return 生成されたピンを返す．
   CiPin*
@@ -738,7 +739,7 @@ public:
     const ShString& name,                ///< [in] 名前
     const vector<const CiPin*>& pin_list ///< [in] ピンリスト
   );
-
+#endif
 
 public:
   //////////////////////////////////////////////////////////////////////

@@ -84,10 +84,10 @@ PinInfo::add_pin(
   switch ( mDirection ) {
   case ClibDirection::input:
     for ( auto name: mNameList ) {
-      auto pin = library()->add_input(cell, name,
-				      mCapacitance,
-				      mRiseCapacitance,
-				      mFallCapacitance);
+      auto pin = cell->add_input(name,
+				 mCapacitance,
+				 mRiseCapacitance,
+				 mFallCapacitance);
       ASSERT_COND( pin->input_id() == ipin_map.at(name) );
     }
     break;
@@ -97,15 +97,15 @@ PinInfo::add_pin(
       mFunctionExpr = make_expr(mFunction, ipin_map);
       mTristateExpr = make_expr(mTristate, ipin_map);
       for ( auto name: mNameList ) {
-	auto pin = library()->add_output(cell, name,
-					 mMaxFanout,
-					 mMinFanout,
-					 mMaxCapacitance,
-					 mMinCapacitance,
-					 mMaxTransition,
-					 mMinTransition,
-					 mFunctionExpr,
-					 mTristateExpr);
+	auto pin = cell->add_output(name,
+				    mMaxFanout,
+				    mMinFanout,
+				    mMaxCapacitance,
+				    mMinCapacitance,
+				    mMaxTransition,
+				    mMinTransition,
+				    mFunctionExpr,
+				    mTristateExpr);
 	mOpinList.push_back(pin->output_id());
       }
     }
@@ -116,17 +116,17 @@ PinInfo::add_pin(
       mFunctionExpr = make_expr(mFunction, ipin_map);
       mTristateExpr = make_expr(mTristate, ipin_map);
       for ( auto name: mNameList ) {
-	auto pin = library()->add_inout(cell, name,
-					mCapacitance,
-					mRiseCapacitance,
-					mFallCapacitance,
-					mMaxFanout, mMinFanout,
-					mMaxCapacitance,
-					mMinCapacitance,
-					mMaxTransition,
-					mMinTransition,
-					mFunctionExpr,
-					mTristateExpr);
+	auto pin = cell->add_inout(name,
+				   mCapacitance,
+				   mRiseCapacitance,
+				   mFallCapacitance,
+				   mMaxFanout, mMinFanout,
+				   mMaxCapacitance,
+				   mMinCapacitance,
+				   mMaxTransition,
+				   mMinTransition,
+				   mFunctionExpr,
+				   mTristateExpr);
 	ASSERT_COND( pin->input_id() == ipin_map.at(name) );
 	mOpinList.push_back(pin->output_id());
       }

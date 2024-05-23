@@ -26,14 +26,14 @@ public:
 
   /// @brief restore() 用のコンストラクタ
   CiFFCell(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
+    CiCellLibrary* lib ///< [in] 親のライブラリ
   ) : CiFLCell{lib}
   {
   }
 
   /// @brief コンストラクタ
   CiFFCell(
-    const CiCellLibrary* lib,  ///< [in] 親のライブラリ
+    CiCellLibrary* lib,        ///< [in] 親のライブラリ
     const ShString& name,      ///< [in] 名前
     ClibArea area,             ///< [in] 面積
     const ShString& var1,      ///< [in] 内部変数1の名前
@@ -156,14 +156,14 @@ public:
 
   /// @brief restore() 用のコンストラクタ
   CiFF2Cell(
-    const CiCellLibrary* lib ///< [in] 親のライブラリ
+    CiCellLibrary* lib ///< [in] 親のライブラリ
   ) : CiFFCell{lib}
   {
   }
 
   /// @brief コンストラクタ
   CiFF2Cell(
-    const CiCellLibrary* lib,    ///< [in] 親のライブラリ
+    CiCellLibrary* lib,          ///< [in] 親のライブラリ
     const ShString& name,        ///< [in] 名前
     ClibArea area,               ///< [in] 面積
     const ShString& var1,        ///< [in] 内部変数1の名前

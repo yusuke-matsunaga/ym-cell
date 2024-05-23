@@ -33,7 +33,7 @@ public:
 
   /// @brief restore() 用のコンストラクタ
   CiCellGroup(
-    const CiCellLibrary* lib,              ///< [in] 親のセルライブラリ
+    CiCellLibrary* lib,                    ///< [in] 親のセルライブラリ
     const ClibIOMap& iomap,                ///< [in] 変換マップ
     const vector<const CiCell*>& cell_list ///< [in] セルのリスト
   ) : CiLibObj{lib},
@@ -44,7 +44,7 @@ public:
 
   /// @brief コンストラクタ
   CiCellGroup(
-    const CiCellLibrary* lib,     ///< [in] 親のセルライブラリ
+    CiCellLibrary* lib,           ///< [in] 親のセルライブラリ
     const CiCellClass* rep_class, ///< [in] 親のセルクラス
     const ClibIOMap& iomap        ///< [in] 変換マップ
   ) : CiLibObj{lib},

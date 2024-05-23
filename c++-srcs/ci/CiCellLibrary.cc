@@ -365,6 +365,7 @@ CiCellLibrary::reg_cell(
   return cell;
 }
 
+#if 0
 // @brief 入力ピンを追加する．
 CiPin*
 CiCellLibrary::add_input(
@@ -473,6 +474,7 @@ CiCellLibrary::add_bundle(
   reg_bundle(cell, bundle);
   return bundle;
 }
+#endif
 
 #if 0
 // @brief LUT を作る．
