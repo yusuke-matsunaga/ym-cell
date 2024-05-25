@@ -563,14 +563,13 @@ ClibCellLibrary::dump(
 }
 
 // @brief バイナリダンプされた内容を読み込む．
-void
+ClibCellLibrary
 ClibCellLibrary::restore(
   istream& s
 )
 {
-  auto new_impl = new CiCellLibrary{};
-  new_impl->restore(s);
-  mImpl = new_impl;
+  auto impl = CiCellLibrary::restore(s);
+  return ClibCellLibrary{impl};
 }
 
 // @brief ポインタを取り出す．

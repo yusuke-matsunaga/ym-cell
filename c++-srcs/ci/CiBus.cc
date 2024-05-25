@@ -32,7 +32,7 @@ CiBus::dump(
   Serializer& s
 ) const
 {
-  s.out() << name();
+  s.dump(name());
   s.dump(bus_type());
   s.dump(pin_list());
 }
@@ -42,14 +42,20 @@ CiBus::restore(
   Deserializer& s
 )
 {
-  ShString name;
-  s.in() >> name;
-  const CiBusType* bus_type;
-  s.restore(bus_type);
-  vector<const CiPin*> pin_list;
-  s.restore(pin_list);
-  auto ptr = unique_ptr<CiBus>{new CiBus{name, bus_type, pin_list}};
+  auto ptr = unique_ptr<CiBus>{new CiBus};
+  ptr->_restore(s);
   return ptr;
+}
+
+// @brief restore() の本体
+void
+CiBus::_restore(
+  Deserializer& s
+)
+{
+  s.restore(mName);
+  s.restore(mBusType);
+  s.restore(mPinList);
 }
 
 END_NAMESPACE_YM_CLIB

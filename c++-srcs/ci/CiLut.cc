@@ -114,7 +114,7 @@ CiLut::dump_common(
   int d
 ) const
 {
-  s.out().write_8(d);
+  s.dump(static_cast<std::uint8_t>(d));
   s.dump(mTemplate);
 }
 
@@ -124,7 +124,8 @@ CiLut::restore(
   Deserializer& s
 )
 {
-  auto d = s.in().read_8();
+  std::uint8_t d;
+  s.restore(d);
   unique_ptr<CiLut> lut;
   switch ( d ) {
   case 1: lut = unique_ptr<CiLut>{new CiLut1D}; break;

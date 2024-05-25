@@ -5,7 +5,7 @@
 /// @brief ClibArea のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2016, 2017, 2018, 2019, 2021 Yusuke Matsunaga (松永 裕介)
+/// Copyright (C) 2024 Yusuke Matsunaga (松永 裕介)
 /// All rights reserved.
 
 #include "ym/clib.h"

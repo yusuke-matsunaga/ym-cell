@@ -493,7 +493,7 @@ CiCell::dump_common(
 ) const
 {
   s.dump(mName);
-  s.out() << mArea;
+  s.dump(mArea);
   s.dump(mInputNum);
   s.dump(mOutputNum);
   s.dump(mInoutNum);
@@ -516,7 +516,8 @@ CiCell::restore(
   Deserializer& s
 )
 {
-  auto type = s.in().read_8();
+  std::uint8_t type;
+  s.restore(type);
   CiCell* cell = nullptr;
   switch ( type ) {
   case 0: cell = new CiLogicCell; break;
@@ -527,8 +528,9 @@ CiCell::restore(
   case 5: cell = new CiFsmCell; break;
   default: ASSERT_NOT_REACHED; break;
   }
-  cell->_restore(s);
-  return unique_ptr<CiCell>{cell};
+  auto ptr = unique_ptr<CiCell>{cell};
+  ptr->_restore(s);
+  return ptr;
 }
 
 // @brief _restore() の共通部分
@@ -537,8 +539,8 @@ CiCell::restore_common(
   Deserializer& s
 )
 {
-  s.in() >> mName
-	 >> mArea;
+  s.restore(mName);
+  s.restore(mArea);
   s.restore(mInputNum);
   s.restore(mOutputNum);
   s.restore(mInoutNum);

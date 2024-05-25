@@ -10,6 +10,12 @@
 
 #include "ym/clib.h"
 #include "ym/BinEnc.h"
+#include "ym/logic.h"
+#include "ym/ClibArea.h"
+#include "ym/ClibCapacitance.h"
+#include "ym/ClibResistance.h"
+#include "ym/ClibTime.h"
+#include "ym/ClibIOMap.h"
 #include "ci/CiCell.h"
 
 
@@ -49,13 +55,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief バイナリエンコーダを返す．
-  BinEnc&
-  out()
-  {
-    return mS;
-  }
 
   /// @brief バスタイプを追加する．
   void
@@ -175,6 +174,15 @@ public:
     out() << val;
   }
 
+  /// @brief ShStringをダンプする．
+  void
+  dump(
+    const ShString& val
+  )
+  {
+    out() << val;
+  }
+
   /// @brief std::uint8_tをダンプする．
   void
   dump(
@@ -238,13 +246,76 @@ public:
     out().write_8(static_cast<std::uint8_t>(val));
   }
 
-  /// @brief ClibTechnology をダンプする．
+  /// @brief ClibVarType をダンプする．
   void
   dump(
     ClibVarType val
   )
   {
     out().write_8(static_cast<std::uint8_t>(val));
+  }
+
+  /// @brief ClibCPV をダンプする．
+  void
+  dump(
+    ClibCPV val
+  )
+  {
+    out().write_8(static_cast<std::uint8_t>(val));
+  }
+
+  /// @brief Expr をダンプする．
+  void
+  dump(
+    const Expr& val
+  )
+  {
+    out() << val;
+  }
+
+  /// @brief ClibArea をダンプする．
+  void
+  dump(
+    const ClibArea& val
+  )
+  {
+    out() << val;
+  }
+
+  /// @brief ClibCapacitance をダンプする．
+  void
+  dump(
+    const ClibCapacitance& val
+  )
+  {
+    out() << val;
+  }
+
+  /// @brief ClibResistance をダンプする．
+  void
+  dump(
+    const ClibResistance& val
+  )
+  {
+    out() << val;
+  }
+
+  /// @brief ClibTime をダンプする．
+  void
+  dump(
+    const ClibTime& val
+  )
+  {
+    out() << val;
+  }
+
+  /// @brief ClibIOMap をダンプする．
+  void
+  dump(
+    const ClibIOMap& val
+  )
+  {
+    val.dump(out());
   }
 
   /// @brief バスタイプ番号を出力する．
@@ -384,6 +455,16 @@ public:
     for ( auto& obj: obj_list ) {
       dump(obj.get());
     }
+  }
+
+
+private:
+
+  /// @brief バイナリエンコーダを返す．
+  BinEnc&
+  out()
+  {
+    return mS;
   }
 
 

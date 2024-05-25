@@ -53,7 +53,7 @@ CiFsmCell::dump(
   Serializer& s
 ) const
 {
-  s.out().write_8(5);
+  s.dump(static_cast<std::uint8_t>(5));
   dump_common(s);
 }
 

@@ -410,7 +410,8 @@ public:
   ) const;
 
   /// @brief バイナリダンプされた内容を読み込む．
-  void
+  static
+  ClibCellLibrary
   restore(
     istream& s ///< [in] 入力元のストリーム
   );

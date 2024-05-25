@@ -26,6 +26,9 @@ class CiBundle
 {
 public:
 
+  /// @brief 空のコンストラクタ
+  CiBundle() = default;
+
   /// @brief コンストラクタ
   CiBundle(
     const ShString& name,                ///< [in] 名前
@@ -105,6 +108,15 @@ public:
   unique_ptr<CiBundle>
   restore(
     Deserializer& s ///< [in] デシリアライザ
+  );
+
+
+protected:
+
+  /// @brief restore() の本体
+  void
+  _restore(
+    Deserializer& s
   );
 
 

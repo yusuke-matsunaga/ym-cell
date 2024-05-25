@@ -240,9 +240,9 @@ CiTiming::dump_common(
   int type_id
 ) const
 {
-  s.out().write_8(type_id);
+  s.dump(static_cast<std::uint8_t>(type_id));
   s.dump(mType);
-  mCond.dump(s.out());
+  s.dump(mCond);
 }
 
 // @brief 内容を読み込む．
@@ -251,17 +251,19 @@ CiTiming::restore(
   Deserializer& s
 )
 {
-  auto ttype = s.in().read_8();
-  unique_ptr<CiTiming> timing;
+  std::uint8_t ttype;
+  s.restore(ttype);
+  CiTiming* timing;
   switch ( ttype ) {
-  case 0: timing = unique_ptr<CiTiming>{new CiTimingGeneric{}}; break;
-  case 1: timing = unique_ptr<CiTiming>{new CiTimingPiecewise{}}; break;
-  case 2: timing = unique_ptr<CiTiming>{new CiTimingLut1{}}; break;
-  case 3: timing = unique_ptr<CiTiming>{new CiTimingLut2{}}; break;
+  case 0: timing = new CiTimingGeneric; break;
+  case 1: timing = new CiTimingPiecewise; break;
+  case 2: timing = new CiTimingLut1; break;
+  case 3: timing = new CiTimingLut2; break;
   default: ASSERT_NOT_REACHED; break;
   }
-  timing->_restore(s);
-  return timing;
+  auto ptr = unique_ptr<CiTiming>{timing};
+  ptr->_restore(s);
+  return ptr;
 }
 
 void
@@ -270,7 +272,7 @@ CiTiming::_restore(
 )
 {
   s.restore(mType);
-  mCond.restore(s.in());
+  s.restore(mCond);
 }
 
 
@@ -312,10 +314,10 @@ CiTimingGP::dump_GP(
   Serializer& s
 ) const
 {
-  s.out() << intrinsic_rise()
-	  << intrinsic_fall()
-	  << slope_rise()
-	  << slope_fall();
+  s.dump(intrinsic_rise());
+  s.dump(intrinsic_fall());
+  s.dump(slope_rise());
+  s.dump(slope_fall());
 }
 
 // @brief 内容を読み込む．
@@ -325,10 +327,10 @@ CiTimingGP::restore_GP(
 )
 {
   CiTiming::_restore(s);
-  s.in() >> mIntrinsicRise
-	 >> mIntrinsicFall
-	 >> mSlopeRise
-	 >> mSlopeFall;
+  s.restore(mIntrinsicRise);
+  s.restore(mIntrinsicFall);
+  s.restore(mSlopeRise);
+  s.restore(mSlopeFall);
 }
 
 
@@ -358,8 +360,8 @@ CiTimingGeneric::dump(
 {
   dump_common(s, 0);
   dump_GP(s);
-  s.out() << rise_resistance()
-	  << fall_resistance();
+  s.dump(rise_resistance());
+  s.dump(fall_resistance());
 }
 
 // @brief 内容を読み込む．
@@ -369,8 +371,8 @@ CiTimingGeneric::_restore(
 )
 {
   restore_GP(s);
-  s.in() >> mRiseResistance
-	 >> mFallResistance;
+  s.restore(mRiseResistance);
+  s.restore(mFallResistance);
 }
 
 
@@ -416,8 +418,8 @@ CiTimingPiecewise::dump(
 {
   dump_common(s, 1);
   dump_GP(s);
-  s.out() << rise_pin_resistance()
-	  << fall_pin_resistance();
+  s.dump(rise_pin_resistance());
+  s.dump(fall_pin_resistance());
 }
 
 // @brief 内容を読み込む．
@@ -427,8 +429,8 @@ CiTimingPiecewise::_restore(
 )
 {
   restore_GP(s);
-  s.in() >> mRisePinResistance
-	 >> mFallPinResistance;
+  s.restore(mRisePinResistance);
+  s.restore(mFallPinResistance);
 }
 
 

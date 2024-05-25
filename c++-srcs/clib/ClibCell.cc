@@ -31,7 +31,7 @@ ClibCellPtr::ClibCellPtr(
 ) : mImpl{impl}
 {
   if ( mImpl != nullptr ) {
-    mImpl->group()->rep_class()->inc_ref();
+    mImpl->parent()->inc_ref();
   }
 }
 
@@ -39,7 +39,7 @@ ClibCellPtr::ClibCellPtr(
 ClibCellPtr::~ClibCellPtr()
 {
   if ( mImpl != nullptr ) {
-    mImpl->group()->rep_class()->dec_ref();
+    mImpl->parent()->dec_ref();
   }
 }
 
@@ -52,7 +52,14 @@ ClibCellPtr::~ClibCellPtr()
 ClibCellLibrary
 ClibCell::library() const
 {
-  return ClibCellLibrary{_impl()->group()->rep_class()->parent()};
+  return ClibCellLibrary{_impl()->parent()};
+}
+
+// @brief 親のセルグループの取得
+ClibCellGroup
+ClibCell::group() const
+{
+  return ClibCellGroup{_impl()->group()};
 }
 
 // @brief 名前の取得

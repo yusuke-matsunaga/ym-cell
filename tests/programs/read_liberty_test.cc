@@ -35,7 +35,7 @@ read_liberty(
   {
     ifstream s(dump_filename);
     ASSERT_COND ( s.is_open() );
-    library2.restore(s);
+    library2 = ClibCellLibrary::restore(s);
   }
 
   return 0;

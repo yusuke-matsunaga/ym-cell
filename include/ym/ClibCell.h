@@ -53,6 +53,10 @@ public:
   ClibCellLibrary
   library() const;
 
+  /// @brief 親のセルグループの取得
+  ClibCellGroup
+  group() const;
+
   /// @brief 名前の取得
   string
   name() const;

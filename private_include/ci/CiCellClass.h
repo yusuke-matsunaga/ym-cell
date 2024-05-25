@@ -10,11 +10,11 @@
 
 #include "ym/clib.h"
 #include "ym/ClibIOMap.h"
-#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiCellLibrary;
 class CiCellGroup;
 class Serializer;
 class Deserializer;
@@ -23,16 +23,18 @@ class Deserializer;
 /// @class CiCellClass CiCellClass.h "CiCellClass.h"
 /// @brief ClibCellClass の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiCellClass :
-  public CiLibObj
+class CiCellClass
 {
 public:
+
+  /// @brief 空のコンストラクタ
+  CiCellClass() = default;
 
   /// @brief コンストラクタ
   CiCellClass(
     CiCellLibrary* lib,                 ///< [in] 親のセルライブラリ
     const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換リスト
-  ): CiLibObj{lib},
+  ): mParent{lib},
      mIdMapList{idmap_list}
   {
   }
@@ -45,6 +47,13 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 一般的な情報を取得する関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 親のライブラリオブジェクトを返す．
+  const CiCellLibrary*
+  parent() const
+  {
+    return mParent;
+  }
 
   /// @brief 同位体変換の個数を得る．
   /// @note 恒等変換は含まない．
@@ -132,6 +141,15 @@ public:
   // 設定用の関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 親のライブラリオブジェクトを設定する．
+  void
+  set_parent(
+    CiCellLibrary* parent
+  )
+  {
+    mParent = parent;
+  }
+
   /// @brief このクラスに属しているセルグループを追加する．
   void
   add_group(
@@ -142,10 +160,25 @@ public:
   }
 
 
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief restore() の本体
+  void
+  _restore(
+    Deserializer& s
+  );
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // 親のライブラリオブジェクト
+  CiCellLibrary* mParent;
 
   // 同位体変換のリスト
   vector<ClibIOMap> mIdMapList;

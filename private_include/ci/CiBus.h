@@ -27,6 +27,9 @@ class CiBus
 {
 public:
 
+  /// @brief 空のコンストラクタ
+  CiBus() = default;
+
   /// @brief コンストラクタ
   CiBus(
     const ShString& name,                ///< [in] 名前
@@ -115,6 +118,15 @@ public:
   unique_ptr<CiBus>
   restore(
     Deserializer& s ///< [in] デシリアライザ
+  );
+
+
+protected:
+
+  /// @brief restore() の本体
+  void
+  _restore(
+    Deserializer& s
   );
 
 

@@ -95,55 +95,19 @@ CiLutTemplate::restore(
   Deserializer& s
 )
 {
-  auto d = s.in().read_8();
+  std::uint8_t d;
+  s.restore(d);
   CiLutTemplate* tmpl = nullptr;
   switch ( d ) {
-  case 1:
-    {
-      ClibVarType var_type;
-      s.restore(var_type);
-      vector<double> index_array;
-      s.restore(index_array);
-      tmpl = new CiLutTemplate1D{var_type, index_array};
-    }
-    break;
-  case 2:
-    {
-      ClibVarType var_type1;
-      s.restore(var_type1);
-      vector<double> index_array1;
-      s.restore(index_array1);
-      ClibVarType var_type2;
-      s.restore(var_type2);
-      vector<double> index_array2;
-      s.restore(index_array2);
-      tmpl = new CiLutTemplate2D{var_type1, index_array1,
-				 var_type2, index_array2};
-    }
-    break;
-  case 3:
-    {
-      ClibVarType var_type1;
-      s.restore(var_type1);
-      vector<double> index_array1;
-      s.restore(index_array1);
-      ClibVarType var_type2;
-      s.restore(var_type2);
-      vector<double> index_array2;
-      s.restore(index_array2);
-      ClibVarType var_type3;
-      s.restore(var_type3);
-      vector<double> index_array3;
-      s.restore(index_array3);
-      tmp = new CiLutTemplate3D{var_type1, index_array1,
-				var_type2, index_array2,
-				var_type3, index_array3};
-    }
-    break;
+  case 1: tmpl = new CiLutTemplate1D; break;
+  case 2: tmpl = new CiLutTemplate2D; break;
+  case 3: tmpl = new CiLutTemplate3D; break;
   default:
     ASSERT_NOT_REACHED;
   }
-  return unique_ptr<CiLutTemplate>{tmpl};
+  auto ptr = unique_ptr<CiLutTemplate>{tmpl};
+  ptr->_restore(s);
+  return ptr;
 }
 
 
@@ -200,8 +164,18 @@ CiLutTemplate1D::dump(
   Serializer& s
 ) const
 {
-  s.out().write_8(1);
+  s.dump(static_cast<std::uint8_t>(1));
   dump_var(s, mVarType, mIndexArray);
+}
+
+// @brief restore() の本体
+void
+CiLutTemplate1D::_restore(
+  Deserializer& s
+)
+{
+  s.restore(mVarType);
+  s.restore(mIndexArray);
 }
 
 
@@ -258,9 +232,21 @@ CiLutTemplate2D::dump(
   Serializer& s
 ) const
 {
-  s.out().write_8(2);
+  s.dump(static_cast<std::uint8_t>(2));
   for ( SizeType i: Range(2) ) {
     dump_var(s, mVarType[i], mIndexArray[i]);
+  }
+}
+
+// @brief restore() の本体
+void
+CiLutTemplate2D::_restore(
+  Deserializer& s
+)
+{
+  for ( SizeType i: Range(2) ) {
+    s.restore(mVarType[i]);
+    s.restore(mIndexArray[i]);
   }
 }
 
@@ -318,9 +304,21 @@ CiLutTemplate3D::dump(
   Serializer& s
 ) const
 {
-  s.out().write_8(3);
+  s.dump(static_cast<std::uint8_t>(3));
   for ( SizeType i: Range(2) ) {
     dump_var(s, mVarType[i], mIndexArray[i]);
+  }
+}
+
+// @brief restore() の本体
+void
+CiLutTemplate3D::_restore(
+  Deserializer& s
+)
+{
+  for ( SizeType i: Range(3) ) {
+    s.restore(mVarType[i]);
+    s.restore(mIndexArray[i]);
   }
 }
 

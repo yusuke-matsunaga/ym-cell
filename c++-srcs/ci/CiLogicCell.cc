@@ -35,7 +35,7 @@ CiLogicCell::dump(
 ) const
 {
   // シグネチャ
-  s.out().write_8(0);
+  s.dump(static_cast<std::uint8_t>(0));
   dump_common(s);
 }
 

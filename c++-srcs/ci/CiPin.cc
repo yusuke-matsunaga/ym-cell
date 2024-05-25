@@ -251,9 +251,9 @@ CiPin::dump_common(
   int sig
 ) const
 {
-  s.out().write_8(sig);
-  s.out() << mName;
-  s.out().write_64(mPinId);
+  s.dump(static_cast<std::uint8_t>(sig));
+  s.dump(mName);
+  s.dump(mPinId);
 }
 
 // @brief ピン情報を復元する．
@@ -262,17 +262,19 @@ CiPin::restore(
   Deserializer& s
 )
 {
-  auto sig = s.in().read_8();
-  unique_ptr<CiPin> pin;
+  std::uint8_t sig;
+  s.restore(sig);
+  CiPin* pin;
   switch ( sig ) {
-  case 0: pin = unique_ptr<CiPin>{new CiInputPin{}}; break;
-  case 1: pin = unique_ptr<CiPin>{new CiOutputPin{}}; break;
-  case 2: pin = unique_ptr<CiPin>{new CiInoutPin{}}; break;
-  case 3: pin = unique_ptr<CiPin>{new CiInternalPin{}}; break;
+  case 0: pin = new CiInputPin; break;
+  case 1: pin = new CiOutputPin; break;
+  case 2: pin = new CiInoutPin; break;
+  case 3: pin = new CiInternalPin; break;
   default: ASSERT_NOT_REACHED; break;
   }
-  pin->_restore(s);
-  return pin;
+  auto ptr = unique_ptr<CiPin>{pin};
+  ptr->_restore(s);
+  return ptr;
 }
 
 // @brief 内容を読み込む．
@@ -281,7 +283,7 @@ CiPin::restore_common(
   Deserializer& s
 )
 {
-  s.in() >> mName;
+  s.restore(mName);
   s.restore(mPinId);
 }
 
@@ -339,10 +341,10 @@ CiInputPin::dump(
 ) const
 {
   dump_common(s, 0);
-  s.out().write_64(mInputId);
-  s.out() << mCapacitance
-	  << mRiseCapacitance
-	  << mFallCapacitance;
+  s.dump(mInputId);
+  s.dump(mCapacitance);
+  s.dump(mRiseCapacitance);
+  s.dump(mFallCapacitance);
 }
 
 // @brief 内容を読み込む．
@@ -353,9 +355,9 @@ CiInputPin::_restore(
 {
   restore_common(s);
   s.restore(mInputId);
-  s.in() >> mCapacitance
-	 >> mRiseCapacitance
-	 >> mFallCapacitance;
+  s.restore(mCapacitance);
+  s.restore(mRiseCapacitance);
+  s.restore(mFallCapacitance);
 }
 
 
@@ -434,16 +436,16 @@ CiOutputPinBase::dump_base(
 ) const
 {
   dump_common(s, sig);
-  s.out().write_64(mOutputId);
-  s.out() << mFanoutLoad
-	  << mMaxFanout
-	  << mMinFanout
-	  << mMaxCapacitance
-	  << mMinCapacitance
-	  << mMaxTransition
-	  << mMinTransition;
-  mFunction.dump(s.out());
-  mTristate.dump(s.out());
+  s.dump(mOutputId);
+  s.dump(mFanoutLoad);
+  s.dump(mMaxFanout);
+  s.dump(mMinFanout);
+  s.dump(mMaxCapacitance);
+  s.dump(mMinCapacitance);
+  s.dump(mMaxTransition);
+  s.dump(mMinTransition);
+  s.dump(mFunction);
+  s.dump(mTristate);
 }
 
 // @brief 内容を読み込む．
@@ -454,15 +456,15 @@ CiOutputPinBase::restore_base(
 {
   restore_common(s);
   s.restore(mOutputId);
-  s.in() >> mFanoutLoad
-	 >> mMaxFanout
-	 >> mMinFanout
-	 >> mMaxCapacitance
-	 >> mMinCapacitance
-	 >> mMaxTransition
-	 >> mMinTransition;
-  mFunction.restore(s.in());
-  mTristate.restore(s.in());
+  s.restore(mFanoutLoad);
+  s.restore(mMaxFanout);
+  s.restore(mMinFanout);
+  s.restore(mMaxCapacitance);
+  s.restore(mMinCapacitance);
+  s.restore(mMaxTransition);
+  s.restore(mMinTransition);
+  s.restore(mFunction);
+  s.restore(mTristate);
 }
 
 
@@ -556,10 +558,10 @@ CiInoutPin::dump(
 ) const
 {
   dump_base(s, 2);
-  s.out().write_64(mInputId);
-  s.out() << mCapacitance
-	  << mRiseCapacitance
-	  << mFallCapacitance;
+  s.dump(mInputId);
+  s.dump(mCapacitance);
+  s.dump(mRiseCapacitance);
+  s.dump(mFallCapacitance);
 }
 
 // @brief 内容を読み込む．
@@ -570,9 +572,9 @@ CiInoutPin::_restore(
 {
   restore_base(s);
   s.restore(mInputId);
-  s.in() >> mCapacitance
-	 >> mRiseCapacitance
-	 >> mFallCapacitance;
+  s.restore(mCapacitance);
+  s.restore(mRiseCapacitance);
+  s.restore(mFallCapacitance);
 }
 
 
@@ -608,7 +610,7 @@ CiInternalPin::dump(
 ) const
 {
   dump_common(s, 3);
-  s.out().write_64(internal_id());
+  s.dump(internal_id());
 }
 
 // @brief 内容を読み込む．

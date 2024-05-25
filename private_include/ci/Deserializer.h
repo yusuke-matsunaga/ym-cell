@@ -10,6 +10,11 @@
 
 #include "ym/clib.h"
 #include "ym/BinDec.h"
+#include "ym/logic.h"
+#include "ym/ClibArea.h"
+#include "ym/ClibCapacitance.h"
+#include "ym/ClibResistance.h"
+#include "ym/ClibTime.h"
 #include "ci/CiBusType.h"
 #include "ci/CiLutTemplate.h"
 #include "ci/CiLut.h"
@@ -59,13 +64,6 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief バイナリデコーダの取得
-  BinDec&
-  in()
-  {
-    return mS;
-  }
-
   /// @brief 要素のデシリアライズを行う．
   void
   deserialize()
@@ -88,7 +86,18 @@ public:
     string& dst
   )
   {
-    mS >> dst;
+    in() >> dst;
+  }
+
+  /// @brief ShStringの読み込み
+  void
+  restore(
+    ShString& dst
+  )
+  {
+    string tmp;
+    in() >> tmp;
+    dst = tmp;
   }
 
   /// @brief std::uint8_t の読み込み
@@ -97,7 +106,7 @@ public:
     std::uint8_t& dst
   )
   {
-    dst = mS.read_8();
+    dst = in().read_8();
   }
 
   /// @brief SizeType の読み込み
@@ -106,7 +115,7 @@ public:
     SizeType& dst
   )
   {
-    dst = mS.read_64();
+    dst = in().read_64();
   }
 
   /// @brief doubleの読み込み
@@ -115,7 +124,7 @@ public:
     double& dst
   )
   {
-    mS >> dst;
+    in() >> dst;
   }
 
   /// @brief ClibTechnology の読み込み
@@ -124,7 +133,7 @@ public:
     ClibTechnology& dst
   )
   {
-    dst = static_cast<ClibTechnology>(mS.read_8());
+    dst = static_cast<ClibTechnology>(in().read_8());
   }
 
   /// @brief ClibDelayModel の読み込み
@@ -133,7 +142,7 @@ public:
     ClibDelayModel& dst
   )
   {
-    dst = static_cast<ClibDelayModel>(mS.read_8());
+    dst = static_cast<ClibDelayModel>(in().read_8());
   }
 
   /// @brief ClibTimingSense の読み込み
@@ -142,7 +151,7 @@ public:
     ClibTimingSense& dst
   )
   {
-    dst = static_cast<ClibTimingSense>(mS.read_8());
+    dst = static_cast<ClibTimingSense>(in().read_8());
   }
 
   /// @brief ClibTimingType の読み込み
@@ -151,7 +160,7 @@ public:
     ClibTimingType& dst
   )
   {
-    dst = static_cast<ClibTimingType>(mS.read_8());
+    dst = static_cast<ClibTimingType>(in().read_8());
   }
 
   /// @brief ClibVarType の読み込み
@@ -160,7 +169,70 @@ public:
     ClibVarType& dst
   )
   {
-    dst = static_cast<ClibVarType>(mS.read_8());
+    dst = static_cast<ClibVarType>(in().read_8());
+  }
+
+  /// @brief ClibCPV の読み込み
+  void
+  restore(
+    ClibCPV& dst
+  )
+  {
+    dst = static_cast<ClibCPV>(in().read_8());
+  }
+
+  /// @brief Expr の読み込み
+  void
+  restore(
+    Expr& dst
+  )
+  {
+    in() >> dst;
+  }
+
+  /// @brief ClibArea の読み込み
+  void
+  restore(
+    ClibArea& dst
+  )
+  {
+    in() >> dst;
+  }
+
+  /// @brief ClibCapacitance の読み込み
+  void
+  restore(
+    ClibCapacitance& dst
+  )
+  {
+    in() >> dst;
+  }
+
+  /// @brief ClibResistance の読み込み
+  void
+  restore(
+    ClibResistance& dst
+  )
+  {
+    in() >> dst;
+  }
+
+  /// @brief ClibTime の読み込み
+  void
+  restore(
+    ClibTime& dst
+  )
+  {
+    in() >> dst;
+  }
+
+  /// @brief ClibIOMap の読み込み
+  void
+  restore(
+    ClibIOMap& dst
+  )
+  {
+    dst.restore(in());
   }
 
   /// @brief バスタイプの読み込み
@@ -362,11 +434,21 @@ public:
     vector<T>& dst
   )
   {
-    SizeType n = mS.read_64();
+    SizeType n = in().read_64();
     dst.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       restore(dst[i]);
     }
+  }
+
+
+private:
+
+  /// @brief バイナリデコーダの取得
+  BinDec&
+  in()
+  {
+    return mS;
   }
 
 

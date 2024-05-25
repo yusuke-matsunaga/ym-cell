@@ -48,7 +48,6 @@ set (ci_SOURCES
   ci/CiCellClass.cc
   ci/CiCellGroup.cc
   ci/CiCellLibrary.cc
-  ci/CiLibObj.cc
   ci/CiLut.cc
   ci/CiLutTemplate.cc
   ci/CiPatGraph.cc

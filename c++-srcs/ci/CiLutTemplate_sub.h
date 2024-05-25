@@ -22,6 +22,9 @@ class CiLutTemplate1D :
 {
 public:
 
+  /// @brief 空のコンストラクタ
+  CiLutTemplate1D() = default;
+
   /// @brief コンストラクタ
   CiLutTemplate1D(
     ClibVarType var_type,
@@ -74,6 +77,14 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
+protected:
+
+  /// @brief restore() の本体
+  void
+  _restore(
+    Deserializer& s
+  ) override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -97,6 +108,9 @@ class CiLutTemplate2D :
   public CiLutTemplate
 {
 public:
+
+  /// @brief 空のコンストラクタ
+  CiLutTemplate2D() = default;
 
   /// @brief コンストラクタ
   CiLutTemplate2D(
@@ -152,6 +166,14 @@ public:
     Serializer& s ///< [in] シリアライザ
   ) const override;
 
+protected:
+
+  /// @brief restore() の本体
+  void
+  _restore(
+    Deserializer& s
+  ) override;
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -175,6 +197,9 @@ class CiLutTemplate3D :
   public CiLutTemplate
 {
 public:
+
+  /// @brief 空のコンストラクタ
+  CiLutTemplate3D() = default;
 
   /// @brief コンストラクタ
   CiLutTemplate3D(
@@ -231,6 +256,14 @@ public:
   dump(
     Serializer& s ///< [in] シリアライザ
   ) const override;
+
+protected:
+
+  /// @brief restore() の本体
+  void
+  _restore(
+    Deserializer& s
+  ) override;
 
 
 private:

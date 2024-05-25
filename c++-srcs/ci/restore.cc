@@ -29,7 +29,7 @@ BEGIN_NAMESPACE_YM_CLIB
 // クラス CiCellLibrary
 //////////////////////////////////////////////////////////////////////
 
-void
+CiCellLibrary*
 CiCellLibrary::restore(
   istream& is
 )
@@ -39,8 +39,16 @@ CiCellLibrary::restore(
   // 要素を復元する．
   s.deserialize();
 
-  clear();
+  auto lib = new CiCellLibrary;
+  lib->_restore(s);
+  return lib;
+}
 
+void
+CiCellLibrary::_restore(
+  Deserializer& s
+)
+{
   // 名前
   s.restore(mName);
 

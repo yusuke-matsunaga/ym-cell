@@ -138,6 +138,13 @@ protected:
     const vector<double>& index_array ///< [in] インデックスの配列
   );
 
+  /// @brief restore() の本体
+  virtual
+  void
+  _restore(
+    Deserializer& s
+  ) = 0;
+
 };
 
 END_NAMESPACE_YM_CLIB

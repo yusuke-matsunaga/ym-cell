@@ -33,7 +33,7 @@ CiCellGroup::dump(
   Serializer& s
 ) const
 {
-  mIoMap.dump(s.out());
+  s.dump(mIoMap);
   s.dump(mCellList);
 }
 
@@ -43,17 +43,24 @@ CiCellGroup::restore(
   Deserializer& s
 )
 {
-  ClibIOMap iomap;
-  iomap.restore(s.in());
+  auto ptr = unique_ptr<CiCellGroup>{new CiCellGroup};
+  ptr->_restore(s);
+  return ptr;
+}
+
+// @brief restore() の本体
+void
+CiCellGroup::_restore(
+  Deserializer& s
+)
+{
+  s.restore(mIoMap);
   vector<CiCell*> cell_list;
   s.restore(cell_list);
-  auto group = new CiCellGroup{nullptr, iomap};
-  auto ptr = unique_ptr<CiCellGroup>{group};
   for ( auto cell: cell_list ) {
-    group->add_cell(cell);
-    cell->set_group(group);
+    add_cell(cell);
+    cell->set_group(this);
   }
-  return ptr;
 }
 
 END_NAMESPACE_YM_CLIB

@@ -98,7 +98,7 @@ TEST(ClibCellLibraryTest, dump_restore)
     ClibCellLibrary library2;
     {
       istringstream s{dump_buff};
-      library2.restore(s);
+      library2 = ClibCellLibrary::restore(s);
     }
 
     EXPECT_EQ( library.cell_num(), library2.cell_num() );

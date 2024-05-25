@@ -26,6 +26,9 @@ class CiBusType
 {
 public:
 
+  /// @brief 空のコンストラクタ
+  CiBusType() = default;
+
   /// @brief 要素を指定したコンストラクタ
   CiBusType(
     const ShString& name,     ///< [in] 名前
@@ -146,6 +149,12 @@ private:
       mBitWidth = (mBitFrom - mBitTo + 1) * 2 + 1;
     }
   }
+
+  /// @brief restore() の本体
+  void
+  _restore(
+    Deserializer& s
+  );
 
 
 private:

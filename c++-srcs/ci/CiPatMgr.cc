@@ -160,7 +160,8 @@ CiPatMgr::restore(
 )
 {
   // ノードと枝の情報を読み込む．
-  auto nn = s.in().read_64();
+  SizeType nn;
+  s.restore(nn);
   set_node_num(nn);
   for ( auto i: Range(nn) ) {
     s.restore(mNodeTypeArray[i]);

@@ -32,7 +32,7 @@ CiBundle::dump(
   Serializer& s
 ) const
 {
-  s.out() << _name();
+  s.dump(_name());
   s.dump(pin_list());
 }
 
@@ -41,12 +41,19 @@ CiBundle::restore(
   Deserializer& s
 )
 {
-  ShString name;
-  s.in() >> name;
-  vector<const CiPin*> pin_list;
-  s.restore(pin_list);
-  auto ptr = unique_ptr<CiBundle>{new CiBundle{name, pin_list}};
+  auto ptr = unique_ptr<CiBundle>{new CiBundle};
+  ptr->_restore(s);
   return ptr;
+}
+
+// @brief restore() の本体
+void
+CiBundle::_restore(
+  Deserializer& s
+)
+{
+  s.restore(mName);
+  s.restore(mPinList);
 }
 
 END_NAMESPACE_YM_CLIB

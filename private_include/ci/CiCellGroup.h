@@ -11,7 +11,6 @@
 #include "ym/ClibCellGroup.h"
 #include "ym/ClibIOMap.h"
 #include "ym/logic.h"
-#include "ci/CiLibObj.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -27,6 +26,9 @@ class Deserializer;
 class CiCellGroup
 {
 public:
+
+  /// @brief 空のコンストラクタ
+  CiCellGroup() = default;
 
   /// @brief コンストラクタ
   CiCellGroup(
@@ -138,6 +140,18 @@ public:
   {
     mCellList.push_back(cell);
   }
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief restore() の本体
+  void
+  _restore(
+    Deserializer& s
+  );
 
 
 private:

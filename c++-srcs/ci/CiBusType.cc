@@ -44,12 +44,21 @@ CiBusType::restore(
   Deserializer& s
 )
 {
-  ShString name;
-  s.in() >> name;
-  auto bit_from = s.in().read_64();
-  auto bit_to = s.in().read_64();
-  auto ptr = unique_ptr<CiBusType>{new CiBusType{name, bit_from, bit_to}};
+  auto ptr = unique_ptr<CiBusType>{new CiBusType};
+  ptr->_restore(s);
   return ptr;
+}
+
+// @brief restore() の本体
+void
+CiBusType::_restore(
+  Deserializer& s
+)
+{
+  s.restore(mName);
+  s.restore(mBitFrom);
+  s.restore(mBitTo);
+  set_bit_width();
 }
 
 END_NAMESPACE_YM_CLIB

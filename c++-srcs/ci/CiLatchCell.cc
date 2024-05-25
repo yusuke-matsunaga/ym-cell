@@ -127,7 +127,7 @@ CiLatchCell::dump(
   Serializer& s
 ) const
 {
-  s.out().write_8(3);
+  s.dump(static_cast<std::uint8_t>(3));
   dump_Latch(s);
 }
 
@@ -138,8 +138,8 @@ CiLatchCell::dump_Latch(
 ) const
 {
   dump_FL(s);
-  mEnable.dump(s.out());
-  mDataIn.dump(s.out());
+  s.dump(mEnable);
+  s.dump(mDataIn);
 }
 
 // @brief 内容を復元する．
@@ -158,8 +158,8 @@ CiLatchCell::restore_Latch(
 )
 {
   restore_FL(s);
-  mEnable.restore(s.in());
-  mDataIn.restore(s.in());
+  s.restore(mEnable);
+  s.restore(mDataIn);
 }
 
 
@@ -181,9 +181,9 @@ CiLatch2Cell::dump(
   Serializer& s
 ) const
 {
-  s.out().write_8(4);
+  s.dump(static_cast<std::uint8_t>(4));
   dump_Latch(s);
-  mEnable2.dump(s.out());
+  s.dump(mEnable2);
 }
 
 // @brief 内容を復元する．
@@ -193,7 +193,7 @@ CiLatch2Cell::_restore(
 )
 {
   restore_Latch(s);
-  mEnable2.restore(s.in());
+  s.restore(mEnable2);
 }
 
 END_NAMESPACE_YM_CLIB

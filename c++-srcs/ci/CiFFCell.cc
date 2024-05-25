@@ -134,7 +134,7 @@ CiFFCell::dump(
   Serializer& s
 ) const
 {
-  s.out().write_8(1);
+  s.dump(static_cast<std::uint8_t>(1));
   dump_FF(s);
 }
 
@@ -145,8 +145,8 @@ CiFFCell::dump_FF(
 ) const
 {
   dump_FL(s);
-  mClock.dump(s.out());
-  mNextState.dump(s.out());
+  s.dump(mClock);
+  s.dump(mNextState);
 }
 
 // @brief 内容を復元する．
@@ -165,8 +165,8 @@ CiFFCell::restore_FF(
 )
 {
   restore_FL(s);
-  mClock.restore(s.in());
-  mNextState.restore(s.in());
+  s.restore(mClock);
+  s.restore(mNextState);
 }
 
 
@@ -188,9 +188,9 @@ CiFF2Cell::dump(
   Serializer& s
 ) const
 {
-  s.out().write_8(2);
+  s.dump(static_cast<std::uint8_t>(2));
   dump_FF(s);
-  mClock2.dump(s.out());
+  s.dump(mClock2);
 }
 
 // @brief 内容を復元する．
@@ -200,7 +200,7 @@ CiFF2Cell::_restore(
 )
 {
   restore_FF(s);
-  mClock2.restore(s.in());
+  s.restore(mClock2);
 }
 
 END_NAMESPACE_YM_CLIB

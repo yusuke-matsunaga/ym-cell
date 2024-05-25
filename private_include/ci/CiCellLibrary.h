@@ -476,9 +476,16 @@ public:
   ) const;
 
   /// @brief バイナリダンプされた内容を読み込む．
-  void
+  static
+  CiCellLibrary*
   restore(
     istream& s ///< [in] 入力ストリーム
+  );
+
+  /// @brief restore() の本体
+  void
+  _restore(
+    Deserializer& s
   );
 
 

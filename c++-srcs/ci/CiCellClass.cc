@@ -35,10 +35,7 @@ CiCellClass::dump(
 ) const
 {
   // 同位体変換情報のダンプ
-  s.dump(idmap_num());
-  for ( auto& map: idmap_list() ) {
-    map.dump(s.out());
-  }
+  s.dump(idmap_list());
   // セルグループのダンプ
   s.dump(cell_group_list());
 }
@@ -49,20 +46,24 @@ CiCellClass::restore(
   Deserializer& s
 )
 {
-  SizeType n = s.in().read_64();
-  vector<ClibIOMap> idmap_list(n);
-  for ( auto i: Range(n) ) {
-    idmap_list[i].restore(s.in());
-  }
-  auto cclass = new CiCellClass{nullptr, idmap_list};
-  auto ptr = unique_ptr<CiCellClass>{cclass};
+  auto ptr = unique_ptr<CiCellClass>{new CiCellClass};
+  ptr->_restore(s);
+  return ptr;
+}
+
+// @brief restore() の本体
+void
+CiCellClass::_restore(
+  Deserializer& s
+)
+{
+  s.restore(mIdMapList);
   vector<CiCellGroup*> group_list;
   s.restore(group_list);
   for ( auto group: group_list ) {
-    cclass->add_group(group);
-    group->set_rep_class(cclass);
+    add_group(group);
+    group->set_rep_class(this);
   }
-  return ptr;
 }
 
 END_NAMESPACE_YM_CLIB

@@ -66,12 +66,12 @@ CiFLCell::dump_FL(
 ) const
 {
   dump_common(s);
-  s.out() << mVar1
-	  << mVar2;
-  mClear.dump(s.out());
-  mPreset.dump(s.out());
-  s.out() << mCpv1
-	  << mCpv2;
+  s.dump(mVar1);
+  s.dump(mVar2);
+  s.dump(mClear);
+  s.dump(mPreset);
+  s.dump(mCpv1);
+  s.dump(mCpv2);
 }
 
 // @brief 内容を読み込む．
@@ -81,12 +81,12 @@ CiFLCell::restore_FL(
 )
 {
   CiCell::restore_common(s);
-  s.in() >> mVar1
-	 >> mVar2;
-  mClear.restore(s.in());
-  mPreset.restore(s.in());
-  s.in() >> mCpv1
-	 >> mCpv2;
+  s.restore(mVar1);
+  s.restore(mVar2);
+  s.restore(mClear);
+  s.restore(mPreset);
+  s.restore(mCpv1);
+  s.restore(mCpv2);
 }
 
 END_NAMESPACE_YM_CLIB
