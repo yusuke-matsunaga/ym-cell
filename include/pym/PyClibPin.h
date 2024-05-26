@@ -1,8 +1,8 @@
-#ifndef PYCLIBCELL_H
-#define PYCLIBCELL_H
+#ifndef PYCLIBPIN_H
+#define PYCLIBPIN_H
 
-/// @file PyClibCell.h
-/// @brief PyClibCell のヘッダファイル
+/// @file PyClibPin.h
+/// @brief PyClibPin のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2023 Yusuke Matsunaga
@@ -11,18 +11,18 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "ym/ClibCell.h"
+#include "ym/ClibPin.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class PyClibCell PyClibCell.h "PyClibCell.h"
-/// @brief Python 用の ClibCell 拡張
+/// @class PyClibPin PyClibPin.h "PyClibPin.h"
+/// @brief Python 用の ClibPin 拡張
 ///
 /// 複数の関数をひとまとめにしているだけなので実は名前空間として用いている．
 //////////////////////////////////////////////////////////////////////
-class PyClibCell
+class PyClibPin
 {
 public:
   //////////////////////////////////////////////////////////////////////
@@ -37,40 +37,40 @@ public:
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
 
-  /// @brief ClibCell を表す PyObject を作る．
+  /// @brief ClibPin を表す PyObject を作る．
   /// @return 生成した PyObject を返す．
   ///
   /// 返り値は新しい参照が返される．
   static
   PyObject*
   ToPyObject(
-    ClibCell val ///< [in] 値
+    ClibPin val ///< [in] 値
   );
 
-  /// @brief PyObject が ClibCell タイプか調べる．
+  /// @brief PyObject が ClibPin タイプか調べる．
   static
   bool
   Check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
-  /// @brief ClibCell を表す PyObject から ClibCell を取り出す．
-  /// @return ClibCell を返す．
+  /// @brief ClibPin を表す PyObject から ClibPin を取り出す．
+  /// @return ClibPin を返す．
   ///
   /// Check(obj) == true であると仮定している．
   static
-  const ClibCell&
+  const ClibPin&
   Get(
     PyObject* obj ///< [in] 変換元の PyObject
   );
 
-  /// @brief ClibCell を表すオブジェクトの型定義を返す．
+  /// @brief ClibPin を表すオブジェクトの型定義を返す．
   static
   PyTypeObject*
   _typeobject();
 
 };
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_CLIB
 
-#endif // PYCLIBCELL_H
+#endif // PYCLIBPIN_H

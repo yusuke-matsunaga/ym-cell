@@ -22,6 +22,8 @@ class CiCell;
 //////////////////////////////////////////////////////////////////////
 class ClibCellPtr
 {
+  friend class PyClibCell;
+
 public:
 
   /// @brief 空のコンストラクタ

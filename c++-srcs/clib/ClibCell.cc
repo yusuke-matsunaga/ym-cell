@@ -31,7 +31,7 @@ ClibCellPtr::ClibCellPtr(
 ) : mImpl{impl}
 {
   if ( mImpl != nullptr ) {
-    mImpl->parent()->inc_ref();
+    mImpl->inc_ref();
   }
 }
 
@@ -39,7 +39,7 @@ ClibCellPtr::ClibCellPtr(
 ClibCellPtr::~ClibCellPtr()
 {
   if ( mImpl != nullptr ) {
-    mImpl->parent()->dec_ref();
+    mImpl->dec_ref();
   }
 }
 

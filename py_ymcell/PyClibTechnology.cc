@@ -10,7 +10,7 @@
 #include "pym/PyModule.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_CLIB
 
 BEGIN_NONAMESPACE
 
@@ -274,4 +274,4 @@ PyClibTechnology::_typeobject()
   return &ClibTechnologyType;
 }
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_CLIB

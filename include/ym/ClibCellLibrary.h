@@ -29,6 +29,8 @@ class CiCellLibrary;
 //////////////////////////////////////////////////////////////////////
 class ClibCellLibrary
 {
+  friend class PyClibCellLibrary;
+
 public:
 
   /// @brief コンストラクタ
@@ -177,14 +179,6 @@ public:
   /// @brief 電力単位の取得
   string
   leakage_power_unit() const;
-
-  /// @brief バスタイプの取得
-  ///
-  /// なければ不正値を返す．
-  ClibBusType
-  bus_type(
-    const string& name ///< [in] バスタイプ名
-  ) const;
 
   //////////////////////////////////////////////////////////////////////
   /// @}
@@ -451,7 +445,7 @@ public:
   }
 
 
-public:
+private:
   //////////////////////////////////////////////////////////////////////
   // Python インターフェイス用の関数
   // 通常の使用は禁止
@@ -459,7 +453,7 @@ public:
 
   /// @brief ポインタを取り出す．
   const CiCellLibrary*
-  ptr() const;
+  _impl() const;
 
 
 private:

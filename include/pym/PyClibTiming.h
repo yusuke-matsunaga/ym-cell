@@ -1,8 +1,8 @@
-#ifndef PYCLIBCELL_H
-#define PYCLIBCELL_H
+#ifndef PYCLIBTIMING_H
+#define PYCLIBTIMING_H
 
-/// @file PyClibCell.h
-/// @brief PyClibCell のヘッダファイル
+/// @file PyClibTiming.h
+/// @brief PyClibTiming のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2023 Yusuke Matsunaga
@@ -11,18 +11,18 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "ym/ClibCell.h"
+#include "ym/ClibTiming.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
-/// @class PyClibCell PyClibCell.h "PyClibCell.h"
-/// @brief Python 用の ClibCell 拡張
+/// @class PyClibTiming PyClibTiming.h "PyClibTiming.h"
+/// @brief Python 用の ClibTiming 拡張
 ///
 /// 複数の関数をひとまとめにしているだけなので実は名前空間として用いている．
 //////////////////////////////////////////////////////////////////////
-class PyClibCell
+class PyClibTiming
 {
 public:
   //////////////////////////////////////////////////////////////////////
@@ -37,40 +37,40 @@ public:
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
 
-  /// @brief ClibCell を表す PyObject を作る．
+  /// @brief ClibTiming を表す PyObject を作る．
   /// @return 生成した PyObject を返す．
   ///
   /// 返り値は新しい参照が返される．
   static
   PyObject*
   ToPyObject(
-    ClibCell val ///< [in] 値
+    ClibTiming val ///< [in] 値
   );
 
-  /// @brief PyObject が ClibCell タイプか調べる．
+  /// @brief PyObject が ClibTiming タイプか調べる．
   static
   bool
   Check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
-  /// @brief ClibCell を表す PyObject から ClibCell を取り出す．
-  /// @return ClibCell を返す．
+  /// @brief ClibTiming を表す PyObject から ClibTiming を取り出す．
+  /// @return ClibTiming を返す．
   ///
   /// Check(obj) == true であると仮定している．
   static
-  const ClibCell&
+  const ClibTiming&
   Get(
     PyObject* obj ///< [in] 変換元の PyObject
   );
 
-  /// @brief ClibCell を表すオブジェクトの型定義を返す．
+  /// @brief ClibTiming を表すオブジェクトの型定義を返す．
   static
   PyTypeObject*
   _typeobject();
 
 };
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_CLIB
 
-#endif // PYCLIBCELL_H
+#endif // PYCLIBTIMING_H

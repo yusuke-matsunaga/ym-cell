@@ -574,7 +574,7 @@ ClibCellLibrary::restore(
 
 // @brief ポインタを取り出す．
 const CiCellLibrary*
-ClibCellLibrary::ptr() const
+ClibCellLibrary::_impl() const
 {
   return mImpl.ptr();
 }

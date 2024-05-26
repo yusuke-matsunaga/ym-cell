@@ -8,9 +8,11 @@
 
 #include "pym/PyClibCell.h"
 #include "pym/PyModule.h"
+#include "ym/ClibCell.h"
+#include "ci/CiCell.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_CLIB
 
 BEGIN_NONAMESPACE
 
@@ -18,7 +20,7 @@ BEGIN_NONAMESPACE
 struct ClibCellObject
 {
   PyObject_HEAD
-  ClibCell* mPtr;
+  const CiCell* mPtr;
 };
 
 // Python 用のタイプ定義
@@ -44,8 +46,11 @@ ClibCell_dealloc(
   PyObject* self
 )
 {
-  auto clibcelllibrary_obj = reinterpret_cast<ClibCellObject*>(self);
-  delete clibcelllibrary_obj->mPtr;
+  auto cell_obj = reinterpret_cast<ClibCellObject*>(self);
+  auto ptr = cell_obj->mPtr;
+  if ( ptr != nullptr ) {
+    ptr->dec_ref();
+  }
   Py_TYPE(self)->tp_free(self);
 }
 
@@ -87,12 +92,24 @@ PyClibCell::init(
 // @brief ClibCell を表す PyObject を作る．
 PyObject*
 PyClibCell::ToPyObject(
-  ClibCell val
+  const ClibCell& val
+)
+{
+  return ToPyObject(val._impl());
+}
+
+// @brief ClibCell を表す PyObject を作る．
+PyObject*
+PyClibCell::ToPyObject(
+  const CiCell* val
 )
 {
   auto obj = ClibCell_Type.tp_alloc(&ClibCell_Type, 0);
   auto cell_obj = reinterpret_cast<ClibCellObject*>(obj);
-  cell_obj->mPtr = new ClibCell{val};
+  cell_obj->mPtr = val;
+  if ( val != nullptr ) {
+    val->inc_ref();
+  }
   return obj;
 }
 
@@ -106,13 +123,13 @@ PyClibCell::Check(
 }
 
 // @brief ClibCell を表す PyObject から ClibCell を取り出す．
-const ClibCell&
+const CiCell*
 PyClibCell::Get(
   PyObject* obj
 )
 {
-  auto clibcelllibrary_obj = reinterpret_cast<ClibCellObject*>(obj);
-  return *clibcelllibrary_obj->mPtr;
+  auto cell_obj = reinterpret_cast<ClibCellObject*>(obj);
+  return cell_obj->mPtr;
 }
 
 // @brief ClibCell を表すオブジェクトの型定義を返す．
@@ -122,4 +139,4 @@ PyClibCell::_typeobject()
   return &ClibCell_Type;
 }
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_CLIB

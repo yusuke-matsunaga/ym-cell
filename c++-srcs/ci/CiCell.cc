@@ -37,6 +37,20 @@ CiCell::parent() const
   return group()->rep_class()->parent();
 }
 
+// @brief 参照回数を増やす．
+void
+CiCell::inc_ref() const
+{
+  parent()->inc_ref();
+}
+
+// @brief 参照回数を減らす．
+void
+CiCell::dec_ref() const
+{
+  parent()->dec_ref();
+}
+
 // @brief セルの種類を返す．
 ClibCellType
 CiCell::type() const

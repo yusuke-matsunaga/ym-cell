@@ -10,7 +10,7 @@
 #include "pym/PyModule.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_CLIB
 
 BEGIN_NONAMESPACE
 
@@ -304,4 +304,4 @@ PyClibCPV::_typeobject()
   return &ClibCPVType;
 }
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_CLIB

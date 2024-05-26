@@ -14,7 +14,7 @@
 #include "ym/ClibCellLibrary.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyClibCellLibrary PyClibCellLibrary.h "PyClibCellLibrary.h"
@@ -47,6 +47,16 @@ public:
     const ClibCellLibrary& val ///< [in] 値
   );
 
+  /// @brief ClibCellLibrary を表す PyObject を作る．
+  /// @return 生成した PyObject を返す．
+  ///
+  /// 返り値は新しい参照が返される．
+  static
+  PyObject*
+  ToPyObject(
+    const CiCellLibrary* val ///< [in] 値
+  );
+
   /// @brief PyObject が ClibCellLibrary タイプか調べる．
   static
   bool
@@ -54,12 +64,12 @@ public:
     PyObject* obj ///< [in] 対象の PyObject
   );
 
-  /// @brief ClibCellLibrary を表す PyObject から ClibCellLibrary を取り出す．
-  /// @return ClibCellLibrary を返す．
+  /// @brief CiCellLibrary を表す PyObject から CiCellLibrary を取り出す．
+  /// @return CiCellLibrary を返す．
   ///
   /// Check(obj) == true であると仮定している．
   static
-  ClibCellLibrary
+  const CiCellLibrary*
   Get(
     PyObject* obj ///< [in] 変換元の PyObject
   );
@@ -70,6 +80,12 @@ public:
   _typeobject();
 
 };
+
+END_NAMESPACE_YM_CLIB
+
+BEGIN_NAMESPACE_YM
+
+using nsClib::PyClibCellLibrary;
 
 END_NAMESPACE_YM
 

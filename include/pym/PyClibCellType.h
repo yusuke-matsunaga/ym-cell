@@ -14,7 +14,7 @@
 #include "ym/clib.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyClibCellType PyClibCellType.h "PyClibCellType.h"
@@ -83,6 +83,6 @@ public:
 
 };
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_CLIB
 
 #endif // PYCLIBCELLTYPE_H

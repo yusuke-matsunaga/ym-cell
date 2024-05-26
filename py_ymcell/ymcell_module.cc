@@ -44,6 +44,8 @@ END_NONAMESPACE
 PyMODINIT_FUNC
 PyInit_ymcell()
 {
+  using namespace nsClib;
+
   auto m = PyModule::init(&ymcell_module);
   if ( m == nullptr ) {
     return nullptr;

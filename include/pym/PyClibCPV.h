@@ -14,7 +14,7 @@
 #include "ym/clib.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_CLIB
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyClibCPV PyClibCPV.h "PyClibCPV.h"
@@ -45,7 +45,7 @@ public:
   bool
   FromPyObject(
     PyObject* obj,            ///< [in] ClibCPV を表す PyObject
-    ClibCPV& val,      ///< [out] 変換された ClibCPV を格納する変数
+    ClibCPV& val,             ///< [out] 変換された ClibCPV を格納する変数
     const char* msg = nullptr ///< [in] エラーメッセージ(省略時にはデフォルト値を使う)
   );
 
@@ -83,6 +83,6 @@ public:
 
 };
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_CLIB
 
 #endif // PYCLIBCPV_H
