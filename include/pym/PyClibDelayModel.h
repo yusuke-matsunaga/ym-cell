@@ -14,7 +14,7 @@
 #include "ym/clib.h"
 
 
-BEGIN_NAMESPACE_YM_CLIB
+BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyClibDelayModel PyClibDelayModel.h "PyClibDelayModel.h"
@@ -83,6 +83,6 @@ public:
 
 };
 
-END_NAMESPACE_YM_CLIB
+END_NAMESPACE_YM
 
 #endif // PYCLIBDELAYMODEL_H

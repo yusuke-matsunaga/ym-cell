@@ -14,7 +14,7 @@
 #include "ym/clib.h"
 
 
-BEGIN_NAMESPACE_YM_CLIB
+BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyClibTechnology PyClibTechnology.h "PyClibTechnology.h"
@@ -83,6 +83,6 @@ public:
 
 };
 
-END_NAMESPACE_YM_CLIB
+END_NAMESPACE_YM
 
 #endif // PYCLIBTECHNOLOGY_H

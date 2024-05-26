@@ -10,7 +10,7 @@
 #include "pym/PyModule.h"
 
 
-BEGIN_NAMESPACE_YM_CLIB
+BEGIN_NAMESPACE_YM
 
 BEGIN_NONAMESPACE
 
@@ -680,4 +680,4 @@ PyClibTimingType::_typeobject()
   return &ClibTimingTypeType;
 }
 
-END_NAMESPACE_YM_CLIB
+END_NAMESPACE_YM

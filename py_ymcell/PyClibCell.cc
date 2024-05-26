@@ -3,16 +3,20 @@
 /// @brief Python ClibCell の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "pym/PyClibCell.h"
+#include "pym/PyClibTiming.h"
+#include "pym/PyClibTimingSense.h"
 #include "pym/PyModule.h"
 #include "ym/ClibCell.h"
 #include "ci/CiCell.h"
 
 
-BEGIN_NAMESPACE_YM_CLIB
+BEGIN_NAMESPACE_YM
+
+using CiCell = nsClib::CiCell;
 
 BEGIN_NONAMESPACE
 
@@ -54,8 +58,48 @@ ClibCell_dealloc(
   Py_TYPE(self)->tp_free(self);
 }
 
+PyObject*
+ClibCell_timing_list(
+  PyObject* self,
+  PyObject* args,
+  PyObject* kwds
+)
+{
+  static const char* kwlist[] = {
+    "ipos",
+    "opos",
+    "sense",
+    nullptr
+  };
+  SizeType ipos = 0;
+  SizeType opos = 0;
+  PyObject* sense_obj = nullptr;
+  if ( !PyArg_ParseTupleAndKeywords(args, kwds, "kkO!",
+				    const_cast<char**>(kwlist),
+				    &ipos, &opos,
+				    PyClibTimingSense::_typeobject(),
+				    &sense_obj) ) {
+    return nullptr;
+  }
+  auto sense = PyClibTimingSense::Get(sense_obj);
+  auto cell = PyClibCell::Get(self);
+  auto& timing_list = cell->timing_list(ipos, opos, sense);
+  SizeType n = timing_list.size();
+  auto list_obj = PyList_New(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    auto timing = timing_list[i];
+    auto timing_obj = PyClibTiming::ToPyObject(cell, timing);
+    PyList_SetItem(list_obj, i, timing_obj);
+  }
+  return list_obj;
+}
+
 // メソッド定義
 PyMethodDef ClibCell_methods[] = {
+  {"timing_list",
+   reinterpret_cast<PyCFunction>(ClibCell_timing_list),
+   METH_VARARGS | METH_KEYWORDS,
+   PyDoc_STR("get timing list")},
   {nullptr, nullptr, 0, nullptr}
 };
 
@@ -139,4 +183,4 @@ PyClibCell::_typeobject()
   return &ClibCell_Type;
 }
 
-END_NAMESPACE_YM_CLIB
+END_NAMESPACE_YM

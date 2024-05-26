@@ -10,7 +10,7 @@
 #include "pym/PyModule.h"
 
 
-BEGIN_NAMESPACE_YM_CLIB
+BEGIN_NAMESPACE_YM
 
 BEGIN_NONAMESPACE
 
@@ -330,4 +330,4 @@ PyClibDelayModel::_typeobject()
   return &ClibDelayModelType;
 }
 
-END_NAMESPACE_YM_CLIB
+END_NAMESPACE_YM

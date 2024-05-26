@@ -10,7 +10,7 @@
 #include "pym/PyModule.h"
 
 
-BEGIN_NAMESPACE_YM_CLIB
+BEGIN_NAMESPACE_YM
 
 BEGIN_NONAMESPACE
 
@@ -302,4 +302,4 @@ PyClibDirection::_typeobject()
   return &ClibDirectionType;
 }
 
-END_NAMESPACE_YM_CLIB
+END_NAMESPACE_YM

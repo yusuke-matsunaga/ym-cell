@@ -120,7 +120,7 @@ ClibTiming::rise_transition() const
 {
   _check_valid();
   auto lut = _impl()->rise_transition();
-  return ClibLut{lut};
+  return ClibLut{_cell(), lut};
 }
 
 // @brief 立ち下がり遷移遅延テーブルの取得
@@ -129,7 +129,7 @@ ClibTiming::fall_transition() const
 {
   _check_valid();
   auto lut = _impl()->fall_transition();
-  return ClibLut{lut};
+  return ClibLut{_cell(), lut};
 }
 
 // @brief 立ち上がり伝搬遅延テーブルの取得
@@ -138,7 +138,7 @@ ClibTiming::rise_propagation() const
 {
   _check_valid();
   auto lut = _impl()->rise_propagation();
-  return ClibLut{lut};
+  return ClibLut{_cell(), lut};
 }
 
 // @brief 立ち下がり伝搬遅延テーブルの取得
@@ -147,7 +147,7 @@ ClibTiming::fall_propagation() const
 {
   _check_valid();
   auto lut = _impl()->fall_propagation();
-  return ClibLut{lut};
+  return ClibLut{_cell(), lut};
 }
 
 // @brief 立ち上がりセル遅延テーブルの取得
@@ -156,7 +156,7 @@ ClibTiming::cell_rise() const
 {
   _check_valid();
   auto lut = _impl()->cell_rise();
-  return ClibLut{lut};
+  return ClibLut{_cell(), lut};
 }
 
 // @brief 立ち下がりセル遅延テーブルの取得
@@ -165,7 +165,7 @@ ClibTiming::cell_fall() const
 {
   _check_valid();
   auto lut = _impl()->cell_fall();
-  return ClibLut{lut};
+  return ClibLut{_cell(), lut};
 }
 
 END_NAMESPACE_YM_CLIB

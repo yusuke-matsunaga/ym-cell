@@ -17,6 +17,6 @@ dist_cc_file = os.path.join(basedir, "PyClibDirection.cc")
 dist_py_file = os.path.join(basedir, "..", "tests", "pytest", "py_ClibDirection_test.py")
 
 keywords = [ "input", "output", "inout", "internal", "none" ]
-mk_enumobj("ClibDirection", keywords, "YM", "ymcell",
+mk_enumobj("ClibDirection", keywords, "YM_CLIB", "ymcell",
            "ym/clib.h", dist_h_file, dist_cc_file, dist_py_file)
 

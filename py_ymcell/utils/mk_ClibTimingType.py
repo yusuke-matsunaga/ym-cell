@@ -48,6 +48,6 @@ keywords = [ "combinational",
              "nochange_low_high",
              "nochange_low_low",
              "none" ]
-mk_enumobj("ClibTimingType", keywords, "YM", "ymcell",
+mk_enumobj("ClibTimingType", keywords, "YM_CLIB", "ymcell",
            "ym/clib.h", dist_h_file, dist_cc_file, dist_py_file)
 

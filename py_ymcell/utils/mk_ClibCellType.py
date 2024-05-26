@@ -17,6 +17,6 @@ dist_cc_file = os.path.join(basedir, "PyClibCellType.cc")
 dist_py_file = os.path.join(basedir, "..", "tests", "pytest", "py_ClibCellType_test.py")
 
 keywords = [ "none", "Logic", "FF", "Latch", "FSM" ]
-mk_enumobj("ClibCellType", keywords, "YM", "ymcell",
+mk_enumobj("ClibCellType", keywords, "YM_CLIB", "ymcell",
            "ym/clib.h", dist_h_file, dist_cc_file, dist_py_file)
 

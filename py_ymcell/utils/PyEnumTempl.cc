@@ -22,7 +22,7 @@ struct %%CLASS%%Object
 };
 
 // Python 用のタイプ定義
-PyTypeObject %%CLASS%%Type = {
+PyTypeObject %%CLASS%%_Type = {
   PyVarObject_HEAD_INIT(nullptr, 0)
 };
 
@@ -40,7 +40,7 @@ PyObject*
   PyObject* kwds
 )
 {
-  if ( type != &%%CLASS%%Type ) {
+  if ( type != &%%CLASS%%_Type ) {
     PyErr_SetString(PyExc_TypeError, "%%CLASS%% cannot be overloaded");
     return nullptr;
   }
@@ -114,7 +114,7 @@ new_obj(
   %%CLASS%% val
 )
 {
-  auto obj = %%CLASS%%Type.tp_alloc(&%%CLASS%%Type, 0);
+  auto obj = %%CLASS%%_Type.tp_alloc(&%%CLASS%%_Type, 0);
   auto val_obj = reinterpret_cast<%%CLASS%%Object*>(obj);
   val_obj->mVal = val;
   return obj;
@@ -127,7 +127,7 @@ reg_obj(
   PyObject* obj
 )
 {
-  if ( PyDict_SetItemString(%%CLASS%%Type.tp_dict, name, obj) < 0 ) {
+  if ( PyDict_SetItemString(%%CLASS%%_Type.tp_dict, name, obj) < 0 ) {
     return false;
   }
   return true;
@@ -142,21 +142,21 @@ Py%%CLASS%%::init(
   PyObject* m
 )
 {
-  %%CLASS%%Type.tp_name = "%%CLASS%%";
-  %%CLASS%%Type.tp_basicsize = sizeof(%%CLASS%%Object);
-  %%CLASS%%Type.tp_itemsize = 0;
-  %%CLASS%%Type.tp_dealloc = %%CLASS%%_dealloc;
-  %%CLASS%%Type.tp_flags = Py_TPFLAGS_DEFAULT;
-  %%CLASS%%Type.tp_doc = PyDoc_STR("%%CLASS%% objects");
-  %%CLASS%%Type.tp_richcompare = %%CLASS%%_richcmpfunc;
-  %%CLASS%%Type.tp_new = %%CLASS%%_new;
-  %%CLASS%%Type.tp_repr = %%CLASS%%_repr;
-  if ( PyType_Ready(&%%CLASS%%Type) < 0 ) {
+  %%CLASS%%_Type.tp_name = "%%CLASS%%";
+  %%CLASS%%_Type.tp_basicsize = sizeof(%%CLASS%%Object);
+  %%CLASS%%_Type.tp_itemsize = 0;
+  %%CLASS%%_Type.tp_dealloc = %%CLASS%%_dealloc;
+  %%CLASS%%_Type.tp_flags = Py_TPFLAGS_DEFAULT;
+  %%CLASS%%_Type.tp_doc = PyDoc_STR("%%CLASS%% objects");
+  %%CLASS%%_Type.tp_richcompare = %%CLASS%%_richcmpfunc;
+  %%CLASS%%_Type.tp_new = %%CLASS%%_new;
+  %%CLASS%%_Type.tp_repr = %%CLASS%%_repr;
+  if ( PyType_Ready(&%%CLASS%%_Type) < 0 ) {
     return false;
   }
 
   // 型オブジェクトの登録
-  if ( !PyModule::reg_type(m, "%%CLASS%%", &%%CLASS%%Type) ) {
+  if ( !PyModule::reg_type(m, "%%CLASS%%", &%%CLASS%%_Type) ) {
     goto error;
   }
 
@@ -232,7 +232,7 @@ Py%%CLASS%%::Get(
 PyTypeObject*
 Py%%CLASS%%::_typeobject()
 {
-  return &%%CLASS%%Type;
+  return &%%CLASS%%_Type;
 }
 
 END_NAMESPACE_%%NAMESPACE%%

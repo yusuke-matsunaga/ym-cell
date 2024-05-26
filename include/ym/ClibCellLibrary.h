@@ -29,8 +29,6 @@ class CiCellLibrary;
 //////////////////////////////////////////////////////////////////////
 class ClibCellLibrary
 {
-  friend class PyClibCellLibrary;
-
 public:
 
   /// @brief コンストラクタ
@@ -445,7 +443,7 @@ public:
   }
 
 
-private:
+public:
   //////////////////////////////////////////////////////////////////////
   // Python インターフェイス用の関数
   // 通常の使用は禁止

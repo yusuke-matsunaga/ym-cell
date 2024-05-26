@@ -18,6 +18,6 @@ dist_py_file = os.path.join(basedir, "..", "tests", "pytest", "py_ClibDelayModel
 
 keywords = [ "generic_cmos", "table_lookup", "piecewise_cmos",
              "cmos2", "dcm", "polynomial", "none" ]
-mk_enumobj("ClibDelayModel", keywords, "YM", "ymcell",
+mk_enumobj("ClibDelayModel", keywords, "YM_CLIB", "ymcell",
            "ym/clib.h", dist_h_file, dist_cc_file, dist_py_file)
 

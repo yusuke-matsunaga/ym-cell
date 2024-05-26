@@ -19,13 +19,9 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief 内容を指定したコンストラクタ
 ClibLut::ClibLut(
+  const CiCell* cell,
   const CiLut* impl
-) : mImpl{impl}
-{
-}
-
-// @brief デストラクタ
-ClibLut::~ClibLut()
+) : ClibCellElem{cell, impl}
 {
 }
 
@@ -34,7 +30,7 @@ SizeType
 ClibLut::dimension() const
 {
   _check_valid();
-  auto lut_templ = mImpl->lut_template();
+  auto lut_templ = _impl()->lut_template();
   return lut_templ->dimension();
 }
 
@@ -45,7 +41,7 @@ ClibLut::variable_type(
 ) const
 {
   _check_valid();
-  auto lut_templ = mImpl->lut_template();
+  auto lut_templ = _impl()->lut_template();
   return lut_templ->variable_type(var);
 }
 
@@ -56,7 +52,7 @@ ClibLut::index_num(
 ) const
 {
   _check_valid();
-  return mImpl->index_num(var);
+  return _impl()->index_num(var);
 }
 
 // @brief インデックス値の取得
@@ -67,7 +63,7 @@ ClibLut::index(
 ) const
 {
   _check_valid();
-  return mImpl->index(var, pos);
+  return _impl()->index(var, pos);
 }
 
 // @brief 格子点の値の取得
@@ -77,7 +73,7 @@ ClibLut::grid_value(
 ) const
 {
   _check_valid();
-  return mImpl->grid_value(pos_array);
+  return _impl()->grid_value(pos_array);
 }
 
 // @brief 値の取得
@@ -87,7 +83,7 @@ ClibLut::value(
 ) const
 {
   _check_valid();
-  return mImpl->value(val_array);
+  return _impl()->value(val_array);
 }
 
 END_NAMESPACE_YM_CLIB

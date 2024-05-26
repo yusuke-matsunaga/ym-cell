@@ -8,7 +8,7 @@
 /// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/clib.h"
+#include "ym/ClibCellElem.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -20,7 +20,8 @@ class CiLut;
 /// @class ClibLut ClibLut.h "ym/ClibLut.h"
 /// @brief ルックアップテーブル(LUT)を表すクラス
 //////////////////////////////////////////////////////////////////////
-class ClibLut
+class ClibLut :
+  public ClibCellElem<CiLut>
 {
 public:
 
@@ -31,11 +32,12 @@ public:
 
   /// @brief 内容を指定したコンストラクタ
   ClibLut(
-    const CiLut* impl ///< [in] 本体
+    const CiCell* cell, ///< [in] 親のセル
+    const CiLut* impl   ///< [in] 本体
   );
 
   /// @brief デストラクタ
-  ~ClibLut();
+  ~ClibLut() = default;
 
 
 public:
@@ -86,62 +88,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // mImpl に関する関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 適正な値を持っている時 true を返す．
-  bool
-  is_valid() const
-  {
-    return mImpl != nullptr;
-  }
-
-  /// @brief 不正値の時 true を返す．
-  bool
-  is_invalid() const
-  {
-    return !is_valid();
-  }
-
-  /// @brief 等価比較
-  bool
-  operator==(
-    const ClibLut& right
-  ) const
-  {
-    return mImpl == right.mImpl;
-  }
-
-  /// @brief 非等価比較
-  bool
-  operator!=(
-    const ClibLut& right
-  ) const
-  {
-    return !operator==(right);
-  }
-
-  /// @brief 適正な値を持っているかチェックする．
-  void
-  _check_valid() const
-  {
-    if ( !is_valid() ) {
-      throw std::invalid_argument{"not having a valid data"};
-    }
-  }
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 実装
-  const CiLut* mImpl;
 
 };
 

@@ -17,6 +17,6 @@ dist_cc_file = os.path.join(basedir, "PyClibTechnology.cc")
 dist_py_file = os.path.join(basedir, "..", "tests", "pytest", "py_ClibTechnology_test.py")
 
 keywords = [ "cmos", "fpga", "none" ]
-mk_enumobj("ClibTechnology", keywords, "YM", "ymcell",
+mk_enumobj("ClibTechnology", keywords, "YM_CLIB", "ymcell",
            "ym/clib.h", dist_h_file, dist_cc_file, dist_py_file)
 

@@ -15,7 +15,9 @@
 #include "ci/CiCellLibrary.h"
 
 
-BEGIN_NAMESPACE_YM_CLIB
+BEGIN_NAMESPACE_YM
+
+using CiCellLibrary = nsClib::CiCellLibrary;
 
 BEGIN_NONAMESPACE
 
@@ -489,4 +491,4 @@ PyClibCellLibrary::_typeobject()
   return &ClibCellLibraryType;
 }
 
-END_NAMESPACE_YM_CLIB
+END_NAMESPACE_YM

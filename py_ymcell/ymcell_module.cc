@@ -17,6 +17,9 @@
 #include "pym/PyClibCellType.h"
 #include "pym/PyClibCPV.h"
 #include "pym/PyClibCellLibrary.h"
+#include "pym/PyClibCell.h"
+#include "pym/PyClibPin.h"
+#include "pym/PyClibTiming.h"
 #include "pym/ymlogic.h"
 #include "pym/PyModule.h"
 
@@ -44,8 +47,6 @@ END_NONAMESPACE
 PyMODINIT_FUNC
 PyInit_ymcell()
 {
-  using namespace nsClib;
-
   auto m = PyModule::init(&ymcell_module);
   if ( m == nullptr ) {
     return nullptr;
@@ -84,6 +85,18 @@ PyInit_ymcell()
   }
 
   if ( !PyClibCellLibrary::init(m) ) {
+    goto error;
+  }
+
+  if ( !PyClibCell::init(m) ) {
+    goto error;
+  }
+
+  if ( !PyClibPin::init(m) ) {
+    goto error;
+  }
+
+  if ( !PyClibTiming::init(m) ) {
     goto error;
   }
 

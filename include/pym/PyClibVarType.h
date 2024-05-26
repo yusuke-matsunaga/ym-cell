@@ -14,7 +14,7 @@
 #include "ym/clib.h"
 
 
-BEGIN_NAMESPACE_YM_CLIB
+BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyClibVarType PyClibVarType.h "PyClibVarType.h"
@@ -82,12 +82,6 @@ public:
   _typeobject();
 
 };
-
-END_NAMESPACE_YM_CLIB
-
-BEGIN_NAMESPACE_YM
-
-using nsClib::PyClibVarType;
 
 END_NAMESPACE_YM
 

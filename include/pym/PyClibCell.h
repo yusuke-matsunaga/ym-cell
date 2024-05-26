@@ -14,9 +14,7 @@
 #include "ym/ClibCell.h"
 
 
-BEGIN_NAMESPACE_YM_CLIB
-
-class CiCell;
+BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyClibCell PyClibCell.h "PyClibCell.h"
@@ -26,6 +24,8 @@ class CiCell;
 //////////////////////////////////////////////////////////////////////
 class PyClibCell
 {
+  using CiCell = nsClib::CiCell;
+
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
@@ -82,12 +82,6 @@ public:
   _typeobject();
 
 };
-
-END_NAMESPACE_YM_CLIB
-
-BEGIN_NAMESPACE_YM
-
-using nsClib::PyClibCell;
 
 END_NAMESPACE_YM
 
