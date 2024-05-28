@@ -45,7 +45,7 @@ public:
   bool
   FromPyObject(
     PyObject* obj,            ///< [in] ClibTimingSense を表す PyObject
-    ClibTimingSense& val,     ///< [out] 変換された ClibTimingSense を格納する変数
+    ClibTimingSense& val,      ///< [out] 変換された ClibTimingSense を格納する変数
     const char* msg = nullptr ///< [in] エラーメッセージ(省略時にはデフォルト値を使う)
   );
 

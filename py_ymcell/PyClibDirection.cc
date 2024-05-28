@@ -22,7 +22,7 @@ struct ClibDirectionObject
 };
 
 // Python 用のタイプ定義
-PyTypeObject ClibDirectionType = {
+PyTypeObject ClibDirection_Type = {
   PyVarObject_HEAD_INIT(nullptr, 0)
 };
 
@@ -46,7 +46,7 @@ ClibDirection_new(
   PyObject* kwds
 )
 {
-  if ( type != &ClibDirectionType ) {
+  if ( type != &ClibDirection_Type ) {
     PyErr_SetString(PyExc_TypeError, "ClibDirection cannot be overloaded");
     return nullptr;
   }
@@ -155,7 +155,7 @@ new_obj(
   ClibDirection val
 )
 {
-  auto obj = ClibDirectionType.tp_alloc(&ClibDirectionType, 0);
+  auto obj = ClibDirection_Type.tp_alloc(&ClibDirection_Type, 0);
   auto val_obj = reinterpret_cast<ClibDirectionObject*>(obj);
   val_obj->mVal = val;
   return obj;
@@ -168,7 +168,7 @@ reg_obj(
   PyObject* obj
 )
 {
-  if ( PyDict_SetItemString(ClibDirectionType.tp_dict, name, obj) < 0 ) {
+  if ( PyDict_SetItemString(ClibDirection_Type.tp_dict, name, obj) < 0 ) {
     return false;
   }
   return true;
@@ -183,21 +183,21 @@ PyClibDirection::init(
   PyObject* m
 )
 {
-  ClibDirectionType.tp_name = "ClibDirection";
-  ClibDirectionType.tp_basicsize = sizeof(ClibDirectionObject);
-  ClibDirectionType.tp_itemsize = 0;
-  ClibDirectionType.tp_dealloc = ClibDirection_dealloc;
-  ClibDirectionType.tp_flags = Py_TPFLAGS_DEFAULT;
-  ClibDirectionType.tp_doc = PyDoc_STR("ClibDirection objects");
-  ClibDirectionType.tp_richcompare = ClibDirection_richcmpfunc;
-  ClibDirectionType.tp_new = ClibDirection_new;
-  ClibDirectionType.tp_repr = ClibDirection_repr;
-  if ( PyType_Ready(&ClibDirectionType) < 0 ) {
+  ClibDirection_Type.tp_name = "ClibDirection";
+  ClibDirection_Type.tp_basicsize = sizeof(ClibDirectionObject);
+  ClibDirection_Type.tp_itemsize = 0;
+  ClibDirection_Type.tp_dealloc = ClibDirection_dealloc;
+  ClibDirection_Type.tp_flags = Py_TPFLAGS_DEFAULT;
+  ClibDirection_Type.tp_doc = PyDoc_STR("ClibDirection objects");
+  ClibDirection_Type.tp_richcompare = ClibDirection_richcmpfunc;
+  ClibDirection_Type.tp_new = ClibDirection_new;
+  ClibDirection_Type.tp_repr = ClibDirection_repr;
+  if ( PyType_Ready(&ClibDirection_Type) < 0 ) {
     return false;
   }
 
   // 型オブジェクトの登録
-  if ( !PyModule::reg_type(m, "ClibDirection", &ClibDirectionType) ) {
+  if ( !PyModule::reg_type(m, "ClibDirection", &ClibDirection_Type) ) {
     goto error;
   }
 
@@ -299,7 +299,7 @@ PyClibDirection::Get(
 PyTypeObject*
 PyClibDirection::_typeobject()
 {
-  return &ClibDirectionType;
+  return &ClibDirection_Type;
 }
 
 END_NAMESPACE_YM

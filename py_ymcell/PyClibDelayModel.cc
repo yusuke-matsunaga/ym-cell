@@ -22,7 +22,7 @@ struct ClibDelayModelObject
 };
 
 // Python 用のタイプ定義
-PyTypeObject ClibDelayModelType = {
+PyTypeObject ClibDelayModel_Type = {
   PyVarObject_HEAD_INIT(nullptr, 0)
 };
 
@@ -50,7 +50,7 @@ ClibDelayModel_new(
   PyObject* kwds
 )
 {
-  if ( type != &ClibDelayModelType ) {
+  if ( type != &ClibDelayModel_Type ) {
     PyErr_SetString(PyExc_TypeError, "ClibDelayModel cannot be overloaded");
     return nullptr;
   }
@@ -171,7 +171,7 @@ new_obj(
   ClibDelayModel val
 )
 {
-  auto obj = ClibDelayModelType.tp_alloc(&ClibDelayModelType, 0);
+  auto obj = ClibDelayModel_Type.tp_alloc(&ClibDelayModel_Type, 0);
   auto val_obj = reinterpret_cast<ClibDelayModelObject*>(obj);
   val_obj->mVal = val;
   return obj;
@@ -184,7 +184,7 @@ reg_obj(
   PyObject* obj
 )
 {
-  if ( PyDict_SetItemString(ClibDelayModelType.tp_dict, name, obj) < 0 ) {
+  if ( PyDict_SetItemString(ClibDelayModel_Type.tp_dict, name, obj) < 0 ) {
     return false;
   }
   return true;
@@ -199,21 +199,21 @@ PyClibDelayModel::init(
   PyObject* m
 )
 {
-  ClibDelayModelType.tp_name = "ClibDelayModel";
-  ClibDelayModelType.tp_basicsize = sizeof(ClibDelayModelObject);
-  ClibDelayModelType.tp_itemsize = 0;
-  ClibDelayModelType.tp_dealloc = ClibDelayModel_dealloc;
-  ClibDelayModelType.tp_flags = Py_TPFLAGS_DEFAULT;
-  ClibDelayModelType.tp_doc = PyDoc_STR("ClibDelayModel objects");
-  ClibDelayModelType.tp_richcompare = ClibDelayModel_richcmpfunc;
-  ClibDelayModelType.tp_new = ClibDelayModel_new;
-  ClibDelayModelType.tp_repr = ClibDelayModel_repr;
-  if ( PyType_Ready(&ClibDelayModelType) < 0 ) {
+  ClibDelayModel_Type.tp_name = "ClibDelayModel";
+  ClibDelayModel_Type.tp_basicsize = sizeof(ClibDelayModelObject);
+  ClibDelayModel_Type.tp_itemsize = 0;
+  ClibDelayModel_Type.tp_dealloc = ClibDelayModel_dealloc;
+  ClibDelayModel_Type.tp_flags = Py_TPFLAGS_DEFAULT;
+  ClibDelayModel_Type.tp_doc = PyDoc_STR("ClibDelayModel objects");
+  ClibDelayModel_Type.tp_richcompare = ClibDelayModel_richcmpfunc;
+  ClibDelayModel_Type.tp_new = ClibDelayModel_new;
+  ClibDelayModel_Type.tp_repr = ClibDelayModel_repr;
+  if ( PyType_Ready(&ClibDelayModel_Type) < 0 ) {
     return false;
   }
 
   // 型オブジェクトの登録
-  if ( !PyModule::reg_type(m, "ClibDelayModel", &ClibDelayModelType) ) {
+  if ( !PyModule::reg_type(m, "ClibDelayModel", &ClibDelayModel_Type) ) {
     goto error;
   }
 
@@ -327,7 +327,7 @@ PyClibDelayModel::Get(
 PyTypeObject*
 PyClibDelayModel::_typeobject()
 {
-  return &ClibDelayModelType;
+  return &ClibDelayModel_Type;
 }
 
 END_NAMESPACE_YM

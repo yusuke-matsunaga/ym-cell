@@ -22,7 +22,7 @@ struct ClibCellTypeObject
 };
 
 // Python 用のタイプ定義
-PyTypeObject ClibCellTypeType = {
+PyTypeObject ClibCellType_Type = {
   PyVarObject_HEAD_INIT(nullptr, 0)
 };
 
@@ -46,7 +46,7 @@ ClibCellType_new(
   PyObject* kwds
 )
 {
-  if ( type != &ClibCellTypeType ) {
+  if ( type != &ClibCellType_Type ) {
     PyErr_SetString(PyExc_TypeError, "ClibCellType cannot be overloaded");
     return nullptr;
   }
@@ -155,7 +155,7 @@ new_obj(
   ClibCellType val
 )
 {
-  auto obj = ClibCellTypeType.tp_alloc(&ClibCellTypeType, 0);
+  auto obj = ClibCellType_Type.tp_alloc(&ClibCellType_Type, 0);
   auto val_obj = reinterpret_cast<ClibCellTypeObject*>(obj);
   val_obj->mVal = val;
   return obj;
@@ -168,7 +168,7 @@ reg_obj(
   PyObject* obj
 )
 {
-  if ( PyDict_SetItemString(ClibCellTypeType.tp_dict, name, obj) < 0 ) {
+  if ( PyDict_SetItemString(ClibCellType_Type.tp_dict, name, obj) < 0 ) {
     return false;
   }
   return true;
@@ -183,21 +183,21 @@ PyClibCellType::init(
   PyObject* m
 )
 {
-  ClibCellTypeType.tp_name = "ClibCellType";
-  ClibCellTypeType.tp_basicsize = sizeof(ClibCellTypeObject);
-  ClibCellTypeType.tp_itemsize = 0;
-  ClibCellTypeType.tp_dealloc = ClibCellType_dealloc;
-  ClibCellTypeType.tp_flags = Py_TPFLAGS_DEFAULT;
-  ClibCellTypeType.tp_doc = PyDoc_STR("ClibCellType objects");
-  ClibCellTypeType.tp_richcompare = ClibCellType_richcmpfunc;
-  ClibCellTypeType.tp_new = ClibCellType_new;
-  ClibCellTypeType.tp_repr = ClibCellType_repr;
-  if ( PyType_Ready(&ClibCellTypeType) < 0 ) {
+  ClibCellType_Type.tp_name = "ClibCellType";
+  ClibCellType_Type.tp_basicsize = sizeof(ClibCellTypeObject);
+  ClibCellType_Type.tp_itemsize = 0;
+  ClibCellType_Type.tp_dealloc = ClibCellType_dealloc;
+  ClibCellType_Type.tp_flags = Py_TPFLAGS_DEFAULT;
+  ClibCellType_Type.tp_doc = PyDoc_STR("ClibCellType objects");
+  ClibCellType_Type.tp_richcompare = ClibCellType_richcmpfunc;
+  ClibCellType_Type.tp_new = ClibCellType_new;
+  ClibCellType_Type.tp_repr = ClibCellType_repr;
+  if ( PyType_Ready(&ClibCellType_Type) < 0 ) {
     return false;
   }
 
   // 型オブジェクトの登録
-  if ( !PyModule::reg_type(m, "ClibCellType", &ClibCellTypeType) ) {
+  if ( !PyModule::reg_type(m, "ClibCellType", &ClibCellType_Type) ) {
     goto error;
   }
 
@@ -299,7 +299,7 @@ PyClibCellType::Get(
 PyTypeObject*
 PyClibCellType::_typeobject()
 {
-  return &ClibCellTypeType;
+  return &ClibCellType_Type;
 }
 
 END_NAMESPACE_YM

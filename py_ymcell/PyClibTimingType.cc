@@ -22,7 +22,7 @@ struct ClibTimingTypeObject
 };
 
 // Python 用のタイプ定義
-PyTypeObject ClibTimingTypeType = {
+PyTypeObject ClibTimingType_Type = {
   PyVarObject_HEAD_INIT(nullptr, 0)
 };
 
@@ -100,7 +100,7 @@ ClibTimingType_new(
   PyObject* kwds
 )
 {
-  if ( type != &ClibTimingTypeType ) {
+  if ( type != &ClibTimingType_Type ) {
     PyErr_SetString(PyExc_TypeError, "ClibTimingType cannot be overloaded");
     return nullptr;
   }
@@ -371,7 +371,7 @@ new_obj(
   ClibTimingType val
 )
 {
-  auto obj = ClibTimingTypeType.tp_alloc(&ClibTimingTypeType, 0);
+  auto obj = ClibTimingType_Type.tp_alloc(&ClibTimingType_Type, 0);
   auto val_obj = reinterpret_cast<ClibTimingTypeObject*>(obj);
   val_obj->mVal = val;
   return obj;
@@ -384,7 +384,7 @@ reg_obj(
   PyObject* obj
 )
 {
-  if ( PyDict_SetItemString(ClibTimingTypeType.tp_dict, name, obj) < 0 ) {
+  if ( PyDict_SetItemString(ClibTimingType_Type.tp_dict, name, obj) < 0 ) {
     return false;
   }
   return true;
@@ -399,21 +399,21 @@ PyClibTimingType::init(
   PyObject* m
 )
 {
-  ClibTimingTypeType.tp_name = "ClibTimingType";
-  ClibTimingTypeType.tp_basicsize = sizeof(ClibTimingTypeObject);
-  ClibTimingTypeType.tp_itemsize = 0;
-  ClibTimingTypeType.tp_dealloc = ClibTimingType_dealloc;
-  ClibTimingTypeType.tp_flags = Py_TPFLAGS_DEFAULT;
-  ClibTimingTypeType.tp_doc = PyDoc_STR("ClibTimingType objects");
-  ClibTimingTypeType.tp_richcompare = ClibTimingType_richcmpfunc;
-  ClibTimingTypeType.tp_new = ClibTimingType_new;
-  ClibTimingTypeType.tp_repr = ClibTimingType_repr;
-  if ( PyType_Ready(&ClibTimingTypeType) < 0 ) {
+  ClibTimingType_Type.tp_name = "ClibTimingType";
+  ClibTimingType_Type.tp_basicsize = sizeof(ClibTimingTypeObject);
+  ClibTimingType_Type.tp_itemsize = 0;
+  ClibTimingType_Type.tp_dealloc = ClibTimingType_dealloc;
+  ClibTimingType_Type.tp_flags = Py_TPFLAGS_DEFAULT;
+  ClibTimingType_Type.tp_doc = PyDoc_STR("ClibTimingType objects");
+  ClibTimingType_Type.tp_richcompare = ClibTimingType_richcmpfunc;
+  ClibTimingType_Type.tp_new = ClibTimingType_new;
+  ClibTimingType_Type.tp_repr = ClibTimingType_repr;
+  if ( PyType_Ready(&ClibTimingType_Type) < 0 ) {
     return false;
   }
 
   // 型オブジェクトの登録
-  if ( !PyModule::reg_type(m, "ClibTimingType", &ClibTimingTypeType) ) {
+  if ( !PyModule::reg_type(m, "ClibTimingType", &ClibTimingType_Type) ) {
     goto error;
   }
 
@@ -677,7 +677,7 @@ PyClibTimingType::Get(
 PyTypeObject*
 PyClibTimingType::_typeobject()
 {
-  return &ClibTimingTypeType;
+  return &ClibTimingType_Type;
 }
 
 END_NAMESPACE_YM

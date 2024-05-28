@@ -45,7 +45,7 @@ public:
   bool
   FromPyObject(
     PyObject* obj,            ///< [in] ClibVarType を表す PyObject
-    ClibVarType& val,         ///< [out] 変換された ClibVarType を格納する変数
+    ClibVarType& val,      ///< [out] 変換された ClibVarType を格納する変数
     const char* msg = nullptr ///< [in] エラーメッセージ(省略時にはデフォルト値を使う)
   );
 

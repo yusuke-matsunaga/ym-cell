@@ -22,7 +22,7 @@ struct ClibTechnologyObject
 };
 
 // Python 用のタイプ定義
-PyTypeObject ClibTechnologyType = {
+PyTypeObject ClibTechnology_Type = {
   PyVarObject_HEAD_INIT(nullptr, 0)
 };
 
@@ -42,7 +42,7 @@ ClibTechnology_new(
   PyObject* kwds
 )
 {
-  if ( type != &ClibTechnologyType ) {
+  if ( type != &ClibTechnology_Type ) {
     PyErr_SetString(PyExc_TypeError, "ClibTechnology cannot be overloaded");
     return nullptr;
   }
@@ -139,7 +139,7 @@ new_obj(
   ClibTechnology val
 )
 {
-  auto obj = ClibTechnologyType.tp_alloc(&ClibTechnologyType, 0);
+  auto obj = ClibTechnology_Type.tp_alloc(&ClibTechnology_Type, 0);
   auto val_obj = reinterpret_cast<ClibTechnologyObject*>(obj);
   val_obj->mVal = val;
   return obj;
@@ -152,7 +152,7 @@ reg_obj(
   PyObject* obj
 )
 {
-  if ( PyDict_SetItemString(ClibTechnologyType.tp_dict, name, obj) < 0 ) {
+  if ( PyDict_SetItemString(ClibTechnology_Type.tp_dict, name, obj) < 0 ) {
     return false;
   }
   return true;
@@ -167,21 +167,21 @@ PyClibTechnology::init(
   PyObject* m
 )
 {
-  ClibTechnologyType.tp_name = "ClibTechnology";
-  ClibTechnologyType.tp_basicsize = sizeof(ClibTechnologyObject);
-  ClibTechnologyType.tp_itemsize = 0;
-  ClibTechnologyType.tp_dealloc = ClibTechnology_dealloc;
-  ClibTechnologyType.tp_flags = Py_TPFLAGS_DEFAULT;
-  ClibTechnologyType.tp_doc = PyDoc_STR("ClibTechnology objects");
-  ClibTechnologyType.tp_richcompare = ClibTechnology_richcmpfunc;
-  ClibTechnologyType.tp_new = ClibTechnology_new;
-  ClibTechnologyType.tp_repr = ClibTechnology_repr;
-  if ( PyType_Ready(&ClibTechnologyType) < 0 ) {
+  ClibTechnology_Type.tp_name = "ClibTechnology";
+  ClibTechnology_Type.tp_basicsize = sizeof(ClibTechnologyObject);
+  ClibTechnology_Type.tp_itemsize = 0;
+  ClibTechnology_Type.tp_dealloc = ClibTechnology_dealloc;
+  ClibTechnology_Type.tp_flags = Py_TPFLAGS_DEFAULT;
+  ClibTechnology_Type.tp_doc = PyDoc_STR("ClibTechnology objects");
+  ClibTechnology_Type.tp_richcompare = ClibTechnology_richcmpfunc;
+  ClibTechnology_Type.tp_new = ClibTechnology_new;
+  ClibTechnology_Type.tp_repr = ClibTechnology_repr;
+  if ( PyType_Ready(&ClibTechnology_Type) < 0 ) {
     return false;
   }
 
   // 型オブジェクトの登録
-  if ( !PyModule::reg_type(m, "ClibTechnology", &ClibTechnologyType) ) {
+  if ( !PyModule::reg_type(m, "ClibTechnology", &ClibTechnology_Type) ) {
     goto error;
   }
 
@@ -271,7 +271,7 @@ PyClibTechnology::Get(
 PyTypeObject*
 PyClibTechnology::_typeobject()
 {
-  return &ClibTechnologyType;
+  return &ClibTechnology_Type;
 }
 
 END_NAMESPACE_YM

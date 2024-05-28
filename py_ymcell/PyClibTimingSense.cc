@@ -22,19 +22,19 @@ struct ClibTimingSenseObject
 };
 
 // Python 用のタイプ定義
-PyTypeObject ClibTimingSenseType = {
+PyTypeObject ClibTimingSense_Type = {
   PyVarObject_HEAD_INIT(nullptr, 0)
 };
 
 // 各定数を表す文字列
-const char* POSI_UNATE_STR = "positive_unate";
-const char* NEGA_UNATE_STR = "negative_unate";
-const char* NON_UNATE_STR  = "non_unate";
+const char* POSITIVE_UNATE_STR = "positive_unate";
+const char* NEGATIVE_UNATE_STR = "negative_unate";
+const char* NON_UNATE_STR      = "non_unate";
 
 // 各定数を表す PyObject
-PyObject* ClibTimingSense_POSI_UNATE = nullptr;
-PyObject* ClibTimingSense_NEGA_UNATE = nullptr;
-PyObject* ClibTimingSense_NON_UNATE  = nullptr;
+PyObject* ClibTimingSense_POSITIVE_UNATE = nullptr;
+PyObject* ClibTimingSense_NEGATIVE_UNATE = nullptr;
+PyObject* ClibTimingSense_NON_UNATE      = nullptr;
 
 // 生成関数
 PyObject*
@@ -44,7 +44,7 @@ ClibTimingSense_new(
   PyObject* kwds
 )
 {
-  if ( type != &ClibTimingSenseType ) {
+  if ( type != &ClibTimingSense_Type ) {
     PyErr_SetString(PyExc_TypeError, "ClibTimingSense cannot be overloaded");
     return nullptr;
   }
@@ -61,10 +61,10 @@ ClibTimingSense_new(
     return nullptr;
   }
   ClibTimingSense val;
-  if ( strcasecmp(name_str, POSI_UNATE_STR) == 0 ) {
+  if ( strcasecmp(name_str, POSITIVE_UNATE_STR) == 0 ) {
     val = ClibTimingSense::positive_unate;
   }
-  else if ( strcasecmp(name_str, NEGA_UNATE_STR) == 0 ) {
+  else if ( strcasecmp(name_str, NEGATIVE_UNATE_STR) == 0 ) {
     val = ClibTimingSense::negative_unate;
   }
   else if ( strcasecmp(name_str, NON_UNATE_STR) == 0 ) {
@@ -77,12 +77,14 @@ ClibTimingSense_new(
     // エラー
     ostringstream buf;
     buf << "argument 1 must be one of \""
-	<< POSI_UNATE_STR
-	<< "\", \""
-	<< NEGA_UNATE_STR
-	<< "\", \""
-	<< NON_UNATE_STR
-	<< "\"";
+        << POSITIVE_UNATE_STR
+        << "\", \""
+        << NEGATIVE_UNATE_STR
+        << "\", \""
+        << NON_UNATE_STR
+        << "\", \""
+        << "none"
+        << "\"";
     PyErr_SetString(PyExc_ValueError, buf.str().c_str());
     return nullptr;
   }
@@ -95,8 +97,8 @@ ClibTimingSense_dealloc(
   PyObject* self
 )
 {
-  // auto ts_obj = reinterpret_cast<ClibTimingSenseObject*>(self);
-  // 必要なら ts_obj->mVal の終了処理を行う．
+  // auto val_obj = reinterpret_cast<ClibTimingSenseObject*>(self);
+  // 必要なら val_obj->mVal の終了処理を行う．
   Py_TYPE(self)->tp_free(self);
 }
 
@@ -109,8 +111,8 @@ ClibTimingSense_repr(
   auto val = PyClibTimingSense::Get(self);
   const char* tmp_str = nullptr;
   switch ( val ) {
-  case ClibTimingSense::positive_unate: tmp_str = POSI_UNATE_STR; break;
-  case ClibTimingSense::negative_unate: tmp_str = NEGA_UNATE_STR; break;
+  case ClibTimingSense::positive_unate: tmp_str = POSITIVE_UNATE_STR; break;
+  case ClibTimingSense::negative_unate: tmp_str = NEGATIVE_UNATE_STR; break;
   case ClibTimingSense::non_unate:      tmp_str = NON_UNATE_STR; break;
   case ClibTimingSense::none:           tmp_str = ""; break;
   }
@@ -145,9 +147,9 @@ new_obj(
   ClibTimingSense val
 )
 {
-  auto obj = ClibTimingSenseType.tp_alloc(&ClibTimingSenseType, 0);
-  auto tech_obj = reinterpret_cast<ClibTimingSenseObject*>(obj);
-  tech_obj->mVal = val;
+  auto obj = ClibTimingSense_Type.tp_alloc(&ClibTimingSense_Type, 0);
+  auto val_obj = reinterpret_cast<ClibTimingSenseObject*>(obj);
+  val_obj->mVal = val;
   return obj;
 }
 
@@ -158,7 +160,7 @@ reg_obj(
   PyObject* obj
 )
 {
-  if ( PyDict_SetItemString(ClibTimingSenseType.tp_dict, name, obj) < 0 ) {
+  if ( PyDict_SetItemString(ClibTimingSense_Type.tp_dict, name, obj) < 0 ) {
     return false;
   }
   return true;
@@ -173,34 +175,34 @@ PyClibTimingSense::init(
   PyObject* m
 )
 {
-  ClibTimingSenseType.tp_name = "ClibTimingSense";
-  ClibTimingSenseType.tp_basicsize = sizeof(ClibTimingSenseObject);
-  ClibTimingSenseType.tp_itemsize = 0;
-  ClibTimingSenseType.tp_dealloc = ClibTimingSense_dealloc;
-  ClibTimingSenseType.tp_flags = Py_TPFLAGS_DEFAULT;
-  ClibTimingSenseType.tp_doc = PyDoc_STR("ClibTimingSense objects");
-  ClibTimingSenseType.tp_richcompare = ClibTimingSense_richcmpfunc;
-  ClibTimingSenseType.tp_new = ClibTimingSense_new;
-  ClibTimingSenseType.tp_repr = ClibTimingSense_repr;
-  if ( PyType_Ready(&ClibTimingSenseType) < 0 ) {
+  ClibTimingSense_Type.tp_name = "ClibTimingSense";
+  ClibTimingSense_Type.tp_basicsize = sizeof(ClibTimingSenseObject);
+  ClibTimingSense_Type.tp_itemsize = 0;
+  ClibTimingSense_Type.tp_dealloc = ClibTimingSense_dealloc;
+  ClibTimingSense_Type.tp_flags = Py_TPFLAGS_DEFAULT;
+  ClibTimingSense_Type.tp_doc = PyDoc_STR("ClibTimingSense objects");
+  ClibTimingSense_Type.tp_richcompare = ClibTimingSense_richcmpfunc;
+  ClibTimingSense_Type.tp_new = ClibTimingSense_new;
+  ClibTimingSense_Type.tp_repr = ClibTimingSense_repr;
+  if ( PyType_Ready(&ClibTimingSense_Type) < 0 ) {
     return false;
   }
 
   // 型オブジェクトの登録
-  if ( !PyModule::reg_type(m, "ClibTimingSense", &ClibTimingSenseType) ) {
+  if ( !PyModule::reg_type(m, "ClibTimingSense", &ClibTimingSense_Type) ) {
     goto error;
   }
 
   // 定数オブジェクトの生成
-  ClibTimingSense_POSI_UNATE = new_obj(ClibTimingSense::positive_unate);
-  ClibTimingSense_NEGA_UNATE = new_obj(ClibTimingSense::negative_unate);
-  ClibTimingSense_NON_UNATE  = new_obj(ClibTimingSense::non_unate);
+  ClibTimingSense_POSITIVE_UNATE = new_obj(ClibTimingSense::positive_unate);
+  ClibTimingSense_NEGATIVE_UNATE = new_obj(ClibTimingSense::negative_unate);
+  ClibTimingSense_NON_UNATE      = new_obj(ClibTimingSense::non_unate);
 
   // 定数の登録
-  if ( !reg_obj(POSI_UNATE_STR, ClibTimingSense_POSI_UNATE) ) {
+  if ( !reg_obj(POSITIVE_UNATE_STR, ClibTimingSense_POSITIVE_UNATE) ) {
     goto error;
   }
-  if ( !reg_obj(NEGA_UNATE_STR, ClibTimingSense_NEGA_UNATE) ) {
+  if ( !reg_obj(NEGATIVE_UNATE_STR, ClibTimingSense_NEGATIVE_UNATE) ) {
     goto error;
   }
   if ( !reg_obj(NON_UNATE_STR, ClibTimingSense_NON_UNATE) ) {
@@ -211,8 +213,8 @@ PyClibTimingSense::init(
 
  error:
 
-  Py_XDECREF(ClibTimingSense_POSI_UNATE);
-  Py_XDECREF(ClibTimingSense_NEGA_UNATE);
+  Py_XDECREF(ClibTimingSense_POSITIVE_UNATE);
+  Py_XDECREF(ClibTimingSense_NEGATIVE_UNATE);
   Py_XDECREF(ClibTimingSense_NON_UNATE);
 
   return false;
@@ -226,6 +228,12 @@ PyClibTimingSense::FromPyObject(
   const char* msg
 )
 {
+  if ( obj == Py_None ) {
+    // 特例: None は ClibTimingSense::none に変換する．
+    val = ClibTimingSense::none;
+    return true;
+  }
+
   if ( !Check(obj) ) {
     if ( msg == nullptr ) {
       msg = "object should be a ClibTimingSense type";
@@ -245,8 +253,8 @@ PyClibTimingSense::ToPyObject(
 {
   PyObject* obj = nullptr;
   switch ( val ) {
-  case ClibTimingSense::positive_unate: obj = ClibTimingSense_POSI_UNATE; break;
-  case ClibTimingSense::negative_unate: obj = ClibTimingSense_NEGA_UNATE; break;
+  case ClibTimingSense::positive_unate: obj = ClibTimingSense_POSITIVE_UNATE; break;
+  case ClibTimingSense::negative_unate: obj = ClibTimingSense_NEGATIVE_UNATE; break;
   case ClibTimingSense::non_unate:      obj = ClibTimingSense_NON_UNATE; break;
   case ClibTimingSense::none:           Py_RETURN_NONE;
   }
@@ -269,15 +277,15 @@ PyClibTimingSense::Get(
   PyObject* obj
 )
 {
-  auto tech_obj = reinterpret_cast<ClibTimingSenseObject*>(obj);
-  return tech_obj->mVal;
+  auto val_obj = reinterpret_cast<ClibTimingSenseObject*>(obj);
+  return val_obj->mVal;
 }
 
 // @brief ClibTimingSense を表すオブジェクトの型定義を返す．
 PyTypeObject*
 PyClibTimingSense::_typeobject()
 {
-  return &ClibTimingSenseType;
+  return &ClibTimingSense_Type;
 }
 
 END_NAMESPACE_YM

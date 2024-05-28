@@ -22,7 +22,7 @@ struct ClibCPVObject
 };
 
 // Python 用のタイプ定義
-PyTypeObject ClibCPVType = {
+PyTypeObject ClibCPV_Type = {
   PyVarObject_HEAD_INIT(nullptr, 0)
 };
 
@@ -48,7 +48,7 @@ ClibCPV_new(
   PyObject* kwds
 )
 {
-  if ( type != &ClibCPVType ) {
+  if ( type != &ClibCPV_Type ) {
     PyErr_SetString(PyExc_TypeError, "ClibCPV cannot be overloaded");
     return nullptr;
   }
@@ -157,7 +157,7 @@ new_obj(
   ClibCPV val
 )
 {
-  auto obj = ClibCPVType.tp_alloc(&ClibCPVType, 0);
+  auto obj = ClibCPV_Type.tp_alloc(&ClibCPV_Type, 0);
   auto val_obj = reinterpret_cast<ClibCPVObject*>(obj);
   val_obj->mVal = val;
   return obj;
@@ -170,7 +170,7 @@ reg_obj(
   PyObject* obj
 )
 {
-  if ( PyDict_SetItemString(ClibCPVType.tp_dict, name, obj) < 0 ) {
+  if ( PyDict_SetItemString(ClibCPV_Type.tp_dict, name, obj) < 0 ) {
     return false;
   }
   return true;
@@ -185,21 +185,21 @@ PyClibCPV::init(
   PyObject* m
 )
 {
-  ClibCPVType.tp_name = "ClibCPV";
-  ClibCPVType.tp_basicsize = sizeof(ClibCPVObject);
-  ClibCPVType.tp_itemsize = 0;
-  ClibCPVType.tp_dealloc = ClibCPV_dealloc;
-  ClibCPVType.tp_flags = Py_TPFLAGS_DEFAULT;
-  ClibCPVType.tp_doc = PyDoc_STR("ClibCPV objects");
-  ClibCPVType.tp_richcompare = ClibCPV_richcmpfunc;
-  ClibCPVType.tp_new = ClibCPV_new;
-  ClibCPVType.tp_repr = ClibCPV_repr;
-  if ( PyType_Ready(&ClibCPVType) < 0 ) {
+  ClibCPV_Type.tp_name = "ClibCPV";
+  ClibCPV_Type.tp_basicsize = sizeof(ClibCPVObject);
+  ClibCPV_Type.tp_itemsize = 0;
+  ClibCPV_Type.tp_dealloc = ClibCPV_dealloc;
+  ClibCPV_Type.tp_flags = Py_TPFLAGS_DEFAULT;
+  ClibCPV_Type.tp_doc = PyDoc_STR("ClibCPV objects");
+  ClibCPV_Type.tp_richcompare = ClibCPV_richcmpfunc;
+  ClibCPV_Type.tp_new = ClibCPV_new;
+  ClibCPV_Type.tp_repr = ClibCPV_repr;
+  if ( PyType_Ready(&ClibCPV_Type) < 0 ) {
     return false;
   }
 
   // 型オブジェクトの登録
-  if ( !PyModule::reg_type(m, "ClibCPV", &ClibCPVType) ) {
+  if ( !PyModule::reg_type(m, "ClibCPV", &ClibCPV_Type) ) {
     goto error;
   }
 
@@ -301,7 +301,7 @@ PyClibCPV::Get(
 PyTypeObject*
 PyClibCPV::_typeobject()
 {
-  return &ClibCPVType;
+  return &ClibCPV_Type;
 }
 
 END_NAMESPACE_YM

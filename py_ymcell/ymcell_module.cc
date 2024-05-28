@@ -16,6 +16,7 @@
 #include "pym/PyClibTimingType.h"
 #include "pym/PyClibCellType.h"
 #include "pym/PyClibCPV.h"
+#include "pym/PyClibVarType.h"
 #include "pym/PyClibCellLibrary.h"
 #include "pym/PyClibCell.h"
 #include "pym/PyClibPin.h"
@@ -81,6 +82,10 @@ PyInit_ymcell()
   }
 
   if ( !PyClibCPV::init(m) ) {
+    goto error;
+  }
+
+  if ( !PyClibVarType::init(m) ) {
     goto error;
   }
 

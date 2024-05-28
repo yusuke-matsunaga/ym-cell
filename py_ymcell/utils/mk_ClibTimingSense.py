@@ -17,6 +17,6 @@ dist_cc_file = os.path.join(basedir, "PyClibTimingSense.cc")
 dist_py_file = os.path.join(basedir, "..", "tests", "pytest", "py_ClibTimingSense_test.py")
 
 keywords = [ "positive_unate", "negative_unate", "non_unate", "none" ]
-mk_enumobj("ClibTimingSense", keywords, "YM_CLIB", "ymcell",
+mk_enumobj("ClibTimingSense", keywords, "YM", "ymcell",
            "ym/clib.h", dist_h_file, dist_cc_file, dist_py_file)
 

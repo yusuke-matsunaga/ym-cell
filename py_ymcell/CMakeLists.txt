@@ -34,6 +34,7 @@ ym_add_object_library ( py_ymcell
   PyClibTimingType.cc
   PyClibCellType.cc
   PyClibCPV.cc
+  PyClibVarType.cc
   PyClibCellLibrary.cc
   PyClibCell.cc
   PyClibPin.cc
