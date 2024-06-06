@@ -30,7 +30,7 @@ class MethodDef:
 
     def gen_defbody(self):
         """定義本体"""
-        return cgutils.List([
+        return cgutils.Block.new_list([
             self.head(),
             self.body(),
             self.tail()
@@ -57,7 +57,7 @@ class MethodDef:
             flag_str += ' | METH_CLASS'
         list_obj.append(cgutils.Text(f'   {flag_str},\n'))
         list_obj.append(cgutils.Text(f'   PyDoc_STR("{self.doc_str}")}},\n'))
-        return cgutils.List(list_obj)
+        return cgutils.Block.new_list(list_obj)
     
     def head(self):
         """先頭部分"""
@@ -76,10 +76,10 @@ class MethodDef:
         if self.keywords:
             list_obj.append(cgutils.Text(',\n  PyObject* kwds\n'))
         else:
-            list_obj.append(cgutils.NL())
+            list_obj.append(cgutils.Text('\n'))
         list_obj.append(cgutils.Text(')\n'))
         list_obj.append(cgutils.Text('{\n'))
-        return cgutils.List(list_obj)
+        return cgutils.Block.new_list(list_obj)
 
     def body(self):
         return None

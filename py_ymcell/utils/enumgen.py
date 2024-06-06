@@ -8,13 +8,14 @@
 """
 
 from codegen import CodeGen
-import cgutils
+from cgutils import Line, Text, Block
 
 
 class EnumGen(CodeGen):
     """列挙型の拡張オブジェクト用ソースファイルを生成するクラス"""
 
     def __init__(self, keywords):
+        super().__init__()
         self.keywords = keywords
 
         self.has_none = False
@@ -36,9 +37,9 @@ class EnumGen(CodeGen):
             nsp = self.max_length - l
             sp = ' ' * nsp
             cap_kwd = kwd.upper()
-            list_obj.append(cgutils.Text(f'const char* {cap_kwd}_STR{sp} = "{kwd}";'))
-            list_obj.append(cgutils.NL())
-        return cgutils.List(list_obj)
+            list_obj.append(Text(f'const char* {cap_kwd}_STR{sp} = "{kwd}";'))
+            list_obj.append(Text('\n'))
+        return Block.new_list(list_obj)
 
     def gen_const_def(self):
         """定数オブジェクトの定義文を作る．"""
@@ -51,9 +52,9 @@ class EnumGen(CodeGen):
             nsp = self.max_length - l
             sp = ' ' * nsp
             cap_kwd = kwd.upper()
-            list_obj.append(cgutils.Text(f'PyObject* {self.class_name}_{cap_kwd}{sp} = nullptr;'))
-            list_obj.append(cgutils.NL())
-        return cgutils.List(list_obj)
+            list_obj.append(Text(f'PyObject* {self.class_name}_{cap_kwd}{sp} = nullptr;'))
+            list_obj.append(Text('\n'))
+        return Block.new_list(list_obj)
 
     def new_block(self):
         """new_func()関数を創る．"""
@@ -65,32 +66,29 @@ new_func(
   PyObject* args,
   PyObject* kwds
 )
-{
-  if ( type != &%%TYPE_CLASS%% ) {
-    PyErr_SetString(PyExc_TypeError, "%%CLASS%% cannot be overloaded");
+{{
+  if ( type != &{TYPE_CLASS} ) {{
+    PyErr_SetString(PyExc_TypeError, "{CLASS} cannot be overloaded");
     return nullptr;
-  }
+  }}
 
   // キーワード引数
-  static const char* kwlist[] = {
+  static const char* kwlist[] = {{
     "name",
     nullptr
-  };
+  }};
   const char* name_str = nullptr;
   if ( !PyArg_ParseTupleAndKeywords(args, kwds, "s",
 				    const_cast<char**>(kwlist),
-				    &name_str) ) {
+				    &name_str) ) {{
     return nullptr;
-  }
+  }}
 
-  %%CLASS%% val;
+  {CLASS} val;
         
-"""
-        head = cgutils.Text(head_text,
-                            replace_list=[
-                                ('%%CLASS%%', self.class_name),
-                                ('%%TYPE_CLASS%%', self.py_type_name)
-                            ])
+""".format(CLASS=self.class_name,
+           TYPE_CLASS=self.py_type_name)
+        head = Text(head_text)
 
         # 文字列比較用のコードを作る．
         buf = ""
@@ -143,34 +141,31 @@ new_func(
         buf += '\n'
         buf += '  }'
         buf += '\n'
-        body = cgutils.Text(buf)
-        tail = cgutils.Text(f'  return {self.py_class_name}::ToPyObject(val);\n}}\n')
-        return cgutils.Block(head=head, body=body, tail=tail)
+        body = Text(buf)
+        tail = Text(f'  return {self.py_class_name}::ToPyObject(val);\n}}\n')
+        return Block.new_list([head, body, tail])
 
     def repr_block(self):
         """repr_func()を生成する．"""
         head_text = """
 // repr() 関数
 PyObject*
-%%CLASS%%_repr(
+{CLASS}_repr(
   PyObject* self
 )
-{
-  auto val = %%PY_CLASS%%::Get(self);
+{{
+  auto val = {PY_CLASS}::Get(self);
   const char* tmp_str = nullptr;
-  switch ( val ) {
-"""
+  switch ( val ) {{
+""".format(CLASS=self.class_name,
+           PY_CLASS=self.py_class_name)
         tail_text = """
   }
   return Py_BuildValue("s", tmp_str);
 }
 """
-        head = cgutils.Text(head_text,
-                            replace_list=[
-                                ('%%CLASS%%', self.class_name),
-                                ('%%PY_CLASS%%', self.py_class_name)
-                            ])
-        tail = cgutils.Text(tail_text)
+        head = Text(head_text)
+        tail = Text(tail_text)
         buf = ""
         for kwd in self.keywords:
             l = len(kwd)
@@ -183,8 +178,8 @@ PyObject*
                 cap_kwd = kwd.upper();
                 buf += f'tmp_str = {cap_kwd}_STR; break;'
             buf += '\n'
-        body = cgutils.Text(buf)
-        return cgutils.Block(head=head, body=body, tail=tail)
+        body = Text(buf)
+        return Block.new_list([head, body, tail])
     
     def new_obj(self):
         """定数オブジェクトの生成文を作る．"""
@@ -288,33 +283,25 @@ PyObject*
         
 if __name__ == '__main__':
     import sys
+
+    class ClibTechnologyGen(EnumGen):
+        def __init__(self):
+            keywords = [ "cmos", "fpga", "none" ]
+            super().__init__(keywords)
+
+        @property
+        def class_name(self):
+            return "ClibTechnology"
+
+        @property
+        def h_includes(self):
+            return ["ym/clib.h"]
+
+        @property
+        def cc_incudes(self):
+            return ["ym/clib.h"]
+
+    gen = ClibTechnologyGen()
     
-    keywords = [ "cmos", "fpga", "none" ]
-    enum_spec = EnumSpec("ClibTechnology", "ym/clib.h", keywords)
-
-    if len(sys.argv) != 2:
-        print('USAGE: enumspec <CMD>')
-        exit(1)
-
-    if sys.argv[1] == 'const_str':
-        ans = enum_spec.const_str()
-    elif sys.argv[1] == 'const_def':
-        ans = enum_spec.const_def()
-    elif sys.argv[1] == 'strcmp':
-        ans = enum_spec.strcmp()
-    elif sys.argv[1] == 'const_repr':
-        ans = enum_spec.const_repr()
-    elif sys.argv[1] == 'new_obj':
-        ans = enum_spec.new_obj()
-    elif sys.argv[1] == 'reg_obj':
-        ans = enum_spec.reg_obj()
-    elif sys.argv[1] == 'xdecref':
-        ans = enum_spec.xdecref()
-    elif sys.argv[1] == 'topyobject':
-        ans = enum_spec.topyobject()
-    else:
-        print(f'{sys.argv[1]}: unknown cmd')
-        exit(2)
-
-    print(ans, end='')
-    
+    #gen.gen_h()
+    gen.gen_cc()
