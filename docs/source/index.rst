@@ -16,6 +16,7 @@ ym-cell に関するドキュメント
    liberty/pin.rst
    liberty/timing.rst
    liberty/group.rst
+   liberty/delay_models.rst
 
 Indices and tables
 ==================
