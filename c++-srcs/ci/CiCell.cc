@@ -356,8 +356,10 @@ CiCell::add_timing_piecewise(
   ClibTime intrinsic_fall,
   ClibTime slope_rise,
   ClibTime slope_fall,
-  ClibResistance rise_pin_resistance,
-  ClibResistance fall_pin_resistance
+  const vector<ClibResistance>& rise_pin_resistance,
+  const vector<ClibResistance>& fall_pin_resistance,
+  const vector<ClibTime>& rise_delay_intercept,
+  const vector<ClibTime>& fall_delay_intercept
 )
 {
   auto ptr = CiTiming::new_Piecewise(timing_type, cond,
@@ -366,7 +368,9 @@ CiCell::add_timing_piecewise(
 				     slope_rise,
 				     slope_fall,
 				     rise_pin_resistance,
-				     fall_pin_resistance);
+				     fall_pin_resistance,
+				     rise_delay_intercept,
+				     fall_delay_intercept);
   auto timing = ptr.get();
   mTimingList.push_back(std::move(ptr));
   return timing;

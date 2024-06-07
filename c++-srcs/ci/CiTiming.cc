@@ -51,15 +51,22 @@ CiTiming::new_Piecewise(
   ClibTime intrinsic_fall,
   ClibTime slope_rise,
   ClibTime slope_fall,
-  ClibResistance rise_pin_resistance,
-  ClibResistance fall_pin_resistance
+  const vector<ClibResistance>& rise_pin_resistance,
+  const vector<ClibResistance>& fall_pin_resistance,
+  const vector<ClibTime>& rise_delay_intercept,
+  const vector<ClibTime>& fall_delay_intercept
 )
 {
   auto ptr = new CiTimingPiecewise{
     timing_type, cond,
-    intrinsic_rise, intrinsic_fall,
-    slope_rise, slope_fall,
-    rise_pin_resistance, fall_pin_resistance
+    intrinsic_rise,
+    intrinsic_fall,
+    slope_rise,
+    slope_fall,
+    rise_pin_resistance,
+    fall_pin_resistance,
+    rise_delay_intercept,
+    fall_delay_intercept
   };
   return unique_ptr<CiTiming>{ptr};
 }
@@ -148,30 +155,38 @@ CiTiming::fall_resistance() const
   return ClibResistance(0.0);
 }
 
-// @brief 立ち上がり遷移遅延の取得
+// @brief 立ち上がりピン抵抗の取得
 ClibResistance
-CiTiming::rise_pin_resistance() const
+CiTiming::rise_pin_resistance(
+  SizeType piece_id
+) const
 {
   return ClibResistance(0.0);
 }
 
-// @brief 立ち下がり遷移遅延の取得
+// @brief 立ち下がりピン抵抗の取得
 ClibResistance
-CiTiming::fall_pin_resistance() const
+CiTiming::fall_pin_resistance(
+  SizeType piece_id
+) const
 {
   return ClibResistance(0.0);
 }
 
-// @brief 立ち上がり？？？
+// @brief 立ち上がりY切片の取得
 ClibTime
-CiTiming::rise_delay_intercept() const
+CiTiming::rise_delay_intercept(
+  SizeType piece_id
+) const
 {
   return ClibTime(0.0);
 }
 
-// @brief 立ち下がり？？？
+// @brief 立ち下がりY切片の取得
 ClibTime
-CiTiming::fall_delay_intercept() const
+CiTiming::fall_delay_intercept(
+  SizeType piece_id
+) const
 {
   return ClibTime(0.0);
 }
@@ -382,32 +397,38 @@ CiTimingGeneric::_restore(
 
 // @brief 立ち上がり遷移遅延の取得
 ClibResistance
-CiTimingPiecewise::rise_pin_resistance() const
+CiTimingPiecewise::rise_pin_resistance(
+  SizeType piece_id
+) const
 {
-  return mRisePinResistance;
+  return mRisePinResistance[piece_id];
 }
 
 // @brief 立ち下がり遷移遅延の取得
 ClibResistance
-CiTimingPiecewise::fall_pin_resistance() const
+CiTimingPiecewise::fall_pin_resistance(
+  SizeType piece_id
+) const
 {
-  return mFallPinResistance;
+  return mFallPinResistance[piece_id];
 }
 
-// @brief 立ち上がり？？？
+// @brief 立ち上がりY切片の取得
 ClibTime
-CiTimingPiecewise::rise_delay_intercept() const
+CiTimingPiecewise::rise_delay_intercept(
+  SizeType piece_id
+) const
 {
-#warning "TODO: CiTimingPiecewise::rise_delay_intercept"
-  return ClibTime(0.0);
+  return mRiseDelayIntercept[piece_id];
 }
 
-// @brief 立ち下がり？？？
+// @brief 立ち下がりY切片の取得
 ClibTime
-CiTimingPiecewise::fall_delay_intercept() const
+CiTimingPiecewise::fall_delay_intercept(
+  SizeType piece_id
+) const
 {
-#warning "TODO: CiTimingPiecewise::fall_delay_intercept"
-  return ClibTime(0.0);
+  return mFallDelayIntercept[piece_id];
 }
 
 // @brief 内容をバイナリダンプする．
@@ -418,8 +439,10 @@ CiTimingPiecewise::dump(
 {
   dump_common(s, 1);
   dump_GP(s);
-  s.dump(rise_pin_resistance());
-  s.dump(fall_pin_resistance());
+  s.dump(mRisePinResistance);
+  s.dump(mFallPinResistance);
+  s.dump(mRiseDelayIntercept);
+  s.dump(mFallDelayIntercept);
 }
 
 // @brief 内容を読み込む．
@@ -431,6 +454,8 @@ CiTimingPiecewise::_restore(
   restore_GP(s);
   s.restore(mRisePinResistance);
   s.restore(mFallPinResistance);
+  s.restore(mRiseDelayIntercept);
+  s.restore(mFallDelayIntercept);
 }
 
 

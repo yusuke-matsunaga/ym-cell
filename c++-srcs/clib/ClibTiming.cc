@@ -82,36 +82,44 @@ ClibTiming::fall_resistance() const
   return _impl()->fall_resistance();
 }
 
-// @brief 立ち上がり遷移遅延の取得
+// @brief 立ち上がりピン抵抗の取得
 ClibResistance
-ClibTiming::rise_pin_resistance() const
+ClibTiming::rise_pin_resistance(
+  SizeType piece_id
+) const
 {
   _check_valid();
-  return _impl()->rise_pin_resistance();
+  return _impl()->rise_pin_resistance(piece_id);
 }
 
-// @brief 立ち下がり遷移遅延の取得
+// @brief 立ち下がりピン抵抗の取得
 ClibResistance
-ClibTiming::fall_pin_resistance() const
+ClibTiming::fall_pin_resistance(
+  SizeType piece_id
+) const
 {
   _check_valid();
-  return _impl()->fall_pin_resistance();
+  return _impl()->fall_pin_resistance(piece_id);
 }
 
-// @brief 立ち上がり？？？
+// @brief 立ち上がりY切片の取得
 ClibTime
-ClibTiming::rise_delay_intercept() const
+ClibTiming::rise_delay_intercept(
+  SizeType piece_id
+) const
 {
   _check_valid();
-  return _impl()->rise_delay_intercept();
+  return _impl()->rise_delay_intercept(piece_id);
 }
 
-// @brief 立ち下がり？？？
+// @brief 立ち下がりY切片の取得
 ClibTime
-ClibTiming::fall_delay_intercept() const
+ClibTiming::fall_delay_intercept(
+  SizeType piece_id
+) const
 {
   _check_valid();
-  return _impl()->fall_delay_intercept();
+  return _impl()->fall_delay_intercept(piece_id);
 }
 
 // @brief 立ち上がり遷移遅延テーブルの取得

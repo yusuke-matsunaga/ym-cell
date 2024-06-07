@@ -75,6 +75,17 @@ ClibCellLibrary::delay_model() const
   return ClibDelayModel::generic_cmos;
 }
 
+// @brief 区間のリストの取得
+vector<double>
+ClibCellLibrary::piece_define() const
+{
+  if ( mImpl ) {
+    return mImpl->piece_define();
+  }
+  // デフォルト値
+  return {};
+}
+
 // @brief バス命名規則の取得
 string
 ClibCellLibrary::bus_naming_style() const

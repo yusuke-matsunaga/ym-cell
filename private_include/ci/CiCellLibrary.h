@@ -110,6 +110,13 @@ public:
     return mDelayModel;
   }
 
+  /// @brief 区間のリストの取得
+  vector<double>
+  piece_define() const
+  {
+    return mPieceDefine;
+  }
+
   /// @brief バス命名規則の取得
   string
   bus_naming_style() const
@@ -858,6 +865,9 @@ private:
 
   // 遅延モデル
   ClibDelayModel mDelayModel{ClibDelayModel::generic_cmos};
+
+  // 区間(の下限)のリスト
+  vector<double> mPieceDefine;
 
   // バスタイプのリスト
   vector<unique_ptr<CiBusType>> mBusTypeList;

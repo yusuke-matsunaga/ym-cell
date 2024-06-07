@@ -151,6 +151,7 @@ ClibTiming_fall_resistance(
   return Py_BuildValue("d", ans.value());
 }
 
+#if 0
 PyObject*
 ClibTiming_rise_pin_resistance(
   PyObject* self,
@@ -194,6 +195,7 @@ ClibTiming_fall_delay_intercept(
   auto ans = val->rise_delay_intercept();
   return Py_BuildValue("d", ans.value());
 }
+#endif
 
 #if 0
 PyObject*
@@ -226,6 +228,7 @@ PyGetSetDef ClibTiming_getsetters[] = {
    PyDoc_STR("rise_resistance"), nullptr},
   {"fall_resistance", ClibTiming_fall_resistance, nullptr,
    PyDoc_STR("fall_resistance"), nullptr},
+#if 0
   {"rise_pin_resistance", ClibTiming_rise_pin_resistance, nullptr,
    PyDoc_STR("rise_pin_resistance"), nullptr},
   {"fall_pin_resistance", ClibTiming_fall_pin_resistance, nullptr,
@@ -234,6 +237,7 @@ PyGetSetDef ClibTiming_getsetters[] = {
    PyDoc_STR("rise_delay_intercept"), nullptr},
   {"fall_delay_intercept", ClibTiming_fall_delay_intercept, nullptr,
    PyDoc_STR("fall_delay_intercept"), nullptr},
+#endif
   {nullptr, nullptr, nullptr, nullptr, nullptr}
 };
 

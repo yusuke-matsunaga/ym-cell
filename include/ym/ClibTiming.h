@@ -100,21 +100,29 @@ public:
   // CMOS折れ線近似遅延モデルの属性
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 立ち上がり遷移遅延の取得
+  /// @brief 立ち上がりピン抵抗の取得
   ClibResistance
-  rise_pin_resistance() const;
+  rise_pin_resistance(
+    SizeType piece_id ///< [in] 区間番号
+  ) const;
 
-  /// @brief 立ち下がり遷移遅延の取得
+  /// @brief 立ち下がりピン抵抗の取得
   ClibResistance
-  fall_pin_resistance() const;
+  fall_pin_resistance(
+    SizeType piece_id ///< [in] 区間番号
+  ) const;
 
-  /// @brief 立ち上がり？？？
+  /// @brief 立ち上がりY切片
   ClibTime
-  rise_delay_intercept() const;
+  rise_delay_intercept(
+    SizeType piece_id ///< [in] 区間番号
+  ) const;
 
-  /// @brief 立ち下がり？？？
+  /// @brief 立ち下がりY切片
   ClibTime
-  fall_delay_intercept() const;
+  fall_delay_intercept(
+    SizeType piece_id ///< [in] 区間番号
+  ) const;
 
 
 public:

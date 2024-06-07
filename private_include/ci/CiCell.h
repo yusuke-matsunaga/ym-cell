@@ -660,8 +660,10 @@ public:
     ClibTime intrinsic_fall,
     ClibTime slope_rise,
     ClibTime slope_fall,
-    ClibResistance rise_pin_resistance,
-    ClibResistance fall_pin_resistance
+    const vector<ClibResistance>& rise_pin_resistance,
+    const vector<ClibResistance>& fall_pin_resistance,
+    const vector<ClibTime>& rise_delay_intercept,
+    const vector<ClibTime>& fall_delay_intercept
   );
 
   /// @brief タイミング情報を作る(非線形タイプ1)．

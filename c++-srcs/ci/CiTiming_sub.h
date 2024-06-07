@@ -125,8 +125,8 @@ public:
     ClibTime intrinsic_fall,        ///< [in] 立ち下がり固有遅延
     ClibTime slope_rise,            ///< [in] 立ち上がりスロープ遅延
     ClibTime slope_fall,            ///< [in] 立ち下がりスロープ遅延
-    ClibResistance rise_resistance, ///< [in] 立ち上がり遷移遅延パラメータ
-    ClibResistance fall_resistance  ///< [in] 立ち下がり遷移遅延パラメータ
+    ClibResistance rise_resistance, ///< [in] 立ち上がり抵抗
+    ClibResistance fall_resistance  ///< [in] 立ち下がり抵抗
   ) : CiTimingGP{timing_type, cond,
 		 intrinsic_rise, intrinsic_fall,
 		 slope_rise, slope_fall},
@@ -144,11 +144,11 @@ public:
   // CMOSジェネリック遅延モデルの属性
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 立ち上がり遷移遅延の取得
+  /// @brief 立ち上がり抵抗の取得
   ClibResistance
   rise_resistance() const override;
 
-  /// @brief 立ち下がり遷移遅延の取得
+  /// @brief 立ち下がり抵抗の取得
   ClibResistance
   fall_resistance() const override;
 
@@ -211,13 +211,17 @@ public:
     ClibTime intrinsic_fall,            ///< [in] 立ち下がり固有遅延
     ClibTime slope_rise,                ///< [in] 立ち上がりスロープ遅延
     ClibTime slope_fall,                ///< [in] 立ち下がりスロープ遅延
-    ClibResistance rise_pin_resistance, ///< [in] 立ち上がりピン抵抗
-    ClibResistance fall_pin_resistance  ///< [in] 立ち下がりピン抵抗
+    const vector<ClibResistance>& rise_pin_resistance, ///< [in] 立ち上がりピン抵抗
+    const vector<ClibResistance>& fall_pin_resistance, ///< [in] 立ち下がりピン抵抗
+    const vector<ClibTime>& rise_delay_intercept,      ///< [in] 立ち上がりY切片
+    const vector<ClibTime>& fall_delay_intercept       ///< [in] 立ち下がりY切片
   ) : CiTimingGP{timing_type, cond,
 		 intrinsic_rise, intrinsic_fall,
 		 slope_rise, slope_fall},
       mRisePinResistance{rise_pin_resistance},
-      mFallPinResistance{fall_pin_resistance}
+      mFallPinResistance{fall_pin_resistance},
+      mRiseDelayIntercept{rise_delay_intercept},
+      mFallDelayIntercept{fall_delay_intercept}
   {
   }
 
@@ -230,21 +234,29 @@ public:
   // CMOS折れ線近似遅延モデルの属性
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 立ち上がり遷移遅延の取得
+  /// @brief 立ち上がりピン抵抗の取得
   ClibResistance
-  rise_pin_resistance() const override;
+  rise_pin_resistance(
+    SizeType piece_id ///< [in] 区間番号
+  ) const override;
 
-  /// @brief 立ち下がり遷移遅延の取得
+  /// @brief 立ち下がりピン抵抗の取得
   ClibResistance
-  fall_pin_resistance() const override;
+  fall_pin_resistance(
+    SizeType piece_id ///< [in] 区間番号
+  ) const override;
 
-  /// @brief 立ち上がり？？？
+  /// @brief 立ち上がりY切片の取得
   ClibTime
-  rise_delay_intercept() const override;
+  rise_delay_intercept(
+    SizeType piece_id ///< [in] 区間番号
+  ) const override;
 
-  /// @brief 立ち下がり？？？
+  /// @brief 立ち下がりY切片の取得
   ClibTime
-  fall_delay_intercept() const override;
+  fall_delay_intercept(
+    SizeType piece_id ///< [in] 区間番号
+  ) const override;
 
 
 public:
@@ -276,11 +288,17 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 立ち上がり遷移遅延
-  ClibResistance mRisePinResistance;
+  // 立ち上がりピン抵抗のリスト
+  vector<ClibResistance> mRisePinResistance;
 
-  // 立ち下がり遷移遅延
-  ClibResistance mFallPinResistance;
+  // 立ち下がりピン抵抗のリスト
+  vector<ClibResistance> mFallPinResistance;
+
+  // 立ち上がりY切片のリスト
+  vector<ClibTime> mRiseDelayIntercept;
+
+  // 立ち下がりY切片のリスト
+  vector<ClibTime> mFallDelayIntercept;
 
 };
 

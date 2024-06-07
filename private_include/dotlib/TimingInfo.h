@@ -72,9 +72,13 @@ private:
   void
   set_timing_common_params();
 
-  /// @brief generic タイプのタイミング情報のパラメータを得る．
+  /// @brief generic_cmos タイプのタイミング情報のパラメータを得る．
   void
   set_timing_generic_params();
+
+  /// @brief piecewise_cmos タイプのタイミング情報のパラメータを得る．
+  void
+  set_timing_piecewise_params();
 
   /// @brief table-lookup タイプのタイミング情報のパラメータを得る．
   int
@@ -105,6 +109,12 @@ private:
   ClibTime mSlopeFall;
   ClibResistance mRiseResistance;
   ClibResistance mFallResistance;
+
+  // piecewise cmos モデルのパラメータ
+  vector<pair<SizeType, ClibResistance>> mRisePinResistance;
+  vector<pair<SizeType, ClibResistance>> mFallPinResistance;
+  vector<pair<SizeType, ClibTime>> mRiseDelayIntercept;
+  vector<pair<SizeType, ClibTime>> mFallDelayIntercept;
 
   // table lookup モデルのパラメータ
   int mLutType;

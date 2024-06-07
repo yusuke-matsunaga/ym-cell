@@ -51,7 +51,7 @@ TimingInfo::set(
     break;
 
   case ClibDelayModel::piecewise_cmos:
-#warning "TODO: piecewise モデル"
+    set_timing_piecewise_params();
     break;
 
   case ClibDelayModel::cmos2:
@@ -339,6 +339,20 @@ TimingInfo::set_timing_generic_params()
 		    "DOTLIB_PARSER",
 		    label);
     throw std::invalid_argument{label};
+  }
+}
+
+// @brief piecewise_cmos タイプのタイミング情報のパラメータを得る．
+void
+TimingInfo::set_timing_piecewise_params()
+{
+  const char* keyword{"rise_pin_resistance"};
+  if ( elem_dict().count(keyword) > 0 ) {
+    auto& vec = elem_dict().at(keyword);
+    mRisePinResistance.clear();
+    mRisePinResistance.reserve(vec.size());
+    for ( auto& val: vec ) {
+    }
   }
 }
 

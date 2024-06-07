@@ -130,6 +130,13 @@ public:
   ClibDelayModel
   delay_model() const;
 
+  /// @brief 区間のリストの取得
+  ///
+  /// delay_model() = ClibDelayModel::piecewise_cmos
+  /// の時のみ意味を持つ．
+  vector<double>
+  piece_define() const;
+
   /// @brief バス命名規則の取得
   string
   bus_naming_style() const;

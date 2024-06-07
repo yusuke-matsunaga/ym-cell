@@ -67,8 +67,10 @@ public:
     ClibTime intrinsic_fall,            ///< [in] 立ち下がり固有遅延
     ClibTime slope_rise,                ///< [in] 立ち上がりスロープ遅延
     ClibTime slope_fall,                ///< [in] 立ち下がりスロープ遅延
-    ClibResistance rise_pin_resistance, ///< [in] 立ち上がりピン抵抗
-    ClibResistance fall_pin_resistance  ///< [in] 立ち下がりピン抵抗
+    const vector<ClibResistance>& rise_pin_resistance, ///< [in] 立ち上がりピン抵抗
+    const vector<ClibResistance>& fall_pin_resistance, ///< [in] 立ち下がりピン抵抗
+    const vector<ClibTime>& rise_delay_intercept,      ///< [in] 立ち上がりY切片
+    const vector<ClibTime>& fall_delay_intercept       ///< [in] 立ち下がりY切片
   );
 
   /// @brief CMOS非線形タイプ1のインスタンスを生成する．
@@ -169,25 +171,33 @@ public:
   // CMOS折れ線近似遅延モデルの属性
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 立ち上がり遷移遅延の取得
+  /// @brief 立ち上がりピン抵抗の取得
   virtual
   ClibResistance
-  rise_pin_resistance() const;
+  rise_pin_resistance(
+    SizeType piece_id ///< [in] 区間番号
+  ) const;
 
-  /// @brief 立ち下がり遷移遅延の取得
+  /// @brief 立ち下がりピン抵抗の取得
   virtual
   ClibResistance
-  fall_pin_resistance() const;
+  fall_pin_resistance(
+    SizeType piece_id ///< [in] 区間番号
+  ) const;
 
-  /// @brief 立ち上がり？？？
+  /// @brief 立ち上がりY切片の取得
   virtual
   ClibTime
-  rise_delay_intercept() const;
+  rise_delay_intercept(
+    SizeType piece_id ///< [in] 区間番号
+  ) const;
 
-  /// @brief 立ち下がり？？？
+  /// @brief 立ち下がりY切片の取得
   virtual
   ClibTime
-  fall_delay_intercept() const;
+  fall_delay_intercept(
+    SizeType piece_id ///< [in] 区間番号
+  ) const;
 
 
 public:
