@@ -9,7 +9,6 @@
 #include "dotlib/PinInfo.h"
 #include "dotlib/AstValue.h"
 #include "dotlib/AstExpr.h"
-#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -171,13 +170,8 @@ PinInfo::set_direction()
   const char* keyword{"direction"};
   if ( !get_direction(keyword, mDirection) ) {
     // direction 属性がない．
-    auto label = "No 'direction' attributes";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    auto label = "'direction' is missing.";
+    parse_error(label);
   }
 }
 
@@ -188,13 +182,8 @@ PinInfo::set_input_params()
   auto ret1 = get_capacitance("capacitance", mCapacitance);
   if ( !ret1 ) {
     // capacitance が定義されていない．
-    auto label = "No 'capacitance' attributes";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    auto label = "'capacitance' is missing.";
+    parse_error(label);
   }
 
   auto ret2 = get_capacitance("rise_capacitance", mRiseCapacitance);
@@ -202,23 +191,11 @@ PinInfo::set_input_params()
 
   if ( ret2 && !ret3 ) {
     // fall_capacitance だけが定義されていない．
-    auto label = "No 'fall_capacitance' attributes";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    auto label = "'fall_capacitance' is missing.";
   }
   if ( !ret2 && ret3 ) {
     // rise_capacitance だけが定義されていない．
-    auto label = "No 'rise_capacitance' attributes";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    auto label = "'rise_capacitance' is missing.";
   }
   if ( !ret2 && !ret3 ) {
     // 両方定義されていない場合には capacitance の値を用いる．

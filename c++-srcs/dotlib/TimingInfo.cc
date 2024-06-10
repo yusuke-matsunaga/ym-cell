@@ -11,7 +11,6 @@
 #include "dotlib/AstExpr.h"
 #include "ci/CiCell.h"
 #include "ym/TvFunc.h"
-#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -39,19 +38,19 @@ TimingInfo::set(
   }
 
   // 共通なパラメータの取得
-  set_timing_common_params();
+  set_common_params();
 
   switch ( mDelayModel ) {
   case ClibDelayModel::generic_cmos:
-    set_timing_generic_params();
-    break;
-
-  case ClibDelayModel::table_lookup:
-    mLutType = set_timing_table_lookup_params();
+    set_generic_params();
     break;
 
   case ClibDelayModel::piecewise_cmos:
-    set_timing_piecewise_params();
+    set_piecewise_params();
+    break;
+
+  case ClibDelayModel::table_lookup:
+    mLutType = set_table_lookup_params();
     break;
 
   case ClibDelayModel::cmos2:
@@ -96,6 +95,20 @@ TimingInfo::add_timing(
 				      mRiseResistance, mFallResistance);
     break;
 
+  case ClibDelayModel::piecewise_cmos:
+    {
+      auto& rp_res = mRisePinResistance;
+      auto& fp_res = mFallPinResistance;
+      auto& rd_int = mRiseDelayIntercept;
+      auto& fd_int = mFallDelayIntercept;
+      timing = cell->add_timing_piecewise(mTimingType, when,
+					  mIntrinsicRise, mIntrinsicFall,
+					  mSlopeRise, mSlopeFall,
+					  rp_res, fp_res,
+					  rd_int, fd_int);
+    }
+    break;
+
   case ClibDelayModel::table_lookup:
     switch ( mLutType ) {
     case 1:
@@ -128,10 +141,6 @@ TimingInfo::add_timing(
       ASSERT_NOT_REACHED;
       break;
     }
-    break;
-
-  case ClibDelayModel::piecewise_cmos:
-#warning "TODO: piecewise モデル"
     break;
 
   case ClibDelayModel::cmos2:
@@ -248,7 +257,7 @@ TimingInfo::add_timing(
 
 // @brief タイミング情報の共通なパラメータを得る．
 void
-TimingInfo::set_timing_common_params()
+TimingInfo::set_common_params()
 {
   if ( !get_timing_type("timing_type", mTimingType) ) {
     // 省略時は combinational を指定する．要確認
@@ -265,13 +274,8 @@ TimingInfo::set_timing_common_params()
 
   const char* keyword{"related_pin"};
   if ( elem_dict().count(keyword) == 0 ) {
-    auto label = "No 'related_pin' attributes";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    auto label = "'related_pin' is missing.";
+    parse_error(label);
   }
   auto& vec = elem_dict().at(keyword);
   mRelatedPin.clear();
@@ -282,95 +286,118 @@ TimingInfo::set_timing_common_params()
   }
 }
 
-// @brief generic タイプのタイミング情報のパラメータを得る．
+// @brief generic_cmos/piecewise_cmos に共通なパラメータを得る．
 void
-TimingInfo::set_timing_generic_params()
+TimingInfo::set_gp_common_params()
 {
   if ( !get_time("intrinsic_rise", mIntrinsicRise) ) {
-    auto label = "No 'intrinsic_rise' attributes";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    auto label = "'intrinsic_rise' is missing.";
+    parse_error(label);
   }
   if ( !get_time("intrinsic_fall", mIntrinsicFall) ) {
-    auto label = "No 'intrinsic_fall' attributes";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    auto label = "'intrinsic_fall' is missing.";
+    parse_error(label);
   }
   if ( !get_time("slope_rise", mSlopeRise) ) {
-    auto label = "No 'slope_rise' attributes";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    auto label = "'slope_rise' is missing.";
+    parse_error(label);
   }
   if ( !get_time("slope_fall", mSlopeFall) ) {
-    auto label = "No 'slope_fall' attributes";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
-  }
-  if ( !get_resistance("rise_resistance", mRiseResistance) ) {
-    auto label = "No 'rise_resistance' attributes";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
-  }
-  if ( !get_resistance("fall_resistance", mFallResistance) ) {
-    auto label = "No 'fall_resistance' attributes";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    auto label = "'slope_fall' is missing.";
+    parse_error(label);
   }
 }
 
+// @brief generic タイプのタイミング情報のパラメータを得る．
+void
+TimingInfo::set_generic_params()
+{
+  set_gp_common_params();
+  if ( !get_resistance("rise_resistance", mRiseResistance) ) {
+    auto label = "'rise_resistance' is missing.";
+    parse_error(label);
+  }
+  if ( !get_resistance("fall_resistance", mFallResistance) ) {
+    auto label = "'fall_resistance' is missing.";
+    parse_error(label);
+  }
+}
+
+BEGIN_NONAMESPACE
+
+template<class T>
+void
+set_param_list(
+  const vector<pair<SizeType, double>>& src_list,
+  SizeType piece_num,
+  vector<T>& dst_list
+)
+{
+  SizeType nelem = src_list.size();
+  dst_list.clear();
+  dst_list.resize(piece_num);
+  SizeType src_i = 0;
+  for ( SizeType index = 0; index < piece_num; ++ index ) {
+    if ( src_i < nelem - 1 && src_list[src_i + 1].first <= index ) {
+      ++ src_i;
+    }
+    dst_list[index] = T{src_list[src_i].second};
+  }
+}
+
+END_NONAMESPACE
+
 // @brief piecewise_cmos タイプのタイミング情報のパラメータを得る．
 void
-TimingInfo::set_timing_piecewise_params()
+TimingInfo::set_piecewise_params()
 {
-  const char* keyword{"rise_pin_resistance"};
+  set_gp_common_params();
+
+  SizeType piece_num = library()->piece_define().size();
+  set_param_list(extract_piecewise_params("rise_pin_resistance"),
+		 piece_num, mRisePinResistance);
+  set_param_list(extract_piecewise_params("fall_pin_resistance"),
+		 piece_num, mFallPinResistance);
+  set_param_list(extract_piecewise_params("rise_delay_intercept"),
+		 piece_num, mRiseDelayIntercept);
+  set_param_list(extract_piecewise_params("fall_delay_intercept"),
+		 piece_num, mFallDelayIntercept);
+}
+
+// @brief piecewise_cmos タイプのパラメータ の値を取り出す．
+vector<pair<SizeType, double>>
+TimingInfo::extract_piecewise_params(
+  const char* keyword
+)
+{
+  vector<pair<SizeType, double>> tmp_list;
   if ( elem_dict().count(keyword) > 0 ) {
-    auto& vec = elem_dict().at(keyword);
-    mRisePinResistance.clear();
-    mRisePinResistance.reserve(vec.size());
-    for ( auto& val: vec ) {
+    auto& elem_list = elem_dict().at(keyword);
+    tmp_list.reserve(elem_list.size());
+    for ( auto elem: elem_list ) {
+      auto pid = static_cast<SizeType>(elem->complex_elem_value(0).int_value());
+      auto val = elem->complex_elem_value(1).float_value();
+      tmp_list.push_back(make_pair(pid, val));
     }
+    sort(tmp_list.begin(), tmp_list.end(),
+	 [&](const pair<SizeType, double>& a,
+	     const pair<SizeType, double>& b) {
+	   return a.first < b.first;
+	 });
   }
+  return tmp_list;
 }
 
 // @brief table-lookup タイプのタイミング情報のパラメータを得る．
 int
-TimingInfo::set_timing_table_lookup_params()
+TimingInfo::set_table_lookup_params()
 {
   auto rt_val = get_value("rise_transition");
   auto ft_val = get_value("fall_transition");
   if ( rt_val == nullptr && ft_val == nullptr ) {
     // rise|fall_transition のどちらかは必須
     auto label = ": Neigther 'rise_transition' nor 'fall_transition' is not defined.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    parse_error(label);
   }
 
   if ( rt_val ) {
@@ -391,12 +418,7 @@ TimingInfo::set_timing_table_lookup_params()
     if ( rp_val ) {
       // cell_rise と rise_propagation は同時に指定できない．
       auto label = "'cell_rise' and 'rise_propagation' are mutually exclusive.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      loc(),
-		      MsgType::Error,
-		      "DOTLIB_PARSER",
-		      label);
-      throw std::invalid_argument{label};
+      parse_error(label);
     }
     mCellRise.set(cr_val);
     type = 1;
@@ -410,21 +432,11 @@ TimingInfo::set_timing_table_lookup_params()
     if ( fp_val ) {
       // cell_fall と fall_propagation は同時に指定できない．
       auto label = "'cell_fall' and 'fall_propagation' are mutually exclusive.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      loc(),
-		      MsgType::Error,
-		      "DOTLIB_PARSER",
-		      label);
-      throw std::invalid_argument{label};
+      parse_error(label);
     }
     if ( type == 2 ) {
       auto label = "'cell_fall' and 'rise_propagation' are mutually exclusive.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      loc(),
-		      MsgType::Error,
-		      "DOTLIB_PARSER",
-		      label);
-      throw std::invalid_argument{label};
+      parse_error(label);
     }
     mCellFall.set(cf_val);
     type = 1;
@@ -432,12 +444,7 @@ TimingInfo::set_timing_table_lookup_params()
   else if ( fp_val ) {
     if ( type == 1 ) {
       auto label = "'cell_rise' and 'fall_propagation' are mutually exclusive.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      loc(),
-		      MsgType::Error,
-		      "DOTLIB_PARSER",
-		      label);
-      throw std::invalid_argument{label};
+      parse_error(label);
     }
     mFallPropagation.set(fp_val);
     type = 2;

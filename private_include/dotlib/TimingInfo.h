@@ -10,6 +10,7 @@
 
 #include "dotlib/ElemInfo.h"
 #include "dotlib/TableInfo.h"
+#include "dotlib/AstValue.h"
 #include "ym/clib.h"
 
 
@@ -70,19 +71,29 @@ private:
 
   /// @brief タイミング情報の共通なパラメータを得る．
   void
-  set_timing_common_params();
+  set_common_params();
+
+  /// @brief generic_cmos/piecewise_cmos に共通なパラメータを得る．
+  void
+  set_gp_common_params();
 
   /// @brief generic_cmos タイプのタイミング情報のパラメータを得る．
   void
-  set_timing_generic_params();
+  set_generic_params();
 
   /// @brief piecewise_cmos タイプのタイミング情報のパラメータを得る．
   void
-  set_timing_piecewise_params();
+  set_piecewise_params();
 
   /// @brief table-lookup タイプのタイミング情報のパラメータを得る．
   int
-  set_timing_table_lookup_params();
+  set_table_lookup_params();
+
+  /// @brief piecewise_cmos タイプのパラメータ の値を取り出す．
+  vector<pair<SizeType, double>>
+  extract_piecewise_params(
+    const char* keyword
+  );
 
 
 private:
@@ -111,10 +122,10 @@ private:
   ClibResistance mFallResistance;
 
   // piecewise cmos モデルのパラメータ
-  vector<pair<SizeType, ClibResistance>> mRisePinResistance;
-  vector<pair<SizeType, ClibResistance>> mFallPinResistance;
-  vector<pair<SizeType, ClibTime>> mRiseDelayIntercept;
-  vector<pair<SizeType, ClibTime>> mFallDelayIntercept;
+  vector<ClibResistance> mRisePinResistance;
+  vector<ClibResistance> mFallPinResistance;
+  vector<ClibTime> mRiseDelayIntercept;
+  vector<ClibTime> mFallDelayIntercept;
 
   // table lookup モデルのパラメータ
   int mLutType;

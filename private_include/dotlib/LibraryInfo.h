@@ -70,12 +70,6 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 文字列型の属性をセットする．
-  void
-  set_str_attr(
-    const char* keyword ///< [in] キーワード
-  );
-
   /// @brief technology の属性をセットする．
   void
   set_technology();
@@ -83,6 +77,16 @@ private:
   /// @brief delay_model の属性をセットする．
   void
   set_delay_model();
+
+  /// @brief piece_define の属性をセットする．
+  void
+  set_piece_define();
+
+  /// @brief 文字列型の属性をセットする．
+  void
+  set_str_attr(
+    const char* keyword ///< [in] キーワード
+  );
 
   /// @brief capacitive_load_unit の属性をセットする．
   void

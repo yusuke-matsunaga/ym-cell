@@ -10,7 +10,6 @@
 #include "dotlib/LibraryInfo.h"
 #include "dotlib/AstValue.h"
 #include "ci/CiLut.h"
-#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -37,12 +36,7 @@ TableInfo::set(
     ostringstream buf;
     buf << name << ": No such lu_template";
     auto label = buf.str();
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    header.complex_elem_value(0).loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    parse_error(label);
   }
 
   get_complex_float_vector("index_1", mIndex1);

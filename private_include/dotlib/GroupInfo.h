@@ -85,21 +85,6 @@ protected:
     ShString& val        ///< [out] 値を格納する変数
   ) const;
 
-  /// @brief technology の値を取り出す．
-  /// @retval true 成功
-  /// @retval false 定義されていなかった
-  ///
-  /// 以下の場合にエラーとなる．
-  /// - 複数回定義されている．
-  /// - 対象が technology キーワードでなかった．
-  /// エラーの場合には invalid_argment 例外が送出される．
-  /// true 以外の場合には val の値は変更されない．
-  bool
-  get_technology(
-    const char* keyword, ///< [in] キーワード
-    ClibTechnology& val  ///< [out] 値を格納する変数
-  ) const;
-
   /// @brief area の値を取り出す．
   /// @retval true 成功
   /// @retval false 定義されていなかった
@@ -235,21 +220,6 @@ protected:
     ClibTimingSense& val  ///< [out] 値を格納する変数
   ) const;
 
-  /// @brief delay_model の値を取り出す．
-  /// @retval true 成功
-  /// @retval false 定義されていなかった
-  ///
-  /// 以下の場合にエラーとなる．
-  /// - 2回以上指定されている．
-  /// - 値が ClibDelayModel 以外
-  /// エラーの場合には invalid_argment 例外が送出される．
-  /// true 以外の場合には val の値は変更されない．
-  bool
-  get_delay_model(
-    const char* keyword,  ///< [in] キーワード
-    ClibDelayModel& val   ///< [out] 値を格納する変数
-  ) const;
-
   /// @brief float_vector の値を取り出す．
   /// @retval true 成功
   /// @retval false 定義されていなかった
@@ -293,6 +263,12 @@ protected:
   get_complex_float_vector(
     const char* keyword,  ///< [in] キーワード
     vector<double>& val	  ///< [out] 値を格納する変数
+  ) const;
+
+  /// @brief エラー処理を行う．
+  void
+  parse_error(
+    const string& err_msg ///< [in] エラーメッセージ
   ) const;
 
 

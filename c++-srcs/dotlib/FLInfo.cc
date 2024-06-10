@@ -8,7 +8,6 @@
 
 #include "dotlib/FLInfo.h"
 #include "dotlib/AstValue.h"
-#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -45,25 +44,15 @@ FLInfo::set_common(
   if ( ret1 ) {
     if ( !ret2 ) {
       // clear_preset_var1 が定義されているのに clear_preset_var2 が定義されていない．
-      auto label = "No 'clear_preset_var2' attributes";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      loc(),
-		      MsgType::Error,
-		      "DOTLIB_PARSER",
-		      label);
-      throw std::invalid_argument{label};
+      auto label = "'clear_preset_var2' is missing.";
+      parse_error(label);
     }
   }
   else {
     if ( ret2 ) {
       // clear_preset_var2 が定義されているのに clear_preset_var1 が定義されていない．
-      auto label = "No 'clear_preset_var1' attributes";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      loc(),
-		      MsgType::Error,
-		      "DOTLIB_PARSER",
-		      label);
-      throw std::invalid_argument{label};
+      auto label = "'clear_preset_var1' is missing.";
+      parse_error(label);
     }
     else {
       // どちらも定義されていないので X を与える．

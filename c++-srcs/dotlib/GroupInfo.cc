@@ -40,12 +40,7 @@ GroupInfo::get_value(
     buf << keyword << " apears more than once."
 	<< " previous occurance is " << vec[0]->loc();
     auto label = buf.str();
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    vec[1]->loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    parse_error(label);
   }
 
   return vec[0];
@@ -61,21 +56,6 @@ GroupInfo::get_string(
   auto _val = get_value(keyword);
   if ( _val != nullptr ) {
     val = _val->string_value();
-    return true;
-  }
-  return false;
-}
-
-// @brief technology の値を取り出す．
-bool
-GroupInfo::get_technology(
-  const char* keyword,
-  ClibTechnology& val
-) const
-{
-  auto _val = get_value(keyword);
-  if ( _val != nullptr ) {
-    val = ClibTechnology{_val->technology_value()};
     return true;
   }
   return false;
@@ -170,12 +150,7 @@ GroupInfo::get_cpv(
       ostringstream buf;
       buf << tmp_str << ": Illegal string. Only 'H', 'L', 'N', 'T', or 'X' are allowed";
       auto label = buf.str();
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      _val->loc(),
-		      MsgType::Error,
-		      "DOTLIB_PARSER",
-		      label);
-      throw std::invalid_argument{label};
+      parse_error(label);
     }
     return true;
   }
@@ -257,21 +232,6 @@ GroupInfo::get_timing_sense(
   return false;
 }
 
-// @brief delay_model の値を取り出す．
-bool
-GroupInfo::get_delay_model(
-  const char* keyword,
-  ClibDelayModel& val
-) const
-{
-  auto _val = get_value(keyword);
-  if ( _val != nullptr ) {
-    val = _val->delay_model_value();
-    return true;
-  }
-  return false;
-}
-
 // @brief float_vector の値を取り出す．
 bool
 GroupInfo::get_float_vector(
@@ -326,6 +286,20 @@ GroupInfo::set(
       mElemDict.at(kwd).push_back(val);
     }
   }
+}
+
+// @brief エラー処理を行う．
+void
+GroupInfo::parse_error(
+  const string& err_msg
+) const
+{
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  loc(),
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  err_msg);
+  throw std::invalid_argument{err_msg};
 }
 
 END_NAMESPACE_YM_DOTLIB

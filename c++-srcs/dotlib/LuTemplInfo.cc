@@ -37,37 +37,47 @@ LuTemplInfo::set(
   get_complex_float_vector("index_2", mIndex2);
   get_complex_float_vector("index_3", mIndex3);
 
-  if ( mVar1 == ClibVarType::none || mIndex1.size() == 0 ) {
-    // variable_1 か index_1 が未定義
-#warning "TODO: エラーメッセージ"
+  if ( mVar1 == ClibVarType::none ) {
+    // variable_1 が未定義
+    auto label = "variable_1 is missing.";
+    parse_error(label);
+  }
+  if ( mIndex1.size() == 0 ) {
+    // index_1 が未定義
+    auto label = "index_1 is missing.";
+    parse_error(label);
   }
 
   mDimension = 1;
   if ( mVar2 == ClibVarType::none ) {
     if ( mIndex2.size() > 0 ) {
       // variable_2 が定義されていないのに index_2 が定義されている．
-#warning "TODO: エラーメッセージ"
+      auto label = "variable_2 is missing.";
+      parse_error(label);
     }
     return;
   }
 
   if ( mIndex2.size() == 0 ) {
     // variable_2 が定義されているのに index_2 が未定義
-#warning "TODO: エラーメッセージ"
+    auto label = "index_2 is missing.";
+    parse_error(label);
   }
 
   mDimension = 2;
   if ( mVar3 == ClibVarType::none ) {
     if ( mIndex3.size() > 0 ) {
       // variable_3 が定義されていないのに index_3 が定義されている．
-#warning "TODO: エラーメッセージ"
+      auto label = "variable_3 is missing.";
+      parse_error(label);
     }
     return;
   }
 
   if ( mIndex3.size() == 0 ) {
     // variable_3 が定義されているのに index_3 が未定義
-#warning "TODO: エラーメッセージ"
+    auto label = "index_3 is missing.";
+    parse_error(label);
   }
 
   mDimension = 3;

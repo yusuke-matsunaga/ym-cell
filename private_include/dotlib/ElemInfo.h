@@ -10,8 +10,6 @@
 
 #include "dotlib/GroupInfo.h"
 #include "ci/CiCellLibrary.h"
-//#include "ym/ShString.h"
-//#include "ym/clib.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB

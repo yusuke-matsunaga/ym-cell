@@ -45,6 +45,9 @@ LibraryInfo::set(
   // 'delay_model' の設定
   set_delay_model();
 
+  // 'piece_define' の設定
+  set_piece_define();
+
   // 'bus_naming_style' の設定
   set_str_attr("bus_naming_style");
 
@@ -114,26 +117,14 @@ LibraryInfo::set(
   mLibrary->wrap_up();
 }
 
-// 文字列型の属性をセットする．
-void
-LibraryInfo::set_str_attr(
-  const char* keyword
-)
-{
-  ShString tmp_str;
-  if ( get_string(keyword, tmp_str) ) {
-    mLibrary->set_attr(keyword, tmp_str);
-  }
-}
-
 // @brief technology の属性をセットする．
 void
 LibraryInfo::set_technology()
 {
   const char* keyword{"technology"};
-  ClibTechnology technology;
-  auto ret = get_technology(keyword, technology);
-  if ( ret ) {
+  auto val = get_value(keyword);
+  if ( val != nullptr ) {
+    auto technology = val->technology_value();
     mLibrary->set_technology(technology);
   }
   else {
@@ -147,10 +138,33 @@ void
 LibraryInfo::set_delay_model()
 {
   const char* keyword{"delay_model"};
-  ClibDelayModel delay_model;
-  auto ret = get_delay_model(keyword, delay_model);
-  if ( ret ) {
+  auto val = get_value(keyword);
+  if ( val != nullptr ) {
+    auto delay_model = val->delay_model_value();
     mLibrary->set_delay_model(delay_model);
+  }
+}
+
+// @brief piece_define の属性をセットする．
+void
+LibraryInfo::set_piece_define()
+{
+  const char* keyword{"piece_define"};
+  ShString tmp_str;
+  if ( get_string(keyword, tmp_str) ) {
+    //...
+  }
+}
+
+// 文字列型の属性をセットする．
+void
+LibraryInfo::set_str_attr(
+  const char* keyword
+)
+{
+  ShString tmp_str;
+  if ( get_string(keyword, tmp_str) ) {
+    mLibrary->set_attr(keyword, tmp_str);
   }
 }
 

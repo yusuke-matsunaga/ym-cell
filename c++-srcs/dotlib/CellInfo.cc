@@ -10,7 +10,6 @@
 #include "dotlib/AstExpr.h"
 #include "dotlib/AstValue.h"
 #include "ci/CiCellLibrary.h"
-#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -235,12 +234,7 @@ CellInfo::set_area()
   const char* keyword{"area"};
   if ( !get_area(keyword, mArea) ) {
     auto label = "'area' attribute is missing";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    parse_error(label);
   }
 }
 
@@ -291,12 +285,7 @@ CellInfo::set_pin()
   if ( elem_dict().count(keyword) == 0 ) {
     // pin 情報がないセルはないはず．
     auto label = "No 'pin' attributes";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    loc(),
-		    MsgType::Error,
-		    "DOTLIB_PARSER",
-		    label);
-    throw std::invalid_argument{label};
+    parse_error(label);
   }
 
   auto& vec = elem_dict().at(keyword);
