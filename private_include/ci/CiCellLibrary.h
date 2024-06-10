@@ -110,6 +110,13 @@ public:
     return mDelayModel;
   }
 
+  /// @brief 区間インデックスのタイプの取得
+  ClibPieceType
+  piece_type() const
+  {
+    return mPieceType;
+  }
+
   /// @brief 区間のリストの取得
   vector<double>
   piece_define() const
@@ -528,6 +535,17 @@ public:
     mDelayModel = delay_model;
   }
 
+  /// @brief 区間関係のパラメータを設定する．
+  void
+  set_piece_params(
+    ClibPieceType piece_type,        ///< [in] 区間のタイプ
+    const vector<double>& piece_list ///< [in] 区間のリスト
+  )
+  {
+    mPieceType = piece_type;
+    mPieceDefine = piece_list;
+  }
+
   /// @brief 'capacitive_load_unit' を設定する．
   void
   set_capacitive_load_unit(
@@ -865,6 +883,9 @@ private:
 
   // 遅延モデル
   ClibDelayModel mDelayModel{ClibDelayModel::generic_cmos};
+
+  // 区間のタイプ
+  ClibPieceType mPieceType;
 
   // 区間(の下限)のリスト
   vector<double> mPieceDefine;

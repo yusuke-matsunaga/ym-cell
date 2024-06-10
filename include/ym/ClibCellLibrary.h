@@ -130,6 +130,13 @@ public:
   ClibDelayModel
   delay_model() const;
 
+  /// @brief 区間のタイプの取得
+  ///
+  /// delay_model() = ClibDelayModel::piecewise_cmos
+  /// の時のみ意味を持つ．
+  ClibPieceType
+  piece_type() const;
+
   /// @brief 区間のリストの取得
   ///
   /// delay_model() = ClibDelayModel::piecewise_cmos

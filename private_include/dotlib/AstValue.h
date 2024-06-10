@@ -75,6 +75,14 @@ public:
     const FileRegion& loc ///< [in] 値の位置
   );
 
+  /// @brief piece_type 値を作る．
+  static
+  AstValuePtr
+  new_piece_type(
+    ClibPieceType value,  ///< [in] 値
+    const FileRegion& loc ///< [in] 値の位置
+  );
+
   /// @brief direction 値を作る．
   static
   AstValuePtr
@@ -217,6 +225,13 @@ public:
   virtual
   ClibDelayModel
   delay_model_value() const;
+
+  /// @brief piece_type 型の値を返す．
+  ///
+  /// piece_type 型でない場合の値は不定
+  virtual
+  ClibPieceType
+  piece_type_value() const;
 
   /// @brief direction 型の値を返す．
   ///

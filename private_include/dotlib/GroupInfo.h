@@ -271,6 +271,12 @@ protected:
     const string& err_msg ///< [in] エラーメッセージ
   ) const;
 
+  /// @brief 警告処理を行う．
+  void
+  warning(
+    const string& warn_msg ///< [in] 警告メッセージ
+  ) const;
+
 
 private:
   //////////////////////////////////////////////////////////////////////

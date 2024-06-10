@@ -75,6 +75,17 @@ ClibCellLibrary::delay_model() const
   return ClibDelayModel::generic_cmos;
 }
 
+// @brief 区間のタイプの取得
+ClibPieceType
+ClibCellLibrary::piece_type() const
+{
+  if ( mImpl ) {
+    return mImpl->piece_type();
+  }
+  // デフォルト値
+  return ClibPieceType::none;
+}
+
 // @brief 区間のリストの取得
 vector<double>
 ClibCellLibrary::piece_define() const

@@ -12,6 +12,7 @@
 #include "dotlib/AstValue.h"
 #include "dotlib/LuTemplInfo.h"
 #include "dotlib/CellInfo.h"
+#include "ym/split.h"
 #include "ym/MsgMgr.h"
 
 
@@ -45,8 +46,8 @@ LibraryInfo::set(
   // 'delay_model' の設定
   set_delay_model();
 
-  // 'piece_define' の設定
-  set_piece_define();
+  // 'piece_type' と 'piece_define' の設定
+  set_piece_params();
 
   // 'bus_naming_style' の設定
   set_str_attr("bus_naming_style");
@@ -145,14 +146,40 @@ LibraryInfo::set_delay_model()
   }
 }
 
-// @brief piece_define の属性をセットする．
+// @brief piece_type と piece_define の設定
 void
-LibraryInfo::set_piece_define()
+LibraryInfo::set_piece_params()
 {
-  const char* keyword{"piece_define"};
-  ShString tmp_str;
-  if ( get_string(keyword, tmp_str) ) {
-    //...
+  const char* keyword1{"piece_type"};
+  const char* keyword2{"piece_define"};
+  if ( mLibrary->delay_model() == ClibDelayModel::piecewise_cmos ) {
+    ClibPieceType piece_type{ClibPieceType::length}; // デフォルト値
+    auto val = get_value(keyword1);
+    if ( val != nullptr ) {
+      piece_type = val->piece_type_value();
+    }
+    ShString tmp_str;
+    if ( !get_string(keyword2, tmp_str) ) {
+      auto label = "'piece_define' is missing.";
+      parse_error(label);
+    }
+    auto str_list = split(tmp_str);
+    vector<double> piece_list;
+    piece_list.reserve(str_list.size());
+    for ( auto str: str_list ) {
+      piece_list.push_back(std::stod(str));
+    }
+    mLibrary->set_piece_params(piece_type, piece_list);
+  }
+  else {
+    if ( get_value(keyword1) ) {
+      auto label = "'piece_type' has no effects on this delay model, ignored";
+      warning(label);
+    }
+    if ( get_value(keyword2) ) {
+      auto label = "'piece_define' has no effects on this delay model, ignored";
+      warning(label);
+    }
   }
 }
 

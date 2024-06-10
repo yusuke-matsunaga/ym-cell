@@ -78,9 +78,9 @@ private:
   void
   set_delay_model();
 
-  /// @brief piece_define の属性をセットする．
+  /// @brief pice_type, piece_define の属性をセットする．
   void
-  set_piece_define();
+  set_piece_params();
 
   /// @brief 文字列型の属性をセットする．
   void

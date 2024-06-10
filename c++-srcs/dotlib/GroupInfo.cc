@@ -302,4 +302,17 @@ GroupInfo::parse_error(
   throw std::invalid_argument{err_msg};
 }
 
+// @brief 警告処理を行う．
+void
+GroupInfo::warning(
+  const string& warn_msg
+) const
+{
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  loc(),
+		  MsgType::Warning,
+		  "DOTLIB_PARSER",
+		  warn_msg);
+}
+
 END_NAMESPACE_YM_DOTLIB

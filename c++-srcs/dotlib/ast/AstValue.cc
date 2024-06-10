@@ -84,6 +84,16 @@ AstValue::new_delay_model(
   return AstValuePtr{new AstDelayModel(value, loc)};
 }
 
+// @brief piece_type 値を作る．
+AstValuePtr
+AstValue::new_piece_type(
+  ClibPieceType value,
+  const FileRegion& loc
+)
+{
+  return AstValuePtr{new AstPieceType(value, loc)};
+}
+
 // @brief direction 値を作る．
 AstValuePtr
 AstValue::new_direction(
@@ -273,6 +283,21 @@ ClibDelayModel
 AstValue::delay_model_value() const
 {
   auto label = "'delay model' is expected";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  mLoc,
+		  MsgType::Error,
+		  "DOTLIB_PARSER",
+		  label);
+  throw std::invalid_argument{label};
+}
+
+// @brief piece_type 型の値を返す．
+//
+// piece_type 型でない場合の値は不定
+ClibPieceType
+AstValue::piece_type_value() const
+{
+  auto label = "'piece type' is expected";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  mLoc,
 		  MsgType::Error,
@@ -669,6 +694,43 @@ AstDelayModel::decompile() const
   case ClibDelayModel::piecewise_cmos: tmp = "piecewise_cmos"; break;
   case ClibDelayModel::cmos2:         tmp = "cmos2"; break;
   case ClibDelayModel::dcm:           tmp = "dcm"; break;
+  default: break;
+  }
+  return tmp;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス AstPieceType
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+AstPieceType::AstPieceType(
+  ClibPieceType value,
+  const FileRegion& val_loc
+) : AstSimple(val_loc),
+    mValue{value}
+{
+}
+
+// @brief PieceType を返す．
+ClibPieceType
+AstPieceType::piece_type_value() const
+{
+  return mValue;
+}
+
+// @brief 値を表す文字列を返す．
+string
+AstPieceType::decompile() const
+{
+  const char* tmp = "---";
+  switch ( piece_type_value() ) {
+  case ClibPieceType::length:    tmp = "piece_length"; break;
+  case ClibPieceType::wire_cap:  tmp = "piece_wire_cap"; break;
+  case ClibPieceType::pin_cap:   tmp = "piece_pin_cap"; break;
+  case ClibPieceType::total_cap: tmp = "piece_total_cap"; break;
+  case ClibPieceType::none:      tmp = "none"; break;
   default: break;
   }
   return tmp;

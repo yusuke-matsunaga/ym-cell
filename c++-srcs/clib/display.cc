@@ -49,6 +49,23 @@ operator<<(
 ostream&
 operator<<(
   ostream& s,
+  ClibPieceType piece_type
+)
+{
+  switch ( piece_type ) {
+  case ClibPieceType::length:    s << "piece_length"; break;
+  case ClibPieceType::wire_cap:  s << "piece_wire_cap"; break;
+  case ClibPieceType::pin_cap:   s << "piece_pin_cap"; break;
+  case ClibPieceType::total_cap: s << "pice_total_cap"; break;
+  case ClibPieceType::none:      s << "none"; break;
+  }
+  return s;
+}
+
+// @brief ストリーム出力演算子
+ostream&
+operator<<(
+  ostream& s,
   ClibTimingSense timing_sense
 )
 {
