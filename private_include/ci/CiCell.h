@@ -122,7 +122,7 @@ public:
 
   /// @brief 親のライブラリを返す．
   const CiCellLibrary*
-  parent() const;
+  library() const;
 
   /// @brief 親のグループの取得
   const CiCellGroup*

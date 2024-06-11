@@ -8,6 +8,7 @@
 
 #include "ci/CiCellGroup.h"
 #include "ci/CiCell.h"
+#include "ci/CiCellClass.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
 
@@ -17,6 +18,13 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 // クラス CiCellGroup
 //////////////////////////////////////////////////////////////////////
+
+// @brief 親のライブラリを返す．
+const CiCellLibrary*
+CiCellGroup::library() const
+{
+  return mRepClass->library();
+}
 
 // @brief 内容をシリアライズする．
 void

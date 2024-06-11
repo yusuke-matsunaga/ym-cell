@@ -34,7 +34,7 @@ public:
   CiCellClass(
     CiCellLibrary* lib,                 ///< [in] 親のセルライブラリ
     const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換リスト
-  ): mParent{lib},
+  ): mLibrary{lib},
      mIdMapList{idmap_list}
   {
   }
@@ -50,9 +50,9 @@ public:
 
   /// @brief 親のライブラリオブジェクトを返す．
   const CiCellLibrary*
-  parent() const
+  library() const
   {
-    return mParent;
+    return mLibrary;
   }
 
   /// @brief 同位体変換の個数を得る．
@@ -143,11 +143,11 @@ public:
 
   /// @brief 親のライブラリオブジェクトを設定する．
   void
-  set_parent(
-    CiCellLibrary* parent
+  set_library(
+    CiCellLibrary* lib
   )
   {
-    mParent = parent;
+    mLibrary = lib;
   }
 
   /// @brief このクラスに属しているセルグループを追加する．
@@ -178,7 +178,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 親のライブラリオブジェクト
-  CiCellLibrary* mParent;
+  CiCellLibrary* mLibrary;
 
   // 同位体変換のリスト
   vector<ClibIOMap> mIdMapList;

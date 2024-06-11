@@ -14,6 +14,11 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+TEST(ClibCellLibraryTest, empty)
+{
+  ClibCellLibrary library;
+}
+
 TEST(ClibCellLibraryTest, read_mislib)
 {
   try {

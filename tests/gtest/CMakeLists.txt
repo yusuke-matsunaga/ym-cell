@@ -56,6 +56,19 @@ ym_add_gtest ( cell_ClibTime_test
 
 
 # ===================================================================
+#  ClibCell_test
+# ===================================================================
+ym_add_gtest ( cell_ClibCell_test
+  cell_library/ClibCellTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  DEFINITIONS
+  "-DDATA_DIR=\"${TESTDATA_DIR}\""
+  )
+
+
+# ===================================================================
 #  ClibCellLibrary_test
 # ===================================================================
 ym_add_gtest ( cell_ClibCellLibrary_test

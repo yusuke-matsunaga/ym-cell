@@ -52,7 +52,7 @@ ClibCellPtr::~ClibCellPtr()
 ClibCellLibrary
 ClibCell::library() const
 {
-  return ClibCellLibrary{_impl()->parent()};
+  return ClibCellLibrary{_impl()->library()};
 }
 
 // @brief 親のセルグループの取得

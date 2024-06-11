@@ -32,23 +32,23 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief 親のライブラリを返す．
 const CiCellLibrary*
-CiCell::parent() const
+CiCell::library() const
 {
-  return group()->rep_class()->parent();
+  return mGroup->library();
 }
 
 // @brief 参照回数を増やす．
 void
 CiCell::inc_ref() const
 {
-  parent()->inc_ref();
+  library()->inc_ref();
 }
 
 // @brief 参照回数を減らす．
 void
 CiCell::dec_ref() const
 {
-  parent()->dec_ref();
+  library()->dec_ref();
 }
 
 // @brief セルの種類を返す．
@@ -176,7 +176,11 @@ CiCell::find_pin(
   const ShString& name
 ) const
 {
-  return parent()->find_pin(this, name);
+  auto lib = library();
+  if ( lib != nullptr ) {
+    return lib->find_pin(this, name);
+  }
+  return nullptr;
 }
 
 // @brief 名前からバスの取得
@@ -185,7 +189,11 @@ CiCell::find_bus(
   const ShString& name
 ) const
 {
-  return parent()->find_bus(this, name);
+  auto lib = library();
+  if ( lib != nullptr ) {
+    return lib->find_bus(this, name);
+  }
+  return nullptr;
 }
 
 // @brief 名前からバスの取得
@@ -194,7 +202,11 @@ CiCell::find_bundle(
   const ShString& name
 ) const
 {
-  return parent()->find_bundle(this, name);
+  auto lib = library();
+  if ( lib != nullptr ) {
+    return lib->find_bundle(this, name);
+  }
+  return nullptr;
 }
 
 // @brief 入力ピンを追加する．

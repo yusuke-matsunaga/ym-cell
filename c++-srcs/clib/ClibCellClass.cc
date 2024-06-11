@@ -24,7 +24,7 @@ ClibCellClass::ClibCellClass(
 ) : mImpl{impl}
 {
   if ( mImpl != nullptr ) {
-    mImpl->parent()->inc_ref();
+    mImpl->library()->inc_ref();
   }
 }
 
@@ -32,7 +32,7 @@ ClibCellClass::ClibCellClass(
 ClibCellClass::~ClibCellClass()
 {
   if ( mImpl != nullptr ) {
-    mImpl->parent()->dec_ref();
+    mImpl->library()->dec_ref();
   }
 }
 

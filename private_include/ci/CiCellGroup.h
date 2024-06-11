@@ -15,6 +15,7 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class CiCellLibrary;
 class CiCellClass;
 class Serializer;
 class Deserializer;
@@ -47,6 +48,10 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 一般的な情報を取得する関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief 親のライブラリを返す．
+  const CiCellLibrary*
+  library() const;
 
   /// @brief 親のセルクラスを返す．
   const CiCellClass*

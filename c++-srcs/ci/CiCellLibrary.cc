@@ -370,7 +370,7 @@ CiCellLibrary::wrap_up()
 
   // クラスに親のライブラリを設定する．
   for ( auto& cclass: mCellClassList ) {
-    cclass->set_parent(this);
+    cclass->set_library(this);
   }
 }
 
