@@ -137,17 +137,30 @@ read_timing_type(
   return scanner.read_timing_type();
 }
 
-/// @brief vartype 型の値を読み込む．
+/// @brief variable type 型の値を読み込む．
 /// @return 生成した AstValue を返す．
 ///
 /// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 inline
 AstValuePtr
-read_vartype(
+read_variable_type(
   DotlibScanner& scanner ///< [in] 字句解析器
 )
 {
-  return scanner.read_vartype();
+  return scanner.read_variable_type();
+}
+
+/// @brief piece type 型の値を読み込む．
+/// @return 生成した AstValue を返す．
+///
+/// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+inline
+AstValuePtr
+read_piece_type(
+  DotlibScanner& scanner ///< [in] 字句解析器
+)
+{
+  return scanner.read_piece_type();
 }
 
 /// @brief int vector 型の値を読み込む．
@@ -358,19 +371,34 @@ simple_timing_type(
   return parser.parse_simple_attribute(kwd, kwd_loc, read_timing_type);
 }
 
-/// @brief 'var_type' Simple Attribute のパースを行う．
+/// @brief 'variable_type' Simple Attribute のパースを行う．
 /// @return パース結果を返す．
 ///
 /// エラーの時は nullptr を返す．
 inline
 AstAttrPtr
-simple_vartype(
+simple_variable_type(
   Parser& parser,           ///< [in] パーサー
   const string& kwd,        ///< [in] 属性名
   const FileRegion& kwd_loc ///< [in] 属性名の位置
 )
 {
-  return parser.parse_simple_attribute(kwd, kwd_loc, read_vartype);
+  return parser.parse_simple_attribute(kwd, kwd_loc, read_variable_type);
+}
+
+/// @brief 'piece_type' Simple Attribute のパースを行う．
+/// @return パース結果を返す．
+///
+/// エラーの時は nullptr を返す．
+inline
+AstAttrPtr
+simple_piece_type(
+  Parser& parser,           ///< [in] パーサー
+  const string& kwd,        ///< [in] 属性名
+  const FileRegion& kwd_loc ///< [in] 属性名の位置
+)
+{
+  return parser.parse_simple_attribute(kwd, kwd_loc, read_piece_type);
 }
 
 //////////////////////////////////////////////////////////////////////

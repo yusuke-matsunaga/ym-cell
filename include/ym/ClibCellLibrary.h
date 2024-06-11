@@ -132,9 +132,18 @@ public:
 
   /// @brief 区間のタイプの取得
   ///
+  /// 返り値は
+  /// - output_net_length ( piece_length )
+  /// - output_pin_cap ( pice_pin_cap )
+  /// - output_wire_cap ( piece_wire_cap )
+  /// - total_output_net_capacitance ( piece_total_cap )
+  /// - none
+  /// のいずれか．
+  /// それ以外の値は用いられない．
+  ///
   /// delay_model() = ClibDelayModel::piecewise_cmos
   /// の時のみ意味を持つ．
-  ClibPieceType
+  ClibVarType
   piece_type() const;
 
   /// @brief 区間のリストの取得

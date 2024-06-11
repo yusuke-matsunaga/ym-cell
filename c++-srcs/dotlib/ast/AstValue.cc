@@ -87,7 +87,7 @@ AstValue::new_delay_model(
 // @brief piece_type 値を作る．
 AstValuePtr
 AstValue::new_piece_type(
-  ClibPieceType value,
+  ClibVarType value,
   const FileRegion& loc
 )
 {
@@ -134,9 +134,9 @@ AstValue::new_timing_type(
   return AstValuePtr{new AstTimingType(value, loc)};
 }
 
-// @brief vartype 値を作る．
+// @brief variable type 値を作る．
 AstValuePtr
-AstValue::new_vartype(
+AstValue::new_variable_type(
   ClibVarType value,
   const FileRegion& loc
 )
@@ -294,7 +294,7 @@ AstValue::delay_model_value() const
 // @brief piece_type 型の値を返す．
 //
 // piece_type 型でない場合の値は不定
-ClibPieceType
+ClibVarType
 AstValue::piece_type_value() const
 {
   auto label = "'piece type' is expected";
@@ -370,7 +370,7 @@ AstValue::timing_type_value() const
 //
 // vartype 型でない場合の値は不定
 ClibVarType
-AstValue::vartype_value() const
+AstValue::variable_type_value() const
 {
   auto label = "'variable type' is expected";
   MsgMgr::put_msg(__FILE__, __LINE__,
@@ -706,7 +706,7 @@ AstDelayModel::decompile() const
 
 // @brief コンストラクタ
 AstPieceType::AstPieceType(
-  ClibPieceType value,
+  ClibVarType value,
   const FileRegion& val_loc
 ) : AstSimple(val_loc),
     mValue{value}
@@ -714,7 +714,7 @@ AstPieceType::AstPieceType(
 }
 
 // @brief PieceType を返す．
-ClibPieceType
+ClibVarType
 AstPieceType::piece_type_value() const
 {
   return mValue;
@@ -726,11 +726,11 @@ AstPieceType::decompile() const
 {
   const char* tmp = "---";
   switch ( piece_type_value() ) {
-  case ClibPieceType::length:    tmp = "piece_length"; break;
-  case ClibPieceType::wire_cap:  tmp = "piece_wire_cap"; break;
-  case ClibPieceType::pin_cap:   tmp = "piece_pin_cap"; break;
-  case ClibPieceType::total_cap: tmp = "piece_total_cap"; break;
-  case ClibPieceType::none:      tmp = "none"; break;
+  case ClibVarType::output_net_length:            tmp = "piece_length"; break;
+  case ClibVarType::output_net_wire_cap:          tmp = "piece_wire_cap"; break;
+  case ClibVarType::output_net_pin_cap:           tmp = "piece_pin_cap"; break;
+  case ClibVarType::total_output_net_capacitance: tmp = "piece_total_cap"; break;
+  case ClibVarType::none:                         tmp = "none"; break;
   default: break;
   }
   return tmp;
@@ -947,7 +947,7 @@ AstVarType::AstVarType(
 
 // @brief VarType を返す．
 ClibVarType
-AstVarType::vartype_value() const
+AstVarType::variable_type_value() const
 {
   return mValue;
 }
@@ -957,7 +957,7 @@ string
 AstVarType::decompile() const
 {
   const char* tmp = "---";
-  switch ( vartype_value() ) {
+  switch ( variable_type_value() ) {
   case ClibVarType::input_net_transition:                     tmp = "input_net_transition"; break;
   case ClibVarType::input_transition_time:                    tmp = "input_transition_time"; break;
   case ClibVarType::total_output_net_capacitance:             tmp = "total_output_net_capacitance"; break;

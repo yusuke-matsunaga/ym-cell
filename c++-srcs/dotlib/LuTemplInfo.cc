@@ -30,9 +30,9 @@ LuTemplInfo::set(
   ASSERT_COND( n == 1 );
   mName = header.complex_elem_value(0).string_value();
 
-  get_vartype("variable_1", mVar1);
-  get_vartype("variable_2", mVar2);
-  get_vartype("variable_3", mVar3);
+  get_variable_type("variable_1", mVar1);
+  get_variable_type("variable_2", mVar2);
+  get_variable_type("variable_3", mVar3);
   get_complex_float_vector("index_1", mIndex1);
   get_complex_float_vector("index_2", mIndex2);
   get_complex_float_vector("index_3", mIndex3);

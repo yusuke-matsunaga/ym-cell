@@ -111,7 +111,7 @@ public:
   }
 
   /// @brief 区間インデックスのタイプの取得
-  ClibPieceType
+  ClibVarType
   piece_type() const
   {
     return mPieceType;
@@ -538,7 +538,7 @@ public:
   /// @brief 区間関係のパラメータを設定する．
   void
   set_piece_params(
-    ClibPieceType piece_type,        ///< [in] 区間のタイプ
+    ClibVarType piece_type,          ///< [in] 区間のタイプ
     const vector<double>& piece_list ///< [in] 区間のリスト
   )
   {
@@ -885,7 +885,7 @@ private:
   ClibDelayModel mDelayModel{ClibDelayModel::generic_cmos};
 
   // 区間のタイプ
-  ClibPieceType mPieceType;
+  ClibVarType mPieceType;
 
   // 区間(の下限)のリスト
   vector<double> mPieceDefine;

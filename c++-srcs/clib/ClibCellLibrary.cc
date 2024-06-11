@@ -76,14 +76,14 @@ ClibCellLibrary::delay_model() const
 }
 
 // @brief 区間のタイプの取得
-ClibPieceType
+ClibVarType
 ClibCellLibrary::piece_type() const
 {
   if ( mImpl ) {
     return mImpl->piece_type();
   }
   // デフォルト値
-  return ClibPieceType::none;
+  return ClibVarType::none;
 }
 
 // @brief 区間のリストの取得

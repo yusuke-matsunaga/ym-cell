@@ -781,160 +781,218 @@ TEST_F(ScannerTest, read_timing_type32)
 	     msg_list[0]);
 }
 
-TEST_F(ScannerTest, read_vartype1)
+TEST_F(ScannerTest, read_variable_type1)
 {
   istringstream buf{"input_net_transition"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::input_net_transition, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::input_net_transition, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype2)
+TEST_F(ScannerTest, read_variable_type2)
 {
   istringstream buf{"total_output_net_capacitance"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::total_output_net_capacitance, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::total_output_net_capacitance, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype3)
+TEST_F(ScannerTest, read_variable_type3)
 {
   istringstream buf{"output_net_length"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::output_net_length, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::output_net_length, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype4)
+TEST_F(ScannerTest, read_variable_type4)
 {
   istringstream buf{"output_net_wire_cap"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::output_net_wire_cap, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::output_net_wire_cap, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype5)
+TEST_F(ScannerTest, read_variable_type5)
 {
   istringstream buf{"output_net_pin_cap"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::output_net_pin_cap, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::output_net_pin_cap, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype6)
+TEST_F(ScannerTest, read_variable_type6)
 {
   istringstream buf{"equal_or_opposite_output_net_capacitance"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::equal_or_opposite_output_net_capacitance, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::equal_or_opposite_output_net_capacitance, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype7)
+TEST_F(ScannerTest, read_variable_type7)
 {
   istringstream buf{"input_transition_time"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::input_transition_time, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::input_transition_time, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype8)
+TEST_F(ScannerTest, read_variable_type8)
 {
   istringstream buf{"related_out_total_output_net_capacitance"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::related_out_total_output_net_capacitance, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::related_out_total_output_net_capacitance, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype9)
+TEST_F(ScannerTest, read_variable_type9)
 {
   istringstream buf{"related_out_output_net_length"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::related_out_output_net_length, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::related_out_output_net_length, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype10)
+TEST_F(ScannerTest, read_variable_type10)
 {
   istringstream buf{"related_out_output_net_wire_cap"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::related_out_output_net_wire_cap, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::related_out_output_net_wire_cap, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype11)
+TEST_F(ScannerTest, read_variable_type11)
 {
   istringstream buf{"related_out_output_net_pin_cap"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::related_out_output_net_pin_cap, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::related_out_output_net_pin_cap, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype12)
+TEST_F(ScannerTest, read_variable_type12)
 {
   istringstream buf{"constrained_pin_transition"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::constrained_pin_transition, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::constrained_pin_transition, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype13)
+TEST_F(ScannerTest, read_variable_type13)
 {
   istringstream buf{"related_pin_transition"};
   DotlibScanner scanner{buf, info};
 
-  auto value1 = scanner.read_vartype();
+  auto value1 = scanner.read_variable_type();
 
   ASSERT_TRUE( value1 != nullptr );
-  EXPECT_EQ( ClibVarType::related_pin_transition, value1->vartype_value() );
+  EXPECT_EQ( ClibVarType::related_pin_transition, value1->variable_type_value() );
 }
 
-TEST_F(ScannerTest, read_vartype14)
+TEST_F(ScannerTest, read_variable_type14)
 {
   istringstream buf{"related_pn_transition"};
   DotlibScanner scanner{buf, info};
 
   EXPECT_THROW( {
-      auto value1 = scanner.read_vartype();
+      auto value1 = scanner.read_variable_type();
     }, std::invalid_argument );
   auto msg_list = mh.message_list();
   EXPECT_EQ( 1, msg_list.size() );
   EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 21: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: related_pn_transition: Illegal value for 'variable_type'.\n",
+	     msg_list[0]);
+}
+
+TEST_F(ScannerTest, read_piece_type1)
+{
+  istringstream buf{"piece_length"};
+  DotlibScanner scanner{buf, info};
+
+  auto value1 = scanner.read_piece_type();
+
+  ASSERT_TRUE( value1 != nullptr );
+  EXPECT_EQ( ClibVarType::output_net_length, value1->piece_type_value() );
+}
+
+TEST_F(ScannerTest, read_piece_type2)
+{
+  istringstream buf{"piece_net_pin_cap"};
+  DotlibScanner scanner{buf, info};
+
+  auto value1 = scanner.read_piece_type();
+
+  ASSERT_TRUE( value1 != nullptr );
+  EXPECT_EQ( ClibVarType::output_net_pin_cap, value1->piece_type_value() );
+}
+
+TEST_F(ScannerTest, read_piece_type3)
+{
+  istringstream buf{"piece_net_wire_cap"};
+  DotlibScanner scanner{buf, info};
+
+  auto value1 = scanner.read_piece_type();
+
+  ASSERT_TRUE( value1 != nullptr );
+  EXPECT_EQ( ClibVarType::output_net_wire_cap, value1->piece_type_value() );
+}
+
+TEST_F(ScannerTest, read_piece_type4)
+{
+  istringstream buf{"piece_total_net_cap"};
+  DotlibScanner scanner{buf, info};
+
+  auto value1 = scanner.read_piece_type();
+
+  ASSERT_TRUE( value1 != nullptr );
+  EXPECT_EQ( ClibVarType::total_output_net_capacitance, value1->piece_type_value() );
+}
+
+TEST_F(ScannerTest, read_piece_type5)
+{
+  istringstream buf{"abc"};
+  DotlibScanner scanner{buf, info};
+
+  EXPECT_THROW( {
+      auto value1 = scanner.read_piece_type();
+    }, std::invalid_argument );
+  auto msg_list = mh.message_list();
+  EXPECT_EQ( 1, msg_list.size() );
+  EXPECT_EQ( "scanner_test.lib: line 1, column 1 - 3: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abc: Illegal value for 'piece_type'.\n",
 	     msg_list[0]);
 }
 

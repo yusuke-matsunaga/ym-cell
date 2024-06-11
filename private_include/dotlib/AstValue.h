@@ -79,7 +79,7 @@ public:
   static
   AstValuePtr
   new_piece_type(
-    ClibPieceType value,  ///< [in] 値
+    ClibVarType value,    ///< [in] 値
     const FileRegion& loc ///< [in] 値の位置
   );
 
@@ -115,10 +115,10 @@ public:
     const FileRegion& loc ///< [in] 値の位置
   );
 
-  /// @brief vartype 値を作る．
+  /// @brief variable type 値を作る．
   static
   AstValuePtr
-  new_vartype(
+  new_variable_type(
     ClibVarType value,    ///< [in] 値
     const FileRegion& loc ///< [in] 値の位置
   );
@@ -230,7 +230,7 @@ public:
   ///
   /// piece_type 型でない場合の値は不定
   virtual
-  ClibPieceType
+  ClibVarType
   piece_type_value() const;
 
   /// @brief direction 型の値を返す．
@@ -261,12 +261,12 @@ public:
   ClibTimingType
   timing_type_value() const;
 
-  /// @brief vartype 型の値を返す．
+  /// @brief variable type 型の値を返す．
   ///
-  /// vartype 型でない場合の値は不定
+  /// variable type 型でない場合の値は不定
   virtual
   ClibVarType
-  vartype_value() const;
+  variable_type_value() const;
 
   /// @brief expr 型の値を返す．
   ///

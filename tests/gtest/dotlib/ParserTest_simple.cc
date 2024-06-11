@@ -899,200 +899,214 @@ TEST_F(ParserTest, simple_timing_type32)
 	     msg_list[0]);
 }
 
-TEST_F(ParserTest, simple_vartype1)
+TEST_F(ParserTest, simple_variable_type1)
 {
   istringstream buf(": input_net_transition;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::input_net_transition, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::input_net_transition, value.variable_type_value() );
   EXPECT_EQ( "input_net_transition", value.decompile() );
 }
 
-TEST_F(ParserTest, simple_vartype2)
+TEST_F(ParserTest, simple_variable_type2)
 {
   istringstream buf(": total_output_net_capacitance;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::total_output_net_capacitance, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::total_output_net_capacitance, value.variable_type_value() );
   EXPECT_EQ( "total_output_net_capacitance", value.decompile() );
 }
 
-TEST_F(ParserTest, simple_vartype3)
+TEST_F(ParserTest, simple_variable_type3)
 {
   istringstream buf(": output_net_length;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::output_net_length, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::output_net_length, value.variable_type_value() );
   EXPECT_EQ( "output_net_length", value.decompile() );
 }
 
-TEST_F(ParserTest, simple_vartype4)
+TEST_F(ParserTest, simple_variable_type4)
 {
   istringstream buf(": output_net_wire_cap;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::output_net_wire_cap, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::output_net_wire_cap, value.variable_type_value() );
   EXPECT_EQ( "output_net_wire_cap", value.decompile() );
 }
 
-TEST_F(ParserTest, simple_vartype5)
+TEST_F(ParserTest, simple_variable_type5)
 {
   istringstream buf(": output_net_pin_cap;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::output_net_pin_cap, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::output_net_pin_cap, value.variable_type_value() );
   EXPECT_EQ( "output_net_pin_cap", value.decompile() );
 }
 
-TEST_F(ParserTest, simple_vartype6)
+TEST_F(ParserTest, simple_variable_type6)
 {
   istringstream buf(": equal_or_opposite_output_net_capacitance;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::equal_or_opposite_output_net_capacitance, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::equal_or_opposite_output_net_capacitance, value.variable_type_value() );
   EXPECT_EQ( "equal_or_opposite_output_net_capacitance", value.decompile() );
 }
 
-TEST_F(ParserTest, simple_vartype7)
+TEST_F(ParserTest, simple_variable_type7)
 {
   istringstream buf(": input_transition_time;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::input_transition_time, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::input_transition_time, value.variable_type_value() );
 }
 
-TEST_F(ParserTest, simple_vartype8)
+TEST_F(ParserTest, simple_variable_type8)
 {
   istringstream buf(": related_out_total_output_net_capacitance;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::related_out_total_output_net_capacitance, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::related_out_total_output_net_capacitance, value.variable_type_value() );
   EXPECT_EQ( "related_out_total_output_net_capacitance", value.decompile() );
 }
 
-TEST_F(ParserTest, simple_vartype9)
+TEST_F(ParserTest, simple_variable_type9)
 {
   istringstream buf(": related_out_output_net_length;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::related_out_output_net_length, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::related_out_output_net_length, value.variable_type_value() );
   EXPECT_EQ( "related_out_output_net_length", value.decompile() );
 }
 
-TEST_F(ParserTest, simple_vartype10)
+TEST_F(ParserTest, simple_variable_type10)
 {
   istringstream buf(": related_out_output_net_wire_cap;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::related_out_output_net_wire_cap, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::related_out_output_net_wire_cap, value.variable_type_value() );
   EXPECT_EQ( "related_out_output_net_wire_cap", value.decompile() );
 }
 
-TEST_F(ParserTest, simple_vartype11)
+TEST_F(ParserTest, simple_variable_type11)
 {
   istringstream buf(": related_out_output_net_pin_cap;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::related_out_output_net_pin_cap, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::related_out_output_net_pin_cap, value.variable_type_value() );
   EXPECT_EQ( "related_out_output_net_pin_cap", value.decompile() );
 }
 
-TEST_F(ParserTest, simple_vartype12)
+TEST_F(ParserTest, simple_variable_type12)
 {
   istringstream buf(": constrained_pin_transition;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::constrained_pin_transition, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::constrained_pin_transition, value.variable_type_value() );
   EXPECT_EQ( "constrained_pin_transition", value.decompile() );
 }
 
-TEST_F(ParserTest, simple_vartype13)
+TEST_F(ParserTest, simple_variable_type13)
 {
   istringstream buf(": related_pin_transition;\n");
   Parser parser{buf, info, false, false};
 
-  auto dst = simple_vartype(parser, kwd, kwd_loc);
+  auto dst = simple_variable_type(parser, kwd, kwd_loc);
 
   ASSERT_TRUE( dst != nullptr );
   auto& value = dst->value();
 
-  EXPECT_EQ( ClibVarType::related_pin_transition, value.vartype_value() );
+  EXPECT_EQ( ClibVarType::related_pin_transition, value.variable_type_value() );
   EXPECT_EQ( "related_pin_transition", value.decompile() );
 }
 
-TEST_F(ParserTest, simple_vartype15)
+TEST_F(ParserTest, simple_variable_type15)
 {
   // 不適切な文字列
   istringstream buf(": abc;\n");
   Parser parser{buf, info, false, false};
 
   EXPECT_THROW( {
-      auto _ = simple_vartype(parser, kwd, kwd_loc);
+      auto _ = simple_variable_type(parser, kwd, kwd_loc);
     }, std::invalid_argument );
   auto msg_list = mh.message_list();
   EXPECT_EQ( 1, msg_list.size() );
   EXPECT_EQ( "parser_test.lib: line 1, column 3 - 5: (ERROR  ) [DOTLIB_SCANNER]: Syntax error: abc: Illegal value for 'variable_type'.\n",
 	     msg_list[0]);
+}
+
+TEST_F(ParserTest, simple_piece_type1)
+{
+  istringstream buf(": piece_length;\n");
+  Parser parser{buf, info, false, false};
+
+  auto dst = simple_piece_type(parser, kwd, kwd_loc);
+
+  ASSERT_TRUE( dst != nullptr );
+  auto& value = dst->value();
+
+  EXPECT_EQ( ClibVarType::output_net_length, value.piece_type_value() );
+  EXPECT_EQ( "piece_length", value.decompile() );
 }
 
 END_NAMESPACE_YM_DOTLIB

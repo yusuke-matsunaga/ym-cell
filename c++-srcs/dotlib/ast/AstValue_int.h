@@ -277,7 +277,7 @@ public:
 
   /// @brief コンストラクタ
   AstPieceType(
-    ClibPieceType value,      ///< [in] 値
+    ClibVarType value,        ///< [in] 値
     const FileRegion& val_loc ///< [in] 値のファイル上の位置
   );
 
@@ -291,7 +291,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief PieceType を返す．
-  ClibPieceType
+  ClibVarType
   piece_type_value() const override;
 
   /// @brief 値を表す文字列を返す．
@@ -305,7 +305,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値
-  ClibPieceType mValue;
+  ClibVarType mValue;
 
 };
 
@@ -512,7 +512,7 @@ public:
 
   /// @brief VarType を返す．
   ClibVarType
-  vartype_value() const override;
+  variable_type_value() const override;
 
   /// @brief 値を表す文字列を返す．
   string

@@ -153,7 +153,7 @@ LibraryInfo::set_piece_params()
   const char* keyword1{"piece_type"};
   const char* keyword2{"piece_define"};
   if ( mLibrary->delay_model() == ClibDelayModel::piecewise_cmos ) {
-    ClibPieceType piece_type{ClibPieceType::length}; // デフォルト値
+    ClibVarType piece_type{ClibVarType::output_net_length}; // デフォルト値
     auto val = get_value(keyword1);
     if ( val != nullptr ) {
       piece_type = val->piece_type_value();

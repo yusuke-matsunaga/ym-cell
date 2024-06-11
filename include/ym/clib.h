@@ -119,19 +119,6 @@ enum class ClibDelayModel : std::uint8_t
 
 
 //////////////////////////////////////////////////////////////////////
-/// @brief 区間のタイプ
-//////////////////////////////////////////////////////////////////////
-enum class ClibPieceType : std::uint8_t
-{
-  length,
-  wire_cap,
-  pin_cap,
-  total_cap,
-  none
-};
-
-
-//////////////////////////////////////////////////////////////////////
 /// @brief ピンの方向を表す列挙型
 //////////////////////////////////////////////////////////////////////
 enum class ClibDirection : std::uint8_t
@@ -300,14 +287,6 @@ ostream&
 operator<<(
   ostream& s,                ///< [in] 出力先のストリーム
   ClibDelayModel delay_model ///< [in] 遅延モデル
-);
-
-/// @brief ClibPieceType のストリーム出力演算子
-/// @return s を返す．
-ostream&
-operator<<(
-  ostream& s,                ///< [in] 出力先のストリーム
-  ClibPieceType piece_type   ///< [in] 区間のタイプ
 );
 
 /// @brief ClibTimingSense のストリーム出力演算子

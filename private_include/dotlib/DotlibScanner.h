@@ -111,10 +111,15 @@ public:
   AstValuePtr
   read_timing_type();
 
-  /// @brief vartype 型の値を読み込む．
+  /// @brief variable type 型の値を読み込む．
   /// @param[in] 生成した AstValue を返す．
   AstValuePtr
-  read_vartype();
+  read_variable_type();
+
+  /// @brief piece type 型の値を読み込む．
+  /// @param[in] 生成した AstValue を返す．
+  AstValuePtr
+  read_piece_type();
 
   /// @brief int vector 型の値を読み込む．
   /// @return 生成した AstValue を返す．

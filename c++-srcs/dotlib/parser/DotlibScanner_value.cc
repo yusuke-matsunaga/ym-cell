@@ -377,12 +377,12 @@ DotlibScanner::read_timing_type()
   return AstValue::new_timing_type(value, token.loc());
 }
 
-// @brief vartype 型の値を読み込む．
+// @brief variable type 型の値を読み込む．
 // @param[in] 生成した AstValue を返す．
 //
 // エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
 AstValuePtr
-DotlibScanner::read_vartype()
+DotlibScanner::read_variable_type()
 {
   auto token = read_token();
   auto tmp_str = token.str_value();
@@ -427,7 +427,7 @@ DotlibScanner::read_vartype()
     value = ClibVarType::related_pin_transition;
   }
   if ( value != ClibVarType::none ) {
-    return AstValue::new_vartype(value, token.loc());
+    return AstValue::new_variable_type(value, token.loc());
   }
 
   ostringstream buf;
@@ -440,6 +440,43 @@ DotlibScanner::read_vartype()
 		  buf.str());
   throw std::invalid_argument{"Syntax error"};
   return {};
+}
+
+// @brief piece type 型の値を読み込む．
+// @param[in] 生成した AstValue を返す．
+//
+// エラーが起きた場合にはエラーメッセージを出力して nullptr を返す．
+AstValuePtr
+DotlibScanner::read_piece_type()
+{
+  auto token = read_token();
+  auto tmp_str = token.str_value();
+  ClibVarType value{ClibVarType::none};
+  if ( tmp_str == "piece_total_net_cap" ) {
+    value = ClibVarType::total_output_net_capacitance;
+  }
+  else if ( tmp_str == "piece_length" ) {
+    value = ClibVarType::output_net_length;
+  }
+  else if ( tmp_str == "piece_net_wire_cap" ) {
+    value = ClibVarType::output_net_wire_cap;
+  }
+  else if ( tmp_str == "piece_net_pin_cap" ) {
+    value = ClibVarType::output_net_pin_cap;
+  }
+  if ( value == ClibVarType::none ) {
+    ostringstream buf;
+    buf << "Syntax error: "
+	<< tmp_str << ": Illegal value for 'piece_type'.";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    token.loc(),
+		    MsgType::Error,
+		    "DOTLIB_SCANNER",
+		    buf.str());
+    throw std::invalid_argument{"Syntax error"};
+    return {};
+  }
+  return AstValue::new_piece_type(value, token.loc());
 }
 
 // @brief int vector 型の値を読み込む．

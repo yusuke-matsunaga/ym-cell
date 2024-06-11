@@ -170,7 +170,7 @@ protected:
   /// エラーの場合には invalid_argment 例外が送出される．
   /// true 以外の場合には val の値は変更されない．
   bool
-  get_vartype(
+  get_variable_type(
     const char* keyword, ///< [in] キーワード
     ClibVarType& val     ///< [out] 値を格納する変数
   ) const;

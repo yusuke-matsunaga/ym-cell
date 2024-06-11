@@ -159,14 +159,14 @@ GroupInfo::get_cpv(
 
 // @brief ClibVarType の値を取り出す．
 bool
-GroupInfo::get_vartype(
+GroupInfo::get_variable_type(
   const char* keyword,
   ClibVarType& val
 ) const
 {
   auto _val= get_value(keyword);
   if ( _val != nullptr ) {
-    val = _val->vartype_value();
+    val = _val->variable_type_value();
     return true;
   }
   return false;

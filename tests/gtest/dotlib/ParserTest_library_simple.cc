@@ -646,7 +646,85 @@ TEST_F(ParserTestLibrary, library_piece_type1)
 
   EXPECT_EQ( "piece_type", attr1.kwd() );
   auto& value1{attr1.value()};
-  EXPECT_EQ( "piece_length", value1.string_value() );
+  EXPECT_EQ( ClibVarType::output_net_length, value1.piece_type_value() );
+}
+
+TEST_F(ParserTestLibrary, library_piece_type2)
+{
+  istringstream buf("( test ) {\n"
+		    "  piece_type: piece_net_pin_cap;\n"
+		    "}\n");
+  Parser parser{buf, info, false, false};
+
+  auto dst = group_library(parser, kwd, kwd_loc);
+
+  ASSERT_TRUE( dst != nullptr );
+  auto& value{dst->value()};
+
+  auto& header = value.group_header_value();
+  ASSERT_TRUE( header.is_valid() );
+
+  EXPECT_EQ( 1, header.complex_elem_size() );
+  EXPECT_EQ( "test", header.complex_elem_value(0).string_value() );
+
+  EXPECT_EQ( 1, value.group_elem_size() );
+  auto& attr1{value.group_elem_attr(0)};
+
+  EXPECT_EQ( "piece_type", attr1.kwd() );
+  auto& value1{attr1.value()};
+  EXPECT_EQ( ClibVarType::output_net_pin_cap, value1.piece_type_value() );
+}
+
+TEST_F(ParserTestLibrary, library_piece_type3)
+{
+  istringstream buf("( test ) {\n"
+		    "  piece_type: piece_net_wire_cap;\n"
+		    "}\n");
+  Parser parser{buf, info, false, false};
+
+  auto dst = group_library(parser, kwd, kwd_loc);
+
+  ASSERT_TRUE( dst != nullptr );
+  auto& value{dst->value()};
+
+  auto& header = value.group_header_value();
+  ASSERT_TRUE( header.is_valid() );
+
+  EXPECT_EQ( 1, header.complex_elem_size() );
+  EXPECT_EQ( "test", header.complex_elem_value(0).string_value() );
+
+  EXPECT_EQ( 1, value.group_elem_size() );
+  auto& attr1{value.group_elem_attr(0)};
+
+  EXPECT_EQ( "piece_type", attr1.kwd() );
+  auto& value1{attr1.value()};
+  EXPECT_EQ( ClibVarType::output_net_wire_cap, value1.piece_type_value() );
+}
+
+TEST_F(ParserTestLibrary, library_piece_type4)
+{
+  istringstream buf("( test ) {\n"
+		    "  piece_type: piece_total_net_cap;\n"
+		    "}\n");
+  Parser parser{buf, info, false, false};
+
+  auto dst = group_library(parser, kwd, kwd_loc);
+
+  ASSERT_TRUE( dst != nullptr );
+  auto& value{dst->value()};
+
+  auto& header = value.group_header_value();
+  ASSERT_TRUE( header.is_valid() );
+
+  EXPECT_EQ( 1, header.complex_elem_size() );
+  EXPECT_EQ( "test", header.complex_elem_value(0).string_value() );
+
+  EXPECT_EQ( 1, value.group_elem_size() );
+  auto& attr1{value.group_elem_attr(0)};
+
+  EXPECT_EQ( "piece_type", attr1.kwd() );
+  auto& value1{attr1.value()};
+  EXPECT_EQ( ClibVarType::total_output_net_capacitance, value1.piece_type_value() );
 }
 
 TEST_F(ParserTestLibrary, library_power_model1)
