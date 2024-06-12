@@ -102,9 +102,20 @@ CiCellLibrary::_restore(
 
   // セルグループのリスト
   s.restore(mCellGroupList);
+  for ( auto& group: mCellGroupList ) {
+    for ( auto cell: group->cell_list() ) {
+      const_cast<CiCell*>(cell)->set_group(group.get());
+    }
+  }
 
   // セルクラスのリスト
   s.restore(mCellClassList);
+  for ( auto& cclass: mCellClassList ) {
+    cclass->set_library(this);
+    for ( auto group: cclass->cell_group_list() ) {
+      const_cast<CiCellGroup*>(group)->set_rep_class(cclass.get());
+    }
+  }
 
   // 組み込み型の読み込み
   for ( auto id: Range(4) ) {

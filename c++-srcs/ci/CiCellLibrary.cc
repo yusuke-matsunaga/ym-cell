@@ -368,9 +368,25 @@ CiCellLibrary::wrap_up()
     }
   }
 
-  // クラスに親のライブラリを設定する．
-  for ( auto& cclass: mCellClassList ) {
-    cclass->set_library(this);
+  { // sanity-check
+    for ( auto& cell: mCellList ) {
+      auto group = cell->group();
+      ASSERT_COND( group != nullptr );
+    }
+    for ( auto& group: mCellGroupList ) {
+      auto rep_class = group->rep_class();
+      ASSERT_COND( rep_class != nullptr );
+      for ( auto cell: group->cell_list() ) {
+	ASSERT_COND( cell->group() == group.get() );
+      }
+    }
+    for ( auto& cclass: mCellClassList ) {
+      auto library = cclass->library();
+      ASSERT_COND( library == this );
+      for ( auto group: cclass->cell_group_list() ) {
+	ASSERT_COND( group->rep_class() == cclass.get() );
+      }
+    }
   }
 }
 
