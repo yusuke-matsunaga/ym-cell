@@ -34,6 +34,11 @@ public:
     const CiCell* impl ///< [in] 本体
   );
 
+  /// @brief コピーコンストラクタ
+  ClibCellPtr(
+    const ClibCellPtr& src ///< [in] コピー元
+  );
+
   /// @brief デストラクタ
   ~ClibCellPtr();
 

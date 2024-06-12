@@ -35,6 +35,16 @@ ClibCellPtr::ClibCellPtr(
   }
 }
 
+// @brief コピーコンストラクタ
+ClibCellPtr::ClibCellPtr(
+  const ClibCellPtr& src
+) : mImpl{src.mImpl}
+{
+  if ( mImpl != nullptr ) {
+    mImpl->inc_ref();
+  }
+}
+
 // @brief デストラクタ
 ClibCellPtr::~ClibCellPtr()
 {
