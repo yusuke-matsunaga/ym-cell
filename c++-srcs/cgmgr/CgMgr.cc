@@ -128,15 +128,19 @@ CgMgr::ff_init()
     // 2: clear (optional)
     // 3: preset (optional)
     // 4: q
-    // 5: iq
+    // 5: iq (optional)
     SizeType ni = 2;
+    SizeType no = 1;
+    if ( info.has_xq() ) {
+      ++ no;
+    }
     if ( info.has_clear() ) {
       ++ ni;
     }
     if ( info.has_preset() ) {
       ++ ni;
     }
-    SizeType xni = ni + 2; // IQ, XIQ の分を足す．
+    SizeType xni = ni + no; // IQ, XIQ の分を足す．
     auto next = TvFunc::make_posi_literal(xni, 0);
     auto clock = TvFunc::make_posi_literal(xni, 1);
     auto clock2 = TvFunc::make_invalid();
@@ -154,12 +158,22 @@ CgMgr::ff_init()
       preset = TvFunc::make_posi_literal(xni, base);
       ++ base;
     }
+    vector<TvFunc> func_list;
+    vector<TvFunc> tristate_list;
     auto qvar = TvFunc::make_posi_literal(xni, base);
-    vector<TvFunc> func_list{qvar};
-    vector<TvFunc> tristate_list{TvFunc::make_invalid()};
+    ++ base;
+    if ( info.has_xq() ) {
+      auto xqvar = TvFunc::make_posi_literal(xni, base);
+      func_list = vector<TvFunc>{qvar, xqvar};
+      tristate_list = vector<TvFunc>{TvFunc::make_invalid(), TvFunc::make_invalid()};
+    }
+    else {
+      func_list = vector<TvFunc>{qvar};
+      tristate_list = vector<TvFunc>{TvFunc::make_invalid()};
+    }
     auto cpv1 = info.clear_preset_var1();
     auto cpv2 = info.clear_preset_var2();
-    auto sig = CgSignature::make_ff_sig(ni, 1, 0,
+    auto sig = CgSignature::make_ff_sig(ni, no, 0,
 					func_list, tristate_list,
 					clock, clock2, next,
 					clear, preset,
@@ -181,22 +195,36 @@ CgMgr::latch_init()
     // 2: clear (optional)
     // 3: preset (optional)
     // 4: q
-    // 5: q~
+    // 5: ~q (optional)
     SizeType ni = 2;
+    SizeType no = 1;
+    if ( info.has_xq() ) {
+      ++ no;
+    }
     if ( info.has_clear() ) {
       ++ ni;
     }
     if ( info.has_preset() ) {
       ++ ni;
     }
-    vector<TvFunc> func_list{TvFunc::make_posi_literal(ni, ni - 2)};
-    vector<TvFunc> tristate_list{TvFunc::make_invalid()};
+    vector<TvFunc> func_list;
+    vector<TvFunc> tristate_list;
+    auto qvar = TvFunc::make_posi_literal(ni, 0);
+    if ( info.has_xq() ) {
+      auto xqvar = TvFunc::make_nega_literal(ni, 0);
+      func_list = vector<TvFunc>{qvar, xqvar};
+      tristate_list = vector<TvFunc>{TvFunc::make_invalid(), TvFunc::make_invalid()};
+    }
+    else {
+      func_list = vector<TvFunc>{qvar};
+      tristate_list = vector<TvFunc>{TvFunc::make_invalid()};
+    }
+    auto data = TvFunc::make_posi_literal(ni, 0);
     auto enable = TvFunc::make_posi_literal(ni, 1);
     auto enable2 = TvFunc::make_invalid();
     if ( info.has_slave_clock() ) {
       enable2 = TvFunc::make_nega_literal(ni, 1);
     }
-    auto data = TvFunc::make_posi_literal(ni, 0);
     SizeType base = 2;
     auto clear = TvFunc::make_invalid();
     if ( info.has_clear() ) {
@@ -206,10 +234,12 @@ CgMgr::latch_init()
     auto preset = TvFunc::make_invalid();
     if ( info.has_preset() ) {
       preset = TvFunc::make_posi_literal(ni, base);
+      ++ base;
     }
     auto cpv1 = info.clear_preset_var1();
     auto cpv2 = info.clear_preset_var2();
-    auto sig = CgSignature::make_latch_sig(ni - 2, 1, 0, func_list, tristate_list,
+    auto sig = CgSignature::make_latch_sig(ni, no, 0,
+					   func_list, tristate_list,
 					   enable, enable2, data,
 					   clear, preset,
 					   cpv1, cpv2);

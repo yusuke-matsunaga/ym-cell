@@ -67,13 +67,25 @@ CiCellLibrary::dec_ref() const
 const CiCellClass*
 CiCellLibrary::simple_ff_class(
   bool master_slave,
+  bool has_xq,
   bool has_clear,
-  bool has_preset,
+  bool has_preset
+) const
+{
+  CiSeqInfo info{master_slave, has_xq, has_clear, has_preset};
+  return mSimpleFFClass[info.encode_val()];
+}
+
+// @brief 単純な型のFFクラスを返す．
+const CiCellClass*
+CiCellLibrary::simple_ff_class(
+  bool master_slave,
+  bool has_xq,
   ClibCPV cpv1,
   ClibCPV cpv2
 ) const
 {
-  CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
+  CiSeqInfo info{master_slave, has_xq, cpv1, cpv2};
   return mSimpleFFClass[info.encode_val()];
 }
 
@@ -81,13 +93,25 @@ CiCellLibrary::simple_ff_class(
 const CiCellClass*
 CiCellLibrary::simple_latch_class(
   bool master_slave,
+  bool has_xq,
   bool has_clear,
-  bool has_preset,
+  bool has_preset
+) const
+{
+  CiSeqInfo info{master_slave, has_xq, has_clear, has_preset};
+  return mSimpleLatchClass[info.encode_val()];
+}
+
+// @brief 単純な型のラッチクラスを返す．
+const CiCellClass*
+CiCellLibrary::simple_latch_class(
+  bool master_slave,
+  bool has_xq,
   ClibCPV cpv1,
   ClibCPV cpv2
 ) const
 {
-  CiSeqInfo info{master_slave, has_clear, has_preset, cpv1, cpv2};
+  CiSeqInfo info{master_slave, has_xq, cpv1, cpv2};
   return mSimpleLatchClass[info.encode_val()];
 }
 

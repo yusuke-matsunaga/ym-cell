@@ -762,27 +762,45 @@ ClibCellLibrary::display(
   display_group(s, "Buffer Group", buf_func());
   display_group(s, "Inverter Group", inv_func());
 
-  display_ff_class(s, "DFF Class", simple_ff_class(false, false, false), class_map);
-  display_ff_class(s, "DFF_R Class", simple_ff_class(false, true, false), class_map);
-  display_ff_class(s, "DFF_S Class", simple_ff_class(false, false, true), class_map);
+  display_ff_class(s, "DFF Class", simple_ff_class(false, false, false, false), class_map);
+  display_ff_class(s, "DFF(XQ) Class", simple_ff_class(false, true, false, false), class_map);
+  display_ff_class(s, "DFF_R Class", simple_ff_class(false, false, true, false), class_map);
+  display_ff_class(s, "DFF_R(XQ) Class", simple_ff_class(false, true, true, false), class_map);
+  display_ff_class(s, "DFF_S Class", simple_ff_class(false, false, false, true), class_map);
+  display_ff_class(s, "DFF_S(XQ) Class", simple_ff_class(false, true, false, true), class_map);
   for ( auto cpv1: CPV_LIST ) {
     for ( auto cpv2: CPV_LIST ) {
-      ostringstream buf;
-      buf << "DFF_RS(" << cpv1 << cpv2 << ") Class";
-      display_class(s, buf.str(),
-		    simple_ff_class(false, true, true, cpv1, cpv2));
+      for ( auto xq: {false, true} ) {
+	ostringstream buf;
+	buf << "DFF_RS(";
+	if ( xq ) {
+	  buf << "XQ, ";
+	}
+	buf << cpv1 << cpv2 << ") Class";
+	display_class(s, buf.str(),
+		      simple_ff_class(false, xq, cpv1, cpv2));
+      }
     }
   }
 
-  display_latch_class(s, "Latch Class", simple_latch_class(false, false, false));
-  display_latch_class(s, "Latch_R Class", simple_latch_class(false, true, false));
-  display_latch_class(s, "Latch_S Class", simple_latch_class(false, false, true));
+  display_latch_class(s, "Latch Class", simple_latch_class(false, false, false, false));
+  display_latch_class(s, "Latch(XQ) Class", simple_latch_class(false, true, false, false));
+  display_latch_class(s, "Latch_R Class", simple_latch_class(false, false, true, false));
+  display_latch_class(s, "Latch_R(XQ) Class", simple_latch_class(false, true, true, false));
+  display_latch_class(s, "Latch_S Class", simple_latch_class(false, false, false, true));
+  display_latch_class(s, "Latch_S(XQ) Class", simple_latch_class(false, true, false, true));
   for ( auto cpv1: CPV_LIST ) {
     for ( auto cpv2: CPV_LIST ) {
-      ostringstream buf;
-      buf << "Latch_RS(" << cpv1 << cpv2 << ") Class";
-      display_class(s, "Latch_RS Class",
-		    simple_latch_class(false, true, true, cpv1, cpv2));
+      for ( auto xq: {false, true} ) {
+	ostringstream buf;
+	buf << "Latch_RS(";
+	if ( xq ) {
+	  buf << "XQ, ";
+	}
+	buf << cpv1 << cpv2 << ") Class";
+	display_class(s, "Latch_RS Class",
+		      simple_latch_class(false, xq, cpv1, cpv2));
+      }
     }
   }
 

@@ -16,6 +16,14 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 /// @class CiSeqInfo CiSeqInfo.h "CiSeqInfo.h"
 /// @brief シンプルなFF/Latch の種類を表すクラス
+///
+/// 以下の属性を持つ．
+/// - slave clock を持つか否か
+/// - xq 出力を持つか否か
+/// - clear 端子を持つか否か
+/// - preset 端子を持つか否か
+/// - xq, clear, preset を持つ場合には以下の属性も持つ．
+/// - clear/preset の両方がアサートされた時の q/xq の出力値
 //////////////////////////////////////////////////////////////////////
 class CiSeqInfo
 {
@@ -23,17 +31,44 @@ public:
 
   /// @brief コンストラクタ
   CiSeqInfo(
-    bool slave_clock = false,
+    bool slave_clock,
+    bool xq,
     bool clear = false,
-    bool preset = false,
-    ClibCPV clear_preset_var1 = ClibCPV::X,
-    ClibCPV clear_preset_var2 = ClibCPV::X
-  ) : mSlaveClock{slave_clock},
-      mClear{clear},
-      mPreset{preset},
-      mCpv1{clear_preset_var1},
+    bool preset = false
+  ) : mCpv1{ClibCPV::X},
+      mCpv2{ClibCPV::X}
+  {
+    if ( slave_clock ) {
+      mFlags.set(0);
+    }
+    if ( xq ) {
+      mFlags.set(1);
+    }
+    if ( clear ) {
+      mFlags.set(2);
+    }
+    if ( preset ) {
+      mFlags.set(3);
+    }
+  }
+
+  /// @brief コンストラクタ
+  CiSeqInfo(
+    bool slave_clock,
+    bool xq,
+    ClibCPV clear_preset_var1,
+    ClibCPV clear_preset_var2
+  ) : mCpv1{clear_preset_var1},
       mCpv2{clear_preset_var2}
   {
+    if ( slave_clock ) {
+      mFlags.set(0);
+    }
+    if ( xq ) {
+      mFlags.set(1);
+    }
+    mFlags.set(2);
+    mFlags.set(3);
   }
 
   /// @brief デストラクタ
@@ -49,21 +84,28 @@ public:
   bool
   has_slave_clock() const
   {
-    return mSlaveClock;
+    return mFlags[0];
+  }
+
+  /// @brief xq 端子を持つ時 true を返す．
+  bool
+  has_xq() const
+  {
+    return mFlags[1];
   }
 
   /// @brief clear 端子を持つ時 true を返す．
   bool
   has_clear() const
   {
-    return mClear;
+    return mFlags[2];
   }
 
   /// @brief preset 端子を持つ時 true を返す．
   bool
   has_preset() const
   {
-    return mPreset;
+    return mFlags[3];
   }
 
   /// @brief clear/preset が同時に与えられたときの出力の値1
@@ -88,16 +130,19 @@ public:
     if ( has_slave_clock() ) {
       index += 1;
     }
-    if ( has_clear() ) {
+    if ( has_xq() ) {
       index += 2;
     }
-    if ( has_preset() ) {
+    if ( has_clear() ) {
       index += 4;
     }
-    if ( index >= 6 ) {
+    if ( has_preset() ) {
+      index += 8;
+    }
+    if ( index >= 12 ) {
       // clear/preset ありの場合
-      index += encode_cpv(mCpv1) * 2;
-      index += encode_cpv(mCpv2) * 10;
+      index += encode_cpv(mCpv1) * 4;
+      index += encode_cpv(mCpv2) * 20;
     }
     return index;
   }
@@ -109,23 +154,21 @@ public:
     SizeType index
   )
   {
-    if ( index < 6 ) {
-      bool slave_clock = static_cast<bool>((index >> 0) & 1);
-      bool clear = static_cast<bool>((index >> 1) & 1);
-      bool preset = static_cast<bool>((index >> 2) & 1);
-      auto cpv1 = ClibCPV::X;
-      auto cpv2 = ClibCPV::X;
-      return CiSeqInfo{slave_clock, clear, preset, cpv1, cpv2};
+    bool slave_clock = static_cast<bool>((index >> 0) & 1);
+    bool xq = static_cast<bool>((index >> 1) & 1);
+    if ( index < 12 ) {
+      bool clear = static_cast<bool>((index >> 2) & 1);
+      bool preset = static_cast<bool>((index >> 3) & 1);
+      return CiSeqInfo{slave_clock, xq, clear, preset};
     }
     else {
-      bool slave_clock = static_cast<bool>(index & 1);
-      index -= 6;
-      index /= 2;
+      index -= 12;
+      index /= 4;
       SizeType index1 = index % 5;
       auto cpv1 = decode_cpv(index1);
       SizeType index2 = index / 5;
       auto cpv2 = decode_cpv(index2);
-      return CiSeqInfo{slave_clock, true, true, cpv1, cpv2};
+      return CiSeqInfo{slave_clock, xq, cpv1, cpv2};
     }
   }
 
@@ -134,7 +177,7 @@ public:
   SizeType
   max_index()
   {
-    return 56;
+    return 112;
   }
 
 
@@ -184,14 +227,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // slave clock の有無
-  bool mSlaveClock;
-
-  // clear 端子の有無
-  bool mClear;
-
-  // preset 端子の有無
-  bool mPreset;
+  // x1/slave clock/clear/preset のフラグ
+  std::bitset<4> mFlags{0U};
 
   // cpv1
   ClibCPV mCpv1;
