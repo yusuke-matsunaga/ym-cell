@@ -127,8 +127,8 @@ CgMgr::ff_init()
     // 1: clock
     // 2: clear (optional)
     // 3: preset (optional)
-    // 4: q
-    // 5: iq (optional)
+    // 4: iq
+    // 5: ixq
     SizeType ni = 2;
     SizeType no = 1;
     if ( info.has_xq() ) {
@@ -140,7 +140,7 @@ CgMgr::ff_init()
     if ( info.has_preset() ) {
       ++ ni;
     }
-    SizeType xni = ni + no; // IQ, XIQ の分を足す．
+    SizeType xni = ni + 2; // IQ, XIQ の分を足す．
     auto next = TvFunc::make_posi_literal(xni, 0);
     auto clock = TvFunc::make_posi_literal(xni, 1);
     auto clock2 = TvFunc::make_invalid();
@@ -158,17 +158,18 @@ CgMgr::ff_init()
       preset = TvFunc::make_posi_literal(xni, base);
       ++ base;
     }
+    auto iqvar = TvFunc::make_posi_literal(xni, base);
+    ++ base;
+    auto ixqvar = TvFunc::make_posi_literal(xni, base);
     vector<TvFunc> func_list;
     vector<TvFunc> tristate_list;
-    auto qvar = TvFunc::make_posi_literal(xni, base);
-    ++ base;
     if ( info.has_xq() ) {
-      auto xqvar = TvFunc::make_posi_literal(xni, base);
-      func_list = vector<TvFunc>{qvar, xqvar};
-      tristate_list = vector<TvFunc>{TvFunc::make_invalid(), TvFunc::make_invalid()};
+      func_list = vector<TvFunc>{iqvar, ixqvar};
+      tristate_list = vector<TvFunc>{TvFunc::make_invalid(),
+				     TvFunc::make_invalid()};
     }
     else {
-      func_list = vector<TvFunc>{qvar};
+      func_list = vector<TvFunc>{iqvar};
       tristate_list = vector<TvFunc>{TvFunc::make_invalid()};
     }
     auto cpv1 = info.clear_preset_var1();
@@ -194,8 +195,8 @@ CgMgr::latch_init()
     // 1: enable
     // 2: clear (optional)
     // 3: preset (optional)
-    // 4: q
-    // 5: ~q (optional)
+    // 4: iq
+    // 5: ixq
     SizeType ni = 2;
     SizeType no = 1;
     if ( info.has_xq() ) {
@@ -207,34 +208,37 @@ CgMgr::latch_init()
     if ( info.has_preset() ) {
       ++ ni;
     }
-    vector<TvFunc> func_list;
-    vector<TvFunc> tristate_list;
-    auto qvar = TvFunc::make_posi_literal(ni, 0);
-    if ( info.has_xq() ) {
-      auto xqvar = TvFunc::make_nega_literal(ni, 0);
-      func_list = vector<TvFunc>{qvar, xqvar};
-      tristate_list = vector<TvFunc>{TvFunc::make_invalid(), TvFunc::make_invalid()};
-    }
-    else {
-      func_list = vector<TvFunc>{qvar};
-      tristate_list = vector<TvFunc>{TvFunc::make_invalid()};
-    }
-    auto data = TvFunc::make_posi_literal(ni, 0);
-    auto enable = TvFunc::make_posi_literal(ni, 1);
+    SizeType xni = ni + 2; // IQ, XIQ の分を足す．
+    auto data = TvFunc::make_posi_literal(xni, 0);
+    auto enable = TvFunc::make_posi_literal(xni, 1);
     auto enable2 = TvFunc::make_invalid();
     if ( info.has_slave_clock() ) {
-      enable2 = TvFunc::make_nega_literal(ni, 1);
+      enable2 = TvFunc::make_nega_literal(xni, 1);
     }
-    SizeType base = 2;
     auto clear = TvFunc::make_invalid();
+    SizeType base = 2;
     if ( info.has_clear() ) {
-      clear = TvFunc::make_posi_literal(ni, base);
+      clear = TvFunc::make_posi_literal(xni, base);
       ++ base;
     }
     auto preset = TvFunc::make_invalid();
     if ( info.has_preset() ) {
-      preset = TvFunc::make_posi_literal(ni, base);
+      preset = TvFunc::make_posi_literal(xni, base);
       ++ base;
+    }
+    auto iqvar = TvFunc::make_posi_literal(xni, base);
+    ++ base;
+    auto ixqvar = TvFunc::make_nega_literal(xni, base);
+    vector<TvFunc> func_list;
+    vector<TvFunc> tristate_list;
+    if ( info.has_xq() ) {
+      func_list = vector<TvFunc>{iqvar, ixqvar};
+      tristate_list = vector<TvFunc>{TvFunc::make_invalid(),
+				     TvFunc::make_invalid()};
+    }
+    else {
+      func_list = vector<TvFunc>{iqvar};
+      tristate_list = vector<TvFunc>{TvFunc::make_invalid()};
     }
     auto cpv1 = info.clear_preset_var1();
     auto cpv2 = info.clear_preset_var2();

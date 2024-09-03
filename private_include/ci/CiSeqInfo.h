@@ -5,7 +5,7 @@
 /// @brief CiSeqInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/clib.h"
@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_CLIB
 /// - xq 出力を持つか否か
 /// - clear 端子を持つか否か
 /// - preset 端子を持つか否か
-/// - xq, clear, preset を持つ場合には以下の属性も持つ．
+/// - clear, preset を持つ場合には以下の属性も持つ．
 /// - clear/preset の両方がアサートされた時の q/xq の出力値
 //////////////////////////////////////////////////////////////////////
 class CiSeqInfo
@@ -31,10 +31,9 @@ public:
 
   /// @brief コンストラクタ
   CiSeqInfo(
-    bool slave_clock,
-    bool xq,
-    bool clear = false,
-    bool preset = false
+    bool slave_clock,     ///< [in] slave clock を持つ時 true
+    bool xq,              ///< [in] xq 出力を持つ時 true
+    ClibSeqType seq_type  ///< [in] clear端子，preset端子の有無
   ) : mCpv1{ClibCPV::X},
       mCpv2{ClibCPV::X}
   {
@@ -44,20 +43,27 @@ public:
     if ( xq ) {
       mFlags.set(1);
     }
-    if ( clear ) {
+    switch ( seq_type ) {
+    case ClibSeqType::none:
+      break;
+    case ClibSeqType::clear:
       mFlags.set(2);
-    }
-    if ( preset ) {
+      break;
+    case ClibSeqType::preset:
       mFlags.set(3);
+      break;
+    case ClibSeqType::clear_preset:
+      throw std::invalid_argument{"ClibSeqType::clear_preset is not allowed hear"};
+      break;
     }
   }
 
   /// @brief コンストラクタ
   CiSeqInfo(
-    bool slave_clock,
-    bool xq,
-    ClibCPV clear_preset_var1,
-    ClibCPV clear_preset_var2
+    bool slave_clock,           ///< [in] slave clock を持つ時 true
+    bool xq,		        ///< [in] xq 出力を持つ時 true
+    ClibCPV clear_preset_var1,  ///< [in] clear と preset の両方がアサートされた時の値1
+    ClibCPV clear_preset_var2   ///< [in] clear と preset の両方がアサートされた時の値2
   ) : mCpv1{clear_preset_var1},
       mCpv2{clear_preset_var2}
   {
@@ -106,6 +112,13 @@ public:
   has_preset() const
   {
     return mFlags[3];
+  }
+
+  /// @brief clear 端子と preset 端子の有無を表す型
+  ClibSeqType
+  clear_preset_type() const
+  {
+    return seq_type_encode(has_clear(), has_preset());
   }
 
   /// @brief clear/preset が同時に与えられたときの出力の値1
@@ -157,9 +170,13 @@ public:
     bool slave_clock = static_cast<bool>((index >> 0) & 1);
     bool xq = static_cast<bool>((index >> 1) & 1);
     if ( index < 12 ) {
-      bool clear = static_cast<bool>((index >> 2) & 1);
-      bool preset = static_cast<bool>((index >> 3) & 1);
-      return CiSeqInfo{slave_clock, xq, clear, preset};
+      ClibSeqType type;
+      switch ( (index >> 2) & 3 ) {
+      case 0: type = ClibSeqType::none; break;
+      case 1: type = ClibSeqType::clear; break;
+      case 2: type = ClibSeqType::preset; break;
+      }
+      return CiSeqInfo{slave_clock, xq, type};
     }
     else {
       index -= 12;

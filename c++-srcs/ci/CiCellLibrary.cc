@@ -68,11 +68,10 @@ const CiCellClass*
 CiCellLibrary::simple_ff_class(
   bool master_slave,
   bool has_xq,
-  bool has_clear,
-  bool has_preset
+  ClibSeqType seq_type
 ) const
 {
-  CiSeqInfo info{master_slave, has_xq, has_clear, has_preset};
+  CiSeqInfo info{master_slave, has_xq, seq_type};
   return mSimpleFFClass[info.encode_val()];
 }
 
@@ -94,11 +93,10 @@ const CiCellClass*
 CiCellLibrary::simple_latch_class(
   bool master_slave,
   bool has_xq,
-  bool has_clear,
-  bool has_preset
+  ClibSeqType seq_type
 ) const
 {
-  CiSeqInfo info{master_slave, has_xq, has_clear, has_preset};
+  CiSeqInfo info{master_slave, has_xq, seq_type};
   return mSimpleLatchClass[info.encode_val()];
 }
 

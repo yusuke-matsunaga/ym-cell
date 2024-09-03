@@ -351,10 +351,9 @@ public:
   /// - 該当するセルがないときでも空のセルクラスが返される．
   const CiCellClass*
   simple_ff_class(
-    bool master_slave, ///< [in] master/slave 型の時 true
-    bool has_xq,       ///< [in] xq 端子を持つ時 true
-    bool has_clear,    ///< [in] clear 端子を持つ時 true
-    bool has_preset    ///< [in] preset 端子を持つ時 true
+    bool master_slave,   ///< [in] master/slave 型の時 true
+    bool has_xq,         ///< [in] xq 端子を持つ時 true
+    ClibSeqType seq_type ///< [in] clear 端子と preset 端子の有無
   ) const;
 
   /// @brief 単純な型のFFクラスを返す．
@@ -383,10 +382,9 @@ public:
   /// - 該当するセルがないときでも空のセルクラスが返される．
   const CiCellClass*
   simple_latch_class(
-    bool master_slave, ///< [in] master/slave 型の時 true
-    bool has_xq,       ///< [in] xq 端子を持つ時 true
-    bool has_clear,    ///< [in] clear 端子を持つ時 true
-    bool has_preset    ///< [in] preset 端子を持つ時 true
+    bool master_slave,   ///< [in] master/slave 型の時 true
+    bool has_xq,         ///< [in] xq 端子を持つ時 true
+    ClibSeqType seq_type ///< [in] clear 端子と preset 端子の有無
   ) const;
 
   /// @brief 単純な型のラッチクラスを返す．

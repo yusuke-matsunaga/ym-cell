@@ -54715,18 +54715,9 @@ Clib#309 (HIT18XOR2P080) : Combinational Logic
                )
 
 Cell Class
-Class#0
-  Idmap List = 
-Input[], Output[ 0]
-
-  Group: Map = Input[], Output[ 0]
-         Cell = 
-  Group: Map = Input[], Output[ 0~]
-         Cell = 
-
 Class#1
   Idmap List = 
-Input[ 0], Output[ 0]
+         Input[ 0], Output[ 0]
 
   Group: Map = Input[ 0], Output[ 0]
          Cell =  HIT18BUFP005 HIT18BUFP010 HIT18BUFP015 HIT18BUFP020 HIT18BUFP030 HIT18BUFP040 HIT18BUFP050 HIT18BUFP060 HIT18BUFP080 HIT18BUFP120 HIT18BUFP160
@@ -54735,7 +54726,7 @@ Input[ 0], Output[ 0]
 
 Class#2
   Idmap List = 
-Input[ 0 1], Output[ 0]
+         Input[ 0 1], Output[ 0]
 
   Group: Map = Input[ 0 1], Output[ 0]
          Cell =  HIT18AND2P005 HIT18AND2P010 HIT18AND2P015 HIT18AND2P020 HIT18AND2P030 HIT18AND2P040 HIT18AND2P040S HIT18AND2P060 HIT18AND2P080 HIT18AND2P080S
@@ -54748,7 +54739,7 @@ Input[ 0 1], Output[ 0]
 
 Class#3
   Idmap List = 
-Input[ 0 1 2], Output[ 0]
+         Input[ 0 1 2], Output[ 0]
 
   Group: Map = Input[ 0 1 2], Output[ 0]
          Cell =  HIT18AND3P005 HIT18AND3P010 HIT18AND3P015 HIT18AND3P020 HIT18AND3P030 HIT18AND3P040 HIT18AND3P040S HIT18AND3P060 HIT18AND3P080 HIT18AND3P080S
@@ -54761,7 +54752,7 @@ Input[ 0 1 2], Output[ 0]
 
 Class#4
   Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
+         Input[ 0 1 2 3], Output[ 0]
 
   Group: Map = Input[ 0 1 2 3], Output[ 0]
          Cell =  HIT18AND4P005 HIT18AND4P010 HIT18AND4P015 HIT18AND4P020 HIT18AND4P030 HIT18AND4P040 HIT18AND4P040S HIT18AND4P060 HIT18AND4P080
@@ -54772,913 +54763,94 @@ Input[ 0 1 2 3], Output[ 0]
   Group: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0~]
          Cell =  HIT18OR4P005 HIT18OR4P010 HIT18OR4P015 HIT18OR4P020 HIT18OR4P030 HIT18OR4P040 HIT18OR4P040S HIT18OR4P060 HIT18OR4P080
 
-Class#5
-  Idmap List = 
-Input[ 0 1 2 3 4], Output[ 0]
-
-  Group: Map = Input[ 0 1 2 3 4], Output[ 0]
-         Cell = 
-
-Class#6
-  Idmap List = 
-Input[ 0 1 2 3 4 5], Output[ 0]
-
-  Group: Map = Input[ 0 1 2 3 4 5], Output[ 0]
-         Cell = 
-
-Class#7
-  Idmap List = 
-Input[ 0 1 2 3 4 5 6], Output[ 0]
-
-  Group: Map = Input[ 0 1 2 3 4 5 6], Output[ 0]
-         Cell = 
-
-Class#8
-  Idmap List = 
-Input[ 0 1 2 3 4 5 6 7], Output[ 0]
-
-  Group: Map = Input[ 0 1 2 3 4 5 6 7], Output[ 0]
-         Cell = 
-
 Class#9
   Idmap List = 
-Input[ 0 1], Output[ 0]
+         Input[ 0 1], Output[ 0]
 
   Group: Map = Input[ 0 1], Output[ 0]
          Cell =  HIT18XOR2P005 HIT18XOR2P010 HIT18XOR2P015 HIT18XOR2P020 HIT18XOR2P030 HIT18XOR2P040 HIT18XOR2P060 HIT18XOR2P080
   Group: Map = Input[ 0 1], Output[ 0~]
          Cell =  HIT18XNOR2P005 HIT18XNOR2P010 HIT18XNOR2P015 HIT18XNOR2P020 HIT18XNOR2P030 HIT18XNOR2P040 HIT18XNOR2P060 HIT18XNOR2P080
 
-Class#10
-  Idmap List = 
-Input[ 0 1 2], Output[ 0]
-
-  Group: Map = Input[ 0 1 2], Output[ 0]
-         Cell = 
-
-Class#11
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 0 1 2 3], Output[ 0]
-         Cell = 
-
 Class#12
   Idmap List = 
-Input[ 0 1 2], Output[ 0]
+         Input[ 0 1 2], Output[ 0]
 
   Group: Map = Input[ 2 1 0], Output[ 0]
          Cell =  HIT18MUX2P010 HIT18MUX2P020 HIT18MUX2P030 HIT18MUX2P040 HIT18MUX2P060 HIT18MUX2P080
 
-Class#13
-  Idmap List = 
-Input[ 0 1 2 3 4 5], Output[ 0]
-Input[ 1 0 2 4 3 5], Output[ 0]
-
-  Group: Map = Input[ 5 4 3 2 0 1], Output[ 0]
-         Cell = 
-
 Class#14
   Idmap List = 
-Input[ 0 1], Output[ 0]
+         Input[ 0 1], Output[ 0]
 
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
   Group: Map = Input[ 1~ 0], Output[ 0]
          Cell =  HIT18DFNP010 HIT18DFNP020 HIT18DFNP040 HIT18DFNP060 HIT18DFNP080 HIT18DFNP120 HIT18DFNP160
   Group: Map = Input[ 1 0], Output[ 0]
          Cell =  HIT18DFP010 HIT18DFP020 HIT18DFP040 HIT18DFP060 HIT18DFP080 HIT18DFP120 HIT18DFP160
 
-Class#15
+Class#18
   Idmap List = 
-Input[ 0 1], Output[ 0]
+         Input[ 0 1 2], Output[ 0]
 
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#16
-  Idmap List = 
-Input[ 0 1 2], Output[ 0]
-
-  Group: Map = Input[ 1 2 0], Output[ 0]
-         Cell = 
   Group: Map = Input[ 2~ 1 0~], Output[ 0]
          Cell =  HIT18DFNRP010 HIT18DFNRP020 HIT18DFNRP040 HIT18DFNRP060 HIT18DFNRP080 HIT18DFNRP120 HIT18DFNRP160
   Group: Map = Input[ 2 1 0~], Output[ 0]
          Cell =  HIT18DFRP010 HIT18DFRP020 HIT18DFRP040 HIT18DFRP060 HIT18DFRP080 HIT18DFRP120 HIT18DFRP160
 
-Class#17
+Class#26
   Idmap List = 
-Input[ 0 1 2], Output[ 0]
+         Input[ 0 1 2 3], Output[ 0]
 
-  Group: Map = Input[ 2 0 1], Output[ 0]
-         Cell = 
-
-Class#18
-  Idmap List = 
-Input[ 0 1 2], Output[ 0]
-
-  Group: Map = Input[ 1 2 0], Output[ 0]
-         Cell = 
-
-Class#19
-  Idmap List = 
-Input[ 0 1 2], Output[ 0]
-
-  Group: Map = Input[ 2 0 1], Output[ 0]
-         Cell = 
-
-Class#20
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
   Group: Map = Input[ 3~ 2 1~ 0~], Output[ 0]
          Cell =  HIT18DFNSRP010 HIT18DFNSRP020 HIT18DFNSRP040 HIT18DFNSRP060 HIT18DFNSRP080 HIT18DFNSRP120 HIT18DFNSRP160
   Group: Map = Input[ 3 2 1~ 0~], Output[ 0]
          Cell =  HIT18DFSRP010 HIT18DFSRP020 HIT18DFSRP040 HIT18DFSRP060 HIT18DFSRP080 HIT18DFSRP120 HIT18DFSRP160
 
-Class#21
+Class#238
   Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#22
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#23
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#24
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#25
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#26
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#27
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#28
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#29
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#30
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#31
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#32
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#33
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#34
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#35
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#36
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#37
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#38
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#39
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#40
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#41
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#42
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#43
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#44
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#45
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#46
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#47
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#48
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#49
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#50
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#51
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#52
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#53
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#54
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#55
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#56
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#57
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#58
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#59
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#60
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#61
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#62
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#63
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#64
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#65
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#66
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#67
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#68
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Class#69
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3 0 2 1], Output[ 0]
-         Cell = 
-
-Class#70
-  Idmap List = 
-Input[], Output[ 0]
-
-  Group: Map = Input[], Output[ 0]
-         Cell = 
-
-Class#71
-  Idmap List = 
-Input[], Output[ 0]
-
-  Group: Map = Input[], Output[ 0]
-         Cell = 
-
-Class#72
-  Idmap List = 
-Input[ 0], Output[ 0]
-
-  Group: Map = Input[ 0], Output[ 0]
-         Cell = 
-
-Class#73
-  Idmap List = 
-Input[ 0], Output[ 0]
-
-  Group: Map = Input[ 0], Output[ 0]
-         Cell = 
-
-Class#74
-  Idmap List = 
-Input[ 0], Output[ 0]
-
-  Group: Map = Input[ 0], Output[ 0]
-         Cell = 
-
-Class#75
-  Idmap List = 
-Input[ 0], Output[ 0]
-
-  Group: Map = Input[ 0], Output[ 0]
-         Cell = 
-
-Class#76
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#77
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#78
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#79
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#80
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#81
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#82
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#83
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#84
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#85
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#86
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#87
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#88
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#89
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#90
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#91
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#92
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#93
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#94
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#95
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#96
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#97
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#98
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#99
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#100
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#101
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#102
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#103
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#104
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#105
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#106
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#107
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#108
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#109
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#110
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#111
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#112
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#113
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#114
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#115
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#116
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#117
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#118
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#119
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#120
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#121
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#122
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#123
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#124
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Class#125
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell = 
-
-Class#126
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
+         Input[ 0 1 2 3], Output[ 0]
 
   Group: Map = Input[ 2~ 3~ 0~ 1~], Output[ 0]
          Cell =  HIT18AOI211P005 HIT18AOI211P010 HIT18AOI211P015 HIT18AOI211P020 HIT18AOI211P030 HIT18AOI211P030S HIT18AOI211P040 HIT18AOI211P040S HIT18AOI211P060 HIT18AOI211P060S HIT18AOI211P080 HIT18AOI211P080S
   Group: Map = Input[ 2 3 0 1], Output[ 0~]
          Cell =  HIT18OAI211P005 HIT18OAI211P010 HIT18OAI211P015 HIT18OAI211P020 HIT18OAI211P030 HIT18OAI211P030S HIT18OAI211P040 HIT18OAI211P040S HIT18OAI211P060 HIT18OAI211P060S HIT18OAI211P080 HIT18OAI211P080S
 
-Class#127
+Class#239
   Idmap List = 
-Input[ 0 1 2], Output[ 0]
+         Input[ 0 1 2], Output[ 0]
 
   Group: Map = Input[ 2~ 0~ 1~], Output[ 0]
          Cell =  HIT18AOI21P005 HIT18AOI21P010 HIT18AOI21P015 HIT18AOI21P020 HIT18AOI21P030 HIT18AOI21P030S HIT18AOI21P040 HIT18AOI21P040S HIT18AOI21P060 HIT18AOI21P060S HIT18AOI21P080 HIT18AOI21P080S
   Group: Map = Input[ 2 0 1], Output[ 0~]
          Cell =  HIT18OAI21P005 HIT18OAI21P010 HIT18OAI21P015 HIT18OAI21P020 HIT18OAI21P030 HIT18OAI21P030S HIT18OAI21P040 HIT18OAI21P040S HIT18OAI21P060 HIT18OAI21P060S HIT18OAI21P080 HIT18OAI21P080S
 
-Class#128
+Class#240
   Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-Input[ 2 3 0 1], Output[ 0]
+         Input[ 0 1 2 3], Output[ 0]
+         Input[ 2 3 0 1], Output[ 0]
 
   Group: Map = Input[ 0 1 2 3], Output[ 0~]
          Cell =  HIT18AOI22P005 HIT18AOI22P010 HIT18AOI22P015 HIT18AOI22P020 HIT18AOI22P030 HIT18AOI22P030S HIT18AOI22P040 HIT18AOI22P040S HIT18AOI22P060 HIT18AOI22P060S HIT18AOI22P080 HIT18AOI22P080S
   Group: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
          Cell =  HIT18OAI22P005 HIT18OAI22P010 HIT18OAI22P015 HIT18OAI22P020 HIT18OAI22P030 HIT18OAI22P030S HIT18OAI22P040 HIT18OAI22P040S HIT18OAI22P060 HIT18OAI22P060S HIT18OAI22P080 HIT18OAI22P080S
 
-Class#129
+Class#241
   Idmap List = 
-Input[ 0 1 2], Output[ 0 1]
+         Input[ 0 1 2], Output[ 0 1]
 
   Group: Map = Input[ 0 1 2], Output[ 0 1]
          Cell =  HIT18FAD1P010 HIT18FAD1P020 HIT18FAD1P030 HIT18FAD1P040 HIT18FAD1P060 HIT18FAD1P080
 
-Class#130
+Class#242
   Idmap List = 
-Input[ 0 1], Output[ 0 1]
+         Input[ 0 1], Output[ 0 1]
 
   Group: Map = Input[ 0 1], Output[ 1 0]
          Cell =  HIT18HAD1P010 HIT18HAD1P020 HIT18HAD1P030 HIT18HAD1P040 HIT18HAD1P060 HIT18HAD1P080
 
-Class#131
+Class#243
   Idmap List = 
-Input[ 0 1], Output[ 0]
+         Input[ 0 1], Output[ 0]
 
   Group: Map = Input[ 1 0~], Output[ 0]
          Cell =  HIT18TBUFP010 HIT18TBUFP020 HIT18TBUFP030 HIT18TBUFP040 HIT18TBUFP060 HIT18TBUFP080
@@ -55697,399 +54869,32 @@ Buffer Group
 Inverter Group
   Cell = HIT18INVP005 HIT18INVP010 HIT18INVP015 HIT18INVP020 HIT18INVP030 HIT18INVP040 HIT18INVP050 HIT18INVP060 HIT18INVP080 HIT18INVP120 HIT18INVP160
 
-DFF Class( Class#14 )
+DFF Class#14
   Idmap List = 
-Input[ 0 1], Output[ 0]
+         Input[ 0 1], Output[ 0]
 
-  Group:         Cell = 
-  Group:         Cell =  HIT18DFNP010 HIT18DFNP020 HIT18DFNP040 HIT18DFNP060 HIT18DFNP080 HIT18DFNP120 HIT18DFNP160
-  Group:         Cell =  HIT18DFP010 HIT18DFP020 HIT18DFP040 HIT18DFP060 HIT18DFP080 HIT18DFP120 HIT18DFP160
+  Group: Map = Input[ 1~ 0], Output[ 0]
+         Cell =  HIT18DFNP010 HIT18DFNP020 HIT18DFNP040 HIT18DFNP060 HIT18DFNP080 HIT18DFNP120 HIT18DFNP160
+  Group: Map = Input[ 1 0], Output[ 0]
+         Cell =  HIT18DFP010 HIT18DFP020 HIT18DFP040 HIT18DFP060 HIT18DFP080 HIT18DFP120 HIT18DFP160
 
-DFF_R Class( Class#16 )
+DFF_R Class#18
   Idmap List = 
-Input[ 0 1 2], Output[ 0]
+         Input[ 0 1 2], Output[ 0]
 
-  Group:         Cell = 
-  Group:         Cell =  HIT18DFNRP010 HIT18DFNRP020 HIT18DFNRP040 HIT18DFNRP060 HIT18DFNRP080 HIT18DFNRP120 HIT18DFNRP160
-  Group:         Cell =  HIT18DFRP010 HIT18DFRP020 HIT18DFRP040 HIT18DFRP060 HIT18DFRP080 HIT18DFRP120 HIT18DFRP160
+  Group: Map = Input[ 2~ 1 0~], Output[ 0]
+         Cell =  HIT18DFNRP010 HIT18DFNRP020 HIT18DFNRP040 HIT18DFNRP060 HIT18DFNRP080 HIT18DFNRP120 HIT18DFNRP160
+  Group: Map = Input[ 2 1 0~], Output[ 0]
+         Cell =  HIT18DFRP010 HIT18DFRP020 HIT18DFRP040 HIT18DFRP060 HIT18DFRP080 HIT18DFRP120 HIT18DFRP160
 
-DFF_S Class( Class#18 )
+DFF_RS(LL) Class#26
   Idmap List = 
-Input[ 0 1 2], Output[ 0]
+         Input[ 0 1 2 3], Output[ 0]
 
-  Group:         Cell = 
-
-DFF_RS(LL) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
   Group: Map = Input[ 3~ 2 1~ 0~], Output[ 0]
          Cell =  HIT18DFNSRP010 HIT18DFNSRP020 HIT18DFNSRP040 HIT18DFNSRP060 HIT18DFNSRP080 HIT18DFNSRP120 HIT18DFNSRP160
   Group: Map = Input[ 3 2 1~ 0~], Output[ 0]
          Cell =  HIT18DFSRP010 HIT18DFSRP020 HIT18DFSRP040 HIT18DFSRP060 HIT18DFSRP080 HIT18DFSRP120 HIT18DFSRP160
-
-DFF_RS(LH) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(LN) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(LT) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(LX) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(HL) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(HH) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(HN) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(HT) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(HX) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(NL) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(NH) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(NN) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(NT) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(NX) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(TL) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(TH) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(TN) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(TT) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(TX) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(XL) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(XH) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(XN) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(XT) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-DFF_RS(XX) Class
-  Idmap List = 
-Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2 3 1 0], Output[ 0]
-         Cell = 
-
-Latch Class
-  Idmap List = 
-Input[], Output[ 0]
-
-  Group:         Cell = 
-
-Latch_R Class
-  Idmap List = 
-Input[ 0], Output[ 0]
-
-  Group:         Cell = 
-
-Latch_S Class
-  Idmap List = 
-Input[ 0], Output[ 0]
-
-  Group:         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
-
-Latch_RS Class
-  Idmap List = 
-Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell = 
 
 ==== PatMgr dump start ====
 Node#0: INPUT#0
@@ -56215,13 +55020,13 @@ Pat#9: Rep#12: [inv](3),  40 34 35 41 38 39
 Pat#10: Rep#12: [inv](3),  42 38 39 43 34 35
 Pat#11: Rep#12: [inv](3),  44 36 37 45 38 39
 Pat#12: Rep#12: [inv](3),  46 38 39 47 36 37
-Pat#13: Rep#126: (4),  52 53 50 51 48 49
-Pat#14: Rep#126: (4),  54 16 17 55 48 49
-Pat#15: Rep#126: (4),  58 59 56 48 49 57
-Pat#16: Rep#126: (4),  62 60 61 48 49 63
-Pat#17: Rep#126: (4),  64 48 49 65 16 17
-Pat#18: Rep#126: (4),  68 66 48 49 67 69
-Pat#19: Rep#127: (3),  60 61 48 49
-Pat#20: Rep#127: (3),  66 48 49 67
-Pat#21: Rep#128: [inv](4),  70 4 5 71 16 17
+Pat#13: Rep#238: (4),  52 53 50 51 48 49
+Pat#14: Rep#238: (4),  54 16 17 55 48 49
+Pat#15: Rep#238: (4),  58 59 56 48 49 57
+Pat#16: Rep#238: (4),  62 60 61 48 49 63
+Pat#17: Rep#238: (4),  64 48 49 65 16 17
+Pat#18: Rep#238: (4),  68 66 48 49 67 69
+Pat#19: Rep#239: (3),  60 61 48 49
+Pat#20: Rep#239: (3),  66 48 49 67
+Pat#21: Rep#240: [inv](4),  70 4 5 71 16 17
 ==== PatMgr dump end ====

@@ -198,8 +198,8 @@ check(
   SizeType nb = spec.mNb;
   SizeType ni2 = ni + nb;
   SizeType no2 = no + nb;
-  SizeType ni3 = ni2 + 2;
-  SizeType no3 = no2 + 5;
+  SizeType ni3 = ni2 + 2; // IQ と IXQ
+  SizeType no3 = no2 + 5; // clock, clock2, next_state, clear, preset
 
   SizeType ni_exp = 1 << ni3;
 
@@ -307,7 +307,9 @@ check(
 		xtristate_table_list[i] = vector<bool>{};
 	      }
 	      // str() の期待値を作る．
-	      auto exp_str = gen_str(ni, no, nb, xfunc_table_list, xtristate_table_list,
+	      auto exp_str = gen_str(ni, no, nb,
+				     xfunc_table_list,
+				     xtristate_table_list,
 				     spec.mCpv1, spec.mCpv2);
 	      EXPECT_EQ( exp_str, xsig.str() );
 	      if ( exp_str != xsig.str() ) {

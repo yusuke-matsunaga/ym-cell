@@ -389,12 +389,11 @@ ClibCellClass
 ClibCellLibrary::simple_ff_class(
   bool master_slave,
   bool has_xq,
-  bool has_clear,
-  bool has_preset
+  ClibSeqType seq_type
 ) const
 {
   if ( mImpl ) {
-    auto cc = mImpl->simple_ff_class(master_slave, has_xq, has_clear, has_preset);
+    auto cc = mImpl->simple_ff_class(master_slave, has_xq, seq_type);
     return ClibCellClass{cc};
   }
   // デフォルト値
@@ -423,12 +422,11 @@ ClibCellClass
 ClibCellLibrary::simple_latch_class(
   bool master_slave,
   bool has_xq,
-  bool has_clear,
-  bool has_preset
+  ClibSeqType seq_type
 ) const
 {
   if ( mImpl ) {
-    auto cc = mImpl->simple_latch_class(master_slave, has_xq, has_clear, has_preset);
+    auto cc = mImpl->simple_latch_class(master_slave, has_xq, seq_type);
     return ClibCellClass{cc};
   }
   // デフォルト値

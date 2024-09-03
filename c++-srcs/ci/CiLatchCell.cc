@@ -100,25 +100,28 @@ CiLatchCell::make_signature() const
   SizeType ni = input_num();
   SizeType no = output_num();
   SizeType nb = inout_num();
-  SizeType ni2 = ni + nb + 2;
-  SizeType no2 = no + nb + 2;
+  SizeType ni2 = ni + nb;
+  SizeType no2 = no + nb;
+  SizeType xni = ni2 + 2;
   vector<TvFunc> logic_list(no2);
   vector<TvFunc> tristate_list(no2);
   for ( SizeType i = 0; i < no2; ++ i ) {
     auto opin = output(i);
-    logic_list[i] = opin->function().make_tv(ni2);
-    tristate_list[i] = opin->tristate().make_tv(ni2);
+    logic_list[i] = opin->function().make_tv(xni);
+    tristate_list[i] = opin->tristate().make_tv(xni);
   }
-  TvFunc enable = enable_expr().make_tv(ni2);
-  TvFunc enable2 = enable2_expr().make_tv(ni2);
-  TvFunc data_in = data_in_expr().make_tv(ni2);
-  TvFunc clear = clear_expr().make_tv(ni2);
-  TvFunc preset = preset_expr().make_tv(ni2);
-  return CgSignature::make_latch_sig(ni, no, nb, logic_list, tristate_list,
-				     enable, enable2, data_in,
-				     clear, preset,
-				     clear_preset_var1(),
-				     clear_preset_var2());
+  TvFunc enable = enable_expr().make_tv(xni);
+  TvFunc enable2 = enable2_expr().make_tv(xni);
+  TvFunc data_in = data_in_expr().make_tv(xni);
+  TvFunc clear = clear_expr().make_tv(xni);
+  TvFunc preset = preset_expr().make_tv(xni);
+  auto sig = CgSignature::make_latch_sig(ni, no, nb,
+					 logic_list, tristate_list,
+					 enable, enable2, data_in,
+					 clear, preset,
+					 clear_preset_var1(),
+					 clear_preset_var2());
+  return sig;
 }
 
 // @brief 内容をバイナリダンプする．

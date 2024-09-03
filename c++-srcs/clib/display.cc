@@ -367,16 +367,30 @@ display_class(
   const ClibCellClass& cclass
 )
 {
+  bool has_cell = false;
+  for ( auto group: cclass.cell_group_list() ) {
+    if ( group.cell_list().size() > 0 ) {
+      has_cell = true;
+      break;
+    }
+  }
+  if ( !has_cell ) {
+    return;
+  }
+
   s << title << endl;
   auto n = cclass.idmap_num();
   if ( n > 0 ) {
     s << "  Idmap List = " << endl;
     for ( auto& idmap: cclass.idmap_list() ) {
-      s << idmap << endl;
+      s << "         " << idmap << endl;
     }
     s << endl;
   }
   for ( auto group: cclass.cell_group_list() ) {
+    if ( group.cell_list().size() == 0 ) {
+      continue;
+    }
     s << "  Group: Map = " << group.iomap() << endl
       << "         Cell = ";
     for ( auto cell: group.cell_list() ) {
@@ -396,6 +410,7 @@ display_CPV(
   s << title << " = " << cpv;
 }
 
+#if 0
 // FFセルクラスの情報を出力する．
 void
 display_ff_class(
@@ -489,6 +504,7 @@ display_latch_class(
   }
   s << endl;
 }
+#endif
 
 // セルグループの情報を出力する．
 void
@@ -762,44 +778,101 @@ ClibCellLibrary::display(
   display_group(s, "Buffer Group", buf_func());
   display_group(s, "Inverter Group", inv_func());
 
-  display_ff_class(s, "DFF Class", simple_ff_class(false, false, false, false), class_map);
-  display_ff_class(s, "DFF(XQ) Class", simple_ff_class(false, true, false, false), class_map);
-  display_ff_class(s, "DFF_R Class", simple_ff_class(false, false, true, false), class_map);
-  display_ff_class(s, "DFF_R(XQ) Class", simple_ff_class(false, true, true, false), class_map);
-  display_ff_class(s, "DFF_S Class", simple_ff_class(false, false, false, true), class_map);
-  display_ff_class(s, "DFF_S(XQ) Class", simple_ff_class(false, true, false, true), class_map);
-  for ( auto cpv1: CPV_LIST ) {
-    for ( auto cpv2: CPV_LIST ) {
-      for ( auto xq: {false, true} ) {
+  for ( auto seq_type: {ClibSeqType::none,
+			ClibSeqType::clear,
+			ClibSeqType::preset} ) {
+    for ( auto has_slave: {false, true} ) {
+      for ( auto has_xq: {false, true} ) {
+	auto cclass = simple_ff_class(has_slave, has_xq, seq_type);
 	ostringstream buf;
-	buf << "DFF_RS(";
-	if ( xq ) {
-	  buf << "XQ, ";
+	buf << "DFF";
+	if ( has_slave ) {
+	  buf << "2";
 	}
-	buf << cpv1 << cpv2 << ") Class";
-	display_class(s, buf.str(),
-		      simple_ff_class(false, xq, cpv1, cpv2));
+	switch ( seq_type ) {
+	case ClibSeqType::none: break;
+	case ClibSeqType::clear: buf << "_R"; break;
+	case ClibSeqType::preset: buf << "_S"; break;
+	case ClibSeqType::clear_preset: break;
+	}
+	if ( has_xq ) {
+	  buf << "(XQ)";
+	}
+	buf << " Class#";
+	auto id = class_map.at(cclass.key());
+	buf << id;
+	display_class(s, buf.str(), cclass);
+      }
+    }
+  }
+  for ( auto has_slave: {false, true} ) {
+    for ( auto has_xq: {false, true} ) {
+      for ( auto cpv1: CPV_LIST ) {
+	for ( auto cpv2: CPV_LIST ) {
+	  auto cclass = simple_ff_class(has_slave, has_xq, cpv1, cpv2);
+	  ostringstream buf;
+	  buf << "DFF";
+	  if ( has_slave ) {
+	    buf << "2";
+	  }
+	  buf << "_RS(";
+	  if ( has_xq ) {
+	    buf << "XQ, ";
+	  }
+	  buf << cpv1 << cpv2 << ") Class#";
+	  auto id = class_map.at(cclass.key());
+	  buf << id;
+	  display_class(s, buf.str(), cclass);
+	}
       }
     }
   }
 
-  display_latch_class(s, "Latch Class", simple_latch_class(false, false, false, false));
-  display_latch_class(s, "Latch(XQ) Class", simple_latch_class(false, true, false, false));
-  display_latch_class(s, "Latch_R Class", simple_latch_class(false, false, true, false));
-  display_latch_class(s, "Latch_R(XQ) Class", simple_latch_class(false, true, true, false));
-  display_latch_class(s, "Latch_S Class", simple_latch_class(false, false, false, true));
-  display_latch_class(s, "Latch_S(XQ) Class", simple_latch_class(false, true, false, true));
-  for ( auto cpv1: CPV_LIST ) {
-    for ( auto cpv2: CPV_LIST ) {
-      for ( auto xq: {false, true} ) {
+  for ( auto seq_type: {ClibSeqType::none,
+			ClibSeqType::clear,
+			ClibSeqType::preset} ) {
+    for ( auto has_slave: {false, true} ) {
+      for ( auto has_xq: {false, true} ) {
+	auto cclass = simple_latch_class(has_slave, has_xq, seq_type);
 	ostringstream buf;
-	buf << "Latch_RS(";
-	if ( xq ) {
-	  buf << "XQ, ";
+	buf << "Latch";
+	if ( has_slave ) {
+	  buf << "2";
 	}
-	buf << cpv1 << cpv2 << ") Class";
-	display_class(s, "Latch_RS Class",
-		      simple_latch_class(false, xq, cpv1, cpv2));
+	switch ( seq_type ) {
+	case ClibSeqType::none: break;
+	case ClibSeqType::clear: buf << "_R"; break;
+	case ClibSeqType::preset: buf << "_S"; break;
+	case ClibSeqType::clear_preset: break;
+	}
+	if ( has_xq ) {
+	  buf << "(XQ)";
+	}
+	buf << " Class#";
+	auto id = class_map.at(cclass.key());
+	buf << id;
+	display_class(s, buf.str(), cclass);
+      }
+    }
+  }
+  for ( auto has_slave: {false, true} ) {
+    for ( auto has_xq: {false, true} ) {
+      for ( auto cpv1: CPV_LIST ) {
+	for ( auto cpv2: CPV_LIST ) {
+	  auto cclass = simple_latch_class(has_slave, has_xq, cpv1, cpv2);
+	  ostringstream buf;
+	  buf << "Latch";
+	  if ( has_slave ) {
+	    buf << "2";
+	  }
+	  if ( has_xq ) {
+	    buf << "(XQ, ";
+	  }
+	  buf << cpv1 << cpv2 << ") Class";
+	  auto id = class_map.at(cclass.key());
+	  buf << id;
+	  display_class(s, buf.str(), cclass);
+	}
       }
     }
   }

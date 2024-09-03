@@ -74,6 +74,9 @@ public:
   }
 
   /// @brief 一般的な組み合わせ回路用のシグネチャを作る．
+  ///
+  /// - func_list, tristate_list のサイズは no + nb
+  /// - func_list, tristate_list の要素の論理関数の入力サイズは ni + nb
   static
   CgSignature
   make_logic_sig(
@@ -85,6 +88,9 @@ public:
   );
 
   /// @brief FF用のシグネチャを作る．
+  ///
+  /// - func_list, tristate_list のサイズは no + nb
+  /// - func_list, tristate_list の要素の論理関数の入力サイズは ni + nb + 2
   static
   CgSignature
   make_ff_sig(
@@ -103,6 +109,9 @@ public:
   );
 
   /// @brief ラッチ用のシグネチャを作る．
+  ///
+  /// - func_list, tristate_list のサイズは no + nb
+  /// - func_list, tristate_list の要素の論理関数の入力サイズは ni + nb + 2
   static
   CgSignature
   make_latch_sig(

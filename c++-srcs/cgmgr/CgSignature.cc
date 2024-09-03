@@ -129,10 +129,10 @@ CgSignature::make_ff_sig(
 {
   SizeType ni2 = ni + nb;
   SizeType no2 = no + nb;
-  SizeType ni3 = ni2 + 2;
-  SizeType no3 = no2 + 5;
-  vector<TvFunc> sig_func_list(no3, TvFunc::make_invalid());
-  vector<TvFunc> sig_tristate_list(no3, TvFunc::make_invalid());
+  SizeType xni = ni2 + 2;
+  SizeType xno = no2 + 5;
+  vector<TvFunc> sig_func_list(xno, TvFunc::make_invalid());
+  vector<TvFunc> sig_tristate_list(xno, TvFunc::make_invalid());
   for ( SizeType i = 0; i < no2; ++ i ) {
     sig_func_list[i] = func_list[i];
     sig_tristate_list[i] = tristate_list[i];
@@ -166,10 +166,10 @@ CgSignature::make_latch_sig(
 {
   SizeType ni2 = ni + nb;
   SizeType no2 = no + nb;
-  SizeType ni3 = ni2 + 2;
-  SizeType no3 = no2 + 5;
-  vector<TvFunc> sig_func_list(no3, TvFunc::make_invalid());
-  vector<TvFunc> sig_tristate_list(no3, TvFunc::make_invalid());
+  SizeType xni = ni2 + 2;
+  SizeType xno = no2 + 5;
+  vector<TvFunc> sig_func_list(xno, TvFunc::make_invalid());
+  vector<TvFunc> sig_tristate_list(xno, TvFunc::make_invalid());
   for ( SizeType i = 0; i < no2; ++ i ) {
     sig_func_list[i] = func_list[i];
     sig_tristate_list[i] = tristate_list[i];

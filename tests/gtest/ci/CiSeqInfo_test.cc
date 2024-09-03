@@ -14,7 +14,7 @@ BEGIN_NAMESPACE_YM_CLIB
 
 TEST(cell_CiSeqInfo_test, case0)
 {
-  CiSeqInfo info{false, false, false, false};
+  CiSeqInfo info{false, false, ClibSeqType::none};
   auto index = info.encode_val();
   EXPECT_EQ( 0, index );
   EXPECT_FALSE( info.has_slave_clock() );
@@ -25,7 +25,7 @@ TEST(cell_CiSeqInfo_test, case0)
 
 TEST(cell_CiSeqInfo_test, case1)
 {
-  CiSeqInfo info{true, false, false, false};
+  CiSeqInfo info{true, false, ClibSeqType::none};
   auto index = info.encode_val();
   EXPECT_EQ( 1, index );
   EXPECT_TRUE( info.has_slave_clock() );
@@ -36,7 +36,7 @@ TEST(cell_CiSeqInfo_test, case1)
 
 TEST(cell_CiSeqInfo_test, case2)
 {
-  CiSeqInfo info{false, true, false, false};
+  CiSeqInfo info{false, true, ClibSeqType::none};
   auto index = info.encode_val();
   EXPECT_EQ( 2, index );
   EXPECT_FALSE( info.has_slave_clock() );
@@ -47,7 +47,7 @@ TEST(cell_CiSeqInfo_test, case2)
 
 TEST(cell_CiSeqInfo_test, case3)
 {
-  CiSeqInfo info{true, true, false, false};
+  CiSeqInfo info{true, true, ClibSeqType::none};
   auto index = info.encode_val();
   EXPECT_EQ( 3, index );
   EXPECT_TRUE( info.has_slave_clock() );
@@ -58,7 +58,7 @@ TEST(cell_CiSeqInfo_test, case3)
 
 TEST(cell_CiSeqInfo_test, case4)
 {
-  CiSeqInfo info{false, false, true, false};
+  CiSeqInfo info{false, false, ClibSeqType::clear};
   auto index = info.encode_val();
   EXPECT_EQ( 4, index );
   EXPECT_FALSE( info.has_slave_clock() );
@@ -69,7 +69,7 @@ TEST(cell_CiSeqInfo_test, case4)
 
 TEST(cell_CiSeqInfo_test, case5)
 {
-  CiSeqInfo info{true, false, true, false};
+  CiSeqInfo info{true, false, ClibSeqType::clear};
   auto index = info.encode_val();
   EXPECT_EQ( 5, index );
   EXPECT_TRUE( info.has_slave_clock() );
@@ -80,7 +80,7 @@ TEST(cell_CiSeqInfo_test, case5)
 
 TEST(cell_CiSeqInfo_test, case6)
 {
-  CiSeqInfo info{false, true, true, false};
+  CiSeqInfo info{false, true, ClibSeqType::clear};
   auto index = info.encode_val();
   EXPECT_EQ( 6, index );
   EXPECT_FALSE( info.has_slave_clock() );
@@ -91,7 +91,7 @@ TEST(cell_CiSeqInfo_test, case6)
 
 TEST(cell_CiSeqInfo_test, case7)
 {
-  CiSeqInfo info{true, true, true, false};
+  CiSeqInfo info{true, true, ClibSeqType::clear};
   auto index = info.encode_val();
   EXPECT_EQ( 7, index );
   EXPECT_TRUE( info.has_slave_clock() );
@@ -102,7 +102,7 @@ TEST(cell_CiSeqInfo_test, case7)
 
 TEST(cell_CiSeqInfo_test, case8)
 {
-  CiSeqInfo info{false, false, false, true};
+  CiSeqInfo info{false, false, ClibSeqType::preset};
   auto index = info.encode_val();
   EXPECT_EQ( 8, index );
   EXPECT_FALSE( info.has_slave_clock() );
@@ -113,7 +113,7 @@ TEST(cell_CiSeqInfo_test, case8)
 
 TEST(cell_CiSeqInfo_test, case9)
 {
-  CiSeqInfo info{true, false, false, true};
+  CiSeqInfo info{true, false, ClibSeqType::preset};
   auto index = info.encode_val();
   EXPECT_EQ( 9, index );
   EXPECT_TRUE( info.has_slave_clock() );
@@ -124,7 +124,7 @@ TEST(cell_CiSeqInfo_test, case9)
 
 TEST(cell_CiSeqInfo_test, case10)
 {
-  CiSeqInfo info{false, true, false, true};
+  CiSeqInfo info{false, true, ClibSeqType::preset};
   auto index = info.encode_val();
   EXPECT_EQ( 10, index );
   EXPECT_FALSE( info.has_slave_clock() );
@@ -135,7 +135,7 @@ TEST(cell_CiSeqInfo_test, case10)
 
 TEST(cell_CiSeqInfo_test, case11)
 {
-  CiSeqInfo info{true, true, false, true};
+  CiSeqInfo info{true, true, ClibSeqType::preset};
   auto index = info.encode_val();
   EXPECT_EQ( 11, index );
   EXPECT_TRUE( info.has_slave_clock() );
@@ -150,7 +150,7 @@ TEST(cell_CiSeqInfo_test, case12_LL)
   auto index = info.encode_val();
   EXPECT_EQ( 12, index );
   EXPECT_FALSE( info.has_slave_clock() );
-  EXPECT_TRUE( info.has_xq() );
+  EXPECT_FALSE( info.has_xq() );
   EXPECT_TRUE( info.has_clear() );
   EXPECT_TRUE( info.has_preset() );
   EXPECT_EQ( ClibCPV::L, info.clear_preset_var1() );
@@ -241,7 +241,7 @@ TEST(cell_CiSeqInfo_test, case19_HL)
   auto index = info.encode_val();
   EXPECT_EQ( 19, index );
   EXPECT_TRUE( info.has_slave_clock() );
-  EXPECT_FALSE( info.has_xq() );
+  EXPECT_TRUE( info.has_xq() );
   EXPECT_TRUE( info.has_clear() );
   EXPECT_TRUE( info.has_preset() );
   EXPECT_EQ( ClibCPV::H, info.clear_preset_var1() );
@@ -291,7 +291,7 @@ TEST(cell_CiSeqInfo_test, case23_NL)
 {
   CiSeqInfo info{true, true, ClibCPV::N, ClibCPV::L};
   auto index = info.encode_val();
-  EXPECT_EQ( 21, index );
+  EXPECT_EQ( 23, index );
   EXPECT_TRUE( info.has_slave_clock() );
   EXPECT_TRUE( info.has_xq() );
   EXPECT_TRUE( info.has_clear() );
@@ -553,7 +553,7 @@ TEST(cell_CiSeqInfo_test, case43_NH)
   auto index = info.encode_val();
   EXPECT_EQ( 43, index );
   EXPECT_TRUE( info.has_slave_clock() );
-  EXPECT_FALSE( info.has_xq() );
+  EXPECT_TRUE( info.has_xq() );
   EXPECT_TRUE( info.has_clear() );
   EXPECT_TRUE( info.has_preset() );
   EXPECT_EQ( ClibCPV::N, info.clear_preset_var1() );
@@ -709,7 +709,7 @@ TEST(cell_CiSeqInfo_test, case55_LN)
   auto index = info.encode_val();
   EXPECT_EQ( 55, index );
   EXPECT_TRUE( info.has_slave_clock() );
-  EXPECT_FALSE( info.has_xq() );
+  EXPECT_TRUE( info.has_xq() );
   EXPECT_TRUE( info.has_clear() );
   EXPECT_TRUE( info.has_preset() );
   EXPECT_EQ( ClibCPV::L, info.clear_preset_var1() );
@@ -1318,7 +1318,7 @@ TEST(cell_CiSeqInfo_test, case102_NX)
 {
   CiSeqInfo info{false, true, ClibCPV::N, ClibCPV::X};
   auto index = info.encode_val();
-  EXPECT_EQ( 100, index );
+  EXPECT_EQ( 102, index );
   EXPECT_FALSE( info.has_slave_clock() );
   EXPECT_TRUE( info.has_xq() );
   EXPECT_TRUE( info.has_clear() );
@@ -1416,7 +1416,7 @@ TEST(cell_CiSeqInfo_test, case109_XX)
 
 TEST(cell_CiSeqInfo_test, case110_XX)
 {
-  CiSeqInfo info{false, false, ClibCPV::X, ClibCPV::X};
+  CiSeqInfo info{false, true, ClibCPV::X, ClibCPV::X};
   auto index = info.encode_val();
   EXPECT_EQ( 110, index );
   EXPECT_FALSE( info.has_slave_clock() );
@@ -1427,7 +1427,7 @@ TEST(cell_CiSeqInfo_test, case110_XX)
 
 TEST(cell_CiSeqInfo_test, case111_XX)
 {
-  CiSeqInfo info{true, false, ClibCPV::X, ClibCPV::X};
+  CiSeqInfo info{true, true, ClibCPV::X, ClibCPV::X};
   auto index = info.encode_val();
   EXPECT_EQ( 111, index );
   EXPECT_TRUE( info.has_slave_clock() );
