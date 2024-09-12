@@ -18,6 +18,8 @@ ym-cell に関するドキュメント
    liberty/group.rst
    liberty/delay_models.rst
 
+   cgmgr/signature.rst
+
 Indices and tables
 ==================
 
