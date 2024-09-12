@@ -11,6 +11,7 @@
 #include "ym/ClibPin.h"
 #include "ym/ClibBus.h"
 #include "ym/ClibBundle.h"
+#include "ym/ClibSeqAttr.h"
 #include "ym/ClibTiming.h"
 #include "ci/CiCell.h"
 #include "ci/CiCellGroup.h"
@@ -501,7 +502,7 @@ ClibCPV
 ClibCell::clear_preset_var1() const
 {
   _check_valid();
-  return _impl()->clear_preset_var1();
+  return _impl()->seq_attr().cpv1();
 }
 
 // @brief clear と preset が同時にアクティブになった時の値1
@@ -509,7 +510,7 @@ ClibCPV
 ClibCell::clear_preset_var2() const
 {
   _check_valid();
-  return _impl()->clear_preset_var2();
+  return _impl()->seq_attr().cpv2();
 }
 
 // @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．

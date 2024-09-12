@@ -64,6 +64,8 @@ class ClibCellClass;
 class ClibIOMap;
 class ClibPinMap;
 class ClibPatGraph;
+class ClibSeqAttr;
+
 
 END_NAMESPACE_YM_CLIB
 
@@ -90,6 +92,7 @@ using nsClib::ClibCellClass;
 using nsClib::ClibIOMap;
 using nsClib::ClibPinMap;
 using nsClib::ClibPatGraph;
+using nsClib::ClibSeqAttr;
 
 
 //////////////////////////////////////////////////////////////////////
@@ -233,38 +236,6 @@ enum class ClibCellType : std::uint8_t
   Latch   = 3, ///< master-slave latch
   FSM     = 4, ///< finite state machine
 };
-
-
-//////////////////////////////////////////////////////////////////////
-/// @brief clear と preset の有無を表す列挙型
-//////////////////////////////////////////////////////////////////////
-enum class ClibSeqType : std::uint8_t
-{
-  none   = 0,      ///< なし
-  clear  = 1,      ///< クリア端子のみ
-  preset = 2,      ///< プリセット端子のみ
-  clear_preset = 3 ///< クリア端子とプリセット端子の両方を持つ
-};
-
-/// @brief ClibSeqType の値をエンコードする．
-inline
-ClibSeqType
-seq_type_encode(
-  bool clear, ///< [in] clear 端子を持つ時 true
-  bool preset ///< [in] preset 端子をもつ時 true
-)
-{
-  if ( clear ) {
-    if ( preset ) {
-      return ClibSeqType::clear_preset;
-    }
-    return ClibSeqType::clear;
-  }
-  if ( preset ) {
-    return ClibSeqType::preset;
-  }
-  return ClibSeqType::none;
-}
 
 
 //////////////////////////////////////////////////////////////////////

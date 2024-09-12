@@ -10,6 +10,7 @@
 #include "cgmgr/CgSignature.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
+#include "ym/ClibSeqAttr.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -30,20 +31,19 @@ CiCell::new_FF(
   const Expr& next_state,
   const Expr& clear,
   const Expr& preset,
-  ClibCPV clear_preset_var1,
-  ClibCPV clear_preset_var2
+  ClibSeqAttr seq_attr
 )
 {
   CiCell* ptr = nullptr;
-  if ( clocked_on_also.is_valid() ) {
+  if ( seq_attr.has_slave_clock() ) {
     ptr = new CiFF2Cell{
       name, area,
       var1, var2,
-      clocked_on, clocked_on_also,
+      clocked_on,
+      clocked_on_also,
       next_state,
       clear, preset,
-      clear_preset_var1,
-      clear_preset_var2
+      seq_attr
     };
   }
   else {
@@ -53,8 +53,7 @@ CiCell::new_FF(
       clocked_on,
       next_state,
       clear, preset,
-      clear_preset_var1,
-      clear_preset_var2
+      seq_attr
     };
   }
   return unique_ptr<CiCell>{ptr};
@@ -125,8 +124,7 @@ CiFFCell::make_signature() const
 				      logic_list, tristate_list,
 				      clock, clock2, next,
 				      clear, preset,
-				      clear_preset_var1(),
-				      clear_preset_var2());
+				      seq_attr());
   return sig;
 }
 

@@ -77,10 +77,7 @@ public:
     const Expr& next_state,      ///< [in] "next_state" 関数の式
     const Expr& clear,           ///< [in] "clear" 関数の式
     const Expr& preset,          ///< [in] "preset" 関数の式
-    ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時に
-                                 ///<      アクティブになった時の値1
-    ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時に
-                                 ///<      アクティブになった時の値2
+    ClibSeqAttr seq_attr         ///< [in] 順序セルの属性
   );
 
   /// @brief single-stage 型のラッチセルを生成するクラスメソッド
@@ -96,10 +93,7 @@ public:
     const Expr& data_in,         ///< [in] "data_in" 関数の式
     const Expr& clear,           ///< [in] "clear" 関数の式
     const Expr& preset,          ///< [in] "preset" 関数の式
-    ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時に
-                                 ///<      アクティブになった時の値1
-    ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時に
-                                 ///<      アクティブになった時の値2
+    ClibSeqAttr seq_attr         ///< [in] 順序セルの属性
   );
 
   /// @brief FSM型の順序セルを生成するクラスメソッド
@@ -493,21 +487,10 @@ public:
   Expr
   preset_expr() const;
 
-  /// @brief clear と preset が同時にアクティブになった時の値1
-  ///
-  /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
-  /// FF/ラッチセル以外の場合には返り値は不定
+  /// @brief 順序セルの属性を返す．
   virtual
-  ClibCPV
-  clear_preset_var1() const;
-
-  /// @brief clear と preset が同時にアクティブになった時の値1
-  ///
-  /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
-  /// FF/ラッチセル以外の場合には返り値は不定
-  virtual
-  ClibCPV
-  clear_preset_var2() const;
+  ClibSeqAttr
+  seq_attr() const;
 
   /// @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．
   ///

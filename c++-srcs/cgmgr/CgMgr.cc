@@ -11,7 +11,7 @@
 #include "ci/CiCellLibrary.h"
 #include "ci/CiCellGroup.h"
 #include "ci/CiCellClass.h"
-#include "ci/CiSeqInfo.h"
+#include "ym/ClibSeqAttr.h"
 #include "ym/TvFunc.h"
 #include "ym/NpnMap.h"
 
@@ -25,17 +25,17 @@ BEGIN_NAMESPACE_YM_CLIB
 // @brief コンストラクタ
 CgMgr::CgMgr(
   CiCellLibrary& library
-) : mLibrary{library},
-    mSimpleFFClass(CiSeqInfo::max_index(), nullptr),
-    mSimpleLatchClass(CiSeqInfo::max_index(), nullptr)
+) : mLibrary{library}
 {
   for ( SizeType i = 0; i < 4; ++ i ) {
     mLogicGroup[i] = nullptr;
   }
 
   logic_init();
+#if 0
   ff_init();
   latch_init();
+#endif
 }
 
 // @brief 論理セルグループの初期化を行なう．
@@ -116,12 +116,13 @@ CgMgr::logic_init()
   }
 }
 
+#if 0
 // @brief FFグループの初期化を行なう．
 void
 CgMgr::ff_init()
 {
-  for ( SizeType index = 0; index < CiSeqInfo::max_index(); ++ index ) {
-    auto info = CiSeqInfo::decode_index(index);
+  for ( SizeType index = 0; index < ClibSeqAttr::max_index(); ++ index ) {
+    ClibSeqAttr seq_attr{index};
     // 入力
     // 0: data-in
     // 1: clock
@@ -131,54 +132,40 @@ CgMgr::ff_init()
     // 5: ixq
     SizeType ni = 2;
     SizeType no = 1;
-    if ( info.has_xq() ) {
-      ++ no;
-    }
-    if ( info.has_clear() ) {
+    if ( seq_attr.has_clear() ) {
       ++ ni;
     }
-    if ( info.has_preset() ) {
+    if ( seq_attr.has_preset() ) {
       ++ ni;
     }
     SizeType xni = ni + 2; // IQ, XIQ の分を足す．
     auto next = TvFunc::make_posi_literal(xni, 0);
     auto clock = TvFunc::make_posi_literal(xni, 1);
     auto clock2 = TvFunc::make_invalid();
-    if ( info.has_slave_clock() ) {
+    if ( seq_attr.has_slave_clock() ) {
       clock2 = TvFunc::make_nega_literal(xni, 1);
     }
     auto clear = TvFunc::make_invalid();
     SizeType base = 2;
-    if ( info.has_clear() ) {
+    if ( seq_attr.has_clear() ) {
       clear = TvFunc::make_posi_literal(xni, base);
       ++ base;
     }
     auto preset = TvFunc::make_invalid();
-    if ( info.has_preset() ) {
+    if ( seq_attr.has_preset() ) {
       preset = TvFunc::make_posi_literal(xni, base);
       ++ base;
     }
     auto iqvar = TvFunc::make_posi_literal(xni, base);
     ++ base;
     auto ixqvar = TvFunc::make_posi_literal(xni, base);
-    vector<TvFunc> func_list;
-    vector<TvFunc> tristate_list;
-    if ( info.has_xq() ) {
-      func_list = vector<TvFunc>{iqvar, ixqvar};
-      tristate_list = vector<TvFunc>{TvFunc::make_invalid(),
-				     TvFunc::make_invalid()};
-    }
-    else {
-      func_list = vector<TvFunc>{iqvar};
-      tristate_list = vector<TvFunc>{TvFunc::make_invalid()};
-    }
-    auto cpv1 = info.clear_preset_var1();
-    auto cpv2 = info.clear_preset_var2();
+    auto func_list = vector<TvFunc>{iqvar};
+    auto tristate_list = vector<TvFunc>{TvFunc::make_invalid()};
     auto sig = CgSignature::make_ff_sig(ni, no, 0,
 					func_list, tristate_list,
 					clock, clock2, next,
 					clear, preset,
-					cpv1, cpv2);
+					seq_attr);
     auto group = find_group(sig);
     mSimpleFFClass[index] = group->rep_class();
   }
@@ -188,8 +175,8 @@ CgMgr::ff_init()
 void
 CgMgr::latch_init()
 {
-  for ( SizeType index = 0; index < CiSeqInfo::max_index(); ++ index ) {
-    auto info = CiSeqInfo::decode_index(index);
+  for ( SizeType index = 0; index < ClibSeqAttr::max_index(); ++ index ) {
+    ClibSeqAttr seq_attr{index};
     // 入力
     // 0: data-in
     // 1: enable
@@ -199,75 +186,70 @@ CgMgr::latch_init()
     // 5: ixq
     SizeType ni = 2;
     SizeType no = 1;
-    if ( info.has_xq() ) {
-      ++ no;
-    }
-    if ( info.has_clear() ) {
+    if ( seq_attr.has_clear() ) {
       ++ ni;
     }
-    if ( info.has_preset() ) {
+    if ( seq_attr.has_preset() ) {
       ++ ni;
     }
     SizeType xni = ni + 2; // IQ, XIQ の分を足す．
     auto data = TvFunc::make_posi_literal(xni, 0);
     auto enable = TvFunc::make_posi_literal(xni, 1);
     auto enable2 = TvFunc::make_invalid();
-    if ( info.has_slave_clock() ) {
+    if ( seq_attr.has_slave_clock() ) {
       enable2 = TvFunc::make_nega_literal(xni, 1);
     }
     auto clear = TvFunc::make_invalid();
     SizeType base = 2;
-    if ( info.has_clear() ) {
+    if ( seq_attr.has_clear() ) {
       clear = TvFunc::make_posi_literal(xni, base);
       ++ base;
     }
     auto preset = TvFunc::make_invalid();
-    if ( info.has_preset() ) {
+    if ( seq_attr.has_preset() ) {
       preset = TvFunc::make_posi_literal(xni, base);
       ++ base;
     }
     auto iqvar = TvFunc::make_posi_literal(xni, base);
     ++ base;
     auto ixqvar = TvFunc::make_nega_literal(xni, base);
-    vector<TvFunc> func_list;
-    vector<TvFunc> tristate_list;
-    if ( info.has_xq() ) {
-      func_list = vector<TvFunc>{iqvar, ixqvar};
-      tristate_list = vector<TvFunc>{TvFunc::make_invalid(),
-				     TvFunc::make_invalid()};
-    }
-    else {
-      func_list = vector<TvFunc>{iqvar};
-      tristate_list = vector<TvFunc>{TvFunc::make_invalid()};
-    }
-    auto cpv1 = info.clear_preset_var1();
-    auto cpv2 = info.clear_preset_var2();
+    auto func_list = vector<TvFunc>{iqvar};
+    auto tristate_list = vector<TvFunc>{TvFunc::make_invalid()};
     auto sig = CgSignature::make_latch_sig(ni, no, 0,
 					   func_list, tristate_list,
 					   enable, enable2, data,
 					   clear, preset,
-					   cpv1, cpv2);
+					   seq_attr);
     auto group = find_group(sig);
     mSimpleLatchClass[index] = group->rep_class();
   }
 }
+#endif
 
 // @brief FFクラスを得る．
-const CiCellClass*
-CgMgr::ff_class(
-  const CiSeqInfo& info
+vector<const CiCellClass*>
+CgMgr::find_ff_class(
+  ClibSeqAttr seq_attr
 ) const
 {
-  return mSimpleFFClass[info.encode_val()];
+  auto index = seq_attr.index();
+  if ( mFFClassDict.count(index) > 0 ) {
+    return mFFClassDict.at(index);
+  }
+  return {};
 }
 
 // @brief ラッチクラスを得る．
-const CiCellClass*
-CgMgr::latch_class(
-  const CiSeqInfo& info
+vector<const CiCellClass*>
+CgMgr::find_latch_class(
+  ClibSeqAttr seq_attr
 ) const
 {
-  return mSimpleLatchClass[info.encode_val()];
+  auto index = seq_attr.index();
+  if ( mLatchClassDict.count(index) > 0 ) {
+    return mLatchClassDict.at(index);
+  }
+  return {};
 }
 
 // @brief シグネチャに一致するグループを探す．
@@ -318,9 +300,32 @@ CgMgr::_find_class(
     // 同位体変換リストを作る．
     auto idmap_list = sig.idmap_list();
     // 新しいクラスを作って登録する．
-    rep_class = mLibrary.add_cell_class(idmap_list);
+    rep_class = mLibrary.add_cell_class(sig.cell_type(),
+					sig.seq_attr(),
+					idmap_list);
     mClassDict.emplace(sig_str, rep_class);
     mExprListDict.emplace(rep_class, vector<Expr>{});
+    auto cell_type = rep_class->cell_type();
+    if ( cell_type == ClibCellType::FF ) {
+      auto seq_attr = rep_class->seq_attr();
+      auto index = seq_attr.index();
+      if ( mFFClassDict.count(index) == 0 ) {
+	mFFClassDict.emplace(index, vector<const CiCellClass*>{rep_class});
+      }
+      else {
+	mFFClassDict.at(index).push_back(rep_class);
+      }
+    }
+    else if ( cell_type == ClibCellType::Latch ) {
+      auto seq_attr = rep_class->seq_attr();
+      auto index = seq_attr.index();
+      if ( mLatchClassDict.count(index) == 0 ) {
+	mLatchClassDict.emplace(index, vector<const CiCellClass*>{rep_class});
+      }
+      else {
+	mLatchClassDict.at(index).push_back(rep_class);
+      }
+    }
   }
   else {
     rep_class = mClassDict.at(sig_str);

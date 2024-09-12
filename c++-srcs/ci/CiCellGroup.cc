@@ -26,6 +26,20 @@ CiCellGroup::library() const
   return mRepClass->library();
 }
 
+// @brief セルの種類を返す．
+ClibCellType
+CiCellGroup::cell_type() const
+{
+  return mRepClass->cell_type();
+}
+
+// @brief 順序セルタイプの場合の属性を返す．
+ClibSeqAttr
+CiCellGroup::seq_attr() const
+{
+  return mRepClass->seq_attr();
+}
+
 // @brief 内容をシリアライズする．
 void
 CiCellGroup::serialize(

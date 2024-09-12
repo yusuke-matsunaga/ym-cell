@@ -14,6 +14,7 @@
 #include "ym/ClibArea.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibResistance.h"
+#include "ym/ClibSeqAttr.h"
 #include "ym/ClibTime.h"
 #include "ym/ClibIOMap.h"
 #include "ci/CiCell.h"
@@ -226,6 +227,15 @@ public:
   )
   {
     out().write_8(static_cast<std::uint8_t>(val));
+  }
+
+  /// @brief ClibSeqAttr をダンプする．
+  void
+  dump(
+    ClibSeqAttr val
+  )
+  {
+    out().write_8(static_cast<std::uint8_t>(val.index()));
   }
 
   /// @brief ClibTimingSense をダンプする．
@@ -454,6 +464,22 @@ public:
     dump(n);
     for ( auto& obj: obj_list ) {
       dump(obj.get());
+    }
+  }
+
+  template<class T>
+  void
+  dump(
+    const std::unordered_map<SizeType, T>& obj_dict
+  )
+  {
+    SizeType n = obj_dict.size();
+    dump(n);
+    for ( auto& p: obj_dict ) {
+      auto key = p.first;
+      auto& val = p.second;
+      dump(key);
+      dump(val);
     }
   }
 

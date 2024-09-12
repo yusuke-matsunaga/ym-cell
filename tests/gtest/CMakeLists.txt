@@ -24,7 +24,7 @@
 # ===================================================================
 ym_add_gtest ( cell_ClibArea_test
   # 実は ClibArea.h のみに依存している．
-  cell_library/ClibAreaTest.cc
+  clib/ClibAreaTest.cc
   )
 
 
@@ -33,7 +33,7 @@ ym_add_gtest ( cell_ClibArea_test
 # ===================================================================
 ym_add_gtest ( cell_ClibCapacitance_test
   # 実は ClibCapacitance.h のみに依存している．
-  cell_library/ClibCapacitanceTest.cc
+  clib/ClibCapacitanceTest.cc
   )
 
 
@@ -42,14 +42,14 @@ ym_add_gtest ( cell_ClibCapacitance_test
 # ===================================================================
 ym_add_gtest ( cell_ClibResistance_test
   # 実は ClibResistance.h のみに依存している．
-  cell_library/ClibResistanceTest.cc
+  clib/ClibResistanceTest.cc
   )
 
 # ===================================================================
 #  ClibSeqAttr_test
 # ===================================================================
 ym_add_gtest ( cell_ClibSeqAttr_test
-  cell_library/ClibSeqAttrTest.cc
+  clib/ClibSeqAttrTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
@@ -61,7 +61,7 @@ ym_add_gtest ( cell_ClibSeqAttr_test
 # ===================================================================
 ym_add_gtest ( cell_ClibTime_test
   # 実は ClibTime.h のみに依存している．
-  cell_library/ClibTimeTest.cc
+  clib/ClibTimeTest.cc
   )
 
 
@@ -69,7 +69,7 @@ ym_add_gtest ( cell_ClibTime_test
 #  ClibCell_test
 # ===================================================================
 ym_add_gtest ( cell_ClibCell_test
-  cell_library/ClibCellTest.cc
+  clib/ClibCellTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
@@ -82,7 +82,7 @@ ym_add_gtest ( cell_ClibCell_test
 #  ClibCellLibrary_test
 # ===================================================================
 ym_add_gtest ( cell_ClibCellLibrary_test
-  cell_library/ClibCellLibraryTest.cc
+  clib/ClibCellLibraryTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
@@ -95,7 +95,7 @@ ym_add_gtest ( cell_ClibCellLibrary_test
 #  ClibIOMap_test
 # ===================================================================
 ym_add_gtest ( cell_ClibIOMap_test
-  cell_library/ClibIOMapTest.cc
+  clib/ClibIOMapTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
@@ -285,22 +285,6 @@ target_include_directories( cell_CgFFSig_test
   PRIVATE
   ../../private_include/cgmgr
   ../../c++-srcs/cgmgr
-  )
-
-
-# ===================================================================
-#  CiSeqInfo_test
-# ===================================================================
-ym_add_gtest ( cell_CiSeqInfo_test
-  ci/CiSeqInfo_test.cc
-  $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_logic_obj_d>
-  $<TARGET_OBJECTS:ym_cell_obj_d>
-  )
-
-target_include_directories( cell_CiSeqInfo_test
-  PRIVATE
-  ../../private_include/ci
   )
 
 # ===================================================================

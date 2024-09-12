@@ -12,6 +12,7 @@
 #include "ym/MultiCombiGen.h"
 #include "ym/MultiPermGen.h"
 #include "ym/ClibIOMap.h"
+#include "ym/ClibSeqAttr.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -29,8 +30,7 @@ struct FFSpec
   TvFunc mNextState;
   TvFunc mClear;
   TvFunc mPreset;
-  ClibCPV mCpv1;
-  ClibCPV mCpv2;
+  ClibSeqAttr mSeqAttr;
 };
 
 BEGIN_NONAMESPACE
@@ -119,14 +119,13 @@ gen_str(
   SizeType nb,
   const vector<vector<bool>>& func_table_list,
   const vector<vector<bool>>& tristate_table_list,
-  ClibCPV cpv1,
-  ClibCPV cpv2
+  ClibSeqAttr seq_attr
 )
 {
   ostringstream buf;
   buf << "F"
-      << cpv_to_str(cpv1)
-      << cpv_to_str(cpv2) << ":"
+      << cpv_to_str(seq_attr.cpv1())
+      << cpv_to_str(seq_attr.cpv2()) << ":"
       << ni << ":" << no << ":" << nb;
   SizeType n = func_table_list.size();
   for ( SizeType i = 0; i < n; ++ i ) {
@@ -187,11 +186,14 @@ check(
 )
 {
   auto sig = CgSignature::make_ff_sig(spec.mNi, spec.mNo, spec.mNb,
-				      spec.mFuncList, spec.mTristateList,
-				      spec.mClockedOn, spec.mClockedOnAlso,
+				      spec.mFuncList,
+				      spec.mTristateList,
+				      spec.mClockedOn,
+				      spec.mClockedOnAlso,
 				      spec.mNextState,
-				      spec.mClear, spec.mPreset,
-				      spec.mCpv1, spec.mCpv2);
+				      spec.mClear,
+				      spec.mPreset,
+				      spec.mSeqAttr);
 
   SizeType ni = spec.mNi;
   SizeType no = spec.mNo;
@@ -218,8 +220,10 @@ check(
   func_table_list[no2 + 4] = extract_table(spec.mPreset);
 
   // str() の期待値を作る．
-  auto exp_str = gen_str(ni, no, nb, func_table_list, tristate_table_list,
-			 spec.mCpv1, spec.mCpv2);
+  auto exp_str = gen_str(ni, no, nb,
+			 func_table_list,
+			 tristate_table_list,
+			 spec.mSeqAttr);
   EXPECT_EQ( exp_str, sig.str() );
 
   // 代表シグネチャを求める．
@@ -310,7 +314,7 @@ check(
 	      auto exp_str = gen_str(ni, no, nb,
 				     xfunc_table_list,
 				     xtristate_table_list,
-				     spec.mCpv1, spec.mCpv2);
+				     spec.mSeqAttr);
 	      EXPECT_EQ( exp_str, xsig.str() );
 	      if ( exp_str != xsig.str() ) {
 		for ( SizeType i = 0; i < no2; ++ i ) {
@@ -456,8 +460,7 @@ TEST(GenFuncTest, base1)
 	      data_var,
 	      clear_var,
 	      preset_var,
-	      ClibCPV::L,
-	      ClibCPV::H};
+	      ClibSeqAttr{false, ClibCPV::L, ClibCPV::H}};
   check(spec);
 }
 

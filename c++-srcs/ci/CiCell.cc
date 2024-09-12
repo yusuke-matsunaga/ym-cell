@@ -114,18 +114,11 @@ CiCell::preset_expr() const
   return Expr::make_invalid();
 }
 
-// @brief clear と preset が同時にアクティブになった時の値1
-ClibCPV
-CiCell::clear_preset_var1() const
+// @brief 順序セルの属性を返す．
+ClibSeqAttr
+CiCell::seq_attr() const
 {
-  return ClibCPV::X;
-}
-
-// @brief clear と preset が同時にアクティブになった時の値1
-ClibCPV
-CiCell::clear_preset_var2() const
-{
-  return ClibCPV::X;
+  return ClibSeqAttr{};
 }
 
 // @brief FFセルの場合にクロックのアクティブエッジを表す論理式を返す．

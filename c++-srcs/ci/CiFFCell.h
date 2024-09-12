@@ -35,13 +35,12 @@ public:
     const Expr& next_state,    ///< [in] "next_state" 関数の式
     const Expr& clear,         ///< [in] "clear" 関数の式
     const Expr& preset,        ///< [in] "preset" 関数の式
-    ClibCPV clear_preset_var1, ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2  ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+    ClibSeqAttr seq_attr       ///< [in] 順序セルの属性
   ) : CiFLCell{name, area,
                var1, var2,
-               clear, preset,
-	       clear_preset_var1,
-	       clear_preset_var2},
+               clear,
+	       preset,
+	       seq_attr},
       mClock{clocked_on},
       mNextState{next_state}
   {
@@ -164,14 +163,14 @@ public:
     const Expr& next_state,      ///< [in] "next_state" 関数の式
     const Expr& clear,           ///< [in] "clear" 関数の式
     const Expr& preset,          ///< [in] "preset" 関数の式
-    ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+    ClibSeqAttr seq_attr         ///< [in] 順序セルの属性
   ) : CiFFCell{name, area,
                var1, var2,
-               clocked_on, next_state,
-	       clear, preset,
-               clear_preset_var1,
-               clear_preset_var2},
+               clocked_on,
+	       next_state,
+	       clear,
+	       preset,
+	       seq_attr},
       mClock2{clocked_on_also}
   {
   }

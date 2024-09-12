@@ -101,8 +101,8 @@ CiCellLibrary::dump(
   for ( auto g: mLogicGroup ) {
     s.dump(g);
   }
-  s.dump(mSimpleFFClass);
-  s.dump(mSimpleLatchClass);
+  s.dump(mFFClassDict);
+  s.dump(mLatchClassDict);
 
   // パタングラフの情報のダンプ
   mPatMgr.dump(s);

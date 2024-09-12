@@ -63,16 +63,30 @@ public:
   }
 
   /// @brief FFクラスを得る．
-  const CiCellClass*
-  ff_class(
-    const CiSeqInfo& info ///< [in] clock/clear/preset 等の情報
+  vector<const CiCellClass*>
+  find_ff_class(
+    ClibSeqAttr seq_attr ///< [in] 順序セルの属性
   ) const;
 
+  /// @brief FFクラスの辞書を得る．
+  const std::unordered_map<SizeType, vector<const CiCellClass*>>&
+  ff_class_dict() const
+  {
+    return mFFClassDict;
+  }
+
   /// @brief ラッチクラスを得る．
-  const CiCellClass*
-  latch_class(
-    const CiSeqInfo& info ///< [in] clock/clear/preset 等の情報
+  vector<const CiCellClass*>
+  find_latch_class(
+    ClibSeqAttr seq_attr ///< [in] 順序セルの属性
   ) const;
+
+  /// @brief ラッチクラスの辞書を得る．
+  const std::unordered_map<SizeType, vector<const CiCellClass*>>&
+  latch_class_dict() const
+  {
+    return mLatchClassDict;
+  }
 
   /// @brief シグネチャに一致するグループを探す．
   /// @return グループを返す．
@@ -160,13 +174,19 @@ private:
   unordered_map<const CiCellClass*, vector<Expr>> mExprListDict;
 
   // 論理セルグループのリスト
+  // 0: 定数0
+  // 1: 定数1
+  // 2: バッファ
+  // 3: インバータ
   const CiCellGroup* mLogicGroup[4];
 
-  // 単純なFFクラスのリスト
-  vector<const CiCellClass*> mSimpleFFClass;
+  // FFセルクラスのリストを持つ辞書
+  // キーは ClibSeqAttr::index()
+  std::unordered_map<SizeType, vector<const CiCellClass*>> mFFClassDict;
 
-  // 単純なラッチクラス番号のリスト
-  vector<const CiCellClass*> mSimpleLatchClass;
+  // ラッチセルクラスのリストを持つ辞書
+  // キーは ClibSeqAttr::index()
+  std::unordered_map<SizeType, vector<const CiCellClass*>> mLatchClassDict;
 
   // 一時的にパタンを保持するクラス
   PatMgr mPatMgr;

@@ -10,6 +10,7 @@
 #include "cgmgr/CgSignature.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
+#include "ym/ClibSeqAttr.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -30,20 +31,19 @@ CiCell::new_Latch(
   const Expr& data_in,
   const Expr& clear,
   const Expr& preset,
-  ClibCPV clear_preset_var1,
-  ClibCPV clear_preset_var2
+  ClibSeqAttr seq_attr
 )
 {
   CiCell* ptr = nullptr;
-  if ( enable_also.is_valid() ) {
+  if ( seq_attr.has_slave_clock() ) {
     ptr = new CiLatch2Cell{
       name, area,
       var1, var2,
-      enable, enable_also,
+      enable,
+      enable_also,
       data_in,
       clear, preset,
-      clear_preset_var1,
-      clear_preset_var2
+      seq_attr
     };
   }
   else {
@@ -53,8 +53,7 @@ CiCell::new_Latch(
       enable,
       data_in,
       clear, preset,
-      clear_preset_var1,
-      clear_preset_var2
+      seq_attr
     };
   }
   return unique_ptr<CiCell>{ptr};
@@ -119,8 +118,7 @@ CiLatchCell::make_signature() const
 					 logic_list, tristate_list,
 					 enable, enable2, data_in,
 					 clear, preset,
-					 clear_preset_var1(),
-					 clear_preset_var2());
+					 seq_attr());
   return sig;
 }
 

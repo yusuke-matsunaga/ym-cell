@@ -16,7 +16,6 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
-class ClibSeqAttr;
 class CiCellLibrary;
 
 //////////////////////////////////////////////////////////////////////
@@ -302,29 +301,8 @@ public:
   // FFセルの情報の取得
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 単純な型のFFクラスを返す．
-  ///
-  /// 該当するセルがないときでも空のセルクラスが返される．
-  ClibCellClass
-  simple_ff_class(
-    bool master_slave,         ///< [in] master/slave 型の時 true
-    bool has_xq,               ///< [in] xq 端子を持つ時 true
-    ClibSeqType seq_type       ///< [in] clear 端子と preset 端子の有無
-  ) const;
-
-  /// @brief 単純な型のFFクラスを返す．
-  ///
-  /// 該当するセルがないときでも空のセルクラスが返される．
-  ClibCellClass
-  simple_ff_class(
-    bool master_slave,         ///< [in] master/slave 型の時 true
-    bool has_xq,               ///< [in] xq 端子を持つ時 true
-    ClibCPV cpv1,              ///< [in] clear_preset_var1 の値
-    ClibCPV cpv2               ///< [in] clear_preset_var2 の値
-  ) const;
-
   /// @brief 指定されたFFタイプのセルクラスを返す．
-  vector<ClibCellClass>
+  ClibCellClassList
   find_ff_class(
     ClibSeqAttr attr ///< [in] FFタイプの属性
   ) const;
@@ -335,29 +313,8 @@ public:
   // ラッチセルの情報の取得
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 単純な型のラッチクラスを返す．
-  ///
-  /// 該当するセルがないときでも空のセルクラスが返される．
-  ClibCellClass
-  simple_latch_class(
-    bool master_slave,         ///< [in] master/slave 型の時 true
-    bool has_xq,               ///< [in] xq 端子を持つ時 true
-    ClibSeqType seq_type       ///< [in] clear 端子と preset 端子の有無
-  ) const;
-
-  /// @brief 単純な型のラッチクラスを返す．
-  ///
-  /// 該当するセルがないときでも空のセルクラスが返される．
-  ClibCellClass
-  simple_latch_class(
-    bool master_slave,         ///< [in] master/slave 型の時 true
-    bool has_xq,               ///< [in] xq 端子を持つ時 true
-    ClibCPV cpv1,              ///< [in] clear_preset_var1 の値
-    ClibCPV cpv2               ///< [in] clear_preset_var2 の値
-  ) const;
-
   /// @brief 指定されたラッチタイプのセルクラスを返す．
-  vector<ClibCellClass>
+  ClibCellClassList
   find_latch_class(
     ClibSeqAttr attr ///< [in] FFタイプの属性
   ) const;

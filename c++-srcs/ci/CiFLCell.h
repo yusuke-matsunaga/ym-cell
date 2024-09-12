@@ -9,6 +9,7 @@
 /// All rights reserved.
 
 #include "ci/CiCell.h"
+#include "ym/ClibSeqAttr.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -33,15 +34,13 @@ public:
     const ShString& var2,      ///< [in] 内部変数2の名前
     const Expr& clear,         ///< [in] "clear" 関数の式
     const Expr& preset,        ///< [in] "preset" 関数の式
-    ClibCPV clear_preset_var1, ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2  ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+    ClibSeqAttr seq_attr       ///< [in] 順序セルの属性
   ) : CiCell{name, area},
       mVar1{var1},
       mVar2{var2},
       mClear{clear},
       mPreset{preset},
-      mCpv1{clear_preset_var1},
-      mCpv2{clear_preset_var2}
+      mSeqAttr{seq_attr}
   {
   }
 
@@ -74,19 +73,9 @@ public:
   Expr
   preset_expr() const override;
 
-  /// @brief clear と preset が同時にアクティブになった時の値1
-  ///
-  /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
-  /// FF/ラッチセル以外の場合には返り値は不定
-  ClibCPV
-  clear_preset_var1() const override;
-
-  /// @brief clear と preset が同時にアクティブになった時の値1
-  ///
-  /// has_clear() == true && has_preset() == true の時のみ意味を持つ．
-  /// FF/ラッチセル以外の場合には返り値は不定
-  ClibCPV
-  clear_preset_var2() const override;
+  /// @brief 順序セルの属性を返す．
+  ClibSeqAttr
+  seq_attr() const override;
 
 
 public:
@@ -124,11 +113,8 @@ private:
   // preset 論理式
   Expr mPreset;
 
-  // clear_preset_var1
-  ClibCPV mCpv1;
-
-  // clear_preset_var2
-  ClibCPV mCpv2;
+  // 順序セルの属性
+  ClibSeqAttr mSeqAttr;
 
 };
 

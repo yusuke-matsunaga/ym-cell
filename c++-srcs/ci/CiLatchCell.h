@@ -5,7 +5,7 @@
 /// @brief CiLatchCell のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "CiFLCell.h"
@@ -37,13 +37,12 @@ public:
     const Expr& data_in,         ///< [in] "data_in" 関数の式
     const Expr& clear,           ///< [in] "clear" 関数の式
     const Expr& preset,          ///< [in] "preset" 関数の式
-    ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+    ClibSeqAttr seq_attr         ///< [in] 順序セルの属性
   ) : CiFLCell{name, area,
                var1, var2,
-	       clear, preset,
-	       clear_preset_var1,
-	       clear_preset_var2},
+	       clear,
+	       preset,
+	       seq_attr},
       mEnable{enable},
       mDataIn{data_in}
   {
@@ -162,14 +161,14 @@ public:
     const Expr& data_in,	 ///< [in] "data_in" 関数の式
     const Expr& clear,           ///< [in] "clear" 関数の式
     const Expr& preset,          ///< [in] "preset" 関数の式
-    ClibCPV clear_preset_var1,   ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2    ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+    ClibSeqAttr seq_attr         ///< [in] 順序セルの属性
   ) : CiLatchCell{name, area,
                   var1, var2,
-		  enable, data_in,
-		  clear, preset,
-		  clear_preset_var1,
-		  clear_preset_var2},
+		  enable,
+		  data_in,
+		  clear,
+		  preset,
+		  seq_attr},
       mEnable2{enable_also}
   {
   }

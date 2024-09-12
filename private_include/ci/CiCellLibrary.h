@@ -344,29 +344,10 @@ public:
   // FFセルクラスの情報の取得
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 単純な型のFFクラスを返す．
-  ///
-  /// - cpv1, cpv2 の値は has_clear, has_preset がともに true
-  ///   の時のみ意味を持つ．
-  /// - 該当するセルがないときでも空のセルクラスが返される．
-  const CiCellClass*
-  simple_ff_class(
-    bool master_slave,   ///< [in] master/slave 型の時 true
-    bool has_xq,         ///< [in] xq 端子を持つ時 true
-    ClibSeqType seq_type ///< [in] clear 端子と preset 端子の有無
-  ) const;
-
-  /// @brief 単純な型のFFクラスを返す．
-  ///
-  /// - cpv1, cpv2 の値は has_clear, has_preset がともに true
-  ///   の時のみ意味を持つ．
-  /// - 該当するセルがないときでも空のセルクラスが返される．
-  const CiCellClass*
-  simple_ff_class(
-    bool master_slave, ///< [in] master/slave 型の時 true
-    bool has_xq,       ///< [in] xq 端子を持つ時 true
-    ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
-    ClibCPV cpv2       ///< [in] clear_preset_var2 の値
+  /// @brief 指定された順序セルの属性を持つFFクラスを返す．
+  vector<const CiCellClass*>
+  find_ff_class(
+    ClibSeqAttr seq_attr ///< [in] 順序セルの属性
   ) const;
 
 
@@ -375,29 +356,10 @@ public:
   // ラッチセルクラスの情報の取得
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 単純な型のラッチクラスを返す．
-  ///
-  /// - cpv1, cpv2 の値は has_clear, has_preset がともに true
-  ///   の時のみ意味を持つ．
-  /// - 該当するセルがないときでも空のセルクラスが返される．
-  const CiCellClass*
-  simple_latch_class(
-    bool master_slave,   ///< [in] master/slave 型の時 true
-    bool has_xq,         ///< [in] xq 端子を持つ時 true
-    ClibSeqType seq_type ///< [in] clear 端子と preset 端子の有無
-  ) const;
-
-  /// @brief 単純な型のラッチクラスを返す．
-  ///
-  /// - cpv1, cpv2 の値は has_clear, has_preset がともに true
-  ///   の時のみ意味を持つ．
-  /// - 該当するセルがないときでも空のセルクラスが返される．
-  const CiCellClass*
-  simple_latch_class(
-    bool master_slave, ///< [in] master/slave 型の時 true
-    bool has_xq,       ///< [in] xq 端子を持つ時 true
-    ClibCPV cpv1,      ///< [in] clear_preset_var1 の値
-    ClibCPV cpv2       ///< [in] clear_preset_var2 の値
+  /// @brief 指定された順序セルの属性を持つラッチクラスを返す．
+  vector<const CiCellClass*>
+  find_latch_class(
+    ClibSeqAttr seq_attr ///< [in] 順序セルの属性
   ) const;
 
 
@@ -637,6 +599,8 @@ public:
   /// @brief セルクラスを作る．
   CiCellClass*
   add_cell_class(
+    ClibCellType cell_type,             ///< [in] セルの種類
+    ClibSeqAttr seq_attr,               ///< [in] 順序セルの属性
     const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換のリスト
   );
 
@@ -666,8 +630,7 @@ public:
     const Expr& next_state,    ///< [in] 次状態の論理式
     const Expr& clear,         ///< [in] クリア条件の論理式
     const Expr& preset,        ///< [in] プリセット条件の論理式
-    ClibCPV clear_preset_var1, ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2  ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+    ClibSeqAttr seq_attr       ///< [in] 順序セルの属性
   );
 
   /// @brief ラッチセルを追加する．
@@ -682,8 +645,7 @@ public:
     const Expr& data_in,       ///< [in] データ入力の論理式
     const Expr& clear,         ///< [in] クリア条件の論理式
     const Expr& preset,        ///< [in] プリセット条件の論理式
-    ClibCPV clear_preset_var1, ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2  ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+    ClibSeqAttr seq_attr       ///< [in] 順序セルの属性
   );
 
   /// @brief FSMセルを追加する．
@@ -946,15 +908,15 @@ private:
   // 3: インバータ
   const CiCellGroup* mLogicGroup[4];
 
-  // 単純なFFクラスの情報
-  // インデックスは CiSeqInfo で作る．
-  vector<const CiCellClass*> mSimpleFFClass;
+  // FFセルクラスのリストを持つ辞書
+  // キーは ClibSeqAttr::index()
+  std::unordered_map<SizeType, vector<const CiCellClass*>> mFFClassDict;
 
-  // 単純なラッチクラスの情報
-  // インデックスは CiSeqInfo で作る．
-  vector<const CiCellClass*> mSimpleLatchClass;
+  // ラッチセルクラスのリストを持つ辞書
+  // キーは ClibSeqAttr::index()
+  std::unordered_map<SizeType, vector<const CiCellClass*>> mLatchClassDict;
 
-  // パタングラフを管理するクラス
+  // パタングラフを管理するオブジェクト
   CiPatMgr mPatMgr;
 
 };

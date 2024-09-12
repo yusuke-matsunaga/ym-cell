@@ -15,6 +15,7 @@
 #include "ym/ClibCellClass.h"
 #include "ym/ClibCellGroup.h"
 #include "ym/ClibPatGraph.h"
+#include "ym/ClibSeqAttr.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibTime.h"
 
@@ -778,102 +779,61 @@ ClibCellLibrary::display(
   display_group(s, "Buffer Group", buf_func());
   display_group(s, "Inverter Group", inv_func());
 
-  for ( auto seq_type: {ClibSeqType::none,
-			ClibSeqType::clear,
-			ClibSeqType::preset} ) {
-    for ( auto has_slave: {false, true} ) {
-      for ( auto has_xq: {false, true} ) {
-	auto cclass = simple_ff_class(has_slave, has_xq, seq_type);
-	ostringstream buf;
-	buf << "DFF";
-	if ( has_slave ) {
-	  buf << "2";
-	}
-	switch ( seq_type ) {
-	case ClibSeqType::none: break;
-	case ClibSeqType::clear: buf << "_R"; break;
-	case ClibSeqType::preset: buf << "_S"; break;
-	case ClibSeqType::clear_preset: break;
-	}
-	if ( has_xq ) {
-	  buf << "(XQ)";
-	}
-	buf << " Class#";
-	auto id = class_map.at(cclass.key());
-	buf << id;
-	display_class(s, buf.str(), cclass);
+  for ( SizeType index = 0; index < ClibSeqAttr::max_index(); ++ index ) {
+    ClibSeqAttr seq_attr{index};
+    auto class_list = find_ff_class(seq_attr);
+    ostringstream buf;
+    buf << "DFF";
+    if ( seq_attr.has_slave_clock() ) {
+      buf << "2";
+    }
+    if ( seq_attr.has_clear() ) {
+      if ( seq_attr.has_preset() ) {
+	auto cpv1 = seq_attr.cpv1();
+	auto cpv2 = seq_attr.cpv2();
+	buf << "_RS" << cpv1 << cpv2;
+      }
+      else {
+	buf << "_R";
       }
     }
-  }
-  for ( auto has_slave: {false, true} ) {
-    for ( auto has_xq: {false, true} ) {
-      for ( auto cpv1: CPV_LIST ) {
-	for ( auto cpv2: CPV_LIST ) {
-	  auto cclass = simple_ff_class(has_slave, has_xq, cpv1, cpv2);
-	  ostringstream buf;
-	  buf << "DFF";
-	  if ( has_slave ) {
-	    buf << "2";
-	  }
-	  buf << "_RS(";
-	  if ( has_xq ) {
-	    buf << "XQ, ";
-	  }
-	  buf << cpv1 << cpv2 << ") Class#";
-	  auto id = class_map.at(cclass.key());
-	  buf << id;
-	  display_class(s, buf.str(), cclass);
-	}
-      }
+    else if ( seq_attr.has_preset() ) {
+      buf << "_S";
+    }
+    for ( auto cclass: class_list ) {
+      buf << " Class#";
+      auto id = class_map.at(cclass.key());
+      buf << id;
+      display_class(s, buf.str(), cclass);
     }
   }
 
-  for ( auto seq_type: {ClibSeqType::none,
-			ClibSeqType::clear,
-			ClibSeqType::preset} ) {
-    for ( auto has_slave: {false, true} ) {
-      for ( auto has_xq: {false, true} ) {
-	auto cclass = simple_latch_class(has_slave, has_xq, seq_type);
-	ostringstream buf;
-	buf << "Latch";
-	if ( has_slave ) {
-	  buf << "2";
-	}
-	switch ( seq_type ) {
-	case ClibSeqType::none: break;
-	case ClibSeqType::clear: buf << "_R"; break;
-	case ClibSeqType::preset: buf << "_S"; break;
-	case ClibSeqType::clear_preset: break;
-	}
-	if ( has_xq ) {
-	  buf << "(XQ)";
-	}
-	buf << " Class#";
-	auto id = class_map.at(cclass.key());
-	buf << id;
-	display_class(s, buf.str(), cclass);
+  for ( SizeType index = 0; index < ClibSeqAttr::max_index(); ++ index ) {
+    ClibSeqAttr seq_attr{index};
+    auto class_list = find_latch_class(seq_attr);
+    ostringstream buf;
+    buf << "Latch";
+    if ( seq_attr.has_slave_clock() ) {
+      buf << "2";
+    }
+    if ( seq_attr.has_clear() ) {
+      if ( seq_attr.has_preset() ) {
+	auto cpv1 = seq_attr.cpv1();
+	auto cpv2 = seq_attr.cpv2();
+	buf << "_RS" << cpv1 << cpv2;
+      }
+      else {
+	buf << "_R";
       }
     }
-  }
-  for ( auto has_slave: {false, true} ) {
-    for ( auto has_xq: {false, true} ) {
-      for ( auto cpv1: CPV_LIST ) {
-	for ( auto cpv2: CPV_LIST ) {
-	  auto cclass = simple_latch_class(has_slave, has_xq, cpv1, cpv2);
-	  ostringstream buf;
-	  buf << "Latch";
-	  if ( has_slave ) {
-	    buf << "2";
-	  }
-	  if ( has_xq ) {
-	    buf << "(XQ, ";
-	  }
-	  buf << cpv1 << cpv2 << ") Class";
-	  auto id = class_map.at(cclass.key());
-	  buf << id;
-	  display_class(s, buf.str(), cclass);
-	}
-      }
+    else if ( seq_attr.has_preset() ) {
+      buf << "_S";
+    }
+    for ( auto cclass: class_list ) {
+      buf << " Class#";
+      auto id = class_map.at(cclass.key());
+      buf << id;
+      display_class(s, buf.str(), cclass);
     }
   }
 

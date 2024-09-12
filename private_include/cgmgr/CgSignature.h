@@ -104,8 +104,7 @@ public:
     const TvFunc& next_state,            ///< [in] 次状態関数
     const TvFunc& clear,                 ///< [in] クリア条件
     const TvFunc& preset,                ///< [in] プリセット条件
-    ClibCPV clear_preset_var1, ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2  ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+    ClibSeqAttr seq_attr                 ///< [in] 順序セルの属性
   );
 
   /// @brief ラッチ用のシグネチャを作る．
@@ -125,8 +124,7 @@ public:
     const TvFunc& data_in,               ///< [in] データ入力
     const TvFunc& clear,                 ///< [in] クリア条件
     const TvFunc& preset,                ///< [in] プリセット条件
-    ClibCPV clear_preset_var1, ///< [in] クリアとプリセットが同時にアクティブになった時の値1
-    ClibCPV clear_preset_var2  ///< [in] クリアとプリセットが同時にアクティブになった時の値2
+    ClibSeqAttr seq_attr                 ///< [in] 順序セルの属性
   );
 
 
@@ -145,6 +143,14 @@ public:
   /// @brief シグネチャ文字列を返す．
   string
   str() const;
+
+  /// @brief セルの種類を返す．
+  ClibCellType
+  cell_type() const;
+
+  /// @brief 順序セルの属性を返す．
+  ClibSeqAttr
+  seq_attr() const;
 
   /// @brief 単一の論理式を持つ時その式を返す．
   Expr

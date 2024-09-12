@@ -19,11 +19,11 @@
 #include "ci/CiBusType.h"
 #include "ci/CiPatGraph.h"
 #include "ci/CiCell.h"
-#include "ci/CiSeqInfo.h"
 #include "cgmgr/CgMgr.h"
 #include "cgmgr/CgSignature.h"
 #include "cgmgr/PatMgr.h"
 #include "cgmgr/PatNode.h"
+#include "ym/ClibSeqAttr.h"
 #include "ym/Range.h"
 
 
@@ -34,9 +34,7 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CiCellLibrary::CiCellLibrary() :
-  mSimpleFFClass(CiSeqInfo::max_index()),
-  mSimpleLatchClass(CiSeqInfo::max_index())
+CiCellLibrary::CiCellLibrary()
 {
 }
 
@@ -63,54 +61,30 @@ CiCellLibrary::dec_ref() const
   }
 }
 
-// @brief 単純な型のFFクラスを返す．
-const CiCellClass*
-CiCellLibrary::simple_ff_class(
-  bool master_slave,
-  bool has_xq,
-  ClibSeqType seq_type
+// @brief FFクラスを返す．
+vector<const CiCellClass*>
+CiCellLibrary::find_ff_class(
+  ClibSeqAttr seq_attr
 ) const
 {
-  CiSeqInfo info{master_slave, has_xq, seq_type};
-  return mSimpleFFClass[info.encode_val()];
+  auto index = seq_attr.index();
+  if ( mFFClassDict.count(index) > 0 ) {
+    return mFFClassDict.at(index);
+  }
+  return {};
 }
 
-// @brief 単純な型のFFクラスを返す．
-const CiCellClass*
-CiCellLibrary::simple_ff_class(
-  bool master_slave,
-  bool has_xq,
-  ClibCPV cpv1,
-  ClibCPV cpv2
+// @brief ラッチクラスを返す．
+vector<const CiCellClass*>
+CiCellLibrary::find_latch_class(
+  ClibSeqAttr seq_attr
 ) const
 {
-  CiSeqInfo info{master_slave, has_xq, cpv1, cpv2};
-  return mSimpleFFClass[info.encode_val()];
-}
-
-// @brief 単純な型のラッチクラスを返す．
-const CiCellClass*
-CiCellLibrary::simple_latch_class(
-  bool master_slave,
-  bool has_xq,
-  ClibSeqType seq_type
-) const
-{
-  CiSeqInfo info{master_slave, has_xq, seq_type};
-  return mSimpleLatchClass[info.encode_val()];
-}
-
-// @brief 単純な型のラッチクラスを返す．
-const CiCellClass*
-CiCellLibrary::simple_latch_class(
-  bool master_slave,
-  bool has_xq,
-  ClibCPV cpv1,
-  ClibCPV cpv2
-) const
-{
-  CiSeqInfo info{master_slave, has_xq, cpv1, cpv2};
-  return mSimpleLatchClass[info.encode_val()];
+  auto index = seq_attr.index();
+  if ( mLatchClassDict.count(index) > 0 ) {
+    return mLatchClassDict.at(index);
+  }
+  return {};
 }
 
 // @brief 属性を設定する(浮動小数点型)
@@ -267,10 +241,12 @@ CiCellLibrary::add_lut_template3(
 // @brief セルクラスを作る．
 CiCellClass*
 CiCellLibrary::add_cell_class(
+  ClibCellType cell_type,
+  ClibSeqAttr seq_attr,
   const vector<ClibIOMap>& idmap_list
 )
 {
-  auto cc = new CiCellClass{this, idmap_list};
+  auto cc = new CiCellClass{this, cell_type, seq_attr, idmap_list};
   mCellClassList.push_back(unique_ptr<CiCellClass>(cc));
   return cc;
 }
@@ -310,17 +286,17 @@ CiCellLibrary::add_ff_cell(
   const Expr& next_state,
   const Expr& clear,
   const Expr& preset,
-  ClibCPV clear_preset_var1,
-  ClibCPV clear_preset_var2
+  ClibSeqAttr seq_attr
 )
 {
   auto ptr = CiCell::new_FF(name, area,
 			    var1, var2,
-			    clock, clock2,
+			    clock,
+			    clock2,
 			    next_state,
-			    clear, preset,
-			    clear_preset_var1,
-			    clear_preset_var2);
+			    clear,
+			    preset,
+			    seq_attr);
   return reg_cell(ptr);
 }
 
@@ -336,17 +312,17 @@ CiCellLibrary::add_latch_cell(
   const Expr& data_in,
   const Expr& clear,
   const Expr& preset,
-  ClibCPV clear_preset_var1,
-  ClibCPV clear_preset_var2
+  ClibSeqAttr seq_attr
 )
 {
   auto ptr = CiCell::new_Latch(name, area,
 			       var1, var2,
-			       enable, enable2,
+			       enable,
+			       enable2,
 			       data_in,
-			       clear, preset,
-			       clear_preset_var1,
-			       clear_preset_var2);
+			       clear,
+			       preset,
+			       seq_attr);
   return reg_cell(ptr);
 }
 
@@ -435,14 +411,8 @@ CiCellLibrary::compile()
   for ( SizeType index: { 0, 1, 2, 3 } ) {
     mLogicGroup[index] = cgmgr.logic_group(index);
   }
-  for ( SizeType index = 0; index < CiSeqInfo::max_index(); ++ index ) {
-    auto info = CiSeqInfo::decode_index(index);
-    mSimpleFFClass[index] = cgmgr.ff_class(info);
-  }
-  for ( SizeType index = 0; index < CiSeqInfo::max_index(); ++ index ) {
-    auto info = CiSeqInfo::decode_index(index);
-    mSimpleLatchClass[info.encode_val()] = cgmgr.latch_class(info);
-  }
+  mFFClassDict = cgmgr.ff_class_dict();
+  mLatchClassDict = cgmgr.latch_class_dict();
 
   // パタングラフの情報をコピーする．
   SizeType nn = cgmgr.pat_node_num();

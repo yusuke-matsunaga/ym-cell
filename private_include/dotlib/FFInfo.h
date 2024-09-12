@@ -10,6 +10,7 @@
 
 #include "dotlib/dotlib_nsdef.h"
 #include "dotlib/FLInfo.h"
+#include "ym/ClibSeqAttr.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -64,6 +65,25 @@ public:
   next_state() const
   {
     return mNextState;
+  }
+
+  /// @brief 順序セルの属性を返す．
+  ClibSeqAttr
+  seq_attr() const
+  {
+    bool has_slave_clock = mClockedOnAlso != nullptr;
+    bool has_clear = clear() != nullptr;
+    bool has_preset = preset() != nullptr;
+    if ( has_clear && has_preset ) {
+      return ClibSeqAttr{has_slave_clock,
+			 clear_preset_var1(),
+			 clear_preset_var2()};
+    }
+    else {
+      return ClibSeqAttr{has_slave_clock,
+			 has_clear,
+			 has_preset};
+    }
   }
 
 

@@ -3,7 +3,7 @@
 /// @brief ClibCellLibrary の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2017, 2021, 2022, 2023 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/ClibCellLibrary.h"
@@ -12,6 +12,7 @@
 #include "ym/ClibCellClass.h"
 #include "ym/ClibCellGroup.h"
 #include "ym/ClibPatGraph.h"
+#include "ym/ClibSeqAttr.h"
 #include "ci/CiCellLibrary.h"
 
 
@@ -384,67 +385,29 @@ ClibCellLibrary::inv_func() const
   return {};
 }
 
-// @brief 単純な型のFFクラスを返す．
-ClibCellClass
-ClibCellLibrary::simple_ff_class(
-  bool master_slave,
-  bool has_xq,
-  ClibSeqType seq_type
+// @brief FFクラスを返す．
+ClibCellClassList
+ClibCellLibrary::find_ff_class(
+  ClibSeqAttr seq_attr
 ) const
 {
   if ( mImpl ) {
-    auto cc = mImpl->simple_ff_class(master_slave, has_xq, seq_type);
-    return ClibCellClass{cc};
+    auto class_list = mImpl->find_ff_class(seq_attr);
+    return ClibCellClassList{class_list};
   }
   // デフォルト値
   return {};
 }
 
-// @brief 単純な型のFFクラスを返す．
-ClibCellClass
-ClibCellLibrary::simple_ff_class(
-  bool master_slave,
-  bool has_xq,
-  ClibCPV cpv1,
-  ClibCPV cpv2
+// @brief ラッチクラスを返す．
+ClibCellClassList
+ClibCellLibrary::find_latch_class(
+  ClibSeqAttr seq_attr
 ) const
 {
   if ( mImpl ) {
-    auto cc = mImpl->simple_ff_class(master_slave, has_xq, cpv1, cpv2);
-    return ClibCellClass{cc};
-  }
-  // デフォルト値
-  return {};
-}
-
-// @brief 単純な型のラッチクラスを返す．
-ClibCellClass
-ClibCellLibrary::simple_latch_class(
-  bool master_slave,
-  bool has_xq,
-  ClibSeqType seq_type
-) const
-{
-  if ( mImpl ) {
-    auto cc = mImpl->simple_latch_class(master_slave, has_xq, seq_type);
-    return ClibCellClass{cc};
-  }
-  // デフォルト値
-  return {};
-}
-
-// @brief 単純な型のラッチクラスを返す．
-ClibCellClass
-ClibCellLibrary::simple_latch_class(
-  bool master_slave,
-  bool has_xq,
-  ClibCPV cpv1,
-  ClibCPV cpv2
-) const
-{
-  if ( mImpl ) {
-    auto cc = mImpl->simple_latch_class(master_slave, has_xq, cpv1, cpv2);
-    return ClibCellClass{cc};
+    auto class_list = mImpl->find_latch_class(seq_attr);
+    return ClibCellClassList{class_list};
   }
   // デフォルト値
   return {};

@@ -10,6 +10,7 @@
 
 #include "ym/clib.h"
 #include "ym/ClibIOMap.h"
+#include "ym/ClibSeqAttr.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -33,8 +34,12 @@ public:
   /// @brief コンストラクタ
   CiCellClass(
     CiCellLibrary* lib,                 ///< [in] 親のセルライブラリ
+    ClibCellType cell_type,             ///< [in] セルの種類
+    ClibSeqAttr seq_attr,               ///< [in] 順序セルの属性
     const vector<ClibIOMap>& idmap_list ///< [in] 同位体変換リスト
   ): mLibrary{lib},
+     mCellType{cell_type},
+     mSeqAttr{seq_attr},
      mIdMapList{idmap_list}
   {
   }
@@ -53,6 +58,20 @@ public:
   library() const
   {
     return mLibrary;
+  }
+
+  /// @brief セルの種類を返す．
+  ClibCellType
+  cell_type() const
+  {
+    return mCellType;
+  }
+
+  /// @brief 順序セルタイプの場合の属性を返す．
+  ClibSeqAttr
+  seq_attr() const
+  {
+    return mSeqAttr;
   }
 
   /// @brief 同位体変換の個数を得る．
@@ -179,6 +198,12 @@ private:
 
   // 親のライブラリオブジェクト
   CiCellLibrary* mLibrary;
+
+  // セルの種類
+  ClibCellType mCellType;
+
+  // 順序セルの属性
+  ClibSeqAttr mSeqAttr;
 
   // 同位体変換のリスト
   vector<ClibIOMap> mIdMapList;

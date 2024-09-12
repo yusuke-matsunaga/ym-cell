@@ -172,13 +172,15 @@ CellInfo::add_ff_cell() const
   if ( mFFInfo.preset() != nullptr ) {
     preset = mFFInfo.preset()->to_expr(mIpinMap);
   }
-  auto cpv1 = mFFInfo.clear_preset_var1();
-  auto cpv2 = mFFInfo.clear_preset_var2();
+  auto seq_attr = mFFInfo.seq_attr();
   auto cell = library()->add_ff_cell(mName, mArea,
 				     var1, var2,
-				     clocked_on, clocked_on_also,
-				     next_state, clear, preset,
-				     cpv1, cpv2);
+				     clocked_on,
+				     clocked_on_also,
+				     next_state,
+				     clear,
+				     preset,
+				     seq_attr);
   return cell;
 }
 
@@ -208,13 +210,15 @@ CellInfo::add_latch_cell() const
   if ( mLatchInfo.preset() != nullptr ) {
     preset = mLatchInfo.preset()->to_expr(mIpinMap);
   }
-  auto cpv1 = mLatchInfo.clear_preset_var1();
-  auto cpv2 = mLatchInfo.clear_preset_var2();
+  auto seq_attr = mLatchInfo.seq_attr();
   auto cell = library()->add_latch_cell(mName, mArea,
 					var1, var2,
-					enable_on, enable_on_also,
-					data_in, clear, preset,
-					cpv1, cpv2);
+					enable_on,
+					enable_on_also,
+					data_in,
+					clear,
+					preset,
+					seq_attr);
   return cell;
 }
 

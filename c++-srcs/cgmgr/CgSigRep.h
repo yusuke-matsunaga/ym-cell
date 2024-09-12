@@ -12,6 +12,7 @@
 #include "ym/ClibIOMap.h"
 #include "ym/Expr.h"
 #include "ym/NpnMap.h"
+#include "ym/ClibSeqAttr.h"
 #include "CgPolInfo.h"
 
 
@@ -28,15 +29,32 @@ class CgSigRep
 {
 public:
 
-  /// @brief コンストラクタ
+  /// @brief コンストラクタ(1出力の組み合わせ論理セル)
   CgSigRep(
-    const string& prefix,                ///< [in] シグネチャの接頭辞
+    SizeType ni,                         ///< [in] 入力数
+    const Expr& expr                     ///< [in] 論理式
+  );
+
+  /// @brief コンストラクタ(汎用の組み合わせ論理セル)
+  CgSigRep(
+    SizeType ni,                         ///< [in] 入力数
+    SizeType no,                         ///< [in] 出力数
+    SizeType nb,                         ///< [in] 入出力数
+    const vector<TvFunc>& func_list,     ///< [in] 対象の論理関数のリスト
+    const vector<TvFunc>& tristate_list  ///< [in] tristate条件のリスト
+  );
+
+  /// @brief コンストラクタ(順序セル)
+  CgSigRep(
+    ClibCellType cell_type,              ///< [in] セルの種類
+    ClibSeqAttr seq_attr,                ///< [in] 順序セルの属性
     SizeType ni,                         ///< [in] 入力数
     SizeType no,                         ///< [in] 出力数
     SizeType nb,                         ///< [in] 入出力数
     const vector<TvFunc>& func_list,     ///< [in] 対象の論理関数のリスト
     const vector<TvFunc>& tristate_list, ///< [in] tristate条件のリスト
-    const Expr& expr = Expr::make_invalid() ///< [in] 単一の論理式
+    const Expr& expr                     ///< [in] 論理式
+    = Expr::make_invalid()
   );
 
   /// @brief デストラクタ
@@ -51,6 +69,14 @@ public:
   /// @brief シグネチャ文字列を返す．
   string
   str() const;
+
+  /// @brief セルの種類を返す．
+  ClibCellType
+  cell_type() const;
+
+  /// @brief 順序セルの属性を返す．
+  ClibSeqAttr
+  seq_attr() const;
 
   /// @brief 単一の論理式を持つ場合，その式を返す．
   Expr
@@ -124,8 +150,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 接頭辞
-  string mPrefix;
+  // セルの種類
+  ClibCellType mCellType{ClibCellType::Logic};
+
+  // 順序セルの属性
+  ClibSeqAttr mSeqAttr;
 
   // 入力数
   SizeType mNi;

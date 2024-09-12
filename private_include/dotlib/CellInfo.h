@@ -29,6 +29,11 @@ class CellInfo :
 {
 public:
 
+  /// @brief ピン名からピン番号を得る辞書の型
+  using PinMap = std::unordered_map<ShString, SizeType>;
+
+public:
+
   /// @brief コンストラクタ
   CellInfo(
     LibraryInfo& library_info ///< [in] ライブラリのパース情報
@@ -132,10 +137,10 @@ private:
   SizeType mOutputId;
 
   // ピン名をキーにして入力ピン番号を格納する辞書
-  unordered_map<ShString, SizeType> mIpinMap;
+  PinMap mIpinMap;
 
   // ピン名をキーにして出力ピン番号を格納する辞書
-  unordered_map<ShString, SizeType> mOpinMap;
+  PinMap mOpinMap;
 
 };
 

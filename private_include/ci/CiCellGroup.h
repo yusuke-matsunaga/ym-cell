@@ -67,6 +67,14 @@ public:
     return mIoMap;
   }
 
+  /// @brief セルの種類を返す．
+  ClibCellType
+  cell_type() const;
+
+  /// @brief 順序セルタイプの場合の属性を返す．
+  ClibSeqAttr
+  seq_attr() const;
+
 
 public:
   //////////////////////////////////////////////////////////////////////

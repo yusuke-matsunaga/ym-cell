@@ -113,8 +113,8 @@ CiCellLibrary::_restore(
   for ( auto id: Range(4) ) {
     s.restore(mLogicGroup[id]);
   }
-  s.restore(mSimpleFFClass);
-  s.restore(mSimpleLatchClass);
+  s.restore(mFFClassDict);
+  s.restore(mLatchClassDict);
 
   // パタングラフの情報の設定
   mPatMgr.restore(s);

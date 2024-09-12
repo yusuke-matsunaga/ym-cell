@@ -3,7 +3,7 @@
 /// @brief CiLFCell の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2021, 2022 Yusuke Matsunaga
+/// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "CiFLCell.h"
@@ -45,18 +45,11 @@ CiFLCell::preset_expr() const
   return mPreset;
 }
 
-// @brief clear と preset が同時にアクティブになった時の値1
-ClibCPV
-CiFLCell::clear_preset_var1() const
+// @brief 順序セルの属性を返す．
+ClibSeqAttr
+CiFLCell::seq_attr() const
 {
-  return mCpv1;
-}
-
-// @brief clear と preset が同時にアクティブになった時の値1
-ClibCPV
-CiFLCell::clear_preset_var2() const
-{
-  return mCpv2;
+  return mSeqAttr;
 }
 
 // @brief 内容をバイナリダンプする．
@@ -70,8 +63,7 @@ CiFLCell::dump_FL(
   s.dump(mVar2);
   s.dump(mClear);
   s.dump(mPreset);
-  s.dump(mCpv1);
-  s.dump(mCpv2);
+  s.dump(mSeqAttr);
 }
 
 // @brief 内容を読み込む．
@@ -85,8 +77,7 @@ CiFLCell::restore_FL(
   s.restore(mVar2);
   s.restore(mClear);
   s.restore(mPreset);
-  s.restore(mCpv1);
-  s.restore(mCpv2);
+  s.restore(mSeqAttr);
 }
 
 END_NAMESPACE_YM_CLIB

@@ -14,6 +14,7 @@
 #include "ym/ClibArea.h"
 #include "ym/ClibCapacitance.h"
 #include "ym/ClibResistance.h"
+#include "ym/ClibSeqAttr.h"
 #include "ym/ClibTime.h"
 #include "ci/CiBusType.h"
 #include "ci/CiLutTemplate.h"
@@ -143,6 +144,15 @@ public:
   )
   {
     dst = static_cast<ClibDelayModel>(in().read_8());
+  }
+
+  /// @brief ClibSeqAttr の読み込み
+  void
+  restore(
+    ClibSeqAttr& dst
+  )
+  {
+    dst = ClibSeqAttr{static_cast<SizeType>(in().read_8())};
   }
 
   /// @brief ClibTimingSense の読み込み
@@ -438,6 +448,24 @@ public:
     dst.resize(n);
     for ( SizeType i = 0; i < n; ++ i ) {
       restore(dst[i]);
+    }
+  }
+
+  /// @brief 辞書の読み込み
+  template<class T>
+  void
+  restore(
+    std::unordered_map<SizeType, T>& dst
+  )
+  {
+    dst.clear();
+    SizeType n = in().read_64();
+    for ( SizeType i = 0; i < n; ++ i ) {
+      SizeType key;
+      restore(key);
+      T val;
+      restore(val);
+      dst.emplace(key, std::move(val));
     }
   }
 

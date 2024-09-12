@@ -8,6 +8,7 @@
 
 #include "cgmgr/CgSignature.h"
 #include "ym/ClibIOMap.h"
+#include "ym/ClibSeqAttr.h"
 #include "ym/Expr.h"
 #include "CgSigRep.h"
 
@@ -66,11 +67,7 @@ CgSignature::make_logic_sig(
   const Expr& expr
 )
 {
-  string prefix{"C"};
-  SizeType no = 1;
-  SizeType nb = 0;
-  auto func = expr.make_tv(ni);
-  auto rep = new CgSigRep{prefix, ni, no, nb, {func}, {TvFunc::make_invalid()}, expr};
+  auto rep = new CgSigRep{ni, expr};
   return CgSignature{unique_ptr<CgSigRep>{rep}};
 }
 
@@ -84,31 +81,11 @@ CgSignature::make_logic_sig(
   const vector<TvFunc>& tristate_list
 )
 {
-  string prefix{"C"};
-  auto rep = new CgSigRep{prefix, ni, no, nb, func_list, tristate_list};
+  auto rep = new CgSigRep{ni, no, nb,
+			  func_list,
+			  tristate_list};
   return CgSignature{unique_ptr<CgSigRep>{rep}};
 }
-
-BEGIN_NONAMESPACE
-
-// clear_preset_var1/var2 の値をエンコードする．
-inline
-string
-encode_cpv(
-  ClibCPV clear_preset_var
-)
-{
-  switch ( clear_preset_var ) {
-  case ClibCPV::L: return "L";
-  case ClibCPV::H: return "H";
-  case ClibCPV::N: return "N";
-  case ClibCPV::T: return "T";
-  case ClibCPV::X: return "X";
-  }
-  return string{};
-}
-
-END_NONAMESPACE
 
 // @brief FF用のシグネチャを作る．
 CgSignature
@@ -123,8 +100,7 @@ CgSignature::make_ff_sig(
   const TvFunc& next_state,
   const TvFunc& clear,
   const TvFunc& preset,
-  ClibCPV clear_preset_var1,
-  ClibCPV clear_preset_var2
+  ClibSeqAttr seq_attr
 )
 {
   SizeType ni2 = ni + nb;
@@ -142,8 +118,10 @@ CgSignature::make_ff_sig(
   sig_func_list[no2 + 2] = next_state;
   sig_func_list[no2 + 3] = clear;
   sig_func_list[no2 + 4] = preset;
-  auto prefix = string{"F"} + encode_cpv(clear_preset_var1) + encode_cpv(clear_preset_var2);
-  auto rep = new CgSigRep{prefix, ni, no, nb, sig_func_list, sig_tristate_list};
+  auto rep = new CgSigRep{ClibCellType::FF, seq_attr,
+			  ni, no, nb,
+			  sig_func_list,
+			  sig_tristate_list};
   return CgSignature{unique_ptr<CgSigRep>{rep}};
 }
 
@@ -160,8 +138,7 @@ CgSignature::make_latch_sig(
   const TvFunc& data_in,
   const TvFunc& clear,
   const TvFunc& preset,
-  ClibCPV clear_preset_var1,
-  ClibCPV clear_preset_var2
+  ClibSeqAttr seq_attr
 )
 {
   SizeType ni2 = ni + nb;
@@ -179,8 +156,10 @@ CgSignature::make_latch_sig(
   sig_func_list[no2 + 2] = data_in;
   sig_func_list[no2 + 3] = clear;
   sig_func_list[no2 + 4] = preset;
-  auto prefix = string{"L"} + encode_cpv(clear_preset_var1) + encode_cpv(clear_preset_var2);
-  auto rep = new CgSigRep{prefix, ni, no, nb, sig_func_list, sig_tristate_list};
+  auto rep = new CgSigRep{ClibCellType::Latch, seq_attr,
+			  ni, no, nb,
+			  sig_func_list,
+			  sig_tristate_list};
   return CgSignature{unique_ptr<CgSigRep>{rep}};
 }
 
@@ -191,9 +170,27 @@ CgSignature::str() const
   if ( is_valid() ) {
     return mRepPtr->str();
   }
-  else {
-    return string{};
+  return string{};
+}
+
+// @brief セルの種類を返す．
+ClibCellType
+CgSignature::cell_type() const
+{
+  if ( is_valid() ) {
+    return mRepPtr->cell_type();
   }
+  return ClibCellType::none;
+}
+
+// @brief 順序セルの属性を返す．
+ClibSeqAttr
+CgSignature::seq_attr() const
+{
+  if ( is_valid() ) {
+    return mRepPtr->seq_attr();
+  }
+  return ClibSeqAttr{};
 }
 
 // @brief 単一の論理式を持つ時その式を返す．

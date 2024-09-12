@@ -126,16 +126,46 @@ from_npnmap(
 END_NONAMESPACE
 
 
-// @brief コンストラクタ
+// @brief コンストラクタ(1出力の組み合わせ論理セル)
 CgSigRep::CgSigRep(
-  const string& prefix,
+  SizeType ni,
+  const Expr& expr
+) : mNi{ni},
+    mNo{1},
+    mNb{0},
+    mFuncList{expr.make_tv(ni)},
+    mTristateList{TvFunc::make_invalid()},
+    mExpr{expr}
+{
+}
+
+// @brief コンストラクタ(汎用の組み合わせ論理セル)
+CgSigRep::CgSigRep(
+  SizeType ni,
+  SizeType no,
+  SizeType nb,
+  const vector<TvFunc>& func_list,
+  const vector<TvFunc>& tristate_list
+): mNi{ni},
+   mNo{no},
+   mNb{nb},
+   mFuncList{func_list},
+   mTristateList{tristate_list}
+{
+}
+
+// @brief コンストラクタ(順序セル)
+CgSigRep::CgSigRep(
+  ClibCellType cell_type,
+  ClibSeqAttr seq_attr,
   SizeType ni,
   SizeType no,
   SizeType nb,
   const vector<TvFunc>& func_list,
   const vector<TvFunc>& tristate_list,
   const Expr& expr
-) : mPrefix{prefix},
+) : mCellType{cell_type},
+    mSeqAttr{seq_attr},
     mNi{ni},
     mNo{no},
     mNb{nb},
@@ -150,7 +180,20 @@ string
 CgSigRep::str() const
 {
   ostringstream buf;
-  buf << mPrefix << ":"
+  switch ( mCellType ) {
+  case ClibCellType::Logic:
+    buf << "C";
+    break;
+  case ClibCellType::FF:
+    buf << "F" << mSeqAttr.cpv1() << mSeqAttr.cpv2();
+    break;
+  case ClibCellType::Latch:
+    buf << "L" << mSeqAttr.cpv1() << mSeqAttr.cpv2();
+    break;
+  default:
+    break;
+  }
+  buf << ":"
       << mNi << ":"
       << mNo << ":"
       << mNb;
@@ -160,6 +203,20 @@ CgSigRep::str() const
 	<< ":"<< hex_str(mTristateList[i]);
   }
   return buf.str();
+}
+
+// @brief セルの種類を返す．
+ClibCellType
+CgSigRep::cell_type() const
+{
+  return mCellType;
+}
+
+// @brief 順序セルの属性を返す．
+ClibSeqAttr
+CgSigRep::seq_attr() const
+{
+  return mSeqAttr;
 }
 
 // @brief 単一の論理式を持つ場合，その式を返す．
@@ -238,7 +295,11 @@ CgSigRep::xform(
     auto npnmap = to_npnmap(iomap, ni, 0);
     xexpr = xform_expr(mExpr, npnmap);
   }
-  auto rep = new CgSigRep{mPrefix, mNi, mNo, mNb, xfunc_list, xtristate_list, xexpr};
+  auto rep = new CgSigRep{mCellType, mSeqAttr,
+			  mNi, mNo, mNb,
+			  xfunc_list,
+			  xtristate_list,
+			  xexpr};
   return unique_ptr<CgSigRep>{rep};
 }
 
