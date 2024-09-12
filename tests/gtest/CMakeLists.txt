@@ -45,6 +45,16 @@ ym_add_gtest ( cell_ClibResistance_test
   cell_library/ClibResistanceTest.cc
   )
 
+# ===================================================================
+#  ClibSeqAttr_test
+# ===================================================================
+ym_add_gtest ( cell_ClibSeqAttr_test
+  cell_library/ClibSeqAttrTest.cc
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  )
+
 
 # ===================================================================
 #  ClibTime_test

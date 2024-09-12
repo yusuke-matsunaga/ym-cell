@@ -16,6 +16,7 @@
 
 BEGIN_NAMESPACE_YM_CLIB
 
+class ClibSeqAttr;
 class CiCellLibrary;
 
 //////////////////////////////////////////////////////////////////////
@@ -322,6 +323,12 @@ public:
     ClibCPV cpv2               ///< [in] clear_preset_var2 の値
   ) const;
 
+  /// @brief 指定されたFFタイプのセルクラスを返す．
+  vector<ClibCellClass>
+  find_ff_class(
+    ClibSeqAttr attr ///< [in] FFタイプの属性
+  ) const;
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -347,6 +354,12 @@ public:
     bool has_xq,               ///< [in] xq 端子を持つ時 true
     ClibCPV cpv1,              ///< [in] clear_preset_var1 の値
     ClibCPV cpv2               ///< [in] clear_preset_var2 の値
+  ) const;
+
+  /// @brief 指定されたラッチタイプのセルクラスを返す．
+  vector<ClibCellClass>
+  find_latch_class(
+    ClibSeqAttr attr ///< [in] FFタイプの属性
   ) const;
 
 
