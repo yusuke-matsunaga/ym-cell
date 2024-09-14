@@ -12,7 +12,8 @@ Library(HIT018)
   capacitive_load_unit: 1pf
   leakage_power_unit: 
 
-Clib#0 (HIT18AND2P005) : Combinational Logic
+HIT18AND2P005: Cell#0(Group#4)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.003052
@@ -129,7 +130,8 @@ Clib#0 (HIT18AND2P005) : Combinational Logic
                 (1.285, 1.288, 1.293)
                )
 
-Clib#1 (HIT18AND2P010) : Combinational Logic
+HIT18AND2P010: Cell#1(Group#4)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005941
@@ -246,7 +248,8 @@ Clib#1 (HIT18AND2P010) : Combinational Logic
                 (1.219, 1.22, 1.225)
                )
 
-Clib#2 (HIT18AND2P015) : Combinational Logic
+HIT18AND2P015: Cell#2(Group#4)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008296
@@ -363,7 +366,8 @@ Clib#2 (HIT18AND2P015) : Combinational Logic
                 (1.588, 1.589, 1.593)
                )
 
-Clib#3 (HIT18AND2P020) : Combinational Logic
+HIT18AND2P020: Cell#3(Group#4)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008736
@@ -480,7 +484,8 @@ Clib#3 (HIT18AND2P020) : Combinational Logic
                 (1.18, 1.181, 1.186)
                )
 
-Clib#4 (HIT18AND2P030) : Combinational Logic
+HIT18AND2P030: Cell#4(Group#4)
+  type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008705
@@ -597,7 +602,8 @@ Clib#4 (HIT18AND2P030) : Combinational Logic
                 (1.552, 1.552, 1.556)
                )
 
-Clib#5 (HIT18AND2P040) : Combinational Logic
+HIT18AND2P040: Cell#5(Group#4)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008761
@@ -714,7 +720,8 @@ Clib#5 (HIT18AND2P040) : Combinational Logic
                 (1.166, 1.167, 1.173)
                )
 
-Clib#6 (HIT18AND2P040S) : Combinational Logic
+HIT18AND2P040S: Cell#6(Group#4)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.018171
@@ -831,7 +838,8 @@ Clib#6 (HIT18AND2P040S) : Combinational Logic
                 (1.156, 1.158, 1.163)
                )
 
-Clib#7 (HIT18AND2P060) : Combinational Logic
+HIT18AND2P060: Cell#7(Group#4)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.018249
@@ -948,7 +956,8 @@ Clib#7 (HIT18AND2P060) : Combinational Logic
                 (1.527, 1.528, 1.532)
                )
 
-Clib#8 (HIT18AND2P080) : Combinational Logic
+HIT18AND2P080: Cell#8(Group#4)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.018198
@@ -1065,7 +1074,8 @@ Clib#8 (HIT18AND2P080) : Combinational Logic
                 (1.153, 1.154, 1.16)
                )
 
-Clib#9 (HIT18AND2P080S) : Combinational Logic
+HIT18AND2P080S: Cell#9(Group#4)
+  type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
     Capacitance      = 0.029448
@@ -1182,7 +1192,8 @@ Clib#9 (HIT18AND2P080S) : Combinational Logic
                 (1.147, 1.148, 1.153)
                )
 
-Clib#10 (HIT18AND3P005) : Combinational Logic
+HIT18AND3P005: Cell#10(Group#10)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.003112
@@ -1352,7 +1363,8 @@ Clib#10 (HIT18AND3P005) : Combinational Logic
                 (1.286, 1.287, 1.292)
                )
 
-Clib#11 (HIT18AND3P010) : Combinational Logic
+HIT18AND3P010: Cell#11(Group#10)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.006009
@@ -1522,7 +1534,8 @@ Clib#11 (HIT18AND3P010) : Combinational Logic
                 (1.219, 1.221, 1.226)
                )
 
-Clib#12 (HIT18AND3P015) : Combinational Logic
+HIT18AND3P015: Cell#12(Group#10)
+  type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
     Capacitance      = 0.009263
@@ -1692,7 +1705,8 @@ Clib#12 (HIT18AND3P015) : Combinational Logic
                 (1.589, 1.589, 1.593)
                )
 
-Clib#13 (HIT18AND3P020) : Combinational Logic
+HIT18AND3P020: Cell#13(Group#10)
+  type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010299
@@ -1862,7 +1876,8 @@ Clib#13 (HIT18AND3P020) : Combinational Logic
                 (1.18, 1.182, 1.186)
                )
 
-Clib#14 (HIT18AND3P030) : Combinational Logic
+HIT18AND3P030: Cell#14(Group#10)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010123
@@ -2032,7 +2047,8 @@ Clib#14 (HIT18AND3P030) : Combinational Logic
                 (1.552, 1.553, 1.557)
                )
 
-Clib#15 (HIT18AND3P040) : Combinational Logic
+HIT18AND3P040: Cell#15(Group#10)
+  type = Combinational Logic
   area = 69.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010186
@@ -2202,7 +2218,8 @@ Clib#15 (HIT18AND3P040) : Combinational Logic
                 (1.168, 1.169, 1.175)
                )
 
-Clib#16 (HIT18AND3P040S) : Combinational Logic
+HIT18AND3P040S: Cell#16(Group#10)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.018455
@@ -2372,7 +2389,8 @@ Clib#16 (HIT18AND3P040S) : Combinational Logic
                 (1.156, 1.158, 1.163)
                )
 
-Clib#17 (HIT18AND3P060) : Combinational Logic
+HIT18AND3P060: Cell#17(Group#10)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.018444
@@ -2542,7 +2560,8 @@ Clib#17 (HIT18AND3P060) : Combinational Logic
                 (1.529, 1.529, 1.533)
                )
 
-Clib#18 (HIT18AND3P080) : Combinational Logic
+HIT18AND3P080: Cell#18(Group#10)
+  type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
     Capacitance      = 0.018444
@@ -2712,7 +2731,8 @@ Clib#18 (HIT18AND3P080) : Combinational Logic
                 (1.153, 1.154, 1.161)
                )
 
-Clib#19 (HIT18AND3P080S) : Combinational Logic
+HIT18AND3P080S: Cell#19(Group#10)
+  type = Combinational Logic
   area = 145.92
   Pin#0[ A ]: Input#0
     Capacitance      = 0.030338
@@ -2882,7 +2902,8 @@ Clib#19 (HIT18AND3P080S) : Combinational Logic
                 (1.15, 1.151, 1.156)
                )
 
-Clib#20 (HIT18AND4P005) : Combinational Logic
+HIT18AND4P005: Cell#20(Group#16)
+  type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
     Capacitance      = 0.00307
@@ -3105,7 +3126,8 @@ Clib#20 (HIT18AND4P005) : Combinational Logic
                 (1.289, 1.29, 1.296)
                )
 
-Clib#21 (HIT18AND4P010) : Combinational Logic
+HIT18AND4P010: Cell#21(Group#16)
+  type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005895
@@ -3328,7 +3350,8 @@ Clib#21 (HIT18AND4P010) : Combinational Logic
                 (1.221, 1.222, 1.227)
                )
 
-Clib#22 (HIT18AND4P015) : Combinational Logic
+HIT18AND4P015: Cell#22(Group#16)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.009294
@@ -3551,7 +3574,8 @@ Clib#22 (HIT18AND4P015) : Combinational Logic
                 (1.589, 1.59, 1.594)
                )
 
-Clib#23 (HIT18AND4P020) : Combinational Logic
+HIT18AND4P020: Cell#23(Group#16)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010331
@@ -3774,7 +3798,8 @@ Clib#23 (HIT18AND4P020) : Combinational Logic
                 (1.182, 1.183, 1.189)
                )
 
-Clib#24 (HIT18AND4P030) : Combinational Logic
+HIT18AND4P030: Cell#24(Group#16)
+  type = Combinational Logic
   area = 69.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010053
@@ -3997,7 +4022,8 @@ Clib#24 (HIT18AND4P030) : Combinational Logic
                 (1.554, 1.554, 1.557)
                )
 
-Clib#25 (HIT18AND4P040) : Combinational Logic
+HIT18AND4P040: Cell#25(Group#16)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.01005
@@ -4220,7 +4246,8 @@ Clib#25 (HIT18AND4P040) : Combinational Logic
                 (1.169, 1.17, 1.176)
                )
 
-Clib#26 (HIT18AND4P040S) : Combinational Logic
+HIT18AND4P040S: Cell#26(Group#16)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015591
@@ -4443,7 +4470,8 @@ Clib#26 (HIT18AND4P040S) : Combinational Logic
                 (1.161, 1.162, 1.167)
                )
 
-Clib#27 (HIT18AND4P060) : Combinational Logic
+HIT18AND4P060: Cell#27(Group#16)
+  type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015559
@@ -4666,7 +4694,8 @@ Clib#27 (HIT18AND4P060) : Combinational Logic
                 (1.534, 1.535, 1.539)
                )
 
-Clib#28 (HIT18AND4P080) : Combinational Logic
+HIT18AND4P080: Cell#28(Group#16)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015618
@@ -4889,7 +4918,8 @@ Clib#28 (HIT18AND4P080) : Combinational Logic
                 (1.162, 1.163, 1.17)
                )
 
-Clib#29 (HIT18AOI211P005) : Combinational Logic
+HIT18AOI211P005: Cell#29(Group#24)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005386
@@ -5112,7 +5142,8 @@ Clib#29 (HIT18AOI211P005) : Combinational Logic
                 (2.261, 2.261, 2.3)
                )
 
-Clib#30 (HIT18AOI211P010) : Combinational Logic
+HIT18AOI211P010: Cell#30(Group#24)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010437
@@ -5335,7 +5366,8 @@ Clib#30 (HIT18AOI211P010) : Combinational Logic
                 (2.144, 2.145, 2.193)
                )
 
-Clib#31 (HIT18AOI211P015) : Combinational Logic
+HIT18AOI211P015: Cell#31(Group#24)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015774
@@ -5558,7 +5590,8 @@ Clib#31 (HIT18AOI211P015) : Combinational Logic
                 (2.896, 2.895, 2.914)
                )
 
-Clib#32 (HIT18AOI211P020) : Combinational Logic
+HIT18AOI211P020: Cell#32(Group#24)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.018187
@@ -5781,7 +5814,8 @@ Clib#32 (HIT18AOI211P020) : Combinational Logic
                 (2.132, 2.134, 2.183)
                )
 
-Clib#33 (HIT18AOI211P030) : Combinational Logic
+HIT18AOI211P030: Cell#33(Group#24)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.006269
@@ -6004,7 +6038,8 @@ Clib#33 (HIT18AOI211P030) : Combinational Logic
                 (1.551, 1.551, 1.551)
                )
 
-Clib#34 (HIT18AOI211P030S) : Combinational Logic
+HIT18AOI211P030S: Cell#34(Group#24)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.028286
@@ -6227,7 +6262,8 @@ Clib#34 (HIT18AOI211P030S) : Combinational Logic
                 (2.825, 2.823, 2.845)
                )
 
-Clib#35 (HIT18AOI211P040) : Combinational Logic
+HIT18AOI211P040: Cell#35(Group#24)
+  type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
     Capacitance      = 0.0104
@@ -6450,7 +6486,8 @@ Clib#35 (HIT18AOI211P040) : Combinational Logic
                 (1.156, 1.156, 1.156)
                )
 
-Clib#36 (HIT18AOI211P040S) : Combinational Logic
+HIT18AOI211P040S: Cell#36(Group#24)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.036545
@@ -6673,7 +6710,8 @@ Clib#36 (HIT18AOI211P040S) : Combinational Logic
                 (2.133, 2.135, 2.183)
                )
 
-Clib#37 (HIT18AOI211P060) : Combinational Logic
+HIT18AOI211P060: Cell#37(Group#24)
+  type = Combinational Logic
   area = 115.2
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010417
@@ -6896,7 +6934,8 @@ Clib#37 (HIT18AOI211P060) : Combinational Logic
                 (1.527, 1.527, 1.526)
                )
 
-Clib#38 (HIT18AOI211P060S) : Combinational Logic
+HIT18AOI211P060S: Cell#38(Group#24)
+  type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
     Capacitance      = 0.0553
@@ -7119,7 +7158,8 @@ Clib#38 (HIT18AOI211P060S) : Combinational Logic
                 (2.821, 2.819, 2.842)
                )
 
-Clib#39 (HIT18AOI211P080) : Combinational Logic
+HIT18AOI211P080: Cell#39(Group#24)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010361
@@ -7342,7 +7382,8 @@ Clib#39 (HIT18AOI211P080) : Combinational Logic
                 (1.145, 1.146, 1.146)
                )
 
-Clib#40 (HIT18AOI211P080S) : Combinational Logic
+HIT18AOI211P080S: Cell#40(Group#24)
+  type = Combinational Logic
   area = 261.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.074057
@@ -7565,7 +7606,8 @@ Clib#40 (HIT18AOI211P080S) : Combinational Logic
                 (2.133, 2.135, 2.184)
                )
 
-Clib#41 (HIT18AOI21P005) : Combinational Logic
+HIT18AOI21P005: Cell#41(Group#25)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005202
@@ -7735,7 +7777,8 @@ Clib#41 (HIT18AOI21P005) : Combinational Logic
                 (2.233, 2.233, 2.275)
                )
 
-Clib#42 (HIT18AOI21P010) : Combinational Logic
+HIT18AOI21P010: Cell#42(Group#25)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010418
@@ -7905,7 +7948,8 @@ Clib#42 (HIT18AOI21P010) : Combinational Logic
                 (2.117, 2.118, 2.168)
                )
 
-Clib#43 (HIT18AOI21P015) : Combinational Logic
+HIT18AOI21P015: Cell#43(Group#25)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.016046
@@ -8075,7 +8119,8 @@ Clib#43 (HIT18AOI21P015) : Combinational Logic
                 (2.872, 2.871, 2.889)
                )
 
-Clib#44 (HIT18AOI21P020) : Combinational Logic
+HIT18AOI21P020: Cell#44(Group#25)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.021166
@@ -8245,7 +8290,8 @@ Clib#44 (HIT18AOI21P020) : Combinational Logic
                 (2.12, 2.119, 2.169)
                )
 
-Clib#45 (HIT18AOI21P030) : Combinational Logic
+HIT18AOI21P030: Cell#45(Group#25)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.006772
@@ -8415,7 +8461,8 @@ Clib#45 (HIT18AOI21P030) : Combinational Logic
                 (1.551, 1.551, 1.55)
                )
 
-Clib#46 (HIT18AOI21P030S) : Combinational Logic
+HIT18AOI21P030S: Cell#46(Group#25)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.032647
@@ -8585,7 +8632,8 @@ Clib#46 (HIT18AOI21P030S) : Combinational Logic
                 (2.809, 2.807, 2.829)
                )
 
-Clib#47 (HIT18AOI21P040) : Combinational Logic
+HIT18AOI21P040: Cell#47(Group#25)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010427
@@ -8755,7 +8803,8 @@ Clib#47 (HIT18AOI21P040) : Combinational Logic
                 (1.155, 1.156, 1.156)
                )
 
-Clib#48 (HIT18AOI21P040S) : Combinational Logic
+HIT18AOI21P040S: Cell#48(Group#25)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.042857
@@ -8925,7 +8974,8 @@ Clib#48 (HIT18AOI21P040S) : Combinational Logic
                 (2.121, 2.119, 2.168)
                )
 
-Clib#49 (HIT18AOI21P060) : Combinational Logic
+HIT18AOI21P060: Cell#49(Group#25)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010451
@@ -9095,7 +9145,8 @@ Clib#49 (HIT18AOI21P060) : Combinational Logic
                 (1.527, 1.527, 1.528)
                )
 
-Clib#50 (HIT18AOI21P060S) : Combinational Logic
+HIT18AOI21P060S: Cell#50(Group#25)
+  type = Combinational Logic
   area = 153.6
   Pin#0[ A ]: Input#0
     Capacitance      = 0.064612
@@ -9265,7 +9316,8 @@ Clib#50 (HIT18AOI21P060S) : Combinational Logic
                 (2.807, 2.805, 2.828)
                )
 
-Clib#51 (HIT18AOI21P080) : Combinational Logic
+HIT18AOI21P080: Cell#51(Group#25)
+  type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010851
@@ -9435,7 +9487,8 @@ Clib#51 (HIT18AOI21P080) : Combinational Logic
                 (1.146, 1.146, 1.147)
                )
 
-Clib#52 (HIT18AOI21P080S) : Combinational Logic
+HIT18AOI21P080S: Cell#52(Group#25)
+  type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
     Capacitance      = 0.08638
@@ -9605,7 +9658,8 @@ Clib#52 (HIT18AOI21P080S) : Combinational Logic
                 (2.122, 2.12, 2.169)
                )
 
-Clib#53 (HIT18AOI22P005) : Combinational Logic
+HIT18AOI22P005: Cell#53(Group#26)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.006349
@@ -9828,7 +9882,8 @@ Clib#53 (HIT18AOI22P005) : Combinational Logic
                 (2.28, 2.28, 2.32)
                )
 
-Clib#54 (HIT18AOI22P010) : Combinational Logic
+HIT18AOI22P010: Cell#54(Group#26)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010232
@@ -10051,7 +10106,8 @@ Clib#54 (HIT18AOI22P010) : Combinational Logic
                 (2.143, 2.143, 2.192)
                )
 
-Clib#55 (HIT18AOI22P015) : Combinational Logic
+HIT18AOI22P015: Cell#55(Group#26)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.016307
@@ -10274,7 +10330,8 @@ Clib#55 (HIT18AOI22P015) : Combinational Logic
                 (2.898, 2.897, 2.916)
                )
 
-Clib#56 (HIT18AOI22P020) : Combinational Logic
+HIT18AOI22P020: Cell#56(Group#26)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.018677
@@ -10497,7 +10554,8 @@ Clib#56 (HIT18AOI22P020) : Combinational Logic
                 (2.137, 2.137, 2.186)
                )
 
-Clib#57 (HIT18AOI22P030) : Combinational Logic
+HIT18AOI22P030: Cell#57(Group#26)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.007254
@@ -10720,7 +10778,8 @@ Clib#57 (HIT18AOI22P030) : Combinational Logic
                 (1.551, 1.551, 1.551)
                )
 
-Clib#58 (HIT18AOI22P030S) : Combinational Logic
+HIT18AOI22P030S: Cell#58(Group#26)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.029213
@@ -10943,7 +11002,8 @@ Clib#58 (HIT18AOI22P030S) : Combinational Logic
                 (2.828, 2.826, 2.848)
                )
 
-Clib#59 (HIT18AOI22P040) : Combinational Logic
+HIT18AOI22P040: Cell#59(Group#26)
+  type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010797
@@ -11166,7 +11226,8 @@ Clib#59 (HIT18AOI22P040) : Combinational Logic
                 (1.155, 1.155, 1.156)
                )
 
-Clib#60 (HIT18AOI22P040S) : Combinational Logic
+HIT18AOI22P040S: Cell#60(Group#26)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.038111
@@ -11389,7 +11450,8 @@ Clib#60 (HIT18AOI22P040S) : Combinational Logic
                 (2.138, 2.138, 2.187)
                )
 
-Clib#61 (HIT18AOI22P060) : Combinational Logic
+HIT18AOI22P060: Cell#61(Group#26)
+  type = Combinational Logic
   area = 115.2
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010793
@@ -11612,7 +11674,8 @@ Clib#61 (HIT18AOI22P060) : Combinational Logic
                 (1.527, 1.527, 1.527)
                )
 
-Clib#62 (HIT18AOI22P060S) : Combinational Logic
+HIT18AOI22P060S: Cell#62(Group#26)
+  type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
     Capacitance      = 0.057751
@@ -11835,7 +11898,8 @@ Clib#62 (HIT18AOI22P060S) : Combinational Logic
                 (2.825, 2.823, 2.845)
                )
 
-Clib#63 (HIT18AOI22P080) : Combinational Logic
+HIT18AOI22P080: Cell#63(Group#26)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010808
@@ -12058,7 +12122,8 @@ Clib#63 (HIT18AOI22P080) : Combinational Logic
                 (1.146, 1.146, 1.146)
                )
 
-Clib#64 (HIT18AOI22P080S) : Combinational Logic
+HIT18AOI22P080S: Cell#64(Group#26)
+  type = Combinational Logic
   area = 261.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.077775
@@ -12281,7 +12346,8 @@ Clib#64 (HIT18AOI22P080S) : Combinational Logic
                 (2.139, 2.139, 2.187)
                )
 
-Clib#65 (HIT18BUFP005) : Combinational Logic
+HIT18BUFP005: Cell#65(Group#2)
+  type = Combinational Logic
   area = 30.72
   Pin#0[ A ]: Input#0
     Capacitance      = 0.00365
@@ -12345,7 +12411,8 @@ Clib#65 (HIT18BUFP005) : Combinational Logic
                 (1.301, 1.303, 1.309)
                )
 
-Clib#66 (HIT18BUFP010) : Combinational Logic
+HIT18BUFP010: Cell#66(Group#2)
+  type = Combinational Logic
   area = 30.72
   Pin#0[ A ]: Input#0
     Capacitance      = 0.006491
@@ -12409,7 +12476,8 @@ Clib#66 (HIT18BUFP010) : Combinational Logic
                 (1.22, 1.221, 1.226)
                )
 
-Clib#67 (HIT18BUFP015) : Combinational Logic
+HIT18BUFP015: Cell#67(Group#2)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.009575
@@ -12473,7 +12541,8 @@ Clib#67 (HIT18BUFP015) : Combinational Logic
                 (1.588, 1.587, 1.591)
                )
 
-Clib#68 (HIT18BUFP020) : Combinational Logic
+HIT18BUFP020: Cell#68(Group#2)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010677
@@ -12537,7 +12606,8 @@ Clib#68 (HIT18BUFP020) : Combinational Logic
                 (1.178, 1.18, 1.185)
                )
 
-Clib#69 (HIT18BUFP030) : Combinational Logic
+HIT18BUFP030: Cell#69(Group#2)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010658
@@ -12601,7 +12671,8 @@ Clib#69 (HIT18BUFP030) : Combinational Logic
                 (1.55, 1.551, 1.555)
                )
 
-Clib#70 (HIT18BUFP040) : Combinational Logic
+HIT18BUFP040: Cell#70(Group#2)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.021055
@@ -12665,7 +12736,8 @@ Clib#70 (HIT18BUFP040) : Combinational Logic
                 (1.156, 1.157, 1.162)
                )
 
-Clib#71 (HIT18BUFP050) : Combinational Logic
+HIT18BUFP050: Cell#71(Group#2)
+  type = Combinational Logic
   area = 69.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.021102
@@ -12729,7 +12801,8 @@ Clib#71 (HIT18BUFP050) : Combinational Logic
                 (1.831, 1.83, 1.834)
                )
 
-Clib#72 (HIT18BUFP060) : Combinational Logic
+HIT18BUFP060: Cell#72(Group#2)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.021099
@@ -12793,7 +12866,8 @@ Clib#72 (HIT18BUFP060) : Combinational Logic
                 (1.528, 1.527, 1.531)
                )
 
-Clib#73 (HIT18BUFP080) : Combinational Logic
+HIT18BUFP080: Cell#73(Group#2)
+  type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
     Capacitance      = 0.033041
@@ -12857,7 +12931,8 @@ Clib#73 (HIT18BUFP080) : Combinational Logic
                 (1.146, 1.147, 1.152)
                )
 
-Clib#74 (HIT18BUFP120) : Combinational Logic
+HIT18BUFP120: Cell#74(Group#2)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.043547
@@ -12921,7 +12996,8 @@ Clib#74 (HIT18BUFP120) : Combinational Logic
                 (1.517, 1.516, 1.52)
                )
 
-Clib#75 (HIT18BUFP160) : Combinational Logic
+HIT18BUFP160: Cell#75(Group#2)
+  type = Combinational Logic
   area = 168.96
   Pin#0[ A ]: Input#0
     Capacitance      = 0.043298
@@ -12985,7 +13061,8 @@ Clib#75 (HIT18BUFP160) : Combinational Logic
                 (1.145, 1.147, 1.152)
                )
 
-Clib#76 (HIT18DFNP010) : Flip-Flop
+HIT18DFNP010: Cell#76(Group#27)
+  type = Flip-Flop
   area = 122.88
   Next State         = D
   Clock              = ~C
@@ -13104,7 +13181,8 @@ Clib#76 (HIT18DFNP010) : Flip-Flop
                 (1.216, 1.217, 1.216)
                )
 
-Clib#77 (HIT18DFNP020) : Flip-Flop
+HIT18DFNP020: Cell#77(Group#27)
+  type = Flip-Flop
   area = 130.56
   Next State         = D
   Clock              = ~C
@@ -13223,7 +13301,8 @@ Clib#77 (HIT18DFNP020) : Flip-Flop
                 (1.179, 1.179, 1.179)
                )
 
-Clib#78 (HIT18DFNP040) : Flip-Flop
+HIT18DFNP040: Cell#78(Group#27)
+  type = Flip-Flop
   area = 145.92
   Next State         = D
   Clock              = ~C
@@ -13342,7 +13421,8 @@ Clib#78 (HIT18DFNP040) : Flip-Flop
                 (1.165, 1.165, 1.165)
                )
 
-Clib#79 (HIT18DFNP060) : Flip-Flop
+HIT18DFNP060: Cell#79(Group#27)
+  type = Flip-Flop
   area = 184.32
   Next State         = D
   Clock              = ~C
@@ -13461,7 +13541,8 @@ Clib#79 (HIT18DFNP060) : Flip-Flop
                 (1.527, 1.527, 1.527)
                )
 
-Clib#80 (HIT18DFNP080) : Flip-Flop
+HIT18DFNP080: Cell#80(Group#27)
+  type = Flip-Flop
   area = 215.04
   Next State         = D
   Clock              = ~C
@@ -13580,7 +13661,8 @@ Clib#80 (HIT18DFNP080) : Flip-Flop
                 (1.146, 1.146, 1.146)
                )
 
-Clib#81 (HIT18DFNP120) : Flip-Flop
+HIT18DFNP120: Cell#81(Group#27)
+  type = Flip-Flop
   area = 253.44
   Next State         = D
   Clock              = ~C
@@ -13699,7 +13781,8 @@ Clib#81 (HIT18DFNP120) : Flip-Flop
                 (1.516, 1.516, 1.516)
                )
 
-Clib#82 (HIT18DFNP160) : Flip-Flop
+HIT18DFNP160: Cell#82(Group#27)
+  type = Flip-Flop
   area = 299.52
   Next State         = D
   Clock              = ~C
@@ -13818,7 +13901,8 @@ Clib#82 (HIT18DFNP160) : Flip-Flop
                 (1.14, 1.139, 1.139)
                )
 
-Clib#83 (HIT18DFNRP010) : Flip-Flop
+HIT18DFNRP010: Cell#83(Group#28)
+  type = Flip-Flop
   area = 145.92
   Next State         = D
   Clock              = ~C
@@ -13969,7 +14053,8 @@ Clib#83 (HIT18DFNRP010) : Flip-Flop
                 (1.218, 1.22, 1.224)
                )
 
-Clib#84 (HIT18DFNRP020) : Flip-Flop
+HIT18DFNRP020: Cell#84(Group#28)
+  type = Flip-Flop
   area = 153.6
   Next State         = D
   Clock              = ~C
@@ -14120,7 +14205,8 @@ Clib#84 (HIT18DFNRP020) : Flip-Flop
                 (1.18, 1.181, 1.185)
                )
 
-Clib#85 (HIT18DFNRP040) : Flip-Flop
+HIT18DFNRP040: Cell#85(Group#28)
+  type = Flip-Flop
   area = 168.96
   Next State         = D
   Clock              = ~C
@@ -14271,7 +14357,8 @@ Clib#85 (HIT18DFNRP040) : Flip-Flop
                 (1.163, 1.164, 1.169)
                )
 
-Clib#86 (HIT18DFNRP060) : Flip-Flop
+HIT18DFNRP060: Cell#86(Group#28)
+  type = Flip-Flop
   area = 207.36
   Next State         = D
   Clock              = ~C
@@ -14422,7 +14509,8 @@ Clib#86 (HIT18DFNRP060) : Flip-Flop
                 (1.527, 1.527, 1.527)
                )
 
-Clib#87 (HIT18DFNRP080) : Flip-Flop
+HIT18DFNRP080: Cell#87(Group#28)
+  type = Flip-Flop
   area = 238.08
   Next State         = D
   Clock              = ~C
@@ -14573,7 +14661,8 @@ Clib#87 (HIT18DFNRP080) : Flip-Flop
                 (1.146, 1.146, 1.146)
                )
 
-Clib#88 (HIT18DFNRP120) : Flip-Flop
+HIT18DFNRP120: Cell#88(Group#28)
+  type = Flip-Flop
   area = 276.48
   Next State         = D
   Clock              = ~C
@@ -14724,7 +14813,8 @@ Clib#88 (HIT18DFNRP120) : Flip-Flop
                 (1.516, 1.516, 1.516)
                )
 
-Clib#89 (HIT18DFNRP160) : Flip-Flop
+HIT18DFNRP160: Cell#89(Group#28)
+  type = Flip-Flop
   area = 322.56
   Next State         = D
   Clock              = ~C
@@ -14875,7 +14965,8 @@ Clib#89 (HIT18DFNRP160) : Flip-Flop
                 (1.14, 1.14, 1.14)
                )
 
-Clib#90 (HIT18DFNSRP010) : Flip-Flop
+HIT18DFNSRP010: Cell#90(Group#29)
+  type = Flip-Flop
   area = 168.96
   Next State         = D
   Clock              = ~C
@@ -15060,7 +15151,8 @@ Clib#90 (HIT18DFNSRP010) : Flip-Flop
                 (2.329, 2.329, 2.329)
                )
 
-Clib#91 (HIT18DFNSRP020) : Flip-Flop
+HIT18DFNSRP020: Cell#91(Group#29)
+  type = Flip-Flop
   area = 176.64
   Next State         = D
   Clock              = ~C
@@ -15245,7 +15337,8 @@ Clib#91 (HIT18DFNSRP020) : Flip-Flop
                 (2.186, 2.186, 2.186)
                )
 
-Clib#92 (HIT18DFNSRP040) : Flip-Flop
+HIT18DFNSRP040: Cell#92(Group#29)
+  type = Flip-Flop
   area = 192
   Next State         = D
   Clock              = ~C
@@ -15430,7 +15523,8 @@ Clib#92 (HIT18DFNSRP040) : Flip-Flop
                 (2.127, 2.128, 2.127)
                )
 
-Clib#93 (HIT18DFNSRP060) : Flip-Flop
+HIT18DFNSRP060: Cell#93(Group#29)
+  type = Flip-Flop
   area = 230.4
   Next State         = D
   Clock              = ~C
@@ -15615,7 +15709,8 @@ Clib#93 (HIT18DFNSRP060) : Flip-Flop
                 (2.768, 2.768, 2.768)
                )
 
-Clib#94 (HIT18DFNSRP080) : Flip-Flop
+HIT18DFNSRP080: Cell#94(Group#29)
+  type = Flip-Flop
   area = 261.12
   Next State         = D
   Clock              = ~C
@@ -15800,7 +15895,8 @@ Clib#94 (HIT18DFNSRP080) : Flip-Flop
                 (2.069, 2.07, 2.069)
                )
 
-Clib#95 (HIT18DFNSRP120) : Flip-Flop
+HIT18DFNSRP120: Cell#95(Group#29)
+  type = Flip-Flop
   area = 299.52
   Next State         = D
   Clock              = ~C
@@ -15985,7 +16081,8 @@ Clib#95 (HIT18DFNSRP120) : Flip-Flop
                 (2.737, 2.737, 2.737)
                )
 
-Clib#96 (HIT18DFNSRP160) : Flip-Flop
+HIT18DFNSRP160: Cell#96(Group#29)
+  type = Flip-Flop
   area = 345.6
   Next State         = D
   Clock              = ~C
@@ -16170,7 +16267,8 @@ Clib#96 (HIT18DFNSRP160) : Flip-Flop
                 (2.051, 2.052, 2.052)
                )
 
-Clib#97 (HIT18DFP010) : Flip-Flop
+HIT18DFP010: Cell#97(Group#30)
+  type = Flip-Flop
   area = 122.88
   Next State         = D
   Clock              = C
@@ -16289,7 +16387,8 @@ Clib#97 (HIT18DFP010) : Flip-Flop
                 (1.216, 1.217, 1.216)
                )
 
-Clib#98 (HIT18DFP020) : Flip-Flop
+HIT18DFP020: Cell#98(Group#30)
+  type = Flip-Flop
   area = 130.56
   Next State         = D
   Clock              = C
@@ -16408,7 +16507,8 @@ Clib#98 (HIT18DFP020) : Flip-Flop
                 (1.179, 1.179, 1.179)
                )
 
-Clib#99 (HIT18DFP040) : Flip-Flop
+HIT18DFP040: Cell#99(Group#30)
+  type = Flip-Flop
   area = 145.92
   Next State         = D
   Clock              = C
@@ -16527,7 +16627,8 @@ Clib#99 (HIT18DFP040) : Flip-Flop
                 (1.165, 1.165, 1.165)
                )
 
-Clib#100 (HIT18DFP060) : Flip-Flop
+HIT18DFP060: Cell#100(Group#30)
+  type = Flip-Flop
   area = 184.32
   Next State         = D
   Clock              = C
@@ -16646,7 +16747,8 @@ Clib#100 (HIT18DFP060) : Flip-Flop
                 (1.527, 1.527, 1.527)
                )
 
-Clib#101 (HIT18DFP080) : Flip-Flop
+HIT18DFP080: Cell#101(Group#30)
+  type = Flip-Flop
   area = 215.04
   Next State         = D
   Clock              = C
@@ -16765,7 +16867,8 @@ Clib#101 (HIT18DFP080) : Flip-Flop
                 (1.146, 1.146, 1.146)
                )
 
-Clib#102 (HIT18DFP120) : Flip-Flop
+HIT18DFP120: Cell#102(Group#30)
+  type = Flip-Flop
   area = 253.44
   Next State         = D
   Clock              = C
@@ -16884,7 +16987,8 @@ Clib#102 (HIT18DFP120) : Flip-Flop
                 (1.516, 1.516, 1.515)
                )
 
-Clib#103 (HIT18DFP160) : Flip-Flop
+HIT18DFP160: Cell#103(Group#30)
+  type = Flip-Flop
   area = 299.52
   Next State         = D
   Clock              = C
@@ -17003,7 +17107,8 @@ Clib#103 (HIT18DFP160) : Flip-Flop
                 (1.14, 1.14, 1.14)
                )
 
-Clib#104 (HIT18DFRP010) : Flip-Flop
+HIT18DFRP010: Cell#104(Group#31)
+  type = Flip-Flop
   area = 153.6
   Next State         = D
   Clock              = C
@@ -17154,7 +17259,8 @@ Clib#104 (HIT18DFRP010) : Flip-Flop
                 (1.219, 1.219, 1.224)
                )
 
-Clib#105 (HIT18DFRP020) : Flip-Flop
+HIT18DFRP020: Cell#105(Group#31)
+  type = Flip-Flop
   area = 153.6
   Next State         = D
   Clock              = C
@@ -17305,7 +17411,8 @@ Clib#105 (HIT18DFRP020) : Flip-Flop
                 (1.18, 1.181, 1.185)
                )
 
-Clib#106 (HIT18DFRP040) : Flip-Flop
+HIT18DFRP040: Cell#106(Group#31)
+  type = Flip-Flop
   area = 168.96
   Next State         = D
   Clock              = C
@@ -17456,7 +17563,8 @@ Clib#106 (HIT18DFRP040) : Flip-Flop
                 (1.163, 1.164, 1.169)
                )
 
-Clib#107 (HIT18DFRP060) : Flip-Flop
+HIT18DFRP060: Cell#107(Group#31)
+  type = Flip-Flop
   area = 207.36
   Next State         = D
   Clock              = C
@@ -17607,7 +17715,8 @@ Clib#107 (HIT18DFRP060) : Flip-Flop
                 (1.527, 1.527, 1.527)
                )
 
-Clib#108 (HIT18DFRP080) : Flip-Flop
+HIT18DFRP080: Cell#108(Group#31)
+  type = Flip-Flop
   area = 238.08
   Next State         = D
   Clock              = C
@@ -17758,7 +17867,8 @@ Clib#108 (HIT18DFRP080) : Flip-Flop
                 (1.146, 1.146, 1.146)
                )
 
-Clib#109 (HIT18DFRP120) : Flip-Flop
+HIT18DFRP120: Cell#109(Group#31)
+  type = Flip-Flop
   area = 276.48
   Next State         = D
   Clock              = C
@@ -17909,7 +18019,8 @@ Clib#109 (HIT18DFRP120) : Flip-Flop
                 (1.516, 1.516, 1.516)
                )
 
-Clib#110 (HIT18DFRP160) : Flip-Flop
+HIT18DFRP160: Cell#110(Group#31)
+  type = Flip-Flop
   area = 330.24
   Next State         = D
   Clock              = C
@@ -18060,7 +18171,8 @@ Clib#110 (HIT18DFRP160) : Flip-Flop
                 (1.139, 1.14, 1.14)
                )
 
-Clib#111 (HIT18DFSRP010) : Flip-Flop
+HIT18DFSRP010: Cell#111(Group#32)
+  type = Flip-Flop
   area = 168.96
   Next State         = D
   Clock              = C
@@ -18245,7 +18357,8 @@ Clib#111 (HIT18DFSRP010) : Flip-Flop
                 (2.328, 2.329, 2.329)
                )
 
-Clib#112 (HIT18DFSRP020) : Flip-Flop
+HIT18DFSRP020: Cell#112(Group#32)
+  type = Flip-Flop
   area = 176.64
   Next State         = D
   Clock              = C
@@ -18430,7 +18543,8 @@ Clib#112 (HIT18DFSRP020) : Flip-Flop
                 (2.187, 2.186, 2.186)
                )
 
-Clib#113 (HIT18DFSRP040) : Flip-Flop
+HIT18DFSRP040: Cell#113(Group#32)
+  type = Flip-Flop
   area = 192
   Next State         = D
   Clock              = C
@@ -18615,7 +18729,8 @@ Clib#113 (HIT18DFSRP040) : Flip-Flop
                 (2.127, 2.128, 2.127)
                )
 
-Clib#114 (HIT18DFSRP060) : Flip-Flop
+HIT18DFSRP060: Cell#114(Group#32)
+  type = Flip-Flop
   area = 230.4
   Next State         = D
   Clock              = C
@@ -18800,7 +18915,8 @@ Clib#114 (HIT18DFSRP060) : Flip-Flop
                 (2.768, 2.767, 2.767)
                )
 
-Clib#115 (HIT18DFSRP080) : Flip-Flop
+HIT18DFSRP080: Cell#115(Group#32)
+  type = Flip-Flop
   area = 261.12
   Next State         = D
   Clock              = C
@@ -18985,7 +19101,8 @@ Clib#115 (HIT18DFSRP080) : Flip-Flop
                 (2.069, 2.07, 2.069)
                )
 
-Clib#116 (HIT18DFSRP120) : Flip-Flop
+HIT18DFSRP120: Cell#116(Group#32)
+  type = Flip-Flop
   area = 299.52
   Next State         = D
   Clock              = C
@@ -19170,7 +19287,8 @@ Clib#116 (HIT18DFSRP120) : Flip-Flop
                 (2.736, 2.737, 2.736)
                )
 
-Clib#117 (HIT18DFSRP160) : Flip-Flop
+HIT18DFSRP160: Cell#117(Group#32)
+  type = Flip-Flop
   area = 345.6
   Next State         = D
   Clock              = C
@@ -19355,7 +19473,8 @@ Clib#117 (HIT18DFSRP160) : Flip-Flop
                 (2.052, 2.052, 2.051)
                )
 
-Clib#118 (HIT18FAD1P010) : Combinational Logic
+HIT18FAD1P010: Cell#118(Group#33)
+  type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
     Capacitance      = 0.022385
@@ -19827,7 +19946,8 @@ Clib#118 (HIT18FAD1P010) : Combinational Logic
                 (1.233, 1.2345, 1.241)
                )
 
-Clib#119 (HIT18FAD1P020) : Combinational Logic
+HIT18FAD1P020: Cell#119(Group#33)
+  type = Combinational Logic
   area = 145.92
   Pin#0[ A ]: Input#0
     Capacitance      = 0.025348
@@ -20299,7 +20419,8 @@ Clib#119 (HIT18FAD1P020) : Combinational Logic
                 (1.208, 1.2095, 1.217)
                )
 
-Clib#120 (HIT18FAD1P030) : Combinational Logic
+HIT18FAD1P030: Cell#120(Group#33)
+  type = Combinational Logic
   area = 161.28
   Pin#0[ A ]: Input#0
     Capacitance      = 0.025953
@@ -20771,7 +20892,8 @@ Clib#120 (HIT18FAD1P030) : Combinational Logic
                 (1.673, 1.6735, 1.679)
                )
 
-Clib#121 (HIT18FAD1P040) : Combinational Logic
+HIT18FAD1P040: Cell#121(Group#33)
+  type = Combinational Logic
   area = 176.64
   Pin#0[ A ]: Input#0
     Capacitance      = 0.025315
@@ -21243,7 +21365,8 @@ Clib#121 (HIT18FAD1P040) : Combinational Logic
                 (1.234, 1.235, 1.2425)
                )
 
-Clib#122 (HIT18FAD1P060) : Combinational Logic
+HIT18FAD1P060: Cell#122(Group#33)
+  type = Combinational Logic
   area = 268.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.022252
@@ -21715,7 +21838,8 @@ Clib#122 (HIT18FAD1P060) : Combinational Logic
                 (1.5275, 1.5275, 1.5275)
                )
 
-Clib#123 (HIT18FAD1P080) : Combinational Logic
+HIT18FAD1P080: Cell#123(Group#33)
+  type = Combinational Logic
   area = 314.88
   Pin#0[ A ]: Input#0
     Capacitance      = 0.022173
@@ -22187,7 +22311,8 @@ Clib#123 (HIT18FAD1P080) : Combinational Logic
                 (1.146, 1.1455, 1.146)
                )
 
-Clib#124 (HIT18HAD1P010) : Combinational Logic
+HIT18HAD1P010: Cell#124(Group#34)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011298
@@ -22508,7 +22633,8 @@ Clib#124 (HIT18HAD1P010) : Combinational Logic
                 (1.2245, 1.2255, 1.228)
                )
 
-Clib#125 (HIT18HAD1P020) : Combinational Logic
+HIT18HAD1P020: Cell#125(Group#34)
+  type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015384
@@ -22829,7 +22955,8 @@ Clib#125 (HIT18HAD1P020) : Combinational Logic
                 (1.1855, 1.1865, 1.1895)
                )
 
-Clib#126 (HIT18HAD1P030) : Combinational Logic
+HIT18HAD1P030: Cell#126(Group#34)
+  type = Combinational Logic
   area = 115.2
   Pin#0[ A ]: Input#0
     Capacitance      = 0.01539
@@ -23150,7 +23277,8 @@ Clib#126 (HIT18HAD1P030) : Combinational Logic
                 (1.5595, 1.5595, 1.562)
                )
 
-Clib#127 (HIT18HAD1P040) : Combinational Logic
+HIT18HAD1P040: Cell#127(Group#34)
+  type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015353
@@ -23471,7 +23599,8 @@ Clib#127 (HIT18HAD1P040) : Combinational Logic
                 (1.18, 1.1805, 1.1845)
                )
 
-Clib#128 (HIT18HAD1P060) : Combinational Logic
+HIT18HAD1P060: Cell#128(Group#34)
+  type = Combinational Logic
   area = 222.72
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011288
@@ -23792,7 +23921,8 @@ Clib#128 (HIT18HAD1P060) : Combinational Logic
                 (1.5275, 1.527, 1.527)
                )
 
-Clib#129 (HIT18HAD1P080) : Combinational Logic
+HIT18HAD1P080: Cell#129(Group#34)
+  type = Combinational Logic
   area = 268.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011304
@@ -24113,7 +24243,8 @@ Clib#129 (HIT18HAD1P080) : Combinational Logic
                 (1.1455, 1.145, 1.1455)
                )
 
-Clib#130 (HIT18INVP005) : Combinational Logic
+HIT18INVP005: Cell#130(Group#3)
+  type = Combinational Logic
   area = 23.04
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005087
@@ -24177,7 +24308,8 @@ Clib#130 (HIT18INVP005) : Combinational Logic
                 (1.276, 1.282, 1.432)
                )
 
-Clib#131 (HIT18INVP010) : Combinational Logic
+HIT18INVP010: Cell#131(Group#3)
+  type = Combinational Logic
   area = 23.04
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010242
@@ -24241,7 +24373,8 @@ Clib#131 (HIT18INVP010) : Combinational Logic
                 (1.211, 1.219, 1.385)
                )
 
-Clib#132 (HIT18INVP015) : Combinational Logic
+HIT18INVP015: Cell#132(Group#3)
+  type = Combinational Logic
   area = 30.72
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015778
@@ -24305,7 +24438,8 @@ Clib#132 (HIT18INVP015) : Combinational Logic
                 (1.58, 1.58, 1.693)
                )
 
-Clib#133 (HIT18INVP020) : Combinational Logic
+HIT18INVP020: Cell#133(Group#3)
+  type = Combinational Logic
   area = 30.72
   Pin#0[ A ]: Input#0
     Capacitance      = 0.021019
@@ -24369,7 +24503,8 @@ Clib#133 (HIT18INVP020) : Combinational Logic
                 (1.17, 1.182, 1.358)
                )
 
-Clib#134 (HIT18INVP030) : Combinational Logic
+HIT18INVP030: Cell#134(Group#3)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.031991
@@ -24433,7 +24568,8 @@ Clib#134 (HIT18INVP030) : Combinational Logic
                 (1.538, 1.539, 1.661)
                )
 
-Clib#135 (HIT18INVP040) : Combinational Logic
+HIT18INVP040: Cell#135(Group#3)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.042915
@@ -24497,7 +24633,8 @@ Clib#135 (HIT18INVP040) : Combinational Logic
                 (1.148, 1.161, 1.344)
                )
 
-Clib#136 (HIT18INVP050) : Combinational Logic
+HIT18INVP050: Cell#136(Group#3)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010648
@@ -24561,7 +24698,8 @@ Clib#136 (HIT18INVP050) : Combinational Logic
                 (1.831, 1.831, 1.831)
                )
 
-Clib#137 (HIT18INVP060) : Combinational Logic
+HIT18INVP060: Cell#137(Group#3)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010658
@@ -24625,7 +24763,8 @@ Clib#137 (HIT18INVP060) : Combinational Logic
                 (1.527, 1.528, 1.527)
                )
 
-Clib#138 (HIT18INVP080) : Combinational Logic
+HIT18INVP080: Cell#138(Group#3)
+  type = Combinational Logic
   area = 115.2
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010624
@@ -24689,7 +24828,8 @@ Clib#138 (HIT18INVP080) : Combinational Logic
                 (1.145, 1.146, 1.146)
                )
 
-Clib#139 (HIT18INVP120) : Combinational Logic
+HIT18INVP120: Cell#139(Group#3)
+  type = Combinational Logic
   area = 153.6
   Pin#0[ A ]: Input#0
     Capacitance      = 0.021106
@@ -24753,7 +24893,8 @@ Clib#139 (HIT18INVP120) : Combinational Logic
                 (1.516, 1.516, 1.516)
                )
 
-Clib#140 (HIT18INVP160) : Combinational Logic
+HIT18INVP160: Cell#140(Group#3)
+  type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
     Capacitance      = 0.021145
@@ -24817,7 +24958,8 @@ Clib#140 (HIT18INVP160) : Combinational Logic
                 (1.139, 1.139, 1.14)
                )
 
-Clib#141 (HIT18MUX2P010) : Combinational Logic
+HIT18MUX2P010: Cell#141(Group#22)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ D0 ]: Input#0
     Capacitance      = 0.006014
@@ -25036,7 +25178,8 @@ Clib#141 (HIT18MUX2P010) : Combinational Logic
                 (1.23, 1.2315, 1.235)
                )
 
-Clib#142 (HIT18MUX2P020) : Combinational Logic
+HIT18MUX2P020: Cell#142(Group#22)
+  type = Combinational Logic
   area = 69.12
   Pin#0[ D0 ]: Input#0
     Capacitance      = 0.006006
@@ -25255,7 +25398,8 @@ Clib#142 (HIT18MUX2P020) : Combinational Logic
                 (1.213, 1.214, 1.219)
                )
 
-Clib#143 (HIT18MUX2P030) : Combinational Logic
+HIT18MUX2P030: Cell#143(Group#22)
+  type = Combinational Logic
   area = 99.84
   Pin#0[ D0 ]: Input#0
     Capacitance      = 0.006018
@@ -25474,7 +25618,8 @@ Clib#143 (HIT18MUX2P030) : Combinational Logic
                 (1.552, 1.551, 1.552)
                )
 
-Clib#144 (HIT18MUX2P040) : Combinational Logic
+HIT18MUX2P040: Cell#144(Group#22)
+  type = Combinational Logic
   area = 122.88
   Pin#0[ D0 ]: Input#0
     Capacitance      = 0.006013
@@ -25693,7 +25838,8 @@ Clib#144 (HIT18MUX2P040) : Combinational Logic
                 (1.156, 1.156, 1.1555)
                )
 
-Clib#145 (HIT18MUX2P060) : Combinational Logic
+HIT18MUX2P060: Cell#145(Group#22)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ D0 ]: Input#0
     Capacitance      = 0.006016
@@ -25912,7 +26058,8 @@ Clib#145 (HIT18MUX2P060) : Combinational Logic
                 (1.5275, 1.5285, 1.528)
                )
 
-Clib#146 (HIT18MUX2P080) : Combinational Logic
+HIT18MUX2P080: Cell#146(Group#22)
+  type = Combinational Logic
   area = 168.96
   Pin#0[ D0 ]: Input#0
     Capacitance      = 0.006004
@@ -26131,7 +26278,8 @@ Clib#146 (HIT18MUX2P080) : Combinational Logic
                 (1.146, 1.146, 1.1465)
                )
 
-Clib#147 (HIT18NAND2P005) : Combinational Logic
+HIT18NAND2P005: Cell#147(Group#5)
+  type = Combinational Logic
   area = 30.72
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005325
@@ -26248,7 +26396,8 @@ Clib#147 (HIT18NAND2P005) : Combinational Logic
                 (2.21, 2.21, 2.252)
                )
 
-Clib#148 (HIT18NAND2P010) : Combinational Logic
+HIT18NAND2P010: Cell#148(Group#5)
+  type = Combinational Logic
   area = 30.72
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010397
@@ -26365,7 +26514,8 @@ Clib#148 (HIT18NAND2P010) : Combinational Logic
                 (2.093, 2.093, 2.143)
                )
 
-Clib#149 (HIT18NAND2P015) : Combinational Logic
+HIT18NAND2P015: Cell#149(Group#5)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015585
@@ -26482,7 +26632,8 @@ Clib#149 (HIT18NAND2P015) : Combinational Logic
                 (3.12, 3.12, 3.132)
                )
 
-Clib#150 (HIT18NAND2P020) : Combinational Logic
+HIT18NAND2P020: Cell#150(Group#5)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.018655
@@ -26599,7 +26750,8 @@ Clib#150 (HIT18NAND2P020) : Combinational Logic
                 (3.126, 3.125, 3.138)
                )
 
-Clib#151 (HIT18NAND2P030) : Combinational Logic
+HIT18NAND2P030: Cell#151(Group#5)
+  type = Combinational Logic
   area = 69.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005951
@@ -26716,7 +26868,8 @@ Clib#151 (HIT18NAND2P030) : Combinational Logic
                 (1.55, 1.551, 1.55)
                )
 
-Clib#152 (HIT18NAND2P030S) : Combinational Logic
+HIT18NAND2P030S: Cell#152(Group#5)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.029987
@@ -26833,7 +26986,8 @@ Clib#152 (HIT18NAND2P030S) : Combinational Logic
                 (3.569, 3.567, 3.574)
                )
 
-Clib#153 (HIT18NAND2P040) : Combinational Logic
+HIT18NAND2P040: Cell#153(Group#5)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008733
@@ -26950,7 +27104,8 @@ Clib#153 (HIT18NAND2P040) : Combinational Logic
                 (1.155, 1.155, 1.155)
                )
 
-Clib#154 (HIT18NAND2P040S) : Combinational Logic
+HIT18NAND2P040S: Cell#154(Group#5)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.040925
@@ -27067,7 +27222,8 @@ Clib#154 (HIT18NAND2P040S) : Combinational Logic
                 (2.508, 2.507, 2.537)
                )
 
-Clib#155 (HIT18NAND2P060) : Combinational Logic
+HIT18NAND2P060: Cell#155(Group#5)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008729
@@ -27184,7 +27340,8 @@ Clib#155 (HIT18NAND2P060) : Combinational Logic
                 (1.528, 1.528, 1.527)
                )
 
-Clib#156 (HIT18NAND2P060S) : Combinational Logic
+HIT18NAND2P060S: Cell#156(Group#5)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.063446
@@ -27301,7 +27458,8 @@ Clib#156 (HIT18NAND2P060S) : Combinational Logic
                 (3.124, 3.123, 3.137)
                )
 
-Clib#157 (HIT18NAND2P080) : Combinational Logic
+HIT18NAND2P080: Cell#157(Group#5)
+  type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008744
@@ -27418,7 +27576,8 @@ Clib#157 (HIT18NAND2P080) : Combinational Logic
                 (1.146, 1.146, 1.146)
                )
 
-Clib#158 (HIT18NAND2P080S) : Combinational Logic
+HIT18NAND2P080S: Cell#158(Group#5)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.085599
@@ -27535,7 +27694,8 @@ Clib#158 (HIT18NAND2P080S) : Combinational Logic
                 (2.282, 2.282, 2.32)
                )
 
-Clib#159 (HIT18NAND3P005) : Combinational Logic
+HIT18NAND3P005: Cell#159(Group#11)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.00511
@@ -27705,7 +27865,8 @@ Clib#159 (HIT18NAND3P005) : Combinational Logic
                 (3.147, 3.148, 3.164)
                )
 
-Clib#160 (HIT18NAND3P010) : Combinational Logic
+HIT18NAND3P010: Cell#160(Group#11)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010207
@@ -27875,7 +28036,8 @@ Clib#160 (HIT18NAND3P010) : Combinational Logic
                 (2.98, 2.981, 3)
                )
 
-Clib#161 (HIT18NAND3P015) : Combinational Logic
+HIT18NAND3P015: Cell#161(Group#11)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015417
@@ -28045,7 +28207,8 @@ Clib#161 (HIT18NAND3P015) : Combinational Logic
                 (4.445, 4.442, 4.446)
                )
 
-Clib#162 (HIT18NAND3P020) : Combinational Logic
+HIT18NAND3P020: Cell#162(Group#11)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.018508
@@ -28215,7 +28378,8 @@ Clib#162 (HIT18NAND3P020) : Combinational Logic
                 (4.456, 4.454, 4.459)
                )
 
-Clib#163 (HIT18NAND3P030) : Combinational Logic
+HIT18NAND3P030: Cell#163(Group#11)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.006051
@@ -28385,7 +28549,8 @@ Clib#163 (HIT18NAND3P030) : Combinational Logic
                 (1.552, 1.552, 1.552)
                )
 
-Clib#164 (HIT18NAND3P030S) : Combinational Logic
+HIT18NAND3P030S: Cell#164(Group#11)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.030344
@@ -28555,7 +28720,8 @@ Clib#164 (HIT18NAND3P030S) : Combinational Logic
                 (5.077, 5.076, 5.075)
                )
 
-Clib#165 (HIT18NAND3P040) : Combinational Logic
+HIT18NAND3P040: Cell#165(Group#11)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010175
@@ -28725,7 +28891,8 @@ Clib#165 (HIT18NAND3P040) : Combinational Logic
                 (1.155, 1.156, 1.156)
                )
 
-Clib#166 (HIT18NAND3P040S) : Combinational Logic
+HIT18NAND3P040S: Cell#166(Group#11)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.038343
@@ -28895,7 +29062,8 @@ Clib#166 (HIT18NAND3P040S) : Combinational Logic
                 (3.57, 3.568, 3.577)
                )
 
-Clib#167 (HIT18NAND3P060) : Combinational Logic
+HIT18NAND3P060: Cell#167(Group#11)
+  type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010151
@@ -29065,7 +29233,8 @@ Clib#167 (HIT18NAND3P060) : Combinational Logic
                 (1.528, 1.527, 1.527)
                )
 
-Clib#168 (HIT18NAND3P060S) : Combinational Logic
+HIT18NAND3P060S: Cell#168(Group#11)
+  type = Combinational Logic
   area = 153.6
   Pin#0[ A ]: Input#0
     Capacitance      = 0.058699
@@ -29235,7 +29404,8 @@ Clib#168 (HIT18NAND3P060S) : Combinational Logic
                 (5.076, 5.076, 5.075)
                )
 
-Clib#169 (HIT18NAND3P080) : Combinational Logic
+HIT18NAND3P080: Cell#169(Group#11)
+  type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010177
@@ -29405,7 +29575,8 @@ Clib#169 (HIT18NAND3P080) : Combinational Logic
                 (1.146, 1.146, 1.146)
                )
 
-Clib#170 (HIT18NAND3P080S) : Combinational Logic
+HIT18NAND3P080S: Cell#170(Group#11)
+  type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
     Capacitance      = 0.078605
@@ -29575,7 +29746,8 @@ Clib#170 (HIT18NAND3P080S) : Combinational Logic
                 (3.571, 3.569, 3.578)
                )
 
-Clib#171 (HIT18NAND4P005) : Combinational Logic
+HIT18NAND4P005: Cell#171(Group#17)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005275
@@ -29798,7 +29970,8 @@ Clib#171 (HIT18NAND4P005) : Combinational Logic
                 (4.094, 4.095, 4.1)
                )
 
-Clib#172 (HIT18NAND4P010) : Combinational Logic
+HIT18NAND4P010: Cell#172(Group#17)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010371
@@ -30021,7 +30194,8 @@ Clib#172 (HIT18NAND4P010) : Combinational Logic
                 (3.878, 3.877, 3.885)
                )
 
-Clib#173 (HIT18NAND4P015) : Combinational Logic
+HIT18NAND4P015: Cell#173(Group#17)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015494
@@ -30244,7 +30418,8 @@ Clib#173 (HIT18NAND4P015) : Combinational Logic
                 (5.649, 5.648, 5.652)
                )
 
-Clib#174 (HIT18NAND4P020) : Combinational Logic
+HIT18NAND4P020: Cell#174(Group#17)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015718
@@ -30467,7 +30642,8 @@ Clib#174 (HIT18NAND4P020) : Combinational Logic
                 (5.319, 5.32, 5.321)
                )
 
-Clib#175 (HIT18NAND4P030) : Combinational Logic
+HIT18NAND4P030: Cell#175(Group#17)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005871
@@ -30690,7 +30866,8 @@ Clib#175 (HIT18NAND4P030) : Combinational Logic
                 (1.551, 1.551, 1.551)
                )
 
-Clib#176 (HIT18NAND4P040) : Combinational Logic
+HIT18NAND4P040: Cell#176(Group#17)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010021
@@ -30913,7 +31090,8 @@ Clib#176 (HIT18NAND4P040) : Combinational Logic
                 (1.156, 1.156, 1.156)
                )
 
-Clib#177 (HIT18NAND4P040S) : Combinational Logic
+HIT18NAND4P040S: Cell#177(Group#17)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.033492
@@ -31136,7 +31314,8 @@ Clib#177 (HIT18NAND4P040S) : Combinational Logic
                 (5.54, 5.541, 5.54)
                )
 
-Clib#178 (HIT18NAND4P060) : Combinational Logic
+HIT18NAND4P060: Cell#178(Group#17)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010002
@@ -31359,7 +31538,8 @@ Clib#178 (HIT18NAND4P060) : Combinational Logic
                 (1.527, 1.527, 1.527)
                )
 
-Clib#179 (HIT18NAND4P060S) : Combinational Logic
+HIT18NAND4P060S: Cell#179(Group#17)
+  type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
     Capacitance      = 0.05149
@@ -31582,7 +31762,8 @@ Clib#179 (HIT18NAND4P060S) : Combinational Logic
                 (7.457, 7.458, 7.452)
                )
 
-Clib#180 (HIT18NAND4P080) : Combinational Logic
+HIT18NAND4P080: Cell#180(Group#17)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010047
@@ -31805,7 +31986,8 @@ Clib#180 (HIT18NAND4P080) : Combinational Logic
                 (1.147, 1.146, 1.147)
                )
 
-Clib#181 (HIT18NAND4P080S) : Combinational Logic
+HIT18NAND4P080S: Cell#181(Group#17)
+  type = Combinational Logic
   area = 261.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.069503
@@ -32028,7 +32210,8 @@ Clib#181 (HIT18NAND4P080S) : Combinational Logic
                 (5.661, 5.66, 5.659)
                )
 
-Clib#182 (HIT18NOR2P005) : Combinational Logic
+HIT18NOR2P005: Cell#182(Group#7)
+  type = Combinational Logic
   area = 30.72
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005335
@@ -32145,7 +32328,8 @@ Clib#182 (HIT18NOR2P005) : Combinational Logic
                 (1.291, 1.297, 1.446)
                )
 
-Clib#183 (HIT18NOR2P010) : Combinational Logic
+HIT18NOR2P010: Cell#183(Group#7)
+  type = Combinational Logic
   area = 30.72
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010369
@@ -32262,7 +32446,8 @@ Clib#183 (HIT18NOR2P010) : Combinational Logic
                 (1.226, 1.233, 1.399)
                )
 
-Clib#184 (HIT18NOR2P015) : Combinational Logic
+HIT18NOR2P015: Cell#184(Group#7)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.01549
@@ -32379,7 +32564,8 @@ Clib#184 (HIT18NOR2P015) : Combinational Logic
                 (1.595, 1.594, 1.707)
                )
 
-Clib#185 (HIT18NOR2P020) : Combinational Logic
+HIT18NOR2P020: Cell#185(Group#7)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.01791
@@ -32496,7 +32682,8 @@ Clib#185 (HIT18NOR2P020) : Combinational Logic
                 (1.181, 1.193, 1.374)
                )
 
-Clib#186 (HIT18NOR2P030) : Combinational Logic
+HIT18NOR2P030: Cell#186(Group#7)
+  type = Combinational Logic
   area = 69.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005969
@@ -32613,7 +32800,8 @@ Clib#186 (HIT18NOR2P030) : Combinational Logic
                 (1.55, 1.551, 1.551)
                )
 
-Clib#187 (HIT18NOR2P030S) : Combinational Logic
+HIT18NOR2P030S: Cell#187(Group#7)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.028695
@@ -32730,7 +32918,8 @@ Clib#187 (HIT18NOR2P030S) : Combinational Logic
                 (1.55, 1.552, 1.675)
                )
 
-Clib#188 (HIT18NOR2P040) : Combinational Logic
+HIT18NOR2P040: Cell#188(Group#7)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008853
@@ -32847,7 +33036,8 @@ Clib#188 (HIT18NOR2P040) : Combinational Logic
                 (1.155, 1.156, 1.156)
                )
 
-Clib#189 (HIT18NOR2P040S) : Combinational Logic
+HIT18NOR2P040S: Cell#189(Group#7)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.039034
@@ -32964,7 +33154,8 @@ Clib#189 (HIT18NOR2P040S) : Combinational Logic
                 (1.16, 1.173, 1.36)
                )
 
-Clib#190 (HIT18NOR2P060) : Combinational Logic
+HIT18NOR2P060: Cell#190(Group#7)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008871
@@ -33081,7 +33272,8 @@ Clib#190 (HIT18NOR2P060) : Combinational Logic
                 (1.527, 1.527, 1.527)
                )
 
-Clib#191 (HIT18NOR2P060S) : Combinational Logic
+HIT18NOR2P060S: Cell#191(Group#7)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.060437
@@ -33198,7 +33390,8 @@ Clib#191 (HIT18NOR2P060S) : Combinational Logic
                 (1.529, 1.53, 1.659)
                )
 
-Clib#192 (HIT18NOR2P080) : Combinational Logic
+HIT18NOR2P080: Cell#192(Group#7)
+  type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008844
@@ -33315,7 +33508,8 @@ Clib#192 (HIT18NOR2P080) : Combinational Logic
                 (1.146, 1.146, 1.146)
                )
 
-Clib#193 (HIT18NOR2P080S) : Combinational Logic
+HIT18NOR2P080S: Cell#193(Group#7)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.081838
@@ -33432,7 +33626,8 @@ Clib#193 (HIT18NOR2P080S) : Combinational Logic
                 (1.149, 1.163, 1.353)
                )
 
-Clib#194 (HIT18NOR3P005) : Combinational Logic
+HIT18NOR3P005: Cell#194(Group#13)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005121
@@ -33602,7 +33797,8 @@ Clib#194 (HIT18NOR3P005) : Combinational Logic
                 (1.303, 1.31, 1.458)
                )
 
-Clib#195 (HIT18NOR3P010) : Combinational Logic
+HIT18NOR3P010: Cell#195(Group#13)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010173
@@ -33772,7 +33968,8 @@ Clib#195 (HIT18NOR3P010) : Combinational Logic
                 (1.239, 1.248, 1.412)
                )
 
-Clib#196 (HIT18NOR3P015) : Combinational Logic
+HIT18NOR3P015: Cell#196(Group#13)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015406
@@ -33942,7 +34139,8 @@ Clib#196 (HIT18NOR3P015) : Combinational Logic
                 (1.608, 1.609, 1.72)
                )
 
-Clib#197 (HIT18NOR3P020) : Combinational Logic
+HIT18NOR3P020: Cell#197(Group#13)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.017804
@@ -34112,7 +34310,8 @@ Clib#197 (HIT18NOR3P020) : Combinational Logic
                 (1.193, 1.204, 1.384)
                )
 
-Clib#198 (HIT18NOR3P030) : Combinational Logic
+HIT18NOR3P030: Cell#198(Group#13)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.006163
@@ -34282,7 +34481,8 @@ Clib#198 (HIT18NOR3P030) : Combinational Logic
                 (1.551, 1.551, 1.551)
                )
 
-Clib#199 (HIT18NOR3P030S) : Combinational Logic
+HIT18NOR3P030S: Cell#199(Group#13)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.029159
@@ -34452,7 +34652,8 @@ Clib#199 (HIT18NOR3P030S) : Combinational Logic
                 (1.978, 1.979, 2.046)
                )
 
-Clib#200 (HIT18NOR3P040) : Combinational Logic
+HIT18NOR3P040: Cell#200(Group#13)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010257
@@ -34622,7 +34823,8 @@ Clib#200 (HIT18NOR3P040) : Combinational Logic
                 (1.155, 1.155, 1.156)
                )
 
-Clib#201 (HIT18NOR3P040S) : Combinational Logic
+HIT18NOR3P040S: Cell#201(Group#13)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.036706
@@ -34792,7 +34994,8 @@ Clib#201 (HIT18NOR3P040S) : Combinational Logic
                 (1.391, 1.395, 1.542)
                )
 
-Clib#202 (HIT18NOR3P060) : Combinational Logic
+HIT18NOR3P060: Cell#202(Group#13)
+  type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
     Capacitance      = 0.01025
@@ -34962,7 +35165,8 @@ Clib#202 (HIT18NOR3P060) : Combinational Logic
                 (1.527, 1.527, 1.527)
                )
 
-Clib#203 (HIT18NOR3P060S) : Combinational Logic
+HIT18NOR3P060S: Cell#203(Group#13)
+  type = Combinational Logic
   area = 153.6
   Pin#0[ A ]: Input#0
     Capacitance      = 0.055956
@@ -35132,7 +35336,8 @@ Clib#203 (HIT18NOR3P060S) : Combinational Logic
                 (1.718, 1.718, 1.82)
                )
 
-Clib#204 (HIT18NOR3P080) : Combinational Logic
+HIT18NOR3P080: Cell#204(Group#13)
+  type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010237
@@ -35302,7 +35507,8 @@ Clib#204 (HIT18NOR3P080) : Combinational Logic
                 (1.146, 1.146, 1.146)
                )
 
-Clib#205 (HIT18NOR3P080S) : Combinational Logic
+HIT18NOR3P080S: Cell#205(Group#13)
+  type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
     Capacitance      = 0.075016
@@ -35472,7 +35678,8 @@ Clib#205 (HIT18NOR3P080S) : Combinational Logic
                 (1.373, 1.379, 1.53)
                )
 
-Clib#206 (HIT18NOR4P005) : Combinational Logic
+HIT18NOR4P005: Cell#206(Group#19)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005135
@@ -35695,7 +35902,8 @@ Clib#206 (HIT18NOR4P005) : Combinational Logic
                 (1.318, 1.322, 1.469)
                )
 
-Clib#207 (HIT18NOR4P010) : Combinational Logic
+HIT18NOR4P010: Cell#207(Group#19)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010334
@@ -35918,7 +36126,8 @@ Clib#207 (HIT18NOR4P010) : Combinational Logic
                 (1.255, 1.261, 1.424)
                )
 
-Clib#208 (HIT18NOR4P015) : Combinational Logic
+HIT18NOR4P015: Cell#208(Group#19)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015002
@@ -36141,7 +36350,8 @@ Clib#208 (HIT18NOR4P015) : Combinational Logic
                 (1.764, 1.764, 1.853)
                )
 
-Clib#209 (HIT18NOR4P020) : Combinational Logic
+HIT18NOR4P020: Cell#209(Group#19)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015231
@@ -36364,7 +36574,8 @@ Clib#209 (HIT18NOR4P020) : Combinational Logic
                 (1.765, 1.766, 1.854)
                )
 
-Clib#210 (HIT18NOR4P030) : Combinational Logic
+HIT18NOR4P030: Cell#210(Group#19)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.00591
@@ -36587,7 +36798,8 @@ Clib#210 (HIT18NOR4P030) : Combinational Logic
                 (1.551, 1.55, 1.551)
                )
 
-Clib#211 (HIT18NOR4P040) : Combinational Logic
+HIT18NOR4P040: Cell#211(Group#19)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010062
@@ -36810,7 +37022,8 @@ Clib#211 (HIT18NOR4P040) : Combinational Logic
                 (1.156, 1.155, 1.155)
                )
 
-Clib#212 (HIT18NOR4P040S) : Combinational Logic
+HIT18NOR4P040S: Cell#212(Group#19)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.031857
@@ -37033,7 +37246,8 @@ Clib#212 (HIT18NOR4P040S) : Combinational Logic
                 (1.719, 1.719, 1.817)
                )
 
-Clib#213 (HIT18NOR4P060) : Combinational Logic
+HIT18NOR4P060: Cell#213(Group#19)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010055
@@ -37256,7 +37470,8 @@ Clib#213 (HIT18NOR4P060) : Combinational Logic
                 (1.527, 1.527, 1.527)
                )
 
-Clib#214 (HIT18NOR4P060S) : Combinational Logic
+HIT18NOR4P060S: Cell#214(Group#19)
+  type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
     Capacitance      = 0.048821
@@ -37479,7 +37694,8 @@ Clib#214 (HIT18NOR4P060S) : Combinational Logic
                 (2.251, 2.251, 2.296)
                )
 
-Clib#215 (HIT18NOR4P080) : Combinational Logic
+HIT18NOR4P080: Cell#215(Group#19)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010045
@@ -37702,7 +37918,8 @@ Clib#215 (HIT18NOR4P080) : Combinational Logic
                 (1.146, 1.146, 1.145)
                )
 
-Clib#216 (HIT18NOR4P080S) : Combinational Logic
+HIT18NOR4P080S: Cell#216(Group#19)
+  type = Combinational Logic
   area = 261.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.065811
@@ -37925,7 +38142,8 @@ Clib#216 (HIT18NOR4P080S) : Combinational Logic
                 (1.692, 1.694, 1.798)
                )
 
-Clib#217 (HIT18OAI211P005) : Combinational Logic
+HIT18OAI211P005: Cell#217(Group#35)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005153
@@ -38148,7 +38366,8 @@ Clib#217 (HIT18OAI211P005) : Combinational Logic
                 (3.175, 3.172, 3.189)
                )
 
-Clib#218 (HIT18OAI211P010) : Combinational Logic
+HIT18OAI211P010: Cell#218(Group#35)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010355
@@ -38371,7 +38590,8 @@ Clib#218 (HIT18OAI211P010) : Combinational Logic
                 (3.01, 3.008, 3.027)
                )
 
-Clib#219 (HIT18OAI211P015) : Combinational Logic
+HIT18OAI211P015: Cell#219(Group#35)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015629
@@ -38594,7 +38814,8 @@ Clib#219 (HIT18OAI211P015) : Combinational Logic
                 (4.298, 4.296, 4.301)
                )
 
-Clib#220 (HIT18OAI211P020) : Combinational Logic
+HIT18OAI211P020: Cell#220(Group#35)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.018722
@@ -38817,7 +39038,8 @@ Clib#220 (HIT18OAI211P020) : Combinational Logic
                 (4, 4, 4.008)
                )
 
-Clib#221 (HIT18OAI211P030) : Combinational Logic
+HIT18OAI211P030: Cell#221(Group#35)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.006249
@@ -39040,7 +39262,8 @@ Clib#221 (HIT18OAI211P030) : Combinational Logic
                 (1.55, 1.55, 1.55)
                )
 
-Clib#222 (HIT18OAI211P030S) : Combinational Logic
+HIT18OAI211P030S: Cell#222(Group#35)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.029797
@@ -39263,7 +39486,8 @@ Clib#222 (HIT18OAI211P030S) : Combinational Logic
                 (4.708, 4.707, 4.711)
                )
 
-Clib#223 (HIT18OAI211P040) : Combinational Logic
+HIT18OAI211P040: Cell#223(Group#35)
+  type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010415
@@ -39486,7 +39710,8 @@ Clib#223 (HIT18OAI211P040) : Combinational Logic
                 (1.156, 1.156, 1.156)
                )
 
-Clib#224 (HIT18OAI211P040S) : Combinational Logic
+HIT18OAI211P040S: Cell#224(Group#35)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.038626
@@ -39709,7 +39934,8 @@ Clib#224 (HIT18OAI211P040S) : Combinational Logic
                 (3.985, 3.986, 3.994)
                )
 
-Clib#225 (HIT18OAI211P060) : Combinational Logic
+HIT18OAI211P060: Cell#225(Group#35)
+  type = Combinational Logic
   area = 115.2
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010379
@@ -39932,7 +40158,8 @@ Clib#225 (HIT18OAI211P060) : Combinational Logic
                 (1.527, 1.528, 1.528)
                )
 
-Clib#226 (HIT18OAI211P060S) : Combinational Logic
+HIT18OAI211P060S: Cell#226(Group#35)
+  type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
     Capacitance      = 0.058755
@@ -40155,7 +40382,8 @@ Clib#226 (HIT18OAI211P060S) : Combinational Logic
                 (5.271, 5.274, 5.274)
                )
 
-Clib#227 (HIT18OAI211P080) : Combinational Logic
+HIT18OAI211P080: Cell#227(Group#35)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010359
@@ -40378,7 +40606,8 @@ Clib#227 (HIT18OAI211P080) : Combinational Logic
                 (1.146, 1.146, 1.147)
                )
 
-Clib#228 (HIT18OAI211P080S) : Combinational Logic
+HIT18OAI211P080S: Cell#228(Group#35)
+  type = Combinational Logic
   area = 261.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.078867
@@ -40601,7 +40830,8 @@ Clib#228 (HIT18OAI211P080S) : Combinational Logic
                 (3.978, 3.978, 3.988)
                )
 
-Clib#229 (HIT18OAI21P005) : Combinational Logic
+HIT18OAI21P005: Cell#229(Group#36)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005163
@@ -40771,7 +41001,8 @@ Clib#229 (HIT18OAI21P005) : Combinational Logic
                 (2.227, 2.225, 2.267)
                )
 
-Clib#230 (HIT18OAI21P010) : Combinational Logic
+HIT18OAI21P010: Cell#230(Group#36)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010349
@@ -40941,7 +41172,8 @@ Clib#230 (HIT18OAI21P010) : Combinational Logic
                 (2.111, 2.113, 2.161)
                )
 
-Clib#231 (HIT18OAI21P015) : Combinational Logic
+HIT18OAI21P015: Cell#231(Group#36)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.016021
@@ -41111,7 +41343,8 @@ Clib#231 (HIT18OAI21P015) : Combinational Logic
                 (2.744, 2.745, 2.768)
                )
 
-Clib#232 (HIT18OAI21P020) : Combinational Logic
+HIT18OAI21P020: Cell#232(Group#36)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.02116
@@ -41281,7 +41514,8 @@ Clib#232 (HIT18OAI21P020) : Combinational Logic
                 (2.04, 2.041, 2.095)
                )
 
-Clib#233 (HIT18OAI21P030) : Combinational Logic
+HIT18OAI21P030: Cell#233(Group#36)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.006711
@@ -41451,7 +41685,8 @@ Clib#233 (HIT18OAI21P030) : Combinational Logic
                 (1.551, 1.552, 1.551)
                )
 
-Clib#234 (HIT18OAI21P030S) : Combinational Logic
+HIT18OAI21P030S: Cell#234(Group#36)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.032737
@@ -41621,7 +41856,8 @@ Clib#234 (HIT18OAI21P030S) : Combinational Logic
                 (2.671, 2.671, 2.698)
                )
 
-Clib#235 (HIT18OAI21P040) : Combinational Logic
+HIT18OAI21P040: Cell#235(Group#36)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010387
@@ -41791,7 +42027,8 @@ Clib#235 (HIT18OAI21P040) : Combinational Logic
                 (1.155, 1.156, 1.156)
                )
 
-Clib#236 (HIT18OAI21P040S) : Combinational Logic
+HIT18OAI21P040S: Cell#236(Group#36)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.043116
@@ -41961,7 +42198,8 @@ Clib#236 (HIT18OAI21P040S) : Combinational Logic
                 (1.999, 1.998, 2.06)
                )
 
-Clib#237 (HIT18OAI21P060) : Combinational Logic
+HIT18OAI21P060: Cell#237(Group#36)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010399
@@ -42131,7 +42369,8 @@ Clib#237 (HIT18OAI21P060) : Combinational Logic
                 (1.527, 1.527, 1.528)
                )
 
-Clib#238 (HIT18OAI21P060S) : Combinational Logic
+HIT18OAI21P060S: Cell#238(Group#36)
+  type = Combinational Logic
   area = 153.6
   Pin#0[ A ]: Input#0
     Capacitance      = 0.064835
@@ -42301,7 +42540,8 @@ Clib#238 (HIT18OAI21P060S) : Combinational Logic
                 (2.629, 2.627, 2.658)
                )
 
-Clib#239 (HIT18OAI21P080) : Combinational Logic
+HIT18OAI21P080: Cell#239(Group#36)
+  type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010668
@@ -42471,7 +42711,8 @@ Clib#239 (HIT18OAI21P080) : Combinational Logic
                 (1.145, 1.146, 1.146)
                )
 
-Clib#240 (HIT18OAI21P080S) : Combinational Logic
+HIT18OAI21P080S: Cell#240(Group#36)
+  type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
     Capacitance      = 0.086929
@@ -42641,7 +42882,8 @@ Clib#240 (HIT18OAI21P080S) : Combinational Logic
                 (1.977, 1.978, 2.039)
                )
 
-Clib#241 (HIT18OAI22P005) : Combinational Logic
+HIT18OAI22P005: Cell#241(Group#37)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.007173
@@ -42864,7 +43106,8 @@ Clib#241 (HIT18OAI22P005) : Combinational Logic
                 (1.395, 1.401, 1.508)
                )
 
-Clib#242 (HIT18OAI22P010) : Combinational Logic
+HIT18OAI22P010: Cell#242(Group#37)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010255
@@ -43087,7 +43330,8 @@ Clib#242 (HIT18OAI22P010) : Combinational Logic
                 (1.876, 1.877, 1.944)
                )
 
-Clib#243 (HIT18OAI22P015) : Combinational Logic
+HIT18OAI22P015: Cell#243(Group#37)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015507
@@ -43310,7 +43554,8 @@ Clib#243 (HIT18OAI22P015) : Combinational Logic
                 (2.523, 2.522, 2.554)
                )
 
-Clib#244 (HIT18OAI22P020) : Combinational Logic
+HIT18OAI22P020: Cell#244(Group#37)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.018475
@@ -43533,7 +43778,8 @@ Clib#244 (HIT18OAI22P020) : Combinational Logic
                 (2.178, 2.179, 2.232)
                )
 
-Clib#245 (HIT18OAI22P030) : Combinational Logic
+HIT18OAI22P030: Cell#245(Group#37)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.007068
@@ -43756,7 +44002,8 @@ Clib#245 (HIT18OAI22P030) : Combinational Logic
                 (1.55, 1.551, 1.551)
                )
 
-Clib#246 (HIT18OAI22P030S) : Combinational Logic
+HIT18OAI22P030S: Cell#246(Group#37)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.028508
@@ -43979,7 +44226,8 @@ Clib#246 (HIT18OAI22P030S) : Combinational Logic
                 (2.633, 2.634, 2.666)
                )
 
-Clib#247 (HIT18OAI22P040) : Combinational Logic
+HIT18OAI22P040: Cell#247(Group#37)
+  type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
     Capacitance      = 0.01041
@@ -44202,7 +44450,8 @@ Clib#247 (HIT18OAI22P040) : Combinational Logic
                 (1.156, 1.156, 1.156)
                )
 
-Clib#248 (HIT18OAI22P040S) : Combinational Logic
+HIT18OAI22P040S: Cell#248(Group#37)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.037119
@@ -44425,7 +44674,8 @@ Clib#248 (HIT18OAI22P040S) : Combinational Logic
                 (2.125, 2.126, 2.183)
                )
 
-Clib#249 (HIT18OAI22P060) : Combinational Logic
+HIT18OAI22P060: Cell#249(Group#37)
+  type = Combinational Logic
   area = 115.2
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010419
@@ -44648,7 +44898,8 @@ Clib#249 (HIT18OAI22P060) : Combinational Logic
                 (1.527, 1.527, 1.527)
                )
 
-Clib#250 (HIT18OAI22P060S) : Combinational Logic
+HIT18OAI22P060S: Cell#250(Group#37)
+  type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
     Capacitance      = 0.056079
@@ -44871,7 +45122,8 @@ Clib#250 (HIT18OAI22P060S) : Combinational Logic
                 (2.786, 2.786, 2.816)
                )
 
-Clib#251 (HIT18OAI22P080) : Combinational Logic
+HIT18OAI22P080: Cell#251(Group#37)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010409
@@ -45094,7 +45346,8 @@ Clib#251 (HIT18OAI22P080) : Combinational Logic
                 (1.146, 1.146, 1.146)
                )
 
-Clib#252 (HIT18OAI22P080S) : Combinational Logic
+HIT18OAI22P080S: Cell#252(Group#37)
+  type = Combinational Logic
   area = 261.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.075104
@@ -45317,7 +45570,8 @@ Clib#252 (HIT18OAI22P080S) : Combinational Logic
                 (2.096, 2.097, 2.156)
                )
 
-Clib#253 (HIT18OR2P005) : Combinational Logic
+HIT18OR2P005: Cell#253(Group#6)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.003065
@@ -45434,7 +45688,8 @@ Clib#253 (HIT18OR2P005) : Combinational Logic
                 (1.308, 1.309, 1.32)
                )
 
-Clib#254 (HIT18OR2P010) : Combinational Logic
+HIT18OR2P010: Cell#254(Group#6)
+  type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
     Capacitance      = 0.00596
@@ -45551,7 +45806,8 @@ Clib#254 (HIT18OR2P010) : Combinational Logic
                 (1.228, 1.229, 1.237)
                )
 
-Clib#255 (HIT18OR2P015) : Combinational Logic
+HIT18OR2P015: Cell#255(Group#6)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008267
@@ -45668,7 +45924,8 @@ Clib#255 (HIT18OR2P015) : Combinational Logic
                 (1.591, 1.592, 1.597)
                )
 
-Clib#256 (HIT18OR2P020) : Combinational Logic
+HIT18OR2P020: Cell#256(Group#6)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008863
@@ -45785,7 +46042,8 @@ Clib#256 (HIT18OR2P020) : Combinational Logic
                 (1.19, 1.192, 1.198)
                )
 
-Clib#257 (HIT18OR2P030) : Combinational Logic
+HIT18OR2P030: Cell#257(Group#6)
+  type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008838
@@ -45902,7 +46160,8 @@ Clib#257 (HIT18OR2P030) : Combinational Logic
                 (1.566, 1.566, 1.572)
                )
 
-Clib#258 (HIT18OR2P040) : Combinational Logic
+HIT18OR2P040: Cell#258(Group#6)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008842
@@ -46019,7 +46278,8 @@ Clib#258 (HIT18OR2P040) : Combinational Logic
                 (1.191, 1.192, 1.201)
                )
 
-Clib#259 (HIT18OR2P040S) : Combinational Logic
+HIT18OR2P040S: Cell#259(Group#6)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.01756
@@ -46136,7 +46396,8 @@ Clib#259 (HIT18OR2P040S) : Combinational Logic
                 (1.175, 1.177, 1.182)
                )
 
-Clib#260 (HIT18OR2P060) : Combinational Logic
+HIT18OR2P060: Cell#260(Group#6)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.017503
@@ -46253,7 +46514,8 @@ Clib#260 (HIT18OR2P060) : Combinational Logic
                 (1.556, 1.557, 1.562)
                )
 
-Clib#261 (HIT18OR2P080) : Combinational Logic
+HIT18OR2P080: Cell#261(Group#6)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.017531
@@ -46370,7 +46632,8 @@ Clib#261 (HIT18OR2P080) : Combinational Logic
                 (1.202, 1.203, 1.211)
                )
 
-Clib#262 (HIT18OR2P080S) : Combinational Logic
+HIT18OR2P080S: Cell#262(Group#6)
+  type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
     Capacitance      = 0.028311
@@ -46487,7 +46750,8 @@ Clib#262 (HIT18OR2P080S) : Combinational Logic
                 (1.17, 1.172, 1.178)
                )
 
-Clib#263 (HIT18OR3P005) : Combinational Logic
+HIT18OR3P005: Cell#263(Group#12)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.003299
@@ -46657,7 +46921,8 @@ Clib#263 (HIT18OR3P005) : Combinational Logic
                 (1.319, 1.321, 1.332)
                )
 
-Clib#264 (HIT18OR3P010) : Combinational Logic
+HIT18OR3P010: Cell#264(Group#12)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.006166
@@ -46827,7 +47092,8 @@ Clib#264 (HIT18OR3P010) : Combinational Logic
                 (1.245, 1.245, 1.255)
                )
 
-Clib#265 (HIT18OR3P015) : Combinational Logic
+HIT18OR3P015: Cell#265(Group#12)
+  type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
     Capacitance      = 0.009211
@@ -46997,7 +47263,8 @@ Clib#265 (HIT18OR3P015) : Combinational Logic
                 (1.607, 1.608, 1.615)
                )
 
-Clib#266 (HIT18OR3P020) : Combinational Logic
+HIT18OR3P020: Cell#266(Group#12)
+  type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010271
@@ -47167,7 +47434,8 @@ Clib#266 (HIT18OR3P020) : Combinational Logic
                 (1.209, 1.21, 1.219)
                )
 
-Clib#267 (HIT18OR3P030) : Combinational Logic
+HIT18OR3P030: Cell#267(Group#12)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010248
@@ -47337,7 +47605,8 @@ Clib#267 (HIT18OR3P030) : Combinational Logic
                 (1.591, 1.592, 1.598)
                )
 
-Clib#268 (HIT18OR3P040) : Combinational Logic
+HIT18OR3P040: Cell#268(Group#12)
+  type = Combinational Logic
   area = 69.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010277
@@ -47507,7 +47776,8 @@ Clib#268 (HIT18OR3P040) : Combinational Logic
                 (1.235, 1.236, 1.246)
                )
 
-Clib#269 (HIT18OR3P040S) : Combinational Logic
+HIT18OR3P040S: Cell#269(Group#12)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.01787
@@ -47677,7 +47947,8 @@ Clib#269 (HIT18OR3P040S) : Combinational Logic
                 (1.205, 1.206, 1.215)
                )
 
-Clib#270 (HIT18OR3P060) : Combinational Logic
+HIT18OR3P060: Cell#270(Group#12)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.01788
@@ -47847,7 +48118,8 @@ Clib#270 (HIT18OR3P060) : Combinational Logic
                 (1.595, 1.596, 1.601)
                )
 
-Clib#271 (HIT18OR3P080) : Combinational Logic
+HIT18OR3P080: Cell#271(Group#12)
+  type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
     Capacitance      = 0.017875
@@ -48017,7 +48289,8 @@ Clib#271 (HIT18OR3P080) : Combinational Logic
                 (1.269, 1.27, 1.278)
                )
 
-Clib#272 (HIT18OR3P080S) : Combinational Logic
+HIT18OR3P080S: Cell#272(Group#12)
+  type = Combinational Logic
   area = 145.92
   Pin#0[ A ]: Input#0
     Capacitance      = 0.029089
@@ -48187,7 +48460,8 @@ Clib#272 (HIT18OR3P080S) : Combinational Logic
                 (1.205, 1.206, 1.216)
                )
 
-Clib#273 (HIT18OR4P005) : Combinational Logic
+HIT18OR4P005: Cell#273(Group#18)
+  type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
     Capacitance      = 0.003075
@@ -48410,7 +48684,8 @@ Clib#273 (HIT18OR4P005) : Combinational Logic
                 (1.363, 1.364, 1.376)
                )
 
-Clib#274 (HIT18OR4P010) : Combinational Logic
+HIT18OR4P010: Cell#274(Group#18)
+  type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
     Capacitance      = 0.005925
@@ -48633,7 +48908,8 @@ Clib#274 (HIT18OR4P010) : Combinational Logic
                 (1.277, 1.279, 1.29)
                )
 
-Clib#275 (HIT18OR4P015) : Combinational Logic
+HIT18OR4P015: Cell#275(Group#18)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008987
@@ -48856,7 +49132,8 @@ Clib#275 (HIT18OR4P015) : Combinational Logic
                 (1.631, 1.632, 1.639)
                )
 
-Clib#276 (HIT18OR4P020) : Combinational Logic
+HIT18OR4P020: Cell#276(Group#18)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010033
@@ -49079,7 +49356,8 @@ Clib#276 (HIT18OR4P020) : Combinational Logic
                 (1.242, 1.243, 1.253)
                )
 
-Clib#277 (HIT18OR4P030) : Combinational Logic
+HIT18OR4P030: Cell#277(Group#18)
+  type = Combinational Logic
   area = 69.12
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010004
@@ -49302,7 +49580,8 @@ Clib#277 (HIT18OR4P030) : Combinational Logic
                 (1.631, 1.632, 1.639)
                )
 
-Clib#278 (HIT18OR4P040) : Combinational Logic
+HIT18OR4P040: Cell#278(Group#18)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.010048
@@ -49525,7 +49804,8 @@ Clib#278 (HIT18OR4P040) : Combinational Logic
                 (1.298, 1.299, 1.308)
                )
 
-Clib#279 (HIT18OR4P040S) : Combinational Logic
+HIT18OR4P040S: Cell#279(Group#18)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015264
@@ -49748,7 +50028,8 @@ Clib#279 (HIT18OR4P040S) : Combinational Logic
                 (1.279, 1.28, 1.289)
                )
 
-Clib#280 (HIT18OR4P060) : Combinational Logic
+HIT18OR4P060: Cell#280(Group#18)
+  type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015233
@@ -49971,7 +50252,8 @@ Clib#280 (HIT18OR4P060) : Combinational Logic
                 (1.671, 1.671, 1.678)
                )
 
-Clib#281 (HIT18OR4P080) : Combinational Logic
+HIT18OR4P080: Cell#281(Group#18)
+  type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
     Capacitance      = 0.015241
@@ -50194,7 +50476,8 @@ Clib#281 (HIT18OR4P080) : Combinational Logic
                 (1.346, 1.346, 1.354)
                )
 
-Clib#282 (HIT18TBUFP010) : Combinational Logic
+HIT18TBUFP010: Cell#282(Group#38)
+  type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
     Capacitance      = 0.006573
@@ -50284,7 +50567,8 @@ Clib#282 (HIT18TBUFP010) : Combinational Logic
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-Clib#283 (HIT18TBUFP020) : Combinational Logic
+HIT18TBUFP020: Cell#283(Group#38)
+  type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
     Capacitance      = 0.014261
@@ -50374,7 +50658,8 @@ Clib#283 (HIT18TBUFP020) : Combinational Logic
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-Clib#284 (HIT18TBUFP030) : Combinational Logic
+HIT18TBUFP030: Cell#284(Group#38)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.014295
@@ -50464,7 +50749,8 @@ Clib#284 (HIT18TBUFP030) : Combinational Logic
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-Clib#285 (HIT18TBUFP040) : Combinational Logic
+HIT18TBUFP040: Cell#285(Group#38)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.014301
@@ -50554,7 +50840,8 @@ Clib#285 (HIT18TBUFP040) : Combinational Logic
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-Clib#286 (HIT18TBUFP060) : Combinational Logic
+HIT18TBUFP060: Cell#286(Group#38)
+  type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
     Capacitance      = 0.014276
@@ -50644,7 +50931,8 @@ Clib#286 (HIT18TBUFP060) : Combinational Logic
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-Clib#287 (HIT18TBUFP080) : Combinational Logic
+HIT18TBUFP080: Cell#287(Group#38)
+  type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
     Capacitance      = 0.014318
@@ -50734,7 +51022,8 @@ Clib#287 (HIT18TBUFP080) : Combinational Logic
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-Clib#288 (HIT18TINVP010) : Combinational Logic
+HIT18TINVP010: Cell#288(Group#39)
+  type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008137
@@ -50824,7 +51113,8 @@ Clib#288 (HIT18TINVP010) : Combinational Logic
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-Clib#289 (HIT18TINVP020) : Combinational Logic
+HIT18TINVP020: Cell#289(Group#39)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008218
@@ -50914,7 +51204,8 @@ Clib#289 (HIT18TINVP020) : Combinational Logic
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-Clib#290 (HIT18TINVP030) : Combinational Logic
+HIT18TINVP030: Cell#290(Group#39)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008205
@@ -51004,7 +51295,8 @@ Clib#290 (HIT18TINVP030) : Combinational Logic
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-Clib#291 (HIT18TINVP040) : Combinational Logic
+HIT18TINVP040: Cell#291(Group#39)
+  type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
     Capacitance      = 0.00823
@@ -51094,7 +51386,8 @@ Clib#291 (HIT18TINVP040) : Combinational Logic
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-Clib#292 (HIT18TINVP060) : Combinational Logic
+HIT18TINVP060: Cell#292(Group#39)
+  type = Combinational Logic
   area = 115.2
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008199
@@ -51184,7 +51477,8 @@ Clib#292 (HIT18TINVP060) : Combinational Logic
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-Clib#293 (HIT18TINVP080) : Combinational Logic
+HIT18TINVP080: Cell#293(Group#39)
+  type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
     Capacitance      = 0.008212
@@ -51274,7 +51568,8 @@ Clib#293 (HIT18TINVP080) : Combinational Logic
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-Clib#294 (HIT18XNOR2P005) : Combinational Logic
+HIT18XNOR2P005: Cell#294(Group#9)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.007544
@@ -51489,7 +51784,8 @@ Clib#294 (HIT18XNOR2P005) : Combinational Logic
                 (2.2285, 2.227, 2.2485)
                )
 
-Clib#295 (HIT18XNOR2P010) : Combinational Logic
+HIT18XNOR2P010: Cell#295(Group#9)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.01128
@@ -51704,7 +52000,8 @@ Clib#295 (HIT18XNOR2P010) : Combinational Logic
                 (2.8965, 2.896, 2.909)
                )
 
-Clib#296 (HIT18XNOR2P015) : Combinational Logic
+HIT18XNOR2P015: Cell#296(Group#9)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011197
@@ -51919,7 +52216,8 @@ Clib#296 (HIT18XNOR2P015) : Combinational Logic
                 (1.5975, 1.598, 1.5985)
                )
 
-Clib#297 (HIT18XNOR2P020) : Combinational Logic
+HIT18XNOR2P020: Cell#297(Group#9)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011194
@@ -52134,7 +52432,8 @@ Clib#297 (HIT18XNOR2P020) : Combinational Logic
                 (1.196, 1.196, 1.1985)
                )
 
-Clib#298 (HIT18XNOR2P030) : Combinational Logic
+HIT18XNOR2P030: Cell#298(Group#9)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011206
@@ -52349,7 +52648,8 @@ Clib#298 (HIT18XNOR2P030) : Combinational Logic
                 (1.575, 1.5755, 1.577)
                )
 
-Clib#299 (HIT18XNOR2P040) : Combinational Logic
+HIT18XNOR2P040: Cell#299(Group#9)
+  type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011201
@@ -52564,7 +52864,8 @@ Clib#299 (HIT18XNOR2P040) : Combinational Logic
                 (1.2075, 1.2075, 1.2115)
                )
 
-Clib#300 (HIT18XNOR2P060) : Combinational Logic
+HIT18XNOR2P060: Cell#300(Group#9)
+  type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011265
@@ -52779,7 +53080,8 @@ Clib#300 (HIT18XNOR2P060) : Combinational Logic
                 (1.527, 1.527, 1.5265)
                )
 
-Clib#301 (HIT18XNOR2P080) : Combinational Logic
+HIT18XNOR2P080: Cell#301(Group#9)
+  type = Combinational Logic
   area = 153.6
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011247
@@ -52994,7 +53296,8 @@ Clib#301 (HIT18XNOR2P080) : Combinational Logic
                 (1.1455, 1.146, 1.146)
                )
 
-Clib#302 (HIT18XOR2P005) : Combinational Logic
+HIT18XOR2P005: Cell#302(Group#8)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.007691
@@ -53209,7 +53512,8 @@ Clib#302 (HIT18XOR2P005) : Combinational Logic
                 (1.768, 1.7685, 1.7935)
                )
 
-Clib#303 (HIT18XOR2P010) : Combinational Logic
+HIT18XOR2P010: Cell#303(Group#8)
+  type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011276
@@ -53424,7 +53728,8 @@ Clib#303 (HIT18XOR2P010) : Combinational Logic
                 (2.488, 2.4895, 2.4975)
                )
 
-Clib#304 (HIT18XOR2P015) : Combinational Logic
+HIT18XOR2P015: Cell#304(Group#8)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011245
@@ -53639,7 +53944,8 @@ Clib#304 (HIT18XOR2P015) : Combinational Logic
                 (1.5945, 1.595, 1.5965)
                )
 
-Clib#305 (HIT18XOR2P020) : Combinational Logic
+HIT18XOR2P020: Cell#305(Group#8)
+  type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011265
@@ -53854,7 +54160,8 @@ Clib#305 (HIT18XOR2P020) : Combinational Logic
                 (1.1905, 1.1915, 1.1945)
                )
 
-Clib#306 (HIT18XOR2P030) : Combinational Logic
+HIT18XOR2P030: Cell#306(Group#8)
+  type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011265
@@ -54069,7 +54376,8 @@ Clib#306 (HIT18XOR2P030) : Combinational Logic
                 (1.5675, 1.568, 1.57)
                )
 
-Clib#307 (HIT18XOR2P040) : Combinational Logic
+HIT18XOR2P040: Cell#307(Group#8)
+  type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011239
@@ -54284,7 +54592,8 @@ Clib#307 (HIT18XOR2P040) : Combinational Logic
                 (1.194, 1.195, 1.199)
                )
 
-Clib#308 (HIT18XOR2P060) : Combinational Logic
+HIT18XOR2P060: Cell#308(Group#8)
+  type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011197
@@ -54499,7 +54808,8 @@ Clib#308 (HIT18XOR2P060) : Combinational Logic
                 (1.5275, 1.5275, 1.528)
                )
 
-Clib#309 (HIT18XOR2P080) : Combinational Logic
+HIT18XOR2P080: Cell#309(Group#8)
+  type = Combinational Logic
   area = 153.6
   Pin#0[ A ]: Input#0
     Capacitance      = 0.011196
@@ -54714,198 +55024,250 @@ Clib#309 (HIT18XOR2P080) : Combinational Logic
                 (1.146, 1.146, 1.1465)
                )
 
-Cell Class
+Group#2(Class#1)
+  Name = Buffer
+  Cell = HIT18BUFP005 HIT18BUFP010 HIT18BUFP015 HIT18BUFP020 HIT18BUFP030 HIT18BUFP040 HIT18BUFP050 HIT18BUFP060 HIT18BUFP080 HIT18BUFP120 HIT18BUFP160
+
+Group#3(Class#1)
+  Name = Inverter
+  Cell = HIT18INVP005 HIT18INVP010 HIT18INVP015 HIT18INVP020 HIT18INVP030 HIT18INVP040 HIT18INVP050 HIT18INVP060 HIT18INVP080 HIT18INVP120 HIT18INVP160
+
+Group#4(Class#2)
+  Name = And2
+  Cell = HIT18AND2P005 HIT18AND2P010 HIT18AND2P015 HIT18AND2P020 HIT18AND2P030 HIT18AND2P040 HIT18AND2P040S HIT18AND2P060 HIT18AND2P080 HIT18AND2P080S
+
+Group#5(Class#2)
+  Name = Nand2
+  Cell = HIT18NAND2P005 HIT18NAND2P010 HIT18NAND2P015 HIT18NAND2P020 HIT18NAND2P030 HIT18NAND2P030S HIT18NAND2P040 HIT18NAND2P040S HIT18NAND2P060 HIT18NAND2P060S HIT18NAND2P080 HIT18NAND2P080S
+
+Group#6(Class#2)
+  Name = Or2
+  Cell = HIT18OR2P005 HIT18OR2P010 HIT18OR2P015 HIT18OR2P020 HIT18OR2P030 HIT18OR2P040 HIT18OR2P040S HIT18OR2P060 HIT18OR2P080 HIT18OR2P080S
+
+Group#7(Class#2)
+  Name = Nor2
+  Cell = HIT18NOR2P005 HIT18NOR2P010 HIT18NOR2P015 HIT18NOR2P020 HIT18NOR2P030 HIT18NOR2P030S HIT18NOR2P040 HIT18NOR2P040S HIT18NOR2P060 HIT18NOR2P060S HIT18NOR2P080 HIT18NOR2P080S
+
+Group#8(Class#3)
+  Name = Xor2
+  Cell = HIT18XOR2P005 HIT18XOR2P010 HIT18XOR2P015 HIT18XOR2P020 HIT18XOR2P030 HIT18XOR2P040 HIT18XOR2P060 HIT18XOR2P080
+
+Group#9(Class#3)
+  Name = Xnor2
+  Cell = HIT18XNOR2P005 HIT18XNOR2P010 HIT18XNOR2P015 HIT18XNOR2P020 HIT18XNOR2P030 HIT18XNOR2P040 HIT18XNOR2P060 HIT18XNOR2P080
+
+Group#10(Class#4)
+  Name = And3
+  Cell = HIT18AND3P005 HIT18AND3P010 HIT18AND3P015 HIT18AND3P020 HIT18AND3P030 HIT18AND3P040 HIT18AND3P040S HIT18AND3P060 HIT18AND3P080 HIT18AND3P080S
+
+Group#11(Class#4)
+  Name = Nand3
+  Cell = HIT18NAND3P005 HIT18NAND3P010 HIT18NAND3P015 HIT18NAND3P020 HIT18NAND3P030 HIT18NAND3P030S HIT18NAND3P040 HIT18NAND3P040S HIT18NAND3P060 HIT18NAND3P060S HIT18NAND3P080 HIT18NAND3P080S
+
+Group#12(Class#4)
+  Name = Or3
+  Cell = HIT18OR3P005 HIT18OR3P010 HIT18OR3P015 HIT18OR3P020 HIT18OR3P030 HIT18OR3P040 HIT18OR3P040S HIT18OR3P060 HIT18OR3P080 HIT18OR3P080S
+
+Group#13(Class#4)
+  Name = Nor3
+  Cell = HIT18NOR3P005 HIT18NOR3P010 HIT18NOR3P015 HIT18NOR3P020 HIT18NOR3P030 HIT18NOR3P030S HIT18NOR3P040 HIT18NOR3P040S HIT18NOR3P060 HIT18NOR3P060S HIT18NOR3P080 HIT18NOR3P080S
+
+Group#16(Class#6)
+  Name = And4
+  Cell = HIT18AND4P005 HIT18AND4P010 HIT18AND4P015 HIT18AND4P020 HIT18AND4P030 HIT18AND4P040 HIT18AND4P040S HIT18AND4P060 HIT18AND4P080
+
+Group#17(Class#6)
+  Name = Nand4
+  Cell = HIT18NAND4P005 HIT18NAND4P010 HIT18NAND4P015 HIT18NAND4P020 HIT18NAND4P030 HIT18NAND4P040 HIT18NAND4P040S HIT18NAND4P060 HIT18NAND4P060S HIT18NAND4P080 HIT18NAND4P080S
+
+Group#18(Class#6)
+  Name = Or4
+  Cell = HIT18OR4P005 HIT18OR4P010 HIT18OR4P015 HIT18OR4P020 HIT18OR4P030 HIT18OR4P040 HIT18OR4P040S HIT18OR4P060 HIT18OR4P080
+
+Group#19(Class#6)
+  Name = Nor4
+  Cell = HIT18NOR4P005 HIT18NOR4P010 HIT18NOR4P015 HIT18NOR4P020 HIT18NOR4P030 HIT18NOR4P040 HIT18NOR4P040S HIT18NOR4P060 HIT18NOR4P060S HIT18NOR4P080 HIT18NOR4P080S
+
+Group#22(Class#8)
+  Name = Mux2
+  Cell = HIT18MUX2P010 HIT18MUX2P020 HIT18MUX2P030 HIT18MUX2P040 HIT18MUX2P060 HIT18MUX2P080
+
+Group#24(Class#10)
+  Cell = HIT18AOI211P005 HIT18AOI211P010 HIT18AOI211P015 HIT18AOI211P020 HIT18AOI211P030 HIT18AOI211P030S HIT18AOI211P040 HIT18AOI211P040S HIT18AOI211P060 HIT18AOI211P060S HIT18AOI211P080 HIT18AOI211P080S
+
+Group#25(Class#11)
+  Cell = HIT18AOI21P005 HIT18AOI21P010 HIT18AOI21P015 HIT18AOI21P020 HIT18AOI21P030 HIT18AOI21P030S HIT18AOI21P040 HIT18AOI21P040S HIT18AOI21P060 HIT18AOI21P060S HIT18AOI21P080 HIT18AOI21P080S
+
+Group#26(Class#12)
+  Cell = HIT18AOI22P005 HIT18AOI22P010 HIT18AOI22P015 HIT18AOI22P020 HIT18AOI22P030 HIT18AOI22P030S HIT18AOI22P040 HIT18AOI22P040S HIT18AOI22P060 HIT18AOI22P060S HIT18AOI22P080 HIT18AOI22P080S
+
+Group#27(Class#13)
+  Cell = HIT18DFNP010 HIT18DFNP020 HIT18DFNP040 HIT18DFNP060 HIT18DFNP080 HIT18DFNP120 HIT18DFNP160
+
+Group#28(Class#14)
+  Cell = HIT18DFNRP010 HIT18DFNRP020 HIT18DFNRP040 HIT18DFNRP060 HIT18DFNRP080 HIT18DFNRP120 HIT18DFNRP160
+
+Group#29(Class#15)
+  Cell = HIT18DFNSRP010 HIT18DFNSRP020 HIT18DFNSRP040 HIT18DFNSRP060 HIT18DFNSRP080 HIT18DFNSRP120 HIT18DFNSRP160
+
+Group#30(Class#13)
+  Cell = HIT18DFP010 HIT18DFP020 HIT18DFP040 HIT18DFP060 HIT18DFP080 HIT18DFP120 HIT18DFP160
+
+Group#31(Class#14)
+  Cell = HIT18DFRP010 HIT18DFRP020 HIT18DFRP040 HIT18DFRP060 HIT18DFRP080 HIT18DFRP120 HIT18DFRP160
+
+Group#32(Class#15)
+  Cell = HIT18DFSRP010 HIT18DFSRP020 HIT18DFSRP040 HIT18DFSRP060 HIT18DFSRP080 HIT18DFSRP120 HIT18DFSRP160
+
+Group#33(Class#16)
+  Cell = HIT18FAD1P010 HIT18FAD1P020 HIT18FAD1P030 HIT18FAD1P040 HIT18FAD1P060 HIT18FAD1P080
+
+Group#34(Class#17)
+  Cell = HIT18HAD1P010 HIT18HAD1P020 HIT18HAD1P030 HIT18HAD1P040 HIT18HAD1P060 HIT18HAD1P080
+
+Group#35(Class#10)
+  Cell = HIT18OAI211P005 HIT18OAI211P010 HIT18OAI211P015 HIT18OAI211P020 HIT18OAI211P030 HIT18OAI211P030S HIT18OAI211P040 HIT18OAI211P040S HIT18OAI211P060 HIT18OAI211P060S HIT18OAI211P080 HIT18OAI211P080S
+
+Group#36(Class#11)
+  Cell = HIT18OAI21P005 HIT18OAI21P010 HIT18OAI21P015 HIT18OAI21P020 HIT18OAI21P030 HIT18OAI21P030S HIT18OAI21P040 HIT18OAI21P040S HIT18OAI21P060 HIT18OAI21P060S HIT18OAI21P080 HIT18OAI21P080S
+
+Group#37(Class#12)
+  Cell = HIT18OAI22P005 HIT18OAI22P010 HIT18OAI22P015 HIT18OAI22P020 HIT18OAI22P030 HIT18OAI22P030S HIT18OAI22P040 HIT18OAI22P040S HIT18OAI22P060 HIT18OAI22P060S HIT18OAI22P080 HIT18OAI22P080S
+
+Group#38(Class#18)
+  Cell = HIT18TBUFP010 HIT18TBUFP020 HIT18TBUFP030 HIT18TBUFP040 HIT18TBUFP060 HIT18TBUFP080
+
+Group#39(Class#18)
+  Cell = HIT18TINVP010 HIT18TINVP020 HIT18TINVP030 HIT18TINVP040 HIT18TINVP060 HIT18TINVP080
+
 Class#1
-  Idmap List = 
+  Name = Buffer
+  Idmap List:
          Input[ 0], Output[ 0]
 
-  Group: Map = Input[ 0], Output[ 0]
-         Cell =  HIT18BUFP005 HIT18BUFP010 HIT18BUFP015 HIT18BUFP020 HIT18BUFP030 HIT18BUFP040 HIT18BUFP050 HIT18BUFP060 HIT18BUFP080 HIT18BUFP120 HIT18BUFP160
-  Group: Map = Input[ 0~], Output[ 0]
-         Cell =  HIT18INVP005 HIT18INVP010 HIT18INVP015 HIT18INVP020 HIT18INVP030 HIT18INVP040 HIT18INVP050 HIT18INVP060 HIT18INVP080 HIT18INVP120 HIT18INVP160
+  Group#2: Map = Input[ 0], Output[ 0]
+  Group#3: Map = Input[ 0~], Output[ 0]
 
 Class#2
-  Idmap List = 
+  Name = And2
+  Idmap List:
          Input[ 0 1], Output[ 0]
 
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell =  HIT18AND2P005 HIT18AND2P010 HIT18AND2P015 HIT18AND2P020 HIT18AND2P030 HIT18AND2P040 HIT18AND2P040S HIT18AND2P060 HIT18AND2P080 HIT18AND2P080S
-  Group: Map = Input[ 0 1], Output[ 0~]
-         Cell =  HIT18NAND2P005 HIT18NAND2P010 HIT18NAND2P015 HIT18NAND2P020 HIT18NAND2P030 HIT18NAND2P030S HIT18NAND2P040 HIT18NAND2P040S HIT18NAND2P060 HIT18NAND2P060S HIT18NAND2P080 HIT18NAND2P080S
-  Group: Map = Input[ 0~ 1~], Output[ 0]
-         Cell =  HIT18NOR2P005 HIT18NOR2P010 HIT18NOR2P015 HIT18NOR2P020 HIT18NOR2P030 HIT18NOR2P030S HIT18NOR2P040 HIT18NOR2P040S HIT18NOR2P060 HIT18NOR2P060S HIT18NOR2P080 HIT18NOR2P080S
-  Group: Map = Input[ 0~ 1~], Output[ 0~]
-         Cell =  HIT18OR2P005 HIT18OR2P010 HIT18OR2P015 HIT18OR2P020 HIT18OR2P030 HIT18OR2P040 HIT18OR2P040S HIT18OR2P060 HIT18OR2P080 HIT18OR2P080S
+  Group#4: Map = Input[ 0 1], Output[ 0]
+  Group#5: Map = Input[ 0 1], Output[ 0~]
+  Group#6: Map = Input[ 0~ 1~], Output[ 0~]
+  Group#7: Map = Input[ 0~ 1~], Output[ 0]
 
 Class#3
-  Idmap List = 
-         Input[ 0 1 2], Output[ 0]
+  Name = Xor2
+  Idmap List:
+         Input[ 0 1], Output[ 0]
 
-  Group: Map = Input[ 0 1 2], Output[ 0]
-         Cell =  HIT18AND3P005 HIT18AND3P010 HIT18AND3P015 HIT18AND3P020 HIT18AND3P030 HIT18AND3P040 HIT18AND3P040S HIT18AND3P060 HIT18AND3P080 HIT18AND3P080S
-  Group: Map = Input[ 0 1 2], Output[ 0~]
-         Cell =  HIT18NAND3P005 HIT18NAND3P010 HIT18NAND3P015 HIT18NAND3P020 HIT18NAND3P030 HIT18NAND3P030S HIT18NAND3P040 HIT18NAND3P040S HIT18NAND3P060 HIT18NAND3P060S HIT18NAND3P080 HIT18NAND3P080S
-  Group: Map = Input[ 0~ 1~ 2~], Output[ 0]
-         Cell =  HIT18NOR3P005 HIT18NOR3P010 HIT18NOR3P015 HIT18NOR3P020 HIT18NOR3P030 HIT18NOR3P030S HIT18NOR3P040 HIT18NOR3P040S HIT18NOR3P060 HIT18NOR3P060S HIT18NOR3P080 HIT18NOR3P080S
-  Group: Map = Input[ 0~ 1~ 2~], Output[ 0~]
-         Cell =  HIT18OR3P005 HIT18OR3P010 HIT18OR3P015 HIT18OR3P020 HIT18OR3P030 HIT18OR3P040 HIT18OR3P040S HIT18OR3P060 HIT18OR3P080 HIT18OR3P080S
+  Group#8: Map = Input[ 0 1], Output[ 0]
+  Group#9: Map = Input[ 0 1], Output[ 0~]
 
 Class#4
-  Idmap List = 
+  Name = And3
+  Idmap List:
+         Input[ 0 1 2], Output[ 0]
+
+  Group#10: Map = Input[ 0 1 2], Output[ 0]
+  Group#11: Map = Input[ 0 1 2], Output[ 0~]
+  Group#12: Map = Input[ 0~ 1~ 2~], Output[ 0~]
+  Group#13: Map = Input[ 0~ 1~ 2~], Output[ 0]
+
+Class#6
+  Name = And4
+  Idmap List:
          Input[ 0 1 2 3], Output[ 0]
 
-  Group: Map = Input[ 0 1 2 3], Output[ 0]
-         Cell =  HIT18AND4P005 HIT18AND4P010 HIT18AND4P015 HIT18AND4P020 HIT18AND4P030 HIT18AND4P040 HIT18AND4P040S HIT18AND4P060 HIT18AND4P080
-  Group: Map = Input[ 0 1 2 3], Output[ 0~]
-         Cell =  HIT18NAND4P005 HIT18NAND4P010 HIT18NAND4P015 HIT18NAND4P020 HIT18NAND4P030 HIT18NAND4P040 HIT18NAND4P040S HIT18NAND4P060 HIT18NAND4P060S HIT18NAND4P080 HIT18NAND4P080S
-  Group: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
-         Cell =  HIT18NOR4P005 HIT18NOR4P010 HIT18NOR4P015 HIT18NOR4P020 HIT18NOR4P030 HIT18NOR4P040 HIT18NOR4P040S HIT18NOR4P060 HIT18NOR4P060S HIT18NOR4P080 HIT18NOR4P080S
-  Group: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0~]
-         Cell =  HIT18OR4P005 HIT18OR4P010 HIT18OR4P015 HIT18OR4P020 HIT18OR4P030 HIT18OR4P040 HIT18OR4P040S HIT18OR4P060 HIT18OR4P080
+  Group#16: Map = Input[ 0 1 2 3], Output[ 0]
+  Group#17: Map = Input[ 0 1 2 3], Output[ 0~]
+  Group#18: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0~]
+  Group#19: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
 
-Class#9
-  Idmap List = 
-         Input[ 0 1], Output[ 0]
+Class#8
+  Name = Mux2
+  Idmap List:
+         Input[ 0 1 2], Output[ 0]
 
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell =  HIT18XOR2P005 HIT18XOR2P010 HIT18XOR2P015 HIT18XOR2P020 HIT18XOR2P030 HIT18XOR2P040 HIT18XOR2P060 HIT18XOR2P080
-  Group: Map = Input[ 0 1], Output[ 0~]
-         Cell =  HIT18XNOR2P005 HIT18XNOR2P010 HIT18XNOR2P015 HIT18XNOR2P020 HIT18XNOR2P030 HIT18XNOR2P040 HIT18XNOR2P060 HIT18XNOR2P080
+  Group#22: Map = Input[ 2 1 0], Output[ 0]
+
+Class#10
+  Idmap List:
+         Input[ 0 1 2 3], Output[ 0]
+
+  Group#24: Map = Input[ 2~ 3~ 0~ 1~], Output[ 0]
+  Group#35: Map = Input[ 2 3 0 1], Output[ 0~]
+
+Class#11
+  Idmap List:
+         Input[ 0 1 2], Output[ 0]
+
+  Group#25: Map = Input[ 2~ 0~ 1~], Output[ 0]
+  Group#36: Map = Input[ 2 0 1], Output[ 0~]
 
 Class#12
-  Idmap List = 
-         Input[ 0 1 2], Output[ 0]
-
-  Group: Map = Input[ 2 1 0], Output[ 0]
-         Cell =  HIT18MUX2P010 HIT18MUX2P020 HIT18MUX2P030 HIT18MUX2P040 HIT18MUX2P060 HIT18MUX2P080
-
-Class#14
-  Idmap List = 
-         Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1~ 0], Output[ 0]
-         Cell =  HIT18DFNP010 HIT18DFNP020 HIT18DFNP040 HIT18DFNP060 HIT18DFNP080 HIT18DFNP120 HIT18DFNP160
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell =  HIT18DFP010 HIT18DFP020 HIT18DFP040 HIT18DFP060 HIT18DFP080 HIT18DFP120 HIT18DFP160
-
-Class#18
-  Idmap List = 
-         Input[ 0 1 2], Output[ 0]
-
-  Group: Map = Input[ 2~ 1 0~], Output[ 0]
-         Cell =  HIT18DFNRP010 HIT18DFNRP020 HIT18DFNRP040 HIT18DFNRP060 HIT18DFNRP080 HIT18DFNRP120 HIT18DFNRP160
-  Group: Map = Input[ 2 1 0~], Output[ 0]
-         Cell =  HIT18DFRP010 HIT18DFRP020 HIT18DFRP040 HIT18DFRP060 HIT18DFRP080 HIT18DFRP120 HIT18DFRP160
-
-Class#26
-  Idmap List = 
-         Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 3~ 2 1~ 0~], Output[ 0]
-         Cell =  HIT18DFNSRP010 HIT18DFNSRP020 HIT18DFNSRP040 HIT18DFNSRP060 HIT18DFNSRP080 HIT18DFNSRP120 HIT18DFNSRP160
-  Group: Map = Input[ 3 2 1~ 0~], Output[ 0]
-         Cell =  HIT18DFSRP010 HIT18DFSRP020 HIT18DFSRP040 HIT18DFSRP060 HIT18DFSRP080 HIT18DFSRP120 HIT18DFSRP160
-
-Class#238
-  Idmap List = 
-         Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 2~ 3~ 0~ 1~], Output[ 0]
-         Cell =  HIT18AOI211P005 HIT18AOI211P010 HIT18AOI211P015 HIT18AOI211P020 HIT18AOI211P030 HIT18AOI211P030S HIT18AOI211P040 HIT18AOI211P040S HIT18AOI211P060 HIT18AOI211P060S HIT18AOI211P080 HIT18AOI211P080S
-  Group: Map = Input[ 2 3 0 1], Output[ 0~]
-         Cell =  HIT18OAI211P005 HIT18OAI211P010 HIT18OAI211P015 HIT18OAI211P020 HIT18OAI211P030 HIT18OAI211P030S HIT18OAI211P040 HIT18OAI211P040S HIT18OAI211P060 HIT18OAI211P060S HIT18OAI211P080 HIT18OAI211P080S
-
-Class#239
-  Idmap List = 
-         Input[ 0 1 2], Output[ 0]
-
-  Group: Map = Input[ 2~ 0~ 1~], Output[ 0]
-         Cell =  HIT18AOI21P005 HIT18AOI21P010 HIT18AOI21P015 HIT18AOI21P020 HIT18AOI21P030 HIT18AOI21P030S HIT18AOI21P040 HIT18AOI21P040S HIT18AOI21P060 HIT18AOI21P060S HIT18AOI21P080 HIT18AOI21P080S
-  Group: Map = Input[ 2 0 1], Output[ 0~]
-         Cell =  HIT18OAI21P005 HIT18OAI21P010 HIT18OAI21P015 HIT18OAI21P020 HIT18OAI21P030 HIT18OAI21P030S HIT18OAI21P040 HIT18OAI21P040S HIT18OAI21P060 HIT18OAI21P060S HIT18OAI21P080 HIT18OAI21P080S
-
-Class#240
-  Idmap List = 
+  Idmap List:
          Input[ 0 1 2 3], Output[ 0]
          Input[ 2 3 0 1], Output[ 0]
 
-  Group: Map = Input[ 0 1 2 3], Output[ 0~]
-         Cell =  HIT18AOI22P005 HIT18AOI22P010 HIT18AOI22P015 HIT18AOI22P020 HIT18AOI22P030 HIT18AOI22P030S HIT18AOI22P040 HIT18AOI22P040S HIT18AOI22P060 HIT18AOI22P060S HIT18AOI22P080 HIT18AOI22P080S
-  Group: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
-         Cell =  HIT18OAI22P005 HIT18OAI22P010 HIT18OAI22P015 HIT18OAI22P020 HIT18OAI22P030 HIT18OAI22P030S HIT18OAI22P040 HIT18OAI22P040S HIT18OAI22P060 HIT18OAI22P060S HIT18OAI22P080 HIT18OAI22P080S
+  Group#26: Map = Input[ 0 1 2 3], Output[ 0~]
+  Group#37: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
 
-Class#241
-  Idmap List = 
-         Input[ 0 1 2], Output[ 0 1]
-
-  Group: Map = Input[ 0 1 2], Output[ 0 1]
-         Cell =  HIT18FAD1P010 HIT18FAD1P020 HIT18FAD1P030 HIT18FAD1P040 HIT18FAD1P060 HIT18FAD1P080
-
-Class#242
-  Idmap List = 
-         Input[ 0 1], Output[ 0 1]
-
-  Group: Map = Input[ 0 1], Output[ 1 0]
-         Cell =  HIT18HAD1P010 HIT18HAD1P020 HIT18HAD1P030 HIT18HAD1P040 HIT18HAD1P060 HIT18HAD1P080
-
-Class#243
-  Idmap List = 
+Class#13
+  Name = DFF
+  Idmap List:
          Input[ 0 1], Output[ 0]
 
-  Group: Map = Input[ 1 0~], Output[ 0]
-         Cell =  HIT18TBUFP010 HIT18TBUFP020 HIT18TBUFP030 HIT18TBUFP040 HIT18TBUFP060 HIT18TBUFP080
-  Group: Map = Input[ 1~ 0~], Output[ 0]
-         Cell =  HIT18TINVP010 HIT18TINVP020 HIT18TINVP030 HIT18TINVP040 HIT18TINVP060 HIT18TINVP080
+  Group#27: Map = Input[ 1~ 0], Output[ 0]
+  Group#30: Map = Input[ 1 0], Output[ 0]
 
-Const0 Group
-  Cell =
-
-Const1 Group
-  Cell =
-
-Buffer Group
-  Cell = HIT18BUFP005 HIT18BUFP010 HIT18BUFP015 HIT18BUFP020 HIT18BUFP030 HIT18BUFP040 HIT18BUFP050 HIT18BUFP060 HIT18BUFP080 HIT18BUFP120 HIT18BUFP160
-
-Inverter Group
-  Cell = HIT18INVP005 HIT18INVP010 HIT18INVP015 HIT18INVP020 HIT18INVP030 HIT18INVP040 HIT18INVP050 HIT18INVP060 HIT18INVP080 HIT18INVP120 HIT18INVP160
-
-DFF Class#14
-  Idmap List = 
-         Input[ 0 1], Output[ 0]
-
-  Group: Map = Input[ 1~ 0], Output[ 0]
-         Cell =  HIT18DFNP010 HIT18DFNP020 HIT18DFNP040 HIT18DFNP060 HIT18DFNP080 HIT18DFNP120 HIT18DFNP160
-  Group: Map = Input[ 1 0], Output[ 0]
-         Cell =  HIT18DFP010 HIT18DFP020 HIT18DFP040 HIT18DFP060 HIT18DFP080 HIT18DFP120 HIT18DFP160
-
-DFF_R Class#18
-  Idmap List = 
+Class#14
+  Name = DFF_R
+  Idmap List:
          Input[ 0 1 2], Output[ 0]
 
-  Group: Map = Input[ 2~ 1 0~], Output[ 0]
-         Cell =  HIT18DFNRP010 HIT18DFNRP020 HIT18DFNRP040 HIT18DFNRP060 HIT18DFNRP080 HIT18DFNRP120 HIT18DFNRP160
-  Group: Map = Input[ 2 1 0~], Output[ 0]
-         Cell =  HIT18DFRP010 HIT18DFRP020 HIT18DFRP040 HIT18DFRP060 HIT18DFRP080 HIT18DFRP120 HIT18DFRP160
+  Group#28: Map = Input[ 2~ 1 0~], Output[ 0]
+  Group#31: Map = Input[ 2 1 0~], Output[ 0]
 
-DFF_RS(LL) Class#26
-  Idmap List = 
+Class#15
+  Name = DFF_RSLL
+  Idmap List:
          Input[ 0 1 2 3], Output[ 0]
 
-  Group: Map = Input[ 3~ 2 1~ 0~], Output[ 0]
-         Cell =  HIT18DFNSRP010 HIT18DFNSRP020 HIT18DFNSRP040 HIT18DFNSRP060 HIT18DFNSRP080 HIT18DFNSRP120 HIT18DFNSRP160
-  Group: Map = Input[ 3 2 1~ 0~], Output[ 0]
-         Cell =  HIT18DFSRP010 HIT18DFSRP020 HIT18DFSRP040 HIT18DFSRP060 HIT18DFSRP080 HIT18DFSRP120 HIT18DFSRP160
+  Group#29: Map = Input[ 3~ 2 1~ 0~], Output[ 0]
+  Group#32: Map = Input[ 3 2 1~ 0~], Output[ 0]
+
+Class#16
+  Idmap List:
+         Input[ 0 1 2], Output[ 0 1]
+
+  Group#33: Map = Input[ 0 1 2], Output[ 0 1]
+
+Class#17
+  Idmap List:
+         Input[ 0 1], Output[ 0 1]
+
+  Group#34: Map = Input[ 0 1], Output[ 1 0]
+
+Class#18
+  Idmap List:
+         Input[ 0 1], Output[ 0]
+
+  Group#38: Map = Input[ 1 0~], Output[ 0]
+  Group#39: Map = Input[ 1~ 0~], Output[ 0]
 
 ==== PatMgr dump start ====
 Node#0: INPUT#0
 Node#1: INPUT#1
 Node#2: AND
-Node#3: INPUT#2
-Node#4: AND
+Node#3: XOR
+Node#4: INPUT#2
 Node#5: AND
 Node#6: AND
-Node#7: INPUT#3
-Node#8: AND
+Node#7: AND
+Node#8: INPUT#3
 Node#9: AND
 Node#10: AND
 Node#11: AND
@@ -54913,7 +55275,7 @@ Node#12: AND
 Node#13: AND
 Node#14: AND
 Node#15: AND
-Node#16: XOR
+Node#16: AND
 Node#17: AND
 Node#18: AND
 Node#19: AND
@@ -54941,37 +55303,37 @@ Edge#3: 0 -> 1(1)
 Edge#4: 0 -> 2(0)
 Edge#5: 1 -> 2(1)
 Edge#6: 0 -> 3(0)
-Edge#7: 0 -> 3(1)
-Edge#8: 1 -> 4(0)
-Edge#9: 3 -> 4(1)
-Edge#10: 0 -> 5(0)
+Edge#7: 1 -> 3(1)
+Edge#8: 0 -> 4(0)
+Edge#9: 0 -> 4(1)
+Edge#10: 1 -> 5(0)
 Edge#11: 4 -> 5(1)
-Edge#12: 2 -> 6(0)
-Edge#13: 3 -> 6(1)
-Edge#14: 0 -> 7(0)
-Edge#15: 0 -> 7(1)
-Edge#16: 3 -> 8(0)
-Edge#17: 7 -> 8(1)
-Edge#18: 1 -> 9(0)
+Edge#12: 0 -> 6(0)
+Edge#13: 5 -> 6(1)
+Edge#14: 2 -> 7(0)
+Edge#15: 4 -> 7(1)
+Edge#16: 0 -> 8(0)
+Edge#17: 0 -> 8(1)
+Edge#18: 4 -> 9(0)
 Edge#19: 8 -> 9(1)
-Edge#20: 0 -> 10(0)
+Edge#20: 1 -> 10(0)
 Edge#21: 9 -> 10(1)
-Edge#22: 4 -> 11(0)
-Edge#23: 7 -> 11(1)
-Edge#24: 0 -> 12(0)
-Edge#25: 11 -> 12(1)
-Edge#26: 2 -> 13(0)
-Edge#27: 8 -> 13(1)
-Edge#28: 5 -> 14(0)
-Edge#29: 7 -> 14(1)
+Edge#22: 0 -> 11(0)
+Edge#23: 10 -> 11(1)
+Edge#24: 5 -> 12(0)
+Edge#25: 8 -> 12(1)
+Edge#26: 0 -> 13(0)
+Edge#27: 12 -> 13(1)
+Edge#28: 2 -> 14(0)
+Edge#29: 9 -> 14(1)
 Edge#30: 6 -> 15(0)
-Edge#31: 7 -> 15(1)
-Edge#32: 0 -> 16(0)
-Edge#33: 1 -> 16(1)
-Edge#34: 3 -> 17(0)
+Edge#31: 8 -> 15(1)
+Edge#32: 7 -> 16(0)
+Edge#33: 8 -> 16(1)
+Edge#34: 4 -> 17(0)
 Edge#35: 0 -> 17(1) ***
 Edge#36: 0 -> 18(0) ***
-Edge#37: 3 -> 18(1)
+Edge#37: 4 -> 18(1)
 Edge#38: 1 -> 19(0)
 Edge#39: 0 -> 19(1)
 Edge#40: 17 -> 20(0) ***
@@ -54984,49 +55346,49 @@ Edge#46: 19 -> 23(0) ***
 Edge#47: 18 -> 23(1) ***
 Edge#48: 0 -> 24(0) ***
 Edge#49: 1 -> 24(1) ***
-Edge#50: 7 -> 25(0)
+Edge#50: 8 -> 25(0)
 Edge#51: 24 -> 25(1) ***
-Edge#52: 3 -> 26(0)
+Edge#52: 4 -> 26(0)
 Edge#53: 25 -> 26(1)
-Edge#54: 8 -> 27(0)
+Edge#54: 9 -> 27(0)
 Edge#55: 24 -> 27(1) ***
 Edge#56: 24 -> 28(0) ***
-Edge#57: 7 -> 28(1)
-Edge#58: 3 -> 29(0)
+Edge#57: 8 -> 28(1)
+Edge#58: 4 -> 29(0)
 Edge#59: 28 -> 29(1)
-Edge#60: 3 -> 30(0)
+Edge#60: 4 -> 30(0)
 Edge#61: 24 -> 30(1) ***
 Edge#62: 30 -> 31(0)
-Edge#63: 7 -> 31(1)
+Edge#63: 8 -> 31(1)
 Edge#64: 24 -> 32(0) ***
-Edge#65: 8 -> 32(1)
+Edge#65: 9 -> 32(1)
 Edge#66: 24 -> 33(0) ***
-Edge#67: 3 -> 33(1)
+Edge#67: 4 -> 33(1)
 Edge#68: 33 -> 34(0)
-Edge#69: 7 -> 34(1)
+Edge#69: 8 -> 34(1)
 Edge#70: 2 -> 35(0) ***
-Edge#71: 8 -> 35(1) ***
+Edge#71: 9 -> 35(1) ***
 
 Pat#0: Rep#2: (2),  4 5
-Pat#1: Rep#3: (3),  10 11 8 9
-Pat#2: Rep#3: (3),  12 4 5 13
-Pat#3: Rep#4: (4),  20 21 18 19 16 17
-Pat#4: Rep#4: (4),  24 25 22 8 9 23
-Pat#5: Rep#4: (4),  26 4 5 27 16 17
-Pat#6: Rep#4: (4),  28 10 11 8 9 29
-Pat#7: Rep#4: (4),  30 12 4 5 13 31
-Pat#8: Rep#9: (2),  32 33
-Pat#9: Rep#12: [inv](3),  40 34 35 41 38 39
-Pat#10: Rep#12: [inv](3),  42 38 39 43 34 35
-Pat#11: Rep#12: [inv](3),  44 36 37 45 38 39
-Pat#12: Rep#12: [inv](3),  46 38 39 47 36 37
-Pat#13: Rep#238: (4),  52 53 50 51 48 49
-Pat#14: Rep#238: (4),  54 16 17 55 48 49
-Pat#15: Rep#238: (4),  58 59 56 48 49 57
-Pat#16: Rep#238: (4),  62 60 61 48 49 63
-Pat#17: Rep#238: (4),  64 48 49 65 16 17
-Pat#18: Rep#238: (4),  68 66 48 49 67 69
-Pat#19: Rep#239: (3),  60 61 48 49
-Pat#20: Rep#239: (3),  66 48 49 67
-Pat#21: Rep#240: [inv](4),  70 4 5 71 16 17
+Pat#1: Rep#3: (2),  6 7
+Pat#2: Rep#4: (3),  12 13 10 11
+Pat#3: Rep#4: (3),  14 4 5 15
+Pat#4: Rep#6: (4),  22 23 20 21 18 19
+Pat#5: Rep#6: (4),  26 27 24 10 11 25
+Pat#6: Rep#6: (4),  28 4 5 29 18 19
+Pat#7: Rep#6: (4),  30 12 13 10 11 31
+Pat#8: Rep#6: (4),  32 14 4 5 15 33
+Pat#9: Rep#8: [inv](3),  40 34 35 41 38 39
+Pat#10: Rep#8: [inv](3),  42 38 39 43 34 35
+Pat#11: Rep#8: [inv](3),  44 36 37 45 38 39
+Pat#12: Rep#8: [inv](3),  46 38 39 47 36 37
+Pat#13: Rep#10: (4),  52 53 50 51 48 49
+Pat#14: Rep#10: (4),  54 18 19 55 48 49
+Pat#15: Rep#10: (4),  58 59 56 48 49 57
+Pat#16: Rep#10: (4),  62 60 61 48 49 63
+Pat#17: Rep#10: (4),  64 48 49 65 18 19
+Pat#18: Rep#10: (4),  68 66 48 49 67 69
+Pat#19: Rep#11: (3),  60 61 48 49
+Pat#20: Rep#11: (3),  66 48 49 67
+Pat#21: Rep#12: [inv](4),  70 4 5 71 18 19
 ==== PatMgr dump end ====

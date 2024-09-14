@@ -32,7 +32,7 @@ set (clib_SOURCES
   clib/ClibPatGraph.cc
   clib/ClibPin.cc
   clib/ClibTiming.cc
-  clib/display.cc
+  clib/Writer.cc
   )
 
 set (ci_SOURCES

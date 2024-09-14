@@ -102,6 +102,13 @@ public:
     }
   }
 
+  /// @brief ハッシュ用のキー
+  SizeType
+  key() const
+  {
+    return reinterpret_cast<SizeType>(mImpl);
+  }
+
 
 private:
   //////////////////////////////////////////////////////////////////////

@@ -12,7 +12,8 @@ Library(lib2.genlib)
   capacitive_load_unit: 0
   leakage_power_unit: 
 
-Clib#0 (inv1x) : Combinational Logic
+inv1x: Cell#0(Group#3)
+  type = Combinational Logic
   area = 928
   Pin#0[ a ]: Input#0
     Capacitance      = 0.0514
@@ -36,7 +37,8 @@ Clib#0 (inv1x) : Combinational Logic
     Fall Intrinsic   = 0.42
     Fall Resistance  = 3.6
 
-Clib#1 (inv2x) : Combinational Logic
+inv2x: Cell#1(Group#3)
+  type = Combinational Logic
   area = 928
   Pin#0[ a ]: Input#0
     Capacitance      = 0.1009
@@ -60,7 +62,8 @@ Clib#1 (inv2x) : Combinational Logic
     Fall Intrinsic   = 0.29
     Fall Resistance  = 1.82
 
-Clib#2 (inv4x) : Combinational Logic
+inv4x: Cell#2(Group#3)
+  type = Combinational Logic
   area = 1392
   Pin#0[ a ]: Input#0
     Capacitance      = 0.1897
@@ -84,7 +87,8 @@ Clib#2 (inv4x) : Combinational Logic
     Fall Intrinsic   = 0.27
     Fall Resistance  = 0.85
 
-Clib#3 (xor) : Combinational Logic
+xor: Cell#3(Group#8)
+  type = Combinational Logic
   area = 2320
   Pin#0[ a ]: Input#0
     Capacitance      = 0.1442
@@ -139,7 +143,8 @@ Clib#3 (xor) : Combinational Logic
     Fall Intrinsic   = 1.14
     Fall Resistance  = 5.22
 
-Clib#4 (xnor) : Combinational Logic
+xnor: Cell#4(Group#9)
+  type = Combinational Logic
   area = 2320
   Pin#0[ a ]: Input#0
     Capacitance      = 0.1502
@@ -194,7 +199,8 @@ Clib#4 (xnor) : Combinational Logic
     Fall Intrinsic   = 1.07
     Fall Resistance  = 3.39
 
-Clib#5 (nand2) : Combinational Logic
+nand2: Cell#5(Group#5)
+  type = Combinational Logic
   area = 1392
   Pin#0[ a ]: Input#0
     Capacitance      = 0.0777
@@ -231,7 +237,8 @@ Clib#5 (nand2) : Combinational Logic
     Fall Intrinsic   = 0.37
     Fall Resistance  = 2.57
 
-Clib#6 (nand3) : Combinational Logic
+nand3: Cell#6(Group#11)
+  type = Combinational Logic
   area = 1856
   Pin#0[ a ]: Input#0
     Capacitance      = 0.1
@@ -281,7 +288,8 @@ Clib#6 (nand3) : Combinational Logic
     Fall Intrinsic   = 0.35
     Fall Resistance  = 2.49
 
-Clib#7 (nand4) : Combinational Logic
+nand4: Cell#7(Group#17)
+  type = Combinational Logic
   area = 2320
   Pin#0[ a ]: Input#0
     Capacitance      = 0.103
@@ -344,7 +352,8 @@ Clib#7 (nand4) : Combinational Logic
     Fall Intrinsic   = 0.38
     Fall Resistance  = 2.39
 
-Clib#8 (nor2) : Combinational Logic
+nor2: Cell#8(Group#7)
+  type = Combinational Logic
   area = 1392
   Pin#0[ a ]: Input#0
     Capacitance      = 0.0736
@@ -381,7 +390,8 @@ Clib#8 (nor2) : Combinational Logic
     Fall Intrinsic   = 0.7
     Fall Resistance  = 3.66
 
-Clib#9 (nor3) : Combinational Logic
+nor3: Cell#9(Group#13)
+  type = Combinational Logic
   area = 1856
   Pin#0[ a ]: Input#0
     Capacitance      = 0.0856
@@ -431,7 +441,8 @@ Clib#9 (nor3) : Combinational Logic
     Fall Intrinsic   = 0.84
     Fall Resistance  = 3.44
 
-Clib#10 (nor4) : Combinational Logic
+nor4: Cell#10(Group#19)
+  type = Combinational Logic
   area = 2320
   Pin#0[ a ]: Input#0
     Capacitance      = 0.0887
@@ -494,7 +505,8 @@ Clib#10 (nor4) : Combinational Logic
     Fall Intrinsic   = 1.94
     Fall Resistance  = 3.2
 
-Clib#11 (aoi21) : Combinational Logic
+aoi21: Cell#11(Group#24)
+  type = Combinational Logic
   area = 1856
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1029
@@ -544,7 +556,8 @@ Clib#11 (aoi21) : Combinational Logic
     Fall Intrinsic   = 0.21
     Fall Resistance  = 1.28
 
-Clib#12 (aoi31) : Combinational Logic
+aoi31: Cell#12(Group#25)
+  type = Combinational Logic
   area = 2320
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1009
@@ -607,7 +620,8 @@ Clib#12 (aoi31) : Combinational Logic
     Fall Intrinsic   = 0.25
     Fall Resistance  = 1.28
 
-Clib#13 (aoi22) : Combinational Logic
+aoi22: Cell#13(Group#26)
+  type = Combinational Logic
   area = 2320
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1019
@@ -670,7 +684,8 @@ Clib#13 (aoi22) : Combinational Logic
     Fall Intrinsic   = 0.54
     Fall Resistance  = 2.93
 
-Clib#14 (aoi32) : Combinational Logic
+aoi32: Cell#14(Group#27)
+  type = Combinational Logic
   area = 2784
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1029
@@ -746,7 +761,8 @@ Clib#14 (aoi32) : Combinational Logic
     Fall Intrinsic   = 0.43
     Fall Resistance  = 2.12
 
-Clib#15 (aoi33) : Combinational Logic
+aoi33: Cell#15(Group#28)
+  type = Combinational Logic
   area = 3248
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1029
@@ -835,7 +851,8 @@ Clib#15 (aoi33) : Combinational Logic
     Fall Intrinsic   = 0.64
     Fall Resistance  = 2.9
 
-Clib#16 (aoi211) : Combinational Logic
+aoi211: Cell#16(Group#29)
+  type = Combinational Logic
   area = 2320
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1039
@@ -898,7 +915,8 @@ Clib#16 (aoi211) : Combinational Logic
     Fall Intrinsic   = 0.51
     Fall Resistance  = 1.79
 
-Clib#17 (aoi221) : Combinational Logic
+aoi221: Cell#17(Group#30)
+  type = Combinational Logic
   area = 2784
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1089
@@ -974,7 +992,8 @@ Clib#17 (aoi221) : Combinational Logic
     Fall Intrinsic   = 0.7
     Fall Resistance  = 1.51
 
-Clib#18 (aoi222) : Combinational Logic
+aoi222: Cell#18(Group#31)
+  type = Combinational Logic
   area = 3712
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1019
@@ -1063,7 +1082,8 @@ Clib#18 (aoi222) : Combinational Logic
     Fall Intrinsic   = 0.76
     Fall Resistance  = 2.92
 
-Clib#19 (oai21) : Combinational Logic
+oai21: Cell#19(Group#32)
+  type = Combinational Logic
   area = 1856
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1019
@@ -1113,7 +1133,8 @@ Clib#19 (oai21) : Combinational Logic
     Fall Intrinsic   = 0.57
     Fall Resistance  = 2.51
 
-Clib#20 (oai31) : Combinational Logic
+oai31: Cell#20(Group#33)
+  type = Combinational Logic
   area = 2320
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1089
@@ -1176,7 +1197,8 @@ Clib#20 (oai31) : Combinational Logic
     Fall Intrinsic   = 0.81
     Fall Resistance  = 2.73
 
-Clib#21 (oai22) : Combinational Logic
+oai22: Cell#21(Group#34)
+  type = Combinational Logic
   area = 2320
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1009
@@ -1239,7 +1261,8 @@ Clib#21 (oai22) : Combinational Logic
     Fall Intrinsic   = 0.56
     Fall Resistance  = 2.06
 
-Clib#22 (oai32) : Combinational Logic
+oai32: Cell#22(Group#35)
+  type = Combinational Logic
   area = 2784
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.113
@@ -1315,7 +1338,8 @@ Clib#22 (oai32) : Combinational Logic
     Fall Intrinsic   = 0.83
     Fall Resistance  = 2.34
 
-Clib#23 (oai33) : Combinational Logic
+oai33: Cell#23(Group#36)
+  type = Combinational Logic
   area = 3248
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.117
@@ -1404,7 +1428,8 @@ Clib#23 (oai33) : Combinational Logic
     Fall Intrinsic   = 1.35
     Fall Resistance  = 2.65
 
-Clib#24 (oai211) : Combinational Logic
+oai211: Cell#24(Group#37)
+  type = Combinational Logic
   area = 2320
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.107
@@ -1467,7 +1492,8 @@ Clib#24 (oai211) : Combinational Logic
     Fall Intrinsic   = 0.52
     Fall Resistance  = 2.41
 
-Clib#25 (oai221) : Combinational Logic
+oai221: Cell#25(Group#38)
+  type = Combinational Logic
   area = 2784
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1039
@@ -1543,7 +1569,8 @@ Clib#25 (oai221) : Combinational Logic
     Fall Intrinsic   = 0.9
     Fall Resistance  = 2.54
 
-Clib#26 (oai222) : Combinational Logic
+oai222: Cell#26(Group#39)
+  type = Combinational Logic
   area = 3248
   Pin#0[ a1 ]: Input#0
     Capacitance      = 0.1161
@@ -1632,7 +1659,8 @@ Clib#26 (oai222) : Combinational Logic
     Fall Intrinsic   = 0.79
     Fall Resistance  = 2.48
 
-Clib#27 (zero) : Combinational Logic
+zero: Cell#27(Group#0)
+  type = Combinational Logic
   area = 0
   Pin#0[ O ]: Output# 0
     Logic            = 0
@@ -1643,7 +1671,8 @@ Clib#27 (zero) : Combinational Logic
     Max Transition   = 1.79769e+308
     Min Transition   = 0
 
-Clib#28 (one) : Combinational Logic
+one: Cell#28(Group#1)
+  type = Combinational Logic
   area = 0
   Pin#0[ O ]: Output# 0
     Logic            = 1
@@ -1654,127 +1683,199 @@ Clib#28 (one) : Combinational Logic
     Max Transition   = 1.79769e+308
     Min Transition   = 0
 
-Cell Class
+Group#0(Class#0)
+  Name = Const0
+  Cell = zero
+
+Group#1(Class#0)
+  Name = Const1
+  Cell = one
+
+Group#3(Class#1)
+  Name = Inverter
+  Cell = inv1x inv2x inv4x
+
+Group#5(Class#2)
+  Name = Nand2
+  Cell = nand2
+
+Group#7(Class#2)
+  Name = Nor2
+  Cell = nor2
+
+Group#8(Class#3)
+  Name = Xor2
+  Cell = xor
+
+Group#9(Class#3)
+  Name = Xnor2
+  Cell = xnor
+
+Group#11(Class#4)
+  Name = Nand3
+  Cell = nand3
+
+Group#13(Class#4)
+  Name = Nor3
+  Cell = nor3
+
+Group#17(Class#6)
+  Name = Nand4
+  Cell = nand4
+
+Group#19(Class#6)
+  Name = Nor4
+  Cell = nor4
+
+Group#24(Class#10)
+  Cell = aoi21
+
+Group#25(Class#11)
+  Cell = aoi31
+
+Group#26(Class#12)
+  Cell = aoi22
+
+Group#27(Class#13)
+  Cell = aoi32
+
+Group#28(Class#14)
+  Cell = aoi33
+
+Group#29(Class#15)
+  Cell = aoi211
+
+Group#30(Class#16)
+  Cell = aoi221
+
+Group#31(Class#17)
+  Cell = aoi222
+
+Group#32(Class#10)
+  Cell = oai21
+
+Group#33(Class#11)
+  Cell = oai31
+
+Group#34(Class#12)
+  Cell = oai22
+
+Group#35(Class#13)
+  Cell = oai32
+
+Group#36(Class#14)
+  Cell = oai33
+
+Group#37(Class#15)
+  Cell = oai211
+
+Group#38(Class#16)
+  Cell = oai221
+
+Group#39(Class#17)
+  Cell = oai222
+
 Class#0
-  Idmap List = 
+  Name = Const
+  Idmap List:
          Input[], Output[ 0]
 
-  Group: Map = Input[], Output[ 0]
-         Cell =  zero
-  Group: Map = Input[], Output[ 0~]
-         Cell =  one
+  Group#0: Map = Input[], Output[ 0]
+  Group#1: Map = Input[], Output[ 0~]
 
 Class#1
-  Idmap List = 
+  Name = Buffer
+  Idmap List:
          Input[ 0], Output[ 0]
 
-  Group: Map = Input[ 0~], Output[ 0]
-         Cell =  inv1x inv2x inv4x
+  Group#3: Map = Input[ 0~], Output[ 0]
 
 Class#2
-  Idmap List = 
+  Name = And2
+  Idmap List:
          Input[ 0 1], Output[ 0]
 
-  Group: Map = Input[ 0 1], Output[ 0~]
-         Cell =  nand2
-  Group: Map = Input[ 0~ 1~], Output[ 0]
-         Cell =  nor2
+  Group#5: Map = Input[ 0 1], Output[ 0~]
+  Group#7: Map = Input[ 0~ 1~], Output[ 0]
 
 Class#3
-  Idmap List = 
-         Input[ 0 1 2], Output[ 0]
-
-  Group: Map = Input[ 0 1 2], Output[ 0~]
-         Cell =  nand3
-  Group: Map = Input[ 0~ 1~ 2~], Output[ 0]
-         Cell =  nor3
-
-Class#4
-  Idmap List = 
-         Input[ 0 1 2 3], Output[ 0]
-
-  Group: Map = Input[ 0 1 2 3], Output[ 0~]
-         Cell =  nand4
-  Group: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
-         Cell =  nor4
-
-Class#9
-  Idmap List = 
+  Name = Xor2
+  Idmap List:
          Input[ 0 1], Output[ 0]
 
-  Group: Map = Input[ 0 1], Output[ 0]
-         Cell =  xor
-  Group: Map = Input[ 0 1], Output[ 0~]
-         Cell =  xnor
+  Group#8: Map = Input[ 0 1], Output[ 0]
+  Group#9: Map = Input[ 0 1], Output[ 0~]
 
-Class#238
-  Idmap List = 
+Class#4
+  Name = And3
+  Idmap List:
          Input[ 0 1 2], Output[ 0]
 
-  Group: Map = Input[ 0~ 1~ 2~], Output[ 0]
-         Cell =  aoi21
-  Group: Map = Input[ 0 1 2], Output[ 0~]
-         Cell =  oai21
+  Group#11: Map = Input[ 0 1 2], Output[ 0~]
+  Group#13: Map = Input[ 0~ 1~ 2~], Output[ 0]
 
-Class#239
-  Idmap List = 
+Class#6
+  Name = And4
+  Idmap List:
          Input[ 0 1 2 3], Output[ 0]
 
-  Group: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
-         Cell =  aoi31
-  Group: Map = Input[ 0 1 2 3], Output[ 0~]
-         Cell =  oai31
+  Group#17: Map = Input[ 0 1 2 3], Output[ 0~]
+  Group#19: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
 
-Class#240
-  Idmap List = 
+Class#10
+  Idmap List:
+         Input[ 0 1 2], Output[ 0]
+
+  Group#24: Map = Input[ 0~ 1~ 2~], Output[ 0]
+  Group#32: Map = Input[ 0 1 2], Output[ 0~]
+
+Class#11
+  Idmap List:
+         Input[ 0 1 2 3], Output[ 0]
+
+  Group#25: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
+  Group#33: Map = Input[ 0 1 2 3], Output[ 0~]
+
+Class#12
+  Idmap List:
          Input[ 0 1 2 3], Output[ 0]
          Input[ 2 3 0 1], Output[ 0]
 
-  Group: Map = Input[ 0 1 2 3], Output[ 0~]
-         Cell =  aoi22
-  Group: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
-         Cell =  oai22
+  Group#26: Map = Input[ 0 1 2 3], Output[ 0~]
+  Group#34: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
 
-Class#241
-  Idmap List = 
+Class#13
+  Idmap List:
          Input[ 0 1 2 3 4], Output[ 0]
 
-  Group: Map = Input[ 0 1 2 3 4], Output[ 0~]
-         Cell =  aoi32
-  Group: Map = Input[ 0~ 1~ 2~ 3~ 4~], Output[ 0]
-         Cell =  oai32
+  Group#27: Map = Input[ 0 1 2 3 4], Output[ 0~]
+  Group#35: Map = Input[ 0~ 1~ 2~ 3~ 4~], Output[ 0]
 
-Class#242
-  Idmap List = 
+Class#14
+  Idmap List:
          Input[ 0 1 2 3 4 5], Output[ 0]
          Input[ 3 4 5 0 1 2], Output[ 0]
 
-  Group: Map = Input[ 0 1 2 3 4 5], Output[ 0~]
-         Cell =  aoi33
-  Group: Map = Input[ 0~ 1~ 2~ 3~ 4~ 5~], Output[ 0]
-         Cell =  oai33
+  Group#28: Map = Input[ 0 1 2 3 4 5], Output[ 0~]
+  Group#36: Map = Input[ 0~ 1~ 2~ 3~ 4~ 5~], Output[ 0]
 
-Class#243
-  Idmap List = 
+Class#15
+  Idmap List:
          Input[ 0 1 2 3], Output[ 0]
 
-  Group: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
-         Cell =  aoi211
-  Group: Map = Input[ 0 1 2 3], Output[ 0~]
-         Cell =  oai211
+  Group#29: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
+  Group#37: Map = Input[ 0 1 2 3], Output[ 0~]
 
-Class#244
-  Idmap List = 
+Class#16
+  Idmap List:
          Input[ 0 1 2 3 4], Output[ 0]
          Input[ 2 3 0 1 4], Output[ 0]
 
-  Group: Map = Input[ 0~ 1~ 2~ 3~ 4~], Output[ 0]
-         Cell =  aoi221
-  Group: Map = Input[ 0 1 2 3 4], Output[ 0~]
-         Cell =  oai221
+  Group#30: Map = Input[ 0~ 1~ 2~ 3~ 4~], Output[ 0]
+  Group#38: Map = Input[ 0 1 2 3 4], Output[ 0~]
 
-Class#245
-  Idmap List = 
+Class#17
+  Idmap List:
          Input[ 0 1 2 3 4 5], Output[ 0]
          Input[ 0 1 4 5 2 3], Output[ 0]
          Input[ 2 3 0 1 4 5], Output[ 0]
@@ -1782,33 +1883,19 @@ Class#245
          Input[ 2 3 4 5 0 1], Output[ 0]
          Input[ 4 5 2 3 0 1], Output[ 0]
 
-  Group: Map = Input[ 0~ 1~ 2~ 3~ 4~ 5~], Output[ 0]
-         Cell =  aoi222
-  Group: Map = Input[ 0 1 2 3 4 5], Output[ 0~]
-         Cell =  oai222
-
-Const0 Group
-  Cell = zero
-
-Const1 Group
-  Cell = one
-
-Buffer Group
-  Cell =
-
-Inverter Group
-  Cell = inv1x inv2x inv4x
+  Group#31: Map = Input[ 0~ 1~ 2~ 3~ 4~ 5~], Output[ 0]
+  Group#39: Map = Input[ 0 1 2 3 4 5], Output[ 0~]
 
 ==== PatMgr dump start ====
 Node#0: INPUT#0
 Node#1: INPUT#1
 Node#2: AND
-Node#3: INPUT#2
-Node#4: AND
+Node#3: XOR
+Node#4: INPUT#2
 Node#5: AND
 Node#6: AND
-Node#7: INPUT#3
-Node#8: AND
+Node#7: AND
+Node#8: INPUT#3
 Node#9: AND
 Node#10: AND
 Node#11: AND
@@ -1816,7 +1903,7 @@ Node#12: AND
 Node#13: AND
 Node#14: AND
 Node#15: AND
-Node#16: XOR
+Node#16: AND
 Node#17: AND
 Node#18: AND
 Node#19: AND
@@ -1828,15 +1915,15 @@ Node#24: AND
 Node#25: AND
 Node#26: AND
 Node#27: AND
-Node#28: AND
+Node#28: INPUT#4
 Node#29: AND
-Node#30: INPUT#4
+Node#30: AND
 Node#31: AND
 Node#32: AND
 Node#33: AND
-Node#34: AND
+Node#34: INPUT#5
 Node#35: AND
-Node#36: INPUT#5
+Node#36: AND
 Node#37: AND
 Node#38: AND
 Node#39: AND
@@ -1868,8 +1955,6 @@ Node#64: AND
 Node#65: AND
 Node#66: AND
 Node#67: AND
-Node#68: AND
-Node#69: AND
 
 Edge#0: 0 -> 0(0)
 Edge#1: 0 -> 0(1)
@@ -1878,180 +1963,174 @@ Edge#3: 0 -> 1(1)
 Edge#4: 0 -> 2(0)
 Edge#5: 1 -> 2(1)
 Edge#6: 0 -> 3(0)
-Edge#7: 0 -> 3(1)
-Edge#8: 1 -> 4(0)
-Edge#9: 3 -> 4(1)
-Edge#10: 0 -> 5(0)
+Edge#7: 1 -> 3(1)
+Edge#8: 0 -> 4(0)
+Edge#9: 0 -> 4(1)
+Edge#10: 1 -> 5(0)
 Edge#11: 4 -> 5(1)
-Edge#12: 2 -> 6(0)
-Edge#13: 3 -> 6(1)
-Edge#14: 0 -> 7(0)
-Edge#15: 0 -> 7(1)
-Edge#16: 3 -> 8(0)
-Edge#17: 7 -> 8(1)
-Edge#18: 1 -> 9(0)
+Edge#12: 0 -> 6(0)
+Edge#13: 5 -> 6(1)
+Edge#14: 2 -> 7(0)
+Edge#15: 4 -> 7(1)
+Edge#16: 0 -> 8(0)
+Edge#17: 0 -> 8(1)
+Edge#18: 4 -> 9(0)
 Edge#19: 8 -> 9(1)
-Edge#20: 0 -> 10(0)
+Edge#20: 1 -> 10(0)
 Edge#21: 9 -> 10(1)
-Edge#22: 4 -> 11(0)
-Edge#23: 7 -> 11(1)
-Edge#24: 0 -> 12(0)
-Edge#25: 11 -> 12(1)
-Edge#26: 2 -> 13(0)
-Edge#27: 8 -> 13(1)
-Edge#28: 5 -> 14(0)
-Edge#29: 7 -> 14(1)
+Edge#22: 0 -> 11(0)
+Edge#23: 10 -> 11(1)
+Edge#24: 5 -> 12(0)
+Edge#25: 8 -> 12(1)
+Edge#26: 0 -> 13(0)
+Edge#27: 12 -> 13(1)
+Edge#28: 2 -> 14(0)
+Edge#29: 9 -> 14(1)
 Edge#30: 6 -> 15(0)
-Edge#31: 7 -> 15(1)
-Edge#32: 0 -> 16(0)
-Edge#33: 1 -> 16(1)
+Edge#31: 8 -> 15(1)
+Edge#32: 7 -> 16(0)
+Edge#33: 8 -> 16(1)
 Edge#34: 0 -> 17(0) ***
 Edge#35: 1 -> 17(1) ***
 Edge#36: 17 -> 18(0) ***
-Edge#37: 2 -> 18(1) ***
-Edge#38: 2 -> 19(0) ***
+Edge#37: 4 -> 18(1)
+Edge#38: 4 -> 19(0)
 Edge#39: 17 -> 19(1) ***
-Edge#40: 17 -> 20(0) ***
-Edge#41: 3 -> 20(1)
-Edge#42: 3 -> 21(0)
-Edge#43: 17 -> 21(1) ***
-Edge#44: 1 -> 22(0) ***
-Edge#45: 3 -> 22(1) ***
-Edge#46: 0 -> 23(0) ***
-Edge#47: 22 -> 23(1)
-Edge#48: 17 -> 24(0)
-Edge#49: 3 -> 24(1) ***
-Edge#50: 23 -> 25(0) ***
-Edge#51: 7 -> 25(1)
-Edge#52: 7 -> 26(0)
-Edge#53: 23 -> 26(1) ***
-Edge#54: 24 -> 27(0) ***
-Edge#55: 7 -> 27(1)
-Edge#56: 7 -> 28(0)
-Edge#57: 24 -> 28(1) ***
-Edge#58: 2 -> 29(0) ***
-Edge#59: 8 -> 29(1) ***
-Edge#60: 0 -> 30(0)
-Edge#61: 0 -> 30(1)
-Edge#62: 7 -> 31(0)
-Edge#63: 30 -> 31(1)
-Edge#64: 5 -> 32(0) ***
-Edge#65: 31 -> 32(1) ***
-Edge#66: 31 -> 33(0) ***
-Edge#67: 5 -> 33(1) ***
-Edge#68: 6 -> 34(0) ***
-Edge#69: 31 -> 34(1) ***
-Edge#70: 31 -> 35(0) ***
-Edge#71: 6 -> 35(1) ***
-Edge#72: 0 -> 36(0)
-Edge#73: 0 -> 36(1)
-Edge#74: 30 -> 37(0)
-Edge#75: 36 -> 37(1)
-Edge#76: 7 -> 38(0)
-Edge#77: 37 -> 38(1)
-Edge#78: 31 -> 39(0)
-Edge#79: 36 -> 39(1)
-Edge#80: 5 -> 40(0) ***
-Edge#81: 38 -> 40(1) ***
-Edge#82: 5 -> 41(0) ***
-Edge#83: 39 -> 41(1) ***
-Edge#84: 39 -> 42(0) ***
-Edge#85: 5 -> 42(1) ***
-Edge#86: 6 -> 43(0) ***
-Edge#87: 38 -> 43(1) ***
-Edge#88: 38 -> 44(0) ***
-Edge#89: 6 -> 44(1) ***
-Edge#90: 6 -> 45(0) ***
-Edge#91: 39 -> 45(1) ***
+Edge#40: 1 -> 20(0) ***
+Edge#41: 4 -> 20(1) ***
+Edge#42: 0 -> 21(0) ***
+Edge#43: 20 -> 21(1)
+Edge#44: 17 -> 22(0)
+Edge#45: 4 -> 22(1) ***
+Edge#46: 21 -> 23(0) ***
+Edge#47: 8 -> 23(1)
+Edge#48: 8 -> 24(0)
+Edge#49: 21 -> 24(1) ***
+Edge#50: 22 -> 25(0) ***
+Edge#51: 8 -> 25(1)
+Edge#52: 8 -> 26(0)
+Edge#53: 22 -> 26(1) ***
+Edge#54: 2 -> 27(0) ***
+Edge#55: 9 -> 27(1) ***
+Edge#56: 0 -> 28(0)
+Edge#57: 0 -> 28(1)
+Edge#58: 8 -> 29(0)
+Edge#59: 28 -> 29(1)
+Edge#60: 6 -> 30(0) ***
+Edge#61: 29 -> 30(1) ***
+Edge#62: 29 -> 31(0) ***
+Edge#63: 6 -> 31(1) ***
+Edge#64: 7 -> 32(0) ***
+Edge#65: 29 -> 32(1) ***
+Edge#66: 29 -> 33(0) ***
+Edge#67: 7 -> 33(1) ***
+Edge#68: 0 -> 34(0)
+Edge#69: 0 -> 34(1)
+Edge#70: 28 -> 35(0)
+Edge#71: 34 -> 35(1)
+Edge#72: 8 -> 36(0)
+Edge#73: 35 -> 36(1)
+Edge#74: 29 -> 37(0)
+Edge#75: 34 -> 37(1)
+Edge#76: 6 -> 38(0) ***
+Edge#77: 36 -> 38(1) ***
+Edge#78: 6 -> 39(0) ***
+Edge#79: 37 -> 39(1) ***
+Edge#80: 37 -> 40(0) ***
+Edge#81: 6 -> 40(1) ***
+Edge#82: 7 -> 41(0) ***
+Edge#83: 36 -> 41(1) ***
+Edge#84: 36 -> 42(0) ***
+Edge#85: 7 -> 42(1) ***
+Edge#86: 7 -> 43(0) ***
+Edge#87: 37 -> 43(1) ***
+Edge#88: 17 -> 44(0) ***
+Edge#89: 9 -> 44(1)
+Edge#90: 18 -> 45(0)
+Edge#91: 8 -> 45(1)
 Edge#92: 17 -> 46(0) ***
 Edge#93: 8 -> 46(1)
-Edge#94: 20 -> 47(0)
-Edge#95: 7 -> 47(1)
-Edge#96: 17 -> 48(0) ***
-Edge#97: 7 -> 48(1)
-Edge#98: 3 -> 49(0)
-Edge#99: 48 -> 49(1)
-Edge#100: 21 -> 50(0)
-Edge#101: 7 -> 50(1)
-Edge#102: 7 -> 51(0)
+Edge#94: 4 -> 47(0)
+Edge#95: 46 -> 47(1)
+Edge#96: 19 -> 48(0)
+Edge#97: 8 -> 48(1)
+Edge#98: 8 -> 49(0)
+Edge#99: 17 -> 49(1) ***
+Edge#100: 4 -> 50(0)
+Edge#101: 49 -> 50(1)
+Edge#102: 9 -> 51(0)
 Edge#103: 17 -> 51(1) ***
-Edge#104: 3 -> 52(0)
-Edge#105: 51 -> 52(1)
-Edge#106: 8 -> 53(0)
-Edge#107: 17 -> 53(1) ***
-Edge#108: 3 -> 54(0) ***
-Edge#109: 7 -> 54(1) ***
-Edge#110: 54 -> 55(0) ***
-Edge#111: 30 -> 55(1)
-Edge#112: 17 -> 56(0) ***
-Edge#113: 55 -> 56(1)
-Edge#114: 17 -> 57(0) ***
-Edge#115: 54 -> 57(1) ***
-Edge#116: 57 -> 58(0)
-Edge#117: 30 -> 58(1)
-Edge#118: 30 -> 59(0)
-Edge#119: 54 -> 59(1) ***
-Edge#120: 17 -> 60(0) ***
-Edge#121: 59 -> 60(1)
-Edge#122: 17 -> 61(0) ***
-Edge#123: 30 -> 61(1)
-Edge#124: 61 -> 62(0)
-Edge#125: 54 -> 62(1) ***
-Edge#126: 30 -> 63(0)
-Edge#127: 57 -> 63(1)
-Edge#128: 30 -> 64(0)
-Edge#129: 17 -> 64(1) ***
-Edge#130: 64 -> 65(0)
-Edge#131: 54 -> 65(1) ***
-Edge#132: 30 -> 66(0) ***
-Edge#133: 36 -> 66(1) ***
-Edge#134: 54 -> 67(0) ***
-Edge#135: 66 -> 67(1) ***
-Edge#136: 17 -> 68(0) ***
-Edge#137: 67 -> 68(1)
-Edge#138: 57 -> 69(0)
-Edge#139: 66 -> 69(1) ***
+Edge#104: 4 -> 52(0) ***
+Edge#105: 8 -> 52(1) ***
+Edge#106: 52 -> 53(0) ***
+Edge#107: 28 -> 53(1)
+Edge#108: 17 -> 54(0) ***
+Edge#109: 53 -> 54(1)
+Edge#110: 17 -> 55(0) ***
+Edge#111: 52 -> 55(1) ***
+Edge#112: 55 -> 56(0)
+Edge#113: 28 -> 56(1)
+Edge#114: 28 -> 57(0)
+Edge#115: 52 -> 57(1) ***
+Edge#116: 17 -> 58(0) ***
+Edge#117: 57 -> 58(1)
+Edge#118: 17 -> 59(0) ***
+Edge#119: 28 -> 59(1)
+Edge#120: 59 -> 60(0)
+Edge#121: 52 -> 60(1) ***
+Edge#122: 28 -> 61(0)
+Edge#123: 55 -> 61(1)
+Edge#124: 28 -> 62(0)
+Edge#125: 17 -> 62(1) ***
+Edge#126: 62 -> 63(0)
+Edge#127: 52 -> 63(1) ***
+Edge#128: 28 -> 64(0) ***
+Edge#129: 34 -> 64(1) ***
+Edge#130: 52 -> 65(0) ***
+Edge#131: 64 -> 65(1) ***
+Edge#132: 17 -> 66(0) ***
+Edge#133: 65 -> 66(1)
+Edge#134: 55 -> 67(0)
+Edge#135: 64 -> 67(1) ***
 
 Pat#0: Rep#2: (2),  4 5
-Pat#1: Rep#3: (3),  10 11 8 9
-Pat#2: Rep#3: (3),  12 4 5 13
-Pat#3: Rep#4: (4),  20 21 18 19 16 17
-Pat#4: Rep#4: (4),  24 25 22 8 9 23
-Pat#5: Rep#4: (4),  26 4 5 27 16 17
-Pat#6: Rep#4: (4),  28 10 11 8 9 29
-Pat#7: Rep#4: (4),  30 12 4 5 13 31
-Pat#8: Rep#9: (2),  32 33
-Pat#9: Rep#9: (2),  36 34 35 37 4 5
-Pat#10: Rep#9: (2),  38 4 5 39 34 35
-Pat#11: Rep#238: (3),  40 34 35 41
-Pat#12: Rep#238: (3),  42 43 34 35
-Pat#13: Rep#239: (4),  50 46 47 44 45 51
-Pat#14: Rep#239: (4),  52 53 46 47 44 45
-Pat#15: Rep#239: (4),  54 48 34 35 49 55
-Pat#16: Rep#239: (4),  56 57 48 34 35 49
-Pat#17: Rep#240: [inv](4),  58 4 5 59 16 17
-Pat#18: Rep#241: [inv](5),  64 10 11 8 9 65 62 63
-Pat#19: Rep#241: [inv](5),  66 62 63 67 10 11 8 9
-Pat#20: Rep#241: [inv](5),  68 12 4 5 13 69 62 63
-Pat#21: Rep#241: [inv](5),  70 62 63 71 12 4 5 13
-Pat#22: Rep#242: [inv](6),  80 10 11 8 9 81 76 77 74 75
-Pat#23: Rep#242: [inv](6),  82 10 11 8 9 83 78 62 63 79
-Pat#24: Rep#242: [inv](6),  84 78 62 63 79 85 10 11 8 9
-Pat#25: Rep#242: [inv](6),  86 12 4 5 13 87 76 77 74 75
-Pat#26: Rep#242: [inv](6),  88 76 77 74 75 89 12 4 5 13
-Pat#27: Rep#242: [inv](6),  90 12 4 5 13 91 78 62 63 79
-Pat#28: Rep#243: (4),  92 34 35 93 16 17
-Pat#29: Rep#243: (4),  94 40 34 35 41 95
-Pat#30: Rep#243: (4),  98 99 96 34 35 97
-Pat#31: Rep#243: (4),  100 42 43 34 35 101
-Pat#32: Rep#243: (4),  104 105 102 103 34 35
-Pat#33: Rep#243: (4),  106 16 17 107 34 35
-Pat#34: Rep#244: (5),  112 34 35 113 110 108 109 111
-Pat#35: Rep#244: (5),  116 114 34 35 115 108 109 117
-Pat#36: Rep#244: (5),  120 34 35 121 118 119 108 109
-Pat#37: Rep#244: (5),  124 122 34 35 123 125 108 109
-Pat#38: Rep#244: (5),  126 127 114 34 35 115 108 109
-Pat#39: Rep#244: (5),  130 128 129 34 35 131 108 109
-Pat#40: Rep#245: (6),  136 34 35 137 134 108 109 135 132 133
-Pat#41: Rep#245: (6),  138 114 34 35 115 108 109 139 132 133
+Pat#1: Rep#3: (2),  6 7
+Pat#2: Rep#4: (3),  12 13 10 11
+Pat#3: Rep#4: (3),  14 4 5 15
+Pat#4: Rep#6: (4),  22 23 20 21 18 19
+Pat#5: Rep#6: (4),  26 27 24 10 11 25
+Pat#6: Rep#6: (4),  28 4 5 29 18 19
+Pat#7: Rep#6: (4),  30 12 13 10 11 31
+Pat#8: Rep#6: (4),  32 14 4 5 15 33
+Pat#9: Rep#10: (3),  36 34 35 37
+Pat#10: Rep#10: (3),  38 39 34 35
+Pat#11: Rep#11: (4),  46 42 43 40 41 47
+Pat#12: Rep#11: (4),  48 49 42 43 40 41
+Pat#13: Rep#11: (4),  50 44 34 35 45 51
+Pat#14: Rep#11: (4),  52 53 44 34 35 45
+Pat#15: Rep#12: [inv](4),  54 4 5 55 18 19
+Pat#16: Rep#13: [inv](5),  60 12 13 10 11 61 58 59
+Pat#17: Rep#13: [inv](5),  62 58 59 63 12 13 10 11
+Pat#18: Rep#13: [inv](5),  64 14 4 5 15 65 58 59
+Pat#19: Rep#13: [inv](5),  66 58 59 67 14 4 5 15
+Pat#20: Rep#14: [inv](6),  76 12 13 10 11 77 72 73 70 71
+Pat#21: Rep#14: [inv](6),  78 12 13 10 11 79 74 58 59 75
+Pat#22: Rep#14: [inv](6),  80 74 58 59 75 81 12 13 10 11
+Pat#23: Rep#14: [inv](6),  82 14 4 5 15 83 72 73 70 71
+Pat#24: Rep#14: [inv](6),  84 72 73 70 71 85 14 4 5 15
+Pat#25: Rep#14: [inv](6),  86 14 4 5 15 87 74 58 59 75
+Pat#26: Rep#15: (4),  88 34 35 89 18 19
+Pat#27: Rep#15: (4),  90 36 34 35 37 91
+Pat#28: Rep#15: (4),  94 95 92 34 35 93
+Pat#29: Rep#15: (4),  96 38 39 34 35 97
+Pat#30: Rep#15: (4),  100 101 98 99 34 35
+Pat#31: Rep#15: (4),  102 18 19 103 34 35
+Pat#32: Rep#16: (5),  108 34 35 109 106 104 105 107
+Pat#33: Rep#16: (5),  112 110 34 35 111 104 105 113
+Pat#34: Rep#16: (5),  116 34 35 117 114 115 104 105
+Pat#35: Rep#16: (5),  120 118 34 35 119 121 104 105
+Pat#36: Rep#16: (5),  122 123 110 34 35 111 104 105
+Pat#37: Rep#16: (5),  126 124 125 34 35 127 104 105
+Pat#38: Rep#17: (6),  132 34 35 133 130 104 105 131 128 129
+Pat#39: Rep#17: (6),  134 110 34 35 111 104 105 135 128 129
 ==== PatMgr dump end ====

@@ -408,7 +408,7 @@ CiCellLibrary::compile()
   cgmgr.gen_pat();
 
   // セルクラスの情報をコピーする．
-  for ( SizeType index: { 0, 1, 2, 3 } ) {
+  for ( SizeType index = 0; index < 24; ++ index ) {
     mLogicGroup[index] = cgmgr.logic_group(index);
   }
   mFFClassDict = cgmgr.ff_class_dict();

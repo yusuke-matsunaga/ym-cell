@@ -310,32 +310,120 @@ public:
   const CiCellGroup*
   const0_func() const
   {
-    // 決め打ち
-    return mLogicGroup[0];
+    return mLogicGroup[C0_BASE];
   }
 
   /// @brief 定数1セルのグループを返す．
   const CiCellGroup*
   const1_func() const
   {
-    // 決め打ち
-    return mLogicGroup[1];
+    return mLogicGroup[C1_BASE];
   }
 
   /// @brief バッファセルのグループを返す．
   const CiCellGroup*
   buf_func() const
   {
-    // 決め打ち
-    return mLogicGroup[2];
+    return mLogicGroup[BUF_BASE];
   }
 
   /// @brief インバータセルのグループを返す．
   const CiCellGroup*
   inv_func() const
   {
-    // 決め打ち
-    return mLogicGroup[3];
+    return mLogicGroup[INV_BASE];
+  }
+
+  /// @brief ANDセルのグループを返す．
+  const CiCellGroup*
+  and_func(
+    SizeType ni ///< [in] 入力数 ( 2 <= ni <= 4 )
+  ) const
+  {
+    if ( ni < 2 || 4 < ni ) {
+      throw std::invalid_argument{"'ni' is out of range"};
+    }
+    auto index = ni - 2;
+    return mLogicGroup[AND_BASE + index];
+  }
+
+  /// @brief NANDセルのグループを返す．
+  const CiCellGroup*
+  nand_func(
+    SizeType ni ///< [in] 入力数 ( 2 <= ni <= 4 )
+  ) const
+  {
+    if ( ni < 2 || 4 < ni ) {
+      throw std::invalid_argument{"'ni' is out of range"};
+    }
+    auto index = ni - 2;
+    return mLogicGroup[NAND_BASE + index];
+  }
+
+  /// @brief ORセルのグループを返す．
+  const CiCellGroup*
+  or_func(
+    SizeType ni ///< [in] 入力数 ( 2 <= ni <= 4 )
+  ) const
+  {
+    if ( ni < 2 || 4 < ni ) {
+      throw std::invalid_argument{"'ni' is out of range"};
+    }
+    auto index = ni - 2;
+    return mLogicGroup[OR_BASE + index];
+  }
+
+  /// @brief NORセルのグループを返す．
+  const CiCellGroup*
+  nor_func(
+    SizeType ni ///< [in] 入力数 ( 2 <= ni <= 4 )
+  ) const
+  {
+    if ( ni < 2 || 4 < ni ) {
+      throw std::invalid_argument{"'ni' is out of range"};
+    }
+    auto index = ni - 2;
+    return mLogicGroup[NOR_BASE + index];
+  }
+
+  /// @brief XORセルのグループを返す．
+  const CiCellGroup*
+  xor_func(
+    SizeType ni ///< [in] 入力数 ( 2 <= ni <= 4 )
+  ) const
+  {
+    if ( ni < 2 || 4 < ni ) {
+      throw std::invalid_argument{"'ni' is out of range"};
+    }
+    auto index = ni - 2;
+    return mLogicGroup[XOR_BASE + index];
+  }
+
+  /// @brief XNORセルのグループを返す．
+  const CiCellGroup*
+  xnor_func(
+    SizeType ni ///< [in] 入力数 ( 2 <= ni <= 4 )
+  ) const
+  {
+    if ( ni < 2 || 4 < ni ) {
+      throw std::invalid_argument{"'ni' is out of range"};
+    }
+    auto index = ni - 2;
+    return mLogicGroup[XNOR_BASE + index];
+  }
+
+  /// @brief MUX2セルのグループを返す．
+  const CiCellGroup*
+  mux2_func() const
+  {
+    return mLogicGroup[MUX2_BASE];
+  }
+
+  /// @brief MUX4セルのグループを返す．
+  const CiCellGroup*
+  mux4_func() const
+  {
+    return mLogicGroup[MUX4_BASE];
   }
 
 
@@ -901,12 +989,21 @@ private:
   // NPN同値クラスの所有権管理用のリスト
   vector<unique_ptr<CiCellClass>> mCellClassList;
 
+  const SizeType C0_BASE = 0;
+  const SizeType C1_BASE = 1;
+  const SizeType BUF_BASE = 2;
+  const SizeType INV_BASE = 3;
+  const SizeType AND_BASE = 4;
+  const SizeType NAND_BASE = 7;
+  const SizeType OR_BASE = 10;
+  const SizeType NOR_BASE = 13;
+  const SizeType XOR_BASE = 16;
+  const SizeType XNOR_BASE = 19;
+  const SizeType MUX2_BASE = 22;
+  const SizeType MUX4_BASE = 23;
+
   // 論理セルグループの情報
-  // 0: 定数0
-  // 1: 定数1
-  // 2: バッファ
-  // 3: インバータ
-  const CiCellGroup* mLogicGroup[4];
+  const CiCellGroup* mLogicGroup[24];
 
   // FFセルクラスのリストを持つ辞書
   // キーは ClibSeqAttr::index()

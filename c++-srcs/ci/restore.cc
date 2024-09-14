@@ -110,7 +110,7 @@ CiCellLibrary::_restore(
   }
 
   // 組み込み型の読み込み
-  for ( auto id: Range(4) ) {
+  for ( auto id: Range(24) ) {
     s.restore(mLogicGroup[id]);
   }
   s.restore(mFFClassDict);

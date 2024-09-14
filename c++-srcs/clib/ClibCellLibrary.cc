@@ -14,6 +14,7 @@
 #include "ym/ClibPatGraph.h"
 #include "ym/ClibSeqAttr.h"
 #include "ci/CiCellLibrary.h"
+#include "Writer.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -385,6 +386,106 @@ ClibCellLibrary::inv_func() const
   return {};
 }
 
+// @brief ANDセルのグループを返す．
+ClibCellGroup
+ClibCellLibrary::and_func(
+  SizeType ni
+) const
+{
+  if ( mImpl ) {
+    return ClibCellGroup{mImpl->and_func(ni)};
+  }
+  // デフォルト値
+  return {};
+}
+
+// @brief NANDセルのグループを返す．
+ClibCellGroup
+ClibCellLibrary::nand_func(
+  SizeType ni
+) const
+{
+  if ( mImpl ) {
+    return ClibCellGroup{mImpl->nand_func(ni)};
+  }
+  // デフォルト値
+  return {};
+}
+
+// @brief ORセルのグループを返す．
+ClibCellGroup
+ClibCellLibrary::or_func(
+  SizeType ni
+) const
+{
+  if ( mImpl ) {
+    return ClibCellGroup{mImpl->or_func(ni)};
+  }
+  // デフォルト値
+  return {};
+}
+
+// @brief NORセルのグループを返す．
+ClibCellGroup
+ClibCellLibrary::nor_func(
+  SizeType ni
+) const
+{
+  if ( mImpl ) {
+    return ClibCellGroup{mImpl->nor_func(ni)};
+  }
+  // デフォルト値
+  return {};
+}
+
+// @brief XORセルのグループを返す．
+ClibCellGroup
+ClibCellLibrary::xor_func(
+  SizeType ni
+) const
+{
+  if ( mImpl ) {
+    return ClibCellGroup{mImpl->xor_func(ni)};
+  }
+  // デフォルト値
+  return {};
+}
+
+// @brief XNORセルのグループを返す．
+ClibCellGroup
+ClibCellLibrary::xnor_func(
+  SizeType ni
+) const
+{
+  if ( mImpl ) {
+    return ClibCellGroup{mImpl->xnor_func(ni)};
+  }
+  // デフォルト値
+  return {};
+}
+
+// @brief MUX2セルのグループを返す．
+ClibCellGroup
+ClibCellLibrary::mux2_func() const
+{
+  if ( mImpl ) {
+    return ClibCellGroup{mImpl->mux2_func()};
+  }
+  // デフォルト値
+  return {};
+}
+
+// @brief MUX4セルのグループを返す．
+ClibCellGroup
+ClibCellLibrary::mux4_func() const
+{
+  if ( mImpl ) {
+    return ClibCellGroup{mImpl->mux4_func()};
+  }
+  // デフォルト値
+  return {};
+}
+
 // @brief FFクラスを返す．
 ClibCellClassList
 ClibCellLibrary::find_ff_class(
@@ -560,6 +661,16 @@ ClibCellLibrary::pg_edge_inv(
   }
   // デフォルト値
   return false;
+}
+
+// @brief 内容を出力する．
+void
+ClibCellLibrary::display(
+  ostream& s
+) const
+{
+  Writer writer{s, *this};
+  writer.run();
 }
 
 // @brief 内容をバイナリダンプする．

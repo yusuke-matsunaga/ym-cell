@@ -291,6 +291,50 @@ public:
   ClibCellGroup
   inv_func() const;
 
+  /// @brief ANDセルのグループを返す．
+  ClibCellGroup
+  and_func(
+    SizeType ni ///< [in] 入力数 ( 2 <= ni <= 4 )
+  ) const;
+
+  /// @brief NANDセルのグループを返す．
+  ClibCellGroup
+  nand_func(
+    SizeType ni ///< [in] 入力数 ( 2 <= ni <= 4 )
+  ) const;
+
+  /// @brief ORセルのグループを返す．
+  ClibCellGroup
+  or_func(
+    SizeType ni ///< [in] 入力数 ( 2 <= ni <= 4 )
+  ) const;
+
+  /// @brief NORセルのグループを返す．
+  ClibCellGroup
+  nor_func(
+    SizeType ni ///< [in] 入力数 ( 2 <= ni <= 4 )
+  ) const;
+
+  /// @brief XORセルのグループを返す．
+  ClibCellGroup
+  xor_func(
+    SizeType ni ///< [in] 入力数 ( 2 <= ni <= 4 )
+  ) const;
+
+  /// @brief XNORセルのグループを返す．
+  ClibCellGroup
+  xnor_func(
+    SizeType ni ///< [in] 入力数 ( 2 <= ni <= 4 )
+  ) const;
+
+  /// @brief MUX2セルのグループを返す．
+  ClibCellGroup
+  mux2_func() const;
+
+  /// @brief MUX4セルのグループを返す．
+  ClibCellGroup
+  mux4_func() const;
+
   //////////////////////////////////////////////////////////////////////
   /// @}
   //////////////////////////////////////////////////////////////////////

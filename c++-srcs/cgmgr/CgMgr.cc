@@ -32,10 +32,6 @@ CgMgr::CgMgr(
   }
 
   logic_init();
-#if 0
-  ff_init();
-  latch_init();
-#endif
 }
 
 // @brief 論理セルグループの初期化を行なう．
@@ -45,60 +41,102 @@ CgMgr::logic_init()
   { // 定数0グループの登録
     auto sig = CgSignature::make_logic_sig(0, Expr::make_zero());
     auto func0 = find_group(sig);
-    mLogicGroup[0] = func0;
+    mLogicGroup[C0_BASE] = func0;
   }
   { // 定数1グループの登録
     auto sig = CgSignature::make_logic_sig(0, Expr::make_one());
     auto func1 = find_group(sig);
-    mLogicGroup[1] = func1;
+    mLogicGroup[C1_BASE] = func1;
   }
   { // バッファグループの登録
     auto sig = CgSignature::make_logic_sig(1, Expr::make_posi_literal(0));
     auto func2 = find_group(sig);
-    mLogicGroup[2] = func2;
+    mLogicGroup[BUF_BASE] = func2;
   }
   { // インバーターグループの登録
     auto sig = CgSignature::make_logic_sig(1, Expr::make_nega_literal(0));
     auto func3 = find_group(sig);
-    mLogicGroup[3] = func3;
+    mLogicGroup[INV_BASE] = func3;
   }
 
   // 以降の処理は必須ではないが，
   // クラス一覧に現れる順序を統一する効果がある．
 
-  // AND2 〜 AND8 のシグネチャを登録しておく．
-  for ( auto ni: {2, 3, 4, 5, 6, 7, 8} ) {
+  // AND2 〜 AND4 のグループの登録
+  // NAND2 〜 NAND4 のグループの登録
+  // OR2 〜 OR4 のグループの登録
+  // NOR2 〜 NOR4 のグループの登録
+  for ( auto ni: {2, 3, 4} ) {
     auto and_expr = Expr::make_posi_literal(0);
+    auto or_expr = Expr::make_posi_literal(0);
+    auto xor_expr = Expr::make_posi_literal(0);
     for ( SizeType i = 1; i < ni; ++ i ) {
       and_expr &= Expr::make_posi_literal(i);
+      or_expr |= Expr::make_posi_literal(i);
+      xor_expr ^= Expr::make_posi_literal(i);
     }
-    auto sig = CgSignature::make_logic_sig(ni, and_expr);
-    find_group(sig);
-  }
 
-  // XOR2 〜 XOR4 のシグネチャを登録しておく．
+    SizeType index = ni - 2;
+
+    auto and_sig = CgSignature::make_logic_sig(ni, and_expr);
+    auto and_func = find_group(and_sig);
+    mLogicGroup[AND_BASE + index] = and_func;
+
+    auto nand_sig = CgSignature::make_logic_sig(ni, ~and_expr);
+    auto nand_func = find_group(nand_sig);
+    mLogicGroup[NAND_BASE + index] = nand_func;
+
+    auto or_sig = CgSignature::make_logic_sig(ni, or_expr);
+    auto or_func = find_group(or_sig);
+    mLogicGroup[OR_BASE + index] = or_func;
+
+    auto nor_sig = CgSignature::make_logic_sig(ni, ~or_expr);
+    auto nor_func = find_group(nor_sig);
+    mLogicGroup[NOR_BASE + index] = nor_func;
+
+#if 1
+    auto xor_sig = CgSignature::make_logic_sig(ni, xor_expr);
+    auto xor_func = find_group(xor_sig);
+    mLogicGroup[XOR_BASE + index] = xor_func;
+
+    auto xnor_sig = CgSignature::make_logic_sig(ni, ~xor_expr);
+    auto xnor_func = find_group(xnor_sig);
+    mLogicGroup[XNOR_BASE + index] = xnor_func;
+#endif
+  }
+#if 0
+  // XOR2 〜 XOR4 のグループの登録
+  // XNOR2 〜 XNOR4 のグループの登録
   for ( auto ni: {2, 3, 4} ) {
     auto xor_expr = Expr::make_posi_literal(0);
     for ( SizeType i = 1; i < ni; ++ i ) {
       xor_expr ^= Expr::make_posi_literal(i);
     }
-    auto sig = CgSignature::make_logic_sig(ni, xor_expr);
-    find_group(sig);
-  }
 
-  // MUX2 のシグネチャを登録しておく．
-  {
+    SizeType index = ni - 2;
+
+    auto xor_sig = CgSignature::make_logic_sig(ni, xor_expr);
+    auto xor_func = find_group(xor_sig);
+    mLogicGroup[XOR_BASE + index] = xor_func;
+
+    auto xnor_sig = CgSignature::make_logic_sig(ni, ~xor_expr);
+    auto xnor_func = find_group(xnor_sig);
+    mLogicGroup[XNOR_BASE + index] = xnor_func;
+  }
+#endif
+
+  { // MUX2 のグループの登録．
     SizeType ni = 3;
     auto lit0 = Expr::make_posi_literal(0);
     auto lit1 = Expr::make_posi_literal(1);
     auto lit2 = Expr::make_posi_literal(2);
     auto mux2_func = lit0 & ~lit2 | lit1 & lit2;
     auto sig = CgSignature::make_logic_sig(ni, mux2_func);
-    find_group(sig);
+    auto mux_func = find_group(sig);
+    mLogicGroup[MUX2_BASE] = mux_func;
   }
 
-  // MUX4 のシグネチャを登録しておく．
-  {
+  { // MUX4 のグループの登録．
     SizeType ni = 6;
     auto lit0 = Expr::make_posi_literal(0);
     auto lit1 = Expr::make_posi_literal(1);
@@ -112,119 +150,10 @@ CgMgr::logic_init()
       lit2 & ~lit4 &  lit5 |
       lit3 &  lit4 &  lit5;
     auto sig = CgSignature::make_logic_sig(ni, mux4_func);
-    find_group(sig);
+    auto mux_func = find_group(sig);
+    mLogicGroup[MUX4_BASE] = mux_func;
   }
 }
-
-#if 0
-// @brief FFグループの初期化を行なう．
-void
-CgMgr::ff_init()
-{
-  for ( SizeType index = 0; index < ClibSeqAttr::max_index(); ++ index ) {
-    ClibSeqAttr seq_attr{index};
-    // 入力
-    // 0: data-in
-    // 1: clock
-    // 2: clear (optional)
-    // 3: preset (optional)
-    // 4: iq
-    // 5: ixq
-    SizeType ni = 2;
-    SizeType no = 1;
-    if ( seq_attr.has_clear() ) {
-      ++ ni;
-    }
-    if ( seq_attr.has_preset() ) {
-      ++ ni;
-    }
-    SizeType xni = ni + 2; // IQ, XIQ の分を足す．
-    auto next = TvFunc::make_posi_literal(xni, 0);
-    auto clock = TvFunc::make_posi_literal(xni, 1);
-    auto clock2 = TvFunc::make_invalid();
-    if ( seq_attr.has_slave_clock() ) {
-      clock2 = TvFunc::make_nega_literal(xni, 1);
-    }
-    auto clear = TvFunc::make_invalid();
-    SizeType base = 2;
-    if ( seq_attr.has_clear() ) {
-      clear = TvFunc::make_posi_literal(xni, base);
-      ++ base;
-    }
-    auto preset = TvFunc::make_invalid();
-    if ( seq_attr.has_preset() ) {
-      preset = TvFunc::make_posi_literal(xni, base);
-      ++ base;
-    }
-    auto iqvar = TvFunc::make_posi_literal(xni, base);
-    ++ base;
-    auto ixqvar = TvFunc::make_posi_literal(xni, base);
-    auto func_list = vector<TvFunc>{iqvar};
-    auto tristate_list = vector<TvFunc>{TvFunc::make_invalid()};
-    auto sig = CgSignature::make_ff_sig(ni, no, 0,
-					func_list, tristate_list,
-					clock, clock2, next,
-					clear, preset,
-					seq_attr);
-    auto group = find_group(sig);
-    mSimpleFFClass[index] = group->rep_class();
-  }
-}
-
-// @brief ラッチグループの初期化を行なう．
-void
-CgMgr::latch_init()
-{
-  for ( SizeType index = 0; index < ClibSeqAttr::max_index(); ++ index ) {
-    ClibSeqAttr seq_attr{index};
-    // 入力
-    // 0: data-in
-    // 1: enable
-    // 2: clear (optional)
-    // 3: preset (optional)
-    // 4: iq
-    // 5: ixq
-    SizeType ni = 2;
-    SizeType no = 1;
-    if ( seq_attr.has_clear() ) {
-      ++ ni;
-    }
-    if ( seq_attr.has_preset() ) {
-      ++ ni;
-    }
-    SizeType xni = ni + 2; // IQ, XIQ の分を足す．
-    auto data = TvFunc::make_posi_literal(xni, 0);
-    auto enable = TvFunc::make_posi_literal(xni, 1);
-    auto enable2 = TvFunc::make_invalid();
-    if ( seq_attr.has_slave_clock() ) {
-      enable2 = TvFunc::make_nega_literal(xni, 1);
-    }
-    auto clear = TvFunc::make_invalid();
-    SizeType base = 2;
-    if ( seq_attr.has_clear() ) {
-      clear = TvFunc::make_posi_literal(xni, base);
-      ++ base;
-    }
-    auto preset = TvFunc::make_invalid();
-    if ( seq_attr.has_preset() ) {
-      preset = TvFunc::make_posi_literal(xni, base);
-      ++ base;
-    }
-    auto iqvar = TvFunc::make_posi_literal(xni, base);
-    ++ base;
-    auto ixqvar = TvFunc::make_nega_literal(xni, base);
-    auto func_list = vector<TvFunc>{iqvar};
-    auto tristate_list = vector<TvFunc>{TvFunc::make_invalid()};
-    auto sig = CgSignature::make_latch_sig(ni, no, 0,
-					   func_list, tristate_list,
-					   enable, enable2, data,
-					   clear, preset,
-					   seq_attr);
-    auto group = find_group(sig);
-    mSimpleLatchClass[index] = group->rep_class();
-  }
-}
-#endif
 
 // @brief FFクラスを得る．
 vector<const CiCellClass*>

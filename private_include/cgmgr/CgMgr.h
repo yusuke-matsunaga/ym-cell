@@ -51,14 +51,12 @@ public:
   /// @brief 論理セルグループを得る．
   const CiCellGroup*
   logic_group(
-    SizeType type ///< [in] グループの種類
-                  ///<  - 0: 定数0
-                  ///<  - 1: 定数1
-                  ///<  - 2: バッファ
-                  ///<  - 3: インバータ
+    SizeType type ///< [in] グループの種類 ( 0 <= type < 24 )
   ) const
   {
-    ASSERT_COND( 0 <= type && type < 4 );
+    if ( type < 0 || 24 <= type ) {
+      throw std::invalid_argument{"'type' is out-of-range"};
+    }
     return mLogicGroup[type];
   }
 
@@ -134,14 +132,6 @@ private:
   void
   logic_init();
 
-  /// @brief FFグループの初期化を行なう．
-  void
-  ff_init();
-
-  /// @brief ラッチグループの初期化を行なう．
-  void
-  latch_init();
-
   /// @brief 代表クラスを得る．
   CiCellClass*
   _find_class(
@@ -173,12 +163,21 @@ private:
   // セルクラスをキーにして論理式のリストを保持する辞書
   unordered_map<const CiCellClass*, vector<Expr>> mExprListDict;
 
+  const SizeType C0_BASE = 0;
+  const SizeType C1_BASE = 1;
+  const SizeType BUF_BASE = 2;
+  const SizeType INV_BASE = 3;
+  const SizeType AND_BASE = 4;
+  const SizeType NAND_BASE = 7;
+  const SizeType OR_BASE = 10;
+  const SizeType NOR_BASE = 13;
+  const SizeType XOR_BASE = 16;
+  const SizeType XNOR_BASE = 19;
+  const SizeType MUX2_BASE = 22;
+  const SizeType MUX4_BASE = 23;
+
   // 論理セルグループのリスト
-  // 0: 定数0
-  // 1: 定数1
-  // 2: バッファ
-  // 3: インバータ
-  const CiCellGroup* mLogicGroup[4];
+  const CiCellGroup* mLogicGroup[24];
 
   // FFセルクラスのリストを持つ辞書
   // キーは ClibSeqAttr::index()
