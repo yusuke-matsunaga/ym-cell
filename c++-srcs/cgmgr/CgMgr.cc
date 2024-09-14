@@ -69,11 +69,9 @@ CgMgr::logic_init()
   for ( auto ni: {2, 3, 4} ) {
     auto and_expr = Expr::make_posi_literal(0);
     auto or_expr = Expr::make_posi_literal(0);
-    auto xor_expr = Expr::make_posi_literal(0);
     for ( SizeType i = 1; i < ni; ++ i ) {
       and_expr &= Expr::make_posi_literal(i);
       or_expr |= Expr::make_posi_literal(i);
-      xor_expr ^= Expr::make_posi_literal(i);
     }
 
     SizeType index = ni - 2;
@@ -93,18 +91,8 @@ CgMgr::logic_init()
     auto nor_sig = CgSignature::make_logic_sig(ni, ~or_expr);
     auto nor_func = find_group(nor_sig);
     mLogicGroup[NOR_BASE + index] = nor_func;
-
-#if 1
-    auto xor_sig = CgSignature::make_logic_sig(ni, xor_expr);
-    auto xor_func = find_group(xor_sig);
-    mLogicGroup[XOR_BASE + index] = xor_func;
-
-    auto xnor_sig = CgSignature::make_logic_sig(ni, ~xor_expr);
-    auto xnor_func = find_group(xnor_sig);
-    mLogicGroup[XNOR_BASE + index] = xnor_func;
-#endif
   }
-#if 0
+
   // XOR2 〜 XOR4 のグループの登録
   // XNOR2 〜 XNOR4 のグループの登録
   for ( auto ni: {2, 3, 4} ) {
@@ -123,7 +111,6 @@ CgMgr::logic_init()
     auto xnor_func = find_group(xnor_sig);
     mLogicGroup[XNOR_BASE + index] = xnor_func;
   }
-#endif
 
   { // MUX2 のグループの登録．
     SizeType ni = 3;
