@@ -207,10 +207,8 @@ BEGIN_NAMESPACE_YM_CLIB
 
 // @brief コンストラクタ
 Writer::Writer(
-  ostream& s,
   const ClibCellLibrary& library
-) : mS{s},
-    mLibrary{library}
+) : mLibrary{library}
 {
   { // セルクラスの登録
     SizeType id = 0;
@@ -280,149 +278,95 @@ Writer::Writer(
 
 // @brief セルライブラリの内容を出力する．
 void
-Writer::run()
+Writer::run(
+  ostream& s
+) const
 {
   // ライブラリ名
-  mS << "Library(" << mLibrary.name() << ")" << endl;
+  s << "Library(" << mLibrary.name() << ")" << endl;
 
   // テクノロジ
-  mS << "  technology: ";
+  s << "  technology: ";
   switch ( mLibrary.technology() ) {
-  case ClibTechnology::cmos: mS << "cmos"; break;
-  case ClibTechnology::fpga: mS << "fpga"; break;
+  case ClibTechnology::cmos: s << "cmos"; break;
+  case ClibTechnology::fpga: s << "fpga"; break;
   default: ASSERT_NOT_REACHED; break;
   }
-  mS << endl;
+  s << endl;
 
   // 遅延モデル
-  mS << "  delay_model: "
-     << mLibrary.delay_model() << endl;
+  s << "  delay_model: "
+    << mLibrary.delay_model() << endl;
 
   // バス命名規則
-  mS << "  bus_naming_style: "
-     << mLibrary.bus_naming_style() << endl;
+  s << "  bus_naming_style: "
+    << mLibrary.bus_naming_style() << endl;
 
   // 日付
-  mS << "  date: "
-     << mLibrary.date() << endl;
+  s << "  date: "
+    << mLibrary.date() << endl;
 
   // リビジョン
-  mS << "  revision: "
-     << mLibrary.revision() << endl;
+  s << "  revision: "
+    << mLibrary.revision() << endl;
 
   // コメント
-  mS << "  comment: "
-     << mLibrary.comment() << endl;
+  s << "  comment: "
+    << mLibrary.comment() << endl;
 
   // 時間単位
-  mS << "  time_unit: "
-     << mLibrary.time_unit() << endl;
+  s << "  time_unit: "
+    << mLibrary.time_unit() << endl;
 
   // 電圧単位
-  mS << "  voltage_unit: "
-     << mLibrary.voltage_unit() << endl;
+  s << "  voltage_unit: "
+    << mLibrary.voltage_unit() << endl;
 
   // 電流単位
-  mS << "  current_unit: "
-     << mLibrary.current_unit() << endl;
+  s << "  current_unit: "
+    << mLibrary.current_unit() << endl;
 
   // 抵抗単位
-  mS << "  pulling_resistance_unit: "
-     << mLibrary.pulling_resistance_unit() << endl;
+  s << "  pulling_resistance_unit: "
+    << mLibrary.pulling_resistance_unit() << endl;
 
   // 容量単位
-  mS << "  capacitive_load_unit: "
-     << mLibrary.capacitive_load_unit()
-     << mLibrary.capacitive_load_unit_str() << endl;
+  s << "  capacitive_load_unit: "
+    << mLibrary.capacitive_load_unit()
+    << mLibrary.capacitive_load_unit_str() << endl;
 
   // 電力単位
-  mS << "  leakage_power_unit: "
-     << mLibrary.leakage_power_unit() << endl;
+  s << "  leakage_power_unit: "
+    << mLibrary.leakage_power_unit() << endl;
 
-  mS << endl;
+  s << endl;
 
   // セル
   for ( auto cell: mLibrary.cell_list() ) {
-    display_cell(cell);
+    display_cell(s, cell);
   }
 
   // セルグループ
   for ( auto cgroup: mLibrary.cell_group_list() ) {
-    display_group(cgroup);
+    display_group(s, cgroup);
   }
 
   // セルクラス
   for ( auto cclass: mLibrary.npn_class_list() ) {
-    display_class(cclass);
+    display_class(s, cclass);
   }
 
   // パタングラフの情報
-  mS << "==== PatMgr dump start ====" << endl;
-
-  // ノードの種類の出力
-  auto nn = mLibrary.pg_node_num();
-  for ( auto i: Range(nn) ) {
-    mS << "Node#" << i << ": ";
-    switch ( mLibrary.pg_node_type(i) ) {
-    case ClibPatType::Input:
-      mS << "INPUT#"
-	 << mLibrary.pg_input_id(i);
-      break;
-    case ClibPatType::And:
-      mS << "AND";
-      break;
-    case ClibPatType::Xor:
-      mS << "XOR";
-      break;
-    default:
-      ASSERT_NOT_REACHED;
-      break;
-    }
-    mS << endl;
-  }
-  mS << endl;
-
-  // 枝の情報の出力
-  auto ne = mLibrary.pg_edge_num();
-  for ( auto i: Range(ne) ) {
-    mS << "Edge#" << i << ": " << mLibrary.pg_edge_from(i)
-       << " -> " << mLibrary.pg_edge_to(i)
-       << "(" << mLibrary.pg_edge_pos(i) << ")";
-    if ( mLibrary.pg_edge_inv(i) ) {
-      mS << " ***";
-    }
-    mS << endl;
-  }
-  mS << endl;
-
-  // パタングラフの情報の出力
-  auto np = mLibrary.pg_pat_num();
-  for ( auto i: Range(np) ) {
-    const auto& pat = mLibrary.pg_pat(i);
-    auto rep = pat.rep_class();
-    auto rep_id = mClassDict.at(rep.key());
-    mS << "Pat#" << i << ": "
-      << "Rep#" << rep_id << ": ";
-    if ( pat.root_inv() ) {
-      mS << "[inv]";
-    }
-    mS << "(" << pat.input_num() << "), ";
-    auto n = pat.edge_num();
-    for ( auto i: Range(n) ) {
-      mS << " " << pat.edge(i);
-    }
-    mS << endl;
-  }
-
-  mS << "==== PatMgr dump end ====" << endl;
+  display_patgraph(s);
 
 }
 
 // セルクラスの情報を出力する．
 void
 Writer::display_class(
+  ostream& s,
   const ClibCellClass& cclass
-)
+) const
 {
   bool has_cell = false;
   for ( auto group: cclass.cell_group_list() ) {
@@ -436,92 +380,94 @@ Writer::display_class(
     return;
   }
 
-  mS << "Class#"
-     << mClassDict.at(cclass.key())
-     << endl;
+  s << "Class#"
+    << mClassDict.at(cclass.key())
+    << endl;
   if ( mClassNameDict.count(cclass.key()) > 0 ) {
     auto name = mClassNameDict.at(cclass.key());
-    mS << "  Name = " << name
-       << endl;
+    s << "  Name = " << name
+      << endl;
   }
   auto n = cclass.idmap_num();
   if ( n > 0 ) {
-    mS << "  Idmap List:" << endl;
+    s << "  Idmap List:" << endl;
     for ( auto& idmap: cclass.idmap_list() ) {
-      mS << "         " << idmap << endl;
+      s << "         " << idmap << endl;
     }
-    mS << endl;
+    s << endl;
   }
   for ( auto group: cclass.cell_group_list() ) {
     if ( group.cell_list().size() == 0 ) {
       continue;
     }
-    mS << "  Group#" << mGroupDict.at(group.key())
-       << ": Map = " << group.iomap() << endl;
+    s << "  Group#" << mGroupDict.at(group.key())
+      << ": Map = " << group.iomap() << endl;
   }
-  mS << endl;
+  s << endl;
 }
 
 // セルグループの情報を出力する．
 void
 Writer::display_group(
+  ostream& s,
   const ClibCellGroup& group
-)
+) const
 {
   if ( group.cell_list().size() == 0 ) {
     // セルを持たないグループはスキップする．
     return;
   }
 
-  mS << "Group#"
-     << mGroupDict.at(group.key())
-     << "(Class#"
-     << mClassDict.at(group.rep_class().key())
-     << ")" << endl;
+  s << "Group#"
+    << mGroupDict.at(group.key())
+    << "(Class#"
+    << mClassDict.at(group.rep_class().key())
+    << ")" << endl;
   if ( mGroupNameDict.count(group.key()) > 0 ) {
     auto name = mGroupNameDict.at(group.key());
-    mS << "  Name = " << name
-       << endl;
+    s << "  Name = " << name
+      << endl;
   }
-  mS << "  Cell =";
+  s << "  Cell =";
   for ( auto cell: group.cell_list() ) {
-    mS << " " << cell.name();
+    s << " " << cell.name();
   }
-  mS << endl
-     << endl;
+  s << endl
+    << endl;
 }
 
 void
 Writer::display_cell(
+  ostream& s,
   const ClibCell& cell
-)
+) const
 {
   // セル名とセルの種類を出力
-  mS << cell.name() << ": Cell#"
-     << mCellDict.at(cell.key())
-     << "(Group#"
-     << mGroupDict.at(cell.group().key())
-     << ")" << endl
-     << "  type = ";
+  s << cell.name() << ": Cell#"
+    << mCellDict.at(cell.key())
+    << "(Group#"
+    << mGroupDict.at(cell.group().key())
+    << ")" << endl
+    << "  type = ";
   if ( cell.is_logic() ) {
-    mS << "Combinational Logic";
+    s << "Combinational Logic";
   }
   else if ( cell.is_ff() ) {
-    mS << "Flip-Flop";
+    s << "Flip-Flop";
   }
   else if ( cell.is_latch() ) {
-    mS << "Latch";
+    s << "Latch";
   }
   else if ( cell.type() == ClibCellType::FSM ) {
-    mS << "FSM";
+    s << "FSM";
   }
   else {
     ASSERT_NOT_REACHED;
   }
-  mS << endl;
+  s << endl;
 
   // 面積
-  mS << "  area = " << cell.area() << endl;
+  s << "  area = " << cell.area() << endl;
 
   // 論理式の出力用にピン名の辞書を作る．
   unordered_map<SizeType, string> var_names;
@@ -535,122 +481,122 @@ Writer::display_cell(
   if ( cell.is_ff() ) {
     // FF の情報
     var_names.emplace(cell.input2_num(), cell.qvar1());
-    mS << "  Next State         = "
-       << ewriter.dump_to_string(cell.next_state_expr(), var_names)
-       << endl
-       << "  Clock              = "
-       << ewriter.dump_to_string(cell.clock_expr(), var_names)
-       << endl;
+    s << "  Next State         = "
+      << ewriter.dump_to_string(cell.next_state_expr(), var_names)
+      << endl
+      << "  Clock              = "
+      << ewriter.dump_to_string(cell.clock_expr(), var_names)
+      << endl;
     if ( cell.clock2_expr().is_valid() ) {
-      mS << "  Clock2             = "
-	 << ewriter.dump_to_string(cell.clock2_expr(), var_names)
-	 << endl;
+      s << "  Clock2             = "
+	<< ewriter.dump_to_string(cell.clock2_expr(), var_names)
+	<< endl;
     }
     if ( cell.has_clear() ) {
-      mS << "  Clear              = "
-	 << ewriter.dump_to_string(cell.clear_expr(), var_names)
-	 << endl;
+      s << "  Clear              = "
+	<< ewriter.dump_to_string(cell.clear_expr(), var_names)
+	<< endl;
     }
     if ( cell.has_preset() ) {
-      mS << "  Preset             = "
-	 << ewriter.dump_to_string(cell.preset_expr(), var_names)
-	 << endl;
+      s << "  Preset             = "
+	<< ewriter.dump_to_string(cell.preset_expr(), var_names)
+	<< endl;
     }
     if ( cell.has_clear() && cell.has_preset() ) {
-      mS << "  Clear Preset Var1  = " << cell.clear_preset_var1() << endl
-	 << "  Clear Preset Var2  = " << cell.clear_preset_var2() << endl;
+      s << "  Clear Preset Var1  = " << cell.clear_preset_var1() << endl
+	<< "  Clear Preset Var2  = " << cell.clear_preset_var2() << endl;
     }
   }
   if ( cell.is_latch() ) {
     // ラッチの情報
     var_names.emplace(cell.input2_num(), cell.qvar1());
-    mS << "  Data In            = "
-       << ewriter.dump_to_string(cell.data_in_expr(), var_names)
-       << endl
-       << "  Enable             = "
-       << ewriter.dump_to_string(cell.enable_expr(), var_names)
-       << endl;
+    s << "  Data In            = "
+      << ewriter.dump_to_string(cell.data_in_expr(), var_names)
+      << endl
+      << "  Enable             = "
+      << ewriter.dump_to_string(cell.enable_expr(), var_names)
+      << endl;
     if ( cell.enable2_expr().is_valid() ) {
-      mS << "  Enable2            = "
-	 << ewriter.dump_to_string(cell.enable2_expr(), var_names)
-	 << endl;
+      s << "  Enable2            = "
+	<< ewriter.dump_to_string(cell.enable2_expr(), var_names)
+	<< endl;
     }
     if ( cell.has_clear() ) {
-      mS << "  Clear              = "
-	 << ewriter.dump_to_string(cell.clear_expr(), var_names)
-	 << endl;
+      s << "  Clear              = "
+	<< ewriter.dump_to_string(cell.clear_expr(), var_names)
+	<< endl;
     }
     if ( cell.has_preset() ) {
-      mS << "  Preset             = "
-	 << ewriter.dump_to_string(cell.preset_expr(), var_names)
-	 << endl;
+      s << "  Preset             = "
+	<< ewriter.dump_to_string(cell.preset_expr(), var_names)
+	<< endl;
     }
     if ( cell.has_clear() && cell.has_preset() ) {
-      mS << "  Clear Preset Var1  = " << cell.clear_preset_var1() << endl
-	 << "  Clear Preset Var2  = " << cell.clear_preset_var2() << endl;
+      s << "  Clear Preset Var1  = " << cell.clear_preset_var1() << endl
+	<< "  Clear Preset Var2  = " << cell.clear_preset_var2() << endl;
     }
   }
 
   // ピンの情報
   for ( auto pin: cell.pin_list() ) {
-    mS << "  Pin#" << pin.pin_id() << "[ " << pin.name() << " ]: ";
+    s << "  Pin#" << pin.pin_id() << "[ " << pin.name() << " ]: ";
     if ( pin.is_input() ) {
       // 入力ピン
-      mS << "Input#" << pin.input_id() << endl
-	 << "    Capacitance      = " << pin.capacitance() << endl
-	 << "    Rise Capacitance = " << pin.rise_capacitance() << endl
-	 << "    Fall Capacitance = " << pin.fall_capacitance() << endl;
+      s << "Input#" << pin.input_id() << endl
+	<< "    Capacitance      = " << pin.capacitance() << endl
+	<< "    Rise Capacitance = " << pin.rise_capacitance() << endl
+	<< "    Fall Capacitance = " << pin.fall_capacitance() << endl;
     }
     else if ( pin.is_output() ) {
       // 出力ピン
       auto opos = pin.output_id();
-      mS << "Output# " << opos << endl;
+      s << "Output# " << opos << endl;
       if ( cell.has_logic(opos) ) {
-	mS << "    Logic            = "
-	   << ewriter.dump_to_string(cell.logic_expr(opos), var_names)
-	   << endl;
+	s << "    Logic            = "
+	  << ewriter.dump_to_string(cell.logic_expr(opos), var_names)
+	  << endl;
 	if ( cell.has_tristate(opos) ) {
-	  mS << "    Tristate         = "
-	     << ewriter.dump_to_string(cell.tristate_expr(opos), var_names)
-	     << endl;
+	  s << "    Tristate         = "
+	    << ewriter.dump_to_string(cell.tristate_expr(opos), var_names)
+	    << endl;
 	}
       }
-      mS << "    Max Fanout       = " << pin.max_fanout() << endl
-	 << "    Min Fanout       = " << pin.min_fanout() << endl
-	 << "    Max Capacitance  = " << pin.max_capacitance() << endl
-	 << "    Min Capacitance  = " << pin.min_capacitance() << endl
-	 << "    Max Transition   = " << pin.max_transition() << endl
-	 << "    Min Transition   = " << pin.min_transition() << endl;
+      s << "    Max Fanout       = " << pin.max_fanout() << endl
+	<< "    Min Fanout       = " << pin.min_fanout() << endl
+	<< "    Max Capacitance  = " << pin.max_capacitance() << endl
+	<< "    Min Capacitance  = " << pin.min_capacitance() << endl
+	<< "    Max Transition   = " << pin.max_transition() << endl
+	<< "    Min Transition   = " << pin.min_transition() << endl;
     }
     else if ( pin.is_inout() ) {
       // 入出力ピン
       auto opos = pin.output_id();
-      mS << "Inout#(" << pin.input_id()
-	 << ", " << opos << ")" << endl;
+      s << "Inout#(" << pin.input_id()
+	<< ", " << opos << ")" << endl;
       if ( cell.has_logic(opos) ) {
-	mS << "    Logic            = "
-	   << ewriter.dump_to_string(cell.logic_expr(opos), var_names)
-	   << endl;
+	s << "    Logic            = "
+	  << ewriter.dump_to_string(cell.logic_expr(opos), var_names)
+	  << endl;
 	if ( cell.has_tristate(opos) ) {
-	  mS << "    Tristate         = "
-	     << ewriter.dump_to_string(cell.tristate_expr(opos), var_names)
-	     << endl;
+	  s << "    Tristate         = "
+	    << ewriter.dump_to_string(cell.tristate_expr(opos), var_names)
+	    << endl;
 	}
       }
-      mS << "    Capacitance      = " << pin.capacitance() << endl
-	 << "    Rise Capacitance = " << pin.rise_capacitance() << endl
-	 << "    Fall Capacitance = " << pin.fall_capacitance() << endl
-	 << "    Max Fanout       = " << pin.max_fanout() << endl
-	 << "    Min Fanout       = " << pin.min_fanout() << endl
-	 << "    Max Capacitance  = " << pin.max_capacitance() << endl
-	 << "    Min Capacitance  = " << pin.min_capacitance() << endl
-	 << "    Max Transition   = " << pin.max_transition() << endl
-	 << "    Min Transition   = " << pin.min_transition() << endl;
+      s << "    Capacitance      = " << pin.capacitance() << endl
+	<< "    Rise Capacitance = " << pin.rise_capacitance() << endl
+	<< "    Fall Capacitance = " << pin.fall_capacitance() << endl
+	<< "    Max Fanout       = " << pin.max_fanout() << endl
+	<< "    Min Fanout       = " << pin.min_fanout() << endl
+	<< "    Max Capacitance  = " << pin.max_capacitance() << endl
+	<< "    Min Capacitance  = " << pin.min_capacitance() << endl
+	<< "    Max Transition   = " << pin.max_transition() << endl
+	<< "    Min Transition   = " << pin.min_transition() << endl;
     }
     else if ( pin.is_internal() ) {
       // 内部ピン
       auto ipos = pin.internal_id();
-      mS << "Internal#(" << ipos << ")" << endl;
+      s << "Internal#(" << ipos << ")" << endl;
     }
   }
 
@@ -659,58 +605,59 @@ Writer::display_cell(
   auto no2 = cell.output2_num();
   for ( auto ipos: Range(ni2) ) {
     for ( auto opos: Range(no2) ) {
-      display_timing(cell, ipos, opos, ClibTimingSense::positive_unate);
-      display_timing(cell, ipos, opos, ClibTimingSense::negative_unate);
+      display_timing(s, cell, ipos, opos, ClibTimingSense::positive_unate);
+      display_timing(s, cell, ipos, opos, ClibTimingSense::negative_unate);
     }
   }
-  mS << endl;
+  s << endl;
 }
 
 // タイミング情報を出力する．
 void
 Writer::display_timing(
+  ostream& s,
   const ClibCell& cell,
   SizeType ipos,
   SizeType opos,
   ClibTimingSense sense
-)
+) const
 {
   for ( auto timing: cell.timing_list(ipos, opos, sense) ) {
-    mS << "  Timing:" << endl
-       << "    Type             = " << timing.type() << endl
-       << "    Input Pin        = " << cell.input(ipos).name() << endl
-       << "    Output Pin       = " << cell.output(opos).name() << endl
-       << "    Sense            = ";
+    s << "  Timing:" << endl
+      << "    Type             = " << timing.type() << endl
+      << "    Input Pin        = " << cell.input(ipos).name() << endl
+      << "    Output Pin       = " << cell.output(opos).name() << endl
+      << "    Sense            = ";
     if ( sense == ClibTimingSense::positive_unate ) {
-      mS << "positive unate";
+      s << "positive unate";
     }
     else if ( sense == ClibTimingSense::negative_unate ) {
-      mS << "negative unate";
+      s << "negative unate";
     }
     else {
       ASSERT_NOT_REACHED;
     }
-    mS << endl;
+    s << endl;
     if ( !timing.timing_cond().is_one() ) {
-      mS << "    When             = " << timing.timing_cond() << endl;
+      s << "    When             = " << timing.timing_cond() << endl;
     }
 
     switch ( mLibrary.delay_model() ) {
     case ClibDelayModel::generic_cmos:
-      mS << "    Rise Intrinsic   = " << timing.intrinsic_rise() << endl
-	 << "    Rise Resistance  = " << timing.rise_resistance() << endl
-	 << "    Fall Intrinsic   = " << timing.intrinsic_fall() << endl
-	 << "    Fall Resistance  = " << timing.fall_resistance() << endl;
+      s << "    Rise Intrinsic   = " << timing.intrinsic_rise() << endl
+	<< "    Rise Resistance  = " << timing.rise_resistance() << endl
+	<< "    Fall Intrinsic   = " << timing.intrinsic_fall() << endl
+	<< "    Fall Resistance  = " << timing.fall_resistance() << endl;
       break;
 
     case ClibDelayModel::table_lookup:
-      display_lut("Cell Rise", timing.cell_rise());
-      display_lut("Rise Transition", timing.rise_transition());
-      display_lut("Rise Propagation", timing.rise_propagation());
+      display_lut(s, "Cell Rise", timing.cell_rise());
+      display_lut(s, "Rise Transition", timing.rise_transition());
+      display_lut(s, "Rise Propagation", timing.rise_propagation());
 
-      display_lut("Cell Fall", timing.cell_fall());
-      display_lut("Fall Transition", timing.fall_transition());
-      display_lut("Fall Propagation", timing.fall_propagation());
+      display_lut(s, "Cell Fall", timing.cell_fall());
+      display_lut(s, "Fall Transition", timing.fall_transition());
+      display_lut(s, "Fall Propagation", timing.fall_propagation());
       break;
 
     case ClibDelayModel::piecewise_cmos:
@@ -734,87 +681,154 @@ Writer::display_timing(
 // LUT の情報を出力する．
 void
 Writer::display_lut(
+  ostream& s,
   const string& label,
   const ClibLut& lut
-)
+) const
 {
   if ( lut.is_invalid() ) {
     return;
   }
 
   SizeType d = lut.dimension();
-  mS << "    " << label << endl;
+  s << "    " << label << endl;
   for ( auto i: Range(d) ) {
-    mS << "      Variable_" << (i + 1) << " = " << lut.variable_type(i) << endl;
+    s << "      Variable_" << (i + 1) << " = " << lut.variable_type(i) << endl;
   }
   for ( auto i: Range(d) ) {
-    mS << "      Index_" << (i + 1) << "    = ";
+    s << "      Index_" << (i + 1) << "    = ";
     auto n = lut.index_num(i);
     const char* comma = "";
-    mS << "(";
+    s << "(";
     for ( auto j: Range(n) ) {
-      mS << comma << lut.index(i, j);
+      s << comma << lut.index(i, j);
       comma = ", ";
     }
-    mS << ")" << endl;
+    s << ")" << endl;
   }
 
   if ( d == 1) {
-    mS << "      Values = (";
+    s << "      Values = (";
     auto n1 = lut.index_num(0);
     vector<SizeType> pos_array(1);
     const char* comma = "";
     for ( auto i1: Range(n1) ) {
       pos_array[0] = i1;
-      mS << comma << lut.grid_value(pos_array);
+      s << comma << lut.grid_value(pos_array);
       comma = ", ";
     }
-    mS << ")" << endl;
+    s << ")" << endl;
   }
   else if ( d == 2 ) {
-    mS << "      Values = (" << endl;
+    s << "      Values = (" << endl;
     auto n1 = lut.index_num(0);
     auto n2 = lut.index_num(1);
     vector<SizeType> pos_array(2);
     for ( auto i1: Range(n1) ) {
-      mS << "                (";
+      s << "                (";
       pos_array[0] = i1;
       const char* comma = "";
       for ( auto i2: Range(n2) ) {
 	pos_array[1] = i2;
-	mS << comma << lut.grid_value(pos_array);
+	s << comma << lut.grid_value(pos_array);
 	comma = ", ";
       }
-      mS << ")" << endl;
+      s << ")" << endl;
     }
-    mS << "               )" << endl;
+    s << "               )" << endl;
   }
   else if ( d == 3 ) {
-    mS << "      Values = (" << endl;
+    s << "      Values = (" << endl;
     auto n1 = lut.index_num(0);
     auto n2 = lut.index_num(1);
     auto n3 = lut.index_num(2);
     vector<SizeType> pos_array(3);
     for ( auto i1: Range(n1) ) {
-      mS << "                (";
+      s << "                (";
       pos_array[0] = i1;
       const char* comma2 = "";
       for ( auto i2: Range(n2) ) {
 	pos_array[1] = i2;
-	mS << comma2 << "(";
+	s << comma2 << "(";
 	const char* comma3 = "";
 	for ( auto i3: Range(n3) ) {
 	  pos_array[2] = i3;
-	  mS << comma3 << lut.grid_value(pos_array);
+	  s << comma3 << lut.grid_value(pos_array);
 	  comma3 = ", ";
 	}
-	mS << ")";
+	s << ")";
 	comma2 = ", ";
       }
-      mS << ")" << endl;
+      s << ")" << endl;
     }
-    mS << "                )" << endl;
+    s << "                )" << endl;
   }
+}
+
+// @brief パタングラフの情報を出力する．
+void
+Writer::display_patgraph(
+  ostream& s
+) const
+{
+  s << "==== PatMgr dump start ====" << endl;
+
+  // ノードの種類の出力
+  auto nn = mLibrary.pg_node_num();
+  for ( auto i: Range(nn) ) {
+    s << "Node#" << i << ": ";
+    switch ( mLibrary.pg_node_type(i) ) {
+    case ClibPatType::Input:
+      s << "INPUT#"
+	<< mLibrary.pg_input_id(i);
+      break;
+    case ClibPatType::And:
+      s << "AND";
+      break;
+    case ClibPatType::Xor:
+      s << "XOR";
+      break;
+    default:
+      ASSERT_NOT_REACHED;
+      break;
+    }
+    s << endl;
+  }
+  s << endl;
+
+  // 枝の情報の出力
+  auto ne = mLibrary.pg_edge_num();
+  for ( auto i: Range(ne) ) {
+    s << "Edge#" << i << ": " << mLibrary.pg_edge_from(i)
+      << " -> " << mLibrary.pg_edge_to(i)
+      << "(" << mLibrary.pg_edge_pos(i) << ")";
+    if ( mLibrary.pg_edge_inv(i) ) {
+      s << " ***";
+    }
+    s << endl;
+  }
+  s << endl;
+
+  // パタングラフの情報の出力
+  auto np = mLibrary.pg_pat_num();
+  for ( auto i: Range(np) ) {
+    const auto& pat = mLibrary.pg_pat(i);
+    auto rep = pat.rep_class();
+    auto rep_id = mClassDict.at(rep.key());
+    s << "Pat#" << i << ": "
+      << "Rep#" << rep_id << ": ";
+    if ( pat.root_inv() ) {
+      s << "[inv]";
+    }
+    s << "(" << pat.input_num() << "), ";
+    auto n = pat.edge_num();
+    for ( auto i: Range(n) ) {
+      s << " " << pat.edge(i);
+    }
+    s << endl;
+  }
+
+  s << "==== PatMgr dump end ====" << endl;
 }
 
 // @brief DFF のセルクラスに名前をつける．

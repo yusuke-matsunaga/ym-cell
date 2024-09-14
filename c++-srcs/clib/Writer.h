@@ -16,6 +16,10 @@ BEGIN_NAMESPACE_YM_CLIB
 //////////////////////////////////////////////////////////////////////
 /// @class Writer Writer.h "Writer.h"
 /// @brief ClibCellLibrary の内容を出力するためのクラス
+///
+/// 意味的にはただの関数だが，セルクラスやセルグループと番号の対応関係を表す
+/// 辞書などを持つ．
+/// これらのオブジェクトはコンストラクタ中で初期化され以後は変更されない．
 //////////////////////////////////////////////////////////////////////
 class Writer
 {
@@ -23,7 +27,6 @@ public:
 
   /// @brief コンストラクタ
   Writer(
-    ostream& s,                    ///< [in] 出力ストリーム
     const ClibCellLibrary& library ///< [in] セルライブラリ
   );
 
@@ -38,7 +41,9 @@ public:
 
   /// @brief セルライブラリの内容を出力する．
   void
-  run();
+  run(
+    ostream& s ///< [in] 出力ストリーム
+  ) const;
 
 
 private:
@@ -49,36 +54,47 @@ private:
   /// @brief セルクラスの情報を出力する．
   void
   display_class(
+    ostream& s,
     const ClibCellClass& cclass
-  );
+  ) const;
 
   /// @brief セルグループの情報を出力する．
   void
   display_group(
+    ostream& s,
     const ClibCellGroup& group
-  );
+  ) const;
 
   /// @brief セルの情報を出力する．
   void
   display_cell(
+    ostream& s,
     const ClibCell& cell
-  );
+  ) const;
 
   /// @brief タイミング情報を出力する．
   void
   display_timing(
+    ostream& s,
     const ClibCell& cell,
     SizeType ipos,
     SizeType opos,
     ClibTimingSense sense
-  );
+  ) const;
 
   /// @brief LUT の情報を出力する．
   void
   display_lut(
+    ostream& s,
     const string& label,
     const ClibLut& lut
-  );
+  ) const;
+
+  /// @brief パタングラフの情報を出力する．
+  void
+  display_patgraph(
+    ostream& s
+  ) const;
 
   /// @brief DFF のセルクラスに名前をつける．
   void
@@ -107,9 +123,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // 出力ストリーム
-  ostream& mS;
 
   // セルライブラリ
   ClibCellLibrary mLibrary;

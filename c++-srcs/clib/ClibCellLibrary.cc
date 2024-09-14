@@ -669,8 +669,8 @@ ClibCellLibrary::display(
   ostream& s
 ) const
 {
-  Writer writer{s, *this};
-  writer.run();
+  Writer writer{*this};
+  writer.run(s);
 }
 
 // @brief 内容をバイナリダンプする．

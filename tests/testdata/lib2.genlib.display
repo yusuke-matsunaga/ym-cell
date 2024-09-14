@@ -87,7 +87,7 @@ inv4x: Cell#2(Group#3)
     Fall Intrinsic   = 0.27
     Fall Resistance  = 0.85
 
-xor: Cell#3(Group#8)
+xor: Cell#3(Group#16)
   type = Combinational Logic
   area = 2320
   Pin#0[ a ]: Input#0
@@ -143,7 +143,7 @@ xor: Cell#3(Group#8)
     Fall Intrinsic   = 1.14
     Fall Resistance  = 5.22
 
-xnor: Cell#4(Group#9)
+xnor: Cell#4(Group#17)
   type = Combinational Logic
   area = 2320
   Pin#0[ a ]: Input#0
@@ -237,7 +237,7 @@ nand2: Cell#5(Group#5)
     Fall Intrinsic   = 0.37
     Fall Resistance  = 2.57
 
-nand3: Cell#6(Group#11)
+nand3: Cell#6(Group#9)
   type = Combinational Logic
   area = 1856
   Pin#0[ a ]: Input#0
@@ -288,7 +288,7 @@ nand3: Cell#6(Group#11)
     Fall Intrinsic   = 0.35
     Fall Resistance  = 2.49
 
-nand4: Cell#7(Group#17)
+nand4: Cell#7(Group#13)
   type = Combinational Logic
   area = 2320
   Pin#0[ a ]: Input#0
@@ -390,7 +390,7 @@ nor2: Cell#8(Group#7)
     Fall Intrinsic   = 0.7
     Fall Resistance  = 3.66
 
-nor3: Cell#9(Group#13)
+nor3: Cell#9(Group#11)
   type = Combinational Logic
   area = 1856
   Pin#0[ a ]: Input#0
@@ -441,7 +441,7 @@ nor3: Cell#9(Group#13)
     Fall Intrinsic   = 0.84
     Fall Resistance  = 3.44
 
-nor4: Cell#10(Group#19)
+nor4: Cell#10(Group#15)
   type = Combinational Logic
   area = 2320
   Pin#0[ a ]: Input#0
@@ -1703,29 +1703,29 @@ Group#7(Class#2)
   Name = Nor2
   Cell = nor2
 
-Group#8(Class#3)
-  Name = Xor2
-  Cell = xor
-
 Group#9(Class#3)
-  Name = Xnor2
-  Cell = xnor
-
-Group#11(Class#4)
   Name = Nand3
   Cell = nand3
 
-Group#13(Class#4)
+Group#11(Class#3)
   Name = Nor3
   Cell = nor3
 
-Group#17(Class#6)
+Group#13(Class#4)
   Name = Nand4
   Cell = nand4
 
-Group#19(Class#6)
+Group#15(Class#4)
   Name = Nor4
   Cell = nor4
+
+Group#16(Class#5)
+  Name = Xor2
+  Cell = xor
+
+Group#17(Class#5)
+  Name = Xnor2
+  Cell = xnor
 
 Group#24(Class#10)
   Cell = aoi21
@@ -1799,28 +1799,28 @@ Class#2
   Group#7: Map = Input[ 0~ 1~], Output[ 0]
 
 Class#3
-  Name = Xor2
-  Idmap List:
-         Input[ 0 1], Output[ 0]
-
-  Group#8: Map = Input[ 0 1], Output[ 0]
-  Group#9: Map = Input[ 0 1], Output[ 0~]
-
-Class#4
   Name = And3
   Idmap List:
          Input[ 0 1 2], Output[ 0]
 
-  Group#11: Map = Input[ 0 1 2], Output[ 0~]
-  Group#13: Map = Input[ 0~ 1~ 2~], Output[ 0]
+  Group#9: Map = Input[ 0 1 2], Output[ 0~]
+  Group#11: Map = Input[ 0~ 1~ 2~], Output[ 0]
 
-Class#6
+Class#4
   Name = And4
   Idmap List:
          Input[ 0 1 2 3], Output[ 0]
 
-  Group#17: Map = Input[ 0 1 2 3], Output[ 0~]
-  Group#19: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
+  Group#13: Map = Input[ 0 1 2 3], Output[ 0~]
+  Group#15: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
+
+Class#5
+  Name = Xor2
+  Idmap List:
+         Input[ 0 1], Output[ 0]
+
+  Group#16: Map = Input[ 0 1], Output[ 0]
+  Group#17: Map = Input[ 0 1], Output[ 0~]
 
 Class#10
   Idmap List:
@@ -1890,12 +1890,12 @@ Class#17
 Node#0: INPUT#0
 Node#1: INPUT#1
 Node#2: AND
-Node#3: XOR
-Node#4: INPUT#2
+Node#3: INPUT#2
+Node#4: AND
 Node#5: AND
 Node#6: AND
-Node#7: AND
-Node#8: INPUT#3
+Node#7: INPUT#3
+Node#8: AND
 Node#9: AND
 Node#10: AND
 Node#11: AND
@@ -1903,7 +1903,7 @@ Node#12: AND
 Node#13: AND
 Node#14: AND
 Node#15: AND
-Node#16: AND
+Node#16: XOR
 Node#17: AND
 Node#18: AND
 Node#19: AND
@@ -1963,105 +1963,105 @@ Edge#3: 0 -> 1(1)
 Edge#4: 0 -> 2(0)
 Edge#5: 1 -> 2(1)
 Edge#6: 0 -> 3(0)
-Edge#7: 1 -> 3(1)
-Edge#8: 0 -> 4(0)
-Edge#9: 0 -> 4(1)
-Edge#10: 1 -> 5(0)
+Edge#7: 0 -> 3(1)
+Edge#8: 1 -> 4(0)
+Edge#9: 3 -> 4(1)
+Edge#10: 0 -> 5(0)
 Edge#11: 4 -> 5(1)
-Edge#12: 0 -> 6(0)
-Edge#13: 5 -> 6(1)
-Edge#14: 2 -> 7(0)
-Edge#15: 4 -> 7(1)
-Edge#16: 0 -> 8(0)
-Edge#17: 0 -> 8(1)
-Edge#18: 4 -> 9(0)
+Edge#12: 2 -> 6(0)
+Edge#13: 3 -> 6(1)
+Edge#14: 0 -> 7(0)
+Edge#15: 0 -> 7(1)
+Edge#16: 3 -> 8(0)
+Edge#17: 7 -> 8(1)
+Edge#18: 1 -> 9(0)
 Edge#19: 8 -> 9(1)
-Edge#20: 1 -> 10(0)
+Edge#20: 0 -> 10(0)
 Edge#21: 9 -> 10(1)
-Edge#22: 0 -> 11(0)
-Edge#23: 10 -> 11(1)
-Edge#24: 5 -> 12(0)
-Edge#25: 8 -> 12(1)
-Edge#26: 0 -> 13(0)
-Edge#27: 12 -> 13(1)
-Edge#28: 2 -> 14(0)
-Edge#29: 9 -> 14(1)
+Edge#22: 4 -> 11(0)
+Edge#23: 7 -> 11(1)
+Edge#24: 0 -> 12(0)
+Edge#25: 11 -> 12(1)
+Edge#26: 2 -> 13(0)
+Edge#27: 8 -> 13(1)
+Edge#28: 5 -> 14(0)
+Edge#29: 7 -> 14(1)
 Edge#30: 6 -> 15(0)
-Edge#31: 8 -> 15(1)
-Edge#32: 7 -> 16(0)
-Edge#33: 8 -> 16(1)
+Edge#31: 7 -> 15(1)
+Edge#32: 0 -> 16(0)
+Edge#33: 1 -> 16(1)
 Edge#34: 0 -> 17(0) ***
 Edge#35: 1 -> 17(1) ***
 Edge#36: 17 -> 18(0) ***
-Edge#37: 4 -> 18(1)
-Edge#38: 4 -> 19(0)
+Edge#37: 3 -> 18(1)
+Edge#38: 3 -> 19(0)
 Edge#39: 17 -> 19(1) ***
 Edge#40: 1 -> 20(0) ***
-Edge#41: 4 -> 20(1) ***
+Edge#41: 3 -> 20(1) ***
 Edge#42: 0 -> 21(0) ***
 Edge#43: 20 -> 21(1)
 Edge#44: 17 -> 22(0)
-Edge#45: 4 -> 22(1) ***
+Edge#45: 3 -> 22(1) ***
 Edge#46: 21 -> 23(0) ***
-Edge#47: 8 -> 23(1)
-Edge#48: 8 -> 24(0)
+Edge#47: 7 -> 23(1)
+Edge#48: 7 -> 24(0)
 Edge#49: 21 -> 24(1) ***
 Edge#50: 22 -> 25(0) ***
-Edge#51: 8 -> 25(1)
-Edge#52: 8 -> 26(0)
+Edge#51: 7 -> 25(1)
+Edge#52: 7 -> 26(0)
 Edge#53: 22 -> 26(1) ***
 Edge#54: 2 -> 27(0) ***
-Edge#55: 9 -> 27(1) ***
+Edge#55: 8 -> 27(1) ***
 Edge#56: 0 -> 28(0)
 Edge#57: 0 -> 28(1)
-Edge#58: 8 -> 29(0)
+Edge#58: 7 -> 29(0)
 Edge#59: 28 -> 29(1)
-Edge#60: 6 -> 30(0) ***
+Edge#60: 5 -> 30(0) ***
 Edge#61: 29 -> 30(1) ***
 Edge#62: 29 -> 31(0) ***
-Edge#63: 6 -> 31(1) ***
-Edge#64: 7 -> 32(0) ***
+Edge#63: 5 -> 31(1) ***
+Edge#64: 6 -> 32(0) ***
 Edge#65: 29 -> 32(1) ***
 Edge#66: 29 -> 33(0) ***
-Edge#67: 7 -> 33(1) ***
+Edge#67: 6 -> 33(1) ***
 Edge#68: 0 -> 34(0)
 Edge#69: 0 -> 34(1)
 Edge#70: 28 -> 35(0)
 Edge#71: 34 -> 35(1)
-Edge#72: 8 -> 36(0)
+Edge#72: 7 -> 36(0)
 Edge#73: 35 -> 36(1)
 Edge#74: 29 -> 37(0)
 Edge#75: 34 -> 37(1)
-Edge#76: 6 -> 38(0) ***
+Edge#76: 5 -> 38(0) ***
 Edge#77: 36 -> 38(1) ***
-Edge#78: 6 -> 39(0) ***
+Edge#78: 5 -> 39(0) ***
 Edge#79: 37 -> 39(1) ***
 Edge#80: 37 -> 40(0) ***
-Edge#81: 6 -> 40(1) ***
-Edge#82: 7 -> 41(0) ***
+Edge#81: 5 -> 40(1) ***
+Edge#82: 6 -> 41(0) ***
 Edge#83: 36 -> 41(1) ***
 Edge#84: 36 -> 42(0) ***
-Edge#85: 7 -> 42(1) ***
-Edge#86: 7 -> 43(0) ***
+Edge#85: 6 -> 42(1) ***
+Edge#86: 6 -> 43(0) ***
 Edge#87: 37 -> 43(1) ***
 Edge#88: 17 -> 44(0) ***
-Edge#89: 9 -> 44(1)
+Edge#89: 8 -> 44(1)
 Edge#90: 18 -> 45(0)
-Edge#91: 8 -> 45(1)
+Edge#91: 7 -> 45(1)
 Edge#92: 17 -> 46(0) ***
-Edge#93: 8 -> 46(1)
-Edge#94: 4 -> 47(0)
+Edge#93: 7 -> 46(1)
+Edge#94: 3 -> 47(0)
 Edge#95: 46 -> 47(1)
 Edge#96: 19 -> 48(0)
-Edge#97: 8 -> 48(1)
-Edge#98: 8 -> 49(0)
+Edge#97: 7 -> 48(1)
+Edge#98: 7 -> 49(0)
 Edge#99: 17 -> 49(1) ***
-Edge#100: 4 -> 50(0)
+Edge#100: 3 -> 50(0)
 Edge#101: 49 -> 50(1)
-Edge#102: 9 -> 51(0)
+Edge#102: 8 -> 51(0)
 Edge#103: 17 -> 51(1) ***
-Edge#104: 4 -> 52(0) ***
-Edge#105: 8 -> 52(1) ***
+Edge#104: 3 -> 52(0) ***
+Edge#105: 7 -> 52(1) ***
 Edge#106: 52 -> 53(0) ***
 Edge#107: 28 -> 53(1)
 Edge#108: 17 -> 54(0) ***
@@ -2094,37 +2094,37 @@ Edge#134: 55 -> 67(0)
 Edge#135: 64 -> 67(1) ***
 
 Pat#0: Rep#2: (2),  4 5
-Pat#1: Rep#3: (2),  6 7
-Pat#2: Rep#4: (3),  12 13 10 11
-Pat#3: Rep#4: (3),  14 4 5 15
-Pat#4: Rep#6: (4),  22 23 20 21 18 19
-Pat#5: Rep#6: (4),  26 27 24 10 11 25
-Pat#6: Rep#6: (4),  28 4 5 29 18 19
-Pat#7: Rep#6: (4),  30 12 13 10 11 31
-Pat#8: Rep#6: (4),  32 14 4 5 15 33
+Pat#1: Rep#3: (3),  10 11 8 9
+Pat#2: Rep#3: (3),  12 4 5 13
+Pat#3: Rep#4: (4),  20 21 18 19 16 17
+Pat#4: Rep#4: (4),  24 25 22 8 9 23
+Pat#5: Rep#4: (4),  26 4 5 27 16 17
+Pat#6: Rep#4: (4),  28 10 11 8 9 29
+Pat#7: Rep#4: (4),  30 12 4 5 13 31
+Pat#8: Rep#5: (2),  32 33
 Pat#9: Rep#10: (3),  36 34 35 37
 Pat#10: Rep#10: (3),  38 39 34 35
 Pat#11: Rep#11: (4),  46 42 43 40 41 47
 Pat#12: Rep#11: (4),  48 49 42 43 40 41
 Pat#13: Rep#11: (4),  50 44 34 35 45 51
 Pat#14: Rep#11: (4),  52 53 44 34 35 45
-Pat#15: Rep#12: [inv](4),  54 4 5 55 18 19
-Pat#16: Rep#13: [inv](5),  60 12 13 10 11 61 58 59
-Pat#17: Rep#13: [inv](5),  62 58 59 63 12 13 10 11
-Pat#18: Rep#13: [inv](5),  64 14 4 5 15 65 58 59
-Pat#19: Rep#13: [inv](5),  66 58 59 67 14 4 5 15
-Pat#20: Rep#14: [inv](6),  76 12 13 10 11 77 72 73 70 71
-Pat#21: Rep#14: [inv](6),  78 12 13 10 11 79 74 58 59 75
-Pat#22: Rep#14: [inv](6),  80 74 58 59 75 81 12 13 10 11
-Pat#23: Rep#14: [inv](6),  82 14 4 5 15 83 72 73 70 71
-Pat#24: Rep#14: [inv](6),  84 72 73 70 71 85 14 4 5 15
-Pat#25: Rep#14: [inv](6),  86 14 4 5 15 87 74 58 59 75
-Pat#26: Rep#15: (4),  88 34 35 89 18 19
+Pat#15: Rep#12: [inv](4),  54 4 5 55 16 17
+Pat#16: Rep#13: [inv](5),  60 10 11 8 9 61 58 59
+Pat#17: Rep#13: [inv](5),  62 58 59 63 10 11 8 9
+Pat#18: Rep#13: [inv](5),  64 12 4 5 13 65 58 59
+Pat#19: Rep#13: [inv](5),  66 58 59 67 12 4 5 13
+Pat#20: Rep#14: [inv](6),  76 10 11 8 9 77 72 73 70 71
+Pat#21: Rep#14: [inv](6),  78 10 11 8 9 79 74 58 59 75
+Pat#22: Rep#14: [inv](6),  80 74 58 59 75 81 10 11 8 9
+Pat#23: Rep#14: [inv](6),  82 12 4 5 13 83 72 73 70 71
+Pat#24: Rep#14: [inv](6),  84 72 73 70 71 85 12 4 5 13
+Pat#25: Rep#14: [inv](6),  86 12 4 5 13 87 74 58 59 75
+Pat#26: Rep#15: (4),  88 34 35 89 16 17
 Pat#27: Rep#15: (4),  90 36 34 35 37 91
 Pat#28: Rep#15: (4),  94 95 92 34 35 93
 Pat#29: Rep#15: (4),  96 38 39 34 35 97
 Pat#30: Rep#15: (4),  100 101 98 99 34 35
-Pat#31: Rep#15: (4),  102 18 19 103 34 35
+Pat#31: Rep#15: (4),  102 16 17 103 34 35
 Pat#32: Rep#16: (5),  108 34 35 109 106 104 105 107
 Pat#33: Rep#16: (5),  112 110 34 35 111 104 105 113
 Pat#34: Rep#16: (5),  116 34 35 117 114 115 104 105

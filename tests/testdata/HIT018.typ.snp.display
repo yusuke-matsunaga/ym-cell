@@ -1192,7 +1192,7 @@ HIT18AND2P080S: Cell#9(Group#4)
                 (1.147, 1.148, 1.153)
                )
 
-HIT18AND3P005: Cell#10(Group#10)
+HIT18AND3P005: Cell#10(Group#8)
   type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
@@ -1363,7 +1363,7 @@ HIT18AND3P005: Cell#10(Group#10)
                 (1.286, 1.287, 1.292)
                )
 
-HIT18AND3P010: Cell#11(Group#10)
+HIT18AND3P010: Cell#11(Group#8)
   type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
@@ -1534,7 +1534,7 @@ HIT18AND3P010: Cell#11(Group#10)
                 (1.219, 1.221, 1.226)
                )
 
-HIT18AND3P015: Cell#12(Group#10)
+HIT18AND3P015: Cell#12(Group#8)
   type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
@@ -1705,7 +1705,7 @@ HIT18AND3P015: Cell#12(Group#10)
                 (1.589, 1.589, 1.593)
                )
 
-HIT18AND3P020: Cell#13(Group#10)
+HIT18AND3P020: Cell#13(Group#8)
   type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
@@ -1876,7 +1876,7 @@ HIT18AND3P020: Cell#13(Group#10)
                 (1.18, 1.182, 1.186)
                )
 
-HIT18AND3P030: Cell#14(Group#10)
+HIT18AND3P030: Cell#14(Group#8)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -2047,7 +2047,7 @@ HIT18AND3P030: Cell#14(Group#10)
                 (1.552, 1.553, 1.557)
                )
 
-HIT18AND3P040: Cell#15(Group#10)
+HIT18AND3P040: Cell#15(Group#8)
   type = Combinational Logic
   area = 69.12
   Pin#0[ A ]: Input#0
@@ -2218,7 +2218,7 @@ HIT18AND3P040: Cell#15(Group#10)
                 (1.168, 1.169, 1.175)
                )
 
-HIT18AND3P040S: Cell#16(Group#10)
+HIT18AND3P040S: Cell#16(Group#8)
   type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
@@ -2389,7 +2389,7 @@ HIT18AND3P040S: Cell#16(Group#10)
                 (1.156, 1.158, 1.163)
                )
 
-HIT18AND3P060: Cell#17(Group#10)
+HIT18AND3P060: Cell#17(Group#8)
   type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
@@ -2560,7 +2560,7 @@ HIT18AND3P060: Cell#17(Group#10)
                 (1.529, 1.529, 1.533)
                )
 
-HIT18AND3P080: Cell#18(Group#10)
+HIT18AND3P080: Cell#18(Group#8)
   type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
@@ -2731,7 +2731,7 @@ HIT18AND3P080: Cell#18(Group#10)
                 (1.153, 1.154, 1.161)
                )
 
-HIT18AND3P080S: Cell#19(Group#10)
+HIT18AND3P080S: Cell#19(Group#8)
   type = Combinational Logic
   area = 145.92
   Pin#0[ A ]: Input#0
@@ -2902,7 +2902,7 @@ HIT18AND3P080S: Cell#19(Group#10)
                 (1.15, 1.151, 1.156)
                )
 
-HIT18AND4P005: Cell#20(Group#16)
+HIT18AND4P005: Cell#20(Group#12)
   type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
@@ -3126,7 +3126,7 @@ HIT18AND4P005: Cell#20(Group#16)
                 (1.289, 1.29, 1.296)
                )
 
-HIT18AND4P010: Cell#21(Group#16)
+HIT18AND4P010: Cell#21(Group#12)
   type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
@@ -3350,7 +3350,7 @@ HIT18AND4P010: Cell#21(Group#16)
                 (1.221, 1.222, 1.227)
                )
 
-HIT18AND4P015: Cell#22(Group#16)
+HIT18AND4P015: Cell#22(Group#12)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -3574,7 +3574,7 @@ HIT18AND4P015: Cell#22(Group#16)
                 (1.589, 1.59, 1.594)
                )
 
-HIT18AND4P020: Cell#23(Group#16)
+HIT18AND4P020: Cell#23(Group#12)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -3798,7 +3798,7 @@ HIT18AND4P020: Cell#23(Group#16)
                 (1.182, 1.183, 1.189)
                )
 
-HIT18AND4P030: Cell#24(Group#16)
+HIT18AND4P030: Cell#24(Group#12)
   type = Combinational Logic
   area = 69.12
   Pin#0[ A ]: Input#0
@@ -4022,7 +4022,7 @@ HIT18AND4P030: Cell#24(Group#16)
                 (1.554, 1.554, 1.557)
                )
 
-HIT18AND4P040: Cell#25(Group#16)
+HIT18AND4P040: Cell#25(Group#12)
   type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
@@ -4246,7 +4246,7 @@ HIT18AND4P040: Cell#25(Group#16)
                 (1.169, 1.17, 1.176)
                )
 
-HIT18AND4P040S: Cell#26(Group#16)
+HIT18AND4P040S: Cell#26(Group#12)
   type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
@@ -4470,7 +4470,7 @@ HIT18AND4P040S: Cell#26(Group#16)
                 (1.161, 1.162, 1.167)
                )
 
-HIT18AND4P060: Cell#27(Group#16)
+HIT18AND4P060: Cell#27(Group#12)
   type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
@@ -4694,7 +4694,7 @@ HIT18AND4P060: Cell#27(Group#16)
                 (1.534, 1.535, 1.539)
                )
 
-HIT18AND4P080: Cell#28(Group#16)
+HIT18AND4P080: Cell#28(Group#12)
   type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
@@ -27694,7 +27694,7 @@ HIT18NAND2P080S: Cell#158(Group#5)
                 (2.282, 2.282, 2.32)
                )
 
-HIT18NAND3P005: Cell#159(Group#11)
+HIT18NAND3P005: Cell#159(Group#9)
   type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
@@ -27865,7 +27865,7 @@ HIT18NAND3P005: Cell#159(Group#11)
                 (3.147, 3.148, 3.164)
                )
 
-HIT18NAND3P010: Cell#160(Group#11)
+HIT18NAND3P010: Cell#160(Group#9)
   type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
@@ -28036,7 +28036,7 @@ HIT18NAND3P010: Cell#160(Group#11)
                 (2.98, 2.981, 3)
                )
 
-HIT18NAND3P015: Cell#161(Group#11)
+HIT18NAND3P015: Cell#161(Group#9)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -28207,7 +28207,7 @@ HIT18NAND3P015: Cell#161(Group#11)
                 (4.445, 4.442, 4.446)
                )
 
-HIT18NAND3P020: Cell#162(Group#11)
+HIT18NAND3P020: Cell#162(Group#9)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -28378,7 +28378,7 @@ HIT18NAND3P020: Cell#162(Group#11)
                 (4.456, 4.454, 4.459)
                )
 
-HIT18NAND3P030: Cell#163(Group#11)
+HIT18NAND3P030: Cell#163(Group#9)
   type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
@@ -28549,7 +28549,7 @@ HIT18NAND3P030: Cell#163(Group#11)
                 (1.552, 1.552, 1.552)
                )
 
-HIT18NAND3P030S: Cell#164(Group#11)
+HIT18NAND3P030S: Cell#164(Group#9)
   type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
@@ -28720,7 +28720,7 @@ HIT18NAND3P030S: Cell#164(Group#11)
                 (5.077, 5.076, 5.075)
                )
 
-HIT18NAND3P040: Cell#165(Group#11)
+HIT18NAND3P040: Cell#165(Group#9)
   type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
@@ -28891,7 +28891,7 @@ HIT18NAND3P040: Cell#165(Group#11)
                 (1.155, 1.156, 1.156)
                )
 
-HIT18NAND3P040S: Cell#166(Group#11)
+HIT18NAND3P040S: Cell#166(Group#9)
   type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
@@ -29062,7 +29062,7 @@ HIT18NAND3P040S: Cell#166(Group#11)
                 (3.57, 3.568, 3.577)
                )
 
-HIT18NAND3P060: Cell#167(Group#11)
+HIT18NAND3P060: Cell#167(Group#9)
   type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
@@ -29233,7 +29233,7 @@ HIT18NAND3P060: Cell#167(Group#11)
                 (1.528, 1.527, 1.527)
                )
 
-HIT18NAND3P060S: Cell#168(Group#11)
+HIT18NAND3P060S: Cell#168(Group#9)
   type = Combinational Logic
   area = 153.6
   Pin#0[ A ]: Input#0
@@ -29404,7 +29404,7 @@ HIT18NAND3P060S: Cell#168(Group#11)
                 (5.076, 5.076, 5.075)
                )
 
-HIT18NAND3P080: Cell#169(Group#11)
+HIT18NAND3P080: Cell#169(Group#9)
   type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
@@ -29575,7 +29575,7 @@ HIT18NAND3P080: Cell#169(Group#11)
                 (1.146, 1.146, 1.146)
                )
 
-HIT18NAND3P080S: Cell#170(Group#11)
+HIT18NAND3P080S: Cell#170(Group#9)
   type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
@@ -29746,7 +29746,7 @@ HIT18NAND3P080S: Cell#170(Group#11)
                 (3.571, 3.569, 3.578)
                )
 
-HIT18NAND4P005: Cell#171(Group#17)
+HIT18NAND4P005: Cell#171(Group#13)
   type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
@@ -29970,7 +29970,7 @@ HIT18NAND4P005: Cell#171(Group#17)
                 (4.094, 4.095, 4.1)
                )
 
-HIT18NAND4P010: Cell#172(Group#17)
+HIT18NAND4P010: Cell#172(Group#13)
   type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
@@ -30194,7 +30194,7 @@ HIT18NAND4P010: Cell#172(Group#17)
                 (3.878, 3.877, 3.885)
                )
 
-HIT18NAND4P015: Cell#173(Group#17)
+HIT18NAND4P015: Cell#173(Group#13)
   type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
@@ -30418,7 +30418,7 @@ HIT18NAND4P015: Cell#173(Group#17)
                 (5.649, 5.648, 5.652)
                )
 
-HIT18NAND4P020: Cell#174(Group#17)
+HIT18NAND4P020: Cell#174(Group#13)
   type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
@@ -30642,7 +30642,7 @@ HIT18NAND4P020: Cell#174(Group#17)
                 (5.319, 5.32, 5.321)
                )
 
-HIT18NAND4P030: Cell#175(Group#17)
+HIT18NAND4P030: Cell#175(Group#13)
   type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
@@ -30866,7 +30866,7 @@ HIT18NAND4P030: Cell#175(Group#17)
                 (1.551, 1.551, 1.551)
                )
 
-HIT18NAND4P040: Cell#176(Group#17)
+HIT18NAND4P040: Cell#176(Group#13)
   type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
@@ -31090,7 +31090,7 @@ HIT18NAND4P040: Cell#176(Group#17)
                 (1.156, 1.156, 1.156)
                )
 
-HIT18NAND4P040S: Cell#177(Group#17)
+HIT18NAND4P040S: Cell#177(Group#13)
   type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
@@ -31314,7 +31314,7 @@ HIT18NAND4P040S: Cell#177(Group#17)
                 (5.54, 5.541, 5.54)
                )
 
-HIT18NAND4P060: Cell#178(Group#17)
+HIT18NAND4P060: Cell#178(Group#13)
   type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
@@ -31538,7 +31538,7 @@ HIT18NAND4P060: Cell#178(Group#17)
                 (1.527, 1.527, 1.527)
                )
 
-HIT18NAND4P060S: Cell#179(Group#17)
+HIT18NAND4P060S: Cell#179(Group#13)
   type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
@@ -31762,7 +31762,7 @@ HIT18NAND4P060S: Cell#179(Group#17)
                 (7.457, 7.458, 7.452)
                )
 
-HIT18NAND4P080: Cell#180(Group#17)
+HIT18NAND4P080: Cell#180(Group#13)
   type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
@@ -31986,7 +31986,7 @@ HIT18NAND4P080: Cell#180(Group#17)
                 (1.147, 1.146, 1.147)
                )
 
-HIT18NAND4P080S: Cell#181(Group#17)
+HIT18NAND4P080S: Cell#181(Group#13)
   type = Combinational Logic
   area = 261.12
   Pin#0[ A ]: Input#0
@@ -33626,7 +33626,7 @@ HIT18NOR2P080S: Cell#193(Group#7)
                 (1.149, 1.163, 1.353)
                )
 
-HIT18NOR3P005: Cell#194(Group#13)
+HIT18NOR3P005: Cell#194(Group#11)
   type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
@@ -33797,7 +33797,7 @@ HIT18NOR3P005: Cell#194(Group#13)
                 (1.303, 1.31, 1.458)
                )
 
-HIT18NOR3P010: Cell#195(Group#13)
+HIT18NOR3P010: Cell#195(Group#11)
   type = Combinational Logic
   area = 38.4
   Pin#0[ A ]: Input#0
@@ -33968,7 +33968,7 @@ HIT18NOR3P010: Cell#195(Group#13)
                 (1.239, 1.248, 1.412)
                )
 
-HIT18NOR3P015: Cell#196(Group#13)
+HIT18NOR3P015: Cell#196(Group#11)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -34139,7 +34139,7 @@ HIT18NOR3P015: Cell#196(Group#13)
                 (1.608, 1.609, 1.72)
                )
 
-HIT18NOR3P020: Cell#197(Group#13)
+HIT18NOR3P020: Cell#197(Group#11)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -34310,7 +34310,7 @@ HIT18NOR3P020: Cell#197(Group#13)
                 (1.193, 1.204, 1.384)
                )
 
-HIT18NOR3P030: Cell#198(Group#13)
+HIT18NOR3P030: Cell#198(Group#11)
   type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
@@ -34481,7 +34481,7 @@ HIT18NOR3P030: Cell#198(Group#13)
                 (1.551, 1.551, 1.551)
                )
 
-HIT18NOR3P030S: Cell#199(Group#13)
+HIT18NOR3P030S: Cell#199(Group#11)
   type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
@@ -34652,7 +34652,7 @@ HIT18NOR3P030S: Cell#199(Group#13)
                 (1.978, 1.979, 2.046)
                )
 
-HIT18NOR3P040: Cell#200(Group#13)
+HIT18NOR3P040: Cell#200(Group#11)
   type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
@@ -34823,7 +34823,7 @@ HIT18NOR3P040: Cell#200(Group#13)
                 (1.155, 1.155, 1.156)
                )
 
-HIT18NOR3P040S: Cell#201(Group#13)
+HIT18NOR3P040S: Cell#201(Group#11)
   type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
@@ -34994,7 +34994,7 @@ HIT18NOR3P040S: Cell#201(Group#13)
                 (1.391, 1.395, 1.542)
                )
 
-HIT18NOR3P060: Cell#202(Group#13)
+HIT18NOR3P060: Cell#202(Group#11)
   type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
@@ -35165,7 +35165,7 @@ HIT18NOR3P060: Cell#202(Group#13)
                 (1.527, 1.527, 1.527)
                )
 
-HIT18NOR3P060S: Cell#203(Group#13)
+HIT18NOR3P060S: Cell#203(Group#11)
   type = Combinational Logic
   area = 153.6
   Pin#0[ A ]: Input#0
@@ -35336,7 +35336,7 @@ HIT18NOR3P060S: Cell#203(Group#13)
                 (1.718, 1.718, 1.82)
                )
 
-HIT18NOR3P080: Cell#204(Group#13)
+HIT18NOR3P080: Cell#204(Group#11)
   type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
@@ -35507,7 +35507,7 @@ HIT18NOR3P080: Cell#204(Group#13)
                 (1.146, 1.146, 1.146)
                )
 
-HIT18NOR3P080S: Cell#205(Group#13)
+HIT18NOR3P080S: Cell#205(Group#11)
   type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
@@ -35678,7 +35678,7 @@ HIT18NOR3P080S: Cell#205(Group#13)
                 (1.373, 1.379, 1.53)
                )
 
-HIT18NOR4P005: Cell#206(Group#19)
+HIT18NOR4P005: Cell#206(Group#15)
   type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
@@ -35902,7 +35902,7 @@ HIT18NOR4P005: Cell#206(Group#19)
                 (1.318, 1.322, 1.469)
                )
 
-HIT18NOR4P010: Cell#207(Group#19)
+HIT18NOR4P010: Cell#207(Group#15)
   type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
@@ -36126,7 +36126,7 @@ HIT18NOR4P010: Cell#207(Group#19)
                 (1.255, 1.261, 1.424)
                )
 
-HIT18NOR4P015: Cell#208(Group#19)
+HIT18NOR4P015: Cell#208(Group#15)
   type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
@@ -36350,7 +36350,7 @@ HIT18NOR4P015: Cell#208(Group#19)
                 (1.764, 1.764, 1.853)
                )
 
-HIT18NOR4P020: Cell#209(Group#19)
+HIT18NOR4P020: Cell#209(Group#15)
   type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
@@ -36574,7 +36574,7 @@ HIT18NOR4P020: Cell#209(Group#19)
                 (1.765, 1.766, 1.854)
                )
 
-HIT18NOR4P030: Cell#210(Group#19)
+HIT18NOR4P030: Cell#210(Group#15)
   type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
@@ -36798,7 +36798,7 @@ HIT18NOR4P030: Cell#210(Group#19)
                 (1.551, 1.55, 1.551)
                )
 
-HIT18NOR4P040: Cell#211(Group#19)
+HIT18NOR4P040: Cell#211(Group#15)
   type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
@@ -37022,7 +37022,7 @@ HIT18NOR4P040: Cell#211(Group#19)
                 (1.156, 1.155, 1.155)
                )
 
-HIT18NOR4P040S: Cell#212(Group#19)
+HIT18NOR4P040S: Cell#212(Group#15)
   type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
@@ -37246,7 +37246,7 @@ HIT18NOR4P040S: Cell#212(Group#19)
                 (1.719, 1.719, 1.817)
                )
 
-HIT18NOR4P060: Cell#213(Group#19)
+HIT18NOR4P060: Cell#213(Group#15)
   type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
@@ -37470,7 +37470,7 @@ HIT18NOR4P060: Cell#213(Group#19)
                 (1.527, 1.527, 1.527)
                )
 
-HIT18NOR4P060S: Cell#214(Group#19)
+HIT18NOR4P060S: Cell#214(Group#15)
   type = Combinational Logic
   area = 199.68
   Pin#0[ A ]: Input#0
@@ -37694,7 +37694,7 @@ HIT18NOR4P060S: Cell#214(Group#19)
                 (2.251, 2.251, 2.296)
                )
 
-HIT18NOR4P080: Cell#215(Group#19)
+HIT18NOR4P080: Cell#215(Group#15)
   type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
@@ -37918,7 +37918,7 @@ HIT18NOR4P080: Cell#215(Group#19)
                 (1.146, 1.146, 1.145)
                )
 
-HIT18NOR4P080S: Cell#216(Group#19)
+HIT18NOR4P080S: Cell#216(Group#15)
   type = Combinational Logic
   area = 261.12
   Pin#0[ A ]: Input#0
@@ -46750,7 +46750,7 @@ HIT18OR2P080S: Cell#262(Group#6)
                 (1.17, 1.172, 1.178)
                )
 
-HIT18OR3P005: Cell#263(Group#12)
+HIT18OR3P005: Cell#263(Group#10)
   type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
@@ -46921,7 +46921,7 @@ HIT18OR3P005: Cell#263(Group#12)
                 (1.319, 1.321, 1.332)
                )
 
-HIT18OR3P010: Cell#264(Group#12)
+HIT18OR3P010: Cell#264(Group#10)
   type = Combinational Logic
   area = 46.08
   Pin#0[ A ]: Input#0
@@ -47092,7 +47092,7 @@ HIT18OR3P010: Cell#264(Group#12)
                 (1.245, 1.245, 1.255)
                )
 
-HIT18OR3P015: Cell#265(Group#12)
+HIT18OR3P015: Cell#265(Group#10)
   type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
@@ -47263,7 +47263,7 @@ HIT18OR3P015: Cell#265(Group#12)
                 (1.607, 1.608, 1.615)
                )
 
-HIT18OR3P020: Cell#266(Group#12)
+HIT18OR3P020: Cell#266(Group#10)
   type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
@@ -47434,7 +47434,7 @@ HIT18OR3P020: Cell#266(Group#12)
                 (1.209, 1.21, 1.219)
                )
 
-HIT18OR3P030: Cell#267(Group#12)
+HIT18OR3P030: Cell#267(Group#10)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -47605,7 +47605,7 @@ HIT18OR3P030: Cell#267(Group#12)
                 (1.591, 1.592, 1.598)
                )
 
-HIT18OR3P040: Cell#268(Group#12)
+HIT18OR3P040: Cell#268(Group#10)
   type = Combinational Logic
   area = 69.12
   Pin#0[ A ]: Input#0
@@ -47776,7 +47776,7 @@ HIT18OR3P040: Cell#268(Group#12)
                 (1.235, 1.236, 1.246)
                )
 
-HIT18OR3P040S: Cell#269(Group#12)
+HIT18OR3P040S: Cell#269(Group#10)
   type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
@@ -47947,7 +47947,7 @@ HIT18OR3P040S: Cell#269(Group#12)
                 (1.205, 1.206, 1.215)
                )
 
-HIT18OR3P060: Cell#270(Group#12)
+HIT18OR3P060: Cell#270(Group#10)
   type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
@@ -48118,7 +48118,7 @@ HIT18OR3P060: Cell#270(Group#12)
                 (1.595, 1.596, 1.601)
                )
 
-HIT18OR3P080: Cell#271(Group#12)
+HIT18OR3P080: Cell#271(Group#10)
   type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
@@ -48289,7 +48289,7 @@ HIT18OR3P080: Cell#271(Group#12)
                 (1.269, 1.27, 1.278)
                )
 
-HIT18OR3P080S: Cell#272(Group#12)
+HIT18OR3P080S: Cell#272(Group#10)
   type = Combinational Logic
   area = 145.92
   Pin#0[ A ]: Input#0
@@ -48460,7 +48460,7 @@ HIT18OR3P080S: Cell#272(Group#12)
                 (1.205, 1.206, 1.216)
                )
 
-HIT18OR4P005: Cell#273(Group#18)
+HIT18OR4P005: Cell#273(Group#14)
   type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
@@ -48684,7 +48684,7 @@ HIT18OR4P005: Cell#273(Group#18)
                 (1.363, 1.364, 1.376)
                )
 
-HIT18OR4P010: Cell#274(Group#18)
+HIT18OR4P010: Cell#274(Group#14)
   type = Combinational Logic
   area = 53.76
   Pin#0[ A ]: Input#0
@@ -48908,7 +48908,7 @@ HIT18OR4P010: Cell#274(Group#18)
                 (1.277, 1.279, 1.29)
                )
 
-HIT18OR4P015: Cell#275(Group#18)
+HIT18OR4P015: Cell#275(Group#14)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -49132,7 +49132,7 @@ HIT18OR4P015: Cell#275(Group#18)
                 (1.631, 1.632, 1.639)
                )
 
-HIT18OR4P020: Cell#276(Group#18)
+HIT18OR4P020: Cell#276(Group#14)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -49356,7 +49356,7 @@ HIT18OR4P020: Cell#276(Group#18)
                 (1.242, 1.243, 1.253)
                )
 
-HIT18OR4P030: Cell#277(Group#18)
+HIT18OR4P030: Cell#277(Group#14)
   type = Combinational Logic
   area = 69.12
   Pin#0[ A ]: Input#0
@@ -49580,7 +49580,7 @@ HIT18OR4P030: Cell#277(Group#18)
                 (1.631, 1.632, 1.639)
                )
 
-HIT18OR4P040: Cell#278(Group#18)
+HIT18OR4P040: Cell#278(Group#14)
   type = Combinational Logic
   area = 76.8
   Pin#0[ A ]: Input#0
@@ -49804,7 +49804,7 @@ HIT18OR4P040: Cell#278(Group#18)
                 (1.298, 1.299, 1.308)
                )
 
-HIT18OR4P040S: Cell#279(Group#18)
+HIT18OR4P040S: Cell#279(Group#14)
   type = Combinational Logic
   area = 107.52
   Pin#0[ A ]: Input#0
@@ -50028,7 +50028,7 @@ HIT18OR4P040S: Cell#279(Group#18)
                 (1.279, 1.28, 1.289)
                )
 
-HIT18OR4P060: Cell#280(Group#18)
+HIT18OR4P060: Cell#280(Group#14)
   type = Combinational Logic
   area = 122.88
   Pin#0[ A ]: Input#0
@@ -50252,7 +50252,7 @@ HIT18OR4P060: Cell#280(Group#18)
                 (1.671, 1.671, 1.678)
                )
 
-HIT18OR4P080: Cell#281(Group#18)
+HIT18OR4P080: Cell#281(Group#14)
   type = Combinational Logic
   area = 138.24
   Pin#0[ A ]: Input#0
@@ -51568,7 +51568,7 @@ HIT18TINVP080: Cell#293(Group#39)
       Index_1    = (0.04, 0.92, 2)
       Values = (0, 0, 0)
 
-HIT18XNOR2P005: Cell#294(Group#9)
+HIT18XNOR2P005: Cell#294(Group#17)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -51784,7 +51784,7 @@ HIT18XNOR2P005: Cell#294(Group#9)
                 (2.2285, 2.227, 2.2485)
                )
 
-HIT18XNOR2P010: Cell#295(Group#9)
+HIT18XNOR2P010: Cell#295(Group#17)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -52000,7 +52000,7 @@ HIT18XNOR2P010: Cell#295(Group#9)
                 (2.8965, 2.896, 2.909)
                )
 
-HIT18XNOR2P015: Cell#296(Group#9)
+HIT18XNOR2P015: Cell#296(Group#17)
   type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
@@ -52216,7 +52216,7 @@ HIT18XNOR2P015: Cell#296(Group#9)
                 (1.5975, 1.598, 1.5985)
                )
 
-HIT18XNOR2P020: Cell#297(Group#9)
+HIT18XNOR2P020: Cell#297(Group#17)
   type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
@@ -52432,7 +52432,7 @@ HIT18XNOR2P020: Cell#297(Group#9)
                 (1.196, 1.196, 1.1985)
                )
 
-HIT18XNOR2P030: Cell#298(Group#9)
+HIT18XNOR2P030: Cell#298(Group#17)
   type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
@@ -52648,7 +52648,7 @@ HIT18XNOR2P030: Cell#298(Group#9)
                 (1.575, 1.5755, 1.577)
                )
 
-HIT18XNOR2P040: Cell#299(Group#9)
+HIT18XNOR2P040: Cell#299(Group#17)
   type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
@@ -52864,7 +52864,7 @@ HIT18XNOR2P040: Cell#299(Group#9)
                 (1.2075, 1.2075, 1.2115)
                )
 
-HIT18XNOR2P060: Cell#300(Group#9)
+HIT18XNOR2P060: Cell#300(Group#17)
   type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
@@ -53080,7 +53080,7 @@ HIT18XNOR2P060: Cell#300(Group#9)
                 (1.527, 1.527, 1.5265)
                )
 
-HIT18XNOR2P080: Cell#301(Group#9)
+HIT18XNOR2P080: Cell#301(Group#17)
   type = Combinational Logic
   area = 153.6
   Pin#0[ A ]: Input#0
@@ -53296,7 +53296,7 @@ HIT18XNOR2P080: Cell#301(Group#9)
                 (1.1455, 1.146, 1.146)
                )
 
-HIT18XOR2P005: Cell#302(Group#8)
+HIT18XOR2P005: Cell#302(Group#16)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -53512,7 +53512,7 @@ HIT18XOR2P005: Cell#302(Group#8)
                 (1.768, 1.7685, 1.7935)
                )
 
-HIT18XOR2P010: Cell#303(Group#8)
+HIT18XOR2P010: Cell#303(Group#16)
   type = Combinational Logic
   area = 61.44
   Pin#0[ A ]: Input#0
@@ -53728,7 +53728,7 @@ HIT18XOR2P010: Cell#303(Group#8)
                 (2.488, 2.4895, 2.4975)
                )
 
-HIT18XOR2P015: Cell#304(Group#8)
+HIT18XOR2P015: Cell#304(Group#16)
   type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
@@ -53944,7 +53944,7 @@ HIT18XOR2P015: Cell#304(Group#8)
                 (1.5945, 1.595, 1.5965)
                )
 
-HIT18XOR2P020: Cell#305(Group#8)
+HIT18XOR2P020: Cell#305(Group#16)
   type = Combinational Logic
   area = 84.48
   Pin#0[ A ]: Input#0
@@ -54160,7 +54160,7 @@ HIT18XOR2P020: Cell#305(Group#8)
                 (1.1905, 1.1915, 1.1945)
                )
 
-HIT18XOR2P030: Cell#306(Group#8)
+HIT18XOR2P030: Cell#306(Group#16)
   type = Combinational Logic
   area = 92.16
   Pin#0[ A ]: Input#0
@@ -54376,7 +54376,7 @@ HIT18XOR2P030: Cell#306(Group#8)
                 (1.5675, 1.568, 1.57)
                )
 
-HIT18XOR2P040: Cell#307(Group#8)
+HIT18XOR2P040: Cell#307(Group#16)
   type = Combinational Logic
   area = 99.84
   Pin#0[ A ]: Input#0
@@ -54592,7 +54592,7 @@ HIT18XOR2P040: Cell#307(Group#8)
                 (1.194, 1.195, 1.199)
                )
 
-HIT18XOR2P060: Cell#308(Group#8)
+HIT18XOR2P060: Cell#308(Group#16)
   type = Combinational Logic
   area = 130.56
   Pin#0[ A ]: Input#0
@@ -54808,7 +54808,7 @@ HIT18XOR2P060: Cell#308(Group#8)
                 (1.5275, 1.5275, 1.528)
                )
 
-HIT18XOR2P080: Cell#309(Group#8)
+HIT18XOR2P080: Cell#309(Group#16)
   type = Combinational Logic
   area = 153.6
   Pin#0[ A ]: Input#0
@@ -55049,44 +55049,44 @@ Group#7(Class#2)
   Cell = HIT18NOR2P005 HIT18NOR2P010 HIT18NOR2P015 HIT18NOR2P020 HIT18NOR2P030 HIT18NOR2P030S HIT18NOR2P040 HIT18NOR2P040S HIT18NOR2P060 HIT18NOR2P060S HIT18NOR2P080 HIT18NOR2P080S
 
 Group#8(Class#3)
-  Name = Xor2
-  Cell = HIT18XOR2P005 HIT18XOR2P010 HIT18XOR2P015 HIT18XOR2P020 HIT18XOR2P030 HIT18XOR2P040 HIT18XOR2P060 HIT18XOR2P080
-
-Group#9(Class#3)
-  Name = Xnor2
-  Cell = HIT18XNOR2P005 HIT18XNOR2P010 HIT18XNOR2P015 HIT18XNOR2P020 HIT18XNOR2P030 HIT18XNOR2P040 HIT18XNOR2P060 HIT18XNOR2P080
-
-Group#10(Class#4)
   Name = And3
   Cell = HIT18AND3P005 HIT18AND3P010 HIT18AND3P015 HIT18AND3P020 HIT18AND3P030 HIT18AND3P040 HIT18AND3P040S HIT18AND3P060 HIT18AND3P080 HIT18AND3P080S
 
-Group#11(Class#4)
+Group#9(Class#3)
   Name = Nand3
   Cell = HIT18NAND3P005 HIT18NAND3P010 HIT18NAND3P015 HIT18NAND3P020 HIT18NAND3P030 HIT18NAND3P030S HIT18NAND3P040 HIT18NAND3P040S HIT18NAND3P060 HIT18NAND3P060S HIT18NAND3P080 HIT18NAND3P080S
 
-Group#12(Class#4)
+Group#10(Class#3)
   Name = Or3
   Cell = HIT18OR3P005 HIT18OR3P010 HIT18OR3P015 HIT18OR3P020 HIT18OR3P030 HIT18OR3P040 HIT18OR3P040S HIT18OR3P060 HIT18OR3P080 HIT18OR3P080S
 
-Group#13(Class#4)
+Group#11(Class#3)
   Name = Nor3
   Cell = HIT18NOR3P005 HIT18NOR3P010 HIT18NOR3P015 HIT18NOR3P020 HIT18NOR3P030 HIT18NOR3P030S HIT18NOR3P040 HIT18NOR3P040S HIT18NOR3P060 HIT18NOR3P060S HIT18NOR3P080 HIT18NOR3P080S
 
-Group#16(Class#6)
+Group#12(Class#4)
   Name = And4
   Cell = HIT18AND4P005 HIT18AND4P010 HIT18AND4P015 HIT18AND4P020 HIT18AND4P030 HIT18AND4P040 HIT18AND4P040S HIT18AND4P060 HIT18AND4P080
 
-Group#17(Class#6)
+Group#13(Class#4)
   Name = Nand4
   Cell = HIT18NAND4P005 HIT18NAND4P010 HIT18NAND4P015 HIT18NAND4P020 HIT18NAND4P030 HIT18NAND4P040 HIT18NAND4P040S HIT18NAND4P060 HIT18NAND4P060S HIT18NAND4P080 HIT18NAND4P080S
 
-Group#18(Class#6)
+Group#14(Class#4)
   Name = Or4
   Cell = HIT18OR4P005 HIT18OR4P010 HIT18OR4P015 HIT18OR4P020 HIT18OR4P030 HIT18OR4P040 HIT18OR4P040S HIT18OR4P060 HIT18OR4P080
 
-Group#19(Class#6)
+Group#15(Class#4)
   Name = Nor4
   Cell = HIT18NOR4P005 HIT18NOR4P010 HIT18NOR4P015 HIT18NOR4P020 HIT18NOR4P030 HIT18NOR4P040 HIT18NOR4P040S HIT18NOR4P060 HIT18NOR4P060S HIT18NOR4P080 HIT18NOR4P080S
+
+Group#16(Class#5)
+  Name = Xor2
+  Cell = HIT18XOR2P005 HIT18XOR2P010 HIT18XOR2P015 HIT18XOR2P020 HIT18XOR2P030 HIT18XOR2P040 HIT18XOR2P060 HIT18XOR2P080
+
+Group#17(Class#5)
+  Name = Xnor2
+  Cell = HIT18XNOR2P005 HIT18XNOR2P010 HIT18XNOR2P015 HIT18XNOR2P020 HIT18XNOR2P030 HIT18XNOR2P040 HIT18XNOR2P060 HIT18XNOR2P080
 
 Group#22(Class#8)
   Name = Mux2
@@ -55159,32 +55159,32 @@ Class#2
   Group#7: Map = Input[ 0~ 1~], Output[ 0]
 
 Class#3
-  Name = Xor2
-  Idmap List:
-         Input[ 0 1], Output[ 0]
-
-  Group#8: Map = Input[ 0 1], Output[ 0]
-  Group#9: Map = Input[ 0 1], Output[ 0~]
-
-Class#4
   Name = And3
   Idmap List:
          Input[ 0 1 2], Output[ 0]
 
-  Group#10: Map = Input[ 0 1 2], Output[ 0]
-  Group#11: Map = Input[ 0 1 2], Output[ 0~]
-  Group#12: Map = Input[ 0~ 1~ 2~], Output[ 0~]
-  Group#13: Map = Input[ 0~ 1~ 2~], Output[ 0]
+  Group#8: Map = Input[ 0 1 2], Output[ 0]
+  Group#9: Map = Input[ 0 1 2], Output[ 0~]
+  Group#10: Map = Input[ 0~ 1~ 2~], Output[ 0~]
+  Group#11: Map = Input[ 0~ 1~ 2~], Output[ 0]
 
-Class#6
+Class#4
   Name = And4
   Idmap List:
          Input[ 0 1 2 3], Output[ 0]
 
-  Group#16: Map = Input[ 0 1 2 3], Output[ 0]
-  Group#17: Map = Input[ 0 1 2 3], Output[ 0~]
-  Group#18: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0~]
-  Group#19: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
+  Group#12: Map = Input[ 0 1 2 3], Output[ 0]
+  Group#13: Map = Input[ 0 1 2 3], Output[ 0~]
+  Group#14: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0~]
+  Group#15: Map = Input[ 0~ 1~ 2~ 3~], Output[ 0]
+
+Class#5
+  Name = Xor2
+  Idmap List:
+         Input[ 0 1], Output[ 0]
+
+  Group#16: Map = Input[ 0 1], Output[ 0]
+  Group#17: Map = Input[ 0 1], Output[ 0~]
 
 Class#8
   Name = Mux2
@@ -55262,12 +55262,12 @@ Class#18
 Node#0: INPUT#0
 Node#1: INPUT#1
 Node#2: AND
-Node#3: XOR
-Node#4: INPUT#2
+Node#3: INPUT#2
+Node#4: AND
 Node#5: AND
 Node#6: AND
-Node#7: AND
-Node#8: INPUT#3
+Node#7: INPUT#3
+Node#8: AND
 Node#9: AND
 Node#10: AND
 Node#11: AND
@@ -55275,7 +55275,7 @@ Node#12: AND
 Node#13: AND
 Node#14: AND
 Node#15: AND
-Node#16: AND
+Node#16: XOR
 Node#17: AND
 Node#18: AND
 Node#19: AND
@@ -55303,37 +55303,37 @@ Edge#3: 0 -> 1(1)
 Edge#4: 0 -> 2(0)
 Edge#5: 1 -> 2(1)
 Edge#6: 0 -> 3(0)
-Edge#7: 1 -> 3(1)
-Edge#8: 0 -> 4(0)
-Edge#9: 0 -> 4(1)
-Edge#10: 1 -> 5(0)
+Edge#7: 0 -> 3(1)
+Edge#8: 1 -> 4(0)
+Edge#9: 3 -> 4(1)
+Edge#10: 0 -> 5(0)
 Edge#11: 4 -> 5(1)
-Edge#12: 0 -> 6(0)
-Edge#13: 5 -> 6(1)
-Edge#14: 2 -> 7(0)
-Edge#15: 4 -> 7(1)
-Edge#16: 0 -> 8(0)
-Edge#17: 0 -> 8(1)
-Edge#18: 4 -> 9(0)
+Edge#12: 2 -> 6(0)
+Edge#13: 3 -> 6(1)
+Edge#14: 0 -> 7(0)
+Edge#15: 0 -> 7(1)
+Edge#16: 3 -> 8(0)
+Edge#17: 7 -> 8(1)
+Edge#18: 1 -> 9(0)
 Edge#19: 8 -> 9(1)
-Edge#20: 1 -> 10(0)
+Edge#20: 0 -> 10(0)
 Edge#21: 9 -> 10(1)
-Edge#22: 0 -> 11(0)
-Edge#23: 10 -> 11(1)
-Edge#24: 5 -> 12(0)
-Edge#25: 8 -> 12(1)
-Edge#26: 0 -> 13(0)
-Edge#27: 12 -> 13(1)
-Edge#28: 2 -> 14(0)
-Edge#29: 9 -> 14(1)
+Edge#22: 4 -> 11(0)
+Edge#23: 7 -> 11(1)
+Edge#24: 0 -> 12(0)
+Edge#25: 11 -> 12(1)
+Edge#26: 2 -> 13(0)
+Edge#27: 8 -> 13(1)
+Edge#28: 5 -> 14(0)
+Edge#29: 7 -> 14(1)
 Edge#30: 6 -> 15(0)
-Edge#31: 8 -> 15(1)
-Edge#32: 7 -> 16(0)
-Edge#33: 8 -> 16(1)
-Edge#34: 4 -> 17(0)
+Edge#31: 7 -> 15(1)
+Edge#32: 0 -> 16(0)
+Edge#33: 1 -> 16(1)
+Edge#34: 3 -> 17(0)
 Edge#35: 0 -> 17(1) ***
 Edge#36: 0 -> 18(0) ***
-Edge#37: 4 -> 18(1)
+Edge#37: 3 -> 18(1)
 Edge#38: 1 -> 19(0)
 Edge#39: 0 -> 19(1)
 Edge#40: 17 -> 20(0) ***
@@ -55346,49 +55346,49 @@ Edge#46: 19 -> 23(0) ***
 Edge#47: 18 -> 23(1) ***
 Edge#48: 0 -> 24(0) ***
 Edge#49: 1 -> 24(1) ***
-Edge#50: 8 -> 25(0)
+Edge#50: 7 -> 25(0)
 Edge#51: 24 -> 25(1) ***
-Edge#52: 4 -> 26(0)
+Edge#52: 3 -> 26(0)
 Edge#53: 25 -> 26(1)
-Edge#54: 9 -> 27(0)
+Edge#54: 8 -> 27(0)
 Edge#55: 24 -> 27(1) ***
 Edge#56: 24 -> 28(0) ***
-Edge#57: 8 -> 28(1)
-Edge#58: 4 -> 29(0)
+Edge#57: 7 -> 28(1)
+Edge#58: 3 -> 29(0)
 Edge#59: 28 -> 29(1)
-Edge#60: 4 -> 30(0)
+Edge#60: 3 -> 30(0)
 Edge#61: 24 -> 30(1) ***
 Edge#62: 30 -> 31(0)
-Edge#63: 8 -> 31(1)
+Edge#63: 7 -> 31(1)
 Edge#64: 24 -> 32(0) ***
-Edge#65: 9 -> 32(1)
+Edge#65: 8 -> 32(1)
 Edge#66: 24 -> 33(0) ***
-Edge#67: 4 -> 33(1)
+Edge#67: 3 -> 33(1)
 Edge#68: 33 -> 34(0)
-Edge#69: 8 -> 34(1)
+Edge#69: 7 -> 34(1)
 Edge#70: 2 -> 35(0) ***
-Edge#71: 9 -> 35(1) ***
+Edge#71: 8 -> 35(1) ***
 
 Pat#0: Rep#2: (2),  4 5
-Pat#1: Rep#3: (2),  6 7
-Pat#2: Rep#4: (3),  12 13 10 11
-Pat#3: Rep#4: (3),  14 4 5 15
-Pat#4: Rep#6: (4),  22 23 20 21 18 19
-Pat#5: Rep#6: (4),  26 27 24 10 11 25
-Pat#6: Rep#6: (4),  28 4 5 29 18 19
-Pat#7: Rep#6: (4),  30 12 13 10 11 31
-Pat#8: Rep#6: (4),  32 14 4 5 15 33
+Pat#1: Rep#3: (3),  10 11 8 9
+Pat#2: Rep#3: (3),  12 4 5 13
+Pat#3: Rep#4: (4),  20 21 18 19 16 17
+Pat#4: Rep#4: (4),  24 25 22 8 9 23
+Pat#5: Rep#4: (4),  26 4 5 27 16 17
+Pat#6: Rep#4: (4),  28 10 11 8 9 29
+Pat#7: Rep#4: (4),  30 12 4 5 13 31
+Pat#8: Rep#5: (2),  32 33
 Pat#9: Rep#8: [inv](3),  40 34 35 41 38 39
 Pat#10: Rep#8: [inv](3),  42 38 39 43 34 35
 Pat#11: Rep#8: [inv](3),  44 36 37 45 38 39
 Pat#12: Rep#8: [inv](3),  46 38 39 47 36 37
 Pat#13: Rep#10: (4),  52 53 50 51 48 49
-Pat#14: Rep#10: (4),  54 18 19 55 48 49
+Pat#14: Rep#10: (4),  54 16 17 55 48 49
 Pat#15: Rep#10: (4),  58 59 56 48 49 57
 Pat#16: Rep#10: (4),  62 60 61 48 49 63
-Pat#17: Rep#10: (4),  64 48 49 65 18 19
+Pat#17: Rep#10: (4),  64 48 49 65 16 17
 Pat#18: Rep#10: (4),  68 66 48 49 67 69
 Pat#19: Rep#11: (3),  60 61 48 49
 Pat#20: Rep#11: (3),  66 48 49 67
-Pat#21: Rep#12: [inv](4),  70 4 5 71 18 19
+Pat#21: Rep#12: [inv](4),  70 4 5 71 16 17
 ==== PatMgr dump end ====
