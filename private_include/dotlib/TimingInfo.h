@@ -128,6 +128,10 @@ private:
   vector<ClibTime> mFallDelayIntercept;
 
   // table lookup モデルのパラメータ
+  // 1: 標準タイプの cell
+  // 2: 標準タイプの propagation + transition
+  // 3: 汎用タイプの cell
+  // 4: 汎用タイプの propagation + transition
   int mLutType;
   TableInfo mCellRise;
   TableInfo mCellFall;

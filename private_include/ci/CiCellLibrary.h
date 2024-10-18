@@ -29,7 +29,6 @@ class CiCell;
 class CiCellClass;
 class CiCellGroup;
 class CiInternalPin;
-class CiLut;
 class CiLutTemplate;
 class CiTiming;
 class Serializer;

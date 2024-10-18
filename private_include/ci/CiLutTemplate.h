@@ -71,6 +71,23 @@ public:
   // 属性の取得
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 標準タイプの時 true を返す．
+  ///
+  /// 標準タイプは以下の条件
+  /// - dimension() == 2
+  /// - variable_type(0) == ClibVarType::total_output_net_capacitance
+  /// - variable_type(1) == ClibVarType::input_net_transition
+  bool
+  is_standard_type() const
+  {
+    if ( dimension() == 2 &&
+	 variable_type(0) == ClibVarType::total_output_net_capacitance &&
+	 variable_type(1) == ClibVarType::input_net_transition ) {
+      return true;
+    }
+    return false;
+  }
+
   /// @brief 次元数の取得
   virtual
   SizeType

@@ -10,6 +10,8 @@
 #include "dotlib/LibraryInfo.h"
 #include "dotlib/AstValue.h"
 #include "ci/CiLut.h"
+#include "ci/CiLutTemplate.h"
+#include "ci/CiStLut.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -50,11 +52,27 @@ TableInfo::set(
   mDomain = get_value("domain");
 }
 
+// @brief 標準タイプの時 true を返す．
+bool
+TableInfo::is_standard() const
+{
+  return mTemplate->is_standard_type();
+}
+
 unique_ptr<CiLut>
 TableInfo::gen_lut() const
 {
   if ( mValues.size() > 0 ) {
     return CiLut::new_lut(mTemplate, mValues, mIndex1, mIndex2, mIndex3);
+  }
+  return {};
+}
+
+unique_ptr<CiStLut>
+TableInfo::gen_stlut() const
+{
+  if ( mValues.size() > 0 ) {
+    return CiLut::new_stlut(mTemplate, mValues, mIndex1, mIndex2);
   }
   return {};
 }

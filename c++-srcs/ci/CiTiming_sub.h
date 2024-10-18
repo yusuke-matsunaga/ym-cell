@@ -9,6 +9,7 @@
 /// All rights reserved.
 
 #include "ci/CiTiming.h"
+#include "CiLut_sub.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -141,6 +142,46 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
+  // 共通の属性
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 立ち上がり遅延時間を計算する．
+  ClibTime
+  calc_rise_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+  /// @brief 立ち下がり遅延時間を計算する．
+  ClibTime
+  calc_fall_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+  /// @brief 立ち上がり遷移時間を計算する．
+  ///
+  /// 立ち上がり遷移時間は出力信号がしきい値1(通常20%)を超えてから
+  /// しきい値2(通常80%)を超えるまでの時間
+  ClibTime
+  calc_rise_transition(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+  /// @brief 立ち下がり遷移時間を計算する．
+  ///
+  /// 立ち上がり遷移時間は出力信号がしきい値1(通常80%)を下回ってから
+  /// しきい値2(通常20%)を下回るまでの時間
+  ClibTime
+  calc_fall_transition(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
   // CMOSジェネリック遅延モデルの属性
   //////////////////////////////////////////////////////////////////////
 
@@ -231,6 +272,46 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
+  // 共通の属性
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 立ち上がり遅延時間を計算する．
+  ClibTime
+  calc_rise_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+  /// @brief 立ち下がり遅延時間を計算する．
+  ClibTime
+  calc_fall_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+  /// @brief 立ち上がり遷移時間を計算する．
+  ///
+  /// 立ち上がり遷移時間は出力信号がしきい値1(通常20%)を超えてから
+  /// しきい値2(通常80%)を超えるまでの時間
+  ClibTime
+  calc_rise_transition(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+  /// @brief 立ち下がり遷移時間を計算する．
+  ///
+  /// 立ち上がり遷移時間は出力信号がしきい値1(通常80%)を下回ってから
+  /// しきい値2(通常20%)を下回るまでの時間
+  ClibTime
+  calc_fall_transition(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
   // CMOS折れ線近似遅延モデルの属性
   //////////////////////////////////////////////////////////////////////
 
@@ -304,7 +385,7 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class CiTimingLut1 CiTiming.h "CiTiming.h"
+/// @class CiTimingLut CiTiming.h "CiTiming.h"
 /// @brief CMOS非線形タイプの ClibTiming の共通の基底クラス
 //////////////////////////////////////////////////////////////////////
 class CiTimingLut :
@@ -329,6 +410,32 @@ public:
 
   /// @brief デストラクタ
   ~CiTimingLut() = default;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 共通の属性
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 立ち上がり遷移時間を計算する．
+  ///
+  /// 立ち上がり遷移時間は出力信号がしきい値1(通常20%)を超えてから
+  /// しきい値2(通常80%)を超えるまでの時間
+  ClibTime
+  calc_rise_transition(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+  /// @brief 立ち下がり遷移時間を計算する．
+  ///
+  /// 立ち上がり遷移時間は出力信号がしきい値1(通常80%)を下回ってから
+  /// しきい値2(通常20%)を下回るまでの時間
+  ClibTime
+  calc_fall_transition(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
 
 
 public:
@@ -378,19 +485,19 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class CiTimingLut1 CiTiming.h "CiTiming.h"
+/// @class CiTimingLut_cell CiTiming.h "CiTiming.h"
 /// @brief CMOS非線形タイプ1の ClibTiming の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiTimingLut1 :
+class CiTimingLut_cell :
   public CiTimingLut
 {
 public:
 
   /// @brief restore() 用のコンストラクタ
-  CiTimingLut1() = default;
+  CiTimingLut_cell() = default;
 
   /// @brief コンストラクタ
-  CiTimingLut1(
+  CiTimingLut_cell(
     ClibTimingType timing_type,          ///< [in] タイミングの型
     const Expr& cond,                    ///< [in] タイミング条件を表す式
     unique_ptr<CiLut>&& cell_rise,       ///< [in] 立ち上がりセル遅延テーブル
@@ -407,7 +514,27 @@ public:
 
 
   /// @brief デストラクタ
-  ~CiTimingLut1() = default;
+  ~CiTimingLut_cell() = default;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 共通の属性
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 立ち上がり遅延時間を計算する．
+  ClibTime
+  calc_rise_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+  /// @brief 立ち下がり遅延時間を計算する．
+  ClibTime
+  calc_fall_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
 
 
 public:
@@ -463,19 +590,19 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class CiTimingLut2 CiTiming.h "CiTiming.h"
+/// @class CiTimingLut_prop CiTiming.h "CiTiming.h"
 /// @brief CMOS非線形タイプ2の ClibTiming の実装クラス
 //////////////////////////////////////////////////////////////////////
-class CiTimingLut2 :
+class CiTimingLut_prop :
   public CiTimingLut
 {
 public:
 
   /// @brief restore() 用のコンストラクタ
-  CiTimingLut2() = default;
+  CiTimingLut_prop() = default;
 
   /// @brief コンストラクタ
-  CiTimingLut2(
+  CiTimingLut_prop(
     ClibTimingType timing_type,           ///< [in] タイミングの型
     const Expr& cond,                     ///< [in] タイミング条件を表す式
     unique_ptr<CiLut>&& rise_transition,  ///< [in] 立ち上がり遷移遅延テーブル
@@ -491,7 +618,27 @@ public:
   }
 
   /// @brief デストラクタ
-  ~CiTimingLut2() = default;
+  ~CiTimingLut_prop() = default;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 共通の属性
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 立ち上がり遅延時間を計算する．
+  ClibTime
+  calc_rise_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+  /// @brief 立ち下がり遅延時間を計算する．
+  ClibTime
+  calc_fall_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
 
 
 public:
@@ -542,6 +689,323 @@ private:
 
   // 立ち下がり伝搬遅延テーブル
   unique_ptr<CiLut> mFallPropagation;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class CiTimingStLut CiTiming.h "CiTiming.h"
+/// @brief CMOS非線形タイプの ClibTiming の共通の基底クラス
+///
+/// 第1変数が total_output_net_capacitance
+/// 第2変数が input_net_transition
+/// の2次元LUTのタイプ
+//////////////////////////////////////////////////////////////////////
+class CiTimingStLut :
+  public CiTiming
+{
+public:
+
+  /// @brief restore() 用のコンストラクタ
+  CiTimingStLut() = default;
+
+  /// @brief コンストラクタ
+  CiTimingStLut(
+    ClibTimingType timing_type,            ///< [in] タイミングの型
+    const Expr& cond,                      ///< [in] タイミング条件を表す式
+    unique_ptr<CiStLut>&& rise_transition, ///< [in] 立ち上がり遷移遅延テーブル
+    unique_ptr<CiStLut>&& fall_transition  ///< [in] 立ち下がり遷移遅延テーブル
+  ) : CiTiming{timing_type, cond},
+      mRiseTransition{std::move(rise_transition)},
+      mFallTransition{std::move(fall_transition)}
+  {
+  }
+
+  /// @brief デストラクタ
+  ~CiTimingStLut() = default;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 共通の属性
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 立ち上がり遷移時間を計算する．
+  ///
+  /// 立ち上がり遷移時間は出力信号がしきい値1(通常20%)を超えてから
+  /// しきい値2(通常80%)を超えるまでの時間
+  ClibTime
+  calc_rise_transition(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+  /// @brief 立ち下がり遷移時間を計算する．
+  ///
+  /// 立ち上がり遷移時間は出力信号がしきい値1(通常80%)を下回ってから
+  /// しきい値2(通常20%)を下回るまでの時間
+  ClibTime
+  calc_fall_transition(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // CMOS非線形遅延モデルの属性
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 立ち上がり遷移遅延テーブルの取得
+  const CiLut*
+  rise_transition() const override;
+
+  /// @brief 立ち下がり遷移遅延テーブルの取得
+  const CiLut*
+  fall_transition() const override;
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // 継承クラスから用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump_LUT(
+    Serializer& s ///< [in] シリアライザ
+  ) const;
+
+  /// @brief 内容を復元する．
+  void
+  restore_LUT(
+    Deserializer& s ///< [in] デシリアライザ
+  );
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 立ち上がり遷移遅延テーブル
+  unique_ptr<CiStLut> mRiseTransition;
+
+  // 立ち下がり遷移遅延テーブル
+  unique_ptr<CiStLut> mFallTransition;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class CiTimingStLut_cell CiTiming.h "CiTiming.h"
+/// @brief CMOS非線形タイプ(cell)の ClibTiming の実装クラス
+//////////////////////////////////////////////////////////////////////
+class CiTimingStLut_cell :
+  public CiTimingStLut
+{
+public:
+
+  /// @brief restore() 用のコンストラクタ
+  CiTimingStLut_cell() = default;
+
+  /// @brief コンストラクタ
+  CiTimingStLut_cell(
+    ClibTimingType timing_type,          ///< [in] タイミングの型
+    const Expr& cond,                    ///< [in] タイミング条件を表す式
+    unique_ptr<CiStLut>&& cell_rise,       ///< [in] 立ち上がりセル遅延テーブル
+    unique_ptr<CiStLut>&& cell_fall,       ///< [in] 立ち下がりセル遅延テーブル
+    unique_ptr<CiStLut>&& rise_transition, ///< [in] 立ち上がり遷移遅延テーブル
+    unique_ptr<CiStLut>&& fall_transition  ///< [in] 立ち下がり遷移遅延テーブル
+  ) : CiTimingStLut{timing_type, cond,
+		    std::move(rise_transition),
+		    std::move(fall_transition)},
+      mCellRise{std::move(cell_rise)},
+      mCellFall{std::move(cell_fall)}
+  {
+  }
+
+
+  /// @brief デストラクタ
+  ~CiTimingStLut_cell() = default;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 共通の属性
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 立ち上がり遅延時間を計算する．
+  ClibTime
+  calc_rise_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+  /// @brief 立ち下がり遅延時間を計算する．
+  ClibTime
+  calc_fall_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // CMOS非線形遅延モデルの属性
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 立ち上がりセル遅延テーブルの取得
+  const CiLut*
+  cell_rise() const override;
+
+  /// @brief 立ち下がりセル遅延テーブルの取得
+  const CiLut*
+  cell_fall() const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    Serializer& s ///< [in] シリアライザ
+  ) const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を復元する．
+  void
+  _restore(
+    Deserializer& s  ///< [in] デシリアライザ
+  ) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 立ち上がりセル遅延テーブル
+  unique_ptr<CiStLut> mCellRise;
+
+  // 立ち下がりセル遅延テーブル
+  unique_ptr<CiStLut> mCellFall;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class CiTimingStLut_prop CiTiming.h "CiTiming.h"
+/// @brief CMOS非線形タイプ(propgation)の ClibTiming の実装クラス
+///
+/// 第1変数が total_output_net_capacitance
+/// 第2変数が input_net_transition
+/// の2次元LUTのタイプ
+//////////////////////////////////////////////////////////////////////
+class CiTimingStLut_prop :
+  public CiTimingStLut
+{
+public:
+
+  /// @brief restore() 用のコンストラクタ
+  CiTimingStLut_prop() = default;
+
+  /// @brief コンストラクタ
+  CiTimingStLut_prop(
+    ClibTimingType timing_type,           ///< [in] タイミングの型
+    const Expr& cond,                     ///< [in] タイミング条件を表す式
+    unique_ptr<CiStLut>&& rise_transition,  ///< [in] 立ち上がり遷移遅延テーブル
+    unique_ptr<CiStLut>&& fall_transition,  ///< [in] 立ち下がり遷移遅延テーブル
+    unique_ptr<CiStLut>&& rise_propagation, ///< [in] 立ち上がり伝搬遅延テーブル
+    unique_ptr<CiStLut>&& fall_propagation  ///< [in] 立ち下がり伝搬遅延テーブル
+  ) : CiTimingStLut{timing_type, cond,
+		    std::move(rise_transition),
+		    std::move(fall_transition)},
+      mRisePropagation{std::move(rise_propagation)},
+      mFallPropagation{std::move(fall_propagation)}
+  {
+  }
+
+  /// @brief デストラクタ
+  ~CiTimingStLut_prop() = default;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 共通の属性
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 立ち上がり遅延時間を計算する．
+  ClibTime
+  calc_rise_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+  /// @brief 立ち下がり遅延時間を計算する．
+  ClibTime
+  calc_fall_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // CMOS非線形遅延モデルの属性
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 立ち上がり伝搬遅延テーブルの取得
+  const CiLut*
+  rise_propagation() const override;
+
+  /// @brief 立ち下がり伝搬遅延テーブルの取得
+  const CiLut*
+  fall_propagation() const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // dump/restore 関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容をバイナリダンプする．
+  void
+  dump(
+    Serializer& s ///< [in] シリアライザ
+  ) const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 内容を復元する．
+  void
+  _restore(
+    Deserializer& s  ///< [in] デシリアライザ
+  ) override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 立ち上がり伝搬遅延テーブル
+  unique_ptr<CiStLut> mRisePropagation;
+
+  // 立ち下がり伝搬遅延テーブル
+  unique_ptr<CiStLut> mFallPropagation;
 
 };
 

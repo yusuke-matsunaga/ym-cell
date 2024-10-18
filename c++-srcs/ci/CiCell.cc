@@ -383,7 +383,7 @@ CiCell::add_timing_piecewise(
 
 // @brief タイミング情報を作る(非線形タイプ1)．
 CiTiming*
-CiCell::add_timing_lut1(
+CiCell::add_timing_lut_cell(
   ClibTimingType timing_type,
   const Expr& cond,
   unique_ptr<CiLut>&& cell_rise,
@@ -392,11 +392,11 @@ CiCell::add_timing_lut1(
   unique_ptr<CiLut>&& fall_transition
 )
 {
-  auto ptr = CiTiming::new_Lut1(timing_type, cond,
-				std::move(cell_rise),
-				std::move(cell_fall),
-				std::move(rise_transition),
-				std::move(fall_transition));
+  auto ptr = CiTiming::new_Lut_cell(timing_type, cond,
+				    std::move(cell_rise),
+				    std::move(cell_fall),
+				    std::move(rise_transition),
+				    std::move(fall_transition));
   auto timing = ptr.get();
   mTimingList.push_back(std::move(ptr));
   return timing;
@@ -404,7 +404,7 @@ CiCell::add_timing_lut1(
 
 // @brief タイミング情報を作る(非線形タイプ2)．
 CiTiming*
-CiCell::add_timing_lut2(
+CiCell::add_timing_lut_prop(
   ClibTimingType timing_type,
   const Expr& cond,
   unique_ptr<CiLut>&& rise_transition,
@@ -413,11 +413,53 @@ CiCell::add_timing_lut2(
   unique_ptr<CiLut>&& fall_propagation
 )
 {
-  auto ptr = CiTiming::new_Lut2(timing_type, cond,
-				std::move(rise_transition),
-				std::move(fall_transition),
-				std::move(rise_propagation),
-				std::move(fall_propagation));
+  auto ptr = CiTiming::new_Lut_prop(timing_type, cond,
+				    std::move(rise_transition),
+				    std::move(fall_transition),
+				    std::move(rise_propagation),
+				    std::move(fall_propagation));
+  auto timing = ptr.get();
+  mTimingList.push_back(std::move(ptr));
+  return timing;
+}
+
+// @brief タイミング情報を作る(非線形タイプ1)．
+CiTiming*
+CiCell::add_timing_lut_cell(
+  ClibTimingType timing_type,
+  const Expr& cond,
+  unique_ptr<CiStLut>&& cell_rise,
+  unique_ptr<CiStLut>&& cell_fall,
+  unique_ptr<CiStLut>&& rise_transition,
+  unique_ptr<CiStLut>&& fall_transition
+)
+{
+  auto ptr = CiTiming::new_Lut_cell(timing_type, cond,
+				    std::move(cell_rise),
+				    std::move(cell_fall),
+				    std::move(rise_transition),
+				    std::move(fall_transition));
+  auto timing = ptr.get();
+  mTimingList.push_back(std::move(ptr));
+  return timing;
+}
+
+// @brief タイミング情報を作る(非線形タイプ2)．
+CiTiming*
+CiCell::add_timing_lut_prop(
+  ClibTimingType timing_type,
+  const Expr& cond,
+  unique_ptr<CiStLut>&& rise_transition,
+  unique_ptr<CiStLut>&& fall_transition,
+  unique_ptr<CiStLut>&& rise_propagation,
+  unique_ptr<CiStLut>&& fall_propagation
+)
+{
+  auto ptr = CiTiming::new_Lut_prop(timing_type, cond,
+				    std::move(rise_transition),
+				    std::move(fall_transition),
+				    std::move(rise_propagation),
+				    std::move(fall_propagation));
   auto timing = ptr.get();
   mTimingList.push_back(std::move(ptr));
   return timing;

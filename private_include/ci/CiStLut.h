@@ -1,71 +1,43 @@
-﻿#ifndef CILUT_H
-#define CILUT_H
+﻿#ifndef CISTLUT_H
+#define CISTLUT_H
 
-/// @file　CiLut.h
-/// @brief CiLut のヘッダファイル
+/// @file　CiStLut.h
+/// @brief CiStLut のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2024 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/clib.h"
+#include "ci/CiLut.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
 
-class CiLutTemplate;
-class CiStLut;
-class Serializer;
-class Deserializer;
-
 //////////////////////////////////////////////////////////////////////
-/// @class CiLut CiLut.h "CiLut.h"
-/// @brief ルックアップテーブルの実装クラスの基底クラス
+/// @class CiStLut CiLut.h "CiLut.h"
+/// @brief 標準的な2次元のルックアップテーブルを表すクラス
+///
+/// ほぼ CiLut2D と同一だが第1変数が total_output_net_capacitance，
+/// 第2変数が input_net_transition と仮定している．
 //////////////////////////////////////////////////////////////////////
-class CiLut
+class CiStLut :
+  public CiLut
 {
-protected:
-
-  /// @brief restore() 用のコンストラクタ
-  CiLut() = default;
-
-  /// @brief コンストラクタ
-  CiLut(
-    const CiLutTemplate* lut_template ///< [in] テンプレート番号
-  ) : mTemplate{lut_template}
-  {
-  }
-
-
 public:
 
-  /// @brief インスタンスを生成するクラスメソッド
-  static
-  unique_ptr<CiLut>
-  new_lut(
-    const CiLutTemplate* lut_template, ///< [in] テンプレート
-    const vector<double>& value_array, ///< [in] 値の配列
-    const vector<double>& index_array1 ///< [in] インデックス値のリスト1
-    = vector<double>{},
-    const vector<double>& index_array2 ///< [in] インデックス値のリスト2
-    = vector<double>{},
-    const vector<double>& index_array3 ///< [in] インデックス値のリスト3
-    = vector<double>{}
-  );
+  /// @brief restore() 用のコンストラクタ
+  CiStLut() = default;
 
-  /// @brief インスタンスを生成するクラスメソッド
-  static
-  unique_ptr<CiStLut>
-  new_stlut(
+  /// @brief コンストラクタ
+  CiStLut(
     const CiLutTemplate* lut_template,  ///< [in] テンプレート
     const vector<double>& value_array,  ///< [in] 値の配列
-    const vector<double>& index_array1, ///< [in] インデックス値のリスト1
-    const vector<double>& index_array2  ///< [in] インデックス値のリスト2
+    const vector<double>& index_array1, ///< [in] 変数1のインデックスの配列
+    const vector<double>& index_array2  ///< [in] 変数2のインデックスの配列
   );
 
   /// @brief デストラクタ
-  virtual
-  ~CiLut() = default;
+  ~CiStLut() = default;
 
 
 public:
@@ -73,48 +45,43 @@ public:
   // 属性の取得
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief テンプレートの取得
-  const CiLutTemplate*
-  lut_template() const
-  {
-    return mTemplate;
-  }
-
   /// @brief 次元数の取得
-  virtual
   SizeType
-  dimension() const = 0;
+  dimension() const override;
 
   /// @brief インデックス数の取得
-  virtual
   SizeType
   index_num(
     SizeType var ///< [in] 変数番号 ( 0 <= var < dimension() )
-  ) const = 0;
+  ) const override;
 
   /// @brief インデックス値の取得
-  virtual
   double
   index(
     SizeType var, ///< [in] 変数番号 ( 0 <= var < dimension() )
     SizeType pos  ///< [in] 位置番号 ( 0 <= pos < index_num(var) )
-  ) const = 0;
+  ) const override;
 
   /// @brief 格子点の値の取得
-  virtual
   double
   grid_value(
     const vector<SizeType>& pos_array ///< [in] 格子点座標
                                       ///< サイズは dimension() と同じ
-  ) const = 0;
+  ) const override;
 
   /// @brief 値の取得
-  virtual
   double
   value(
     const vector<double>& val_array ///< [in] 入力の値の配列
                                     ///< サイズは dimension() と同じ
-  ) const = 0;
+  ) const override;
+
+  /// @brief 値の取得
+  double
+  value(
+    double val1, ///< [in] 入力1の値
+    double val2  ///< [in] 入力2の値
+  ) const;
 
 
 public:
@@ -129,44 +96,16 @@ public:
   ) const;
 
   /// @brief 内容をバイナリダンプする．
-  virtual
   void
   dump(
     Serializer& s ///< [in] シリアライザ
-  ) const = 0;
+  ) const override;
 
   /// @brief 内容を復元する．
   static
-  unique_ptr<CiLut>
+  unique_ptr<CiStLut>
   restore(
     Deserializer& s   ///< [in] デシリアライザ
-  );
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 実際のダンプを行う関数
-  void
-  dump_common(
-    Serializer& s, ///< [in] シリアライザ
-    int d          ///< [in] 次元数
-  ) const;
-
-  /// @brief 内容を読み込む．
-  void
-  restore_common(
-    Deserializer& s ///< [in] デシリアライザ
-  );
-
-  /// @brief val に対応する区間を求める．
-  static
-  SizeType
-  search(
-    double val,
-    const vector<double>& index_array
   );
 
 
@@ -175,12 +114,21 @@ private:
   // 内部で用いられる関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief mValueArray のインデックスを計算する．
+  SizeType
+  idx(
+    SizeType idx1, ///< [in] 1番めのインデックス
+    SizeType idx2  ///< [in] 2番めのインデックス
+  ) const
+  {
+    return idx1 * index_num(1) + idx2;
+  }
+
   /// @brief restore() の下請け関数
-  virtual
   void
   _restore(
     Deserializer& s ///< [in] デシリアライザ
-  ) = 0;
+  ) override;
 
 
 private:
@@ -188,11 +136,14 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // テンプレート
-  const CiLutTemplate* mTemplate{nullptr};
+  // インデックスの配列の配列
+  vector<double> mIndexArray[2];
+
+  // 格子点の値の配列
+  vector<double> mValueArray;
 
 };
 
 END_NAMESPACE_YM_CLIB
 
-#endif // CILUT_H
+#endif // CISTLUT_H

@@ -19,6 +19,7 @@
 #include "ci/CiBusType.h"
 #include "ci/CiLutTemplate.h"
 #include "ci/CiLut.h"
+#include "ci/CiStLut.h"
 #include "ci/CiPin.h"
 #include "ci/CiBus.h"
 #include "ci/CiBundle.h"
@@ -72,6 +73,7 @@ public:
     mBusTypeList.restore(*this);
     mLutTemplateList.restore(*this);
     mLutList.restore(*this);
+    mStLutList.restore(*this);
     mPinList.restore(*this);
     mBusList.restore(*this);
     mBundleList.restore(*this);
@@ -371,6 +373,24 @@ public:
     std::swap(dst, mLutList.restore_ptr(*this));
   }
 
+  /// @brief StLutの読み込み
+  void
+  restore(
+    CiStLut*& dst
+  )
+  {
+    dst = mStLutList.restore_ref(*this);
+  }
+
+  /// @brief StLutの読み込み
+  void
+  restore(
+    unique_ptr<CiStLut>& dst
+  )
+  {
+    std::swap(dst, mStLutList.restore_ptr(*this));
+  }
+
   /// @brief セルの読み込み
   void
   restore(
@@ -546,6 +566,9 @@ private:
 
   // LUTのリスト
   ObjList<CiLut> mLutList;
+
+  // StLutのリスト
+  ObjList<CiStLut> mStLutList;
 
   // ピンのリスト
   ObjList<CiPin> mPinList;

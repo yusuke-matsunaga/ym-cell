@@ -113,28 +113,54 @@ TimingInfo::add_timing(
     switch ( mLutType ) {
     case 1:
       {
+	auto cr_lut = mCellRise.gen_stlut();
+	auto cf_lut = mCellFall.gen_stlut();
+	auto rt_lut = mRiseTransition.gen_stlut();
+	auto ft_lut = mFallTransition.gen_stlut();
+	timing = cell->add_timing_lut_cell(mTimingType, when,
+					   std::move(cr_lut),
+					   std::move(cf_lut),
+					   std::move(rt_lut),
+					   std::move(ft_lut));
+      }
+      break;
+    case 2:
+      {
+	auto rt_lut = mRiseTransition.gen_stlut();
+	auto ft_lut = mFallTransition.gen_stlut();
+	auto rp_lut = mRisePropagation.gen_stlut();
+	auto fp_lut = mFallPropagation.gen_stlut();
+	timing = cell->add_timing_lut_prop(mTimingType, when,
+					   std::move(rt_lut),
+					   std::move(ft_lut),
+					   std::move(rp_lut),
+					   std::move(fp_lut));
+      }
+      break;
+    case 3:
+      {
 	auto cr_lut = mCellRise.gen_lut();
 	auto cf_lut = mCellFall.gen_lut();
 	auto rt_lut = mRiseTransition.gen_lut();
 	auto ft_lut = mFallTransition.gen_lut();
-	timing = cell->add_timing_lut1(mTimingType, when,
-				       std::move(cr_lut),
-				       std::move(cf_lut),
-				       std::move(rt_lut),
-				       std::move(ft_lut));
+	timing = cell->add_timing_lut_cell(mTimingType, when,
+					   std::move(cr_lut),
+					   std::move(cf_lut),
+					   std::move(rt_lut),
+					   std::move(ft_lut));
       }
       break;
-    case 2:
+    case 4:
       {
 	auto rt_lut = mRiseTransition.gen_lut();
 	auto ft_lut = mFallTransition.gen_lut();
 	auto rp_lut = mRisePropagation.gen_lut();
 	auto fp_lut = mFallPropagation.gen_lut();
-	timing = cell->add_timing_lut2(mTimingType, when,
-				       std::move(rt_lut),
-				       std::move(ft_lut),
-				       std::move(rp_lut),
-				       std::move(fp_lut));
+	timing = cell->add_timing_lut_prop(mTimingType, when,
+					   std::move(rt_lut),
+					   std::move(ft_lut),
+					   std::move(rp_lut),
+					   std::move(fp_lut));
       }
       break;
     default:
@@ -392,6 +418,7 @@ TimingInfo::extract_piecewise_params(
 int
 TimingInfo::set_table_lookup_params()
 {
+  bool standard = false;
   auto rt_val = get_value("rise_transition");
   auto ft_val = get_value("fall_transition");
   if ( rt_val == nullptr && ft_val == nullptr ) {
@@ -402,9 +429,15 @@ TimingInfo::set_table_lookup_params()
 
   if ( rt_val ) {
     mRiseTransition.set(rt_val);
+    if ( !mRiseTransition.is_standard() ) {
+      standard = false;
+    }
   }
   if ( ft_val ) {
     mFallTransition.set(ft_val);
+    if ( !mFallTransition.is_standard() ) {
+      standard = false;
+    }
   }
 
   auto cr_val = get_value("cell_rise");
@@ -421,10 +454,16 @@ TimingInfo::set_table_lookup_params()
       parse_error(label);
     }
     mCellRise.set(cr_val);
+    if ( !mCellRise.is_standard() ) {
+      standard = false;
+    }
     type = 1;
   }
   else if ( rp_val ) {
     mRisePropagation.set(rp_val);
+    if ( !mRisePropagation.is_standard() ) {
+      standard = false;
+    }
     type = 2;
   }
 
@@ -439,6 +478,9 @@ TimingInfo::set_table_lookup_params()
       parse_error(label);
     }
     mCellFall.set(cf_val);
+    if ( !mCellFall.is_standard() ) {
+      standard = false;
+    }
     type = 1;
   }
   else if ( fp_val ) {
@@ -447,7 +489,14 @@ TimingInfo::set_table_lookup_params()
       parse_error(label);
     }
     mFallPropagation.set(fp_val);
+    if ( !mFallPropagation.is_standard() ) {
+      standard = false;
+    }
     type = 2;
+  }
+
+  if ( !standard ) {
+    type += 2;
   }
 
   return type;

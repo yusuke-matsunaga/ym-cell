@@ -53,6 +53,7 @@ set (ci_SOURCES
   ci/CiPatGraph.cc
   ci/CiPatMgr.cc
   ci/CiPin.cc
+  ci/CiStLut.cc
   ci/CiTiming.cc
   ci/dump.cc
   ci/restore.cc

@@ -12,6 +12,7 @@
 #include "CiTiming_sub.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
+#include "CiLut_sub.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -73,7 +74,7 @@ CiTiming::new_Piecewise(
 
 // @brief CMOS非線形タイプ1のインスタンスを生成する．
 unique_ptr<CiTiming>
-CiTiming::new_Lut1(
+CiTiming::new_Lut_cell(
   ClibTimingType timing_type,
   const Expr& cond,
   unique_ptr<CiLut>&& cell_rise,
@@ -82,7 +83,7 @@ CiTiming::new_Lut1(
   unique_ptr<CiLut>&& fall_transition
 )
 {
-  auto ptr = new CiTimingLut1{
+  auto ptr = new CiTimingLut_cell{
     timing_type, cond,
     std::move(cell_rise),
     std::move(cell_fall),
@@ -94,7 +95,7 @@ CiTiming::new_Lut1(
 
 // @brief CMOS非線形タイプ2のインスタンスを生成する．
 unique_ptr<CiTiming>
-CiTiming::new_Lut2(
+CiTiming::new_Lut_prop(
   ClibTimingType timing_type,
   const Expr& cond,
   unique_ptr<CiLut>&& rise_transition,
@@ -103,7 +104,49 @@ CiTiming::new_Lut2(
   unique_ptr<CiLut>&& fall_propagation
 )
 {
-  auto ptr = new CiTimingLut2{
+  auto ptr = new CiTimingLut_prop{
+    timing_type, cond,
+    std::move(rise_transition),
+    std::move(fall_transition),
+    std::move(rise_propagation),
+    std::move(fall_propagation)
+  };
+  return unique_ptr<CiTiming>{ptr};
+}
+
+// @brief CMOS非線形タイプ1のインスタンスを生成する．
+unique_ptr<CiTiming>
+CiTiming::new_Lut_cell(
+  ClibTimingType timing_type,
+  const Expr& cond,
+  unique_ptr<CiStLut>&& cell_rise,
+  unique_ptr<CiStLut>&& cell_fall,
+  unique_ptr<CiStLut>&& rise_transition,
+  unique_ptr<CiStLut>&& fall_transition
+)
+{
+  auto ptr = new CiTimingStLut_cell{
+    timing_type, cond,
+    std::move(cell_rise),
+    std::move(cell_fall),
+    std::move(rise_transition),
+    std::move(fall_transition)
+  };
+  return unique_ptr<CiTiming>{ptr};
+}
+
+// @brief CMOS非線形タイプ2のインスタンスを生成する．
+unique_ptr<CiTiming>
+CiTiming::new_Lut_prop(
+  ClibTimingType timing_type,
+  const Expr& cond,
+  unique_ptr<CiStLut>&& rise_transition,
+  unique_ptr<CiStLut>&& fall_transition,
+  unique_ptr<CiStLut>&& rise_propagation,
+  unique_ptr<CiStLut>&& fall_propagation
+)
+{
+  auto ptr = new CiTimingStLut_prop{
     timing_type, cond,
     std::move(rise_transition),
     std::move(fall_transition),
@@ -272,8 +315,10 @@ CiTiming::restore(
   switch ( ttype ) {
   case 0: timing = new CiTimingGeneric; break;
   case 1: timing = new CiTimingPiecewise; break;
-  case 2: timing = new CiTimingLut1; break;
-  case 3: timing = new CiTimingLut2; break;
+  case 2: timing = new CiTimingLut_cell; break;
+  case 3: timing = new CiTimingLut_prop; break;
+  case 4: timing = new CiTimingStLut_cell; break;
+  case 5: timing = new CiTimingStLut_prop; break;
   default: ASSERT_NOT_REACHED; break;
   }
   auto ptr = unique_ptr<CiTiming>{timing};
@@ -353,6 +398,52 @@ CiTimingGP::restore_GP(
 // クラス CiTimingGeneric
 //////////////////////////////////////////////////////////////////////
 
+// @brief 立ち上がり遅延時間を計算する．
+ClibTime
+CiTimingGeneric::calc_rise_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  auto t_i = intrinsic_rise();
+  auto t_s = ClibTime{slope_rise().value() * input_transition.value()};
+  auto t_t = calc_rise_transition(input_transition, output_capacitance);
+  return t_i + t_s + t_t;
+}
+
+// @brief 立ち下がり遅延時間を計算する．
+ClibTime
+CiTimingGeneric::calc_fall_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  auto t_i = intrinsic_fall();
+  auto t_s = ClibTime{slope_fall().value() * input_transition.value()};
+  auto t_t = calc_fall_transition(input_transition, output_capacitance);
+  return t_i + t_s + t_t;
+}
+
+// @brief 立ち上がり遷移時間を計算する．
+ClibTime
+CiTimingGeneric::calc_rise_transition(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  return ClibTime{rise_resistance().value() * output_capacitance.value()};
+}
+
+// @brief 立ち下がり遷移時間を計算する．
+ClibTime
+CiTimingGeneric::calc_fall_transition(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  return ClibTime{fall_resistance().value() * output_capacitance.value()};
+}
+
 // @brief 立ち上がり遷移遅延の取得
 ClibResistance
 CiTimingGeneric::rise_resistance() const
@@ -394,6 +485,54 @@ CiTimingGeneric::_restore(
 //////////////////////////////////////////////////////////////////////
 // クラス CiTimingPiecewise
 //////////////////////////////////////////////////////////////////////
+
+// @brief 立ち上がり遅延時間を計算する．
+ClibTime
+CiTimingPiecewise::calc_rise_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  auto t_i = intrinsic_rise();
+  auto t_s = ClibTime{slope_rise().value() * input_transition.value()};
+  auto t_t = calc_rise_transition(input_transition, output_capacitance);
+  return t_i + t_s + t_t;
+}
+
+// @brief 立ち下がり遅延時間を計算する．
+ClibTime
+CiTimingPiecewise::calc_fall_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  auto t_i = intrinsic_fall();
+  auto t_s = ClibTime{slope_fall().value() * input_transition.value()};
+  auto t_t = calc_fall_transition(input_transition, output_capacitance);
+  return t_i + t_s + t_t;
+}
+
+// @brief 立ち上がり遷移時間を計算する．
+ClibTime
+CiTimingPiecewise::calc_rise_transition(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  // rise_pin_resistance(piece_id) * output_capacitance + rise_delay_intercept()
+  return ClibTime{0.0};
+}
+
+// @brief 立ち下がり遷移時間を計算する．
+ClibTime
+CiTimingPiecewise::calc_fall_transition(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  // fall_pin_resistance(piece_id) * output_capacitance + fall_delay_intercept()
+  return ClibTime{0.0};
+}
 
 // @brief 立ち上がり遷移遅延の取得
 ClibResistance
@@ -463,6 +602,28 @@ CiTimingPiecewise::_restore(
 // クラス CiTimingLut
 //////////////////////////////////////////////////////////////////////
 
+// @brief 立ち上がり遷移時間を計算する．
+ClibTime
+CiTimingLut::calc_rise_transition(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  throw std::invalid_argument{"Delay calculation of thid delay model is not implemented."};
+  return ClibTime{};
+}
+
+// @brief 立ち下がり遷移時間を計算する．
+ClibTime
+CiTimingLut::calc_fall_transition(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  throw std::invalid_argument{"Delay calculation of thid delay model is not implemented."};
+  return ClibTime{};
+}
+
 // @brief 立ち上がり遷移遅延テーブルの取得
 const CiLut*
 CiTimingLut::rise_transition() const
@@ -500,26 +661,48 @@ CiTimingLut::restore_LUT(
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiTimingLut1
+// クラス CiTimingLut_cell
 //////////////////////////////////////////////////////////////////////
+
+// @brief 立ち上がり遅延時間を計算する．
+ClibTime
+CiTimingLut_cell::calc_rise_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  throw std::invalid_argument{"Delay calculation of thid delay model is not implemented."};
+  return ClibTime{};
+}
+
+// @brief 立ち下がり遅延時間を計算する．
+ClibTime
+CiTimingLut_cell::calc_fall_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  throw std::invalid_argument{"Delay calculation of thid delay model is not implemented."};
+  return ClibTime{};
+}
 
 // @brief 立ち上がりセル遅延テーブルの取得
 const CiLut*
-CiTimingLut1::cell_rise() const
+CiTimingLut_cell::cell_rise() const
 {
   return mCellRise.get();
 }
 
 // @brief 立ち下がりセル遅延テーブルの取得
 const CiLut*
-CiTimingLut1::cell_fall() const
+CiTimingLut_cell::cell_fall() const
 {
   return mCellFall.get();
 }
 
 // @brief 内容をバイナリダンプする．
 void
-CiTimingLut1::dump(
+CiTimingLut_cell::dump(
   Serializer& s
 ) const
 {
@@ -531,7 +714,7 @@ CiTimingLut1::dump(
 
 // @brief 内容を読み込む．
 void
-CiTimingLut1::_restore(
+CiTimingLut_cell::_restore(
   Deserializer& s
 )
 {
@@ -542,26 +725,48 @@ CiTimingLut1::_restore(
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス CiTimingLut2
+// クラス CiTimingLut_prop
 //////////////////////////////////////////////////////////////////////
+
+// @brief 立ち上がり遅延時間を計算する．
+ClibTime
+CiTimingLut_prop::calc_rise_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  throw std::invalid_argument{"Delay calculation of thid delay model is not implemented."};
+  return ClibTime{};
+}
+
+// @brief 立ち下がり遅延時間を計算する．
+ClibTime
+CiTimingLut_prop::calc_fall_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  throw std::invalid_argument{"Delay calculation of thid delay model is not implemented."};
+  return ClibTime{};
+}
 
 // @brief 立ち上がり伝搬遅延テーブルの取得
 const CiLut*
-CiTimingLut2::rise_propagation() const
+CiTimingLut_prop::rise_propagation() const
 {
   return mRisePropagation.get();
 }
 
 // @brief 立ち下がり伝搬遅延テーブルの取得
 const CiLut*
-CiTimingLut2::fall_propagation() const
+CiTimingLut_prop::fall_propagation() const
 {
   return mFallPropagation.get();
 }
 
 // @brief 内容をバイナリダンプする．
 void
-CiTimingLut2::dump(
+CiTimingLut_prop::dump(
   Serializer& s
 ) const
 {
@@ -573,7 +778,201 @@ CiTimingLut2::dump(
 
 // @brief 内容を読み込む．
 void
-CiTimingLut2::_restore(
+CiTimingLut_prop::_restore(
+  Deserializer& s
+)
+{
+  restore_LUT(s);
+  s.restore(mRisePropagation);
+  s.restore(mFallPropagation);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingStLut
+//////////////////////////////////////////////////////////////////////
+
+// @brief 立ち上がり遷移時間を計算する．
+ClibTime
+CiTimingStLut::calc_rise_transition(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  return ClibTime{mRiseTransition->value(output_capacitance.value(),
+					 input_transition.value())};
+}
+
+// @brief 立ち下がり遷移時間を計算する．
+ClibTime
+CiTimingStLut::calc_fall_transition(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  return ClibTime{mFallTransition->value(output_capacitance.value(),
+					 input_transition.value())};
+}
+
+// @brief 立ち上がり遷移遅延テーブルの取得
+const CiLut*
+CiTimingStLut::rise_transition() const
+{
+  return mRiseTransition.get();
+}
+
+// @brief 立ち下がり遷移遅延テーブルの取得
+const CiLut*
+CiTimingStLut::fall_transition() const
+{
+  return mFallTransition.get();
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiTimingStLut::dump_LUT(
+  Serializer& s
+) const
+{
+  s.dump(rise_transition());
+  s.dump(fall_transition());
+}
+
+// @brief 内容を読み込む．
+void
+CiTimingStLut::restore_LUT(
+  Deserializer& s
+)
+{
+  CiTiming::_restore(s);
+  s.restore(mRiseTransition);
+  s.restore(mFallTransition);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingStLut_cell
+//////////////////////////////////////////////////////////////////////
+
+// @brief 立ち上がり遅延時間を計算する．
+ClibTime
+CiTimingStLut_cell::calc_rise_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  return ClibTime{mCellRise->value(output_capacitance.value(),
+				   input_transition.value())};
+}
+
+// @brief 立ち下がり遅延時間を計算する．
+ClibTime
+CiTimingStLut_cell::calc_fall_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  return ClibTime{mCellFall->value(output_capacitance.value(),
+				   input_transition.value())};
+}
+
+// @brief 立ち上がりセル遅延テーブルの取得
+const CiLut*
+CiTimingStLut_cell::cell_rise() const
+{
+  return mCellRise.get();
+}
+
+// @brief 立ち下がりセル遅延テーブルの取得
+const CiLut*
+CiTimingStLut_cell::cell_fall() const
+{
+  return mCellFall.get();
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiTimingStLut_cell::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 4);
+  dump_LUT(s);
+  s.dump(cell_rise());
+  s.dump(cell_fall());
+}
+
+// @brief 内容を読み込む．
+void
+CiTimingStLut_cell::_restore(
+  Deserializer& s
+)
+{
+  restore_LUT(s);
+  s.restore(mCellRise);
+  s.restore(mCellFall);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス CiTimingStLut_prop
+//////////////////////////////////////////////////////////////////////
+
+// @brief 立ち上がり遅延時間を計算する．
+ClibTime
+CiTimingStLut_prop::calc_rise_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  auto t_p = ClibTime{mRisePropagation->value(output_capacitance.value(),
+					      input_transition.value())};
+  auto t_t = calc_rise_transition(input_transition, output_capacitance);
+  return t_p + t_t;
+}
+
+// @brief 立ち下がり遅延時間を計算する．
+ClibTime
+CiTimingStLut_prop::calc_fall_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  auto t_p = ClibTime{mFallPropagation->value(output_capacitance.value(),
+					      input_transition.value())};
+  auto t_t = calc_fall_transition(input_transition, output_capacitance);
+  return t_p + t_t;
+}
+
+// @brief 立ち上がり伝搬遅延テーブルの取得
+const CiLut*
+CiTimingStLut_prop::rise_propagation() const
+{
+  return mRisePropagation.get();
+}
+
+// @brief 立ち下がり伝搬遅延テーブルの取得
+const CiLut*
+CiTimingStLut_prop::fall_propagation() const
+{
+  return mFallPropagation.get();
+}
+
+// @brief 内容をバイナリダンプする．
+void
+CiTimingStLut_prop::dump(
+  Serializer& s
+) const
+{
+  dump_common(s, 5);
+  dump_LUT(s);
+  s.dump(rise_propagation());
+  s.dump(fall_propagation());
+}
+
+// @brief 内容を読み込む．
+void
+CiTimingStLut_prop::_restore(
   Deserializer& s
 )
 {

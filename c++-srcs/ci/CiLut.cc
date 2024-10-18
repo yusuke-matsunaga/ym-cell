@@ -8,6 +8,7 @@
 
 #include "ci/CiLut.h"
 #include "ci/CiLutTemplate.h"
+#include "ci/CiStLut.h"
 #include "ci/Serializer.h"
 #include "ci/Deserializer.h"
 #include "ym/Range.h"
@@ -70,6 +71,21 @@ CiLut::new_lut(
     break;
   }
   return unique_ptr<CiLut>{lut};
+}
+
+// @brief インスタンスを生成するクラスメソッド
+unique_ptr<CiStLut>
+CiLut::new_stlut(
+  const CiLutTemplate* lut_template,
+  const vector<double>& value_array,
+  const vector<double>& index_array1,
+  const vector<double>& index_array2
+)
+{
+  auto lut = new CiStLut{lut_template, value_array,
+			 make_index_array(index_array1, lut_template, 0),
+			 make_index_array(index_array2, lut_template, 1)};
+  return unique_ptr<CiStLut>{lut};
 }
 
 // @brief val に対応する区間を求める．
@@ -163,6 +179,13 @@ CiLut1D::CiLut1D(
   if ( value_array.size() != index_array.size() ) {
     throw std::invalid_argument{"value_array.size() != index_array.size()"};
   }
+}
+
+// @brief 次元数の取得
+SizeType
+CiLut1D::dimension() const
+{
+  return 1;
 }
 
 // @brief インデックス数の取得
@@ -274,6 +297,13 @@ CiLut2D::CiLut2D(
   if ( value_array.size() != n ) {
     throw std::invalid_argument{"value_array.size() is not consistent with index_array1.size() and index_arary2.size()"};
   }
+}
+
+// @brief 次元数の取得
+SizeType
+CiLut2D::dimension() const
+{
+  return 2;
 }
 
 // @brief インデックス数の取得
@@ -406,6 +436,13 @@ CiLut3D::CiLut3D(
   if ( value_array.size() != n ) {
     throw std::invalid_argument{"value_array.size() is not consistent with index1_array.size(), index2_array.size() and index3_array.size()"};
   }
+}
+
+// @brief 次元数の取得
+SizeType
+CiLut3D::dimension() const
+{
+  return 1;
 }
 
 // @brief インデックス数の取得

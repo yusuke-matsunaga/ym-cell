@@ -29,6 +29,7 @@ class CiBundle;
 class CiTiming;
 class CiLutTemplate;
 class CiLut;
+class CiStLut;
 class CiCell;
 class CiCellGroup;
 class CiCellClass;
@@ -120,6 +121,15 @@ public:
     mLutList.put(obj);
   }
 
+  /// @brief LUT2Dを追加する．
+  void
+  reg_obj(
+    const CiStLut* obj
+  )
+  {
+    mStLutList.put(obj);
+  }
+
   /// @brief セルを追加する．
   void
   reg_obj(
@@ -157,6 +167,7 @@ public:
     mBusTypeList.dump(*this);
     mLutTemplateList.dump(*this);
     mLutList.dump(*this);
+    mStLutList.dump(*this);
     mPinList.dump(*this);
     mBusList.dump(*this);
     mBundleList.dump(*this);
@@ -398,6 +409,16 @@ public:
     dump(id);
   }
 
+  /// @brief LUT番号を出力する．
+  void
+  dump(
+    const CiStLut* obj
+  )
+  {
+    SizeType id = mStLutList.get_id(obj);
+    dump(id);
+  }
+
   /// @brief セル番号を出力する．
   void
   dump(
@@ -586,6 +607,9 @@ private:
 
   // LUTのリスト
   ListMap<CiLut> mLutList;
+
+  // StLUTのリスト
+  ListMap<CiStLut> mStLutList;
 
   // ピンのリスト
   ListMap<CiPin> mPinList;

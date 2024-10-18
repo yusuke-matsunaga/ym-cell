@@ -9,6 +9,8 @@
 /// All rights reserved.
 
 #include "dotlib/ElemInfo.h"
+#include "ci/CiLut.h"
+#include "ci/CiStLut.h"
 
 
 BEGIN_NAMESPACE_YM_DOTLIB
@@ -44,8 +46,17 @@ public:
     const AstValue* val
   );
 
+  /// @brief 標準タイプの時 true を返す．
+  bool
+  is_standard() const;
+
+  /// @brief CiLut を生成する．
   unique_ptr<CiLut>
   gen_lut() const;
+
+  /// @brief CiStLut を生成する．
+  unique_ptr<CiStLut>
+  gen_stlut() const;
 
 
 private:

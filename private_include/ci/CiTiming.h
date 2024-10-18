@@ -13,6 +13,7 @@
 #include "ym/ClibResistance.h"
 #include "ym/Expr.h"
 #include "ci/CiLut.h"
+#include "ci/CiStLut.h"
 
 
 BEGIN_NAMESPACE_YM_CLIB
@@ -73,10 +74,10 @@ public:
     const vector<ClibTime>& fall_delay_intercept       ///< [in] 立ち下がりY切片
   );
 
-  /// @brief CMOS非線形タイプ1のインスタンスを生成する．
+  /// @brief CMOS非線形タイプ(cell)のインスタンスを生成する．
   static
   unique_ptr<CiTiming>
-  new_Lut1(
+  new_Lut_cell(
     ClibTimingType timing_type,          ///< [in] タイミングの型
     const Expr& cond,                    ///< [in] タイミング条件を表す式
     unique_ptr<CiLut>&& cell_rise,       ///< [in] 立ち上がりセル遅延テーブル
@@ -85,16 +86,40 @@ public:
     unique_ptr<CiLut>&& fall_transition  ///< [in] 立ち下がり遷移遅延テーブル
   );
 
-  /// @brief CMOS非線形タイプ2のインスタンスを生成する．
+  /// @brief CMOS非線形タイプ(propagation)のインスタンスを生成する．
   static
   unique_ptr<CiTiming>
-  new_Lut2(
+  new_Lut_prop(
     ClibTimingType timing_type,           ///< [in] タイミングの型
     const Expr& cond,                     ///< [in] タイミング条件を表す式
     unique_ptr<CiLut>&& rise_transition,  ///< [in] 立ち上がり遷移遅延テーブル
     unique_ptr<CiLut>&& fall_transition,  ///< [in] 立ち下がり遷移遅延テーブル
     unique_ptr<CiLut>&& rise_propagation, ///< [in] 立ち上がり伝搬遅延テーブル
     unique_ptr<CiLut>&& fall_propagation  ///< [in] 立ち下がり伝搬遅延テーブル
+  );
+
+  /// @brief CMOS非線形タイプ(cell)のインスタンスを生成する．
+  static
+  unique_ptr<CiTiming>
+  new_Lut_cell(
+    ClibTimingType timing_type,            ///< [in] タイミングの型
+    const Expr& cond,                      ///< [in] タイミング条件を表す式
+    unique_ptr<CiStLut>&& cell_rise,       ///< [in] 立ち上がりセル遅延テーブル
+    unique_ptr<CiStLut>&& cell_fall,       ///< [in] 立ち下がりセル遅延テーブル
+    unique_ptr<CiStLut>&& rise_transition, ///< [in] 立ち上がり遷移遅延テーブル
+    unique_ptr<CiStLut>&& fall_transition  ///< [in] 立ち下がり遷移遅延テーブル
+  );
+
+  /// @brief CMOS非線形タイプ(propagation)のインスタンスを生成する．
+  static
+  unique_ptr<CiTiming>
+  new_Lut_prop(
+    ClibTimingType timing_type,             ///< [in] タイミングの型
+    const Expr& cond,                       ///< [in] タイミング条件を表す式
+    unique_ptr<CiStLut>&& rise_transition,  ///< [in] 立ち上がり遷移遅延テーブル
+    unique_ptr<CiStLut>&& fall_transition,  ///< [in] 立ち下がり遷移遅延テーブル
+    unique_ptr<CiStLut>&& rise_propagation, ///< [in] 立ち上がり伝搬遅延テーブル
+    unique_ptr<CiStLut>&& fall_propagation  ///< [in] 立ち下がり伝搬遅延テーブル
   );
 
   /// @brief デストラクタ
@@ -122,6 +147,44 @@ public:
   {
     return mCond;
   }
+
+  /// @brief 立ち上がり遅延時間を計算する．
+  virtual
+  ClibTime
+  calc_rise_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const = 0;
+
+  /// @brief 立ち下がり遅延時間を計算する．
+  virtual
+  ClibTime
+  calc_fall_delay(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const = 0;
+
+  /// @brief 立ち上がり遷移時間を計算する．
+  ///
+  /// 立ち上がり遷移時間は出力信号がしきい値1(通常20%)を超えてから
+  /// しきい値2(通常80%)を超えるまでの時間
+  virtual
+  ClibTime
+  calc_rise_transition(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const = 0;
+
+  /// @brief 立ち下がり遷移時間を計算する．
+  ///
+  /// 立ち上がり遷移時間は出力信号がしきい値1(通常80%)を下回ってから
+  /// しきい値2(通常20%)を下回るまでの時間
+  virtual
+  ClibTime
+  calc_fall_transition(
+    ClibTime input_transition,         ///< [in] 入力信号の遷移時間
+    ClibCapacitance output_capacitance ///< [in] 出力の負荷容量
+  ) const = 0;
 
 
 public:

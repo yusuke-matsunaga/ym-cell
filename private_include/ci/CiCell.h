@@ -25,6 +25,7 @@ class CiCellLibrary;
 class CiCellGroup;
 class CiBusType;
 class CiLut;
+class CiStLut;
 class CgSignature;
 class Serializer;
 class Deserializer;
@@ -652,7 +653,7 @@ public:
   /// @brief タイミング情報を作る(非線形タイプ1)．
   /// @return 生成されたタイミングを返す．
   CiTiming*
-  add_timing_lut1(
+  add_timing_lut_cell(
     ClibTimingType timing_type,
     const Expr& cond,
     unique_ptr<CiLut>&& cell_rise,
@@ -664,13 +665,37 @@ public:
   /// @brief タイミング情報を作る(非線形タイプ2)．
   /// @return 生成されたタイミングを返す．
   CiTiming*
-  add_timing_lut2(
+  add_timing_lut_prop(
     ClibTimingType timing_type,
     const Expr& cond,
     unique_ptr<CiLut>&& rise_transition,
     unique_ptr<CiLut>&& fall_transition,
     unique_ptr<CiLut>&& rise_propagation,
     unique_ptr<CiLut>&& fall_propagation
+  );
+
+  /// @brief タイミング情報を作る(非線形タイプ1)．
+  /// @return 生成されたタイミングを返す．
+  CiTiming*
+  add_timing_lut_cell(
+    ClibTimingType timing_type,
+    const Expr& cond,
+    unique_ptr<CiStLut>&& cell_rise,
+    unique_ptr<CiStLut>&& cell_fall,
+    unique_ptr<CiStLut>&& rise_transition,
+    unique_ptr<CiStLut>&& fall_transition
+  );
+
+  /// @brief タイミング情報を作る(非線形タイプ2)．
+  /// @return 生成されたタイミングを返す．
+  CiTiming*
+  add_timing_lut_prop(
+    ClibTimingType timing_type,
+    const Expr& cond,
+    unique_ptr<CiStLut>&& rise_transition,
+    unique_ptr<CiStLut>&& fall_transition,
+    unique_ptr<CiStLut>&& rise_propagation,
+    unique_ptr<CiStLut>&& fall_propagation
   );
 
   /// @brief タイミング情報用のデータ構造を初期化する．

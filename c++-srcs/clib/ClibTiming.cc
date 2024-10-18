@@ -34,6 +34,50 @@ ClibTiming::timing_cond() const
   return _impl()->timing_cond();
 }
 
+// @brief 立ち上がり遅延時間を計算する．
+ClibTime
+ClibTiming::calc_rise_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  _check_valid();
+  return _impl()->calc_rise_delay(input_transition, output_capacitance);
+}
+
+// @brief 立ち下がり遅延時間を計算する．
+ClibTime
+ClibTiming::calc_fall_delay(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  _check_valid();
+  return _impl()->calc_fall_delay(input_transition, output_capacitance);
+}
+
+// @brief 立ち上がり遷移時間を計算する．
+ClibTime
+ClibTiming::calc_rise_transition(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  _check_valid();
+  return _impl()->calc_rise_transition(input_transition, output_capacitance);
+}
+
+// @brief 立ち下がり遷移時間を計算する．
+ClibTime
+ClibTiming::calc_fall_transition(
+  ClibTime input_transition,
+  ClibCapacitance output_capacitance
+) const
+{
+  _check_valid();
+  return _impl()->calc_fall_transition(input_transition, output_capacitance);
+}
+
 // @brief 立ち上がり固有遅延の取得
 ClibTime
 ClibTiming::intrinsic_rise() const
