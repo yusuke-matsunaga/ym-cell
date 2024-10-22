@@ -290,10 +290,10 @@ AstBoolExpr::to_expr(
 ) const
 {
   if ( mValue ) {
-    return Expr::make_zero();
+    return Expr::zero();
   }
   else {
-    return Expr::make_one();
+    return Expr::one();
   }
 }
 
@@ -346,7 +346,7 @@ AstFloatExpr::to_expr(
 ) const
 {
   ASSERT_NOT_REACHED;
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief 内容を表す文字列を返す．
@@ -402,11 +402,11 @@ AstStrExpr::to_expr(
 		    MsgType::Error,
 		    "DOTLIB_PARSER",
 		    buf.str());
-    return Expr::make_invalid();
+    return Expr::invalid();
   }
 
   SizeType id = pin_map.at(mValue);
-  return Expr::make_posi_literal(id);
+  return Expr::posi_literal(id);
 }
 
 // @brief 内容を表す文字列を返す．
@@ -444,7 +444,7 @@ AstSymbolExpr::to_expr(
 ) const
 {
   ASSERT_NOT_REACHED;
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief 内容を表す文字列を返す．
@@ -619,7 +619,7 @@ AstNullExpr::to_expr(
   const unordered_map<ShString, SizeType>& pin_map
 ) const
 {
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief 内容を表す文字列を返す．

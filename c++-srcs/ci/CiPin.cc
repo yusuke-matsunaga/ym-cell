@@ -218,14 +218,14 @@ CiPin::min_transition() const
 Expr
 CiPin::function() const
 {
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief tristate 条件式を返す．
 Expr
 CiPin::tristate() const
 {
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief 内部ピン番号を返す．

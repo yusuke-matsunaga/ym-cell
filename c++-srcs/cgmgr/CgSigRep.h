@@ -54,7 +54,7 @@ public:
     const vector<TvFunc>& func_list,     ///< [in] 対象の論理関数のリスト
     const vector<TvFunc>& tristate_list, ///< [in] tristate条件のリスト
     const Expr& expr                     ///< [in] 論理式
-    = Expr::make_invalid()
+    = Expr::invalid()
   );
 
   /// @brief デストラクタ

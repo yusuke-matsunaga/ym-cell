@@ -250,11 +250,11 @@ foo_test(
 )
 {
 #if 0
-  FuncSpec spec{TvFunc::make_zero(1),
-		TvFunc::make_invalid()};
+  FuncSpec spec{TvFunc::zero(1),
+		TvFunc::invalid()};
 #else
-  FuncSpec spec{TvFunc::make_posi_literal(2, 0),
-                TvFunc::make_posi_literal(2, 1)};
+  FuncSpec spec{TvFunc::posi_literal(2, 0),
+                TvFunc::posi_literal(2, 1)};
 #endif
 
   FuncTest test;

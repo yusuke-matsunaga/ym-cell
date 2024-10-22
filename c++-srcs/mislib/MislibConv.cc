@@ -233,11 +233,11 @@ MislibConv::new_gate(
 		   ClibTime::infty(),
 		   ClibTime{0.0},
 		   oexpr,
-		   Expr::make_invalid());
+		   Expr::invalid());
 
   // タイミング情報の生成
   cell->init_timing_map();
-  auto tv_function = oexpr.make_tv(ni);
+  auto tv_function = oexpr.to_tv(ni);
   if ( wildcard_pin ) {
     // すべてのピンが同一のパラメータを持つ．
     auto pt_pin = ipin_top;
@@ -269,7 +269,7 @@ MislibConv::add_timing(
   ClibResistance f_r{pin->fall_fanout_delay()->num()};
   auto timing = cell->add_timing_generic(
     ClibTimingType::combinational,
-    Expr::make_one(),
+    Expr::one(),
     r_i, f_i,
     ClibTime{0.0}, ClibTime{0.0},
     r_r, f_r

@@ -104,14 +104,14 @@ CiCell::qvar2() const
 Expr
 CiCell::clear_expr() const
 {
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief FFセル/ラッチセルの場合にプリセット条件を表す論理式を返す．
 Expr
 CiCell::preset_expr() const
 {
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief 順序セルの属性を返す．
@@ -125,42 +125,42 @@ CiCell::seq_attr() const
 Expr
 CiCell::clock_expr() const
 {
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief FFセルの場合にスレーブクロックのアクティブエッジを表す論理式を返す．
 Expr
 CiCell::clock2_expr() const
 {
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief FFセルの場合に次状態関数を表す論理式を返す．
 Expr
 CiCell::next_state_expr() const
 {
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief ラッチセルの場合にイネーブル条件を表す論理式を返す．
 Expr
 CiCell::enable_expr() const
 {
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief ラッチセルの場合に2つめのイネーブル条件を表す論理式を返す．
 Expr
 CiCell::enable2_expr() const
 {
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief ラッチセルの場合にデータ入力関数を表す論理式を返す．
 Expr
 CiCell::data_in_expr() const
 {
-  return Expr::make_invalid();
+  return Expr::invalid();
 }
 
 // @brief 名前からピンの取得
@@ -509,8 +509,8 @@ CiCell::make_signature() const
       auto tri_expr = opin->tristate();
       if ( tri_expr.is_valid() ) {
 	// tristate あり
-	auto func = expr.make_tv(ni2);
-	auto tristate = tri_expr.make_tv(ni2);
+	auto func = expr.to_tv(ni2);
+	auto tristate = tri_expr.to_tv(ni2);
 	return CgSignature::make_logic_sig(func, tristate);
       }
       // tristate なし
@@ -521,8 +521,8 @@ CiCell::make_signature() const
   vector<TvFunc> tristate_list(no2);
   for ( SizeType i = 0; i < no2; ++ i ) {
     auto opin = output(i);
-    logic_list[i] = opin->function().make_tv(ni2);
-    tristate_list[i] = opin->tristate().make_tv(ni2);
+    logic_list[i] = opin->function().to_tv(ni2);
+    tristate_list[i] = opin->tristate().to_tv(ni2);
   }
   return CgSignature::make_logic_sig(ni, no, nb, logic_list, tristate_list);
 }

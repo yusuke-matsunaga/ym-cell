@@ -447,16 +447,16 @@ TEST(GenFuncTest, base1)
   SizeType no = 1;
   SizeType nb = 0;
   SizeType ni3 = ni + 2;
-  auto clock_var = TvFunc::make_posi_literal(ni3, 0);
-  auto data_var = TvFunc::make_posi_literal(ni3, 1);
-  auto clear_var = TvFunc::make_posi_literal(ni3, 2);
-  auto preset_var = TvFunc::make_posi_literal(ni3, 3);
-  auto qout_var = TvFunc::make_posi_literal(ni3, 4);
+  auto clock_var = TvFunc::posi_literal(ni3, 0);
+  auto data_var = TvFunc::posi_literal(ni3, 1);
+  auto clear_var = TvFunc::posi_literal(ni3, 2);
+  auto preset_var = TvFunc::posi_literal(ni3, 3);
+  auto qout_var = TvFunc::posi_literal(ni3, 4);
   FFSpec spec{ni, no, nb,
 	      {qout_var},
-	      {TvFunc::make_invalid()},
+	      {TvFunc::invalid()},
 	      clock_var,
-	      TvFunc::make_invalid(),
+	      TvFunc::invalid(),
 	      data_var,
 	      clear_var,
 	      preset_var,
@@ -470,13 +470,13 @@ TEST(GenFuncTest, manual1)
   SizeType ni = 4;
   SizeType no = 2;
   SizeType nb = 0;
-  auto v0 = TvFunc::make_posi_literal(ni + nb, 0);
-  auto v1 = TvFunc::make_posi_literal(ni + nb, 1);
-  auto v2 = TvFunc::make_posi_literal(ni + nb, 2);
-  auto v3 = TvFunc::make_posi_literal(ni + nb, 3);
+  auto v0 = TvFunc::posi_literal(ni + nb, 0);
+  auto v1 = TvFunc::posi_literal(ni + nb, 1);
+  auto v2 = TvFunc::posi_literal(ni + nb, 2);
+  auto v3 = TvFunc::posi_literal(ni + nb, 3);
   auto f0 = v0 & v1;
   auto f1 = v2 | v3;
-  auto iv = TvFunc::make_invalid();
+  auto iv = TvFunc::invalid();
   auto sig1 = CgSignature::make_logic_sig(ni, no, nb,
 					  {f0, f1},
 					  {iv, iv});

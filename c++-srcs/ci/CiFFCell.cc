@@ -112,14 +112,14 @@ CiFFCell::make_signature() const
   vector<TvFunc> tristate_list(no2);
   for ( SizeType i = 0; i < no2; ++ i ) {
     auto opin = output(i);
-    logic_list[i] = opin->function().make_tv(xni);
-    tristate_list[i] = opin->tristate().make_tv(xni);
+    logic_list[i] = opin->function().to_tv(xni);
+    tristate_list[i] = opin->tristate().to_tv(xni);
   }
-  auto clock = clock_expr().make_tv(xni);
-  auto clock2 = clock2_expr().make_tv(xni);
-  auto next = next_state_expr().make_tv(xni);
-  auto clear = clear_expr().make_tv(xni);
-  auto preset = preset_expr().make_tv(xni);
+  auto clock = clock_expr().to_tv(xni);
+  auto clock2 = clock2_expr().to_tv(xni);
+  auto next = next_state_expr().to_tv(xni);
+  auto clear = clear_expr().to_tv(xni);
+  auto preset = preset_expr().to_tv(xni);
   auto sig = CgSignature::make_ff_sig(ni, no, nb,
 				      logic_list, tristate_list,
 				      clock, clock2, next,

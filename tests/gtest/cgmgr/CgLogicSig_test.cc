@@ -260,26 +260,26 @@ TEST_P(FuncTest, xform)
 INSTANTIATE_TEST_SUITE_P(CgLogicSig0_test,
 			 FuncTest,
 			 ::testing::Values(
-			   FuncSpec{TvFunc::make_invalid(),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_zero(0),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_one(0),
-				    TvFunc::make_invalid()}
+			   FuncSpec{TvFunc::invalid(),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::zero(0),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::one(0),
+				    TvFunc::invalid()}
 			 ));
 
 // 1入力関数のテスト
 INSTANTIATE_TEST_SUITE_P(CgLogicSig1_test,
 			 FuncTest,
 			 ::testing::Values(
-			   FuncSpec{TvFunc::make_zero(1),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_one(1),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(1, 0),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_nega_literal(1, 0),
-				    TvFunc::make_invalid()}
+			   FuncSpec{TvFunc::zero(1),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::one(1),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::posi_literal(1, 0),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::nega_literal(1, 0),
+				    TvFunc::invalid()}
 			 ));
 
 
@@ -287,53 +287,53 @@ INSTANTIATE_TEST_SUITE_P(CgLogicSig1_test,
 INSTANTIATE_TEST_SUITE_P(CgLogicSig2_test,
 			 FuncTest,
 			 ::testing::Values(
-			   FuncSpec{TvFunc::make_zero(2),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_one(2),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, 0),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, 1),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, 0) &
-				    TvFunc::make_posi_literal(2, 1),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, 0) &
-				    TvFunc::make_nega_literal(2, 1),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, 0) ^
-				    TvFunc::make_posi_literal(2, 1),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(2, 0),
-				    TvFunc::make_posi_literal(2, 1)}
+			   FuncSpec{TvFunc::zero(2),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::one(2),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::posi_literal(2, 0),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::posi_literal(2, 1),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::posi_literal(2, 0) &
+				    TvFunc::posi_literal(2, 1),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::posi_literal(2, 0) &
+				    TvFunc::nega_literal(2, 1),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::posi_literal(2, 0) ^
+				    TvFunc::posi_literal(2, 1),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::posi_literal(2, 0),
+				    TvFunc::posi_literal(2, 1)}
 			 ));
 
 // 3入力関数のテスト
 INSTANTIATE_TEST_SUITE_P(CgLogicSig3_test,
 			 FuncTest,
 			 ::testing::Values(
-			   FuncSpec{TvFunc::make_zero(3),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_one(3),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(3, 0) |
-				    (TvFunc::make_posi_literal(3, 1) &
-				     TvFunc::make_nega_literal(3, 2)),
-				    TvFunc::make_invalid()}
+			   FuncSpec{TvFunc::zero(3),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::one(3),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::posi_literal(3, 0) |
+				    (TvFunc::posi_literal(3, 1) &
+				     TvFunc::nega_literal(3, 2)),
+				    TvFunc::invalid()}
 			 ));
 
 // 4入力関数のテスト
 INSTANTIATE_TEST_SUITE_P(CgLogicSig4_test,
 			 FuncTest,
 			 ::testing::Values(
-			   FuncSpec{TvFunc::make_zero(4),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_one(4),
-				    TvFunc::make_invalid()},
-			   FuncSpec{TvFunc::make_posi_literal(4, 0) |
-				    (TvFunc::make_posi_literal(4, 1) &
-				     TvFunc::make_nega_literal(4, 2)),
-				    TvFunc::make_posi_literal(4, 3)}
+			   FuncSpec{TvFunc::zero(4),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::one(4),
+				    TvFunc::invalid()},
+			   FuncSpec{TvFunc::posi_literal(4, 0) |
+				    (TvFunc::posi_literal(4, 1) &
+				     TvFunc::nega_literal(4, 2)),
+				    TvFunc::posi_literal(4, 3)}
 			 ));
 
 END_NAMESPACE_YM_CLIB

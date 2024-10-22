@@ -359,7 +359,7 @@ MislibVarName::to_expr(
   ASSERT_COND( c > 0 );
 
   SizeType var = name_map.at(varname());
-  return Expr::make_posi_literal(var);
+  return Expr::posi_literal(var);
 }
 
 // @brief 変数名を取り出す
@@ -399,7 +399,7 @@ MislibConst0::to_expr(
   const MislibNameMap& name_map
 ) const
 {
-  return Expr::make_zero();
+  return Expr::zero();
 }
 
 // 内容を出力する．
@@ -432,7 +432,7 @@ MislibConst1::to_expr(
   const MislibNameMap& name_map
 ) const
 {
-  return Expr::make_one();
+  return Expr::one();
 }
 
 // 内容を出力する．

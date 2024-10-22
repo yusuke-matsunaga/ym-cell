@@ -106,14 +106,14 @@ CiLatchCell::make_signature() const
   vector<TvFunc> tristate_list(no2);
   for ( SizeType i = 0; i < no2; ++ i ) {
     auto opin = output(i);
-    logic_list[i] = opin->function().make_tv(xni);
-    tristate_list[i] = opin->tristate().make_tv(xni);
+    logic_list[i] = opin->function().to_tv(xni);
+    tristate_list[i] = opin->tristate().to_tv(xni);
   }
-  TvFunc enable = enable_expr().make_tv(xni);
-  TvFunc enable2 = enable2_expr().make_tv(xni);
-  TvFunc data_in = data_in_expr().make_tv(xni);
-  TvFunc clear = clear_expr().make_tv(xni);
-  TvFunc preset = preset_expr().make_tv(xni);
+  TvFunc enable = enable_expr().to_tv(xni);
+  TvFunc enable2 = enable2_expr().to_tv(xni);
+  TvFunc data_in = data_in_expr().to_tv(xni);
+  TvFunc clear = clear_expr().to_tv(xni);
+  TvFunc preset = preset_expr().to_tv(xni);
   auto sig = CgSignature::make_latch_sig(ni, no, nb,
 					 logic_list, tristate_list,
 					 enable, enable2, data_in,

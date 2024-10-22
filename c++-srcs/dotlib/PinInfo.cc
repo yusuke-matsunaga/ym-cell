@@ -65,7 +65,7 @@ make_expr(
 {
   if ( ast_expr == nullptr ) {
     // 未定義の場合のフォールバック
-    return Expr::make_invalid();
+    return Expr::invalid();
   }
   return ast_expr->to_expr(pin_map);
 }

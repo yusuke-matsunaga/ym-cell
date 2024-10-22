@@ -159,16 +159,16 @@ CellInfo::add_ff_cell() const
   auto var1 = mFFInfo.var1();
   auto var2 = mFFInfo.var2();
   auto clocked_on = mFFInfo.clocked_on()->to_expr(mIpinMap);
-  auto clocked_on_also = Expr::make_invalid();
+  auto clocked_on_also = Expr::invalid();
   if ( mFFInfo.clocked_on_also() != nullptr ) {
     clocked_on_also = mFFInfo.clocked_on_also()->to_expr(mIpinMap);
   }
   auto next_state = mFFInfo.next_state()->to_expr(mIpinMap);
-  auto clear = Expr::make_invalid();
+  auto clear = Expr::invalid();
   if ( mFFInfo.clear() != nullptr ) {
     clear = mFFInfo.clear()->to_expr(mIpinMap);
   }
-  auto preset = Expr::make_invalid();
+  auto preset = Expr::invalid();
   if ( mFFInfo.preset() != nullptr ) {
     preset = mFFInfo.preset()->to_expr(mIpinMap);
   }
@@ -190,23 +190,23 @@ CellInfo::add_latch_cell() const
 {
   auto var1 = mLatchInfo.var1();
   auto var2 = mLatchInfo.var2();
-  auto enable_on = Expr::make_invalid();
+  auto enable_on = Expr::invalid();
   if ( mLatchInfo.enable_on() != nullptr ) {
     enable_on = mLatchInfo.enable_on()->to_expr(mIpinMap);
   }
-  auto enable_on_also = Expr::make_invalid();
+  auto enable_on_also = Expr::invalid();
   if ( mLatchInfo.enable_on_also() != nullptr ) {
     enable_on_also = mLatchInfo.enable_on_also()->to_expr(mIpinMap);
   }
-  auto data_in = Expr::make_invalid();
+  auto data_in = Expr::invalid();
   if ( mLatchInfo.data_in() != nullptr ) {
     data_in = mLatchInfo.data_in()->to_expr(mIpinMap);
   }
-  auto clear = Expr::make_invalid();
+  auto clear = Expr::invalid();
   if ( mLatchInfo.clear() != nullptr ) {
     clear = mLatchInfo.clear()->to_expr(mIpinMap);
   }
-  auto preset = Expr::make_invalid();
+  auto preset = Expr::invalid();
   if ( mLatchInfo.preset() != nullptr ) {
     preset = mLatchInfo.preset()->to_expr(mIpinMap);
   }

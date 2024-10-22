@@ -39,22 +39,22 @@ void
 CgMgr::logic_init()
 {
   { // 定数0グループの登録
-    auto sig = CgSignature::make_logic_sig(0, Expr::make_zero());
+    auto sig = CgSignature::make_logic_sig(0, Expr::zero());
     auto func0 = find_group(sig);
     mLogicGroup[C0_BASE] = func0;
   }
   { // 定数1グループの登録
-    auto sig = CgSignature::make_logic_sig(0, Expr::make_one());
+    auto sig = CgSignature::make_logic_sig(0, Expr::one());
     auto func1 = find_group(sig);
     mLogicGroup[C1_BASE] = func1;
   }
   { // バッファグループの登録
-    auto sig = CgSignature::make_logic_sig(1, Expr::make_posi_literal(0));
+    auto sig = CgSignature::make_logic_sig(1, Expr::posi_literal(0));
     auto func2 = find_group(sig);
     mLogicGroup[BUF_BASE] = func2;
   }
   { // インバーターグループの登録
-    auto sig = CgSignature::make_logic_sig(1, Expr::make_nega_literal(0));
+    auto sig = CgSignature::make_logic_sig(1, Expr::nega_literal(0));
     auto func3 = find_group(sig);
     mLogicGroup[INV_BASE] = func3;
   }
@@ -67,11 +67,11 @@ CgMgr::logic_init()
   // OR2 〜 OR4 のグループの登録
   // NOR2 〜 NOR4 のグループの登録
   for ( auto ni: {2, 3, 4} ) {
-    auto and_expr = Expr::make_posi_literal(0);
-    auto or_expr = Expr::make_posi_literal(0);
+    auto and_expr = Expr::posi_literal(0);
+    auto or_expr = Expr::posi_literal(0);
     for ( SizeType i = 1; i < ni; ++ i ) {
-      and_expr &= Expr::make_posi_literal(i);
-      or_expr |= Expr::make_posi_literal(i);
+      and_expr &= Expr::posi_literal(i);
+      or_expr |= Expr::posi_literal(i);
     }
 
     SizeType index = ni - 2;
@@ -96,9 +96,9 @@ CgMgr::logic_init()
   // XOR2 〜 XOR4 のグループの登録
   // XNOR2 〜 XNOR4 のグループの登録
   for ( auto ni: {2, 3, 4} ) {
-    auto xor_expr = Expr::make_posi_literal(0);
+    auto xor_expr = Expr::posi_literal(0);
     for ( SizeType i = 1; i < ni; ++ i ) {
-      xor_expr ^= Expr::make_posi_literal(i);
+      xor_expr ^= Expr::posi_literal(i);
     }
 
     SizeType index = ni - 2;
@@ -114,9 +114,9 @@ CgMgr::logic_init()
 
   { // MUX2 のグループの登録．
     SizeType ni = 3;
-    auto lit0 = Expr::make_posi_literal(0);
-    auto lit1 = Expr::make_posi_literal(1);
-    auto lit2 = Expr::make_posi_literal(2);
+    auto lit0 = Expr::posi_literal(0);
+    auto lit1 = Expr::posi_literal(1);
+    auto lit2 = Expr::posi_literal(2);
     auto mux2_func = lit0 & ~lit2 | lit1 & lit2;
     auto sig = CgSignature::make_logic_sig(ni, mux2_func);
     auto mux_func = find_group(sig);
@@ -125,12 +125,12 @@ CgMgr::logic_init()
 
   { // MUX4 のグループの登録．
     SizeType ni = 6;
-    auto lit0 = Expr::make_posi_literal(0);
-    auto lit1 = Expr::make_posi_literal(1);
-    auto lit2 = Expr::make_posi_literal(2);
-    auto lit3 = Expr::make_posi_literal(3);
-    auto lit4 = Expr::make_posi_literal(4);
-    auto lit5 = Expr::make_posi_literal(5);
+    auto lit0 = Expr::posi_literal(0);
+    auto lit1 = Expr::posi_literal(1);
+    auto lit2 = Expr::posi_literal(2);
+    auto lit3 = Expr::posi_literal(3);
+    auto lit4 = Expr::posi_literal(4);
+    auto lit5 = Expr::posi_literal(5);
     auto mux4_func =
       lit0 & ~lit4 & ~lit5 |
       lit1 &  lit4 & ~lit5 |

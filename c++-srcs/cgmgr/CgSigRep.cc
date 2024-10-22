@@ -133,8 +133,8 @@ CgSigRep::CgSigRep(
 ) : mNi{ni},
     mNo{1},
     mNb{0},
-    mFuncList{expr.make_tv(ni)},
-    mTristateList{TvFunc::make_invalid()},
+    mFuncList{expr.to_tv(ni)},
+    mTristateList{TvFunc::invalid()},
     mExpr{expr}
 {
 }
@@ -240,7 +240,7 @@ xform_expr(
   for ( auto src_var = 0; src_var < ni; ++ src_var ) {
     NpnVmap imap = map.imap(src_var);
     auto dst_var = imap.var();
-    auto expr = Expr::make_literal(dst_var, imap.inv());
+    auto expr = Expr::literal(dst_var, imap.inv());
     vlm[src_var] = expr;
   }
   Expr cexpr = expr.compose(vlm);
@@ -290,7 +290,7 @@ CgSigRep::xform(
     xfunc_list[i] = mFuncList[i].xform(npnmap0);
     xtristate_list[i] = mTristateList[i].xform(npnmap0);
   }
-  auto xexpr = Expr::make_invalid();
+  auto xexpr = Expr::invalid();
   if ( mExpr.is_valid() ) {
     auto npnmap = to_npnmap(iomap, ni, 0);
     xexpr = xform_expr(mExpr, npnmap);
