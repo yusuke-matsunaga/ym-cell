@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 #include "gtest/gtest.h"
-#include "DotlibScanner.h"
+#include "dotlib/DotlibScanner.h"
 #include "ym/MsgMgr.h"
 #include "ym/StrListMsgHandler.h"
 

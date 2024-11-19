@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 #include "gtest/gtest.h"
-#include "dotlib_nsdef.h"
+#include "dotlib/dotlib_nsdef.h"
 #include "ym/MsgMgr.h"
 #include "ym/StrListMsgHandler.h"
 #include "ym/StreamMsgHandler.h"

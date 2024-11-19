@@ -7,9 +7,9 @@
 /// All rights reserved.
 
 #include "ParserTest.h"
-#include "Parser.h"
-#include "AstAttr.h"
-#include "AstValue.h"
+#include "dotlib/Parser.h"
+#include "dotlib/AstAttr.h"
+#include "dotlib/AstValue.h"
 
 #include "parse_complex.h"
 
