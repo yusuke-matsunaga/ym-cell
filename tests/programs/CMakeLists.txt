@@ -28,7 +28,6 @@ set ( TESTDATA_DIR
 add_executable ( read_mislib_test
   read_mislib_test.cc
   $<TARGET_OBJECTS:ym_cell_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
@@ -45,7 +44,6 @@ target_compile_definitions ( read_mislib_test
 add_executable ( read_liberty_test
   read_liberty_test.cc
   $<TARGET_OBJECTS:ym_cell_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_base_obj_d>
   )
@@ -63,7 +61,6 @@ add_executable ( dotlib_parser_test
   $<TARGET_OBJECTS:ym_cell_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   )
 
 target_include_directories ( dotlib_parser_test

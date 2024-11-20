@@ -37,7 +37,6 @@ add_executable( py_ymcell
   $<TARGET_OBJECTS:ym_cell_obj>
   $<TARGET_OBJECTS:ym_logic_obj>
   $<TARGET_OBJECTS:ym_base_obj>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   )
 
 target_compile_options( py_ymcell
@@ -60,7 +59,6 @@ add_executable( py_ymcell_d
   $<TARGET_OBJECTS:ym_cell_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   )
 
 target_compile_options( py_ymcell_d

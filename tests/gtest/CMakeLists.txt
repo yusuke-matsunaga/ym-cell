@@ -51,7 +51,6 @@ ym_add_gtest ( cell_ClibResistance_test
 ym_add_gtest ( cell_ClibSeqAttr_test
   clib/ClibSeqAttrTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   )
@@ -72,7 +71,6 @@ ym_add_gtest ( cell_ClibTime_test
 ym_add_gtest ( cell_ClibCell_test
   clib/ClibCellTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   DEFINITIONS
@@ -86,7 +84,6 @@ ym_add_gtest ( cell_ClibCell_test
 ym_add_gtest ( cell_ClibCellLibrary_test
   clib/ClibCellLibraryTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   DEFINITIONS
@@ -100,7 +97,6 @@ ym_add_gtest ( cell_ClibCellLibrary_test
 ym_add_gtest ( cell_ClibIOMap_test
   clib/ClibIOMapTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   )
@@ -112,7 +108,6 @@ ym_add_gtest ( cell_ClibIOMap_test
 ym_add_gtest ( cell_MislibScanner_test
   mislib/MislibScannerTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   DEFINITIONS
@@ -131,7 +126,6 @@ target_include_directories( cell_MislibScanner_test
 ym_add_gtest ( cell_MislibParser_test
   mislib/MislibParserTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   DEFINITIONS
@@ -150,7 +144,6 @@ target_include_directories( cell_MislibParser_test
 ym_add_gtest ( cell_DotlibScanner_test
   dotlib/ScannerTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   )
@@ -162,7 +155,6 @@ ym_add_gtest ( cell_DotlibScanner_test
 ym_add_gtest ( cell_FuncScanner_test
   dotlib/FuncScannerTest.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   )
@@ -188,7 +180,6 @@ ym_add_gtest ( cell_DotlibParser_test
   dotlib/ParserTest_library_complex.cc
   dotlib/ParserTest_library_group.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   )
@@ -205,7 +196,6 @@ target_include_directories( cell_DotlibParser_test
 ym_add_gtest ( cell_DotlibParser_test2
   dotlib/ParserTest_ast.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   DEFINITIONS
@@ -224,7 +214,6 @@ target_include_directories( cell_DotlibParser_test2
 ym_add_gtest ( cell_CgLogicSig_test
   cgmgr/CgLogicSig_test.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   )
@@ -237,7 +226,6 @@ target_include_directories( cell_CgLogicSig_test
 add_executable( foo_test
   cgmgr/foo.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   )
@@ -263,7 +251,6 @@ target_include_directories( foo_test
 ym_add_gtest ( cell_CgGenLogicSig_test
   cgmgr/CgGenLogicSig_test.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   )
@@ -280,7 +267,6 @@ target_include_directories( cell_CgGenLogicSig_test
 ym_add_gtest ( cell_CgFFSig_test
   cgmgr/CgFFSig_test.cc
   $<TARGET_OBJECTS:ym_base_obj_d>
-  $<TARGET_OBJECTS:ym_json_obj_d>
   $<TARGET_OBJECTS:ym_logic_obj_d>
   $<TARGET_OBJECTS:ym_cell_obj_d>
   )
