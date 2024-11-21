@@ -45,6 +45,7 @@ add_library ( py_ymcelllib
   SHARED
   $<TARGET_OBJECTS:py_ymcell_obj>
   $<TARGET_OBJECTS:py_ymlogic_obj>
+  $<TARGET_OBJECTS:py_ymbase_obj>
   $<TARGET_OBJECTS:ym_cell_obj>
   $<TARGET_OBJECTS:ym_logic_obj>
   $<TARGET_OBJECTS:ym_base_obj>
