@@ -14,6 +14,12 @@ include_directories(
 # サブディレクトリの設定
 # ===================================================================
 
+add_subdirectory( cgmgr )
+add_subdirectory( ci )
+add_subdirectory( clib )
+add_subdirectory( dotlib )
+add_subdirectory( mislib )
+
 
 # ===================================================================
 #  ソースファイルの設定

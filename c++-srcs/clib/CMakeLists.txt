@@ -7,35 +7,42 @@
 # インクルードパスの設定
 # ===================================================================
 include_directories(
-  ${PROJECT_BINARY_DIR}/include
-  ${PROJECT_SOURCE_DIR}/ym-common/include
-  ${PROJECT_SOURCE_DIR}/ym-base/include
-  ${PROJECT_SOURCE_DIR}/ym-logic/include
-  include
-  private_include
   )
-
-
-# テストデータのパス
-set ( TESTDATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/testdata )
 
 
 # ===================================================================
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory ( c++-srcs )
-add_subdirectory ( test-programs )
+add_subdirectory( gtest )
 
-if ( Python3_FOUND )
-  add_subdirectory ( py_capi )
-  add_subdirectory ( pytest )
-endif ( Python3_FOUND )
+
+# ===================================================================
+#  ソースファイルの設定
+# ===================================================================
+set (clib_SOURCES
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibBundle.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibBus.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibBusType.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibCell.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibCellClass.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibCellGroup.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibCellLibrary.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibIOMap.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibLibraryPtr.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibLut.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibPatGraph.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibPin.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/ClibTiming.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/Writer.cc
+  PARENT_SCOPE
+  )
 
 
 # ===================================================================
 #  ターゲットの設定
 # ===================================================================
+
 
 # ===================================================================
 #  インストールターゲットの設定

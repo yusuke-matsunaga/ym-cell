@@ -19,12 +19,6 @@ include_directories(
 # サブディレクトリの設定
 # ===================================================================
 
-# テストデータのパス
-set ( TESTDATA_DIR
-  ${PROJECT_SOURCE_DIR}/ym-cell/tests/testdata
-  )
-
-
 add_executable ( read_mislib_test
   read_mislib_test.cc
   $<TARGET_OBJECTS:ym_cell_obj_d>
@@ -65,7 +59,7 @@ add_executable ( dotlib_parser_test
 
 target_include_directories ( dotlib_parser_test
   PRIVATE
-  ../../c++-srcs/dotlib/parser
+  ../c++-srcs/dotlib/parser
   )
 
 target_compile_options ( dotlib_parser_test

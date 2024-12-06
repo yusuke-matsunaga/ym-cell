@@ -7,35 +7,33 @@
 # インクルードパスの設定
 # ===================================================================
 include_directories(
-  ${PROJECT_BINARY_DIR}/include
-  ${PROJECT_SOURCE_DIR}/ym-common/include
-  ${PROJECT_SOURCE_DIR}/ym-base/include
-  ${PROJECT_SOURCE_DIR}/ym-logic/include
-  include
-  private_include
   )
-
-
-# テストデータのパス
-set ( TESTDATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/testdata )
 
 
 # ===================================================================
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory ( c++-srcs )
-add_subdirectory ( test-programs )
+add_subdirectory( gtest )
 
-if ( Python3_FOUND )
-  add_subdirectory ( py_capi )
-  add_subdirectory ( pytest )
-endif ( Python3_FOUND )
+
+# ===================================================================
+#  ソースファイルの設定
+# ===================================================================
+set (mislib_SOURCES
+  ${CMAKE_CURRENT_SOURCE_DIR}/MislibNode.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/MislibParser.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/MislibScanner.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/MislibConv.cc
+
+  PARENT_SCOPE
+  )
 
 
 # ===================================================================
 #  ターゲットの設定
 # ===================================================================
+
 
 # ===================================================================
 #  インストールターゲットの設定
