@@ -10,14 +10,12 @@
 #include "pym/PyClibDirection.h"
 #include "pym/PyExpr.h"
 #include "pym/PyModule.h"
-#include "ci/CiCell.h"
-#include "ci/CiPin.h"
+#include "ym/ClibPin.h"
+#include "ym/ClibCapacitance.h"
+#include "ym/ClibTime.h"
 
 
 BEGIN_NAMESPACE_YM
-
-using CiCell = nsClib::CiCell;
-using CiPin = nsClib::CiPin;
 
 BEGIN_NONAMESPACE
 
@@ -25,8 +23,7 @@ BEGIN_NONAMESPACE
 struct ClibPinObject
 {
   PyObject_HEAD
-  const CiCell* mCell;
-  const CiPin* mVal;
+  ClibPin mPin;
 };
 
 // Python 用のタイプ定義
@@ -53,26 +50,9 @@ ClibPin_dealloc(
   PyObject* self
 )
 {
-  auto val_obj = reinterpret_cast<ClibPinObject*>(self);
-  auto ptr = val_obj->mCell;
-  if ( ptr != nullptr ) {
-    ptr->dec_ref();
-  }
+  auto pin_obj = reinterpret_cast<ClibPinObject*>(self);
+  pin_obj->mPin.~ClibPin();
   Py_TYPE(self)->tp_free(self);
-}
-
-// repr() 関数
-PyObject*
-ClibPin_repr(
-  PyObject* self
-)
-{
-  auto val_obj = reinterpret_cast<ClibPinObject*>(self);
-  auto cell = val_obj->mCell;
-  auto pin = val_obj->mVal;
-  ostringstream buf;
-  buf << cell->name() << "." << pin->name();
-  return Py_BuildValue("s", buf.str().c_str());
 }
 
 PyObject*
@@ -81,8 +61,8 @@ ClibPin_is_input(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->is_input();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.is_input();
   return PyBool_FromLong(ans);
 }
 
@@ -92,8 +72,8 @@ ClibPin_is_output(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->is_output();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.is_output();
   return PyBool_FromLong(ans);
 }
 
@@ -103,8 +83,8 @@ ClibPin_is_inout(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->is_inout();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.is_inout();
   return PyBool_FromLong(ans);
 }
 
@@ -114,8 +94,8 @@ ClibPin_is_internal(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->is_internal();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.is_internal();
   return PyBool_FromLong(ans);
 }
 
@@ -138,8 +118,8 @@ ClibPin_name(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->name();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.name();
   return Py_BuildValue("s", ans.c_str());
 }
 
@@ -149,8 +129,8 @@ ClibPin_direction(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->direction();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.direction();
   return PyClibDirection::ToPyObject(ans);
 }
 
@@ -160,8 +140,8 @@ ClibPin_pin_id(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->pin_id();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.pin_id();
   return Py_BuildValue("k", ans);
 }
 
@@ -171,8 +151,8 @@ ClibPin_input_id(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->input_id();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.input_id();
   return Py_BuildValue("k", ans);
 }
 
@@ -182,8 +162,8 @@ ClibPin_output_id(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->output_id();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.output_id();
   return Py_BuildValue("k", ans);
 }
 
@@ -193,8 +173,8 @@ ClibPin_internal_id(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->internal_id();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.internal_id();
   return Py_BuildValue("k", ans);
 }
 
@@ -204,8 +184,8 @@ ClibPin_capacitance(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->capacitance();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.capacitance();
   return Py_BuildValue("d", ans.value());
 }
 
@@ -215,8 +195,8 @@ ClibPin_rise_capacitance(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->rise_capacitance();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.rise_capacitance();
   return Py_BuildValue("d", ans.value());
 }
 
@@ -226,8 +206,8 @@ ClibPin_fall_capacitance(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->fall_capacitance();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.fall_capacitance();
   return Py_BuildValue("d", ans.value());
 }
 
@@ -237,8 +217,8 @@ ClibPin_max_fanout(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->max_fanout();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.max_fanout();
   return Py_BuildValue("d", ans.value());
 }
 
@@ -248,8 +228,8 @@ ClibPin_min_fanout(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->min_fanout();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.min_fanout();
   return Py_BuildValue("d", ans.value());
 }
 
@@ -259,8 +239,8 @@ ClibPin_max_capacitance(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->max_capacitance();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.max_capacitance();
   return Py_BuildValue("d", ans.value());
 }
 
@@ -270,8 +250,8 @@ ClibPin_min_capacitance(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->min_capacitance();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.min_capacitance();
   return Py_BuildValue("d", ans.value());
 }
 
@@ -281,8 +261,8 @@ ClibPin_max_transition(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->max_transition();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.max_transition();
   return Py_BuildValue("d", ans.value());
 }
 
@@ -292,8 +272,8 @@ ClibPin_min_transition(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->min_transition();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.min_transition();
   return Py_BuildValue("d", ans.value());
 }
 
@@ -303,8 +283,8 @@ ClibPin_function(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->function();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.function();
   return PyExpr::ToPyObject(ans);
 }
 
@@ -314,8 +294,8 @@ ClibPin_tristate(
   void* Py_UNUSED(closure)
 )
 {
-  auto val = PyClibPin::Get(self);
-  auto ans = val->tristate();
+  auto& pin = PyClibPin::Get(self);
+  auto ans = pin.tristate();
   return PyExpr::ToPyObject(ans);
 }
 
@@ -399,30 +379,10 @@ PyClibPin::init(
   ClibPinType.tp_methods = ClibPin_methods;
   ClibPinType.tp_getset = ClibPin_getsetters;
   ClibPinType.tp_new = ClibPin_new;
-  ClibPinType.tp_repr = ClibPin_repr;
   if ( PyType_Ready(&ClibPinType) < 0 ) {
     return false;
   }
 
-  return true;
-}
-
-// @brief ClibPin を表す PyObject から ClibPin を取り出す．
-bool
-PyClibPin::FromPyObject(
-  PyObject* obj,
-  const CiPin*& val,
-  const char* msg
-)
-{
-  if ( !Check(obj) ) {
-    if ( msg == nullptr ) {
-      msg = "object should be a ClibPin type";
-    }
-    PyErr_SetString(PyExc_TypeError, msg);
-    return false;
-  }
-  val = Get(obj);
   return true;
 }
 
@@ -434,30 +394,7 @@ PyClibPin::ToPyObject(
 {
   PyObject* obj = ClibPinType.tp_alloc(&ClibPinType, 0);
   auto pin_obj = reinterpret_cast<ClibPinObject*>(obj);
-  pin_obj->mCell = val._cell();
-  pin_obj->mVal = val._impl();
-  if ( pin_obj->mCell != nullptr ) {
-    pin_obj->mCell->inc_ref();
-  }
-  Py_INCREF(obj);
-  return obj;
-}
-
-// @brief ClibPin を表す PyObject を作る．
-PyObject*
-PyClibPin::ToPyObject(
-  const CiCell* cell,
-  const CiPin* val
-)
-{
-  PyObject* obj = ClibPinType.tp_alloc(&ClibPinType, 0);
-  auto pin_obj = reinterpret_cast<ClibPinObject*>(obj);
-  pin_obj->mCell = cell;
-  pin_obj->mVal = val;
-  if ( pin_obj->mCell != nullptr ) {
-    pin_obj->mCell->inc_ref();
-  }
-  Py_INCREF(obj);
+  new (&pin_obj->mPin) ClibPin{val};
   return obj;
 }
 
@@ -471,13 +408,13 @@ PyClibPin::Check(
 }
 
 // @brief ClibPin を表す PyObject から ClibPin を取り出す．
-const CiPin*
+const ClibPin&
 PyClibPin::Get(
   PyObject* obj
 )
 {
-  auto val_obj = reinterpret_cast<ClibPinObject*>(obj);
-  return val_obj->mVal;
+  auto pin_obj = reinterpret_cast<ClibPinObject*>(obj);
+  return pin_obj->mPin;
 }
 
 // @brief ClibPin を表すオブジェクトの型定義を返す．

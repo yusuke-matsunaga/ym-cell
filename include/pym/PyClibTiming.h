@@ -24,9 +24,6 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 class PyClibTiming
 {
-  using CiCell = nsClib::CiCell;
-  using CiTiming = nsClib::CiTiming;
-
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
@@ -40,18 +37,6 @@ public:
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
 
-  /// @brief ClibTiming を表す PyObject から ClibTiming を取り出す．
-  /// @return 変換が成功したら true を返す．
-  ///
-  /// エラーの場合には Python 例外をセットする．
-  static
-  bool
-  FromPyObject(
-    PyObject* obj,            ///< [in] ClibTiming を表す PyObject
-    const CiTiming*& val,     ///< [out] 変換された ClibTiming を格納する変数
-    const char* msg = nullptr ///< [in] エラーメッセージ(省略時にはデフォルト値を使う)
-  );
-
   /// @brief ClibTiming を表す PyObject を作る．
   /// @return 生成した PyObject を返す．
   ///
@@ -60,17 +45,6 @@ public:
   PyObject*
   ToPyObject(
     const ClibTiming& val ///< [in] 値
-  );
-
-  /// @brief ClibTiming を表す PyObject を作る．
-  /// @return 生成した PyObject を返す．
-  ///
-  /// 返り値は新しい参照が返される．
-  static
-  PyObject*
-  ToPyObject(
-    const CiCell* cell, ///< [in] 親のセル
-    const CiTiming* val ///< [in] 値
   );
 
   /// @brief PyObject が ClibTiming タイプか調べる．
@@ -85,7 +59,7 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  const CiTiming*
+  const ClibTiming&
   Get(
     PyObject* obj ///< [in] 変換元の PyObject
   );

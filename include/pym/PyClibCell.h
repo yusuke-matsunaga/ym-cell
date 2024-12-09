@@ -24,8 +24,6 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 class PyClibCell
 {
-  using CiCell = nsClib::CiCell;
-
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
@@ -49,16 +47,6 @@ public:
     const ClibCell& val ///< [in] 値
   );
 
-  /// @brief ClibCell を表す PyObject を作る．
-  /// @return 生成した PyObject を返す．
-  ///
-  /// 返り値は新しい参照が返される．
-  static
-  PyObject*
-  ToPyObject(
-    const CiCell* val ///< [in] 値
-  );
-
   /// @brief PyObject が ClibCell タイプか調べる．
   static
   bool
@@ -71,7 +59,7 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  const CiCell*
+  const ClibCell&
   Get(
     PyObject* obj ///< [in] 変換元の PyObject
   );

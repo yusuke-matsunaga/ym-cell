@@ -11,12 +11,9 @@
 #include "pym/PyClibTimingSense.h"
 #include "pym/PyModule.h"
 #include "ym/ClibCell.h"
-#include "ci/CiCell.h"
 
 
 BEGIN_NAMESPACE_YM
-
-using CiCell = nsClib::CiCell;
 
 BEGIN_NONAMESPACE
 
@@ -24,7 +21,7 @@ BEGIN_NONAMESPACE
 struct ClibCellObject
 {
   PyObject_HEAD
-  const CiCell* mPtr;
+  ClibCell mCell;
 };
 
 // Python 用のタイプ定義
@@ -51,10 +48,7 @@ ClibCell_dealloc(
 )
 {
   auto cell_obj = reinterpret_cast<ClibCellObject*>(self);
-  auto ptr = cell_obj->mPtr;
-  if ( ptr != nullptr ) {
-    ptr->dec_ref();
-  }
+  cell_obj->mCell.~ClibCell();
   Py_TYPE(self)->tp_free(self);
 }
 
@@ -83,12 +77,12 @@ ClibCell_timing_list(
   }
   auto sense = PyClibTimingSense::Get(sense_obj);
   auto cell = PyClibCell::Get(self);
-  auto& timing_list = cell->timing_list(ipos, opos, sense);
+  auto timing_list = cell.timing_list(ipos, opos, sense);
   SizeType n = timing_list.size();
   auto list_obj = PyList_New(n);
   for ( SizeType i = 0; i < n; ++ i ) {
     auto timing = timing_list[i];
-    auto timing_obj = PyClibTiming::ToPyObject(cell, timing);
+    auto timing_obj = PyClibTiming::ToPyObject(timing);
     PyList_SetItem(list_obj, i, timing_obj);
   }
   return list_obj;
@@ -139,21 +133,9 @@ PyClibCell::ToPyObject(
   const ClibCell& val
 )
 {
-  return ToPyObject(val._impl());
-}
-
-// @brief ClibCell を表す PyObject を作る．
-PyObject*
-PyClibCell::ToPyObject(
-  const CiCell* val
-)
-{
   auto obj = ClibCell_Type.tp_alloc(&ClibCell_Type, 0);
   auto cell_obj = reinterpret_cast<ClibCellObject*>(obj);
-  cell_obj->mPtr = val;
-  if ( val != nullptr ) {
-    val->inc_ref();
-  }
+  new (&cell_obj->mCell) ClibCell{val};
   return obj;
 }
 
@@ -167,13 +149,13 @@ PyClibCell::Check(
 }
 
 // @brief ClibCell を表す PyObject から ClibCell を取り出す．
-const CiCell*
+const ClibCell&
 PyClibCell::Get(
   PyObject* obj
 )
 {
   auto cell_obj = reinterpret_cast<ClibCellObject*>(obj);
-  return cell_obj->mPtr;
+  return cell_obj->mCell;
 }
 
 // @brief ClibCell を表すオブジェクトの型定義を返す．

@@ -24,9 +24,6 @@ BEGIN_NAMESPACE_YM
 //////////////////////////////////////////////////////////////////////
 class PyClibPin
 {
-  using CiCell = nsClib::CiCell;
-  using CiPin = nsClib::CiPin;
-
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
@@ -40,18 +37,6 @@ public:
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
 
-  /// @brief ClibPin を表す PyObject から ClibPin を取り出す．
-  /// @return 変換が成功したら true を返す．
-  ///
-  /// エラーの場合には Python 例外をセットする．
-  static
-  bool
-  FromPyObject(
-    PyObject* obj,            ///< [in] ClibPin を表す PyObject
-    const CiPin*& val,        ///< [out] 変換された ClibPin を格納する変数
-    const char* msg = nullptr ///< [in] エラーメッセージ(省略時にはデフォルト値を使う)
-  );
-
   /// @brief ClibPin を表す PyObject を作る．
   /// @return 生成した PyObject を返す．
   ///
@@ -60,17 +45,6 @@ public:
   PyObject*
   ToPyObject(
     const ClibPin& val ///< [in] 値
-  );
-
-  /// @brief ClibPin を表す PyObject を作る．
-  /// @return 生成した PyObject を返す．
-  ///
-  /// 返り値は新しい参照が返される．
-  static
-  PyObject*
-  ToPyObject(
-    const CiCell* cell, ///< [in] 親のセル
-    const CiPin* val    ///< [in] 値
   );
 
   /// @brief PyObject が ClibPin タイプか調べる．
@@ -85,18 +59,8 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  const CiPin*
+  const ClibPin&
   Get(
-    PyObject* obj ///< [in] 変換元の PyObject
-  );
-
-  /// @brief ClibPin を表す PyObject から ClibPin を取り出す．
-  /// @return ClibPin を返す．
-  ///
-  /// Check(obj) == true であると仮定している．
-  static
-  std::pair<const CiCell*, const CiPin*>
-  _Get(
     PyObject* obj ///< [in] 変換元の PyObject
   );
 
