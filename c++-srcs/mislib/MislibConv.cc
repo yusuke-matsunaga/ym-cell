@@ -237,7 +237,7 @@ MislibConv::new_gate(
 
   // タイミング情報の生成
   cell->init_timing_map();
-  auto tv_function = oexpr.to_tv(ni);
+  auto tv_function = oexpr.tvfunc(ni);
   if ( wildcard_pin ) {
     // すべてのピンが同一のパラメータを持つ．
     auto pt_pin = ipin_top;

@@ -194,23 +194,23 @@ TimingInfo::add_timing(
   switch ( mTimingType ) {
   case ClibTimingType::combinational:
   case ClibTimingType::combinational_rise:
-    function = function_expr.to_tv(ni);
+    function = function_expr.tvfunc(ni);
     break;
 
   case ClibTimingType::combinational_fall:
-    function = ~function_expr.to_tv(ni);
+    function = ~function_expr.tvfunc(ni);
     break;
 
   case ClibTimingType::three_state_enable:
   case ClibTimingType::three_state_enable_rise:
   case ClibTimingType::three_state_disable:
   case ClibTimingType::three_state_disable_rise:
-    tristate = tristate_expr.to_tv(ni);
+    tristate = tristate_expr.tvfunc(ni);
     break;
 
   case ClibTimingType::three_state_enable_fall:
   case ClibTimingType::three_state_disable_fall:
-    tristate = ~tristate_expr.to_tv(ni);
+    tristate = ~tristate_expr.tvfunc(ni);
     break;
 
   default:

@@ -509,8 +509,8 @@ CiCell::make_signature() const
       auto tri_expr = opin->tristate();
       if ( tri_expr.is_valid() ) {
 	// tristate あり
-	auto func = expr.to_tv(ni2);
-	auto tristate = tri_expr.to_tv(ni2);
+	auto func = expr.tvfunc(ni2);
+	auto tristate = tri_expr.tvfunc(ni2);
 	return CgSignature::make_logic_sig(func, tristate);
       }
       // tristate なし
@@ -521,8 +521,8 @@ CiCell::make_signature() const
   vector<TvFunc> tristate_list(no2);
   for ( SizeType i = 0; i < no2; ++ i ) {
     auto opin = output(i);
-    logic_list[i] = opin->function().to_tv(ni2);
-    tristate_list[i] = opin->tristate().to_tv(ni2);
+    logic_list[i] = opin->function().tvfunc(ni2);
+    tristate_list[i] = opin->tristate().tvfunc(ni2);
   }
   return CgSignature::make_logic_sig(ni, no, nb, logic_list, tristate_list);
 }

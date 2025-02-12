@@ -133,7 +133,7 @@ CgSigRep::CgSigRep(
 ) : mNi{ni},
     mNo{1},
     mNb{0},
-    mFuncList{expr.to_tv(ni)},
+    mFuncList{expr.tvfunc(ni)},
     mTristateList{TvFunc::invalid()},
     mExpr{expr}
 {
