@@ -17,6 +17,51 @@
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
+/// @class PyClibVarTypeConv PyClibVarType.h "PyClibVarType.h"
+/// @brief ClibVarType を PyObject* に変換するファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibVarTypeConv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ClibVarType を PyObject* に変換する．
+  PyObject*
+  operator()(
+    const ClibVarType& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class PyClibVarTypeDeconv PyClibVarType.h "PyClibVarType.h"
+/// @brief ClibVarType を取り出すファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibVarTypeDeconv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief PyObject* から ClibVarType を取り出す．
+  bool
+  operator()(
+    PyObject* obj,
+    ClibVarType& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @class PyClibVarType PyClibVarType.h "PyClibVarType.h"
 /// @brief Python 用の ClibVarType 拡張
 ///
@@ -57,12 +102,16 @@ public:
   PyObject*
   ToPyObject(
     ClibVarType val ///< [in] 値
-  );
+  )
+  {
+    PyClibVarTypeConv conv;
+    return conv(val);
+  }
 
   /// @brief PyObject が ClibVarType タイプか調べる．
   static
   bool
-  Check(
+  _check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -71,8 +120,8 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  ClibVarType
-  Get(
+  ClibVarType&
+  _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );
 

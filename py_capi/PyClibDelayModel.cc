@@ -129,7 +129,7 @@ ClibDelayModel_repr(
   PyObject* self
 )
 {
-  auto val = PyClibDelayModel::Get(self);
+  auto val = PyClibDelayModel::_get_ref(self);
   const char* tmp_str = nullptr;
   switch ( val ) {
   case ClibDelayModel::generic_cmos:   tmp_str = GENERIC_CMOS_STR; break;
@@ -151,10 +151,10 @@ ClibDelayModel_richcmpfunc(
   int op
 )
 {
-  if ( PyClibDelayModel::Check(self) &&
-       PyClibDelayModel::Check(other) ) {
-    auto val1 = PyClibDelayModel::Get(self);
-    auto val2 = PyClibDelayModel::Get(other);
+  if ( PyClibDelayModel::_check(self) &&
+       PyClibDelayModel::_check(other) ) {
+    auto val1 = PyClibDelayModel::_get_ref(self);
+    auto val2 = PyClibDelayModel::_get_ref(other);
     if ( op == Py_EQ ) {
       return PyBool_FromLong(val1 == val2);
     }
@@ -273,21 +273,21 @@ PyClibDelayModel::FromPyObject(
     return true;
   }
 
-  if ( !Check(obj) ) {
+  if ( !_check(obj) ) {
     if ( msg == nullptr ) {
       msg = "object should be a ClibDelayModel type";
     }
     PyErr_SetString(PyExc_TypeError, msg);
     return false;
   }
-  val = Get(obj);
+  val = _get_ref(obj);
   return true;
 }
 
 // @brief ClibDelayModel を表す PyObject を作る．
 PyObject*
-PyClibDelayModel::ToPyObject(
-  ClibDelayModel val
+PyClibDelayModelConv::operator()(
+  const ClibDelayModel& val
 )
 {
   PyObject* obj = nullptr;
@@ -304,9 +304,23 @@ PyClibDelayModel::ToPyObject(
   return obj;
 }
 
+// @brief PyObject* から ClibDelayModel を取り出す．
+bool
+PyClibDelayModelDeconv::operator()(
+  PyObject* obj,
+  ClibDelayModel& val
+)
+{
+  if ( PyClibDelayModel::_check(obj) ) {
+    val = PyClibDelayModel::_get_ref(obj);
+    return true;
+  }
+  return false;
+}
+
 // @brief PyObject が ClibDelayModel タイプか調べる．
 bool
-PyClibDelayModel::Check(
+PyClibDelayModel::_check(
   PyObject* obj
 )
 {
@@ -314,8 +328,8 @@ PyClibDelayModel::Check(
 }
 
 // @brief ClibDelayModel を表す PyObject から ClibDelayModel を取り出す．
-ClibDelayModel
-PyClibDelayModel::Get(
+ClibDelayModel&
+PyClibDelayModel::_get_ref(
   PyObject* obj
 )
 {

@@ -17,6 +17,51 @@
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
+/// @class PyClibTimingTypeConv PyClibTimingType.h "PyClibTimingType.h"
+/// @brief ClibTimingType を PyObject* に変換するファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibTimingTypeConv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ClibTimingType を PyObject* に変換する．
+  PyObject*
+  operator()(
+    const ClibTimingType& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class PyClibTimingTypeDeconv PyClibTimingType.h "PyClibTimingType.h"
+/// @brief ClibTimingType を取り出すファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibTimingTypeDeconv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief PyObject* から ClibTimingType を取り出す．
+  bool
+  operator()(
+    PyObject* obj,
+    ClibTimingType& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @class PyClibTimingType PyClibTimingType.h "PyClibTimingType.h"
 /// @brief Python 用の ClibTimingType 拡張
 ///
@@ -57,12 +102,16 @@ public:
   PyObject*
   ToPyObject(
     ClibTimingType val ///< [in] 値
-  );
+  )
+  {
+    PyClibTimingTypeConv conv;
+    return conv(val);
+  }
 
   /// @brief PyObject が ClibTimingType タイプか調べる．
   static
   bool
-  Check(
+  _check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -71,8 +120,8 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  ClibTimingType
-  Get(
+  ClibTimingType&
+  _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );
 

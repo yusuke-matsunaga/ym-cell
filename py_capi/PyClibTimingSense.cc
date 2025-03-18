@@ -108,7 +108,7 @@ ClibTimingSense_repr(
   PyObject* self
 )
 {
-  auto val = PyClibTimingSense::Get(self);
+  auto val = PyClibTimingSense::_get_ref(self);
   const char* tmp_str = nullptr;
   switch ( val ) {
   case ClibTimingSense::positive_unate: tmp_str = POSITIVE_UNATE_STR; break;
@@ -127,10 +127,10 @@ ClibTimingSense_richcmpfunc(
   int op
 )
 {
-  if ( PyClibTimingSense::Check(self) &&
-       PyClibTimingSense::Check(other) ) {
-    auto val1 = PyClibTimingSense::Get(self);
-    auto val2 = PyClibTimingSense::Get(other);
+  if ( PyClibTimingSense::_check(self) &&
+       PyClibTimingSense::_check(other) ) {
+    auto val1 = PyClibTimingSense::_get_ref(self);
+    auto val2 = PyClibTimingSense::_get_ref(other);
     if ( op == Py_EQ ) {
       return PyBool_FromLong(val1 == val2);
     }
@@ -234,21 +234,21 @@ PyClibTimingSense::FromPyObject(
     return true;
   }
 
-  if ( !Check(obj) ) {
+  if ( !_check(obj) ) {
     if ( msg == nullptr ) {
       msg = "object should be a ClibTimingSense type";
     }
     PyErr_SetString(PyExc_TypeError, msg);
     return false;
   }
-  val = Get(obj);
+  val = _get_ref(obj);
   return true;
 }
 
 // @brief ClibTimingSense を表す PyObject を作る．
 PyObject*
-PyClibTimingSense::ToPyObject(
-  ClibTimingSense val
+PyClibTimingSenseConv::operator()(
+  const ClibTimingSense& val
 )
 {
   PyObject* obj = nullptr;
@@ -262,9 +262,23 @@ PyClibTimingSense::ToPyObject(
   return obj;
 }
 
+// @brief PyObject* から ClibTimingSense を取り出す．
+bool
+PyClibTimingSenseDeconv::operator()(
+  PyObject* obj,
+  ClibTimingSense& val
+)
+{
+  if ( PyClibTimingSense::_check(obj) ) {
+    val = PyClibTimingSense::_get_ref(obj);
+    return true;
+  }
+  return false;
+}
+
 // @brief PyObject が ClibTimingSense タイプか調べる．
 bool
-PyClibTimingSense::Check(
+PyClibTimingSense::_check(
   PyObject* obj
 )
 {
@@ -272,8 +286,8 @@ PyClibTimingSense::Check(
 }
 
 // @brief ClibTimingSense を表す PyObject から ClibTimingSense を取り出す．
-ClibTimingSense
-PyClibTimingSense::Get(
+ClibTimingSense&
+PyClibTimingSense::_get_ref(
   PyObject* obj
 )
 {

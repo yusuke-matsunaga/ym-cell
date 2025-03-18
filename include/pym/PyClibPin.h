@@ -11,10 +11,55 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "ym/ClibPin.h"
+#include "ym/clib.h"
 
 
 BEGIN_NAMESPACE_YM
+
+//////////////////////////////////////////////////////////////////////
+/// @class PyClibPinConv PyClibPin.h "PyClibPin.h"
+/// @brief ClibPin を PyObject* に変換するファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibPinConv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ClibPin を PyObject* に変換する．
+  PyObject*
+  operator()(
+    const ClibPin& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class PyClibPinDeconv PyClibPin.h "PyClibPin.h"
+/// @brief ClibPin を取り出すファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibPinDeconv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief PyObject* から ClibPin を取り出す．
+  bool
+  operator()(
+    PyObject* obj,
+    ClibPin& val
+  );
+
+};
+
 
 //////////////////////////////////////////////////////////////////////
 /// @class PyClibPin PyClibPin.h "PyClibPin.h"
@@ -45,12 +90,16 @@ public:
   PyObject*
   ToPyObject(
     const ClibPin& val ///< [in] 値
-  );
+  )
+  {
+    PyClibPinConv conv;
+    return conv(val);
+  }
 
   /// @brief PyObject が ClibPin タイプか調べる．
   static
   bool
-  Check(
+  _check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -59,8 +108,8 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  const ClibPin&
-  Get(
+  ClibPin&
+  _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );
 

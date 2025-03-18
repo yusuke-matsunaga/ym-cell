@@ -17,6 +17,51 @@
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
+/// @class PyClibTechnologyConv PyClibTechnology.h "PyClibTechnology.h"
+/// @brief ClibTechnology を PyObject* に変換するファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibTechnologyConv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ClibTechnology を PyObject* に変換する．
+  PyObject*
+  operator()(
+    const ClibTechnology& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class PyClibTechnologyDeconv PyClibTechnology.h "PyClibTechnology.h"
+/// @brief ClibTechnology を取り出すファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibTechnologyDeconv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief PyObject* から ClibTechnology を取り出す．
+  bool
+  operator()(
+    PyObject* obj,
+    ClibTechnology& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @class PyClibTechnology PyClibTechnology.h "PyClibTechnology.h"
 /// @brief Python 用の ClibTechnology 拡張
 ///
@@ -56,13 +101,17 @@ public:
   static
   PyObject*
   ToPyObject(
-    ClibTechnology val ///< [in] 値
-  );
+    const ClibTechnology& val ///< [in] 値
+  )
+  {
+    PyClibTechnologyConv conv;
+    return conv(val);
+  }
 
   /// @brief PyObject が ClibTechnology タイプか調べる．
   static
   bool
-  Check(
+  _check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -71,8 +120,8 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  ClibTechnology
-  Get(
+  ClibTechnology&
+  _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );
 

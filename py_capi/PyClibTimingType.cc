@@ -304,7 +304,7 @@ ClibTimingType_repr(
   PyObject* self
 )
 {
-  auto val = PyClibTimingType::Get(self);
+  auto val = PyClibTimingType::_get_ref(self);
   const char* tmp_str = nullptr;
   switch ( val ) {
   case ClibTimingType::combinational:            tmp_str = COMBINATIONAL_STR; break;
@@ -351,10 +351,10 @@ ClibTimingType_richcmpfunc(
   int op
 )
 {
-  if ( PyClibTimingType::Check(self) &&
-       PyClibTimingType::Check(other) ) {
-    auto val1 = PyClibTimingType::Get(self);
-    auto val2 = PyClibTimingType::Get(other);
+  if ( PyClibTimingType::_check(self) &&
+       PyClibTimingType::_check(other) ) {
+    auto val1 = PyClibTimingType::_get_ref(self);
+    auto val2 = PyClibTimingType::_get_ref(other);
     if ( op == Py_EQ ) {
       return PyBool_FromLong(val1 == val2);
     }
@@ -598,21 +598,21 @@ PyClibTimingType::FromPyObject(
     return true;
   }
 
-  if ( !Check(obj) ) {
+  if ( !_check(obj) ) {
     if ( msg == nullptr ) {
       msg = "object should be a ClibTimingType type";
     }
     PyErr_SetString(PyExc_TypeError, msg);
     return false;
   }
-  val = Get(obj);
+  val = _get_ref(obj);
   return true;
 }
 
 // @brief ClibTimingType を表す PyObject を作る．
 PyObject*
-PyClibTimingType::ToPyObject(
-  ClibTimingType val
+PyClibTimingTypeConv::operator()(
+  const ClibTimingType& val
 )
 {
   PyObject* obj = nullptr;
@@ -654,9 +654,23 @@ PyClibTimingType::ToPyObject(
   return obj;
 }
 
+// @brief PyObject* から ClibTimingType を取り出す．
+bool
+PyClibTimingTypeDeconv::operator()(
+  PyObject* obj,
+  ClibTimingType& val
+)
+{
+  if ( PyClibTimingType::_check(obj) ) {
+    val = PyClibTimingType::_get_ref(obj);
+    return true;
+  }
+  return false;
+}
+
 // @brief PyObject が ClibTimingType タイプか調べる．
 bool
-PyClibTimingType::Check(
+PyClibTimingType::_check(
   PyObject* obj
 )
 {
@@ -664,8 +678,8 @@ PyClibTimingType::Check(
 }
 
 // @brief ClibTimingType を表す PyObject から ClibTimingType を取り出す．
-ClibTimingType
-PyClibTimingType::Get(
+ClibTimingType&
+PyClibTimingType::_get_ref(
   PyObject* obj
 )
 {

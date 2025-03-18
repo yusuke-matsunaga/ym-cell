@@ -75,8 +75,8 @@ ClibCell_timing_list(
 				    &sense_obj) ) {
     return nullptr;
   }
-  auto sense = PyClibTimingSense::Get(sense_obj);
-  auto cell = PyClibCell::Get(self);
+  auto sense = PyClibTimingSense::_get_ref(sense_obj);
+  auto& cell = PyClibCell::_get_ref(self);
   auto timing_list = cell.timing_list(ipos, opos, sense);
   SizeType n = timing_list.size();
   auto list_obj = PyList_New(n);
@@ -129,7 +129,7 @@ PyClibCell::init(
 
 // @brief ClibCell を表す PyObject を作る．
 PyObject*
-PyClibCell::ToPyObject(
+PyClibCellConv::operator()(
   const ClibCell& val
 )
 {
@@ -139,9 +139,23 @@ PyClibCell::ToPyObject(
   return obj;
 }
 
+// @brief PyObject* から ClibCell を取り出す．
+bool
+PyClibCellDeconv::operator()(
+  PyObject* obj,
+  ClibCell& val
+)
+{
+  if ( PyClibCell::_check(obj) ) {
+    val = PyClibCell::_get_ref(obj);
+    return true;
+  }
+  return false;
+}
+
 // @brief PyObject が ClibCell タイプか調べる．
 bool
-PyClibCell::Check(
+PyClibCell::_check(
   PyObject* obj
 )
 {
@@ -149,8 +163,8 @@ PyClibCell::Check(
 }
 
 // @brief ClibCell を表す PyObject から ClibCell を取り出す．
-const ClibCell&
-PyClibCell::Get(
+ClibCell&
+PyClibCell::_get_ref(
   PyObject* obj
 )
 {

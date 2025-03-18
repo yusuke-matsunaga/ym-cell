@@ -64,7 +64,7 @@ ClibTiming_type(
   void* Py_UNUSED(closure)
 )
 {
-  auto timing = PyClibTiming::Get(self);
+  auto& timing = PyClibTiming::_get_ref(self);
   auto ans = timing.type();
   return PyClibTimingType::ToPyObject(ans);
 }
@@ -75,7 +75,7 @@ ClibTiming_timing_cond(
   void* Py_UNUSED(closure)
 )
 {
-  auto timing = PyClibTiming::Get(self);
+  auto& timing = PyClibTiming::_get_ref(self);
   auto ans = timing.timing_cond();
   return PyExpr::ToPyObject(ans);
 }
@@ -86,7 +86,7 @@ ClibTiming_intrinsic_rise(
   void* Py_UNUSED(closure)
 )
 {
-  auto timing = PyClibTiming::Get(self);
+  auto& timing = PyClibTiming::_get_ref(self);
   auto ans = timing.intrinsic_rise();
   return Py_BuildValue("d", ans.value());
 }
@@ -97,7 +97,7 @@ ClibTiming_intrinsic_fall(
   void* Py_UNUSED(closure)
 )
 {
-  auto timing = PyClibTiming::Get(self);
+  auto& timing = PyClibTiming::_get_ref(self);
   auto ans = timing.intrinsic_fall();
   return Py_BuildValue("d", ans.value());
 }
@@ -108,7 +108,7 @@ ClibTiming_slope_rise(
   void* Py_UNUSED(closure)
 )
 {
-  auto timing = PyClibTiming::Get(self);
+  auto& timing = PyClibTiming::_get_ref(self);
   auto ans = timing.slope_rise();
   return Py_BuildValue("d", ans.value());
 }
@@ -119,7 +119,7 @@ ClibTiming_slope_fall(
   void* Py_UNUSED(closure)
 )
 {
-  auto timing = PyClibTiming::Get(self);
+  auto& timing = PyClibTiming::_get_ref(self);
   auto ans = timing.slope_fall();
   return Py_BuildValue("d", ans.value());
 }
@@ -130,7 +130,7 @@ ClibTiming_rise_resistance(
   void* Py_UNUSED(closure)
 )
 {
-  auto timing = PyClibTiming::Get(self);
+  auto& timing = PyClibTiming::_get_ref(self);
   auto ans = timing.rise_resistance();
   return Py_BuildValue("d", ans.value());
 }
@@ -141,7 +141,7 @@ ClibTiming_fall_resistance(
   void* Py_UNUSED(closure)
 )
 {
-  auto timing = PyClibTiming::Get(self);
+  auto& timing = PyClibTiming::_get_ref(self);
   auto ans = timing.fall_resistance();
   return Py_BuildValue("d", ans.value());
 }
@@ -244,10 +244,10 @@ ClibTiming_richcmpfunc(
   int op
 )
 {
-  if ( PyClibTiming::Check(self) &&
-       PyClibTiming::Check(other) ) {
-    auto val1 = PyClibTiming::Get(self);
-    auto val2 = PyClibTiming::Get(other);
+  if ( PyClibTiming::_check(self) &&
+       PyClibTiming::_check(other) ) {
+    auto& val1 = PyClibTiming::_get_ref(self);
+    auto& val2 = PyClibTiming::_get_ref(other);
     if ( op == Py_EQ ) {
       return PyBool_FromLong(val1 == val2);
     }
@@ -286,7 +286,7 @@ PyClibTiming::init(
 
 // @brief ClibTiming を表す PyObject を作る．
 PyObject*
-PyClibTiming::ToPyObject(
+PyClibTimingConv::operator()(
   const ClibTiming& val
 )
 {
@@ -296,9 +296,23 @@ PyClibTiming::ToPyObject(
   return obj;
 }
 
+// @brief PyObject* から ClibTiming を取り出す．
+bool
+PyClibTimingDeconv::operator()(
+  PyObject* obj,
+  ClibTiming& val
+)
+{
+  if ( PyClibTiming::_check(obj) ) {
+    val = PyClibTiming::_get_ref(obj);
+    return true;
+  }
+  return false;
+}
+
 // @brief PyObject が ClibTiming タイプか調べる．
 bool
-PyClibTiming::Check(
+PyClibTiming::_check(
   PyObject* obj
 )
 {
@@ -306,8 +320,8 @@ PyClibTiming::Check(
 }
 
 // @brief ClibTiming を表す PyObject から ClibTiming を取り出す．
-const ClibTiming&
-PyClibTiming::Get(
+ClibTiming&
+PyClibTiming::_get_ref(
   PyObject* obj
 )
 {

@@ -11,6 +11,7 @@
 #include "pym/PyClibDelayModel.h"
 #include "pym/PyClibCell.h"
 #include "pym/PyModule.h"
+#include "pym/PyString.h"
 #include "ym/ClibLibraryPtr.h"
 
 
@@ -109,7 +110,7 @@ ClibCellLibrary_is_valid(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   bool val = lib.is_valid();
   return PyBool_FromLong(val);
 }
@@ -126,7 +127,7 @@ ClibCellLibrary_display(
     return nullptr;
   }
 
-  auto lib = ClibCellLibrary{PyClibCellLibrary::Get(self)};
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   if ( filename == nullptr ) {
     lib.display(cout);
   }
@@ -151,7 +152,7 @@ ClibCellLibrary_to_string_list(
   PyObject* Py_UNUSED(args)
 )
 {
-  auto lib = ClibCellLibrary{PyClibCellLibrary::Get(self)};
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   ostringstream buf;
   lib.display(buf);
 
@@ -193,7 +194,7 @@ ClibCellLibrary_name(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto val = lib.name();
   return Py_BuildValue("s", val.c_str());
 }
@@ -204,7 +205,7 @@ ClibCellLibrary_technology(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto val = lib.technology();
   return PyClibTechnology::ToPyObject(val);
 }
@@ -215,7 +216,7 @@ ClibCellLibrary_delay_model(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto val = lib.delay_model();
   return PyClibDelayModel::ToPyObject(val);
 }
@@ -226,9 +227,9 @@ ClibCellLibrary_bus_naming_style(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto val = lib.bus_naming_style();
-  return Py_BuildValue("s", val.c_str());
+  return PyString::ToPyObject(val);
 }
 
 PyObject*
@@ -237,9 +238,9 @@ ClibCellLibrary_date(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto val = lib.date();
-  return Py_BuildValue("s", val.c_str());
+  return PyString::ToPyObject(val);
 }
 
 PyObject*
@@ -248,9 +249,9 @@ ClibCellLibrary_revision(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto val = lib.revision();
-  return Py_BuildValue("s", val.c_str());
+  return PyString::ToPyObject(val);
 }
 
 PyObject*
@@ -259,9 +260,9 @@ ClibCellLibrary_comment(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto val = lib.comment();
-  return Py_BuildValue("s", val.c_str());
+  return PyString::ToPyObject(val);
 }
 
 PyObject*
@@ -270,9 +271,9 @@ ClibCellLibrary_time_unit(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto val = lib.time_unit();
-  return Py_BuildValue("s", val.c_str());
+  return PyString::ToPyObject(val);
 }
 
 PyObject*
@@ -281,9 +282,9 @@ ClibCellLibrary_voltage_unit(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto val = lib.voltage_unit();
-  return Py_BuildValue("s", val.c_str());
+  return PyString::ToPyObject(val);
 }
 
 PyObject*
@@ -292,9 +293,9 @@ ClibCellLibrary_current_unit(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto val = lib.current_unit();
-  return Py_BuildValue("s", val.c_str());
+  return PyString::ToPyObject(val);
 }
 
 PyObject*
@@ -303,9 +304,9 @@ ClibCellLibrary_pulling_resistance_unit(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto val = lib.pulling_resistance_unit();
-  return Py_BuildValue("s", val.c_str());
+  return PyString::ToPyObject(val);
 }
 
 PyObject*
@@ -314,7 +315,7 @@ ClibCellLibrary_capacitive_load_unit(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto unit = lib.capacitive_load_unit();
   auto unit_str = lib.capacitive_load_unit_str();
   return Py_BuildValue("(d, s)", unit, unit_str.c_str());
@@ -326,9 +327,9 @@ ClibCellLibrary_leakage_power_unit(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto val = lib.leakage_power_unit();
-  return Py_BuildValue("s", val.c_str());
+  return PyString::ToPyObject(val);
 }
 
 PyObject*
@@ -337,7 +338,7 @@ ClibCellLibrary_cell_list(
   void* Py_UNUSED(closure)
 )
 {
-  auto lib = PyClibCellLibrary::Get(self);
+  auto& lib = PyClibCellLibrary::_get_ref(self);
   auto cell_list = lib.cell_list();
   SizeType n = cell_list.size();
   auto obj = PyList_New(n);
@@ -392,10 +393,10 @@ ClibCellLibrary_richcompfunc(
   int op
 )
 {
-  if ( PyClibCellLibrary::Check(self) &&
-       PyClibCellLibrary::Check(other) ) {
-    auto val1 = PyClibCellLibrary::Get(self);
-    auto val2 = PyClibCellLibrary::Get(other);
+  if ( PyClibCellLibrary::_check(self) &&
+       PyClibCellLibrary::_check(other) ) {
+    auto& val1 = PyClibCellLibrary::_get_ref(self);
+    auto& val2 = PyClibCellLibrary::_get_ref(other);
     if ( op == Py_EQ ) {
       return PyBool_FromLong(val1 == val2);
     }
@@ -437,7 +438,7 @@ PyClibCellLibrary::init(
 
 // @brief ClibCellLibrary を PyObject に変換する．
 PyObject*
-PyClibCellLibrary::ToPyObject(
+PyClibCellLibraryConv::operator()(
   const ClibCellLibrary& val
 )
 {
@@ -449,7 +450,7 @@ PyClibCellLibrary::ToPyObject(
 
 // @brief PyObject が ClibCellLibrary タイプか調べる．
 bool
-PyClibCellLibrary::Check(
+PyClibCellLibrary::_check(
   PyObject* obj
 )
 {
@@ -458,7 +459,7 @@ PyClibCellLibrary::Check(
 
 // @brief ClibCellLibrary を表す PyObject から ClibCellLibrary を取り出す．
 const ClibCellLibrary&
-PyClibCellLibrary::Get(
+PyClibCellLibrary::_get_ref(
   PyObject* obj
 )
 {

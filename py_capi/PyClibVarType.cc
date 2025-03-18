@@ -178,7 +178,7 @@ ClibVarType_repr(
   PyObject* self
 )
 {
-  auto val = PyClibVarType::Get(self);
+  auto val = PyClibVarType::_get_ref(self);
   const char* tmp_str = nullptr;
   switch ( val ) {
   case ClibVarType::input_net_transition:                     tmp_str = INPUT_NET_TRANSITION_STR; break;
@@ -207,10 +207,10 @@ ClibVarType_richcmpfunc(
   int op
 )
 {
-  if ( PyClibVarType::Check(self) &&
-       PyClibVarType::Check(other) ) {
-    auto val1 = PyClibVarType::Get(self);
-    auto val2 = PyClibVarType::Get(other);
+  if ( PyClibVarType::_check(self) &&
+       PyClibVarType::_check(other) ) {
+    auto val1 = PyClibVarType::_get_ref(self);
+    auto val2 = PyClibVarType::_get_ref(other);
     if ( op == Py_EQ ) {
       return PyBool_FromLong(val1 == val2);
     }
@@ -364,21 +364,21 @@ PyClibVarType::FromPyObject(
     return true;
   }
 
-  if ( !Check(obj) ) {
+  if ( !_check(obj) ) {
     if ( msg == nullptr ) {
       msg = "object should be a ClibVarType type";
     }
     PyErr_SetString(PyExc_TypeError, msg);
     return false;
   }
-  val = Get(obj);
+  val = _get_ref(obj);
   return true;
 }
 
 // @brief ClibVarType を表す PyObject を作る．
 PyObject*
-PyClibVarType::ToPyObject(
-  ClibVarType val
+PyClibVarTypeConv::operator()(
+  const ClibVarType& val
 )
 {
   PyObject* obj = nullptr;
@@ -402,9 +402,23 @@ PyClibVarType::ToPyObject(
   return obj;
 }
 
+// @brief PyObject* から ClibVarType を取り出す．
+bool
+PyClibVarTypeDeconv::operator()(
+  PyObject* obj,
+  ClibVarType& val
+)
+{
+  if ( PyClibVarType::_check(obj) ) {
+    val = PyClibVarType::_get_ref(obj);
+    return true;
+  }
+  return false;
+}
+
 // @brief PyObject が ClibVarType タイプか調べる．
 bool
-PyClibVarType::Check(
+PyClibVarType::_check(
   PyObject* obj
 )
 {
@@ -412,8 +426,8 @@ PyClibVarType::Check(
 }
 
 // @brief ClibVarType を表す PyObject から ClibVarType を取り出す．
-ClibVarType
-PyClibVarType::Get(
+ClibVarType&
+PyClibVarType::_get_ref(
   PyObject* obj
 )
 {

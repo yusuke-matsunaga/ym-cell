@@ -115,7 +115,7 @@ ClibCellType_repr(
   PyObject* self
 )
 {
-  auto val = PyClibCellType::Get(self);
+  auto val = PyClibCellType::_get_ref(self);
   const char* tmp_str = nullptr;
   switch ( val ) {
   case ClibCellType::none:  tmp_str = ""; break;
@@ -135,10 +135,10 @@ ClibCellType_richcmpfunc(
   int op
 )
 {
-  if ( PyClibCellType::Check(self) &&
-       PyClibCellType::Check(other) ) {
-    auto val1 = PyClibCellType::Get(self);
-    auto val2 = PyClibCellType::Get(other);
+  if ( PyClibCellType::_check(self) &&
+       PyClibCellType::_check(other) ) {
+    auto val1 = PyClibCellType::_get_ref(self);
+    auto val2 = PyClibCellType::_get_ref(other);
     if ( op == Py_EQ ) {
       return PyBool_FromLong(val1 == val2);
     }
@@ -247,21 +247,21 @@ PyClibCellType::FromPyObject(
     return true;
   }
 
-  if ( !Check(obj) ) {
+  if ( !_check(obj) ) {
     if ( msg == nullptr ) {
       msg = "object should be a ClibCellType type";
     }
     PyErr_SetString(PyExc_TypeError, msg);
     return false;
   }
-  val = Get(obj);
+  val = _get_ref(obj);
   return true;
 }
 
 // @brief ClibCellType を表す PyObject を作る．
 PyObject*
-PyClibCellType::ToPyObject(
-  ClibCellType val
+PyClibCellTypeConv::operator()(
+  const ClibCellType& val
 )
 {
   PyObject* obj = nullptr;
@@ -276,9 +276,23 @@ PyClibCellType::ToPyObject(
   return obj;
 }
 
+// @brief PyObject* から ClibCellType を取り出す．
+bool
+PyClibCellTypeDeconv::operator()(
+  PyObject* obj,
+  ClibCellType& val
+)
+{
+  if ( PyClibCellType::_check(obj) ) {
+    val = PyClibCellType::_get_ref(obj);
+    return true;
+  }
+  return false;
+}
+
 // @brief PyObject が ClibCellType タイプか調べる．
 bool
-PyClibCellType::Check(
+PyClibCellType::_check(
   PyObject* obj
 )
 {
@@ -286,8 +300,8 @@ PyClibCellType::Check(
 }
 
 // @brief ClibCellType を表す PyObject から ClibCellType を取り出す．
-ClibCellType
-PyClibCellType::Get(
+ClibCellType&
+PyClibCellType::_get_ref(
   PyObject* obj
 )
 {

@@ -17,6 +17,51 @@
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
+/// @class PyClibDirectionConv PyClibDirection.h "PyClibDirection.h"
+/// @brief ClibDirection を PyObject* に変換するファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibDirectionConv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ClibDirection を PyObject* に変換する．
+  PyObject*
+  operator()(
+    const ClibDirection& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class PyClibDirectionDeconv PyClibDirection.h "PyClibDirection.h"
+/// @brief ClibDirection を取り出すファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibDirectionDeconv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief PyObject* から ClibDirection を取り出す．
+  bool
+  operator()(
+    PyObject* obj,
+    ClibDirection& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @class PyClibDirection PyClibDirection.h "PyClibDirection.h"
 /// @brief Python 用の ClibDirection 拡張
 ///
@@ -56,13 +101,17 @@ public:
   static
   PyObject*
   ToPyObject(
-    ClibDirection val ///< [in] 値
-  );
+    const ClibDirection& val ///< [in] 値
+  )
+  {
+    PyClibDirectionConv conv;
+    return conv(val);
+  }
 
   /// @brief PyObject が ClibDirection タイプか調べる．
   static
   bool
-  Check(
+  _check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -71,8 +120,8 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  ClibDirection
-  Get(
+  ClibDirection&
+  _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );
 

@@ -115,7 +115,7 @@ ClibDirection_repr(
   PyObject* self
 )
 {
-  auto val = PyClibDirection::Get(self);
+  auto val = PyClibDirection::_get_ref(self);
   const char* tmp_str = nullptr;
   switch ( val ) {
   case ClibDirection::input:    tmp_str = INPUT_STR; break;
@@ -135,10 +135,10 @@ ClibDirection_richcmpfunc(
   int op
 )
 {
-  if ( PyClibDirection::Check(self) &&
-       PyClibDirection::Check(other) ) {
-    auto val1 = PyClibDirection::Get(self);
-    auto val2 = PyClibDirection::Get(other);
+  if ( PyClibDirection::_check(self) &&
+       PyClibDirection::_check(other) ) {
+    auto val1 = PyClibDirection::_get_ref(self);
+    auto val2 = PyClibDirection::_get_ref(other);
     if ( op == Py_EQ ) {
       return PyBool_FromLong(val1 == val2);
     }
@@ -247,21 +247,21 @@ PyClibDirection::FromPyObject(
     return true;
   }
 
-  if ( !Check(obj) ) {
+  if ( !_check(obj) ) {
     if ( msg == nullptr ) {
       msg = "object should be a ClibDirection type";
     }
     PyErr_SetString(PyExc_TypeError, msg);
     return false;
   }
-  val = Get(obj);
+  val = _get_ref(obj);
   return true;
 }
 
 // @brief ClibDirection を表す PyObject を作る．
 PyObject*
-PyClibDirection::ToPyObject(
-  ClibDirection val
+PyClibDirectionConv::operator()(
+  const ClibDirection& val
 )
 {
   PyObject* obj = nullptr;
@@ -276,9 +276,23 @@ PyClibDirection::ToPyObject(
   return obj;
 }
 
+// @brief PyObject* から ClibDirection を取り出す．
+bool
+PyClibDirectionDeconv::operator()(
+  PyObject* obj,
+  ClibDirection& val
+)
+{
+  if ( PyClibDirection::_check(obj) ) {
+    val = PyClibDirection::_get_ref(obj);
+    return true;
+  }
+  return false;
+}
+
 // @brief PyObject が ClibDirection タイプか調べる．
 bool
-PyClibDirection::Check(
+PyClibDirection::_check(
   PyObject* obj
 )
 {
@@ -286,8 +300,8 @@ PyClibDirection::Check(
 }
 
 // @brief ClibDirection を表す PyObject から ClibDirection を取り出す．
-ClibDirection
-PyClibDirection::Get(
+ClibDirection&
+PyClibDirection::_get_ref(
   PyObject* obj
 )
 {

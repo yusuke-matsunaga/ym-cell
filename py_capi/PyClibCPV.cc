@@ -117,7 +117,7 @@ ClibCPV_repr(
   PyObject* self
 )
 {
-  auto val = PyClibCPV::Get(self);
+  auto val = PyClibCPV::_get_ref(self);
   const char* tmp_str = nullptr;
   switch ( val ) {
   case ClibCPV::L: tmp_str = L_STR; break;
@@ -137,10 +137,10 @@ ClibCPV_richcmpfunc(
   int op
 )
 {
-  if ( PyClibCPV::Check(self) &&
-       PyClibCPV::Check(other) ) {
-    auto val1 = PyClibCPV::Get(self);
-    auto val2 = PyClibCPV::Get(other);
+  if ( PyClibCPV::_check(self) &&
+       PyClibCPV::_check(other) ) {
+    auto val1 = PyClibCPV::_get_ref(self);
+    auto val2 = PyClibCPV::_get_ref(other);
     if ( op == Py_EQ ) {
       return PyBool_FromLong(val1 == val2);
     }
@@ -249,21 +249,21 @@ PyClibCPV::FromPyObject(
 )
 {
 
-  if ( !Check(obj) ) {
+  if ( !_check(obj) ) {
     if ( msg == nullptr ) {
       msg = "object should be a ClibCPV type";
     }
     PyErr_SetString(PyExc_TypeError, msg);
     return false;
   }
-  val = Get(obj);
+  val = _get_ref(obj);
   return true;
 }
 
 // @brief ClibCPV を表す PyObject を作る．
 PyObject*
-PyClibCPV::ToPyObject(
-  ClibCPV val
+PyClibCPVConv::operator()(
+  const ClibCPV& val
 )
 {
   PyObject* obj = nullptr;
@@ -278,9 +278,23 @@ PyClibCPV::ToPyObject(
   return obj;
 }
 
+// @brief PyObject* から ClibCPV を取り出す．
+bool
+PyClibCPVDeconv::operator()(
+  PyObject* obj,
+  ClibCPV& val
+)
+{
+  if ( PyClibCPV::_check(obj) ) {
+    val = PyClibCPV::_get_ref(obj);
+    return true;
+  }
+  return false;
+}
+
 // @brief PyObject が ClibCPV タイプか調べる．
 bool
-PyClibCPV::Check(
+PyClibCPV::_check(
   PyObject* obj
 )
 {
@@ -288,8 +302,8 @@ PyClibCPV::Check(
 }
 
 // @brief ClibCPV を表す PyObject から ClibCPV を取り出す．
-ClibCPV
-PyClibCPV::Get(
+ClibCPV&
+PyClibCPV::_get_ref(
   PyObject* obj
 )
 {

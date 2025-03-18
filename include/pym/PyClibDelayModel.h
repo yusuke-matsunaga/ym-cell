@@ -17,6 +17,51 @@
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
+/// @class PyClibDelayModelConv PyClibDelayModel.h "PyClibDelayModel.h"
+/// @brief ClibDelayModel を PyObject* に変換するファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibDelayModelConv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ClibDelayModel を PyObject* に変換する．
+  PyObject*
+  operator()(
+    const ClibDelayModel& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class PyClibDelayModelDeconv PyClibDelayModel.h "PyClibDelayModel.h"
+/// @brief ClibDelayModel を取り出すファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibDelayModelDeconv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief PyObject* から ClibDelayModel を取り出す．
+  bool
+  operator()(
+    PyObject* obj,
+    ClibDelayModel& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @class PyClibDelayModel PyClibDelayModel.h "PyClibDelayModel.h"
 /// @brief Python 用の ClibDelayModel 拡張
 ///
@@ -56,13 +101,17 @@ public:
   static
   PyObject*
   ToPyObject(
-    ClibDelayModel val ///< [in] 値
-  );
+    const ClibDelayModel& val ///< [in] 値
+  )
+  {
+    PyClibDelayModelConv conv;
+    return conv(val);
+  }
 
   /// @brief PyObject が ClibDelayModel タイプか調べる．
   static
   bool
-  Check(
+  _check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -71,8 +120,8 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  ClibDelayModel
-  Get(
+  ClibDelayModel&
+  _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );
 

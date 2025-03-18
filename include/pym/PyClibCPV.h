@@ -17,6 +17,51 @@
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
+/// @class PyClibCPVConv PyClibCPV.h "PyClibCPV.h"
+/// @brief ClibCPV を PyObject* に変換するファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibCPVConv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ClibCPV を PyObject* に変換する．
+  PyObject*
+  operator()(
+    const ClibCPV& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class PyClibCPVDeconv PyClibCPV.h "PyClibCPV.h"
+/// @brief ClibCPV を取り出すファンクタクラス
+///
+/// 実はただの関数
+//////////////////////////////////////////////////////////////////////
+class PyClibCPVDeconv
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief PyObject* から ClibCPV を取り出す．
+  bool
+  operator()(
+    PyObject* obj,
+    ClibCPV& val
+  );
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @class PyClibCPV PyClibCPV.h "PyClibCPV.h"
 /// @brief Python 用の ClibCPV 拡張
 ///
@@ -57,12 +102,16 @@ public:
   PyObject*
   ToPyObject(
     ClibCPV val ///< [in] 値
-  );
+  )
+  {
+    PyClibCPVConv conv;
+    return conv(val);
+  }
 
   /// @brief PyObject が ClibCPV タイプか調べる．
   static
   bool
-  Check(
+  _check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -71,8 +120,8 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  ClibCPV
-  Get(
+  ClibCPV&
+  _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );
 

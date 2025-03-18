@@ -101,7 +101,7 @@ ClibTechnology_repr(
   PyObject* self
 )
 {
-  auto val = PyClibTechnology::Get(self);
+  auto val = PyClibTechnology::_get_ref(self);
   const char* tmp_str = nullptr;
   switch ( val ) {
   case ClibTechnology::cmos: tmp_str = CMOS_STR; break;
@@ -119,10 +119,10 @@ ClibTechnology_richcmpfunc(
   int op
 )
 {
-  if ( PyClibTechnology::Check(self) &&
-       PyClibTechnology::Check(other) ) {
-    auto val1 = PyClibTechnology::Get(self);
-    auto val2 = PyClibTechnology::Get(other);
+  if ( PyClibTechnology::_check(self) &&
+       PyClibTechnology::_check(other) ) {
+    auto val1 = PyClibTechnology::_get_ref(self);
+    auto val2 = PyClibTechnology::_get_ref(other);
     if ( op == Py_EQ ) {
       return PyBool_FromLong(val1 == val2);
     }
@@ -221,21 +221,21 @@ PyClibTechnology::FromPyObject(
     return true;
   }
 
-  if ( !Check(obj) ) {
+  if ( !_check(obj) ) {
     if ( msg == nullptr ) {
       msg = "object should be a ClibTechnology type";
     }
     PyErr_SetString(PyExc_TypeError, msg);
     return false;
   }
-  val = Get(obj);
+  val = _get_ref(obj);
   return true;
 }
 
 // @brief ClibTechnology を表す PyObject を作る．
 PyObject*
-PyClibTechnology::ToPyObject(
-  ClibTechnology val
+PyClibTechnologyConv::operator()(
+  const ClibTechnology& val
 )
 {
   PyObject* obj = nullptr;
@@ -248,9 +248,23 @@ PyClibTechnology::ToPyObject(
   return obj;
 }
 
+// @brief PyObject* から ClibTechnology を取り出す．
+bool
+PyClibTechnologyDeconv::operator()(
+  PyObject* obj,
+  ClibTechnology& val
+)
+{
+  if ( PyClibTechnology::_check(obj) ) {
+    val = PyClibTechnology::_get_ref(obj);
+    return true;
+  }
+  return false;
+}
+
 // @brief PyObject が ClibTechnology タイプか調べる．
 bool
-PyClibTechnology::Check(
+PyClibTechnology::_check(
   PyObject* obj
 )
 {
@@ -258,8 +272,8 @@ PyClibTechnology::Check(
 }
 
 // @brief ClibTechnology を表す PyObject から ClibTechnology を取り出す．
-ClibTechnology
-PyClibTechnology::Get(
+ClibTechnology&
+PyClibTechnology::_get_ref(
   PyObject* obj
 )
 {
