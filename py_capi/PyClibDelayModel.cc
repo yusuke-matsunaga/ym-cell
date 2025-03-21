@@ -151,8 +151,8 @@ ClibDelayModel_richcmpfunc(
   int op
 )
 {
-  if ( PyClibDelayModel::_check(self) &&
-       PyClibDelayModel::_check(other) ) {
+  if ( PyClibDelayModel::Check(self) &&
+       PyClibDelayModel::Check(other) ) {
     auto val1 = PyClibDelayModel::_get_ref(self);
     auto val2 = PyClibDelayModel::_get_ref(other);
     if ( op == Py_EQ ) {
@@ -208,9 +208,6 @@ PyClibDelayModel::init(
   ClibDelayModel_Type.tp_richcompare = ClibDelayModel_richcmpfunc;
   ClibDelayModel_Type.tp_new = ClibDelayModel_new;
   ClibDelayModel_Type.tp_repr = ClibDelayModel_repr;
-  if ( PyType_Ready(&ClibDelayModel_Type) < 0 ) {
-    return false;
-  }
 
   // 型オブジェクトの登録
   if ( !PyModule::reg_type(m, "ClibDelayModel", &ClibDelayModel_Type) ) {
@@ -259,34 +256,9 @@ PyClibDelayModel::init(
   return false;
 }
 
-// @brief ClibDelayModel を表す PyObject から ClibDelayModel を取り出す．
-bool
-PyClibDelayModel::FromPyObject(
-  PyObject* obj,
-  ClibDelayModel& val,
-  const char* msg
-)
-{
-  if ( obj == Py_None ) {
-    // 特例: None は ClibDelayModel::none に変換する．
-    val = ClibDelayModel::none;
-    return true;
-  }
-
-  if ( !_check(obj) ) {
-    if ( msg == nullptr ) {
-      msg = "object should be a ClibDelayModel type";
-    }
-    PyErr_SetString(PyExc_TypeError, msg);
-    return false;
-  }
-  val = _get_ref(obj);
-  return true;
-}
-
 // @brief ClibDelayModel を表す PyObject を作る．
 PyObject*
-PyClibDelayModelConv::operator()(
+PyClibDelayModel::Conv::operator()(
   const ClibDelayModel& val
 )
 {
@@ -306,12 +278,18 @@ PyClibDelayModelConv::operator()(
 
 // @brief PyObject* から ClibDelayModel を取り出す．
 bool
-PyClibDelayModelDeconv::operator()(
+PyClibDelayModel::Deconv::operator()(
   PyObject* obj,
   ClibDelayModel& val
 )
 {
-  if ( PyClibDelayModel::_check(obj) ) {
+  if ( obj == Py_None ) {
+    // 特例: None は ClibDelayModel::none に変換する．
+    val = ClibDelayModel::none;
+    return true;
+  }
+
+  if ( PyClibDelayModel::Check(obj) ) {
     val = PyClibDelayModel::_get_ref(obj);
     return true;
   }
@@ -320,7 +298,7 @@ PyClibDelayModelDeconv::operator()(
 
 // @brief PyObject が ClibDelayModel タイプか調べる．
 bool
-PyClibDelayModel::_check(
+PyClibDelayModel::Check(
   PyObject* obj
 )
 {

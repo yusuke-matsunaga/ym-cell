@@ -129,7 +129,7 @@ PyClibCell::init(
 
 // @brief ClibCell を表す PyObject を作る．
 PyObject*
-PyClibCellConv::operator()(
+PyClibCell::Conv::operator()(
   const ClibCell& val
 )
 {
@@ -141,12 +141,12 @@ PyClibCellConv::operator()(
 
 // @brief PyObject* から ClibCell を取り出す．
 bool
-PyClibCellDeconv::operator()(
+PyClibCell::Deconv::operator()(
   PyObject* obj,
   ClibCell& val
 )
 {
-  if ( PyClibCell::_check(obj) ) {
+  if ( PyClibCell::Check(obj) ) {
     val = PyClibCell::_get_ref(obj);
     return true;
   }
@@ -155,7 +155,7 @@ PyClibCellDeconv::operator()(
 
 // @brief PyObject が ClibCell タイプか調べる．
 bool
-PyClibCell::_check(
+PyClibCell::Check(
   PyObject* obj
 )
 {

@@ -135,8 +135,8 @@ ClibDirection_richcmpfunc(
   int op
 )
 {
-  if ( PyClibDirection::_check(self) &&
-       PyClibDirection::_check(other) ) {
+  if ( PyClibDirection::Check(self) &&
+       PyClibDirection::Check(other) ) {
     auto val1 = PyClibDirection::_get_ref(self);
     auto val2 = PyClibDirection::_get_ref(other);
     if ( op == Py_EQ ) {
@@ -192,9 +192,6 @@ PyClibDirection::init(
   ClibDirection_Type.tp_richcompare = ClibDirection_richcmpfunc;
   ClibDirection_Type.tp_new = ClibDirection_new;
   ClibDirection_Type.tp_repr = ClibDirection_repr;
-  if ( PyType_Ready(&ClibDirection_Type) < 0 ) {
-    return false;
-  }
 
   // 型オブジェクトの登録
   if ( !PyModule::reg_type(m, "ClibDirection", &ClibDirection_Type) ) {
@@ -233,34 +230,9 @@ PyClibDirection::init(
   return false;
 }
 
-// @brief ClibDirection を表す PyObject から ClibDirection を取り出す．
-bool
-PyClibDirection::FromPyObject(
-  PyObject* obj,
-  ClibDirection& val,
-  const char* msg
-)
-{
-  if ( obj == Py_None ) {
-    // 特例: None は ClibDirection::none に変換する．
-    val = ClibDirection::none;
-    return true;
-  }
-
-  if ( !_check(obj) ) {
-    if ( msg == nullptr ) {
-      msg = "object should be a ClibDirection type";
-    }
-    PyErr_SetString(PyExc_TypeError, msg);
-    return false;
-  }
-  val = _get_ref(obj);
-  return true;
-}
-
 // @brief ClibDirection を表す PyObject を作る．
 PyObject*
-PyClibDirectionConv::operator()(
+PyClibDirection::Conv::operator()(
   const ClibDirection& val
 )
 {
@@ -278,12 +250,18 @@ PyClibDirectionConv::operator()(
 
 // @brief PyObject* から ClibDirection を取り出す．
 bool
-PyClibDirectionDeconv::operator()(
+PyClibDirection::Deconv::operator()(
   PyObject* obj,
   ClibDirection& val
 )
 {
-  if ( PyClibDirection::_check(obj) ) {
+  if ( obj == Py_None ) {
+    // 特例: None は ClibDirection::none に変換する．
+    val = ClibDirection::none;
+    return true;
+  }
+
+  if ( PyClibDirection::Check(obj) ) {
     val = PyClibDirection::_get_ref(obj);
     return true;
   }
@@ -292,7 +270,7 @@ PyClibDirectionDeconv::operator()(
 
 // @brief PyObject が ClibDirection タイプか調べる．
 bool
-PyClibDirection::_check(
+PyClibDirection::Check(
   PyObject* obj
 )
 {

@@ -135,8 +135,8 @@ ClibCellType_richcmpfunc(
   int op
 )
 {
-  if ( PyClibCellType::_check(self) &&
-       PyClibCellType::_check(other) ) {
+  if ( PyClibCellType::Check(self) &&
+       PyClibCellType::Check(other) ) {
     auto val1 = PyClibCellType::_get_ref(self);
     auto val2 = PyClibCellType::_get_ref(other);
     if ( op == Py_EQ ) {
@@ -192,9 +192,6 @@ PyClibCellType::init(
   ClibCellType_Type.tp_richcompare = ClibCellType_richcmpfunc;
   ClibCellType_Type.tp_new = ClibCellType_new;
   ClibCellType_Type.tp_repr = ClibCellType_repr;
-  if ( PyType_Ready(&ClibCellType_Type) < 0 ) {
-    return false;
-  }
 
   // 型オブジェクトの登録
   if ( !PyModule::reg_type(m, "ClibCellType", &ClibCellType_Type) ) {
@@ -233,34 +230,9 @@ PyClibCellType::init(
   return false;
 }
 
-// @brief ClibCellType を表す PyObject から ClibCellType を取り出す．
-bool
-PyClibCellType::FromPyObject(
-  PyObject* obj,
-  ClibCellType& val,
-  const char* msg
-)
-{
-  if ( obj == Py_None ) {
-    // 特例: None は ClibCellType::none に変換する．
-    val = ClibCellType::none;
-    return true;
-  }
-
-  if ( !_check(obj) ) {
-    if ( msg == nullptr ) {
-      msg = "object should be a ClibCellType type";
-    }
-    PyErr_SetString(PyExc_TypeError, msg);
-    return false;
-  }
-  val = _get_ref(obj);
-  return true;
-}
-
 // @brief ClibCellType を表す PyObject を作る．
 PyObject*
-PyClibCellTypeConv::operator()(
+PyClibCellType::Conv::operator()(
   const ClibCellType& val
 )
 {
@@ -278,12 +250,18 @@ PyClibCellTypeConv::operator()(
 
 // @brief PyObject* から ClibCellType を取り出す．
 bool
-PyClibCellTypeDeconv::operator()(
+PyClibCellType::Deconv::operator()(
   PyObject* obj,
   ClibCellType& val
 )
 {
-  if ( PyClibCellType::_check(obj) ) {
+  if ( obj == Py_None ) {
+    // 特例: None は ClibCellType::none に変換する．
+    val = ClibCellType::none;
+    return true;
+  }
+
+  if ( PyClibCellType::Check(obj) ) {
     val = PyClibCellType::_get_ref(obj);
     return true;
   }
@@ -292,7 +270,7 @@ PyClibCellTypeDeconv::operator()(
 
 // @brief PyObject が ClibCellType タイプか調べる．
 bool
-PyClibCellType::_check(
+PyClibCellType::Check(
   PyObject* obj
 )
 {

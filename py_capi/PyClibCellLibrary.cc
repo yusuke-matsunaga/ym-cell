@@ -393,8 +393,8 @@ ClibCellLibrary_richcompfunc(
   int op
 )
 {
-  if ( PyClibCellLibrary::_check(self) &&
-       PyClibCellLibrary::_check(other) ) {
+  if ( PyClibCellLibrary::Check(self) &&
+       PyClibCellLibrary::Check(other) ) {
     auto& val1 = PyClibCellLibrary::_get_ref(self);
     auto& val2 = PyClibCellLibrary::_get_ref(other);
     if ( op == Py_EQ ) {
@@ -438,7 +438,7 @@ PyClibCellLibrary::init(
 
 // @brief ClibCellLibrary を PyObject に変換する．
 PyObject*
-PyClibCellLibraryConv::operator()(
+PyClibCellLibrary::Conv::operator()(
   const ClibCellLibrary& val
 )
 {
@@ -448,9 +448,23 @@ PyClibCellLibraryConv::operator()(
   return obj;
 }
 
+// @brief PyObject* から ClibCellLibrary を取り出す．
+bool
+PyClibCellLibrary::Deconv::operator()(
+  PyObject* obj,
+  ClibCellLibrary& val
+)
+{
+  if ( PyClibCellLibrary::Check(obj) ) {
+    val = PyClibCellLibrary::_get_ref(obj);
+    return true;
+  }
+  return false;
+}
+
 // @brief PyObject が ClibCellLibrary タイプか調べる．
 bool
-PyClibCellLibrary::_check(
+PyClibCellLibrary::Check(
   PyObject* obj
 )
 {
@@ -458,7 +472,7 @@ PyClibCellLibrary::_check(
 }
 
 // @brief ClibCellLibrary を表す PyObject から ClibCellLibrary を取り出す．
-const ClibCellLibrary&
+ClibCellLibrary&
 PyClibCellLibrary::_get_ref(
   PyObject* obj
 )

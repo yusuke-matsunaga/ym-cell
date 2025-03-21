@@ -207,8 +207,8 @@ ClibVarType_richcmpfunc(
   int op
 )
 {
-  if ( PyClibVarType::_check(self) &&
-       PyClibVarType::_check(other) ) {
+  if ( PyClibVarType::Check(self) &&
+       PyClibVarType::Check(other) ) {
     auto val1 = PyClibVarType::_get_ref(self);
     auto val2 = PyClibVarType::_get_ref(other);
     if ( op == Py_EQ ) {
@@ -264,9 +264,6 @@ PyClibVarType::init(
   ClibVarType_Type.tp_richcompare = ClibVarType_richcmpfunc;
   ClibVarType_Type.tp_new = ClibVarType_new;
   ClibVarType_Type.tp_repr = ClibVarType_repr;
-  if ( PyType_Ready(&ClibVarType_Type) < 0 ) {
-    return false;
-  }
 
   // 型オブジェクトの登録
   if ( !PyModule::reg_type(m, "ClibVarType", &ClibVarType_Type) ) {
@@ -350,34 +347,9 @@ PyClibVarType::init(
   return false;
 }
 
-// @brief ClibVarType を表す PyObject から ClibVarType を取り出す．
-bool
-PyClibVarType::FromPyObject(
-  PyObject* obj,
-  ClibVarType& val,
-  const char* msg
-)
-{
-  if ( obj == Py_None ) {
-    // 特例: None は ClibVarType::none に変換する．
-    val = ClibVarType::none;
-    return true;
-  }
-
-  if ( !_check(obj) ) {
-    if ( msg == nullptr ) {
-      msg = "object should be a ClibVarType type";
-    }
-    PyErr_SetString(PyExc_TypeError, msg);
-    return false;
-  }
-  val = _get_ref(obj);
-  return true;
-}
-
 // @brief ClibVarType を表す PyObject を作る．
 PyObject*
-PyClibVarTypeConv::operator()(
+PyClibVarType::Conv::operator()(
   const ClibVarType& val
 )
 {
@@ -404,12 +376,18 @@ PyClibVarTypeConv::operator()(
 
 // @brief PyObject* から ClibVarType を取り出す．
 bool
-PyClibVarTypeDeconv::operator()(
+PyClibVarType::Deconv::operator()(
   PyObject* obj,
   ClibVarType& val
 )
 {
-  if ( PyClibVarType::_check(obj) ) {
+  if ( obj == Py_None ) {
+    // 特例: None は ClibVarType::none に変換する．
+    val = ClibVarType::none;
+    return true;
+  }
+
+  if ( PyClibVarType::Check(obj) ) {
     val = PyClibVarType::_get_ref(obj);
     return true;
   }
@@ -418,7 +396,7 @@ PyClibVarTypeDeconv::operator()(
 
 // @brief PyObject が ClibVarType タイプか調べる．
 bool
-PyClibVarType::_check(
+PyClibVarType::Check(
   PyObject* obj
 )
 {

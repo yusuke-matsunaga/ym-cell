@@ -17,51 +17,6 @@
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
-/// @class PyClibCellTypeConv PyClibCellType.h "PyClibCellType.h"
-/// @brief ClibCellType を PyObject* に変換するファンクタクラス
-///
-/// 実はただの関数
-//////////////////////////////////////////////////////////////////////
-class PyClibCellTypeConv
-{
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief ClibCellType を PyObject* に変換する．
-  PyObject*
-  operator()(
-    const ClibCellType& val
-  );
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class PyClibCellTypeDeconv PyClibCellType.h "PyClibCellType.h"
-/// @brief ClibCellType を取り出すファンクタクラス
-///
-/// 実はただの関数
-//////////////////////////////////////////////////////////////////////
-class PyClibCellTypeDeconv
-{
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief PyObject* から ClibCellType を取り出す．
-  bool
-  operator()(
-    PyObject* obj,
-    ClibCellType& val
-  );
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
 /// @class PyClibCellType PyClibCellType.h "PyClibCellType.h"
 /// @brief Python 用の ClibCellType 拡張
 ///
@@ -69,6 +24,28 @@ public:
 //////////////////////////////////////////////////////////////////////
 class PyClibCellType
 {
+  using ElemType = ClibCellType;
+
+public:
+
+  /// @brief ClibCellType を PyObject* に変換するファンクタクラス
+  struct Conv {
+    PyObject*
+    operator()(
+      const ClibCellType& val
+    );
+  };
+
+  /// @brief PyObject* から ClibCellType を取り出すファンクタクラス
+  struct Deconv {
+    bool
+    operator()(
+      PyObject* obj,
+      ClibCellType& val
+    );
+  };
+
+
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
@@ -82,18 +59,6 @@ public:
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
 
-  /// @brief ClibCellType を表す PyObject から ClibCellType を取り出す．
-  /// @return 変換が成功したら true を返す．
-  ///
-  /// エラーの場合には Python 例外をセットする．
-  static
-  bool
-  FromPyObject(
-    PyObject* obj,            ///< [in] ClibCellType を表す PyObject
-    ClibCellType& val,      ///< [out] 変換された ClibCellType を格納する変数
-    const char* msg = nullptr ///< [in] エラーメッセージ(省略時にはデフォルト値を使う)
-  );
-
   /// @brief ClibCellType を表す PyObject を作る．
   /// @return 生成した PyObject を返す．
   ///
@@ -104,14 +69,29 @@ public:
     ClibCellType val ///< [in] 値
   )
   {
-    PyClibCellTypeConv conv;
+    Conv conv;
     return conv(val);
+  }
+
+  /// @brief ClibCellType を表す PyObject から ClibCellType を取り出す．
+  /// @return 変換が成功したら true を返す．
+  ///
+  /// エラーの場合には Python 例外をセットする．
+  static
+  bool
+  FromPyObject(
+    PyObject* obj,    ///< [in] ClibCellType を表す PyObject
+    ClibCellType& val ///< [out] 変換された ClibCellType を格納する変数
+  )
+  {
+    Deconv deconv;
+    return deconv(obj, val);
   }
 
   /// @brief PyObject が ClibCellType タイプか調べる．
   static
   bool
-  _check(
+  Check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 

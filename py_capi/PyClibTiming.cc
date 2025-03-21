@@ -244,8 +244,8 @@ ClibTiming_richcmpfunc(
   int op
 )
 {
-  if ( PyClibTiming::_check(self) &&
-       PyClibTiming::_check(other) ) {
+  if ( PyClibTiming::Check(self) &&
+       PyClibTiming::Check(other) ) {
     auto& val1 = PyClibTiming::_get_ref(self);
     auto& val2 = PyClibTiming::_get_ref(other);
     if ( op == Py_EQ ) {
@@ -277,16 +277,21 @@ PyClibTiming::init(
   ClibTiming_Type.tp_methods = ClibTiming_methods;
   ClibTiming_Type.tp_getset = ClibTiming_getsetters;
   ClibTiming_Type.tp_new = ClibTiming_new;
-  if ( PyType_Ready(&ClibTiming_Type) < 0 ) {
-    return false;
+
+  // 型オブジェクトの登録
+  if ( !PyModule::reg_type(m, "ClibTiming", &ClibTiming_Type) ) {
+    goto error;
   }
 
   return true;
+
+ error:
+  return false;
 }
 
 // @brief ClibTiming を表す PyObject を作る．
 PyObject*
-PyClibTimingConv::operator()(
+PyClibTiming::Conv::operator()(
   const ClibTiming& val
 )
 {
@@ -298,12 +303,12 @@ PyClibTimingConv::operator()(
 
 // @brief PyObject* から ClibTiming を取り出す．
 bool
-PyClibTimingDeconv::operator()(
+PyClibTiming::Deconv::operator()(
   PyObject* obj,
   ClibTiming& val
 )
 {
-  if ( PyClibTiming::_check(obj) ) {
+  if ( PyClibTiming::Check(obj) ) {
     val = PyClibTiming::_get_ref(obj);
     return true;
   }
@@ -312,7 +317,7 @@ PyClibTimingDeconv::operator()(
 
 // @brief PyObject が ClibTiming タイプか調べる．
 bool
-PyClibTiming::_check(
+PyClibTiming::Check(
   PyObject* obj
 )
 {

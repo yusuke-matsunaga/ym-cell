@@ -17,51 +17,6 @@
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
-/// @class PyClibTechnologyConv PyClibTechnology.h "PyClibTechnology.h"
-/// @brief ClibTechnology を PyObject* に変換するファンクタクラス
-///
-/// 実はただの関数
-//////////////////////////////////////////////////////////////////////
-class PyClibTechnologyConv
-{
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief ClibTechnology を PyObject* に変換する．
-  PyObject*
-  operator()(
-    const ClibTechnology& val
-  );
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class PyClibTechnologyDeconv PyClibTechnology.h "PyClibTechnology.h"
-/// @brief ClibTechnology を取り出すファンクタクラス
-///
-/// 実はただの関数
-//////////////////////////////////////////////////////////////////////
-class PyClibTechnologyDeconv
-{
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief PyObject* から ClibTechnology を取り出す．
-  bool
-  operator()(
-    PyObject* obj,
-    ClibTechnology& val
-  );
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
 /// @class PyClibTechnology PyClibTechnology.h "PyClibTechnology.h"
 /// @brief Python 用の ClibTechnology 拡張
 ///
@@ -69,6 +24,28 @@ public:
 //////////////////////////////////////////////////////////////////////
 class PyClibTechnology
 {
+  using ElemType = ClibTechnology;
+
+public:
+
+  /// @brief ClibTechnology を PyObject* に変換するファンクタクラス
+  struct Conv {
+    PyObject*
+    operator()(
+      const ElemType& val
+    );
+  };
+
+  /// @brief PyObject* から ClibTechnology を取り出すファンクタクラス
+  struct Deconv {
+    bool
+    operator()(
+      PyObject* obj,
+      ElemType& val
+    );
+  };
+
+
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
@@ -82,18 +59,6 @@ public:
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
 
-  /// @brief ClibTechnology を表す PyObject から ClibTechnology を取り出す．
-  /// @return 変換が成功したら true を返す．
-  ///
-  /// エラーの場合には Python 例外をセットする．
-  static
-  bool
-  FromPyObject(
-    PyObject* obj,            ///< [in] ClibTechnology を表す PyObject
-    ClibTechnology& val,      ///< [out] 変換された ClibTechnology を格納する変数
-    const char* msg = nullptr ///< [in] エラーメッセージ(省略時にはデフォルト値を使う)
-  );
-
   /// @brief ClibTechnology を表す PyObject を作る．
   /// @return 生成した PyObject を返す．
   ///
@@ -101,17 +66,30 @@ public:
   static
   PyObject*
   ToPyObject(
-    const ClibTechnology& val ///< [in] 値
+    const ElemType& val ///< [in] 値
   )
   {
-    PyClibTechnologyConv conv;
+    Conv conv;
     return conv(val);
+  }
+
+  /// @brief ClibTechnology を表す PyObject から ClibTechnology を取り出す．
+  /// @return 変換が成功したら true を返す．
+  static
+  bool
+  FromPyObject(
+    PyObject* obj, ///< [in] ClibTechnology を表す PyObject
+    ElemType& val  ///< [out] 変換された ClibTechnology を格納する変数
+  )
+  {
+    Deconv deconv;
+    return deconv(obj, val);
   }
 
   /// @brief PyObject が ClibTechnology タイプか調べる．
   static
   bool
-  _check(
+  Check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -120,7 +98,7 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  ClibTechnology&
+  ElemType&
   _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );

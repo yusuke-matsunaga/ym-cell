@@ -17,51 +17,6 @@
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
-/// @class PyClibTimingSenseConv PyClibTimingSense.h "PyClibTimingSense.h"
-/// @brief ClibTimingSense を PyObject* に変換するファンクタクラス
-///
-/// 実はただの関数
-//////////////////////////////////////////////////////////////////////
-class PyClibTimingSenseConv
-{
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief ClibTimingSense を PyObject* に変換する．
-  PyObject*
-  operator()(
-    const ClibTimingSense& val
-  );
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class PyClibTimingSenseDeconv PyClibTimingSense.h "PyClibTimingSense.h"
-/// @brief ClibTimingSense を取り出すファンクタクラス
-///
-/// 実はただの関数
-//////////////////////////////////////////////////////////////////////
-class PyClibTimingSenseDeconv
-{
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief PyObject* から ClibTimingSense を取り出す．
-  bool
-  operator()(
-    PyObject* obj,
-    ClibTimingSense& val
-  );
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
 /// @class PyClibTimingSense PyClibTimingSense.h "PyClibTimingSense.h"
 /// @brief Python 用の ClibTimingSense 拡張
 ///
@@ -69,6 +24,28 @@ public:
 //////////////////////////////////////////////////////////////////////
 class PyClibTimingSense
 {
+  using ElemType = ClibTimingSense;
+
+public:
+
+  /// @brief ClibTimingSense を PyObject* に変換するファンクタクラス
+  struct Conv {
+    PyObject*
+    operator()(
+      const ElemType& val
+    );
+  };
+
+  /// @brief PyObject* から ClibTimingSense を取り出すファンクタクラス
+  struct Deconv {
+    bool
+    operator()(
+      PyObject* obj,
+      ElemType& val
+    );
+  };
+
+
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
@@ -82,18 +59,6 @@ public:
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
 
-  /// @brief ClibTimingSense を表す PyObject から ClibTimingSense を取り出す．
-  /// @return 変換が成功したら true を返す．
-  ///
-  /// エラーの場合には Python 例外をセットする．
-  static
-  bool
-  FromPyObject(
-    PyObject* obj,            ///< [in] ClibTimingSense を表す PyObject
-    ClibTimingSense& val,      ///< [out] 変換された ClibTimingSense を格納する変数
-    const char* msg = nullptr ///< [in] エラーメッセージ(省略時にはデフォルト値を使う)
-  );
-
   /// @brief ClibTimingSense を表す PyObject を作る．
   /// @return 生成した PyObject を返す．
   ///
@@ -101,17 +66,30 @@ public:
   static
   PyObject*
   ToPyObject(
-    const ClibTimingSense& val ///< [in] 値
+    const ElemType& val ///< [in] 値
   )
   {
-    PyClibTimingSenseConv conv;
+    Conv conv;
     return conv(val);
+  }
+
+  /// @brief ClibTimingSense を表す PyObject から ClibTimingSense を取り出す．
+  /// @return 変換が成功したら true を返す．
+  static
+  bool
+  FromPyObject(
+    PyObject* obj, ///< [in] ClibTimingSense を表す PyObject
+    ElemType& val  ///< [out] 変換された ClibTimingSense を格納する変数
+  )
+  {
+    Deconv deconv;
+    return deconv(obj, val);
   }
 
   /// @brief PyObject が ClibTimingSense タイプか調べる．
   static
   bool
-  _check(
+  Check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -120,7 +98,7 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  ClibTimingSense&
+  ElemType&
   _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );

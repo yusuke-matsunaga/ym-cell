@@ -119,8 +119,8 @@ ClibTechnology_richcmpfunc(
   int op
 )
 {
-  if ( PyClibTechnology::_check(self) &&
-       PyClibTechnology::_check(other) ) {
+  if ( PyClibTechnology::Check(self) &&
+       PyClibTechnology::Check(other) ) {
     auto val1 = PyClibTechnology::_get_ref(self);
     auto val2 = PyClibTechnology::_get_ref(other);
     if ( op == Py_EQ ) {
@@ -176,9 +176,6 @@ PyClibTechnology::init(
   ClibTechnology_Type.tp_richcompare = ClibTechnology_richcmpfunc;
   ClibTechnology_Type.tp_new = ClibTechnology_new;
   ClibTechnology_Type.tp_repr = ClibTechnology_repr;
-  if ( PyType_Ready(&ClibTechnology_Type) < 0 ) {
-    return false;
-  }
 
   // 型オブジェクトの登録
   if ( !PyModule::reg_type(m, "ClibTechnology", &ClibTechnology_Type) ) {
@@ -207,34 +204,9 @@ PyClibTechnology::init(
   return false;
 }
 
-// @brief ClibTechnology を表す PyObject から ClibTechnology を取り出す．
-bool
-PyClibTechnology::FromPyObject(
-  PyObject* obj,
-  ClibTechnology& val,
-  const char* msg
-)
-{
-  if ( obj == Py_None ) {
-    // 特例: None は ClibTechnology::none に変換する．
-    val = ClibTechnology::none;
-    return true;
-  }
-
-  if ( !_check(obj) ) {
-    if ( msg == nullptr ) {
-      msg = "object should be a ClibTechnology type";
-    }
-    PyErr_SetString(PyExc_TypeError, msg);
-    return false;
-  }
-  val = _get_ref(obj);
-  return true;
-}
-
 // @brief ClibTechnology を表す PyObject を作る．
 PyObject*
-PyClibTechnologyConv::operator()(
+PyClibTechnology::Conv::operator()(
   const ClibTechnology& val
 )
 {
@@ -250,12 +222,18 @@ PyClibTechnologyConv::operator()(
 
 // @brief PyObject* から ClibTechnology を取り出す．
 bool
-PyClibTechnologyDeconv::operator()(
+PyClibTechnology::Deconv::operator()(
   PyObject* obj,
   ClibTechnology& val
 )
 {
-  if ( PyClibTechnology::_check(obj) ) {
+  if ( obj == Py_None ) {
+    // 特例: None は ClibTechnology::none に変換する．
+    val = ClibTechnology::none;
+    return true;
+  }
+
+  if ( PyClibTechnology::Check(obj) ) {
     val = PyClibTechnology::_get_ref(obj);
     return true;
   }
@@ -264,7 +242,7 @@ PyClibTechnologyDeconv::operator()(
 
 // @brief PyObject が ClibTechnology タイプか調べる．
 bool
-PyClibTechnology::_check(
+PyClibTechnology::Check(
   PyObject* obj
 )
 {

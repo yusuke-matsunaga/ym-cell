@@ -127,8 +127,8 @@ ClibTimingSense_richcmpfunc(
   int op
 )
 {
-  if ( PyClibTimingSense::_check(self) &&
-       PyClibTimingSense::_check(other) ) {
+  if ( PyClibTimingSense::Check(self) &&
+       PyClibTimingSense::Check(other) ) {
     auto val1 = PyClibTimingSense::_get_ref(self);
     auto val2 = PyClibTimingSense::_get_ref(other);
     if ( op == Py_EQ ) {
@@ -184,9 +184,6 @@ PyClibTimingSense::init(
   ClibTimingSense_Type.tp_richcompare = ClibTimingSense_richcmpfunc;
   ClibTimingSense_Type.tp_new = ClibTimingSense_new;
   ClibTimingSense_Type.tp_repr = ClibTimingSense_repr;
-  if ( PyType_Ready(&ClibTimingSense_Type) < 0 ) {
-    return false;
-  }
 
   // 型オブジェクトの登録
   if ( !PyModule::reg_type(m, "ClibTimingSense", &ClibTimingSense_Type) ) {
@@ -220,34 +217,9 @@ PyClibTimingSense::init(
   return false;
 }
 
-// @brief ClibTimingSense を表す PyObject から ClibTimingSense を取り出す．
-bool
-PyClibTimingSense::FromPyObject(
-  PyObject* obj,
-  ClibTimingSense& val,
-  const char* msg
-)
-{
-  if ( obj == Py_None ) {
-    // 特例: None は ClibTimingSense::none に変換する．
-    val = ClibTimingSense::none;
-    return true;
-  }
-
-  if ( !_check(obj) ) {
-    if ( msg == nullptr ) {
-      msg = "object should be a ClibTimingSense type";
-    }
-    PyErr_SetString(PyExc_TypeError, msg);
-    return false;
-  }
-  val = _get_ref(obj);
-  return true;
-}
-
 // @brief ClibTimingSense を表す PyObject を作る．
 PyObject*
-PyClibTimingSenseConv::operator()(
+PyClibTimingSense::Conv::operator()(
   const ClibTimingSense& val
 )
 {
@@ -264,12 +236,18 @@ PyClibTimingSenseConv::operator()(
 
 // @brief PyObject* から ClibTimingSense を取り出す．
 bool
-PyClibTimingSenseDeconv::operator()(
+PyClibTimingSense::Deconv::operator()(
   PyObject* obj,
   ClibTimingSense& val
 )
 {
-  if ( PyClibTimingSense::_check(obj) ) {
+  if ( obj == Py_None ) {
+    // 特例: None は ClibTimingSense::none に変換する．
+    val = ClibTimingSense::none;
+    return true;
+  }
+
+  if ( PyClibTimingSense::Check(obj) ) {
     val = PyClibTimingSense::_get_ref(obj);
     return true;
   }
@@ -278,7 +256,7 @@ PyClibTimingSenseDeconv::operator()(
 
 // @brief PyObject が ClibTimingSense タイプか調べる．
 bool
-PyClibTimingSense::_check(
+PyClibTimingSense::Check(
   PyObject* obj
 )
 {

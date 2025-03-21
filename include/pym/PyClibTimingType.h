@@ -17,51 +17,6 @@
 BEGIN_NAMESPACE_YM
 
 //////////////////////////////////////////////////////////////////////
-/// @class PyClibTimingTypeConv PyClibTimingType.h "PyClibTimingType.h"
-/// @brief ClibTimingType を PyObject* に変換するファンクタクラス
-///
-/// 実はただの関数
-//////////////////////////////////////////////////////////////////////
-class PyClibTimingTypeConv
-{
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief ClibTimingType を PyObject* に変換する．
-  PyObject*
-  operator()(
-    const ClibTimingType& val
-  );
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class PyClibTimingTypeDeconv PyClibTimingType.h "PyClibTimingType.h"
-/// @brief ClibTimingType を取り出すファンクタクラス
-///
-/// 実はただの関数
-//////////////////////////////////////////////////////////////////////
-class PyClibTimingTypeDeconv
-{
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 外部インターフェイス
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief PyObject* から ClibTimingType を取り出す．
-  bool
-  operator()(
-    PyObject* obj,
-    ClibTimingType& val
-  );
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
 /// @class PyClibTimingType PyClibTimingType.h "PyClibTimingType.h"
 /// @brief Python 用の ClibTimingType 拡張
 ///
@@ -69,6 +24,28 @@ public:
 //////////////////////////////////////////////////////////////////////
 class PyClibTimingType
 {
+  using ElemType = ClibTimingType;
+
+public:
+
+  /// @brief ClibTimingType を PyObject* に変換するファンクタクラス
+  struct Conv {
+    PyObject*
+    operator()(
+      const ElemType& val
+    );
+  };
+
+  /// @brief PyObject* から ClibTimingType を取り出すファンクタクラス
+  struct Deconv {
+    bool
+    operator()(
+      PyObject* obj,
+      ElemType& val
+    );
+  };
+
+
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
@@ -82,18 +59,6 @@ public:
     PyObject* m ///< [in] 親のモジュールを表す PyObject
   );
 
-  /// @brief ClibTimingType を表す PyObject から ClibTimingType を取り出す．
-  /// @return 変換が成功したら true を返す．
-  ///
-  /// エラーの場合には Python 例外をセットする．
-  static
-  bool
-  FromPyObject(
-    PyObject* obj,            ///< [in] ClibTimingType を表す PyObject
-    ClibTimingType& val,      ///< [out] 変換された ClibTimingType を格納する変数
-    const char* msg = nullptr ///< [in] エラーメッセージ(省略時にはデフォルト値を使う)
-  );
-
   /// @brief ClibTimingType を表す PyObject を作る．
   /// @return 生成した PyObject を返す．
   ///
@@ -101,17 +66,30 @@ public:
   static
   PyObject*
   ToPyObject(
-    ClibTimingType val ///< [in] 値
+    const ElemType& val ///< [in] 値
   )
   {
-    PyClibTimingTypeConv conv;
+    Conv conv;
     return conv(val);
+  }
+
+  /// @brief ClibTimingType を表す PyObject から ClibTimingType を取り出す．
+  /// @return 変換が成功したら true を返す．
+  static
+  bool
+  FromPyObject(
+    PyObject* obj, ///< [in] ClibTimingType を表す PyObject
+    ElemType& val  ///< [out] 変換された ClibTimingType を格納する変数
+  )
+  {
+    Deconv deconv;
+    return deconv(obj, val);
   }
 
   /// @brief PyObject が ClibTimingType タイプか調べる．
   static
   bool
-  _check(
+  Check(
     PyObject* obj ///< [in] 対象の PyObject
   );
 
@@ -120,7 +98,7 @@ public:
   ///
   /// Check(obj) == true であると仮定している．
   static
-  ClibTimingType&
+  ElemType&
   _get_ref(
     PyObject* obj ///< [in] 変換元の PyObject
   );

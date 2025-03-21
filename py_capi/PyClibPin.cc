@@ -346,8 +346,8 @@ ClibPin_richcmpfunc(
   int op
 )
 {
-  if ( PyClibPin::_check(self) &&
-       PyClibPin::_check(other) ) {
+  if ( PyClibPin::Check(self) &&
+       PyClibPin::Check(other) ) {
     auto val1 = PyClibPin::_get_ref(self);
     auto val2 = PyClibPin::_get_ref(other);
     if ( op == Py_EQ ) {
@@ -379,16 +379,21 @@ PyClibPin::init(
   ClibPinType.tp_methods = ClibPin_methods;
   ClibPinType.tp_getset = ClibPin_getsetters;
   ClibPinType.tp_new = ClibPin_new;
-  if ( PyType_Ready(&ClibPinType) < 0 ) {
-    return false;
+
+  // 型オブジェクトの登録
+  if ( !PyModule::reg_type(m, "ClibPin", &ClibPinType) ) {
+    goto error;
   }
 
   return true;
+
+ error:
+  return false;
 }
 
 // @brief ClibPin を表す PyObject を作る．
 PyObject*
-PyClibPinConv::operator()(
+PyClibPin::Conv::operator()(
   const ClibPin& val
 )
 {
@@ -400,12 +405,12 @@ PyClibPinConv::operator()(
 
 // @brief PyObject* から ClibPin を取り出す．
 bool
-PyClibPinDeconv::operator()(
+PyClibPin::Deconv::operator()(
   PyObject* obj,
   ClibPin& val
 )
 {
-  if ( PyClibPin::_check(obj) ) {
+  if ( PyClibPin::Check(obj) ) {
     val = PyClibPin::_get_ref(obj);
     return true;
   }
@@ -414,7 +419,7 @@ PyClibPinDeconv::operator()(
 
 // @brief PyObject が ClibPin タイプか調べる．
 bool
-PyClibPin::_check(
+PyClibPin::Check(
   PyObject* obj
 )
 {
