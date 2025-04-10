@@ -93,14 +93,14 @@ to_npnmap(
   NpnMap npnmap(ni0);
   for ( SizeType i = 0; i < ni; ++ i ) {
     auto ipinmap = iomap.input_map(i);
-    npnmap.set(i, ipinmap.id(), ipinmap.inv());
+    npnmap.set_imap(i, ipinmap.id(), ipinmap.inv());
   }
   for ( SizeType i = 0; i < nb; ++ i ) {
     auto bpinmap = iomap.inout_map(i);
-    npnmap.set(i + ni, bpinmap.id() + ni, bpinmap.inv());
+    npnmap.set_imap(i + ni, bpinmap.id() + ni, bpinmap.inv());
   }
   for ( SizeType i = ni + nb; i < ni0; ++ i ) {
-    npnmap.set(i, i, false);
+    npnmap.set_imap(i, i, false);
   }
   if ( opos < no ) {
     npnmap.set_oinv(iomap.output_map(opos).inv());
