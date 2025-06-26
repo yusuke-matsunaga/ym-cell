@@ -163,14 +163,14 @@ PatMgr::check_equivalent(
     return false;
   }
 
-  if ( expr1.is_posi_literal() ) {
-    if ( expr2.is_posi_literal() && expr1.varid() == expr2.varid() ) {
+  if ( expr1.is_positive_literal() ) {
+    if ( expr2.is_positive_literal() && expr1.varid() == expr2.varid() ) {
       return true;
     }
     return false;
   }
-  if ( expr1.is_nega_literal() ) {
-    if ( expr2.is_nega_literal() && expr1.varid() == expr2.varid() ) {
+  if ( expr1.is_negative_literal() ) {
+    if ( expr2.is_negative_literal() && expr1.varid() == expr2.varid() ) {
       return true;
     }
     return false;
@@ -288,7 +288,7 @@ PatMgr::pg_sub(
 {
   if ( expr.is_literal() ) {
     PatNode* node = make_input(expr.varid());
-    bool inv = expr.is_nega_literal();
+    bool inv = expr.is_negative_literal();
     pg_list.push_back(PatHandle{node, inv});
   }
   else {
